@@ -1,4 +1,4 @@
-import {defineNuxtRouteMiddleware} from '#imports'
+import {defineNuxtRouteMiddleware, usePublicPageState} from '#imports'
 export default defineNuxtRouteMiddleware((to, from) => {
-    
+    const publicPage = usePublicPageState()
   })
