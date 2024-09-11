@@ -1,7 +1,8 @@
 <template>
-<div class="layoutContainer">
-    
-    <slot />
-</div>
+    <AppWraper>
+        <slot name="header" />
+        <slot  />
+        <slot name="footer" />
+    </AppWraper>
 
 </template>
