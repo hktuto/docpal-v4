@@ -1,0 +1,78 @@
+
+
+
+:root{
+  --app-main-color: #15d5b9;
+  --app-accent-color: #0077ff;
+  // generate grey color in 5 levels
+  --app-grey-hue: 160;
+  --app-grey-saturation: 15%;
+  --app-grey-000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 0%);
+  --app-grey-100: hsl(var(--app-grey-hue) var(--app-grey-saturation) 10%);
+  --app-grey-200: hsl(var(--app-grey-hue) var(--app-grey-saturation) 20%);
+  --app-grey-300: hsl(var(--app-grey-hue) var(--app-grey-saturation) 30%);
+  --app-grey-400: hsl(var(--app-grey-hue) var(--app-grey-saturation) 40%);
+  --app-grey-500: hsl(var(--app-grey-hue) var(--app-grey-saturation) 50%);
+  --app-grey-600: hsl(var(--app-grey-hue) var(--app-grey-saturation) 60%);
+  --app-grey-700: hsl(var(--app-grey-hue) var(--app-grey-saturation) 70%);
+  --app-grey-800: hsl(var(--app-grey-hue) var(--app-grey-saturation) 85%);
+  --app-grey-900: hsl(var(--app-grey-hue) var(--app-grey-saturation) 94%);
+  --app-grey-1000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 98%);
+  // generate white and black color
+  --app-white: #fff;
+  --app-black: #000;
+  --app-text-color: #000;
+  --app-font-size-xs: 0.5rem;
+  --app-font-size-s: 0.75rem;
+  --app-font-size-m: 1rem;
+  --app-font-size-l: 1.5rem;
+  --app-font-size-xl: 2rem;
+  --app-font-size-xxl: 3rem;
+  --app-line-height: 1.2;
+  --app-font-weight: 400;
+  --app-font-family: 'Roboto', sans-serif;
+  
+  // set ap size base on rem;
+  --app-border-radius-s: 0.25rem;
+  --app-border-radius-m: 0.5rem;
+  --app-border-radius-l: 1rem;
+  --app-border-radius-xl: 2rem;
+  --app-border-radius-xxl: 4rem;
+  --app-border-radius-max: 10e5px;
+  
+  // set app space
+  --app-space-s: 0.5rem;
+  --app-space-m: 1rem;
+  --app-space-l: 2rem;
+  --app-space-xl: 4rem;
+  --app-space-xxl: 8rem;
+  
+  // set app shadow
+  --app-shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --app-shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --app-shadow-l: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --app-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+}
+
+
+html, body{
+  padding: 0;
+  margin: 0;
+  font-family: var(--app-font-family);
+  font-size: var(--app-font-size-m);
+  line-height: var(--app-line-height);
+  font-weight: var(--app-font-weight);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+$colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'error-color', 'grey-100', 'grey-200', 'grey-300', 'grey-400', 'grey-500', 'grey-600', 'grey-700', 'grey-800', 'grey-900', 'grey-1000';
+// generate class to all background color
+@each $color in $colors {
+  .bg-#{$color} {
+    background-color: var(--app-#{$color});
+  }
+}
