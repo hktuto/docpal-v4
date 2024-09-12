@@ -5,8 +5,8 @@
 
 <template>
     <div class="appFullPage">
-        <div class="appSideBar">
-
+        <div class="appSidebar">
+            <slot name="sidebar"></slot>
         </div>
         <div class="appMainContainer">
             <div class="appHeader">
