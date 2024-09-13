@@ -4,6 +4,7 @@
             <AppWrapper>
                 <template #sidebar>
                     sidebar
+                    <LangSwitch />
                 </template>
                 <template #header>
                     header
@@ -14,8 +15,16 @@
             </AppWrapper>
         </template>
         <template #placeholder>
-            loading
+            <LoadingBg >
+             <h1>{{ $t('loading') }}</h1>
+            </LoadingBg>
         </template>
     </AuthState>
 
 </template>
+
+<style scoped>
+h1{
+    color:#fff;
+}
+</style>
