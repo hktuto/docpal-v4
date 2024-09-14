@@ -1,4 +1,4 @@
-// @ts-check
+
 import { createError } from '#imports';
 import {Client} from './generate/client'
 import {Admin} from './generate/admin'
@@ -62,7 +62,7 @@ clientApi.instance.interceptors.response.use(
             // 重新设置请求头中的 access token 并重试请求
             originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
             return clientApi.instance(originalRequest);
-          } catch (refreshError) {
+          } catch (refreshError:any) {
             // 如果 refresh token 也过期了，则清除所有存储的 token，并导航到登录页面
             if (refreshError.response.status === 401) {
               localStorage.removeItem('access_token');
@@ -94,6 +94,15 @@ adminApi.instance.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
+        if(error.response.status >= 500) {
+            throw createError({
+                statusCode: error.response.status,
+                statusMessage: 'Server endpoint Error',
+                data: {
+                    url: error.config.url
+                }
+            })
+        }
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
       
@@ -113,7 +122,7 @@ adminApi.instance.interceptors.response.use(
             // 重新设置请求头中的 access token 并重试请求
             originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
             return clientApi.instance(originalRequest);
-          } catch (refreshError) {
+          } catch (refreshError:any) {
             // 如果 refresh token 也过期了，则清除所有存储的 token，并导航到登录页面
             if (refreshError.response.status === 401) {
               localStorage.removeItem('access_token');

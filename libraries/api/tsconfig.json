@@ -5,4 +5,5 @@
     },
     "include": ["/**/*.ts"],
     "exclude": ["node_modules"],
-  }
+    "extends": "../../apps/web/.nuxt/tsconfig.json"
+}
