@@ -18,9 +18,9 @@ async function generate(){
         url: point.url,
         httpClientType: "axios",
         generateClient:true,
+        unwrapResponseData:true,
         apiClassName: point.className,
         singleHttpClient:false,
-        cleanOutput:true,
     }))
 }
 

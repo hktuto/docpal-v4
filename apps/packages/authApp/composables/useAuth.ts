@@ -1,5 +1,5 @@
 
-import {useState} from '#imports'
+import {useState, createError} from '#imports'
 import Keycloak from 'keycloak-js'
 import {clientApi} from 'api'
 
@@ -44,11 +44,7 @@ export async function fetch() {
         return;
     }
     if(!keyCloakState.value) {
-        
-        const {data:{code, data}} = await clientApi.api.getKeyCloakProperty()
-        if(code !== 200) {
-            throw new Error('can not get keycloak property')
-        }
+        const {data} = await clientApi.api.getKeyCloakProperty()
         keyCloakState.value = new Keycloak({
             "url": data?.keyCloakProperty?.url,
             "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
@@ -65,6 +61,14 @@ export async function fetch() {
         onLoad:'login-required'
     })
     console.log("authenticated", authenticated)
+    keyCloakState.value.updateToken(10)
+    localStorage.setItem('access_token', keyCloakState.value.token || "");
+    const {data} = await clientApi.api.verifyKeycloakToken()
+    if(!data){
+        throw new Error('token not valid')
+    }
+    localStorage.setItem('access_token', data.access_token)
+    localStorage.setItem('refresh_token', data.refresh_token)
     userState.value = {
         username: "username",
         userId: "username"

@@ -42,44 +42,5 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       redirectOn: 'root' // recommended
     }
-  },
-  nitro:{
-    routeRules:{
-      '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
-      '/notification/api/**': {proxy: {to: process.env.NOTIFICATION_PROXY+"/**"}},
-      '/dashboard/**': {proxy: {to:process.env.DASHBOARD_PROXY+"/**"}},
-      '/client/**': {proxy: {to:process.env.CLIENT_PROXY+"/**"}},
-    },
-
-      devProxy:{
-        '/client/api':{
-          target: process.env.CLIENT_PROXY,
-          changeOrigin: true,
-          prependPath: true
-        },
-        '/admin/api':{
-          target: process.env.ADMIN_PROXY,
-          changeOrigin: true,
-          prependPath: true
-        },
-        '/docpalApi':{
-          target: process.env.PROXY,
-          changeOrigin: true,
-          prependPath: true
-        },
-        '/dashboard':{
-          target: process.env.DASHBOARD_PROXY,
-          changeOrigin: true,
-          prependPath: true
-        },
-        '/client':{
-          target: process.env.CLIENT_PROXY,
-          changeOrigin: true,
-          prependPath: true
-        }
-      }
-  },
-  features:{
-    inlineStyles: true,
   }
 })

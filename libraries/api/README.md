@@ -8,10 +8,11 @@
 - [x] 查看 **打包大小** ( 103kb/10.38 Gzip) 可能要考慮換 package
 - [x] 測試不用 npx 使用node 來生成 (要配合 env)
 - [x] 從 env 讀取 endpoint 來生成
-- [ ] 測試 refresh token
+- [x] 測試 refresh token
 - [ ] 測試 cancel axios
 - [ ] 測試 global error handling
-- [ ] 測試在CI/CD 打包
+- [ ] 測試在 CI/CD 打包
+- [ ] 測試打包後 轉 baseURL 功能
 
 
 
