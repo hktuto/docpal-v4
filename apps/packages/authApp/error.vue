@@ -1,19 +1,16 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
-const {loggedIn, ready} = useAuth()
-const props = defineProps({
-  error: Object as () => NuxtError
-})
+const props = defineProps<{error:any}>()
 
 const handleError = () => window.location.reload()
 </script>
 
 <template>
-  <div>
-    <h2>Error : {{ error.statusCode }}</h2>
-    <pre>
+  <NuxtLayout name="error">
+    <h2 v-if="error">Error : {{ error.statusCode }}</h2>
+    <pre v-if="error">
         {{  error.data  }}
     </pre>
     <NuxtLink to="/">Go back home</NuxtLink>
-  </div>
+  </NuxtLayout>
 </template>

@@ -10,9 +10,9 @@
 - [x] 從 env 讀取 endpoint 來生成
 - [ ] 測試 refresh token
 - [ ] 測試 cancel axios
-- [ ] 測試 global error handling
+- [x] 測試 global error handling
 - [ ] 測試在 CI/CD 打包
-- [ ] 測試打包後 轉 baseURL 功能
+- [x] 測試打包後 轉 baseURL 功能
 
 
 

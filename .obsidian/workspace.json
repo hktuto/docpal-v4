@@ -161,6 +161,7 @@
   },
   "active": "00d3a92fe9d62d8e",
   "lastOpenFiles": [
+    "apps/packages/authApp/layouts/error.vue",
     "apps/packages/authApp/middleware/needAuth.global.ts",
     "apps/packages/authApp/error.vue",
     "apps/web/node_modules/@element-plus",
@@ -171,7 +172,6 @@
     "apps/packages/authApp/package.json",
     "apps/web/node_modules",
     "apps/package.json",
-    "libraries/api/src/generate/admin.ts",
     "libraries/api/README.md",
     "README.md",
     "libraries/api/README 1.md"
