@@ -1,3 +1,5 @@
+// @ts-check
+import { createError } from '#imports';
 import {Client} from './generate/client'
 import {Admin} from './generate/admin'
 
@@ -31,6 +33,16 @@ clientApi.instance.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
+        console.log('fetch error', error)
+        if(error.response.status >= 500) {
+          throw createError({
+            statusCode: error.response.status,
+            statusMessage: 'Server endpoint Error',
+            data: {
+              url: error.config.url
+            }
+          })
+        }
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
       

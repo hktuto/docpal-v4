@@ -161,6 +161,8 @@
   },
   "active": "00d3a92fe9d62d8e",
   "lastOpenFiles": [
+    "apps/packages/authApp/middleware/needAuth.global.ts",
+    "apps/packages/authApp/error.vue",
     "apps/web/node_modules/@element-plus",
     "apps/web/node_modules/@nuxtjs",
     "apps/web/node_modules/@vue",
@@ -170,8 +172,6 @@
     "apps/web/node_modules",
     "apps/package.json",
     "libraries/api/src/generate/admin.ts",
-    "libraries/api/src/generate/client.ts",
-    "libraries/api/src/refreshToken.ts",
     "libraries/api/README.md",
     "README.md",
     "libraries/api/README 1.md"
