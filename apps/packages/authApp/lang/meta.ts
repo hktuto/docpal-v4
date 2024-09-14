@@ -1,3 +1,5 @@
+import { clientApi } from "api"
+
 export default defineI18nLocale(async(locale) => {
     const { loggedIn } = useAuth()
     if(!loggedIn.value){
@@ -5,9 +7,12 @@ export default defineI18nLocale(async(locale) => {
         }
     }
     // for example, fetch locale messages from nuxt server
-    const lang = await $fetch<{data:string}>(`/api/docpal/relation/queryLanguage?locale=${locale}&languageKey=meta`).then(res => res.data)
-    if(lang && lang.length > 0) {
-        return JSON.parse(lang[0].languageContent)
+    const {data:{data}} = await clientApi.api.queryLanguage({language:{
+        locale:locale,
+        languageKey:'meta'
+    }})
+    if(data && data.length > 0 && data[0].languageContent) {
+        return JSON.parse(data[0]?.languageContent)
     }
     return {}
   })

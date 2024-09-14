@@ -7,7 +7,9 @@
     "/src/*"
   ],
   "scripts": {
-    "gen:client": "npx swagger-typescript-api -p https://app4.wclsolution.com/v3/api-docs -o ./src -n client.ts --axios"
+    "gen:all": "node --env-file=../../env/.env.dev -r ts-node/register ./src/generator ",
+    "gen:client": "npx swagger-typescript-api -p https://app4.wclsolution.com/v3/api-docs -o ./src -n client.ts --axios --api-class-name Client",
+    "gen:admin": "npx swagger-typescript-api -p https://app4.wclsolution.com/admin/v3/api-docs -o ./src -n admin.ts --axios --api-class-name Admin"
   },
   "keywords": [],
   "author": "",
