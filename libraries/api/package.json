@@ -7,14 +7,14 @@
     "/src/*"
   ],
   "scripts": {
-    "gen:all": "node --env-file=../../env/.env.dev -r ts-node/register ./src/generator ",
-    "gen:client": "npx swagger-typescript-api -p https://app4.wclsolution.com/v3/api-docs -o ./src -n client.ts --axios --api-class-name Client",
-    "gen:admin": "npx swagger-typescript-api -p https://app4.wclsolution.com/admin/v3/api-docs -o ./src -n admin.ts --axios --api-class-name Admin"
+    "generate": "ts-node ./src/generator",
+    "postinstall": "npm run generate"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "dotenv": "^16.4.5",
     "swagger-typescript-api": "^13.0.22",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"

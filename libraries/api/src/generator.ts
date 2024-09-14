@@ -1,6 +1,10 @@
-import fs from "node:fs";
 import path from "node:path";
 import { generateApi } from "swagger-typescript-api";
+import dotenv from 'dotenv'
+dotenv.config({
+    path:'../../env/.env.dev'
+})
+
 
 const endpoint = [
     {name: 'client', url:`${process.env.BASEURL}/v3/api-docs`, className:"Client"},

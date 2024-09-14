@@ -8,7 +8,7 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5(happy-dom@15.7.3)(sass@1.78.0)
 
-  apps:
+  apps/web:
     dependencies:
       '@element-plus/nuxt':
         specifier: ^1.0.10
@@ -46,7 +46,7 @@ importers:
         version: 2.4.6
       api:
         specifier: workspace:*
-        version: link:../libraries/api
+        version: link:../../libraries/api
       happy-dom:
         specifier: ^15.7.3
         version: 15.7.3
@@ -75,6 +75,9 @@ importers:
         specifier: ^1.7.7
         version: 1.7.7
     devDependencies:
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       swagger-typescript-api:
         specifier: ^13.0.22
         version: 13.0.22

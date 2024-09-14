@@ -163,12 +163,15 @@
   "lastOpenFiles": [
     "libraries/api/src/generate/client.ts",
     "libraries/api/src/generate/admin.ts",
+    "apps/web/node_modules/@nuxtjs",
+    "apps/web/node_modules/@element-plus",
+    "apps/web/node_modules/@vue",
+    "apps/web/node_modules/@nuxt",
+    "apps/web/package.json",
+    "pnpm-lock.yaml.300789901",
     "libraries/api/generate/client.ts",
     "libraries/api/generate/admin.ts",
     "libraries/api/generate",
-    "libraries/api/tsconfig.json",
-    "libraries/api/src/generate",
-    "libraries/api/src/generator.ts",
     "README.md",
     "libraries/api/README.md",
     "libraries/api/README 1.md"
