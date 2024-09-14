@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "files": [
+    "/src/*"
+  ],
+  "scripts": {
+    "gen:client": "npx swagger-typescript-api -p https://app4.wclsolution.com/v3/api-docs -o ./src -n client.ts --axios"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "swagger-typescript-api": "^13.0.22",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "axios": "^1.7.7"
+  }
+}

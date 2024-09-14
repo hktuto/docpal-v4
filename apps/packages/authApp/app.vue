@@ -5,7 +5,7 @@ const { locale, loadLocaleMessages} = useI18n()
 watch(loggedIn, (bool) => {
   if(bool) {
     loadLocaleMessages(locale.value)
-    // authReadyState.value = true;
+    authReadyState.value = true;
   }
 })
 </script>
