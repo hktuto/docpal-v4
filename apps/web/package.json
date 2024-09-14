@@ -1,15 +1,16 @@
 {
-  "name": "apps",
+  "name": "web",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "check:web": "npx nuxi typecheck ./web",
-    "build:web": "nuxt build ./web",
-    "dev:web": "nuxt dev ./web --dotenv ../../env/.env.dev",
-    "generate:web": "nuxt generate ./web",
-    "preview:web": "nuxt preview ./web",
-    "postinstall": "nuxt prepare ./web"
+    "pregenerate":"pnpm -filter api run generate",
+    "check": "npx nuxi typecheck",
+    "build": "nuxt build",
+    "dev": "nuxt dev  --dotenv ../../env/.env.dev",
+    "generate": "nuxt generate ",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "keywords": [],
   "author": "",
@@ -36,5 +37,9 @@
     "vitest": "^2.0.5",
     "vue-inline-svg": "^3.1.3",
     "vue-tsc": "^2.1.6"
+  },
+  "engines" : {
+    "npm" : ">=10.0.0",
+    "node" : ">=20.0.0"
   }
 }
