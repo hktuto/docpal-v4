@@ -16,7 +16,7 @@
         </template>
         <template #placeholder>
             <LoadingBg >
-             <h1>{{ $t('loading') }}</h1>
+                <h1>{{ $t('loading') }}</h1>
             </LoadingBg>
         </template>
     </AuthState>

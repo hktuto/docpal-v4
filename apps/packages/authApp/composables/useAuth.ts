@@ -1,6 +1,9 @@
 
 import {useState} from '#imports'
 import Keycloak from 'keycloak-js'
+import {clientApi} from 'api'
+
+
 
 import type { User } from '../types/user'
 
@@ -41,18 +44,22 @@ export async function fetch() {
         return;
     }
     if(!keyCloakState.value) {
-        const config = await $fetch('/api/docpal/relation/getKeyCloakProperty').then( (res:any) => res.data)
+        
+        const {data:{code, data}} = await clientApi.api.getKeyCloakProperty()
+        if(code !== 200) {
+            throw new Error('can not get keycloak property')
+        }
         keyCloakState.value = new Keycloak({
-            "url": config.keyCloakProperty.url,
-            "realm": config.keyCloakProperty.realm, // ldap: docpal_third_party
-            "clientId": config.keyCloakProperty.clientId,
+            "url": data?.keyCloakProperty?.url,
+            "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
+            "clientId": data?.keyCloakProperty?.clientId || "",
             // @ts-ignore
-            "ssl-required": config.keyCloakProperty.sslRequired,
-            "public-client": config.keyCloakProperty.publicClient,
-            "confidential-port": config.keyCloakProperty.confidentialPort
+            "ssl-required": data?.keyCloakProperty.sslRequired || "",
+            "public-client": data?.keyCloakProperty?.publicClient || "",
+            "confidential-port": data?.keyCloakProperty?.confidentialPort || ""
         })
-        isSSO.value = !!config?.keyCloakProperty?.enableSSO
-        isLDAP.value = !!config.isLdap
+        isSSO.value = !!data?.keyCloakProperty?.enableSSO
+        isLDAP.value = !!data?.isLdap
     }
     const authenticated = await keyCloakState.value.init({
         onLoad:'login-required'
