@@ -1,0 +1,176 @@
+{
+  "main": {
+    "id": "5a9abe25656ad031",
+    "type": "split",
+    "children": [
+      {
+        "id": "b3df5b16c35ea8b9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fc45aa9d4f83f87c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "00d3a92fe9d62d8e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "libraries/api/README.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c870cab5d5c04f3d",
+    "type": "split",
+    "children": [
+      {
+        "id": "06959eb4b675e069",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0f3556438d10f910",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "86fb84c31d704334",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "ab3a59c90d9cb329",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "dffe8cc626f435c4",
+    "type": "split",
+    "children": [
+      {
+        "id": "3eccd88deb67b97e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4c8293bf6397b5fe",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "libraries/api/README.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "a21b62bd3282d34f",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "libraries/api/README.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "a3645fa7b3de837a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "f4f9823e63082e5f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "libraries/api/README.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:開啟快速切換": false,
+      "graph:查看關聯圖": false,
+      "canvas:建立新畫布": false,
+      "daily-notes:開啟今天的每日筆記": false,
+      "templates:插入模板": false,
+      "command-palette:開啟命令面板": false
+    }
+  },
+  "active": "00d3a92fe9d62d8e",
+  "lastOpenFiles": [
+    "libraries/api/src/generate/client.ts",
+    "libraries/api/src/generate/admin.ts",
+    "libraries/api/generate/client.ts",
+    "libraries/api/generate/admin.ts",
+    "libraries/api/generate",
+    "libraries/api/tsconfig.json",
+    "libraries/api/src/generate",
+    "libraries/api/src/generator.ts",
+    "README.md",
+    "libraries/api/README.md",
+    "libraries/api/README 1.md"
+  ]
+}

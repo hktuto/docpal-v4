@@ -52,8 +52,13 @@ export default defineNuxtConfig({
     },
 
       devProxy:{
-        '/api':{
-          target: process.env.PROXY,
+        '/client/api':{
+          target: process.env.CLIENT_PROXY,
+          changeOrigin: true,
+          prependPath: true
+        },
+        '/admin/api':{
+          target: process.env.ADMIN_PROXY,
           changeOrigin: true,
           prependPath: true
         },

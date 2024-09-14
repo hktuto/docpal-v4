@@ -14,12 +14,13 @@
 const props = defineProps<{
     selectedSrc: string
 }>()
+const svgIconList = ref<{name:string, children:{name:string, src:string}[]}[]>([])
 const value = ref()
 import InlineSvg from 'vue-inline-svg';
 
 const _selectSvg = ref(props.selectedSrc)
 const emit = defineEmits(['svg-click', 'update:selectedSrc'])
-const handleSvgClick = (item)=>{
+const handleSvgClick = (item:{src:string})=>{
     _selectSvg.value = item.src
 }
 function getSvg () {
