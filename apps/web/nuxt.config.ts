@@ -13,5 +13,17 @@ export default defineNuxtConfig({
   },
   build:{
     analyze:true
+  },
+  features:{
+    inlineStyles: true,
+  },
+  nitro:{
+    devProxy:{
+      '/api':{
+        target: process.env.CLIENT_PROXY,
+        changeOrigin: true,
+        prependPath: true
+      },
+    }
   }
 })

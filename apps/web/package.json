@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pregenerate":"pnpm -filter api run generate",
     "check": "npx nuxi typecheck",
-    "build": "nuxt build",
-    "dev": "nuxt dev  --dotenv ../../env/.env.dev",
-    "generate": "nuxt generate ",
+    "build": "nuxt build ./web",
+    "dev": "nuxt dev --dotenv ../../env/.env.dev",
+    "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
