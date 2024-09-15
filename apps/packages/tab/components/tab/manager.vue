@@ -10,7 +10,7 @@ const {layout, initLayout, allComponents} = useTabsManager()
 
 function panelTabFocus(panelId:string, tabIndex: number) {
     // step 1 split panelId by -
-    const panel:TabPanelContainer = recursiveGetPanelById(layout.value, panelId)
+    const panel = recursiveGetPanelById(layout.value, panelId) as TabPanelContainer
     if(panel) {
         panel.showingTabIndex = tabIndex
     }
@@ -18,19 +18,14 @@ function panelTabFocus(panelId:string, tabIndex: number) {
 
 function closePanelTab(panelId:string, tabIndex: number) {
     const panel = recursiveGetPanelById(layout.value, panelId)
-    console.log('close Panel', panel.showingTabIndex, tabIndex);
     // remove tab in panel with given tabIndex
     
     panel?.tabs.splice(tabIndex, 1)
-    if(panel?.showingTabIndex === tabIndex) {
-        nextTick(() => {
-            panel.showingTabIndex = 0
-            console.log('close Panel', panel.showingTabIndex, tabIndex);
-        })
-    }
     // check if panel is empty
     if(panel?.tabs.length === 0) {
         console.log('remove panel')
+    } else if(panel?.showingTabIndex === tabIndex) {
+        panel.showingTabIndex = 0;
     }
         
 }

@@ -8,7 +8,7 @@ const counter = ref(0)
     <div class="emptyContainer">
         empty tab can display
         {{ $props.tab }}
-        {{ counter }}
+        local stage : {{ counter }}
         <ElButton @click="() => counter++">add 1</ElButton>
     </div>
 
