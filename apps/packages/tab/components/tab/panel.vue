@@ -21,7 +21,6 @@ const displayTab = ref(panel.tabs[0])
 
 function changeTab(index:number) {
     displayTab.value = panel.tabs[index];
-    panel.showingTabIndex = index;
     tabManger?.panelTabFocus(panel.id, index)
 }
 
@@ -36,6 +35,7 @@ function setUpDrag() {
         <div class="tabHeaderContainer">
             <div v-for="(tab,index) in panel.tabs" :key="tab.id" :class="{tabItem:true, showing:index === panel.showingTabIndex}" @click="changeTab(index)">
                 {{ tab.label }}
+                <ElButton @click="tabManger.closePanelTab(panel.id, index)">Close</ElButton>
             </div>
         </div>
         <div class="tabBody">
