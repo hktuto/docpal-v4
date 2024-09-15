@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { TabPanelContainer } from '../../composables/useTab';
 import {TabManagerKey} from './type'
+import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
+import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge';
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
@@ -16,6 +18,10 @@ const displayTab = ref(panel.tabs[0])
 function changeTab(index:number) {
     displayTab.value = panel.tabs[index];
     tabManger?.panelTabFocus(panel.id, index)
+}
+
+function setUpDrag() {
+    
 }
 
 </script>
