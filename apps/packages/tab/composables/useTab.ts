@@ -1,11 +1,10 @@
 
 import {useState} from '#imports'
-import { tourEmits } from 'element-plus'
-import component from 'element-plus/es/components/tree-select/src/tree-select-option.mjs'
 
 export type TabItem = {
     id:string,
     label: string,
+    parent:string
     component: string
 }
 export type TabPanel = TabItem[] // tab panel container
@@ -18,6 +17,7 @@ export type TabPanelContainer = {
     type: TabType
     minSize?: number,
     maxSize?: number,
+    parent:string
     showingTabIndex?: number
     tabs: TabPanel
 }
@@ -25,6 +25,7 @@ export type TabPanelContainer = {
 export type TabLayout = {
     id: string,
     type: TabType
+    parent:string
     direction: LayoutDirection
     tabs: (TabPanelContainer | TabLayout)[]
 }
@@ -33,12 +34,14 @@ export type TabLayout = {
 export const useTabs = () => useState<TabLayout>(() => ({
     id: "root",
     type: "TabLayout" as TabType,
+    parent: "",
     direction: "vertical" as LayoutDirection,
     tabs: []
 }))
 
 type TabComponent = {
     id:string,
+    parent:string
     teleportId:string,
     component: string
 }
@@ -46,16 +49,19 @@ type TabComponent = {
 export const exampleLayout:TabLayout = {
     id: "root",
     type: "TabLayout" as TabType,
+    parent: "",
     direction: "vertical" as LayoutDirection,
     tabs: [
         {
             id:"l0",
             type: "TabLayout" as TabType,
+            parent: "root",
             direction: "horizontal" as LayoutDirection,
             tabs: [
                 {
                     id: 'l0-0',
                     type: "TabPanel" as TabType,
+                    parent: "l0",
                     showingTabIndex:0,
                     tabs: [
                         {
@@ -73,6 +79,7 @@ export const exampleLayout:TabLayout = {
                 {
                     id:'l0-1',
                     type: "TabLayout" as TabType,
+                    parent: "l0",
                     direction: "vertical" as LayoutDirection,
                     tabs: [
                         {
@@ -95,15 +102,18 @@ export const exampleLayout:TabLayout = {
             id:"l1",
             type: "TabPanel" as TabType,
             showingTabIndex:0,
+            parent: "root",
             tabs: [
                 {
                     id:'demo',
                     label:"demo1",
+                    parent: "l1",
                     component: 'LazyTabEmpty'
                 },
                 {
                     id:'demo2',
                     label:"demo2",
+                    parent: "l1",
                     component: 'LazyTabEmpty'
                 }
             ]
@@ -111,11 +121,13 @@ export const exampleLayout:TabLayout = {
         { 
             id:"l2",
             type: "TabPanel" as TabType,
+            parent: "root",
             showingTabIndex:0,
             tabs: [
                 {
                     id:'demo3',
                     label:"demo3",
+                    parent: "l2",
                     component: 'LazyTabEmpty'
                 }
             ]
@@ -128,6 +140,7 @@ export const useTabsManager = () => {
     const layout = ref<TabLayout>({
         id: "root",
         type: "TabLayout" as TabType,
+        parent: "",
         direction: "vertical" as LayoutDirection,
         tabs: []
     })
@@ -138,7 +151,6 @@ export const useTabsManager = () => {
         layout.value = {...newLayout}
         nextTick(() => {
             allComponents.value = recursiveLoopLayout(newLayout, [])
-            console.log("initLayout", allComponents.value)
         })
         // loop thought layout and push all components
         
@@ -160,34 +172,10 @@ function recursiveLoopLayout(layout:TabLayout, components:TabComponent[]) {
             } else if(tab.type === 'TabPanel') {
                 const tabPanel = tab as TabPanelContainer
                 tabPanel.tabs.forEach( (component, index) => {
-                    allComponents.push({id:component.id, teleportId:'#'+tabPanel.id+'-'+component.id, component: component.component})
+                    allComponents.push({id:component.id, parent:component.parent, teleportId:'#'+tabPanel.id+'-'+component.id, component: component.component})
                 })
             }
         })
     }
     return allComponents
-}
-
-export function recursiveGetPanelById(layout:TabLayout, panelId:string):TabPanelContainer | null {
-    if(layout.id === panelId) {
-        return layout
-    }
-    if (layout.tabs) {
-        for (let i = 0; i < layout.tabs.length; i++) {
-            if(layout.tabs[i].type === 'TabLayout') {
-                let found:any = recursiveGetPanelById((layout.tabs[i] as TabLayout), panelId)
-                if(found) {
-                    return found
-                }
-            } else {
-                const tabPanel = layout.tabs[i] as TabPanelContainer
-                if(tabPanel.id === panelId) {
-                    return tabPanel
-                }
-            }
-        }
-    }
-
-    return null;
-    
 }

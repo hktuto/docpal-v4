@@ -13,15 +13,19 @@ if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
 
-const { panel } = defineProps<{
+const {panel} = defineProps<{
     panel: TabPanelContainer
 }>()
 
 const displayTab = ref(panel.tabs[0])
 
 function changeTab(index:number) {
-    displayTab.value = panel.tabs[index];
+    // displayTab.value = panel.tabs[index];
     tabManger?.panelTabFocus(panel.id, index)
+}
+
+function closeTab(index:number) {
+    tabManger?.closePanelTab(panel.id, index)
 }
 
 function setUpDrag() {
@@ -32,13 +36,17 @@ function setUpDrag() {
 
 <template>
     <div class="tabContainer">
+
+        
         <div class="tabHeaderContainer">
             <div v-for="(tab,index) in panel.tabs" :key="tab.id" :class="{tabItem:true, showing:index === panel.showingTabIndex}" @click="changeTab(index)">
                 {{ tab.label }}
-                <ElButton @click="tabManger.closePanelTab(panel.id, index)">Close</ElButton>
+                <ElButton @click="closeTab(index)">Close</ElButton>
             </div>
         </div>
         <div class="tabBody">
+            {{ panel.tabs  }}
+            {{ panel.showingTabIndex }}
             <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex">
             </div>
             <!-- <component :is="resolveComponent(displayTab.component)" :tab="displayTab" /> -->
