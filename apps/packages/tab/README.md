@@ -3,12 +3,13 @@
 this package is to manage multiple tabs
 
 ### Tasks
-- [ ] render multiple splitpanes
-- [ ] display tab in splitpanes
+- [x] render multiple splitpanes
+- [x] display tab in splitpanes
 - [ ] remove tab action ( notify manager if no tabs and change layout)
 - [ ] drag and drop tabs between tab
 - [ ] drag and drop tabs between layout
 - [ ] render custom component in tabpanel
+- [ ] test scroll in tab
 
 ### Component 結構 
 
