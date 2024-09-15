@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-import {TabManagerKey} from './type'
 const props = defineProps<{tab: TabItem}>()
 
+const counter = ref(0)
 
 </script>
 <template>
     <div class="emptyContainer">
         empty tab can display
         {{ $props.tab }}
+        {{ counter }}
+        <ElButton @click="() => counter++">add 1</ElButton>
     </div>
 
 </template>

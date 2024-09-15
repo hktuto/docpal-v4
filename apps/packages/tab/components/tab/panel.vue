@@ -3,6 +3,10 @@ import type { TabPanelContainer } from '../../composables/useTab';
 import {TabManagerKey} from './type'
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { reorderWithEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/util/reorder-with-edge';
+import {
+  draggable,
+  dropTargetForElements,
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
@@ -17,11 +21,12 @@ const displayTab = ref(panel.tabs[0])
 
 function changeTab(index:number) {
     displayTab.value = panel.tabs[index];
+    panel.showingTabIndex = index;
     tabManger?.panelTabFocus(panel.id, index)
 }
 
 function setUpDrag() {
-    
+
 }
 
 </script>
@@ -34,8 +39,9 @@ function setUpDrag() {
             </div>
         </div>
         <div class="tabBody">
-            {{ displayTab }}
-            <component :is="resolveComponent(displayTab.component)" :tab="displayTab" />
+            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex">
+            </div>
+            <!-- <component :is="resolveComponent(displayTab.component)" :tab="displayTab" /> -->
         </div>
     </div>
 </template>
@@ -69,7 +75,7 @@ function setUpDrag() {
     grid-template-rows: min-content 1fr;
 
 }
-.tabBody{
+.tabBody, .tabContent{
     width:100%;
     height:100%;
     overflow: auto;
