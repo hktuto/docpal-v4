@@ -2,7 +2,7 @@
 import type {TabPanelContainer, TabLayout} from '#imports'
 import {TabManagerKey} from './type'
 
-import { useTabs, provide, useTabsManager, exampleLayout } from '#imports'
+import { useTabs, provide, useTabsManager, exampleLayout, recursiveGetPanelById } from '#imports'
 import 'splitpanes/dist/splitpanes.css'
 
 
@@ -10,24 +10,34 @@ const {layout, initLayout, allComponents} = useTabsManager()
 
 function panelTabFocus(panelId:string, tabIndex: number) {
     // step 1 split panelId by -
-    const ids = panelId.split('-')
-    // step 2 loop through ids and find the panel
-    // remark first level do not require id;
-    let temPanel:any
-    ids.forEach(id => {
-        if(!temPanel) {
-            temPanel = layout.value.tabs.find((tab:any) => tab.id === id)
-        } else {
-            temPanel = temPanel.tabs.find((tab:any) => tab.id === id)
-        }
-    })
-    if(temPanel){
-        temPanel.showingTabIndex = tabIndex
+    const panel:TabPanelContainer = recursiveGetPanelById(layout.value, panelId)
+    if(panel) {
+        panel.showingTabIndex = tabIndex
     }
+}
+
+function closePanelTab(panelId:string, tabIndex: number) {
+    const panel = recursiveGetPanelById(layout.value, panelId)
+    console.log('close Panel', panel.showingTabIndex, tabIndex);
+    // remove tab in panel with given tabIndex
+    
+    panel?.tabs.splice(tabIndex, 1)
+    if(panel?.showingTabIndex === tabIndex) {
+        nextTick(() => {
+            panel.showingTabIndex = 0
+            console.log('close Panel', panel.showingTabIndex, tabIndex);
+        })
+    }
+    // check if panel is empty
+    if(panel?.tabs.length === 0) {
+        console.log('remove panel')
+    }
+        
 }
 
 provide(TabManagerKey, {
     panelTabFocus,
+    closePanelTab
 })
 
 onMounted(() => {

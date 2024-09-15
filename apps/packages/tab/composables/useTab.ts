@@ -167,3 +167,27 @@ function recursiveLoopLayout(layout:TabLayout, components:TabComponent[]) {
     }
     return allComponents
 }
+
+export function recursiveGetPanelById(layout:TabLayout, panelId:string):TabPanelContainer | null {
+    if(layout.id === panelId) {
+        return layout
+    }
+    if (layout.tabs) {
+        for (let i = 0; i < layout.tabs.length; i++) {
+            if(layout.tabs[i].type === 'TabLayout') {
+                let found:any = recursiveGetPanelById((layout.tabs[i] as TabLayout), panelId)
+                if(found) {
+                    return found
+                }
+            } else {
+                const tabPanel = layout.tabs[i] as TabPanelContainer
+                if(tabPanel.id === panelId) {
+                    return tabPanel
+                }
+            }
+        }
+    }
+
+    return null;
+    
+}
