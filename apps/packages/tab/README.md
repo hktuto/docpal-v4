@@ -35,3 +35,24 @@ flowchart TB;
 
 ```
 
+# 留意
+Global Component 不能 deconstruct props
+
+這是不可以的
+```ts
+const { tab} = defineProps<{tab:any}>()
+```
+只能這樣
+```ts
+const props = defineProps<{tab:any}>()
+```
+
+### Global Component 測試
+
+- [x] provide inject
+- [x] api 會不會增加 import 大小 ( 不會，api 只會異部加載)
+
+
+
+
+
