@@ -10,7 +10,9 @@ this package is to manage multiple tabs
 - [ ] drag and drop tabs between layout
 - [ ] render custom component in tabpanel
 - [ ] test scroll in tab
-
+- [ ] Handle component is not define
+- [ ] config container query ( responsive )
+- [ ] test will move component unmount when move drag ( may need to use teleport)
 ### Component 結構 
 
 ```mermaid
