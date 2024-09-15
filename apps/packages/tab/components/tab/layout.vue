@@ -3,7 +3,7 @@ import type {TabLayout, TabPanelContainer} from '#imports'
 import { Splitpanes, Pane } from 'splitpanes'
 
 
-const { layout } = defineProps<{
+const props = defineProps<{
     layout: TabLayout
 }>()
 
@@ -20,5 +20,9 @@ const { layout } = defineProps<{
             </template>
         </Pane>
     </splitpanes>
-
+    
 </template>
+
+<style>
+
+</style>
