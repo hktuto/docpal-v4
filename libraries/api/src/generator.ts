@@ -1,6 +1,7 @@
 import path from "node:path";
 import { generateApi } from "swagger-typescript-api";
 import dotenv from 'dotenv'
+
 dotenv.config({
     path:'../../env/.env.dev'
 })
@@ -12,16 +13,26 @@ const endpoint = [
 ]
 
 async function generate(){
-    endpoint.map( point => generateApi({
-        name: point.name + '.ts',
-        output: path.resolve(process.cwd(), "./src/generate"),
-        url: point.url,
-        httpClientType: "axios",
-        generateClient:true,
-        unwrapResponseData:true,
-        apiClassName: point.className,
-        singleHttpClient:false,
-    }))
+    try{
+        
+    const promise = await Promise.all(
+        endpoint.map( 
+            point => generateApi({
+                name: point.name + '.ts',
+                output: path.resolve(process.cwd(), "./src/generate"),
+                url: point.url,
+                httpClientType: "axios",
+                generateClient:true,
+                unwrapResponseData:true,
+                apiClassName: point.className,
+                singleHttpClient:false,
+            }
+            )
+        )
+    )
+    }catch(error) {
+        console.log(error)
+    }
 }
 
 

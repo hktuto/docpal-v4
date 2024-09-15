@@ -1,0 +1,55 @@
+{
+  "name": "apps",
+  "version": "1.0.0",
+  "description": "all DocPal module entry",
+  "main": "index.js",
+  "scripts": {
+    "web:check": "npx nuxi typecheck ./web",
+    "web:build": "nuxt build ./web",
+    "web:dev": "nuxt dev ./web --dotenv ../../env/.env.dev",
+    "web:generate": "nuxt generate ./web",
+    "web:preview": "nuxt preview ./web",
+    "web:prepare": "nuxt prepare ./web",
+    "public:check": "npx nuxi typecheck ./public",
+    "public:build": "nuxt build ./public",
+    "public:dev": "nuxt dev ./public --dotenv ../../env/.env.dev",
+    "public:generate": "nuxt generate ./public",
+    "public:preview": "nuxt preview ./public",
+    "public:prepare": "nuxt prepare ./public",
+    "postinstall": "npm run web:prepare && npm run public:prepare"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.3.0",
+    "@element-plus/nuxt": "^1.0.10",
+    "@nuxtjs/i18n": "^8.5.3",
+    "element-plus": "^2.8.2",
+    "keycloak-js": "^25.0.4",
+    "nuxt": "^3.13.0",
+    "nuxt-auth-utils": "^0.3.7",
+    "nuxt-authorization": "^0.1.0",
+    "splitpanes": "^3.1.5",
+    "vue": "latest",
+    "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.14.1",
+    "@nuxtjs/color-mode": "^3.5.1",
+    "@types/splitpanes": "^2.2.6",
+    "@vue/test-utils": "^2.4.6",
+    "api": "workspace:*",
+    "happy-dom": "^15.7.3",
+    "playwright-core": "^1.47.0",
+    "sass": "^1.78.0",
+    "typescript": "^5.6.2",
+    "vitest": "^2.0.5",
+    "vue-inline-svg": "^3.1.3",
+    "vue-tsc": "^2.1.6"
+  },
+  "engines": {
+    "pnpm": ">=8.5.0",
+    "node": ">=20.0.0"
+  }
+}

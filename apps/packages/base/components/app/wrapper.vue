@@ -9,14 +9,8 @@
             <slot name="sidebar"></slot>
         </div>
         <div class="appMainContainer">
-            <div class="appHeader">
-                <slot name="header"></slot>
-            </div>
             <div class="appContent">
                 <slot />
-            </div>
-            <div class="appFooter">
-                <slot name="footer"></slot>
             </div>
         </div>
     </div>
@@ -35,9 +29,16 @@
     padding: var(--app-space-s);
 }
 .appMainContainer{
-    border-radius: var(--app-border-radius-l);
     background-color: var(--app-grey-900);
     box-shadow: var(--app-shadow-l);
+    border-radius: var(--app-border-radius-m);
+    overflow: hidden;
+    height:100%;
+}
+.appContent{
+    height: 100%;
+    width:100%;
+    position: relative;
     overflow: hidden;
 }
 </style>

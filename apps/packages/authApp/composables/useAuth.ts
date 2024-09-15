@@ -19,10 +19,9 @@ export const useIsLDAP = () => useState<boolean>(() => false);
 export const useAuth = () => {
     const authReadyState = useAuthReadyState()
     const userState = useUserState()
-    const loggedIn = computed(() => Boolean(userState.value))
 
     return {
-        loggedIn ,
+        loggedIn :computed(() => Boolean(userState.value)),
         logout,
         fetch,
         ready : computed(() => authReadyState.value)
@@ -57,10 +56,9 @@ export async function fetch() {
         isSSO.value = !!data?.keyCloakProperty?.enableSSO
         isLDAP.value = !!data?.isLdap
     }
-    const authenticated = await keyCloakState.value.init({
+    await keyCloakState.value.init({
         onLoad:'login-required'
     })
-    console.log("authenticated", authenticated)
     keyCloakState.value.updateToken(10)
     localStorage.setItem('access_token', keyCloakState.value.token || "");
     const {data} = await clientApi.api.verifyKeycloakToken()
@@ -75,5 +73,11 @@ export async function fetch() {
     }
 }
 export function logout() {
+    const keyCloakState = useKeyCloakState()
 
+    const userState = useUserState()
+    keyCloakState.value?.logout()
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
+    userState.value = null;
 }
