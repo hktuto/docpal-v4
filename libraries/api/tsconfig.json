@@ -1,9 +1,11 @@
 {
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "moduleResolution": "node"
-    },
-    "include": ["/**/*.ts"],
-    "exclude": ["node_modules"],
-    "extends": "../../apps/web/.nuxt/tsconfig.json"
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "verbatimModuleSyntax":false
+    // other options
+  },
+    "extends": "../../apps/web/.nuxt/tsconfig.json",
 }
+

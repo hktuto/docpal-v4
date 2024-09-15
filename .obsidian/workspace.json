@@ -11,8 +11,12 @@
             "id": "88f20bfb5bb7a301",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {}
+              "type": "markdown",
+              "state": {
+                "file": "apps/packages/tab/README.md",
+                "mode": "source",
+                "source": false
+              }
             }
           }
         ]
@@ -81,6 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "apps/packages/tab/README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,6 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "apps/packages/tab/README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -118,7 +124,9 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {}
+              "state": {
+                "file": "apps/packages/tab/README.md"
+              }
             }
           }
         ]
@@ -140,10 +148,12 @@
   },
   "active": "88f20bfb5bb7a301",
   "lastOpenFiles": [
+    "apps/packages/tab/components/tab/empty.global.vue",
+    "apps/packages/tab/components/tab/empty.vue",
+    "apps/packages/base/README.md",
     "apps/packages/browse/Browse Migration task.md",
     "README.md",
     "apps/packages/authApp/README.md",
-    "apps/packages/base/README.md",
     "apps/packages/canvasTable",
     "libraries/api/README.md",
     "apps/packages/browse",
@@ -154,7 +164,6 @@
     "apps/web/node_modules/@nuxtjs",
     "apps/web/node_modules/@vue",
     "apps/web/node_modules/@nuxt",
-    "apps/web/package.json",
     "libraries/api/README 1.md"
   ]
 }

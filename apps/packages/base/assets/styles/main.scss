@@ -5,19 +5,29 @@
   --app-main-color: #15d5b9;
   --app-accent-color: #0077ff;
   // generate grey color in 5 levels
-  --app-grey-hue: 160;
+  --app-grey-hue: 200;
   --app-grey-saturation: 15%;
   --app-grey-000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 0%);
+  --app-grey-050: hsl(var(--app-grey-hue) var(--app-grey-saturation) 5%);
   --app-grey-100: hsl(var(--app-grey-hue) var(--app-grey-saturation) 10%);
+  --app-grey-150: hsl(var(--app-grey-hue) var(--app-grey-saturation) 15%);
   --app-grey-200: hsl(var(--app-grey-hue) var(--app-grey-saturation) 20%);
+  --app-grey-250: hsl(var(--app-grey-hue) var(--app-grey-saturation) 25%);
   --app-grey-300: hsl(var(--app-grey-hue) var(--app-grey-saturation) 30%);
+  --app-grey-350: hsl(var(--app-grey-hue) var(--app-grey-saturation) 35%);
   --app-grey-400: hsl(var(--app-grey-hue) var(--app-grey-saturation) 40%);
+  --app-grey-450: hsl(var(--app-grey-hue) var(--app-grey-saturation) 45%);
   --app-grey-500: hsl(var(--app-grey-hue) var(--app-grey-saturation) 50%);
+  --app-grey-550: hsl(var(--app-grey-hue) var(--app-grey-saturation) 55%);
   --app-grey-600: hsl(var(--app-grey-hue) var(--app-grey-saturation) 60%);
+  --app-grey-650: hsl(var(--app-grey-hue) var(--app-grey-saturation) 65%);
   --app-grey-700: hsl(var(--app-grey-hue) var(--app-grey-saturation) 70%);
-  --app-grey-800: hsl(var(--app-grey-hue) var(--app-grey-saturation) 85%);
-  --app-grey-900: hsl(var(--app-grey-hue) var(--app-grey-saturation) 94%);
-  --app-grey-1000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 98%);
+  --app-grey-750: hsl(var(--app-grey-hue) var(--app-grey-saturation) 75%);
+  --app-grey-800: hsl(var(--app-grey-hue) var(--app-grey-saturation) 80%);
+  --app-grey-850: hsl(var(--app-grey-hue) var(--app-grey-saturation) 85%);
+  --app-grey-900: hsl(var(--app-grey-hue) var(--app-grey-saturation) 90%);
+  --app-grey-950: hsl(var(--app-grey-hue) var(--app-grey-saturation) 95%);
+  --app-grey-1000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 100%);
   // generate white and black color
   --app-white: #fff;
   --app-black: #000;

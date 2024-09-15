@@ -1,0 +1,28 @@
+import {useNuxtApp, defineI18nLocale} from '#imports'
+import { clientApi } from "api"
+
+export default defineI18nLocale(async(locale:string) => {
+    const config  = useRuntimeConfig()
+    console.log(config.public)
+    if(config.public.needAuth){
+        // @ts-ignore
+        const { loggedIn } = useAuth()
+        if(!loggedIn.value){
+            return {
+                loading: "Loading...",
+                'en-US':"ENG",
+                'zh-CN':'簡',
+                'zh-HK':"繁"
+            }
+        }
+    }   
+    // for example, fetch locale messages from nuxt server
+    const {data} = await clientApi.api.queryLanguage({
+        locale:locale,
+        languageKey:'client'
+    })
+    if(data && data.length > 0 && data[0].languageContent) {
+        return JSON.parse(data[0]?.languageContent)
+    }
+    return {}
+  })

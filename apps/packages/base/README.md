@@ -2,11 +2,12 @@
 
 this package contain all non auth depend package
 
-- i18n
-- colorMode
-- element-plus ui
-- scss style 
+- [x] i18n
+- [ ] colorMode
+- [x] element-plus ui
+- [x] scss style 
+- [ ] [[apps/packages/tab/README|Tab System]]
 - base components
-    - app wrapper
-    - loading bg
-    - svg icons 
+    - [x] app wrapper
+    - [ ] loading bg
+    - [x] svg icons 
