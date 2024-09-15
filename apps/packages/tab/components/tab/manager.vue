@@ -1,18 +1,33 @@
 <script setup lang="ts">
 import type {TabPanelContainer, TabLayout} from '#imports'
+import {TabManagerKey} from './type'
+
 import { useTabs, provide } from '#imports'
 import 'splitpanes/dist/splitpanes.css'
 
 
 const layout = useTabs()
 
-function panelFocus(id:string) {
-
+function panelTabFocus(panelId:string, tabIndex: number) {
+    // step 1 split panelId by -
+    const ids = panelId.split('-')
+    // step 2 loop through ids and find the panel
+    // remark first level do not require id;
+    let temPanel:any
+    ids.forEach(id => {
+        if(!temPanel) {
+            temPanel = layout.value.tabs.find((tab:any) => tab.id === id)
+        } else {
+            temPanel = temPanel.tabs.find((tab:any) => tab.id === id)
+        }
+    })
+    if(temPanel){
+        temPanel.showingTabIndex = tabIndex
+    }
 }
 
-provide('tabManager', {
-    panelFocus,
-
+provide(TabManagerKey, {
+    panelTabFocus,
 })
 </script>
 

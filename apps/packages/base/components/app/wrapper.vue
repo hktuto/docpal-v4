@@ -29,9 +29,11 @@
     padding: var(--app-space-s);
 }
 .appMainContainer{
-    background-color: var(--app-grey-900);
+    --container-radius: var(--app-border-radius-m);
+    --container-padding: 0px;
+    background-color: var(--app-grey-850);
     box-shadow: var(--app-shadow-l);
-    border-radius: var(--app-border-radius-m);
+    border-radius: var(--container-radius);
     overflow: hidden;
     height:100%;
 }

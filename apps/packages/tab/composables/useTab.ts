@@ -6,7 +6,6 @@ import component from 'element-plus/es/components/tree-select/src/tree-select-op
 export type TabItem = {
     id:string,
     label: string,
-    isSelected: boolean,
     component: string
 }
 export type TabPanel = TabItem[] // tab panel container
@@ -19,6 +18,7 @@ export type TabPanelContainer = {
     type: TabType
     minSize?: number,
     maxSize?: number,
+    showingTabIndex: number
     tabs: TabPanel
 }
 
@@ -39,11 +39,16 @@ export const useTabs = () => useState<TabLayout>(() => ({
        { 
             id:"default",
             type: "TabPanel" as TabType,
+            showingTabIndex:0,
             tabs: [
                 {
                     id:'demo',
-                    label:"demo",
-                    isSelected: true,
+                    label:"demo1",
+                    component: 'LazyTabEmpty'
+                },
+                {
+                    id:'demo2',
+                    label:"demo2",
                     component: 'LazyTabEmpty'
                 }
             ]
@@ -51,11 +56,11 @@ export const useTabs = () => useState<TabLayout>(() => ({
         { 
             id:"default2",
             type: "TabPanel" as TabType,
+            showingTabIndex:0,
             tabs: [
                 {
-                    id:'demo',
-                    label:"demo",
-                    isSelected: true,
+                    id:'demo3',
+                    label:"demo3",
                     component: 'LazyTabEmpty'
                 }
             ]

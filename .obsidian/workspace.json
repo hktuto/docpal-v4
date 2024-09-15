@@ -148,6 +148,8 @@
   },
   "active": "88f20bfb5bb7a301",
   "lastOpenFiles": [
+    "apps/packages/tab/components/tab/type.ts",
+    "apps/packages/tab/components/tab/manager.ts",
     "apps/packages/tab/components/tab/empty.global.vue",
     "apps/packages/tab/components/tab/empty.vue",
     "apps/packages/base/README.md",
@@ -162,8 +164,6 @@
     "apps/packages/authApp/error.vue",
     "apps/web/node_modules/@element-plus",
     "apps/web/node_modules/@nuxtjs",
-    "apps/web/node_modules/@vue",
-    "apps/web/node_modules/@nuxt",
     "libraries/api/README 1.md"
   ]
 }
