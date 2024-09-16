@@ -140,9 +140,9 @@ function closeTab(){
             <!-- <div class="gripIcon">
                 <Icon class="" name="lucide:grip-vertical" />
             </div> -->
-            <div class="icon">
+            <!-- <div class="icon">
                 {{ tab.icon }}
-            </div>
+            </div> -->
             <div class="label">
                 {{ tab.label }}
             </div>

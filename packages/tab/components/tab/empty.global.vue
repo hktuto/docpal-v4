@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const props = defineProps<{tab: TabItem}>()
+const props = defineProps<{tab: any}>()
 
 const counter = ref(0)
 

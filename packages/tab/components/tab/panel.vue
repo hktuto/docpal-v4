@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TabPanelContainer } from './type';
+import type { TabPanelContainer, TabItem } from './type';
 import {TabManagerKey} from './type'
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
@@ -13,7 +13,7 @@ if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
 
-function getTabData(panel: TabItem) {
+function getTabData(panel: any) {
   return { [(tabManger as any).tabDataKey]: true, tabId: panel.id, data:panel };
 }
 
@@ -29,7 +29,7 @@ const {panel} = defineProps<{
 
 const elRef = ref()
 const state = ref<'idle' | 'is-dragging-over'>('idle')
-const closeEdge = ref('')
+const closeEdge = ref<string | null>()
 let cleanup = () => { }
 onMounted(() => {
     if(!elRef.value) return
@@ -105,7 +105,7 @@ onUnmounted(() => {
         <TabHeaderList :panel="panel"/>
         
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
-                tabBody:true, [state]:true, [closeEdge]:true
+                tabBody:true, [state]:true, [closeEdge as string]:true
             }">
             <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex">
             </div>
