@@ -4,7 +4,6 @@ import { clientApi } from 'api'
 
 export default defineI18nLocale(async(locale:string) => {
     const config  = useRuntimeConfig()
-    console.log(config.public)
     if(config.public.needAuth ){
         // @ts-ignore
         const { loggedIn } = useAuth()

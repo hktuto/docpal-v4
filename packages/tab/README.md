@@ -5,12 +5,12 @@ this package is to manage multiple tabs
 ### Tasks
 - [x] render multiple splitpanes
 - [x] display tab in splitpanes
-- [ ] remove tab action ( notify manager if no tabs and change layout)
-- [ ] drag and drop tabs between tab
-- [ ] drag and drop tabs between layout
-- [ ] render custom component in tabpanel
+- [x] remove tab action ( notify manager if no tabs and change layout)
+- [x] drag and drop tabs between tab
+- [x] drag and drop tabs between layout
+- [x] render custom component in tabpanel
 - [ ] test scroll in tab
-- [ ] Handle component is not define
+- [x] Handle component is not define
 - [ ] config container query ( responsive )
 - [ ] test will move component unmount when move drag ( may need to use teleport)
 ### Component 結構 
