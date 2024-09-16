@@ -142,6 +142,8 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
         const newItemIndex = direction === 'left' || direction === 'top' ? targetIndex  : targetIndex + 1
         targetParent?.tabs.splice(newItemIndex, 0 , newData)
 
+    } else {
+        // need to create new layout
     }
     
 
