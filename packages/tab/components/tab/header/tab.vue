@@ -60,7 +60,7 @@ function closeTab(){
             <div class="label">
                 {{ tab.label }}
             </div>
-        <div @click.stop="closeTab">X</div>
+            <Icon name="material-symbols:close-small-outline-rounded" @click.stop="closeTab"></Icon>
     </div>
 </div>
 
@@ -75,8 +75,13 @@ function closeTab(){
     border-top-right-radius: var(--item-radius);
     cursor: pointer;
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
     flex-flow: row nowrap;
     gap: var(--app-space-s);
+    .iconify{
+        font-size: var(--app-font-size-m);
+    }
     &:hover {
         background: var(--app-grey-900);
     }

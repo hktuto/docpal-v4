@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
-    '@nuxtjs/color-mode'
+    '@nuxtjs/color-mode',
+    '@nuxt/icon',
   ],
   css:[
     '../assets/styles/main.scss'
