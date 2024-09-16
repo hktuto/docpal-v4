@@ -8,19 +8,19 @@ import {dropTargetForElements} from '@atlaskit/pragmatic-drag-and-drop/element/a
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 
 
-const tabManger = inject(TabManagerKey)
-if(!tabManger) {
+const tabManager = inject(TabManagerKey)
+if(!tabManager) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
 
 function getTabData(panel: any) {
-  return { [(tabManger as any).tabDataKey]: true, tabId: panel.id, data:panel };
+  return { [(tabManager as any).tabDataKey]: true, tabId: panel.id, data:panel };
 }
 
 function isTabData(
   data: Record<string | symbol, unknown>,
 ):boolean {
-  return data[(tabManger as any).tabDataKey] === true;
+  return data[(tabManager as any).tabDataKey] === true;
 }
 
 const {panel} = defineProps<{
@@ -43,6 +43,9 @@ onMounted(() => {
                 const sourceData = source.data as any
                 const targetData = target.data as any
                 console.log(targetData)
+                const closestEdgeOfTarget = extractClosestEdge(targetData)
+                if(!closestEdgeOfTarget) return
+                tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
             }
         }),
         dropTargetForElements({
@@ -71,7 +74,6 @@ onMounted(() => {
                 const closestEdge = extractClosestEdge(self.data)
                 state.value = 'is-dragging-over'
                 closeEdge.value = closestEdge
-                console.log("onDragEnter", self)
                 // elState.value = { type: 'is-dragging-over', closestEdge }
             },
             onDrag({ self, location }) {

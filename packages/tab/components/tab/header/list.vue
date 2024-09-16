@@ -51,12 +51,25 @@ onUnmounted(() => {
     cleanup()
 })
 
+function newTab() {
+    const newData:TabItem = {
+        id:'newTab-' + new Date().getTime(),
+        label: "New Tab",
+        parent: panel.id,
+        component: 'LazyTabEmpty'
+    }
+    tabManger?.addTabToPanel(panel.id, newData)
+}
+
 
 </script>
 
 <template>
     <div class="tabHeaderContainer">
         <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :index="index" :selected="index === panel.showingTabIndex" />
+        <div class="newTabButtonContainer">
+            <Icon name="lucide:plus" @click.stop="newTab" />
+        </div>
     </div>
 </template>
 
@@ -69,7 +82,9 @@ onUnmounted(() => {
     overflow-y:hidden ;
     isolation: isolate;
     position: relative;
-    background: var(--app-grey-900);
+    // background: var(--app-grey-900);
+    justify-content: flex-start;
+    align-items: center;
     &:after {
         content: '';
         height: 1px;
@@ -82,5 +97,7 @@ onUnmounted(() => {
         bottom: 0;
     }
 }
-
+.newTabButtonContainer{
+    padding-left: var(--app-space-xs);
+}
 </style>
