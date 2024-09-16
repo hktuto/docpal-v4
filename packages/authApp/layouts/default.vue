@@ -10,7 +10,7 @@
                     header
                 </template>
                 <template #default>
-                    <slot />
+                    <TabManage />
                 </template>
             </AppWrapper>
         </template>

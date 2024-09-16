@@ -1,4 +1,4 @@
-import { TabLayout, TabPanelContainer } from './../composables/useTab';
+import type { TabLayout, TabPanelContainer } from './../components/tab/type';
 
 export function recursiveGetPanelById(layout:TabLayout|TabPanelContainer, panelId:string):TabPanelContainer | null {
     if(layout.id === panelId) {
