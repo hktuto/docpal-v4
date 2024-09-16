@@ -26,13 +26,13 @@
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
     background-color: var(--app-grey-800);
-    padding: var(--app-space-s);
+    padding: var(--app-space-xs);
 }
 .appMainContainer{
-    --container-radius: var(--app-border-radius-m);
+    --container-radius: var(--app-border-radius-l);
     --container-padding: 0px;
     background-color: var(--app-grey-850);
-    box-shadow: var(--app-shadow-l);
+    box-shadow: var(--app-shadow-xl);
     border-radius: var(--container-radius);
     overflow: hidden;
     height:100%;
@@ -42,5 +42,8 @@
     width:100%;
     position: relative;
     overflow: hidden;
+}
+.appSidebar{
+    padding-inline: var(--app-space-s);
 }
 </style>

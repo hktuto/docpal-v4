@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {TabItem, TabPanelContainer} from './type'
+import type {TabItem, TabPanelContainer, TabLayout} from './type'
 import {TabManagerKey, } from './type'
 
 import { provide, useTabsManager, exampleLayout, recursiveGetPanelById } from '#imports'
@@ -12,8 +12,7 @@ function panelTabFocus(panelId:string, tabIndex: number) {
     // step 1 split panelId by -
     const panel = recursiveGetPanelById(layout.value, panelId) as TabPanelContainer
     if(panel) {
-        panel.showingTabIndex = tabIndex
-        console.log("panelTabFocus", panel)
+        panel.showingTabIndex = tabIndex;
     }
 }
 
@@ -53,7 +52,7 @@ function closePanelTab(panelId:string, tabIndex: number, deleteComponent = true)
             //     if(panelIndex !== -1) parent.tabs.splice(panelIndex, 1)
             //     // check parent
             // }
-        } else if(panel.showingTabIndex === tabIndex) {
+        } else if((panel as TabPanelContainer).showingTabIndex === tabIndex) {
             panelTabFocus(panelId, 0)
         }
     }
@@ -79,7 +78,7 @@ function reorderWithEdge( parent : TabPanelContainer, sourceData:TabItem, target
 
 function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 'left' | 'right') {
     
-    // get target parnet
+    // get target parent
     const sourceParent = recursiveGetPanelById(layout.value, sourceData.parent)
     if(!sourceParent)return
     
@@ -87,7 +86,7 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
     if(!targetParent)return
     // if source and target is the same panel, move source to target
     if(sourceData.parent === targetData.parent) {
-        reorderWithEdge(sourceParent, sourceData, targetData, direction)
+        reorderWithEdge((sourceParent as TabPanelContainer ), sourceData, targetData, direction)
         return
     }
     // if source and target is not the same panel, move source to target
@@ -113,31 +112,124 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
 
 }
 
-provide(TabManagerKey, {
-    panelTabFocus,
-    closePanelTab,
-    moveTabBetweenPanel,
-    tabDataKey
-})
+function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, direction: 'top' | 'bottom' | 'left' | 'right') {
+    const sourceParent = recursiveGetPanelById(layout.value, sourceData.parent)
+    if(!sourceParent)return
+    
+    const targetParent = recursiveGetPanelById(layout.value, targetData.parent)
+    if(!targetParent )return
+
+    const sourceIndex = sourceParent.tabs.findIndex((tabItem) => tabItem.id === sourceData.id);
+    closePanelTab(sourceData.parent, sourceIndex, false)
+    console.log(direction, targetParent)
+    // check if targetParentLayout direction match new direction
+    if(
+        ((targetParent as TabLayout).direction === 'vertical' && (direction == 'left' || direction === 'right')) ||
+        ((targetParent as TabLayout).direction === 'horizontal' && (direction == 'top' || direction === 'bottom'))
+    ) {
+        const newPanelId = "newPanel-" + new Date().getTime()
+        const newData:TabPanelContainer = {
+            id: newPanelId,
+            type: "TabPanel",
+            parent: targetParent.id,
+            showingTabIndex: 0,
+            tabs: [{
+                ...sourceData,
+                parent: newPanelId,
+            }]
+        }
+        const targetIndex = targetParent.tabs.findIndex((tabItem:any) => tabItem.id === targetData.id);
+        const newItemIndex = direction === 'left' || direction === 'top' ? targetIndex  : targetIndex + 1
+        targetParent?.tabs.splice(newItemIndex, 0 , newData)
+
+    }
+    
+
+}
+
+function addTabToPanel(panelId:string, newTab: TabItem ) {
+    const parent = recursiveGetPanelById(layout.value, panelId);
+    if(!parent) return
+    (parent as TabPanelContainer).tabs.push(newTab)
+    panelTabFocus(panelId, parent.tabs.length - 1)
+    nextTick(() => {
+        allComponents.value.push({
+            ...newTab,
+            teleportId: newTab.parent + '-' + newTab.id
+        })
+    })
+}
+
+
+
+provide(
+    TabManagerKey, 
+    {
+        panelTabFocus,
+        closePanelTab,
+        moveTabBetweenPanel,
+        addTabToPanel,
+        splitViewToDirection,
+        tabDataKey
+    }
+)
+
+const loading = ref(false);
+async function getTabsFromServer() {
+    loading.value = true;
+    const storageTabs = localStorage.getItem('app-tab')
+    if(storageTabs) {
+        const newLayout = JSON.parse(storageTabs);
+        initLayout(newLayout)
+    }else{
+        // init a basic layout
+        initLayout({
+            id: "root",
+            type: 'TabLayout',
+            parent: "",
+            direction: 'vertical',
+            tabs:[
+                {
+                    id:"dummy-tab-container",
+                    type: "TabPanel",
+                    parent: "root",
+                    showingTabIndex: 0,
+                    tabs: [
+                        {
+                            id: 'new-tab-001',
+                            label: "New Tab",
+                            parent: "dummy-tab-container",
+                            component: 'LazyTabEmpty'
+                        }
+                    ]
+                }
+            ]
+        })
+    }
+    loading.value = false;
+} 
 
 onMounted(() => {
-    nextTick(() => {
-
-        initLayout(exampleLayout)
-    })
+    getTabsFromServer()
 })
 </script>
 
 <template>
     <div class="tabManager">
-        <TabLayout :layout="layout" />
-        <div class="hiddenAllComponent">
-            <template v-for="component in allComponents" :key="component.id">
-                <Teleport  :to="'#' + component.teleportId">
-                    <component :is="component.component" :tab="component"/>
-                </Teleport>
-            </template>
-        </div>
+        <template  v-if="loading">
+            <LoadingBg />
+        </template>
+        <template v-else>
+
+            <TabLayout :layout="layout" />
+            <div class="hiddenAllComponent">
+                <template v-for="component in allComponents" :key="component.id">
+                    <Teleport  :to="'#' + component.teleportId">
+                        <component :is="component.component" :tab="component"/>
+                    </Teleport>
+                </template>
+            </div>
+        </template>
     </div>
 </template>
 
