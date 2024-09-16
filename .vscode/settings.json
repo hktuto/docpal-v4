@@ -5,7 +5,5 @@
         "typecheck"
     ],
     "i18n-ally.localesPaths": [
-        "packages/base/lang",
-        "packages/base/components/lang"
     ]
 }

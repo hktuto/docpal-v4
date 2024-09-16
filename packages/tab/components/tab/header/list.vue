@@ -1,5 +1,6 @@
 <script lang="ts" setup >
-import {TabManagerKey} from '../type'
+import {TabManagerKey,} from '../type'
+import type {TabPanelContainer} from '../type'
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
@@ -16,7 +17,6 @@ const {panel} = defineProps<{panel:TabPanelContainer}>()
 
 <template>
     <div class="tabHeaderContainer">
-        {{ panel.showingTabIndex }}
         <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :index="index" :selected="index === panel.showingTabIndex" />
     </div>
 </template>

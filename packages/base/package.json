@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@element-plus/nuxt": "^1.0.10",
+    "@nuxt/icon": "^1.5.1",
     "@nuxtjs/i18n": "^8.5.3",
     "element-plus": "^2.8.2",
     "nuxt": "^3.13.0",

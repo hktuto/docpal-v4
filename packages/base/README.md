@@ -7,6 +7,7 @@ this package contain all non auth depend package
 - [x] element-plus ui
 - [x] scss style 
 - [ ] [[apps/packages/tab/README|Tab System]]
+- [x] icon set (Nuxt icon)  -  Iconify icon
 - base components
     - [x] app wrapper
     - [ ] loading bg
