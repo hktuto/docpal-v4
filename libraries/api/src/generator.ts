@@ -9,7 +9,7 @@ dotenv.config({
 
 const endpoint = [
     {name: 'client', url:`${process.env.BASEURL}/v3/api-docs`, className:"Client"},
-    {name: 'admin', url:`${process.env.BASEURL}/admin/v3/api-docs`, className:"Admin"},
+    {name: 'admin', url:`${process.env.ADMINURL}/admin/v3/api-docs`, className:"Admin"},
 ]
 
 async function generate(){

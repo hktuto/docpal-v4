@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   ssr:false,
   modules: ['@nuxt/test-utils/module'],
   extends:[
-    '../packages/publicApp',
+    '../../packages/publicApp',
   ],
   typescript: {
     typeCheck: true,

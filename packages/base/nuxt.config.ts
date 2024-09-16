@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
@@ -11,7 +13,6 @@ export default defineNuxtConfig({
     '../assets/styles/main.scss'
   ],
   extends:[
-    "../tab"
   ],
   i18n: {
     defaultLocale:'en-US',
@@ -37,5 +38,24 @@ export default defineNuxtConfig({
       cookieKey: 'i18n_redirected',
       redirectOn: 'root' // recommended
     }
-  }
+  },
+  nitro:{
+    devProxy:{
+      '/api':{
+        target: process.env.CLIENT_PROXY,
+        changeOrigin: true,
+        prependPath: true
+      },
+    }
+  },
+  vite: {
+    vue: {
+      features: {
+        propsDestructure: true,
+      },
+      script:{
+        defineModel:true
+      }
+    }    
+  },
 })

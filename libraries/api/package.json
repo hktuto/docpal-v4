@@ -7,8 +7,8 @@
     "/src/*"
   ],
   "scripts": {
-    "generate": " npx ts-node ./src/generator"
-    
+    "generate": " npx ts-node ./src/generator",
+    "postinstall": "npm run generate"
   },
   "keywords": [],
   "author": "",
