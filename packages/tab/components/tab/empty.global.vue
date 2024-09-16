@@ -6,10 +6,12 @@ const counter = ref(0)
 </script>
 <template>
     <div class="emptyContainer">
-        empty tab can display
-        {{ $props.tab }}
-        local stage : {{ counter }}
+        <div class="content">
+
+        {{ tab.id }} <br/>
+        local stage : {{ counter }}<br/>
         <ElButton @click="() => counter++">add 1</ElButton>
+        </div>
     </div>
 
 </template>

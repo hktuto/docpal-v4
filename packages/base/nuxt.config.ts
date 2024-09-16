@@ -15,6 +15,13 @@ export default defineNuxtConfig({
   ],
   extends:[
   ],
+  icon:{
+    clientBundle:[
+      'material-symbols',
+      'lucide'
+    ],
+    scan: true,
+  },
   i18n: {
     defaultLocale:'en-US',
     langDir:'lang',

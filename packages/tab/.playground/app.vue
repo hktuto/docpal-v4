@@ -1,8 +1,7 @@
 <template>
-    <div class="fullPage">
-
-    <TabManager />
-    </div>
+    <AppWrapper >
+        <TabManager />
+    </AppWrapper>
 </template>
 
 <style lang="scss" >

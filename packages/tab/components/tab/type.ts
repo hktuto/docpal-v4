@@ -49,7 +49,9 @@ export type TabComponent = {
 
 interface TabManager {
     panelTabFocus:(panelId:string, tabIndex:number) => void,
-    closePanelTab:(panelId:string, tabIndex:number) => void
+    closePanelTab:(panelId:string, tabIndex:number, deleteComponent:boolean) => void,
+    moveTabBetweenPanel:(sourceData:TabItem, targetData:TabItem, direction: 'left' | 'right') =>void,
+    tabDataKey:symbol
 }
 
 export const TabManagerKey: InjectionKey<TabManager> = Symbol('tabManager');
