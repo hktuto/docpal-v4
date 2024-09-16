@@ -11,9 +11,20 @@ const {layout, initLayout, allComponents} = useTabsManager()
 function panelTabFocus(panelId:string, tabIndex: number) {
     // step 1 split panelId by -
     const panel = recursiveGetPanelById(layout.value, panelId) as TabPanelContainer
-    
     if(panel) {
         panel.showingTabIndex = tabIndex
+        console.log("panelTabFocus", panel)
+    }
+}
+
+function recursiveRemoveEmptyContainer(panel:any){
+    console.log("remove item :", panel.id)
+    const parent = recursiveGetPanelById(layout.value, panel.parent)
+    if(!parent) return; // reach root 
+    const panelIndex = parent.tabs.findIndex((t) => t.id === panel.id)
+    if(panelIndex !== -1) parent.tabs.splice(panelIndex, 1)
+    if(parent.tabs.length === 0) {
+        recursiveRemoveEmptyContainer(parent)
     }
 }
 
@@ -25,22 +36,24 @@ function closePanelTab(panelId:string, tabIndex: number, deleteComponent = true)
         if(allComponents.value.length === 1 ){
             return
         } 
-        
+        const data = panel?.tabs[tabIndex];
         panel?.tabs.splice(tabIndex, 1);
+        console.log(data)
         if(deleteComponent){
-            const componentIndex = allComponents.value.findIndex((component) => component.id === panel.tabs[tabIndex].id);
+            const componentIndex = allComponents.value.findIndex((component) => component.id === data.id);
             if(componentIndex !== -1) allComponents.value.splice(componentIndex, 1)
         }
 
         if(panel.tabs.length === 0) {
-            const parent = recursiveGetPanelById(layout.value, panel.parent)
+            recursiveRemoveEmptyContainer(panel)
+            // const parent = recursiveGetPanelById(layout.value, panel.parent)
             
-            if(parent) {
-                const panelIndex = parent.tabs.findIndex((t) => t.id === panel.id)
-                if(panelIndex !== -1) parent.tabs.splice(panelIndex, 1)
-            }
+            // if(parent) {
+            //     const panelIndex = parent.tabs.findIndex((t) => t.id === panel.id)
+            //     if(panelIndex !== -1) parent.tabs.splice(panelIndex, 1)
+            //     // check parent
+            // }
         } else if(panel.showingTabIndex === tabIndex) {
-            console.log(panel, panelId, tabIndex)
             panelTabFocus(panelId, 0)
         }
     }
@@ -59,7 +72,9 @@ function reorderWithEdge( parent : TabPanelContainer, sourceData:TabItem, target
     const newItemIndex = direction === 'left' ? targetIndex : targetIndex + 1
     parent?.tabs.splice(newItemIndex, 0 , sourceData)
     // final focus on source
-    panelTabFocus(sourceData.parent, newItemIndex)
+    nextTick(( ) => {
+        panelTabFocus(sourceData.parent, newItemIndex)
+    })
 }
 
 function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 'left' | 'right') {
@@ -91,7 +106,7 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
     
     const componentIndex = allComponents.value.findIndex((component) => component.id === newSourceData.id);
     nextTick(() => {
-        panelTabFocus(sourceData.parent, newItemIndex)
+        panelTabFocus(targetData.parent, newItemIndex)
         allComponents.value[componentIndex].teleportId = newSourceData.parent + '-' + newSourceData.id
     })
     // remove source target
