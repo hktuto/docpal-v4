@@ -1,4 +1,4 @@
-import type { TabLayout, TabPanelContainer } from './tabType';
+import type { TabLayout, TabPanelContainer, TabComponent, TabItem } from './tabType';
 
 export function recursiveGetPanelById(layout:TabLayout|TabPanelContainer, panelId:string):(TabPanelContainer | TabLayout) | null {
     if(layout.id === panelId) {
@@ -23,4 +23,21 @@ export function recursiveGetPanelById(layout:TabLayout|TabPanelContainer, panelI
 
     return null;
     
+}
+
+export function recursiveLoopLayout(layout:TabLayout, components:TabComponent[]) {
+    let allComponents = components
+    if(layout.tabs) {
+        layout.tabs.forEach(tab => {
+            if(tab.type === 'TabLayout') {
+                recursiveLoopLayout((tab as TabLayout), components)
+            } else if(tab.type === 'TabPanel') {
+                const tabPanel = tab as TabPanelContainer
+                tabPanel.tabs.forEach( (component:TabItem, index:number) => {
+                    allComponents.push({id:component.id, parent:component.parent, teleportId:tabPanel.id+'-'+component.id, component: component.component})
+                })
+            }
+        })
+    }
+    return allComponents
 }
