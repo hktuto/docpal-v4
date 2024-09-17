@@ -5,12 +5,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/test-utils/module'
   ],
-<<<<<<<< HEAD:packages/browse/nuxt.config.ts
-  css:[
-    '../assets/styles/main.scss'
-========
   extends:[
     "../base"
->>>>>>>> setup:packages/publicApp/nuxt.config.ts
   ]
 })

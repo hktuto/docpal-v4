@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {appMenu} from '#imports'
+const appMenu = useMenuList()
 import { TabManagerKey } from '#imports';
 
 const props = defineProps<{tab: any}>()

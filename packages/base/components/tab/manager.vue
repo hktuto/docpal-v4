@@ -158,7 +158,6 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
             const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
             if(component) {
                 component.teleportId = newPanelId + '-' + sourceData.id;
-                console.log(component, newData)
             }
         })
 
@@ -198,6 +197,7 @@ function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanelContainer, d
         if(component) {
             component.teleportId = newPanelId + '-' + sourceData.id;
         }else{
+            console.log("new component")
             allComponents.value.push({
                 ...sourceData,
                 parent: newPanelId,

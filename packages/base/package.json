@@ -6,7 +6,7 @@
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv ../../env/.env.dev",
+    "dev": "nuxt dev .playground --dotenv ../../../env/.env.dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
@@ -22,8 +22,8 @@
     "@nuxt/icon": "^1.5.1",
     "@nuxtjs/i18n": "^8.5.3",
     "element-plus": "^2.8.2",
-    "nuxt": "3.13.1",
-    "vue": "3.5.5",
+    "nuxt": "3.13.2",
+    "vue": "3.5.6",
     "vue-router": "latest"
   },
   "devDependencies": {

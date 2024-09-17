@@ -1,6 +1,6 @@
+import type {MenuItem} from '../utils/menuType'
 
-
-export const appMenu = useState<MenuItem[]>('app-menu', () =>([
+export const useMenuList = () => useState<MenuItem[]>('app-menu', () =>([
     {
         id:'browse',
         icon: 'lucide:folder',

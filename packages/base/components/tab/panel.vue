@@ -43,11 +43,14 @@ onMounted(() => {
             },
             onDrop({ location, source }) {
                 // drop tabs item logic
+                // return if target is not this panel
                 const isTab = isTabData(source.data)
-                console.log("not tab")
+                const target = location.current.dropTargets[0]
+                // 如果不是本 panel 下 drop 的，不用做什麼
+                if(target.data.data.id !== panel.id) return;
                 if(isTab){
 
-                    const target = location.current.dropTargets[0]
+                    
                     const sourceData = source.data as any
                     const targetData = target.data as any
                     const closestEdgeOfTarget = extractClosestEdge(targetData)
@@ -57,14 +60,14 @@ onMounted(() => {
                 }
                 const isMenu = isMenuData(source.data)
                 if(isMenu) {
-                    const target = location.current.dropTargets[0]
                     const sourceData = source.data as any
                     const targetData = target.data as any
                     const closestEdgeOfTarget = extractClosestEdge(targetData)
                     if(!closestEdgeOfTarget) return
                     tabManager?.addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
+                    return
                 }
-                console.log("isMenu", isMenu)
+                
             }
         }),
         dropTargetForElements({
