@@ -16,7 +16,7 @@ function panelTabFocus(panelId:string, tabIndex: number) {
         
         panel.showingTabIndex = tabIndex;
         hightLightPanel.value = panel.id
-        console.log("high light", hightLightPanel.value)
+        console.log("highlight", hightLightPanel.value)
     }
 }
 
@@ -115,7 +115,7 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
     
     const componentIndex = allComponents.value.findIndex((component) => component.id === newSourceData.id);
     nextTick(() => {
-        panelTabFocus(targetData.parent, newItemIndex)
+        panelTabFocus(targetParent.id, newItemIndex)
         allComponents.value[componentIndex].teleportId = newSourceData.parent + '-' + newSourceData.id
     })
     // remove source target
@@ -158,7 +158,7 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
 
         // get component and update parent and teleport id
         nextTick(() => {
-            panelTabFocus(targetParent.id, newItemIndex)
+            panelTabFocus(newPanelId, newItemIndex)
             const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
             if(component) {
                 component.teleportId = newPanelId + '-' + sourceData.id;
@@ -196,7 +196,7 @@ function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanelContainer, d
 
     // get component and update parent and teleport id
     nextTick(() => {
-        panelTabFocus(targetParent.id, newItemIndex)
+        panelTabFocus(newPanelId, newItemIndex)
 
         const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
         if(component) {
@@ -217,9 +217,10 @@ function addTabToPanel(panelId:string, newTab: TabItem ) {
     const parent = recursiveGetPanelById(layout.value, panelId);
     if(!parent) return
     (parent as TabPanelContainer).tabs.push(newTab)
-    panelTabFocus(panelId, parent.tabs.length - 1)
+    
     console.log("newTab : ", newTab.id, parent)
     nextTick(() => {
+        panelTabFocus(panelId, parent.tabs.length - 1)
         allComponents.value.push({
             ...newTab,
             teleportId: newTab.parent + '-' + newTab.id
@@ -311,7 +312,7 @@ onMounted(() => {
     height:100%;
     --splitpanes-margin: 4rem;
     :deep(.splitpanes__pane) {
-        background: var(--app-grey-950);
+        background: var(--app-grey-925);
         box-shadow: var(--app-shadow-s);
         border-radius: var(--app-border-radius-m);
         overflow: hidden;
