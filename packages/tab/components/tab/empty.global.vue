@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 const props = defineProps<{tab: any}>()
-
+import { TabManagerKey } from './type';
 const counter = ref(0)
+const tabManager = inject(TabManagerKey)
+if(!tabManager){
+    throw createError('Tab manger not found')
+}
 
 </script>
 <template>
