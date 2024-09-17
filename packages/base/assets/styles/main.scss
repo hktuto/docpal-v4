@@ -1,13 +1,33 @@
-@use './var.scss' as *;
-@use './element/index.scss' as *;
+
+@use './elements/index.scss' ;
 
 :root{
+  --app-main-color: #15d5b9;
+  --app-accent-color: #0077ff;
   // generate grey color in 5 levels
-  // generate grey color in 5 levels using $grey-hue and $grey-saturation
-  @for $i from 0 through 20 {
-    --app-grey-#{$i}: hsl(160 2% #{$i * 5%});
-  }
-  
+  --app-grey-hue: 200;
+  --app-grey-saturation: 15%;
+  --app-grey-000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 0%);
+  --app-grey-050: hsl(var(--app-grey-hue) var(--app-grey-saturation) 5%);
+  --app-grey-100: hsl(var(--app-grey-hue) var(--app-grey-saturation) 10%);
+  --app-grey-150: hsl(var(--app-grey-hue) var(--app-grey-saturation) 15%);
+  --app-grey-200: hsl(var(--app-grey-hue) var(--app-grey-saturation) 20%);
+  --app-grey-250: hsl(var(--app-grey-hue) var(--app-grey-saturation) 25%);
+  --app-grey-300: hsl(var(--app-grey-hue) var(--app-grey-saturation) 30%);
+  --app-grey-350: hsl(var(--app-grey-hue) var(--app-grey-saturation) 35%);
+  --app-grey-400: hsl(var(--app-grey-hue) var(--app-grey-saturation) 40%);
+  --app-grey-450: hsl(var(--app-grey-hue) var(--app-grey-saturation) 45%);
+  --app-grey-500: hsl(var(--app-grey-hue) var(--app-grey-saturation) 50%);
+  --app-grey-550: hsl(var(--app-grey-hue) var(--app-grey-saturation) 55%);
+  --app-grey-600: hsl(var(--app-grey-hue) var(--app-grey-saturation) 60%);
+  --app-grey-650: hsl(var(--app-grey-hue) var(--app-grey-saturation) 65%);
+  --app-grey-700: hsl(var(--app-grey-hue) var(--app-grey-saturation) 70%);
+  --app-grey-750: hsl(var(--app-grey-hue) var(--app-grey-saturation) 75%);
+  --app-grey-800: hsl(var(--app-grey-hue) var(--app-grey-saturation) 80%);
+  --app-grey-850: hsl(var(--app-grey-hue) var(--app-grey-saturation) 85%);
+  --app-grey-900: hsl(var(--app-grey-hue) var(--app-grey-saturation) 90%);
+  --app-grey-950: hsl(var(--app-grey-hue) var(--app-grey-saturation) 95%);
+  --app-grey-1000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 100%);
   // generate white and black color
   --app-white: #fff;
   --app-black: #000;
@@ -23,35 +43,27 @@
   --app-font-family: 'Roboto', sans-serif;
   
   // set ap size base on rem;
-  --app-border-radius-xxs: 0.25rem;
-  --app-border-radius-xs: 0.5rem;
-  --app-border-radius-s: 0.8rem;
-  --app-border-radius-m: 1.2rem;
-  --app-border-radius-l: 1.8rem;
-  --app-border-radius-xl: 2.5rem;
+  --app-border-radius-s: 0.25rem;
+  --app-border-radius-m: 0.5rem;
+  --app-border-radius-l: 1rem;
+  --app-border-radius-xl: 2rem;
   --app-border-radius-xxl: 4rem;
   --app-border-radius-max: 10e5px;
   
   // set app space
-  --app-space-sxs: 0.25rem;
-  --app-space-xs: 0.5rem;
+  --app-space-xxs: 0.2rem;
+  --app-space-xs: 0.4rem;
   --app-space-s: 0.8rem;
   --app-space-m: 1.2rem;
-  --app-space-l: 1.8rem;
-  --app-space-xl: 2.5rem;
-  --app-space-xxl: 4rem;
-  
-  --app-bg-level-0: hsl(160, 5%, 91%);
-  --app-bg-level-1: hsl(160, 5%, 93%);
-  --app-bg-level-2: hsl(160, 5%, 95%);
-  --app-bg-level-3: hsl(160, 5%, 98%);
-  --app-bg-level-4: hsl(160, 5%, 100%);
+  --app-space-l: 2.4rem;
+  --app-space-xl: 3.6rem;
+  --app-space-xxl: 4.8rem;
   
   // set app shadow
   --app-shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   --app-shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --app-shadow-l: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --app-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --app-shadow-xl: 0 12px 25px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -5px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
   
 }
 
@@ -67,4 +79,12 @@ html, body{
 
 * {
   box-sizing: border-box;
+}
+
+$colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'error-color', 'grey-100', 'grey-200', 'grey-300', 'grey-400', 'grey-500', 'grey-600', 'grey-700', 'grey-800', 'grey-900', 'grey-1000';
+// generate class to all background color
+@each $color in $colors {
+  .bg-#{$color} {
+    background-color: var(--app-#{$color});
+  }
 }
