@@ -1,37 +1,52 @@
-
+@use 'sass:math';
+@use 'sass:map';
 @use './elements/index.scss' ;
+@use './var.scss' as *;
+
+$types: primary, success, warning, danger, error, info;
 
 :root{
-  --app-main-color: #15d5b9;
-  --app-accent-color: #0077ff;
+  --app-main-color: #{map.get($app-color, 'primary', 'base')};
+  --app-accent-color: #{map.get($app-color, 'success', 'base')};
   // generate grey color in 5 levels
   --app-grey-hue: 200;
   --app-grey-saturation: 15%;
-  --app-grey-000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 0%);
-  --app-grey-050: hsl(var(--app-grey-hue) var(--app-grey-saturation) 5%);
-  --app-grey-100: hsl(var(--app-grey-hue) var(--app-grey-saturation) 10%);
-  --app-grey-150: hsl(var(--app-grey-hue) var(--app-grey-saturation) 15%);
-  --app-grey-200: hsl(var(--app-grey-hue) var(--app-grey-saturation) 20%);
-  --app-grey-250: hsl(var(--app-grey-hue) var(--app-grey-saturation) 25%);
-  --app-grey-300: hsl(var(--app-grey-hue) var(--app-grey-saturation) 30%);
-  --app-grey-350: hsl(var(--app-grey-hue) var(--app-grey-saturation) 35%);
-  --app-grey-400: hsl(var(--app-grey-hue) var(--app-grey-saturation) 40%);
-  --app-grey-450: hsl(var(--app-grey-hue) var(--app-grey-saturation) 45%);
-  --app-grey-500: hsl(var(--app-grey-hue) var(--app-grey-saturation) 50%);
-  --app-grey-550: hsl(var(--app-grey-hue) var(--app-grey-saturation) 55%);
-  --app-grey-600: hsl(var(--app-grey-hue) var(--app-grey-saturation) 60%);
-  --app-grey-650: hsl(var(--app-grey-hue) var(--app-grey-saturation) 65%);
-  --app-grey-700: hsl(var(--app-grey-hue) var(--app-grey-saturation) 70%);
-  --app-grey-750: hsl(var(--app-grey-hue) var(--app-grey-saturation) 75%);
-  --app-grey-800: hsl(var(--app-grey-hue) var(--app-grey-saturation) 80%);
-  --app-grey-850: hsl(var(--app-grey-hue) var(--app-grey-saturation) 85%);
-  --app-grey-900: hsl(var(--app-grey-hue) var(--app-grey-saturation) 90%);
-  --app-grey-950: hsl(var(--app-grey-hue) var(--app-grey-saturation) 95%);
-  --app-grey-1000: hsl(var(--app-grey-hue) var(--app-grey-saturation) 100%);
+  
+  // loop through grey levels , each level increase by 2.5%
+  @for $i from 1 through 40 {
+    $tab: $i * 25;
+    @if $i < 4 {
+      --app-grey-0#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{$i * 2.5%});
+    } @else {
+      --app-grey-#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{$i * 2.5%});
+    }
+    
+  }
+  
+  @each $type in $types {
+    --app-#{$type}-color: #{map.get($app-color, $type, 'base')};
+    @for $i from 1 through 3 {
+        // generate color in 5 levels mix with white
+        --app-#{$type}-#{$i}: #{
+          mix( map.get($app-color, $type, 'base'), white, $i * 20%)
+        };
+    }
+    @for $i from 4 through 6 {
+      // generate color in 5 levels mix with black
+      --app-#{$type}-#{$i}: #{
+          mix(black, map.get($app-color, $type, 'base'), ($i - 3) * 20%)
+        };
+    }
+  }
+  
+  
+  
   // generate white and black color
   --app-white: #fff;
   --app-black: #000;
   --app-text-color: #000;
+  
+  
   --app-font-size-xs: 0.5rem;
   --app-font-size-s: 0.75rem;
   --app-font-size-m: 1rem;
