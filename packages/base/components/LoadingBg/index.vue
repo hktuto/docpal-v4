@@ -1,5 +1,8 @@
 <template>
     <div class="fullPage">
+        <div class="center">
+            <slot />
+        </div>
         <canvas id="gradient-canvas" :class="{canvasInit}"  data-transition-in/>
     </div>
 </template>
@@ -35,6 +38,9 @@ onMounted(()=>{
 </script>
 
 <style lang="scss" scoped>
+.center{
+    z-index: 2;
+}
 .fullPage{
     position: fixed;
     left:0;
@@ -43,14 +49,16 @@ onMounted(()=>{
     height: 100vh;
     overflow: hidden;
     z-index: -1;
-    background-color: var(--primary-color);
+    background-color: var(--app-main-color);
+    display: grid;
+    place-items: center;
     #gradient-canvas{
         position: fixed;
         left: 0;
         top:0;
         height: 100vh;
         width: 100%;
-        background: var(--primary-color);
+        background: var(--app-main-color);
         opacity: 0;
         transition: opacity .3s ease-in-out;
         &.canvasInit{

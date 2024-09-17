@@ -1,43 +1,30 @@
-
-
 <template>
     <AuthState>
-        <template #default="{loggedIn}">
-            <AppWraper>
+        <template #default="{ loggedIn }">
+            <AppWrapper>
                 <template #sidebar>
-                        <AppMenu>
-                            <template #footer>
-                            </template>
-                        </AppMenu>
+                    sidebar
+                    <LangSwitch />
                 </template>
-                <slot name="header" />
                 <template #header>
-                    <slot name="header" />
+                    header
                 </template>
-                <slot  />
-                <slot name="footer" />
-            </AppWraper>
+                <template #default>
+                    <TabManage />
+                </template>
+            </AppWrapper>
         </template>
         <template #placeholder>
-            <div class="loadingContainer">
-                <LoadingBg >
-                    Loading
-                </LoadingBg>
-            </div>
+            <LoadingBg >
+                <h1>{{ $t('loading') }}</h1>
+            </LoadingBg>
         </template>
     </AuthState>
+
 </template>
 
-<style scoped lang="scss">
-.layoutSidebar{
-    position: relative;
-}
-.loadingContainer{
-    width:100svw;
-    height: 100svh;
-    display: grid;
-    place-items: center;
-    color: #fff;
-    background: var(--el-menu-active-color);
+<style scoped>
+h1{
+    color:#fff;
 }
 </style>

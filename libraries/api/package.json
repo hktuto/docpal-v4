@@ -1,0 +1,23 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "files": [
+    "/src/*"
+  ],
+  "scripts": {
+    "generate": " npx ts-node ./src/generator"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.4.5",
+    "swagger-typescript-api": "^13.0.22",
+    "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "axios": "^1.7.7"
+  }
+}

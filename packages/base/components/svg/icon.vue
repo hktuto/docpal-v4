@@ -86,7 +86,7 @@ const svgRoundClass = computed(() => {
         opacity: 0.8;
         color: var(--icon-hover-color, --color-grey-0000);
         svg{
-            color: var(--icon-hover-color, --color-grey-0000);
+            color: var(--icon-hover-color, --color-grey-0000)!important;
         }
     }
     &-disabled  {

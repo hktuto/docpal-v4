@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
-        "Keycloak"
+        "Keycloak",
+        "splitpanes",
+        "typecheck"
+    ],
+    "i18n-ally.localesPaths": [
     ]
 }
