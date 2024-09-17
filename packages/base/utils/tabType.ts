@@ -7,7 +7,7 @@ export type TabItem = {
     component: string,
     data?:any
 }
-export type TabPanel = TabItem[] // tab panel container
+export type TabPanel = any[] // tab panel container
 
 export type TabType = "TabLayout" | "TabPanel"
 export type LayoutDirection = "horizontal" | "vertical"
@@ -51,7 +51,9 @@ interface TabManager {
     closePanelTab:(panelId:string, tabIndex:number, deleteComponent:boolean) => void,
     moveTabBetweenPanel:(sourceData:TabItem, targetData:TabItem, direction: 'left' | 'right') =>void,
     splitViewToDirection:(sourceData:TabItem, targetData:TabPanelContainer, direction:  'top' | 'bottom' | 'left' | 'right') =>void,
+    addMenuItemToPanel:(sourceData:MenuItem, targetData:TabPanelContainer, direction:  'top' | 'bottom' | 'left' | 'right') =>void,
     addTabToPanel:(panelId:string, newTab: TabItem) => void,
+    
     tabDataKey:symbol
 }
 

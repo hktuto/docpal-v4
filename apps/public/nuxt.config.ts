@@ -12,7 +12,6 @@ export default defineNuxtConfig({
   modules: ['@nuxt/test-utils/module'],
   extends:[
     '../../packages/publicApp',
-    "../../packages/tab"
   ],
   typescript: {
     typeCheck: true,

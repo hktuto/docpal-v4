@@ -1,33 +1,12 @@
 <script lang="ts" setup>
-import type {MenuItem} from '#imports'
-const menu: MenuItem[] = [
-    {
-        icon: 'lucide:folder',
-        label: "Browse",
-        draggable: true,
-    },
-    {
-        icon: 'lucide:search',
-        label: "Search",
-        draggable: false
-    },
-    {
-        icon:"material-symbols:collections-bookmark-outline-rounded",
-        label: "Collection",
-        draggable: false,
-    },
-    {
-        icon: 'lucide:workflow',
-        label:"workflow",
-        draggable:true
-    }
-] 
+import {appMenu} from '#imports'
+
 </script>
 
 <template>
     <AppWrapper>
         <template #sidebar>
-            <AppMenu class="sideMenu" :menu="menu">
+            <AppMenu class="sideMenu" :menu="appMenu">
                 <template #header>
                     <div class="logoContainer">
                         <AppLogo />

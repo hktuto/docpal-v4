@@ -1,6 +1,6 @@
 
 import {useState} from '#imports'
-import type {TabType, TabPanel, TabPanelContainer,  TabItem, TabLayout, LayoutDirection, TabComponent} from '../components/tab/type'
+import type {TabType, TabPanel, TabPanelContainer,  TabItem, TabLayout, LayoutDirection, TabComponent} from '../utils/tabType'
 
 export const exampleLayout:TabLayout = {
     id: "root",
