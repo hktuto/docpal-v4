@@ -17,10 +17,6 @@ export default defineNuxtConfig({
   ],
   icon:{
     clientBundle:{
-      icons:[
-         'material-symbols',
-        'lucide'
-      ],
       scan: true,
       includeCustomCollections: true, 
     },

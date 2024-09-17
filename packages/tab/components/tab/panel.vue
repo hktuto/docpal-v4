@@ -42,7 +42,6 @@ onMounted(() => {
                 const target = location.current.dropTargets[0]
                 const sourceData = source.data as any
                 const targetData = target.data as any
-                console.log(targetData)
                 const closestEdgeOfTarget = extractClosestEdge(targetData)
                 if(!closestEdgeOfTarget) return
                 tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
@@ -64,7 +63,7 @@ onMounted(() => {
                 return attachClosestEdge(data, {
                     element: elRef.value!,
                     input,
-                    allowedEdges: ['left', 'right', 'top', 'bottom'],
+                    allowedEdges: ['left', 'right'],
                 })
             },
             getIsSticky() {

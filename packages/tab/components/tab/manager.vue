@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type {TabItem, TabPanelContainer, TabLayout} from './type'
-import {TabManagerKey, } from './type'
+import type {TabItem, TabPanelContainer, TabLayout, TabComponent} from './type'
+import {TabManagerKey } from './type'
 
 import { provide, useTabsManager, exampleLayout, recursiveGetPanelById } from '#imports'
 import 'splitpanes/dist/splitpanes.css'
@@ -17,7 +17,7 @@ function panelTabFocus(panelId:string, tabIndex: number) {
 }
 
 function recursiveRemoveEmptyContainer(panel:any){
-    console.log("remove item :", panel.id)
+    console.trace("remove item :", panel.id)
     const parent = recursiveGetPanelById(layout.value, panel.parent)
     if(!parent) return; // reach root 
     const panelIndex = parent.tabs.findIndex((t) => t.id === panel.id)
@@ -36,14 +36,18 @@ function closePanelTab(panelId:string, tabIndex: number, deleteComponent = true)
             return
         } 
         const data = panel?.tabs[tabIndex];
+        if(!data) {
+            console.trace(panel)
+            throw new Error(`data not found. tabIndex ${tabIndex} is not correct in ${panel.id}`)
+        }
         panel?.tabs.splice(tabIndex, 1);
-        console.log(data)
         if(deleteComponent){
             const componentIndex = allComponents.value.findIndex((component) => component.id === data.id);
             if(componentIndex !== -1) allComponents.value.splice(componentIndex, 1)
         }
 
         if(panel.tabs.length === 0) {
+            console.log("detect empty panel : ", panel)
             recursiveRemoveEmptyContainer(panel)
             // const parent = recursiveGetPanelById(layout.value, panel.parent)
             
@@ -91,6 +95,9 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
     }
     // if source and target is not the same panel, move source to target
     const sourceIndex = sourceParent.tabs.findIndex((tabItem) => tabItem.id === sourceData.id);
+    if(sourceIndex === -1) {
+        return
+    }
     closePanelTab(sourceData.parent, sourceIndex, false)
 
     const newSourceData = {
@@ -113,6 +120,7 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
 }
 
 function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, direction: 'top' | 'bottom' | 'left' | 'right') {
+    console.log(layout.value)
     const sourceParent = recursiveGetPanelById(layout.value, sourceData.parent)
     if(!sourceParent)return
     
@@ -120,8 +128,10 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
     if(!targetParent )return
 
     const sourceIndex = sourceParent.tabs.findIndex((tabItem) => tabItem.id === sourceData.id);
-    closePanelTab(sourceData.parent, sourceIndex, false)
-    console.log(direction, targetParent)
+    if(sourceIndex === -1) {
+        return
+    }
+    closePanelTab(sourceParent.id, sourceIndex, false)
     // check if targetParentLayout direction match new direction
     if(
         ((targetParent as TabLayout).direction === 'vertical' && (direction == 'left' || direction === 'right')) ||
@@ -138,9 +148,21 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
                 parent: newPanelId,
             }]
         }
+        console.log("New Panel :", newPanelId)
+        console.log("move source to new panel :", sourceData.id)
         const targetIndex = targetParent.tabs.findIndex((tabItem:any) => tabItem.id === targetData.id);
         const newItemIndex = direction === 'left' || direction === 'top' ? targetIndex  : targetIndex + 1
         targetParent?.tabs.splice(newItemIndex, 0 , newData)
+
+        // get component and update parent and teleport id
+        nextTick(() => {
+
+            const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
+            if(component) {
+                component.teleportId = newPanelId + '-' + sourceData.id;
+                console.log(component, newData)
+            }
+        })
 
     } else {
         // need to create new layout
@@ -154,6 +176,7 @@ function addTabToPanel(panelId:string, newTab: TabItem ) {
     if(!parent) return
     (parent as TabPanelContainer).tabs.push(newTab)
     panelTabFocus(panelId, parent.tabs.length - 1)
+    console.log("newTab : ", newTab.id, parent)
     nextTick(() => {
         allComponents.value.push({
             ...newTab,
@@ -248,24 +271,51 @@ onMounted(() => {
     // :deep(.splitpanes__pane) {
     //     // default style for pane
     // }
-    
-    :deep(.splitpanes--vertical > .splitpanes__splitter) {
-        min-width: var(--app-space-s);
-        position: relative;
+    :deep(.splitpanes__splitter) {
+        --center-width: 2px;
+        --bg-width: var(--app-space-m);
+        --center-color: var(--app-grey-800);
+        --bg-color: var(--app-grey-850);
+        z-index: 2;
         &:hover {
-            background: var(--app-grey-850); 
-            &:after{
-                background: var(--app-grey-800);
+            &:before{
+                opacity: 0.5 !important;
             }
         }
         &:after {
             content: "";
-            width: 2px;
+            position:absolute;
+            background: var(--center-color);
+            z-index: 2;
+        }
+        &:before {
+            content: "";
+            position:absolute;
+            background: var(--bg-color);
+        }
+    }
+    :deep(.splitpanes--dragging > .splitpanes__splitter) {
+        --center-color:var(--app-accent-color) !important ;
+    }
+    :deep(.splitpanes--vertical > .splitpanes__splitter) {
+        width: var(--center-width);
+        position: relative;
+        &:after {
+            width: var(--center-width);
             height: 100%;
             display: block;
-            background: var(--app-grey-850);
+            background: var(--center-color);
+            top: 0;
+            left: 0;
+        }
+        &:before {
+            width: var(--bg-width);
+            height: 100%;
+            display: block;
+            background: var(--bg-color);
             position: absolute;
-            left: calc( (var(--app-space-s) / 2) - 1px);
+            left: calc(var(--bg-width) / 2  * -1 + var(--center-width));
+            opacity: 0;
         }
         // background: var(--app-grey-800);
     }

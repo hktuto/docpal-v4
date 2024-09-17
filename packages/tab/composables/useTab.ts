@@ -115,13 +115,14 @@ export const exampleLayout:TabLayout = {
 
 export const useTabsManager = () => {
 
-    const layout = ref<TabLayout>({
-        id: "root",
-        type: "TabLayout" as TabType,
-        parent: "",
-        direction: "vertical" as LayoutDirection,
-        tabs: []
-    })
+    const layout = useState<TabLayout>('layout', () => ({
+            id: "root",
+            type: "TabLayout" as TabType,
+            parent: "",
+            direction: "vertical" as LayoutDirection,
+            tabs: []
+        })
+    )
     const allComponents = ref<TabComponent[]>([])
     
     function initLayout(newLayout:TabLayout) {
