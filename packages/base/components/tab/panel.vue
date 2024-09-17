@@ -148,9 +148,12 @@ onUnmounted(() => {
     grid-template-rows: min-content 1fr;
     opacity: 0.8;
     overflow: hidden;
-    opacity: 0.8;
+    opacity: 1;
     &.activePanel{
         opacity: 1;
+        :deep(.tabItem.showing) {
+            border-bottom: 1px solid var(--app-primary-5);
+        }
     }
 }
 .tabBody, .tabContent{
