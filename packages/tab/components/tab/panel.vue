@@ -130,7 +130,7 @@ onUnmounted(() => {
     width:100%;
     height:100%;
     overflow: auto;
-    background: var(--app-grey-950);
+    background: var(--app-grey-1000);
 }
 .tabBody{
     position: relative;

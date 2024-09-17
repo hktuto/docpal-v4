@@ -16,6 +16,12 @@ export default defineNuxtConfig({
   extends:[
   ],
   icon:{
+    customCollections:[
+      {
+        prefix:'dp-icon',
+        dir:'./assets/dp-icons'
+      }
+    ],
     clientBundle:{
       scan: true,
       includeCustomCollections: true, 

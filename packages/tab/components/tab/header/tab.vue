@@ -198,7 +198,7 @@ function closeTab(){
         }
     }
     &.showing{
-        background: var(--app-grey-950);
+        background: var(--app-grey-1000);
         color: var(--app-grey-100);
         .closeIcon{
             display: block;

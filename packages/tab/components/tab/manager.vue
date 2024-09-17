@@ -17,7 +17,6 @@ function panelTabFocus(panelId:string, tabIndex: number) {
 }
 
 function recursiveRemoveEmptyContainer(panel:any){
-    console.trace("remove item :", panel.id)
     const parent = recursiveGetPanelById(layout.value, panel.parent)
     if(!parent) return; // reach root 
     const panelIndex = parent.tabs.findIndex((t) => t.id === panel.id)
@@ -265,7 +264,7 @@ onMounted(() => {
 .tabManager{
     height:100%;
     :deep(.splitpanes) {
-        background: var(--app-grey-900);
+        background: var(--app-grey-950);
     }
     
     // :deep(.splitpanes__pane) {

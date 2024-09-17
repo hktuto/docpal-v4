@@ -1,7 +1,7 @@
 <template>
     <div id="languageSwitcher" class="languageSwitchContainer">
       <ElDropdown id="languageSwitchContainerIcon"  @command="handleCommand">
-        <SvgIcon src="/icons/language.svg" round />
+        <Icon name="lucide:languages" size="var(--app-font-size-l)"/>
           <template #dropdown>
               <ElDropdownMenu >
                   <ElDropdownItem v-for="lang in locales" :key="lang.code" :command="lang.code"

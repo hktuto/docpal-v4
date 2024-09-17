@@ -55,4 +55,11 @@ interface TabManager {
     tabDataKey:symbol
 }
 
+interface TabComponetHelper {
+    renameTab:(panelId:string, tabId:string, newName:string) => void
+    
+    tabDataKey:symbol
+}
+
 export const TabManagerKey: InjectionKey<TabManager> = Symbol('tabManager');
+export const TabComponetKey: InjectionKey<TabComponetHelper> = Symbol('tabComponent');
