@@ -6,9 +6,9 @@ import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/eleme
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 
 
-import type { TabItem } from '../type';
+import type { TabItem } from '#imports';
 import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
-import {TabManagerKey} from '../type'
+import {TabManagerKey} from '#imports'
 const { tab, selected, index } = defineProps<{tab: T, selected:B, index:I}>()
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {

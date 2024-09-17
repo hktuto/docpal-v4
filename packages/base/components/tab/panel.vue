@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import type { TabPanelContainer, TabItem } from './type';
-import {TabManagerKey} from './type'
+import type { TabPanelContainer, TabItem } from '#imports';
+import {TabManagerKey} from '#imports'
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
 import {dropTargetForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
+import { id } from 'element-plus/es/locale/index.mjs';
 
 
 const tabManager = inject(TabManagerKey)
@@ -31,6 +32,8 @@ const elRef = ref()
 const state = ref<'idle' | 'is-dragging-over'>('idle')
 const closeEdge = ref<string | null>()
 let cleanup = () => { }
+
+const {isMenuData} = useMenuDrop()
 onMounted(() => {
     if(!elRef.value) return
     cleanup = combine(
@@ -39,12 +42,29 @@ onMounted(() => {
                 return true
             },
             onDrop({ location, source }) {
-                const target = location.current.dropTargets[0]
-                const sourceData = source.data as any
-                const targetData = target.data as any
-                const closestEdgeOfTarget = extractClosestEdge(targetData)
-                if(!closestEdgeOfTarget) return
-                tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
+                // drop tabs item logic
+                const isTab = isTabData(source.data)
+                console.log("not tab")
+                if(isTab){
+
+                    const target = location.current.dropTargets[0]
+                    const sourceData = source.data as any
+                    const targetData = target.data as any
+                    const closestEdgeOfTarget = extractClosestEdge(targetData)
+                    if(!closestEdgeOfTarget) return
+                    tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
+                    return;
+                }
+                const isMenu = isMenuData(source.data)
+                if(isMenu) {
+                    const target = location.current.dropTargets[0]
+                    const sourceData = source.data as any
+                    const targetData = target.data as any
+                    const closestEdgeOfTarget = extractClosestEdge(targetData)
+                    if(!closestEdgeOfTarget) return
+                    tabManager?.addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
+                }
+                console.log("isMenu", isMenu)
             }
         }),
         dropTargetForElements({
@@ -132,8 +152,12 @@ onUnmounted(() => {
     overflow: auto;
     background: var(--app-grey-1000);
 }
+.tabContent {
+    container-type: inline-size;
+}
 .tabBody{
     position: relative;
+    
     &.is-dragging-over{
         --side-width: 40%;
         .tabContent{

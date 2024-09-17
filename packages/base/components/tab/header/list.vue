@@ -1,8 +1,8 @@
 <script lang="ts" setup >
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import {TabManagerKey,} from '../type'
-import type {TabPanelContainer, TabItem} from '../type'
+import {TabManagerKey,} from '#imports'
+import type {TabPanelContainer, TabItem} from '#imports'
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {

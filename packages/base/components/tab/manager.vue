@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type {TabItem, TabPanelContainer, TabLayout, TabComponent} from './type'
-import {TabManagerKey } from './type'
+import { provide, useTabsManager, recursiveGetPanelById } from '#imports'
+import type {TabItem, TabPanelContainer, TabLayout, TabComponent, MenuItem, exampleLayout} from '#imports'
+import {TabManagerKey } from '#imports'
 
-import { provide, useTabsManager, exampleLayout, recursiveGetPanelById } from '#imports'
 import 'splitpanes/dist/splitpanes.css'
 
 const tabDataKey = Symbol("tab");
@@ -119,7 +119,6 @@ function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 
 }
 
 function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, direction: 'top' | 'bottom' | 'left' | 'right') {
-    console.log(layout.value)
     const sourceParent = recursiveGetPanelById(layout.value, sourceData.parent)
     if(!sourceParent)return
     
@@ -170,6 +169,45 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
 
 }
 
+function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanelContainer, direction: 'top' | 'bottom' | 'left' | 'right') {
+ 
+    const targetParent = recursiveGetPanelById(layout.value, targetData.parent)
+    if(!targetParent )return
+
+    const newPanelId = "newPanel-" + new Date().getTime()
+    sourceData.id +=  new Date().getTime();
+    const newData:TabPanelContainer = {
+        id: newPanelId,
+        type: "TabPanel",
+        parent: targetParent.id,
+        showingTabIndex: 0,
+        tabs: [{
+            ...sourceData,
+            parent: newPanelId,
+        }]
+    }
+    console.log("new menu Data", newData)
+    const targetIndex = targetParent.tabs.findIndex((tabItem:any) => tabItem.id === targetData.id);
+    const newItemIndex = direction === 'left' || direction === 'top' ? targetIndex  : targetIndex + 1
+    targetParent?.tabs.splice(newItemIndex, 0 , newData)
+
+    // get component and update parent and teleport id
+    nextTick(() => {
+
+        const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
+        if(component) {
+            component.teleportId = newPanelId + '-' + sourceData.id;
+        }else{
+            allComponents.value.push({
+                ...sourceData,
+                parent: newPanelId,
+                teleportId: newPanelId + '-' + sourceData.id,
+                component: sourceData.component as string
+            })
+        }
+    })
+}
+
 function addTabToPanel(panelId:string, newTab: TabItem ) {
     const parent = recursiveGetPanelById(layout.value, panelId);
     if(!parent) return
@@ -189,6 +227,7 @@ function addTabToPanel(panelId:string, newTab: TabItem ) {
 provide(
     TabManagerKey, 
     {
+        addMenuItemToPanel,
         panelTabFocus,
         closePanelTab,
         moveTabBetweenPanel,
@@ -206,6 +245,7 @@ async function getTabsFromServer() {
         const newLayout = JSON.parse(storageTabs);
         initLayout(newLayout)
     }else{
+        
         // init a basic layout
         initLayout({
             id: "root",
@@ -223,7 +263,7 @@ async function getTabsFromServer() {
                             id: 'new-tab-001',
                             label: "New Tab",
                             parent: "dummy-tab-container",
-                            component: 'LazyTabEmpty'
+                            component: 'LazyTabEmpty',
                         }
                     ]
                 }
@@ -249,7 +289,7 @@ onMounted(() => {
             <div class="hiddenAllComponent">
                 <template v-for="component in allComponents" :key="component.id">
                     <Teleport  :to="'#' + component.teleportId">
-                        <component :is="component.component" :tab="component"/>
+                        <component :is="component.component" :tab="component" />
                     </Teleport>
                 </template>
             </div>

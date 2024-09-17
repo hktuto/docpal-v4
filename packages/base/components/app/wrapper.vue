@@ -1,6 +1,5 @@
 <script setup lang="ts" >
 
-
 </script>
 
 <template>
@@ -25,7 +24,7 @@
     display: grid;
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
-    background-color: var(--app-grey-950);
+    background-color: var(--app-grey-900);
     padding: var(--app-space-xs);
 }
 .appMainContainer{
