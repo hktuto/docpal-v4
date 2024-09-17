@@ -1,15 +1,44 @@
-<script setup>
-
+<script lang="ts" setup>
+import type {MenuItem} from '#imports'
+const menu: MenuItem[] = [
+    {
+        icon: 'lucide:folder',
+        label: "Browse",
+        draggable: true,
+    },
+    {
+        icon: 'lucide:search',
+        label: "Search",
+        draggable: false
+    },
+    {
+        icon:"material-symbols:collections-bookmark-outline-rounded",
+        label: "Collection",
+        draggable: false,
+    },
+    {
+        icon: 'lucide:workflow',
+        label:"workflow",
+        draggable:true
+    }
+] 
 </script>
 
 <template>
     <AppWrapper>
         <template #sidebar>
-            <LangSwitch />
+            <AppMenu class="sideMenu" :menu="menu">
+                <template #header>
+                    <div class="logoContainer">
+                        <AppLogo />
+                    </div>
+                </template>
+                <template #footer>
+                    <LangSwitch />
+                </template>
+            </AppMenu>
         </template>
-        <template #header>
-            header
-        </template>
+        
         <template #default>
             <TabManager />
         </template>
@@ -17,5 +46,20 @@
 </template>
 
 <style scoped lang="scss">
-
+.sideMenu{
+    --menu-gap: var(--app-space-xs);
+    --icon-font-size: var(--app-font-size-l);
+    --menu-item-padding: var(--app-space-xs);
+    --menu-item-radius: var(--app-border-radius-s);
+    --menu-item-normal-bg: rgba(0,0,0,0);
+    --menu-item-hover-bg: var(--app-grey-950);
+    --menu-item-active-bg: var(--app-grey-1000);
+    --menu-item-normal-color: var(--app-grey-100);
+    --menu-item-hover-color: var(--app-accent-color);
+    --menu-item-active-color: var(--app-main-color);
+}
+.logoContainer{
+    padding: var(--menu-item-padding);
+    font-size: var(--icon-font-size);
+}
 </style>

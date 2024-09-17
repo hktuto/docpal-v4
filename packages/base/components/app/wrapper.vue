@@ -25,13 +25,13 @@
     display: grid;
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
-    background-color: var(--app-grey-900);
+    background-color: var(--app-grey-950);
     padding: var(--app-space-xs);
 }
 .appMainContainer{
     --container-radius: var(--app-border-radius-l);
     --container-padding: 0px;
-    background-color: var(--app-grey-950);
+    background-color: var(--app-grey-1000);
     box-shadow: var(--app-shadow-xl);
     border-radius: var(--container-radius);
     overflow: hidden;
