@@ -8,7 +8,7 @@ import {dropTargetForElements} from '@atlaskit/pragmatic-drag-and-drop/element/a
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 import { id } from 'element-plus/es/locale/index.mjs';
 
-
+const hightLightPanel = useCurrentTargetPanel()
 const tabManager = inject(TabManagerKey)
 if(!tabManager) {
     throw createError('no '+ TabManagerKey.toString + "provided")
@@ -45,7 +45,7 @@ onMounted(() => {
                 // drop tabs item logic
                 // return if target is not this panel
                 const isTab = isTabData(source.data)
-                const target = location.current.dropTargets[0]
+                const target:any = location.current.dropTargets[0]
                 // 如果不是本 panel 下 drop 的，不用做什麼
                 if(target.data.data.id !== panel.id) return;
                 if(isTab){
@@ -124,7 +124,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="tabContainer">
+    <div :class="{tabContainer:true, activePanel: hightLightPanel === panel.id}">
 
         <TabHeaderList :panel="panel"/>
         
@@ -147,20 +147,25 @@ onUnmounted(() => {
     display: grid;
     grid-template-rows: min-content 1fr;
     opacity: 0.8;
-    
+    overflow: hidden;
+    opacity: 0.8;
+    &.activePanel{
+        opacity: 1;
+    }
 }
 .tabBody, .tabContent{
     width:100%;
     height:100%;
-    overflow: auto;
+    overflow: hidden;
+    position: relative;
     background: var(--app-grey-1000);
 }
 .tabContent {
     container-type: inline-size;
+    overflow: hidden;
 }
 .tabBody{
-    position: relative;
-    
+    overflow: hidden;
     &.is-dragging-over{
         --side-width: 40%;
         .tabContent{

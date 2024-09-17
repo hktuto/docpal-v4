@@ -1,18 +1,22 @@
 <script setup lang="ts">
 import { provide, useTabsManager, recursiveGetPanelById } from '#imports'
-import type {TabItem, TabPanelContainer, TabLayout, TabComponent, MenuItem, exampleLayout} from '#imports'
-import {TabManagerKey } from '#imports'
+import type {TabItem, TabPanelContainer, TabLayout, TabComponent, MenuItem} from '#imports'
+import {TabManagerKey, useCurrentTargetPanel } from '#imports'
 
 import 'splitpanes/dist/splitpanes.css'
 
 const tabDataKey = Symbol("tab");
 const {layout, initLayout, allComponents} = useTabsManager()
+const hightLightPanel = useCurrentTargetPanel()
 
 function panelTabFocus(panelId:string, tabIndex: number) {
     // step 1 split panelId by -
     const panel = recursiveGetPanelById(layout.value, panelId) as TabPanelContainer
     if(panel) {
+        
         panel.showingTabIndex = tabIndex;
+        hightLightPanel.value = panel.id
+        console.log("high light", hightLightPanel.value)
     }
 }
 
@@ -154,7 +158,7 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
 
         // get component and update parent and teleport id
         nextTick(() => {
-
+            panelTabFocus(targetParent.id, newItemIndex)
             const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
             if(component) {
                 component.teleportId = newPanelId + '-' + sourceData.id;
@@ -192,6 +196,7 @@ function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanelContainer, d
 
     // get component and update parent and teleport id
     nextTick(() => {
+        panelTabFocus(targetParent.id, newItemIndex)
 
         const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
         if(component) {
@@ -233,7 +238,8 @@ provide(
         moveTabBetweenPanel,
         addTabToPanel,
         splitViewToDirection,
-        tabDataKey
+        tabDataKey,
+        hightLightPanel: hightLightPanel.value
     }
 )
 
@@ -245,8 +251,8 @@ async function getTabsFromServer() {
         const newLayout = JSON.parse(storageTabs);
         initLayout(newLayout)
     }else{
-        
         // init a basic layout
+        hightLightPanel.value = "dummy-tab-container"
         initLayout({
             id: "root",
             type: 'TabLayout',
@@ -303,57 +309,68 @@ onMounted(() => {
 }
 .tabManager{
     height:100%;
-    :deep(.splitpanes) {
+    --splitpanes-margin: 4rem;
+    :deep(.splitpanes__pane) {
         background: var(--app-grey-950);
+        box-shadow: var(--app-shadow-s);
+        border-radius: var(--app-border-radius-m);
+        overflow: hidden;
+        &:has(.activePanel) {
+            background: var(--app-grey-975);
+            box-shadow: var(--app-shadow-xl);
+        }
     }
     
     // :deep(.splitpanes__pane) {
     //     // default style for pane
     // }
     :deep(.splitpanes__splitter) {
-        --center-width: 2px;
+        --center-width: 12px;
+        --dragger-width: 1px;
         --bg-width: var(--app-space-m);
-        --center-color: var(--app-grey-800);
-        --bg-color: var(--app-grey-850);
+        --center-color: var(--app-grey-700);
+        --bg-color: rgba(0,0,0,0.3);
         z-index: 2;
         &:hover {
-            &:before{
-                opacity: 0.5 !important;
-            }
+            --dragger-width: 2px;
+            --splitpanes-margin: 2rem;
+            --center-color: var(--app-grey-400);
         }
         &:after {
             content: "";
             position:absolute;
             background: var(--center-color);
             z-index: 2;
+            transition: all .2s ease-in-out;
         }
         &:before {
             content: "";
             position:absolute;
-            background: var(--bg-color);
         }
     }
     :deep(.splitpanes--dragging > .splitpanes__splitter) {
         --center-color:var(--app-accent-color) !important ;
+        --dragger-width: 2px !important;
+        --splitpanes-margin: 0rem !important;
     }
     :deep(.splitpanes--vertical > .splitpanes__splitter) {
         width: var(--center-width);
         position: relative;
         &:after {
-            width: var(--center-width);
-            height: 100%;
+            width: var(--dragger-width);
+            height: calc(100% - var(--splitpanes-margin) * 2);
             display: block;
             background: var(--center-color);
-            top: 0;
-            left: 0;
+            top: var(--splitpanes-margin);
+            left: calc(( var(--center-width) - var(--dragger-width)) / 2);
         }
         &:before {
             width: var(--bg-width);
             height: 100%;
             display: block;
-            background: var(--bg-color);
             position: absolute;
-            left: calc(var(--bg-width) / 2  * -1 + var(--center-width));
+            left: calc( (var(--center-width) - var(--bg-width)) / 2 );
+            // background: var(--bg-color);
             opacity: 0;
         }
         // background: var(--app-grey-800);

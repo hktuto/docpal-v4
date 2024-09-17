@@ -53,7 +53,7 @@ interface TabManager {
     splitViewToDirection:(sourceData:TabItem, targetData:TabPanelContainer, direction:  'top' | 'bottom' | 'left' | 'right') =>void,
     addMenuItemToPanel:(sourceData:MenuItem, targetData:TabPanelContainer, direction:  'top' | 'bottom' | 'left' | 'right') =>void,
     addTabToPanel:(panelId:string, newTab: TabItem) => void,
-    
+    hightLightPanel: string
     tabDataKey:symbol
 }
 
