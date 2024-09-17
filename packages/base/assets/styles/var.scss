@@ -1,8 +1,11 @@
+@use 'sass:math';
+@use 'sass:map';
+
 $app-color: (
     'white': #ffffff,
     'black': #000000,
     'primary': (
-      'base': #17B2C0,
+      'base': #15d5b9,
     ),
     'success': (
       'base': #0077ff,
@@ -55,7 +58,7 @@ $app-radius: (
     'small': 0.25rem,
     'middle': 0.5rem,
     'round': 1.25rem,
-    'circle': 10rem,
+    'circle': 10e5px,
 );
 
 $app-font-size: (
@@ -65,4 +68,27 @@ $app-font-size: (
     'base': 0.9rem,
     'small': 0.8rem,
     'extra-small': 0.7rem,
-)
+);
+
+$white: map.get($app-color, 'white') !default;
+$black: map.get($app-color, 'black') !default;
+@mixin set-app-mix-light(
+    $type,
+    $number,
+    $mode: 'light',
+    $mix-color: $white
+) {
+    $app-color: map.deep-merge(
+        (
+            $type: (
+                '#{$mode}-#{$number}':
+                mix(
+                    $mix-color,
+                    map.get($app-color, $type, 'base'),
+                    math.percentage(math.div($number, 10))
+                ),
+            ),
+        ),
+        $app-color
+    ) !global;
+}
