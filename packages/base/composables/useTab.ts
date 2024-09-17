@@ -10,8 +10,8 @@ const useTabLayout = () => useState<TabLayout>('layout', () => ({
     tabs: []
 })
 )
-const useDropEventCallback = () => useState<Record<symbol, any>>('tab-panel-drop-event-callback', ()=>({}))
-
+export const useDropEventCallback = () => useState<Record<symbol, any>>('tab-panel-drop-event-callback', ()=>({}))
+export const useCurrentTargetPanel = () => useState<string>('tab-current-target-panel',() => "")
 export const useTabsManager = () => {
 
     const layout = useTabLayout()

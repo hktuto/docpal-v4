@@ -34,3 +34,17 @@
 ```
 
 ## Events
+
+- task list
+- [x] render tab in tab panel
+- [x] change tab update display
+- [x] "Add tab" in tab header
+- [x] "Close" tab in tab header
+- [x] drag tab to reorder
+- [x] multiple tab panel
+- [x] drop tab to other tab panel
+- [ ] highlight current tag, dim other tab and panel
+- [ ] focus tab (hide other)
+- [ ] tab component router system
+
+   
