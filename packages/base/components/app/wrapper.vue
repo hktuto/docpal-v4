@@ -44,10 +44,9 @@ const {x,y} = useMouse()
     width:100%;
     position: relative;
     overflow: hidden;
-    padding: var(--app-space-s);
     z-index: 2;
 }
 .appSidebar{
-    padding-inline: var(--app-space-s);
+    padding: var(--app-space-s);
 }
 </style>

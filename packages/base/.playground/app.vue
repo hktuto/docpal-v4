@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import {appMenu} from '#imports'
+
 
 </script>
 
 <template>
     <AppWrapper>
         <template #sidebar>
-            <AppMenu class="sideMenu">
+            <AppMenu class="sideMenu" >
                 <template #header>
                     <div class="logoContainer">
                         <AppLogo />

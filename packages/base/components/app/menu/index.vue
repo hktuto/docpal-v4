@@ -1,7 +1,6 @@
 <script setup lang="ts" generic="T extends MenuItem">
-import type {MenuItem} from '#imports'
+const menu = useMenuList()
 
-const { menu = []} = defineProps<{ menu: T[] }>()
 const opened = ref('false')
 
 
