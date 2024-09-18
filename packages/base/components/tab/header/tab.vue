@@ -140,16 +140,15 @@ function closeTab(){
             <!-- <div class="gripIcon">
                 <Icon class="" name="lucide:grip-vertical" />
             </div> -->
-            <!-- <div class="icon">
-                {{ tab.icon }}
-            </div> -->
+            <div class="tabLeftTeleportContainer" >
+
+            </div>
+            <Icon v-if="tab.icon" :name="tab.icon" />
             <div class="label">
                 {{ tab.label }}
             </div>
             <Icon class="closeIcon" name="ic:round-close" @click.stop="closeTab"></Icon>
             <!-- <TabDropIndicator 
-                
-                
                 gap="20px" /> -->
         </div>
 
@@ -175,6 +174,7 @@ function closeTab(){
     padding: var(--app-space-xs) var(--app-space-s);
     font-size: var(--app-font-size-s);
     color: var(--app-grey-400);
+    border-bottom: 2px solid var(--tab-item-border-color);
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
@@ -186,15 +186,15 @@ function closeTab(){
         opacity: 0.4;
     }
     .closeIcon{
-        display: none;
+        opacity: 0;
     }
     &:hover {
-        background: linear-gradient(0deg, var(--app-grey-850), rgba(255,255,255,0));
+        background: var(--app-grey-850);
         .gripIcon{
             display: block;
         }
         .closeIcon{
-            display: block;
+            opacity: 1;
         }
     }
     &.showing{
