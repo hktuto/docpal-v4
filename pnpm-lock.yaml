@@ -64,7 +64,7 @@ importers:
         specifier: 3.13.2
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.21.3)(sass@1.78.0)(terser@5.32.0)(typescript@5.6.2)(vite@5.4.5(@types/node@22.5.5)(sass@1.78.0)(terser@5.32.0))(vue-tsc@2.1.6(typescript@5.6.2))
       vue:
-        specifier: 3.5.6
+        specifier: latest
         version: 3.5.6(typescript@5.6.2)
       vue-router:
         specifier: latest
@@ -101,7 +101,7 @@ importers:
         specifier: 3.13.2
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.21.3)(sass@1.78.0)(terser@5.32.0)(typescript@5.6.2)(vite@5.4.5(@types/node@22.5.5)(sass@1.78.0)(terser@5.32.0))(vue-tsc@2.1.6(typescript@5.6.2))
       vue:
-        specifier: 3.5.6
+        specifier: latest
         version: 3.5.6(typescript@5.6.2)
       vue-router:
         specifier: latest
@@ -157,7 +157,7 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(magicast@0.3.5)(rollup@4.21.3)
       vue:
-        specifier: 3.5.6
+        specifier: latest
         version: 3.5.6(typescript@5.6.2)
       vue-router:
         specifier: latest
@@ -215,7 +215,7 @@ importers:
         specifier: 3.13.2
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.21.3)(sass@1.78.0)(terser@5.32.0)(typescript@5.6.2)(vite@5.4.5(@types/node@22.5.5)(sass@1.78.0)(terser@5.32.0))(vue-tsc@2.1.6(typescript@5.6.2))
       vue:
-        specifier: 3.5.6
+        specifier: latest
         version: 3.5.6(typescript@5.6.2)
       vue-router:
         specifier: latest
@@ -297,7 +297,7 @@ importers:
         specifier: ^3.1.5
         version: 3.1.5
       vue:
-        specifier: 3.5.6
+        specifier: latest
         version: 3.5.6(typescript@5.6.2)
       vue-router:
         specifier: latest
@@ -346,7 +346,7 @@ importers:
         specifier: 3.13.2
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.21.3)(sass@1.78.0)(terser@5.32.0)(typescript@5.6.2)(vite@5.4.5(@types/node@22.5.5)(sass@1.78.0)(terser@5.32.0))(vue-tsc@2.1.6(typescript@5.6.2))
       vue:
-        specifier: 3.5.6
+        specifier: latest
         version: 3.5.6(typescript@5.6.2)
       vue-router:
         specifier: latest

@@ -38,6 +38,7 @@ onMounted(()=>{
 </script>
 
 <style lang="scss" scoped>
+
 .center{
     z-index: 2;
 }
@@ -45,18 +46,18 @@ onMounted(()=>{
     position: fixed;
     left:0;
     top:0;
-    width: 100vw;
-    height: 100vh;
+    width: 100svw;
+    height: 100svh;
     overflow: hidden;
     z-index: -1;
-    background-color: var(--app-main-color);
+    background-color: var(--app-accent-color);
     display: grid;
     place-items: center;
     #gradient-canvas{
         position: fixed;
         left: 0;
         top:0;
-        height: 100vh;
+        height: 100svh;
         width: 100%;
         background: var(--app-main-color);
         opacity: 0;

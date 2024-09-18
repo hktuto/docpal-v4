@@ -75,11 +75,12 @@ $types: primary, success, warning, danger, error, info;
   --app-space-xxl: 4.8rem;
   
   // set app shadow
-  --app-shadow-s: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --app-shadow-m: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --app-shadow-l: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --app-shadow-xl: 0 12px 25px -5px rgba(0, 0, 0, 0.2), 0 5px 10px -5px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
+  --app-shadow-s: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 4px  rgba(0, 0, 0, 0.02);
+  --app-shadow-m: 0 2px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  --app-shadow-l: 0 2px 15px -3px rgba(0, 0, 0, 0.2), 0 2px 6px -2px rgba(0, 0, 0, 0.1);
+  --app-shadow-xl: 0 3px 25px -5px rgba(0, 0, 0, 0.4), 0 3px 10px -5px rgba(0, 0, 0, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
   
+
 }
 
 
@@ -90,6 +91,10 @@ html, body{
   font-size: var(--app-font-size-m);
   line-height: var(--app-line-height);
   font-weight: var(--app-font-weight);
+  --gradient-color-1: #119de9;
+  --gradient-color-2: #637fdc;
+  --gradient-color-3: #1dd6c3;
+  --gradient-color-4: #9adfee;
 }
 
 * {

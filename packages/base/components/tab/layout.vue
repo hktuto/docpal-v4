@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {TabLayout, TabPanelContainer} from './type'
+import type {TabLayout, TabPanelContainer} from '#imports'
 import { Splitpanes, Pane } from 'splitpanes'
 
 

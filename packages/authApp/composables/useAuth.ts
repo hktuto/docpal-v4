@@ -1,19 +1,19 @@
 
 import {useState, createError} from '#imports'
-import Keycloak from 'keycloak-js'
+
 import {clientApi} from 'api'
+import type Keycloak from 'keycloak-js'
 
-
-
-import type { User } from '../types/user'
+import type { UserDTO } from 'api/src/generate/client'
 
 export const useAuthReadyState = () => useState('auth-ready', () => false)
-const useUserState = () => useState<User | null>('auth-user');
-const useKeyCloakState = () => useState<Keycloak |null>('keycloak-state')
+export const useUserState = () => useState<UserDTO>('auth-user');
+export const useKeyCloakState = () => useState<Keycloak |null>('keycloak-state')
 export const usePublicPageState = () => useState<string[]>('auth-public-page', () => ([]))
 export const useLoginHook = () => useState<any>(() => shallowRef([]));
 export const useIsSSO = () => useState<boolean>(() => false);
 export const useIsLDAP = () => useState<boolean>(() => false);
+
 
 
 export const useAuth = () => {
@@ -28,33 +28,20 @@ export const useAuth = () => {
     }
 }
 
+
+/**
+ *  從 keycloak 拿回用戶 token, 放到 localStorage, 
+ *  登陸後先  {@link useFeature} 
+ *  再  
+ */
 export async function fetch() {
     const authReadyState = useAuthReadyState()
     const keyCloakState = useKeyCloakState()
     const publicPageState = usePublicPageState()
     const userState = useUserState()
-    const isSSO = useIsSSO()
-    const isLDAP = useIsLDAP()
-    const route = useRoute()
-    if(publicPageState.value.includes(route.path)){
-        console.log('public page')
-        authReadyState.value = true;
-        userState.value = null;
-        return;
-    }
+
     if(!keyCloakState.value) {
-        const {data} = await clientApi.api.getKeyCloakProperty()
-        keyCloakState.value = new Keycloak({
-            "url": data?.keyCloakProperty?.url,
-            "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
-            "clientId": data?.keyCloakProperty?.clientId || "",
-            // @ts-ignore
-            "ssl-required": data?.keyCloakProperty.sslRequired || "",
-            "public-client": data?.keyCloakProperty?.publicClient || "",
-            "confidential-port": data?.keyCloakProperty?.confidentialPort || ""
-        })
-        isSSO.value = !!data?.keyCloakProperty?.enableSSO
-        isLDAP.value = !!data?.isLdap
+       throw createError('Keycloak is not define') 
     }
     await keyCloakState.value.init({
         onLoad:'login-required'
@@ -71,7 +58,14 @@ export async function fetch() {
         username: "username",
         userId: "username"
     }
+    await Promise.all([
+        getUser(),        
+        getFeature(),
+        getUserPreference()
+    ])
 }
+
+
 export function logout() {
     const keyCloakState = useKeyCloakState()
 
@@ -81,3 +75,107 @@ export function logout() {
     localStorage.removeItem('refresh_token')
     userState.value = null;
 }
+
+const useFeature = () => useState<Record<string,boolean>>('app-feature');
+/**
+ *  從Backend 拿回當前環境有的 feature, 并存到 `useFeature` 裡
+ */
+async function getFeature() {
+    const features = useFeature()
+    const {data} = await clientApi.api.getFeatures()
+    if(!data) throw new Error('get license feature error')
+    features.value = data
+}
+
+/**
+ * 
+ * @param requireFeatures  string | string[] // 單個或多個需要的 Feature
+ * @returns boolean 
+ */
+export function checkLicenseFeatures(requireFeatures: string[] | string) {
+    const features = useFeature()
+    if (typeof requireFeatures === 'string') return features.value[requireFeatures]
+    let result = false
+    if (Array.isArray(requireFeatures)) {
+        requireFeatures.forEach(item => {
+            if (features.value[item]) result = true
+        })
+    }
+    return result
+}
+
+
+export const useUserPreference = () => useState<Record<string,any>>();
+const colorModeOption = [
+    {
+        id: '1',
+        value: 'system',
+        name: 'System',
+    },
+    {
+        id: '2',
+        value: 'light',
+        name: 'Light',
+    },
+    {
+        id: '3',
+        value: 'dark',
+        name: 'Dark',
+    },
+]
+const uiSize = [
+    {
+        label: 'small',
+        value: '14px',
+    },
+    {
+        label: 'normal',
+        value: '18px',
+    },
+    {
+        label: 'large',
+        value: '20px',
+    },
+]
+/**
+ *  從後台拿回 user 的 setting, 包括文字大小，color mode ...
+ */
+async function getUserPreference()  {
+    const preference = useUserPreference()
+    const {data} = await clientApi.api.getSetting2()
+    if(!data ) {throw new Error('get user preference fail')}
+    const userSetting = JSON.parse(data) || {}
+    // normalize user preference , user may be come from old version
+    const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
+    if(!userSizeValid) {
+        delete userSetting.size;
+      }
+    const userColorValid = colorModeOption.find( c => c.value === userSetting.color);
+    if(!userColorValid) {
+        delete userSetting.color;
+    }
+      // normalize uploadFileMaxSize
+    if(userSetting.uploadFileMaxSize) {
+        userSetting.uploadFileMaxSize = Number(userSetting.uploadFileMaxSize.replace('M','').replace('G',''))
+    }
+    preference.value = Object.assign(
+        {
+            size: '14px',
+            folderView: 'tree',
+            language: navigator.language,
+            color: 'light',
+            tableSettings: {},
+            uploadFileMaxSize: 1200
+        },
+        userSetting
+    )
+
+}
+
+async function getUser(){
+    const user = useUserState()
+    const {data} = await clientApi.api.getApplication1()
+    if(!data) throw new Error('Get user info fail');
+    user.value = data
+}
+

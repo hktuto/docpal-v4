@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/test-utils/module'],
   extends:[
     '../../packages/authApp',
+    "../../packages/browse"
   ],
   typescript: {
     typeCheck: true,
