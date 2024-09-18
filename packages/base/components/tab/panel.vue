@@ -120,6 +120,11 @@ onUnmounted(() => {
     cleanup()
 })
 
+function backdropClick(index:number){
+    console.log("backdrop clicked ")
+    tabManager?.panelTabFocus(panel.id, index);
+}
+
 
 </script>
 
@@ -131,7 +136,7 @@ onUnmounted(() => {
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
                 tabBody:true, [state]:true, [closeEdge as string]:true
             }">
-            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex">
+            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
             </div>
         </div>
     </div>
@@ -152,7 +157,7 @@ onUnmounted(() => {
     &.activePanel{
         opacity: 1;
         :deep(.tabItem.showing) {
-            border-bottom: 1px solid var(--app-primary-5);
+            border-bottom: 2px solid var(--app-primary-4);
         }
     }
 }

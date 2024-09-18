@@ -156,7 +156,7 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
 
         // get component and update parent and teleport id
         nextTick(() => {
-            panelTabFocus(newPanelId, newItemIndex)
+            panelTabFocus(newPanelId, 0)
             const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
             if(component) {
                 component.teleportId = newPanelId + '-' + sourceData.id;
@@ -194,7 +194,7 @@ function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanelContainer, d
 
     // get component and update parent and teleport id
     nextTick(() => {
-        panelTabFocus(newPanelId, newItemIndex)
+        panelTabFocus(newPanelId, 0)
 
         const component = allComponents.value.find( (component:TabComponent) => component.id === sourceData.id)
         if(component) {
