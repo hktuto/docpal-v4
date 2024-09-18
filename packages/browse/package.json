@@ -10,7 +10,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
-    "postinstall": "npm run prepare"
+    "predev": "npm run prepare"
   },
   "keywords": [],
   "author": "",
