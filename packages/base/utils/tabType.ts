@@ -42,6 +42,7 @@ export const useTabs = () => useState<TabLayout>(() => ({
 
 export type TabComponent = {
     id:string,
+    label:string,
     parent:string // parent id no #
     teleportId:string,
     component: string

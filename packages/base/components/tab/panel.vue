@@ -154,11 +154,13 @@ function backdropClick(index:number){
     opacity: 0.8;
     overflow: hidden;
     opacity: 1;
+    --tab-item-border-color: rgba(255,255,255,0);
     &.activePanel{
         opacity: 1;
         :deep(.tabItem.showing) {
-            border-bottom: 2px solid var(--app-primary-4);
+            --tab-item-border-color: var(--app-success-4)
         }
+        
     }
 }
 .tabBody, .tabContent{
