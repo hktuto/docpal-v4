@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { provide, useTabsManager, recursiveGetPanelById } from '#imports'
-import type {TabItem, TabPanelContainer, TabLayout, TabComponent, MenuItem} from '#imports'
+import type {TabItem, TabPanelContainer, TabLayout, TabComponent, MenuItem, RouterParams} from '#imports'
 import {TabManagerKey, useCurrentTargetPanel } from '#imports'
 
 import 'splitpanes/dist/splitpanes.css'
@@ -16,7 +16,6 @@ function panelTabFocus(panelId:string, tabIndex: number) {
         
         panel.showingTabIndex = tabIndex;
         hightLightPanel.value = panel.id
-        console.log("highlight", hightLightPanel.value)
     }
 }
 
@@ -150,8 +149,7 @@ function splitViewToDirection(sourceData:TabItem, targetData:TabPanelContainer, 
                 parent: newPanelId,
             }]
         }
-        console.log("New Panel :", newPanelId)
-        console.log("move source to new panel :", sourceData.id)
+        
         const targetIndex = targetParent.tabs.findIndex((tabItem:any) => tabItem.id === targetData.id);
         const newItemIndex = direction === 'left' || direction === 'top' ? targetIndex  : targetIndex + 1
         targetParent?.tabs.splice(newItemIndex, 0 , newData)
@@ -228,6 +226,19 @@ function addTabToPanel(panelId:string, newTab: TabItem ) {
     })
 }
 
+function panelRouteUpdate(panelId:string, tabId:string, routerParams:RouterParams) {
+    const panel = recursiveGetPanelById(layout.value, panelId)
+    if(!panel) {
+        throw new Error('Panel not found when router change')
+    }
+    const item = panel.tabs.find( tab => tab.id === tabId);
+    if(!item) throw new Error('Tab not found when router change')
+    item.label = routerParams.label
+    item.component = routerParams.component
+    item.props = routerParams.props
+
+}
+
 
 
 provide(
@@ -240,7 +251,7 @@ provide(
         addTabToPanel,
         splitViewToDirection,
         tabDataKey,
-        hightLightPanel: hightLightPanel.value
+        panelRouteUpdate,
     }
 )
 
@@ -293,10 +304,11 @@ onMounted(() => {
         <template v-else>
 
             <TabLayout :layout="layout" />
+            
             <div class="hiddenAllComponent">
                 <template v-for="component in allComponents" :key="component.id">
-                    <Teleport  :to="'#' + component.teleportId">
-                        <component :is="component.component" :tab="component" />
+                    <Teleport defer :to="'#' + component.teleportId">
+                        <TabRouter :tab="component" />
                     </Teleport>
                 </template>
             </div>
@@ -318,7 +330,8 @@ onMounted(() => {
         overflow: hidden;
         &:has(.activePanel) {
             background: var(--app-grey-975);
-            box-shadow: var(--app-shadow-xl);
+            box-shadow: var(--app-shadow-l);
+            z-index: 4;
         }
     }
     
@@ -326,23 +339,23 @@ onMounted(() => {
     //     // default style for pane
     // }
     :deep(.splitpanes__splitter) {
-        --center-width: 12px;
+        --center-width: 6px;
         --dragger-width: 1px;
         --bg-width: var(--app-space-m);
-        --center-color: var(--app-grey-700);
+        --center-color: transparent;
         --bg-color: rgba(0,0,0,0.3);
         z-index: 2;
         &:hover {
             --dragger-width: 2px;
             --splitpanes-margin: 2rem;
-            --center-color: var(--app-grey-400);
+            --center-color: var(--app-grey-600);
         }
         &:after {
             content: "";
             position:absolute;
             background: var(--center-color);
             z-index: 2;
-            transition: all .2s ease-in-out;
+            transition: all .1s ease-in-out;
         }
         &:before {
             content: "";
@@ -371,7 +384,7 @@ onMounted(() => {
             display: block;
             position: absolute;
             left: calc( (var(--center-width) - var(--bg-width)) / 2 );
-            // background: var(--bg-color);
+            background: var(--bg-color);
             opacity: 0;
         }
         // background: var(--app-grey-800);

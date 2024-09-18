@@ -1,10 +1,11 @@
-import type { InjectionKey } from '#imports';
+import type { InjectionKey, RouterParams } from '#imports';
 
 export type TabItem = {
     id:string,
     label: string,
     parent:string
     component: string,
+    props?:any
     data?:any
 }
 export type TabPanel = any[] // tab panel container
@@ -53,15 +54,15 @@ interface TabManager {
     splitViewToDirection:(sourceData:TabItem, targetData:TabPanelContainer, direction:  'top' | 'bottom' | 'left' | 'right') =>void,
     addMenuItemToPanel:(sourceData:MenuItem, targetData:TabPanelContainer, direction:  'top' | 'bottom' | 'left' | 'right') =>void,
     addTabToPanel:(panelId:string, newTab: TabItem) => void,
-    hightLightPanel: string
+    panelRouteUpdate: (panelId:string, tabId:string, routerParams:RouterParams ) => void
     tabDataKey:symbol
 }
 
-interface TabComponetHelper {
+interface TabComponentHelper {
     renameTab:(panelId:string, tabId:string, newName:string) => void
     
     tabDataKey:symbol
 }
 
 export const TabManagerKey: InjectionKey<TabManager> = Symbol('tabManager');
-export const TabComponetKey: InjectionKey<TabComponetHelper> = Symbol('tabComponent');
+export const TabComponentKey: InjectionKey<TabComponentHelper> = Symbol('tabComponent');

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const appMenu = useMenuList()
-import { TabManagerKey } from '#imports';
+import type {routerParams} from '#imports'
+import { TabManagerKey,MenuRouterKey } from '#imports';
 
 const props = defineProps<{tab: any}>()
 const counter = ref(0)
@@ -8,7 +9,22 @@ const tabManager = inject(TabManagerKey)
 if(!tabManager){
     throw createError('Tab manger not found')
 }
+const menuManager = inject(MenuRouterKey)
+if(!menuManager) {
+    throw createError('menu manger not found')
+}
 
+
+function itemClick(item:MenuItem) {
+    console.log("child item clcik", item)
+    const param:routerParams = {
+        menuKey: (menuManager as any).menuSymbol,
+        label: item.label,
+        component: item.component,
+        props:{}
+    }
+    menuManager?.navigateTo(param)
+}
 
 </script>
 <template>
@@ -19,7 +35,7 @@ if(!tabManager){
                 {{ tab.id }} 
             </div>
         <div class="menuGrid">
-            <div v-for="item in appMenu" :key="item.id" class="menuItem">
+            <div v-for="item in appMenu" :key="item.id" class="menuItem" @click="itemClick(item)">
                 <Icon :name="item.icon" />
             </div>
         </div>

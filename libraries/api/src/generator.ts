@@ -26,6 +26,9 @@ async function generate(){
                 unwrapResponseData:true,
                 apiClassName: point.className,
                 singleHttpClient:false,
+                modular:false,
+                moduleNameFirstTag:false
+                
             }
             )
         )

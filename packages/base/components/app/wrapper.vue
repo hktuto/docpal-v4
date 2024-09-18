@@ -23,7 +23,6 @@ const {x,y} = useMouse()
     width: 100svw;
     height: 100svh;
     overflow: hidden;
-    position: absolute;
     display: grid;
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
@@ -48,6 +47,6 @@ const {x,y} = useMouse()
     z-index: 2;
 }
 .appSidebar{
-    padding: var(--app-space-s);
+    padding: var(--app-space-s) calc( var(--app-space-s) - var(--app-space-xs)) var(--app-space-s) var(--app-space-s);
 }
 </style>
