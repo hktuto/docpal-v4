@@ -348,7 +348,7 @@ onMounted(() => {
         &:hover {
             --dragger-width: 2px;
             --splitpanes-margin: 2rem;
-            --center-color: var(--app-grey-600);
+            --center-color: var(--app-success-3);
         }
         &:after {
             content: "";
