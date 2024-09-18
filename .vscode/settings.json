@@ -1,9 +1,19 @@
 {
     "cSpell.words": [
+        "docpal",
+        "hitbox",
+        "iconify",
         "Keycloak",
+        "lucide",
+        "nuxi",
+        "predev",
         "splitpanes",
-        "typecheck"
+        "typecheck",
+        "vueuse"
     ],
+    
+    "i18n-ally.sourceLanguage": "en-US",
     "i18n-ally.localesPaths": [
+        "./dev-tools/i18n-helper/dist"
     ]
 }
