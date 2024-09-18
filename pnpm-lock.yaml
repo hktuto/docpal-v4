@@ -129,6 +129,18 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6(typescript@5.6.2)
 
+  dev-tools/i18n-helper:
+    devDependencies:
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.2
+
   libraries/api:
     dependencies:
       axios:

@@ -4,9 +4,10 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev ./apps/web --dotenv ../../env/.env.dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview"
+    "test": "vitest",
+    "i18n": "pnpm -filter i18n-helper generate",
+    "api": "pnpm -filter api generate",
+    "postinstall": "npm run i18n && npm run api"
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.0.10",
