@@ -1,8 +1,8 @@
 <script lang="ts" setup >
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import {TabManagerKey,} from '#imports'
 import type {TabPanelContainer, TabItem} from '#imports'
+import { useDropable } from '~/composables/useDnD';
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
@@ -10,23 +10,17 @@ if(!tabManger) {
 }
 
 const {panel} = defineProps<{panel:TabPanelContainer}>()
-function getTabData(tab: TabItem) {
-  return { [(tabManger as any).tabDataKey]: true, tabId: tab.id };
-}
+
 function isTabData(
   data: Record<string | symbol, unknown>,
 ):boolean {
-  return data[(tabManger as any).tabDataKey] === true;
+  return data.key === (tabManger as any).tabDataKey;
 }
 
-let cleanup = () => {}
-onMounted(() => {
-    cleanup = monitorForElements({
-        canMonitor({ source }) {
-            return isTabData(source.data)
-        },
-        onDrop({ location, source }) {
-            const target = location.current.dropTargets[0]
+const { setupDropable } = useDropable({
+    key: tabManger?.tabDataKey,
+    canMonitor:({ source }) => isTabData(source.data),
+    onDropHandler:({ location, source, target }) => {
             // if drop target is not this panel , return
             if (!target || (target as any).data.data.parent !== panel.id) {
                 return
@@ -42,9 +36,12 @@ onMounted(() => {
             const closestEdgeOfTarget = extractClosestEdge(targetData)
             if(!closestEdgeOfTarget) return
             tabManger?.moveTabBetweenPanel({...sourceData.data}, {...targetData.data}, closestEdgeOfTarget as any )
-
-        }
-    })
+    },
+    detectDrop:false,
+})
+let cleanup = () => {}
+onMounted(() => {
+    setupDropable()
 })
 
 onUnmounted(() => {

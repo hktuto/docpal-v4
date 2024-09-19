@@ -1,12 +1,7 @@
 import type { InjectionKey, RouterParams } from '#imports';
-
-export type TabItem = {
-    id:string,
-    label: string,
+import type {DropableItem} from './dragType'
+export interface TabItem extends DropableItem {
     parent:string
-    component: string,
-    props?:any
-    data?:any
 }
 export type TabPanel = any[] // tab panel container
 
@@ -30,15 +25,6 @@ export type TabLayout = {
     direction: LayoutDirection
     tabs: (TabPanelContainer | TabLayout)[]
 }
-
-
-export const useTabs = () => useState<TabLayout>(() => ({
-    id: "root",
-    type: "TabLayout" as TabType,
-    parent: "",
-    direction: "vertical" as LayoutDirection,
-    tabs: []
-}))
 
 export type TabComponent = {
     id:string,
