@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import type { TabPanelContainer, TabItem } from '#imports';
 import {TabManagerKey} from '#imports'
-import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
-import {dropTargetForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
-import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
-import { id } from 'element-plus/es/locale/index.mjs';
+import { useDropable } from '~/composables/useDnD';
 
 const hightLightPanel = useCurrentTargetPanel()
 const tabManager = inject(TabManagerKey)
@@ -14,14 +9,10 @@ if(!tabManager) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
 
-function getTabData(panel: any) {
-  return { [(tabManager as any).tabDataKey]: true, tabId: panel.id, data:panel };
-}
-
 function isTabData(
   data: Record<string | symbol, unknown>,
 ):boolean {
-  return data[(tabManager as any).tabDataKey] === true;
+  return data.key === (tabManager as any).tabDataKey;
 }
 
 const {panel} = defineProps<{
@@ -29,95 +20,49 @@ const {panel} = defineProps<{
 }>()
 
 const elRef = ref()
-const state = ref<'idle' | 'is-dragging-over'>('idle')
-const closeEdge = ref<string | null>()
-let cleanup = () => { }
-
 const {isMenuData} = useMenuDrop()
-onMounted(() => {
-    if(!elRef.value) return
-    cleanup = combine(
-        monitorForElements({
-            canMonitor({ source }) {
-                return true
-            },
-            onDrop({ location, source }) {
-                // drop tabs item logic
-                // return if target is not this panel
-                const isTab = isTabData(source.data)
-                const target:any = location.current.dropTargets[0]
-                // 如果不是本 panel 下 drop 的，不用做什麼
-                if(target.data.data.id !== panel.id) return;
-                if(isTab){
+const { dragState, setupDropable } = useDropable({
+    key: (tabManager as any).tabDataKey,
+    canMonitor: () => {return true},
+    onDropHandler :({ location, source, target}) => {
+        const isTab = isTabData(source.data)
+        // 如果不是本 panel 下 drop 的，不用做什麼
+        if(target.data.data.id !== panel.id) return;
+        if(isTab){
 
-                    
-                    const sourceData = source.data as any
-                    const targetData = target.data as any
-                    const closestEdgeOfTarget = extractClosestEdge(targetData)
-                    if(!closestEdgeOfTarget) return
-                    tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
-                    return;
-                }
-                const isMenu = isMenuData(source.data)
-                if(isMenu) {
-                    const sourceData = source.data as any
-                    const targetData = target.data as any
-                    const closestEdgeOfTarget = extractClosestEdge(targetData)
-                    if(!closestEdgeOfTarget) return
-                    tabManager?.addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
-                    return
-                }
-                
-            }
-        }),
-        dropTargetForElements({
-            element: elRef.value,
-            canDrop({ source }) {
-                // not allowing dropping on yourself
-                if (source.element === elRef.value) {
-                    return false
-                }
-                // only allowing tasks to be dropped on me
-                // 是否可以拖拉到元件上的邏輯
-                return true
-            },
-            getData({ input }) {
-                const data = getTabData(panel)
-                return attachClosestEdge(data, {
-                    element: elRef.value!,
-                    input,
-                    allowedEdges: ['left', 'right'],
-                })
-            },
-            getIsSticky() {
-                return false
-            },
-            onDragEnter({ self }) {
-                const closestEdge = extractClosestEdge(self.data)
-                state.value = 'is-dragging-over'
-                closeEdge.value = closestEdge
-                // elState.value = { type: 'is-dragging-over', closestEdge }
-            },
-            onDrag({ self, location }) {
-                const closestEdge = extractClosestEdge(self.data)
-                // Only need to update react state if nothing has changed.
-                if (state.value !== 'is-dragging-over' || closeEdge.value !== closestEdge) {
-                    state.value = 'is-dragging-over'
-                    closeEdge.value = closestEdge
-                }
-            },
-            onDragLeave() {
-                state.value = 'idle'
-            },
-            onDrop() {
-                state.value = 'idle'
-            },
-        })
-    )
+            
+            const sourceData = source.data as any
+            const targetData = target.data as any
+            const closestEdgeOfTarget = extractClosestEdge(targetData)
+            if(!closestEdgeOfTarget) return
+            tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
+            return;
+        }
+        const isMenu = isMenuData(source.data)
+        if(isMenu) {
+            const sourceData = source.data as any
+            const targetData = target.data as any
+            const closestEdgeOfTarget = extractClosestEdge(targetData)
+            if(!closestEdgeOfTarget) return
+            tabManager?.addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
+            return
+        }
+    },
+    detectDrop: true,
+    dragData: {
+        key: (tabManager as any).tabDataKey,
+        data: panel as any,
+    },
+    allowedEdges: ['left', 'right'],
+    
 })
 
-onUnmounted(() => {
-    cleanup()
+
+
+onMounted(() => {
+    if(!elRef.value) return
+    setupDropable(elRef.value)
+    
 })
 
 function backdropClick(index:number){
@@ -134,7 +79,7 @@ function backdropClick(index:number){
         <TabHeaderList :panel="panel"/>
         
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
-                tabBody:true, [state]:true, [closeEdge as string]:true
+                tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true
             }">
             <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
             </div>

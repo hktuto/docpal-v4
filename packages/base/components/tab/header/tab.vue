@@ -1,120 +1,28 @@
 <script lang="ts" setup generic="T extends TabItem, B extends boolean, I extends number">
-import {draggable, dropTargetForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
-import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview'
-import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview'
-import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 
 
 import type { TabItem } from '#imports';
-import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
 import {TabManagerKey} from '#imports'
+import { useDragable } from '~/composables/useDnD'
 const { tab, selected, index } = defineProps<{tab: T, selected:B, index:I}>()
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
-
-function getTabData(tab: TabItem) {
-  return { [(tabManger as any).tabDataKey]: true, tabId: tab.id, data:tab };
-}
-
-type TabState = 
-    | {
-        type: "idle";
-    }
-    | {
-        type: "preview";
-        container: HTMLElement;
-    }
-    | {
-        type: "is-dragging";
-    }
-    | {
-        type: "is-dragging-over";
-        closestEdge: Edge | null;
-    };
-const idle: TabState = { type: "idle" };
-const elRef = ref<HTMLDivElement | null>(null);
-const elState = useState<TabState>("state_" + tab.id, () => idle);
-
-let cleanup = () => { }
-
-onMounted(() => {
-    if(!elRef.value) return
-    
-    cleanup = combine(
-        draggable({
-            element: elRef.value, // 可拖拉的元件
-            getInitialData(){
-                return getTabData(tab)
-            },
-            onGenerateDragPreview({ nativeSetDragImage }) {
-                setCustomNativeDragPreview({
-                    nativeSetDragImage,
-                    getOffset: pointerOutsideOfPreview({
-                        x: '16px',
-                        y: '8px',
-                    }),
-                    render({ container }) {
-                        elState.value = { type: 'preview', container }
-                    },
-                })
-            },
-            onDragStart() {
-                elState.value = { type: 'is-dragging' }
-            },
-            onDrop() {
-                elState.value = idle
-            },
-
-        }),
-        dropTargetForElements({
-            element: elRef.value,
-            canDrop({ source }) {
-                // not allowing dropping on yourself
-                if (source.element === elRef.value) {
-                    return false
-                }
-                // only allowing tasks to be dropped on me
-                // 是否可以拖拉到元件上的邏輯
-                return true
-            },
-            getData({ input }) {
-                const data = getTabData(tab)
-                return attachClosestEdge(data, {
-                    element: elRef.value!,
-                    input,
-                    allowedEdges: ['left', 'right'],
-                })
-            },
-            getIsSticky() {
-                return true
-            },
-            onDragEnter({ self }) {
-                const closestEdge = extractClosestEdge(self.data)
-                elState.value = { type: 'is-dragging-over', closestEdge }
-            },
-            onDrag({ self }) {
-                const closestEdge = extractClosestEdge(self.data)
-                // Only need to update react state if nothing has changed.
-                if (elState.value.type !== 'is-dragging-over' || elState.value.closestEdge !== closestEdge) {
-                    elState.value = { type: 'is-dragging-over', closestEdge }
-                }
-            },
-            onDragLeave() {
-                elState.value = idle
-            },
-            onDrop() {
-                elState.value = idle
-            },
-        }),
-        
-    )
+const elRef = ref()
+const {dragState ,setupDrag} = useDragable({
+    key: (tabManger as any).tabDataKey,
+    dragData: {
+        [(tabManger as any).tabDataKey]: true,
+        key : (tabManger as any).tabDataKey,
+        data: tab
+    },
+    detectDrop: true,
+    allowedEdges: ['left', 'right'],
 })
 
-onUnmounted(() => {
-    cleanup()
+onMounted(() => {
+    setupDrag(elRef.value)
 })
 
 function tabFocus() {
@@ -136,7 +44,7 @@ function closeTab(){
     <div class="wrapper" @click="tabFocus">
 
         <div ref="elRef" :data-tab-id="tab.id" 
-        :class="{tabItem:true, showing:selected, [elState.type]:true, [(elState as any).closestEdge] :true}" >
+        :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" >
             <!-- <div class="gripIcon">
                 <Icon class="" name="lucide:grip-vertical" />
             </div> -->
@@ -152,7 +60,7 @@ function closeTab(){
                 gap="20px" /> -->
         </div>
 
-        <Teleport v-if="elState.type === 'preview'" :to="elState.container">
+        <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dragPreview">
                 {{ tab.label }}
             </div>
