@@ -5,9 +5,8 @@
   "scripts": {
     "build": "nuxt build",
     "test": "vitest",
-    "i18n": "pnpm -filter i18n-helper generate",
     "api": "pnpm -filter api generate",
-    "postinstall": "npm run i18n && npm run api"
+    "postinstall": "npm run api"
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.0.10",

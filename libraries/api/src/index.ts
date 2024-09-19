@@ -1,5 +1,4 @@
 
-import { createError } from '#imports';
 import {Client} from './generate/client'
 import {Admin} from './generate/admin'
 
@@ -35,13 +34,7 @@ clientApi.instance.interceptors.response.use(
         const originalRequest = error.config;
         console.log('fetch error', error)
         if(error.response.status >= 500) {
-          throw createError({
-            statusCode: error.response.status,
-            statusMessage: 'Server endpoint Error',
-            data: {
-              url: error.config.url
-            }
-          })
+          return Promise.reject(error);
         }
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
@@ -95,13 +88,7 @@ adminApi.instance.interceptors.response.use(
     async error => {
         const originalRequest = error.config;
         if(error.response.status >= 500) {
-            throw createError({
-                statusCode: error.response.status,
-                statusMessage: 'Server endpoint Error',
-                data: {
-                    url: error.config.url
-                }
-            })
+          return Promise.reject(error);
         }
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
