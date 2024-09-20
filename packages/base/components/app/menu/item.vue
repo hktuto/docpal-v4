@@ -68,6 +68,20 @@ function itemClickHandler(){
     position: relative;
     isolation: isolate;
     --item-bg: transparent;
+    &:after{
+            content: "";
+            width: calc(100% + 1px);
+            height: calc(100% + 1px);
+            position: absolute;
+            display: block;
+            background: transparent;
+            top: -1px;
+            left: -1px;
+            z-index: -1;
+            border-radius: calc(var(--menu-item-radius) + 1px);
+            box-shadow: var(--app-shadow-s);
+            opacity: 1;
+        }
     &.preview{
         opacity: 0.5;
     }
