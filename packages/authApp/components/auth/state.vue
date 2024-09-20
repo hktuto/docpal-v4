@@ -1,45 +1,23 @@
 <script lang="ts" setup>
-
 const { loggedIn, logout, ready  } = useAuth()
-
-const delayReady = ref(false)
-watch( loggedIn, (bool) => {
-    if(bool) {
-        setTimeout(() => delayReady.value = true, 300)
-    }
-})
 </script>
 
 <template>
-    <div v-if="ready" class="readyContentContainer">
-
-        <slot
-        
-        v-bind="{ loggedIn, logout }"
-        />
-    </div>
-    <div v-if="!delayReady" class="placeHolderContainer">
-        <slot
-        
-        name="placeholder"
-        />
-    </div>
+    <Transition appear>
+        <slot v-if="ready" v-bind="{ loggedIn, logout }" />
+        <slot v-else name="placeholder" />
+    </Transition>
 </template>
 
 <style lang="scss" scoped>
-.readyContentContainer{
-    opacity: 0;
-    animation: fadeIn 0.3s linear 0s normal forwards;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
 }
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(30vh);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
 

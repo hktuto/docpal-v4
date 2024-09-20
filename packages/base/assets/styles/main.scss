@@ -28,7 +28,7 @@ $types: primary, success, warning, danger, error, info;
     @for $i from 1 through 3 {
         // generate color in 5 levels mix with white
         --app-#{$type}-#{$i}: #{
-          mix( map.get($app-color, $type, 'base'), white, $i * 20%)
+          mix( map.get($app-color, $type, 'base'), white, $i * 10%)
         };
     }
     @for $i from 4 through 6 {
@@ -75,7 +75,7 @@ $types: primary, success, warning, danger, error, info;
   --app-space-xxl: 4.8rem;
   
   // set app shadow
-  --app-shadow-s: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 4px  rgba(0, 0, 0, 0.02);
+  --app-shadow-s: 0 2px 2px 0 rgba(0, 0, 0, 0.02), 0 2px 4px  rgba(0, 0, 0, 0.01);
   --app-shadow-m: 0 2px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
   --app-shadow-l: 0 2px 15px -3px rgba(0, 0, 0, 0.2), 0 2px 6px -2px rgba(0, 0, 0, 0.1);
   --app-shadow-xl: 0 3px 25px -5px rgba(0, 0, 0, 0.4), 0 3px 10px -5px rgba(0, 0, 0, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.05);

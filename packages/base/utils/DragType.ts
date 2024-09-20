@@ -9,7 +9,7 @@ export interface DropableItem {
     icon?:string,
     label:string,
     component: string,
-    props: Record<string, any>
+    props?: Record<string, any>
 }
 
 export interface DragData extends Record<string,any> {
@@ -36,7 +36,7 @@ export type UseDragableParam = {
     key:symbol,  
     dragData: DragData,
     detectDrop:boolean, 
-    allowedEdges:Edge[],
+    allowedEdges?:Edge[],
     onDragStart?:Function, 
     onDropItself?:Function,
     canDrop?:({ source }:any) => boolean, 
@@ -49,7 +49,7 @@ export type UseDragableParam = {
 
 export type DropableItemParam = {
     key:symbol,
-    canMonitor:(arg:any) => boolean,
+    canMonitor:({ source }:any) => boolean,
     onDropHandler:({ location, source, target }:any) => void,
     allowDropKeys?: symbol[], // 那個 symbol 可以的 drop 事件可以 trigger
     detectDrop?:boolean,

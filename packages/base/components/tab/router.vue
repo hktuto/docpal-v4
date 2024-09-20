@@ -114,4 +114,14 @@ provide(MenuRouterKey,{
     --gradient-color-3: #9ceee6;
     --gradient-color-4: #def5fa;
 }
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 </style>

@@ -2,8 +2,8 @@
 
 
 import type { TabItem } from '#imports';
-import {TabManagerKey} from '#imports'
-import { useDragable } from '~/composables/useDnD'
+import {TabManagerKey, useDragable} from '#imports'
+
 const { tab, selected, index } = defineProps<{tab: T, selected:B, index:I}>()
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {

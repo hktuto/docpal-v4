@@ -3,7 +3,7 @@ const menu = useMenuList()
 
 const opened = ref('false')
 
-
+const mode = ref<'collapse' | 'expand'>('collapse')
 
 </script>
 
@@ -14,7 +14,7 @@ const opened = ref('false')
                 <slot name="header" />
             </div>
             <div class="menuBody">
-                <AppMenuItem v-for="(item, index) in menu" :key="index" :item="item" :selected="false" />
+                <AppMenuItem v-for="(item, index) in menu" :key="index" :item="item" :selected="false" :mode="mode" />
             </div>
             <div class="menuFooter">
                 <Icon name="lucide:settings" />
@@ -22,11 +22,20 @@ const opened = ref('false')
             </div>
         </div>
     </div>
-</template>
+</template> 
 
 <style scoped lang="scss">
 .wrapper{
     height: 100%;
+    --menu-gap: var(--app-space-xs);
+    --icon-font-size: var(--app-font-size-l);
+    --menu-item-padding: var(--app-space-xs);
+    --menu-item-radius: var(--app-border-radius-m);
+    --menu-item-normal-bg: rgba(0,0,0,0);
+    --menu-item-active-bg: var(--app-grey-1000);
+    --menu-item-normal-color: var(--app-grey-100);
+    --menu-item-hover-color: var(--app-accent-color);
+    --menu-item-active-color: var(--app-main-color);
 }
 .menuContainer{
     height: 100%;

@@ -38,20 +38,3 @@ export const useMenuList = () => useState<MenuItem[]>('app-menu', () =>([
     },
 ]))
 export const menuKey = Symbol('menu');
-export const useMenuDrop =() => {
-
-    function isMenuData(data:any) {
-        return data[menuKey] === true
-    }
-
-    function getMenuData(data:MenuItem) {
-        return {
-            [menuKey]:true, menuId: data.id, data
-        }
-    }
-    return {
-        menuKey,
-        getMenuData,
-        isMenuData
-    }
-}

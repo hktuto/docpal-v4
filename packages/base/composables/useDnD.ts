@@ -1,4 +1,4 @@
-import type {DragState, UseDragableParam, DropableItemParam, DropTargtParams} from "~/utils/dragType";
+import type {DragState, UseDragableParam, DropableItemParam, DropTargtParams} from "#imports";
 import {draggable, dropTargetForElements, monitorForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview'
@@ -80,6 +80,7 @@ export const useDragable = ({
     })
 
     return {
+        extractClosestEdge,
         setupDrag,
         dragState
     }
@@ -145,6 +146,7 @@ export const useDropable = ({
         cleanup()
     })
     return {
+        extractClosestEdge,
         dragState,
         setupDropable
     }

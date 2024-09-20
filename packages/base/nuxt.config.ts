@@ -6,15 +6,6 @@ export default defineNuxtConfig({
   devtools: { 
     enabled: true, 
     customTabs:[
-      {
-        name: "client-swagger",
-        title: "Client Swagger",
-        icon: "mdi:api",
-        view: {
-          type: 'iframe',
-          src: (process.env.BASEURL || 'https://app4.wclsolution.com') + '/swagger-ui/',
-        },
-      }
     ]
   },
   modules: [

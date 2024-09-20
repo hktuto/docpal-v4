@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 const appMenu = useMenuList()
-import type {routerParams} from '#imports'
+import type {RouterParams} from '#imports'
 import { TabManagerKey,MenuRouterKey } from '#imports';
 
 const props = defineProps<{tab: any}>()
@@ -17,7 +17,7 @@ if(!menuManager) {
 
 function itemClick(item:MenuItem) {
     console.log("child item clcik", item)
-    const param:routerParams = {
+    const param:RouterParams = {
         menuKey: (menuManager as any).menuSymbol,
         label: item.label,
         component: item.component,

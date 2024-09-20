@@ -6,7 +6,7 @@
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv .playground ../env/.env.dev",
+    "dev": "nuxt dev .playground --dotenv ../../../env/.env.dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
@@ -19,7 +19,7 @@
     "keycloak-js": "^25.0.4",
     "nuxt": "3.13.2",
     "nuxt-authorization": "^0.1.0",
-    "vue": "latest",
+    "vue": "3.5.6",
     "vue-router": "latest"
   },
   "devDependencies": {

@@ -11,10 +11,44 @@ watch(loggedIn, (bool) => {
 </script>
 
 <template>
-  <div>
-    <NuxtRouteAnnouncer />
-    <NuxtPage />
-  </div>
+   <AuthState>
+        <template #default="{ loggedIn, logout }">
+            <AppWrapper>
+                <template #sidebar>
+                    <AppMenu class="sideMenu">
+                        <template #header>
+                            <div class="logoContainer">
+                                <AppLogo />
+                            </div>
+                        </template>
+                        <template #footer>
+                            <Icon name="lucide:log-out" @click="logout"/>
+                            <LangSwitch />
+                        </template>
+                    </AppMenu>
+                </template>
+                
+                <template #default>
+                    <TabManager />
+                </template>
+            </AppWrapper>
+        </template>
+        <template #placeholder>
+            <LoadingBg >
+                <h1 style="color: #fff;">{{ $t('loading') }}</h1>
+            </LoadingBg>
+        </template>
+    </AuthState>
+
 </template>
+
+
+<style scoped lang="scss">
+
+.logoContainer{
+    // padding: var(--menu-item-padding);
+    --icon-size: calc(var(--icon-font-size) + (var(--menu-item-padding) * 2));
+}
+</style>
 
 

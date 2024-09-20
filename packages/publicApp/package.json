@@ -6,7 +6,7 @@
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv .playground ../env/.env.dev",
+    "dev": "nuxt dev --dotenv .playground ../../env/.env.dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "nuxt": "3.13.2",
-    "vue": "latest",
+    "vue": "3.5.6",
     "vue-router": "latest"
   },
   "devDependencies": {
