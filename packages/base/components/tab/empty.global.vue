@@ -18,6 +18,8 @@ if(!menuManager) {
 function itemClick(item:MenuItem) {
     console.log("child item clcik", item)
     const param:RouterParams = {
+        id: item.id,
+        icon: item.icon,
         menuKey: (menuManager as any).menuSymbol,
         label: item.label,
         component: item.component,

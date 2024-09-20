@@ -6,11 +6,8 @@ export interface MenuItem extends DropableItem {
     children?: MenuItem[]
 }
 
-export interface RouterParams {
+export interface RouterParams extends DropableItem {
     menuKey:symbol,
-    label:string,
-    component: string,
-    props?: Record<string, any>
 }
 
 interface MenuProvider {

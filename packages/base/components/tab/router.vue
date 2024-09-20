@@ -11,12 +11,15 @@ function navigateTo(param: RouterParams) {
     console.log("param from child",{...tab.value})
     history.value.push({
         menuKey: menuSymbol,
+        id: tab.value.id,
+        icon: tab.value.icon,
         label: tab.value.label,
         component: tab.value.component,
         props: tab.value.props
     })
-    console.log(tab.value)
     if(!tab.value) throw new Error('Tab did not pass to child')
+    tab.value.icon =  param.icon
+    tab.value.id =  param.id
     tab.value.component =param.component
     tab.value.props = param.props
     tab.value.label = param.label
@@ -30,12 +33,16 @@ function back(){
     if(lastItem){
         forwardHistory.value.push({
             menuKey: menuSymbol,
+            id: tab.value.id,
+            icon: tab.value.icon,
             label: tab.value.label,
             component: tab.value.component,
             props: tab.value.props
         })
         console.log("lastItem", forwardHistory.value[0])
         tab.value.component =lastItem.component
+        tab.value.id =lastItem.id
+        tab.value.icon =lastItem.icon
         tab.value.props = lastItem.props
         tab.value.label = lastItem.label
         tabManager?.panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
