@@ -14,7 +14,7 @@ export default defineI18nLocale(async(locale:string) => {
             }
     }
     // for example, fetch locale messages from nuxt server
-    const {data} = await clientApi.api.queryLanguage({
+    const {data} = await clientApi.formPropertiesRelationController.getQuerylanguage({
         locale,
         languageKey:'admin'
     })

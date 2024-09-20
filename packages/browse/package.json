@@ -6,7 +6,7 @@
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv ../../env/.env.dev",
+    "dev": "nuxt dev .playground --dotenv ../../../env/.env.dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
@@ -19,7 +19,7 @@
     "@atlaskit/pragmatic-drag-and-drop": "^1.3.0",
     "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
     "nuxt": "3.13.2",
-    "vue": "latest",
+    "vue": "3.5.6",
     "vue-router": "latest"
   },
   "devDependencies": {

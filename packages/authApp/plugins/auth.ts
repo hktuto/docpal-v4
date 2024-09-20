@@ -7,7 +7,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const isSSO = useIsSSO()
     const isLDAP = useIsLDAP()
     nuxtApp.hook('app:created', async() => {
-        const {data} = await clientApi.api.getKeyCloakProperty()
+        const {data} = await clientApi.formPropertiesRelationController.getGetkeycloakproperty()
         keyCloakState.value = new Keycloak({
             "url": data?.keyCloakProperty?.url,
             "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party

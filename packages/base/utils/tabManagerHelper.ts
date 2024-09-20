@@ -34,7 +34,7 @@ export function recursiveLoopLayout(layout:TabLayout, components:TabComponent[])
             } else if(tab.type === 'TabPanel') {
                 const tabPanel = tab as TabPanelContainer
                 tabPanel.tabs.forEach( (component:TabItem, index:number) => {
-                    allComponents.push({id:component.id, parent:component.parent, teleportId:tabPanel.id+'-'+component.id, component: component.component})
+                    allComponents.push({id:component.id, label:component.label, parent:component.parent, teleportId:tabPanel.id+'-'+component.id, component: component.component})
                 })
             }
         })

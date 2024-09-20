@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { TabPanelContainer, TabItem } from '#imports';
-import {TabManagerKey} from '#imports'
-import { useDropable } from '~/composables/useDnD';
-
+import {TabManagerKey, useDropable, menuKey} from '#imports'
 const hightLightPanel = useCurrentTargetPanel()
 const tabManager = inject(TabManagerKey)
 if(!tabManager) {
@@ -20,11 +18,10 @@ const {panel} = defineProps<{
 }>()
 
 const elRef = ref()
-const {isMenuData} = useMenuDrop()
-const { dragState, setupDropable } = useDropable({
+const { dragState, setupDropable, extractClosestEdge } = useDropable({
     key: (tabManager as any).tabDataKey,
     canMonitor: () => {return true},
-    onDropHandler :({ location, source, target}) => {
+    onDropHandler :({ location, source, target}:any) => {
         const isTab = isTabData(source.data)
         // 如果不是本 panel 下 drop 的，不用做什麼
         if(target.data.data.id !== panel.id) return;
@@ -38,7 +35,7 @@ const { dragState, setupDropable } = useDropable({
             tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
             return;
         }
-        const isMenu = isMenuData(source.data)
+        const isMenu = source.data.key === menuKey
         if(isMenu) {
             const sourceData = source.data as any
             const targetData = target.data as any

@@ -1,8 +1,7 @@
 <script lang="ts" setup >
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
-import {TabManagerKey,} from '#imports'
+import {TabManagerKey, useDropable} from '#imports'
 import type {TabPanelContainer, TabItem} from '#imports'
-import { useDropable } from '~/composables/useDnD';
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
@@ -20,7 +19,7 @@ function isTabData(
 const { setupDropable } = useDropable({
     key: tabManger?.tabDataKey,
     canMonitor:({ source }) => isTabData(source.data),
-    onDropHandler:({ location, source, target }) => {
+    onDropHandler:({ location, source, target }:any) => {
             // if drop target is not this panel , return
             if (!target || (target as any).data.data.parent !== panel.id) {
                 return

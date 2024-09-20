@@ -8,9 +8,6 @@ export default defineNuxtConfig({
     '../../packages/authApp',
     "../../packages/browse"
   ],
-  typescript: {
-    typeCheck: true,
-  },
   build:{
     analyze:true
   },

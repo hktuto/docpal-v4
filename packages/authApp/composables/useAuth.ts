@@ -7,7 +7,7 @@ import type Keycloak from 'keycloak-js'
 import type { UserDTO } from 'api/src/generate/client'
 
 export const useAuthReadyState = () => useState('auth-ready', () => false)
-export const useUserState = () => useState<UserDTO>('auth-user');
+export const useUserState = () => useState<UserDTO | null>('auth-user');
 export const useKeyCloakState = () => useState<Keycloak |null>('keycloak-state')
 export const usePublicPageState = () => useState<string[]>('auth-public-page', () => ([]))
 export const useLoginHook = () => useState<any>(() => shallowRef([]));
@@ -35,10 +35,7 @@ export const useAuth = () => {
  *  再  
  */
 export async function fetch() {
-    const authReadyState = useAuthReadyState()
     const keyCloakState = useKeyCloakState()
-    const publicPageState = usePublicPageState()
-    const userState = useUserState()
 
     if(!keyCloakState.value) {
        throw createError('Keycloak is not define') 
@@ -48,16 +45,12 @@ export async function fetch() {
     })
     keyCloakState.value.updateToken(10)
     localStorage.setItem('access_token', keyCloakState.value.token || "");
-    const {data} = await clientApi.api.verifyKeycloakToken()
+    const {data} = await clientApi.systemFeatureController.getKeycloakTokenVerification()
     if(!data){
         throw new Error('token not valid')
     }
     localStorage.setItem('access_token', data.access_token)
     localStorage.setItem('refresh_token', data.refresh_token)
-    userState.value = {
-        username: "username",
-        userId: "username"
-    }
     await Promise.all([
         getUser(),        
         getFeature(),
@@ -82,7 +75,7 @@ const useFeature = () => useState<Record<string,boolean>>('app-feature');
  */
 async function getFeature() {
     const features = useFeature()
-    const {data} = await clientApi.api.getFeatures()
+    const {data} = await clientApi.systemFeatureController.getGetfeatures()
     if(!data) throw new Error('get license feature error')
     features.value = data
 }
@@ -142,7 +135,7 @@ const uiSize = [
  */
 async function getUserPreference()  {
     const preference = useUserPreference()
-    const {data} = await clientApi.api.getSetting2()
+    const {data} = await clientApi.nuxeoUserController.getSetting()
     if(!data ) {throw new Error('get user preference fail')}
     const userSetting = JSON.parse(data) || {}
     // normalize user preference , user may be come from old version
@@ -174,7 +167,7 @@ async function getUserPreference()  {
 
 async function getUser(){
     const user = useUserState()
-    const {data} = await clientApi.api.getApplication1()
+    const {data} = await clientApi.userNuxeo.getGetapplication()
     if(!data) throw new Error('Get user info fail');
     user.value = data
 }

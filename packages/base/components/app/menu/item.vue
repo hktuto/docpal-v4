@@ -1,66 +1,27 @@
 <script lang="ts" setup generic="T extends MenuItem">
 import type {MenuItem} from '#imports'
-import {useMenuDrop} from '#imports';
-import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
-import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview'
-import {draggable} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
-import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview'
+import {menuKey} from '#imports';
 
-const {menuKey, getMenuData } = useMenuDrop()
-
-
-
-const { item, selected } = defineProps<{item :MenuItem, selected:boolean}>()
+const { item, selected, mode='collapse' } = defineProps<{item :MenuItem, selected:boolean, mode:'collapse' | 'expand' }>()
 
 const elRef = ref()
 
-type menuState = 
-    | {
-        type: "idle";
-    }
-    | {
-        type: "preview";
-        container: HTMLElement;
-    }
-    | {
-        type: "is-dragging";
-    };
-const elState = ref<menuState>({type:'idle'});
-let cleanup = () => {}
+
+const { dragState ,setupDrag } = useDragable({
+    key: menuKey,
+    dragData: {
+        key: menuKey,
+        data: item
+    },
+    detectDrop: false,
+})
 onMounted(() => {
     if(!elRef) return
-    if( !item.draggable ) return
-    cleanup = combine(
-        draggable({
-            element: elRef.value,
-            getInitialData(){
-                return getMenuData(item)
-            },
-            onGenerateDragPreview({ nativeSetDragImage }) {
-                setCustomNativeDragPreview({
-                    nativeSetDragImage,
-                    getOffset: pointerOutsideOfPreview({
-                        x: '16px',
-                        y: '8px',
-                    }),
-                    render({ container }) {
-                        elState.value = { type: 'preview', container }
-                    },
-                }
-                )
-            },
-            onDragStart() {
-                elState.value = { type: 'is-dragging' }
-            },
-            onDrop() {
-                elState.value = { type: 'idle'}
-            },
-        })
-    )
+    setupDrag(elRef.value)
 })
 
 onUnmounted(() => {
-    cleanup()
+    // cleanup()
 })
 
 function itemClickHandler(){
@@ -70,9 +31,13 @@ function itemClickHandler(){
 </script>
 
 <template>
-<div ref="elRef" :class="{menuItemContainer:true, selected, [elState.type]:true}" @click="itemClickHandler">
+<div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click="itemClickHandler">
+    <div class="collapseMenu">
+
     <Icon :name="item.icon"></Icon>
-    <Teleport v-if="elState.type === 'preview'" :to="elState.container">
+    <div v-if="mode === 'expand'" class="label">{{ item.label }}</div>
+    </div>
+    <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dropPreviewFile">
                 <Icon :name="item.icon"></Icon>
             </div>
@@ -88,20 +53,44 @@ function itemClickHandler(){
     background: var(--app-grey-1000);
     color: var(--app-main-color);
 }
-.menuItemContainer{
+.collapseMenu{
     padding: var(--menu-item-padding);
     border-radius: var(--menu-item-radius);
     display: grid;
     place-items: center;
     cursor: pointer;
-    background-color: var(--menu-item-normal-bg);
+    background: var(--item-bg);
     color: var(--menu-item-normal-color);
+    position: relative;
+
+}
+.menuItemContainer{
+    position: relative;
+    isolation: isolate;
+    --item-bg: transparent;
     &.preview{
         opacity: 0.5;
     }
-    &:hover{
-        background: var(--menu-item-hover-bg);
-        color: var(--menu-item-hover-color);
+    &:hover, &:focus-within{
+        --item-bg: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);
+        .collapseMenu{
+            color: var(--menu-item-hover-color);
+            transition: color .2s ease-in-out;
+        }
+        &:after{
+            content: "";
+            width: calc(100% + 1px);
+            height: calc(100% + 1px);
+            position: absolute;
+            display: block;
+            background: linear-gradient(180deg, var(--app-grey-1000) 0%, var(--app-grey-950) 40%);
+            top: -1px;
+            left: -1px;
+            z-index: -1;
+            border-radius: calc(var(--menu-item-radius) + 1px);
+            box-shadow: var(--app-shadow-s);
+            opacity: 1;
+        }
     }
     &.selected {
         background: var(--menu-item-active-bg);

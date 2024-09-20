@@ -2,6 +2,7 @@ import type { InjectionKey } from "vue"
 import type { DropableItem } from "./dragType"
 
 export interface MenuItem extends DropableItem {
+    icon: string,
     children?: MenuItem[]
 }
 
