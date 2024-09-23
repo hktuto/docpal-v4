@@ -41,15 +41,12 @@ function closeTab(){
 
         <div ref="elRef" :data-tab-id="tab.id" 
         :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" >
-            <!-- <div class="gripIcon">
-                <Icon class="" name="lucide:grip-vertical" />
-            </div> -->
+
             <div class="tabLeftTeleportContainer" >
 
             </div>
-            <Icon v-if="tab.icon" :name="tab.icon" />
+            <div class="icon"></div>
             <div class="label">
-                {{ tab.label }}
             </div>
             <Icon class="closeIcon" name="ic:round-close" @click.stop="closeTab"></Icon>
             <!-- <TabDropIndicator 

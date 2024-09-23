@@ -11,7 +11,15 @@ function toggleMenuMode(){
     }else{
         mode.value = 'collapse'
     }
+    localStorage.setItem('app-menu-mode', mode.value)
 }
+
+onMounted(() => {
+    const menuState = localStorage.getItem('app-menu-mode')
+    if(menuState === 'expand'){
+        mode.value = 'expand'
+    }
+})
 
 </script>
 
@@ -90,6 +98,8 @@ function toggleMenuMode(){
     font-size: var(--icon-font-size);
     &.expand{
         justify-content: stretch;
+        gap: var(--app-space-xxs);
+        min-width: 200px;
     }
     
 }
