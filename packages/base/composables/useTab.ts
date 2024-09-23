@@ -1,4 +1,3 @@
-import { it } from 'vitest';
 
 import {useState} from '#imports'
 import type {TabPanel,TabItem} from '../utils/tabType'
@@ -42,6 +41,14 @@ export function panelTabFocus(panelId:string, tabIndex: number) {
     if(panelIndex !== -1) {
         layout.value[panelIndex].showingTabIndex = tabIndex;
     }
+}
+
+export function paneResized(sizes:{min:number, max:number, size:number}[]) {
+    console.log("resized", sizes)
+    const layout = useTabLayout()
+    sizes.forEach((size, index) => {
+        layout.value[index].size = size.size
+    })
 }
 
 

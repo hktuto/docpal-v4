@@ -6,8 +6,7 @@ export interface TabItem extends DropableItem {
 
 export type TabPanel = {
     id: string
-    minSize?: number,
-    maxSize?: number,
+    size?: number,
     parent:string
     showingTabIndex?: number
     tabs: TabItem[]
