@@ -21,14 +21,18 @@ provide(
 const loading = ref(false);
 
 async function saveTabsToLocalStorage() {
+    console.log("saveTabsToLocalStorage", layout.value)
     localStorage.setItem('app-tab', JSON.stringify(layout.value))
 }
 async function getTabsFromServer() {
     loading.value = true;
     const storageTabs = localStorage.getItem('app-tab')
     if(storageTabs) {
+        console.log("getTabsFromServer", JSON.parse(storageTabs))
         const newLayout = JSON.parse(storageTabs);
-        initLayout(newLayout)
+        setTimeout(() =>{
+            initLayout(newLayout)
+        },200)
     }else{
         // init a basic layout
         hightLightPanel.value = "dummy-tab-container"
@@ -37,6 +41,7 @@ async function getTabsFromServer() {
                     id:"dummy-tab-container",
                     parent: "root",
                     showingTabIndex: 0,
+                    size:100,
                     tabs: [
                         {
                             id: 'new-tab-001',
@@ -61,7 +66,7 @@ watch(layout, (newVal) => {
 })
 
 onMounted(() => {
-    getTabsFromServer()
+    // getTabsFromServer()
 })
 </script>
 
@@ -72,7 +77,7 @@ onMounted(() => {
         </template>
         <template v-else>
 
-            <TabLayout :layout="layout" />
+            <TabLayout :layout="layout" @ready="getTabsFromServer" />
             
             <div class="hiddenAllComponent">
                 <template v-for="component in allComponents" :key="component.id">
@@ -94,6 +99,7 @@ onMounted(() => {
     height:100%;
     --splitpanes-margin: 4rem;
     :deep(.splitpanes__pane) {
+        transition: none;
         background: var(--app-grey-925);
         box-shadow: var(--app-shadow-s);
         border-radius: var(--app-border-radius-m);
