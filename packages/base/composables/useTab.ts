@@ -59,6 +59,9 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
 
         if(layout.value[panelIndex].tabs.length === 0) {
             layout.value.splice(panelIndex, 1)
+        }else{
+            layout.value[panelIndex].showingTabIndex = panelIndex > 0 ? panelIndex - 1 : 0;
+            console.log("focus on ", layout.value[panelIndex].showingTabIndex)
         }
     }else{
         throw new Error(`data not found. tabIndex ${tabIndex} is not correct in ${panelId}`)

@@ -76,7 +76,7 @@ onMounted(() => {
             
             <div class="hiddenAllComponent">
                 <template v-for="component in allComponents" :key="component.id">
-                    <Teleport defer :to="'#' + component.id">
+                    <Teleport defer :to="'#' + component.parent + '_' + component.id">
                         {{ component.id }}
                         <TabRouter :tab="component" />
                     </Teleport>

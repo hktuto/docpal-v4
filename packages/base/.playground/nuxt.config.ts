@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   ssr:false,
   extends:[
     "../",
-    "../../pages/browse"
+    "../../../pages/browse"
   ],
   
 })
