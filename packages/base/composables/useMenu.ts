@@ -7,6 +7,35 @@ export const useMenuList = () => useState<MenuItem[]>('app-menu', () =>([
         label: "Browse",
         component:"LazyBrowse",
         draggable: true,
+        children:[
+            {
+                id:'recent',
+                icon: 'lucide:clock',
+                label: "Recent",
+                component:"LazyBrowse",
+                draggable: false
+            },
+            {
+                id:'star',
+                icon: 'lucide:star',
+                label: "Star",
+                component:"LazyBrowse",
+                draggable: false    
+            },
+            {
+                id: 'collection',
+                icon: 'lucide:collection',
+                label: "Collection",
+                component:"LazyBrowse",
+                draggable: false
+            },
+            {
+                id: 'trash',
+                icon: 'lucide:trash',
+                label: "Trash",
+                component:"LazyBrowse", 
+            }
+        ]
     },
     {
         id:'search',

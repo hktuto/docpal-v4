@@ -48,6 +48,6 @@ const {x,y} = useMouse()
     z-index: 2;
 }
 .appSidebar{
-    padding: var(--app-space-s) calc( var(--app-space-s) - var(--app-space-xs)) var(--app-space-s) var(--app-space-s);
+    padding: var(--app-space-s) ;
 }
 </style>
