@@ -35,7 +35,6 @@ function itemClickHandler(){
     <div class="collapseMenu">
 
     <Icon :name="item.icon"></Icon>
-    <div v-if="mode === 'expand'" class="label">{{ item.label }}</div>
     </div>
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dropPreviewFile">
@@ -60,7 +59,7 @@ function itemClickHandler(){
     place-items: center;
     cursor: pointer;
     background: var(--item-bg);
-    color: var(--menu-item-normal-color);
+    color: var(--app-grey-450);
     position: relative;
 
 }
@@ -68,6 +67,7 @@ function itemClickHandler(){
     position: relative;
     isolation: isolate;
     --item-bg: transparent;
+    --menu-item-radius: var(--app-border-radius-m);
     &:after{
             content: "";
             width: calc(100% + 1px);

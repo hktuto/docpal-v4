@@ -30,6 +30,7 @@ async function getTabsFromServer() {
     if(storageTabs) {
         console.log("getTabsFromServer", JSON.parse(storageTabs))
         const newLayout = JSON.parse(storageTabs);
+        // need to delay initLayout to wait for splitpanes to render
         setTimeout(() =>{
             initLayout(newLayout)
         },200)
