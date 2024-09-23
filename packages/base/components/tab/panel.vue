@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TabPanelContainer, TabItem } from '#imports';
+import type { TabPanel, TabItem } from '#imports';
 import {TabManagerKey, useDropable, menuKey} from '#imports'
 const hightLightPanel = useCurrentTargetPanel()
 const tabManager = inject(TabManagerKey)
@@ -14,7 +14,7 @@ function isTabData(
 }
 
 const {panel} = defineProps<{
-    panel: TabPanelContainer
+    panel: TabPanel
 }>()
 
 const elRef = ref()
@@ -32,7 +32,7 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
             const targetData = target.data as any
             const closestEdgeOfTarget = extractClosestEdge(targetData)
             if(!closestEdgeOfTarget) return
-            tabManager?.splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
+            splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
             return;
         }
         const isMenu = source.data.key === menuKey
@@ -41,7 +41,7 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
             const targetData = target.data as any
             const closestEdgeOfTarget = extractClosestEdge(targetData)
             if(!closestEdgeOfTarget) return
-            tabManager?.addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
+            addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
             return
         }
     },
@@ -64,7 +64,7 @@ onMounted(() => {
 
 function backdropClick(index:number){
     console.log("backdrop clicked ")
-    tabManager?.panelTabFocus(panel.id, index);
+    panelTabFocus(panel.id, index);
 }
 
 
@@ -78,7 +78,8 @@ function backdropClick(index:number){
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
                 tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true
             }">
-            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '-' +tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
+            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
+                {{ tab.id }}
             </div>
         </div>
     </div>
