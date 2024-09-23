@@ -27,12 +27,6 @@
  type recursiveGetPanelById: (layout: TabLayout, panelId:string) => TabPanelContainer | TabLayout | null
 ```
 
-```ts
-// loop 整個 layout , 找出所有 component, 
-// 只有 第一次生成 layout 時有用
- type recursiveLoopLayout: (layout: TabLayout, components:TabComponent[]) => TabComponent[]
-```
-
 ## Events
 
 - task list

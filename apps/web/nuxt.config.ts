@@ -6,11 +6,7 @@ export default defineNuxtConfig({
   modules: ['@nuxt/test-utils/module'],
   extends:[
     '../../packages/authApp',
-    "../../packages/browse"
   ],
-  build:{
-    analyze:true
-  },
   features:{
     inlineStyles: true,
   },

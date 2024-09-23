@@ -26,16 +26,12 @@ onMounted(() => {
 })
 
 function tabFocus() {
-    if(tabManger){
-        tabManger.panelTabFocus(tab.parent, index)
-    }
+    panelTabFocus(tab.parent, index)
 }
 
 function closeTab(){
 
-    if(tabManger){
-        tabManger.closePanelTab(tab.parent, index, true)
-    }
+    closePanelTab(tab.parent, index, true)
 }
 
 </script>

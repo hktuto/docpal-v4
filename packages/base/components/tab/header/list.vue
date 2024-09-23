@@ -34,7 +34,7 @@ const { setupDropable } = useDropable({
             }
             const closestEdgeOfTarget = extractClosestEdge(targetData)
             if(!closestEdgeOfTarget) return
-            tabManger?.moveTabBetweenPanel({...sourceData.data}, {...targetData.data}, closestEdgeOfTarget as any )
+            moveTabBetweenPanel({...sourceData.data}, {...targetData.data}, closestEdgeOfTarget as any )
     },
     detectDrop:false,
 })
@@ -54,7 +54,7 @@ function newTab() {
         parent: panel.id,
         component: 'LazyTabEmpty'
     }
-    tabManger?.addTabToPanel(panel.id, newData)
+    addTabToPanel(panel.id, newData)
 }
 
 

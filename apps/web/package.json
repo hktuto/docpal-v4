@@ -9,8 +9,7 @@
     "dev": "nuxt dev --dotenv ../../env/.env.dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare",
-    "predev": "npm run prepare"
+    "prepare": "nuxt prepare"
   },
   "keywords": [],
   "author": "",

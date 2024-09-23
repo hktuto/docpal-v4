@@ -168,6 +168,7 @@ async function getUserPreference()  {
 async function getUser(){
     const user = useUserState()
     const {data} = await clientApi.userNuxeo.getGetapplication()
+    
     if(!data) throw new Error('Get user info fail');
     user.value = data
 }

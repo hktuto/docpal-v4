@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type {TabItem, RouterParams} from '#imports';
-import {MenuRouterKey, TabManagerKey} from '#imports'
+import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
 const history = ref<RouterParams[]>([])
@@ -19,11 +19,10 @@ function navigateTo(param: RouterParams) {
     })
     if(!tab.value) throw new Error('Tab did not pass to child')
     tab.value.icon =  param.icon
-    tab.value.id =  param.id
-    tab.value.component =param.component
+    tab.value.component = param.component
     tab.value.props = param.props
     tab.value.label = param.label
-    tabManager?.panelRouteUpdate(tab.value.parent, tab.value.id, param)
+    panelRouteUpdate(tab.value.parent, tab.value.id, param)
 }
 
 function back(){
@@ -41,11 +40,10 @@ function back(){
         })
         console.log("lastItem", forwardHistory.value[0])
         tab.value.component =lastItem.component
-        tab.value.id =lastItem.id
         tab.value.icon =lastItem.icon
         tab.value.props = lastItem.props
         tab.value.label = lastItem.label
-        tabManager?.panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
+        panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
     }
 }
 
@@ -59,7 +57,7 @@ function forward() {
         tab.value.component =lastItem.component
         tab.value.props = lastItem.props
         tab.value.label = lastItem.label
-        tabManager?.panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
+        panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
     }
 }
 
