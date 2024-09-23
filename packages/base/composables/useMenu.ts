@@ -63,7 +63,23 @@ export const useMenuList = () => useState<MenuItem[]>('app-menu', () =>([
         icon: 'lucide:chart-pie',
         label:"Dashobard",
         component:"LazyBrowse",
-        draggable:true
+        draggable:true,
+        children:[
+            {
+                id:'dashboard-1',
+                icon: 'lucide:chart-pie',
+                label:"Dashboard 1",
+                component:"LazyBrowse",
+                draggable:false
+            },
+            {
+                id:'dashboard-2',
+                icon: 'lucide:chart-pie',
+                label:"Dashboard 2",
+                component:"LazyBrowse",
+                draggable:false
+            },
+        ]
     },
 ]))
 export const menuKey = Symbol('menu');

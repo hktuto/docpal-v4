@@ -17,7 +17,7 @@ const elRef = ref()
            <div class="menuLabel">
                {{ item.label }}
            </div>
-           <div v-if="item.children && item.children.length > 0" class="menuIcon" >
+           <div v-if="item.children && item.children.length > 0" class="menuIcon dropdown" >
                 <Icon :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'" @click.stop="opened = !opened" />
            </div>
        </div>
@@ -41,6 +41,10 @@ const elRef = ref()
     background: var(--item-bg);
     padding: var(--app-space-xs)  var(--app-space-xs);
     border-radius: var(--app-border-radius-s);
+    color: var(--app-grey-350);
+    .menuLabel{
+        flex:1 0 auto;
+    }
     cursor: pointer;
     
     &:hover{
@@ -54,6 +58,10 @@ const elRef = ref()
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    .dropdown{
+        margin-left: var(--app-space-s);
+
     }
     .menuLabel{
         flex: 1;

@@ -77,6 +77,14 @@ provide(MenuRouterKey,{
                 <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
             </div>
         </Teleport>
+        <Teleport  v-if="tab.icon" :to="`[data-tab-id=${tab.id}] > .icon`">
+            <Icon :name="tab.icon" />
+        </Teleport>
+        <Teleport  v-if="tab.label" :to="`[data-tab-id=${tab.id}] > .label`">
+            <div class="label">
+                {{ tab.label }}
+            </div>  
+        </Teleport>
         <Transition appear>
             <KeepAlive>
                 <Suspense>
