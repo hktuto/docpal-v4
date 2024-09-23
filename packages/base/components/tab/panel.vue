@@ -78,7 +78,7 @@ function backdropClick(index:number){
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
                 tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true
             }">
-            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
+            <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '_' + tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
                 {{ tab.id }}
             </div>
         </div>

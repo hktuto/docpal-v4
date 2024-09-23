@@ -8,7 +8,6 @@ const forwardHistory = ref<RouterParams[]>([])
 
 function navigateTo(param: RouterParams) {
     if(param.menuKey !== menuSymbol) return
-    console.log("param from child",{...tab.value})
     history.value.push({
         menuKey: menuSymbol,
         id: tab.value.id,
@@ -28,7 +27,6 @@ function navigateTo(param: RouterParams) {
 function back(){
     if(history.value.length === 0) return
     const lastItem = history.value.pop()
-    console.log("lastItem", lastItem)
     if(lastItem){
         forwardHistory.value.push({
             menuKey: menuSymbol,
