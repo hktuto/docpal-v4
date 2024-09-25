@@ -59,6 +59,8 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
     const components = useTabComponent()
     const panelIndex = layout.value.findIndex(tab => tab.id === panelId)
     if(panelIndex !== -1) {
+        // cannot delete the last tab
+        if(components.value.length === 1) return;
         const data = layout.value[panelIndex].tabs[tabIndex]
         layout.value[panelIndex].tabs.splice(tabIndex, 1);
         if(deleteComponent){
