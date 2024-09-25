@@ -23,7 +23,7 @@
                   <SvgIcon src="/icons/move-handle.svg" />
                 </div>
                   <div class="label">
-                    {{$t(element.label || element.type)}}
+                    {{ t(element.label || element.type)}}
                   </div>
                   <div v-if="!element.canNotDelete" class="show">
                     <el-switch v-model="element.show" :disabled="element.defaultColumn" @change="handleSubmit"/>
@@ -72,14 +72,20 @@
     </client-only>
 </template>
 <script lang="ts" setup>
+import type { Table } from '#imports';
+import {useI18n} from '#imports'
 import { ref, toRefs } from 'vue'
 import draggable from 'vuedraggable'
-import { UserSettingSaveApi, defaultTableSetting } from 'dp-api'
-const { userPreference } = toRefs(useUser())
+// import { UserSettingSaveApi, defaultTableSetting } from 'dp-api'
+import type { TableColumnCtx } from 'element-plus';
+const preference = useUserPreference()
+// const { userPreference } = toRefs(useUser())
 const { getUserSetting } = useUser()
 const { tableColumnSetting } = toRefs(useSetting())
+
+const { t} = useI18n()
 export type SortParams<T> = {
-    column: TableColumnCtx<T | any>
+    column: TableColumnCtx<any>
     prop: string
     order: Table.Order
 }
@@ -97,7 +103,7 @@ const popoverRef = ref();
 
 const dialogShow = ref(false)
 
-const displayList = ref([
+const displayList = ref<any>([
 ])
 
 const originalColumns = ref()
@@ -113,7 +119,7 @@ function handleCancle () {
 // 使用前端默认配置
 function handleRevert () {
   const userColumns = getDefaultColumns()
-  displayList.value = originalColumns.value.map( (item,index) => {
+  displayList.value = originalColumns.value.map( (item: { rowIndex: any; show: any; },index: any) => {
       item.rowIndex = index;
       item.show = userColumns.includes(index)
       return item

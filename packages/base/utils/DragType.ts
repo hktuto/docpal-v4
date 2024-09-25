@@ -4,7 +4,7 @@ import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
 /**
  * 所布可以 drop 物件的最小單位
  */
-export interface DropableItem {
+export interface DroppableItem {
     id:string,
     icon?:string,
     label:string,
@@ -14,7 +14,7 @@ export interface DropableItem {
 
 export interface DragData extends Record<string,any> {
     key: symbol,
-    data: DropableItem
+    data: DroppableItem
 }
 
 export type DragState = | {
@@ -47,7 +47,7 @@ export type UseDragableParam = {
     onDropToOther?: Function,
 }
 
-export type DropableItemParam = {
+export type DroppableItemParam = {
     key:symbol,
     canMonitor:({ source }:any) => boolean,
     onDropHandler:({ location, source, target }:any) => void,

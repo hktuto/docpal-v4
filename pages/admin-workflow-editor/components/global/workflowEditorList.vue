@@ -1,0 +1,189 @@
+<script lang="ts" setup>
+import {MenuRouterKey} from '#imports'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from '../../../../libraries/api/src';
+
+const menuManager = inject(MenuRouterKey)
+if(!menuManager) {
+    throw createError('menu manger not found')
+}
+const { t } = useI18n()
+const {page, pageSize, time} = defineProps<{
+    page:number, pageSize:number, time:number
+}>()
+const pageParams = {
+        pageNum: 0,
+        pageSize: 20,
+        orderBy: 'createdDate',
+        isDesc: true
+}
+const tableKey = TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE
+
+const tableSetting = defaultTableSetting[tableKey]
+    const state = reactive<State>({
+        loading: false,
+        tableData: [],
+        options: {
+            showPagination: true,
+            paginationConfig: {
+                total: 0,
+                currentPage: 1,
+                pageSize: pageParams.pageSize
+            },
+            rowKey: 'id',
+            sortKey: tableKey
+        },
+        extraParams: {}
+    })
+
+    async function getList (param:any) {
+        state.loading = true
+        try {
+            const {data}:any = await adminApi.workflowProcessDefinitionController.postPage(param)
+            // await GetWorkflowDraftPageApi({ ...param, ...state.extraParams })
+            state.tableData = data.entryList
+            state.options.paginationConfig.total = data.totalSize
+            state.options.paginationConfig.pageSize = param.pageSize
+            state.options.paginationConfig.currentPage = param.pageNum + 1
+        } catch (error) {
+
+        }
+        state.loading = false
+    }
+
+    function handlePaginationChange (page: number, pageSize?: number) {
+        if(!page) page = pageParams.pageNum + 1
+        if(!pageSize) pageSize = pageParams.pageSize
+        const time = new Date().valueOf().toString()
+        // scroll top
+
+    }
+    watch(
+        () => [page, pageSize, time],
+        async () => {
+            nextTick(() => {
+
+              pageParams.pageNum = (Number(page) - 1) || 0
+              pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+              getList(pageParams)
+            })
+        },
+        { immediate: true }
+    )
+
+    function handleAction (command:string, row: any, rowIndex: number) {
+    switch (command) {
+        case 'edit':
+            handleDblclick(row)
+            break
+    }
+}
+
+
+async function handleDeactive(row:any) {
+    const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToDeactivate')}`)
+    if(action !== 'confirm') return
+    state.loading = true
+    await adminApi.workflowProcessDefinitionController.deleteSuspend(row.id)
+    // await DeactiveWorkflowApi(row.id)
+    state.loading = false
+    handlePaginationChange(1)
+}
+async function handleActive(row:any) {
+    state.loading = true
+    try {
+        await adminApi.workflowProcessDefinitionController.postActive(row.id)
+
+        // await ActiveWorkflowApi(row.id)
+        handlePaginationChange(1)
+    } catch (error) {
+    }
+    state.loading = false
+}
+function handleDblclick(row:any) {
+    menuManager?.navigateTo({
+        menuKey: menuManager.menuSymbol,
+        id: 'workflow-editor-detail',
+        icon: 'dp-icon:flow-outline',
+        label: 'workflowEditorDetail',
+        component: 'LazyWorkflowEditorDetail',
+        props: {
+            id: row.id
+        }
+    })
+}
+const WorkflowEditorDialogRef = ref()
+function handleAdd () {
+    WorkflowEditorDialogRef.value.handleOpen()
+}
+// #region module: ResponsiveFilterRef
+    function handleFilterFormChange(formModel:any) {
+
+    if (!formModel.isDesc) formModel.isDesc = true
+    if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === 'false' ? false : true
+    let filterParams = {
+        name: formModel.name === "" ? undefined : formModel.name,
+        orderBy: formModel.orderBy === undefined || formModel.orderBy === "" ? "createdDate" : formModel.orderBy,
+        isDesc: formModel.isDesc
+    };
+    state.extraParams = filterParams
+    handlePaginationChange(1)
+    }
+// #endregion
+const ResponsiveFilterRef = ref()
+onMounted(() => {
+    // TODO: move ResponsiveFilterRef from old repo to here
+    if(!ResponsiveFilterRef.value) return;
+        ResponsiveFilterRef.value.init(
+            [{ key: "orderBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
+                    options: [
+                        { label: 'table_name', value: 'name' },
+                        { label: 'dpTable_status', value: 'publishStatus' },
+                        { label: 'workflow_createDate', value: 'createdDate' },
+                    ]
+                },
+                { key: "isDesc", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
+                    options: [
+                        { label: 'tableHeader.desc', value: false },
+                        { label: 'tableHeader.asc', value: true }
+                    ]
+        }])
+})
+</script>
+
+<template>
+    <div class="content">
+        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
+            @command="handleAction"
+            @row-dblclick="handleDblclick"
+            @pagination-change="handlePaginationChange">
+            <template #preSortButton>
+                <!-- {{ $t('msg.confirmWhetherToDeactivate') }} -->
+                <!-- <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" @clear-filter="handleClearFilter"
+                    inputKey="name"/> -->
+            </template>  
+            <template #suffixSortButton>
+                <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
+            </template>
+            <template #publishStatus="{ row }">
+                {{ row.status === 'P' ? 
+                    $t('actions.unpublished') : 
+                    row.publishStatus === 'A' ? 
+                    $t('actions.activated') : 
+                    $t('actions.inactivated') }}
+            </template>
+            <template #dpTable_actions="{ row }">
+                <el-dropdown>
+                    <SvgIcon src="/icons/dots.svg"></SvgIcon>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item v-loading="state.loading" @click="handleDblclick(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item>
+                            <el-dropdown-item v-if="row.publishStatus === 'A' && row.status === 'A'" v-loading="state.loading" @click="handleDeactive(row)">{{$t('actions.inactive')}}</el-dropdown-item>
+                            <el-dropdown-item v-else-if="row.status === 'A'" v-loading="state.loading" @click="handleActive(row)">{{$t('actions.active')}}</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </template>
+        </Table>
+    </div>
+</template>

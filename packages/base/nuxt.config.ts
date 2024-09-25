@@ -1,5 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
+const currentDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
@@ -11,6 +14,7 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@nuxtjs/color-mode',
     '@nuxt/icon',
+    '@vueuse/nuxt',
   ],
   css:[
     '../assets/styles/main.scss'
@@ -21,7 +25,7 @@ export default defineNuxtConfig({
     customCollections:[
       {
         prefix:'dp-icon',
-        dir:'./assets/dp-icons'
+        dir: join(currentDir, './assets/dp-icons')
       }
     ],
     clientBundle:{
@@ -55,15 +59,7 @@ export default defineNuxtConfig({
       redirectOn: 'root' // recommended
     }
   },
-  nitro:{
-    devProxy:{
-      '/api':{
-        target: process.env.CLIENT_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-    }
-  },
+  
   vite: {
     vue: {
       features: {

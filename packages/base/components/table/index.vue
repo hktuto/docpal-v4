@@ -8,7 +8,7 @@
             </slot>
         </div>
         <div class="dp-table-container--main">
-          <template v-if="!isSmallMobile">
+       
             <el-table
                 ref="tableRef"
                 :data="tableData"
@@ -25,7 +25,7 @@
                 @cell-click="handleCellClick"
                 @sort-change="handleSortChange"
                 @header-dragend="handleHeaderDragEnd"
-                @expand-change="(row, expandedRows) => emit('expand-change', row, expandedRows)">
+                @expand-change="(row: any, expandedRows: any) => emit('expand-change', row, expandedRows)">
                 <template v-for="(col, index) in columns__sub" :key="index">
                     <template v-if="!col.hide">
                         <!---复选框, 序号 (START)-->
@@ -60,52 +60,8 @@
                     </template>
                 </template>
             </el-table>
-          </template>
-          <template v-else>
-            <div v-if="_options.sortKey" class="cardSortContainer">
-              <TableSortButton ref="TableSortButtonRef" :sortKey="_options.sortKey" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
-            </div>
-            <div ref="tableCardRef" class="cardList">
-              <div v-if="tableData.length === 0" class="noData">
-                {{ $t('noData')}}
-              </div>
-             <TableCard
-                v-for="(item, rowIndex) in tableData"
-                :key="'card_'+ rowIndex"
-                :row="item"
-                :column="columns__sub"
-                @row-contextmenu="handleRightClick"
-                @selection-change="handleSelectionChange"
-                @row-click="handleRowClick"
-                @row-dblclick="handleRowDblclick"
-                @cell-click="handleCellClick"
-                @sort-change="handleSortChange"
-              >
-                <template v-for="(col, index) in columns__sub" :key="index">
-                  <template v-if="!col.hide">
-                    <template v-if="col.type === 'index' || col.type === 'selection' || col.type === 'expand'" >
-                      <input
-                        type="checkbox"
-
-                        @change="(val) => cardSelectedChange(rowIndex, val)"
-                      />
-                    </template>
-                    <TableCardItem v-else :col="col" :rowData="item" :rowIndex="index" :class="col.class" @command="handleAction">
-                      <template #customHeader="{ slotName, column, index }">
-                        <slot :name="slotName" :column="column" :index="index" />
-                      </template>
-                      <!-- 自定义表头插槽 -->
-                      <!-- 自定义列插槽 -->
-                      <template #default="{ slotName, row, index }">
-                        <slot :name="slotName" :row="row" :index="index" />
-                      </template>
-                    </TableCardItem>
-                  </template>
-                </template>
-              </TableCard>
-            </div>
-          </template>
-            <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>
+          
+            <!-- <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton> -->
 
         </div>
         <!-- 分页器 -->
@@ -119,20 +75,21 @@
 <!--        <TableSortButton v-if="_options.sortKey" ref="TableSortButtonRef" :sortKey="_options.sortKey" :sortAll="_options.sortAll" :columns="columns" @reorderColumn="reorderColumn"></TableSortButton>-->
     </div>
 </template>
-<script lang="ts" setup>
+<script lang="ts" setup generic="">
+import type { Order, Column, Options, Command } from '#imports';
 import type { TableColumnCtx } from 'element-plus/es/components/table/src/table-column/defaults'
 import { onKeyUp, onKeyDown } from '@vueuse/core'
-const { isSmallMobile, isMobile } = useLayout()
+
 export type SortParams = {
-    column: TableColumnCtx<T | any>,
+    column: TableColumnCtx<any>,
     prop: string,
-    order: Table.Order
+    order: Order
 }
 
 const props = defineProps<{
     tableData: Array<object>, // table的数据
-    columns: Table.Column[], // 每列的配置项
-    options?: Table.Options,
+    columns: Column[], // 每列的配置项
+    options?: Options,
     headerClass?: string,
     disableRowAttrs?: { [name: string] : string[] }
 }>()
@@ -142,7 +99,7 @@ const tableCardRef = ref();
 const clickTimeoutId = ref<NodeJS.Timeout>();
 const selectChangeTimeoutId = ref<NodeJS.Timeout>();
 // 设置option默认值，如果传入自定义的配置则合并option配置项
-const _options = computed<Table.Options>(() => {
+const _options = computed<Options>(() => {
     const option = {
         multiSelect: false,
         stripe: false,
@@ -183,11 +140,11 @@ const emit = defineEmits([
 const columns__sub = ref(deepCopy(props.columns))
 
 // 自定义索引
-const tableRowClassName = ({ row, rowIndex }) => {
+const tableRowClassName = ({ row, rowIndex }:any) => {
     // if (!row || !row.rowIndex) return
     row.rowIndex = rowIndex
     let rowName = ""
-    const index = shiftSelectList.value.findIndex(c => c.rowIndex === row.rowIndex)
+    const index = shiftSelectList.value.findIndex((c:any) => c.rowIndex === row.rowIndex)
     if (index > -1) {
         rowName = "current-row "; // elementUI 默认高亮行的class类 不用再样式了^-^,也可通过css覆盖改变背景颜色
     }
@@ -196,6 +153,7 @@ const tableRowClassName = ({ row, rowIndex }) => {
     if(props.disableRowAttrs) {
         try {
             Object.keys(props.disableRowAttrs).forEach(key => {
+                if(!props.disableRowAttrs || !props.disableRowAttrs[key]) return
                 const attrItem = props.disableRowAttrs[key]
                 if(row[key] === attrItem[0]) rowName += attrItem[1]
             })
@@ -223,7 +181,7 @@ const indexMethod = (index: number) => {
         emit('pagination-change', currentPage, _paginationConfig.value.pageSize)
     }
     // 按钮组事件
-    const handleAction = (command: Table.Command, row: any, index: number, evt: Event) => {
+    const handleAction = (command: Command, row: any, index: number, evt: Event) => {
         emit('command', command, row, index, evt)
     }
 
@@ -261,10 +219,7 @@ const indexMethod = (index: number) => {
     })
     // 当某一行被点击时会触发该事件
     const handleRowClick = (row: any, column: any, event: MouseEvent) => {
-        if(isMobile.value) {
-          emit('row-dblclick', row, column, event)
-          return ;
-        }
+        
         if(_options.value.mode === 'normal') {
             if(_options.value.multiSelect) handleShift(row)
             emit('row-click', row, column, event)
@@ -297,24 +252,24 @@ const indexMethod = (index: number) => {
         * 如果需要后端排序，需将 sortable 设置为 custom，同时在 Table 上监听 sort-change 事件，
         * 在事件回调中可以获取当前排序的字段名和排序顺序，从而向接口请求排序后的表格数据。
         */
-    const handleSortChange = ({ column, prop, order }: SortParams<any>) => {
+    const handleSortChange = ({ column, prop, order }: any) => {
         emit('sort-change', { column, prop, order })
     }
 // #endregion
-const TableSortButtonRef = ref()
-function reorderColumn (displayList, initColumn: boolean = true) {
-    columns__sub.value = deepCopy(displayList);
-    if(initColumn) {
-        setTimeout(() => {
-            TableSortButtonRef.value.initColumn()
-        })
-    }
-}
+// const TableSortButtonRef = ref()
+// function reorderColumn (displayList: any, initColumn: boolean = true) {
+//     columns__sub.value = deepCopy(displayList);
+//     if(initColumn) {
+//         setTimeout(() => {
+//             TableSortButtonRef.value.initColumn()
+//         })
+//     }
+// }
 // #region module: sort
     let CtrlDown = false
     let shiftOrAltDown = false
     const shiftSelectList = ref([])
-    function handleShift (row) {
+    function handleShift (row: { source: string; rowIndex: any; }) {
         if (_options.value.selectable && !_options.value.selectable(row)) return
         let refsElTable = tableRef.value
         if(CtrlDown) {
@@ -324,6 +279,7 @@ function reorderColumn (displayList, initColumn: boolean = true) {
         }
         if ( shiftOrAltDown && shiftSelectList.value.length > 0) {
             let topAndBottom = getTopAndBottom(row );
+            if(!topAndBottom) return
             const dataObj = refsElTable.data.reduce((prev:any, item:any) => {
                 if (item.source === 'tempFile' || item.isFolder) return prev
                 prev[`${item.rowIndex}`] = item
@@ -335,7 +291,7 @@ function reorderColumn (displayList, initColumn: boolean = true) {
             }
          } else {
             if (row.source === 'tempFile') return
-            let findRow = shiftSelectList.value.find(c => c.rowIndex == row.rowIndex); //找出当前选中行
+            let findRow = shiftSelectList.value.find((c:any) => c.rowIndex == row.rowIndex); //找出当前选中行
             //如果只有一行且点击的也是这一行则取消选择 否则清空再选中当前点击行
             if (findRow&& shiftSelectList.value.length === 1 ) {
                 refsElTable.toggleRowSelection(row, false);
@@ -351,13 +307,13 @@ function reorderColumn (displayList, initColumn: boolean = true) {
     }
 
     /**获取最新最上最下行 */
-    function getTopAndBottom(row) {
+    function getTopAndBottom(row:any) {
         let bottom = shiftSelectList.value.reduce((start, end) => {
-            return start.rowIndex > end.rowIndex ? start : end;
-        })
+            return (start as any).rowIndex > (end as any).rowIndex ? start : end;
+        }) as any
         let top = shiftSelectList.value.reduce((start, end) => {
-            return start.rowIndex < end.rowIndex ? start : end;
-        });
+            return (start as any).rowIndex < (end as any).rowIndex ? start : end;
+        }) as any;
         console.log(bottom, top);
         
         let n = row.rowIndex,
@@ -391,23 +347,22 @@ function toggleSelection (rows?: any[]) {
         rows.forEach((row) => {
             // TODO: improvement typing when refactor table
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
             tableRef.value!.toggleRowSelection(row, undefined)
         })
     } else {
         tableRef.value!.clearSelection()
     }
 }
-function handleHeaderDragEnd(newWidth, oldWidth, column, event) {
+function handleHeaderDragEnd(newWidth: any, oldWidth: any, column: any, event: any) {
     console.log(newWidth, oldWidth, column, event);
 }
 
-function cellStyle({ row, column, rowIndex, columnIndex }) {
+function cellStyle({ columnIndex }:any) {
     const style = props.columns[columnIndex].cellStyle || {}
     return Object.assign({padding:'calc( var(--app-padding) /2) calc( var(--app-padding) * 1.5)'}, style);
 }
 
-function headerStyle({ row, column, rowIndex, columnIndex }) {
+function headerStyle({ row, column, rowIndex, columnIndex }:any) {
     const style = props.columns[columnIndex].headerStyle || {}
     return Object.assign({padding:'calc( var(--app-padding) /2) calc( var(--app-padding) * 1.5)', 'border-right-color': 'var(--color-grey-100)', 'background-color': 'var(--color-grey-000)'}, style);
 }
@@ -430,7 +385,7 @@ onMounted(() => {
 })
 
 // 暴露给父组件参数和方法，如果外部需要更多的参数或者方法，都可以从这里暴露出去。
-defineExpose({ reorderColumn, toggleSelection, tableRef })
+defineExpose({  toggleSelection, tableRef })
 </script>
 <style lang="scss" scoped>
 :deep(.el-image__inner) {

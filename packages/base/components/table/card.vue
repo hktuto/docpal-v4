@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import type {TableColumnItem} from '#imports'
 const props = defineProps<{
   row: any[],
-  column: Table.Column[],
+  column: TableColumnItem[],
 }>();
 const emits = defineEmits(['row-contextmenu', 'selection-change', 'row-click', 'row-dblclick', 'cell-click', 'sort-change', 'expand-change'])
 </script>
