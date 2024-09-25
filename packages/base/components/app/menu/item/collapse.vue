@@ -1,11 +1,11 @@
 <script lang="ts" setup generic="T extends MenuItem">
 import type {MenuItem} from '#imports'
-import {menuKey} from '#imports';
+import {menuKey, useElementHover} from '#imports';
 
 const { item, selected, mode='collapse' } = defineProps<{item :MenuItem, selected:boolean, mode:'collapse' | 'expand' }>()
 
 const elRef = ref()
-
+const isHovered = useElementHover(elRef)
 
 const { dragState ,setupDrag } = useDragable({
     key: menuKey,
@@ -25,20 +25,18 @@ onUnmounted(() => {
 })
 
 function itemClickHandler(){
-
 }
- 
+
 </script>
 
 <template>
 <div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click="itemClickHandler">
     <div class="collapseMenu">
-
-    <Icon :name="item.icon"></Icon>
+    <Icon v-if="item.icon" :name="isHovered ? item.hoverIcon || item.icon : item.icon" class="normal"></Icon>
     </div>
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dropPreviewFile">
-                <Icon :name="item.icon"></Icon>
+                <Icon v-if="item.icon" :name="item.icon"></Icon>
             </div>
         </Teleport>
 </div>

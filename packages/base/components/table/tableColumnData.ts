@@ -1,5 +1,7 @@
+import type { Column } from '#imports'
+
 // 基本表格配置
-export const tableColumn: Table.Column[] = [
+export const tableColumn: Column[] = [
   { type: 'selection', width: '50' },
   { type: 'index', width: '50', label: 'No.' },
   { prop: 'name', label: '名字', sortable: true  },
@@ -15,7 +17,7 @@ export const tableColumn: Table.Column[] = [
   }
 ]
 // 带有分页的表格配置
-export const tableDemoColumn: Table.Column[] = [
+export const tableDemoColumn: Column[] = [
   { type: 'index', width: '65', label: 'No.', align: 'center' },
   { prop: 'avatar', type: 'image', label: '头像', width: '100', align: 'center' },
   { prop: 'name', label: '姓名', width: '100' },

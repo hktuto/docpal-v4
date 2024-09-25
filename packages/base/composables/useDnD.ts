@@ -1,4 +1,4 @@
-import type {DragState, UseDragableParam, DropableItemParam, DropTargtParams} from "#imports";
+import type {DragState, UseDragableParam, DroppableItemParam, DropTargtParams} from "#imports";
 import {draggable, dropTargetForElements, monitorForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview'
@@ -100,7 +100,7 @@ export const useDropable = ({
     onDragOver,
     onDragLeave,
     onDropToOther,
-}:DropableItemParam) => {
+}:DroppableItemParam) => {
 
     const idle: DragState = { type: "idle" };
     const dragState = ref<DragState>(idle)

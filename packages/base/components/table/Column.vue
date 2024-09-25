@@ -1,25 +1,27 @@
 <script lang="ts" setup>
+import type {Command, TableColumnItem} from '#imports'
+
 import { CopyDocument } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 const tableHelper = useTableHelper()
-const props = defineProps<{ col: Table.Column }>()
+const props = defineProps<{ col: TableColumnItem}>()
 const emit = defineEmits(['command'])
 // 按钮组事件
-const handleAction = (command: Table.Command, { row, $index }: { row: any; $index: number }, evt:Event) => {
+const handleAction = (command: Command, { row, $index }: { row: any; $index: number }, evt?:Event) => {
     emit('command', command, row, $index, evt)
 }
-function getProp(row, prop?) {
+function getProp(row: any, prop?: string | undefined) {
     if(!prop) prop = props.col.prop
-    return tableHelper.getProp(row, prop)
+    return tableHelper.getProp(row, prop as string)
 }
-function formatProp (row) {
+function formatProp (row: any) {
     return tableHelper.getFormatProp(row, props.col)
 }
-function getIcon (row, position='prefixIcon') {
+function getIcon (position='prefixIcon') {
     // dpLog(col[position]);
 
 }
-function handleCopy (text) {
+function handleCopy (text: string) {
     const el = document.createElement('textarea');
     el.value = text
     document.body.appendChild(el);
@@ -68,18 +70,18 @@ function handleCopy (text) {
                     :key="index"
                     :size="btn.size"
                     :type="btn.type"
-                    @click.stop="(evt) => handleAction(btn.command, { row, $index }, evt)"
+                    @click.stop="(evt: Event) => handleAction(btn.command, { row, $index }, evt)"
                     >
-                        <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
+                        <SvgIcon v-if="btn.prefixIcon" :src="btn.prefixIcon" ></SvgIcon>
                         {{ btn.name }}
-                        <SvgIcon class="el-icon--right" :src="btn.suffixIcon" ></SvgIcon>
+                        <SvgIcon v-if="btn.suffixIcon" class="el-icon--right" :src="btn.suffixIcon" ></SvgIcon>
                     </el-button
                 >
             </el-button-group>
         </template>
         <template v-else-if="col.moreActionSlot"  #default="{ row, $index }">
             <!-- 如果存在moreActionSlot，就展示moreActions -->
-            <el-dropdown  @command="(command) => handleAction(command, { row, $index })">
+            <el-dropdown  @command="(command: Command) => handleAction(command, { row, $index })">
                 <SvgIcon @click.stop src="/icons/tools/more.svg" ></SvgIcon>
                 <template #dropdown>
                     <el-dropdown-menu>

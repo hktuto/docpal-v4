@@ -1,8 +1,6 @@
 <script setup lang="ts" generic="T extends MenuItem">
-const menu = useMenuList()
-
+const  { menu } = useAppConfig()
 const opened = ref('false')
-
 const mode = ref<'collapse' | 'expand'>('collapse')
 
 function toggleMenuMode(){

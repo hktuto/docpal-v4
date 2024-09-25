@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { TableColumnItem } from 'dp-api';
+import type { TableColumnItem } from '#imports';
 
 
 const props = defineProps<{
@@ -18,7 +18,7 @@ const handleSubmit = () => {
             <SvgIcon src="/icons/move-handle.svg" />
         </div>
             <div class="label">
-            {{$t(element.label || element.type)}}
+            {{ $t(element.label || element.type)}}
             </div>
             <div v-if="!element.canNotDelete" class="show">
             <el-switch v-model="element.show" :disabled="element.defaultColumn" @change="handleSubmit"/>

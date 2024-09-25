@@ -1,19 +1,20 @@
 <script setup lang="ts">
+import type {Command, TableColumnItem} from '#imports'
 const tableHelper = useTableHelper()
-const props = defineProps<{ col: Table.Column, rowData:any, rowIndex }>()
+const props = defineProps<{ col: TableColumnItem, rowData:any, rowIndex:number }>()
 const emit = defineEmits(['command'])
 
-const handleAction = (command: Table.Command, { row, $index }: { row: any; $index: number }, evt:Event) => {
+const handleAction = (command: Command, { row, $index }: { row: any; $index: number }, evt:Event) => {
   emit('command', command, row, $index, evt)
 }
-function getProp(row, prop?) {
+function getProp(row:any, prop?:any) {
   if(!prop) prop = props.col.prop
   return tableHelper.getProp(row, prop)
 }
-function formatProp (row) {
+function formatProp (row:any) {
   return tableHelper.getFormatProp(row, props.col)
 }
-function getIcon (row, position='prefixIcon') {
+function getIcon (row:any, position='prefixIcon') {
   // dpLog(col[position]);
   
 }
@@ -56,11 +57,11 @@ function getIcon (row, position='prefixIcon') {
             :key="index"
             :size="btn.size"
             :type="btn.type"
-            @click.stop="(evt) => handleAction(btn.command, { row:rowData, $index:rowIndex }, evt)"
+            @click.stop="(evt: Event) => handleAction(btn.command, { row:rowData, $index:rowIndex }, evt)"
           >
-            <SvgIcon :src="btn.prefixIcon" ></SvgIcon>
+            <SvgIcon v-if="btn.prefixIcon" :src="btn.prefixIcon" ></SvgIcon>
             {{ btn.name }}
-            <SvgIcon class="el-icon--right" :src="btn.suffixIcon" ></SvgIcon>
+            <SvgIcon v-if="btn.suffixIcon" class="el-icon--right" :src="btn.suffixIcon" ></SvgIcon>
           </el-button
           >
         </el-button-group>

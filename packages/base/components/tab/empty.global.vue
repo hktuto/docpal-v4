@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const appMenu = useMenuList()
+const { menu }  = useAppConfig()
 import type {RouterParams} from '#imports'
 import { TabManagerKey,MenuRouterKey } from '#imports';
 
@@ -37,8 +37,8 @@ function itemClick(item:MenuItem) {
                 {{ tab.id }} 
             </div>
         <div class="menuGrid">
-            <div v-for="item in appMenu" :key="item.id" class="menuItem" @click="itemClick(item)">
-                <Icon :name="item.icon" />
+            <div v-for="item in menu" :key="item.id" class="menuItem" @click="itemClick(item)">
+                <Icon v-if="item.icon" :name="item.icon" />
             </div>
         </div>
         </div>

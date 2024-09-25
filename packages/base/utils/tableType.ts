@@ -1,0 +1,2614 @@
+// import '../../../dp-components/typing/table'
+export type TableColumnSetting = {
+    [key:string] : TableColumnSettingItem
+}
+export type TableColumnSettingItem = {
+    columns: TableColumnItem[],
+    events: string[],
+    slots?: TableColumnItem[],
+    options: TableColumnSettingOptions
+}
+export type TableColumnSettingOptions = {
+    pageSize?: number,
+    notEdit?: boolean
+}
+export type TableColumnItem = {
+    id?: string | any,
+    property?: string,
+    label: string,
+    sortable?:boolean,
+    slot ?: string,
+    headerSlot ?: string,
+    align ?: string,
+    width ?: string | number,
+    'min-width'?: string | number,
+    defaultValue ?: any,
+    headerAlign ?: string,
+    isFilter ?: boolean,
+    canNotDelete ?:boolean,
+    fixed?: boolean | 'left' | 'right'
+    cellStyle?: Object
+    headerStyle?: Object
+    prop?: string,
+    type: string,
+    hide?: boolean,
+    system?: boolean,
+    class?: string,
+    showOverflowTooltip?: boolean,
+    formatList?: any[],
+    buttons?: any[],
+    prefixIcon?: string,
+    suffixIcon?: string,
+    defaultColumn?: boolean
+    hideSort?:boolean
+    show?:boolean,
+    children?:any[]
+}
+export type TableBase = {
+    commands: any[]
+}
+export type TableBaseSetting = {
+    [key:string] : TableBase
+}
+export enum TABLE {
+    META_CAPTURE_PROFILE = "metaCaptureProfile",
+    META_IMPORT_MAPPING = 'metaImportMapping',
+    META_PROFILE_DIALOG = "metaProfileDialog",
+    META_LIST = "metaList",
+    META_DISPLAY_LIST = 'metaDisplayList',
+    META_RELATED_LIST = 'metaRelatedList',
+    CHILD_FORM = 'childForm',
+    HIERARCHIAL_FORM = 'hierarchicalForm',
+    SIMPLE_FORM = 'simpleForm',
+    ADMIN_WORKFLOW = 'adminWorkflow',
+    VERSION_POPOVER = 'versionPopOver',
+    ALL_TASK = 'allTask',
+    COMPLETE_TASK = 'completeTask',
+    MY_TASK = 'myTask',
+    SMART_FOLDER = 'smartFolder',
+    FILE_REQUEST_DETAIL = 'fileRequestDetail',
+    FILE_REQUEST_INDEX = 'fileRequestIndex',
+    ADHOC_Submitted_TASK = 'adhocSubmittedTask',
+    ADHOC_Approval_TASK = 'adhocApprovalTask',
+    ADHOC_Completed_TASK = 'adhocCompletedTask',
+    ACTIVE_TASK = 'activeTask',
+    CLIENT_TRASH = 'clientTrash',
+    CLIENT_SMART_FOLDER_LIST = 'clientSmartFolderList',
+    CLIENT_SMART_FOLDER = 'clientSmartFolder',
+    CLIENT_COLLECTION = 'clientCollection',
+    CLIENT_SHARE_LIST = 'clientShareList',
+    CLIENT_SEARCH = 'clientSearch',
+    CLIENT_FILE_UPLOAD = 'clientFileUpload',
+    CLIENT_FILE_REQUEST = 'clientFileRequest',
+    CLIENT_FILE_REQUEST_AUDIT = 'clientFileRequestAudit',
+    CLIENT_WORKFLOW_All_TASK = 'clientAllTask',
+    CLIENT_WORKFLOW_MY_TASK = 'clientMyTask',
+    CLIENT_WORKFLOW_COMPLETE_TASK = 'clientCompleteTask',
+    CLIENT_WORKFLOW_ACTIVE_TASK = 'clientActiveTask',
+    CLIENT_ADHOC_APPROVAL_TASK = 'clientAdhocApprovalTask',
+    CLIENT_ADHOC_SUBMITTED_TASK = 'clientAdhocSubmittedTask',
+    CLIENT_ADHOC_COMPLETED_TASK = 'clientAdhocCompletedTask',
+    CLIENT_BROWSE = 'clientBrowse',
+    CLIENT_SHARE_SET = 'clientShareSet',
+    CLIENT_FOLDER_CABINET = 'clientFolderCabinet',
+    CLIENT_INTERNAL_SHEAR_ME = 'clientInternalShareMe',
+    CLIENT_INTERNAL_SHEAR_OTHER = 'clientInternalShareOther',
+    CLIENT_HOLD_POLICIES = "clientHoldPolicies",
+    CLIENT_RETENTION_DONE = "clientRetentionDone",
+    CLIENT_RETENTION_PENDING= "clientRetentionPending",
+    CLIENT_DASHBOARD = 'clientDashboard',
+    CLIENT_UPLOAD_AI = 'clientUploadAi',
+    CLIENT_CASE_MANAGE = 'clientCaseManage',
+
+    PUBLIC_SHARE = 'publicShare',
+    ADMIN_LOG_MANAGE = 'adminLogManage',
+    ADMIN_USER_MANAGE = 'adminUserManage',
+    ADMIN_USER_GROUP_MANAGE = 'adminUserGroupManage',
+    ADMIN_GROUP_MANAGE = 'adminGroupManage',
+    ADMIN_GROUP_USER_MANAGE = 'adminGroupUserManage',
+    ADMIN_META_MANAGE = 'adminMetaManage',
+    ADMIN_META_DISPLAY = 'adminMetaDisplay',
+    ADMIN_META_RELATED = 'adminMetaRelated',
+    ADMIN_DOCPAL_TYPE_META_RELATED = 'adminDocpalTypeMetaRelated',
+    ADMIN_BULK_IMPORT = 'adminBulkImport',
+    ADMIN_BULK_IMPORT_META = 'adminBulkImportMeta',
+    ADMIN_BULK_IMPORT_CONFIG = 'adminBulkImportConfig',
+    ADMIN_BULK_IMPORT_CONFIG_FORM = 'adminBulkImportConfigForm',
+    ADMIN_DAM = 'adminDam',
+    ADMIN_SCHEMA_LIST = 'adminSchemaList',
+    ADMIN_SCHEMA_FIELDS_FORM = 'adminSchemaFieldsForm',
+    ADMIN_DOC_TYPE_LIST = 'adminDocTypeList',
+    ADMIN_DOC_TYPE = 'adminDocType',
+    ADMIN_VOCABULARY_SIMPLE_FORM = 'adminVocabularySimpleForm',
+    ADMIN_VOCABULARY_CHILD_FORM = 'adminVocabularyChildForm',
+    ADMIN_VOCABULARY_TREE_FORM = 'adminVocabularyTreeForm',
+    ADMIN_WORKFLOW_MANAGE = 'adminWorkflowManage',
+    ADMIN_WORKFLOW_EDITOR_MANAGE = 'adminWorkflowEditorManage',
+    ADMIN_CASE_MANAGE = 'adminCaseManage',
+    ADMIN_MESSAGE_QUEUE = 'adminMessageQueue',
+    ADMIN_AUDIT = 'adminAudit',
+    ADMIN_WORKFLOW_RETRY = 'adminWorkflowRetry',
+    ADMIN_INTERNAL_SHEAR = 'adminInternalShare',
+
+    PUBLIC_LANGUAGE_SET = 'publicLanguageSet',
+    ADMIN_FOLDER_CABINET = 'adminFolderCabinet',
+    ADMIN_HOLD_POLICIES_MANAGE = 'adminHoldPoliciesManage',
+    ADMIN_RETENTION_MANAGE = 'adminRetentionManage',
+    ADMIN_EMAIL_TEMPLATE = 'adminEmailTemplate',
+    ADMIN_EMAIL_LAYOUT = 'adminEmailLayout',
+    ADMIN_DOC_TEMPLATE = 'adminDocTemplate',
+    ADMIN_DASHBOARD = 'adminDashboard',
+    ADMIN_SMART_FOLDER = 'adminSmartFolder',
+    ADMIN_MASTER_TABLE = 'adminMasterTable',
+    ADMIN_META_VALIDATION = 'adminMetaValidation',
+    ADMIN_EASY_FORM = 'adminEasyForm'
+}
+
+export const defaultTableSetting: TableColumnSetting = {
+    [TABLE.ALL_TASK] : {
+        columns: [
+            { id:1, label: 'table_name', property: 'taskName', sortable: true },
+            { id:2, label: 'workflow_workflow', property: 'processDefinitionName', sortable: true, isFilter: true },
+            { id:3, slot: 'status', property: 'status', label: 'common_status' },
+            { id:4, slot: 'assignee', property: 'assignee', label: 'workflow_assignee' },
+            { id:5, label: 'workflow_createDate', property: 'createDate', sortable: true },
+            { id:6, label: 'workflow_dueDate', property: 'dueDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.META_CAPTURE_PROFILE]: {
+        columns: [
+            { label: 'dpTable_id', property: 'profileID', sortable: true },
+            { label: 'dpTable_name', property: 'profileName' },
+            { slot: 'action', property: 'action', label: 'dpTable_actions', class: "slotTopRight", }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.META_IMPORT_MAPPING] :{
+        columns: [
+            { label: 'docType_property', property: 'key', sortable: true },
+            { label: 'table_label', property: 'label' },
+            { slot: 'action', property: 'action', label: 'table.action' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.META_PROFILE_DIALOG] :{
+        columns: [
+            { property: 'title', label: 'title' },
+            { property: 'name', label: 'tableHeader_name' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.META_LIST] : {
+        columns: [
+            { slot: 'icon' },
+            { label: 'docType_documentType', property: 'name', sortable: true },
+            { slot: 'metaMapping', label: 'docType_metaMapping' },
+            { slot: 'metaProfile', label: 'docType_metaMapping', },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.META_DISPLAY_LIST] : {
+        columns: [
+            { label: 'docType_property', property: 'metaData', sortable: true },
+            { label: 'form_vocabulary', property: 'vocabulary' },
+            { label: 'form_length', property: 'length', align: 'right', width: '100' },
+            { slot: 'isRequire', label: 'form_isRequire', property: 'isRequire', width: '100' },
+            { slot: 'display', property: 'display', label: 'form_display' },
+            { slot: 'action', property: 'action', label: 'table_action' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.META_RELATED_LIST] : {
+        columns: [
+            { label: 'dpTable_documentType', property: 'type', sortable: true },
+            { label: 'rightDetail_meta', property: 'meta' },
+            { slot: 'action', property: 'action', label: 'table_actions', class: "slotTopRight", }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CHILD_FORM] : {
+        columns: [
+            { property: 'id', label: 'id', slot: "id" },
+            { property: 'label', label: 'dpTable_label' },
+            { property: 'parentEntryID', label: 'parentEntryID', slot: "parentEntryID"},
+            { property: 'obsolete', label: 'obsolete', slot: "obsolete", width: '100', align: 'center', headerAlign: 'center', defaultValue: false },
+            { property: 'order', label: 'order', defaultValue: 0 }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.HIERARCHIAL_FORM]:{
+        columns: [
+            { property: 'id', label: 'id', slot: "id" },
+            { property: 'label', label: 'dpTable_label' },
+            { property: 'obsolete', label: 'obsolete', slot: "obsolete", width: '100', align: 'center', headerAlign: 'center', defaultValue: false },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.SIMPLE_FORM]: {
+        columns: [
+            { property: 'id', label: 'id', slot: "id" },
+          { property: 'label', label: 'dpTable_label' },
+          { property: 'obsolete', label: 'obsolete', slot: "obsolete", width: '100', align: 'center', headerAlign: 'center', defaultValue: false },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_WORKFLOW] : {
+        columns: [
+            { label: 'dpTable_selection', slot: 'selection', canNotDelete: true, },
+            // { label: 'common.status', property: 'name', sortable: true, isFilter: true, type: 'tag' },
+            // { slot: 'status', property: 'status', label: i18n.t('common_status') },
+            { label: 'table_name', property: 'taskName', sortable: true },
+            { label: 'workflow_workflow', property: 'processDefinitionName', sortable: true, isFilter: true },
+            { label: 'role.creator', property: 'startUserId', sortable: true, isFilter: true },
+            { label: 'workflow_assignee', slot: 'assignee', property: 'assignee' },
+            // { slot: 'status', property: 'status', label: i18n.t('common_status') },
+            // { slot: 'assignee', property: 'assignee', label: i18n.t('workflow_assignee')  },
+            { label: 'workflow_createDate', property: 'createDate', sortable: true },
+            { label: 'workflow_dueDate', property: 'dueDate', sortable: true },
+            { label: 'dpTable_actions', slot: 'action', property: 'action', class: "slotTopRight", }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.VERSION_POPOVER] : {
+        columns: [
+            { label: 'file_versionNumber', property: 'version', sortable: true },
+            { label: 'table_lastModified', property: 'time', sortable: true },
+            { slot: 'action', property: 'action', label: 'table_action' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.COMPLETE_TASK] : {
+        columns: [
+            { label: 'table_name', property: 'taskName', sortable: true },
+            { slot: 'workflow', label: 'workflow_workflow', property: 'workflow' },
+            // { label: 'workflow_workflow', property: 'name', sortable: true },
+            { label: 'workflow_createDate', property: 'createDate', sortable: true },
+            { label: 'table_completeDate', property: 'completeDate', sortable: true },
+            { slot: 'duration', label: 'table_duration', property: 'duration' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ACTIVE_TASK] : {
+        columns: [
+            { label: 'table_name', property: 'taskName', sortable: true },
+            { slot: 'workflow', label: 'workflow_workflow', property: 'workflow' },
+            { id:3, slot: 'status', property: 'status', label: 'common_status' },
+            { id:4, slot: 'assignee', property: 'assignee', label: 'workflow_assignee' },
+            { label: 'workflow_createDate', property: 'createDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.MY_TASK] : {
+        columns: [
+            { label: 'table_name', property: 'taskName', sortable: true },
+            { label: 'workflow_workflow', property: 'processDefinitionName', sortable: true, isFilter: true },
+            { slot: 'status', label: 'common_status', property: 'status', },
+            { slot: 'assignee', label: 'workflow_assignee', property: 'assignee', },
+            { label: 'workflow_createDate', property: 'createDate', sortable: true },
+            { label: 'workflow_dueDate', property: 'dueDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SMART_FOLDER_LIST] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'dpDocument_fileType', slot: 'fileType' },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "cellStyle":{},
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "preview",
+                        "suffixIcon": "/icons/eye.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SMART_FOLDER] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'name' },
+            { id: '2', label: 'table_path', prop: 'logicalPath' },
+            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '4', label: 'table_type', prop: 'type' },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.FILE_REQUEST_DETAIL] : {
+        columns: [
+            { id: '1', slot: 'selection' },
+            { id: '2', slot: 'expand' },
+            { id: '3', label: 'dpDocument_fileName', property: 'initName', sortable: true },
+            { id: '4', slot: 'fileType', label: 'dpDocument_fileType', property: 'documentType', sortable: true },
+            { id: '5', slot: 'approve',label: 'dpTool_approve', property: 'approve', sortable: true, align: 'center' },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.FILE_REQUEST_INDEX] : {
+        columns: [
+            { label: 'dpTable_email', property: 'email', sortable: true },
+            { label: 'dpTable_location', property: 'documentId', sortable: true },
+            { label: 'dpTable_message', property: 'message', sortable: true },
+            { label: 'dpTable_status', property: 'status', sortable: true, slot: 'status' },
+            { label: 'dpTable_createdDate', property: 'createdDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADHOC_Submitted_TASK] : {
+        columns: [
+            { id: '1', label: 'table_path', property: 'documentPath', sortable: true },
+            // { label: 'info_version', property: 'documentStartVersion' },
+            // { label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true },
+            { id: '2', label: 'role.approvers', property: 'user_approver_id', sortable: true, isFilter: true },
+            { id: '3', label: 'workflow_createDate', property: 'createDate', sortable: true },
+            // { label: 'table_completeDate', property: 'completeDate', sortable: true },
+            // { slot: 'duration', label: 'table_duration', property: 'duration' }
+            // { label: 'table_duration', property: 'duration', align:"right", sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADHOC_Approval_TASK] : {
+        columns: [
+            { id:'1', label: 'table_path', property: 'documentPath', sortable: true },
+            { id:'2', label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true },
+            { id:'3', label: 'workflow_createDate', property: 'createDate', sortable: true },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADHOC_Completed_TASK] : {
+        columns: [
+            { id: '1', label: 'table_path', property: 'documentPath', sortable: true },
+            { id: '2', label: 'info_version', property: 'documentApprovalVersion', align: 'right', width: '70' },
+            { id: '3', label: 'role.creator', property: 'user_creator_id', sortable: true, isFilter: true, width: '150' },
+            { id: '4', label: 'workflow_createDate', property: 'createDate', sortable: true, align: 'center', width: '130' },
+            { id: '5', label: 'role.approver', property: 'approvedBy', sortable: true, isFilter: true, width: '150' },
+            { id: '6', label: 'dpTable_approvedDate', property: 'approvedDate', sortable: true, align: 'center', width: '130' },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_UPLOAD_AI] : {
+        columns: [
+            { id: '0', label: 'tableHeader_path', prop: 'uploadPath', slot:'path' },
+            { id: '1', label: 'dpTable_createdDate', prop: "createdDate", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "createdDate",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
+            { id: '2', label: 'tableHeader_filesCount', prop: 'filesCount' },
+            { id: '3', label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { id: '4', label: 'dpTable_actions', slot: 'commonActions', width: 100 }
+        ],
+        events: [],
+        slots: [
+            { label: 'common_status', prop: 'uploadStatus', slot: 'status' },
+            { label: 'dpTable_actions', slot: 'commonActions' }
+        ],
+        options: { pageSize: 20 }
+    },
+    
+    [TABLE.CLIENT_TRASH] : {
+        columns: [
+            { id: '6', type: 'selection' },
+            { id: '7', slot: 'docIcon', label: 'tableHeader_name', defaultColumn: true },
+            // { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath' },
+            { id: '3', label: 'tableHeader_type', prop: 'type' },
+            { id: '4', label: 'trash_deleteBy', prop: 'properties.principalName' },
+            { id: '5', label: 'trash_date', prop: "properties.trashed_date", formatList: [
+                {
+                    "joiner": "",
+                    "prop": "properties.trashed_date",
+                    "formatFun": "dateFormat",
+                    "params": {
+                        "format": ""
+                    },
+                    "index": 0
+                }]
+            },
+            {
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/delete.svg",
+                        "index": 0
+                    },
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "restored",
+                        "suffixIcon": "/icons/restored.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete', 'restored'],
+        slots: [
+            { slot: 'docIcon', label: '' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_COLLECTION] : {
+        columns: [
+            { id: '1', label: 'tableHeader.fileOrFolderName', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '3', label: 'table_type', prop: 'type' },
+            {   
+                id: '4',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_BROWSE] : {
+        columns: [
+            // { id: '4', type: 'selection' },
+            { id: '1',  slot: 'docName',  label: 'table_name',  prop: 'name',  fixed:'left', sortable: true,  headerSlot:"nameFilter", 
+                defaultColumn: true, 'min-width':300, canNotDelete:true,
+            },
+            { id: '2', slot: 'mimeType', label: 'docInfo.fileExtension', 'min-width':150, },
+            { id: '3', label: 'info_type', prop: 'documentType', sortable: true,
+            'min-width':200, 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ],
+            },
+            { id: '4', prop: 'fileSize', label: 'search.size', 'min-width':150, 
+                formatList: [ unitFormat('fileSize', 'KB', 0) ] 
+            },
+            { 
+                id: '5', label: 'table_modifiedDate', prop: 'modifiedDate', sortable: true, 
+                'min-width':250,
+                formatList: [ datesFormat('modifiedDate') ] 
+            },
+            { 
+                id: '6', label: 'dpTable_createdDate', prop: 'createdDate', sortable: true, 
+                'min-width':250,
+                formatList: [ datesFormat('createdDate') ] 
+            },
+            {
+                id:'7', label: 'fileModifiedDate_label', prop: 'fileModifiedDate', sortable: true,
+                'min-width':250,
+                formatList: [ datesFormat('fileModifiedDate') ] 
+            },
+            
+            { id: '8', slot: 'tags', label: 'rightDetail_tags', prop: 'tags', sortable: true, 'min-width':250, },
+            { id: '9', slot: 'contributors', label: 'info_contributors', prop: 'contributors', sortable: true, 'min-width':250, },
+            {
+                id: '10',
+                "type": "dpTable_actions",
+                "label": "",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 80,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                fixed:'right',
+                hideSort: true,
+                canNotDelete:true,
+                cellStyle:{
+                    padding:'0px',
+                    '--icon-color':"var(--color-grey-200)"
+                },
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "rightClick",
+                        "suffixIcon": "/icons/dots.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        slots: [
+            { slot: 'docName', label: 'table_name', prop: 'name' },
+            { slot: 'tags', label: 'rightDetail_tags', prop: 'tags' },
+            { slot: 'contributors', label: 'info_contributors', prop: 'contributors' }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SHARE_SET] : {
+        columns: [
+            // { id: '1', type: 'selection' },
+            // { id: '4', type: 'selection' },
+            { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: 'watermark', slot: 'watermark', label: 'watermark.watermark' },
+            { id: '5', slot: 'readOnly', label: 'button.readOnly' },
+            { id: '4', label: 'table_modifiedDate', prop: 'modifiedDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            {
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                "prop": "",
+                class: "slotTopRight",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        slots: [
+            { slot: 'watermark', label: 'watermark' }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_FOLDER_CABINET]: {
+        columns: [
+            { id: '7', label: 'tableHeader_status', slot: 'status',width: 60, defaultColumn: true },
+            { id: '1', label: 'tableHeader_name', prop: 'label' },
+            { id: '2', label: 'tableHeader_modifiedDate', prop: 'modifiedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '6', label: 'tableHeader.deadline', prop: 'deadline',
+                formatList: [
+                    {
+                        joiner: "",
+                        prop: 'deadline',
+                        formatFun: "dateFormat",
+                        params: {
+                            "format": ""
+                        },
+                        index: 0
+                    }
+                ]
+            },
+            { id: '4', label: 'tableHeader_type', prop: 'documentType',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            {
+                "id": '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "goRoute",
+                        "suffixIcon": "/icons/file/position.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        slots: [
+            { label: 'tableHeader_status', slot: 'status' },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SHARE_LIST] : {
+        columns: [
+            { id: '1', label: 'tableHeader_emailList', prop: 'emailList', defaultColumn: true, 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "emailList",
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '2', label: 'tableHeader_numberOfFiles', prop: 'documentSize' },
+            { id: '3', label: 'tableHeader_creationDate', prop: 'created', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "created",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '4', label: 'tableHeader_dueDate', prop: 'expiredDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "expiredDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '6', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+        ],
+        events: ['disabled'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_INTERNAL_SHEAR_ME] : {
+        columns: [
+            { id: '1', slot: 'docIcon', label: 'tableHeader.fileOrFolderName', prop: 'documentName', defaultColumn: true },
+            // { id: '2', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '3', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '6', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_INTERNAL_SHEAR_OTHER] : {
+        columns: [
+            { id: '1', slot: 'docIcon', label: 'tableHeader.fileOrFolderName', prop: 'documentName', defaultColumn: true },
+            // { id: '2', label: 'tableHeader_name', prop: 'documentNames'},
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds' },
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '6', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
+    
+    [TABLE.CLIENT_FILE_REQUEST] : {
+        columns: [
+            { id: '1', label: 'dpTable_email', prop: 'email', showOverflowTooltip: true, defaultColumn: true },
+            { id: '2', label: 'dpTable_location', prop: 'logicalPath', showOverflowTooltip: true },
+            { id: '3', label: 'dpTable_message', prop: 'message', showOverflowTooltip: true },
+            { id: '4', label: 'dpTable_status', prop: 'status',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "status",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '5', label: 'dpTable_createdDate', prop: 'createdDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '6', label: 'dpTable_actions', slot: 'dpTable_actions', width: 100 },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_FILE_UPLOAD] : {
+        columns: [
+            { id: '1', type: 'selection' },
+            { id: '2', type: 'expand', slot: 'expand' },
+            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true, defaultColumn: true },
+            { id: '4', label: 'dpDocument_fileType', prop: 'type', slot: 'documentType', sortable: true },
+            {   
+                id: '5',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { }
+    },
+    [TABLE.CLIENT_FILE_REQUEST_AUDIT] : {
+        columns: [
+            { id: '1', type: 'selection' },
+            { id: '2', type: 'expand', slot: 'expand' },
+            { id: '3', label: 'dpDocument_fileName', prop: 'initName', sortable: true, defaultColumn: true },
+            { id: '4', label: 'dpDocument_fileType', prop: 'documentType', slot: 'documentType', sortable: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', label: 'dpTool_approve', prop: 'approve', slot: 'approve', sortable: true, align: 'center' },
+        ],
+        events: [],
+        options: { }
+    },
+    [TABLE.CLIENT_WORKFLOW_All_TASK] : {
+        columns: [
+            { id:1, label: 'table_name', prop: 'taskInstance.businessKey' },
+            { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName', class: 'tag' },
+            { id:3, label: 'common_status', prop: 'name', class: 'danger-tag round', showOverflowTooltip: true },
+            { id:4, label: 'workflow_assignee', prop: 'assignee', type: 'slot', slot: 'assignee' },
+            { id:7, label: 'workflow_startUser', prop: 'taskInstance.startUserId' },
+            { id:5, label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id:6, label: 'workflow_dueDate', prop: 'dueDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+        ],
+        events: [],
+        slots: [
+            { slot: 'assignee', label: 'workflow_assignee', prop: 'assignee' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_WORKFLOW_MY_TASK] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey', defaultColumn: true },
+            { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
+            { id: '3', label: 'common_status', prop: 'name', },
+            { id: '4', label: 'workflow_assignee', prop: 'assignee', },
+            { id: '5', label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '6', label: 'workflow_dueDate', prop: 'dueDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_WORKFLOW_COMPLETE_TASK] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'businessKey', sortable: true, defaultColumn: true },
+            { id: '2', label: 'workflow_workflow', prop: 'processDefinitionName' },
+            // { label: 'workflow_workflow', property: 'name', sortable: true },
+            { id: '3', label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '4', label: 'table_completeDate', prop: 'completeDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "endTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '5', label: 'table_duration', prop: 'duration', align: 'right',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "endTime",
+                        "formatFun": "duration",
+                        "params": {
+                            "date": "startTime"
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_WORKFLOW_ACTIVE_TASK] : {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'taskInstance.businessKey', defaultColumn: true },
+            { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
+            { id: '3', label: 'workflow_assignee', prop: 'assignee',  },
+            { id: '4', label: 'workflow_createDate', prop: 'createDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_ADHOC_SUBMITTED_TASK] : {
+        columns: [
+            { id: '1', label: 'table_path', prop: 'documentPath', defaultColumn: true },
+            { id: '2', label: 'role.approvers', prop: 'user_approver_id' },
+            { id: '3', label: 'workflow_createDate', prop: 'startTime',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_ADHOC_APPROVAL_TASK] : {
+        columns: [
+            { id: '1', label: 'table_path', prop: 'documentPath', defaultColumn: true },
+            { id: '2', label: 'role.creator', prop: 'user_creator_id' },
+            { id: '3', label: 'workflow_createDate', prop: 'startTime',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_ADHOC_COMPLETED_TASK] : {
+        columns: [
+            { id: '1', label: 'table_path', prop: 'documentPath', defaultColumn: true},
+            { id: '2', label: 'info_version', prop: 'documentApprovalVersion', align: 'right', width: '80' },
+            { id: '3', label: 'role.creator', prop: 'user_creator_id', width: '150' },
+            { id: '4', label: 'workflow_createDate', prop: 'startTime', align: 'center', width: '180',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '5', label: 'role.approver', prop: 'approvedBy', width: '150' },
+            { id: '6', label: 'dpTable_approvedDate', prop: 'approvedDate', align: 'center', width: '150',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "approvedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_SEARCH] : {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true, sortable: true, canNotDelete:true, "min-width": "320" },
+            { id: '2', label: 'tableHeader_path', prop: 'logicalPath', sortable: true, slot: 'logicalPath',  "min-width": "160" },
+            { id: '8', label: 'tableHeader.summaryKey', prop: 'properties.summaryKey', "min-width": "140" },
+            { id: '9', label: 'tableHeader.summary', prop: 'properties.summaryValue', "min-width": "200" },
+            { id: '3', label: 'tableHeader_type', prop: 'type', sortable: true, headerSlot: 'documentTypeHeader', "min-width": "200"},
+            { id: '6', label: 'search.authors', prop: 'createdBy', sortable: true, "min-width": "150" },
+            { id: '7', label: 'search.contributors', prop: 'properties.dc:contributors', "min-width": "200",
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": 'properties.dc:contributors',
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '4',label: 'tableHeader_modifiedDate', prop: 'modifiedDate', align: 'center', width: '180', sortable: true, "min-width": "200",
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '5', slot: 'tags', label: 'dpTable_tags', prop: 'tags', "min-width": "200" },
+
+        ],
+        events: [],
+        slots: [
+            { slot: 'tags', label: 'dpTable_tags', prop: 'tags' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_HOLD_POLICIES]: {
+        columns: [
+            { id: '1', label: 'tableHeader.folderName', prop: 'documentName', defaultColumn: true },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyHoldName' },
+            { id: '4', label: 'tableHeader_applyBy', prop: 'applyBy' },
+            { id: '5', label: 'tableHeader_approver', prop: 'applyApprovedBy' },
+            { id: '6', label: 'tableHeader_confirmAt', prop: 'applyApprovedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "applyApprovedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            {   
+                id: '7',
+                "type": "",
+                "label": "dpTable_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "goRoute",
+                        "suffixIcon": "/icons/file/position.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_RETENTION_DONE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
+            { id: '4', label: 'tableHeader_approver', slot: 'approver', width: 150 },
+            { id: '6', label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150},
+        ],
+        events: [],
+        slots: [
+            { label: 'tableHeader_approver', slot: 'approver', width: 150 },
+            { label: 'tableHeader_confirmAt', slot: 'confirmAt', width: 150 }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_RETENTION_PENDING]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'documentName', defaultColumn: true },
+            { id: '2', label: 'tableHeader_path', prop: 'documentPath' },
+            { id: '3', label: 'tableHeader_policyName', prop: 'policyName' },
+            // { id: '4', label: 'tableHeader_approver', prop: 'approver' },
+            { id: '4', label: 'tableHeader_dueDate', prop: 'expireDate', width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "expireDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', slot: 'action', label: 'tableHeader_actions', width: 100, align: 'center' }
+        ],
+        events: [],
+        slots: [
+            { slot: 'action', label: 'tableHeader_actions', width: 100, align: 'center' }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_CASE_MANAGE]: {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'workflow_createDate', prop: 'createdDate', width: 200,
+                formatList: [ datesFormat('createdDate') ]  
+            },
+            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', width: 200,
+                formatList: [ datesFormat('modifiedDate') ]      
+            }
+        ],
+        events: ['delete'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.CLIENT_DASHBOARD]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            // { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    
+    [TABLE.PUBLIC_SHARE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'title', defaultColumn: true },
+            { id: '2', label: 'tableHeader_modifiedDate', prop: 'lastModified',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "lastModified",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '3', label: 'tableHeader_type', prop: 'type' },
+            { id: '4', slot: 'actions', label: 'tableHeader_actions', class: "slotTopRight", }
+            // {   
+            //     id: '4',
+            //     "type": "buttons",
+            //     "label": "tableHeader_actions",
+            //     "prop": "",
+            //     "align": "left",
+            //     "hide": false,
+            //     "system": false,
+            //     "showOverflowTooltip": false,
+            //     "formatList": [],
+            //     "buttons": [
+            //         {
+            //             "name": "download",
+            //             "command": "download",
+            //             "type": "primary",
+            //             "index": 0
+            //         }
+            //     ],
+            //     "prefixIcon": "",
+            //     "suffixIcon": "",
+            // }
+        ],
+        slots: [
+            { slot: 'actions', label: 'tableHeader_actions', class: "slotTopRight", }
+        ],
+        events: ['download'],
+        options: { pageSize: 20 }
+    },
+
+    [TABLE.ADMIN_LOG_MANAGE]: {
+        columns: [
+            { id: '1', label: 'service', prop: 'service', defaultColumn: true },
+            { id: '2', label: 'effectiveLevel', prop: 'effectiveLevel' },
+            { id: '3', label: 'configuredLevel', prop: 'configuredLevel', slot: 'configuredLevel' }
+        ],
+        events: [],
+        slots: [
+            { slot: 'configuredLevel', label: 'configuredLevel', prop: 'configuredLevel' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_USER_MANAGE]: {
+        columns: [
+            { id: '1', label: 'user_username', prop: 'username', "width": 200, showOverflowTooltip: true, defaultColumn: true  },
+            // { id: '2', label: 'Identifer', prop: 'userId' },
+            { id: '3', label: 'user_email', prop: 'email', "width": 250, showOverflowTooltip: true  },
+            { id: '4', label: 'user_groupName', slot: 'group' },
+            { id: '5', label: 'user_active', slot: 'active', "width": 100 },
+            { id: '6', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+        ],
+
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_USER_GROUP_MANAGE]: {
+        columns: [
+            { id: '1', label: 'user_groupName', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'user_groupIdentifer', prop: 'id' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_GROUP_MANAGE]: {
+        columns: [
+            { id: '1', label: 'user_groupName', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'Identifer', prop: 'id' },
+            { id: '3', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_GROUP_USER_MANAGE]: {
+        columns: [
+            { id: '1', label: 'username', prop: 'username', defaultColumn: true },
+            { id: '2', label: 'user_groupIdentifer', prop: 'userId' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_META_MANAGE]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '3', slot: 'displayMeta', label: 'docType_displayMeta' },
+            { id: '4', slot: 'relatedDocument', label: 'docType_relatedDocument' },
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+            { slot: 'displayMeta', label: 'docType_displayMeta' },
+            { slot: 'relatedDocument', label: 'docType_relatedDocument' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_META_VALIDATION]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'name', showOverflowTooltip: true, defaultColumn: true, sortable: true },
+            { id: '3', label: 'doc.isFolder', prop: 'isFolder', width: 200, sortable: true },
+            {   
+                id: '4',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            },
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DOC_TYPE]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'name', showOverflowTooltip: true, defaultColumn: true },
+            { id: '4', label: 'docType.category', prop: 'category', showOverflowTooltip: true, defaultColumn: true },
+            { id: '6', label: 'docType.type', prop: 'dataType', showOverflowTooltip: true, defaultColumn: true },
+            { id: '3', label: 'user_active', slot: 'user_active', "width": 100 },
+            { id: '6', label: 'table_last_update', prop: 'modifiedDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "modifiedDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            // { id: '3', label: 'doc.isFolder', prop: 'isFolder', width: 200, sortable: true },
+            { id: '5', label: 'dpTable_actions', slot: 'dpTable_actions', "width": 100, align: 'center'}
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+            { label: 'dpTable_actions', slot: 'dpTable_actions', "width": 100,  }
+        ],
+        options: { pageSize: 20 }
+    },
+    
+    [TABLE.ADMIN_META_DISPLAY]: {
+        columns: [
+            {
+                id: '1',
+                label: 'rightDetail_meta',
+                prop: 'metadata',
+                showOverflowTooltip: true,
+                defaultColumn: true,
+                sortable: true,
+                formatList: [{
+                    "joiner": "",
+                    "prop": "metadata",
+                    "formatFun": "i18n",
+                    "params": {},
+                    "index": 0
+                }],
+            },
+            // { id: '2', label: 'form_vocabulary', prop: 'vocabulary', showOverflowTooltip: true },
+            // { id: '3', label: 'form_length', prop: 'length'},
+            { id: '3', label: 'metadata.dataType', prop: 'metaDataType', sortable: true, slot: 'dataType', width: 150 },
+            { id: '4', slot: 'isRequire', label:'form_isRequire', width: 120, sortable: true },
+            { id: '5', slot: 'display',label:'form_display', prop: 'display',width: 110, sortable: true },
+            {   
+                id: '6',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'dataType', prop: 'dataType', slot: 'dataType'},
+            { slot: 'isRequire', label:'form_isRequire', width: 50 },
+            { slot: 'display', label:'form_display', width: 50 },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_META_RELATED]: {
+        columns: [
+            { id: '1', label: 'dpTable_documentType', prop: 'documentType', defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'rightDetail_meta', prop: 'metaData' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DOCPAL_TYPE_META_RELATED]: {
+        columns: [
+            { id: '1', label: 'dpTable_documentType', prop: 'rootDocPalType', defaultColumn: true, sortable: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "rootDocPalType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'rightDetail_meta', prop: 'metaData', sortable: true },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: ['delete'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT]: {
+        columns: [
+            { id: '1', slot: 'icon', label: '', width: 50 },
+            { id: '2', label: 'docType_documentType', prop: 'documentType', width: 200, showOverflowTooltip: true, defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '3', slot: 'metaMapping', label: 'docType_metaMapping' },
+            { id: '4', slot: 'bulkImportConfig', label: 'docType_captureProfile' },
+            { id: '5', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+        ],
+        events: [],
+        slots: [
+            { slot: 'icon', width: 50 },
+            { slot: 'metaMapping', label: 'docType_metaMapping' },
+            { slot: 'bulkImportConfig', label: 'docType_captureProfile' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT_META]: {
+        columns: [
+            { id: '1', label: 'docType_property', prop: 'metaData', showOverflowTooltip: true, defaultColumn: true,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "metaData",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'table_label', prop: 'label', showOverflowTooltip: true },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT_CONFIG]: {
+        columns: [
+            { id: '1', label: 'dpTable_id', prop: 'profileID', defaultColumn: true },
+            { id: '2', label: 'dpTable_name', prop: 'profileName' },
+            {   
+                id: '3',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "delete",
+                        "suffixIcon": "/icons/menu/trash.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_BULK_IMPORT_CONFIG_FORM]: {
+        columns: [
+            { id: '1', prop: 'title', label: 'title', defaultColumn: true },
+            { id: '2', prop: 'name', label: 'tableHeader_name' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DAM]: {
+        columns: [
+            { id: '2', label: 'DAM_fileType', prop: 'sourceType', width: 200, showOverflowTooltip: true, defaultColumn: true },
+            { id: '3', slot: 'targetTypes', label: 'DAM_convertion' },
+            { id: '4', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['add'],
+        slots: [
+            { slot: 'targetTypes', label: 'DAM_convertion' },
+        ],
+        options: { pageSize: 20 }
+    },
+    // 已移除
+    [TABLE.ADMIN_SCHEMA_LIST]: {
+        columns: [
+            { id: '1', prop: 'keyword', label: 'tableHeader_name', defaultColumn: true},
+            {   
+                id: '2',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    // 已移除
+    [TABLE.ADMIN_DOC_TYPE_LIST]: {
+        columns: [
+            { id: '1', prop: 'docTypeId', label: 'tableHeader_name', defaultColumn: true },
+            {   
+                id: '2',
+                "type": "",
+                "label": "tableHeader_actions",
+                class: "slotTopRight",
+                "prop": "",
+                "align": "center",
+                "width": 100,
+                "hide": false,
+                "system": false,
+                "showOverflowTooltip": false,
+                "formatList": [],
+                "buttons": [
+                    {
+                        "name": "",
+                        "type": "text",
+                        "command": "edit",
+                        "suffixIcon": "/icons/edit.svg",
+                        "index": 0
+                    }
+                ],
+                "prefixIcon": "",
+                "suffixIcon": "",
+            }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_SCHEMA_FIELDS_FORM]: {
+        columns: [
+            { id: '1', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
+            { id: '3', slot: 'type', label: 'docType_type', prop: 'type' },
+            // { id: '4', slot: 'setting' },
+            { id: '5', prop: 'defaultValue', label: 'docType_defaultValue' },
+            { id: '6', slot: 'multiple', label: 'multiple', prop: 'isMultiValue', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VOCABULARY_SIMPLE_FORM]: {
+        columns: [
+            { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
+            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
+            { id: '4', prop: 'order', label: 'order', defaultValue: 0 }
+        ],
+        events: [],
+        slots: [
+            { slot: 'id', prop: 'id', label: 'docType_id' },
+            { slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VOCABULARY_CHILD_FORM]: {
+        columns: [
+            { id: '1', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
+            { id: '3', slot: 'parentEntryID', prop: 'parentEntryID', label: 'parentEntryID' },
+            
+            { id: '4', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
+            { id: '5', prop: 'order', label: 'order', defaultValue: 0 }
+        ],
+        events: [],
+        slots: [
+            { slot: 'id', prop: 'id', label: 'docType_id' },
+            { slot: 'parentEntryID', prop: 'parentEntryID', label: 'parentEntryID' },
+            { slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_VOCABULARY_TREE_FORM]: {
+        columns: [
+            { id: '1', slot: 'id', prop: 'id', label: 'docType_id' },
+            { id: '2', prop: 'label', label: 'docType_label', defaultColumn: true },
+            { id: '3', slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false },
+            { id: '4', prop: 'order', label: 'order', defaultValue: 0 }
+        ],
+        events: [],
+        slots: [
+            { slot: 'id', prop: 'id', label: 'docType_id' },
+            { slot: 'obsolete', label: 'obsolete', prop: 'obsolete', headerAlign: 'center', align: 'center',width: 80, defaultValue: false }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_WORKFLOW_MANAGE]: {
+        columns: [
+            { id: '1', type: 'selection' },
+            { id: '2', label: 'table_name', prop: 'taskInstance.businessKey', defaultColumn: true },
+            { id: '3', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName' },
+            { id: '4', label: 'role.creator', prop: 'taskInstance.startUserId' },
+            { id: '5', label: 'workflow_assignee', prop: 'assignee' },
+            { id: '6', label: 'workflow_createDate', prop: 'createDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '7', label: 'workflow_dueDate', prop: 'dueDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "dueDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '8', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['delete', 'reallocate'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE]: {
+        columns: [
+            { id: '2', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: '6', label: 'workflow_createDate', prop: 'createdDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '3', label: 'dpTable_status', prop: 'publishStatus', slot: 'publishStatus', width: 120 },
+            { id: '8', type: "", label: "dpTable_actions", slot: 'dpTable_actions', width: 80 }
+        ],
+        events: ['delete'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_CASE_MANAGE]: {
+        columns: [
+            { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'workflow_createDate', prop: 'createdDate', width: 200,
+                formatList: [ datesFormat('createdDate') ]  
+            },
+            { id: '3', label: 'table_modifiedDate', prop: 'modifiedDate', width: 200,
+                formatList: [ datesFormat('modifiedDate') ]      
+            },
+            { id: '4', label: 'caseManagement.count', prop: 'caseIdDigit', width: 120 },
+            { id: '5', label: 'dpTable_status', prop: 'publishStatus', slot: 'publishStatus', width: 120 },
+            { id: '6', type: "", label: "dpTable_actions", slot: 'dpTable_actions', width: 80 }
+        ],
+        events: ['delete'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_MESSAGE_QUEUE]: {
+        columns: [
+            { id: '2', label: 'table_fileName', prop: 'fileName', defaultColumn: true },
+            { id: '3', label: 'table_path', prop: 'logicalPath', showOverflowTooltip: true },
+            { id: '4', label: 'category', prop: 'category' },
+            { id: '5', label: 'dpTable_status', prop: 'status' },
+            { id: '6', label: 'table_last_update', prop: 'lastUpdateDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "lastUpdateDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+            { id: '7', slot: 'refreshAction', label: 'dpTable_actions', class: "slotTopRight", width: 100 },
+        ],
+        events: [],
+        slots: [
+            { slot: 'refreshAction', label: 'dpTable_actions', class: "slotTopRight", },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_INTERNAL_SHEAR] : {
+        columns: [
+            { id: '1', slot: 'docIcon', label: 'tableHeader.fileOrFolderName', prop: 'documentName', defaultColumn: true },
+            // { id: '1', label: 'tableHeader_name', prop: 'documentName'},
+            { id: '2', label: 'tableHeader_shareBy', prop: 'shareByUserId' },
+            { id: '3', label: 'tableHeader_shareTo', prop: 'shareToUserIds',},
+            { id: '4', label: 'tableHeader_shareDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '6', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+        ],
+        slots: [
+            { slot: 'docIcon' },
+        ],
+        events: ['preview'],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_AUDIT]: {
+        columns: [
+            { id: '1', label: 'User', prop: 'principalName', defaultColumn: true },
+            { id: '2', slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true },
+            { id: '3', label: 'category', prop: 'eventCategory' },
+            { id: '4', label: 'Event', prop: 'label' },
+            { id: '5', label: 'Date', prop: 'eventDate',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "eventDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]  
+            },
+        ],
+        events: ['goClientPath'],
+        slots: [
+            { slot: 'currentPath', label: 'table_path', prop: 'currentPath', showOverflowTooltip: true }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.PUBLIC_LANGUAGE_SET]: {
+        columns: [
+            { id: '1', label: 'key', prop: 'key', defaultColumn: true, copy: true },
+            { id: '2', label: 'en-US', prop: 'en-US', slot: 'enUS' },
+            { id: '3', label: 'zh-CN', prop: 'zh-CN', slot: 'zhCN' },
+            { id: '4', label: 'zh-HK', prop: 'zh-HK', slot: 'zhHK' },
+            { id: '5', label: 'dpTable_actions', slot: 'actions', class: "slotTopRight", }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_FOLDER_CABINET]: {
+        columns: [
+            { id: '1', label: 'folderCabinet.name', prop: 'label', defaultColumn: true },
+            { id: '2', label: 'docType_documentType', prop: 'documentType',
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "documentType",
+                        "formatFun": "i18n",
+                        "params": {
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_HOLD_POLICIES_MANAGE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'policyName', defaultColumn: true },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+            { id: '3', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DOC_TEMPLATE]: {
+        columns: [
+            { id: '10', label: '', slot: 'iconName', defaultColumn: true, width: 60 },
+            { id: '1', label: 'tableHeader_name', prop: 'name', defaultColumn: true },
+            { id: '2', label: 'info_type', prop: 'fileType' },
+            { id: '3', label: 'role.creator', prop: 'createdBy' },
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '2', label: 'dpTable_actions', slot: 'templateAction', prop: 'status', width: 100 },
+        ],
+        events: ['delete'],
+        slots: [],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_RETENTION_MANAGE]: {
+        columns: [
+            { id: '1', label: 'hp.policyName', prop: 'policyName', defaultColumn: true },
+            { id: '2', label: 'docType_documentType', slot: 'docType' },
+            { id: '3', label: 'rp.period', prop: 'periodNum', slot: 'period'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', label: 'rp.isAuto', slot: 'isAuto', prop: 'isAuto', width: 150, align: 'center' },
+            { id: '6', label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+            { id: '7', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'docType_documentType', slot: 'docType' },
+            { label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_EMAIL_TEMPLATE]: {
+        columns: [
+            {id: "0", label:"tableHeader_name", prop:"label"},
+            { id: '1', label: 'tableHeader_subject', prop: 'subject' },
+            { id: '2', label: 'ID', prop: 'id', copy: true },
+            { id: '3', label: 'emailTemplate.layout', prop: 'emailLayoutName' },
+            { id: '4', label: 'role.creator', prop: 'createdBy', width: 100 },
+            { id: '5', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 },
+            // { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+            //     formatList: [
+            //         {
+            //             "joiner": "",
+            //             "prop": "createdDate",
+            //             "formatFun": "dateFormat",
+            //             "params": {
+            //                 "format": ""
+            //             },
+            //             "index": 0
+            //         }
+            //     ]
+            // },
+            
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'dpTable_actions', slot: 'moreActionSlot' },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_EMAIL_LAYOUT]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '5', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['delete'],
+        slots: [
+            { label: 'docType_documentType', slot: 'docType' },
+            { label: 'user_active', slot: 'active', prop: 'status', width: 100 },
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_DASHBOARD]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_access', prop: 'access' },
+            // { id: '3', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'workflow_createDate', prop: 'createdDate', 
+                width: 150,
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "createdDate",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            { id: '6', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_MASTER_TABLE]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'role.creator', prop: 'createdBy'},
+            { id: '4', label: 'dpTable_status', slot: 'status'},
+            { id: '3', label: "dpTable_actions", slot: 'more', width: 100}
+        ],
+        events: ['delete', 'edit', 'preview', 'more'],
+        slots: [
+            { label: "dpTable_actions", slot: 'more', width: 100 }
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_EASY_FORM]: {
+        columns: [
+            { id: '1', label: 'docType_documentType', prop: 'name', showOverflowTooltip: true, defaultColumn: true },
+            { id: '2', label: 'workflow_createDate', prop: 'createDate', showOverflowTooltip: true,
+                formatList: [ datesFormat('modifiedDate') ]     
+            },
+            { id: '3', label: 'table_last_update', prop: 'modifiedDate',
+                formatList: [ datesFormat('modifiedDate') ]    
+            },
+            { id: '4', label: 'common_status', slot: 'common_status' },
+            { id: '5', label: 'easyForm.submitWorkflow', prop: 'processDefinitionKey' },
+            // { id: '3', label: 'doc.isFolder', prop: 'isFolder', width: 200, sortable: true },
+            { id: '6', label: 'dpTable_actions', slot: 'dpTable_actions', "width": 100, align: 'center'}
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_SMART_FOLDER]: {
+        columns: [
+            { id: '1', label: 'tableHeader_name', prop: 'name' },
+            { id: '2', label: 'tableHeader_access', prop: 'userGroups', 
+                formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "userGroups",
+                        "formatFun": "concat",
+                        "params": {
+                            "joiner": ""
+                        },
+                        "index": 0
+                    }
+                ] 
+            },
+            { id: '7', label: 'dpTable_actions', moreActionSlot: 'moreAction', "width": 100 }
+        ],
+        events: ['delete', 'edit'],
+        slots: [
+        ],
+        options: { pageSize: 20 }
+    },
+    [TABLE.ADMIN_WORKFLOW_RETRY]:{
+        columns: [
+            {
+                id: 1, label: 'tableHeader_name', prop: 'businessKey'
+            },
+            {
+                id:4, label:'workflow_createDate', prop:'startTime',  formatList: [
+                    {
+                        "joiner": "",
+                        "prop": "startTime",
+                        "formatFun": "dateFormat",
+                        "params": {
+                            "format": ""
+                        },
+                        "index": 0
+                    }
+                ]
+            },
+            {
+                id:2, label: 'role.creator', prop:'creator'
+            },
+            {
+                id:3, label: "common_status", prop:'state'
+            },
+            { id: '3', label: "dpTable_actions", slot: 'more', width: 100}
+        ],
+        events:[],
+        slots:[
+            { label: 'dpTable_actions', slot: 'more' },
+        ],
+        options: { pageSize: 20 }
+    }
+}
+
+export function TableAddColumns (columnItem: TableColumnItem, columnList: any, position: number = 1) {
+    const _columnItem: TableColumnItem = {
+        ...columnItem,
+        showOverflowTooltip: true
+    }
+    if (columnItem.type === 'date') {
+        _columnItem.formatList = [
+            {
+                joiner: "",
+                prop: columnItem.prop,
+                formatFun: "dateFormat",
+                params: {
+                    "format": ""
+                },
+                index: 0
+            }
+        ]
+    } else if (columnItem.type === 'complex') {
+        _columnItem.formatList = [
+            {
+                joiner: "",
+                prop: columnItem.prop,
+                formatFun: "concat",
+                params: {
+                    "format": ""
+                },
+                index: 0
+            }
+        ]
+    }
+    columnList.splice(position, 0, {
+        ..._columnItem
+    })
+    return columnList
+} 
+
+export function TableAddMultiColumns (columnItems: TableColumnItem[], oldColumnList: any, position: number = 1) {
+    let resultList;
+    try{
+        resultList = structuredClone(oldColumnList)
+    }catch(err){
+        resultList = oldColumnList;
+    }
+    const columns = columnItems.reduce((prev: any, item:TableColumnItem) => {
+        const _columnItem: TableColumnItem = {
+            ...item,
+            width: 150,
+            showOverflowTooltip: true
+        }
+        if (item.type === 'date') {
+            _columnItem.formatList = [
+                {
+                    joiner: "",
+                    prop: item.prop,
+                    formatFun: "dateFormat",
+                    params: {
+                        "format": ""
+                    },
+                    index: 0
+                }
+            ]
+        } else if (item.type === 'complex') {
+            _columnItem.formatList = [
+                {
+                    joiner: "",
+                    prop: item.prop,
+                    formatFun: "concat",
+                    params: {
+                        "format": ""
+                    },
+                    index: 0
+                }
+            ]
+        } else if (item.type === 'size') {
+            _columnItem.formatList = [
+                {
+                    "joiner": "",
+                    "prop": item.prop,
+                    "formatFun": "fileSize",
+                    "params": {
+                        "joiner": ""
+                    },
+                    "index": 0
+                }
+            ]
+        }
+        prev.push(_columnItem)
+        return prev
+    }, [])
+    resultList.splice(position, 0, ...columns)
+    console.log(resultList)
+    return resultList
+} 
+
+export function datesFormat(prop: string = 'modifiedDate') {
+    return {
+        "joiner": "",
+        "prop": prop,
+        "formatFun": "dateFormat",
+        "params": {
+            "format": ""
+        },
+        "index": 0
+    }
+}
+
+export function unitFormat(prop: string = 'modifiedDate', unit: string = 'KB', decimal: number = -1) {
+    return {
+        "joiner": "",
+        "prop": prop,
+        "formatFun": "unit",
+        "params": {
+            unit,
+            decimal
+        },
+        "index": 0
+    }
+}
+
+type VNodeChild = import('vue').VNodeChild
+type Type = 'selection' | 'index' | 'expand' | 'image' | 'date'
+type columnType = 'buttons' | 'slot'
+type Size = 'large' | 'default' | 'small'
+type Align = 'center' | 'left' | 'right'
+export type Command = string | number
+type DateFormat = 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD HH:mm' | 'YYYY-MM'
+export type Order = 'ascending' | 'descending'
+
+
+export interface formatListType {
+    joiner?: string,
+    prop?: string,
+    formatFun?: string,
+    params?: any
+}
+export interface ButtonItem {
+    name: string,
+    command: Command,
+    size?: Size
+    type?: 'primary' | 'success' | 'warning' | 'danger' | 'info',
+    prefixIcon?: string,
+    suffixIcon?: string,
+}
+export interface Sort {
+    prop: string
+    order: Order
+    init?: any
+    silent?: any
+}
+export interface Column {
+    cellStyle?: {}
+    headerStyle?: {}
+    // 对应列的类型。 如果设置了selection则显示多选框； 如果设置了 index 则显示该行的索引（从 1 开始计算）； 如果设置了 expand 则显示为一个可展开的按钮
+    type?: Type | columnType,
+    class?:string,
+    label?: string,
+    prop?: string,
+    slot?: string
+    width?: string,
+    copy?:boolean,
+    align?: Align,
+    headerAlign?: Align,
+    hide?: boolean,
+    system?: boolean, // 后期兼容不允许删除
+    dateFormat?: DateFormat, // 显示在页面中的日期格式，简单列举了几种格式， 可自行配置
+    showOverflowTooltip?: boolean,
+    buttons?: ButtonItem[],
+    prefixIcon?: string,
+    suffixIcon?: string,
+    render?: (row?: Record<string, any>, index?: number) => VNodeChild // 渲染函数，渲染这一列的每一行的单元格
+    sortable?: boolean | 'custom', // 对应列是否可以排序， 如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 sort-change 事件
+    headerRender?: ({ column, index }:any) => VNodeChild, // 渲染函数，渲染列表头
+    headerSlot?: string, // 自定义表头插槽名字
+    children?: Column[] // 配置多级表头的数据集合, 具体用法可参考多级表头使用示例。
+    formatList?: formatListType[] // 配置显示的属性（带格式）列表
+    defaultColumn?: boolean,
+    moreActionSlot?:any
+}
+export interface Options {
+    multiSelect: boolean,
+    height?: string | number,
+    // Table 的高度， 默认为自动高度。 如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。
+    stripe?: boolean, // 是否为斑马纹 table
+    maxHeight?: string | number, // Table 的最大高度。 合法的值为数字或者单位为 px 的高度。
+    size?: Size // Table 的尺寸
+    showHeader?: boolean // 是否显示表头,
+    tooltipEffect?: 'dark' | 'light' // tooltip effect 属性
+    showPagination?: boolean // 是否展示分页器
+    paginationConfig?: Pagination, // 分页器配置项，详情见下方 paginationConfig 属性,
+    rowStyle?: ({ row, rowIndex }:any) => string | object, // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style。
+    headerCellStyle?: import('vue').CSSProperties, // 表头单元格的style样式，是一个object为所有表头单元格设置一样的 Style。注：CSSProperties类型就是一个对象，像正常在style中写css一样 {color: #f00}
+    defaultSort?: Sort, // 默认的排序列的 prop 和顺序。 它的 prop 属性指定默认的排序的列，order 指定默认排序的顺序。
+    rowKey?: string // 行数据的 Key，用来优化 Table 的渲染。
+        sortKey?: string,
+        sortAll?: boolean,
+        mode?:string,
+        selectable?:(row:any) => boolean,
+        cellStyle?:  any,
+        headerStyle?:any
+}
+export interface Pagination {
+    total?: number, // 总条目数
+    currentPage: number, // 当前页数，支持 v-model 双向绑定
+    pageSize: number, // 每页显示条目个数，支持 v-model 双向绑定
+    pageSizes?: number[], // 每页显示个数选择器的选项设置
+    layout?: string, // 组件布局，子组件名用逗号分隔
+    background?: boolean // 是否为分页按钮添加背景色
+}
