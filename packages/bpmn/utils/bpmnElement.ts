@@ -12,7 +12,8 @@ Graph.registerNode(
                     attrs: {
                         circle: {
                             magnet: true,
-                            stroke: '#8f8f8f',
+                            stroke: 'transparent',
+                            fill: 'transparent',
                             r: 5,
                         },
                     },
@@ -22,7 +23,8 @@ Graph.registerNode(
                     attrs: {
                         circle: {
                             magnet: true,
-                            stroke: '#8f8f8f',
+                            stroke: 'transparent',
+                            fill: 'transparent',
                             r: 5,
                         },
                     },
@@ -32,7 +34,8 @@ Graph.registerNode(
                     attrs: {
                         circle: {
                             magnet: true,
-                            stroke: '#8f8f8f',
+                            stroke: 'transparent',
+                            fill: 'transparent',
                             r: 5,
                         },
                     },
@@ -42,7 +45,8 @@ Graph.registerNode(
                     attrs: {
                         circle: {
                             magnet: true,
-                            stroke: '#8f8f8f',
+                            stroke: 'transparent',
+                            fill: 'transparent',
                             r: 5,
                         },
                     },
@@ -139,7 +143,7 @@ export const bpmnElement:BpmnElement = {
         clickHandler:() => {}
     },
     userTask:{
-        nodeStyle:() =>({...squareNodeStyle('#0099ff', '/bpmn/icons/form.svg'),
+        nodeStyle:() =>({...squareNodeStyle('#0099ff', "UserTask", '/bpmn/icons/form.svg'),
             shape:'bpmn-node',
             ports: {
                 items:[
@@ -241,25 +245,29 @@ export const bpmnElement:BpmnElement = {
         nodeStyle:(item:any) => {
             let icon = '/bpmn/icons/document.svg'
             let color ='#7B61FF'
+            let type = "ServiceTask"
             if(!item['attr_flowable:delegateExpression']){
-                return squareNodeStyle('#7B61FF', icon)
+                return squareNodeStyle('#7B61FF', "ServiceTask", icon)
             }
             switch(item['attr_flowable:delegateExpression']){
                 case '${sendNotificationDelegate}':
                     icon = '/bpmn/icons/email.svg'
+                    type = "Email"
                     color = '#36ce3c'
                     break;
                 case '${generateDocumentDelegate}':
                     icon = '/bpmn/icons/document.svg'
+                    type = "Document"
                     color = '#7B61FF'
                     break;
                 case '${filingGenerateDocumentDelegate}':
                     icon = '/bpmn/icons/folder.svg'
+                    type = "Filing"
                     color = '#7B61FF';
                     break;
             }
             return {
-                ...squareNodeStyle(color, icon),
+                ...squareNodeStyle(color, type, icon),
                 shape:'bpmn-node',
                 ports: {
                     items:[
