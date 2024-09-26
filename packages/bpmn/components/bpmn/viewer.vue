@@ -2,6 +2,9 @@
 import {ref, BPMN_PROVIDER, provide} from '#imports'
 import {Graph} from '@antv/x6'
 import type { Node } from '@antv/x6'
+import { DagreLayout } from '@antv/layout'
+
+import { bpmnStringToJson, jsonToX6Node } from '~/utils/bpmnConverter';
 
 const containerEl = ref()
 const graph = ref<Graph>();
@@ -10,6 +13,8 @@ const {options = {}} = defineProps<{
     options: any
 }>()
 const emits = defineEmits(['graphReady']);
+const flatGraphObject = ref<any>({})
+const bpmnJson = ref<any>({})
 
 function init(bpmnXml :string, x6Json?:any){
     if(!containerEl.value) {
@@ -62,14 +67,44 @@ function init(bpmnXml :string, x6Json?:any){
         container: containerEl,
         ...graphOptions
     });
+    autoLayout(bpmnXml)
     emits('graphReady', x6Json)
+}
+
+function autoLayout(xml:string){
+    const {json, flatObj} = bpmnStringToJson(xml)
+    // flatGraphObject.value = flatObj
+    bpmnJson.value = json;
+    const layout =  new DagreLayout({
+        type: 'dagre',
+        rankdir: 'LR',
+        ranksep: 60,
+        nodesep: 60,
+    });
+    const result = jsonToX6Node(bpmnJson.value, flatGraphObject.value );
+    const position = layout.layout(result)
+    graph.value?.fromJSON(position);
+    // check window width, if width is more than 1024, zoom graph with padding 200, more than 1280 with padding 300
+    nextTick(() => {
+
+        if(window.innerWidth >= 1280){
+            graph.value?.zoomToFit({padding: 100})
+        }
+        graph.value?.zoomToFit({padding: 40})
+    })
 }
 
 
 provide(BPMN_PROVIDER, {
     init,
     graph,
+    bpmnJson,
+    flatGraphObject,
     key: Symbol('BPMN_PROVIDER_KEY')
+})
+
+defineExpose({
+    init
 })
 
 </script>

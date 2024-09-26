@@ -8,6 +8,7 @@ const forwardHistory = ref<RouterParams[]>([])
 
 function navigateTo(param: RouterParams) {
     if(param.menuKey !== menuSymbol) return
+    
     history.value.push({
         menuKey: menuSymbol,
         id: tab.value.id,
@@ -21,6 +22,7 @@ function navigateTo(param: RouterParams) {
     tab.value.component = param.component
     tab.value.props = param.props
     tab.value.label = param.label
+    console.log("navigateTo", tab.value)
     panelRouteUpdate(tab.value.parent, tab.value.id, param)
 }
 
@@ -82,13 +84,13 @@ provide(MenuRouterKey,{
         </Teleport>
         <Teleport  v-if="tab.label" :to="`[data-tab-id=${tab.id}] > .label`">
             <div class="label">
-                {{ tab.label }}
+                {{ tab.label }} 
             </div>  
         </Teleport>
         <Transition appear>
             <KeepAlive>
                 <Suspense>
-                    <component :is="tab.component" :tab="tab" :v-bind="tab.props"/>
+                    <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
                     <template #fallback>
                         <LoadingBg >
                             <h1 style="color: var(--app-grey-1000)">{{ $t('loading') }}</h1>

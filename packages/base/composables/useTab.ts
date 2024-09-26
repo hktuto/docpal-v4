@@ -1,5 +1,6 @@
 
 import {useState} from '#imports'
+import type { MenuItem } from '#imports'
 import type {TabPanel,TabItem} from '../utils/tabType'
 import type {Edge} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 
@@ -221,7 +222,6 @@ export function panelRouteUpdate(panelId:string, tabId:string, routerParams:Rout
     const layout = useTabLayout()
     const allComponents = useTabComponent()
     const panelIndex = layout.value.findIndex(tab => tab.id === panelId)
-    console.log(layout.value, panelId, tabId)
     if(panelIndex !== -1) {
         const index = layout.value[panelIndex].tabs.findIndex( tab => tab.id === tabId);
         if(index === -1) throw new Error('Tab not found when router change')

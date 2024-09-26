@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import {MenuRouterKey} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { adminApi } from '../../../../libraries/api/src';
+import { adminApi } from 'api';
+import { workflowEditorListTableSetting } from '../workflowEditorPage/table'
 
 const menuManager = inject(MenuRouterKey)
 if(!menuManager) {
@@ -13,14 +14,13 @@ const {page, pageSize, time} = defineProps<{
 }>()
 const pageParams = {
         pageNum: 0,
-        pageSize: 20,
+        pageSize: 5,
         orderBy: 'createdDate',
         isDesc: true
 }
-const tableKey = TABLE.ADMIN_WORKFLOW_EDITOR_MANAGE
 
-const tableSetting = defaultTableSetting[tableKey]
-    const state = reactive<State>({
+const tableSetting = workflowEditorListTableSetting
+    const state = reactive({
         loading: false,
         tableData: [],
         options: {
@@ -30,8 +30,7 @@ const tableSetting = defaultTableSetting[tableKey]
                 currentPage: 1,
                 pageSize: pageParams.pageSize
             },
-            rowKey: 'id',
-            sortKey: tableKey
+            rowKey: 'id'
         },
         extraParams: {}
     })
@@ -45,6 +44,7 @@ const tableSetting = defaultTableSetting[tableKey]
             state.options.paginationConfig.total = data.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
+            console
         } catch (error) {
 
         }
@@ -55,12 +55,23 @@ const tableSetting = defaultTableSetting[tableKey]
         if(!page) page = pageParams.pageNum + 1
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
+        menuManager?.navigateTo({
+            menuKey: menuManager.menuSymbol,
+            id:'workflow-editor-list',
+            label: "Workflow Editor List",
+            icon: "dp-icon:flow-outline",
+            component: "LazyWorkflowEditorList",
+            props: {
+                page, pageSize, time
+            }
+        })
         // scroll top
 
     }
     watch(
         () => [page, pageSize, time],
         async () => {
+            console.log("page, pageSize, time", page, pageSize, time)
             nextTick(() => {
 
               pageParams.pageNum = (Number(page) - 1) || 0
@@ -68,7 +79,7 @@ const tableSetting = defaultTableSetting[tableKey]
               getList(pageParams)
             })
         },
-        { immediate: true }
+        { immediate: true, deep:true }
     )
 
     function handleAction (command:string, row: any, rowIndex: number) {
@@ -152,7 +163,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="content">
+    <div class="pageContainer">
         <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
             @command="handleAction"
             @row-dblclick="handleDblclick"
@@ -187,3 +198,9 @@ onMounted(() => {
         </Table>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.pageContainer{
+    padding: var(--app-space-s);
+}
+</style>
