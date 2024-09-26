@@ -2,12 +2,11 @@
 export const squareStep = 80
 export const round = 80
 export const taskLabel = {
-    textAnchor: 'center',
-    textAlign: 'center',
-    textVerticalAnchor: 'top',
-    refX: 0,
-    y : squareStep / 2 + 5,
-    fill: '#000',
+    refX: 40,
+    refY: 14,
+    fill: 'rgba(0,0,0,0.85)',
+    fontSize: 12,
+    'text-anchor': 'start',
     textWrap: {
         width: -0, // 宽度减少 10px
         ellipsis: true,  // 文本超出显示范围时，自动添加省略号
@@ -23,21 +22,50 @@ export const iconOptionMaker = (iconPath:string) => {
         refY: 0.15
     }
 }
-export const squareNodeStyle = (color:string, img:string) => {
+export const squareNodeStyle = (color:string, nodeType:string, img:string) => {
     const style:any = {
-        width: squareStep,
-        height: squareStep,
+        width: 200,
+        height: 64,
         attrs: {
             body: {
                 stroke: color,
                 strokeWidth: 1,
-                fill: color,
-                rx: 8,
-                ry: 8,
+                fill: 'rgba(95,149,255,0.05)',
+                rx: 4,
+                ry: 4,
                 refWidth: 1,
                 refHeight: 1,
             },
-            label:taskLabel
+            image: {
+                'xlink:href':img,
+                width: 24,
+                height: 24,
+                x: 12,
+                y: 12,
+              },
+            title: {
+                text: nodeType,
+                refX: 46,
+                refY: 12,
+                fill: 'rgba(0,0,0,0.85)',
+                fontSize: 14,
+                fontWeight: 'bold',
+                'text-anchor': 'start',
+              },
+            text: {
+                refX: 46,
+                refY: 30,
+                fontSize: 12,
+                fill: 'rgba(0,0,0,0.6)',
+                textAnchor: 'start',
+                textVerticalAnchor: 'top',
+                textWrap: {
+                    width: -52, // 宽度减少 10px
+                    height: "70%", // 高度减少 10px
+                    ellipsis: true,  // 文本超出显示范围时，自动添加省略号
+                    breakWord: false, // 是否截断单词
+                }
+              },
         },
         markup: [
             {
@@ -45,19 +73,31 @@ export const squareNodeStyle = (color:string, img:string) => {
                 selector: 'body'
             },
             {
+                tagName: 'image',
+                selector: 'image',
+              },
+            {
                 tagName: 'text',
-                selector: 'label'
-            },
+                selector: 'title',
+              },
+              {
+                tagName: 'text',
+                selector: 'text',
+              },
 
         ]
     }
-    if(img) {
-        style.attrs.image = iconOptionMaker(img)
-        style.markup.push({
-            tagName: 'image',
-            selector: 'image'
-        })
-    }
+    // if(img) {
+    //     style.attrs.image = iconOptionMaker(img)
+    //     style.markup.push({
+    //         tagName: 'image',
+    //         selector: 'image',
+    //         width: 16,
+    //         height: 16,
+    //         x: 12,
+    //         y: 12,
+    //     })
+    // }
 
     return style
 }

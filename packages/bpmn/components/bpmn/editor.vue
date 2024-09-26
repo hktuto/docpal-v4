@@ -63,5 +63,6 @@ defineExpose({
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
         <BpmnSidebar v-if="ready" />
         <BpmnEdge v-if="ready" />
+        <BpmnNode v-if="ready" />
     </BpmnViewer>
 </template>
