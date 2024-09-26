@@ -87,9 +87,11 @@ adminApi.instance.interceptors.response.use(
     response => response,
     async error => {
         const originalRequest = error.config;
+        console.log('fetch error', error)
         if(error.response.status >= 500) {
           return Promise.reject(error);
         }
+        console.log('retry', error.response.status, originalRequest._retry)
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
       
@@ -102,6 +104,7 @@ adminApi.instance.interceptors.response.use(
                     Authorization: 'Bearer ' + refreshToken
                 }
             }).then( res => res.json())
+            console.log('retry', data)
             console.log("refresh token response", data)
             localStorage.setItem('access_token', data.access_token);
             localStorage.setItem('refresh_token', data.refresh_token);

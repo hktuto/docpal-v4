@@ -1,0 +1,248 @@
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:folderCabinetMapping="http://www.w3.org/1999/xhtml" xmlns:permissions="http://www.w3.org/1999/xhtml" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+    <process id="e-leave_application_workflow_1722907775201" isExecutable="true" name="e-Leave Application Workflow" flowable:candidateStarterGroups="Demo Approval Group">
+        <extensionElements>
+            <flowable:executionListener event="start" delegateExpression="${notificationListener}">
+                <flowable:field name="functionPoint">
+                    <flowable:string>
+                        <![CDATA[APPLY]]>
+                    </flowable:string>
+                </flowable:field>
+                <flowable:field name="notificationUserFromVariables">
+                    <flowable:string>
+                        <![CDATA[user_approver_id,copy_approver_id]]>
+                    </flowable:string>
+                </flowable:field>
+            </flowable:executionListener>
+            <flowable:folderCabinetMapping id="25049c6a-2cd5-406a-92c2-e7538ffb4b5d" name="Employee Record"></flowable:folderCabinetMapping>
+        </extensionElements>
+        <startEvent id="start" name="Start" flowable:formFieldValidation="true">
+            <extensionElements>
+                <flowable:formProperty field_label="Label" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="businessKey" name="Business Key" type="string" fixed="true" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Creator ID" field_type="current_user" field_hidden="true" field_disabled="false" id="user_creator_id" name="Creator ID" type="string" fixed="true" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Approver ID" field_type="approve_user_dropdown" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="user_approver_id" name="Approver ID" type="string" field_valid="true" target_step="approvalForm"></flowable:formProperty>
+                <flowable:formProperty field_label="Copy Personnel ID" field_type="user_dropdown" field_hidden="false" field_disabled="false" id="user_copy_personnel_id" name="Copy Personnel ID" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
+                <flowable:formProperty field_label="Employee Name" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Employee_Name" name="Employee Name" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Department" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Department" name="Department" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Position" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Position" name="Position" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Date Join" field_type="date" field_writable="true" field_hidden="false" field_disabled="false" id="Date_Join" name="Date Join" type="date" datePattern="yyyy-MM-dd HH:mm:ss" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave From" field_type="date" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_From" name="Leave From" type="date" datePattern="yyyy-MM-dd HH:mm:ss" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave To" field_type="date" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_To" name="Leave To" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Nature" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Nature" name="Leave Nature" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Others Specify" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Others_Specify" name="Others Specify" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Type" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Type" name="Leave Type" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Entitlement" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Entitlement" name="Leave Entitlement" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Total Leave Applied" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Total_Leave_Applied" name="Total Leave Applied" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Days" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Days" name="Leave Days" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Balance" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Balance" name="Leave Balance" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Days Forfeited" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Days_Forfeited" name="Days Forfeited" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Days" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Days" name="Days" type="string" field_valid="true"></flowable:formProperty>
+            </extensionElements>
+        </startEvent>
+        <endEvent id="end" name="End"></endEvent>
+        <userTask id="approvalForm" name="Start Approval Form" flowable:candidateGroups="administrators" flowable:formFieldValidation="true">
+            <extensionElements>
+                <flowable:formProperty field_label="label" field_type="single_line_input" field_hidden="false" field_disabled="true" id="businessKey" name="Business Key" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Approve" field_type="boolean" field_required="true" field_hidden="false" field_disabled="false" id="approved" name="Approve" type="boolean" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
+                <flowable:formProperty field_label="Reject Reason" field_type="multi_line_input" field_hidden="false" field_disabled="false" id="rejectReason" name="Reject Reason" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Employee Name" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Employee_Name" name="Employee Name" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Department" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Department" name="Department" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Position" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Position" name="Position" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Date Join" field_type="date" field_writable="true" field_hidden="false" field_disabled="false" id="Date_Join" name="Date Join" type="date" datePattern="yyyy-MM-dd HH:mm:ss" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave From" field_type="date" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_From" name="Leave From" type="date" datePattern="yyyy-MM-dd HH:mm:ss" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave To" field_type="date" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_To" name="Leave To" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Nature" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Nature" name="Leave Nature" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Others Specify" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Others_Specify" name="Others Specify" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Type" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Type" name="Leave Type" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Entitlement" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Entitlement" name="Leave Entitlement" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Total Leave Applied" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Total_Leave_Applied" name="Total Leave Applied" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Days" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Days" name="Leave Days" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Leave Balance" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Leave_Balance" name="Leave Balance" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Days Forfeited" field_type="single_line_input" field_writable="true" field_hidden="false" field_disabled="false" id="Days_Forfeited" name="Days Forfeited" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Creator ID" field_type="user_dropdown" field_hidden="false" field_disabled="true" id="user_creator_id" name="Creator ID" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="Approver ID" field_type="approve_user_dropdown" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="user_approver_id" name="Approver ID" type="string" field_valid="true" target_step="approvalForm"></flowable:formProperty>
+                <flowable:formProperty field_label="Copy Personnel ID" field_type="user_dropdown" field_hidden="false" field_disabled="false" id="user_copy_personnel_id" name="Copy Personnel ID" type="string" field_valid="true"></flowable:formProperty>
+                <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler">
+                    <![CDATA[true]]>
+                </modeler:activiti-idm-candidate-group>
+                <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler">
+                    <![CDATA[false]]>
+                </modeler:initiator-can-complete>
+                <modeler:group-info-name-administrators xmlns:modeler="http://flowable.org/modeler">
+                    <![CDATA[Administrators group]]>
+                </modeler:group-info-name-administrators>
+                <flowable:taskListener delegateExpression="${autoAssignTaskListener}" event="create">
+                    <flowable:field name="assignee">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(user_approver_id)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                </flowable:taskListener>
+            </extensionElements>
+        </userTask>
+        <exclusiveGateway id="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" name="Leave Approval"></exclusiveGateway>
+        <serviceTask id="createDocumentServiceTask" name="Create Leave Application Form" flowable:delegateExpression="${generateDocumentDelegate}">
+            <extensionElements>
+                <flowable:field name="templateId">
+                    <flowable:expression>
+                        <![CDATA[183e45cd-3d04-4de7-9344-9ca4f77d1db4]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field path="[&quot;/default-domain&quot;,&quot;/default-domain/new Folder1685665351412&quot;,&quot;/default-domain/new Folder1685665351412/archive-page-design&quot;]" name="parentPath">
+                    <flowable:expression>
+                        <![CDATA[/default-domain/new Folder1685665351412/archive-page-design]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="documentType">
+                    <flowable:expression>
+                        <![CDATA[File]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="variables">
+                    <flowable:expression>
+                        <![CDATA[{"Employee Name":"${variables:get(Employee_Name)}","Position":"${variables:get(Position)}","Department":"${variables:get(Department)}","Date Join":"${variables:get(Date_Join)}","Date From":"${variables:get(Leave_From)}","Date To":"${variables:get(Leave_To)}","Days":"${variables:get(Days)}","Leave Nature":"${variables:get(Leave_Nature)}","Others specify":"${variables:get(Others_Specify)}","Leave Type":"${variables:get(Leave_Type)}","Leave entitlement":"${variables:get(Leave_Entitlement)}","Leave applied":"${variables:get(Total_Leave_Applied)}","Leave Days":"${variables:get(Leave_Days)}","Leave Balance":"${variables:get(Leave_Balance)}","Creator":"${variables:get(user_creator_id)}","ApprovalID":"${variables:get(user_approver_id)}"}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="documentName" type="string" value="" required="false" path="[{&quot;attr_field_label&quot;:&quot;label&quot;,&quot;attr_field_type&quot;:&quot;single_line_input&quot;,&quot;attr_field_hidden&quot;:false,&quot;attr_field_disabled&quot;:true,&quot;attr_id&quot;:&quot;businessKey&quot;,&quot;attr_name&quot;:&quot;Business Key&quot;,&quot;attr_type&quot;:&quot;string&quot;,&quot;attr_field_valid&quot;:true},{&quot;attr_field_label&quot;:&quot;Creator ID&quot;,&quot;attr_field_type&quot;:&quot;user_dropdown&quot;,&quot;attr_field_hidden&quot;:false,&quot;attr_field_disabled&quot;:true,&quot;attr_id&quot;:&quot;user_creator_id&quot;,&quot;attr_name&quot;:&quot;Creator ID&quot;,&quot;attr_type&quot;:&quot;string&quot;,&quot;attr_field_valid&quot;:true},{&quot;attr_field_label&quot;:&quot;Submit Date&quot;,&quot;attr_field_type&quot;:&quot;today&quot;,&quot;attr_field_hidden&quot;:false,&quot;attr_field_disabled&quot;:true,&quot;attr_id&quot;:&quot;SubmitDate&quot;,&quot;attr_name&quot;:&quot;Submit Date&quot;,&quot;attr_type&quot;:&quot;date&quot;,&quot;attr_field_valid&quot;:true}]">
+                    <flowable:expression>
+                        <![CDATA[${businessKey}-${user_creator_id}-${dateUtil.convert2String(variables:get(SubmitDate), 'yyyy-MM-dd HH:mm:ss')}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="folderCabinetId">
+                    <flowable:expression>
+                        <![CDATA[ab2e30dd-9b33-4c91-8397-d053aaf3b143]]>
+                    </flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+        <serviceTask id="submitFormNotification" name="Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+            <extensionElements>
+                <flowable:field name="notificationType">
+                    <flowable:string>
+                        <![CDATA[notification.workflow.approval.notification.test]]>
+                    </flowable:string>
+                </flowable:field>
+                <flowable:field name="Approver ID">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="Creat">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+        <serviceTask id="completedApprovedNotification" name="Approved Email" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+            <extensionElements>
+                <flowable:field name="notificationType">
+                    <flowable:string>
+                        <![CDATA[notification.workflow.approved.successful]]>
+                    </flowable:string>
+                </flowable:field>
+                <flowable:field name="Creator ID">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="Approver ID">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+        <serviceTask id="rejectApprovedNotification" name="Reject Approved Notification to creator， copy creator" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+            <extensionElements>
+                <flowable:field name="notificationType">
+                    <flowable:string>
+                        <![CDATA[notification.workflow.editor.reject]]>
+                    </flowable:string>
+                </flowable:field>
+                <flowable:field name="creator">
+                    <flowable:expression>
+                        <![CDATA[${variables:get(user_creator_id)}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="approver">
+                    <flowable:expression>
+                        <![CDATA[${variables:get(user_approver_id)}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="reason">
+                    <flowable:expression>
+                        <![CDATA[${variables:get(rejectReason)}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="hostUrl">
+                    <flowable:expression>
+                        <![CDATA[${variables:get(user_copy_personnel_id)}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="processInstanceId">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="cpoy">
+                    <flowable:expression>
+                        <![CDATA[${variables:get(user_copy_personnel_id)}]]>
+                    </flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+        <serviceTask id="taskDueNotification" name="Task Due Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
+            <extensionElements>
+                <flowable:field name="notificationType">
+                    <flowable:string>
+                        <![CDATA[notification.general.workflow.reminder.email]]>
+                    </flowable:string>
+                </flowable:field>
+                <flowable:field name="Approver ID">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="Creater ID">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="Workflow">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="Submit Date">
+                    <flowable:expression>
+                        <![CDATA[]]>
+                    </flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+        <boundaryEvent id="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" attachedToRef="approvalForm" cancelActivity="false" name="Leave Application Approval Request Timer">
+            <timerEventDefinition>
+                <timeDuration>P1D</timeDuration>
+            </timerEventDefinition>
+        </boundaryEvent>
+        <sequenceFlow id="sid-4997F99D-0C86-4C63-8974-A52EBC38C4F3" sourceRef="start" targetRef="submitFormNotification"></sequenceFlow>
+        <sequenceFlow id="sid-12A74733-1783-454C-80B9-A66E0ACDF034" sourceRef="submitFormNotification" targetRef="approvalForm"></sequenceFlow>
+        <sequenceFlow id="sid-A641DB66-3A1C-45A4-A03C-3FF308F8BC44" sourceRef="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" targetRef="taskDueNotification"></sequenceFlow>
+        <sequenceFlow id="sid-E6B2EE69-B671-4564-BFF5-0A7BEE7FC110" sourceRef="approvalForm" targetRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></sequenceFlow>
+        <sequenceFlow id="sid-65BE74D6-A548-4E70-8B5F-6D919EDDC1BF" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="rejectApprovedNotification">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${!approved}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-2060190D-232A-4C95-8D17-CFCE24A7395B" sourceRef="completedApprovedNotification" targetRef="end"></sequenceFlow>
+        <sequenceFlow id="sid-FE76A11C-6B59-429C-9228-DF4D7EF675C8" sourceRef="createDocumentServiceTask" targetRef="completedApprovedNotification"></sequenceFlow>
+        <sequenceFlow id="sid-D04FB86E-F550-433E-A8A9-D2E0E7668D9B" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="createDocumentServiceTask">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${approved}]]>
+            </conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="99b6bf75-1d85-4a45-888e-c3a09037d52d" sourceRef="rejectApprovedNotification" targetRef="end"></sequenceFlow>
+    </process>
+</definitions>

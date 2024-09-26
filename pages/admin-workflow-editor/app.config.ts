@@ -1,6 +1,5 @@
 // create nuxt app config
 import { defineAppConfig } from '#imports'
-import type { MenuItem} from '#imports'
 
 export default defineAppConfig({
   menu:[
@@ -23,6 +22,6 @@ export default defineAppConfig({
         }
       ]
     },
-  ] as MenuItem[],
+  ] ,
 
 })

@@ -1,0 +1,73 @@
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:folderCabinetMapping="http://www.w3.org/1999/xhtml" xmlns:permissions="http://www.w3.org/1999/xhtml" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+    <process flowable:candidateStarterGroups="Demo Approval Group" id="SingleFileApproval" isExecutable="true" name="Single File Approval" template="Single">
+        <extensionElements>
+            <flowable:permissions>
+                <field name="administrators" accesstype="view"></field>
+                <field name="Contract_Approval_Approvers" accesstype="view"></field>
+                <field name="administrators" accesstype="start"></field>
+            </flowable:permissions>
+            <flowable:folderCabinetMapping id="93909d76-337e-4c7f-a6f0-2793a71bc28c" name="Kutch - Armstrong">
+                <field formProperty="applicantName" metadata="dc:title"></field>
+                <field formProperty="createDate" metadata="dc:expired"></field>
+            </flowable:folderCabinetMapping>
+            <flowable:folderCabinetMapping id="04527f86-47e6-4a60-97c6-acab8f5933c0" name="Kutch - Armstrong/Employment Contract Files">
+                <field formProperty="createDate" metadata="dpa:customerName"></field>
+                <field formProperty="applicantName" metadata="dpa:crNumber"></field>
+                <field formProperty="country" metadata="dpa:invoiceNo"></field>
+                <field formProperty="purchaseDate" metadata="dpa:contractValue"></field>
+            </flowable:folderCabinetMapping>
+            <flowable:folderCabinetMapping id="26173bb7-19d1-4924-bc55-1b8190b68650" name="Kutch - Armstrong/Employment Contract Files/Records">
+                <field formProperty="createDate" metadata="dpa:customerName"></field>
+                <field formProperty="username" metadata="dpa:customerCode"></field>
+                <field formProperty="applicantName" metadata="dpa:crNumber"></field>
+                <field formProperty="country" metadata="dpa:caseId"></field>
+            </flowable:folderCabinetMapping>
+        </extensionElements>
+        <startEvent id="startEvent1" flowable:formFieldValidation="true" name="Start">
+            <extensionElements>
+                <flowable:formProperty field_label="ab" field_type="single_line_input" field_hidden="false" field_disabled="false" id="ab" name="ab" type="string" field_valid="true"></flowable:formProperty>
+                <flowable:formProperty field_label="bbb" field_type="single_line_input" field_hidden="false" field_disabled="false" id="bbb" name="bbb" type="string" field_valid="true"></flowable:formProperty>
+            </extensionElements>
+        </startEvent>
+        <endEvent id="sid-EEE3CE54-DFCF-4BAD-A3DE-F869384C402D"></endEvent>
+        <userTask id="generateDocumenTask" name="Generate document use folder Cabinet" flowable:assignee="ninerabbit" flowable:formFieldValidation="true">
+            <extensionElements>
+                <flowable:formProperty></flowable:formProperty>
+                <flowable:taskListener event="complete" expression="#{generateDocumentExpression.doCreateUseTemplate(execution, execution.getVariable(&apos;templateId&apos;), execution.getVariable(&apos;folderCabinetId&apos;), op.asMap().put(&apos;Notice_Date&apos;, execution.getVariable(&apos;createDate&apos;)).put(&apos;Customer_Name&apos;, execution.getVariable(&apos;username&apos;)).put(&apos;Customer_Address_Country&apos;, execution.getVariable(&apos;country&apos;)).put(&apos;Applicant_Name&apos;, execution.getVariable(&apos;applicantName&apos;)).put(&apos;Claim_Amount&apos;, execution.getVariable(&apos;claimAmount&apos;)).done())}">
+                    <flowable:field name="Notice_Date">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(createDate)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="Customer_Name">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(username)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="Applicant_Name">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(applicantName)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="Date_Of_Purchase">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(purchaseDate)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="Claim_Amount">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(claimAmount)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                    <flowable:field name="Customer_Address_Country">
+                        <flowable:expression>
+                            <![CDATA[${variables:get(country)}]]>
+                        </flowable:expression>
+                    </flowable:field>
+                </flowable:taskListener>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-771F1B43-9A6D-4DFE-91CC-4001C449A068" sourceRef="startEvent1" targetRef="generateDocumenTask"></sequenceFlow>
+        <sequenceFlow id="0474e7b7-f33e-4ac5-af53-2c8d55d0a4e6" sourceRef="generateDocumenTask" targetRef="sid-EEE3CE54-DFCF-4BAD-A3DE-F869384C402D"></sequenceFlow>
+    </process>
+</definitions>
