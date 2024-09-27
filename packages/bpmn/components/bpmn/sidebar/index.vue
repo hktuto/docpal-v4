@@ -13,6 +13,7 @@ if(!graphProvider) {
 const opened = ref(false);
 const selectedNode = ref()
 const editComponent = ref()
+const nodeType = ref("")
 
 function emptyClickHandler() {
     opened.value = false
@@ -30,15 +31,19 @@ function nodeClickHandler({e,x,y,view,node}:any) {
     selectedNode.value = node
     switch(node.data.type){
         case 'startEvent':
+            nodeType.value = "Start"
             editComponent.value = resolveComponent('BpmnSidebarStartEvent')
             break;
         case 'endEvent':
+            nodeType.value = "End"
             editComponent.value = resolveComponent('BpmnSidebarEndEvent')
             break;
         case 'userTask':
+            nodeType.value = "User Task"
             editComponent.value = resolveComponent('BpmnSidebarUserTask')
             break;
         case 'exclusiveGateway':
+            nodeType.value = "Exclusive Gateway"
             editComponent.value = resolveComponent('BpmnSidebarExclusiveGateway')
             break;
         case 'serviceTask':
@@ -46,12 +51,17 @@ function nodeClickHandler({e,x,y,view,node}:any) {
             if(delegate) {
                 switch(delegate) {
                     case '${sendNotificationDelegate}':
+                        nodeType.value = "Email"
+
                         editComponent.value = resolveComponent('BpmnSidebarEmail')
                         break;
                     case '${generateDocumentDelegate}':
+                        nodeType.value = "Document"
+
                         editComponent.value = resolveComponent('BpmnSidebarDocument')
                         break;
                     case '${filingGenerateDocumentDelegate}':
+                        nodeType.value = "Filing"
                         editComponent.value = resolveComponent('BpmnSidebarFiling')
                         break;
                 }
@@ -81,10 +91,9 @@ onMounted(() => {
 </script>
 
 <template>
-    <div :class="{sidebarWrapperr:true, opened}">
+    <div :class="{sidebarWrapper:true, opened}">
         <div class="tabHeader">
-            header
-            <Icon name="lucide:move"   />
+            {{ nodeType }}
         </div>
         <div class="sideBarContainer">
             <component :is="editComponent" v-if="editComponent" :node="selectedNode" />
@@ -93,17 +102,19 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.sidebarWrapperr{
+.sidebarWrapper{
     position: absolute;
-    width: 320px;
+    width: 100%;
+    max-width: 600px;
+    min-width: 280px;
     height: 100%;
     top: 0;
     right: 0;
-    background: rgba(243, 245, 247, 0.6);
-    border: 2px solid rgba(255,255,255,1);
+    background: rgba(247, 248, 249, 0.6);
+    border-left: 2px solid rgba(255,255,255,0.4);
     padding: var(--app-space-m);
-    // box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    backdrop-filter: blur(20px);
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
     transform: translateX(100%);
     overflow: hidden;
     display: grid;
@@ -121,5 +132,8 @@ onMounted(() => {
 }
 .tabHeader{
     font-size: var(--app-font-size-m);
+    padding-block: var(--app-space-xs);
+    border-bottom: 1px solid var(--app-grey-800);
+    font-weight: 700;
 }
 </style>

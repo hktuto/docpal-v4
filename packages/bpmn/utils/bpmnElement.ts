@@ -93,7 +93,8 @@ export type BpmnElement = {
 export const bpmnElement:BpmnElement = {
     startEvent:{
         nodeStyle:() => ({
-            ...circleNodeStyle('#0099ff', '/bpmn/icons/form.svg'),
+            ...squareNodeStyle('#0099ff', "StartEvent", '/bpmn/icons/form.svg', 120,64 ),
+            // ...circleNodeStyle('#0099ff', '/bpmn/icons/form.svg'),
             shape:'bpmn-node',
             ports: {
                 items:[
@@ -118,7 +119,8 @@ export const bpmnElement:BpmnElement = {
     },
     endEvent:{
         nodeStyle:() =>({
-            ...circleNodeStyle('#eee', '/bpmn/icons/close.svg'),
+            ...squareNodeStyle('#ddd', "EndEvent", '/bpmn/icons/close.svg', 120,64 ),
+
             shape:'bpmn-node',
             ports: {
                 items:[
