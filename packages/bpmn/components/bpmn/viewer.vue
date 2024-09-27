@@ -104,7 +104,8 @@ provide(BPMN_PROVIDER, {
 })
 
 defineExpose({
-    init
+    init,
+    graph
 })
 
 </script>

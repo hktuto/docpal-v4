@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-
+import { Transform } from '@antv/x6-plugin-transform'
+import { Selection } from '@antv/x6-plugin-selection'
 function init(bpmnXml :string, x6Json?:any){
     viewerRef.value.init(bpmnXml, x6Json)
 }
@@ -8,9 +9,45 @@ const ready = ref(false)
 
 function graphReady(){
     ready.value = true
+    const graph = viewerRef.value.graph;
+    console.log(graph)
+    
+    graph.use(
+        new Transform({
+            resizing: {
+                enabled:true,
+                allowReverse:false,
+            },
+        }),
+    )
+
+    graph.use(
+        new Selection({
+            enabled: true,
+            multiple: true,
+            rubberband: true,
+            movable: true,
+            showNodeSelectionBox: true,
+            modifiers:['shift']
+        }),
+    )
+
+    graph.on('mousemove', () => {
+        if (graph.isPanning()) {
+            console.log('panning')
+            graph.disableMultipleSelection()
+        }else{
+            graph.enableMultipleSelection()
+        }
+    });
 }
 const graphOptions = {
     interacting:true,
+    panning: {
+            enabled: true,
+            eventTypes: ['leftMouseDown', 'mouseWheel'],
+            
+        },
     highlighting: {
         magnetAvailable: {
             name: 'stroke',
