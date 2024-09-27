@@ -30,11 +30,12 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string) => {
             body: {
                 stroke: color,
                 strokeWidth: 1,
-                fill: 'rgba(95,149,255,0.05)',
+                fill: '#fff',
                 rx: 4,
                 ry: 4,
                 refWidth: 1,
                 refHeight: 1,
+                filter: 'drop-shadow(0px 5px 10px rgba(0,0,0,0.2))'
             },
             image: {
                 'xlink:href':img,
