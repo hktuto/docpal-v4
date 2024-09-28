@@ -87,14 +87,14 @@ provide(MenuRouterKey,{
                 {{ tab.label }} 
             </div>  
         </Teleport>
-        <Transition appear>
+        <Transition >
             <KeepAlive>
                 <Suspense>
                     <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
                     <template #fallback>
-                        <LoadingBg >
-                            <h1 style="color: var(--app-grey-1000)">{{ $t('loading') }}</h1>
-                        </LoadingBg>
+                        <div class="loadingContainer">
+                            {{ $t('loading') }}
+                        </div>
                     </template>
                 </Suspense>
             </KeepAlive>
@@ -103,6 +103,14 @@ provide(MenuRouterKey,{
 </template>
 
 <style scoped>
+.loadingContainer{
+    position: relative;
+    width:100%;
+    height: 100%;
+    background-color: var(--app-primary-color);
+    display: grid;
+    place-items: center;
+}
 .historyContainer{
     line-height: 1;
 }

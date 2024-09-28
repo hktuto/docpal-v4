@@ -8,7 +8,7 @@ const { node } = defineProps<{
 
 <template>
 <div class="fromContainer">
-    StartEvent
-    {{ node }}
+    <BpmnSidebarEditLabel :node="node" />
+    <BpmnSidebarEditForm :node="node" />
 </div>
 </template>

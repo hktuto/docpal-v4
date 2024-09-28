@@ -17,7 +17,6 @@ export const bpmnStringToJson = function(bpmnString: string) {
     json.definitions['attr_xmlns:permissions'] = 'http://www.w3.org/1999/xhtml'
     // remove template from process
     if(json.definitions.process.attr_template) {
-        console.log("remove template from process")
         delete json.definitions.process.attr_template
     }
     let flatObj:any = {}

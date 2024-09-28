@@ -314,6 +314,9 @@ importers:
       vue-router:
         specifier: latest
         version: 4.4.5(vue@3.5.6(typescript@5.6.2))
+      vuedraggable:
+        specifier: ^2.24.3
+        version: 2.24.3
     devDependencies:
       '@nuxt/test-utils':
         specifier: ^3.14.1
