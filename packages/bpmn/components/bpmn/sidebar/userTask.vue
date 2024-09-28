@@ -8,7 +8,6 @@ const { node } = defineProps<{
 
 <template>
 <div class="fromContainer">
-    UserTask
-    {{ node }}
+    <BpmnSidebarFormLabel :node="node" />
 </div>
 </template>

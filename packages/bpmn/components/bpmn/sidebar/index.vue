@@ -93,10 +93,13 @@ onMounted(() => {
 <template>
     <div :class="{sidebarWrapper:true, opened}">
         <div class="tabHeader">
-            {{ nodeType }}
+            <div class="label">
+                {{ nodeType }}
+            </div>
+            <Icon name="lucide:panel-right-close" class="icon" @click="opened = !opened"/>
         </div>
         <div class="sideBarContainer">
-            <component :is="editComponent" v-if="editComponent" :node="selectedNode" />
+            <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
         </div>
     </div>
 </template>
@@ -110,11 +113,11 @@ onMounted(() => {
     height: 100%;
     top: 0;
     right: 0;
-    background: rgba(247, 248, 249, 0.6);
+    background: var(--app-grey-1000);
     border-left: 2px solid rgba(255,255,255,0.4);
     padding: var(--app-space-m);
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    backdrop-filter: blur(10px);
+    // backdrop-filter: blur(10px);
     transform: translateX(100%);
     overflow: hidden;
     display: grid;
@@ -128,6 +131,7 @@ onMounted(() => {
 .sideBarContainer{
     position: relative;
     height: 100%;
+    width: 100%;
     overflow: auto;
 }
 .tabHeader{
@@ -135,5 +139,13 @@ onMounted(() => {
     padding-block: var(--app-space-xs);
     border-bottom: 1px solid var(--app-grey-800);
     font-weight: 700;
+    color: var(--app-grey-400);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    .icon{
+        cursor: pointer;
+    }
 }
 </style>

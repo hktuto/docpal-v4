@@ -28,7 +28,7 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string, width
         height,
         attrs: {
             body: {
-                stroke: color,
+                stroke: '#ddd',
                 strokeWidth: 1,
                 fill: '#fff',
                 rx: 8,

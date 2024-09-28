@@ -8,7 +8,7 @@ const { node } = defineProps<{
 
 <template>
 <div class="fromContainer">
-    Email
+    <BpmnSidebarFormLabel :node="node" />
     {{ node }}
 </div>
 </template>

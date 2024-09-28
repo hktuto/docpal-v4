@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import { Transform } from '@antv/x6-plugin-transform'
 import { Selection } from '@antv/x6-plugin-selection'
+import { History } from '@antv/x6-plugin-history'
 function init(bpmnXml :string, x6Json?:any){
     viewerRef.value.init(bpmnXml, x6Json)
 }
 const viewerRef = ref()
 const ready = ref(false)
+
+
 
 function graphReady(){
     ready.value = true
@@ -32,14 +35,18 @@ function graphReady(){
         }),
     )
 
-    graph.on('mousemove', () => {
-        if (graph.isPanning()) {
-            console.log('panning')
-            graph.disableMultipleSelection()
-        }else{
-            graph.enableMultipleSelection()
-        }
-    });
+    graph.use(
+        new History({
+            enabled: true,
+            beforeAddCommand:(event:any, args:any) => {
+                console.log("beforeAddCommand", args.key)
+                const ignoreKeys = ['tools', 'ports']
+                if(ignoreKeys.includes(args.key)) return false
+                console.log(args)
+            }
+        }),
+    )
+    graph.cleanHistory()
 }
 const graphOptions = {
     interacting:true,
@@ -98,8 +105,28 @@ defineExpose({
 
 <template>
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
+        <div class="toolbar">
+            <BpmnHistory v-if="ready"/>
+        </div>
         <BpmnSidebar v-if="ready" />
         <BpmnEdge v-if="ready" />
         <BpmnNode v-if="ready" />
     </BpmnViewer>
 </template>
+
+<style scoped lang="scss">
+
+.toolbar{
+    position: absolute;
+    left: var(--app-space-m);
+    top: var(--app-space-m);
+    z-index: 2;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-xs);
+    
+}
+
+</style>
