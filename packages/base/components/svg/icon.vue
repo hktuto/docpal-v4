@@ -79,14 +79,14 @@ const svgRoundClass = computed(() => {
         width: var(--icon-size, 18px);
         height: var(--icon-size, 18px);
         &:hover{
-            color: var(--icon-hover-color, --color-grey-0000);
+            color: var(--icon-hover-color, --app-grey-9000);
         }
     }
     &:hover{
         opacity: 0.8;
-        color: var(--icon-hover-color, --color-grey-0000);
+        color: var(--icon-hover-color, --app-grey-9000);
         svg{
-            color: var(--icon-hover-color, --color-grey-0000)!important;
+            color: var(--icon-hover-color, --app-grey-9000)!important;
         }
     }
     &-disabled  {

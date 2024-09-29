@@ -185,13 +185,24 @@ function createDropTargetForElements({
             if(isSticky) return isSticky()
             return true
         },
-        onDragEnter({ self }) {
+        onDragEnter({self, location,source}) {
             if(onDragEnter) onDragEnter()
+                // get mouse location in "location.current"
+            
+                // if mouse is near the top of the target, then we're dragging over the target
             const closestEdge = extractClosestEdge(self.data)
             dragState.value = { type: 'is-dragging-over', closestEdge }
         },
-        onDrag({ self }) {
+        onDrag({self, location,source}) {
             if(onDragOver) onDragOver()
+            const mouse = location.current.input;
+            const targetRect = self.element.getBoundingClientRect();
+            const isCenter = (Math.abs(mouse.clientX - targetRect.left) > targetRect.width / 3) && (Math.abs(mouse.clientX - targetRect.right) > targetRect.width / 3);
+            if(isCenter) {
+                dragState.value = { type: 'is-dragging-over', closestEdge:'center' }
+                return;
+            }
+            
             const closestEdge = extractClosestEdge(self.data)
             // Only need to update react state if nothing has changed.
             if (dragState.value.type !== 'is-dragging-over' || dragState.value.closestEdge !== closestEdge) {

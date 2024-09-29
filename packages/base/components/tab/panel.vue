@@ -26,22 +26,37 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
         // 如果不是本 panel 下 drop 的，不用做什麼
         if(target.data.data.id !== panel.id) return;
         if(isTab){
-
-            
             const sourceData = source.data as any
             const targetData = target.data as any
-            const closestEdgeOfTarget = extractClosestEdge(targetData)
-            if(!closestEdgeOfTarget) return
-            splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
+
+            const mouse = location.current.input;
+            const targetRect = target.element.getBoundingClientRect();
+            const isCenter = (Math.abs(mouse.clientX - targetRect.left) > targetRect.width / 3) && (Math.abs(mouse.clientX - targetRect.right) > targetRect.width / 3);
+            if(isCenter) {
+                splitViewToDirection(sourceData.data, targetData.data, 'center')
+                return;
+            }else{
+                const closestEdgeOfTarget = extractClosestEdge(targetData) as any
+                if(!closestEdgeOfTarget) return
+                splitViewToDirection(sourceData.data, targetData.data, closestEdgeOfTarget)
+            }
             return;
         }
         const isMenu = source.data.key === menuKey
         if(isMenu) {
             const sourceData = source.data as any
             const targetData = target.data as any
-            const closestEdgeOfTarget = extractClosestEdge(targetData)
-            if(!closestEdgeOfTarget) return
-            addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
+            const mouse = location.current.input;
+            const targetRect = target.element.getBoundingClientRect();
+            const isCenter = (Math.abs(mouse.clientX - targetRect.left) > targetRect.width / 3) && (Math.abs(mouse.clientX - targetRect.right) > targetRect.width / 3);
+            if(isCenter) {
+                addMenuItemToPanel(sourceData.data, targetData.data, 'center')
+                return;
+            }else{
+                const closestEdgeOfTarget = extractClosestEdge(targetData) as any
+                if(!closestEdgeOfTarget) return
+                addMenuItemToPanel(sourceData.data, targetData.data, closestEdgeOfTarget)
+            }
             return
         }
     },
@@ -127,8 +142,8 @@ function backdropClick(index:number){
             &:after{
                 height:100%;
                 top: 0;
-                left:0;
-                width:100%;
+                left:15%;
+                width:70%;
             } 
         }
         &.top{
@@ -159,7 +174,7 @@ function backdropClick(index:number){
             &:after{
                 width:var(--side-width);
                 top: 0;
-                right:0;
+                left: calc(100% - var(--side-width));
                 height:100%;
             }
         }

@@ -43,7 +43,7 @@ function init(bpmnXml :string, x6Json?:any){
             min: 0.01, max: 2
         },
         background: {
-            color: 'var(--color-grey-0000)',
+            color: 'var(--app-grey-9000)',
         },
         autoResize: true,
         panning: {
@@ -139,7 +139,7 @@ defineExpose({
     }
 }
 .x6-highlight-stroke{
-    stroke: var(--primary-color) !important;
+    stroke: var(--app-main-color) !important;
     stroke-dasharray: 5;
     animation: running-line 60s infinite linear;
 }

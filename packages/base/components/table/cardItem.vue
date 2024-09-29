@@ -89,18 +89,18 @@ function getIcon (row:any, position='prefixIcon') {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  padding-block: var(--app-padding);
+  padding-block: var(--app-space-xs);
   &.slotTopRight{
     .header {
       display: none;
     }
     position: absolute;
     top: 0;
-    right:var(--app-padding);
+    right:var(--app-space-xs);
   }
   .header{
     font-size: .8rem;
-    color: var(--primary-color);
+    color: var(--app-main-color);
     line-height: 1;
   }
   .content {

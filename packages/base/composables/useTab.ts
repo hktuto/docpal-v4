@@ -130,7 +130,7 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
 
 }
 
-export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, direction:  Edge) {
+export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, direction:  "left" | "right" | 'center') {
         const layout = useTabLayout()
         const allComponents = useTabComponent()
         const sourceParentId = layout.value.findIndex(tab => tab.id === sourceData.parent)
@@ -142,7 +142,78 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
         }
         closePanelTab(sourceData.parent, sourceIndex, false)
         // check if targetParentLayout direction match new direction
-        const newPanelId = "newPanel-" + new Date().getTime()
+        
+        if(direction === 'center') {
+            
+            layout.value[targetParentId].tabs.push(
+                {
+                    ...sourceData,
+                    parent: targetData.parent,
+                })
+                nextTick(() => {
+                    panelTabFocus(layout.value[targetParentId].id, layout.value[targetParentId].tabs.length - 1)
+                    const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
+                    if(component) {
+                        component.parent = targetData.parent;
+                    }
+                })
+        }else{
+            const newPanelId = "newPanel-" + new Date().getTime()
+            const newData:TabPanel = {
+                id: newPanelId,
+                parent: targetData.id,
+                showingTabIndex: 0,
+                tabs: [{
+                    ...sourceData,
+                    parent: newPanelId,
+                }]
+            }
+            const newItemIndex = direction === 'left' ? targetParentId  : targetParentId + 1
+            layout.value.splice(newItemIndex, 0 , newData)
+            nextTick(() => {
+                panelTabFocus(newPanelId, 0)
+                const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
+                if(component) {
+                    component.parent = newPanelId;
+                }
+            })
+        }
+
+        // get component and update parent and teleport id
+        
+            
+}
+
+
+export function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanel, direction:  "left" | "right" | 'center') {
+    const layout = useTabLayout();
+    const allComponents = useTabComponent();
+    const targetParentId = layout.value.findIndex(tab => tab.id === targetData.id)
+    const newPanelId = "newPanel-" + new Date().getTime()
+    sourceData.id +=  new Date().getTime();
+    
+
+    if(direction === 'center') {
+        console.log(targetData)
+        layout.value[targetParentId].tabs.push(
+            {
+                ...sourceData,
+                parent: targetData.id,
+            })
+        nextTick(() => {
+            panelTabFocus(layout.value[targetParentId].id, layout.value[targetParentId].tabs.length - 1)
+            const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
+            if(component) {
+                component.parent = targetData.parent;
+            }else{
+                allComponents.value.push({
+                    ...sourceData,
+                    parent: targetData.id,
+                })
+            }
+        })
+    }else{
+
         const newData:TabPanel = {
             id: newPanelId,
             parent: targetData.id,
@@ -158,47 +229,18 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
         // get component and update parent and teleport id
         nextTick(() => {
             panelTabFocus(newPanelId, 0)
+
             const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
             if(component) {
                 component.parent = newPanelId;
+            }else{
+                allComponents.value.push({
+                    ...sourceData,
+                    parent: newPanelId,
+                })
             }
         })
-            
 }
-
-
-export function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanel, direction:  Edge) {
-    const layout = useTabLayout();
-    const allComponents = useTabComponent();
-    const targetParentId = layout.value.findIndex(tab => tab.id === targetData.parent)
-    const newPanelId = "newPanel-" + new Date().getTime()
-    sourceData.id +=  new Date().getTime();
-    const newData:TabPanel = {
-        id: newPanelId,
-        parent: targetData.id,
-        showingTabIndex: 0,
-        tabs: [{
-            ...sourceData,
-            parent: newPanelId,
-        }]
-    }
-    const newItemIndex = direction === 'left' ? targetParentId  : targetParentId + 1
-    layout.value.splice(newItemIndex, 0 , newData)
-
-    // get component and update parent and teleport id
-    nextTick(() => {
-        panelTabFocus(newPanelId, 0)
-
-        const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
-        if(component) {
-            component.parent = newPanelId;
-        }else{
-            allComponents.value.push({
-                ...sourceData,
-                parent: newPanelId,
-            })
-        }
-    })
 }
 
 export function addTabToPanel(panelId:string, newTab: TabItem ) {

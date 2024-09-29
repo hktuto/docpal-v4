@@ -60,6 +60,6 @@ watch(()=> props.src, (newValue) => {
 .flex-y {
     display: flex;
     align-items: center;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
 }
 </style>

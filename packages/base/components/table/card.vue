@@ -19,16 +19,16 @@ const emits = defineEmits(['row-contextmenu', 'selection-change', 'row-click', '
 
 <style scoped lang="scss">
 .cardContainer{
-  border-radius: var(--app-padding);
-  background: var(--color-grey-0000);
-  padding: var(--app-padding);
-  border:1px solid var(--color-grey-050);
+  border-radius: var(--app-space-xs);
+  background: var(--app-grey-900);
+  padding: var(--app-space-xs);
+  border:1px solid var(--color-grey-800);
   box-shadow: 0 2px 5px rgba(0,0,0,.2);
   position: relative;
   width: 100%;
   :deep {
     .cardContent + .cardContent {
-      border-top: 1px solid var(--color-grey-050);
+      border-top: 1px solid var(--color-grey-800);
     }
   }
 }
