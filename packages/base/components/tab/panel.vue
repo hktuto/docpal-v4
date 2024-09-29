@@ -63,7 +63,6 @@ onMounted(() => {
 })
 
 function backdropClick(index:number){
-    console.log("backdrop clicked ")
     panelTabFocus(panel.id, index);
 }
 
