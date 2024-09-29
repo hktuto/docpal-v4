@@ -4,7 +4,7 @@ import type { MenuItem } from '#imports'
 import type {TabPanel,TabItem} from '../utils/tabType'
 import type {Edge} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 
-const useTabLayout = () => useState<TabPanel[]>('tabs', () => ([]))
+export const useTabLayout = () => useState<TabPanel[]>('tabs', () => ([]))
 export const useDropEventCallback = () => useState<Record<symbol, any>>('tab-panel-drop-event-callback', ()=>({}))
 export const useCurrentTargetPanel = () => useState<string>('tab-current-target-panel',() => "")
 export const useTabComponent = () => useState<TabItem[]>('tab-component', () => ([]))
