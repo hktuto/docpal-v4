@@ -13,7 +13,6 @@ const ready = ref(false)
 function graphReady(){
     ready.value = true
     const graph = viewerRef.value.graph;
-    console.log(graph)
     
     graph.use(
         new Transform({
