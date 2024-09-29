@@ -8,9 +8,9 @@ if(!graphProvider) {
     
 }
 
-const {node, disabled} = defineProps<{
+const {node, disabled = false} = defineProps<{
   node: Node,
-  disabled:boolean
+  disabled?:boolean
 }>()
 const { t } = useI18n()
 
