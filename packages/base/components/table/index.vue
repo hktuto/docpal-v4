@@ -359,12 +359,12 @@ function handleHeaderDragEnd(newWidth: any, oldWidth: any, column: any, event: a
 
 function cellStyle({ columnIndex }:any) {
     const style = props.columns[columnIndex].cellStyle || {}
-    return Object.assign({padding:'calc( var(--app-padding) /2) calc( var(--app-padding) * 1.5)'}, style);
+    return Object.assign({padding:'calc( var(--app-space-xs) /2) calc( var(--app-space-xs) * 1.5)'}, style);
 }
 
 function headerStyle({ row, column, rowIndex, columnIndex }:any) {
     const style = props.columns[columnIndex].headerStyle || {}
-    return Object.assign({padding:'calc( var(--app-padding) /2) calc( var(--app-padding) * 1.5)', 'border-right-color': 'var(--color-grey-100)', 'background-color': 'var(--color-grey-000)'}, style);
+    return Object.assign({padding:'calc( var(--app-space-xs) /2) calc( var(--app-space-xs) * 1.5)', 'border-right-color': 'var(--color-grey-100)', 'background-color': 'var(--app-grey-900)'}, style);
 }
 
 
@@ -410,7 +410,7 @@ defineExpose({  toggleSelection, tableRef })
         }
     }
     .mt20 {
-        margin-top: var(--app-padding);
+        margin-top: var(--app-space-xs);
         display: grid;
         grid-template-columns: 1fr min-content;
         align-items: center;
@@ -423,7 +423,7 @@ defineExpose({  toggleSelection, tableRef })
     flex-flow: row wrap;
     justify-content: flex-start;
     align-items: flex-end;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .headerLeftExpand {
         overflow: hidden;
         display: flex;
@@ -484,7 +484,7 @@ defineExpose({  toggleSelection, tableRef })
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   padding-inline: 4px;
 }
 @media (max-width : 640px) {
@@ -496,7 +496,7 @@ defineExpose({  toggleSelection, tableRef })
 .table-responsive-header {
     display: grid!important;
     grid-template-columns: 1fr min-content;
-    margin-bottom: var(--app-padding);
+    margin-bottom: var(--app-space-xs);
     .headerLeftExpand {
         display: grid;
         grid-template-columns: 200px 1fr;
@@ -511,7 +511,7 @@ defineExpose({  toggleSelection, tableRef })
         width: 100%;
         grid-template-columns: 1fr;
         .headerLeftExpand {
-            gap: var(--app-padding);
+            gap: var(--app-space-xs);
             grid-template-columns: unset;
         }
     }
@@ -525,10 +525,10 @@ defineExpose({  toggleSelection, tableRef })
     }
 }
 .dp-table-container .el-table__row {
-    // color: var(--color-grey-900);
+    // color: var(--app-grey-900);
 }
 .dp-table-container .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-    // background-color: var(--color-grey-050);
+    // background-color: var(--color-grey-800);
 }
 .dp-table-container .el-table--border .el-table__cell {
     // border-right: transparent;

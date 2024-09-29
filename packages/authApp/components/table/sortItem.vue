@@ -31,11 +31,11 @@ const handleSubmit = () => {
     display: grid;
     grid-template-columns: 20px 1fr 40px;
     grid-template-areas: 'handle label toggle';
-    padding: calc(var(--app-padding)) calc(var(--app-padding) / 2) ;
-    background: var(--color-grey-000);
+    padding: calc(var(--app-space-xs)) calc(var(--app-space-xs) / 2) ;
+    background: var(--app-grey-900);
     align-items: center;
     &:hover {
-      background: var(--color-grey-0000);
+      background: var(--app-grey-9000);
     }
     & + & {
       border-top: 1px solid var(--color-grey-150);

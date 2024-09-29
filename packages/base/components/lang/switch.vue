@@ -44,7 +44,7 @@ function handleCommand(newLocale:any) {
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
     .langItem{
       display: inline-block;
     }

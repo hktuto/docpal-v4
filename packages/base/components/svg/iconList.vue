@@ -31,7 +31,7 @@ defineExpose({ getSvg })
 
 <style lang="scss" scoped>
 .catergoryContainer{
-        margin-block: var(--app-padding);
+        margin-block: var(--app-space-xs);
         .categoryTitle{
             font-size: var(--el-font-size-medium);
         }
@@ -39,13 +39,13 @@ defineExpose({ getSvg })
 .svg-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
 
     .iconContainer{
         aspect-ratio: 1 / 1;
         display: grid;
         place-items: center;
-        border-radius: var(--app-padding);
+        border-radius: var(--app-space-xs);
         --icon-size:2rem;
     }
     .selectedSvg {

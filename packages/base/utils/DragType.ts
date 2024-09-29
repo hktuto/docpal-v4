@@ -29,7 +29,7 @@ export type DragState = | {
 }
 | {
     type: "is-dragging-over";
-    closestEdge: Edge | null;
+    closestEdge: string | null;
 };
 
 export type UseDragableParam = {

@@ -220,7 +220,7 @@ defineExpose({ initColumn })
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: calc( var(--app-padding) / 3);
+  padding: calc( var(--app-space-xs) / 3);
   border-radius: 0 0 0 100%;
   --icon-size: 1.14rem;
   --icon-color: var(--color-grey-700);
@@ -240,11 +240,11 @@ defineExpose({ initColumn })
     display: grid;
     grid-template-columns: 20px 1fr 40px;
     grid-template-areas: 'handle label toggle';
-    padding: calc(var(--app-padding)) calc(var(--app-padding) / 2) ;
-    background: var(--color-grey-0000);
+    padding: calc(var(--app-space-xs)) calc(var(--app-space-xs) / 2) ;
+    background: var(--app-grey-9000);
     align-items: center;
     &:hover {
-      background: var(--color-grey-0000);
+      background: var(--app-grey-9000);
     }
     & + & {
       border-top: 1px solid var(--color-grey-150);
