@@ -113,11 +113,11 @@ onMounted(() => {
     height: 100%;
     top: 0;
     right: 0;
-    background: var(--app-grey-1000);
+    background: rgba(255,255,255,0.95);
     border-left: 2px solid rgba(255,255,255,0.4);
     padding: var(--app-space-m);
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-    // backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     transform: translateX(100%);
     overflow: hidden;
     display: grid;
