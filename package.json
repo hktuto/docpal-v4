@@ -12,7 +12,7 @@
   "scripts": {
     "build": "nuxt build",
     "test": "vitest",
-    "api": "bun --filter api generate",
+    "api": "pnpm --filter api generate",
     "postinstall": "npm run api"
   },
   "dependencies": {

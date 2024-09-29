@@ -30,14 +30,11 @@ onMounted(() => {
 // #endregion
 const drag = ref(false)
 const formItems = ref<any[]>([])
-const editDialogOpened = ref(false)
 
 const openedItems = ref<string[]>([])
 
 function formChange() {
     graphProvider?.graph.value?.startBatch('update-from-data')
-    console.log("formChange", formItems.value)
-
     const newData = {
         ...node.data,
         version: (node.data.version || 0) + 1,
@@ -74,7 +71,6 @@ function removeFormItem(index:number) {
     }
     node.setData(newData, { overwrite: true, deep: true, silent:false })
     graphProvider?.graph.value?.stopBatch('update-from-data')
-
 }
 function editItem(id:string) {
     // if openedItems include id, remove it
@@ -87,9 +83,9 @@ function editItem(id:string) {
 function refreshData() {
     if(!node.data || !node.data.data || !node.data.data.extensionElements) throw new Error('node data not found');
     
-    formItems.value = node.data.data.extensionElements['flowable:formProperty'] || []
+    formItems.value =JSON.parse(JSON.stringify( node.data.data.extensionElements['flowable:formProperty'] || []))
     // if(node.data.data.extensionElements['flowable:formProperty']) 
-    console.log("refreshData", formItems.value)
+    // node.setData(node.data, {overwrite:true, silent:false})
 }
 
 watch(() => node, ()=> {
@@ -130,7 +126,7 @@ watch(() => node, ()=> {
                         <div scope="row" class="mover">
                             <Icon name="uil:elipsis-double-v-alt" />
                         </div>
-                        <div class="label">
+                        <div class="label" @click="editItem(formItems[index].attr_id)">
                             {{  formItems[index].attr_name }}
                         </div>
                         <div v-if="!formItems[index].attr_fixed" class="actions">

@@ -39,7 +39,6 @@ function graphReady(){
         new History({
             enabled: true,
             beforeAddCommand:(event:any, args:any) => {
-                console.log("beforeAddCommand", args.key)
                 const ignoreKeys = ['tools', 'ports']
                 if(ignoreKeys.includes(args.key)) return false
                 console.log(args)
