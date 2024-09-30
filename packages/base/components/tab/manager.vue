@@ -21,14 +21,19 @@ provide(
 const loading = ref(false);
 
 async function saveTabsToLocalStorage() {
-    console.log("saveTabsToLocalStorage", layout.value)
-    localStorage.setItem('app-tab', JSON.stringify(layout.value))
+    const saveData = JSON.parse(JSON.stringify(layout.value))
+    // loop all panel and tabs to reset all initized to false
+    saveData.forEach((panel:any) => {
+        panel.tabs.forEach((tab:any) => {
+            tab.initized = false
+        })
+    })
+    localStorage.setItem('app-tab', JSON.stringify(saveData))
 }
 async function getTabsFromServer() {
     loading.value = true;
     const storageTabs = localStorage.getItem('app-tab')
     if(storageTabs) {
-        console.log("getTabsFromServer", JSON.parse(storageTabs))
         const newLayout = JSON.parse(storageTabs);
         // need to delay initLayout to wait for splitpanes to render
         setTimeout(() =>{

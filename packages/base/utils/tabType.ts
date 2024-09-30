@@ -2,6 +2,7 @@ import type { InjectionKey, RouterParams } from '#imports';
 import type {DroppableItem} from './dragType'
 export interface TabItem extends DroppableItem {
     parent:string
+    initized?: boolean
 }// tab panel container
 
 export type TabPanel = {

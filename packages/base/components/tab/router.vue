@@ -22,6 +22,7 @@ function navigateTo(param: RouterParams) {
     tab.value.component = param.component
     tab.value.props = param.props
     tab.value.label = param.label
+    tab.value.initized = true
     console.log("navigateTo", tab.value)
     panelRouteUpdate(tab.value.parent, tab.value.id, param)
 }
@@ -43,6 +44,7 @@ function back(){
         tab.value.icon =lastItem.icon
         tab.value.props = lastItem.props
         tab.value.label = lastItem.label
+        tab.value.initized = true
         panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
     }
 }
@@ -57,6 +59,7 @@ function forward() {
         tab.value.component =lastItem.component
         tab.value.props = lastItem.props
         tab.value.label = lastItem.label
+        tab.value.initized = true
         panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
     }
 }
@@ -90,7 +93,7 @@ provide(MenuRouterKey,{
         <Transition >
             <KeepAlive>
                 <Suspense>
-                    <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
+                    <component v-if="tab.initized" :is="tab.component" :tab="tab" v-bind="tab.props"/>
                     <template #fallback>
                         <div class="loadingContainer">
                             <div class="loadingbar gradient"></div>
