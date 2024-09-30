@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const tab = defineModel<any>('tab', { required: true });
 const tableData = [
   {
     date: '2016-05-03',
@@ -173,6 +174,14 @@ const tableData = [
 
 <template>
     <div class="pageContainer" >
+      <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
+            <Icon :name="tab.icon" />
+        </Teleport>
+        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
+            <div class="label">
+                Browse Page Title 
+            </div>  
+        </Teleport>
         <el-table :data="tableData" style="width: 100%" height="100%">
             <el-table-column fixed prop="date" label="Date" width="150" />
             <el-table-column prop="name" label="Name" width="120" />

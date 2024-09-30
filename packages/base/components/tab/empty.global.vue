@@ -3,7 +3,7 @@ const { menu }  = useAppConfig()
 import type {RouterParams} from '#imports'
 import { TabManagerKey,MenuRouterKey } from '#imports';
 
-const props = defineProps<{tab: any}>()
+const {tab} = defineProps<{tab: any}>()
 const counter = ref(0)
 const tabManager = inject(TabManagerKey)
 if(!tabManager){
@@ -14,7 +14,7 @@ if(!menuManager) {
     throw createError('menu manger not found')
 }
 
-
+const label = ref(tab.label)
 function itemClick(item:MenuItem) {
     console.log("child item clcik", item)
     const param:RouterParams = {
@@ -31,10 +31,19 @@ function itemClick(item:MenuItem) {
 </script>
 <template>
     <div class="emptyContainer">
+        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
+            <Icon :name="tab.icon" />
+        </Teleport>
+        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
+            <div class="label">
+                {{ label }}
+            </div>  
+        </Teleport>
         <div class="content">
             <div class="tabId">
                 <small>tab id: </small>  <br/>
                 {{ tab.id }} 
+                <ElInput v-model="label" placeholder="Tab Name" />
             </div>
         <div class="menuGrid">
             <div v-for="item in menu" :key="item.id" class="menuItem" @click="itemClick(item)">
