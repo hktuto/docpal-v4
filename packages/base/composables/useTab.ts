@@ -48,7 +48,6 @@ export function panelTabFocus(panelId:string, tabIndex: number) {
     hightLightPanel.value = panelId
     if(panelIndex !== -1) {
         layout.value[panelIndex].showingTabIndex = tabIndex;
-        layout.value[panelIndex].tabs[tabIndex].initized = true
     }
 }
 
@@ -70,7 +69,10 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
         if(components.value.length === 1) return;
         const data = layout.value[panelIndex].tabs[tabIndex]
         layout.value[panelIndex].tabs.splice(tabIndex, 1);
-        if(deleteComponent){
+        if(!data) {
+            throw new Error('data not found. tabIndex ' + tabIndex + ' is not correct in ' + panelId)
+        };
+        if(deleteComponent && data && data.id){
             const componentIndex = components.value.findIndex((component) => component.id === data.id);
             if(componentIndex !== -1) components.value.splice(componentIndex, 1)
         }
@@ -106,6 +108,7 @@ export function reorderWithEdge(parent:TabPanel, sourceData:TabItem, targetData:
 }
 
 export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, direction: 'left' | 'right') {
+    console.log("moveTabBetweenPanel", sourceData, targetData, direction)
     const layout = useTabLayout()
     const allComponents = useTabComponent()
     const sourceParentId = layout.value.findIndex(tab => tab.id === sourceData.parent)
@@ -139,6 +142,7 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
 }
 
 export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, direction:  "left" | "right" | 'center') {
+    console.log("splitViewToDirection", sourceData, targetData, direction)
         const layout = useTabLayout()
         const allComponents = useTabComponent()
         const sourceParentId = layout.value.findIndex(tab => tab.id === sourceData.parent)
@@ -263,7 +267,6 @@ export function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanel, dir
 export function addTabToPanel(panelId:string, newTab: TabItem ) {
     const layout = useTabLayout()
     const allComponents = useTabComponent()
-    console.log(layout.value)
     const parentId = layout.value.findIndex(tab => tab.id === panelId);
     if(parentId !== -1) {
         layout.value[parentId].tabs.push(newTab)
@@ -271,6 +274,7 @@ export function addTabToPanel(panelId:string, newTab: TabItem ) {
             panelTabFocus(panelId, layout.value[parentId].tabs.length - 1)
             allComponents.value.push({
                 ...newTab,
+                initized:true,
                 parent: panelId
             })
         })

@@ -76,24 +76,27 @@ provide(MenuRouterKey,{
 <template>
 
 <div class="routerContainer">
-        <Teleport :to="`[data-tab-id=${tab.id}] > .tabLeftTeleportContainer`">
+        <Teleport :to="`#tab-header-${tab.parent}-${tab.id} > .tabLeftTeleportContainer`">
             <div class="historyContainer">
                 <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
                 <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
             </div>
         </Teleport>
-        <Teleport  v-if="tab.icon" :to="`[data-tab-id=${tab.id}] > .icon`">
+        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
             <Icon :name="tab.icon" />
         </Teleport>
-        <Teleport  v-if="tab.label" :to="`[data-tab-id=${tab.id}] > .label`">
+        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
             <div class="label">
                 {{ tab.label }} 
             </div>  
         </Teleport>
+        <template v-if="tab.initized">
+
+        
         <Transition >
             <KeepAlive>
                 <Suspense>
-                    <component v-if="tab.initized" :is="tab.component" :tab="tab" v-bind="tab.props"/>
+                    <component  :is="tab.component" :tab="tab" v-bind="tab.props"/>
                     <template #fallback>
                         <div class="loadingContainer">
                             <div class="loadingbar gradient"></div>
@@ -103,6 +106,7 @@ provide(MenuRouterKey,{
                 </Suspense>
             </KeepAlive>
         </Transition>
+    </template>
 </div>
 </template>
 
