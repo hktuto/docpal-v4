@@ -2,7 +2,6 @@
 import {useState} from '#imports'
 import type { MenuItem } from '#imports'
 import type {TabPanel,TabItem} from '../utils/tabType'
-import type {Edge} from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 
 export const useTabLayout = () => useState<TabPanel[]>('tabs', () => ([]))
 export const useDropEventCallback = () => useState<Record<symbol, any>>('tab-panel-drop-event-callback', ()=>({}))
@@ -23,6 +22,12 @@ export const useTabsManager = () => {
             allComponents.value = newLayout.reduce((prev:TabItem[], panel:TabPanel) => {
                 return prev.concat(panel.tabs)
                 }, [])
+              // focus on panels  
+              // set initized to all panel selected tab
+              layout.value.forEach(panel => {
+                panel.tabs[panel.showingTabIndex || 0].initized = true
+              })
+              
         })
         // loop thought layout and push all components
         
@@ -43,6 +48,7 @@ export function panelTabFocus(panelId:string, tabIndex: number) {
     hightLightPanel.value = panelId
     if(panelIndex !== -1) {
         layout.value[panelIndex].showingTabIndex = tabIndex;
+        layout.value[panelIndex].tabs[tabIndex].initized = true
     }
 }
 
@@ -73,7 +79,8 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
             layout.value.splice(panelIndex, 1)
         }else{
             layout.value[panelIndex].showingTabIndex = panelIndex > 0 ? panelIndex - 1 : 0;
-            console.log("focus on ", layout.value[panelIndex].showingTabIndex)
+            const componentIndex = components.value.findIndex( (component:TabItem) => component.id === layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex || 0].id);
+            components.value[componentIndex].initized = true
         }
     }else{
         throw new Error(`data not found. tabIndex ${tabIndex} is not correct in ${panelId}`)
@@ -121,6 +128,7 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
     const targetIndex = layout.value[targetParentId].tabs.findIndex((tabItem) => tabItem.id === targetData.id);
     const newItemIndex = direction === 'left' ? targetIndex  : targetIndex + 1
     layout.value[targetParentId]?.tabs.splice(newItemIndex, 0 , newSourceData)
+    
     // final focus on source
     
     const componentIndex = allComponents.value.findIndex((component) => component.id === newSourceData.id);
@@ -155,6 +163,7 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
                     const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
                     if(component) {
                         component.parent = targetData.parent;
+                        component.initized = true
                     }
                 })
         }else{
@@ -166,6 +175,7 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
                 tabs: [{
                     ...sourceData,
                     parent: newPanelId,
+                    initized: true,
                 }]
             }
             const newItemIndex = direction === 'left' ? targetParentId  : targetParentId + 1
@@ -175,7 +185,9 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
                 const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
                 if(component) {
                     component.parent = newPanelId;
+                    component.initized = true
                 }
+                
             })
         }
 
@@ -205,10 +217,12 @@ export function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanel, dir
             const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
             if(component) {
                 component.parent = targetData.parent;
+                component.initized  = true
             }else{
                 allComponents.value.push({
                     ...sourceData,
                     parent: targetData.id,
+                    initized: true,
                 })
             }
         })
@@ -220,6 +234,7 @@ export function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanel, dir
             showingTabIndex: 0,
             tabs: [{
                 ...sourceData,
+                initized: true,
                 parent: newPanelId,
             }]
         }
@@ -233,9 +248,11 @@ export function addMenuItemToPanel(sourceData:MenuItem, targetData:TabPanel, dir
             const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
             if(component) {
                 component.parent = newPanelId;
+                component.initized = true
             }else{
                 allComponents.value.push({
                     ...sourceData,
+                    initized: true,
                     parent: newPanelId,
                 })
             }
