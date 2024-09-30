@@ -6,6 +6,8 @@ const tabManager = inject(TabManagerKey)
 const history = ref<RouterParams[]>([])
 const forwardHistory = ref<RouterParams[]>([])
 
+
+
 function navigateTo(param: RouterParams) {
     if(param.menuKey !== menuSymbol) return
     
@@ -82,30 +84,22 @@ provide(MenuRouterKey,{
                 <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
             </div>
         </Teleport>
-        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
-            <Icon :name="tab.icon" />
-        </Teleport>
-        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
-            <div class="label">
-                {{ tab.label }} 
-            </div>  
-        </Teleport>
-        <template v-if="tab.initized">
-
         
-        <Transition >
-            <KeepAlive>
-                <Suspense>
-                    <component  :is="tab.component" :tab="tab" v-bind="tab.props"/>
-                    <template #fallback>
-                        <div class="loadingContainer">
-                            <div class="loadingbar gradient"></div>
-                            {{ $t('loading') }}
-                        </div>
-                    </template>
-                </Suspense>
-            </KeepAlive>
-        </Transition>
+        
+        <template v-if="tab.initized">
+            <Transition >
+                <KeepAlive>
+                    <Suspense>
+                        <component  :is="tab.component" :tab="tab" v-bind="tab.props"/>
+                        <template #fallback>
+                            <div class="loadingContainer">
+                                <div class="loadingbar gradient"></div>
+                                {{ $t('loading') }}
+                            </div>
+                        </template>
+                    </Suspense>
+                </KeepAlive>
+            </Transition>
     </template>
 </div>
 </template>
