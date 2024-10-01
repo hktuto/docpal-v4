@@ -18,5 +18,6 @@ interface MenuProvider {
     menuSymbol:symbol
 }
 
+export const menuSymbol = Symbol('menu')
 
-export const MenuRouterKey: InjectionKey<MenuProvider> = Symbol('meu');
+export const MenuRouterKey: InjectionKey<MenuProvider> = menuSymbol;

@@ -3,6 +3,7 @@ const  { menu } = useAppConfig()
 const opened = ref('false')
 const mode = ref<'collapse' | 'expand'>('collapse')
 
+const selectedMenuItem = ref<MenuItem>()
 function toggleMenuMode(){
     if(mode.value === 'collapse'){
         mode.value = 'expand'
@@ -10,6 +11,20 @@ function toggleMenuMode(){
         mode.value = 'collapse'
     }
     localStorage.setItem('app-menu-mode', mode.value)
+}
+
+function menuItemClick(item:MenuItem) {
+    if(!item.children || item.children.length === 0) {
+        // open page in new tab'
+
+        return
+    }
+    if(selectedMenuItem.value && selectedMenuItem.value.id === item.id) {
+        selectedMenuItem.value = undefined
+    }else{
+
+        selectedMenuItem.value = item
+    }
 }
 
 onMounted(() => {
@@ -29,7 +44,7 @@ onMounted(() => {
             </div>
             <Transition name="fade" appear>
                 <div v-if="mode === 'collapse'" class="menuBody">
-                    <AppMenuItemCollapse v-for="(item, index) in menu" :key="index" :item="item" :selected="false" :mode="mode" />
+                    <AppMenuItemCollapse v-for="(item, index) in menu" :key="index" :item="item" :selected="!!selectedMenuItem && selectedMenuItem.id === item.id" :mode="mode" @itemClick="menuItemClick(item)" />
                 </div>
                 <div v-else class="menuBody expand">
                     <AppMenuItemExpane v-for="(item, index) in menu" :key="index" :item="item" :selected="false" :mode="mode" />
@@ -40,6 +55,9 @@ onMounted(() => {
                 <slot name="footer"></slot>
             </div>
         </div>
+        <div v-if="mode === 'collapse' && selectedMenuItem && selectedMenuItem.children" class="levelTwoMenuContainer">
+            <AppMenuItemCollapseSubmenu v-for="item in selectedMenuItem.children" :key="item.id" :subMenuItem="item" />
+        </div>
         <div class="menuToggleer" @click="toggleMenuMode">
 
         </div>
@@ -47,6 +65,17 @@ onMounted(() => {
 </template> 
 
 <style scoped lang="scss">
+.levelTwoMenuContainer{
+    padding: var(--app-space-s);
+    border-left: 1px solid var(--app-grey-800);
+    height: 100%;
+    min-width: 220px;
+    margin-left: var(--app-space-xs);
+    
+    .subMenuItem + .subMenuItem {
+        border-top: 1px solid var(--app-grey-800);
+    }
+}
 .menuExpaneBody{
     width: 220px;
 }
@@ -69,6 +98,10 @@ onMounted(() => {
 }
 .wrapper{
     height: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
     --menu-gap: var(--app-space-xs);
     --icon-font-size: var(--app-font-size-l);
     --menu-item-padding: var(--app-space-xs);
