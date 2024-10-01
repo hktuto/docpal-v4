@@ -4,7 +4,9 @@ window.ipcRenderer = require('electron').ipcRenderer;
 //@ts-ignore
 window.isDesktopMode = true
 
+
 window.addEventListener('dragTagToWindow', (event) => {
     console.log("preload dragTagToWindow", event)
-    ipcRenderer.invoke('dragTagToWindow', event)
+    
+    ipcRenderer.send('dragTagToWindow', JSON.stringify(event.detail))
 })

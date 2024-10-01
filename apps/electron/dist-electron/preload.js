@@ -1,1 +1,1 @@
-"use strict";const o=require("electron");window.ipcRenderer=require("electron").ipcRenderer;window.isDesktopMode=!0;window.addEventListener("dragTagToWindow",e=>{console.log("preload dragTagToWindow",e),o.ipcRenderer.invoke("dragTagToWindow",e)});
+"use strict";const r=require("electron");window.ipcRenderer=require("electron").ipcRenderer;window.isDesktopMode=!0;window.addEventListener("dragTagToWindow",e=>{console.log("preload dragTagToWindow",e),r.ipcRenderer.send("dragTagToWindow",JSON.stringify(e.detail))});
