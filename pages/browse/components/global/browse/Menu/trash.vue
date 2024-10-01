@@ -1,0 +1,3 @@
+<template>
+    trash component
+    </template>

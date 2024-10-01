@@ -24,13 +24,10 @@ onUnmounted(() => {
     // cleanup()
 })
 
-function itemClickHandler(){
-}
-
 </script>
 
 <template>
-<div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click="itemClickHandler">
+<div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click.prevent="$emit('itemClick', item)" @contextmenu.prevent="$emit('contextmenu', item)">
     <div class="collapseMenu">
     <Icon v-if="item.icon" :name="isHovered ? item.hoverIcon || item.icon : item.icon" class="normal"></Icon>
     </div>
@@ -92,12 +89,20 @@ function itemClickHandler(){
         }
         &:after{
             
-            opacity: 1;
+            opacity: 0.6;
         }
     }
     &.selected {
-        background: var(--menu-item-active-bg);
+        --item-bg: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);
         color: var(--menu-item-active-color);
+        .collapseMenu{
+            color: var(--menu-item-hover-color);
+            transition: color .2s ease-in-out;
+        }
+        &:after{
+            
+            opacity: 1;
+        }
     }
     .iconify{
         font-size: var(--icon-font-size);

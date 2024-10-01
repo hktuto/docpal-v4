@@ -22,9 +22,7 @@ const elRef = ref()
            </div>
        </div>
        <div v-if="opened" class="expendItem">
-            <div v-for="subItem in item.children" class="item">
-                {{subItem.label }}
-            </div>
+            <AppMenuItemCollapseSubmenu v-for="subItem in item.children" :key="subItem.id" :subMenuItem="subItem" />
        </div>
     </div>
 </template>
@@ -70,19 +68,13 @@ const elRef = ref()
 .menuExpanItemContainer{
     width:100%;
     &.opened {
-        background: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);;
+        // background: linear-gradient(180deg, hsl(200, 0%,97%) 0%, hsl(200, 0%,99%) 20%);;
         padding-bottom: var(--app-space-s);
         border-bottom: 1px solid var(--app-grey-800);
     }
 }
 .expendItem{
     padding-inline: var(--app-space-xs) ;
-    .item{
-        font-weight: 300;
-        color: var(--app-grey-550);
-        font-size: var(--app-font-size-m);
-        cursor: pointer;
-        padding-block: var(--app-space-xxs);
-    }
+    
 }
 </style>

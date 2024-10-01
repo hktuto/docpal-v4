@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {MenuRouterKey} from '#imports'
+import {MenuRouterKey, useI18n} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
 import { workflowEditorListTableSetting } from '../workflowEditorPage/table'
@@ -9,8 +9,8 @@ if(!menuManager) {
     throw createError('menu manger not found')
 }
 const { t } = useI18n()
-const {page, pageSize, time} = defineProps<{
-    page:number, pageSize:number, time:number
+const {page, pageSize, time, tab} = defineProps<{
+    page:number, pageSize:number, time?:number, tab:any
 }>()
 const pageParams = {
         pageNum: 0,
@@ -46,7 +46,7 @@ const tableSetting = workflowEditorListTableSetting
             state.options.paginationConfig.currentPage = param.pageNum + 1
             console
         } catch (error) {
-
+            throw error
         }
         state.loading = false
     }
@@ -71,7 +71,6 @@ const tableSetting = workflowEditorListTableSetting
     watch(
         () => [page, pageSize, time],
         async () => {
-            console.log("page, pageSize, time", page, pageSize, time)
             nextTick(() => {
 
               pageParams.pageNum = (Number(page) - 1) || 0
@@ -164,38 +163,26 @@ onMounted(() => {
 
 <template>
     <div class="pageContainer">
-        <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
-            @command="handleAction"
-            @row-dblclick="handleDblclick"
-            @pagination-change="handlePaginationChange">
-            <template #preSortButton>
-                <!-- {{ $t('msg.confirmWhetherToDeactivate') }} -->
-                <!-- <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" @clear-filter="handleClearFilter"
-                    inputKey="name"/> -->
-            </template>  
-            <template #suffixSortButton>
-                <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
-            </template>
-            <template #publishStatus="{ row }">
-                {{ row.status === 'P' ? 
-                    $t('actions.unpublished') : 
-                    row.publishStatus === 'A' ? 
-                    $t('actions.activated') : 
-                    $t('actions.inactivated') }}
-            </template>
-            <template #dpTable_actions="{ row }">
-                <el-dropdown>
-                    <SvgIcon src="/icons/dots.svg"></SvgIcon>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item v-loading="state.loading" @click="handleDblclick(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item>
-                            <el-dropdown-item v-if="row.publishStatus === 'A' && row.status === 'A'" v-loading="state.loading" @click="handleDeactive(row)">{{$t('actions.inactive')}}</el-dropdown-item>
-                            <el-dropdown-item v-else-if="row.status === 'A'" v-loading="state.loading" @click="handleActive(row)">{{$t('actions.active')}}</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-            </template>
-        </Table>
+        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
+            <Icon :name="tab.icon" />
+        </Teleport>
+        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
+            <div class="label">
+                workflow List
+            </div>  
+        </Teleport>
+        <WorkflowEditorPageList 
+            :loading="state.loading" 
+            :columns="tableSetting.columns" 
+            :table-data="state.tableData" 
+            :options="state.options" 
+            @handleAction="handleAction"
+            @handleDblclick="handleDblclick"
+            @handlePaginationChange="handlePaginationChange"
+            @handleAdd="handleAdd"
+            @inactive="handleDeactive"
+            @active="handleActive"
+        />
     </div>
 </template>
 
