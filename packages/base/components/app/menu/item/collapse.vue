@@ -1,7 +1,10 @@
 <script lang="ts" setup generic="T extends MenuItem">
 import type {MenuItem} from '#imports'
 import {menuKey, useElementHover} from '#imports';
-
+const tabProvider = inject(TabManagerKey)
+if(!tabProvider) {
+    throw createError('tab manger not found')
+}
 const { item, selected, mode='collapse' } = defineProps<{item :MenuItem, selected:boolean, mode:'collapse' | 'expand' }>()
 
 const elRef = ref()

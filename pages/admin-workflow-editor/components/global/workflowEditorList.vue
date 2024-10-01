@@ -163,14 +163,7 @@ onMounted(() => {
 
 <template>
     <div class="pageContainer">
-        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
-            <Icon :name="tab.icon" />
-        </Teleport>
-        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
-            <div class="label">
-                workflow List
-            </div>  
-        </Teleport>
+        
         <WorkflowEditorPageList 
             :loading="state.loading" 
             :columns="tableSetting.columns" 
