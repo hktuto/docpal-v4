@@ -5,9 +5,45 @@ import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/el
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview'
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
+import { dropTargetForExternal } from '@atlaskit/pragmatic-drag-and-drop/external/adapter';
+import { containsFiles, getFiles } from '@atlaskit/pragmatic-drag-and-drop/external/file';
+import { containsText, getText } from '@atlaskit/pragmatic-drag-and-drop/external/text';
 
+export const useExternalDrop = (
+    onDragEnter:any,
+    onDragLeave:any,
+    onDrop:any
+) => {
 
+    let cleanup = () => {}
 
+    function setupDropable(element?: HTMLElement) {
+        
+        cleanup = dropTargetForExternal({
+            element,
+            onDragEnter: (arg) => {
+                if(onDragEnter) onDragEnter(arg)
+            },
+            onDragLeave: (arg) => {
+                if(onDragLeave) onDragLeave(arg)
+            },
+            onDrop: ({ source }) {
+                const files = getFiles({ source });
+                const text = getText({ source });
+                
+            },
+        })
+    }
+
+    onUnmounted(() => {
+        cleanup()
+    })
+
+    return {
+        setupDropable
+    }
+
+}
 
 export const useDragable = ({
     key,
