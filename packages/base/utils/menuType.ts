@@ -3,7 +3,7 @@ import type { DroppableItem } from './dragType'
 
 
 export interface MenuItem extends DroppableItem {
-    icon?: string, // 如果是 inlineRender 會忽略
+    icon: string, // 如果是 inlineRender 會忽略
     hoverIcon?: string, // 如果是 inlineRender 會忽略
     inlineRender?:boolean, // 如果是 true 則直接在 menu 中渲染component, 多用於 children 裡的列表
     children?: MenuItem[]

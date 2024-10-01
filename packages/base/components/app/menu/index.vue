@@ -3,6 +3,11 @@ const  { menu } = useAppConfig()
 const opened = ref('false')
 const mode = ref<'collapse' | 'expand'>('collapse')
 
+
+const tabProvider = inject(TabManagerKey)
+if(!tabProvider) {
+    throw createError('tab manger not found')
+}
 const selectedMenuItem = ref<MenuItem>()
 function toggleMenuMode(){
     if(mode.value === 'collapse'){

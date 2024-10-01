@@ -30,8 +30,7 @@ export default defineAppConfig({
                     icon: 'tabler:trash',
                     hoverIcon: 'tabler:trash-filled',
                     label: "Trash",
-                    inlineRender:true,
-                    component: "LazyBrowseMenuTrash",
+                    component: "LazyBrowseTrash",
                 }
             ]
         },
