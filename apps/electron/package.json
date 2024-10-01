@@ -1,0 +1,41 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "check": "npx nuxi typecheck",
+    "build": "nuxt build",
+    "dev": "nuxt dev --dotenv ../../env/.env.dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "prepare": "nuxt prepare"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nuxt": "3.13.2",
+    "vue": "3.5.6",
+    "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxt/test-utils": "^3.14.1",
+    "@tauri-apps/cli": "2.0.0-rc.17",
+    "@vue/test-utils": "^2.4.6",
+    "electron": "^32.1.2",
+    "electron-builder": "^25.0.5",
+    "happy-dom": "^15.7.3",
+    "nuxt-electron": "^0.7.0",
+    "playwright-core": "^1.47.0",
+    "sass": "^1.78.0",
+    "typescript": "^5.6.2",
+    "vite-plugin-electron": "^0.28.8",
+    "vite-plugin-electron-renderer": "^0.14.6",
+    "vue-tsc": "^2.1.6"
+  },
+  "engines": {
+    "pnpm": ">=8.5.0",
+    "node": ">=20.0.0"
+  }
+}

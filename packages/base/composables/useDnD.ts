@@ -52,8 +52,9 @@ export const useDragable = ({
                 if(onDragStart) onDragStart()
                 dragState.value = { type: 'is-dragging' }
             },
-            onDrop() {
-                if(onDropItself) onDropItself()
+            onDrop(args) {
+                if(onDropItself) onDropItself(args)
+                
                 dragState.value = idle
             },
         })
