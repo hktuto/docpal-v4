@@ -31,14 +31,7 @@ function itemClick(item:MenuItem) {
 </script>
 <template>
     <div class="emptyContainer">
-        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
-            <Icon :name="tab.icon" />
-        </Teleport>
-        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
-            <div class="label">
-                {{ label }}
-            </div>  
-        </Teleport>
+       
         <div class="content">
             <div class="tabId">
                 <small>tab id: </small>  <br/>

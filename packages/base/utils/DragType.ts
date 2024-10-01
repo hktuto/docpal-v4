@@ -38,7 +38,7 @@ export type UseDragableParam = {
     detectDrop:boolean, 
     allowedEdges?:Edge[],
     onDragStart?:Function, 
-    onDropItself?:Function,
+    onDropItself?:(args:any) => void,
     canDrop?:({ source }:any) => boolean, 
     isSticky?:() => boolean, 
     onDragEnter?:Function, 

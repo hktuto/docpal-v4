@@ -19,6 +19,20 @@ const {dragState ,setupDrag} = useDragable({
     },
     detectDrop: true,
     allowedEdges: ['left', 'right'],
+    onDropItself:({location}) => {
+        const mouse = location.current.input
+        if(mouse.clientX < 0 || mouse.clientY < 0 || mouse.clientX > window.innerWidth || mouse.clientY > window.innerHeight) {
+            // the drag is out of the window
+            console.log("out of the window")
+            const ev = new CustomEvent('dragTagToWindow', {
+                detail: {
+                    url: '/tab',
+                    data: tab
+                }
+            })
+            window.dispatchEvent(ev)
+        }
+    }
 })
 
 onMounted(() => {

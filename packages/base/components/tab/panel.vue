@@ -24,7 +24,7 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
     onDropHandler :({ location, source, target}:any) => {
         const isTab = isTabData(source.data)
         // 如果不是本 panel 下 drop 的，不用做什麼
-        if(target.data.data.id !== panel.id) return;
+        if(!target || !target.data || target.data.data.id !== panel.id) return;
         if(isTab){
             const sourceData = source.data as any
             const targetData = target.data as any
