@@ -29,7 +29,7 @@ onUnmounted(() => {
 <template>
 <div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click.prevent="$emit('itemClick', item)" @contextmenu.prevent="$emit('contextmenu', item)">
     <div class="collapseMenu">
-    <Icon v-if="item.icon" :name="isHovered ? item.hoverIcon || item.icon : item.icon" class="normal"></Icon>
+    <Icon v-if="item.icon" :name="isHovered || selected ? item.hoverIcon || item.icon : item.icon" class="normal"></Icon>
     </div>
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dropPreviewFile">
