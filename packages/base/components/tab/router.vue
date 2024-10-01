@@ -92,10 +92,7 @@ provide(MenuRouterKey,{
                     <Suspense>
                         <component  :is="tab.component" :tab="tab" v-bind="tab.props"/>
                         <template #fallback>
-                            <div class="loadingContainer">
-                                <div class="loadingbar gradient"></div>
-                                {{ $t('loading') }}
-                            </div>
+                            <LoadingBgInline />
                         </template>
                     </Suspense>
                 </KeepAlive>
@@ -115,15 +112,7 @@ provide(MenuRouterKey,{
 .historyContainer{
     line-height: 1;
 }
-.loadingbar{
-    width: 100%;
-    height: 5px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    animation: rotate 3s infinite linear;
-    -webkit-animation: rotate 3s infinite linear;
-}
+
 .historyBtn{
     --btn-color:var(--app-grey-800);
     color: var(--btn-color);
@@ -142,19 +131,6 @@ provide(MenuRouterKey,{
     overflow: hidden;
 }
 
-.gradient {
-    background: var(--app-grey-800); /* Old browsers */
-    background: linear-gradient(to right,  var(--app-primary-6) 0%,var(--app-primary-3) 25%,var(--app-success-3) 50%,var(--app-success-1) 75%, var(--app-primary-3) 100%); /* W3C */
-
-}
-@keyframes rotate {
-  from {
-    background-position: -3000px;
-  }
-  to { 
-    background-position: 0px;
-  }
-}
 
 .v-enter-active,
 .v-leave-active {

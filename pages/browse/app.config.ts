@@ -11,21 +11,24 @@ export default defineAppConfig({
             children: [
                 {
                     id: 'recent',
-                    icon: 'lucide:folder',
+                    icon: 'tabler:folder',
+                    hoverIcon: 'tabler:folder-filled',
                     label: "Files",
                     inlineRender:true,
                     component: "LazyBrowseMenuTree",
                 },
                 {
                     id: 'collection',
-                    icon: 'lucide:folder-heart',
+                    icon: 'tabler:bookmark',
+                    hoverIcon: 'tabler:bookmark-filled',
                     label: "Collection",
                     inlineRender:true,
                     component: "LazyBrowseMenuCollection",
                 },
                 {
                     id: 'trash',
-                    icon: 'lucide:trash',
+                    icon: 'tabler:trash',
+                    hoverIcon: 'tabler:trash-filled',
                     label: "Trash",
                     inlineRender:true,
                     component: "LazyBrowseMenuTrash",
