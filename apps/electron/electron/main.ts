@@ -19,7 +19,7 @@ app.whenReady().then( async() => {
         
     }); // production
   }
-  mainWindow.webContents.openDevTools() 
+   
 })
 
 app.on('window-all-closed', function () {
@@ -38,17 +38,21 @@ ipcMain.on('dragTagToWindow', (event,args)=> {
     const newY = y + data.clientY
     console.log(newX, newY)
     let newWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1280,
+        height: 720,
         x: newX,
         y: newY,
         webPreferences: {
-            contextIsolation: false,
-        },
+          contextIsolation: false,
+          preload: path.join(MAIN_DIST, 'preload.js'),
+      },
     })
+    
     newWindow.loadURL(
-        'http://localhost:3000/tab'
+        'http://localhost:3000/tab?arg=' + btoa(encodeURIComponent(args))
     )
+
+    newWindow.webContents.openDevTools()
     newWindow.on('closed', () => {
         newWindow = null
     })
