@@ -66,7 +66,7 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
         data: panel as any,
     },
     allowedEdges: ['left', 'right'],
-    
+    // dropExternal: true
 })
 
 

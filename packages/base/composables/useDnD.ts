@@ -1,49 +1,30 @@
-import type {DragState, UseDragableParam, DroppableItemParam, DropTargtParams} from "#imports";
+import type {DragState, DroppableItemParam, DropTargtParams} from "#imports";
 import {draggable, dropTargetForElements, monitorForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter'
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview'
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview'
 import { attachClosestEdge, extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
+import type { Edge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge'
 import type { CleanupFn } from "@atlaskit/pragmatic-drag-and-drop/dist/types/internal-types";
 import { dropTargetForExternal } from '@atlaskit/pragmatic-drag-and-drop/external/adapter';
 import { containsFiles, getFiles } from '@atlaskit/pragmatic-drag-and-drop/external/file';
 import { containsText, getText } from '@atlaskit/pragmatic-drag-and-drop/external/text';
 
-export const useExternalDrop = (
-    
-    onDragEnter:any,
-    onDragLeave:any,
-    onDrop:any
-) => {
 
-    let cleanup = () => {}
-
-    function setupDropable(element: HTMLElement) {
-        
-        cleanup = dropTargetForExternal({
-            element,
-            onDragEnter: (arg) => {
-                if(onDragEnter) onDragEnter(arg)
-            },
-            onDragLeave: (arg) => {
-                if(onDragLeave) onDragLeave(arg)
-            },
-            onDrop: ({ source }) => {
-                const files = getFiles({ source });
-                const text = getText({ source });
-                
-            },
-        })
-    }
-
-    onUnmounted(() => {
-        cleanup()
-    })
-
-    return {
-        setupDropable
-    }
-
+export type UseDraggableParam = {
+    key:symbol,  
+    dragData: DragData,
+    detectDrop:boolean, 
+    allowedEdges?:string[],
+    onDragStart?:Function, 
+    onDropItself?:(args:any) => void,
+    canDrop?:({ source }:any) => boolean, 
+    isSticky?:() => boolean, 
+    onDragEnter?:Function, 
+    onDragOver?:Function, 
+    onDragLeave?:Function,
+    onDropToOther?: Function,
+    canDragToExternal?:boolean
 }
 
 export const useDragable = ({
@@ -58,20 +39,31 @@ export const useDragable = ({
     onDragEnter,
     onDragOver,
     onDragLeave,
-    onDropToOther
-}:UseDragableParam ) => {
+    onDropToOther,
+    canDragToExternal = false
+}:UseDraggableParam ) => {
     const idle: DragState = { type: "idle" };
     const dragState = ref<DragState>(idle)
 
     let cleanup = () => {}
 
     function setupDrag(element:HTMLElement) {
-        if(!element) return;    
-
+        if(!element) return; 
         cleanup = draggable({
             element,
             getInitialData(){
                 return dragData
+            },
+            getInitialDataForExternal() {
+                console.log("getInitialDataForExternal")
+                if((window as any).isDesktopMode) {
+                    const dataAsString = JSON.stringify(dragData)
+                    return {
+                        ['text/plain']: dataAsString,
+                    }
+                } else {
+                    return dragData
+                }
             },
             onGenerateDragPreview({ nativeSetDragImage }) {
                 setCustomNativeDragPreview({
@@ -90,6 +82,7 @@ export const useDragable = ({
                 dragState.value = { type: 'is-dragging' }
             },
             onDrop(args) {
+                console.log("onDrop", args)
                 if(onDropItself) onDropItself(args)
                 
                 dragState.value = idle
@@ -109,6 +102,63 @@ export const useDragable = ({
                     onDragOver,
                     onDragLeave,
                     onDropToOther
+                })
+            )
+        }
+        if(canDragToExternal) {
+            cleanup = combine(
+                cleanup,
+                dropTargetForExternal({
+                    element,
+                    canDrop({ source }) {
+                        console.log("can Drop", source)
+                        if(canDrop) return canDrop({ source })
+                            return true
+                    },
+                    getIsSticky: () => true,
+                    getData({input}) {
+                        const edge = allowedEdges as Edge[]
+                        return attachClosestEdge((dragData as any), {
+                            element,
+                            input,
+                            allowedEdges:edge,
+                        })
+                    },
+                    onDragEnter({self, location,source}) {
+                        if(onDragEnter) onDragEnter()
+                            // get mouse location in "location.current"
+                        
+                            // if mouse is near the top of the target, then we're dragging over the target
+                        const closestEdge = extractClosestEdge(self.data)
+                        dragState.value = { type: 'is-dragging-over', closestEdge }
+                    },
+                    onDrag({self, location,source}) {
+                        if(onDragOver) onDragOver()
+                        const mouse = location.current.input;
+                        const targetRect = self.element.getBoundingClientRect();
+                        const isCenter = (Math.abs(mouse.clientX - targetRect.left) > targetRect.width / 3) && (Math.abs(mouse.clientX - targetRect.right) > targetRect.width / 3);
+                        if(isCenter) {
+                            dragState.value = { type: 'is-dragging-over', closestEdge:'center' }
+                            return;
+                        }
+                        
+                        const closestEdge = extractClosestEdge(self.data)
+                        // Only need to update react state if nothing has changed.
+                        if (dragState.value.type !== 'is-dragging-over' || dragState.value.closestEdge !== closestEdge) {
+                            dragState.value = { type: 'is-dragging-over', closestEdge }
+                        }
+                    },
+                    onDragLeave(args) {
+                        if(onDragLeave) onDragLeave()
+                            console.log("external onDragLeave", args)
+                        dragState.value = { type: "idle" }
+                    },
+                    onDrop(args) {
+                        // if(onDropToOther) onDropToOther()
+                        const data = args.source.getStringData('text/plain')
+                        console.log("external onDrop", args, data)
+                        dragState.value = { type: "idle" }
+                    },
                 })
             )
         }
@@ -138,6 +188,7 @@ export const useDropable = ({
     onDragOver,
     onDragLeave,
     onDropToOther,
+    dropExternal = false
 }:DroppableItemParam) => {
 
     const idle: DragState = { type: "idle" };
@@ -146,7 +197,7 @@ export const useDropable = ({
 
     let cleanup = () => {}
 
-    function setupDropable(element?: HTMLElement) {
+    function setupDropable(element: HTMLElement) {
         
         cleanup = monitorForElements({
             canMonitor(arg:any) {
@@ -175,6 +226,61 @@ export const useDropable = ({
                     onDragOver,
                     onDragLeave,
                     onDropToOther
+                })
+            )
+        }
+        if(dropExternal) {
+            cleanup = combine(
+                cleanup,
+                dropTargetForExternal({
+                    element,
+                    getDropEffect: () => 'move',
+                    canDrop({ source }) {
+                        return true
+                    },
+                    getData(data){
+                        return {
+                            data,
+                            [key]:true
+                        }
+                    },
+                    getIsSticky() {
+                        if(isSticky) return isSticky()
+                        return true
+                    },
+                    onDragEnter({self, location,source}) {
+                        if(onDragEnter) onDragEnter()
+                            // get mouse location in "location.current"
+                        
+                            // if mouse is near the top of the target, then we're dragging over the target
+                        const closestEdge = extractClosestEdge(self.data)
+                        dragState.value = { type: 'is-dragging-over', closestEdge }
+                    },
+                    onDrag({self, location,source}) {
+                        if(onDragOver) onDragOver()
+                        const mouse = location.current.input;
+                        const targetRect = self.element.getBoundingClientRect();
+                        const isCenter = (Math.abs(mouse.clientX - targetRect.left) > targetRect.width / 3) && (Math.abs(mouse.clientX - targetRect.right) > targetRect.width / 3);
+                        if(isCenter) {
+                            dragState.value = { type: 'is-dragging-over', closestEdge:'center' }
+                            return;
+                        }
+                        console.log("External Drag")
+                        const closestEdge = extractClosestEdge(self.data)
+                        // Only need to update react state if nothing has changed.
+                        if (dragState.value.type !== 'is-dragging-over' || dragState.value.closestEdge !== closestEdge) {
+                            dragState.value = { type: 'is-dragging-over', closestEdge }
+                        }
+                    },
+                    onDragLeave() {
+                        if(onDragLeave) onDragLeave()
+                        dragState.value = { type: "idle" }
+                    },
+                    onDrop() {
+                        console.log('onDrop')
+                        if(onDropToOther) onDropToOther()
+                        dragState.value = { type: "idle" }
+                    },
                 })
             )
         }
@@ -213,10 +319,11 @@ function createDropTargetForElements({
             return true
         },
         getData({input}) {
+            const edges = allowedEdges as Edge[]
             return attachClosestEdge((dragData as any), {
                 element,
                 input,
-                allowedEdges,
+                allowedEdges:edges,
             })
         },
         getIsSticky() {
