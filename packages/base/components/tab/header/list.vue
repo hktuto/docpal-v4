@@ -1,14 +1,14 @@
 <script lang="ts" setup >
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 import {TabManagerKey, useDropable} from '#imports'
-import type {TabPanelContainer, TabItem} from '#imports'
+import type {TabPanel, TabItem} from '#imports'
 
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
 
-const {panel} = defineProps<{panel:TabPanelContainer}>()
+const {panel} = defineProps<{panel:TabPanel}>()
 
 function isTabData(
   data: Record<string | symbol, unknown>,
@@ -62,7 +62,7 @@ function newTab() {
 
 <template>
     <div class="tabHeaderContainer">
-        <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :index="index" :selected="index === panel.showingTabIndex" />
+        <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :panel="panel" :index="index" :selected="index === panel.showingTabIndex" />
         <div class="newTabButtonContainer">
             <Icon name="lucide:plus" @click.stop="newTab" />
         </div>
