@@ -19,6 +19,7 @@ app.whenReady().then( async() => {
         
     }); // production
   }
+  mainWindow.webContents.openDevTools()
    
 })
 

@@ -2,7 +2,8 @@
 
 
 import type { TabItem, TabPanel } from '#imports';
-import {TabManagerKey, useDragable} from '#imports'
+import {TabManagerKey, } from '#imports'
+import {useDragable} from '../../../composables/useDnD'
 
 const { tab, selected, index, panel } = defineProps<{tab: T, selected:B, index:I , panel:TabPanel}>()
 const tabManger = inject(TabManagerKey)
@@ -19,13 +20,14 @@ const {dragState ,setupDrag} = useDragable({
     },
     detectDrop: true,
     allowedEdges: ['left', 'right'],
-    onDropItself:({location}) => {
-        const mouse = location.current.input
+    onDropItself:(args:any) => {
+        const mouse = args.location.current.input
+        console.log("onDropItself", args)
         if(mouse.clientX < 0 || mouse.clientY < 0 || mouse.clientX > window.innerWidth || mouse.clientY > window.innerHeight) {
-           
+            
             // the drag is out of the window
             if((window as any).isDesktopMode && panel.tabs.length > 1) {
-
+                // check 
                 const ev = new CustomEvent('dragTagToWindow', {
                     detail: {
                         url: '/tab',
@@ -38,7 +40,8 @@ const {dragState ,setupDrag} = useDragable({
                 closePanelTab(tab.parent, index, true)
             }
         }
-    }
+    },
+    canDragToExternal: true
 })
 
 onMounted(() => {

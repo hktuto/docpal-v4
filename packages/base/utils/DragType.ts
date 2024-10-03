@@ -32,20 +32,7 @@ export type DragState = | {
     closestEdge: string | null;
 };
 
-export type UseDragableParam = {
-    key:symbol,  
-    dragData: DragData,
-    detectDrop:boolean, 
-    allowedEdges?:Edge[],
-    onDragStart?:Function, 
-    onDropItself?:(args:any) => void,
-    canDrop?:({ source }:any) => boolean, 
-    isSticky?:() => boolean, 
-    onDragEnter?:Function, 
-    onDragOver?:Function, 
-    onDragLeave?:Function,
-    onDropToOther?: Function,
-}
+
 
 export type DroppableItemParam = {
     key:symbol,
@@ -53,7 +40,7 @@ export type DroppableItemParam = {
     onDropHandler:({ location, source, target }:any) => void,
     allowDropKeys?: symbol[], // 那個 symbol 可以的 drop 事件可以 trigger
     detectDrop?:boolean,
-    allowedEdges?:Edge[],
+    allowedEdges?:string[],
     dragData?: DragData
     canDrop?:({ source }:any) => boolean, 
     isSticky?:() => boolean, 
@@ -61,14 +48,15 @@ export type DroppableItemParam = {
     onDragOver?:Function, 
     onDragLeave?:Function,
     onDropToOther?: Function
+    dropExternal?:boolean
 }
 
 export type DropTargtParams =  {
     element:HTMLElement,
-    dragState: Ref<DragState>,
+    dragState: any,
     canDrop?:({ source }:any) => boolean,
     dragData: DragData,
-    allowedEdges: Edge[],
+    allowedEdges: string[],
     isSticky?:() => boolean, 
     onDragEnter?:Function, 
     onDragOver?:Function, 
