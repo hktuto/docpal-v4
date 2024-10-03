@@ -10,6 +10,7 @@ import { containsFiles, getFiles } from '@atlaskit/pragmatic-drag-and-drop/exter
 import { containsText, getText } from '@atlaskit/pragmatic-drag-and-drop/external/text';
 
 export const useExternalDrop = (
+    
     onDragEnter:any,
     onDragLeave:any,
     onDrop:any
@@ -17,7 +18,7 @@ export const useExternalDrop = (
 
     let cleanup = () => {}
 
-    function setupDropable(element?: HTMLElement) {
+    function setupDropable(element: HTMLElement) {
         
         cleanup = dropTargetForExternal({
             element,
@@ -27,7 +28,7 @@ export const useExternalDrop = (
             onDragLeave: (arg) => {
                 if(onDragLeave) onDragLeave(arg)
             },
-            onDrop: ({ source }) {
+            onDrop: ({ source }) => {
                 const files = getFiles({ source });
                 const text = getText({ source });
                 
