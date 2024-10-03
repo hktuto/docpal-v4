@@ -1,10 +1,10 @@
 <script lang="ts" setup generic="T extends TabItem, B extends boolean, I extends number">
 
 
-import type { TabItem } from '#imports';
+import type { TabItem, TabPanel } from '#imports';
 import {TabManagerKey, useDragable} from '#imports'
 
-const { tab, selected, index } = defineProps<{tab: T, selected:B, index:I}>()
+const { tab, selected, index, panel } = defineProps<{tab: T, selected:B, index:I , panel:TabPanel}>()
 const tabManger = inject(TabManagerKey)
 if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
@@ -24,16 +24,19 @@ const {dragState ,setupDrag} = useDragable({
         if(mouse.clientX < 0 || mouse.clientY < 0 || mouse.clientX > window.innerWidth || mouse.clientY > window.innerHeight) {
            
             // the drag is out of the window
-            console.log("out of the window", window.isDesktopMode)
-            const ev = new CustomEvent('dragTagToWindow', {
-                detail: {
-                    url: '/tab',
-                    data: tab,
-                    clientX: mouse.clientX,
-                    clientY: mouse.clientY,
-                }
-            })
-            window.dispatchEvent(ev)
+            if((window as any).isDesktopMode && panel.tabs.length > 1) {
+
+                const ev = new CustomEvent('dragTagToWindow', {
+                    detail: {
+                        url: '/tab',
+                        data: tab,
+                        clientX: mouse.clientX,
+                        clientY: mouse.clientY,
+                    }
+                })
+                window.dispatchEvent(ev)
+                closePanelTab(tab.parent, index, true)
+            }
         }
     }
 })
