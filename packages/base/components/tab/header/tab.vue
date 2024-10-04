@@ -22,27 +22,32 @@ const {dragState ,setupDrag} = useDragable({
     allowedEdges: ['left', 'right'],
     onDropItself:(args:any) => {
         const mouse = args.location.current.input
-        console.log("onDropItself", args)
-        if(mouse.clientX < 0 || mouse.clientY < 0 || mouse.clientX > window.innerWidth || mouse.clientY > window.innerHeight) {
+        // depecated, open in new tab should not be allowed by drag and drop, should be handled by clicking on the tab
+        // if(mouse.clientX < 0 || mouse.clientY < 0 || mouse.clientX > window.innerWidth || mouse.clientY > window.innerHeight) {
             
-            // the drag is out of the window
-            if((window as any).isDesktopMode && panel.tabs.length > 1) {
-                // check 
-                const ev = new CustomEvent('dragTagToWindow', {
-                    detail: {
-                        url: '/tab',
-                        data: tab,
-                        clientX: mouse.clientX,
-                        clientY: mouse.clientY,
-                    }
-                })
-                window.dispatchEvent(ev)
-                closePanelTab(tab.parent, index, true)
-            }
-        }
+        //     // the drag is out of the window
+        //     if((window as any).isDesktopMode && panel.tabs.length > 1) {
+        //         // check 
+        //         const ev = new CustomEvent('dragTagToWindow', {
+        //             detail: {
+        //                 url: '/tab',
+        //                 data: tab,
+        //                 clientX: mouse.clientX,
+        //                 clientY: mouse.clientY,
+        //             }
+        //         })
+        //         window.dispatchEvent(ev)
+        //         closePanelTab(tab.parent, index, true)
+        //     }
+        // }
     },
     canDragToExternal: true
 })
+
+function openInFocusMode() {
+    tabManger?.openFocusMode(tab)
+
+}
 
 onMounted(() => {
     setupDrag(elRef.value)
@@ -71,6 +76,7 @@ function closeTab(){
             <div class="icon"></div>
             <div class="label">
             </div>
+            <Icon  class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
             <Icon class="closeIcon" name="ic:round-close" @click.stop="closeTab"></Icon>
             <!-- <TabDropIndicator 
                 gap="20px" /> -->

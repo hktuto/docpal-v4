@@ -3,9 +3,17 @@ import type {TabItem, RouterParams} from '#imports';
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
+if(!tabManager) {    
+    throw createError('no '+ TabManagerKey.toString + "provided")
+}
 const history = ref<RouterParams[]>([])
 const forwardHistory = ref<RouterParams[]>([])
 
+
+const isFullscreen = computed(() => {
+    if(!tabManager.fullscreenItem.value) return false
+    return tabManager.fullscreenItem.value?.id === tab.value.id
+})
 
 
 function navigateTo(param: RouterParams) {
@@ -54,7 +62,6 @@ function back(){
 function forward() {
     if(forwardHistory.value.length === 0) return
     const lastItem = forwardHistory.value.pop()
-    console.log("forward", lastItem)
     if(lastItem){
         history.value.push(lastItem)
 
@@ -78,16 +85,16 @@ provide(MenuRouterKey,{
 <template>
 
 <div class="routerContainer">
-        <Teleport :to="`#tab-header-${tab.parent}-${tab.id} > .tabLeftTeleportContainer`">
+        <Teleport defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .tabLeftTeleportContainer`" >
             <div class="historyContainer">
                 <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
                 <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
             </div>
         </Teleport>
-        <Teleport  v-if="tab.icon" :to="`#tab-header-${tab.parent}-${tab.id} > .icon`">
+        <Teleport  v-if="tab.icon" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .icon`">
             <Icon :name="tab.icon" />
         </Teleport>
-        <Teleport  v-if="tab.label" :to="`#tab-header-${tab.parent}-${tab.id} > .label`">
+        <Teleport  v-if="tab.label" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .label`">
             <div class="label">
                 {{  tab.label }} 
             </div>  
