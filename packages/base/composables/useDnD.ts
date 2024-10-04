@@ -25,6 +25,7 @@ export type UseDraggableParam = {
     onDragLeave?:Function,
     onDropToOther?: Function,
     canDragToExternal?:boolean
+    onDropFromExternal?: Function
 }
 
 export const useDragable = ({
@@ -40,7 +41,8 @@ export const useDragable = ({
     onDragOver,
     onDragLeave,
     onDropToOther,
-    canDragToExternal = false
+    canDragToExternal = false,
+    onDropFromExternal,
 }:UseDraggableParam ) => {
     const idle: DragState = { type: "idle" };
     const dragState = ref<DragState>(idle)
@@ -62,7 +64,9 @@ export const useDragable = ({
                         ['text/plain']: dataAsString,
                     }
                 } else {
-                    return dragData
+                    return {
+                        ['text/plain']: JSON.stringify(dragData),
+                    }
                 }
             },
             onGenerateDragPreview({ nativeSetDragImage }) {
@@ -111,7 +115,6 @@ export const useDragable = ({
                 dropTargetForExternal({
                     element,
                     canDrop({ source }) {
-                        console.log("can Drop", source)
                         if(canDrop) return canDrop({ source })
                             return true
                     },
@@ -154,9 +157,8 @@ export const useDragable = ({
                         dragState.value = { type: "idle" }
                     },
                     onDrop(args) {
-                        // if(onDropToOther) onDropToOther()
+                        if(onDropFromExternal) onDropFromExternal(args)
                         const data = args.source.getStringData('text/plain')
-                        console.log("external onDrop", args, data)
                         dragState.value = { type: "idle" }
                     },
                 })
