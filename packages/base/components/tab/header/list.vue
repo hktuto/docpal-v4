@@ -7,7 +7,7 @@ const tabManger = inject(TabManagerKey)
 if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
-
+const elRef = ref()
 const {panel} = defineProps<{panel:TabPanel}>()
 
 function isTabData(
@@ -40,7 +40,7 @@ const { setupDropable } = useDropable({
 })
 let cleanup = () => {}
 onMounted(() => {
-    setupDropable()
+    setupDropable(elRef.value)
 })
 
 onUnmounted(() => {
@@ -61,7 +61,7 @@ function newTab() {
 </script>
 
 <template>
-    <div class="tabHeaderContainer">
+    <div ref="elRef" class="tabHeaderContainer">
         <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :panel="panel" :index="index" :selected="index === panel.showingTabIndex" />
         <div class="newTabButtonContainer">
             <Icon name="lucide:plus" @click.stop="newTab" />

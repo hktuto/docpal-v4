@@ -36,6 +36,7 @@ const {x,y} = useMouse()
     // background-color: var(--app-grey-1000);
     // box-shadow: var(--app-shadow-xl);
     // border-radius: var(--container-radius);
+    
     overflow: hidden;
     padding: var(--app-space-xs);
     height:100%;

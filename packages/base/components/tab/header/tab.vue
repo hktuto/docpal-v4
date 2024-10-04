@@ -1,5 +1,6 @@
 <script lang="ts" setup generic="T extends TabItem, B extends boolean, I extends number">
 
+import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 
 import type { TabItem, TabPanel } from '#imports';
 import {TabManagerKey, } from '#imports'
@@ -11,6 +12,13 @@ if(!tabManger) {
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
 const elRef = ref()
+
+
+function isTabData(
+  data: Record<string | symbol, unknown>,
+):boolean {
+  return data.key === (tabManger as any).tabDataKey;
+}
 const {dragState ,setupDrag} = useDragable({
     key: (tabManger as any).tabDataKey,
     dragData: {
@@ -20,6 +28,30 @@ const {dragState ,setupDrag} = useDragable({
     },
     detectDrop: true,
     allowedEdges: ['left', 'right'],
+    onDropFromExternal:({source, self}:any) => {
+            const layout = useTabLayout()
+            const allComponents = useTabComponent()
+            const data = source.getStringData('text/plain');
+            const sourceData = JSON.parse(data).data as any
+            const targetData = self.data as any
+            
+            const closestEdgeOfTarget = extractClosestEdge(self.data)
+            console.log("closestEdgeOfTarget", closestEdgeOfTarget)
+            if(!closestEdgeOfTarget) return
+            const parentId = layout.value.findIndex(tab => tab.id === targetData.data.parent);
+            const targetIndex = layout.value[parentId].tabs.findIndex((tabItem) => tabItem.id === targetData.data.id);
+            const newItemIndex = closestEdgeOfTarget === 'left' ? targetIndex  : targetIndex + 1
+            const newData = {
+                ...sourceData,
+                id: "newtab-" + new Date().getTime(),
+                parent: targetData.data.parent,
+                initilized: false,
+            }
+            layout.value[parentId].tabs.splice(newItemIndex, 0, newData)
+            allComponents.value.push(newData)
+            console.log("layout", layout.value)
+            panelTabFocus(targetData.data.parent, newItemIndex)
+    },
     onDropItself:(args:any) => {
         const mouse = args.location.current.input
         // depecated, open in new tab should not be allowed by drag and drop, should be handled by clicking on the tab
@@ -53,6 +85,22 @@ onMounted(() => {
     setupDrag(elRef.value)
 })
 
+function openInNewTab() {
+    if((window as any).isDesktopMode) {
+        const ev = new CustomEvent('dragTagToWindow', {
+            detail: {
+                url: '/tab',
+                data: tab,
+            }
+        })
+        window.dispatchEvent(ev)
+    } else {
+        const args = btoa(encodeURIComponent(JSON.stringify({data:tab})))
+        console.log(tab)
+        window.open(`/tab?arg=${args}`, '_blank')
+    }
+}
+
 function tabFocus() {
     panelTabFocus(tab.parent, index)
 }
@@ -77,6 +125,7 @@ function closeTab(){
             <div class="label">
             </div>
             <Icon  class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
+            <Icon  class="closeIcon" name="lucide:screen-share" @click="openInNewTab" />
             <Icon class="closeIcon" name="ic:round-close" @click.stop="closeTab"></Icon>
             <!-- <TabDropIndicator 
                 gap="20px" /> -->
@@ -111,6 +160,8 @@ function closeTab(){
     align-items: center;
     flex-flow: row nowrap;
     gap: var(--app-space-xxs);
+    border-top-left-radius: var(--app-border-radius-m);
+    border-top-right-radius: var(--app-border-radius-m);
     position: relative;
     &.is-dragging {
         opacity: 0.4;
