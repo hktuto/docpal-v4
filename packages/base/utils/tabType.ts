@@ -15,6 +15,8 @@ export type TabPanel = {
 
 interface TabManager {
     tabDataKey:symbol
+    fullscreenItem: Ref<TabItem | undefined>
+    openFocusMode:(tab:TabItem) => void
 }
 
 interface TabComponentHelper {
