@@ -53,25 +53,7 @@ const {dragState ,setupDrag} = useDragable({
             panelTabFocus(targetData.data.parent, newItemIndex)
     },
     onDropItself:(args:any) => {
-        const mouse = args.location.current.input
-        // depecated, open in new tab should not be allowed by drag and drop, should be handled by clicking on the tab
-        // if(mouse.clientX < 0 || mouse.clientY < 0 || mouse.clientX > window.innerWidth || mouse.clientY > window.innerHeight) {
-            
-        //     // the drag is out of the window
-        //     if((window as any).isDesktopMode && panel.tabs.length > 1) {
-        //         // check 
-        //         const ev = new CustomEvent('dragTagToWindow', {
-        //             detail: {
-        //                 url: '/tab',
-        //                 data: tab,
-        //                 clientX: mouse.clientX,
-        //                 clientY: mouse.clientY,
-        //             }
-        //         })
-        //         window.dispatchEvent(ev)
-        //         closePanelTab(tab.parent, index, true)
-        //     }
-        // }
+        console.log("onDropItself", args)
     },
     canDragToExternal: true
 })
@@ -99,6 +81,7 @@ function openInNewTab() {
         console.log(tab)
         window.open(`/tab?arg=${args}`, '_blank')
     }
+    closePanelTab(tab.parent, index, true)
 }
 
 function tabFocus() {

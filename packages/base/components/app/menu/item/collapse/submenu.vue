@@ -9,7 +9,7 @@ if(!tabProvider) {
     throw createError('tab manger not found')
 }
 
-const { dragState ,setupDrag } = useDraggable({
+const { dragState ,setupDrag } = useDragable({
         key: menuKey,
         dragData: {
             key: menuKey,
