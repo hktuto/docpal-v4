@@ -86,7 +86,6 @@ export const useDragable = ({
                 dragState.value = { type: 'is-dragging' }
             },
             onDrop(args) {
-                console.log("onDrop", args)
                 if(onDropItself) onDropItself(args)
                 
                 dragState.value = idle
@@ -238,7 +237,10 @@ export const useDropable = ({
                     element,
                     getDropEffect: () => 'move',
                     canDrop({ source }) {
-                        return true
+                        const data = source.getStringData('text/plain');
+                        if(!data) return false
+                        // TODO: check if data follow the format
+                        return !!JSON.parse(data)
                     },
                     getData(data){
                         return {

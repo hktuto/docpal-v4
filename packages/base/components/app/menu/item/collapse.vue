@@ -9,6 +9,7 @@ const { item, selected, mode='collapse' } = defineProps<{item :MenuItem, selecte
 
 const elRef = ref()
 const isHovered = useElementHover(elRef)
+const emits = defineEmits(['itemClick', 'contextmenu'])
 
 const { dragState ,setupDrag } = useDragable({
     key: menuKey,
@@ -30,7 +31,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-<div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click.prevent="$emit('itemClick', item)" @contextmenu.prevent="$emit('contextmenu', item)">
+<div ref="elRef" :class="{menuItemContainer:true, selected, [dragState.type]:true}" @click="$emit('itemClick', item)" @contextmenu="$emit('contextmenu', item)">
     <div class="collapseMenu">
     <Icon v-if="item.icon" :name="isHovered || selected ? item.hoverIcon || item.icon : item.icon" class="normal"></Icon>
     </div>
