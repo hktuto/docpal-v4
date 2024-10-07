@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.14.1",
-    "@tauri-apps/cli": "2.0.0-rc.17",
     "@vue/test-utils": "^2.4.6",
     "electron": "^32.1.2",
     "electron-builder": "^25.0.5",

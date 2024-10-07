@@ -11,7 +11,7 @@ const elRef = ref()
 const isHovered = useElementHover(elRef)
 const emits = defineEmits(['itemClick', 'contextmenu'])
 
-const { dragState ,setupDrag } = useDragable({
+const dropOtion:UseDraggableParam = {
     key: menuKey,
     dragData: {
         key: menuKey,
@@ -19,7 +19,14 @@ const { dragState ,setupDrag } = useDragable({
         data: item
     },
     detectDrop: false,
-})
+}
+
+if(item.onDropItself) {
+    dropOtion.detectDrop = true
+    dropOtion.onDropItself = item.onDropItself;
+}
+
+const { dragState ,setupDrag } = useDragable(dropOtion)
 onMounted(() => {
     if(!elRef) return
     setupDrag(elRef.value)

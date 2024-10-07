@@ -9,15 +9,24 @@ if(!tabProvider) {
     throw createError('tab manger not found')
 }
 
-const { dragState ,setupDrag } = useDragable({
+const dropOtion:UseDraggableParam = {
+    key: menuKey,
+    dragData: {
         key: menuKey,
-        dragData: {
-            key: menuKey,
-            type: 'menu',
-            data: subMenuItem
-        },
-        detectDrop: false,
-    })
+        type: 'menu',
+        data: subMenuItem
+    },
+    detectDrop: false,
+}
+
+if(subMenuItem.onDropItself) {
+    dropOtion.detectDrop = true
+    dropOtion.onDropItself = subMenuItem.onDropItself;
+}
+if(subMenuItem.canDrop) {
+    dropOtion.canDrop = subMenuItem.canDrop
+}
+const { dragState ,setupDrag } = useDragable(dropOtion)
 
 onMounted(() => {
     if(subMenuItem.inlineRender) return
@@ -29,7 +38,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-<div ref="elRef" class="subMenuItem">
+<div ref="elRef" :class="{subMenuItem:true, detectDrop: !!subMenuItem.onDropItself, [dragState.type]:true}">
     <div :class="{header:true, opened}" @click="opened = !opened">
         <Icon v-if="!opened && subMenuItem.icon" :name="subMenuItem.icon" />
         <Icon v-else-if="subMenuItem.icon"  class="hoverIcon" :name="opened ? subMenuItem.hoverIcon : subMenuItem.icon"  />
@@ -71,6 +80,12 @@ onUnmounted(() => {
 .subMenuItem{
     font-size: var(--app-font-size-m);
     color: var(--app-grey-500);
+    &.detectDrop{
+        &.is-dragging-over {
+            outline: 1px dashed var(--app-grey-800);
+            border-radius: var(--app-border-radius-s);
+        }
+    }
 }
 .child{
     padding-bottom: var(--app-space-s);

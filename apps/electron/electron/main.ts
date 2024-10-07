@@ -1,7 +1,7 @@
-import path from 'path'
+import path from 'path';
 
-import { app, BrowserWindow, ipcMain } from 'electron'
-export const MAIN_DIST = path.join(__dirname, '../dist-electron')
+export const MAIN_DIST = path.join(__dirname, '../dist-electron');
+import { app, BrowserWindow, ipcMain } from 'electron';
 let mainWindow: BrowserWindow;
 
 app.whenReady().then( async() => {
@@ -30,13 +30,12 @@ app.on('window-all-closed', function () {
   })
 
 ipcMain.on('dragTagToWindow', (event,args)=> {
-    console.log('ipcMain', args)
     const data = JSON.parse(args)
     // get mainWindow x y
     const mainWindow = BrowserWindow.getAllWindows()[0]
     const mainWindowBounds = mainWindow.getBounds()
 
-    let newWindow = new BrowserWindow({
+    let newWindow:any = new BrowserWindow({
         width: 1280,
         height: 720,
         webPreferences: {
