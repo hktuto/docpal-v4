@@ -125,6 +125,11 @@ provide(MenuRouterKey,{
 }
 .historyContainer{
     line-height: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-space-xxs);
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .historyBtn{

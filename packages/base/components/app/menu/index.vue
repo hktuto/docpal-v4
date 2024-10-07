@@ -6,7 +6,7 @@ const mode = ref<'collapse' | 'expand'>('collapse')
 
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
-    throw createError('tab manger not found')
+    throw createError('tab manger not found on menu')
 }
 const selectedMenuItem = ref<MenuItem>()
 function toggleMenuMode(){

@@ -1,11 +1,9 @@
 <script setup lang="ts" >
-import { useMouse } from '@vueuse/core'
-const {x,y} = useMouse()
 
 </script>
 
 <template>
-    <div class="appFullPage" :style="`--mouse-x:${x}px;--mouse-y:${y}px;`">
+    <div class="appFullPage" >
         <div class="appSidebar">
             <slot name="sidebar"></slot>
         </div>
@@ -28,9 +26,11 @@ const {x,y} = useMouse()
     grid-template-rows: 1fr;
     background: linear-gradient( 110deg,  hsl(var(--app-grey-hue), 46%, 95%) 0%,   var(--app-grey-900) 20%) ;
     background-color: var(--app-grey-900);
+    -webkit-app-region: drag;
     
 }
 .appMainContainer{
+    -webkit-app-region: drag;
     --container-radius: var(--app-border-radius-l);
     --container-padding: 0px;
     // background-color: var(--app-grey-1000);
@@ -47,8 +47,10 @@ const {x,y} = useMouse()
     position: relative;
     // overflow: hidden;
     z-index: 2;
+    -webkit-app-region: no-drag;
 }
 .appSidebar{
     padding: var(--app-space-s) calc(var(--app-space-s) - var(--app-space-xs)) var(--app-space-s) var(--app-space-s);
+    -webkit-app-region: no-drag;
 }
 </style>

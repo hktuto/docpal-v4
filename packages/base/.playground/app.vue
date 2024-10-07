@@ -4,24 +4,7 @@
 </script>
 
 <template>
-    <AppWrapper>
-        <template #sidebar>
-            <AppMenu class="sideMenu" >
-                <template #header>
-                    <div class="logoContainer">
-                        <AppLogo />
-                    </div>
-                </template>
-                <template #footer>
-                    <LangSwitch />
-                </template>
-            </AppMenu>
-        </template>
-        
-        <template #default>
-            <TabManager />
-        </template>
-    </AppWrapper>
+    <App />
 </template>
 
 <style scoped lang="scss">
