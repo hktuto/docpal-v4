@@ -30,7 +30,16 @@ export default defineAppConfig({
                     icon: 'tabler:trash',
                     hoverIcon: 'tabler:trash-filled',
                     label: "Trash",
-                    component: "LazyBrowseTrash",
+                    component: "LazyTrashPage",
+                    canDrop: (args:any) => {
+                        if(args.source.data.type === 'collection' || args.source.data.type === 'file') {
+                            return true
+                        }
+                        return false
+                    },
+                    onDropItself: (args:any) => {
+                        console.log(args)
+                    },
                 }
             ]
         },

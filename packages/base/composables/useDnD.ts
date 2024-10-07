@@ -336,6 +336,7 @@ function createDropTargetForElements({
         },
         onDragEnter({self, location,source}) {
             if(onDragEnter) onDragEnter()
+            console.log("drag enter")
                 // get mouse location in "location.current"
             
                 // if mouse is near the top of the target, then we're dragging over the target

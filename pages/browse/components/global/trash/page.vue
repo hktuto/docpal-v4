@@ -4,6 +4,5 @@ const {tab} = defineProps<{tab: any}>()
 </script>
 
 <template>
-    
     trash component
 </template>

@@ -54,7 +54,6 @@ const {dragState ,setupDrag} = useDragable({
             panelTabFocus(targetData.data.parent, newItemIndex)
     },
     onDropItself:(args:any) => {
-        console.log("onDropItself", args)
     },
     canDragToExternal: true
 })
