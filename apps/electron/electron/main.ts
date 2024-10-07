@@ -7,6 +7,8 @@ app.whenReady().then( async() => {
     mainWindow = new BrowserWindow({
         width: 1280,
         height: 720,
+        frame: false,
+        titleBarStyle: 'customButtonsOnHover',
         webPreferences: {
             contextIsolation: false,
             preload: path.join(MAIN_DIST, 'preload.js'),

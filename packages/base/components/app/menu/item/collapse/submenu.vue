@@ -13,6 +13,7 @@ const { dragState ,setupDrag } = useDragable({
         key: menuKey,
         dragData: {
             key: menuKey,
+            type: 'menu',
             data: subMenuItem
         },
         detectDrop: false,

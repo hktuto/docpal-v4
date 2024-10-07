@@ -24,6 +24,7 @@ const {dragState ,setupDrag} = useDragable({
     dragData: {
         [(tabManger as any).tabDataKey]: true,
         key : (tabManger as any).tabDataKey,
+        type: 'tab',
         data: tab
     },
     detectDrop: true,
@@ -146,6 +147,8 @@ function closeTab(){
     border-top-left-radius: var(--app-border-radius-m);
     border-top-right-radius: var(--app-border-radius-m);
     position: relative;
+    max-width: 100%;
+    min-width: 60px;
     &.is-dragging {
         opacity: 0.4;
     }
@@ -188,6 +191,7 @@ function closeTab(){
             }
         }
     }
+
 }
 .gripIcon{
     font-size: var(--app-font-size-m);
@@ -198,5 +202,9 @@ function closeTab(){
     width: 30%;
     top: calc( var(--app-space-s) / 2);
     cursor:grab;
+}
+.label{
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 </style>

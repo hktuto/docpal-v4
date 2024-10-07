@@ -293,3 +293,22 @@ export function panelRouteUpdate(panelId:string, tabId:string, routerParams:Rout
         layout.value[panelIndex].tabs[index].props = routerParams.props
     }
 }
+
+export function addTabInCurrentPanel(newTab: TabItem ) {
+    const layout = useTabLayout()
+    const allComponents = useTabComponent()
+    const hightLightPanel = useCurrentTargetPanel()
+    const parentId = layout.value.findIndex(tab => tab.id === hightLightPanel.value)
+    // create new id for new tab
+    newTab.id = "new-tab-" + new Date().getTime()
+    newTab.initized = true
+    newTab.parent = hightLightPanel.value
+    if(parentId !== -1) {
+        layout.value[parentId].tabs.push(newTab)
+        nextTick(() => {
+            panelTabFocus(hightLightPanel.value, layout.value[parentId].tabs.length - 1)
+            allComponents.value.push(newTab)
+        })
+    }
+    console.log(layout.value)
+}
