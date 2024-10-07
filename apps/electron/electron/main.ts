@@ -3,12 +3,12 @@ import path from 'path'
 import { app, BrowserWindow, ipcMain } from 'electron'
 export const MAIN_DIST = path.join(__dirname, '../dist-electron')
 let mainWindow: BrowserWindow;
+
 app.whenReady().then( async() => {
     mainWindow = new BrowserWindow({
         width: 1280,
         height: 720,
         frame: false,
-        titleBarStyle: 'customButtonsOnHover',
         webPreferences: {
             contextIsolation: false,
             preload: path.join(MAIN_DIST, 'preload.js'),
