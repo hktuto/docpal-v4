@@ -20,7 +20,7 @@ defineExpose({
 </script>
 
 <template>
-    <ElDialog v-model="dialogOpened" :show-close="false"  @close="dialogOpened = false" height="90%" :modal="false">
+    <ElDialog v-model="dialogOpened" :show-close="false"  @close="dialogOpened = false" height="90%" :modal="false" :draggable="true">
         <template #header="{ close, titleId, titleClass }">
             <div class="header">
                <div class="label"> {{ item.label }}</div>
