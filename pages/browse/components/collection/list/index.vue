@@ -42,7 +42,7 @@ whenever(logicAnd(up, isFocusWithin), () => {
 })
 
 whenever(logicAnd(down, isFocusWithin), () => {
-   if(!focusIndex.value || focusIndex.value > entryList.value.length - 1) {
+   if(focusIndex.value === entryList.value.length - 1) {
     focusIndex.value = 0
    }else{
     focusIndex.value += 1
@@ -53,16 +53,18 @@ whenever(logicAnd(down, isFocusWithin), () => {
 })
 
 whenever(logicAnd(space, isFocusWithin), async () => {
-    console.log("focusWithin space",tabProvider?.dialogOpened.value )
+    
     if(!tabProvider?.dialogOpened.value) {
         opendDialog(entryList.value[focusIndex.value])
+        dialogOpened.value = true
     }else{
         console.log("space, close dialog")
         tabProvider?.closeDialog()
+        dialogOpened.value = false
     }
 })
 
-whenever(logicAnd(enter, isFocusWithin), async () => {
+whenever(logicAnd(enter, isFocusWithin, dialogOpened), async () => {
     console.log("enter, open dialog", tabProvider?.dialogOpened.value)
     if(tabProvider?.dialogOpened.value){
 
@@ -78,6 +80,13 @@ whenever(logicAnd(enter, isFocusWithin), async () => {
             }
         }
         addTabInCurrentPanel(tabData)
+    }
+})
+
+watch(tabProvider.dialogOpened, (bool) => {
+    if(!bool) {
+        console.log("dialog closed")
+        dialogOpened.value = false
     }
 })
 
