@@ -62,20 +62,23 @@ whenever(logicAnd(space, isFocusWithin), async () => {
     }
 })
 
-whenever(logicAnd(enter, tabProvider?.dialogOpened.value), async () => {
-    console.log("enter, open dialog")
-    const item = entryList.value[focusIndex.value]
-    tabProvider?.closeDialog()
-    const tabData = {
-        id: item.id,
-        label: item.name,
-        icon: 'tabler:bookmark-filled',
-        component:'LazyCollectionDetail',
-        props:{
-            collectionId: item.id
+whenever(logicAnd(enter, isFocusWithin), async () => {
+    console.log("enter, open dialog", tabProvider?.dialogOpened.value)
+    if(tabProvider?.dialogOpened.value){
+
+        const item = entryList.value[focusIndex.value]
+        tabProvider?.closeDialog()
+        const tabData:any = {
+            id: item.id,
+            label: item.name,
+            icon: 'tabler:bookmark-filled',
+            component:'LazyCollectionDetail',
+            props:{
+                collectionId: item.id
+            }
         }
+        addTabInCurrentPanel(tabData)
     }
-    addTabInCurrentPanel(tabData)
 })
 
 
