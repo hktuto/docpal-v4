@@ -1,34 +1,60 @@
 <script lang="ts" setup>
 import {useActiveElement, useMagicKeys, whenever} from '@vueuse/core'
+import {TabManagerKey } from '#imports'
 import { logicAnd } from '@vueuse/math'
-import { clientApi } from 'api'
+import { onMounted } from 'vue';
+
+const { getListFunction, listResultMappingFunction, generatePreviewData, generatePageData } = defineProps<{
+    getListFunction: (param:any) => Promise<any>,
+    listResultMappingFunction: (data:any) => any[],
+    generatePreviewData: (item:any) => any,
+    generatePageData:(item:any) => any,
+}>()
 
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
+// #region list setup
+
+const entryList = ref<any[]>([])
+const loading = ref(false)
+const pageParams = ref({
+    pageNum: 0,
+    pageSize: 20
+})
+async function getList() {
+    loading.value = true
+    const {data}:any = await getListFunction(pageParams.value)
+    if(!data && !data.entryList) {
+        throw createError('data not found')
+    }
+    const list = await listResultMappingFunction(data)
+    entryList.value.push(...list)
+    pageParams.value.pageNum = (Number(pageParams.value.pageNum) + 1) || 0
+    loading.value = false
+}
+
+onMounted(async() => {
+    await getList()
+})
+// #endregion
+
+// #region focus setup
 const focusIndex = ref<number>(0);
 const activeElement = useActiveElement()
 
 const { up, down, space, enter} = useMagicKeys()
-
 const dialogOpened = ref(false)
 const isFocusWithin = computed(() => {
     return (tabProvider?.dialogOpened.value || activeElement.value?.parentElement?.classList.contains('inlineListContainer'))
 })
 
 function opendDialog(item:any) {
-    const tabData = {
-        id: item.id,
-        label: item.name,
-        icon: 'tabler:bookmark-filled',
-        component:'LazyCollectionDetail',
-        props:{
-            collectionId: item.id
-        }
-    }
+    const tabData = generatePreviewData(item)
     tabProvider?.openNewDialog(tabData)
 }
+
 
 whenever(logicAnd(up, isFocusWithin), () => {
    if(!focusIndex.value || focusIndex.value === 0) {
@@ -64,23 +90,20 @@ whenever(logicAnd(space, isFocusWithin), async () => {
     }
 })
 
-whenever(logicAnd(enter, isFocusWithin, dialogOpened), async () => {
+whenever(logicAnd(enter, isFocusWithin, dialogOpened), () => {
     if(tabProvider?.dialogOpened.value){
 
-        const item = entryList.value[focusIndex.value]
-        tabProvider?.closeDialog()
-        const tabData:any = {
-            id: item.id,
-            label: item.name,
-            icon: 'tabler:bookmark-filled',
-            component:'LazyCollectionDetail',
-            props:{
-                collectionId: item.id
-            }
-        }
-        addTabInCurrentPanel(tabData)
+        const item = entryList.value[focusIndex.value];
+        tabProvider?.closeDialog();
+        const data = generatePageData(item);
+        addTabInCurrentPanel(data)
     }
 })
+
+function focusChange(index:number) {
+    focusIndex.value = index
+}
+
 
 watch(tabProvider.dialogOpened, (bool) => {
     if(!bool) {
@@ -89,30 +112,12 @@ watch(tabProvider.dialogOpened, (bool) => {
     }
 })
 
-
-const query = ref({
-    currentPageIndex: 0,
-    pageSize: 10,
-})
-const { data, refresh, pending } = useAsyncData('collection-menu', () => clientApi.collectionNuxeo.getCollection({
-    currentPageIndex: 0,
-    pageSize: 20,
-}))
-
-const entryList = computed(() => {
-    return data.value?.data?.entryList || []
-})
-
-
-function focusChange(index:number) {
-    focusIndex.value = index
-}
+// #endregion
 
 </script>
 
 <template>
-    <ul class="inlineListContainer">
-        <CollectionListItem v-for="(item, index) in entryList" :key="item.id" :item="item" :selected="index === focusIndex"  @focus="focusChange(index)" :tabindex="index + 1"/>
-    </ul>
+<div class="inlineListContainer">
+    <AppMenuLazyLoadListItem v-for="(item, index) in entryList" :key="item.id" :item="item" @focus="focusChange(index)" :tabindex="index + 1" />
+</div>
 </template>
-

@@ -8,12 +8,11 @@ export default defineNuxtConfig({
   extends:[
     "../",
     "../../../packages/authApp",
-    "../../browse"
   ],
   nitro:{
     devProxy:{
       '/api':{
-        target: process.env.CLIENT_PROXY,
+        target: process.env.ADMIN_PROXY,
         changeOrigin: true,
         prependPath: true
       },

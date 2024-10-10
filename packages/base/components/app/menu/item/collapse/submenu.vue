@@ -45,7 +45,21 @@ onUnmounted(() => {
         <span class="label">{{ subMenuItem.label }}</span>
         <Icon v-if="subMenuItem.inlineRender" :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'" class="toggler"  />
     </div>
-    <template v-if="subMenuItem.inlineRender && opened">
+    <template v-if="subMenuItem.isList && opened">
+        <div class="child">
+            <Transition appear name="fade">
+                <KeepAlive>
+                    <Suspense>
+                        <AppMenuLazyLoadList v-bind="subMenuItem.props" />
+                        <template #fallback>
+                            <LoadingBgInline />
+                        </template>
+                    </Suspense>
+                </KeepAlive>
+            </Transition>
+        </div>
+    </template>
+    <!-- <template v-if=subMenuItem.isList && opened">
         <div class="child">
 
             <Transition appear name="fade">
@@ -59,7 +73,7 @@ onUnmounted(() => {
                 </KeepAlive>
             </Transition>
         </div>
-    </template>
+    </template> -->
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
         <div class="dropPreviewFile">
             <Icon v-if="subMenuItem.icon" :name="subMenuItem.icon"></Icon>

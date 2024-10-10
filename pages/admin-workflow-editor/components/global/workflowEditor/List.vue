@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import {MenuRouterKey, useI18n} from '#imports'
+import {TabManagerKey, useI18n, workflowEditorListTableSetting} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
-import { workflowEditorListTableSetting } from '../workflowEditorPage/table'
 
-const menuManager = inject(MenuRouterKey)
-if(!menuManager) {
+const tabManager = inject(TabManagerKey)
+if(!tabManager) {
     throw createError('menu manger not found')
 }
 const { t } = useI18n()
@@ -14,7 +13,7 @@ const {page, pageSize, time, tab} = defineProps<{
 }>()
 const pageParams = {
         pageNum: 0,
-        pageSize: 5,
+        pageSize: 20,
         orderBy: 'createdDate',
         isDesc: true
 }
@@ -44,7 +43,6 @@ const tableSetting = workflowEditorListTableSetting
             state.options.paginationConfig.total = data.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
-            console
         } catch (error) {
             throw error
         }
@@ -55,8 +53,8 @@ const tableSetting = workflowEditorListTableSetting
         if(!page) page = pageParams.pageNum + 1
         if(!pageSize) pageSize = pageParams.pageSize
         const time = new Date().valueOf().toString()
-        menuManager?.navigateTo({
-            menuKey: menuManager.menuSymbol,
+        tabManager?.navigateTo({
+            menuKey: tabManager.menuSymbol,
             id:'workflow-editor-list',
             label: "Workflow Editor List",
             icon: "dp-icon:flow-outline",
@@ -111,8 +109,8 @@ async function handleActive(row:any) {
     state.loading = false
 }
 function handleDblclick(row:any) {
-    menuManager?.navigateTo({
-        menuKey: menuManager.menuSymbol,
+    tabManager?.navigateTo({
+        menuKey: tabManager.menuSymbol,
         id: 'workflow-editor-detail',
         icon: 'dp-icon:flow-outline',
         label: 'workflowEditorDetail',

@@ -40,7 +40,6 @@ function graphReady(){
             beforeAddCommand:(event:any, args:any) => {
                 const ignoreKeys = ['tools', 'ports']
                 if(ignoreKeys.includes(args.key)) return false
-                console.log(args)
             }
         }),
     )
