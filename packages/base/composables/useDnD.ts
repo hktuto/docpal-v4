@@ -57,7 +57,6 @@ export const useDragable = ({
                 return dragData
             },
             getInitialDataForExternal() {
-                console.log("getInitialDataForExternal")
                 if((window as any).isDesktopMode) {
                     const dataAsString = JSON.stringify(dragData)
                     return {
@@ -83,6 +82,7 @@ export const useDragable = ({
             },
             onDragStart() {
                 if(onDragStart) onDragStart()
+                    console.log("onDragStart", element)
                 dragState.value = { type: 'is-dragging' }
             },
             onDrop(args) {

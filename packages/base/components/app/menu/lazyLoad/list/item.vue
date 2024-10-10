@@ -31,7 +31,6 @@ function itemDblclick(){
 
 function itemFocus(){
     elRef.value.focus()
-    emtis('focus')
 }
 
 onMounted(() => {
@@ -52,3 +51,27 @@ onMounted(() => {
         </Teleport>
 
 </template>
+
+<style lang="scss" scoped>
+.item{
+        padding: var(--app-space-xxs) var(--app-space-xs);
+        border-radius: var(--app-border-radius-s);
+        // background: var(--app-grey-1000);
+        color: var(--app-grey-300);
+        font-size: var(--app-font-size-s);
+        cursor: pointer;
+        &:hover, &:focus{
+            background: var(--app-grey-975);
+        }
+        &.selected{
+            background: var(--app-grey-975);
+        }
+    }
+
+    .dropPreviewFile{
+        padding: var(--app-space-xs);
+        border-radius: var(--app-border-radius-s);
+        background: var(--app-grey-1000);
+        color: var(--app-main-color);   
+    }
+</style>

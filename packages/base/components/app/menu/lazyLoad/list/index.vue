@@ -118,6 +118,25 @@ watch(tabProvider.dialogOpened, (bool) => {
 
 <template>
 <div class="inlineListContainer">
-    <AppMenuLazyLoadListItem v-for="(item, index) in entryList" :key="item.id" :item="item" @focus="focusChange(index)" :tabindex="index + 1" />
+    <AppMenuLazyLoadListItem v-for="(item, index) in entryList" :key="item.id" :item="item" :selected="index === focusIndex" @focus="focusChange(index)" :tabindex="index + 1" />
 </div>
 </template>
+
+
+<style lang="scss" scoped>
+
+.inlineListContainer{
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0;
+    justify-content: flex-start;
+    align-items: flex-start;
+    list-style: none;
+    padding: 0;
+    margin:0;
+    &:focus-within{
+        outline: none;
+    }
+    
+}
+</style>

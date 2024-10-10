@@ -10,10 +10,7 @@ export interface MenuItem extends DroppableItem {
     children?: MenuItem[],
     canDrop: (args:any) => boolean,
     onDropItself?:(args:any) => void,
-    getListFunction?: (param:any) => Promise<any>, // 如果 isList 是 true 時必填
-    listResultMappingFunction?: (data:any) => any[], // 如果 isList 是 true 時必填
-    generatePreviewData?: (item:any) => any, // 如果 isList 是 true 時必填
-    generatePageData?:(item:any) => any, // 如果 isList 是 true 時必填
+    // 如果 isList 是 true 時必填
 }
 
 export interface RouterParams extends DroppableItem {

@@ -43,7 +43,7 @@ onUnmounted(() => {
         <Icon v-if="!opened && subMenuItem.icon" :name="subMenuItem.icon" />
         <Icon v-else-if="subMenuItem.icon"  class="hoverIcon" :name="opened ? subMenuItem.hoverIcon : subMenuItem.icon"  />
         <span class="label">{{ subMenuItem.label }}</span>
-        <Icon v-if="subMenuItem.inlineRender" :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'" class="toggler"  />
+        <Icon v-if="subMenuItem.isList" :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'" class="toggler"  />
     </div>
     <template v-if="subMenuItem.isList && opened">
         <div class="child">
