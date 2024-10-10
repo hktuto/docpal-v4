@@ -1,4 +1,4 @@
-
+import {clientApi} from 'api'
 
 export default defineAppConfig({
     menu:[
@@ -22,8 +22,34 @@ export default defineAppConfig({
                     icon: 'tabler:bookmark',
                     hoverIcon: 'tabler:bookmark-filled',
                     label: "Collection",
-                    inlineRender:true,
+                    isList:true,
                     component: "LazyBrowseMenuCollection",
+                    props:{
+                        getListFunction:clientApi.collectionNuxeo.getCollection,
+                        listResultMappingFunction:(data:any) => {
+                            return data.entryList.map((item:any) => {
+                                return {
+                                    name: item.name,
+                                    id: item.id,
+                                    tabData: {
+                                        id: item.id,
+                                        label: item.name,
+                                        icon: 'tabler:bookmark-filled',
+                                        component: 'LazyCollectionDetail',
+                                        props: {
+                                            collectionId: item.id
+                                        }
+                                    }
+                                } 
+                            })
+                        },
+                        generatePreviewData:(item:any) => {
+                            return item.tabData
+                        },
+                        generatePageData:(item:any) => {
+                            return item.tabData
+                        },  
+                    }
                 },
                 {
                     id: 'trash',
