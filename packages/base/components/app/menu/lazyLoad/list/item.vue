@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {addTabInCurrentPanel} from '#imports'
+
 const { item, selected, tabindex } = defineProps<{ item: any , selected:boolean, tabindex:number}>()
 
 const tabProvider = inject(TabManagerKey)
@@ -9,34 +11,22 @@ if(!tabProvider) {
 const emtis = defineEmits(['focus'])
 const elRef = ref()
 
-const tabData = {
-    id: item.id,
-    label: item.name,
-    icon: 'tabler:bookmark-filled',
-    component:'LazyCollectionDetail',
-    props:{
-        collectionId: item.id
-    }
-}
 
 const { dragState ,setupDrag } = useDragable({
     key: menuKey,
     dragData: {
         key: menuKey,
         type: 'collection',
-        data: tabData
+        data: item.tabData
     },
     // TODO : allow Drop file to collection
     detectDrop: false,
 })
 
 
-function itemClick(){
-    tabProvider?.openNewDialog(tabData)
-}
 
 function itemDblclick(){
-    addTabInCurrentPanel(tabData)
+    addTabInCurrentPanel(item.tabData)
 }
 
 function itemFocus(){
@@ -48,10 +38,11 @@ onMounted(() => {
     setupDrag(elRef.value)
 })
 
+
 </script>
 
 <template>
-    <li ref="elRef" :class="{item:true, selected}"  @dblclick="itemDblclick" :tabindex="tabindex" @mouseenter="itemFocus" >
+<li ref="elRef" :class="{item:true, selected}"  @dblclick="itemDblclick" :tabindex="tabindex" @mouseenter="itemFocus" >
         {{ item.name}}
     </li>
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
@@ -59,8 +50,5 @@ onMounted(() => {
                 {{ item.name }}
             </div>
         </Teleport>
+
 </template>
-
-<style scoped lang="scss">
-
-</style>
