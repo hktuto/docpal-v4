@@ -34,12 +34,21 @@ export default defineAppConfig({
                     props: {
                       id: item.id
                     }
+                  },
+                  previewData:{
+                    id:item.id,
+                    label: item.name,
+                    icon: 'dp-icon:flow-outline',
+                    component: 'lazyWorkflowEditorViewer',
+                    props:{
+                      id: item.id
+                    }
                   }
                 }
               }) 
             },
             generatePreviewData:(item:any) => {
-              return item.tabData
+              return item.previewData
             },
             generatePageData:(item:any) => {
               return item.tabData
