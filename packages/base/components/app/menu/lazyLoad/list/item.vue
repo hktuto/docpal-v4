@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import {addTabInCurrentPanel} from '#imports'
 
-const { item, selected, tabindex } = defineProps<{ item: any , selected:boolean, tabindex:number}>()
+const { item, selected, tabindex, index } = defineProps<{ item: any , selected:boolean, tabindex:number, index:number}>()
 
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
-
-const emtis = defineEmits(['focus'])
+const clickTimeout = ref()
+const emits = defineEmits(['focus', 'itemClick'])
 const elRef = ref()
 
 
@@ -24,8 +24,20 @@ const { dragState ,setupDrag } = useDragable({
 })
 
 
+function itemClick(){
+    if(clickTimeout.value) {
+        clearTimeout(clickTimeout.value)
+    }
+    clickTimeout.value = setTimeout(() => {
+        emits('itemClick', index)
+    }, 200)
+}
+
 
 function itemDblclick(){
+    if(clickTimeout.value) {
+        clearTimeout(clickTimeout.value)
+    }
     addTabInCurrentPanel(item.tabData)
 }
 
@@ -41,7 +53,7 @@ onMounted(() => {
 </script>
 
 <template>
-<li ref="elRef" :class="{item:true, selected}"  @dblclick="itemDblclick" :tabindex="tabindex" @mouseenter="itemFocus" >
+<li ref="elRef" :class="{item:true, selected}" @click="itemClick"  @dblclick="itemDblclick" :tabindex="tabindex" @mouseenter="itemFocus" >
         {{ item.name}}
     </li>
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
@@ -54,6 +66,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .item{
+    width: 100%;
         padding: var(--app-space-xxs) var(--app-space-xs);
         border-radius: var(--app-border-radius-s);
         // background: var(--app-grey-1000);

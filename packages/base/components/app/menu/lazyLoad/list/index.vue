@@ -104,6 +104,13 @@ function focusChange(index:number) {
     focusIndex.value = index
 }
 
+function itemClick(tabindex:number) {
+    focusIndex.value = tabindex
+    if(!dialogOpened.value) {
+        opendDialog(entryList.value[tabindex])
+    }
+}
+
 
 watch(tabProvider.dialogOpened, (bool) => {
     if(!bool) {
@@ -114,11 +121,20 @@ watch(tabProvider.dialogOpened, (bool) => {
 
 // #endregion
 
+
+// #region filter list
+
+const filterTest = ref('')
+
+
+// #endregion
+
 </script>
 
 <template>
 <div class="inlineListContainer">
-    <AppMenuLazyLoadListItem v-for="(item, index) in entryList" :key="item.id" :item="item" :selected="index === focusIndex" @focus="focusChange(index)" :tabindex="index + 1" />
+
+    <AppMenuLazyLoadListItem v-for="(item, index) in entryList" :key="item.id" :item="item" :selected="index === focusIndex"  :index="index" :tabindex="index + 1" @itemClick="itemClick" @focus="focusChange(index)"/>
 </div>
 </template>
 

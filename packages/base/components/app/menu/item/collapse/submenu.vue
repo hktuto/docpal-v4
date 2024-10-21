@@ -1,8 +1,25 @@
 <script lang="ts" setup>
+import {useActiveElement, useMagicKeys, whenever} from '@vueuse/core'
+
 const { subMenuItem } = defineProps<{ subMenuItem: MenuItem }>()
 const elRef = ref()
+const activeElement = useActiveElement()
+const itemId = ref(subMenuItem.id)
+const { enter} = useMagicKeys()
+
+const isFocusWithin = computed(() => {
+    return (tabProvider?.dialogOpened.value || activeElement.value?.parentElement?.classList.contains('inlineListContainer'))
+})
 
 const opened = ref(false)
+const dialogOpened = ref(false)
+
+whenever(logicAnd(enter, isFocusWithin, dialogOpened), () => {
+    if(tabProvider?.dialogOpened.value){
+        tabProvider?.closeDialog();
+        addTabInCurrentPanel(subMenuItem as any)
+    }
+})
 
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
@@ -28,8 +45,23 @@ if(subMenuItem.canDrop) {
 }
 const { dragState ,setupDrag } = useDragable(dropOtion)
 
+function itemClickHandler(item:MenuItem) {
+    if(item.isList || item.inlineRender) {
+        opened.value = !opened.value
+    }else{
+        dialogOpened.value = true;
+        tabProvider?.openNewDialog(subMenuItem)
+    }
+}
+
+watch(tabProvider.dialogOpened, (bool) => {
+    if(!bool) {
+        console.log("dialog closed")
+        dialogOpened.value = false
+    }
+})
+
 onMounted(() => {
-    if(subMenuItem.inlineRender) return
     setupDrag(elRef.value)
 })
 
@@ -39,7 +71,7 @@ onUnmounted(() => {
 
 <template>
 <div ref="elRef" :class="{subMenuItem:true, detectDrop: !!subMenuItem.onDropItself, [dragState.type]:true}">
-    <div :class="{header:true, opened}" @click="opened = !opened">
+    <div :class="{header:true, opened}" @click="itemClickHandler(subMenuItem)">
         <Icon v-if="!opened && subMenuItem.icon" :name="subMenuItem.icon" />
         <Icon v-else-if="subMenuItem.icon"  class="hoverIcon" :name="opened ? subMenuItem.hoverIcon : subMenuItem.icon"  />
         <span class="label">{{ subMenuItem.label }}</span>
@@ -58,6 +90,13 @@ onUnmounted(() => {
                 </KeepAlive>
             </Transition>
         </div>
+    </template>
+    <template v-if="subMenuItem.inlineRender && opened">
+        <KeepAlive>
+            <Suspense>
+                <component :is="resolveComponent(subMenuItem.component)" :tab="subMenuItem" v-props="subMenuItem.props" />
+            </Suspense>
+        </KeepAlive>
     </template>
     <!-- <template v-if=subMenuItem.isList && opened">
         <div class="child">
