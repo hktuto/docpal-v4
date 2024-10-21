@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 const tab = defineModel<any>('tab', { required: true });
 
+const {idOrPath} = defineProps<{ idOrPath: string }>();
+
 </script>
 
 <template>
