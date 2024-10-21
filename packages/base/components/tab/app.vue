@@ -22,7 +22,6 @@ function closeDialog(){
     dialogOpened.value = false
 }
 function openNewDialog(tab:TabItem){
-    console.log('open new dialog')
     dialogOpened.value = true;
     dialogItem.value = tab
 }
