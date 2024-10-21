@@ -64,7 +64,7 @@ onMounted(() => {
             <AppMenuItemCollapseSubmenu v-for="item in selectedMenuItem.children" :key="item.id" :subMenuItem="item" />
         </div>
         <div class="menuToggleer" @click="toggleMenuMode">
-
+            <Icon class="menuToggleIcon" :name="mode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" />
         </div>
     </div>
 </template> 
@@ -81,16 +81,21 @@ onMounted(() => {
         border-top: 1px solid var(--app-grey-800);
     }
 }
+.menuToggleIcon{
+    font-size: var(--toggler-width);
+    color: var(--app-grey-100);
+}
 .menuExpaneBody{
     width: 220px;
 }
 .menuToggleer{
+    --toggler-width: 1rem;
     position: absolute;
-    top: 0;
+    top: calc(var(--app-space-s) * -1);
     right: calc( var(--app-space-s) * -1);
-    width: var(--app-space-s);
-    background: var(--app-grey-300);
-    height: 100%;
+    width: var(--toggler-width);
+    background: linear-gradient( -90deg, var(--app-grey-800), rgba(255,255,255,0)) ;
+    height: calc(100% + var(--app-space-s));
     display: flex;
     justify-content: center;
     align-items: center;
@@ -98,6 +103,7 @@ onMounted(() => {
     opacity: 0;
     transition: all .2s ease-in-out;
     &:hover{
+        --toggler-width: 1.5rem;
         opacity: 1;
     }
 }
