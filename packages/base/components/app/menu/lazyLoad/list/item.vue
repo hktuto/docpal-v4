@@ -53,9 +53,9 @@ onMounted(() => {
 </script>
 
 <template>
-<li ref="elRef" :class="{item:true, selected}" @click="itemClick"  @dblclick="itemDblclick" :tabindex="tabindex" @mouseenter="itemFocus" >
+<div ref="elRef" :class="{item:true, selected}" @click="itemClick"  @dblclick="itemDblclick" :tabindex="tabindex" @mouseenter="itemFocus" >
         {{ item.name}}
-    </li>
+    </div>
     <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dropPreviewFile">
                 {{ item.name }}

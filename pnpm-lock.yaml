@@ -281,6 +281,9 @@ importers:
       vue-router:
         specifier: latest
         version: 4.4.5(vue@3.5.6(typescript@5.6.2))
+      vue-virt-list:
+        specifier: ^1.5.4
+        version: 1.5.4(vue@3.5.6(typescript@5.6.2))
       vuedraggable:
         specifier: ^2.24.3
         version: 2.24.3
@@ -5617,6 +5620,15 @@ packages:
     hasBin: true
     peerDependencies:
       typescript: '>=5.0.0'
+
+  vue-virt-list@1.5.4:
+    resolution: {integrity: sha512-ADsx9mthejGqBDEO5x7x+/0xgI28blb2Y5cVZA9BUI9/DSkYG88Rq4DwL6SPFkvcSDVOZPLmQ5xzw/a4aFwqcA==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
 
   vue@2.7.16:
     resolution: {integrity: sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==}
@@ -11667,6 +11679,11 @@ snapshots:
       '@vue/language-core': 2.1.6(typescript@5.6.2)
       semver: 7.6.3
       typescript: 5.6.2
+
+  vue-virt-list@1.5.4(vue@3.5.6(typescript@5.6.2)):
+    dependencies:
+      vue: 3.5.6(typescript@5.6.2)
+      vue-demi: 0.14.10(vue@3.5.6(typescript@5.6.2))
 
   vue@2.7.16:
     dependencies:
