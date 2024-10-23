@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+ import { VirtList } from 'vue-virt-list';
 import {useActiveElement, useMagicKeys, whenever} from '@vueuse/core'
 import {TabManagerKey } from '#imports'
 import { logicAnd } from '@vueuse/math'
@@ -19,6 +20,7 @@ if(!tabProvider) {
 
 const entryList = ref<any[]>([])
 const loading = ref(false)
+const totalSize = ref(0)
 const pageParams = ref({
     pageNum: 0,
     pageSize: 20
@@ -26,6 +28,7 @@ const pageParams = ref({
 async function getList() {
     loading.value = true
     const {data}:any = await getListFunction(pageParams.value)
+    totalSize.value = data.totalSize
     if(!data && !data.entryList) {
         throw createError('data not found')
     }
@@ -114,7 +117,6 @@ function itemClick(tabindex:number) {
 
 watch(tabProvider.dialogOpened, (bool) => {
     if(!bool) {
-        console.log("dialog closed")
         dialogOpened.value = false
     }
 })
@@ -124,7 +126,12 @@ watch(tabProvider.dialogOpened, (bool) => {
 
 // #region filter list
 
-const filterTest = ref('')
+function loadMore() {
+    if(entryList.value.length < totalSize.value) {
+        pageParams.value.pageNum += 1
+        getList()
+    }
+}
 
 
 // #endregion
@@ -132,27 +139,31 @@ const filterTest = ref('')
 </script>
 
 <template>
-<div class="inlineListContainer">
+    <div class="listCont">
 
-    <AppMenuLazyLoadListItem v-for="(item, index) in entryList" :key="item.id" :item="item" :selected="index === focusIndex"  :index="index" :tabindex="index + 1" @itemClick="itemClick" @focus="focusChange(index)"/>
-</div>
+     <VirtList itemKey="id" 
+        :list="entryList" 
+        :buffer="10"
+        :minSize="20"
+        @toBottom="loadMore"
+        >
+        <template #default="{ itemData, index }">
+           
+            <AppMenuLazyLoadListItem :item="itemData" :selected="index === focusIndex"  :index="index" :tabindex="index + 1" @itemClick="itemClick" @focus="focusChange(index)"/>
+        </template>
+     </VirtList>
+    </div>
+
 </template>
 
 
 <style lang="scss" scoped>
-
-.inlineListContainer{
-    display: flex;
-    flex-flow: column nowrap;
-    gap: 0;
-    justify-content: flex-start;
-    align-items: flex-start;
-    list-style: none;
-    padding: 0;
-    margin:0;
-    &:focus-within{
-        outline: none;
-    }
-    
+.listCont{
+    height: 200px;
+    overflow: hidden;
 }
+.item{
+    height: 20px;
+}
+
 </style>
