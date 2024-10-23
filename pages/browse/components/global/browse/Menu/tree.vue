@@ -1,3 +1,0 @@
-<template>
-    tree component
-</template>
