@@ -1,3 +1,4 @@
+
 <script lang="ts" setup>
 import {addTabInCurrentPanel} from '#imports'
 
