@@ -15,7 +15,7 @@ export default defineAppConfig({
                     hoverIcon: 'tabler:folder-filled',
                     label: "Files",
                     inlineRender:true,
-                    component: "LazyBrowseMenuTree",
+                    component: "LazyBrowseTree",
                 },
                 {
                     id: 'collection',
