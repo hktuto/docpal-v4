@@ -69,14 +69,22 @@ onMounted(() => {
     </div>
 </template> 
 
-<style scoped lang="scss">
+<style scoped lang="scss">                                                    
 .levelTwoMenuContainer{
     padding: var(--app-space-s);
     border-left: 1px solid var(--app-grey-800);
     height: 100%;
     min-width: 220px;
     margin-left: var(--app-space-xs);
-    
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap:0;
+    > * {
+        width:100%;
+        flex: 0 0 auto;
+    }
     .subMenuItem + .subMenuItem {
         border-top: 1px solid var(--app-grey-800);
     }

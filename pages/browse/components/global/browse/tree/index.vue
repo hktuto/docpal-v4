@@ -1,81 +1,80 @@
 <script lang="ts" setup>
+import VirTree from '@ysx-libs/vue-virtual-tree';
+import type { TreeNodeOptions, BaseTreeNode } from '@ysx-libs/vue-virtual-tree';
+import '@ysx-libs/vue-virtual-tree/style.css';
 import {clientApi} from 'api'
- import { VirtTree  } from 'vue-virt-list';
- import 'vue-virt-list/lib/assets/tree.css';
 
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
-type NodeData = {
-    id: string,
-    name: string,
-    path: string,
-    loading: boolean,
-    isFolder: boolean,
-    isDummy: boolean,
-    expanded?: boolean,
-    selected?: boolean,
-    pageSize?: number,
-    pageNumber?: number,
-    children?: NodeData[]
-}
+
 const loading = ref(false)
-const tree = ref<NodeData[]>([])
+const tree = ref<TreeNodeOptions[]>([])
 
+const virtual = ref({
+    size: 26, remain: 15
+})
 
-async function getChildren(idOrPath:string = '/', pageNumber=0, pageSize=2147483647, parentPath:string[]=[]) {
+const defaultBaseNode: BaseTreeNode = {
+    key:'/',
+    name:"",
+    level:0,
+    loading:false,
+    hasChildren:true,
+    showCheckbox:false,
+    children:[],
+    parentKey:'',
+    parentKeys:[],
+    origin:{
+        nodeKey:'/',
+        name:'',
+        path:'/',
+        loading:false,
+    }
+}
+
+async function getChildren(node: BaseTreeNode = defaultBaseNode, callback: (children: TreeNodeOptions[]) => void ) {
+    console.log("getChildren", node)
+    const idOrPath = node.key as string
     const response = await clientApi.documentNuxeo.postThumbnailV2({
         idOrPath,
-        pageNumber,
-        pageSize
+        pageNumber : 0,
+        pageSize : 1000,
     })
     if(!response || !response.data || !response.data.entryList) {
-        throw createError('data not found')
+        callback([])
     }
-    if(response?.data?.entryList.length === 0) {
-        return
+    if(response?.data?.entryList?.length === 0) {
+        callback([])
     }
     const entryList = response?.data?.entryList || []
-    const items:NodeData[] = entryList.map((item:any) => {
-        const data: NodeData = {
+    const data = entryList.map((item:any) => {
+        const data: TreeNodeOptions = {
             id: item.id,
+            nodeKey: item.id,
             name: item.name,
             path: item.path,
             loading: false,
             expanded: false,
             isDummy:false,
             isFolder: item.isFolder,
+            hasChildren: item.isFolder
         }
-        if(item.isFolder){
-            data.children = [
-                {
-                    id: new Date().getTime().toString(),
-                    name: "..",
-                    path: item.path,
-                    loading: false,
-                    expanded: false,
-                    isFolder: false,
-                    isDummy: true
-                }
-            ]
-        }
+        
         return data;
     })
-    if(tree.value.length === 0) {
-        tree.value = items
-    } else {
-        
-    }
+    console.log(data)
+    callback(data)
 }
 
-async function onExpand(data: NodeData, expandedInfo: any) {
-    console.log('onExpand', data, expandedInfo)
-    // check if the node is a dummy node
-}
 
-onMounted(() => {
-    getChildren()
+
+onMounted(async () => {
+    await getChildren(defaultBaseNode, (data) => {
+        tree.value = data
+    })
+    
 })
 
 
@@ -83,48 +82,38 @@ onMounted(() => {
 
 <template>
 <div class="listContainer">
-    <VirtTree
-        ref="virtTreeRef"
-        :list="tree"
-        :showLine="true"
-        :indent="20"
-         :fieldNames="{
-            key: 'id',
-         }"
-        expandOnClickNode
-        @expand="onExpand"
-    >
-        <template #icon>
-          <div style="height: 16px; width: 16px">
-            <svg
-              viewBox="0 0 48 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              stroke="currentColor"
-              class="arco-icon arco-icon-down"
-              stroke-width="4"
-              stroke-linecap="butt"
-              stroke-linejoin="miter"
-            >
-              <path d="M39.6 17.443 24.043 33 8.487 17.443"></path>
-            </svg>
-          </div>
+    <VirTree ref="virTree" :source="tree" :virtual="{ size: 26, remain: 15 }" :load-data="getChildren" >
+        <template #icon="{ loading, expanded, node }">
+            <Icon v-if="loading" name="tabler:loader" />
+            <Icon v-else-if="expanded" name="lucide:folder-open" />
+            <Icon v-else-if="node.origin.isFolder" name="lucide:folder" />
+            <Icon v-else name="lucide:file" />
         </template>
-        <template #content="{ node }">
-          <div>
-            <span> {{ node.data.name }}</span>
-          </div>
-        </template>
-    </VirtTree>
+        <template #node="{ node }">
+            <span>{{ node.origin.name }}</span>
+         </template>
+    </VirTree>
 </div>
 </template>
 
 <style lang="scss" scoped>
 .listContainer {
-    height: 400px;
+    height: 100%;
     overflow: hidden;
-    :deep(.virt-tree-item){
+    :deep(.vir-tree){
         --virt-tree-color-node-bg: transparent;
+        // --vir-tree-indent: 6px;
+    }
+    :deep(.vir-tree-node){
+        display: flex;
+        flex-flow: row nowrap;
+        gap: var(--app-space-xxs);
+        justify-content: flex-start;
+        align-items: center;
+        white-space: nowrap;
+        .node-arrow.expanded{
+            transform: rotate(0) !important;
+        }
     }
 }
 </style>

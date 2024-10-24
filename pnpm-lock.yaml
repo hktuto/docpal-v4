@@ -495,6 +495,9 @@ importers:
       '@atlaskit/pragmatic-drag-and-drop-hitbox':
         specifier: ^1.0.3
         version: 1.0.3
+      '@ysx-libs/vue-virtual-tree':
+        specifier: ^0.0.13
+        version: 0.0.13(vue@3.5.6(typescript@5.6.2))
       nuxt:
         specifier: 3.13.2
         version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(encoding@0.1.13)(ioredis@5.4.1)(magicast@0.3.5)(rollup@4.22.0)(sass@1.79.2)(terser@5.33.0)(typescript@5.6.2)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3)
@@ -2172,6 +2175,11 @@ packages:
   '@xmldom/xmldom@0.8.10':
     resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
     engines: {node: '>=10.0.0'}
+
+  '@ysx-libs/vue-virtual-tree@0.0.13':
+    resolution: {integrity: sha512-MKRSuGWeTMh6xe+2giFLR0LCkIIF6sk+eDnwndQ6mvH4I4/ufr3UPxTce9N5d4j1cRQxzlaVhOiaXfLf33cM1Q==}
+    peerDependencies:
+      vue: ^3.2.25
 
   abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -4037,6 +4045,9 @@ packages:
     resolution: {integrity: sha512-bAxsR8BVfj60DWXHE3u30oHzfl4G7khkSuPW+qvpd7jFRHm7dLxOjUk1EHACJ/hxLY8phGJ0YhYHZo7jil7Qdg==}
     engines: {node: '>= 8'}
 
+  mitt@2.1.0:
+    resolution: {integrity: sha512-ILj2TpLiysu2wkBbWjAmww7TkZb65aiQO+DkVdUTBpBXq+MHYiETENkKFMtsJZX1Lf4pe4QOrTSjIfUwN5lRdg==}
+
   mitt@3.0.1:
     resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
 
@@ -5610,6 +5621,16 @@ packages:
     peerDependencies:
       vue: ^3
 
+  vue-observe-visibility@2.0.0-alpha.1:
+    resolution: {integrity: sha512-flFbp/gs9pZniXR6fans8smv1kDScJ8RS7rEpMjhVabiKeq7Qz3D9+eGsypncjfIyyU84saU88XZ0zjbD6Gq/g==}
+    peerDependencies:
+      vue: ^3.0.0
+
+  vue-resize@2.0.0-alpha.1:
+    resolution: {integrity: sha512-7+iqOueLU7uc9NrMfrzbG8hwMqchfVfSzpVlCMeJQe4pyibqyoifDNbKTZvwxZKDvGkB+PdFeKvnGZMoEb8esg==}
+    peerDependencies:
+      vue: ^3.0.0
+
   vue-router@4.4.5:
     resolution: {integrity: sha512-4fKZygS8cH1yCyuabAXGUAsyi1b2/o/OKgu/RUb+znIYOxPRxdkytJEx+0wGcpBE1pX6vUgh5jwWOKRGvuA/7Q==}
     peerDependencies:
@@ -5629,6 +5650,11 @@ packages:
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
+
+  vue-virtual-scroller@2.0.0-beta.8:
+    resolution: {integrity: sha512-b8/f5NQ5nIEBRTNi6GcPItE4s7kxNHw2AIHLtDp+2QvqdTjVN0FgONwX9cr53jWRgnu+HRLPaWDOR2JPI5MTfQ==}
+    peerDependencies:
+      vue: ^3.2.0
 
   vue@2.7.16:
     resolution: {integrity: sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==}
@@ -7768,6 +7794,11 @@ snapshots:
 
   '@xmldom/xmldom@0.8.10': {}
 
+  '@ysx-libs/vue-virtual-tree@0.0.13(vue@3.5.6(typescript@5.6.2))':
+    dependencies:
+      vue: 3.5.6(typescript@5.6.2)
+      vue-virtual-scroller: 2.0.0-beta.8(vue@3.5.6(typescript@5.6.2))
+
   abbrev@1.1.1: {}
 
   abbrev@2.0.0: {}
@@ -9840,6 +9871,8 @@ snapshots:
       minipass: 3.3.6
       yallist: 4.0.0
 
+  mitt@2.1.0: {}
+
   mitt@3.0.1: {}
 
   mkdirp@1.0.4: {}
@@ -11668,6 +11701,14 @@ snapshots:
     dependencies:
       vue: 3.5.6(typescript@5.6.2)
 
+  vue-observe-visibility@2.0.0-alpha.1(vue@3.5.6(typescript@5.6.2)):
+    dependencies:
+      vue: 3.5.6(typescript@5.6.2)
+
+  vue-resize@2.0.0-alpha.1(vue@3.5.6(typescript@5.6.2)):
+    dependencies:
+      vue: 3.5.6(typescript@5.6.2)
+
   vue-router@4.4.5(vue@3.5.6(typescript@5.6.2)):
     dependencies:
       '@vue/devtools-api': 6.6.4
@@ -11684,6 +11725,13 @@ snapshots:
     dependencies:
       vue: 3.5.6(typescript@5.6.2)
       vue-demi: 0.14.10(vue@3.5.6(typescript@5.6.2))
+
+  vue-virtual-scroller@2.0.0-beta.8(vue@3.5.6(typescript@5.6.2)):
+    dependencies:
+      mitt: 2.1.0
+      vue: 3.5.6(typescript@5.6.2)
+      vue-observe-visibility: 2.0.0-alpha.1(vue@3.5.6(typescript@5.6.2))
+      vue-resize: 2.0.0-alpha.1(vue@3.5.6(typescript@5.6.2))
 
   vue@2.7.16:
     dependencies:
