@@ -80,14 +80,14 @@ const graphOptions = {
 
         validateConnection({ sourceMagnet, targetMagnet }:any) {
             // 只能从输出连接桩创建连接
-            if (!sourceMagnet || sourceMagnet.getAttribute('port-group') === 'from') {
-                return false
-            }
+            // if (!sourceMagnet || sourceMagnet.getAttribute('port-group') === 'from') {
+            //     return false
+            // }
 
-            // 只能连接到输入连接桩
-            if (!targetMagnet || targetMagnet.getAttribute('port-group') !== 'from') {
-                return false
-            }
+            // // 只能连接到输入连接桩
+            // if (!targetMagnet || targetMagnet.getAttribute('port-group') !== 'from') {
+            //     return false
+            // }
 
             return true
         },
@@ -101,6 +101,8 @@ defineExpose({
 </script>
 
 <template>
+    <div class="bpmnEditorContainer">
+
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
         <div class="toolbar">
             <BpmnHistory v-if="ready"/>
@@ -109,10 +111,24 @@ defineExpose({
         <BpmnEdge v-if="ready" />
         <BpmnNode v-if="ready" />
     </BpmnViewer>
+    <div class="actions">
+
+    <slot name="actions" />
+    </div>
+    </div>
 </template>
 
 <style scoped lang="scss">
-
+.bpmnEditorContainer{
+    width:100%;
+    height:100%;
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr min-content;
+}
+.actions{
+    padding: var(--app-space-xs);
+}
 .toolbar{
     position: absolute;
     left: var(--app-space-m);
