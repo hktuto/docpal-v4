@@ -3,9 +3,12 @@ import fs from 'node:fs';
 import { generateApi } from "swagger-typescript-api";
 import dotenv from 'dotenv'
 
-dotenv.config({
-    path:'../../env/.env.dev'
-})
+if(!process.env.BASEURL || !process.env.ADMINURL){
+    dotenv.config({
+        path:'../../env/.env.dev'
+    })
+}
+console.log("process.env.BASEURL",process.env.BASEURL)
 
 
 const endpoint = [
