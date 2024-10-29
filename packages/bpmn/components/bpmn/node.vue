@@ -1,13 +1,22 @@
 <script lang="ts" setup>
-import {BPMN_PROVIDER, createError } from '#imports'
+import {BPMN_PROVIDER, createError, bpmnElement } from '#imports'
+import type { BpmnElement } from '#imports'
 const graphProvider = inject(BPMN_PROVIDER)
 if(!graphProvider) {
     throw createError('graph provider not found')
     
 }
-
+const opened = ref(false)
+const editComponent = ref()
+const ignoreTypeList = ['endEvent']
+const selectedNode = ref()
 function setupNode(){
-
+    graphProvider?.graph.value?.on('blank:dblclick', () => {
+        graphProvider?.graph.value?.zoomToFit({
+            padding: 24
+        })
+        opened.value = false
+    })
     graphProvider?.graph.value?.on('node:mouseenter', ({cell}:any) => {
         // 获取该节点下的所有连接桩
         const ports = cell.getPorts() || []
@@ -30,6 +39,32 @@ function setupNode(){
             })
         })
     })
+
+    graphProvider?.graph.value?.on('node:dblclick', handleNodeClick )
+}
+
+function handleNodeClick({e,x,y,view,node}:any) {
+    const point = node.position()
+        graphProvider?.graph.value?.zoomTo(1.2);
+        // graphProvider?.graph.value?.centerCell(node)
+        graphProvider?.graph.value?.centerPoint(point.x + (node.size().width / 2) + 100, point.y + 200)
+        if(ignoreTypeList.includes(node.data.type || "")) {
+            return
+        }
+        selectedNode.value = node
+        const type = node.data.type as BpmnElementType
+        if(type) {
+            const bpmnElementType = bpmnElement[type]
+            if(bpmnElementType.contextMenuComponent) {
+                if(typeof bpmnElementType.contextMenuComponent === 'string') {
+                    editComponent.value = resolveComponent(bpmnElementType.contextMenuComponent)
+                }else{
+                    const element = bpmnElementType.contextMenuComponent(node.data.data)
+                    editComponent.value = element
+                }
+                opened.value = true
+            }
+        }
 }
 
 onMounted(() => {
@@ -38,6 +73,34 @@ onMounted(() => {
 </script>
 
 <template>
-    <div></div>
-
+    <div :class="{contextHandler:true, opened}">
+        <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
+    </div>
 </template>
+
+<style scoped lang="scss">
+.contextHandler{
+    position: absolute;
+    width: 280px;
+    height: calc(100% - var(--app-space-xs) * 2);
+    overflow: auto;
+    right: var(--app-space-xs);
+    top: var(--app-space-xs);
+    z-index: 2;
+    background: #fff;
+    opacity: 0;
+    padding: var(--app-space-xs);
+    border-radius: var(--app-border-radius-m);
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+    backdrop-filter: blur(10px);
+    transform: translateX(100%);
+    transition: all .2s ease-in-out;
+    &.opened{
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+.opened{
+    opacity: 1;
+}
+</style>

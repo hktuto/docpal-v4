@@ -83,13 +83,10 @@ onMounted(async () => {
 <template>
 <div class="listContainer">
     <VirTree ref="virTree" :source="tree" :virtual="{ size: 26, remain: 15 }" :load-data="getChildren" >
-        <template #icon="{ loading, expanded, node }">
-            <Icon v-if="loading" name="tabler:loader" />
-            <Icon v-else-if="expanded" name="lucide:folder-open" />
-            <Icon v-else-if="node.origin.isFolder" name="lucide:folder" />
-            <Icon v-else name="lucide:file" />
-        </template>
+        
         <template #node="{ node }">
+            <Icon v-if="node.origin.isFolder" name="lucide:folder" />
+            <Icon v-else name="lucide:file" />
             <span>{{ node.origin.name }}</span>
          </template>
     </VirTree>
@@ -112,7 +109,7 @@ onMounted(async () => {
         align-items: center;
         white-space: nowrap;
         .node-arrow.expanded{
-            transform: rotate(0) !important;
+            // transform: rotate(0) !important;
         }
     }
 }

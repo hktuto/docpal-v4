@@ -86,7 +86,8 @@ export type BpmnElement = {
             type: BpmnElementType
             data: any
         },
-        clickHandler: (args:{node:Cell, view:Cell}) => void
+        clickHandler: (args:{node:Cell, view:Cell}) => void,
+        contextMenuComponent?: string | Function ,
     }
 }
 
@@ -115,7 +116,8 @@ export const bpmnElement:BpmnElement = {
             type: BpmnElementType['startEvent'],
             data
         }),
-        clickHandler:() => {}
+        clickHandler:() => {},
+        contextMenuComponent:'LazyBpmnContextStartEvent',
     },
     endEvent:{
         nodeStyle:() =>({
@@ -143,7 +145,9 @@ export const bpmnElement:BpmnElement = {
             type: BpmnElementType['endEvent'],
             data
         }),
-        clickHandler:() => {}
+        clickHandler:() => {},
+        contextMenuComponent:'LazyBpmnContextEndEvent',
+
     },
     userTask:{
         nodeStyle:() =>({...squareNodeStyle('#0099ff', "UserTask", '/bpmn/icons/form.svg'),
@@ -180,7 +184,8 @@ export const bpmnElement:BpmnElement = {
             
             data
         }),
-        clickHandler:() => {}
+        clickHandler:() => {},
+        contextMenuComponent:'LazyBpmnContextUserTask',
     },
     exclusiveGateway:{
         nodeStyle:(item:any) => ({
@@ -220,7 +225,9 @@ export const bpmnElement:BpmnElement = {
                 ...data
             }
         }),
-        clickHandler:() => {}
+        clickHandler:() => {},
+        contextMenuComponent:'LazyBpmnContextExclusiveGateway',
+
     },
     boundaryEvent:{
         nodeStyle:(item:any) => ({
@@ -258,7 +265,9 @@ export const bpmnElement:BpmnElement = {
             name:label,
             data
         }),
-        clickHandler:() => {}
+        clickHandler:() => {},
+        contextMenuComponent:'LazyBpmnContextBoundaryEvent',
+
     },
     serviceTask:{
         nodeStyle:(item:any) => {
@@ -321,7 +330,22 @@ export const bpmnElement:BpmnElement = {
             
             data
         }),
-        clickHandler:() => {}
+        clickHandler:() => {},
+        contextMenuComponent:(item:any) => {
+            const type = item['attr_flowable:delegateExpression']
+            if(!type) {
+                return 'LazyBpmnContextServiceTask'
+            }
+            switch(type){
+                case '${sendNotificationDelegate}':
+                    return 'LazyBpmnContextEmail'
+                case '${generateDocumentDelegate}':
+                    return 'LazyBpmnContextDocument'
+                case '${filingGenerateDocumentDelegate}':
+                    return 'LazyBpmnContextFiling'
+            }
+        },
+
     },
     // scriptTask:{
     //     nodeStyle:squareNodeStyle('#29CC6A', '/bpmn/icons/email.svg'),
