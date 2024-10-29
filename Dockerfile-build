@@ -1,0 +1,4 @@
+FROM electronuserland/builder:20-wine AS base
+RUN apt-get update
+RUN apt-get install 
+RUN npm i -g pnpm

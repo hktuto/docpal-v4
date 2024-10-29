@@ -75,14 +75,15 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
                         result.edges.push({
                             id: item.attr_attachedToRef + '_' + item.attr_id,
                             label:"",
-                            source: {cell:item.attr_attachedToRef, port:'top'},
-                            target: {cell:item.attr_id, port: 'from'},
+                            source: {cell:item.attr_attachedToRef, port:'right'},
+                            target: {cell:item.attr_id, port: 'left'},
                             connector: {
                                 name: 'rounded',
                                 args: {
                                   radius: 20,
                                 },
                               },
+                              router:"manhattan",
                             data: {
                                 type:'linkToBoundary',
                                 attachedToRef: item.attr_attachedToRef
@@ -106,6 +107,7 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
                               radius: 20,
                             },
                           },
+                          router:"manhattan",
                         data: nodeSetting.newNodeData(item.attr_id, item.attr_name, item),
                     })
                 }
@@ -122,6 +124,7 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
                           radius: 20,
                         },
                       },
+                      router:"manhattan",
                     data: nodeSetting.newNodeData(item.attr_id, item.attr_name, item),
                 })
                 

@@ -2,11 +2,8 @@
 import {MenuRouterKey} from '#imports'
 import { ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
-const menuManager = inject('menu')
 const { t } = useI18n()
-if(!menuManager) {
-    throw createError('menu manger not found')
-}
+
 const { id } = defineProps<{
     id:string
 }>()

@@ -8,28 +8,6 @@ Graph.registerNode(
         ports: {
             groups: {
                 from: {
-                    position: 'left',
-                    attrs: {
-                        circle: {
-                            magnet: true,
-                            stroke: 'transparent',
-                            fill: 'transparent',
-                            r: 5,
-                        },
-                    },
-                },
-                to: {
-                    position: 'right',
-                    attrs: {
-                        circle: {
-                            magnet: true,
-                            stroke: 'transparent',
-                            fill: 'transparent',
-                            r: 5,
-                        },
-                    },
-                },
-                top: {
                     position: 'top',
                     attrs: {
                         circle: {
@@ -40,8 +18,30 @@ Graph.registerNode(
                         },
                     },
                 },
-                bottom: {
+                to: {
                     position: 'bottom',
+                    attrs: {
+                        circle: {
+                            magnet: true,
+                            stroke: 'transparent',
+                            fill: 'transparent',
+                            r: 5,
+                        },
+                    },
+                },
+                left: {
+                    position: 'left',
+                    attrs: {
+                        circle: {
+                            magnet: true,
+                            stroke: 'transparent',
+                            fill: 'transparent',
+                            r: 5,
+                        },
+                    },
+                },
+                right: {
+                    position: 'right',
                     attrs: {
                         circle: {
                             magnet: true,
@@ -128,6 +128,7 @@ export const bpmnElement:BpmnElement = {
                         id: 'from',
                         group: 'from',
                     },
+                    
                 ]
             },
     }),
@@ -158,12 +159,12 @@ export const bpmnElement:BpmnElement = {
                         group: 'to',
                     },
                     {
-                        id:'top',
-                        group:'top',
+                        id:'left',
+                        group:'left',
                     },
                     {
-                        id:'bottom',
-                        group:'bottom',
+                        id:'right',
+                        group:'right',
                     },
                 ]
             },
@@ -194,6 +195,14 @@ export const bpmnElement:BpmnElement = {
                     {
                         id: 'to',
                         group: 'to',
+                    },
+                    {
+                        id:'left',
+                        group:'left',
+                    },
+                    {
+                        id:'right',
+                        group:'right',
                     },
                 ]
             },
@@ -227,6 +236,14 @@ export const bpmnElement:BpmnElement = {
                     {
                         id: 'to',
                         group: 'to',
+                    },
+                    {
+                        id:'left',
+                        group:'left',
+                    },
+                    {
+                        id:'right',
+                        group:'right',
                     },
                 ]
             },
@@ -280,6 +297,14 @@ export const bpmnElement:BpmnElement = {
                         {
                             id: 'to',
                             group: 'to',
+                        },
+                        {
+                            id:'left',
+                            group:'left',
+                        },
+                        {
+                            id:'right',
+                            group:'right',
                         },
                     ]
                 },

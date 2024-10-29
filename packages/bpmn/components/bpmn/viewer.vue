@@ -77,9 +77,9 @@ function autoLayout(xml:string){
     bpmnJson.value = json;
     const layout =  new DagreLayout({
         type: 'dagre',
-        rankdir: 'LR',
-        ranksep: 80,
-        nodesep: 60,
+        rankdir: 'TB',
+        ranksep: 40,
+        nodesep: 40,
     });
     const result = jsonToX6Node(bpmnJson.value, flatGraphObject.value );
     const position = layout.layout(result)

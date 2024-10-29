@@ -29,6 +29,14 @@ function setupEdge(){
                 },
             },
             {
+                name:'source-arrowhead',
+                args:{
+                    attrs: {
+                        fill: 'black',
+                    },
+                }
+            },
+            {
                 name: 'button-remove',
                 args:{
                     distance: -20
