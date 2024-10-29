@@ -107,7 +107,6 @@ defineExpose({
         <div class="toolbar">
             <BpmnHistory v-if="ready"/>
         </div>
-        <BpmnSidebar v-if="ready" />
         <BpmnEdge v-if="ready" />
         <BpmnNode v-if="ready" />
     </BpmnViewer>

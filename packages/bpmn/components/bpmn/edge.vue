@@ -20,6 +20,7 @@ function setupEdge(){
                     attrs: { fill: '#666' },
                 },
             },
+            'segments',
             {
                 name: 'target-arrowhead',
                 args: {
