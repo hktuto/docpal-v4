@@ -5,13 +5,12 @@ import dotenv from 'dotenv'
 //@ts-ignore
 import setting from './setting.json'
 
-console.log("process.env.CLIENTURL",setting.CLIENTURL)
 
 
 
 const endpoint = [
-    {name: 'client', url:`${setting.CLIENTURL}/v3/api-docs`, className:"Client"},
-    {name: 'admin', url:`${setting.ADMINURL}/admin/v3/api-docs`, className:"Admin"},
+    {name: 'client', url:`${setting.API_URL}/v3/api-docs`, className:"Client"},
+    {name: 'admin', url:`${setting.API_URL}/admin/v3/api-docs`, className:"Admin"},
 ]
 
 async function generate(){
