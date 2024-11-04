@@ -44,27 +44,25 @@ function setupNode(){
 }
 
 function handleNodeClick({e,x,y,view,node}:any) {
-    const point = node.position()
-        graphProvider?.graph.value?.zoomTo(1.2);
-        // graphProvider?.graph.value?.centerCell(node)
-        graphProvider?.graph.value?.centerPoint(point.x + (node.size().width / 2) + 100, point.y + 200)
-        if(ignoreTypeList.includes(node.data.type || "")) {
-            return
-        }
-        selectedNode.value = node
-        const type = node.data.type as BpmnElementType
-        if(type) {
-            const bpmnElementType = bpmnElement[type]
-            if(bpmnElementType.contextMenuComponent) {
-                if(typeof bpmnElementType.contextMenuComponent === 'string') {
-                    editComponent.value = resolveComponent(bpmnElementType.contextMenuComponent)
-                }else{
-                    const element = bpmnElementType.contextMenuComponent(node.data.data)
-                    editComponent.value = element
-                }
-                opened.value = true
+    graphProvider?.graph.value?.zoomTo(2);
+    graphProvider?.graph.value?.centerCell(node)
+    if(ignoreTypeList.includes(node.data.type || "")) {
+        return
+    }
+    selectedNode.value = node
+    const type = node.data.type as BpmnElementType
+    if(type) {
+        const bpmnElementType = bpmnElement[type]
+        if(bpmnElementType.contextMenuComponent) {
+            if(typeof bpmnElementType.contextMenuComponent === 'string') {
+                editComponent.value = resolveComponent(bpmnElementType.contextMenuComponent)
+            }else{
+                const element = bpmnElementType.contextMenuComponent(node.data.data)
+                editComponent.value = element
             }
+            opened.value = true
         }
+    }
 }
 
 onMounted(() => {

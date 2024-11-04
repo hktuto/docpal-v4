@@ -2,18 +2,16 @@ import path from "node:path";
 import fs from 'node:fs';
 import { generateApi } from "swagger-typescript-api";
 import dotenv from 'dotenv'
+//@ts-ignore
+import setting from './setting.json'
 
-if(!process.env.BASEURL || !process.env.ADMINURL){
-    dotenv.config({
-        path:'../../env/.env.dev'
-    })
-}
-console.log("process.env.BASEURL",process.env.BASEURL)
+console.log("process.env.CLIENTURL",setting.CLIENTURL)
+
 
 
 const endpoint = [
-    {name: 'client', url:`${process.env.BASEURL}/v3/api-docs`, className:"Client"},
-    {name: 'admin', url:`${process.env.ADMINURL}/admin/v3/api-docs`, className:"Admin"},
+    {name: 'client', url:`${setting.CLIENTURL}/v3/api-docs`, className:"Client"},
+    {name: 'admin', url:`${setting.ADMINURL}/admin/v3/api-docs`, className:"Admin"},
 ]
 
 async function generate(){
