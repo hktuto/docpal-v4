@@ -3,7 +3,7 @@
   "private": true,
   "version": "4.0.0",
   "type": "module",
-  "workspaces":[
+  "workspaces": [
     "libraries/*",
     "packages/*",
     "apps/*",
@@ -11,14 +11,12 @@
   ],
   "scripts": {
     "build": "nuxt build",
-    "test": "vitest",
-    "api": "pnpm --filter api generate",
-    "postinstall": "npm run api"
+    "test": "vitest"
   },
   "dependencies": {
     "@element-plus/nuxt": "^1.0.10",
     "@vueuse/core": "^11.0.3",
-    "element-plus": "^2.8.2",
+    "cross-env": "^7.0.3",    "element-plus": "^2.8.2",
     "keycloak-js": "^25.0.4",
     "nuxt": "3.13.2",
     "nuxt-auth-utils": "^0.3.7",
