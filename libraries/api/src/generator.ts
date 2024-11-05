@@ -9,8 +9,8 @@ import setting from './setting.json'
 
 
 const endpoint = [
-    {name: 'client', url:`${setting.API_URL}/v3/api-docs`, className:"Client"},
-    {name: 'admin', url:`${setting.API_URL}/admin/v3/api-docs`, className:"Admin"},
+    {name: 'client', url:`${setting.CLIENT_URL}/v3/api-docs`, className:"Client"},
+    {name: 'admin', url:`${setting.ADMIN_URL}/v3/api-docs`, className:"Admin"},
 ]
 
 async function generate(){
