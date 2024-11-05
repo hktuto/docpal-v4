@@ -3,13 +3,14 @@ const argv = require('minimist')(process.argv.slice(2));
 
 function normalizeSetting(){
     let path = argv.path || '../api/src'
-    const { API_URL } = argv
-    if(!API_URL ) throw new Error('Missing arguments')
+    const { CLIENT_URL, ADMIN_URL } = argv
+    if(!CLIENT_URL || !ADMIN_URL ) throw new Error('Missing arguments')
     
     return {
         path,
         setting:{
-            API_URL
+            CLIENT_URL,
+            ADMIN_URL
         }
     }
 }
