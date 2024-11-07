@@ -1,12 +1,17 @@
 <script lang="ts" setup>
 import {MenuRouterKey} from '#imports'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElNotification } from 'element-plus'
 import { adminApi } from 'api';
 const { t } = useI18n()
 
-const { id } = defineProps<{
+const { id, currentVersion, productionVersion, name } = defineProps<{
     id:string
+    currentVersion: string,
+    productionVersion: string,
+    name:string
 }>()
+
+const routerInject = inject(MenuRouterKey)
 
 const bpmnFile = ref()
 const WorkflowEditorRef = ref()
@@ -16,75 +21,69 @@ const state = reactive<any>({
     newStatus: false
 })
 
-async function getDetail(id: string) {
-    const {data } = await adminApi.workflowProcessDefinitionController.getDraft(id)
-     state.detail = data
-}
 
-async function getXML(id: string) {
-    const blob = await adminApi.workflowProcessDefinitionController.getXml(id, {
+async function getWorkflow() {
+    const blob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
     }) 
+    const json = await adminApi.workflowVersionController.getJson({draftId:id, versionNumber:currentVersion}, {})
     // @ts-ignore
     const file = await blob.text()
     bpmnFile.value = file
-    WorkflowEditorRef.value.init( bpmnFile.value)
-}
-async function handleSave(isDraft: boolean = true) {
-
-    const formRequest = await WorkflowEditorRef.value.validateForm()
-    if(!state.detail.draftId) return
-    console.log("handleSave")
-    state.loading = true
-    try {
-        const { blob, name, key } = WorkflowEditorRef.value.save()
-        const formData = new FormData();
-        
-        formData.append('name', name)
-        formData.append('key', key)
-        formData.append('draftId', state.detail.draftId)
-        formData.append('file', blob, 'workflow.bpmn.xml')
-        formData.append('isDraft', isDraft)
-        const { data } = await adminApi.workflowProcessDefinitionController.postUpload({},formData)
-        state.detail = await data
-        if(!isDraft){
-        
-        await Promise.all(formRequest.map((param: any) => {
-             return adminApi.formPropertiesRelationController.postSave(param)
-        }))
-        }
-    } catch (error) {
-    console.log(error)
+    if(json && json.data){
+        WorkflowEditorRef.value.init( bpmnFile.value, JSON.parse(json.data))
+    }else{
+        WorkflowEditorRef.value.init( bpmnFile.value, json)
     }
-
-    state.loading = false
-}
-async function handleDeactive() {
-    const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToDeactivate')}`)
-    if(action !== 'confirm') return
-    state.loading = true
-    try {
-        await adminApi.workflowProcessDefinitionController.deleteSuspend(state.detail.draftId)
-        getDetail(id as string)
-    } catch (error) {
-    }
-    state.loading = false
-    }
-async function handleActive() {
-    state.loading = true
-    try {
-        await adminApi.workflowProcessDefinitionController.postActive(state.detail.draftId)
-        // await ActiveWorkflowApi(state.detail.draftId)
-        getDetail(id as string)
-    } catch (error) {
-    }
-    state.loading = false
+    routerInject?.updateTabName(name + ` - (${currentVersion})`)
 }
 
-onActivated(() => {
-    getDetail(id)
-    getXML(id)
+async function saveDraft() {
+    const { xml, x6Json } = WorkflowEditorRef.value.getData()
+    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+    const form:any = new FormData();
+    form.append('name', name)
+    form.append('versionId', currentVersion)
+    form.append('draftId', id)
+    form.append('jsonValue', JSON.stringify(x6Json))
+    form.append('file', blob, 'workflow.bpmn.xml')
+    form.append('isDraft', true)
+
+    await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
+}
+
+provide('workflowDetail',{
+    saveDraft
 })
+
+async function saveAsNewVersion(){
+    const { xml, x6Json } = WorkflowEditorRef.value.getData()
+    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+    const form:any = new FormData();
+    form.append('id', currentVersion)
+    form.append('draftId', id)
+    form.append('jsonValue', JSON.stringify(x6Json))
+    form.append('file', blob, 'workflow.bpmn.xml')
+    
+    const {data}:any = await adminApi.workflowVersionController.postNew({requestDTO:{}},form)
+    ElNotification.success(t('common.success'))
+    routerInject?.updateProps({
+        id,
+        currentVersion: data.versionNumber,
+        productionVersion: data.productionVersion
+    })
+
+}
+
+watch(() => id, (newWorkflowId) => {
+    if(newWorkflowId) {
+        getWorkflow()
+    }
+},{
+    immediate:true
+})
+
+
 
 </script>
 
@@ -92,10 +91,14 @@ onActivated(() => {
     <div class="pageContainer">
         <BpmnEditor ref="WorkflowEditorRef"  >
             <template #actions>
-                <el-button v-if="state.detail.publishStatus === 'A' && state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleDeactive()">{{$t('actions.inactive')}}</el-button>
-                <el-button v-else-if="state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleActive()">{{$t('actions.active')}}</el-button>
-                <el-button :loading="state.loading" type="primary" @click="handleSave(true)">{{$t('button.saveDraft')}}</el-button>
-                <el-button v-if="state.detail.status !== 'A'" :loading="state.loading"  type="primary" @click="handleSave(false)">{{$t('button.publish')}}</el-button>
+                <template v-if="!productionVersion || productionVersion !== currentVersion">
+                    <ElButton type="primary">Promote To Prodocution : {{ currentVersion }}</ElButton>
+                </template>
+                <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
+                <!-- <el-button v-if="state.detail.publishStatus === 'A' && state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleDeactive()">{{$t('actions.inactive')}}</el-button> -->
+                <!-- <el-button v-else-if="state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleActive()">{{$t('actions.active')}}</el-button> -->
+                <!-- <el-button :loading="state.loading" type="primary" @click="handleSave(true)">{{$t('button.saveDraft')}}</el-button> -->
+                <!-- <el-button v-if="state.detail.status !== 'A'" :loading="state.loading"  type="primary" @click="handleSave(false)">{{$t('button.publish')}}</el-button> -->
             </template>
         </BpmnEditor>
     </div>

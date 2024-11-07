@@ -18,9 +18,12 @@ export interface RouterParams extends DroppableItem {
     menuKey:symbol,
 }
 
+
 interface MenuProvider {
     navigateTo:(param:RouterParams) => void
-    menuSymbol:symbol
+    menuSymbol:symbol,
+    updateProps(newProps:any):void
+    updateTabName(newName:string):void
 }
 
 export const menuSymbol = Symbol('menu')

@@ -67,7 +67,15 @@ function init(bpmnXml :string, x6Json?:any){
         container: containerEl,
         ...graphOptions
     });
-    autoLayout(bpmnXml)
+    if(x6Json) {
+        const {json} = bpmnStringToJson(bpmnXml)
+        bpmnJson.value = json;
+
+        graph.value.fromJSON(x6Json)
+        nextTick(fitIn)
+    }else{
+        autoLayout(bpmnXml)
+    }
     emits('graphReady', x6Json)
 }
 
@@ -85,27 +93,31 @@ function autoLayout(xml:string){
     const position = layout.layout(result)
     graph.value?.fromJSON(position);
     // check window width, if width is more than 1024, zoom graph with padding 200, more than 1280 with padding 300
-    nextTick(() => {
+    nextTick(fitIn)
+}
 
-        if(window.innerWidth >= 1280){
-            graph.value?.zoomToFit({padding: 100})
-        }
-        graph.value?.zoomToFit({padding: 40})
-    })
+function fitIn(){
+    if(window.innerWidth >= 1280){
+        graph.value?.zoomToFit({padding: 100})
+    }
+    graph.value?.zoomToFit({padding: 40})
 }
 
 
 provide(BPMN_PROVIDER, {
     init,
+    
     graph,
     bpmnJson,
     flatGraphObject,
+    
     key: Symbol('BPMN_PROVIDER_KEY')
 })
 
 defineExpose({
     init,
-    graph
+    graph,
+    bpmnJson
 })
 
 </script>
