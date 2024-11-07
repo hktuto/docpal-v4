@@ -11,6 +11,8 @@ const { id, currentVersion, productionVersion, name } = defineProps<{
     name:string
 }>()
 
+const draftDetail = ref<any>({})
+
 const routerInject = inject(MenuRouterKey)
 
 const bpmnFile = ref()
@@ -23,12 +25,14 @@ const state = reactive<any>({
 
 
 async function getWorkflow() {
+    const data = await adminApi.workflowProcessDefinitionController.getDraft(id)
     const blob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
     }) 
     const json = await adminApi.workflowVersionController.getJson({draftId:id, versionNumber:currentVersion}, {})
     // @ts-ignore
     const file = await blob.text()
+    draftDetail.value = data.data;
     bpmnFile.value = file
     if(json && json.data){
         WorkflowEditorRef.value.init( bpmnFile.value, JSON.parse(json.data))
@@ -90,6 +94,7 @@ watch(() => id, (newWorkflowId) => {
 <template>
     <div class="pageContainer">
         <BpmnEditor ref="WorkflowEditorRef"  >
+            
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">
                     <ElButton type="primary">Promote To Prodocution : {{ currentVersion }}</ElButton>
