@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {BPMN_PROVIDER, createError, bpmnElement } from '#imports'
 import type { BpmnElement } from '#imports'
+import { useEventListener } from '@vueuse/core';
 const graphProvider = inject(BPMN_PROVIDER)
 if(!graphProvider) {
     throw createError('graph provider not found')
@@ -43,6 +44,16 @@ function setupNode(){
     graphProvider?.graph.value?.on('node:dblclick', handleNodeClick )
 }
 
+function openInfo() {
+    opened.value = true;
+    editComponent.value = resolveComponent('LazyBpmnSidebarInfo');
+}
+function openFolderCabinet() {
+    opened.value = true;
+
+    editComponent.value = resolveComponent('LazyBpmnSidebarFolderCabinet');
+}
+
 function handleNodeClick({e,x,y,view,node}:any) {
     graphProvider?.graph.value?.zoomTo(2);
     graphProvider?.graph.value?.centerCell(node)
@@ -65,13 +76,23 @@ function handleNodeClick({e,x,y,view,node}:any) {
     }
 }
 
+
 onMounted(() => {
     setupNode()
+})
+
+defineExpose({
+    openInfo,
+    openFolderCabinet
 })
 </script>
 
 <template>
     <div :class="{contextHandler:true, opened}">
+        <div class="propertiesHeader" @click="opened = false">
+            <Icon name="lucide:settings-2" />
+            Propertie
+        </div>
         <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
     </div>
 </template>
@@ -85,7 +106,8 @@ onMounted(() => {
     right: var(--app-space-xs);
     top: var(--app-space-xs);
     z-index: 2;
-    background: #fff;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(10px);
     opacity: 0;
     padding: var(--app-space-xs);
     border-radius: var(--app-border-radius-m);
