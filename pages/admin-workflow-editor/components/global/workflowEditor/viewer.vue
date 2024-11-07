@@ -15,8 +15,15 @@ async function getData() {
     const bpmn = await xmlBlob.text()
     const { data: x6Json} = await adminApi.workflowProcessDefinitionController.getJson(id, {})
     viewerRef.value?.init(bpmn, x6Json)
+    console.log("getData", bpmn)
     loading.value = false;
 }
+
+watch(() => id, (newId) => {
+    if(newId) {
+        getData()
+    }
+})
 
 onMounted(() => {
     getData()
@@ -24,5 +31,15 @@ onMounted(() => {
 </script>
 
 <template>
-    <BpmnViewer ref="viewerRef" :options="{}" />
+    <div class="viewerContainer">
+
+        <BpmnViewer ref="viewerRef" :options="{}" />
+    </div>
 </template>
+
+<style lang="scss" scoped>
+.viewerContainer{
+    height: 600px;
+    // height: 100%;
+}
+</style>
