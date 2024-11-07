@@ -10,7 +10,11 @@ function init(bpmnXml :string, x6Json?:any){
 const viewerRef = ref()
 const ready = ref(false)
 
-const toolbarLabelShow = ref(true)
+// el
+const nodeEl = ref()
+const edgeEl = ref()
+
+const toolbarLabelShow = ref(false)
 
 function graphReady(){
     ready.value = true
@@ -101,6 +105,17 @@ function getData(){
     return graphToBpmnJson(viewerRef.value.graph, bpmnJson)
 }
 
+function openInfo(){
+    nodeEl.value.openInfo()
+}
+
+function openCabinet(){
+    nodeEl.value.openFolderCabinet()
+}
+
+
+
+
 defineExpose({
     init,
     getData
@@ -114,19 +129,21 @@ defineExpose({
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
         <div :class="{toolbar:true, noLabel: !toolbarLabelShow} ">
             <BpmnHistory v-if="ready"/>
-            <BpmnInfo v-if="ready" />
-            <BpmnFolderCabinet v-if="ready" />
+            <BpmnInfo v-if="ready" @click="openInfo" />
+            <BpmnFolderCabinet v-if="ready" @click="openCabinet" />
             <div class="icon" @click="toolbarLabelShow = !toolbarLabelShow">
                 <ElTooltip content="Show/Hide Toolbar Label" placement="right">
                     <Icon :name="toolbarLabelShow ? 'lucide:eye' : 'lucide:eye-closed'" />
                 </ElTooltip>
                 <div class="label">Toolbar Label</div>
             </div>
+            
         </div>
-        <BpmnEdge v-if="ready" />
-        <BpmnNode v-if="ready" />
+        <BpmnEdge v-if="ready" ref="edgeEl" />
+        <BpmnNode v-if="ready" ref="nodeEl" />
         
     </BpmnViewer>
+
     <div class="actions">
 
         <slot name="actions" />
@@ -136,6 +153,7 @@ defineExpose({
 </template>
 
 <style scoped lang="scss">
+
 .bpmnEditorContainer{
     width:100%;
     height:100%;
