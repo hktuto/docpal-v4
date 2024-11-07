@@ -54,6 +54,11 @@ function openFolderCabinet() {
     editComponent.value = resolveComponent('LazyBpmnSidebarFolderCabinet');
 }
 
+function openPermission() {
+    opened.value = true;
+    editComponent.value = resolveComponent('LazyBpmnSidebarPermission');
+}
+
 function handleNodeClick({e,x,y,view,node}:any) {
     graphProvider?.graph.value?.zoomTo(2);
     graphProvider?.graph.value?.centerCell(node)
@@ -83,7 +88,8 @@ onMounted(() => {
 
 defineExpose({
     openInfo,
-    openFolderCabinet
+    openFolderCabinet,
+    openPermission
 })
 </script>
 
@@ -91,13 +97,18 @@ defineExpose({
     <div :class="{contextHandler:true, opened}">
         <div class="propertiesHeader" @click="opened = false">
             <Icon name="lucide:settings-2" />
-            Propertie
+            Propertie : {{ selectedNode?.data.type }}
         </div>
         <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
     </div>
 </template>
 
 <style scoped lang="scss">
+.propertiesHeader{
+    width:100%;
+    padding-block: var(--app-space-xs);
+    border-bottom : 1px solid var(--app-grey-800);
+}
 .contextHandler{
     position: absolute;
     width: 280px;
@@ -115,6 +126,10 @@ defineExpose({
     backdrop-filter: blur(10px);
     transform: translateX(100%);
     transition: all .2s ease-in-out;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    overflow: hidden;
+    gap: var(--app-space-xs);
     &.opened{
         transform: translateX(0);
         opacity: 1;
