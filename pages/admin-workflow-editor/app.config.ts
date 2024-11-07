@@ -32,7 +32,10 @@ export default defineAppConfig({
                     icon: 'dp-icon:flow-outline',
                     component: 'LazyWorkflowEditorDetail',
                     props: {
-                      id: item.id
+                      id: item.id,
+                      currentVersion: item.latestVersion,
+                      productionVersion: item.productionVersion,
+                      name: item.name
                     }
                   },
                   previewData:{
@@ -41,7 +44,11 @@ export default defineAppConfig({
                     icon: 'dp-icon:flow-outline',
                     component: 'lazyWorkflowEditorViewer',
                     props:{
-                      id: item.id
+                      id: item.id,
+                      latestVersion: item.latestVersion,
+                      productionVersion: item.productionVersion,
+                      name: item.name
+
                     }
                   }
                 }

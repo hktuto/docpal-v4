@@ -5,6 +5,10 @@ if(!graphProvider) {
     throw createError('graph provider not found')
     
 }
+const workflowDetail = inject<{saveDraft:()=>void}>('workflowDetail')
+if(!workflowDetail) {
+    throw createError('workflowDetail not found')
+}
 
 function setupHistory(){
     console.log("setup history")
@@ -12,6 +16,7 @@ function setupHistory(){
         console.log("history:change")
         state.value.canUndo =  graphProvider?.graph.value?.canUndo() || false
         state.value.canRedo = graphProvider?.graph.value?.canRedo() || false
+        workflowDetail?.saveDraft()
     })
 }
 

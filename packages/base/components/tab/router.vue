@@ -73,10 +73,20 @@ function forward() {
     }
 }
 
+function updateProps(newProps:any){
+    tab.value.props = newProps
+}
+
+function updateTabName(newName:string){
+    tab.value.label = newName
+}
+
 const menuSymbol = Symbol(tab.value.id)
 provide(MenuRouterKey,{
     navigateTo,
-    menuSymbol
+    menuSymbol,
+    updateProps,
+    updateTabName
 })
 
 

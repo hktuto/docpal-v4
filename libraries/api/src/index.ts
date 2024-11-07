@@ -38,6 +38,7 @@ clientApi.instance.interceptors.response.use(
         if(error.response.status >= 500) {
           return Promise.reject(error);
         }
+        console.log("error", error.response)
         if (error.response.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
       
@@ -100,6 +101,7 @@ adminApi.instance.interceptors.response.use(
           try {
             // 使用 refresh token 获取新的 access token
             const refreshToken = localStorage.getItem('refresh_token');
+            console.log("refresh token", refreshToken)
             const { data } = await fetch('/client/api/auth/nuxeo/token', {
                 method:"POST",
                 headers:{

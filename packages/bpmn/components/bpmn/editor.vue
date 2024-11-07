@@ -2,7 +2,9 @@
 import { Transform } from '@antv/x6-plugin-transform'
 import { Selection } from '@antv/x6-plugin-selection'
 import { History } from '@antv/x6-plugin-history'
+import { graphToBpmnJson } from '~/utils/bpmnConverter';
 function init(bpmnXml :string, x6Json?:any){
+    console.log("init", bpmnXml, x6Json)
     viewerRef.value.init(bpmnXml, x6Json)
 }
 const viewerRef = ref()
@@ -94,8 +96,14 @@ const graphOptions = {
     }
 }
 
+function getData(){
+    const bpmnJson = viewerRef.value.bpmnJson
+    return graphToBpmnJson(viewerRef.value.graph, bpmnJson)
+}
+
 defineExpose({
-    init
+    init,
+    getData
 })
 
 </script>
