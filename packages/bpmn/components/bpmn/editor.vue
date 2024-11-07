@@ -113,6 +113,10 @@ function openCabinet(){
     nodeEl.value.openFolderCabinet()
 }
 
+function openPermission(){
+    nodeEl.value.openPermission()
+}
+
 
 
 
@@ -127,15 +131,16 @@ defineExpose({
     <div class="bpmnEditorContainer">
 
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
-        <div :class="{toolbar:true, noLabel: !toolbarLabelShow} ">
-            <BpmnHistory v-if="ready"/>
-            <BpmnInfo v-if="ready" @click="openInfo" />
-            <BpmnFolderCabinet v-if="ready" @click="openCabinet" />
-            <div class="icon" @click="toolbarLabelShow = !toolbarLabelShow">
+        <div v-if="ready" :class="{toolbar:true, noLabel: !toolbarLabelShow} ">
+            <BpmnHistory />
+            <BpmnInfo  @click="openInfo" />
+            <BpmnPermission  @click="openPermission" />
+            <BpmnFolderCabinet  @click="openCabinet" />
+            <div class="toggle" @click="toolbarLabelShow = !toolbarLabelShow">
                 <ElTooltip content="Show/Hide Toolbar Label" placement="right">
-                    <Icon :name="toolbarLabelShow ? 'lucide:eye' : 'lucide:eye-closed'" />
+                    <Icon :name="toolbarLabelShow ? 'lucide:arrow-left-from-line' : 'lucide:arrow-right-from-line'" />
                 </ElTooltip>
-                <div class="label">Toolbar Label</div>
+                <!-- <div class="label">Toolbar Label</div> -->
             </div>
             
         </div>
