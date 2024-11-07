@@ -43,30 +43,19 @@ onMounted(() => {
 
 <template>
      <div :class="{icon:true, disabled:!state.canUndo}">
-        <Icon name="lucide:undo-dot" @click="undo"/>
+        <ElTooltip content="Undo" placement="right">
+            <Icon name="lucide:undo-dot" @click="undo"/>
+        </ElTooltip>
+            <div class="label">Undo</div>
     </div>
     <div :class="{icon:true, disabled:!state.canRedo}">
-        <Icon name="lucide:redo-dot"  @click="redo"/>
+        <ElTooltip content="Redo" placement="right">
+            <Icon name="lucide:redo-dot"  @click="redo"/>
+        </ElTooltip>
+            <div class="label">Redo</div>
     </div>
 </template>
 
 <style lang="scss" scoped>
-.icon{
-    font-size: var(--app-font-size-l);
-    padding: var(--app-space-xs);
-    background: var(--app-grey-1000);
-    border-radius: var(--app-border-radius-m);
-    border: 1px solid var(--app-grey-800);
-    box-shadow: var(--app-shadow-s);
-    color: var(--app-grey-400);
-    line-height: 0;
-    &.disabled{
-        color: var(--app-grey-700);
-        cursor: not-allowed;
-    }
-    cursor: pointer;
-    &:hover {
-        box-shadow: var(--app-shadow-l);
-    }
-}
+
 </style>
