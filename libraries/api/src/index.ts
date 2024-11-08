@@ -102,21 +102,22 @@ adminApi.instance.interceptors.response.use(
             // 使用 refresh token 获取新的 access token
             const refreshToken = localStorage.getItem('refresh_token');
             console.log("refresh token", refreshToken)
-            const { data } = await fetch('/client/api/auth/nuxeo/token', {
-                method:"POST",
+            const { data } = await adminApi.instance.post('/api/auth/nuxeo/token', {
                 headers:{
                     Authorization: 'Bearer ' + refreshToken
                 }
-            }).then( res => res.json())
+            })
             console.log('retry', data)
             console.log("refresh token response", data)
+            
             localStorage.setItem('access_token', data.access_token);
             localStorage.setItem('refresh_token', data.refresh_token);
       
             // 重新设置请求头中的 access token 并重试请求
             originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
-            return clientApi.instance(originalRequest);
+            return adminApi.instance(originalRequest);
           } catch (refreshError:any) {
+            console.log("refresh error", refreshError)
             // 如果 refresh token 也过期了，则清除所有存储的 token，并导航到登录页面
             if (refreshError.response.status === 401) {
               localStorage.removeItem('access_token');

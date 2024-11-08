@@ -14,8 +14,6 @@ const ready = ref(false)
 const nodeEl = ref()
 const edgeEl = ref()
 
-const toolbarLabelShow = ref(false)
-
 function graphReady(){
     ready.value = true
     const graph = viewerRef.value.graph;
@@ -131,16 +129,15 @@ defineExpose({
     <div class="bpmnEditorContainer">
 
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
-        <div v-if="ready" :class="{toolbar:true, noLabel: !toolbarLabelShow} ">
-            <BpmnHistory />
-            <BpmnInfo  @click="openInfo" />
-            <BpmnPermission  @click="openPermission" />
-            <BpmnFolderCabinet  @click="openCabinet" />
-            <div class="toggle" @click="toolbarLabelShow = !toolbarLabelShow">
-                <ElTooltip content="Show/Hide Toolbar Label" placement="right">
-                    <Icon :name="toolbarLabelShow ? 'lucide:arrow-left-from-line' : 'lucide:arrow-right-from-line'" />
-                </ElTooltip>
-                <!-- <div class="label">Toolbar Label</div> -->
+        <div v-if="ready" class="toolbar">
+            <div class="group">
+                <BpmnHistory />
+                <BpmnInfo  @click="openInfo" />
+                <BpmnPermission  @click="openPermission" />
+                <BpmnFolderCabinet  @click="openCabinet" />
+            </div>
+            <div class="group">
+                
             </div>
             
         </div>
@@ -179,45 +176,53 @@ defineExpose({
     justify-content: stretch;
     align-items: flex-start;
     gap: 0px;
-    &.noLabel{
-        
-        gap: var(--app-space-xs);
-        :deep(.icon){
-            border-radius: var(--app-border-radius-m);
-            border: 1px solid var(--app-grey-800);
-            .label{
-                display: none;
-            }
-        }
-    }
-    :deep(.icon){
-        width: 100%;;
-        font-size: var(--app-font-size-l);
-        padding: var(--app-space-xs);
-        background: var(--app-grey-1000);
-        border-radius: 0;
-        border: 0;
+    overflow: hidden;
+    transition: all .2s ease-in-out;
+    .group{
         box-shadow: var(--app-shadow-s);
         color: var(--app-grey-400);
         line-height: 0;
         display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        border-radius: var(--app-border-radius-m);
+        border: 1px solid var(--app-grey-800);
+        gap: var(--app-space-xxs);
+        gap: var(--app-space-xs);
+        font-size: var(--app-font-size-l);
+        padding: var(--app-space-xs);
+        background: var(--app-grey-1000);
+    }
+    &:hover, &:focus-within{
+        :deep(.label) {
+            display: block !important;
+        }
+        :deep(.icon) {
+            width: 100%;
+        }
+    }
+
+    :deep(.icon){
+        
+        border-radius: 0;
+        border: 0;
+        display: flex;
         flex-flow: row nowrap;
         justify-content: flex-start;
         align-items: center;
-        gap: var(--app-space-xxs);
-        + .icon{
-            border-top: 1px solid var(--app-grey-800);
-        }
+        gap: var(--app-space-xs);
         &.disabled{
             color: var(--app-grey-700);
             cursor: not-allowed;
         }
         cursor: pointer;
         &:hover {
-            box-shadow: var(--app-shadow-l);
+            color: var(--app-main-color);
         }
         .label{
             font-size: var(--app-font-size-s);
+            display: none;
         }
     }
 }

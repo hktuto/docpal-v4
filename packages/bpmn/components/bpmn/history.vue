@@ -11,9 +11,9 @@ if(!workflowDetail) {
 }
 
 function setupHistory(){
-    console.log("setup history")
     graphProvider?.graph.value?.on('history:change', () => {
         console.log("history:change")
+        console.log("history:change", graphProvider?.graph.value?.toJSON())
         state.value.canUndo =  graphProvider?.graph.value?.canUndo() || false
         state.value.canRedo = graphProvider?.graph.value?.canRedo() || false
         workflowDetail?.saveDraft()
@@ -43,16 +43,14 @@ onMounted(() => {
 
 <template>
      <div :class="{icon:true, disabled:!state.canUndo}">
-        <ElTooltip content="Undo" placement="right">
-            <Icon name="lucide:undo-dot" @click="undo"/>
-        </ElTooltip>
+        <Icon name="lucide:undo-dot" @click="undo"/>
             <div class="label">Undo</div>
+            
     </div>
     <div :class="{icon:true, disabled:!state.canRedo}">
-        <ElTooltip content="Redo" placement="right">
-            <Icon name="lucide:redo-dot"  @click="redo"/>
-        </ElTooltip>
+        <Icon name="lucide:redo-dot"  @click="redo"/>
             <div class="label">Redo</div>
+            
     </div>
 </template>
 

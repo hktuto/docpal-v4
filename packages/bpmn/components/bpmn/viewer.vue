@@ -103,6 +103,11 @@ function fitIn(){
     graph.value?.zoomToFit({padding: 40})
 }
 
+const allFormField = computed(() => {
+    if(!graph.value) return []
+    return getAllFormFieldFromGraph(graph.value )
+})
+
 
 provide(BPMN_PROVIDER, {
     init,
@@ -110,7 +115,7 @@ provide(BPMN_PROVIDER, {
     graph,
     bpmnJson,
     flatGraphObject,
-    
+    allFormField,
     key: Symbol('BPMN_PROVIDER_KEY')
 })
 
