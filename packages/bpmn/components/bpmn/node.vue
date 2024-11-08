@@ -60,8 +60,8 @@ function openPermission() {
 }
 
 function handleNodeClick({e,x,y,view,node}:any) {
-    graphProvider?.graph.value?.zoomTo(2);
-    graphProvider?.graph.value?.centerCell(node)
+    // graphProvider?.graph.value?.zoomTo(2);
+    // graphProvider?.graph.value?.centerCell(node)
     if(ignoreTypeList.includes(node.data.type || "")) {
         return
     }

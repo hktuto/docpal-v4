@@ -10,6 +10,7 @@ export interface BPMNProvider {
     graph: Ref<Graph | undefined>,
     bpmnJson: any,
     flatGraphObject: any,
+    allFormField: ComputedRef<any>,
     key: symbol
 }
 

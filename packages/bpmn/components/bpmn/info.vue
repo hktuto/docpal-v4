@@ -3,9 +3,8 @@
 
 <template>
     <div class="icon">
-        <ElTooltip content="Info" placement="right">
-            <Icon name="lucide:info" />
-        </ElTooltip>
+        
+        <Icon name="lucide:info" />
         <div class="label">Info</div>
     </div>
 </template>
