@@ -3,7 +3,7 @@ import type { Node } from '@antv/x6'
 const { node } = defineProps<{
     node:Node
 }>()
-
+const emits = defineEmits(['openForm'])
 </script>
 
 <template>

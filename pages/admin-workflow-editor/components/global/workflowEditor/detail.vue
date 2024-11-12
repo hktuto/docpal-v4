@@ -4,11 +4,12 @@ import { ElMessageBox, ElNotification } from 'element-plus'
 import { adminApi } from 'api';
 const { t } = useI18n()
 
-const { id, currentVersion, productionVersion, name } = defineProps<{
+const { id, currentVersion, productionVersion, name, item } = defineProps<{
     id:string
     currentVersion: string,
     productionVersion: string,
     name:string
+    item:any
 }>()
 
 const draftDetail = ref<any>({})
@@ -93,7 +94,7 @@ watch(() => id, (newWorkflowId) => {
 
 <template>
     <div class="pageContainer">
-        <BpmnEditor ref="WorkflowEditorRef" :id="id" >
+        <BpmnEditor ref="WorkflowEditorRef" :workflow-data="item" :currentVersion="currentVersion" :id="id" >
             
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">

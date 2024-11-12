@@ -1,17 +1,21 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-import { ElCol, ElForm } from 'element-plus';
-import { version } from 'vue';
+import { ElButton, ElCol, ElForm } from 'element-plus';
+
 import draggable from "vuedraggable";
 
 const { node } = defineProps<{
     node:Node
 }>()
 
+const emits = defineEmits(['openForm'])
+
 // #region setup
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
-    throw createError('graph provider not found')
+const editorProvider = inject<{openForm:(node:Node)=>void}>('workflowEditor');
+
+if(!graphProvider || !editorProvider) {
+    throw createError('provider not found')
     
 }
 
@@ -178,6 +182,7 @@ watch(() => node, ()=> {
 
         </template>
         </draggable>
+        <ElButton type="primary" @click="editorProvider.openForm(node)" >Edit Form</ElButton>
     </div>
 
 </template>
