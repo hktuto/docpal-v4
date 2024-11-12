@@ -35,7 +35,8 @@ export default defineAppConfig({
                       id: item.id,
                       currentVersion: item.latestVersion,
                       productionVersion: item.productionVersion,
-                      name: item.name
+                      name: item.name,
+                      item,
                     }
                   },
                   previewData:{
@@ -47,8 +48,8 @@ export default defineAppConfig({
                       id: item.id,
                       latestVersion: item.latestVersion,
                       productionVersion: item.productionVersion,
-                      name: item.name
-
+                      name: item.name,
+                      item
                     }
                   }
                 }

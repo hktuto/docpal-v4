@@ -27,6 +27,7 @@
     "element-plus": "^2.8.2",
     "nuxt": "3.13.2",
     "splitpanes": "^3.1.5",
+    "v-form": "github:hktuto/v-form-designer",
     "vue": "3.5.6",
     "vue-router": "latest",
     "vue-virt-list": "^1.5.4",

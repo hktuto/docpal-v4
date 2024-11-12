@@ -7,6 +7,7 @@ if(!graphProvider) {
     throw createError('graph provider not found')
     
 }
+
 const opened = ref(false)
 const editComponent = ref()
 const ignoreTypeList = ['endEvent']

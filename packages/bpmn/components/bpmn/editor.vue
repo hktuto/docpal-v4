@@ -1,9 +1,21 @@
 <script lang="ts" setup>
+import type {Node} from '@antv/x6'
 import { Transform } from '@antv/x6-plugin-transform'
 import { Selection } from '@antv/x6-plugin-selection'
 import { History } from '@antv/x6-plugin-history'
 import { graphToBpmnJson } from '~/utils/bpmnConverter';
-import type { ElTooltip } from 'element-plus';
+import { adminApi } from 'api';
+
+/**
+ *  options: bpmn viewer options 
+ *  workflowData: workflow data ( versionNamber, versionId ...etc)
+ */
+const {options={}, workflowData, currentVersion} = defineProps<{
+    options?: any
+    workflowData: any,
+    currentVersion: string
+}>()
+
 function init(bpmnXml :string, x6Json?:any){
     viewerRef.value.init(bpmnXml, x6Json)
 }
@@ -14,41 +26,6 @@ const ready = ref(false)
 const nodeEl = ref()
 const edgeEl = ref()
 
-function graphReady(){
-    ready.value = true
-    const graph = viewerRef.value.graph;
-    
-    graph.use(
-        new Transform({
-            resizing: {
-                enabled:true,
-                allowReverse:false,
-            },
-        }),
-    )
-
-    graph.use(
-        new Selection({
-            enabled: true,
-            multiple: true,
-            rubberband: true,
-            movable: true,
-            showNodeSelectionBox: true,
-            modifiers:['shift']
-        }),
-    )
-
-    graph.use(
-        new History({
-            enabled: true,
-            beforeAddCommand:(event:any, args:any) => {
-                const ignoreKeys = ['tools', 'ports']
-                if(ignoreKeys.includes(args.key)) return false
-            }
-        }),
-    )
-    graph.cleanHistory()
-}
 const graphOptions = {
     interacting:true,
     panning: {
@@ -97,6 +74,42 @@ const graphOptions = {
         },
     }
 }
+function graphReady(){
+    ready.value = true
+    const graph = viewerRef.value.graph;
+    
+    graph.use(
+        new Transform({
+            resizing: {
+                enabled:true,
+                allowReverse:false,
+            },
+        }),
+    )
+
+    graph.use(
+        new Selection({
+            enabled: true,
+            multiple: true,
+            rubberband: true,
+            movable: true,
+            showNodeSelectionBox: true,
+            modifiers:['shift']
+        }),
+    )
+
+    graph.use(
+        new History({
+            enabled: true,
+            beforeAddCommand:(event:any, args:any) => {
+                const ignoreKeys = ['tools', 'ports']
+                if(ignoreKeys.includes(args.key)) return false
+            }
+        }),
+    )
+    graph.cleanHistory()
+}
+
 
 function getData(){
     const bpmnJson = viewerRef.value.bpmnJson
@@ -115,7 +128,68 @@ function openPermission(){
     nodeEl.value.openPermission()
 }
 
+// #region form
+const fromDesignRef = ref();
+const formDialogVisible = ref(false);
+const selectedStep = ref();
 
+
+const fieldListApi = computed(() => {
+    let data:any[] = []
+    if(selectedStep.value?.data.extensionElements['flowable:formProperty'] && selectedStep.value?.data.extensionElements['flowable:formProperty'].length > 0){
+        console.log(selectedStep.value?.data.extensionElements, selectedStep.value?.data.extensionElements['flowable:formProperty'])
+        data = [...selectedStep.value?.data.extensionElements['flowable:formProperty']]
+    }
+    return {
+        labelKey: 'attr_id',
+        nameKey: 'attr_name',
+        data
+    }
+})
+
+async function formSubmit(){
+    const json = fromDesignRef.value.getFormJson()
+    await adminApi.formPropertiesRelationController.postSave({
+        processKey: workflowData.key,
+        userTaskId: selectedStep.value.id,
+        jsonValue: JSON.stringify(json),
+        versionId: currentVersion
+    })
+    formDialogVisible.value = false;
+}
+
+async function openForm(node: Node){
+    const response = await adminApi.formPropertiesRelationController.getQuery({
+        processKey: workflowData.key,
+        userTaskId: node.data.id,
+        versionId: currentVersion
+    });
+    if(!response || !response.data){
+        throw createError('Server Error');
+    }
+    selectedStep.value = node.getData()
+    formDialogVisible.value = true;
+    setTimeout(() => {
+        if(response.data.length > 0) {
+            const json = JSON.parse(response.data[0].jsonValue || "{}")
+            fromDesignRef.value.setFormJson(json)
+        }else{
+            fromDesignRef.value.setFormJson({})
+        }
+    })
+   
+
+    // console.log(selectedStep.value?.data.extensionElements['flowable:formProperty'] , fieldListApi.value)
+}
+
+/// #endregion
+
+
+provide('workflowEditor', {
+    openForm,
+    openPermission,
+    openInfo,
+})
 
 
 defineExpose({
@@ -127,12 +201,11 @@ defineExpose({
 
 <template>
     <div class="bpmnEditorContainer">
-
     <BpmnViewer ref="viewerRef" :options="graphOptions" @graph-ready="graphReady">
         <div v-if="ready" class="toolbar">
             <div class="group">
                 <BpmnHistory />
-                <BpmnInfo  @click="openInfo" />
+                <BpmnInfo  @click="openInfo"  />
                 <BpmnPermission  @click="openPermission" />
                 <BpmnFolderCabinet  @click="openCabinet" />
             </div>
@@ -142,10 +215,16 @@ defineExpose({
             
         </div>
         <BpmnEdge v-if="ready" ref="edgeEl" />
-        <BpmnNode v-if="ready" ref="nodeEl" />
+        <BpmnNode v-if="ready" ref="nodeEl" @openForm="openForm"/>
         
     </BpmnViewer>
-
+    <ElDialog v-model="formDialogVisible" width="100%" top="0" draggable distroy-on-closed>
+        <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi"  >
+            <template #submit>
+                <ElButton type="primary" @click="formSubmit">{{$t('submit')}}</ElButton>
+            </template>
+        </FormDesigner>
+    </ElDialog>
     <div class="actions">
 
         <slot name="actions" />
