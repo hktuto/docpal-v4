@@ -2,10 +2,11 @@
 import type {Node} from '@antv/x6'
 import { Transform } from '@antv/x6-plugin-transform'
 import { Selection } from '@antv/x6-plugin-selection'
+import { Dnd } from '@antv/x6-plugin-dnd'
 import { History } from '@antv/x6-plugin-history'
 import { graphToBpmnJson } from '~/utils/bpmnConverter';
 import { adminApi } from 'api';
-
+import {bpmnElement} from '~/utils/bpmnElement';
 /**
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
@@ -25,7 +26,8 @@ const ready = ref(false)
 // el
 const nodeEl = ref()
 const edgeEl = ref()
-
+const graph = ref()
+const dnd = ref()
 const graphOptions = {
     interacting:true,
     panning: {
@@ -76,9 +78,9 @@ const graphOptions = {
 }
 function graphReady(){
     ready.value = true
-    const graph = viewerRef.value.graph;
+    graph.value = viewerRef.value.graph;
     
-    graph.use(
+    graph.value.use(
         new Transform({
             resizing: {
                 enabled:true,
@@ -87,7 +89,7 @@ function graphReady(){
         }),
     )
 
-    graph.use(
+    graph.value.use(
         new Selection({
             enabled: true,
             multiple: true,
@@ -98,7 +100,7 @@ function graphReady(){
         }),
     )
 
-    graph.use(
+    graph.value.use(
         new History({
             enabled: true,
             beforeAddCommand:(event:any, args:any) => {
@@ -107,7 +109,15 @@ function graphReady(){
             }
         }),
     )
-    graph.cleanHistory()
+    graph.value.cleanHistory()
+    dnd.value = new Dnd({
+        target: graph.value,
+        validateNode: (node:Node,options) => {
+            // if(!node.parent) return false
+            
+            return true
+        }
+    })
 }
 
 
@@ -132,6 +142,25 @@ function openPermission(){
 const fromDesignRef = ref();
 const formDialogVisible = ref(false);
 const selectedStep = ref();
+
+const dropActionsItems = computed(() => {
+    return Object.values(bpmnElement).reduce((acc:any, cur:any) => {
+        if(cur.toolbar.length > 0) {
+            acc.push(...cur.toolbar)
+        }
+        return acc
+    }, [])
+
+})
+
+function itemDrop(item:any, ev:any) {
+    const id = 'new_' + new Date().getTime()
+    const newData = item.dropData(id)
+    const newNode = graph.value.createNode(newData)
+    dnd.value.options.getDragNode = (node:Node) => node;
+    dnd.value.options.getDropNode = (node:Node) => node.clone({ keepId: true });
+    dnd.value.start(newNode, ev)
+}
 
 
 const fieldListApi = computed(() => {
@@ -210,7 +239,10 @@ defineExpose({
                 <BpmnFolderCabinet  @click="openCabinet" />
             </div>
             <div class="group">
-                
+                <div v-for="(item,index) in dropActionsItems" :key="index" class="icon" @mousedown.native="(ev) => itemDrop(item, ev)">
+                    <SvgIcon :src="item.icon" />
+                    <div class="label">{{  item.label }}</div>
+                </div>
             </div>
             
         </div>
@@ -254,7 +286,7 @@ defineExpose({
     flex-flow: column nowrap;
     justify-content: stretch;
     align-items: flex-start;
-    gap: 0px;
+    gap: var(--app-space-xs);
     overflow: hidden;
     transition: all .2s ease-in-out;
     .group{

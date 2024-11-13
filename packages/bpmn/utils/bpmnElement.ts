@@ -75,11 +75,10 @@ export type BpmnElement = {
         connectable?:boolean
         connectRule?: (args:{child:Cell,parent:Cell,childView:CellView, parentView:CellView}) => boolean,
         toolbar: {
-            enable: boolean,
-            group?:string,
-            icon?: string,
-            i18nLabelKey?: string
-        }
+            icon: string,
+            label: string,
+            dropData: any,
+        }[]
         newNodeData:(id:string, label:string, data:any) => {
             id: string
             name: string
@@ -107,9 +106,7 @@ export const bpmnElement:BpmnElement = {
             },
         }),
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[],
         newNodeData:(id,label,data) => ({
             id,
             name:label,
@@ -135,9 +132,7 @@ export const bpmnElement:BpmnElement = {
             },
     }),
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[],
         
         newNodeData:(id,label,data) => ({
             id,
@@ -174,9 +169,33 @@ export const bpmnElement:BpmnElement = {
             },
     }),
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[{
+            icon:'/bpmn/icons/form.svg',
+            label: "UserForm",
+            dropData: (id:string) => ({
+                id,
+                ...bpmnElement.userTask.nodeStyle(),
+                label: 'New User Task',
+                data: bpmnElement.userTask.newNodeData(id, 'New User Task', {
+                    ['attr_flowable:candidateGroups']: "",
+                    ['attr_flowable:formFieldValidation']:true,
+                    attr_id:id,
+                    attr_name:'New User Task',
+                    extensionElements: {
+                        ['flowable:formProperty']:[],
+                        ['modeler:activiti-idm-candidate-group']: {
+                            'attr_xmlns:modeler': 'http://flowable.org/modeler',
+                            '__cdata': 'true'
+                        },
+                        ['modeler:initiator-can-complete']: {
+                            'attr_xmlns:modeler': 'http://flowable.org/modeler',
+                            '__cdata': 'false'
+                        },
+                    },
+                  
+                })
+            })
+        }],
         newNodeData:(id,label,data) => ({
             id,
             name:label,
@@ -213,9 +232,19 @@ export const bpmnElement:BpmnElement = {
             },
         }),
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[{
+            icon:'/bpmn/icons/check.svg',
+            label: "exclusiveGateway",
+            dropData:(id:string) => ({
+                id,
+                ...bpmnElement.exclusiveGateway.nodeStyle({}),
+                label: 'new approval',
+                data: bpmnElement.exclusiveGateway.newNodeData(id, 'New Approval', {
+                    attr_id:id,
+                })
+            })
+
+        }],
         newNodeData:(id,label,data) => ({
             id,
             type: BpmnElementType['exclusiveGateway'],
@@ -256,9 +285,25 @@ export const bpmnElement:BpmnElement = {
             },
         }),
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[
+            {
+                icon:'/bpmn/icons/clock.svg',
+                label: 'boundaryEvent',
+                dropData:(id:string) => ({
+                    id,
+                    ...bpmnElement.boundaryEvent.nodeStyle(),
+                    data: bpmnElement.boundaryEvent.newNodeData(id, '', {
+                        attr_id: id,
+                        attr_attachedToRef: "",
+                        attr_cancelActivity: false,
+                        timerEventDefinition:{
+                            timeDuration: 'P3D'
+                        }
+                    })
+                })
+
+            }
+        ],
         newNodeData:(id,label,data) => ({
             id,
             type: BpmnElementType['boundaryEvent'],
@@ -320,9 +365,93 @@ export const bpmnElement:BpmnElement = {
             }
         },
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[
+            {
+                icon:'/bpmn/icons/document.svg',
+                label:'document',
+                dropData:(id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                        ['attr_flowable:delegateExpression']:'${generateDocumentDelegate}',
+                        extensionElements:{
+                            ['flowable:field']:[
+                                {
+                                    attr_name: 'notificationType',
+                                    'flowable:string': {
+                                        "__cdata": ""
+                                    }
+                                }
+                            ]
+                        }
+                    }),
+                    label: 'New Document Generate',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Document Generate', {
+                        attr_id:id,
+                        attr_name:'New Document Generate',
+                        ['attr_flowable:delegateExpression']:'${generateDocumentDelegate}',
+                        extensionElements:{
+                            ['flowable:field']:[
+                                {
+                                    attr_name: 'notificationType',
+                                    'flowable:string': {
+                                      "__cdata": ""
+                                    }
+                                }
+                            ]
+                        }
+                    })
+                })
+
+            },
+            {
+                icon:'/bpmn/icons/email.svg',
+                label: 'email',
+                dropData:(id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                        ['attr_flowable:delegateExpression']:'${sendNotificationDelegate}'
+                    }),
+                    label: 'New Email',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Email', {
+                        attr_id:id,
+                        attr_name:'New Email',
+                      ['attr_flowable:delegateExpression']:'${sendNotificationDelegate}',
+                        ['attr_flowable:async']:true,
+                        ['attr_flowable:exclusive']:false,
+                      extensionElements:{
+                          ['flowable:field']:[
+                              {
+                                  attr_name: 'notificationType',
+                                  'flowable:string': {
+                                    "__cdata": ""
+                                  }
+                              }
+                          ]
+                      }
+                    })
+                })
+
+            },
+            {
+                icon:'/bpmn/icons/folder.svg',
+                label: 'filing',
+                dropData: (id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                            ['attr_flowable:delegateExpression']:'${filingGenerateDocumentDelegate}',
+                            extensionElements:""
+                        }),
+                    label: 'New Filing',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Filing', {
+                        attr_id:id,
+                        attr_name:'New Filing',
+                        ['attr_flowable:delegateExpression']:'${filingGenerateDocumentDelegate}',
+                        extensionElements:""
+                    })
+                })
+
+            }
+        ],
         newNodeData:(id,label,data) => ({
             id,
             name:label,
@@ -363,9 +492,7 @@ export const bpmnElement:BpmnElement = {
     sequenceFlow:{
         nodeStyle:() => ({}),
         embed:false,
-        toolbar:{
-            enable:false,
-        },
+        toolbar:[],
         newNodeData:(id,label,data) => ({
             id,
             name:label,

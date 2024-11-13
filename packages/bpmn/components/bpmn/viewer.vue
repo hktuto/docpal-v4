@@ -72,6 +72,20 @@ function init(bpmnXml :string, x6Json?:any){
         bpmnJson.value = json;
 
         graph.value.fromJSON(x6Json)
+        // remove all tools
+        graph.value.getNodes().forEach((node:any) => {
+            node.removeTools()
+            const ports = node.getPorts() || []
+            ports.forEach((port:any) => {
+                node.setPortProp(port.id, 'attrs/circle', {
+                    fill: 'transparent',
+                    stroke: 'transparent',
+                })
+            })
+        })
+        graph.value.getEdges().forEach((edge:any) => {
+            edge.removeTools()
+        })
         nextTick(fitIn)
     }else{
         autoLayout(bpmnXml)
