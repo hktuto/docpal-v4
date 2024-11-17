@@ -56,7 +56,7 @@ export default defineAppConfig({
               }) 
             },
             generatePreviewData:(item:any) => {
-              return item.previewData
+              return item
             },
             generatePageData:(item:any) => {
               return item.tabData

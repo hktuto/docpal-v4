@@ -9,9 +9,7 @@ function open(){
 }
 
 function openInTab(){
-    console.log(item)
-    addTabInCurrentPanel({...item})
-    dialogOpened.value = false
+    addTabInCurrentPanel(item.tabData)
 }
 
 defineExpose({
@@ -23,9 +21,9 @@ defineExpose({
     <ElDialog v-model="dialogOpened" :show-close="false"  @close="dialogOpened = false" height="90%" :modal="false" :draggable="true">
         <template #header="{ close, titleId, titleClass }">
             <div class="header">
-               <div class="label"> {{ item.label }}</div>
+               <div class="label"> {{ item.previewData.label }}</div>
                <div class="action">
-                    <Icon name="lucide:columns-2" class="action" @click="openInTab" />
+                    <Icon name="lucide:columns-2" class="action" @click="() => {openInTab(), close()}" />
                     <Icon name="lucide:x" class="action" @click="close" />
                </div>
             </div>
@@ -36,7 +34,7 @@ defineExpose({
             <Transition>
                 <KeepAlive>
                     <Suspense>
-                        <component :is="item.component" :tab="item" v-bind="item.props"/>
+                        <component :is="item.previewData.component" :tab="item" v-bind="item.previewData.props"/>
                         <template #fallback>
                             <LoadingBgInline />
                         </template>

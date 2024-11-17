@@ -15,9 +15,13 @@ async function getData() {
         format: 'blob'
     }) as unknown as Blob
     const bpmn = await xmlBlob.text()
-    const { data: x6Json} = await adminApi.workflowProcessDefinitionController.getJson(id, {})
-    viewerRef.value?.init(bpmn, x6Json)
-    console.log("getData", bpmn)
+    const json = await adminApi.workflowVersionController.getJson({draftId:id, versionNumber:latestVersion}, {})
+    if(json && json.data){
+        const x6Json = JSON.parse(json.data)
+        viewerRef.value?.init(bpmn, x6Json)
+    }else{
+        viewerRef.value?.init(bpmn)
+    }
     loading.value = false;
 }
 

@@ -38,7 +38,7 @@ async function getWorkflow() {
     if(json && json.data){
         WorkflowEditorRef.value.init( bpmnFile.value, JSON.parse(json.data))
     }else{
-        WorkflowEditorRef.value.init( bpmnFile.value, json)
+        WorkflowEditorRef.value.init( bpmnFile.value)
     }
     routerInject?.updateTabName(name + ` - (${currentVersion})`)
 }
