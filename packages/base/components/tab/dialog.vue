@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import {addTabInCurrentPanel} from '#imports'
 const { item } = defineProps<{
-    item:TabItem
+    item:{tabData:TabItem, previewData:TabItem}
 }>()
 const dialogOpened = defineModel<boolean>('dialogOpened', { required: true })
 function open(){
     dialogOpened.value = true
+    openInTab();
 }
 
 function openInTab(){
+    console.log("open in tab", item)
     addTabInCurrentPanel(item.tabData)
 }
 

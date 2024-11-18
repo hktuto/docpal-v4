@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import {BPMN_PROVIDER, createError, bpmnElement } from '#imports'
 import type { BpmnElement } from '#imports'
-import { useEventListener } from '@vueuse/core';
+import { onClickOutside, useEventListener } from '@vueuse/core';
+import { ElPopconfirm } from 'element-plus';
 const graphProvider = inject(BPMN_PROVIDER)
 if(!graphProvider) {
     throw createError('graph provider not found')
@@ -43,7 +44,46 @@ function setupNode(){
     })
 
     graphProvider?.graph.value?.on('node:dblclick', handleNodeClick )
+
+    graphProvider?.graph.value?.on('node:contextmenu', contextMenuHandler)
 }
+
+
+// #region context menu
+const position = ref({x:0,y:0})
+const contextMenuOpened = ref(false)
+const contextSelectedNode = ref()
+const rightClickEl = ref()
+function contextMenuHandler({e,x,y,view,node}:any) {
+    if(ignoreTypeList.includes(node.data.type || "")) {
+        return
+    }
+    console.log("contextMenuHandler", node)
+    contextSelectedNode.value = node
+    position.value = {
+        x:e.clientX,
+        y:e.clientY
+    }
+    contextMenuOpened.value = true
+}
+
+function deleteItem(){
+    const id = contextSelectedNode.value.id
+    graphProvider?.graph.value?.removeNode(id)
+    contextMenuOpened.value = false;
+
+}
+
+function editItem(){
+    contextMenuOpened.value = false;
+    handleNodeClick({node:contextSelectedNode.value})
+}
+
+onClickOutside(rightClickEl, () => {
+    
+    contextMenuOpened.value = false
+})
+// #endregion
 
 function openInfo() {
     opened.value = true;
@@ -60,7 +100,7 @@ function openPermission() {
     editComponent.value = resolveComponent('LazyBpmnSidebarPermission');
 }
 
-function handleNodeClick({e,x,y,view,node}:any) {
+function handleNodeClick({node}:any) {
     // graphProvider?.graph.value?.zoomTo(2);
     // graphProvider?.graph.value?.centerCell(node)
     if(ignoreTypeList.includes(node.data.type || "")) {
@@ -83,6 +123,7 @@ function handleNodeClick({e,x,y,view,node}:any) {
 }
 
 
+
 onMounted(() => {
     setupNode()
 })
@@ -96,15 +137,71 @@ defineExpose({
 
 <template>
     <div :class="{contextHandler:true, opened}">
-        <div class="propertiesHeader" @click="opened = false">
+        <div class="propertiesHeader" @click="opened = false" >
             <Icon name="lucide:settings-2" />
             Propertie : {{ selectedNode?.data.type }}
         </div>
         <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
     </div>
+    <div ref="rightClickEl" :class="{contextMenuContainer:true, show:contextMenuOpened}" :style="`--x: ${position.x}px; --y: ${position.y}px`">
+        <div class="contextAction" @click="editItem">
+            <Icon name="lucide:settings-2" />
+            <div class="label">Edit</div>
+        </div>
+        <ElPopconfirm title="Are you sure to delete this item?" @confirm="deleteItem">
+            <template #reference>
+                <div class="contextAction" >
+                    <Icon name="lucide:trash" />
+                    <div class="label">Delete</div>
+                </div>
+            </template>
+        </ElPopconfirm>
+        
+    </div>
 </template>
 
 <style scoped lang="scss">
+
+.contextMenuContainer{
+    position: fixed;
+    z-index: 10;
+    background-color: var(--app-grey-1000);
+    border-radius: 4px;
+    box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.3);
+    padding-block: 8px;
+    display: none;
+    left: var(--x);
+    top: var(--y);
+    &.show{
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 0;
+
+    }
+    
+}
+
+.contextAction{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-xs);
+    cursor: pointer;
+    padding: var(--app-space-xs) var(--app-space-xs);
+    &:hover{
+        color: var(--app-main-color);
+    }
+    .label{
+        font-size: var(--app-font-size-s);
+    }
+    & + &{
+        border-top: 1px solid var(--app-grey-800);
+    }
+}
+
 .propertiesHeader{
     width:100%;
     padding-block: var(--app-space-xs);
