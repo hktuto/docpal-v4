@@ -4,7 +4,7 @@ import {Graph} from '@antv/x6'
 import type { Node } from '@antv/x6'
 import { DagreLayout } from '@antv/layout'
 
-import { bpmnStringToJson, jsonToX6Node } from '~/utils/bpmnConverter';
+import { bpmnStringToJson, checkX6Json, jsonToX6Node } from '~/utils/bpmnConverter';
 
 const containerEl = ref()
 const graph = ref<Graph>();
@@ -70,6 +70,7 @@ function init(bpmnXml :string, x6Json?:any){
     if(x6Json) {
         const {json} = bpmnStringToJson(bpmnXml)
         bpmnJson.value = json;
+        x6Json = checkX6Json(x6Json, json)
 
         graph.value.fromJSON(x6Json)
         // remove all tools

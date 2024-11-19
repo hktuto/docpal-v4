@@ -2,6 +2,7 @@ import {XMLParser, XMLBuilder} from "fast-xml-parser";
 import type {Cell, Graph} from '@antv/x6'
 import type { BPMNJSON } from "./bpmnType";
 import { BpmnElementType, bpmnElement } from "./bpmnElement";
+import { at } from "vitest/dist/chunks/reporters.WnPwkmgA.js";
 
 
 
@@ -37,8 +38,6 @@ export const bpmnStringToJson = function(bpmnString: string) {
             item.field = normalizeToArray(item.field, 'flowable:field')
         }
     }
-
-    // create invisible node for workflow data
     
    
     return {json, flatObj}
@@ -135,7 +134,50 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
             }
         })
     }
+    result.nodes.push({
+        id: json.definitions.process.attr_name,
+        shape:'invisible-node',
+        data:{
+            type: 'process',
+            id: json.definitions.process.attr_id,
+            name: json.definitions.process.attr_name,
+            data: {
+                attr_id: json.definitions.process.attr_id,
+                attr_name: json.definitions.process.attr_name,
+                extensionElements: json.definitions.process.extensionElements
+            }
+        }
+    })
+
     return result
+}
+
+/**
+ * normal and check x6Json
+ * @param x6Json 
+ * @param bpmnJson 
+ */
+export const checkX6Json = function(x6Json:any, bpmnJson:BPMNJSON){
+    // check if process node exist
+    const processId = bpmnJson.definitions.process.attr_id;
+    if(!x6Json.cells.find((node:any) => node.id === processId)) {
+        x6Json.cells.push({
+            id: processId,
+            shape:'invisible-node',
+            label: bpmnJson.definitions.process.attr_name,
+            data: {
+                type: 'process',
+                id: processId,
+                name: bpmnJson.definitions.process.attr_name,
+                data: {
+                    attr_id: bpmnJson.definitions.process.attr_id,
+                    attr_name: bpmnJson.definitions.process.attr_name,
+                    extensionElements: bpmnJson.definitions.process.extensionElements
+                }
+            }
+        })
+    }
+    return x6Json;
 }
 
 
