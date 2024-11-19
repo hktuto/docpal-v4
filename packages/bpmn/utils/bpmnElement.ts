@@ -56,6 +56,7 @@ Graph.registerNode(
     },
     true,
 )
+
 export enum BpmnElementType {
     startEvent = 'startEvent',
     endEvent = 'endEvent',
