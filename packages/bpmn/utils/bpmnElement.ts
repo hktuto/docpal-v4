@@ -2,6 +2,14 @@ import { Cell,CellView, Graph } from "@antv/x6"
 import {circleNodeStyle, squareNodeStyle} from "./bpmnElementHelper";
 
 Graph.registerNode(
+    'invisible-node',
+    {
+        inherit:'rect',
+
+    },
+    true,
+)
+Graph.registerNode(
     'bpmn-node',
     {
         inherit: 'rect',
