@@ -37,6 +37,9 @@ export const bpmnStringToJson = function(bpmnString: string) {
             item.field = normalizeToArray(item.field, 'flowable:field')
         }
     }
+
+    // create invisible node for workflow data
+    
    
     return {json, flatObj}
 }
