@@ -148,7 +148,7 @@ defineExpose({
             <Icon name="lucide:settings-2" />
             <div class="label">Edit</div>
         </div>
-        <ElPopconfirm title="Are you sure to delete this item?" @confirm="deleteItem">
+        <ElPopconfirm v-if="contextSelectedNode && !['start','end'].includes(contextSelectedNode.data.id)" title="Are you sure to delete this item?" @confirm="deleteItem">
             <template #reference>
                 <div class="contextAction" >
                     <Icon name="lucide:trash" />

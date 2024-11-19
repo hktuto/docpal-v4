@@ -170,7 +170,7 @@ export const bpmnElement:BpmnElement = {
     }),
         embed:false,
         toolbar:[{
-            icon:'/bpmn/icons/form.svg',
+            icon:'bpmn:form',
             label: "UserForm",
             dropData: (id:string) => ({
                 id,
@@ -233,7 +233,7 @@ export const bpmnElement:BpmnElement = {
         }),
         embed:false,
         toolbar:[{
-            icon:'/bpmn/icons/check.svg',
+            icon:'bpmn:check',
             label: "exclusiveGateway",
             dropData:(id:string) => ({
                 id,
@@ -287,7 +287,7 @@ export const bpmnElement:BpmnElement = {
         embed:false,
         toolbar:[
             {
-                icon:'/bpmn/icons/clock.svg',
+                icon:'bpmn:clock',
                 label: 'boundaryEvent',
                 dropData:(id:string) => ({
                     id,
@@ -334,7 +334,7 @@ export const bpmnElement:BpmnElement = {
                     color = '#7B61FF'
                     break;
                 case '${filingGenerateDocumentDelegate}':
-                    icon = '/bpmn/icons/folder.svg'
+                    icon = '/bpmn/icons/browse.svg'
                     type = "Filing"
                     color = '#7B61FF';
                     break;
@@ -367,7 +367,7 @@ export const bpmnElement:BpmnElement = {
         embed:false,
         toolbar:[
             {
-                icon:'/bpmn/icons/document.svg',
+                icon:'bpmn:document',
                 label:'document',
                 dropData:(id:string) => ({
                     id,
@@ -404,7 +404,7 @@ export const bpmnElement:BpmnElement = {
 
             },
             {
-                icon:'/bpmn/icons/email.svg',
+                icon:'bpmn:email',
                 label: 'email',
                 dropData:(id:string) => ({
                     id,
@@ -433,7 +433,7 @@ export const bpmnElement:BpmnElement = {
 
             },
             {
-                icon:'/bpmn/icons/folder.svg',
+                icon:'bpmn:browse',
                 label: 'filing',
                 dropData: (id:string) => ({
                     id,
