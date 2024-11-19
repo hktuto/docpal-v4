@@ -240,7 +240,7 @@ defineExpose({
             </div>
             <div class="group">
                 <div v-for="(item,index) in dropActionsItems" :key="index" class="icon" @mousedown.native="(ev) => itemDrop(item, ev)">
-                    <SvgIcon :src="item.icon" />
+                    <Icon :name="item.icon" />
                     <div class="label">{{  item.label }}</div>
                 </div>
             </div>
