@@ -5,7 +5,7 @@ Graph.registerNode(
     'invisible-node',
     {
         inherit:'rect',
-
+        markup:[]
     },
     true,
 )
