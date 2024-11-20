@@ -57,6 +57,7 @@ async function saveDraft() {
     form.append('isDraft', true)
 
     await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
+    // 如果是修改了名称，则更新 tab 的名称
     if(newName !== name) {
         routerInject?.updateTabName(newName + ` - (${currentVersion})`)
     }
