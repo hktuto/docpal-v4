@@ -3,16 +3,19 @@ import {BPMN_PROVIDER, createError, bpmnElement } from '#imports'
 import type { BpmnElement } from '#imports'
 import { onClickOutside, useEventListener } from '@vueuse/core';
 import { ElPopconfirm } from 'element-plus';
+
 const graphProvider = inject(BPMN_PROVIDER)
+
+
 if(!graphProvider) {
     throw createError('graph provider not found')
-    
 }
 
 const opened = ref(false)
 const editComponent = ref()
 const ignoreTypeList = ['endEvent']
 const selectedNode = ref()
+
 function setupNode(){
     graphProvider?.graph.value?.on('blank:dblclick', () => {
         graphProvider?.graph.value?.zoomToFit({
@@ -86,16 +89,33 @@ onClickOutside(rightClickEl, () => {
 // #endregion
 
 function openInfo() {
+    // get process node 
+    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
+    const cell = graphProvider?.graph.value?.getCellById(id)
+    if(!cell){
+        throw createError('Process node not found')
+    }
     opened.value = true;
+    selectedNode.value = cell
     editComponent.value = resolveComponent('LazyBpmnSidebarInfo');
 }
 function openFolderCabinet() {
+    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
+    const cell = graphProvider?.graph.value?.getCellById(id)
+    if(!cell){
+        throw createError('Process node not found')
+    }
     opened.value = true;
-
+    selectedNode.value = cell
     editComponent.value = resolveComponent('LazyBpmnSidebarFolderCabinet');
 }
 
 function openPermission() {
+    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
+    const cell = graphProvider?.graph.value?.getCellById(id)
+    if(!cell){
+        throw createError('Process node not found')
+    }
     opened.value = true;
     editComponent.value = resolveComponent('LazyBpmnSidebarPermission');
 }

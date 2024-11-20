@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
 
+const { node } = defineProps<{
+    node:Node
+}>()
+
 const graphProvider = inject(BPMN_PROVIDER)
 if(!graphProvider) {
     throw createError('graph provider not found')   
@@ -13,12 +17,23 @@ const FormRef = ref()
 
 function nameChange(val:string) {
     graphProvider?.graph.value?.startBatch('update-name')
-    // 
+
+    node.setData({
+        ...node.data,
+        version: (node.data.version || 0) + 1,
+        name: val,
+        data:{
+            ...node.data.data,
+            attr_name: val
+        }
+    }, { overwrite: true, deep: true, silent:false })
+
     graphProvider?.graph.value?.stopBatch('update-name')
 }
 
 function refreshData(){
-    form.value.name = graphProvider?.bpmnJson.value.definitions.process.attr_name;
+    const data = node.getData()
+    form.value.name = data.data.attr_name;
 
 }
 
