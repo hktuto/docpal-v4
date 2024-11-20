@@ -43,11 +43,13 @@ async function getWorkflow() {
     routerInject?.updateTabName(name + ` - (${currentVersion})`)
 }
 
+
 async function saveDraft() {
-    const { xml, x6Json } = WorkflowEditorRef.value.getData()
+    const { xml, json, x6Json } = WorkflowEditorRef.value.getData()
+    const newName = json.definitions.process.attr_name
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
-    form.append('name', name)
+    form.append('name', newName)
     form.append('versionId', currentVersion)
     form.append('draftId', id)
     form.append('jsonValue', JSON.stringify(x6Json))
@@ -55,10 +57,13 @@ async function saveDraft() {
     form.append('isDraft', true)
 
     await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
+    if(newName !== name) {
+        routerInject?.updateTabName(newName + ` - (${currentVersion})`)
+    }
 }
 
 provide('workflowDetail',{
-    saveDraft
+    saveDraft,
 })
 
 async function saveAsNewVersion(){

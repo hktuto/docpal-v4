@@ -232,7 +232,17 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
     const nodes = graph.getNodes()
     const edges = graph.getEdges()
     nodes.forEach( node => {
-        insertNodeToBpmn(graph, json, node)
+
+        // 如果是 process 节点，不用 insertNodeToBpmn, 因為是 Process 的 data 是整個 workflow 的数据
+        if(node.getData().type !== 'process') {
+            insertNodeToBpmn(graph, json, node)
+        }else{
+            const processData = node.getData().data
+            json.definitions.process = {
+                ...json.definitions.process,
+                ...processData
+            }
+        }
     })
     edges.forEach( edge => {
         insertEdgeToBpmn(graph, json, edge)
