@@ -12,8 +12,7 @@ if(!workflowDetail) {
 
 function setupHistory(){
     graphProvider?.graph.value?.on('history:change', () => {
-        console.log("history:change")
-        console.log("history:change", graphProvider?.graph.value?.toJSON())
+
         state.value.canUndo =  graphProvider?.graph.value?.canUndo() || false
         state.value.canRedo = graphProvider?.graph.value?.canRedo() || false
         workflowDetail?.saveDraft()
