@@ -159,7 +159,7 @@ defineExpose({
     <div :class="{contextHandler:true, opened}">
         <div class="propertiesHeader" @click="opened = false" >
             <Icon name="lucide:settings-2" />
-            Propertie : {{ selectedNode?.data.type }}
+            Propertie 
         </div>
         <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
     </div>
