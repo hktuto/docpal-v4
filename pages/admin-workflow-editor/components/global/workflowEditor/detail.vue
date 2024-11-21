@@ -7,7 +7,7 @@ const { t } = useI18n()
 const { id, currentVersion, productionVersion, name, item } = defineProps<{
     id:string
     currentVersion: string,
-    productionVersion: string,
+    productionVersion?: string,
     name:string
     item:any
 }>()
@@ -58,9 +58,7 @@ async function saveDraft() {
 
     await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
     // 如果是修改了名称，则更新 tab 的名称
-    if(newName !== name) {
-        routerInject?.updateTabName(newName + ` - (${currentVersion})`)
-    }
+    routerInject?.updateTabName(newName + ` - (${currentVersion})`)
 }
 
 provide('workflowDetail',{

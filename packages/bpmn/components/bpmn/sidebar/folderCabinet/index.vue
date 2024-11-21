@@ -38,17 +38,18 @@ async function loopChildren(all:any, item: any, level = 0) {
 async function getCabinetDetail(id:string) {
     if(!id) {
         form.value = []
-        node.setData({
-            ...node.data,
-            version: node.data.version ? node.data.version + 1 : 1,
-            data:{
-                ...node.data.data,
-                extensionElements:{
-                    ...node.data.data.extensionElements,
-                    'flowable:folderCabinetMapping': []
-                }
-            }
-        })
+        console.log("saveItem")
+        // node.setData({
+        //     ...node.data,
+        //     version: node.data.version ? node.data.version + 1 : 1,
+        //     data:{
+        //         ...node.data.data,
+        //         extensionElements:{
+        //             ...node.data.data.extensionElements,
+        //             'flowable:folderCabinetMapping': []
+        //         }
+        //     }
+        // })
         return
     }
 
@@ -63,7 +64,6 @@ async function getCabinetDetail(id:string) {
     }
     const processData = processNode.getData().data;
     const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping'];
-    console.log(cabinetMapping)
     if(cabinetMapping){
         form.value = arr.map(item => {
             const fields = item.displayMeta.reduce((allMeta:any, meta:any) => {
@@ -106,7 +106,7 @@ async function getCabinetDetail(id:string) {
             }
         }) 
     }
-
+    setForm()
 }
 async function getList() {
     const response = await adminApi.folderCabinetController.getList()
@@ -120,23 +120,24 @@ async function setData(){
         throw createError('Process node not found')
     }
     const processData = processNode.getData().data;
+    console.log("cabinetMapping", processData)
     if(processData.extensionElements && processData.extensionElements['flowable:folderCabinetMapping']) {
         const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping'];
         if(Array.isArray(cabinetMapping)) {
             selectedCabinet.value = cabinetMapping[0].attr_id
         }else{
             selectedCabinet.value = cabinetMapping.attr_id
-            node.setData({
-                ...node.data,
-                version: node.data.version ? node.data.version + 1 : 1,
-                data:{
-                    ...node.data.data,
-                    extensionElements:{
-                        ...node.data.data.extensionElements,
-                        'flowable:folderCabinetMapping': [node.data.data.extensionElements['flowable:folderCabinetMapping']]
-                    }
-                }
-            })
+            // node.setData({
+            //     ...node.data,
+            //     version: node.data.version ? node.data.version + 1 : 1,
+            //     data:{
+            //         ...node.data.data,
+            //         extensionElements:{
+            //             ...node.data.data.extensionElements,
+            //             'flowable:folderCabinetMapping': [node.data.data.extensionElements['flowable:folderCabinetMapping']]
+            //         }
+            //     }
+            // })
             
         }
         getCabinetDetail(selectedCabinet.value)
@@ -144,7 +145,7 @@ async function setData(){
         selectedCabinet.value = ''
         form.value = []
     }
-
+    console.log("setData", processData)
     setForm()
 }
 
@@ -183,14 +184,21 @@ function setForm(){
 
         }
     }
-    node.setData({
-        ...node.data,
-        version: node.data.version ? node.data.version + 1 : 1,
-        extensionElements:{
-            ...node.data.extensionElements,
-            'flowable:folderCabinetMapping': saveItem
-        }
-    })
+    
+    // check if data is different
+    const currentCabinetMapping = node.getData().data.extensionElements['flowable:folderCabinetMapping'];
+    const newCabinetMapping = saveItem;
+    if(JSON.stringify(currentCabinetMapping) !== JSON.stringify(newCabinetMapping)) {
+        console.log("saveItem", saveItem)
+        node.setData({
+            ...node.data,
+            version: node.data.version ? node.data.version + 1 : 1,
+            extensionElements:{
+                ...node.data.extensionElements,
+                'flowable:folderCabinetMapping': saveItem
+            }
+        })
+    }
 }
 
 function setUpListener(){
@@ -203,6 +211,7 @@ function setUpListener(){
 }
 
 onMounted(async () => {
+    setUpListener()
     await getList()
     setData()
 })
@@ -219,7 +228,7 @@ onMounted(async () => {
             </ElFormItem>
         </ElForm>
         <div class="folderCabinetDetail" v-if="selectedCabinet && cabinetDetail" >
-            {{ cabinetDetail }}
+            <!-- {{ cabinetDetail }} -->
             <!-- <BpmnSidebarFolderCabinetDetail v-model:field="form" :folderCabinetItem="cabinetDetail" :all-field="allFields" @update:field="setForm"  /> -->
         </div>
 </template>
