@@ -1,7 +1,7 @@
 
 import {Client} from './generate/client'
 import {Admin} from './generate/admin'
-
+// import {logout} from '~/utils/auth'
 
 
 let clientBaseURL = '/';
@@ -119,11 +119,12 @@ adminApi.instance.interceptors.response.use(
           } catch (refreshError:any) {
             console.log("refresh error", refreshError)
             // 如果 refresh token 也过期了，则清除所有存储的 token，并导航到登录页面
-            if (refreshError.response.status === 401) {
+            if (refreshError.response.status === 403) {
               localStorage.removeItem('access_token');
               localStorage.removeItem('refresh_token');
-              window.location.href = '/login';
+              logout()
             }
+
             return Promise.reject(refreshError);
           }
         }

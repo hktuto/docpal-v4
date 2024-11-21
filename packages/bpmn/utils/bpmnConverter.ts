@@ -32,7 +32,11 @@ export const bpmnStringToJson = function(bpmnString: string) {
             }
         })
     }
+    if(!json.definitions.process.extensionElements) {
+        json.definitions.process.extensionElements = {}
+    }
     if(json.definitions.process.extensionElements['flowable:folderCabinetMapping']){
+        
         json.definitions.process.extensionElements['flowable:folderCabinetMapping'] = normalizeToArray(json.definitions.process.extensionElements['flowable:folderCabinetMapping'], 'flowable:folderCabinetMapping')
         for(let item of json.definitions.process.extensionElements['flowable:folderCabinetMapping']){
             item.field = normalizeToArray(item.field, 'flowable:field')
@@ -134,8 +138,9 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
             }
         })
     }
+
     result.nodes.push({
-        id: json.definitions.process.attr_name,
+        id: json.definitions.process.attr_id,
         shape:'invisible-node',
         data:{
             type: 'process',
