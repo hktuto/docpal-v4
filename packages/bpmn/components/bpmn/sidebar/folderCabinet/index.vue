@@ -11,6 +11,10 @@ if(!graphProvider) {
     throw createError('graph provider not found')   
 }
 
+const allFields = computed(() => {
+    if(!graphProvider?.allFormField.value) return []
+    return graphProvider?.allFormField.value
+})
 // #region folder cabinet form setup
 
 const cabinetOptions = ref();
@@ -35,24 +39,25 @@ async function loopChildren(all:any, item: any, level = 0) {
     return all
 }
 
+const detailLoading = ref(false)
 async function getCabinetDetail(id:string) {
+    // 如果沒有 id , 那 reset node data 的 flowable:folderCabinetMapping
     if(!id) {
         form.value = []
-        console.log("saveItem")
-        // node.setData({
-        //     ...node.data,
-        //     version: node.data.version ? node.data.version + 1 : 1,
-        //     data:{
-        //         ...node.data.data,
-        //         extensionElements:{
-        //             ...node.data.data.extensionElements,
-        //             'flowable:folderCabinetMapping': []
-        //         }
-        //     }
-        // })
+        node.setData({
+            ...node.data,
+            version: node.data.version ? node.data.version + 1 : 1,
+            data:{
+                ...node.data.data,
+                extensionElements:{
+                    ...node.data.data.extensionElements,
+                    'flowable:folderCabinetMapping': []
+                }
+            }
+        })
         return
     }
-
+    detailLoading.value = true
     const response = await adminApi.folderCabinetController.getTemplate(id);
     cabinetDetail.value = response.data;
     let arr:any[] =[];
@@ -106,6 +111,7 @@ async function getCabinetDetail(id:string) {
             }
         }) 
     }
+    detailLoading.value = false
     setForm()
 }
 async function getList() {
@@ -120,24 +126,13 @@ async function setData(){
         throw createError('Process node not found')
     }
     const processData = processNode.getData().data;
-    console.log("cabinetMapping", processData)
     if(processData.extensionElements && processData.extensionElements['flowable:folderCabinetMapping']) {
         const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping'];
         if(Array.isArray(cabinetMapping)) {
             selectedCabinet.value = cabinetMapping[0].attr_id
         }else{
             selectedCabinet.value = cabinetMapping.attr_id
-            // node.setData({
-            //     ...node.data,
-            //     version: node.data.version ? node.data.version + 1 : 1,
-            //     data:{
-            //         ...node.data.data,
-            //         extensionElements:{
-            //             ...node.data.data.extensionElements,
-            //             'flowable:folderCabinetMapping': [node.data.data.extensionElements['flowable:folderCabinetMapping']]
-            //         }
-            //     }
-            // })
+
             
         }
         getCabinetDetail(selectedCabinet.value)
@@ -145,8 +140,7 @@ async function setData(){
         selectedCabinet.value = ''
         form.value = []
     }
-    console.log("setData", processData)
-    setForm()
+    // setForm()
 }
 
 function setForm(){
@@ -189,15 +183,21 @@ function setForm(){
     const currentCabinetMapping = node.getData().data.extensionElements['flowable:folderCabinetMapping'];
     const newCabinetMapping = saveItem;
     if(JSON.stringify(currentCabinetMapping) !== JSON.stringify(newCabinetMapping)) {
-        console.log("saveItem", saveItem)
         node.setData({
             ...node.data,
             version: node.data.version ? node.data.version + 1 : 1,
-            extensionElements:{
-                ...node.data.extensionElements,
-                'flowable:folderCabinetMapping': saveItem
+            data:{
+                ...node.data.data,
+                extensionElements:{
+                    ...node.data.data.extensionElements,
+                    'flowable:folderCabinetMapping': saveItem
+                }
             }
+        },{
+            overwrite: true,
+            deep:true,
         })
+        console.log("new data", node.getData())
     }
 }
 
@@ -220,6 +220,8 @@ onMounted(async () => {
 </script>
 
 <template>
+    <div class="folderCabinetContainer">
+
     <ElForm label-position="top" @native.enter="() => {}">
             <ElFormItem lable="Folder Cabinet">
                 <ElSelect v-model="selectedCabinet" @change="getCabinetDetail" clearable>
@@ -228,7 +230,23 @@ onMounted(async () => {
             </ElFormItem>
         </ElForm>
         <div class="folderCabinetDetail" v-if="selectedCabinet && cabinetDetail" >
-            <!-- {{ cabinetDetail }} -->
-            <!-- <BpmnSidebarFolderCabinetDetail v-model:field="form" :folderCabinetItem="cabinetDetail" :all-field="allFields" @update:field="setForm"  /> -->
+            <BpmnSidebarFolderCabinetDetail v-loading="detailLoading" v-model:field="form" :folderCabinetItem="cabinetDetail" :all-field="allFields" @update:field="setForm"  />
         </div>
+    </div>
 </template>
+
+<style lang="scss" scoped>
+.folderCabinetContainer{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: calc(var(--app-space-xs) / 2);
+    overflow: hidden;
+    .folderCabinetDetail{
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+}
+</style>

@@ -45,7 +45,7 @@ const activeName = ref("")
 
 <style scoped lang="scss">
 .indentItem{
-    width: var(--app-padding);
+    width: var(--app-space-s);
     height:100px;
     border-left: 1px solid var(--color-grey-050);
 }
@@ -55,7 +55,7 @@ const activeName = ref("")
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
-    gap: calc(var(--app-padding) / 2);
+    gap: calc(var(--app-space-xs) / 2);
     .indentItem{
         height: 48px;
     }
@@ -65,7 +65,7 @@ const activeName = ref("")
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: calc(var(--app-padding) / 2);
+    gap: calc(var(--app-space-xs) / 2);
     width:100%;
     .content{
         flex: 1 0 auto;
@@ -75,7 +75,7 @@ const activeName = ref("")
     }
 }
 .fieldMappingItemContainer + .fieldMappingItemContainer{
-    border-top: 1px solid var(--color-grey-000);
+    border-top: 1px solid var(--color-grey-800);
 }
 .mappingTitle{
     font-size: 1rem;

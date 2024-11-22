@@ -242,11 +242,13 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
         if(node.getData().type !== 'process') {
             insertNodeToBpmn(graph, json, node)
         }else{
-            const processData = node.getData().data
+            
+            const processData = node.getData()
             json.definitions.process = {
                 ...json.definitions.process,
-                ...processData
+                ...processData.data
             }
+            console.log("process node", json, processData)
         }
     })
     edges.forEach( edge => {

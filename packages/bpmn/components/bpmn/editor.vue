@@ -166,7 +166,7 @@ function itemDrop(item:any, ev:any) {
 const fieldListApi = computed(() => {
     let data:any[] = []
     if(selectedStep.value?.data.extensionElements['flowable:formProperty'] && selectedStep.value?.data.extensionElements['flowable:formProperty'].length > 0){
-        console.log(selectedStep.value?.data.extensionElements, selectedStep.value?.data.extensionElements['flowable:formProperty'])
+        
         data = [...selectedStep.value?.data.extensionElements['flowable:formProperty']]
     }
     return {
