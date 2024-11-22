@@ -116,6 +116,7 @@ function openPermission() {
     if(!cell){
         throw createError('Process node not found')
     }
+    selectedNode.value = cell
     opened.value = true;
     editComponent.value = resolveComponent('LazyBpmnSidebarPermission');
 }
