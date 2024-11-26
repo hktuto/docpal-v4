@@ -46,7 +46,8 @@ const config = createTableConfig({
                         default:'action'
                     }
                 }
-            ],
+            ],    
+},{
     menuConfig:{
         body: {
             options: [
@@ -56,9 +57,26 @@ const config = createTableConfig({
                 ]
             ]
         }
-    }
-
+    },
+    rowConfig:{
+            drag: true,
+        },
+    rowDragConfig:{
+        showIcon: true,
         
+        visibleMethod: ({ row }:any) => {
+            return true
+        },
+        dragStartMethod: (params:any) => {
+            console.log('drag start', params)
+            return true;
+        },
+        dragEndMethod: (params:any) => {
+            console.log('drag end', params)
+            return true;
+        }
+
+    }
 }
 )
 
