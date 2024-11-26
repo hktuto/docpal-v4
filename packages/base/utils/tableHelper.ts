@@ -8,7 +8,6 @@ export type TableConfig = {
     columns:any[]
     formConfig?:any
     toolbarConfig?:any
-    menuConfig?:any
 }
 
 export const createTableConfig = ({
@@ -18,8 +17,7 @@ export const createTableConfig = ({
             buttons: 'toolbar_buttons'
         }
     },
-    menuConfig
-    }:TableConfig):VxeGridProps => {
+    }:TableConfig,optional:VxeGridProps):VxeGridProps => {
 
     // @ts-ignore
     const perference = useUserPreference()
@@ -27,6 +25,7 @@ export const createTableConfig = ({
         id,
         border: true,
         showOverflow: true,
+        height: 'auto',
         toolbarConfig: toolbarConfig,
         columnConfig: {
             resizable: true,
@@ -65,8 +64,7 @@ export const createTableConfig = ({
               }
             }
         },
-        formConfig: formConfig || {},
-        menuConfig: menuConfig || {}
+        ...optional
     }
 }
 
