@@ -1,23 +1,56 @@
-export const createTableConfig = (id:string, api:any, columns:any[]) => {
+// import {useUserPreference} from '#imports'
 
+import { clientApi } from "api"
+import type { VxeGridProps } from 'vxe-table'
+export type TableConfig = {
+    api:Function,
+    id:string,
+    columns:any[]
+    formConfig?:any
+    toolbarConfig?:any
+    menuConfig?:any
+}
+
+export const createTableConfig = ({
+    id, api, columns, formConfig, 
+    toolbarConfig= {
+        custom:true,slots: {
+            buttons: 'toolbar_buttons'
+        }
+    },
+    menuConfig
+    }:TableConfig):VxeGridProps => {
+
+    // @ts-ignore
+    const perference = useUserPreference()
     return {
         id,
         border: true,
-        toolbarConfig: {
-            custom: true
+        showOverflow: true,
+        toolbarConfig: toolbarConfig,
+        columnConfig: {
+            resizable: true,
+            useKey: true,
+                drag: true
         },
         customConfig: {
-            storage: false,
-            // restoreStore ({ id }) {
-            //     return getColumnSetting(id)
-            // },
-            // updateStore ({ id, storeData }) {
-            //     // 模拟异步，实现服务端保存
-            //     return setColumnSetting(id, storeData)
-            // }
+            storage: true,
+            restoreStore ({ id }) {
+                if(perference.value.tableSettings && perference.value.tableSettings[id]) {
+                    return perference.value.tableSettings[id]
+                }
+            },
+            updateStore ({ id, storeData }) {
+                if(!perference.value.tableSettings) perference.value.tableSettings = {}
+                perference.value.tableSettings[id] = storeData
+                // save perference
+                return clientApi.nuxeoUserController.putSetting(perference.value)
+            }
         },
         columns,
-        pagerConfig: {},
+        pagerConfig: {
+            pageSize: 15
+        },
         proxyConfig: {
             ajax: {
               query: async({ page }:any) => {
@@ -32,6 +65,8 @@ export const createTableConfig = (id:string, api:any, columns:any[]) => {
               }
             }
         },
+        formConfig: formConfig || {},
+        menuConfig: menuConfig || {}
     }
 }
 

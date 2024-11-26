@@ -49,6 +49,10 @@ export function panelTabFocus(panelId:string, tabIndex: number) {
     if(panelIndex !== -1) {
         layout.value[panelIndex].showingTabIndex = tabIndex;
     }
+    // set panel initized
+    if(!layout.value[panelIndex].tabs[tabIndex].initized) {
+        layout.value[panelIndex].tabs[tabIndex].initized = true
+    }
 }
 
 export function paneResized(sizes:{min:number, max:number, size:number}[]) {

@@ -5,7 +5,8 @@ import type { Edge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/types";
  * 所布可以 drop 物件的最小單位
  */
 export interface DroppableItem {
-    id:string,
+    id:string, // unique id
+    name:string, // usally the funcion name and params of the component , use this to check if the component is the same
     icon?:string,
     label:string,
     component: string,

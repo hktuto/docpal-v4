@@ -35,9 +35,32 @@ provide(
         dialogOpened,
         closeDialog,
         openFocusMode,
-        openNewDialog
+        openNewDialog,
+        openTab
     }
 )
+
+function openTab(tab:TabItem){
+    // check if tab is already open
+    // if not, open tab
+    // if yes, focus tab
+    const existingTab = allComponents.value.find(item => item.name === tab.name)
+    if(existingTab){
+        console.log("layout", layout.value)
+        const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
+        if(panelIndex !== -1) {
+            layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.findIndex(item => item.id === existingTab.id)
+            // if panel is not initized, set it to initized
+            if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
+                layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true
+            }
+        }
+    }else{
+        tab.parent = tab.parent || hightLightPanel.value
+        addTabToPanel(tab.parent, tab)
+    }
+    // console.log(existingTab, allComponents.value)
+}
 
 function setLayout(layout:TabPanel[]){
     loading.value = true;

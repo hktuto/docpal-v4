@@ -1,4 +1,5 @@
 
+
 import {useState, createError} from '#imports'
 
 import {clientApi} from 'api'
@@ -13,17 +14,19 @@ export const usePublicPageState = () => useState<string[]>('auth-public-page', (
 export const useLoginHook = () => useState<any>(() => shallowRef([]));
 export const useIsSSO = () => useState<boolean>(() => false);
 export const useIsLDAP = () => useState<boolean>(() => false);
-
-
+export const useUserPreference = () => useState<Record<string,any>>();
+export const useFeature = () => useState<Record<string,boolean>>('app-feature');
 
 export const useAuth = () => {
     const authReadyState = useAuthReadyState()
     const userState = useUserState()
+    const perference = useUserPreference()
+
 
     return {
         loggedIn :computed(() => Boolean(userState.value)),
         logout,
-        fetch,
+        login,
         ready : computed(() => authReadyState.value)
     }
 }
@@ -34,7 +37,7 @@ export const useAuth = () => {
  *  登陸後先  {@link useFeature} 
  *  再  
  */
-export async function fetch() {
+export async function login() {
     const keyCloakState = useKeyCloakState()
 
     if(!keyCloakState.value) {
@@ -51,6 +54,7 @@ export async function fetch() {
     }
     localStorage.setItem('access_token', data.access_token)
     localStorage.setItem('refresh_token', data.refresh_token)
+
     await Promise.all([
         getUser(),        
         getFeature(),
@@ -69,7 +73,6 @@ export function logout() {
     userState.value = null;
 }
 
-const useFeature = () => useState<Record<string,boolean>>('app-feature');
 /**
  *  從Backend 拿回當前環境有的 feature, 并存到 `useFeature` 裡
  */
@@ -98,7 +101,6 @@ export function checkLicenseFeatures(requireFeatures: string[] | string) {
 }
 
 
-export const useUserPreference = () => useState<Record<string,any>>();
 const colorModeOption = [
     {
         id: '1',

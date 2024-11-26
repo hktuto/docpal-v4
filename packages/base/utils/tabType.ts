@@ -1,7 +1,7 @@
 import type { InjectionKey, RouterParams } from '#imports';
 import type {DroppableItem} from './dragType'
 export interface TabItem extends DroppableItem {
-    parent:string
+    parent?:string
     initized?: boolean
 }// tab panel container
 
@@ -20,6 +20,7 @@ interface TabManager {
     closeDialog:() => void,
     openFocusMode:(tab:TabItem) => void
     openNewDialog:(args: any) => void
+    openTab:(tab:TabItem) => void
 }
 
 interface TabComponentHelper {

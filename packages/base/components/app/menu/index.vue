@@ -18,11 +18,12 @@ function toggleMenuMode(){
     localStorage.setItem('app-menu-mode', mode.value)
 }
 
-function menuItemClick(item:MenuItem) {
+function menuItemClick(item:any) {
+    // if menu  has no children, open page in new tab
     if(!item.children || item.children.length === 0) {
-        // open page in new tab'
-
-        return
+        console.log("item click", item);
+        tabProvider?.openTab(item)
+        return;
     }
     if(selectedMenuItem.value && selectedMenuItem.value.id === item.id) {
         selectedMenuItem.value = undefined
@@ -30,6 +31,7 @@ function menuItemClick(item:MenuItem) {
 
         selectedMenuItem.value = item
     }
+    
 }
 
 onMounted(() => {
@@ -52,7 +54,7 @@ onMounted(() => {
                     <AppMenuItemCollapse v-for="(item, index) in menu" :key="index" :item="item" :selected="!!selectedMenuItem && selectedMenuItem.id === item.id" :mode="mode" @itemClick="menuItemClick(item)" />
                 </div>
                 <div v-else class="menuBody expand">
-                    <AppMenuItemExpane v-for="(item, index) in menu" :key="index" :item="item" :selected="false" :mode="mode" />
+                    <AppMenuItemExpane v-for="(item, index) in menu" :key="index" :item="item" :selected="false" :mode="mode" @itemClick="menuItemClick(item)" />
                 </div>
             </Transition>
             <div class="menuFooter">

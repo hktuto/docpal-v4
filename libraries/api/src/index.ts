@@ -51,7 +51,6 @@ clientApi.instance.interceptors.response.use(
                     Authorization: 'Bearer ' + refreshToken
                 }
             }).then( res => res.json)
-            console.log("refresh token response", refreshResponse)
             localStorage.setItem('access_token', refreshResponse.data.access_token);
             localStorage.setItem('refresh_token', refreshResponse.data.refresh_token);
       
