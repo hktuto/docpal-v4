@@ -2,6 +2,9 @@
 import {TabManagerKey, useI18n, workflowEditorListTableSetting} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
+import { createTableConfig } from '../../../../../packages/base/utils/tableHelper';
+
+
 
 const tabManager = inject(TabManagerKey)
 if(!tabManager) {
@@ -11,13 +14,14 @@ const { t } = useI18n()
 const {page, pageSize, time, tab} = defineProps<{
     page:number, pageSize:number, time?:number, tab:any
 }>()
-const pageParams = {
-        pageNum: 0,
-        pageSize: 20,
-        orderBy: 'createdDate',
-        isDesc: true
-}
 
+
+const pageParams = reactive({
+    pageNum: 0,
+    pageSize: 20,
+    totalSize:0,
+    
+})
 const tableSetting = workflowEditorListTableSetting
     const state = reactive({
         loading: false,
@@ -34,12 +38,15 @@ const tableSetting = workflowEditorListTableSetting
         extraParams: {}
     })
 
-    async function getList (param:any) {
+    async function getList (param?:any) {
         state.loading = true
         try {
-            const {data}:any = await adminApi.workflowProcessDefinitionController.postPage(param)
+
+            const {data}:any = await adminApi.workflowProcessDefinitionController.postPage(pageParams)
             // await GetWorkflowDraftPageApi({ ...param, ...state.extraParams })
             state.tableData = data.entryList
+            pageParams.totalSize = data.totalSize
+            pageParams.pageSize = param.pageSize
             state.options.paginationConfig.total = data.totalSize
             state.options.paginationConfig.pageSize = param.pageSize
             state.options.paginationConfig.currentPage = param.pageNum + 1
@@ -66,18 +73,6 @@ const tableSetting = workflowEditorListTableSetting
         // scroll top
 
     }
-    watch(
-        () => [page, pageSize, time],
-        async () => {
-            nextTick(() => {
-
-              pageParams.pageNum = (Number(page) - 1) || 0
-              pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-              getList(pageParams)
-            })
-        },
-        { immediate: true, deep:true }
-    )
 
     function handleAction (command:string, row: any, rowIndex: number) {
     switch (command) {
@@ -124,61 +119,60 @@ const WorkflowEditorDialogRef = ref()
 function handleAdd () {
     WorkflowEditorDialogRef.value.handleOpen()
 }
-// #region module: ResponsiveFilterRef
-    function handleFilterFormChange(formModel:any) {
 
-    if (!formModel.isDesc) formModel.isDesc = true
-    if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === 'false' ? false : true
-    let filterParams = {
-        name: formModel.name === "" ? undefined : formModel.name,
-        orderBy: formModel.orderBy === undefined || formModel.orderBy === "" ? "createdDate" : formModel.orderBy,
-        isDesc: formModel.isDesc
-    };
-    state.extraParams = filterParams
-    handlePaginationChange(1)
-    }
-// #endregion
-const ResponsiveFilterRef = ref()
+const config = createTableConfig(
+    "workflowEditorListTableSetting", 
+    adminApi.workflowProcessDefinitionController.postPage,
+    [
+                {
+                    field: 'name',
+                    title: 'Name',
+                    fixed:'left',
+                    'min-width': 100,
+                },
+                {
+                    field: 'productionVersion',
+                    title: 'productionVersion',
+                    'min-width': 100,
+                },
+                {
+                    field: 'latestVersion',
+                    title: 'latestVersion',
+                    'min-width': 100,
+                },
+                {
+                    field:'modifiedBy',
+                    title: 'modifiedBy',
+                    'min-width': 100,
+                },
+                {
+                    title: 'Action',
+                    fixed: 'right',
+                    width: 60,
+                }
+            ]
+)
+
 onMounted(() => {
     // TODO: move ResponsiveFilterRef from old repo to here
-    if(!ResponsiveFilterRef.value) return;
-        ResponsiveFilterRef.value.init(
-            [{ key: "orderBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
-                    options: [
-                        { label: 'table_name', value: 'name' },
-                        { label: 'dpTable_status', value: 'publishStatus' },
-                        { label: 'workflow_createDate', value: 'createdDate' },
-                    ]
-                },
-                { key: "isDesc", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
-                    options: [
-                        { label: 'tableHeader.desc', value: false },
-                        { label: 'tableHeader.asc', value: true }
-                    ]
-        }])
+
 })
 </script>
 
 <template>
     <div class="pageContainer">
-        
-        <WorkflowEditorPageList 
-            :loading="state.loading" 
-            :columns="tableSetting.columns" 
-            :table-data="state.tableData" 
-            :options="state.options" 
-            @handleAction="handleAction"
-            @handleDblclick="handleDblclick"
-            @handlePaginationChange="handlePaginationChange"
-            @handleAdd="handleAdd"
-            @inactive="handleDeactive"
-            @active="handleActive"
-        />
+        <vxe-grid
+            v-bind="config"
+        > </vxe-grid>
+
     </div>
 </template>
 
 <style lang="scss" scoped>
 .pageContainer{
     padding: var(--app-space-s);
+    height: 100%;
+    overflow: hidden;
+    position: relative;
 }
 </style>
