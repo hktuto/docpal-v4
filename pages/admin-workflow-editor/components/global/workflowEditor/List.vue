@@ -15,33 +15,32 @@ const { t } = useI18n()
 
 const config = createTableConfig({
     id: 'workflowEditorListTableSetting',
-    api: adminApi.workflowProcessDefinitionController.postPage,
+    api: (pageParams:any) => adminApi.workflowProcessDefinitionController.postPage(pageParams),
     columns:  [
                 {
                     field: 'name',
                     title: 'Name',
                     fixed: 'left',
-                    minWidth: 100,
                 },
                 {
                     field: 'productionVersion',
                     title: 'productionVersion',
-                    minWidth: 60,
+                    minWidth: 120,
                 },
                 {
                     field: 'latestVersion',
                     title: 'latestVersion',
-                    minWidth: 60,
+                    minWidth: 120,
                 },
                 {
                     field:'modifiedBy',
                     title: 'modifiedBy',
-                    minWidth: 200,
+                    minWidth: 120,
                 },
                 {
                     title: 'Action',
                     fixed: 'right',
-                    minWidth: 40,
+                    width: 65,
                     slots:{
                         default:'action'
                     }
@@ -97,7 +96,6 @@ const tableEvents: VxeGridListeners = {
 }
 
 function handleDblclick(data:any){
-    console.log('item clicked', data)
     // TODO: open detail page
     const newItem: any = {
         menuKey: routerProvider?.menuSymbol,
@@ -114,12 +112,11 @@ function handleDblclick(data:any){
             item: data,
         }
     }
-    routerProvider?.navigateTo(newItem)
+    routerProvider?.navigateTo({...newItem})
     // tabManager?.openTab(newItem)
 }
 
 function openLastestVersion(data:any, openInNewTab = false){
-    console.log('item clicked', data)
     // TODO: open detail page
     const newItem: any = {
         menuKey: routerProvider?.menuSymbol,
@@ -137,9 +134,9 @@ function openLastestVersion(data:any, openInNewTab = false){
         }
     }
     if(!openInNewTab){
-        routerProvider?.navigateTo(newItem)
+        routerProvider?.navigateTo({...newItem})
     }else{
-        tabManager?.openTab(newItem)
+        tabManager?.openTab({...newItem})
     }
 }
 
@@ -161,7 +158,7 @@ function openProductionVersion(data:any){
             item: data,
         }
     }        
-    routerProvider?.navigateTo(newItem)
+    routerProvider?.navigateTo({...newItem})
     // tabManager?.openTab(newItem)
 }
 
@@ -170,6 +167,7 @@ function saveAsNewWorkflow(data:any){
 }
 
 function openVersions(data:any){
+    console.log('open versions', data)
     const newItem:any = {
         menuKey: routerProvider?.menuSymbol,
         id: "workflow-editor-versions-" + new Date().getTime(),
@@ -179,13 +177,14 @@ function openVersions(data:any){
         component: 'LazyWorkflowEditorVersion',
         props: {
             id: data.id,
-            currentVersion: data.productionVersion,
+            draftId: data.draftId,
+            latestVersion: data.latestVersion,
             productionVersion: data.productionVersion,
             name: data.name,
             item: data,
         }
     }
-    routerProvider?.navigateTo(newItem)
+    routerProvider?.navigateTo({...newItem})
 }
 
 function createNewWorkflow(){
@@ -213,7 +212,7 @@ function createNewWorkflow(){
                             <ElDropdownItem @click="openLastestVersion(row)">Edit latest version</ElDropdownItem>
                             <ElDropdownItem v-if="row.productionVersion" @click="openProductionVersion(row)">View Production</ElDropdownItem>
                             <ElDropdownItem @click="handleDblclick(row)">Save As New Workflow</ElDropdownItem>
-                            <ElDropdownItem @click="handleDblclick(row)">View  Versions</ElDropdownItem>
+                            <ElDropdownItem @click="openVersions(row)">View  Versions</ElDropdownItem>
                             
                         </ElDropdownMenu>
                     </template>
