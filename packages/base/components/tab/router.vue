@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type {TabItem, RouterParams} from '#imports';
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
+const {allComponents} = useTabsManager()
+
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
 if(!tabManager) {    
@@ -17,6 +19,12 @@ const isFullscreen = computed(() => {
 
 
 function navigateTo(param: RouterParams) {
+    const existingTab = allComponents.value.find(item => item.name === param.name)
+    if(existingTab){
+        tabManager?.openTab(param)
+        return;
+    }
+
     if(param.menuKey !== menuSymbol) return
     
     history.value.push({
@@ -35,7 +43,6 @@ function navigateTo(param: RouterParams) {
     tab.value.props = param.props
     tab.value.label = param.label
     tab.value.initized = true
-    console.log("navigateTo", tab.value)
    
     panelRouteUpdate(tab.value.parent, tab.value.id, param)
 }

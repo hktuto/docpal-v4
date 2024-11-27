@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ElDialog } from 'element-plus';
 import 'splitpanes/dist/splitpanes.css'
 import {TabDialog} from '#components'
 const emits = defineEmits(['ready', 'layoutChanged', 'highlightPanelChanged'])
@@ -41,23 +40,28 @@ provide(
 )
 
 function openTab(tab:TabItem){
+    console.log("openTab")
     // check if tab is already open
-    // if not, open tab
-    // if yes, focus tab
     const existingTab = allComponents.value.find(item => item.name === tab.name)
+    console.log("existingTab", existingTab)
     if(existingTab){
-        console.log("layout", layout.value)
+        console.log("find existingTab")
         const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
         if(panelIndex !== -1) {
+            console.log("can find index")
             layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.findIndex(item => item.id === existingTab.id)
             // if panel is not initized, set it to initized
             if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
                 layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true
             }
+        }else{
+            console.log("can not find index")
+            addTabInCurrentPanel({...tab})
         }
     }else{
+        console.log("no existingTab")
         tab.parent = tab.parent || hightLightPanel.value
-        addTabToPanel(tab.parent, tab)
+        addTabInCurrentPanel({...tab})
     }
     // console.log(existingTab, allComponents.value)
 }

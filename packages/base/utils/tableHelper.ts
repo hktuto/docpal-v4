@@ -17,13 +17,14 @@ export const createTableConfig = ({
             buttons: 'toolbar_buttons'
         }
     },
-    }:TableConfig,optional:VxeGridProps):VxeGridProps => {
+    }:TableConfig,optional:VxeGridProps = {}):VxeGridProps => {
 
     // @ts-ignore
     const perference = useUserPreference()
     return {
         id,
         border: true,
+        round: true,
         showOverflow: true,
         height: 'auto',
         toolbarConfig: toolbarConfig,
@@ -48,13 +49,21 @@ export const createTableConfig = ({
         },
         columns,
         pagerConfig: {
-            pageSize: 15
+            pageSize: 20
         },
         proxyConfig: {
+            sort: true,
             ajax: {
-              query: async({ page }:any) => {
+              query: async({ page, sorts }:any) => {
                 // 默认接收 Promise<{ result: [], page: { total: 100 } }>
-                const {data} = await api({pageSize:page.pageSize, pageNum:page.currentPage - 1})
+                let params:any = {
+                    pageSize:page.pageSize, pageNum:page.currentPage - 1
+                }
+                if(sorts && sorts.length > 0) {
+                    params.orderBy = sorts[0].property
+                    params.isDesc = sorts[0].order === "desc"
+                }
+                const {data} = await api(params)
                 return {
                     result: data.entryList,
                     page: {
