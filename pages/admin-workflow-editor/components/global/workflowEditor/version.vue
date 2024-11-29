@@ -71,7 +71,6 @@ const tableConfig = createTableConfig({
         },
         visibleMethod: ({options, column, row, rowIndex}) => {
             // options 是 menuConfig 中的 body 配置
-            console.log(row, latestVersion)
             const isProduction = row.isProduction === 'A'
             const isLatest = row.versionNumber === latestVersion
             options.forEach(list => {

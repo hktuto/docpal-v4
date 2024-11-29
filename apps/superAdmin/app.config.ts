@@ -11,11 +11,11 @@ export default defineAppConfig({
             component: 'LazyMenuSetup'
         },
         {
-            id:'pageSetup',
+            id:'tableSetting',
             name:"page-setup",
             icon: 'lucide:columns-2',
-            label: "Page Setup",
-            component: 'LazyPageSetup'
+            label: "Table Setup",
+            component: 'LazyTableSetup'
         },
     ]
 })

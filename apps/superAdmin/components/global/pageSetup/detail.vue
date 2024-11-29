@@ -7,7 +7,7 @@ const { id, item } = defineProps<{
 
 <template>
     <div class="pageContainer">
-        <PageSettingEditor :item="item"/>
+        
     </div>
 </template>
 <style lang="scss" scoped>
