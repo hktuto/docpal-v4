@@ -31,7 +31,7 @@ async function handleSubmit () {
     const form:any = new FormData();
     form.append('name', name)
     form.append('attr_id', nameToId)
-    // form.append('versionId', 'V1')
+    form.append('versionId', 'V1')
     form.append('jsonValue', JSON.stringify({}))
     form.append('file', blob, 'workflow.bpmn.xml')
     form.append('isDraft', true)
@@ -58,6 +58,7 @@ async function handleSubmit () {
     }, 300);
     state.visible = false
 }
+
 
 async function getXMLFileTemplate(template:string = 'Single') {
     const item: any = workflowTemplateList.find((item) => item.id === template)
@@ -89,7 +90,7 @@ defineExpose({ handleOpen })
             <el-radio-group v-model="state.form.template">
                 <el-radio v-for="item in workflowTemplateList" :key="item.id" :label="item.id">
                     <div class="workflow-template-step">
-                        <SvgIcon class="workflow-template-step-icon" :src="item.icon" @click="toggleColor" />
+                        <SvgIcon class="workflow-template-step-icon" :src="item.icon" />
                         <h3 class="workflow-template-step-label">{{item.name}}</h3>
                         <tip class="workflow-template-step-tip">{{$t(item.tip)}}</tip>
                     </div>

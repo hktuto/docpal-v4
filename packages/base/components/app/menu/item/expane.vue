@@ -1,6 +1,7 @@
 <script lang="ts" setup generic="T extends MenuItem">
 import type {MenuItem} from '#imports'
 import {menuKey} from '#imports';
+const emits = defineEmits(['itemClick', 'contextmenu'])
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
@@ -13,7 +14,7 @@ const elRef = ref()
 </script>
 <template>
     <div :class="{menuExpanItemContainer:true, opened, selected}">
-       <div class="menuItem">
+       <div class="menuItem" @click="$emit('itemClick', item)">
            <div class="menuIcon">
                <Icon :name="item.icon"></Icon>
            </div>

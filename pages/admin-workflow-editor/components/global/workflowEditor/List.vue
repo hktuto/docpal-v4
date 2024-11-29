@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import dayjs from 'dayjs'
 import {TabManagerKey, useI18n, workflowEditorListTableSetting} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
@@ -21,11 +22,13 @@ const config = createTableConfig({
                     field: 'name',
                     title: 'Name',
                     fixed: 'left',
+                    sortable: true,
                 },
                 {
                     field: 'productionVersion',
                     title: 'productionVersion',
                     minWidth: 120,
+                    
                 },
                 {
                     field: 'latestVersion',
@@ -36,6 +39,16 @@ const config = createTableConfig({
                     field:'modifiedBy',
                     title: 'modifiedBy',
                     minWidth: 120,
+                    sortable: true,
+                },
+                {
+                    field: 'modifiedDate',
+                    title: 'modifiedDate',
+                    minWidth: 120,
+                    sortable: true,
+                    formatter ({ cellValue }:any) {
+                        return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
+                    }
                 },
                 {
                     title: 'Action',
@@ -75,7 +88,16 @@ const config = createTableConfig({
             return true;
         }
 
-    }
+    },
+    sortConfig: {
+        remote: true,
+        defaultSort:[
+            {
+                field: 'name',
+                order: 'asc'
+            }
+        ]
+    },
 }
 )
 
