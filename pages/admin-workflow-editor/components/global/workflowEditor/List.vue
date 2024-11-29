@@ -187,8 +187,9 @@ function openVersions(data:any){
     routerProvider?.navigateTo({...newItem})
 }
 
+const newDialogRef = ref()
 function createNewWorkflow(){
-
+    newDialogRef.value.handleOpen()
 }
 
 </script>
@@ -219,7 +220,7 @@ function createNewWorkflow(){
                 </ElDropdown>       
             </template>
         </vxe-grid>
-
+        <WorkflowEditorNewDialog ref="newDialogRef" />
     </div>
 </template>
 
