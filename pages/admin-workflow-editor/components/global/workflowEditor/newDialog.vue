@@ -53,6 +53,9 @@ async function handleSubmit () {
     //     }
     // }
     // routerProvider?.navigateTo({...newItem})
+    setTimeout(() => {
+        emits('created')
+    }, 300);
     state.visible = false
 }
 

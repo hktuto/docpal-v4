@@ -5,7 +5,7 @@ import { adminApi } from 'api';
 import { createTableConfig } from '../../../../../packages/base/utils/tableHelper';
 import type {VxeGridListeners} from 'vxe-table'
 
-
+const gridRef = ref();
 const tabManager = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 if(!tabManager || !routerProvider) {
@@ -192,11 +192,19 @@ function createNewWorkflow(){
     newDialogRef.value.handleOpen()
 }
 
+function reload(){
+    const $grid = gridRef.value
+  if ($grid) {
+    $grid.commitProxy('reload')
+  }
+}
+
 </script>
 
 <template>
     <div class="pageContainer">
         <vxe-grid
+            ref="gridRef"
             v-bind="config"
             v-on="tableEvents"
         >
@@ -220,7 +228,7 @@ function createNewWorkflow(){
                 </ElDropdown>       
             </template>
         </vxe-grid>
-        <WorkflowEditorNewDialog ref="newDialogRef" />
+        <WorkflowEditorNewDialog ref="newDialogRef" @click="reload" />
     </div>
 </template>
 
