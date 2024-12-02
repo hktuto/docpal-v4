@@ -7,6 +7,7 @@ import { History } from '@antv/x6-plugin-history'
 import { graphToBpmnJson } from '~/utils/bpmnConverter';
 import { adminApi } from 'api';
 import {bpmnElement} from '~/utils/bpmnElement';
+import { ElNotification } from 'element-plus';
 /**
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
@@ -187,6 +188,28 @@ async function formSubmit(){
     formDialogVisible.value = false;
 }
 
+async function getFormByNode(node: Node){
+    const response = await adminApi.formPropertiesRelationController.getQuery({
+        processKey: workflowData.key,
+        userTaskId: node.data.id,
+        versionId: currentVersion
+    });
+    if(!response || !response.data || response.data.length === 0){
+        return {};
+    }
+    const json = JSON.parse(response.data[0].jsonValue || "{}")
+    return json
+}
+
+async function saveFormByNode(node: Node, json:any){
+    return await adminApi.formPropertiesRelationController.postSave({
+        processKey: workflowData.key,
+        userTaskId: node.data.id,
+        jsonValue: JSON.stringify(json),
+        versionId: currentVersion
+    })
+}
+
 async function openForm(node: Node){
     const response = await adminApi.formPropertiesRelationController.getQuery({
         processKey: workflowData.key,
@@ -211,6 +234,42 @@ async function openForm(node: Node){
     // console.log(selectedStep.value?.data.extensionElements['flowable:formProperty'] , fieldListApi.value)
 }
 
+const copyKey = ref("")
+const copyObj = ref<any>();
+async function copyForm(node:Node, obj:any) {
+    copyKey.value = node.data.id;
+    copyObj.value = obj
+    console.log('copyed', copyObj.value, node.data)
+    ElNotification.success(
+        `${node.data.name}'s form has copied`
+    )
+
+}
+async function pasteForm(node:Node){
+    const {form, fields} = copyObj.value
+    await saveFormByNode(node, form);
+    graph.value?.startBatch('update-from-data')
+    const newData = {
+        ...node.data,
+        version: (node.data.version || 0) + 1,
+        data:{
+            ...JSON.parse(JSON.stringify(node.data.data)),
+            extensionElements:{
+                ...node.data.data.extensionElements,
+                'flowable:formProperty': [...fields]
+            }
+        }
+    }
+    node.setData(newData,{ overwrite: true, deep: true, silent:false })
+    graph.value?.stopBatch('update-from-data')
+
+    // notify user
+    ElNotification.success(
+        `${node.data.name} has paste the copied content`
+    )
+    // reset copyObj
+}
+
 /// #endregion
 
 
@@ -218,6 +277,12 @@ provide('workflowEditor', {
     openForm,
     openPermission,
     openInfo,
+    saveFormByNode,
+    getFormByNode,
+    pasteForm,
+    copyForm,
+    copyObj,
+    copyKey
 })
 
 

@@ -165,6 +165,9 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
 export const checkX6Json = function(x6Json:any, bpmnJson:BPMNJSON){
     // check if process node exist
     const processId = bpmnJson.definitions.process.attr_id;
+    if(!x6Json || !x6Json.cells) {
+        x6Json.cells = []
+    }
     if(!x6Json.cells.find((node:any) => node.id === processId)) {
         x6Json.cells.push({
             id: processId,
@@ -248,7 +251,6 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
                 ...json.definitions.process,
                 ...processData.data
             }
-            console.log("process node", json, processData)
         }
     })
     edges.forEach( edge => {
