@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-import { ElButton, ElCol, ElForm } from 'element-plus';
 
 import draggable from "vuedraggable";
 
@@ -12,7 +11,14 @@ const emits = defineEmits(['openForm'])
 
 // #region setup
 const graphProvider = inject(BPMN_PROVIDER)
-const editorProvider = inject<{openForm:(node:Node)=>void}>('workflowEditor');
+const editorProvider = inject<{
+    openForm:(node:Node)=>void, 
+    getFormByNode:(node:Node) => object,
+    copyForm: (node:Node, obj:any) => void
+    pasteForm: (node:Node) => void,
+    copyObj: any
+    copyKey: Ref<string>
+}>('workflowEditor');
 
 if(!graphProvider || !editorProvider) {
     throw createError('provider not found')
@@ -34,10 +40,16 @@ onMounted(() => {
 // #endregion
 const drag = ref(false)
 const formItems = ref<any[]>([])
-
+const fieldEditorRef = ref()
 const openedItems = ref<string[]>([])
 
+function formUpdate(value:any[]) {
+    formItems.value = value
+    formChange()
+}
+
 function formChange() {
+    console.log('form change', formItems.value)
     graphProvider?.graph.value?.startBatch('update-from-data')
     const newData = {
         ...node.data,
@@ -85,12 +97,43 @@ function editItem(id:string) {
     }
 }
 function refreshData() {
-    if(!node.data || !node.data.data || !node.data.data.extensionElements) throw new Error('node data not found');
+    if(!node.data || !node.data.data || !node.data.data.extensionElements){
+        node.setData({
+            ...node.data,
+            data:{
+                ...node.data.data,
+                extensionElements:{
+                    ...node.data.data.extensionElements,
+                    'flowable:formProperty': []
+                }
+            }
+        }, {overwrite:true, silent:true})
+    }
     
     formItems.value =JSON.parse(JSON.stringify( node.data.data.extensionElements['flowable:formProperty'] || []))
     // if(node.data.data.extensionElements['flowable:formProperty']) 
     // node.setData(node.data, {overwrite:true, silent:false})
 }
+
+function editField(){
+    fieldEditorRef.value.open()
+}
+
+async function copyFormAndFieldSetting(){
+    const fields = JSON.parse(JSON.stringify(formItems.value))
+    const form = await editorProvider?.getFormByNode(node)
+    editorProvider?.copyForm(node, {
+        fields,
+        form
+    });
+}
+
+
+async function pasteForm(){
+    await editorProvider?.pasteForm(node);
+    refreshData();
+}
+
 
 watch(() => node, ()=> {
   if(node) {
@@ -107,56 +150,40 @@ watch(() => node, ()=> {
 
 <template>
     <div class="formComponentContainer">
-        <draggable 
-            v-model="formItems" 
-            class="formItemListContainer" 
-            handle=".mover" 
-            tag="transition-group"
-            :component-data="{
-                tag: 'ul', name: 'transition-group', type: 'transition'
-            }"
-            :animation="200"
-            group="description"
-            :disabled="false"
-            ghostClass="ghost"
-            tem-key="attr_id"
-            @change="formChange"
-            @start="drag = true"
-            @end="drag = false"
-            >
-            <template #item="{ element, index }">
-                <li :class="{formFieldItem : true, opened: openedItems.includes(element.attr_id)}">
-                    <div class="header">
-                        <div scope="row" class="mover">
-                            <Icon name="uil:elipsis-double-v-alt" />
+        <div class="listContainer">
+            <div v-for="(item, index) in formItems" :key="item.attr_id" class="formFieldItem">
+                <div class="header">
+                        <div class="label" @click="editItem(item.attr_id)">
+                            {{  item.attr_name }}
                         </div>
-                        <div class="label" @click="editItem(formItems[index].attr_id)">
-                            {{  formItems[index].attr_name }}
+                        <div v-if="!item.attr_fixed" class="actions">
+                            <Icon name="lucide:square-pen" @click="editItem(item.attr_id)" />
                         </div>
-                        <div v-if="!formItems[index].attr_fixed" class="actions">
-                            <Icon name="lucide:square-pen" @click="editItem(formItems[index].attr_id)" />
-                        </div>
-                        <div v-if="!formItems[index].attr_fixed" class="actions">
+                        <div v-if="!item.attr_fixed" class="actions">
                             <Icon name="lucide:delete" @click="removeFormItem(index)" />
                         </div>
                     </div>
-                    <div class="body" v-show="openedItems.includes(formItems[index].attr_id)">
-                        
+                    <div class="body" v-show="openedItems.includes(item.attr_id)">
                         <ElForm label-position="top" label-width="100px" size="small">
                             <ElRow :gutter="12">
                             <ElCol :span="12">
                                 <ElFormItem label="Name">
-                                    <ElInput v-model="formItems[index].attr_name" @change="formChange"/>
+                                    <ElInput v-model="item.attr_id" disabled />
                                 </ElFormItem>
                             </ElCol>
                             <ElCol :span="12">
-                                <ElFormItem label="Form label">
-                                    <ElInput v-model="formItems[index].attr_field_label" @change="formChange"/>
+                                <ElFormItem label="Name">
+                                    <ElInput v-model="item.attr_name" @change="formChange"/>
                                 </ElFormItem>
                             </ElCol>
+                            <!-- <ElCol :span="12">
+                                <ElFormItem label="Form label">
+                                    <ElInput v-model="item.attr_field_label" @change="formChange"/>
+                                </ElFormItem>
+                            </ElCol> -->
                             <ElCol :span="12">                            
                                 <ElFormItem label="Type">
-                                    <ElSelect v-model="formItems[index].attr_type" @change="formChange">
+                                    <ElSelect v-model="item.attr_type" @change="formChange">
                                         <ElOption label="String" value="string"></ElOption>
                                         <ElOption label="Number" value="number"></ElOption>
                                         <ElOption label="Boolean" value="boolean"></ElOption>
@@ -164,25 +191,32 @@ watch(() => node, ()=> {
                                 </ElFormItem>
                             </ElCol>
                             <ElCol :span="12">
-
                                 <ElFormItem label="Required">
-                                    <ElSwitch v-model="formItems[index].attr_required" @change="formChange"/>
+                                    <ElSwitch v-model="item.attr_required" @change="formChange"/>
                                 </ElFormItem>
                             </ElCol>
-                            <ElCol :span="12">
-
+                            <!-- <ElCol :span="12">
                                 <ElFormItem label="Fixed">
-                                    <ElSwitch v-model="formItems[index].attr_fixed" @change="formChange"/>
+                                    <ElSwitch v-model="item.attr_fixed" @change="formChange"/>
                                 </ElFormItem>
-                            </ElCol>
+                            </ElCol> -->
                         </ElRow>
                         </ElForm>
                     </div>
-                </li>
+            </div>
+        </div>
+        <div class="actionsContainer">
 
-        </template>
-        </draggable>
-        <ElButton type="primary" @click="editorProvider.openForm(node)" >Edit Form</ElButton>
+            <ElButton type="primary" @click="editField" >Edit Field</ElButton>
+            <ElButton type="primary" @click="editorProvider.openForm(node)" >Edit Form</ElButton>
+        </div>
+        <Eldivider />
+        <div class="actionsContainer">
+            <ElButton type="link" size="small" @click="copyFormAndFieldSetting">Copy Form and Field setting</ElButton>
+
+            <ElButton v-if="editorProvider.copyKey.value && editorProvider.copyKey.value !== node.data.id" type="link" size="small" @click="pasteForm">Paste Form</ElButton>
+        </div>
+        <BpmnFieldEditor ref="fieldEditorRef" :fields="formItems" @change="formUpdate"/>
     </div>
 
 </template>
@@ -230,7 +264,13 @@ watch(() => node, ()=> {
 .mover{
     cursor: move;
 }
-
+.actionsContainer{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-block: var(--app-font-size-xs);
+}
 .flip-list-move {
   transition: transform 0.5s;
 }

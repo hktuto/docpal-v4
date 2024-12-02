@@ -67,7 +67,7 @@ function init(bpmnXml :string, x6Json?:any){
         container: containerEl,
         ...graphOptions
     });
-    if(x6Json) {
+    if(x6Json && x6Json.cells && x6Json.cells.length > 0) {
         const {json} = bpmnStringToJson(bpmnXml)
         bpmnJson.value = json;
         x6Json = checkX6Json(x6Json, json)
@@ -91,6 +91,12 @@ function init(bpmnXml :string, x6Json?:any){
     }else{
         autoLayout(bpmnXml)
     }
+    allFormField.value = getAllFormFieldFromGraph(graph.value)
+
+    graph.value.on('history:change', () => {
+        allFormField.value = getAllFormFieldFromGraph(graph.value as any)
+        console.log("all field changed", allFormField.value)
+    })
     emits('graphReady', x6Json)
 }
 
@@ -118,10 +124,8 @@ function fitIn(){
     graph.value?.zoomToFit({padding: 40})
 }
 
-const allFormField = computed(() => {
-    if(!graph.value) return []
-    return getAllFormFieldFromGraph(graph.value )
-})
+const allFormField = ref({});
+
 
 
 provide(BPMN_PROVIDER, {
