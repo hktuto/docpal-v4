@@ -328,6 +328,8 @@ export const bpmnElement:BpmnElement = {
             let icon = '/bpmn/icons/document.svg'
             let color ='#7B61FF'
             let type = "ServiceTask"
+            let bgColor = '#fff';
+            let textColor = '#000';
             if(!item['attr_flowable:delegateExpression']){
                 return squareNodeStyle('#7B61FF', "ServiceTask", icon)
             }
@@ -347,9 +349,16 @@ export const bpmnElement:BpmnElement = {
                     type = "Filing"
                     color = '#7B61FF';
                     break;
+                case '${conditionValidateDelegate}':
+                    icon = '/bpmn/icons/condition.svg'
+                    type = "condition"
+                    color = '#7B61FF';
+                    bgColor = '#0F2037';
+                    textColor = '#fff';
+                    break;
             }
             return {
-                ...squareNodeStyle(color, type, icon),
+                ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
                 shape:'bpmn-node',
                 ports: {
                     items:[
@@ -458,6 +467,36 @@ export const bpmnElement:BpmnElement = {
                         extensionElements:""
                     })
                 })
+            },
+            {
+                icon:'bpmn:condition',
+                label: 'Condition',
+                dropData: (id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                            ['attr_flowable:delegateExpression']:'${conditionValidateDelegate}',
+                            extensionElements:{
+                                "docpal:decisionTable": {
+                                    orConditionElements:{
+                                        element:[]
+                                    }
+                                }
+                            }
+                        }),
+                    label: 'New Condition',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Condition', {
+                        attr_id:id,
+                        attr_name:'New Condition',
+                        ['attr_flowable:delegateExpression']:'${conditionValidateDelegate}',
+                        extensionElements:{
+                            "docpal:decisionTable": {
+                                orConditionElements:{
+                                    element:[]
+                                }
+                            }
+                        }
+                    })
+                })
 
             }
         ],
@@ -481,6 +520,8 @@ export const bpmnElement:BpmnElement = {
                     return 'LazyBpmnContextDocument'
                 case '${filingGenerateDocumentDelegate}':
                     return 'LazyBpmnContextFiling'
+                case '${conditionValidateDelegate}':
+                    return 'LazyBpmnContextCondition'
             }
         },
 

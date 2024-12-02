@@ -106,6 +106,7 @@ function openInfo() {
     selectedNode.value = cell
     editComponent.value = resolveComponent('LazyBpmnSidebarInfo');
 }
+
 function openFolderCabinet() {
     const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
     const cell = graphProvider?.graph.value?.getCellById(id)

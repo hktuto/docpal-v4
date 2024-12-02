@@ -71,5 +71,7 @@ watch(() => node, ()=> {
 </template>
 
 <style scoped lang="scss">
-
+:deep(.el-form-item){
+  margin-bottom: var(--app-space-xs);
+}
 </style>
