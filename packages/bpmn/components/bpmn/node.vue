@@ -5,9 +5,16 @@ import { onClickOutside, useEventListener } from '@vueuse/core';
 import { ElPopconfirm } from 'element-plus';
 
 const graphProvider = inject(BPMN_PROVIDER)
+const editorProvider = inject<{
+    openForm:(node:Node)=>void, 
+    getFormByNode:(node:Node) => object,
+    copyForm: (node:Node, obj:any) => void
+    pasteForm: (node:Node) => void,
+    copyObj: any
+    copyKey: Ref<string>
+}>('workflowEditor');
 
-
-if(!graphProvider) {
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')
 }
 
@@ -143,6 +150,21 @@ function handleNodeClick({node}:any) {
     }
 }
 
+async function copy(){
+    const data = contextSelectedNode.value.data
+    const field = data.data.extensionElements['flowable:formProperty'] || []
+    const fields = JSON.parse(JSON.stringify(field))
+    const form = await editorProvider?.getFormByNode(contextSelectedNode.value)
+    editorProvider?.copyForm(contextSelectedNode.value, {
+        fields,
+        form
+    });
+}
+
+async function paste(){
+    await editorProvider?.pasteForm(contextSelectedNode.value);
+}
+
 
 
 onMounted(() => {
@@ -168,6 +190,14 @@ defineExpose({
         <div class="contextAction" @click="editItem">
             <Icon name="lucide:settings-2" />
             <div class="label">Edit</div>
+        </div>
+        <div class="contextAction" v-if="contextSelectedNode && ['userTask', 'startEvent'].includes(contextSelectedNode.data.type)" @click="copy">
+            <Icon name="lucide:clipboard-copy" />
+            <div class="label">Copy</div>
+        </div>
+        <div class="contextAction" v-if="contextSelectedNode && ['userTask', 'startEvent'].includes(contextSelectedNode.data.type) && editorProvider.copyKey.value && editorProvider.copyKey.value !== contextSelectedNode.data.id" @click="paste">
+            <Icon name="lucide:clipboard-paste" />
+            <div class="label">Paste</div>
         </div>
         <ElPopconfirm v-if="contextSelectedNode && !['start','end'].includes(contextSelectedNode.data.id)" title="Are you sure to delete this item?" @confirm="deleteItem">
             <template #reference>
