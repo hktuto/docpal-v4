@@ -22,7 +22,7 @@ export const iconOptionMaker = (iconPath:string) => {
         refY: 0.15
     }
 }
-export const squareNodeStyle = (color:string, nodeType:string, img:string, width=200, height=64) => {
+export const squareNodeStyle = (color:string, nodeType:string, img:string, width=200, height=64, bgColor='#fff', textColor='#000') => {
     const style:any = {
         width,
         height,
@@ -30,7 +30,7 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string, width
             body: {
                 stroke: '#ddd',
                 strokeWidth: 1,
-                fill: '#fff',
+                fill: bgColor,
                 rx: 8,
                 ry: 8,
                 refWidth: 1,
@@ -48,7 +48,7 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string, width
                 text: nodeType,
                 refX: 46,
                 refY: 12,
-                fill: 'rgba(0,0,0,0.85)',
+                fill: textColor,
                 fontSize: 14,
                 fontWeight: 'bold',
                 'text-anchor': 'start',
@@ -57,7 +57,7 @@ export const squareNodeStyle = (color:string, nodeType:string, img:string, width
                 refX: 46,
                 refY: 30,
                 fontSize: 12,
-                fill: 'rgba(0,0,0,0.6)',
+                fill: textColor,
                 textAnchor: 'start',
                 textVerticalAnchor: 'top',
                 textWrap: {
