@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-
+import {CONDITION_PROVIDER} from '#imports'
 import type { Node } from '@antv/x6'
+import { adminApi } from 'api';
 const { node } = defineProps<{
     node:Node
 }>()
-
+const graphProvider = inject(BPMN_PROVIDER)
 const form = ref();
 
 function refreshData() {
@@ -22,23 +23,92 @@ function refreshData() {
             }
         })
     }
-    form.value = node.data.data.extensionElements['docpal:decisionTable'].orConditionElements
+    console.log("refreshData", node.data.data.extensionElements['docpal:decisionTable'].orConditionElements)
+    form.value = JSON.parse(JSON.stringify(node.data.data.extensionElements['docpal:decisionTable'].orConditionElements))
+}
+
+function updateNode(){
+    graphProvider?.graph.value?.startBatch('update-node-data');
+    const newData = {
+        ...node.data,
+        version: node.data.version+1 || 0,
+        data:{
+            ...JSON.parse(JSON.stringify(node.data.data)),
+            extensionElements:{
+                ...JSON.parse(JSON.stringify(node.data.data.extensionElements)),
+                "docpal:decisionTable":{
+                    orConditionElements: [...JSON.parse(JSON.stringify(form.value))]
+                }
+            }
+        }
+    }
+    node.setData(newData,{ overwrite: true, deep: true, silent:false })
+    graphProvider?.graph.value?.stopBatch('update-node-data')
+
+    console.log("condition change", node.data)
 }
 
 function addNewCondition(){
     const newData = {
-        type:"String_Validation" ,
-        source:"form",
-        fieldName:'',
-        condition:"is",
-        target:"string",
-        targetValue:""
+        attr_id: 'element_' + new Date().getTime(),
+        attr_type:"String_Validation" ,
+        attr_source:"form",
+        attr_fieldName:'',
+        attr_condition:"is",
+        attr_target:"string",
+        attr_targetValue:""
     }
     form.value.push({
         element:[newData]
     })
+    updateNode();
 }
 
+function deleteCondition(index:number){
+    console.log("deleteCondition on condition", index)
+    form.value.splice(index, 1)
+    updateNode();
+}
+
+function updateCondition(newVal:any, index:number){
+    form.value[index].element = newVal
+    updateNode();
+}
+
+const userGroupOption = ref<any[]>([]);
+async function getUserGroup() {
+    const data = await adminApi.identityNuxeo.postGroups3();
+    if(data.data){
+        userGroupOption.value = data.data
+    }
+}
+const masterTableOption = ref<any[]>([]);
+async function getMasterTable() {
+    const data = await adminApi.masterTableController.getTables();
+    
+    if(data.data){
+        masterTableOption.value = data.data
+    }else{
+        masterTableOption.value = []
+    }
+    console.log("getMasterTable", masterTableOption.value)
+}
+
+
+function setUpListener(){
+    graphProvider?.graph.value?.on('history:undo', () => {
+      refreshData()
+    })
+    graphProvider?.graph.value?.on('history:redo', () => {
+      refreshData()
+    })
+}
+
+onMounted(async () => {
+    setUpListener()
+    getUserGroup()
+    getMasterTable()
+})
 watch(() => node, ()=> {
   if(node) {
     refreshData()
@@ -46,6 +116,11 @@ watch(() => node, ()=> {
 },{
   immediate: true,
   deep: true
+})
+
+provide(CONDITION_PROVIDER,{
+    masterTableOption,
+    userGroupOption
 })
 
 </script>
@@ -56,11 +131,23 @@ watch(() => node, ()=> {
         <div class="listContainer">
             <div class="title">Conditions</div>
             <div class="conditions">
-                <BpmnSidebarConditionGroup v-for="(element,index) in form" :key="index" :elements="element.element" :index="index" />
-            </div>
-            <div class="addNewContainer" @click="addNewCondition">
-                  <Icon name="lucide:circle-plus" />
-                  <div class="label">And</div>  
+                <div v-for="(element,index) in form" :key="index" class="group">
+                    <BpmnSidebarConditionGroup  
+                        :elements="element.element" 
+                        :index="index"
+                        @delete="deleteCondition" 
+                        @update="(newVal:any) => updateCondition(newVal, index)" 
+                    />
+                    <div class="addNewContainer" @click="addNewCondition">
+                        <Icon name="lucide:circle-plus" />
+                        <div class="label">And</div>  
+                    </div>
+                </div>
+                <div v-if="form.length === 0" class="addNewContainer" @click="addNewCondition">
+                        <Icon name="lucide:circle-plus" />
+                        <div class="label">And</div>  
+                    </div>
+               
             </div>
         </div>
         
@@ -78,11 +165,9 @@ watch(() => node, ()=> {
 }
 .listContainer{
     height: 100%;
-    overflow: auto;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: flex-start;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: min-content 1fr ;
     gap: var(--app-space-xs);
     width:100%;
 }
@@ -106,5 +191,11 @@ watch(() => node, ()=> {
     justify-content: flex-start;
     align-items: flex-start;
     gap: var(--app-space-xs);
+    height: 100%;
+    overflow: auto;
+    > * {
+        width: 100%;
+        flex: 0 0 auto;
+    }
 }
 </style>

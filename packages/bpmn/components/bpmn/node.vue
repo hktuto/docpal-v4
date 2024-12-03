@@ -5,14 +5,7 @@ import { onClickOutside, useEventListener } from '@vueuse/core';
 import { ElPopconfirm } from 'element-plus';
 
 const graphProvider = inject(BPMN_PROVIDER)
-const editorProvider = inject<{
-    openForm:(node:Node)=>void, 
-    getFormByNode:(node:Node) => object,
-    copyForm: (node:Node, obj:any) => void
-    pasteForm: (node:Node) => void,
-    copyObj: any
-    copyKey: Ref<string>
-}>('workflowEditor');
+const editorProvider = inject(EDITOR_PROVIDER);
 
 if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')

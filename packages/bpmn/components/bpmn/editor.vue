@@ -8,6 +8,7 @@ import { graphToBpmnJson } from '~/utils/bpmnConverter';
 import { adminApi } from 'api';
 import {bpmnElement} from '~/utils/bpmnElement';
 import { ElNotification } from 'element-plus';
+import { EDITOR_PROVIDER, conditionOptions } from '#imports'
 /**
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
@@ -17,6 +18,10 @@ const {options={}, workflowData, currentVersion} = defineProps<{
     workflowData: any,
     currentVersion: string
 }>()
+
+
+
+
 
 function init(bpmnXml :string, x6Json?:any){
     viewerRef.value.init(bpmnXml, x6Json)
@@ -222,7 +227,8 @@ async function openForm(node: Node){
     selectedStep.value = node.getData()
     formDialogVisible.value = true;
     setTimeout(() => {
-        if(response.data.length > 0) {
+        if(!response || !response.data) return;
+        if(response?.data.length > 0) {
             const json = JSON.parse(response.data[0].jsonValue || "{}")
             fromDesignRef.value.setFormJson(json)
         }else{
@@ -271,9 +277,25 @@ async function pasteForm(node:Node){
 }
 
 /// #endregion
+const conditionSetting = ref<Record<string, object>[]>([])
+
+async function getConditionSetting(){
+    // const data = await adminApi.globalSettingController.getSetting()
+    // console.log("getConditionSetting", data);
+    // if(!data || !data.data) {
+    //     conditionSetting.value = []
+    // }else{
+    //     conditionSetting.value = data.data
+    // }
+    conditionSetting.value = conditionOptions
+}
 
 
-provide('workflowEditor', {
+onMounted(async() => {
+    await getConditionSetting()
+})
+
+provide(EDITOR_PROVIDER, {
     openForm,
     openPermission,
     openInfo,
@@ -282,7 +304,9 @@ provide('workflowEditor', {
     pasteForm,
     copyForm,
     copyObj,
-    copyKey
+    copyKey,
+    conditionSetting
+
 })
 
 
