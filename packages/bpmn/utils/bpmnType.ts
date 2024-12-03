@@ -1,6 +1,6 @@
 
 import type { InjectionKey } from 'vue'
-import type { Graph } from '@antv/x6'
+import type { Graph, Node } from '@antv/x6'
 
 // create injecttion key for bpmn provider
 
@@ -19,6 +19,29 @@ export interface BPMNProvider {
     key: symbol
 }
 
+export interface ConditionProvider {
+    masterTableOption: Ref<any[]>,
+    userGroupOption: Ref<any[]>,
+}
+
+export const CONDITION_PROVIDER: InjectionKey<ConditionProvider> = Symbol('CONDITION_PROVIDER_KEY')
+
+
+
+// editor provider
+export const EDITOR_PROVIDER: InjectionKey<EditorProvider> = Symbol('EDITOR_PROVIDER_KEY')
+export interface EditorProvider {
+    openForm: (node:Node) => Promise<void>,
+    openPermission: () => void,
+    openInfo: () => void,
+    saveFormByNode: (node:Node, json:any) => Promise<any>,
+    getFormByNode: (node:Node) => Promise<Object>,
+    pasteForm: (node:Node) => void,
+    copyForm: (node:Node, obj:any) => void
+    copyObj: Ref<any>,
+    copyKey: Ref<string | undefined>,
+    conditionSetting: Ref<any>
+}
 export type BPMNJSON = {
     definitions :{
         attr_exporter: string,
@@ -150,3 +173,143 @@ export type UserTask = {
     }
 
 }
+
+export const conditionOptions = [
+    {
+        "type": "Boolean_Validation",
+        "source": {
+            "type": "boolean"
+        },
+        "target": {
+            "type": "boolean"
+        },
+        "validation": [
+            {
+                "label": "Is",
+                "value": "is"
+            }
+        ]
+    },
+    {
+        "type": "String_Validation",
+        "source": {
+            "type": "string"
+        },
+        "target": {
+            "type": "string"
+        },
+        "validation": [
+            {
+                "label": "Is",
+                "value": "is"
+            }
+        ]
+    },
+    {
+        "type": "Numbering_Validation",
+        "source": {
+            "type": "number"
+        },
+        "target": {
+            "type": "number"
+        },
+        "validation": [
+            {
+                "label": "Is Greater Than",
+                "value": "greater"
+            },
+            {
+                "label": "Is Less Than",
+                "value": "smaller"
+            }
+        ]
+    },
+    {
+        "type": "Match_Master_Table",
+        "source": {
+            "type": "string"
+        },
+        "target": {
+            "type": "masterTable"
+        },
+        "validation": [
+            {
+                "label": "Can Found",
+                "value": "is"
+            },
+            {
+                "label": "Not Found",
+                "value": "not"
+            }
+        ]
+    },
+    {
+        "type": "Match_Member_in_User_Group",
+        "source": {
+            "type": "string"
+        },
+        "target": {
+            "type": "userGroup"
+        },
+        "validation": [
+            {
+                "label": "Is Member",
+                "value": "is"
+            },
+            {
+                "label": "Not Member",
+                "value": "not"
+            }
+        ]
+    },
+    {
+        "type": "Match_Case_Info",
+        "source": {
+            "type": "string"
+        },
+        "target": {
+            "type": "caseTable"
+        },
+        "validation": [
+            {
+                "label": "Can Found",
+                "value": "is"
+            },
+            {
+                "label": "Not Found",
+                "value": "not"
+            }
+        ]
+    },
+    {
+        "type": "Compare_Case_Info",
+        "source": {
+            "type": "form"
+        },
+        "target": {
+            "type": "caseTypeId"
+        },
+        "validation": [
+            {
+                "label": "Is Empty",
+                "value": "is"
+            },
+            {
+                "label": "Not Empty",
+                "value": "not"
+            },
+            {
+                "label": "Equal",
+                "value": "equal"
+            },
+            {
+                "label": "Is Greater Than",
+                "value": "greater"
+            },
+            {
+                "label": "Is Less Than",
+                "value": "smaller"
+            }
+        ]
+    }
+]
