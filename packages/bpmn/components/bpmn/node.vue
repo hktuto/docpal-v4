@@ -57,6 +57,7 @@ const position = ref({x:0,y:0})
 const contextMenuOpened = ref(false)
 const contextSelectedNode = ref()
 const rightClickEl = ref()
+
 function contextMenuHandler({e,x,y,view,node}:any) {
     if(ignoreTypeList.includes(node.data.type || "")) {
         return
@@ -88,39 +89,11 @@ onClickOutside(rightClickEl, () => {
 })
 // #endregion
 
-function openInfo() {
-    // get process node 
-    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
-    const cell = graphProvider?.graph.value?.getCellById(id)
-    if(!cell){
-        throw createError('Process node not found')
-    }
-    opened.value = true;
-    selectedNode.value = cell
-    editComponent.value = resolveComponent('LazyBpmnSidebarInfo');
-}
 
-function openFolderCabinet() {
-    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
-    const cell = graphProvider?.graph.value?.getCellById(id)
-    if(!cell){
-        throw createError('Process node not found')
-    }
-    opened.value = true;
-    selectedNode.value = cell
-    editComponent.value = resolveComponent('LazyBpmnSidebarFolderCabinet');
-}
 
-function openPermission() {
-    const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
-    const cell = graphProvider?.graph.value?.getCellById(id)
-    if(!cell){
-        throw createError('Process node not found')
-    }
-    selectedNode.value = cell
-    opened.value = true;
-    editComponent.value = resolveComponent('LazyBpmnSidebarPermission');
-}
+
+
+
 
 function handleNodeClick({node}:any) {
     // graphProvider?.graph.value?.zoomTo(2);
@@ -128,18 +101,19 @@ function handleNodeClick({node}:any) {
     if(ignoreTypeList.includes(node.data.type || "")) {
         return
     }
-    selectedNode.value = node
     const type = node.data.type as BpmnElementType
     if(type) {
         const bpmnElementType = bpmnElement[type]
         if(bpmnElementType.contextMenuComponent) {
+            let element = ""
             if(typeof bpmnElementType.contextMenuComponent === 'string') {
-                editComponent.value = resolveComponent(bpmnElementType.contextMenuComponent)
+                element = bpmnElementType.contextMenuComponent
             }else{
-                const element = bpmnElementType.contextMenuComponent(node.data.data)
-                editComponent.value = element
+                element = bpmnElementType.contextMenuComponent(node.data.data)
             }
-            opened.value = true
+            if(element) {
+                editorProvider?.openSidebar(element, node)
+            }
         }
     }
 }
@@ -165,21 +139,9 @@ onMounted(() => {
     setupNode()
 })
 
-defineExpose({
-    openInfo,
-    openFolderCabinet,
-    openPermission
-})
 </script>
 
 <template>
-    <div :class="{contextHandler:true, opened}">
-        <div class="propertiesHeader" @click="opened = false" >
-            <Icon name="lucide:settings-2" />
-            Propertie 
-        </div>
-        <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
-    </div>
     <div ref="rightClickEl" :class="{contextMenuContainer:true, show:contextMenuOpened}" :style="`--x: ${position.x}px; --y: ${position.y}px`">
         <div class="contextAction" @click="editItem">
             <Icon name="lucide:settings-2" />

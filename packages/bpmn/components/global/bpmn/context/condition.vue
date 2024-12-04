@@ -65,7 +65,6 @@ function addNewCondition(){
 }
 
 function deleteCondition(index:number){
-    console.log("deleteCondition on condition", index)
     form.value.splice(index, 1)
     updateNode();
 }
@@ -94,6 +93,18 @@ async function getMasterTable() {
     console.log("getMasterTable", masterTableOption.value)
 }
 
+const caseTableOption = ref<any[]>([]);
+async function getCaseTable() {
+    const data = await adminApi.caseTableController.getTables();
+    
+    if(data.data){
+        caseTableOption.value = data.data
+    }else{
+        caseTableOption.value = []
+    }
+    console.log("getCaseTable", caseTableOption.value)
+}
+
 
 function setUpListener(){
     graphProvider?.graph.value?.on('history:undo', () => {
@@ -108,6 +119,7 @@ onMounted(async () => {
     setUpListener()
     getUserGroup()
     getMasterTable()
+    getCaseTable()
 })
 watch(() => node, ()=> {
   if(node) {
@@ -120,7 +132,8 @@ watch(() => node, ()=> {
 
 provide(CONDITION_PROVIDER,{
     masterTableOption,
-    userGroupOption
+    userGroupOption,
+    caseTableOption
 })
 
 </script>

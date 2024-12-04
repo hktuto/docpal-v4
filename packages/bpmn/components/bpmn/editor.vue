@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {Node} from '@antv/x6'
+import type {Node, Edge, Cell} from '@antv/x6'
 import { Transform } from '@antv/x6-plugin-transform'
 import { Selection } from '@antv/x6-plugin-selection'
 import { Dnd } from '@antv/x6-plugin-dnd'
@@ -19,10 +19,6 @@ const {options={}, workflowData, currentVersion} = defineProps<{
     currentVersion: string
 }>()
 
-
-
-
-
 function init(bpmnXml :string, x6Json?:any){
     viewerRef.value.init(bpmnXml, x6Json)
 }
@@ -34,6 +30,7 @@ const nodeEl = ref()
 const edgeEl = ref()
 const graph = ref()
 const dnd = ref()
+
 const graphOptions = {
     interacting:true,
     panning: {
@@ -126,22 +123,21 @@ function graphReady(){
     })
 }
 
-
 function getData(){
     const bpmnJson = viewerRef.value.bpmnJson
     return graphToBpmnJson(viewerRef.value.graph, bpmnJson)
 }
 
 function openInfo(){
-    nodeEl.value.openInfo()
+    sidebarRef.value.openInfo()
 }
 
 function openCabinet(){
-    nodeEl.value.openFolderCabinet()
+    sidebarRef.value.openFolderCabinet()
 }
 
 function openPermission(){
-    nodeEl.value.openPermission()
+    sidebarRef.value.openPermission()
 }
 
 // #region form
@@ -289,6 +285,10 @@ async function getConditionSetting(){
     // }
     conditionSetting.value = conditionOptions
 }
+const sidebarRef = ref()
+function openSidebar(component:string, node:Node | Edge | Cell){
+    sidebarRef.value.openSidebar(component, node)
+}
 
 
 onMounted(async() => {
@@ -296,6 +296,7 @@ onMounted(async() => {
 })
 
 provide(EDITOR_PROVIDER, {
+    openSidebar,
     openForm,
     openPermission,
     openInfo,
@@ -323,18 +324,19 @@ defineExpose({
         <div v-if="ready" class="toolbar">
             <div class="group">
                 <BpmnHistory />
-                <BpmnInfo  @click="openInfo"  />
-                <BpmnPermission  @click="openPermission" />
-                <BpmnFolderCabinet  @click="openCabinet" />
+                <BpmnInfo  @click="openInfo" /> 
+                <BpmnPermission @click="openPermission" />
+                <BpmnFolderCabinet @click="openCabinet" />
             </div>
             <div class="group">
-                <div v-for="(item,index) in dropActionsItems" :key="index" class="icon" @mousedown.native="(ev) => itemDrop(item, ev)">
+                <div v-for="(item,index) in dropActionsItems" :key="index" class="icon handlers" @mousedown.native="(ev) => itemDrop(item, ev)">
                     <Icon :name="item.icon" />
-                    <div class="label">{{  item.label }}</div>
+                    <div class="label">{{ item.label }}</div>
                 </div>
             </div>
             
         </div>
+        <BpmnSidebar ref="sidebarRef" />
         <BpmnEdge v-if="ready" ref="edgeEl" />
         <BpmnNode v-if="ready" ref="nodeEl" @openForm="openForm"/>
         
@@ -342,14 +344,12 @@ defineExpose({
     <ElDialog v-model="formDialogVisible" width="100%" top="0" draggable distroy-on-closed>
         <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi"  >
             <template #submit>
-                <ElButton type="primary" @click="formSubmit">{{$t('submit')}}</ElButton>
+                <ElButton type="primary" @click="formSubmit">{{ $t('submit')}}</ElButton>
             </template>
         </FormDesigner>
     </ElDialog>
     <div class="actions">
-
         <slot name="actions" />
-        
         </div>
     </div>
 </template>
@@ -388,7 +388,6 @@ defineExpose({
         align-items: flex-start;
         border-radius: var(--app-border-radius-m);
         border: 1px solid var(--app-grey-800);
-        gap: var(--app-space-xxs);
         gap: var(--app-space-xs);
         font-size: var(--app-font-size-l);
         padding: var(--app-space-xs);
@@ -404,7 +403,6 @@ defineExpose({
     }
 
     :deep(.icon){
-        
         border-radius: 0;
         border: 0;
         display: flex;
@@ -412,9 +410,12 @@ defineExpose({
         justify-content: flex-start;
         align-items: center;
         gap: var(--app-space-xs);
+        &.handlers{
+            cursor:grab;
+        }
         &.disabled{
             color: var(--app-grey-700);
-            cursor: not-allowed;
+            cursor: not-allowed !important;
         }
         cursor: pointer;
         &:hover {

@@ -56,7 +56,6 @@ export function panelTabFocus(panelId:string, tabIndex: number) {
 }
 
 export function paneResized(sizes:{min:number, max:number, size:number}[]) {
-    console.log("resized", sizes)
     const layout = useTabLayout()
     sizes.forEach((size, index) => {
         layout.value[index].size = size.size

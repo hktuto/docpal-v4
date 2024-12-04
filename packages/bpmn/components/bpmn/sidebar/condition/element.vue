@@ -32,7 +32,7 @@ const form = ref<{
     attr_condition:string,
     attr_target:string,
     attr_targetValue:any
-    validataInfo?:string
+    attr_validataInfo?:string
     compareValue?:any
 }>({
     attr_type:"",
@@ -53,10 +53,8 @@ const rules = reactive({
     attr_condition:[
         { required: true, message: 'Please select a condition', trigger: 'change' }
     ],
-    attr_targetValue:[
-        { required: true, message: 'Please input target value', trigger: 'change' }
-    ]
 })
+
 
 const selectedType = computed(() => {
     if(!form.value.attr_type || !editorProvider.conditionSetting) return null;
@@ -78,7 +76,7 @@ function typeChange(value:string) {
             form.value.attr_targetValue = "";
         }
         // ignore masterTable and cast to change attr_target
-        if(!['masterTable', 'caseTable'].includes(selectedType.value.target.type)) {
+        if(!['Match_Master_Table', 'Match_Case_Info', 'Compare_Case_Info'].includes(value)) {
             form.value.attr_target = selectedType.value.target.type
         }else{
             form.value.attr_target = "";
@@ -96,19 +94,49 @@ const allFieldOptions = computed(() => {
   })
 });
 
+const masterTableLoading = ref(false)
 const selectedMasterTableOption = ref<any[]>([])
 async function masterTableChange(masterTableId:string) {
+    masterTableLoading.value = true
     const data = await adminApi.masterTableController.getTables1(masterTableId);
     if(data.data && data.data.fields){
         selectedMasterTableOption.value = data.data.fields
     }else{
         selectedMasterTableOption.value = []
     }
+    masterTableLoading.value = false
+}
+
+const castColumnLoading = ref(false)
+const selectedCaseTableOption = ref<any[]>([])
+async function caseTableChange(caseTableId:string) {
+    castColumnLoading.value = true
+    const data = await adminApi.caseTableController.getTables1(caseTableId);
+    console.log("caseTableChange", data)
+    if(data.data && data.data.fields){
+        selectedCaseTableOption.value = data.data.fields
+    }else{
+        selectedCaseTableOption.value = []
+    }
+    castColumnLoading.value = false
 }
 
 
 watch(() => element, () => {
-    form.value =  JSON.parse(JSON.stringify(element))
+    if(JSON.stringify(form.value) !== JSON.stringify(element)) {
+        form.value =  JSON.parse(JSON.stringify(element))
+        console.log(element)
+        if(element.attr_type === 'Match_Case_Info' && element.attr_target) {
+            caseTableChange(element.attr_target)
+        }
+        if(element.attr_type === 'Compare_Case_Info' && element.attr_target) {
+            caseTableChange(element.attr_target)
+        }
+        if(element.attr_type === 'Match_Master_Table' && element.attr_target) {
+            masterTableChange(element.attr_target)
+        }
+    }
+    
 },{
     immediate: true,
     deep: true
@@ -117,7 +145,6 @@ watch(() => element, () => {
 watch(form, () => {
     // if form and different from element, emit update
     if(JSON.stringify(form.value) !== JSON.stringify(element)) {
-        console.log("form changed", form.value, element)
         emits('update', JSON.parse(JSON.stringify(form.value)))
     }
 },{
@@ -150,7 +177,7 @@ watch(form, () => {
             </ElFormItem>
             <template v-if="selectedType">
                 <template v-if="selectedType.target.type === 'boolean'" >
-                    <ElFormItem  label="Condition Value" prop="attr_targetValue">
+                    <ElFormItem  label="Condition Value" prop="attr_targetValue" required>
                         <ElSwitch v-model="form.attr_targetValue" active-text="True" inactive-text="False" />
                     </ElFormItem>
                 </template>
@@ -160,28 +187,68 @@ watch(form, () => {
                     </ElFormItem>
                 </template>
                 <template v-else-if="selectedType.target.type === 'number'">
-                    <ElFormItem  label="Condition Value" prop="attr_targetValue">
+                    <ElFormItem  label="Condition Value" prop="attr_targetValue" required>
                         <ElInputNumber v-model="form.attr_targetValue" />
                     </ElFormItem>
                 </template>
                 <template v-else-if="selectedType.target.type === 'userGroup'">
-                    <ElFormItem  label="User Group" prop="attr_targetValue">
+                    <ElFormItem  label="User Group" prop="attr_targetValue" required>
                         <ElSelect v-model="form.attr_targetValue" filterable placeholder="Select">
                             <ElOption v-for="item in conditionProvider.userGroupOption.value" :key="item.id" :label="item.name" :value="item.id" />
                         </ElSelect>
                     </ElFormItem>
                 </template>
                 <template v-else-if="selectedType.target.type === 'masterTable'">
-                    <ElFormItem  label="Master Table" prop="attr_target">
+                    <ElFormItem  label="Master Table" prop="attr_target" required>
                         <ElSelect v-model="form.attr_target" filterable placeholder="Select" @change="masterTableChange">
                             <ElOption v-for="item in conditionProvider.masterTableOption.value" :key="item.id" :label="item.name" :value="item.id" />
                         </ElSelect>
                     </ElFormItem>
-                    <ElFormItem label="Master Table Column" prop="attr_targetValue">
+                    <ElFormItem label="Master Table Column" prop="attr_targetValue" required>
                         <ElSelect v-model="form.attr_targetValue" filterable placeholder="Select">
-                                <ElOption v-for="item in selectedMasterTableOption" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
-                            </ElSelect>
+                            <ElOption v-for="item in selectedMasterTableOption" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
+                        </ElSelect>
                     </ElFormItem>
+                </template>
+                <template v-else-if="selectedType.type === 'Match_Case_Info'">
+                    <ElFormItem  label="Case Table" prop="attr_target" required>
+                        <ElSelect v-model="form.attr_target" filterable placeholder="Select" @change="caseTableChange">
+                            <ElOption v-for="item in conditionProvider.caseTableOption.value" :key="item.id" :label="item.tableName" :value="item.id" />
+                        </ElSelect>
+                    </ElFormItem>
+                    <ElFormItem label="Case Table Column" prop="attr_targetValue" required>
+                        <ElSelect v-model="form.attr_targetValue" filterable placeholder="Select">
+                            <ElOption v-for="item in selectedCaseTableOption" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
+                        </ElSelect>
+                    </ElFormItem>
+                </template>
+                <template v-else-if="selectedType.type === 'Compare_Case_Info'">
+                    <ElFormItem  label="Case Table" prop="attr_target" required>
+                        <ElSelect v-model="form.attr_target" filterable placeholder="Select" @change="caseTableChange">
+                            <ElOption v-for="item in conditionProvider.caseTableOption.value" :key="item.id" :label="item.tableName" :value="item.id" />
+                        </ElSelect>
+                    </ElFormItem>
+                    <ElFormItem label="Case Table Column" prop="attr_targetValue" required>
+                        <ElSelect v-model="form.attr_targetValue" filterable placeholder="Select">
+                            <ElOption v-for="item in selectedCaseTableOption" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
+                        </ElSelect>
+                    </ElFormItem>
+                    <ElFormItem label="Compare Column" prop="attr_validataInfo" required>
+                        <ElSelect v-model="form.attr_validataInfo" filterable placeholder="Select">
+                            <ElOption v-for="item in selectedCaseTableOption" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
+                        </ElSelect>
+                    </ElFormItem>
+                    <template v-if="!['isEmpty', 'notEmpty'].includes(form.attr_condition)">
+
+                        <ElFormItem label="Compare Value" prop="attr_targetValue" required>
+                            <template v-if="['greater', 'smaller'].includes(form.attr_condition)">
+                                <ElInputNumber v-model="form.compareValue" />
+                            </template>
+                            <template v-else>
+                                <ElInput v-model="form.compareValue" />
+                            </template>
+                        </ElFormItem>
+                    </template>
                 </template>
             </template>
             
@@ -201,6 +268,9 @@ watch(form, () => {
 }
 :deep(.el-form-item__label){
     margin-bottom: var(--app-font-size-xxs);
+}
+:deep(.el-input-number--small){
+    width: 100%;
 }
 .removeConditionContainer{
     position: absolute;
