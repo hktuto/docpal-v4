@@ -160,7 +160,7 @@ watch(() => node, ()=> {
                         <ElForm label-position="top" label-width="100px" size="small">
                             <ElRow :gutter="12">
                             <ElCol :span="12">
-                                <ElFormItem label="Name">
+                                <ElFormItem label="id">
                                     <ElInput v-model="item.attr_id" disabled />
                                 </ElFormItem>
                             </ElCol>

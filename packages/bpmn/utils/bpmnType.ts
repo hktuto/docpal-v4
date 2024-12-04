@@ -1,6 +1,6 @@
 
 import type { InjectionKey } from 'vue'
-import type { Graph, Node } from '@antv/x6'
+import type { Graph, Node, Edge, Cell } from '@antv/x6'
 
 // create injecttion key for bpmn provider
 
@@ -22,6 +22,7 @@ export interface BPMNProvider {
 export interface ConditionProvider {
     masterTableOption: Ref<any[]>,
     userGroupOption: Ref<any[]>,
+    caseTableOption: Ref<any[]>,
 }
 
 export const CONDITION_PROVIDER: InjectionKey<ConditionProvider> = Symbol('CONDITION_PROVIDER_KEY')
@@ -31,6 +32,7 @@ export const CONDITION_PROVIDER: InjectionKey<ConditionProvider> = Symbol('CONDI
 // editor provider
 export const EDITOR_PROVIDER: InjectionKey<EditorProvider> = Symbol('EDITOR_PROVIDER_KEY')
 export interface EditorProvider {
+    openSidebar:(component:string, node:Node | Edge | Cell) => void
     openForm: (node:Node) => Promise<void>,
     openPermission: () => void,
     openInfo: () => void,
@@ -272,11 +274,11 @@ export const conditionOptions = [
         },
         "validation": [
             {
-                "label": "Can Found",
+                "label": "Match",
                 "value": "is"
             },
             {
-                "label": "Not Found",
+                "label": "Not Match",
                 "value": "not"
             }
         ]
@@ -292,11 +294,11 @@ export const conditionOptions = [
         "validation": [
             {
                 "label": "Is Empty",
-                "value": "is"
+                "value": "isEmpty"
             },
             {
                 "label": "Not Empty",
-                "value": "not"
+                "value": "notEmpty"
             },
             {
                 "label": "Equal",

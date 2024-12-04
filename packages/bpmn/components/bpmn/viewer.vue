@@ -95,7 +95,6 @@ function init(bpmnXml :string, x6Json?:any){
 
     graph.value.on('history:change', () => {
         allFormField.value = getAllFormFieldFromGraph(graph.value as any)
-        console.log("all field changed", allFormField.value)
     })
     emits('graphReady', x6Json)
 }
