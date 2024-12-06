@@ -81,6 +81,28 @@ provide('workflowDetail',{
     saveDraft,
 })
 
+function openVersionList(){
+    const newItem:any = {
+        menuKey: routerInject?.menuSymbol,
+        id: "workflow-editor-versions-" + new Date().getTime(),
+        name: "workflow-editor-versions-" + workflowData.value.id,
+        icon: 'dp-icon:flow-outline',
+        label: workflowData.value.name,
+        component: 'LazyWorkflowEditorVersion',
+        props: {
+            id: workflowData.value.id,
+            draftId: workflowData.value.draftId,
+            latestVersion: workflowData.value.latestVersion,
+            productionVersion: workflowData.value.productionVersion,
+            name: workflowData.value.name,
+            item: workflowData.value,
+        }
+    }
+    routerInject?.navigateTo(newItem)
+}
+
+
+
 async function saveAsNewVersion(){
     const { xml, x6Json } = WorkflowEditorRef.value.getData()
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
@@ -121,6 +143,7 @@ watch(() => id, (newWorkflowId) => {
                     <ElButton type="primary">Promote To Prodocution : {{ currentVersion }}</ElButton>
                 </template>
                 <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
+                <ElButton @click="openVersionList" type="primary">Version List</ElButton>
                 <!-- <el-button v-if="state.detail.publishStatus === 'A' && state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleDeactive()">{{$t('actions.inactive')}}</el-button> -->
                 <!-- <el-button v-else-if="state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleActive()">{{$t('actions.active')}}</el-button> -->
                 <!-- <el-button :loading="state.loading" type="primary" @click="handleSave(true)">{{$t('button.saveDraft')}}</el-button> -->
