@@ -15,7 +15,7 @@ export interface BPMNProvider {
     graph: Ref<Graph | undefined>,
     bpmnJson: any,
     flatGraphObject: any,
-    allFormField: ComputedRef<any>,
+    allFormField: Ref<any>,
     key: symbol
 }
 
@@ -34,6 +34,7 @@ export const EDITOR_PROVIDER: InjectionKey<EditorProvider> = Symbol('EDITOR_PROV
 export interface EditorProvider {
     openSidebar:(component:string, node:Node | Edge | Cell) => void
     openForm: (node:Node) => Promise<void>,
+    previewForm: (node:Node) => void,
     openPermission: () => void,
     openInfo: () => void,
     saveFormByNode: (node:Node, json:any) => Promise<any>,

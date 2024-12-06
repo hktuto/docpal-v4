@@ -203,6 +203,7 @@ watch(() => node, ()=> {
 
             <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value" >Edit Field</ElButton>
             <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >Edit Form</ElButton>
+            <ElButton type="primary" @click="editorProvider.previewForm(node)" >Preview Form</ElButton>
         </div>
         <Eldivider />
         <div class="actionsContainer">
@@ -260,10 +261,14 @@ watch(() => node, ()=> {
 }
 .actionsContainer{
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: flex-start;
     align-items: center;
     margin-block: var(--app-font-size-xs);
+    gap: var(--app-space-xs);
+    :deep(.el-button + .el-button){
+        margin-left: 0;
+    }
 }
 .flip-list-move {
   transition: transform 0.5s;
