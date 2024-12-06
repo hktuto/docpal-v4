@@ -242,7 +242,7 @@ async function previewForm(node:Node) {
     if(!response || !response.data){
         throw createError('Server Error');
     }
-    if(response.data.length == 0 || !response.data[0].jsonValue){
+    if(response.data.length == 0 || !response.data[0].jsonValue || response.data[0].jsonValue === "{}") {
         ElMessage.warning("Empty Form")
         return;
     }
