@@ -22,10 +22,10 @@ const props = defineProps<{
 
 const { options={}, workflowData, currentVersion, readonly} = toRefs(props)
 
-
+const graphOptions = ref({})
 function init(bpmnXml :string, x6Json?:any){
     graphOptions.value = {
-        interacting: !readonly,
+        interacting: !readonly.value,
         panning: {
                 enabled: true,
                 eventTypes: ['leftMouseDown', 'mouseWheel'],
@@ -54,7 +54,7 @@ function init(bpmnXml :string, x6Json?:any){
             allowEdge:false,
             highlight: true,
             validateMagnet({ magnet }:any) {
-                return !readonly
+                return !readonly.value
             },
 
             validateConnection({ sourceMagnet, targetMagnet }:any) {
@@ -68,11 +68,13 @@ function init(bpmnXml :string, x6Json?:any){
                 //     return false
                 // }
 
-                return !readonly
+                return !readonly.value
             },
         }
     }
-    viewerRef.value.init(bpmnXml, x6Json)
+    nextTick(() => {
+        viewerRef.value.init(bpmnXml, x6Json)
+    })
 }
 const viewerRef = ref()
 const ready = ref(false)
@@ -83,15 +85,15 @@ const edgeEl = ref()
 const graph = ref()
 const dnd = ref()
 
-const graphOptions = ref()
+
 function graphReady(){
     ready.value = true
     graph.value = viewerRef.value.graph;
-    
+    console.log('ready', readonly.value)
     graph.value.use(
         new Transform({
             resizing: {
-                enabled:!readonly,
+                enabled:!readonly.value,
                 allowReverse:false,
             },
         }),
@@ -99,7 +101,7 @@ function graphReady(){
 
     graph.value.use(
         new Selection({
-            enabled: !readonly,
+            enabled: !readonly.value,
             multiple: true,
             rubberband: true,
             movable: true,
@@ -110,7 +112,7 @@ function graphReady(){
 
     graph.value.use(
         new History({
-            enabled: !readonly,
+            enabled: !readonly.value,
             beforeAddCommand:(event:any, args:any) => {
                 const ignoreKeys = ['tools', 'ports']
                 if(ignoreKeys.includes(args.key)) return false
@@ -123,7 +125,7 @@ function graphReady(){
         validateNode: (node:Node,options) => {
             // if(!node.parent) return false
             
-            return !readonly
+            return !readonly.value
         }
     })
 }
@@ -161,7 +163,7 @@ const dropActionsItems = computed(() => {
 })
 
 function itemDrop(item:any, ev:any) {
-    if(readonly) return;
+    if(readonly.value) return;
     const id = 'new_' + new Date().getTime()
     const newData = item.dropData(id)
     const newNode = graph.value.createNode(newData)
@@ -173,7 +175,17 @@ function itemDrop(item:any, ev:any) {
 
 const fieldListApi = computed(() => {
     let data:any[] = []
-    if(selectedStep.value?.data.extensionElements['flowable:formProperty'] && selectedStep.value?.data.extensionElements['flowable:formProperty'].length > 0){
+    // if selected step is end step, return allField
+    if(selectedStep.value?.id === 'end') {
+        const allField = viewerRef.value.allFormField.value
+        data = Object.keys(allField).map((key) => {
+            return {
+                attr_name: allField[key].attr_name,
+                attr_id: allField[key].attr_id
+            }
+        })
+        // data = 
+    }else if(selectedStep.value?.data.extensionElements['flowable:formProperty'] && selectedStep.value?.data.extensionElements['flowable:formProperty'].length > 0){
         
         data = [...selectedStep.value?.data.extensionElements['flowable:formProperty']]
     }
@@ -218,9 +230,10 @@ async function saveFormByNode(node: Node, json:any){
 }
 
 async function openForm(node: Node){
+    const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
     const response = await adminApi.formPropertiesRelationController.getQuery({
         processKey: workflowData.value.key,
-        userTaskId: node.data.id,
+        userTaskId: id,
         versionId: currentVersion.value
     });
     if(!response || !response.data){
