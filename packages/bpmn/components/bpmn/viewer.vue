@@ -63,7 +63,6 @@ function init(bpmnXml :string, x6Json?:any){
         },
         interacting: false,
     }, options )
-    console.log("options",graphOptions, options )
     graph.value = new Graph({
         container: containerEl,
         ...graphOptions
@@ -141,7 +140,8 @@ provide(BPMN_PROVIDER, {
 defineExpose({
     init,
     graph,
-    bpmnJson
+    bpmnJson,
+    allFormField
 })
 
 </script>

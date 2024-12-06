@@ -7,7 +7,7 @@ import { History } from '@antv/x6-plugin-history'
 import { graphToBpmnJson } from '~/utils/bpmnConverter';
 import { adminApi } from 'api';
 import {bpmnElement} from '~/utils/bpmnElement';
-import { ElNotification } from 'element-plus';
+import { ElMessage, ElNotification } from 'element-plus';
 import { EDITOR_PROVIDER, conditionOptions } from '#imports'
 /**
  *  options: bpmn viewer options 
@@ -89,7 +89,6 @@ const dnd = ref()
 function graphReady(){
     ready.value = true
     graph.value = viewerRef.value.graph;
-    console.log('ready', readonly.value)
     graph.value.use(
         new Transform({
             resizing: {
@@ -177,7 +176,8 @@ const fieldListApi = computed(() => {
     let data:any[] = []
     // if selected step is end step, return allField
     if(selectedStep.value?.id === 'end') {
-        const allField = viewerRef.value.allFormField.value
+        const allField = viewerRef.value.allFormField
+        console.log("allField", allField)
         data = Object.keys(allField).map((key) => {
             return {
                 attr_name: allField[key].attr_name,
@@ -221,11 +221,43 @@ async function getFormByNode(node: Node){
 }
 
 async function saveFormByNode(node: Node, json:any){
+    const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
     return await adminApi.formPropertiesRelationController.postSave({
         processKey: workflowData.value.key,
-        userTaskId: node.data.id,
+        userTaskId: id,
         jsonValue: JSON.stringify(json),
         versionId: currentVersion.value
+    })
+}
+
+const formRenderVisible = ref(false);
+const fromRenderRef = ref();
+async function previewForm(node:Node) {
+    const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
+    const response = await adminApi.formPropertiesRelationController.getQuery({
+        processKey: workflowData.value.key,
+        userTaskId: id,
+        versionId: currentVersion.value
+    });
+    if(!response || !response.data){
+        throw createError('Server Error');
+    }
+    if(response.data.length == 0 || !response.data[0].jsonValue){
+        ElMessage.warning("Empty Form")
+        return;
+    }
+    selectedStep.value = node.getData()
+    formRenderVisible.value = true;
+    setTimeout(() => {
+        if(!response || !response.data) return;
+        if(response?.data.length > 0) {
+            const json = JSON.parse(response.data[0].jsonValue || "{}")
+            console.log("preview json :", json)
+            fromRenderRef.value.setFormJson(json)
+        }else{
+            console.log("preview json : empty")
+            fromRenderRef.value.setFormJson({})
+        }
     })
 }
 
@@ -269,20 +301,24 @@ async function copyForm(node:Node, obj:any) {
 async function pasteForm(node:Node){
     const {form, fields} = copyObj.value
     await saveFormByNode(node, form);
-    graph.value?.startBatch('update-from-data')
-    const newData = {
-        ...node.data,
-        version: (node.data.version || 0) + 1,
-        data:{
-            ...JSON.parse(JSON.stringify(node.data.data)),
-            extensionElements:{
-                ...node.data.data.extensionElements,
-                'flowable:formProperty': [...fields]
+    if(node.id !== 'end') {
+        graph.value?.startBatch('update-from-data')
+   
+        const newData = {
+            ...node.data,
+            version: (node.data.version || 0) + 1,
+            data:{
+                ...JSON.parse(JSON.stringify(node.data.data)),
+                extensionElements:{
+                    ...node.data.data.extensionElements,
+                    'flowable:formProperty': [...fields]
+                }
             }
         }
+        node.setData(newData,{ overwrite: true, deep: true, silent:false })
+        graph.value?.stopBatch('update-from-data')
     }
-    node.setData(newData,{ overwrite: true, deep: true, silent:false })
-    graph.value?.stopBatch('update-from-data')
+    
 
     // notify user
     ElNotification.success(
@@ -317,6 +353,7 @@ onMounted(async() => {
 provide(EDITOR_PROVIDER, {
     openSidebar,
     openForm,
+    previewForm,
     openPermission,
     openInfo,
     saveFormByNode,
@@ -366,6 +403,9 @@ defineExpose({
                 <ElButton type="primary" @click="formSubmit">{{ $t('submit')}}</ElButton>
             </template>
         </FormDesigner>
+    </ElDialog>
+    <ElDialog v-model="formRenderVisible" width="90%"  draggable>
+        <FormRenderer ref="fromRenderRef" />
     </ElDialog>
     <div class="actions">
         <slot name="actions" />

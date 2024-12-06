@@ -22,7 +22,7 @@ function editCompleteForm() {
 <template>
 <div class="fromContainer">
     
-    {{  node.data }}
-    <ElButton type="primary" @click="editCompleteForm">Edit Complete Form</ElButton>
+    <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >Edit Form</ElButton>
+    <ElButton type="primary" @click="editorProvider.previewForm(node)" >Preview Form</ElButton>
 </div>
 </template>

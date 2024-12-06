@@ -114,7 +114,7 @@ watch(() => id, (newWorkflowId) => {
 
 <template>
     <div class="pageContainer">
-        <BpmnEditor ref="WorkflowEditorRef" :workflow-data="item" :currentVersion="currentVersion" :id="id" :readonly="readonly">
+        <BpmnEditor ref="WorkflowEditorRef" :workflow-data="workflowData" :currentVersion="currentVersion" :id="id" :readonly="readonly">
             
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">

@@ -14,7 +14,8 @@
 </template>
 
 <script lang="ts" setup>
-import { WorkflowAttachmentDownloadApi, DownloadDocApi } from 'dp-api'
+import { clientApi } from 'api';
+
     const emits = defineEmits(['submit','clean','fail', 'formChange', 'emit']);
     const props = withDefaults(defineProps<{
         data?: Object,
@@ -22,7 +23,9 @@ import { WorkflowAttachmentDownloadApi, DownloadDocApi } from 'dp-api'
         options?: Object,
         attachmentDownloadApi?: Function,
     }>(), {
-        attachmentDownloadApi: (id: string) => WorkflowAttachmentDownloadApi(id)
+        attachmentDownloadApi: (id: string) => clientApi.workflow.getDeprecate4({attachmentId:id},{
+                    format: 'blob'
+                })
     });
     const vFormRenderRef = ref()
     const fromJsonNormalizer = computed(() => {
@@ -77,10 +80,13 @@ import { WorkflowAttachmentDownloadApi, DownloadDocApi } from 'dp-api'
             let fileId = ''
             if (options.uploadName === 'file') {
                 fileId = file.response?.data ? file.response.data.id : file.id
-                previewFile.blob = await DownloadDocApi(fileId, null, true)
+                previewFile.blob = await clientApi.documentNuxeo.getDownload({idOrPath:fileId})
             } else {
                 fileId = file.response?.data && file.response.data.length > 0 ? file.response.data[0].contentId : file.id
-                previewFile.blob = await WorkflowAttachmentDownloadApi(fileId)
+                previewFile.blob = await clientApi.workflow.getDeprecate4({attachmentId:fileId},{
+                    format: 'blob'
+                })
+                
             }
             previewFile.collabora = canCollaboraEdit(previewFile.blob.type)
             ReaderRef.value.handleOpen()
