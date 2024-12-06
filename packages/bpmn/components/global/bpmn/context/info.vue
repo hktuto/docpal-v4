@@ -6,7 +6,8 @@ const { node } = defineProps<{
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')   
 }
 
@@ -60,7 +61,7 @@ onMounted(() => {
            :model="form" @submit.stop>
     <el-formItem label="Name" prop="name"
                  :rules="[{ required: true, message: 'Workflow Name is required'}]">
-      <el-input v-model="form.name" @change="nameChange"  placeholder="Name" />
+      <el-input v-model="form.name" @change="nameChange" :disabled="editorProvider.readonly.value"  placeholder="Name" />
     </el-formItem>
 </el-form>  
 </template>

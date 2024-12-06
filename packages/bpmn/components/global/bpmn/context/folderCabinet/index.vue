@@ -7,7 +7,8 @@ const { node } = defineProps<{
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')   
 }
 
@@ -148,7 +149,7 @@ function setForm(){
     
     for (const item of form.value) {
         if(item.attr_id === selectedCabinet.value){
-            const field = item.field.reduce((acc, cur) => {
+            const field = item.field.reduce((acc:any, cur:any) => {
                 if(cur.attr_formProperty) acc.push(cur)
                 return acc
             }, [])
@@ -159,9 +160,9 @@ function setForm(){
             })
         }else {
             
-            const notEmpty = item.field.find((item) => item.attr_formProperty)
+            const notEmpty = item.field.find((item:any) => item.attr_formProperty)
             if(notEmpty){
-                const field = item.field.reduce((acc, cur) => {
+                const field = item.field.reduce((acc:any, cur:any) => {
                     
                     if(cur.attr_formProperty) acc.push(cur)
                     return acc
@@ -224,7 +225,7 @@ onMounted(async () => {
 
     <ElForm label-position="top" @native.enter="() => {}">
             <ElFormItem lable="Folder Cabinet">
-                <ElSelect v-model="selectedCabinet" @change="getCabinetDetail" clearable>
+                <ElSelect v-model="selectedCabinet" :disabled="editorProvider.readonly.value" @change="getCabinetDetail" clearable>
                     <ElOption v-for="item in cabinetOptions" :key="item.id" :label="item.label" :value="item.id" />
                 </ElSelect>
             </ElFormItem>

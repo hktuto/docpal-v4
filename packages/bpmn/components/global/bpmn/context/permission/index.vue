@@ -6,7 +6,8 @@ const { node } = defineProps<{
 }>()
 const allPermission = ref<any[]>([])
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')   
 }
 function refreshData(){
@@ -145,13 +146,13 @@ onMounted(() => {
             <ElTableColumn label="action">
                 <template #default="scope">
                     <ElDropdown @command="handleActions">
-                        <ElButton type="primary" link>
+                        <ElButton type="primary" :disabled="editorProvider.readonly.value" link>
                             <ElIcon><SvgIcon src="/icons/dots.svg"/></ElIcon>
                         </ElButton>
                         <template #dropdown>
                             <ElDropdownMenu>
-                                <ElDropdownItem :command="{type:'edit', item: scope.row, index: scope.$index}">Edit</ElDropdownItem>
-                                <ElDropdownItem :command="{type:'delete', item: scope.row, index: scope.$index }">Delete</ElDropdownItem>
+                                <ElDropdownItem :disabled="editorProvider.readonly.value" :command="{type:'edit', item: scope.row, index: scope.$index}">Edit</ElDropdownItem>
+                                <ElDropdownItem :disabled="editorProvider.readonly.value" :command="{type:'delete', item: scope.row, index: scope.$index }">Delete</ElDropdownItem>
                             </ElDropdownMenu>
                         </template>
                     </ElDropdown>
@@ -160,7 +161,7 @@ onMounted(() => {
             </ElTableColumn>
             
         </ElTable>
-        <ElButton type="text" @click="newPermission">add</ElButton>
+        <ElButton type="text" :disabled="editorProvider.readonly.value" @click="newPermission">add</ElButton>
 
         <ElDialog v-model="newPermissionDialogShow" destroy-on-close append-to-body>
             <BpmnSidebarPermissionNewDialog @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/>

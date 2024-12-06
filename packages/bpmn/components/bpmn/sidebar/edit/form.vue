@@ -82,6 +82,7 @@ function removeFormItem(index:number) {
     graphProvider?.graph.value?.stopBatch('update-from-data')
 }
 function editItem(id:string) {
+    if(editorProvider?.readonly.value) return;
     // if openedItems include id, remove it
     if(openedItems.value.includes(id)) {
         openedItems.value = openedItems.value.filter(item => item !== id)
@@ -149,10 +150,10 @@ watch(() => node, ()=> {
                         <div class="label" @click="editItem(item.attr_id)">
                             {{  item.attr_name }}
                         </div>
-                        <div v-if="!item.attr_fixed" class="actions">
+                        <div v-if="!item.attr_fixed && !editorProvider.readonly.value" class="actions">
                             <Icon name="lucide:square-pen" @click="editItem(item.attr_id)" />
                         </div>
-                        <div v-if="!item.attr_fixed" class="actions">
+                        <div v-if="!item.attr_fixed && !editorProvider.readonly.value" class="actions">
                             <Icon name="lucide:delete" @click="removeFormItem(index)" />
                         </div>
                     </div>
@@ -166,7 +167,7 @@ watch(() => node, ()=> {
                             </ElCol>
                             <ElCol :span="12">
                                 <ElFormItem label="Name">
-                                    <ElInput v-model="item.attr_name" @change="formChange"/>
+                                    <ElInput v-model="item.attr_name" @change="formChange" :disabled="editorProvider.readonly.value"/>
                                 </ElFormItem>
                             </ElCol>
                             <!-- <ElCol :span="12">
@@ -176,7 +177,7 @@ watch(() => node, ()=> {
                             </ElCol> -->
                             <ElCol :span="12">                            
                                 <ElFormItem label="Type">
-                                    <ElSelect v-model="item.attr_type" @change="formChange">
+                                    <ElSelect v-model="item.attr_type" :disabled="editorProvider.readonly.value" @change="formChange">
                                         <ElOption label="String" value="string"></ElOption>
                                         <ElOption label="Number" value="number"></ElOption>
                                         <ElOption label="Boolean" value="boolean"></ElOption>
@@ -185,7 +186,7 @@ watch(() => node, ()=> {
                             </ElCol>
                             <ElCol :span="12">
                                 <ElFormItem label="Required">
-                                    <ElSwitch v-model="item.attr_required" @change="formChange"/>
+                                    <ElSwitch v-model="item.attr_required" :disabled="editorProvider.readonly.value" @change="formChange"/>
                                 </ElFormItem>
                             </ElCol>
                             <!-- <ElCol :span="12">
@@ -200,14 +201,14 @@ watch(() => node, ()=> {
         </div>
         <div class="actionsContainer">
 
-            <ElButton type="primary" @click="editField" >Edit Field</ElButton>
-            <ElButton type="primary" @click="editorProvider.openForm(node)" >Edit Form</ElButton>
+            <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value" >Edit Field</ElButton>
+            <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >Edit Form</ElButton>
         </div>
         <Eldivider />
         <div class="actionsContainer">
-            <ElButton type="link" size="small" @click="copyFormAndFieldSetting">Copy Form and Field setting</ElButton>
+            <ElButton type="link" size="small" @click="copyFormAndFieldSetting" :disabled="editorProvider.readonly.value">Copy Form and Field setting</ElButton>
 
-            <ElButton v-if="editorProvider.copyKey.value && editorProvider.copyKey.value !== node.data.id" type="link" size="small" @click="pasteForm">Paste Form</ElButton>
+            <ElButton v-if="editorProvider.copyKey.value && editorProvider.copyKey.value !== node.data.id" type="link" size="small" :disabled="editorProvider.readonly.value" @click="pasteForm">Paste Form</ElButton>
         </div>
         <BpmnFieldEditor ref="fieldEditorRef" :fields="formItems" @change="formUpdate"/>
     </div>

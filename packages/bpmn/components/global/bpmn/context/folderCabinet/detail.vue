@@ -8,6 +8,11 @@ const props = defineProps<{
 const emits = defineEmits(['update:field'])
 const activeName = ref("")
 
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!editorProvider) {
+    throw createError('editor provider not found')   
+}
+
 
 
 
@@ -31,7 +36,7 @@ const activeName = ref("")
                             <ElForm label-position="top" @native.enter="() => {}">
                                 <ElFormItem :label="metaField.attr_metadata">
                                     
-                                    <ElSelect v-model="metaField.attr_formProperty" @change="emits('update:field', field)" clearable>
+                                    <ElSelect v-model="metaField.attr_formProperty" @change="emits('update:field', field)" :disabled="editorProvider.readonly.value" clearable>
                                         <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name" :value="option.attr_id" />
                                     </ElSelect>
                                 </ElFormItem>
