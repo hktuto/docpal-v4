@@ -2,30 +2,30 @@
 import {MenuRouterKey} from '#imports'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { adminApi } from 'api';
+import type { ToolBar } from '../../../../../packages/base/components/app/toolbar/index.vue';
 const { t } = useI18n()
 
-const { id, currentVersion, productionVersion, name, item } = defineProps<{
+const { id, currentVersion } = defineProps<{
     id:string
     currentVersion: string,
-    productionVersion?: string,
-    name:string
-    item:any
 }>()
 
 const draftDetail = ref<any>({})
-
 const routerInject = inject(MenuRouterKey)
-
+const readonly = ref(true);
 const bpmnFile = ref()
 const WorkflowEditorRef = ref()
+const workflowData = ref()
 const state = reactive<any>({
     detail: {},
     loading: false,
     newStatus: false
 })
 
-
+const productionVersion = ref()
+const lastestVewsion = ref()
 async function getWorkflow() {
+
     const data = await adminApi.workflowProcessDefinitionController.getDraft(id)
     const blob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
@@ -35,12 +35,29 @@ async function getWorkflow() {
     const file = await blob.text()
     draftDetail.value = data.data;
     bpmnFile.value = file
-    if(json && json.data){
-        WorkflowEditorRef.value.init( bpmnFile.value, JSON.parse(json.data))
-    }else{
-        WorkflowEditorRef.value.init( bpmnFile.value)
+    
+    const {data: draftData}:any = await adminApi.workflowProcessDefinitionController.getDraft(id)
+    if(!draftData ){
+        throw createError("draft not found")
     }
-    routerInject?.updateTabName(name + ` - (${currentVersion})`)
+    productionVersion.value = draftData.productionVersion
+    lastestVewsion.value = draftData.latestVersion 
+    
+    // check read only logic
+    if(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value) {
+        readonly.value = true
+    }else{
+        readonly.value = false
+    }
+    workflowData.value = draftData
+    routerInject?.updateTabName(draftData.name + ` - (${currentVersion})`)
+    nextTick(() => {
+        if(json && json.data){
+            WorkflowEditorRef.value.init( bpmnFile.value, JSON.parse(json.data))
+        }else{
+            WorkflowEditorRef.value.init( bpmnFile.value)
+        }    
+    })
 }
 
 
@@ -82,6 +99,7 @@ async function saveAsNewVersion(){
 
 }
 
+
 watch(() => id, (newWorkflowId) => {
     if(newWorkflowId) {
         getWorkflow()
@@ -96,7 +114,7 @@ watch(() => id, (newWorkflowId) => {
 
 <template>
     <div class="pageContainer">
-        <BpmnEditor ref="WorkflowEditorRef" :workflow-data="item" :currentVersion="currentVersion" :id="id" >
+        <BpmnEditor ref="WorkflowEditorRef" :workflow-data="item" :currentVersion="currentVersion" :id="id" :readonly="readonly">
             
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">
@@ -112,10 +130,12 @@ watch(() => id, (newWorkflowId) => {
     </div>
 </template>
 
+
+
 <style lang="scss" scoped>
+
 .pageContainer{
     width:100%;
     height:100%;
-    overflow: hidden;
 }
 </style>

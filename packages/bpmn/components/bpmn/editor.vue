@@ -13,13 +13,65 @@ import { EDITOR_PROVIDER, conditionOptions } from '#imports'
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
  */
-const {options={}, workflowData, currentVersion} = defineProps<{
+const props = defineProps<{
     options?: any
     workflowData: any,
     currentVersion: string
+    readonly:boolean
 }>()
 
+const { options={}, workflowData, currentVersion, readonly} = toRefs(props)
+
+
 function init(bpmnXml :string, x6Json?:any){
+    graphOptions.value = {
+        interacting: !readonly,
+        panning: {
+                enabled: true,
+                eventTypes: ['leftMouseDown', 'mouseWheel'],
+                
+            },
+        highlighting: {
+            magnetAvailable: {
+                name: 'stroke',
+                args: {
+                    padding: 3,
+                    attrs: {
+                        strokeWidth: 3,
+                        stroke: '#c41a1a',
+                    },
+                },
+            },
+        },
+        connecting:{
+            // router: 'orth',
+            connector: 'rounded',
+            snap: true,
+            allowBlank: false,
+            allowLoop: false,
+            allowNode: true,
+            allowMulti:false,
+            allowEdge:false,
+            highlight: true,
+            validateMagnet({ magnet }:any) {
+                return !readonly
+            },
+
+            validateConnection({ sourceMagnet, targetMagnet }:any) {
+                // 只能从输出连接桩创建连接
+                // if (!sourceMagnet || sourceMagnet.getAttribute('port-group') === 'from') {
+                //     return false
+                // }
+
+                // // 只能连接到输入连接桩
+                // if (!targetMagnet || targetMagnet.getAttribute('port-group') !== 'from') {
+                //     return false
+                // }
+
+                return !readonly
+            },
+        }
+    }
     viewerRef.value.init(bpmnXml, x6Json)
 }
 const viewerRef = ref()
@@ -31,54 +83,7 @@ const edgeEl = ref()
 const graph = ref()
 const dnd = ref()
 
-const graphOptions = {
-    interacting:true,
-    panning: {
-            enabled: true,
-            eventTypes: ['leftMouseDown', 'mouseWheel'],
-            
-        },
-    highlighting: {
-        magnetAvailable: {
-            name: 'stroke',
-            args: {
-                padding: 3,
-                attrs: {
-                    strokeWidth: 3,
-                    stroke: '#c41a1a',
-                },
-            },
-        },
-    },
-    connecting:{
-        // router: 'orth',
-        connector: 'rounded',
-        snap: true,
-        allowBlank: false,
-        allowLoop: false,
-        allowNode: true,
-        allowMulti:false,
-        allowEdge:false,
-        highlight: true,
-        validateMagnet({ magnet }:any) {
-            return true
-        },
-
-        validateConnection({ sourceMagnet, targetMagnet }:any) {
-            // 只能从输出连接桩创建连接
-            // if (!sourceMagnet || sourceMagnet.getAttribute('port-group') === 'from') {
-            //     return false
-            // }
-
-            // // 只能连接到输入连接桩
-            // if (!targetMagnet || targetMagnet.getAttribute('port-group') !== 'from') {
-            //     return false
-            // }
-
-            return true
-        },
-    }
-}
+const graphOptions = ref()
 function graphReady(){
     ready.value = true
     graph.value = viewerRef.value.graph;
@@ -86,7 +91,7 @@ function graphReady(){
     graph.value.use(
         new Transform({
             resizing: {
-                enabled:true,
+                enabled:!readonly,
                 allowReverse:false,
             },
         }),
@@ -94,7 +99,7 @@ function graphReady(){
 
     graph.value.use(
         new Selection({
-            enabled: true,
+            enabled: !readonly,
             multiple: true,
             rubberband: true,
             movable: true,
@@ -105,7 +110,7 @@ function graphReady(){
 
     graph.value.use(
         new History({
-            enabled: true,
+            enabled: !readonly,
             beforeAddCommand:(event:any, args:any) => {
                 const ignoreKeys = ['tools', 'ports']
                 if(ignoreKeys.includes(args.key)) return false
@@ -118,7 +123,7 @@ function graphReady(){
         validateNode: (node:Node,options) => {
             // if(!node.parent) return false
             
-            return true
+            return !readonly
         }
     })
 }
@@ -156,6 +161,7 @@ const dropActionsItems = computed(() => {
 })
 
 function itemDrop(item:any, ev:any) {
+    if(readonly) return;
     const id = 'new_' + new Date().getTime()
     const newData = item.dropData(id)
     const newNode = graph.value.createNode(newData)
@@ -181,19 +187,19 @@ const fieldListApi = computed(() => {
 async function formSubmit(){
     const json = fromDesignRef.value.getFormJson()
     await adminApi.formPropertiesRelationController.postSave({
-        processKey: workflowData.key,
+        processKey: workflowData.value.key,
         userTaskId: selectedStep.value.id,
         jsonValue: JSON.stringify(json),
-        versionId: currentVersion
+        versionId: currentVersion.value
     })
     formDialogVisible.value = false;
 }
 
 async function getFormByNode(node: Node){
     const response = await adminApi.formPropertiesRelationController.getQuery({
-        processKey: workflowData.key,
+        processKey: workflowData.value.key,
         userTaskId: node.data.id,
-        versionId: currentVersion
+        versionId: currentVersion.value
     });
     if(!response || !response.data || response.data.length === 0){
         return {};
@@ -204,18 +210,18 @@ async function getFormByNode(node: Node){
 
 async function saveFormByNode(node: Node, json:any){
     return await adminApi.formPropertiesRelationController.postSave({
-        processKey: workflowData.key,
+        processKey: workflowData.value.key,
         userTaskId: node.data.id,
         jsonValue: JSON.stringify(json),
-        versionId: currentVersion
+        versionId: currentVersion.value
     })
 }
 
 async function openForm(node: Node){
     const response = await adminApi.formPropertiesRelationController.getQuery({
-        processKey: workflowData.key,
+        processKey: workflowData.value.key,
         userTaskId: node.data.id,
-        versionId: currentVersion
+        versionId: currentVersion.value
     });
     if(!response || !response.data){
         throw createError('Server Error');
@@ -283,7 +289,7 @@ async function getConditionSetting(){
     // }else{
     //     conditionSetting.value = data.data
     // }
-    conditionSetting.value = conditionOptions
+    conditionSetting.value = conditionOptions as any
 }
 const sidebarRef = ref()
 function openSidebar(component:string, node:Node | Edge | Cell){
@@ -306,8 +312,8 @@ provide(EDITOR_PROVIDER, {
     copyForm,
     copyObj,
     copyKey,
-    conditionSetting
-
+    conditionSetting,
+    readonly
 })
 
 
@@ -328,7 +334,7 @@ defineExpose({
                 <BpmnPermission @click="openPermission" />
                 <BpmnFolderCabinet @click="openCabinet" />
             </div>
-            <div class="group">
+            <div v-if="!readonly" class="group">
                 <div v-for="(item,index) in dropActionsItems" :key="index" class="icon handlers" @mousedown.native="(ev) => itemDrop(item, ev)">
                     <Icon :name="item.icon" />
                     <div class="label">{{ item.label }}</div>

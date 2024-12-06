@@ -6,6 +6,7 @@ const { node } = defineProps<{
     node:Node
 }>()
 const graphProvider = inject(BPMN_PROVIDER)
+const editorProvider = inject(EDITOR_PROVIDER);
 const form = ref();
 
 function refreshData() {
@@ -49,6 +50,7 @@ function updateNode(){
 }
 
 function addNewCondition(){
+    if(editorProvider?.readonly.value) return;
     const newData = {
         attr_id: 'element_' + new Date().getTime(),
         attr_type:"String_Validation" ,

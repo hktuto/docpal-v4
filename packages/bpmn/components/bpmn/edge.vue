@@ -4,7 +4,8 @@ import { onActivated, onMounted } from 'vue';
 
 
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')
     
 }
@@ -12,6 +13,7 @@ if(!graphProvider) {
 function setupEdge(){
 
     graphProvider?.graph.value?.on('edge:mouseenter', ({cell}:any) => {
+        if(editorProvider?.readonly.value) return;
         // cell.setRouter('normal')
         cell.addTools([
             {
@@ -47,10 +49,12 @@ function setupEdge(){
     })
 
     graphProvider?.graph.value?.on('edge:mouseleave', ({cell}:any) => {
+        if(editorProvider?.readonly.value) return;
         cell.removeTools()
     })
 
     graphProvider?.graph.value?.on("edge:connected", ({edge, isNew}) => {
+        if(editorProvider?.readonly.value) return;
         const source = edge.getSourceCell()
         if(!source) return;
         // #region exclusiveGateway 

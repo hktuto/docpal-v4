@@ -24,6 +24,7 @@ function setupNode(){
         opened.value = false
     })
     graphProvider?.graph.value?.on('node:mouseenter', ({cell}:any) => {
+        if(editorProvider?.readonly.value) return;
         // 获取该节点下的所有连接桩
         const ports = cell.getPorts() || []
         ports.forEach((port:any) => {
@@ -36,6 +37,7 @@ function setupNode(){
     })
 
     graphProvider?.graph.value?.on('node:mouseleave', ({cell}:any) => {
+        if(editorProvider?.readonly.value) return;
         // 获取该节点下的所有连接桩
         const ports = cell.getPorts() || []
         ports.forEach((port:any) => {
@@ -59,6 +61,7 @@ const contextSelectedNode = ref()
 const rightClickEl = ref()
 
 function contextMenuHandler({e,x,y,view,node}:any) {
+    if(editorProvider?.readonly.value) return;
     if(ignoreTypeList.includes(node.data.type || "")) {
         return
     }
@@ -88,11 +91,6 @@ onClickOutside(rightClickEl, () => {
     contextMenuOpened.value = false
 })
 // #endregion
-
-
-
-
-
 
 
 function handleNodeClick({node}:any) {

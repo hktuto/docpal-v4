@@ -3,14 +3,14 @@ import {useI18n} from '#imports'
 import type { Node } from '@antv/x6'
 
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')
     
 }
 
-const {node, disabled = false} = defineProps<{
-  node: Node,
-  disabled?:boolean
+const {node, } = defineProps<{
+  node: Node
 }>()
 const { t } = useI18n()
 
@@ -65,7 +65,7 @@ watch(() => node, ()=> {
            :model="form" @submit.stop>
     <el-formItem label="Name" prop="name"
                  :rules="[{ required: true, message: t('form_common_requird')}]">
-      <el-input v-model="form.name" :disabled="disabled" @change="nameChange"  placeholder="Name" />
+      <el-input v-model="form.name" :disabled="editorProvider.readonly.value" @change="nameChange"   placeholder="Name" />
     </el-formItem>
   </el-form>
 </template>

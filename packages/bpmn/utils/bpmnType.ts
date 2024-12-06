@@ -43,6 +43,7 @@ export interface EditorProvider {
     copyObj: Ref<any>,
     copyKey: Ref<string | undefined>,
     conditionSetting: Ref<any>
+    readonly: Ref<boolean>
 }
 export type BPMNJSON = {
     definitions :{

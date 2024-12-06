@@ -7,7 +7,8 @@ const { node } = defineProps<{
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if(!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')
     
 }
@@ -151,12 +152,12 @@ watch( () => node, async() => {
     <BpmnSidebarEditLabel :node="node" />
     <ElForm label-position="top" label-width="80px" >
     <ElFormItem label="Email template">
-          <ElSelect v-model="emailTemplateId" placeholder="Select email template" class="fullwidth" @change="setEmailTemplateId" filterable>
+          <ElSelect v-model="emailTemplateId" placeholder="Select email template" class="fullwidth" @change="setEmailTemplateId" :disabled="editorProvider.readonly.value" filterable>
             <ElOption v-for="item in allEmailTemplates" :key="item.id" :label="item.label" :value="item.id"></ElOption>
           </ElSelect>
         </ElFormItem>
         <ElFormItem v-for="(item, index) in templateVariables" :key="item.attr_name" :label="item.attr_name" >
-            <ElSelect v-model="item['flowable:expression'].__cdata" placeholder="Select form field" class="fullwidth" clearable @change="(val:any) => fieldMappingUpdate(index, val)">
+            <ElSelect v-model="item['flowable:expression'].__cdata" placeholder="Select form field" class="fullwidth" :disabled="editorProvider.readonly.value" clearable @change="(val:any) => fieldMappingUpdate(index, val)">
               <ElOption v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
             </ElSelect>
         </ElFormItem>

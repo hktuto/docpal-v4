@@ -5,6 +5,8 @@ const {elements, index} = defineProps<{
 }>()
 const emits = defineEmits(['delete', 'update'])
 
+
+
 function deleteItem(itemIndex:number) {
     elements.splice(itemIndex, 1)
     if(elements.length === 0) {
@@ -15,6 +17,7 @@ function deleteItem(itemIndex:number) {
 }
 
 function addNewElement(){
+    if(editorProvider?.readonly.value) return;
     const newData = {
         attr_id: 'element_' + new Date().getTime(),
         attr_type:"String_Validation" ,
