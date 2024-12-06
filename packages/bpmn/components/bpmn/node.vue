@@ -13,7 +13,7 @@ if(!graphProvider || !editorProvider) {
 
 const opened = ref(false)
 const editComponent = ref()
-const ignoreTypeList = ['endEvent']
+const ignoreTypeList:string[] = []
 const selectedNode = ref()
 
 function setupNode(){
