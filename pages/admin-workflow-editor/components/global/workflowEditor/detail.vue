@@ -90,7 +90,7 @@ function openVersionList(){
         label: workflowData.value.name,
         component: 'LazyWorkflowEditorVersion',
         props: {
-            id: workflowData.value.id,
+            id: workflowData.value.draftId,
             draftId: workflowData.value.draftId,
             latestVersion: workflowData.value.latestVersion,
             productionVersion: workflowData.value.productionVersion,

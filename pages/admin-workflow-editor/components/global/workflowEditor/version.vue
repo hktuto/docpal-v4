@@ -2,15 +2,16 @@
 import {adminApi} from 'api';
 import dayjs from 'dayjs'
 
-const { id, name, latestVersion } = defineProps<{
+    const { id, name, draftId, latestVersion } = defineProps<{
     id:string,
+    draftId:string,
     name:string
     latestVersion:string
 }>()
-
+console.log("id", id)
 const tableConfig = createTableConfig({
     id: 'workflowEditorVersionTableSetting',
-    api:  (pageParams:any) => adminApi.workflowVersionController.postPage({...pageParams, id:id}),
+    api:  (pageParams:any) => adminApi.workflowVersionController.postPage({...pageParams, draftId:id || draftId}),
     columns:  [
         {
             field: 'versionNumber',
