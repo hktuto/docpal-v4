@@ -46,7 +46,6 @@ function updateNode(){
     node.setData(newData,{ overwrite: true, deep: true, silent:false })
     graphProvider?.graph.value?.stopBatch('update-node-data')
 
-    console.log("condition change", node.data)
 }
 
 function addNewCondition(){

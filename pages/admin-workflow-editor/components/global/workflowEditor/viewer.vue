@@ -9,6 +9,7 @@ const { id, latestVersion, productionVersion } = defineProps<{
 
 const loading = ref(false)
 const viewerRef = ref<InstanceType<typeof BpmnViewer>>();
+    
 async function getData() {
     loading.value = true;
     const xmlBlob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:latestVersion}, {
