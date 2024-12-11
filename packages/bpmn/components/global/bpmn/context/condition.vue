@@ -7,6 +7,9 @@ const { node } = defineProps<{
 }>()
 const graphProvider = inject(BPMN_PROVIDER)
 const editorProvider = inject(EDITOR_PROVIDER);
+if(!graphProvider || !editorProvider) {
+    throw createError('graph provider not found')
+}
 const form = ref();
 
 function refreshData() {
@@ -157,7 +160,7 @@ provide(CONDITION_PROVIDER,{
                         <div class="label">And</div>  
                     </div>
                 </div>
-                <div v-if="form.length === 0" class="addNewContainer" @click="addNewCondition">
+                <div v-if="form.length === 0" :class="{addNewContainer:true, readonly: editorProvider.readonly.value}" @click="addNewCondition">
                         <Icon name="lucide:circle-plus" />
                         <div class="label">And</div>  
                     </div>
@@ -196,6 +199,12 @@ provide(CONDITION_PROVIDER,{
     font-size: var(--app-font-size-s);
     &:hover {
         color: var(--app-main-color);
+    }
+    &.readonly{
+        cursor: not-allowed;
+        &:hover {
+            color: initial;
+        }
     }
 }
 .conditions{
