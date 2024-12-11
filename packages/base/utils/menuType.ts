@@ -19,7 +19,7 @@ export interface RouterParams extends DroppableItem {
 
 
 interface MenuProvider {
-    navigateTo:(param:RouterParams) => void
+    navigateTo:(param:TabItem) => void
     menuSymbol:symbol,
     updateProps(newProps:any):void
     updateTabName(newName:string):void
