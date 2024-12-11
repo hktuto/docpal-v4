@@ -2,6 +2,7 @@
 import type {VxeGrid} from 'vxe-table'
 import {adminApi} from 'api';
 import dayjs from 'dayjs'
+import { newWorkflowEditorDetail } from '~/utils/workflowEditorMenu';
 
 const { id, name, draftId, latestVersion } = defineProps<{
     id:string,
@@ -133,38 +134,11 @@ async function getWorkflowDetail(){
 }
 
 function editHandler(row:any){
-    routerProvider?.navigateTo({
-        menuKey: routerProvider?.menuSymbol,
-        id: "workflow-editor-detail-" + workflowData.value.id + new Date().getTime(),
-        name: "workflow-editor-detail-" + workflowData.value.id,
-        icon: 'dp-icon:flow-outline',
-        label: workflowData.value.name,
-        component: 'LazyWorkflowEditorDetail',
-        props: {
-            id: row.draftId,
-            draftId: row.draftId,
-            currentVersion: row.versionNumber,
-            name: row.name,
-            item: row,
-        }
-    })
+    routerProvider?.navigateTo(newWorkflowEditorDetail(row))
 }
 
 function editNewTabHandler(row:any){
-    tabProvider?.openTab({
-        id: "workflow-editor-detail-" + workflowData.value.id + new Date().getTime(),
-        name: "workflow-editor-detail-" + workflowData.value.id,
-        icon: 'dp-icon:flow-outline',
-        label: workflowData.value.name,
-        component: 'LazyWorkflowEditorDetail',
-        props: {
-            id: row.draftId,
-            draftId: row.draftId,
-            currentVersion: row.versionNumber,
-            name: row.name,
-            item: row,
-        }
-    })
+    tabProvider?.openTab(newWorkflowEditorDetail(row))
 }
 
 onMounted(async () => {
