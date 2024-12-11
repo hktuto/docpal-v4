@@ -91,6 +91,14 @@ function updateProps(newProps:any){
 
 function updateTabName(newName:string){
     tab.value.label = newName
+    // add tab name to allComponents 
+    allComponents.value.forEach( item => {
+        if(item.id === tab.value.id){
+            item.label = newName
+            item.name = newName
+        }
+    })
+   
 }
 
 const menuSymbol = Symbol(tab.value.id)

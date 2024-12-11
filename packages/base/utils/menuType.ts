@@ -1,6 +1,5 @@
 import type { InjectionKey } from "vue"
 import type { DroppableItem } from './dragType'
-import type { ar } from "vitest/dist/chunks/reporters.WnPwkmgA.js"
 
 
 export interface MenuItem extends DroppableItem {
@@ -8,7 +7,7 @@ export interface MenuItem extends DroppableItem {
     hoverIcon?: string, // 如果是 inlineRender 會忽略
     isList?:boolean, // 如果是 true 則直接在 menu 中渲染component, 多用於 children 裡的列表
     inlineRender?:boolean, // 如果是 true 則直接在 menu 中渲染component, 多用於 children 裡的列表
-    children?: MenuItem[],
+    children?: MenuItem[], 
     canDrop: (args:any) => boolean,
     onDropItself?:(args:any) => void,
     // 如果 isList 是 true 時必填
