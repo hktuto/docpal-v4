@@ -96,9 +96,9 @@ onClickOutside(rightClickEl, () => {
 function handleNodeClick({node}:any) {
     // graphProvider?.graph.value?.zoomTo(2);
     // graphProvider?.graph.value?.centerCell(node)
-    if(ignoreTypeList.includes(node.data.type || "")) {
-        return
-    }
+    // if(ignoreTypeList.includes(node.data.type || "")) {
+    //     return
+    // }
     const type = node.data.type as BpmnElementType
     if(type) {
         const bpmnElementType = bpmnElement[type]

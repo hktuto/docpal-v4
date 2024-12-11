@@ -156,12 +156,12 @@ watch(form, () => {
 
 <template>
     <div class="elementContainer">
-        <div v-if="!editorProvider.readonly.value.value" class="removeConditionContainer">
+        <div v-if="!editorProvider.readonly.value" class="removeConditionContainer">
             <Icon name="lucide:trash" @click="$emit('delete')" />
         </div>
         <ElForm :model="form" :rules="rules" label-position="top" size="small" @submit.stop>
             <ElFormItem label="Type" prop="attr_type">
-                <ElSelect v-model="form.attr_type" placeholder="Select form field" :disabled="editorProvider.readonly.value.value"   filterable clearable @change="typeChange">
+                <ElSelect v-model="form.attr_type" placeholder="Select form field" :disabled="editorProvider.readonly.value"   filterable clearable @change="typeChange">
                     <ElOption v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value"></ElOption>
                 </ElSelect>
             </ElFormItem>

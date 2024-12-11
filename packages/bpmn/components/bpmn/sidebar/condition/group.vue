@@ -5,6 +5,7 @@ const {elements, index} = defineProps<{
 }>()
 const emits = defineEmits(['delete', 'update'])
 
+const editorProvider = inject(EDITOR_PROVIDER)
 
 
 function deleteItem(itemIndex:number) {
@@ -46,7 +47,7 @@ function updateItem(newVal:any, elementIndex:number) {
                 :element="item"
                  @delete="deleteItem(elementIndex)" 
                  @update="(newVal:any) => updateItem(newVal, elementIndex)" />
-            <div v-if="elementIndex === elements.length - 1" class="moreButtonContainer" @click="addNewElement">
+            <div v-if="elementIndex === elements.length - 1" :class="{moreButtonContainer:true, readonly: editorProvider.readonly.value}" @click="addNewElement">
                 <Icon name="lucide:plus"  />
                 <div class="label">Or</div>
             </div>
@@ -77,6 +78,12 @@ function updateItem(newVal:any, elementIndex:number) {
     cursor: pointer;
     font-size: var(--app-font-size-s);
     position: relative;
+    &.readonly{
+        cursor: not-allowed;
+        &:hover {
+            color: initial;
+        }
+    }
     &:hover {
         color: var(--app-main-color);
     }
