@@ -14,6 +14,53 @@ if(!tabManager || !routerProvider) {
 }
 const { t } = useI18n()
 
+const tableConfig : TableConfigWithPagerParams = {
+    id: 'workflowEditorListTableSetting',
+    apiString: 'adminApi.workflowProcessDefinitionController.postPage',
+    columns:  [
+                {
+                    field: 'name',
+                    title: 'Name',
+                    fixed: 'left',
+                    sortable: true,
+                },
+                {
+                    field: 'productionVersion',
+                    title: 'productionVersion',
+                    minWidth: 120,
+                    
+                },
+                {
+                    field: 'latestVersion',
+                    title: 'latestVersion',
+                    minWidth: 120,
+                },
+                {
+                    field:'modifiedBy',
+                    title: 'modifiedBy',
+                    minWidth: 120,
+                    sortable: true,
+                },
+                {
+                    field: 'modifiedDate',
+                    title: 'modifiedDate',
+                    minWidth: 120,
+                    sortable: true,
+                    formatter ({ cellValue }:any) {
+                        return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
+                    }
+                },
+                {
+                    title: 'Action',
+                    fixed: 'right',
+                    width: 65,
+                    slots:{
+                        default:'action'
+                    }
+                }
+            ], 
+}
+
 const config = createTableConfig({
     id: 'workflowEditorListTableSetting',
     api: (pageParams:any) => adminApi.workflowProcessDefinitionController.postPage(pageParams),
@@ -119,22 +166,9 @@ const tableEvents: VxeGridListeners = {
 
 function handleDblclick(data:any){
     // TODO: open detail page
-    const newItem: any = {
-        menuKey: routerProvider?.menuSymbol,
-        id: "workflow-editor-detail-" + new Date().getTime(),
-        name: "workflow-editor-detail-" + data.id,
-        icon: 'dp-icon:flow-outline',
-        label: data.name,
-        component: 'LazyWorkflowEditorDetail',
-        props: {
-            id: data.id,
-            currentVersion: data.latestVersion,
-            productionVersion: data.productionVersion,
-            name: data.name,
-            item: data,
-        }
-    }
-    routerProvider?.navigateTo({...newItem})
+    const newItem = newWorkflowEditorDetail(data);
+    
+    routerProvider?.navigateTo(newItem)
     // tabManager?.openTab(newItem)
 }
 
@@ -225,7 +259,8 @@ function reload(){
 
 <template>
     <div class="pageContainer">
-        <vxe-grid
+        <TablePage :config="tableConfig" />
+        <!-- <vxe-grid
             ref="gridRef"
             v-bind="config"
             v-on="tableEvents"
@@ -249,7 +284,7 @@ function reload(){
                     </template>
                 </ElDropdown>       
             </template>
-        </vxe-grid>
+        </vxe-grid> -->
         <WorkflowEditorNewDialog ref="newDialogRef" @click="reload" />
     </div>
 </template>
