@@ -107,9 +107,9 @@ function reload(){
 <template>
     <div class="pageContainer">
         <!-- <TablePage :config="tableConfig" /> -->
-        <WorkflowEditorWorkflowListTable ref="tableRef" />
-        <WorkflowEditorNewDialog ref="newDialogRef" @click="reload" />
-        <WorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion" :data="newWorkflowDialogData" @close="reload" />
+        <LazyWorkflowEditorWorkflowListTable ref="tableRef" />
+        <LazyWorkflowEditorNewDialog ref="newDialogRef" @click="reload" />
+        <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion" :data="newWorkflowDialogData" @close="reload" />
     </div>
 </template>
 

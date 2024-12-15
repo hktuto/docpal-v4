@@ -14,7 +14,7 @@ export interface MenuItem extends DroppableItem {
 }
 
 export interface RouterParams extends DroppableItem {
-    menuKey:symbol,
+    menuKey?:symbol,
 }
 
 
@@ -28,3 +28,17 @@ interface MenuProvider {
 export const menuSymbol = Symbol('menu')
 
 export const MenuRouterKey: InjectionKey<MenuProvider> = menuSymbol;
+
+
+export type PageSetting = {
+    id: string, // id with unique time stamp
+    name: string, // name to check if tag is exist
+    label: string, // label to show in menu
+    icon: string, // icon to show in menu
+    hoverIcon?: string, // hover icon to show in menu
+    component: string, // component to show in menu
+    props: {
+        [key:string]:any
+    }, // props to pass to component
+    createRouterParams: (params:any) => RouterParams
+}
