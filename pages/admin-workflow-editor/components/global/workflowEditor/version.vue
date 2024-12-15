@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type {VxeGrid} from 'vxe-table'
 import {adminApi} from 'api';
-import dayjs from 'dayjs'
+
 import { newWorkflowEditorDetail } from '~/utils/workflowEditorMenu';
 
 const { id, name, draftId, latestVersion } = defineProps<{
@@ -17,114 +17,7 @@ const tabProvider = inject(TabManagerKey)
 if(!routerProvider || !tabProvider) {
     throw new Error('MenuRouterKey is not provided')
 }
-const tableRef = ref<InstanceType<typeof VxeGrid>>()
-const tableConfig = createTableConfig({
-    id: 'workflowEditorVersionTableSetting',
-    api: (pageParams:any) => adminApi.workflowVersionController.postPage({...pageParams, draftId:id || draftId}),
-    columns:  [
-        {
-            field: 'versionNumber',
-            title: 'Version',
-            minWidth: 60,
-            fixed: 'left',
-            sortable: true,
-        },
-        {
-            field:'isProduction',
-            title: 'Production',
-            minWidth: 60,
-            formatter ({ cellValue }:any) {
-                return cellValue === 'A' ? 'Production' : '--'
-            }
-        },
-        {
-            field: 'modifiedDate',
-            title: 'modifiedDate',
-            minWidth: 120,
-            sortable: true,
-            formatter ({ cellValue }:any) {
-                return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
-            }
-        },
-        {
-            field: 'createdBy',
-            title: 'createdBy',
-            minWidth: 120,
-            sortable: true,
-        },
-        {
-            field: 'modifiedBy',
-            title: 'modifiedBy',
-            minWidth: 120,
-            sortable: true,
-        },
-        {
-            title: 'Action',
-            width: 65,
-            fixed: 'right',
-            slots:{
-                default:'action'
-            }
-        }
-    ],
-    },
-    {
-        menuConfig:{
-            body:{
-                options:[
-                    [
-                        { code: 'edit', name: 'Edit', visible: true, disabled: false },
-                        { code: 'edit_new_tab', name: 'Edit in new tab', visible: true, disabled: false },
-                        { code: 'promote_to_production', name: 'Promote to Production', visible: true, disabled: false },
-                        { code: "save_as_new_version", name: "Save as new version", visible: true, disabled: false },
-                    ]
-                ]
-            },
-            visibleMethod: ({options, column, row, rowIndex}) => {
-                // options 是 menuConfig 中的 body 配置
-                const isProduction = row.isProduction === 'A'
-                const isLatest = row.versionNumber === workflowData.value.latestVersion
-                options.forEach(list => {
-                    list.forEach(item => {
-                        if(item.code === 'edit' || item.code === 'edit_new_tab'){
-                            item.disabled = !isLatest || isProduction
-                        }
-                        if(item.code === 'promote_to_production'){
-                            item.disabled = isProduction
-                        }
-                    })
-                })
-                return true;
-            }
-        },
-        sortConfig: {
-            remote: true,
-            defaultSort:[
-                {
-                    field: 'versionNumber',
-                    order: 'desc'
-                }
-            ]
-        },
-    }
-)
 
-const tableEvent = {
-    menuClick: ({menu, row, column}:any) => {
-        switch(menu.code){
-            case 'edit':
-                editHandler(row)
-                break;
-            case 'edit_new_tab':
-                editNewTabHandler(row)
-                break;
-            case 'promote_to_production':
-                break;
-            case 'save_as_new_version':
-                break;
-        }
-    }
-}
 
 
 async function getWorkflowDetail(){
@@ -141,33 +34,44 @@ function editNewTabHandler(row:any){
     tabProvider?.openTab(newWorkflowEditorDetail(row))
 }
 
+type ActionPermission = (row:any, index:number, code:string) => {disabled:boolean, visible:boolean}
+function actionPermission({row, index, code}:ActionPermission){
+    const isProduction = row.isProduction === 'A'
+    const isLatest = row.versionNumber === workflowData.value.latestVersion
+    let result = {
+        visible :true,
+        disabled: true
+    }   
+    if(code === 'edit' || code === 'edit_new_tab'){
+        result.disabled = !isLatest || isProduction
+    }
+    if(code === 'promote_to_production'){
+        result.disabled = isProduction
+    }
+    return result
+}
+
 onMounted(async () => {
     await getWorkflowDetail()
 })
 
 
+provide(WorkflowEditorVersionListProviderKey,{
+    getListApi : adminApi.workflowVersionController.postPage,
+    editHandler,
+    editNewTabHandler,
+    actionPermission,
+})
+
 </script>
 
 <template> 
 <div class="pageContainer">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <WorkflowEditorVersionListTable ref="tableRef" :draftId="draftId" >
         <template #toolbar_buttons>
             <h2>{{ name }}</h2>
         </template>
-        <template #action="{row, rowIndex}"> 
-            <ElDropdown >
-                <ElButton type="primary" link>
-                    <ElIcon><SvgIcon src="/icons/dots.svg"/></ElIcon>
-                </ElButton>
-                <template #dropdown>
-                    <ElDropdownMenu>
-                        <ElDropdownItem @click="editHandler(row)">Edit</ElDropdownItem>
-                        <ElDropdownItem @click="editNewTabHandler(row)">Edit in new tab</ElDropdownItem>
-                    </ElDropdownMenu>
-                </template>
-            </ElDropdown>       
-        </template>
-    </VxeGrid>
+    </WorkflowEditorVersionListTable>
 </div>
 </template>
 
