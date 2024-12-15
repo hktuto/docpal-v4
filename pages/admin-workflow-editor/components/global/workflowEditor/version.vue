@@ -67,11 +67,11 @@ provide(WorkflowEditorVersionListProviderKey,{
 
 <template> 
 <div class="pageContainer">
-    <WorkflowEditorVersionListTable ref="tableRef" :draftId="draftId" >
+    <LazyWorkflowEditorVersionListTable ref="tableRef" :draftId="draftId" >
         <template #toolbar_buttons>
             <h2>{{ name }}</h2>
         </template>
-    </WorkflowEditorVersionListTable>
+    </LazyWorkflowEditorVersionListTable>
 </div>
 </template>
 
