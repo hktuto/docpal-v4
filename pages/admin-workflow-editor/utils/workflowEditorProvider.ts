@@ -3,7 +3,7 @@ import type { InjectionKey } from '#imports';
 
 interface WorkflowEditorListProvider {
     getListApi:(pageParams:any) => Promise<any>
-    openProductionVersion:(data:any) => void
+    openProductionVersion:(data:any, openInNewTab?:boolean) => void
     openLastestVersion:(data:any, openInNewTab?:boolean) => void
     openVersions:(data:any) => void
     saveAsNewWorkflow:(data:any) => void

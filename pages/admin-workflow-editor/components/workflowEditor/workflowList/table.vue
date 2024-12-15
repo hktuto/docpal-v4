@@ -61,6 +61,11 @@ const tableConfig = createTableConfig({
                 [
                     { code: 'edit_latest_version', name: 'Edit Latest Version', visible: true, disabled: false },
                     { code: 'edit_latest_version_new_tab', name: 'Edit Latest Version in New Tab', visible: true, disabled: false },
+                    { code : 'view_production', name: 'View Production', visible: true, disabled: false },
+                    { code : 'view_production_new_tab', name: 'View Production in New Tab', visible: true, disabled: false },
+                    { code : 'save_as_new_workflow', name: 'Save as new workflow', visible: true, disabled: false },
+                    { code : 'view_versions', name: 'View Versions', visible: true, disabled: false },
+                    { code : 'view_versions_new_tab', name: 'View Versions in New Tab', visible: true, disabled: false },
                 ]
             ]
         }
@@ -90,11 +95,26 @@ const tableEvents: VxeGridListeners = {
     },
     menuClick: ({ menu, row, column }) => {
         switch (menu.code) {
+            case 'view_production':
+                listProvider.openProductionVersion(row)
+                break;
+            case 'view_production_new_tab':
+                listProvider.openProductionVersion(row, true)
+                break;
+            case 'save_as_new_workflow':
+                listProvider.saveAsNewWorkflow(row)
+                break;
+            case 'view_versions':
+                listProvider.openVersions(row)
+                break;
+            case 'view_versions_new_tab':
+                listProvider.openVersions(row, true)
+                break;
             case 'edit_latest_version':
-            listProvider.openLastestVersion(row)
+                listProvider.openLastestVersion(row)
                 break;
             case 'edit_latest_version_new_tab':
-            listProvider.openLastestVersion(row, true)
+                listProvider.openLastestVersion(row, true)
                 break;
         }
     }
@@ -131,7 +151,7 @@ defineExpose({
                         <ElDropdownMenu>
                             <ElDropdownItem @click="listProvider.openLastestVersion(row)">Edit latest version</ElDropdownItem>
                             <ElDropdownItem v-if="row.productionVersion" @click="listProvider.openProductionVersion(row)">View Production</ElDropdownItem>
-                            <ElDropdownItem @click="listProvider.openLastestVersion(row)">Save As New Workflow</ElDropdownItem>
+                            <ElDropdownItem @click="listProvider.saveAsNewWorkflow(row)">Save As New Workflow</ElDropdownItem>
                             <ElDropdownItem @click="listProvider.openVersions(row)">View  Versions</ElDropdownItem>
                         </ElDropdownMenu>
                     </template>

@@ -37,8 +37,7 @@ function openLastestVersion(data:any, openInNewTab = false){
     }
 }
 
-function openProductionVersion(data:any){
-    console.log('item clicked', data)
+function openProductionVersion(data:any, openInNewTab = false){
     // TODO: open detail page
     const newItem: any = {
         menuKey: routerProvider?.menuSymbol,
@@ -55,19 +54,32 @@ function openProductionVersion(data:any){
             item: data,
         }
     }        
-    routerProvider?.navigateTo({...newItem})
+    if(!openInNewTab){
+        routerProvider?.navigateTo({...newItem})
+    }else{
+        tabManager?.openTab({...newItem})
+    }
     // tabManager?.openTab(newItem)
 }
 
+const saveAsDialogRef = ref()
+const newWorkflowDialogData = ref({
+    latestVersion:"V1"
+})
 function saveAsNewWorkflow(data:any){
-
+    newWorkflowDialogData.value = data
+    saveAsDialogRef.value.open()
 }
 
-function openVersions(data:any){
+function openVersions(data:any , openInNewTab = false){
     const newItem = newWorkflowEditorVerionList(data);
     console.log('newItem', newItem, data)
     
-    routerProvider?.navigateTo({...newItem})
+    if(!openInNewTab){
+        routerProvider?.navigateTo({...newItem})
+    }else{
+        tabManager?.openTab({...newItem})
+    }
 }
 
 const newDialogRef = ref()
@@ -97,6 +109,7 @@ function reload(){
         <!-- <TablePage :config="tableConfig" /> -->
         <WorkflowEditorWorkflowListTable ref="tableRef" />
         <WorkflowEditorNewDialog ref="newDialogRef" @click="reload" />
+        <WorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion" :data="newWorkflowDialogData" @close="reload" />
     </div>
 </template>
 
