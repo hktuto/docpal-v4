@@ -29,7 +29,7 @@ export const newWorkflowEditorVerionList  = function(params:NewWorkflowVersionLi
         component: 'LazyWorkflowEditorVersion',
         props: {
             id: params.id,
-            draftId: params.draftId,
+            draftId: params.draftId || params.id,
             latestVersion: params.latestVersion,
             productionVersion: params.productionVersion,
             name: params.name,

@@ -21,11 +21,10 @@ const isFullscreen = computed(() => {
 function navigateTo(param: RouterParams) {
     const existingTab = allComponents.value.find(item => item.name === param.name)
     if(existingTab){
+        console.log('existingTab', existingTab)
         tabManager?.openTab(param)
         return;
     }
-
-    if(param.menuKey !== menuSymbol) return
     
     history.value.push({
         menuKey: menuSymbol,
