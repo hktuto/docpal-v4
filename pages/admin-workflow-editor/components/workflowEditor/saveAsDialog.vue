@@ -49,6 +49,7 @@ async function getVersionList() {
 async function open(){
     
     await getVersionList()
+    // 因為 props 有可能未更新，所以在 nextTick 中再次設置 form 的值
     nextTick(() => {
         form.name = data.name
         form.copyVersion = copyVersion
