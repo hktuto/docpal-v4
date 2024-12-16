@@ -262,8 +262,3 @@ type dayjsUnit = 'day'| 'minute'
 export const diffMinute = (date1:string | Date = today, date2:string | Date = today, unit:dayjsUnit = 'minute') => {
     return dayjs(date1).diff(date2, unit)
 }
-
-export const deepCopy  = (data:any) => {
-    if (!data) return {}
-    return JSON.parse(JSON.stringify(data));
-}
