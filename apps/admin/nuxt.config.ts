@@ -8,6 +8,9 @@ export default defineNuxtConfig({
     '../../packages/authApp',
     "../../pages/admin-workflow-editor",
     "../../pages/admin-user",
+    "../../pages/admin-acl",
+    "../../pages/admin-setting",
+    "../../pages/admin-audit",
   ],
   features:{
     inlineStyles: true,
