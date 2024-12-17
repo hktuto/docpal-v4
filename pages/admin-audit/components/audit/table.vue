@@ -9,6 +9,7 @@ const tableConfig = createTableConfig({
     api: (pageParams:any) => auditProvider?.getListApi(pageParams),
     columns:  [
                 {
+                    id: "10",
                     field: 'principalName',
                     title: 'User',
                     fixed: 'left',
@@ -41,6 +42,7 @@ const tableConfig = createTableConfig({
             ],    
 },{
     rowConfig:{
+        useKey:true,
             drag: true,
         },
     rowDragConfig:{
