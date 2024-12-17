@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
-import formJson from './pathSelector.vform.json'
 import type { Node } from '@antv/x6'
 const { t } = useI18n()
 const { node } = defineProps<{
@@ -11,72 +10,142 @@ const graphProvider = inject(BPMN_PROVIDER)
 if(!graphProvider){
     throw new Error('Missing provider')
 }
-const { t } = useI18n()
-const FromRendererRef = ref()
-const allDocumentTemplates = ref<{id:string, name: string, value:any}[]>([]);
 
-async function getDocumentTemplates() {
-    const data = await adminApi.documentTemplateController.getAll()
-    if(!data || !data.data){
-        return
+const allDocumentTemplates = ref<any[]>([]);
+const flatCabinetList = ref<any[]>([]);
+const folderCabinetRootId = ref('')
+
+const form = ref<{
+  [key: string]: any
+}>({
+    templateId:"",
+    folderCabinetId:"",
+    variables:""
+})
+const { getMetaSetting } = useDocumentType()
+async function loopChildren(all:any[], item: any, level = 0, title = ''){
+    const meta = await getMetaSetting(item.documentType) as any;
+    title = (title ? title + '/' : '') + item.label
+    if(!item.children) {
+        all.push({
+            ...item, 
+            level, 
+            displayMeta : meta && meta.displayMataTags ? meta.displayMataTags : [],
+            title
+        })
     }
-  allDocumentTemplates.value = data.data.map((item: any) => {
-    return {
-      id: item.id,
-      name: item.name,
-      value: item
+    
+    if(item.children){
+        level ++ ;
+        for (const child of item.children) {
+            all = await loopChildren(all, child, level, title)
+        }
     }
-  });
+    return all
 }
 
-const templateVariables = computed(() => {
-    const nodeData = node.getData()
-  return nodeData.data.extensionElements['flowable:field'];
-})
-
-const allFormFieldArray = computed(() => {
-  return Object.keys(graphProvider.allFormField.value).map((key) => {
-    return graphProvider.allFormField.value[key]
-  })
-})
-
-const allFieldOptions = computed(() => {
-
-  return Object.keys(graphProvider.allFormField.value).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: graphProvider.allFormField.value[key].attr_id
-    }
-  })
-})
-const formVariable = ref<any[]>([]);
-const formData = ref();
-async function getFormData(){
-    const nodeData = node.getData()
-    const parentPathField = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "parentPath");
-    const documentTypeField = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentType");
-    const documentPropertiesField = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentProperties");
-    const variablesField = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "variables");
-    const templateIdField = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "templateId");
-    const vari = variablesField['flowable:expression']['__cdata'] ? JSON.parse(variablesField['flowable:expression']['__cdata']) : {};
-    // loop throught vari and set value to formVariable and remove ${variables:get()}
-    formVariable.value = Object.keys(vari).map((key) => {
+async function getAllTemplate(){
+    const {data} = await adminApi.documentTemplateController.getAll()
+    if(!data) return
+    allDocumentTemplates.value = data.map((item: any) => {
         return {
-        key,
-        value: vari[key].replace('${variables:get(', '').replace(')}', '')
+            id: item.id,
+            name: item.name,
+            value: item
         }
     });
-    formData.value = {
-        templateId: templateIdField['flowable:expression']['__cdata'],
-        parentPath: parentPathField.attr_path ? JSON.parse(parentPathField.attr_path) : [],
-        documentType: documentTypeField['flowable:expression']['__cdata'],
-        // documentProperties: documentPropertiesField['flowable:expression']['__cdata'] || "",
-        variables: variablesField['flowable:expression']['__cdata'] ? JSON.parse(variablesField['flowable:expression']['__cdata']) : {},
+    const bpmnJson = graphProvider?.bpmnJson.value
+    if(bpmnJson && bpmnJson.definitions && bpmnJson.definitions.process && bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping']){
+        folderCabinetRootId.value = bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping'][0].attr_id
+        const {data} = await adminApi.folderCabinetController.getTemplate(folderCabinetRootId.value)
+        flatCabinetList.value = await loopChildren([], data, 0,'')
+        // flatCabinetList.value = props.bpmnJson.definitions.process['flowable:folderCabinetMapping'][0]
     }
-    nextTick( () => {
-        FromRendererRef.value.vFormRenderRef.setFormData(formData)
-    })
+    await getForm()
 }
+
+
+async function getForm(){
+  const nodeData = node.getData()
+    if(!nodeData.data || !nodeData.data.data || !nodeData.data.data.extensionElements) {
+        form.value = {
+            templateId:"",
+            folderCabinetId:'',
+            variables:""
+        }
+        
+        return;
+    }
+    // get templateId
+    const index = nodeData.data.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "templateId");
+    const templateIdItem = nodeData.data.data.extensionElements['flowable:field'][index];
+    
+    if(templateIdItem) {
+        form.value.templateId = templateIdItem['flowable:expression']['__cdata']
+        
+    }else{
+        form.value.templateId = ""
+    }
+    // get folderCabinetId
+    const folderCabinetIdItem =nodeData.data.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "folderCabinetId");
+    if(folderCabinetIdItem){
+        form.value.folderCabinetId = folderCabinetIdItem['flowable:expression']['__cdata'] || ""
+    }else{
+        nodeData.data.data.extensionElements['flowable:field'].push({
+            "attr_name": "folderCabinetId",
+            "flowable:expression": {
+                "__cdata": ""
+            }
+        })
+        form.value.folderCabinetId = ""
+    }
+    
+    // get variables
+    const variablesItem = nodeData.data.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "variables");
+    if(variablesItem){
+        form.value.variables = variablesItem['flowable:expression']['__cdata'] || ""
+    }else{
+        nodeData.data.data.extensionElements['flowable:field'].push({
+            "attr_name": "variables",
+            "flowable:expression": {
+                "__cdata": ""
+            }
+        })
+        form.value.variables = ""
+    }
+
+}
+
+function updateField(key:string, value:any){
+    const nodeData = node.getData()
+    let newData = JSON.parse(JSON.stringify(nodeData))
+    if(!nodeData || !nodeData.data || !nodeData.data.extensionElements) {
+      
+      newData.data.extensionElements['flowable:field']= [
+            {
+                "attr_name": key,
+                "flowable:expression": {
+                    "__cdata": value
+                }
+            }
+        ]
+    }
+    let index = nodeData.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === key);
+    if(index === -1) {
+      newData.data.extensionElements['flowable:field'].push({
+            "attr_name": key,
+            "flowable:expression": {
+                "__cdata": value
+            }
+        })
+    }else{
+        
+      newData.data.extensionElements['flowable:field'][index]['flowable:expression']['__cdata'] = value
+    }
+    node.setData(newData,{ overwrite: true, deep:true });
+    form.value[key] = value
+}
+
 
 function setUpListener(){
     graphProvider?.graph.value?.on('history:undo', () => {
@@ -86,141 +155,16 @@ function setUpListener(){
         refreshData()
     })
 }
-// #region documentName
-const documentName = ref([])
-function getDocumentName(){
-    const nodeData = node.getData()
-    const item = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
-    if(!item) {
-        documentName.value =  []
-        return
-    }
-    documentName.value =  item.attr_path ? JSON.parse(item.attr_path) : [];
-}
 
-function setDocumentName(value:string){
-    const nodeData = node.getData()
-    const index = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "documentName");
-    if(index === -1){
-        // push documentName to extensionElements
-        node.setData({
-            ...node.data,
-            version: (node.data.version || 0) + 1,
-            data:{
-                ...node.data.data,
-                extensionElements:{
-                    ...node.data.data.extensionElements,
-                    "flowable:field":[
-                        {
-                            attr_name: "documentName",
-                            attr_type: "string",
-                            attr_value: "",
-                            attr_required: "false",
-                            attr_path: value ? JSON.stringify(value) : "[]",
-                            "flowable:expression": {
-                            __cdata: value ? value[value.length - 1] : ""
-                            }
-                        }
-                    ]
-                }
-            }
-        })
-        return;
-    }
-    const item = nodeData.data.extensionElements['flowable:field'][index];
-    item.attr_path = value ? JSON.stringify(value) : "[]";
-    const allLabel = value.map((item:any) => {
-      //check item type
-      if(item.attr_type === 'date') {
-        return "${dateUtil.convert2String(variables:get(" + item.attr_id + "), 'yyyy-MM-dd HH:mm:ss')}"
-      }else{
-        
-        return '${' + item.attr_id + '}'
-      }
-    }) ;
-
-    item['flowable:expression']['__cdata'] = allLabel.join('-');
-    const allFlowableField = nodeData.data.extensionElements['flowable:field'];
-    allFlowableField.splice(index, 1, item);
-    node.setData({
-        ...node.data,
-        version: (node.data.version || 0) + 1,
-        data:{
-            ...node.data.data,
-            extensionElements:{
-                ...node.data.data.extensionElements,
-                "flowable:field": allFlowableField
-            }
-        }
-    });
-    getDocumentName()
-}
-
-// #endregion
-
-const selectedDocumentTemplate = ref()
-function valueChange({fieldName,newValue, oldValue}:any) {
-  if(fieldName === 'templateId') {
-    selectedDocumentTemplate.value = newValue;
-    return
-  }
-  const nodeData = node.getData()
-  const index = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === fieldName);
-  const item = nodeData.data.extensionElements['flowable:field'][index];
-  if(fieldName === 'parentPath') {
-    item.attr_path = newValue ? JSON.stringify(newValue) : "[]";
-    item['flowable:expression']['__cdata'] = newValue ? newValue[newValue.length -1 ] : "";
-  } else {
-    item['flowable:expression']['__cdata'] = newValue;
-  }
-  const allFlowableField = nodeData.data.extensionElements['flowable:field'];
-  allFlowableField.splice(index, 1, item);
-  node.setData({
-      ...node.data,
-      version: (node.data.version || 0) + 1,
-      data:{
-          ...node.data.data,
-          extensionElements:{
-              ...node.data.data.extensionElements,
-              "flowable:field": allFlowableField
-          }
-      }
-  })
-}
-
-function emailVariableChange(newVal:string, key:string) {
-    const nodeData = node.getData()
-    const index = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "variables");
-    const variables = nodeData.data.extensionElements['flowable:field'][index];
-    const json = JSON.parse(variables['flowable:expression']['__cdata']);
-    json[key] = newVal ? '${variables:get(' + newVal + ')}' : "";
-    variables['flowable:expression']['__cdata'] = JSON.stringify(json);
-    const formIndex = formVariable.value.findIndex((item) => item.key === key);
-    formVariable.value[formIndex].value = newVal;
-    const allFlowableField = nodeData.data.extensionElements['flowable:field'];
-    allFlowableField.splice(index, 1, variables);
-    node.setData({
-        ...node.data,
-        version: (node.data.version || 0) + 1,
-        data:{
-            ...node.data.data,
-            extensionElements:{
-                ...node.data.data.extensionElements,
-                "flowable:field": allFlowableField
-            }
-        }
-    });
-}
 
 function refreshData(){  
-  getFormData()
-  getDocumentName()
+
 }
 
 
 onMounted(async() => {
+    await getAllTemplate()
     setUpListener()
-    await getDocumentTemplates();
     refreshData()
   
 })
@@ -230,19 +174,30 @@ onMounted(async() => {
 <div class="fromContainer">
     <BpmnSidebarFormLabel :node="node" />
     <div class="formContainer">
-        <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="valueChange">
-        <template v-slot:tableForm>
-          <ElFormItem :label="t('tableHeader_documentName')">
-            <DragSelect :dragList="allFormFieldArray" :dropList="documentName" itemKey="attr_field_label" nullTip="No Field in workflow" @change="setDocumentName"/>
-          </ElFormItem>
-          <h3>{{ t('workflowEditor.documentVariable') }}</h3>
-          <ElFormItem v-for="item in formVariable" :key="item.key" :label="t(`workflowEditor.${item.key}`)">
-            <ElSelect v-model="item.value" @change="(val:any) => emailVariableChange(val, item.key)">
-              <ElOption v-for="option in allFieldOptions" :key="option.value" :label="option.label" :value="option.value"></ElOption>
-            </ElSelect>
-          </ElFormItem>
-        </template>
-      </FromRenderer>
+      <div v-if="folderCabinetRootId" class="generateDocumentFormContainer">
+                <ElForm  label-position="top">
+                    
+                    <ElFormItem label="Folder Cabinet location" required>
+                        <ElSelect  v-model="form.folderCabinetId" placeholder="Folder Cabinet location" @change="(val) => updateField('folderCabinetId', val)">
+                            <ElOption v-for="item in flatCabinetList" :key="item.id" :label="item.title" :value="item.id" />
+                        </ElSelect>
+                        
+                    </ElFormItem>
+                    <ElFormItem label="Document Template" required>
+                        <ElSelect v-model="form.templateId" placeholder="Document Template" @change="(val) => updateField('templateId', val)">
+                            <ElOption v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
+                        </ElSelect>
+                    </ElFormItem>
+                    
+                </ElForm>
+                <BpmnSidebarDocumentTemplateVariable :node="node" :graph="graph" :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val) => updateField('variables', val)"/>
+<!--                -->
+<!--                {{flatCabinetList}}-->
+<!--                <pre>{{form.templateId}}</pre>-->
+            </div>
+            <div v-else>
+                please select folder cabinet first
+            </div>
     </div>
 </div>
 </template>
