@@ -72,7 +72,8 @@ async function getAllTemplate(){
 
 async function getForm(){
   const nodeData = node.getData()
-    if(!nodeData.data || !nodeData.data.data || !nodeData.data.data.extensionElements) {
+  console.log("nodeData getForm,", nodeData)
+    if(!nodeData.data || !nodeData.data.extensionElements) {
         form.value = {
             templateId:"",
             folderCabinetId:'',
@@ -82,8 +83,8 @@ async function getForm(){
         return;
     }
     // get templateId
-    const index = nodeData.data.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "templateId");
-    const templateIdItem = nodeData.data.data.extensionElements['flowable:field'][index];
+    const index = nodeData.data.extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "templateId");
+    const templateIdItem = nodeData.data.extensionElements['flowable:field'][index];
     
     if(templateIdItem) {
         form.value.templateId = templateIdItem['flowable:expression']['__cdata']
@@ -92,11 +93,11 @@ async function getForm(){
         form.value.templateId = ""
     }
     // get folderCabinetId
-    const folderCabinetIdItem =nodeData.data.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "folderCabinetId");
+    const folderCabinetIdItem =nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "folderCabinetId");
     if(folderCabinetIdItem){
         form.value.folderCabinetId = folderCabinetIdItem['flowable:expression']['__cdata'] || ""
     }else{
-        nodeData.data.data.extensionElements['flowable:field'].push({
+        nodeData.data.extensionElements['flowable:field'].push({
             "attr_name": "folderCabinetId",
             "flowable:expression": {
                 "__cdata": ""
@@ -106,11 +107,11 @@ async function getForm(){
     }
     
     // get variables
-    const variablesItem = nodeData.data.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "variables");
+    const variablesItem = nodeData.data.extensionElements['flowable:field'].find((item: any) => item.attr_name === "variables");
     if(variablesItem){
         form.value.variables = variablesItem['flowable:expression']['__cdata'] || ""
     }else{
-        nodeData.data.data.extensionElements['flowable:field'].push({
+        nodeData.data.extensionElements['flowable:field'].push({
             "attr_name": "variables",
             "flowable:expression": {
                 "__cdata": ""
@@ -118,7 +119,7 @@ async function getForm(){
         })
         form.value.variables = ""
     }
-
+    console.log("form", form.value)
 }
 
 function updateField(key:string, value:any){
@@ -163,7 +164,7 @@ function setUpListener(){
 
 
 function refreshData(){  
-
+    getForm()
 }
 
 
@@ -191,12 +192,8 @@ onMounted(async() => {
                         <ElOption v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
                     </ElSelect>
                 </ElFormItem>
-                
             </ElForm>
-            <BpmnSidebarTemplateVariable :node="node"  :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val:string) => updateField('variables', val)"/>
-<!--                -->
-<!--                {{flatCabinetList}}-->
-<!--                <pre>{{form.templateId}}</pre>-->
+            <BpmnSidebarTemplateVariable :node="node" :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val:string) => updateField('variables', val)"/>
             </div>
             <div v-else>
                 please select folder cabinet first

@@ -56,7 +56,10 @@ export const useDocumentType = () => {
                 name: documentType,
             }
         }
-        throw new Error('documentType not found ' + documentType)
+        return {
+            displayMataTags:[],
+            related:[],
+        }
     }
 
     return {

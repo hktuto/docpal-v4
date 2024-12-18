@@ -16,6 +16,7 @@ async function getTemplateVariableList() {
         return;
     }
     const {data} = await adminApi.documentTemplateController.getRefresh(props.templateId)
+    console.log("data", data)
     // const {templateVariable} = await GetTemplateVariablesApi(props.templateId);
     
     const varList = [...new Set(JSON.parse(data as any))]
@@ -48,6 +49,7 @@ function isEmptyObj(obj: any) {
 }
 
 watch(templateId, ()=>{
+    console.log("templateId", templateId)
     getTemplateVariableList()
 },{
     immediate: true
