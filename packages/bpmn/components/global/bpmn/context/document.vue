@@ -180,22 +180,20 @@ onMounted(async() => {
     <BpmnSidebarFormLabel :node="node" />
     <div class="formContainer">
       <div v-if="folderCabinetRootId" class="generateDocumentFormContainer">
-                <ElForm  label-position="top">
-                    
-                    <ElFormItem label="Folder Cabinet location" required>
-                        <ElSelect  v-model="form.folderCabinetId" placeholder="Folder Cabinet location" @change="(val) => updateField('folderCabinetId', val)">
-                            <ElOption v-for="item in flatCabinetList" :key="item.id" :label="item.title" :value="item.id" />
-                        </ElSelect>
-                        
-                    </ElFormItem>
-                    <ElFormItem label="Document Template" required>
-                        <ElSelect v-model="form.templateId" placeholder="Document Template" @change="(val) => updateField('templateId', val)">
-                            <ElOption v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
-                        </ElSelect>
-                    </ElFormItem>
-                    
-                </ElForm>
-                <BpmnSidebarTemplateVariable :node="node"  :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val:string) => updateField('variables', val)"/>
+            <ElForm  label-position="top">
+                <ElFormItem label="Folder Cabinet location" required>
+                    <ElSelect  v-model="form.folderCabinetId" placeholder="Folder Cabinet location" @change="(val:any) => updateField('folderCabinetId', val)">
+                        <ElOption v-for="item in flatCabinetList" :key="item.id" :label="item.title" :value="item.id" />
+                    </ElSelect>
+                </ElFormItem>
+                <ElFormItem label="Document Template" required>
+                    <ElSelect v-model="form.templateId" placeholder="Document Template" @change="(val:any) => updateField('templateId', val)">
+                        <ElOption v-for="item in allDocumentTemplates" :key="item.id" :label="item.name" :value="item.id" />
+                    </ElSelect>
+                </ElFormItem>
+                
+            </ElForm>
+            <BpmnSidebarTemplateVariable :node="node"  :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val:string) => updateField('variables', val)"/>
 <!--                -->
 <!--                {{flatCabinetList}}-->
 <!--                <pre>{{form.templateId}}</pre>-->

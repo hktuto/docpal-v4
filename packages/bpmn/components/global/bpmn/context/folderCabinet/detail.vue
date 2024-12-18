@@ -13,15 +13,11 @@ if(!editorProvider) {
     throw createError('editor provider not found')   
 }
 
-
-
-
 </script>
 
 <template>
     <div class="cabinetDetailContainer">
         <ElCollapse v-model="activeName" >
-            
             <ElCollapseItem v-for="item in field" :key="item.attr_id" :title="item.attr_name" :name="item.attr_id">
                 <template #title>
                     <div class="collapseTitleContainer" >
@@ -31,7 +27,6 @@ if(!editorProvider) {
                 <div class="fieldContainer">
                     <div class="indentItem" v-for="i in item.attr_level" :key="i"></div>
                     <div class="content">
-                        
                         <div class="fieldMappingItemContainer" v-for="metaField in item.field" :key="metaField.metadata">
                             <ElForm label-position="top" @native.enter="() => {}">
                                 <ElFormItem :label="metaField.attr_metadata">
