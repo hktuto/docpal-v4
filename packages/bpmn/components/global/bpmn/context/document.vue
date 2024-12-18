@@ -23,6 +23,11 @@ const form = ref<{
     variables:""
 })
 const { getMetaSetting } = useDocumentType()
+const allFields = computed(() => {
+    return Object.keys(graphProvider.allFormField.value).map((key:string) => {
+        return graphProvider.allFormField.value[key]
+    })
+})
 async function loopChildren(all:any[], item: any, level = 0, title = ''){
     const meta = await getMetaSetting(item.documentType) as any;
     title = (title ? title + '/' : '') + item.label
@@ -190,7 +195,7 @@ onMounted(async() => {
                     </ElFormItem>
                     
                 </ElForm>
-                <BpmnSidebarDocumentTemplateVariable :node="node" :graph="graph" :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val) => updateField('variables', val)"/>
+                <BpmnSidebarTemplateVariable :node="node"  :templateCData="form.variables" :allFields="allFields" :templateId="form.templateId" @updateCData="(val:string) => updateField('variables', val)"/>
 <!--                -->
 <!--                {{flatCabinetList}}-->
 <!--                <pre>{{form.templateId}}</pre>-->
