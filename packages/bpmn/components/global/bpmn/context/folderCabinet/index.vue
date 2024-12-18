@@ -222,8 +222,7 @@ onMounted(async () => {
 
 <template>
     <div class="folderCabinetContainer">
-
-    <ElForm label-position="top" @native.enter="() => {}">
+        <ElForm label-position="top" @native.enter="() => {}">
             <ElFormItem lable="Folder Cabinet">
                 <ElSelect v-model="selectedCabinet" :disabled="editorProvider.readonly.value" @change="getCabinetDetail" clearable>
                     <ElOption v-for="item in cabinetOptions" :key="item.id" :label="item.label" :value="item.id" />
@@ -231,7 +230,7 @@ onMounted(async () => {
             </ElFormItem>
         </ElForm>
         <div class="folderCabinetDetail" v-if="selectedCabinet && cabinetDetail" >
-            <BpmnSidebarFolderCabinetDetail v-loading="detailLoading" v-model:field="form" :folderCabinetItem="cabinetDetail" :all-field="allFields" @update:field="setForm"  />
+            <BpmnContextFolderCabinetDetail v-loading="detailLoading" v-model:field="form" :folderCabinetItem="cabinetDetail" :all-field="allFields" @update:field="setForm"  />
         </div>
     </div>
 </template>
