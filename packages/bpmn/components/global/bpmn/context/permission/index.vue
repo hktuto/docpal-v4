@@ -164,11 +164,11 @@ onMounted(() => {
         <ElButton type="text" :disabled="editorProvider.readonly.value" @click="newPermission">add</ElButton>
 
         <ElDialog v-model="newPermissionDialogShow" destroy-on-close append-to-body>
-            <BpmnSidebarPermissionNewDialog @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/>
+            <BpmnContextPermissionNewDialog @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/>
             <!-- <WorkflowEditorFormPermissionNewDialog @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/> -->
         </ElDialog>
         <ElDialog v-model="editPermissionDialogShow" >
-            <BpmnSidebarPermissionEditDialog ref="editFormEl" @close="editPermissionDialogShow = false" @submit="editPermissionHandler"/>
+            <BpmnContextPermissionEditDialog ref="editFormEl" @close="editPermissionDialogShow = false" @submit="editPermissionHandler"/>
 
             <!-- <WorkflowEditorFormPermissionEditDialog ref="editFormEl" @close="editPermissionDialogShow = false" @submit="editPermissionHandler"/> -->
         </ElDialog>
