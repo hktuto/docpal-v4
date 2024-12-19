@@ -241,19 +241,21 @@ export const bpmnElement:BpmnElement = {
             },
         }),
         embed:false,
-        toolbar:[{
-            icon:'bpmn:check',
-            label: "exclusiveGateway",
-            dropData:(id:string) => ({
-                id,
-                ...bpmnElement.exclusiveGateway.nodeStyle({}),
-                label: 'new approval',
-                data: bpmnElement.exclusiveGateway.newNodeData(id, 'New Approval', {
-                    attr_id:id,
-                })
-            })
+        toolbar:[
+        //     {
+        //     icon:'bpmn:check',
+        //     label: "exclusiveGateway",
+        //     dropData:(id:string) => ({
+        //         id,
+        //         ...bpmnElement.exclusiveGateway.nodeStyle({}),
+        //         label: 'new approval',
+        //         data: bpmnElement.exclusiveGateway.newNodeData(id, 'New Approval', {
+        //             attr_id:id,
+        //         })
+        //     })
 
-        }],
+        // }
+    ],
         newNodeData:(id,label,data) => ({
             id,
             type: BpmnElementType['exclusiveGateway'],
