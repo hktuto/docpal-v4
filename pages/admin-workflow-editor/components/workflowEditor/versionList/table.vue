@@ -100,6 +100,9 @@ const tableConfig = createTableConfig({
 )
 
 const tableEvent = {
+    cellDblclick:({ row, column, rowIndex }) => {
+        listProvider.editHandler(row)
+    },
     menuClick: ({menu, row, column}:any) => {
         switch(menu.code){
             case 'edit':

@@ -27,7 +27,8 @@ async function getWorkflowDetail(){
 }
 
 function editHandler(row:any){
-    routerProvider?.navigateTo(newWorkflowEditorDetail(row))
+    const newItem = newWorkflowEditorDetail(row)
+    routerProvider?.navigateTo(newItem)
 }
 
 function editNewTabHandler(row:any){

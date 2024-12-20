@@ -9,6 +9,7 @@ import { adminApi } from 'api';
 import {bpmnElement} from '~/utils/bpmnElement';
 import { ElMessage, ElNotification } from 'element-plus';
 import { EDITOR_PROVIDER, conditionOptions } from '#imports'
+import { vi } from 'vitest'
 /**
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
@@ -261,6 +262,13 @@ async function previewForm(node:Node) {
     })
 }
 
+const getGraphValue = computed(() => {
+    if(viewerRef.value) {
+        return viewerRef.value.graph
+    }
+    return null
+})
+
 async function openForm(node: Node){
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
     const response = await adminApi.formPropertiesRelationController.getQuery({
@@ -327,6 +335,7 @@ async function pasteForm(node:Node){
     // reset copyObj
 }
 
+
 /// #endregion
 const conditionSetting = ref<Record<string, object>[]>([])
 
@@ -369,7 +378,8 @@ provide(EDITOR_PROVIDER, {
 
 defineExpose({
     init,
-    getData
+    getData,
+    getGraphValue,
 })
 
 </script>

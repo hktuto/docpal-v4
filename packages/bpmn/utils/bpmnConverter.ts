@@ -22,6 +22,23 @@ export const bpmnStringToJson = function(bpmnString: string) {
         delete json.definitions.process.attr_template
     }
     let flatObj:any = {}
+    // check if process has start and end event
+    if(!json.definitions.process.startEvent || json.definitions.process.startEvent.length === 0) {
+        json.definitions.process.startEvent = [{
+            attr_id: 'startEvent',
+            attr_name: 'Start Event',
+            extensionElements: {
+            }
+        }]
+    }
+    if(!json.definitions.process.endEvent || json.definitions.process.endEvent.length === 0) {
+        json.definitions.process.endEvent = [{
+            attr_id: 'endEvent',
+            attr_name: 'End Event',
+            extensionElements: {
+            }
+        }]
+    }
     for( let value of Object.values(BpmnElementType)) {
         
         json.definitions.process[value] = normalizeToArray(json.definitions.process[value], value as string)

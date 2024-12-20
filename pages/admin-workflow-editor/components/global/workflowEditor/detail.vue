@@ -3,7 +3,9 @@ import {MenuRouterKey} from '#imports'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { adminApi } from 'api';
 import type { ToolBar } from '../../../../../packages/base/components/app/toolbar/index.vue';
+import { saveWorkflowFormToNewVersion } from '~/utils/workflowEditorhelpers';
 const { t } = useI18n()
+
 
 const { id, currentVersion } = defineProps<{
     id:string
@@ -25,7 +27,7 @@ const state = reactive<any>({
 const productionVersion = ref()
 const lastestVewsion = ref()
 async function getWorkflow() {
-
+    console.log("getWorkflow", id, currentVersion)
     const data = await adminApi.workflowProcessDefinitionController.getDraft(id)
     const blob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
@@ -52,6 +54,7 @@ async function getWorkflow() {
     workflowData.value = draftData
     routerInject?.updateTabName(draftData.name + ` - (${currentVersion})`)
     nextTick(() => {
+        
         if(json && json.data){
             WorkflowEditorRef.value.init( bpmnFile.value, JSON.parse(json.data))
         }else{
@@ -82,22 +85,8 @@ provide('workflowDetail',{
 })
 
 function openVersionList(){
-    const newItem:any = {
-        menuKey: routerInject?.menuSymbol,
-        id: "workflow-editor-versions-" + new Date().getTime(),
-        name: "workflow-editor-versions-" + workflowData.value.id,
-        icon: 'dp-icon:flow-outline',
-        label: workflowData.value.name,
-        component: 'LazyWorkflowEditorVersion',
-        props: {
-            id: workflowData.value.draftId,
-            draftId: workflowData.value.draftId,
-            latestVersion: workflowData.value.latestVersion,
-            productionVersion: workflowData.value.productionVersion,
-            name: workflowData.value.name,
-            item: workflowData.value,
-        }
-    }
+    const newItem = newWorkflowEditorVerionList(workflowData.value);
+    
     routerInject?.navigateTo(newItem)
 }
 
@@ -107,12 +96,18 @@ async function saveAsNewVersion(){
     const { xml, x6Json } = WorkflowEditorRef.value.getData()
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
-    form.append('id', currentVersion)
+    form.append('jsonValue', JSON.stringify(x6Json))
     form.append('draftId', id)
     form.append('file', blob, 'workflow.bpmn.xml')
+
+    // save all forms to new version
     
     const {data}:any = await adminApi.workflowVersionController.postNew({requestDTO:{}},form)
+    await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, currentVersion, data.versionNumber)
+
     ElNotification.success(t('common.success'))
+
+    
     routerInject?.updateProps({
         id,
         currentVersion: data.versionNumber,
@@ -122,8 +117,8 @@ async function saveAsNewVersion(){
 }
 
 
-watch(() => id, (newWorkflowId) => {
-    if(newWorkflowId) {
+watch(() => [id,currentVersion], (newWorkflowId) => {
+    if(newWorkflowId[0] && newWorkflowId[1]) {
         getWorkflow()
     }
 },{
