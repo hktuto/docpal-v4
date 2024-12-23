@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import {TabManagerKey, useI18n, workflowEditorListTableSetting} from '#imports'
+import {useI18n, workflowEditorListTableSetting} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
 import { createTableConfig } from '../../../../../packages/base/utils/tableHelper';
 
-const tabManager = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
-if(!tabManager || !routerProvider) {
+if(!routerProvider) {
     throw createError('menu manger not found')
 }
 
@@ -38,7 +37,7 @@ function openProductionVersion(data:any, openInNewTab = false){
         }
     }        
     routerProvider?.navigateTo({...newItem}, openInNewTab)
-    // tabManager?.openTab(newItem)
+
 }
 
 const saveAsDialogRef = ref()
