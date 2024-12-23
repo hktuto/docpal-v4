@@ -38,7 +38,7 @@ import { deepCopy } from "#imports"
 
 const props = withDefaults(defineProps<{
     inputKey: string,
-    inputPlaceHolder: string
+    inputPlaceHolder?: string
 }>(), {
   inputPlaceHolder: 'tip.filterByName'
 })
