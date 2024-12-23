@@ -8,6 +8,10 @@ export default defineAppConfig({
             hoverIcon: 'dp-icon:browse-fill',
             label: "Browse",
             component: "LazyBrowsePage",
+            props:{
+                idOrPath:"/",
+                filter:{}
+            }
         },
     ]
 })

@@ -1,12 +1,33 @@
 <script lang="ts" setup>
-
-const {idOrPath} = defineProps<{ idOrPath: string }>();
+import {BrowseListProviderKey} from '#imports'
+import {clientApi} from 'api'
+const props = defineProps<{ 
+    idOrPath: string ,
+    filter: any,
+}>();
+const { idOrPath } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 
 if(!tabProvider || !routerProvider) {
     throw createError('provider not found')
 }
+
+function changeRoute(path:string) {
+    // change route, update tab
+    // clean filter
+    routerProvider?.updateProps({
+        idOrPath: path,
+        filter: {}
+    })
+}
+provide(BrowseListProviderKey,{
+    getchildApi:(pageParams:any) => {
+        return clientApi.documentNuxeo.postThumbnailV2(pageParams)
+    },
+    idOrPath,
+    changeRoute,
+})
 
 
 
@@ -15,7 +36,11 @@ if(!tabProvider || !routerProvider) {
 <template>
         
     <div class="pageContainer" >
-        browse
+        <BrowseListTable >
+            <template #toolbar_buttons>
+                <BrowseListBreadcrumb :idOrPath="idOrPath" />
+            </template>
+        </BrowseListTable>
     </div>
 </template>
 
