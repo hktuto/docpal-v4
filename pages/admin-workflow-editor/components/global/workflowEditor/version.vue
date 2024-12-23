@@ -13,8 +13,7 @@ const { id, name, draftId, latestVersion } = defineProps<{
 const workflowData = ref<any>()
 
 const routerProvider = inject(MenuRouterKey)
-const tabProvider = inject(TabManagerKey)
-if(!routerProvider || !tabProvider) {
+if(!routerProvider ) {
     throw new Error('MenuRouterKey is not provided')
 }
 
@@ -32,7 +31,7 @@ function editHandler(row:any){
 }
 
 function editNewTabHandler(row:any){
-    tabProvider?.openTab(newWorkflowEditorDetail(row))
+    routerProvider?.navigateTo(newWorkflowEditorDetail(row), true)
 }
 
 type ActionPermission = (row:any, index:number, code:string) => {disabled:boolean, visible:boolean}
