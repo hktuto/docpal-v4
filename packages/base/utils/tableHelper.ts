@@ -10,7 +10,8 @@ export type TableConfig = {
     columns:any[],
     sort?:boolean,
     filter?:boolean,
-    formConfig?:any
+    formConfig?:any,
+    pageSize?:number,
     toolbarConfig?:any
 }
 
@@ -18,6 +19,7 @@ export const createTableConfig = ({
     id, api, columns, formConfig, 
     sort=true,
     filter=false,
+    pageSize=20,
     toolbarConfig= {
         custom:true,
         slots: {
@@ -56,14 +58,15 @@ export const createTableConfig = ({
             }
         },
         sortConfig: {
-            remote: sort
+            remote: sort,
+            defaultSort:[]
           },
           filterConfig: {
             remote: filter
           },
         columns,
         pagerConfig: {
-            pageSize: 20
+            pageSize
         },
         proxyConfig: {
             sort,

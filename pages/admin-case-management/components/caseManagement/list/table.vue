@@ -7,6 +7,15 @@ if(!listProvider) {
 }
 const tableRef = ref<VxeGridInstance<any>>()
 const { t } = useI18n()
+
+const {pageNum, pageSize, orderBy, isDesc, filters}= defineProps<{
+    pageNum?: number,
+    pageSize?: number,
+    orderBy?: string,
+    isDesc?: boolean,
+    filters?: any
+}>();
+
 function reload() {
     // tableRef.value.reload()
     tableRef.value?.commitProxy('reload')
@@ -16,13 +25,22 @@ const tableConfig = reactive(createTableConfig({
     id: 'adminCaseManagementList',
     api: (pageParams:any) => listProvider?.getListApi(pageParams),
     sort:true,
-    filter:false, 
+    filter:false,
+    pageSize,
     columns:  [
         {
             field:'name',
             title: 'table_name',
             sortable: true,
             fixed:'left',
+        },
+        {
+            field:'latestVersion',
+            title: 'workflow_latestVersion',
+        },
+        {
+            field:'productionVersion',
+            title: 'workflow_productionVersion',
         },
         {
             field:'createdDate',
@@ -74,10 +92,13 @@ const tableEvent = {
     
 }
 
-function statusFilterChange(option:any) {
-    const $grid = tableRef.value as VxeGridInstance
-    $grid.updateFilterOptionStatus(option, true)
-}
+onMounted(() => {
+    // console.log('table mounted', pageNum, pageSize, orderBy, isDesc)
+    // if(pageNum) tableConfig.pagerConfig.currentPage = pageNum + 1
+    // if(pageSize) tableConfig.pagerConfig.pageSize = pageSize
+    // if(orderBy) tableConfig.sortConfig.defaultSort = orderBy && isDesc ? [{field: orderBy, order: 'desc'}] : []
+    // console.log("tableConfig", tableConfig.pagerConfig.currentPage)
+})
 
 defineExpose({ reload })
 </script>

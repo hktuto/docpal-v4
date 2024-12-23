@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {CaseManagementListProviderKey, MenuRouterKey} from '#imports';
+import {ResponsiveFilter, CaseManagementNewDialog} from '#components'
 import { adminApi} from 'api'
 import { newCaseManagementDetail } from '~/utils/caseManagementHelper';
 import tableComponent from '../../caseManagement/list/table.vue'
@@ -7,15 +8,17 @@ const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
     throw new Error('MenuRouterKey is not provided')
 }
-
+const responsiveFilterRef = ref<InstanceType<typeof ResponsiveFilter>>()
 const props= defineProps<{
     pageNum: number,
     pageSize: number,
-    sort: any,
-    filters: any,
+    orderBy?: string,
+    isDesc?: boolean,
+    filters?: any
 }>();
-const { pageNum, pageSize, sort, filters } = toRefs(props)
+const { pageNum, pageSize, isDesc, orderBy, filters } = toRefs(props)
 const filterFormdata = ref();
+const dialogRef = ref<InstanceType<typeof CaseManagementNewDialog>>()
 function updatePageParams({pageNum, pageSize, sort, filters}:any){
     routerProvider?.updateProps({
         pageNum,
@@ -44,17 +47,32 @@ function openProductionVersion(data:any){
 
 
 function openNewCaseDialog(){
-
+    dialogRef.value?.handleOpen()
 }
 
+function reload(){
+    tableRef.value?.reload()
+}
+onMounted(() => {
+    console.log("mounted", props)
+})
 provide(CaseManagementListProviderKey,{
     getListApi: (params:any) => {
-        const filter = filterFormdata.value
-        if(filter){
-            Object.keys(filter).forEach(key => {
-                if(filter[key]) params[key] = filter[key]
+        let filters:any = undefined;
+        if(filterFormdata.value){
+            Object.keys(filterFormdata.value).forEach(key => {
+                if(filterFormdata.value[key]) params[key] = filterFormdata.value[key]
             })
+            filters = {...filterFormdata.value}
         }
+        routerProvider?.updateProps({
+            pageNum: params.pageNum + 1,
+            pageSize: params.pageSize,
+            orderBy: params.orderBy,
+            isDesc: params.isDesc,
+            filters
+        })
+        
         return adminApi.caseTypeController.postPage(params)
     },
     updatePageParams,
@@ -67,15 +85,17 @@ provide(CaseManagementListProviderKey,{
 
 <template>
     <div class="pageContainer">
-        <CaseManagementListTable ref="tableRef" >
+        <CaseManagementListTable ref="tableRef" v-bind="props" >
             <template #toolbar_buttons>
                 <div class="actionsContainer">
-                    <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+                    <ResponsiveFilter ref="responsiveFilterRef" @form-change="handleFilterFormChange"
                     inputKey="name"/>
                     <el-button type="primary" @click="openNewCaseDialog">{{$t('button.add')}}</el-button>
                 </div>
             </template>
         </CaseManagementListTable>
+      <CaseManageNewDialog ref="dialogRef" @refresh="reload"/>
+
     </div>
 </template>
 
