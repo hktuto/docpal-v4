@@ -35,14 +35,14 @@ function handleFilterFormChange(formData:any) {
     tableRef.value?.reload()
 }
 
-function openLatestVersion(data:any){
-    const newItem = newCaseManagementDetail(data)
-    routerProvider?.navigateTo(newItem)
+function openLatestVersion(data:any, openInNewTab:boolean = false){
+    const newItem = newCaseManagementDetail(data, data.latestVersion)
+    routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
-function openProductionVersion(data:any){
-    const newItem = newCaseManagementDetail(data)
-    routerProvider?.navigateTo(newItem)
+function openProductionVersion(data:any, openInNewTab:boolean = false){
+    const newItem = newCaseManagementDetail(data, data.productionVersion)
+    routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
 
@@ -59,6 +59,23 @@ onMounted(() => {
         responsiveFilterRef.value?.setValue('name', filters.value.name)
     }
 })
+
+function actionPermission(row:any, code:string) {
+    const isProdcution = row.latestVersion === row.productionVersion
+    const hasProdcution = !!row.productionVersion
+    switch(code){
+        case 'edit_latest_version':
+            return {visible:!isProdcution, disabled: isProdcution}
+        case 'edit_latest_version_new_tab':
+            return {visible:!isProdcution, disabled: isProdcution}
+        case 'edit_production_version':
+            return {visible:hasProdcution, disabled: !isProdcution}
+        case 'edit_production_new_tab':
+            return {visible:hasProdcution, disabled: !isProdcution}
+        default:
+            return {visible:true, disabled: false}
+    }
+}
 provide(CaseManagementListProviderKey,{
     getListApi: (params:any) => {
         let filters:any = undefined;
@@ -80,7 +97,8 @@ provide(CaseManagementListProviderKey,{
     },
     updatePageParams,
     openLatestVersion,
-    openProductionVersion
+    openProductionVersion,
+    actionPermission
 })
 
 </script>

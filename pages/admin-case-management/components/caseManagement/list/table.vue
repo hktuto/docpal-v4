@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import type {VxeGridInstance} from 'vxe-table'
+import type {VxeGridInstance, VxeGridListeners} from 'vxe-table'
 const listProvider = inject(CaseManagementListProviderKey)
 if(!listProvider) {
     throw new Error('CaseManagementListProviderKey not found')
@@ -86,19 +86,81 @@ const tableConfig = reactive(createTableConfig({
         }
     ],
 },{
+    menuConfig:{
+        body:{
+            options:[
+               [ 
+                    {
+                        name:"editLatest",
+                        children:[
+                            {code:'edit_latest_version', name:"edit.currentTab"},
+                            {code:'edit_latest_version_new_tab', name:"edit.newTab"},
+                        ]
+                    },
+                    {
+                        name:"editProduction",
+                        children:[
+                            {code:'edit_production_version', name:"edit.currentTab"},
+                            {code:'edit_production_new_tab', name:"edit.newTab"},
+                        ]
+                    }
+                    
+                    
+               ],
+            ]
+        },
+        visibleMethod ({options, column, row, rowIndex})  {
+            options.forEach(list => {
+                    list.forEach(item => {
+                        if(item.children){
+                            // loop all children , and set visible and disabled
+                            // if all children are not visible , set iten.visible = false
+                            // if all children are disabled , set item.disabled = true
+                            item.children.forEach(child => {
+                                const {visible, disabled} = listProvider.actionPermission(row, child.code)
+                                child.visible = visible
+                                child.disabled = disabled
+                            })
+                            const allVisible = item.children.every(child => child.visible)
+                            const allDisabled = item.children.every(child => child.disabled)
+                            item.visible = allVisible
+                            item.disabled = allDisabled
+                        }else{
+                            const {visible, disabled} = listProvider.actionPermission(row, item.code)
+                            item.visible = visible
+                            item.disabled = disabled
+
+                        }
+
+                    })
+                })
+                return true;
+        }
+    }
 }))
 
-const tableEvent = {
-    
-}
+const tableEvent :VxeGridListeners<any> = {
+    cellDblclick: ({ row, column, event }:any) => {
+        listProvider.openLatestVersion(row)
+    },
+    menuClick: ({menu, row, column}:any) => {
+        switch(menu.code){
+            case 'edit_latest_version':
+                listProvider.openLatestVersion(row)
+                break;
+            case 'edit_latest_version_new_tab':
+                listProvider.openLatestVersion(row, true)
+                break;
+            case 'edit_production_version':
+                listProvider.openProductionVersion(row)
+                break;
+            case 'edit_production_new_tab':
+                listProvider.openProductionVersion(row, true)
+                break;
+        }
+    }
 
-onMounted(() => {
-    // console.log('table mounted', pageNum, pageSize, orderBy, isDesc)
-    // if(pageNum) tableConfig.pagerConfig.currentPage = pageNum + 1
-    // if(pageSize) tableConfig.pagerConfig.pageSize = pageSize
-    // if(orderBy) tableConfig.sortConfig.defaultSort = orderBy && isDesc ? [{field: orderBy, order: 'desc'}] : []
-    // console.log("tableConfig", tableConfig.pagerConfig.currentPage)
-})
+}
 
 defineExpose({ reload })
 </script>
