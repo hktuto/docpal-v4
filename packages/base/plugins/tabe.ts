@@ -14,6 +14,7 @@ export default defineNuxtPlugin(nuxtApp => {
 
     VxeUI.setConfig({
         // 对组件内置的提示语进行国际化翻译
-        i18n: (key, args) => i18n.t(key, args)
+        i18n: (key, args) => i18n.t(key, args),
+        translate: (key, args) => i18n.t(key, args)
     })
 })
