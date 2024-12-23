@@ -42,6 +42,11 @@ function openProductionVersion(data:any){
     routerProvider?.navigateTo(newItem)
 }
 
+
+function openNewCaseDialog(){
+
+}
+
 provide(CaseManagementListProviderKey,{
     getListApi: (params:any) => {
         const filter = filterFormdata.value
@@ -64,10 +69,13 @@ provide(CaseManagementListProviderKey,{
     <div class="pageContainer">
         <CaseManagementListTable ref="tableRef" >
             <template #toolbar_buttons>
-                <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                inputKey="name"/>
+                <div class="actionsContainer">
+                    <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+                    inputKey="name"/>
+                    <el-button type="primary" @click="openNewCaseDialog">{{$t('button.add')}}</el-button>
+                </div>
             </template>
-            </CaseManagementListTable>
+        </CaseManagementListTable>
     </div>
 </template>
 
@@ -77,5 +85,12 @@ provide(CaseManagementListProviderKey,{
     height: 100%;
     position: relative;
     padding: var(--app-space-xs);
+}
+.actionsContainer{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--app-space-s);
+    justify-content: flex-start;
+    align-items: center;
 }
 </style>
