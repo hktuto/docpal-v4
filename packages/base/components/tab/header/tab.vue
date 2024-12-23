@@ -50,7 +50,6 @@ const {dragState ,setupDrag} = useDragable({
             }
             layout.value[parentId].tabs.splice(newItemIndex, 0, newData)
             allComponents.value.push(newData)
-            console.log("layout", layout.value)
             panelTabFocus(targetData.data.parent, newItemIndex)
     },
     onDropItself:(args:any) => {
@@ -81,16 +80,16 @@ function openInNewTab() {
         console.log(tab)
         window.open(`/tab?arg=${args}`, '_blank')
     }
-    closePanelTab(tab.parent, index, true)
+    closePanelTab(tab.parent as string, index, true)
 }
 
 function tabFocus() {
-    panelTabFocus(tab.parent, index)
+    panelTabFocus(tab.parent as string, index)
 }
 
 function closeTab(){
 
-    closePanelTab(tab.parent, index, true)
+    closePanelTab(tab.parent as string, index, true)
 }
 
 </script>
