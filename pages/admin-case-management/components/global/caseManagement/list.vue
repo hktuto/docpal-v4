@@ -54,7 +54,10 @@ function reload(){
     tableRef.value?.reload()
 }
 onMounted(() => {
-    console.log("mounted", props)
+    if(filters.value){
+        filterFormdata.value = filters.value
+        responsiveFilterRef.value?.setValue('name', filters.value.name)
+    }
 })
 provide(CaseManagementListProviderKey,{
     getListApi: (params:any) => {
@@ -72,7 +75,7 @@ provide(CaseManagementListProviderKey,{
             isDesc: params.isDesc,
             filters
         })
-        
+        console.log("filter params", filters)
         return adminApi.caseTypeController.postPage(params)
     },
     updatePageParams,
