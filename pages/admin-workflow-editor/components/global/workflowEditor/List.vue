@@ -1,40 +1,22 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import {TabManagerKey, useI18n, workflowEditorListTableSetting} from '#imports'
+import {useI18n, workflowEditorListTableSetting} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
 import { createTableConfig } from '../../../../../packages/base/utils/tableHelper';
 
-const tabManager = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
-if(!tabManager || !routerProvider) {
+if(!routerProvider) {
     throw createError('menu manger not found')
 }
 
 const tableRef = ref()
 
 function openLastestVersion(data:any, openInNewTab = false){
-    // TODO: open detail page
-    const newItem: any = {
-        menuKey: routerProvider?.menuSymbol,
-        id: "workflow-editor-detail-" + new Date().getTime(),
-        name: "workflow-editor-detail-" + data.id,
-        icon: 'dp-icon:flow-outline',
-        label: data.name,
-        component: 'LazyWorkflowEditorDetail',
-        props: {
-            id: data.id,
-            currentVersion: data.latestVersion,
-            productionVersion: data.productionVersion,
-            name: data.name,
-            item: data,
-        }
-    }
-    if(!openInNewTab){
-        routerProvider?.navigateTo({...newItem})
-    }else{
-        tabManager?.openTab({...newItem})
-    }
+    // TODO: open detail page'
+    let newItem = newWorkflowEditorDetail(data) as any;
+    newItem.props.currentVersion = data.latestVersion
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
 function openProductionVersion(data:any, openInNewTab = false){
@@ -54,12 +36,8 @@ function openProductionVersion(data:any, openInNewTab = false){
             item: data,
         }
     }        
-    if(!openInNewTab){
-        routerProvider?.navigateTo({...newItem})
-    }else{
-        tabManager?.openTab({...newItem})
-    }
-    // tabManager?.openTab(newItem)
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
+
 }
 
 const saveAsDialogRef = ref()
@@ -73,13 +51,8 @@ function saveAsNewWorkflow(data:any){
 
 function openVersions(data:any , openInNewTab = false){
     const newItem = newWorkflowEditorVerionList(data);
-    console.log('newItem', newItem, data)
     
-    if(!openInNewTab){
-        routerProvider?.navigateTo({...newItem})
-    }else{
-        tabManager?.openTab({...newItem})
-    }
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
 const newDialogRef = ref()

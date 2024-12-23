@@ -1,3 +1,4 @@
+import { join } from 'path';
 // import {useUserPreference} from '#imports'
 
 import { clientApi, adminApi } from "api"
@@ -6,15 +7,22 @@ import type { VxeGridProps } from 'vxe-table'
 export type TableConfig = {
     api:Function,
     id:string,
-    columns:any[]
-    formConfig?:any
+    columns:any[],
+    sort?:boolean,
+    filter?:boolean,
+    formConfig?:any,
+    pageSize?:number,
     toolbarConfig?:any
 }
 
 export const createTableConfig = ({
     id, api, columns, formConfig, 
+    sort=true,
+    filter=false,
+    pageSize=20,
     toolbarConfig= {
-        custom:true,slots: {
+        custom:true,
+        slots: {
             buttons: 'toolbar_buttons'
         }
     },
@@ -22,7 +30,7 @@ export const createTableConfig = ({
 
     // @ts-ignore
     const perference = useUserPreference()
-    return {
+    const config:VxeGridProps = {
         id,
         border: true,
         round: true,
@@ -42,25 +50,37 @@ export const createTableConfig = ({
         customConfig: {
             storage: true,
             restoreStore ({ id }) {
-                if(perference.value.tableSettings && perference.value.tableSettings[id]) {
+                if(perference.value && perference.value.tableSettings && perference.value.tableSettings[id]) {
                     return perference.value.tableSettings[id]
                 }
             },
             updateStore ({ id, storeData }) {
+
                 if(!perference.value.tableSettings) perference.value.tableSettings = {}
                 perference.value.tableSettings[id] = storeData
                 // save perference
                 return clientApi.nuxeoUserController.putSetting(perference.value)
             }
         },
+        sortConfig: {
+            remote: sort,
+            defaultSort:[]
+          },
+          filterConfig: {
+            remote: filter
+          },
         columns,
         pagerConfig: {
-            pageSize: 20
+            pageSize
         },
         proxyConfig: {
-            sort: true,
+            sort,
+            filter, 
             ajax: {
-              query: async({ page, sorts }:any) => {
+              query: async(args:any) => {
+
+                console.log("params", args)
+                const { page, sorts, filters } = args
                 // 默认接收 Promise<{ result: [], page: { total: 100 } }>
                 let params:any = {
                     pageSize:page.pageSize, pageNum:page.currentPage - 1
@@ -68,6 +88,12 @@ export const createTableConfig = ({
                 if(sorts && sorts.length > 0) {
                     params.orderBy = sorts[0].property
                     params.isDesc = sorts[0].order === "desc"
+                }
+                if(filters && filters.length > 0) {
+                    if(!params.filter) params.filter = {}
+                    filters.forEach( (filter:any) => {
+                        params.filter[filter.property] = filter.datas.join(',')
+                    })
                 }
                 const {data} = await api(params)
                 return {
@@ -81,6 +107,7 @@ export const createTableConfig = ({
         },
         ...optional
     }
+    return config
 }
 
 export const createLazyLoadTableConfig = ({

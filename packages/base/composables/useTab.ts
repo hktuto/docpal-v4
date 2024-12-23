@@ -24,10 +24,13 @@ export const useTabsManager = () => {
                 }, [])
               // focus on panels  
               // set initized to all panel selected tab
+              //
               layout.value.forEach(panel => {
-                panel.tabs[panel.showingTabIndex || 0].initized = true
+                if(panel.tabs[panel.showingTabIndex || 0]) {
+                    panel.tabs[panel.showingTabIndex || 0].initized = true
+                }
               })
-              
+              console.log("initLayout", layout.value)
         })
         // loop thought layout and push all components
         
@@ -64,6 +67,7 @@ export function paneResized(sizes:{min:number, max:number, size:number}[]) {
 
 
 export function closePanelTab(panelId:string, tabIndex: number, deleteComponent = true) {
+    console.log("closePanelTab")
     const layout = useTabLayout()
     const components = useTabComponent()
     const panelIndex = layout.value.findIndex(tab => tab.id === panelId)
@@ -129,7 +133,7 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
 
     const newSourceData = {
         ...sourceData,
-        parent: targetData.id,
+        parent: targetData.parent,
     }
     const targetIndex = layout.value[targetParentId].tabs.findIndex((tabItem) => tabItem.id === targetData.id);
     const newItemIndex = direction === 'left' ? targetIndex  : targetIndex + 1
