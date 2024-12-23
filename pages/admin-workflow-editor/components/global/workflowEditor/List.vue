@@ -14,27 +14,10 @@ if(!tabManager || !routerProvider) {
 const tableRef = ref()
 
 function openLastestVersion(data:any, openInNewTab = false){
-    // TODO: open detail page
-    const newItem: any = {
-        menuKey: routerProvider?.menuSymbol,
-        id: "workflow-editor-detail-" + new Date().getTime(),
-        name: "workflow-editor-detail-" + data.id,
-        icon: 'dp-icon:flow-outline',
-        label: data.name,
-        component: 'LazyWorkflowEditorDetail',
-        props: {
-            id: data.id,
-            currentVersion: data.latestVersion,
-            productionVersion: data.productionVersion,
-            name: data.name,
-            item: data,
-        }
-    }
-    if(!openInNewTab){
-        routerProvider?.navigateTo({...newItem})
-    }else{
-        tabManager?.openTab({...newItem})
-    }
+    // TODO: open detail page'
+    let newItem = newWorkflowEditorDetail(data) as any;
+    newItem.props.currentVersion = data.latestVersion
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
 function openProductionVersion(data:any, openInNewTab = false){
@@ -54,11 +37,7 @@ function openProductionVersion(data:any, openInNewTab = false){
             item: data,
         }
     }        
-    if(!openInNewTab){
-        routerProvider?.navigateTo({...newItem})
-    }else{
-        tabManager?.openTab({...newItem})
-    }
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
     // tabManager?.openTab(newItem)
 }
 
@@ -73,13 +52,8 @@ function saveAsNewWorkflow(data:any){
 
 function openVersions(data:any , openInNewTab = false){
     const newItem = newWorkflowEditorVerionList(data);
-    console.log('newItem', newItem, data)
     
-    if(!openInNewTab){
-        routerProvider?.navigateTo({...newItem})
-    }else{
-        tabManager?.openTab({...newItem})
-    }
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
 const newDialogRef = ref()
