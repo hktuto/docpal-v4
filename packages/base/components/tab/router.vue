@@ -85,7 +85,7 @@ function forward() {
 }
 
 function updateProps(newProps:any){
-    tab.value.props = newProps
+    tab.value.props = { ...tab.value.props, ...newProps }
 }
 
 function updateTabName(newName:string){
