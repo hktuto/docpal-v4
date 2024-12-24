@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 import dayjs from 'dayjs'
 import type {VxeGridInstance, VxeGridListeners} from 'vxe-table'
 const listProvider = inject(CaseManagementListProviderKey)
@@ -103,6 +104,12 @@ const tableConfig = reactive(createTableConfig({
                             {code:'edit_production_version', name:"edit.currentTab"},
                             {code:'edit_production_new_tab', name:"edit.newTab"},
                         ]
+                    },{
+                        name:"listVersion",
+                        children:[
+                            {code:'list_version', name:"list.version"},
+                            {code:'list_version_new_tab', name:"list.newTab"},
+                        ]
                     }
                     
                     
@@ -117,7 +124,7 @@ const tableConfig = reactive(createTableConfig({
                             // if all children are not visible , set iten.visible = false
                             // if all children are disabled , set item.disabled = true
                             item.children.forEach(child => {
-                                const {visible, disabled} = listProvider.actionPermission(row, child.code)
+                                const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
                                 child.visible = visible
                                 child.disabled = disabled
                             })
@@ -126,7 +133,7 @@ const tableConfig = reactive(createTableConfig({
                             item.visible = allVisible
                             item.disabled = allDisabled
                         }else{
-                            const {visible, disabled} = listProvider.actionPermission(row, item.code)
+                            const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
                             item.visible = visible
                             item.disabled = disabled
 
@@ -136,6 +143,10 @@ const tableConfig = reactive(createTableConfig({
                 })
                 return true;
         }
+    },
+    sortConfig:{
+        remote: true,
+        defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
     }
 }))
 
@@ -156,6 +167,12 @@ const tableEvent :VxeGridListeners<any> = {
                 break;
             case 'edit_production_new_tab':
                 listProvider.openProductionVersion(row, true)
+                break;
+            case 'list_version':
+                listProvider.openVersion(row)
+                break;
+            case 'list_version_new_tab':
+                listProvider.openVersion(row, true)
                 break;
         }
     }
@@ -182,7 +199,9 @@ defineExpose({ reload })
                 <SvgIcon src="/icons/dots.svg"></SvgIcon>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openLatestVersion(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item>
+                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openLatestVersion(row)">{{$t('editLatest')}}</el-dropdown-item>
+                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openProductionVersion(row)">{{$t('editProduction')}}</el-dropdown-item>
+                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openVersion(row)">{{$t('listVersion')}}</el-dropdown-item>
                         <!-- <el-dropdown-item v-if="row.publishStatus !== 'P' && row.enable" v-loading="tableConfig.loading" @click="handleActive(row, false)">{{$t('actions.inactive')}}</el-dropdown-item>
                         <el-dropdown-item v-else-if="row.publishStatus !== 'P' && !row.enable" v-loading="tableConfig.loading" @click="handleActive(row, true)">{{$t('actions.active')}}</el-dropdown-item> -->
                     </el-dropdown-menu>

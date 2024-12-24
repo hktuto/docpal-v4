@@ -45,8 +45,8 @@ export const createTableConfig = ({
         },
         scrollY: {
             enabled: true,
-            gt: 0
-          },
+            gt: 10
+        },
         customConfig: {
             storage: true,
             restoreStore ({ id }) {
@@ -97,7 +97,7 @@ export const createTableConfig = ({
                 }
                 const {data} = await api(params)
                 return {
-                    result: data.entryList,
+                    result: Array.isArray(data) ? data : data.entryList,
                     page: {
                         total: data.totalSize
                     }

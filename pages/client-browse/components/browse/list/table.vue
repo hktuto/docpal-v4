@@ -36,7 +36,7 @@ const gridSetting = reactive(createLazyLoadTableConfig({
             title: 'mimeType',
             minWidth: 60,
             formatter: ({ cellValue }:any) => {
-                return mimeTypeToExtension(mimeType)
+                return mimeTypeToExtension(cellValue)
             },
         },
         {
@@ -68,7 +68,8 @@ const gridSetting = reactive(createLazyLoadTableConfig({
     checkboxConfig: {
         labelField: 'name',
         checkStrictly: true,
-        showHeader: true
+        showHeader: true,
+        range:true,
     },
     data:[]
 }))
