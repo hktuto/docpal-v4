@@ -10,7 +10,8 @@ export type TableConfig = {
     columns:any[],
     sort?:boolean,
     filter?:boolean,
-    formConfig?:any
+    formConfig?:any,
+    pageSize?:number,
     toolbarConfig?:any
 }
 
@@ -18,6 +19,7 @@ export const createTableConfig = ({
     id, api, columns, formConfig, 
     sort=true,
     filter=false,
+    pageSize=20,
     toolbarConfig= {
         custom:true,
         slots: {
@@ -32,6 +34,7 @@ export const createTableConfig = ({
         id,
         border: true,
         round: true,
+        stripe: true,
         showOverflow: true,
         height: 'auto',
         toolbarConfig: toolbarConfig,
@@ -40,6 +43,10 @@ export const createTableConfig = ({
             useKey: true,
             drag: true
         },
+        scrollY: {
+            enabled: true,
+            gt: 0
+          },
         customConfig: {
             storage: true,
             restoreStore ({ id }) {
@@ -56,14 +63,15 @@ export const createTableConfig = ({
             }
         },
         sortConfig: {
-            remote: sort
+            remote: sort,
+            defaultSort:[]
           },
           filterConfig: {
             remote: filter
           },
         columns,
         pagerConfig: {
-            pageSize: 20
+            pageSize
         },
         proxyConfig: {
             sort,
@@ -100,4 +108,64 @@ export const createTableConfig = ({
         ...optional
     }
     return config
+}
+
+export const createLazyLoadTableConfig = ({
+    id, api, columns, formConfig, 
+    toolbarConfig= {
+        custom:true,slots: {
+            buttons: 'toolbar_buttons'
+        }
+    },
+    }:TableConfig,optional:VxeGridProps = {}):VxeGridProps => {
+
+    // @ts-ignore
+    const perference = useUserPreference()
+    return {
+        id,
+        border: true,
+        round: true,
+        showOverflow: true,
+        height: 'auto',
+        stripe: true,
+        toolbarConfig: toolbarConfig,
+        columnConfig: {
+            resizable: true,
+            useKey: true,
+            drag: true
+        },
+        customConfig: {
+            storage: true,
+            restoreStore ({ id }) {
+                if(perference.value.tableSettings && perference.value.tableSettings[id]) {
+                    return perference.value.tableSettings[id]
+                }
+            },
+            updateStore ({ id, storeData }) {
+                if(!perference.value.tableSettings) perference.value.tableSettings = {}
+                perference.value.tableSettings[id] = storeData
+                // save perference
+                return clientApi.nuxeoUserController.putSetting(perference.value)
+            }
+        },
+        columns,
+        pagerConfig: {
+            enabled: false,
+        },
+        scrollY: {
+            enabled: true,
+            gt: 100
+          },
+        proxyConfig: {
+            sort: false,
+            ajax: {
+              query: async(params:any) => {
+                // lazy load 的 table 不用傳 page, 應在多面板中傳
+                const entryList = await api()
+                return entryList
+              }
+            }
+        },
+        ...optional
+    }
 }

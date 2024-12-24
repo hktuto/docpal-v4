@@ -1,5 +1,5 @@
 {
-  "name": "browse",
+  "name": "client-browse",
   "version": "1.0.0",
   "description": "all DocPal module entry",
   "main": "index.js",
