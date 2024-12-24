@@ -1,8 +1,9 @@
 export interface CaseManagementListProvider {
     getListApi: (params:any) => Promise<any>
     updatePageParams:(params:CaseManagementListPageProps) => void
-    openLatestVersion:(data:any) => void
-    openProductionVersion:(data:any) => void
+    openLatestVersion:(data:any, openInNewTab?:boolean) => void
+    openProductionVersion:(data:any, openInNewTab?:boolean) => void
+    actionPermission:(row:any, code:string) => {visible:boolean, disabled:boolean}
 }
 
 export type CaseManagementListPageProps = {
@@ -32,7 +33,7 @@ export const CaseManagementListProviderKey : InjectionKey<CaseManagementListProv
 
 
 
-export const newCaseManagementDetail = function(data:any) {
+export const newCaseManagementDetail = function(data:any, version:string) {
     return {
         id: "case-management-detail-" + new Date().getTime(),
         name: "case-management-detail-" + data.id,
@@ -41,10 +42,12 @@ export const newCaseManagementDetail = function(data:any) {
         component: 'LazyCaseManagementDetail',
         props: {
             id: data.id,
-            currentVersion: data.productionVersion,
-            productionVersion: data.productionVersion,
+            currentVersion: version,
             name: data.name,
-            item: data,
         }
     } as TabItem
+}
+
+export function caseSaveAs(caseData:any, version:string, newCaseName:string) {
+     // TODO : save as case logic
 }

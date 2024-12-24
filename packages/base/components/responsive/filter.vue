@@ -38,7 +38,7 @@ import { deepCopy } from "#imports"
 
 const props = withDefaults(defineProps<{
     inputKey: string,
-    inputPlaceHolder: string
+    inputPlaceHolder?: string
 }>(), {
   inputPlaceHolder: 'tip.filterByName'
 })
@@ -59,6 +59,9 @@ type state = {
     moreList: ResSelectData[],
     padding: number,
     moreSelected: number
+    inputValue?: string
+    selected?: number
+    interval?: ReturnType<typeof setInterval>
 }
 const boxRefs = ref({})
 
@@ -136,6 +139,12 @@ const state = reactive<state>({
     }
 // #endregion
 const responsiveRef = ref()
+
+function setValue(key:string, value:string) {
+    if(key === props.inputKey) {
+        state.inputValue = value
+    }
+}
 function init(list: ResSelectData[]) {
     state.list = list.reduce((prev, item) => {
         if(item.isMultiple !== false) item.isMultiple = true
@@ -188,7 +197,7 @@ function handleFilter () {
     emits('clear-filter')
     emits('form-change', {}, null )
 }
-defineExpose({ init })
+defineExpose({ init, setValue })
 </script>
 <style lang="scss" scoped>
 .responsive-container {
