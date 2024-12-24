@@ -11,6 +11,7 @@ export default defineNuxtConfig({
     "../../pages/admin-acl",
     "../../pages/admin-setting",
     "../../pages/admin-audit",
+    "../../pages/admin-azure",
   ],
   features:{
     inlineStyles: true,

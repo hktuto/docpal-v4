@@ -138,7 +138,7 @@ async function removeLocalAcl (row: any) {
 <style lang="scss" scoped>
 .card {
     width: 100%;
-    margin: 0 0 var(--app-padding) 0;
+    margin: 0 0 var(--app-space-xs) 0;
     box-shadow: var(--el-box-shadow-light);
     .tableTopContainer {
         display: flex;

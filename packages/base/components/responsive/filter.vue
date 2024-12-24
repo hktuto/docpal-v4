@@ -200,5 +200,9 @@ defineExpose({ init })
         width: 100%;
     }
 }
+.flex-x-start {
+    display: flex;
+    justify-content: start;
+}
 </style>
 

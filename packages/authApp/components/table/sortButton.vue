@@ -216,14 +216,14 @@ defineExpose({ initColumn })
   right: 0;
   width: 2.14rem;
   height: 30px;
-  background-color: var(--color-grey-200);
+  background-color: var(--app-grey-200);
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
   padding: calc( var(--app-space-xs) / 3);
   border-radius: 0 0 0 100%;
   --icon-size: 1.14rem;
-  --icon-color: var(--color-grey-700);
+  --icon-color: var(--app-grey-700);
   transform: scale(1);
   transition: transform .2s ease-in-out;
   transform-origin: top right;
@@ -247,7 +247,7 @@ defineExpose({ initColumn })
       background: var(--app-grey-9000);
     }
     & + & {
-      border-top: 1px solid var(--color-grey-150);
+      border-top: 1px solid var(--app-grey-150);
     }
     .handle{
       grid-area: handle;

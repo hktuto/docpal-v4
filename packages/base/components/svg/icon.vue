@@ -52,7 +52,7 @@ const svgRoundClass = computed(() => {
     width: var(--icon-size, );
     height: var(--icon-size, 24px);
     fill: currentColor;
-    color: var(--icon-color, --color-grey-500);
+    color: var(--icon-color, --app-grey-500);
     &:hover {
         opacity: 0.7;
     }
@@ -69,8 +69,8 @@ const svgRoundClass = computed(() => {
     font-size: var(--icon-size, 18px);
     width: var(--icon-bg-size, 32px);
     height: var(--icon-bg-size, 32px);
-    color: var(--icon-color, --color-grey-950)!important;
-    background-color: var(--icon-bg-color, var(--color-grey-150));
+    color: var(--icon-color, --app-grey-950)!important;
+    background-color: var(--icon-bg-color, var(--app-grey-150));
     border-radius: 50%;
     display: grid;
     place-items: center;
@@ -91,7 +91,7 @@ const svgRoundClass = computed(() => {
     }
     &-disabled  {
         cursor: unset;
-        background-color: var(--icon-bg-color, var(--color-grey-300));
+        background-color: var(--icon-bg-color, var(--app-grey-300));
         svg:hover { 
             opacity: unset;
             cursor: unset;
