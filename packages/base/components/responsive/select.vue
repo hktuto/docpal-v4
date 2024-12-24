@@ -22,7 +22,7 @@
                     v-model="selectData.value"
                     @change="handleChange(selectData)">
                     <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" 
-                        :data-testid="`filter-${item.value}`">
+                        :data-testid="`filter-${item.value}`" :title="item.label">
                         <template v-if="selectData.type === 'date'">
                             {{formatDate(item.label)}}
                         </template>
@@ -64,5 +64,15 @@ function handleChange (data: typeof ResSelectData) {
 .el-checkbox {
     width: calc(100% - 30px);
     white-space: pre-wrap;
+    overflow: hidden;
+    :deep .el-checkbox__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+        word-break: break-all;
+    }
 }
 </style>

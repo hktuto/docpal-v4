@@ -202,7 +202,7 @@ const inheritedList = computed(() => {
     overflow: hidden;
     display: grid;
     grid-template-columns: 250px 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .el-tree {
         overflow: auto;
         .doc-container {
@@ -218,10 +218,10 @@ const inheritedList = computed(() => {
     }
     .main {
         border-left: 1px solid #ddd;
-        padding: 0 var(--app-padding);
+        padding: 0 var(--app-space-xs);
         display:grid;
         grid-template-rows: min-content 1fr;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
         height: 100%;
         overflow: hidden;
         .topAction {
@@ -232,7 +232,7 @@ const inheritedList = computed(() => {
                 display: flex;
                 flex-flow: row nowrap;
                 align-items: center;
-                gap: var(--app-padding);
+                gap: var(--app-space-xs);
                 .el-select {
                     width: 120px;
                 }
@@ -240,7 +240,7 @@ const inheritedList = computed(() => {
         }
         &-content {
            overflow: auto;
-           padding: var(--app-padding);
+           padding: var(--app-space-xs);
         }
     }
 }
