@@ -45,6 +45,10 @@ function openProductionVersion(data:any, openInNewTab:boolean = false){
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
+function openVersion(data:any, openInNewTab:boolean = false){
+    const newItem = newCaseManagementVersionList(data, data.version)
+    routerProvider?.navigateTo(newItem, openInNewTab)
+}
 
 function openNewCaseDialog(){
     dialogRef.value?.handleOpen()
@@ -92,13 +96,13 @@ provide(CaseManagementListProviderKey,{
             isDesc: params.isDesc,
             filters
         })
-        console.log("filter params", filters)
-        return adminApi.caseTypeController.postPage(params)
+        return adminApi.caseTypeController.postPage1(params)
     },
     updatePageParams,
     openLatestVersion,
     openProductionVersion,
-    actionPermission
+    actionPermission,
+    openVersion
 })
 
 </script>
