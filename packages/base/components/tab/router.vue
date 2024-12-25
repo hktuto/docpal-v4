@@ -109,6 +109,7 @@ provide(MenuRouterKey,{
     navigateTo,
     updateProps,
     updateTabName,
+    tabData: tab
 })
 
 

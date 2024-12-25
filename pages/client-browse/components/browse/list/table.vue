@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {BrowseListProviderKey} from '#imports'
-import type {VxeGridInstance} from 'vxe-table'
+import {Grid, type VxeGridInstance, type VxeGridListeners} from 'vxe-table'
 import { createLazyLoadTableConfig } from '../../../../../packages/base/utils/tableHelper';
 
 const listProvider = inject(BrowseListProviderKey);
@@ -25,6 +25,10 @@ const gridSetting = reactive(createLazyLoadTableConfig({
     columns:  [
         {
             type: 'checkbox',
+            fixed: 'left',
+            width:50,
+        },
+        {
             field: 'name',
             title: 'Name',
             minWidth: 60,
@@ -58,7 +62,8 @@ const gridSetting = reactive(createLazyLoadTableConfig({
         rowField: 'id',
         parentField: 'parentId',
         lazy:true,
-        indent: 16,
+        indent: 20,
+        showLine: true,
         hasChildField:'isFolder',
         loadMethod: async(params) => {
             const entry = await loadAllChildren([], params.row.path)
@@ -66,13 +71,23 @@ const gridSetting = reactive(createLazyLoadTableConfig({
         }
     },
     checkboxConfig: {
-        labelField: 'name',
-        checkStrictly: true,
-        showHeader: true,
-        range:true,
-    },
-    data:[]
+            checkStrictly: true,
+            showHeader: false,
+            highlight: true,
+            range: true,
+        }
 }))
+
+const gridEvent:VxeGridListeners<any> = {
+    cellDblclick:({ row, column, rowIndex }) => {
+        if(row.isFolder) {
+            listProvider.changeRoute(row.path)
+        }
+    },
+    checkboxChange:({ row, column, rowIndex }) => {
+        console.log("check box change", row, column, rowIndex)
+    },
+}
 
 async function loadAllChildren(entry:any[] = [], path?:string, pageNum:number = 0) {
     gridSetting.loading = true
@@ -80,22 +95,29 @@ async function loadAllChildren(entry:any[] = [], path?:string, pageNum:number = 
     entry.push(...data.entryList)
     if(data.isNextPageAvailable) {
         return loadAllChildren(entry, path, pageNum + 1)
-    }else{}
+    }
     gridSetting.loading = false
     // tableRef.value?.loadData([...gridSetting.data, ...entry])
     return entry
 }
-const gridEvent = {
-    cellDblclick:({ row, column, rowIndex }) => {
-        if(row.isFolder) {
-            listProvider.changeRoute(row.path)
-        }
-    }
-}
+
 
 function changeRoute(){
     if(tableRef.value) {
         tableRef.value.commitProxy('reload')
+    }
+}
+
+
+function selectAll(){
+    if(tableRef.value) {
+        tableRef.value.toggleAllCheckboxRow();
+    }
+}
+
+function cleanSelected(){
+    if(tableRef.value) {
+        tableRef.value.toggleAllCheckboxRow();
     }
 }
 
@@ -107,6 +129,12 @@ watch(() => listProvider.idOrPath, ()=> {
 },{
   immediate: true,
   deep: true
+})
+
+
+defineExpose({
+    selectAll,
+    cleanSelected,
 })
 
 </script>
