@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import {BrowseListProviderKey} from '#imports'
 import {clientApi} from 'api'
+import { ElSwitch } from 'element-plus';
+import {BrowseListTable} from '#components'
 const props = defineProps<{ 
     idOrPath: string ,
     filter: any,
@@ -8,10 +10,18 @@ const props = defineProps<{
 const { idOrPath } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
-
+const selectedItem = ref<any[]>([])
 if(!tabProvider || !routerProvider) {
     throw createError('provider not found')
 }
+const tableRef = ref<InstanceType<typeof BrowseListTable>>();
+function addToSelection(items: any[]){
+    selectedItem.value.push(...items)
+}
+function removeFromSelection(items: any[]){
+    selectedItem.value = selectedItem.value.filter(item => !items.includes(item))
+}
+
 
 function changeRoute(path:string) {
     // change route, update tab
@@ -27,6 +37,9 @@ provide(BrowseListProviderKey,{
     },
     idOrPath,
     changeRoute,
+    addToSelection,
+    removeFromSelection,
+    
 })
 
 
@@ -34,18 +47,30 @@ provide(BrowseListProviderKey,{
 </script>
 
 <template>
-        
+        <Teleport defer :to="'#'+routerProvider.tabData.value.id +'_action'">
+            <div class="actionRow">
+
+                <BrowseBreadcrumb :idOrPath="idOrPath" />
+                
+            </div>
+        </Teleport>
     <div class="pageContainer" >
-        <BrowseListTable >
+        <BrowseListTable ref="tableRef" >
             <template #toolbar_buttons>
-                <BrowseListBreadcrumb :idOrPath="idOrPath" />
+                <div :id="routerProvider.tabData.value.id +'_action'" class="toolsBarContainer">
+                </div>
+                
             </template>
         </BrowseListTable>
     </div>
 </template>
 
 <style lang="scss" scoped>
-
+.actionRow{
+    width:auto;
+    display: flex;
+    flex-flow: column nowrap;
+}
 .pageContainer{
     height: 100%;
     position: relative;
