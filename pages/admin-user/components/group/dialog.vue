@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('user_newGroup')"
     :close-on-click-modal="false"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -11,6 +11,9 @@
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
 import { getJsonApi, CreateGroupApi } from 'dp-api'
+import { groupProviderKey } from '~/util/userProvider'; 
+import formJson from './dialog.vform.json'
+const groupProvider = inject(groupProviderKey)
 const emits = defineEmits([
     'refresh'
 ])
@@ -21,10 +24,9 @@ const state = reactive({
     loading: false,
     visible: false,
 })
-const FromRendererRef = ref()
-const formJson = getJsonApi('admin/adminGroupForm.json')
+const FormRendererRef = ref()
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     // check group name exist
   if(props.groups.some((g:any) => g.name === data.groupName || g.id === data.groupId)) {
     ElMessage.error('Group name / id already exists')
@@ -33,9 +35,9 @@ async function handleSubmit () {
     data.groupName = data.groupName.trim()
     state.loading = true
     try {
-        await CreateGroupApi(data)
+        await groupProvider?.CreateGroupApi(data)
         state.visible = false
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
 

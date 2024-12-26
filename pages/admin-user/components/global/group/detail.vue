@@ -1,15 +1,19 @@
 <template>
 <div class="group-detail" >
-  <div class="topArea" v-if="state.curGroup">
+  <div class="topArea">
     <div class="flex-x-center">
-      {{name}}
+      {{state.name}}
       <Icon  v-show="isCanModified" name="material-symbols:edit-square" class="normal cursor-pointer"  @click="handleEdit"></Icon>
     </div>
     <Icon  v-show="isCanModified" name="material-symbols:delete-rounded" class="normal cursor-pointer"  @click="handleDelete"></Icon>
 
   </div>
   <GroupUserTable class="group" :group="{id, name, isCanModified}" ></GroupUserTable>
-  <!-- <GroupEditDialog ref="GroupEditDialogRef" :group="state.curGroup" @refresh="handleEditRefresh"></GroupEditDialog> -->
+  <GroupEditDialog ref="GroupEditDialogRef" :group="{
+    id,
+    name: state.name,
+    isCanModified
+  }" @refresh="handleEditRefresh"></GroupEditDialog>
 </div>
 </template>
 <script lang="ts" setup>
@@ -26,13 +30,13 @@ const { id, name, isCanModified } = defineProps<{
   isCanModified: boolean;
 }>();
 const state = reactive<any>({
-  curGroup: {}
+  name: name
 })
 async function handleDelete() {
   const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
-  const res = await adminApi.identityNuxeo.deleteGroup({ groupId: state.curGroup.id })
-  if(!res) openGroupList()
+  const res = await adminApi.identityNuxeo.deleteGroup({ groupId: id })
+  if(!!res) openGroupList()
 }
 const GroupEditDialogRef = ref()
 function handleEdit () {
@@ -52,6 +56,9 @@ function openGroupList(openInNewTab: boolean = false){
     }        
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
+function handleEditRefresh(group:any) {
+  state.name = group.name
+}
 provide(groupProviderDetailKey, {
   DeleteGroupApi: (params:any) => {
     return adminApi.identityNuxeo.deleteGroup(params)
@@ -64,6 +71,9 @@ provide(groupProviderDetailKey, {
   },
   BatchGroupAddUsersApi : (params:any) => {
     return adminApi.identityNuxeo.postUsers2(params)
+  },
+  PatchGroupApi: (params:any) => {
+    return adminApi.identityNuxeo.patchGroup(params)
   },
   getUserListApi : async() => {
     const res = await adminApi.identityNuxeo.postUsers({})
