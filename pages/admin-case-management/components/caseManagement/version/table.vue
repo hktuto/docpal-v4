@@ -15,7 +15,7 @@ const {pageNum, pageSize, orderBy, isDesc, filters}= defineProps<{
     filters?: any
 }>();
 function reload(){
-
+    gridRef.value?.commitProxy('reload')
 }
 
 const tableConfig = reactive(createTableConfig({
@@ -64,13 +64,36 @@ const tableConfig = reactive(createTableConfig({
             title: "dpTable_createdBy",
             sortable: true,
         },
-
+        {
+            title: "dpTable_actions",
+            fixed:'right',
+            width: 60,
+            slots:{
+                default:'actions'
+            }
+        }
     ],
 },{
     menuConfig:{
         body:{
             options:[
-                []
+                [
+                    {
+                        name: "edit",
+                        children:[
+                            {code:'edit_version', name:"edit.currentTab"},
+                            {code:'edit_version_new_tab', name:"edit.newTab"},
+                        ]
+                    },
+                    {
+                        name:'save_as_new_version',
+                        code: 'save_as_new_version',
+                    },
+                    {
+                        code: "promote_version",
+                        name:"promote",
+                    }
+                ]
             ]
         },
         visibleMethod ({options, column, row, rowIndex})  {
@@ -96,24 +119,56 @@ const tableConfig = reactive(createTableConfig({
                         }
                     })
                 })
+                return true;
         }
     },
     sortConfig:{
         remote: true,
         defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
     }
-},{}))
+}))
 
 const tableEvent :VxeGridListeners<any> = {
+    cellDblclick: ({ row, column, event }:any) => {
+        listProvider.openVersionDetail(row)
+    },
+    menuClick: ({menu, row, column}:any) => {
+        switch(menu.code){
+            case 'edit_version':
+                listProvider.openVersionDetail(row)
+                break;
+            case 'edit_version_new_tab':
+                listProvider.openVersionDetail(row, true)
+                break;
+            case 'save_as_new_version':
+                listProvider.saveAsNewVersion(row)
+                break;
+            case 'promote_version':
+                listProvider.promoteVersion(row)
+                break;
+        }
+    }
 }
 
 defineExpose({ reload })
 </script>
 
 <template>
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <VxeGrid ref="gridRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
+        </template>
+        <template #actions="{row}">
+            <!-- <el-dropdown >
+                <SvgIcon src="/icons/dots.svg"></SvgIcon>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item :disabled="listProvider.actionPermission(row, 'edit_version').disabled"  @click="listProvider.openVersionDetail(row)">{{$t('edit')}}</el-dropdown-item>
+                        <el-dropdown-item :disabled="listProvider.actionPermission(row, 'save_as_new_version').disabled"  @click="listProvider.saveAsNewVersion(row)">{{$t('save_as_new_version')}}</el-dropdown-item>
+                        <el-dropdown-item :disabled="listProvider.actionPermission(row, 'promote_version').disabled"  @click="listProvider.promoteVersion(row)">{{$t('promote_to_production')}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown> -->
         </template>
     </VxeGrid>
 </template>

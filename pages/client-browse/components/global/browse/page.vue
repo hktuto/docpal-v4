@@ -47,17 +47,12 @@ provide(BrowseListProviderKey,{
 </script>
 
 <template>
-        <Teleport defer :to="'#'+routerProvider.tabData.value.id +'_action'">
-            <div class="actionRow">
-
-                <BrowseBreadcrumb :idOrPath="idOrPath" />
-                
-            </div>
-        </Teleport>
+        
     <div class="pageContainer" >
         <BrowseListTable ref="tableRef" >
             <template #toolbar_buttons>
                 <div :id="routerProvider.tabData.value.id +'_action'" class="toolsBarContainer">
+                    <BrowseBreadcrumb :idOrPath="idOrPath" />
                 </div>
                 
             </template>

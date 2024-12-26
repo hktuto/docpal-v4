@@ -73,18 +73,10 @@ const tableConfig = reactive(createTableConfig({
             field:'enable',
             title: 'dpTable_status',
             sortable: true,
-            slots:{
-                default:'status',
-            }
+            formatter: ({ cellValue }:any) => {
+                return cellValue ? t('Enabled') : t('Disabled')
+            },
         },
-        {
-            title: "dpTable_actions",
-            fixed:'right',
-            width: 60,
-            slots:{
-                default:'actions'
-            }
-        }
     ],
 },{
     menuConfig:{
@@ -147,7 +139,12 @@ const tableConfig = reactive(createTableConfig({
     sortConfig:{
         remote: true,
         defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
-    }
+    },
+    rowConfig:{
+            height: 60,
+            isCurrent: true,
+            isHover: true
+        }
 }))
 
 const tableEvent :VxeGridListeners<any> = {
@@ -187,26 +184,6 @@ defineExpose({ reload })
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
-        </template>
-        <template #status="{row}">
-            {{ row.enable ?
-                $t('actions.activated') :
-                $t('actions.inactived') }}
-        </template>
-        
-        <template #actions="{row}">
-            <el-dropdown>
-                <SvgIcon src="/icons/dots.svg"></SvgIcon>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openLatestVersion(row)">{{$t('editLatest')}}</el-dropdown-item>
-                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openProductionVersion(row)">{{$t('editProduction')}}</el-dropdown-item>
-                        <el-dropdown-item v-loading="tableConfig.loading" @click="listProvider.openVersion(row)">{{$t('listVersion')}}</el-dropdown-item>
-                        <!-- <el-dropdown-item v-if="row.publishStatus !== 'P' && row.enable" v-loading="tableConfig.loading" @click="handleActive(row, false)">{{$t('actions.inactive')}}</el-dropdown-item>
-                        <el-dropdown-item v-else-if="row.publishStatus !== 'P' && !row.enable" v-loading="tableConfig.loading" @click="handleActive(row, true)">{{$t('actions.active')}}</el-dropdown-item> -->
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
         </template>
     </VxeGrid>
 </template>
