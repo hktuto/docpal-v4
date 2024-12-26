@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import {BrowseListProviderKey} from '#imports'
 import {Grid, type VxeGridInstance, type VxeGridListeners} from 'vxe-table'
 import { createLazyLoadTableConfig } from '../../../../../packages/base/utils/tableHelper';
@@ -75,6 +75,11 @@ const gridSetting = reactive(createLazyLoadTableConfig({
             showHeader: false,
             highlight: true,
             range: true,
+        },
+        rowConfig:{
+            height: 60,
+            isCurrent: true,
+            isHover: true
         }
 }))
 

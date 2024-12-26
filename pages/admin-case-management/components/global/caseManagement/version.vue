@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {adminApi} from 'api'
 import {CaseManagementVersionTable} from '#components'
+import { ElNotification } from 'element-plus';
 const props = defineProps<{
     caseTypeId: string,
     name: string,
@@ -16,9 +17,18 @@ if(!routerProvider) {
 const tableRef = ref<InstanceType<typeof CaseManagementVersionTable>>()
 const { pageNum, pageSize, orderBy, isDesc } = toRefs(props)
 
+const caseData = ref();
+
+async function getCaseData(){
+    const { data } = await adminApi.caseTypeController.getTypes1(props.caseTypeId)
+    caseData.value = data
+    console.log(caseData.value)
+}
 
 async function saveAsNewVersion(data:any){
-
+    await adminApi.caseTypeController.postNew(data.id)
+    tableRef.value?.reload()
+    ElNotification.success(`${data.versionNumber} has save to new version`)
 }
 
 async function promoteVersion(data:any){
@@ -31,7 +41,20 @@ async function openVersionDetail(data:any, openInNewTab:boolean = false){
 }
 
 function actionPermission(row:any, code:string) {
-    return {visible:true, disabled: false}
+    const isProduction = row.production
+    const isLatest = row.version === caseData.value.latestVersion
+    switch(code){
+        case 'edit_version':
+            return {visible:true, disabled: !isLatest}
+        case 'edit_version_new_tab':
+            return {visible:true, disabled: !isLatest}
+        case 'save_as_new_version':
+            return {visible:true, disabled: false}
+        case 'promote_version':
+            return {visible:true, disabled: isProduction}
+        default:
+            return {visible:true, disabled: false}
+    }
 }
 
 provide(CaseManagementVersionProviderKey,{
@@ -48,6 +71,10 @@ provide(CaseManagementVersionProviderKey,{
     saveAsNewVersion,
     promoteVersion,
     openVersionDetail
+})
+
+onMounted(async () => {
+    await getCaseData()
 })
 
 </script>
