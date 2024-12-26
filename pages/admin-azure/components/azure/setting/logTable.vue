@@ -30,7 +30,7 @@ const tableConfig = createTableConfig({
             }
         },
     ],  
-}, )
+})
 const gridRef = ref()
 function query() {
     gridRef.value.commitProxy('query')
