@@ -26,7 +26,7 @@ async function handleSave() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        const result = await azureProvider.UpdateAzureOcrSettingApi({
+        const result = await azureProvider?.UpdateAzureOcrSettingApi({
             ...data,
             alertEmail: data.alertEmail.join(',')
         })
@@ -35,10 +35,9 @@ async function handleSave() {
     }
     setTimeout(() => state.loading = false, 500)
 }
-function initForm(setting) {
+function initForm(setting: any) {
     if(!setting.alertEmail) return
     setting.alertEmail = setting.alertEmail.split(',')
-    console.log(setting);
     
     FormRendererRef.value.vFormRenderRef.setFormData(setting)
 }

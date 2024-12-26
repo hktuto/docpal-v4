@@ -12,6 +12,15 @@ export default defineAppConfig({
       hoverIcon: "lucide:user",
       component: "LazyAdminUserList",
       props:{},
+    },
+    {
+      id:"admin-group",
+      name: 'admin-group-list',
+      label: "Admin Group",
+      icon: "mingcute:group-line",
+      hoverIcon: "mingcute:group-line",
+      component: "LazyGroupList",
+      props:{},
     }
   ] ,
 
