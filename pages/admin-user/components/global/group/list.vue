@@ -30,11 +30,24 @@ provide(groupProviderKey, {
     const res = await adminApi.identityNuxeo.postGroups3();
     return res.data;
   },
+  DeleteGroupApi: (params: any) => {
+    return adminApi.identityNuxeo.deleteGroup(params);
+  },
+  CreateGroupApi: (params: any) => {
+    return adminApi.identityNuxeo.postGroup(params);
+  },
 });
 </script>
 
 <template>
-  <GroupTable
-    ref="tableRef"
-  ></GroupTable>
+  <div class="pageContainer">
+    <GroupTable ref="tableRef"></GroupTable>
+  </div>
 </template>
+<style lang="scss" scoped>
+.pageContainer {
+  padding: var(--app-space-s);
+  height: 100%;
+  overflow: hidden;
+}
+</style>

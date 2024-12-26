@@ -6,7 +6,8 @@
           @form-change="handleFilterFormChange"
           inputKey="userNameOrEmail"
           :inputPlaceHolder="$t('placeHolder.userNameOrEmail')"
-        />
+        /><el-button class="el-icon--right button" type="primary"
+                @click="handleGroupDialogShow()">{{$t('user_newGroup')}}</el-button>
     </template>
     <template #more="{ row }">
       <el-dropdown>
@@ -20,10 +21,7 @@
       </el-dropdown>
     </template>
   </VxeGrid>
-  <UserAddGroupsDialog
-    ref="UserAddGroupDialogRef"
-    @refresh="refresh()"
-  ></UserAddGroupsDialog>
+  <GroupDialog ref="GroupDialogRef" :groups="state._groupList" @refresh="getGroup"></GroupDialog>
 </template>
 
 <script lang="ts" setup>
@@ -74,12 +72,12 @@ function routeDetail(row:any) {
   groupProvider.openGroupDetail(row)
 }
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm($i18n.t("userTip.confirmWhetherToDelete"));
-  if (action !== "confirm") return;
-  const res = await groupProvider?.BatchDeleteUserApi({ userIds: [row.userId] });
+  const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+  if (action !== 'confirm') return
+  const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
   if (!!res) {
     ElMessage.success($i18n.t("dpMsg_success"));
-    refresh();
+    reload();
   }
 }
 const tableRef=ref()
@@ -97,14 +95,18 @@ async function getGroup() {
   state._groupList = [...state.groupList]
   tableConfig.value.data = state._groupList
 }
+const GroupDialogRef = ref()
+function handleGroupDialogShow() {
+    GroupDialogRef.value.handleOpen()
+}
 onMounted(() => {
   getGroup()
 });
 function refresh() {
-  tableRef.value.commitProxy('query')
+  getGroup()
 }
 function reload() {
-  tableRef.value.commitProxy('reload')
+  getGroup()
 }
 defineExpose({ reload })
 </script>
@@ -113,4 +115,9 @@ defineExpose({ reload })
 :deep .el-input {
   width: 200px;
 }
+:deep .vxe-buttons--wrapper {
+  justify-content: space-between;
+  .responsive-container {
+  width: fit-content;
+}}
 </style>
