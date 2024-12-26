@@ -45,19 +45,19 @@ clientApi.instance.interceptors.response.use(
           try {
             // 使用 refresh token 获取新的 access token
             const refreshToken = localStorage.getItem('refresh_token');
-            const refreshResponse:any = await fetch('/client/api/auth/nuxeo/token', {
-                method:"POST",
-                headers:{
-                    Authorization: 'Bearer ' + refreshToken
-                }
-            }).then( res => res.json)
-            localStorage.setItem('access_token', refreshResponse.data.access_token);
-            localStorage.setItem('refresh_token', refreshResponse.data.refresh_token);
+            localStorage.setItem("access_token", refreshToken as string);
+
+            const { data } = await clientApi.instance.post('/api/auth/nuxeo/token',{}, {
+              headers:{
+                  Authorization: 'Bearer ' + refreshToken
+              }
+          })
+            localStorage.setItem('access_token', data.data.access_token);
+            localStorage.setItem('refresh_token', data.data.refresh_token);
       
-            // 重新设置请求头中的 access token 并重试请求
-            originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.access_token}`;
             return clientApi.instance(originalRequest);
           } catch (refreshError:any) {
+            console.log(refreshError)
             // 如果 refresh token 也过期了，则清除所有存储的 token，并导航到登录页面
             if (refreshError.response.status === 401) {
               localStorage.removeItem('access_token');
@@ -100,8 +100,10 @@ adminApi.instance.interceptors.response.use(
           try {
             // 使用 refresh token 获取新的 access token
             const refreshToken = localStorage.getItem('refresh_token');
+            localStorage.setItem("access_token", refreshToken as string);
+
             console.log("refresh token", refreshToken)
-            const { data } = await adminApi.instance.post('/api/auth/nuxeo/token', {
+            const { data } = await adminApi.instance.post('/api/auth/nuxeo/token',{}, {
                 headers:{
                     Authorization: 'Bearer ' + refreshToken
                 }
@@ -109,11 +111,8 @@ adminApi.instance.interceptors.response.use(
             console.log('retry', data)
             console.log("refresh token response", data)
             
-            localStorage.setItem('access_token', data.access_token);
-            localStorage.setItem('refresh_token', data.refresh_token);
-      
-            // 重新设置请求头中的 access token 并重试请求
-            originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
+            localStorage.setItem('access_token', data.data.access_token);
+            localStorage.setItem('refresh_token', data.data.refresh_token);
             return adminApi.instance(originalRequest);
           } catch (refreshError:any) {
             console.log("refresh error", refreshError)
