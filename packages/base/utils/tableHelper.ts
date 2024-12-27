@@ -1,9 +1,9 @@
-import { join } from 'path';
-// import {useUserPreference} from '#imports'
+import { tableSetting } from './../../../apps/superAdmin/components/global/tableSetup/demo';
+
 
 import { clientApi, adminApi } from "api"
 import type { V } from "vitest/dist/chunks/environment.C5eAp3K6.js"
-import type { VxeGridProps } from 'vxe-table'
+import type { VxeGridProps, VxeGridListeners } from 'vxe-table'
 export type TableConfig = {
     api?:Function,
     id:string,
@@ -44,8 +44,7 @@ export const createTableConfig = ({
             drag: true
         },
         scrollY: {
-            enabled: true,
-            gt: 10
+            enabled: false,
         },
         customConfig: {
             storage: true,
@@ -132,7 +131,7 @@ export const createLazyLoadTableConfig = ({
         columnConfig: {
             resizable: true,
             useKey: true,
-            drag: true
+            drag: true,
         },
         customConfig: {
             storage: true,
@@ -171,4 +170,65 @@ export const createLazyLoadTableConfig = ({
         }
     }
     return config
+}
+
+
+type Actions = {
+    code: string,
+    name: string,
+    children?: Actions[],
+    action: (row:any) => void
+}
+
+type CreateTableActionParams = {
+    tableConfig:VxeGridProps, 
+    tableEvent:VxeGridListeners, 
+    dblClickAction:({row, column, event}:any) => void,
+    actions:Actions[], 
+    visibleMethod:({options, column, row, rowIndex}:any) => boolean
+}
+export const createTableActions = (
+    {
+        tableConfig, 
+        tableEvent,
+        dblClickAction,
+        actions, 
+        visibleMethod
+    }:CreateTableActionParams , 
+    optional?:any // optional params for future use
+    ) => {
+    // step 1 add actions column to tableConfig
+        const actionsColumn:any = {
+            title: 'dpTable_actions',
+            fixed:'right',
+            width: 60,
+            type: 'html',
+            formatter: ({ row }:any) => {
+                return `<img src="/icons/dots.svg" style="width: 1.2rem; height: 1.2rem; cursor: pointer;" />`
+            }
+        };
+        if(!tableConfig.columns || tableConfig.columns.length === 0) {  
+            tableConfig.columns = [actionsColumn]
+        }else{
+            tableConfig.columns.push(actionsColumn)
+        }
+    // step 2 add actions to tableEvent
+        tableEvent.cellDblclick = ({ row, column, event }:any) => {
+            dblClickAction({ row, column, event })
+        }
+        if(actions && actions.length > 0) {
+            tableEvent.menuClick = ({menu, row, column}:any) => {
+                console.log("menu click", menu)
+                if(menu.action){
+                    menu.action(row);
+                }
+            }
+            tableConfig.menuConfig = {
+                body: {
+                    options: [actions]
+                },
+                visibleMethod
+            }
+        }
+        
 }
