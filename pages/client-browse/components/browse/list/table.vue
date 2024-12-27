@@ -109,6 +109,25 @@ createTableActions(
                         listProvider.changeRoute(row.path)
                     }
                 }
+            },
+            {
+                name: "subnmenu",
+                children: [
+                    {
+                        code: 'edit',
+                        name: 'Edit',
+                        action: (row:any) => {
+                            console.log("edit", row)
+                        }
+                    },
+                    {
+                        code: 'delete',
+                        name: 'Delete',
+                        action: (row:any) => {
+                            console.log("delete", row)
+                        }
+                    }
+                ]
             }
         ],
         visibleMethod: ({options, column, row, rowIndex}:any) => {

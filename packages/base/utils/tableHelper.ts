@@ -174,10 +174,10 @@ export const createLazyLoadTableConfig = ({
 
 
 type Actions = {
-    code: string,
+    code?: string,
     name: string,
     children?: Actions[],
-    action: (row:any) => void
+    action?: (row:any) => void
 }
 
 type CreateTableActionParams = {
@@ -230,5 +230,10 @@ export const createTableActions = (
                 visibleMethod
             }
         }
-        
+    // step 3 add cell click event to actions column
+        tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
+            if(column.type === 'html' && column.title === 'dpTable_actions'){
+                console.log("click actions", row, column, $event)
+            }
+        }
 }
