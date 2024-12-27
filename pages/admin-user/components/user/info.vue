@@ -1,0 +1,114 @@
+<template>
+<el-card v-if="user">
+    <template #header>
+        <div class="flex-x-between">
+            {{ $t('common_info') }} 
+            <div class="flex-x-end" v-if="!isLdapMode">
+                <Icon name="material-symbols:edit-square" class="normal cursor-pointer"  @click="handleEdit"></Icon>
+                <Icon name="mynaui:lock-password-solid" class="normal cursor-pointer"  @click="openDialog"></Icon>
+                <Icon name="material-symbols:delete-rounded" class="normal cursor-pointer"  @click="handleDelete"></Icon>
+            </div>
+        </div>
+    </template>
+    <div class="row">
+        <div class="rowTitle">{{ $t('user_firstName') }}</div>
+        <div class="rowValue" :title="user.firstName">{{ user.firstName }}</div>
+    </div>
+    <div class="row">
+        <div class="rowTitle">{{ $t('user_lastName') }}</div>
+        <div class="rowValue" :title="user.lastName">{{ user.lastName }}</div>
+    </div>
+    <div class="row">
+        <div class="rowTitle">{{ $t('user_email') }}</div>
+        <div class="rowValue" :title="user.email">{{ user.email }}</div>
+    </div>
+    <div class="row">
+        <div class="rowTitle">{{ $t('user_company') }}</div>
+        <div class="rowValue" :title="user.company">{{ user.company }}</div>
+    </div>
+    <div class="row">
+        <div class="rowTitle">{{ $t('user_active') }}</div>
+        <div class="rowValue">
+            <el-switch v-model="user.status" 
+                active-value="A" inactive-value="D"
+                :loading="user.loading" :disabled="user.loading"
+                @change="(value) => handleSetStatus(value, user)" />
+        </div>
+    </div>
+    <UserEditDialog ref="UserEditDialogRef" :user="user" @refresh="emits('refresh')"></UserEditDialog>
+    <UserPasswordDialog ref="UserPasswordDialogRef" :user="user"></UserPasswordDialog>
+</el-card>
+</template>
+
+
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import { userProviderDetailKey } from '~/util/userProvider';
+import type { UserDTO } from 'api/src/generate/admin'
+const userProviderDetail = inject(userProviderDetailKey)
+const props = defineProps<{
+    user: UserDTO,
+    isLdapMode: boolean,
+}>()
+const emits = defineEmits([
+    'refresh'
+])
+
+async function handleDelete() {
+    const action = await ElMessageBox.confirm($i18n.t('userTip.confirmWhetherToDelete'))
+    if (action !== 'confirm') return
+    const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
+    if (!!res) userProviderDetail?.openUserList()
+}
+
+const UserEditDialogRef = ref()
+function handleEdit () {
+    UserEditDialogRef.value.handleOpen()
+}
+
+const UserPasswordDialogRef = ref()
+function openDialog() {
+    UserPasswordDialogRef.value.handleOpen()
+}
+async function handleSetStatus (status, row) {
+    row.loading = true
+    row.properties = null
+    const res = await userProviderDetail?.SetUserStatusApi(row)
+    if (!res) {
+        row.status = row.status = 'A' ? 'D' : 'A'
+    } else {
+        // await getAllUserAndActiveCount()
+    }
+    row.loading = false
+}
+
+</script>
+
+<style lang="scss" scoped>
+.flex-x-between {
+    display: flex;
+    justify-content: space-between;
+}
+.flex-x-end {
+    display: flex;
+    justify-content: flex-end;
+}
+.row {
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    gap: var(--app-space-xs);
+    align-items: center;
+    padding: 0.25rem 0;
+    color: var(--color-grey-500);
+    .rowTitle {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .rowValue {
+        max-width: 200px;
+        font-weight: bold;
+        @extend .rowTitle;
+    }
+}
+</style>

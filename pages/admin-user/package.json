@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@nuxt/icon": "^1.5.1",
     "nuxt": "3.13.2",
     "vue": "3.5.6",
     "vue-router": "latest"

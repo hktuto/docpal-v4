@@ -48,7 +48,7 @@ if(!editorProvider) {
 .indentItem{
     width: var(--app-space-s);
     height:100px;
-    border-left: 1px solid var(--color-grey-050);
+    border-left: 1px solid var(--app-grey-050);
 }
 .collapseTitleContainer{
     --icon-size: 12px;
@@ -76,7 +76,7 @@ if(!editorProvider) {
     }
 }
 .fieldMappingItemContainer + .fieldMappingItemContainer{
-    border-top: 1px solid var(--color-grey-800);
+    border-top: 1px solid var(--app-grey-800);
 }
 .mappingTitle{
     font-size: 1rem;

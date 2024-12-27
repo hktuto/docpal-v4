@@ -5,7 +5,7 @@ import { clientApi, adminApi } from "api"
 import type { V } from "vitest/dist/chunks/environment.C5eAp3K6.js"
 import type { VxeGridProps } from 'vxe-table'
 export type TableConfig = {
-    api:Function,
+    api?:Function,
     id:string,
     columns:any[],
     sort?:boolean,
@@ -121,7 +121,7 @@ export const createLazyLoadTableConfig = ({
 
     // @ts-ignore
     const perference = useUserPreference()
-    return {
+    const config = {
         id,
         border: true,
         round: true,
@@ -156,7 +156,10 @@ export const createLazyLoadTableConfig = ({
             enabled: true,
             gt: 100
           },
-        proxyConfig: {
+        ...optional
+    }
+    if(!!api) {
+        config.proxyConfig = {
             sort: false,
             ajax: {
               query: async(params:any) => {
@@ -165,7 +168,7 @@ export const createLazyLoadTableConfig = ({
                 return entryList
               }
             }
-        },
-        ...optional
+        }
     }
+    return config
 }
