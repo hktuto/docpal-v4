@@ -19,7 +19,15 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
     }
 }
 
-const gridSetting = reactive(createLazyLoadTableConfig({
+
+
+const tableEvent:VxeGridListeners<any> = {
+    checkboxChange:({ row, column, rowIndex }) => {
+        console.log("check box change", row, column, rowIndex)
+    },
+}
+
+const tableConfig = createLazyLoadTableConfig({
     id: 'browseTableSetting',
     api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
     columns:  [
@@ -79,20 +87,39 @@ const gridSetting = reactive(createLazyLoadTableConfig({
         rowConfig:{
             height: 60,
             isCurrent: true,
-            isHover: true
+            isHover: true,
+            useKey: true
         }
-}))
+})
+createTableActions(
+    {
+        tableConfig,
+        tableEvent,
+        dblClickAction: ({ row, column, event }) => {
+            if(row.isFolder) {
+                listProvider.changeRoute(row.path)
+            }
+        },
+        actions: [
+            {
+                code: 'open',
+                name: 'Open',
+                action: (row:any) => {
+                    if(row.isFolder) {
+                        listProvider.changeRoute(row.path)
+                    }
+                }
+            }
+        ],
+        visibleMethod: ({options, column, row, rowIndex}:any) => {
+            console.log(options, column, row, rowIndex)
+            return true
+        }
+})
 
-const gridEvent:VxeGridListeners<any> = {
-    cellDblclick:({ row, column, rowIndex }) => {
-        if(row.isFolder) {
-            listProvider.changeRoute(row.path)
-        }
-    },
-    checkboxChange:({ row, column, rowIndex }) => {
-        console.log("check box change", row, column, rowIndex)
-    },
-}
+const gridSetting = reactive(tableConfig)
+const gridEvent = reactive(tableEvent)
+    console.log("tableSetting", gridSetting, gridEvent)
 
 async function loadAllChildren(entry:any[] = [], path?:string, pageNum:number = 0) {
     gridSetting.loading = true
@@ -150,6 +177,9 @@ defineExpose({
     <VxeGrid ref="tableRef" v-bind="gridSetting" v-on="gridEvent">
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
+        </template>
+        <template #actions="{row}">
+            <SvgIcon src="/icons/dots.svg"></SvgIcon>
         </template>
     </VxeGrid>
 </div>

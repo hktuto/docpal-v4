@@ -1,13 +1,15 @@
 import type { InjectionKey } from '#imports';
 
 interface userProvider {
-    getAllUserAndActiveCountApi: () => Promise<any>,
+    getAllUsersApi: (params:any) => Promise<any>,
+    SetUserStatusApi: (params:any) => Promise<any>,
     BatchActiveUserApi: (params:any) => Promise<any>,
     BatchDeleteUserApi: (params:any) => Promise<any>,
-    GetUserStatusApi: (params:any) => Promise<any>,
-    GetAllUsersApi: (params:any) => Promise<any>,
-    SetUserStatusApi: (params:any) => Promise<any>,
+    getAllUserAndActiveCountApi: () => Promise<any>,
     CreateUserApi: (params:any) => Promise<any>,
+    BatchUsersToGroupsApi: (params:any) => Promise<any>,
+    GetGroupListApi : () => Promise<any>,
+    openUserDetail: (data:any, openInNewTab?:boolean) => void,
 }
 interface userProviderDetail {
     openUserList: (openInNewTab?: boolean) => void,

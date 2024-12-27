@@ -68,6 +68,10 @@ provide(userProviderKey, {
   },
   openUserDetail,
 });
+
+onActivated(() => {
+  tableRef.value?.reload()
+})
 </script>
 
 <template>
