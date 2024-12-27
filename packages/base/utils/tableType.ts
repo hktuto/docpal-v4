@@ -603,7 +603,7 @@ export const defaultTableSetting: TableColumnSetting = {
                 canNotDelete:true,
                 cellStyle:{
                     padding:'0px',
-                    '--icon-color':"var(--color-grey-200)"
+                    '--icon-color':"var(--app-grey-200)"
                 },
                 "buttons": [
                     {
