@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import {BrowseListProviderKey} from '#imports'
 import {clientApi} from 'api'
-import { ElSwitch } from 'element-plus';
 import {BrowseListTable} from '#components'
+
+defineOptions({
+    name: 'BrowsePage'
+})
+
 const props = defineProps<{ 
     idOrPath: string ,
     filter: any,
@@ -51,10 +55,9 @@ provide(BrowseListProviderKey,{
     <div class="pageContainer" >
         <BrowseListTable ref="tableRef" >
             <template #toolbar_buttons>
-                <div :id="routerProvider.tabData.value.id +'_action'" class="toolsBarContainer">
+                <div class="toolsBarContainer">
                     <BrowseBreadcrumb :idOrPath="idOrPath" />
                 </div>
-                
             </template>
         </BrowseListTable>
     </div>

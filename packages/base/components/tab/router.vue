@@ -135,9 +135,9 @@ provide(MenuRouterKey,{
         
         <template v-if="tab.initized">
             <Transition >
-                <KeepAlive :exclude="/dead/">
+                <KeepAlive >
                     <Suspense>
-                        <component  :is="tab.component" :tab="tab" v-bind="tab.props"/>
+                        <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
                         <template #fallback>
                             <LoadingBgInline />
                         </template>

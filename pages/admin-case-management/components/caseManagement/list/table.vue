@@ -21,13 +21,10 @@ function reload() {
     // tableRef.value.reload()
     tableRef.value?.commitProxy('reload')
 }
-
-const tableConfig = reactive(createTableConfig({
+const { tableConfig, tableEvent } = useVxeTable({
     id: 'adminCaseManagementList',
     api: (pageParams:any) => listProvider?.getListApi(pageParams),
-    sort:true,
-    filter:false,
-    pageSize,
+    remoteSort: true,
     columns:  [
         {
             field:'name',
@@ -78,103 +75,99 @@ const tableConfig = reactive(createTableConfig({
             },
         },
     ],
-},{
-    menuConfig:{
-        body:{
-            options:[
-               [ 
+    bodyActions: [
+        [ 
+            {
+                name:"editLatest",
+                children:[
                     {
-                        name:"editLatest",
-                        children:[
-                            {code:'edit_latest_version', name:"edit.currentTab"},
-                            {code:'edit_latest_version_new_tab', name:"edit.newTab"},
-                        ]
+                        code:'edit_latest_version', 
+                        name:"edit.currentTab", 
+                        action: ({row}) => listProvider.openLatestVersion(row)},
+                    {
+                        code:'edit_latest_version_new_tab', 
+                        name:"edit.newTab", 
+                        action: ({row}) => listProvider.openLatestVersion(row, true)
+                    },
+                ]
+            },
+            {
+                name:"editProduction",
+                children:[
+                    {
+                        code:'edit_production_version', 
+                        name:"edit.currentTab",
+                        action: ({row}) =>  listProvider.openProductionVersion(row)
                     },
                     {
-                        name:"editProduction",
-                        children:[
-                            {code:'edit_production_version', name:"edit.currentTab"},
-                            {code:'edit_production_new_tab', name:"edit.newTab"},
-                        ]
-                    },{
-                        name:"listVersion",
-                        children:[
-                            {code:'list_version', name:"list.version"},
-                            {code:'list_version_new_tab', name:"list.newTab"},
-                        ]
+                        code:'edit_production_new_tab', 
+                        name:"edit.newTab",
+                        action: ({row}) =>  listProvider.openProductionVersion(row, true)
+
+                    },
+                ]
+            },{
+                name:"listVersion",
+                children:[
+                    {
+                        code:'list_version', 
+                        name:"list.version",
+                        action:({row}) => listProvider.openVersion(row)
+                    },
+                    {
+                        code:'list_version_new_tab', 
+                        name:"list.newTab",
+                        action:({row}) => listProvider.openVersion(row, true)
+                    },
+                ]
+            }
+            
+            
+        ],
+    ],
+    visibleMethod: ({options, column, row, rowIndex}) => {
+        options.forEach((list:any) => {
+                list.forEach((item:any) => {
+                    if(item.children){
+                        // loop all children , and set visible and disabled
+                        // if all children are not visible , set iten.visible = false
+                        // if all children are disabled , set item.disabled = true
+                        item.children.forEach(child => {
+                            const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
+                            child.visible = visible
+                            child.disabled = disabled
+                        })
+                        const allVisible = item.children.every(child => child.visible)
+                        const allDisabled = item.children.every(child => child.disabled)
+                        item.visible = allVisible
+                        item.disabled = allDisabled
+                    }else{
+                        const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
+                        item.visible = visible
+                        item.disabled = disabled
+
                     }
-                    
-                    
-               ],
-            ]
-        },
-        visibleMethod ({options, column, row, rowIndex})  {
-            options.forEach(list => {
-                    list.forEach(item => {
-                        if(item.children){
-                            // loop all children , and set visible and disabled
-                            // if all children are not visible , set iten.visible = false
-                            // if all children are disabled , set item.disabled = true
-                            item.children.forEach(child => {
-                                const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
-                                child.visible = visible
-                                child.disabled = disabled
-                            })
-                            const allVisible = item.children.every(child => child.visible)
-                            const allDisabled = item.children.every(child => child.disabled)
-                            item.visible = allVisible
-                            item.disabled = allDisabled
-                        }else{
-                            const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
-                            item.visible = visible
-                            item.disabled = disabled
 
-                        }
-
-                    })
                 })
-                return true;
-        }
+        })
+        return true;
     },
-    sortConfig:{
-        remote: true,
-        defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
+    dblClickAction:({ row, column, event }:any) => {
+        listProvider.openLatestVersion(row)
     },
-    rowConfig:{
+    optionalConfig:{
+        sortConfig:{
+            remote: true,
+            defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
+        },
+        rowConfig:{
             height: 60,
             isCurrent: true,
             isHover: true
         }
-}))
-
-const tableEvent :VxeGridListeners<any> = {
-    cellDblclick: ({ row, column, event }:any) => {
-        listProvider.openLatestVersion(row)
-    },
-    menuClick: ({menu, row, column}:any) => {
-        switch(menu.code){
-            case 'edit_latest_version':
-                listProvider.openLatestVersion(row)
-                break;
-            case 'edit_latest_version_new_tab':
-                listProvider.openLatestVersion(row, true)
-                break;
-            case 'edit_production_version':
-                listProvider.openProductionVersion(row)
-                break;
-            case 'edit_production_new_tab':
-                listProvider.openProductionVersion(row, true)
-                break;
-            case 'list_version':
-                listProvider.openVersion(row)
-                break;
-            case 'list_version_new_tab':
-                listProvider.openVersion(row, true)
-                break;
-        }
     }
+})
 
-}
 
 defineExpose({ reload })
 </script>

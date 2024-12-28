@@ -18,16 +18,7 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
         return entry
     }
 }
-
-
-
-const tableEvent:VxeGridListeners<any> = {
-    checkboxChange:({ row, column, rowIndex }) => {
-        console.log("check box change", row, column, rowIndex)
-    },
-}
-
-const tableConfig = createLazyLoadTableConfig({
+const { tableConfig, tableEvent } = useVxeTable({
     id: 'browseTableSetting',
     api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
     columns:  [
@@ -64,43 +55,16 @@ const tableConfig = createLazyLoadTableConfig({
             },
         },
     ],
-},{
-    treeConfig: {
-        transform: true,
-        rowField: 'id',
-        parentField: 'parentId',
-        lazy:true,
-        indent: 20,
-        showLine: true,
-        hasChildField:'isFolder',
-        loadMethod: async(params) => {
-            const entry = await loadAllChildren([], params.row.path)
-            return entry
-        }
-    },
-    checkboxConfig: {
-            checkStrictly: true,
-            showHeader: false,
-            highlight: true,
-            range: true,
-        },
-        rowConfig:{
-            height: 60,
-            isCurrent: true,
-            isHover: true,
-            useKey: true
-        }
-})
-createTableActions(
-    {
-        tableConfig,
-        tableEvent,
-        dblClickAction: ({ row, column, event }) => {
+    virtualScroll: true,
+    remoteSort: false,
+    remoteFilter: false,
+    dblClickAction: ({ row, column, event }) => {
             if(row.isFolder) {
                 listProvider.changeRoute(row.path)
             }
-        },
-        actions: [
+    },
+    bodyActions: [
+        [
             {
                 code: 'open',
                 name: 'Open',
@@ -129,26 +93,57 @@ createTableActions(
                     }
                 ]
             }
-        ],
-        visibleMethod: ({options, column, row, rowIndex}:any) => {
-            console.log(options, column, row, rowIndex)
-            return true
+        ]
+    ],
+    visibleMethod: ({options, column, row, rowIndex}:any) => {
+        console.log(options, column, row, rowIndex)
+        return true
+    },
+    optionalConfig: {
+        treeConfig: {
+            transform: true,
+            rowField: 'id',
+            parentField: 'parentId',
+            lazy:true,
+            indent: 20,
+            showLine: true,
+            hasChildField:'isFolder',
+            loadMethod: async(params) => {
+                const entry = await loadAllChildren([], params.row.path)
+                return entry
+            }
+        },
+        checkboxConfig: {
+            checkStrictly: true,
+            showHeader: false,
+            highlight: true,
+            range: false,
+        },
+        rowConfig:{
+            height: 60,
+            isCurrent: true,
+            isHover: true,
+            useKey: true
         }
+    },
+    optionalEvent:{
+        checkboxChange:({ row, column, rowIndex }) => {
+            console.log("check box change", row, column, rowIndex)
+        },
+    }
 })
 
-const gridSetting = reactive(tableConfig)
-const gridEvent = reactive(tableEvent)
-    console.log("tableSetting", gridSetting, gridEvent)
+
 
 async function loadAllChildren(entry:any[] = [], path?:string, pageNum:number = 0) {
-    gridSetting.loading = true
+    tableConfig.loading = true
     const {data} = await listProvider?.getchildApi({idOrPath: path, pageSize:1000, pageNum})
     entry.push(...data.entryList)
     if(data.isNextPageAvailable) {
         return loadAllChildren(entry, path, pageNum + 1)
     }
-    gridSetting.loading = false
-    // tableRef.value?.loadData([...gridSetting.data, ...entry])
+    tableConfig.loading = false
+    // tableRef.value?.loadData([...tableConfig.data, ...entry])
     return entry
 }
 
@@ -193,7 +188,7 @@ defineExpose({
 
 <template>
 <div ref="tableContainer" class="tableContainer">
-    <VxeGrid ref="tableRef" v-bind="gridSetting" v-on="gridEvent">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
         </template>
