@@ -67,6 +67,7 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
         </template>
         
     </TabApp>
+    <Contextmenu />
 </template>
 
 <style lang="scss" scoped>

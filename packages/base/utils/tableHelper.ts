@@ -1,9 +1,7 @@
-import { tableSetting } from './../../../apps/superAdmin/components/global/tableSetup/demo';
 
 
 import { clientApi, adminApi } from "api"
-import type { V } from "vitest/dist/chunks/environment.C5eAp3K6.js"
-import type { VxeGridProps, VxeGridListeners } from 'vxe-table'
+import { type VxeGridProps, type VxeGridListeners, use } from 'vxe-table'
 export type TableConfig = {
     api?:Function,
     id:string,
@@ -173,10 +171,10 @@ export const createLazyLoadTableConfig = ({
 }
 
 
-type Actions = {
+export type TableMenuActions = {
     code?: string,
     name: string,
-    children?: Actions[],
+    children?: TableMenuActions[],
     action?: (row:any) => void
 }
 
@@ -184,9 +182,10 @@ type CreateTableActionParams = {
     tableConfig:VxeGridProps, 
     tableEvent:VxeGridListeners, 
     dblClickAction:({row, column, event}:any) => void,
-    actions:Actions[], 
+    actions:TableMenuActions[], 
     visibleMethod:({options, column, row, rowIndex}:any) => boolean
 }
+
 export const createTableActions = (
     {
         tableConfig, 
@@ -225,15 +224,30 @@ export const createTableActions = (
             }
             tableConfig.menuConfig = {
                 body: {
-                    options: [actions]
+                    options: []
                 },
-                visibleMethod
             }
         }
     // step 3 add cell click event to actions column
         tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
             if(column.type === 'html' && column.title === 'dpTable_actions'){
-                console.log("click actions", row, column, $event)
+               
+                const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
+                bus.emit({
+                    data:row,
+                    actions,
+                    visibleMethod,
+                    event:$event
+                })
             }
         }
+    // step 4 add scroll event to handle close context menu
+        tableEvent.scroll = ({ scrollTop }:any) => {
+            const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_CLOSE)
+            bus.emit({
+                scrollTop
+            })
+        }
 }
+
+
