@@ -47,7 +47,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'masterTableTableSetting',
     api: (pageParams:any) => masterTableProvider?.GetMasterTablesPageApi(pageParams),
     columns:  [
-        { id: "10",  field: 'name', title: 'tableHeader_name', fixed: 'left'},
+        { field: 'name', title: 'tableHeader_name', fixed: 'left'},
         { field: 'createdBy', title: 'role.creator',},
         { field: 'status', title: 'dpTable_status',  
           slots:{
@@ -64,29 +64,21 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
       { 
         code: 'edit_latest_version', 
         name: 'masterTable.editDetail', 
-        visible: true, 
-        disabled: false,
         action: ({row}:any) => {handleDblclick(row)}
       },
       { 
         code: 'edit_latest_version', 
         name: 'trash_actions_delete', 
-        visible: true, 
-        disabled: false,
         action: ({row}:any) => {handleDblclick(row)}
       },
       { 
         code: 'edit_latest_version', 
         name: 'actions.inactive', 
-        visible: true, 
-        disabled: false,
         action: ({row}:any) => {handleDblclick(row)}
       },
       { 
         code: 'edit_latest_version', 
         name: 'actions.active', 
-        visible: true, 
-        disabled: false,
         action: ({row}:any) => {handleDblclick(row)}
       }
     ]],
@@ -96,11 +88,11 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         list.forEach((item: any) => {
           if(item.name === 'actions.active' || item.name === 'actions.inactive') {
             item.visible = row.status === 'A' ? true : false
+            console.log("item", row.status)
           }
         })
       })
-      console.log(options, column, row, rowIndex)
-      return true;
+      return options;
     }
 })
 async function handleDelete(row: any) {
