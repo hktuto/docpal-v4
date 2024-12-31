@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/icon',
     '@vueuse/nuxt',
+    'nuxt-viewport'
   ],
   css:[
     '../assets/styles/main.scss'

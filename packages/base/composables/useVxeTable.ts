@@ -1,8 +1,9 @@
 
 
 import { clientApi } from "api"
+import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
-import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes  } from 'vxe-table'
+import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance  } from 'vxe-table'
 
 export interface TableMenuActions extends VxeTableDefines.MenuFirstOption {
     name:string,
@@ -50,7 +51,12 @@ interface Config extends VxeGridProps {
 }
 
 export const useVxeTable = (params: UseVxeTableParams) => {
+    // set Defalut value for params
     const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true } = params
+    
+    const tableRef = ref<VxeGridInstance<any>>()
+    const viewport = useViewport()
+    
     const tableConfig = reactive<Config>({...{
         id: params.id,
         border: true,
@@ -79,7 +85,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         },
         customConfig: {
             enabled: saveColumnOrder,
-            storage: true,
+            storage: saveColumnOrder,
             restoreStore ({ id }) {
                 // TODO : move useUserPreference to a composable to store and cache tabel config
                 // @ts-ignore
@@ -248,12 +254,35 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     if(params.footerActions && params.footerActions.length > 0){
         tableConfig.menuConfig.footer.options = params.footerActions
     }
-    // #endregion
-        
-    console.log("tableConfig", tableConfig)
 
+
+    watch(viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
+        if(viewport.isLessThan('tablet')){
+            // mobile setting for table
+            return
+        }
+        if(viewport.isGreaterThan('mobile')){
+            // desktop setting for table
+            return
+        }
+    }, {
+        immediate: true
+    })
+
+    function reload(){
+        tableRef.value?.commitProxy('reload')
+    }
+
+    function query(params:any){
+        tableRef.value?.commitProxy('query', params)
+    }
+
+    // #endregion
     return {
         tableConfig,
-        tableEvent
+        tableEvent,
+        tableRef,
+        reload, 
+        query
     }
 }
