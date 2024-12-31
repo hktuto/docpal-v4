@@ -118,6 +118,19 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
 .vxe-toolbar{
   gap: var(--app-space-s);
 }
+.pageContainer--padding {
+  height: 100%;
+  overflow: hidden;
+  padding: var(--app-space-s);
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+@each $type in $types {
+  .color--#{$type} {
+    color: var(--app-#{$type}-color);
+  }
+}
 
 // vxe table context menu
 .contextMenuContainer{
