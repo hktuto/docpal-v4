@@ -1,19 +1,32 @@
 
 
 import { clientApi } from "api"
-import { th } from "element-plus/es/locale/index.mjs"
-import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines  } from 'vxe-table'
+import type {TABLE_CONTEXT_PARAMS} from '#imports';
+import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes  } from 'vxe-table'
 
-interface TableMenuActions extends VxeTableDefines.MenuFirstOption {
+export interface TableMenuActions extends VxeTableDefines.MenuFirstOption {
+    name:string,
     children?: TableMenuActions[],
     action?: (row:any) => void
 }
-interface UseVxeTableParams<R = any> {
+
+export type TableMenuValidataMethod  = (params: {
+    type?: string
+    options: TableMenuActions[][]
+    columns: VxeGridPropTypes.Columns,
+    row?: any
+    rowIndex?: number
+    column?: VxeTableDefines.ColumnInfo
+    columnIndex?: number
+    event?: MouseEvent
+  }) => TableMenuActions[][]
+export interface UseVxeTableParams<R = any> {
     id:string,
     height?:string, // 'auto' | number
     api?:Function,
     remoteSort?:boolean,
     remoteFilter?:boolean,
+    defaultSort?: { field: string, order: VxeTablePropTypes.SortOrder }[],
     columns:VxeGridPropTypes.Columns<R>,
     saveColumnOrder?:boolean,
     virtualScroll?:boolean,
@@ -22,20 +35,12 @@ interface UseVxeTableParams<R = any> {
     headerActions?:TableMenuActions[][],
     footerActions?:TableMenuActions[][],
     bodyActions?:TableMenuActions[][],
-    visibleMethod?(params: {
-        type: string
-        options: VxeTableDefines.MenuFirstOption[][]
-        columns: VxeTableDefines.ColumnInfo<R>[]
-        row?: R
-        rowIndex?: number
-        column?: VxeTableDefines.ColumnInfo<R>
-        columnIndex?: number
-      }): boolean,
+    visibleMethod?: TableMenuValidataMethod,
     optionalConfig?: VxeGridProps<R>
     optionalEvent?: VxeGridListeners<R>
 }
 
-interface Config extends VxeGridProps<any> {
+interface Config extends VxeGridProps {
     proxyConfig: VxeGridPropTypes.ProxyConfig
     menuConfig: {
         header: VxeTableDefines.MenuOptions,
@@ -45,7 +50,7 @@ interface Config extends VxeGridProps<any> {
 }
 
 export const useVxeTable = (params: UseVxeTableParams) => {
-    const { optionalConfig = {},  optionalEvent = {} } = params
+    const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true } = params
     const tableConfig = reactive<Config>({...{
         id: params.id,
         border: true,
@@ -54,7 +59,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         showOverflow: true,
         height: params.height || 'auto',
         toolbarConfig:{
-            custom: params.virtualScroll ,
+            custom: saveColumnOrder ,
             slots: {
                 buttons: 'toolbar_buttons'
             }
@@ -73,7 +78,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             pageSize : params.pageSize || 20
         },
         customConfig: {
-            enabled: params.saveColumnOrder || true,
+            enabled: saveColumnOrder,
             storage: true,
             restoreStore ({ id }) {
                 // TODO : move useUserPreference to a composable to store and cache tabel config
@@ -93,6 +98,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 return clientApi.nuxeoUserController.putSetting(perference.value)
             }
         },
+        sortConfig:{
+            remote: params.remoteSort || false,
+            defaultSort: params.defaultSort || []
+        },
         proxyConfig:{
             enabled: params.api ? true : false,
             sort: params.remoteSort || false,
@@ -108,6 +117,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             footer:{
                 options: params.footerActions || []
             },
+            className: 'contextMenuContainer'
         }
     }, ...optionalConfig} as Config)
 
@@ -195,13 +205,32 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         // add click event to action column
         tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
             if(column.type === 'html' && column.title === 'dpTable_actions'){
+                if(!params.visibleMethod){
+                    throw new Error('visibleMethod is required')
+                }
+                if(!params.bodyActions){
+                    throw new Error('bodyActions is required')
+                }
+                if(!params.columns){
+                    throw new Error('columns is required')
+                }
                 const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
-                bus.emit({
-                    data:row,
-                    actions: params.bodyActions,
-                    visibleMethod: params.visibleMethod,
+                const evtParams:TABLE_CONTEXT_PARAMS = {
+                    row,
+                    column,
+                    rowIndex,
+                    options: params.visibleMethod({
+                        options: params.bodyActions, 
+                        columns: params.columns,
+                        row, 
+                        rowIndex, 
+                        column, 
+                        columnIndex, 
+                        event:$event
+                    }),
                     event:$event
-                })
+                }
+                bus.emit(evtParams)
             }
         }
         tableEvent.scroll = ({ scrollTop }:any) => {

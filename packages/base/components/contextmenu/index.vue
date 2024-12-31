@@ -3,38 +3,14 @@ import { useEventBus, EventType } from '#imports'
 
 
 
-const eventPostion = ref<any>({x:0, y:0})
+const actions = ref<TableMenuActions[][]>([])
 const visible = ref(false)
-const actions = ref<TableMenuActions[]>([])
-let visibleMethod;
-const postion = computed(() => {
-    // contextMenu is 120px width , so we need to calculate the left and top postion and check if it is out of the screen
-    const {x, y} = eventPostion.value
-    
-    const left = x + 120 > window.innerWidth ? x - 120 : x
-    // calculate the total height of actions
-    const totoalActionHeight = actions.value.length * 40;// 40 is the height of each action
-    // check if the top postion is out of the screen
-    const top = y + totoalActionHeight > window.innerHeight ? y - totoalActionHeight : y
-    return {
-        left,
-        top
-    }
-    
+const visibleMethod = ref<any>((params:any) => {
+    return true
 })
 
-const container = ref<HTMLElement>()
-onClickOutside(container, () => {
-    visible.value = false
-})
-
-const contextMenuOpenHandler = (args:any)=>{
-    actions.value = args.actions
-    visibleMethod = args.visibleMethod
-    eventPostion.value = {
-        x: args.event.clientX,
-        y: args.event.clientY
-    }
+const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
+    actions.value = args.options
     visible.value = true
 }
 
@@ -42,8 +18,8 @@ const contextMenuCloseHandler = () => {
     visible.value = false
 }
 
-const contextMenuBus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
-const contextMenuCloseBus = useEventBus(EventType.TABLE_CONTEXT_MENU_CLOSE)
+const contextMenuBus = useEventBus<TABLE_CONTEXT_PARAMS>(EventType.TABLE_CONTEXT_MENU_OPEN)
+const contextMenuCloseBus = useEventBus<void>(EventType.TABLE_CONTEXT_MENU_CLOSE)
 contextMenuBus.on(contextMenuOpenHandler)
 contextMenuCloseBus.on(contextMenuCloseHandler)
 onUnmounted(() => {
@@ -53,32 +29,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div ref="container" :class="{contextMenu:true, visible}" :style="{left: postion.left + 'px', top: postion.top + 'px'}">
-        <ContextmenuItem v-for="(item, index) in actions" :key="index" :item="item" />
+    <div :class="{contextMenuContainer:true, visible}">
+        
     </div>
 </template>
-
-<style lang="scss" scoped>
-.contextMenu{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 120px;
-    height: auto;
-    background: var(--app-grey-1000);
-    z-index: 2;
-    padding: var(--app-space-xs);
-    border-radius: var(--app-border-radius-s);
-    transform: translateY(100vw);
-    opacity: 0;
-    // display: none;
-    transition: transform .1s ease-in-out , opacity .2s ease-in-out;
-    transition-delay: 0.2s;
-    &.visible{
-        // display: block !important;
-        opacity: 1;
-        transform: translateY(0);
-        transition-delay: 0s;
-    }
-}
-</style>

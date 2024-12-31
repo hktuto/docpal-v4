@@ -12,9 +12,16 @@ const { draftId } = defineProps<{
 }>()
 
 const tableRef = ref<InstanceType<typeof VxeGrid>>()
-const tableConfig = createTableConfig({
+const { tableConfig, tableEvent } = useVxeTable({
     id: 'workflowEditorVersionTableSetting',
     api: (pageParams:any) => listProvider.getListApi({...pageParams, draftId}),
+    remoteSort:true,
+    defaultSort: [
+        {
+            field: 'versionNumber',
+            order: 'desc'
+        }
+    ],
     columns:  [
         {
             field: 'versionNumber',
@@ -61,63 +68,46 @@ const tableConfig = createTableConfig({
             }
         }
     ],
-    },
-    {
-        menuConfig:{
-            body:{
-                options:[
-                    [
-                        { code: 'edit', name: 'Edit', visible: true, disabled: false },
-                        { code: 'edit_new_tab', name: 'Edit in new tab', visible: true, disabled: false },
-                        { code: 'promote_to_production', name: 'Promote to Production', visible: true, disabled: false },
-                        { code: "save_as_new_version", name: "Save as new version", visible: true, disabled: false },
-                    ]
-                ]
-            },
-            visibleMethod: ({options, column, row, rowIndex}) => {
-                // options 是 menuConfig 中的 body 配置
-                
-                options.forEach(list => {
-                    list.forEach(item => {
-                        const {visible, disabled} = listProvider.actionPermission(row, rowIndex, item.code)
-                        item.visible = visible
-                        item.disabled = disabled
-                    })
-                })
-                return true;
-            }
-        },
-        sortConfig: {
-            remote: true,
-            defaultSort:[
-                {
-                    field: 'versionNumber',
-                    order: 'desc'
-                }
-            ]
-        },
-    }
-)
-
-const tableEvent = {
-    cellDblclick:({ row, column, rowIndex }) => {
+    dblClickAction: ({ row, column, event }:any) => {
         listProvider.editHandler(row)
     },
-    menuClick: ({menu, row, column}:any) => {
-        switch(menu.code){
-            case 'edit':
-                listProvider.editHandler(row)
-                break;
-            case 'edit_new_tab':
-                listProvider.editNewTabHandler(row)
-                break;
-            case 'promote_to_production':
-                break;
-            case 'save_as_new_version':
-                break;
-        }
+    bodyActions: [
+        [
+            { 
+                code: 'edit', 
+                name: 'Edit', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.editHandler(row)
+                }
+             },
+            { 
+                code: 'edit_new_tab', 
+                name: 'Edit in new tab', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.editHandler(row, true)
+                }
+             },
+            { code: 'promote_to_production', name: 'Promote to Production', visible: true, disabled: false },
+            { code: "save_as_new_version", name: "Save as new version", visible: true, disabled: false },
+        ]
+    ],
+    visibleMethod: ({options, column, row, rowIndex}) => {
+        // options 是 menuConfig 中的 body 配置
+        
+        options.forEach(list => {
+            list.forEach(item => {
+                const {visible, disabled} = listProvider.actionPermission(row, rowIndex, item.code)
+                item.visible = visible
+                item.disabled = disabled
+            })
+        })
+        return true;
     }
-}
+})
 
 
 </script>

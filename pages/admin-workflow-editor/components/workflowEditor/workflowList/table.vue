@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { WorkflowEditorListProviderKey } from '~/utils/workflowEditorProvider';
-import type {VxeGridListeners} from 'vxe-table'
 import dayjs from 'dayjs'
 
 const listProvider = inject(WorkflowEditorListProviderKey)
@@ -9,116 +8,132 @@ if(!listProvider) {
 }
 
 const gridRef = ref()
-const tableConfig = createTableConfig({
+const { tableConfig , tableEvent } = useVxeTable({
     id: 'workflowEditorListTableSetting',
     api: (pageParams:any) => listProvider.getListApi(pageParams),
     columns:  [
-                {
-                    field: 'name',
-                    title: 'Name',
-                    fixed: 'left',
-                    sortable: true,
-                },
-                {
-                    field: 'productionVersion',
-                    title: 'productionVersion',
-                    minWidth: 120,
-                    
-                },
-                {
-                    field: 'latestVersion',
-                    title: 'latestVersion',
-                    minWidth: 120,
-                },
-                {
-                    field:'modifiedBy',
-                    title: 'modifiedBy',
-                    minWidth: 120,
-                    sortable: true,
-                },
-                {
-                    field: 'modifiedDate',
-                    title: 'modifiedDate',
-                    minWidth: 120,
-                    sortable: true,
-                    formatter ({ cellValue }:any) {
-                        return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
-                    }
-                },
-                {
-                    title: 'Action',
-                    fixed: 'right',
-                    width: 65,
-                    slots:{
-                        default:'action'
-                    }
-                }
-            ],    
-},{
-    menuConfig:{
-        body: {
-            options: [
-                [
-                    { code: 'edit_latest_version', name: 'Edit Latest Version', visible: true, disabled: false },
-                    { code: 'edit_latest_version_new_tab', name: 'Edit Latest Version in New Tab', visible: true, disabled: false },
-                    { code : 'view_production', name: 'View Production', visible: true, disabled: false },
-                    { code : 'view_production_new_tab', name: 'View Production in New Tab', visible: true, disabled: false },
-                    { code : 'save_as_new_workflow', name: 'Save as new workflow', visible: true, disabled: false },
-                    { code : 'view_versions', name: 'View Versions', visible: true, disabled: false },
-                    { code : 'view_versions_new_tab', name: 'View Versions in New Tab', visible: true, disabled: false },
-                ]
-            ]
-        }
-    },
-    rowConfig:{
-            drag: true,
+        {
+            field: 'name',
+            title: 'Name',
+            fixed: 'left',
+            sortable: true,
         },
-    rowDragConfig:{
-        showIcon: true,
-    },
-    sortConfig: {
-        remote: true,
-        defaultSort:[
-            {
-                field: 'name',
-                order: 'asc'
+        {
+            field: 'productionVersion',
+            title: 'productionVersion',
+            minWidth: 120,
+            
+        },
+        {
+            field: 'latestVersion',
+            title: 'latestVersion',
+            minWidth: 120,
+        },
+        {
+            field:'modifiedBy',
+            title: 'modifiedBy',
+            minWidth: 120,
+            sortable: true,
+        },
+        {
+            field: 'modifiedDate',
+            title: 'modifiedDate',
+            minWidth: 120,
+            sortable: true,
+            formatter ({ cellValue }:any) {
+                return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
             }
-        ]
-    },
-}
-)
-
-const tableEvents: VxeGridListeners = {
-    cellDblclick: ({ row, column, rowIndex }) => {
-        
-        listProvider.openLastestVersion(row)
-    },
-    menuClick: ({ menu, row, column }) => {
-        switch (menu.code) {
-            case 'view_production':
-                listProvider.openProductionVersion(row)
-                break;
-            case 'view_production_new_tab':
-                listProvider.openProductionVersion(row, true)
-                break;
-            case 'save_as_new_workflow':
-                listProvider.saveAsNewWorkflow(row)
-                break;
-            case 'view_versions':
-                listProvider.openVersions(row)
-                break;
-            case 'view_versions_new_tab':
-                listProvider.openVersions(row, true)
-                break;
-            case 'edit_latest_version':
-                listProvider.openLastestVersion(row)
-                break;
-            case 'edit_latest_version_new_tab':
-                listProvider.openLastestVersion(row, true)
-                break;
+        },
+        {
+            title: 'Action',
+            fixed: 'right',
+            width: 65,
+            slots:{
+                default:'action'
+            }
         }
+    ], 
+    bodyActions: [
+        [
+            { 
+                code: 'edit_latest_version', 
+                name: 'Edit Latest Version', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.openLastestVersion(row)
+                }
+            },
+            { 
+                code: 'edit_latest_version_new_tab', 
+                name: 'Edit Latest Version in New Tab', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.openLastestVersion(row, true)
+                }
+            },
+            { 
+                code : 'view_production', 
+                name: 'View Production', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.openProductionVersion(row)
+                }
+            },
+            { 
+                code : 'view_production_new_tab', 
+                name: 'View Production in New Tab', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.openProductionVersion(row, true)
+                }
+            },
+            { 
+                code : 'save_as_new_workflow', 
+                name: 'Save as new workflow', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.saveAsNewWorkflow(row)
+                }
+            },
+            { 
+                code : 'view_versions', 
+                name: 'View Versions', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.openVersions(row)
+                }
+            },
+            { 
+                code : 'view_versions_new_tab', 
+                name: 'View Versions in New Tab', 
+                visible: true, 
+                disabled: false,
+                action: ({row}:any) => {
+                    listProvider.openVersions(row, true)
+                }
+            },
+        ]
+    ],
+    visibleMethod: ({options, column, row, rowIndex}) => {
+        // options 是 menuConfig 中的 body 配置
+        
+        options.forEach(list => {
+            list.forEach(item => {
+                const {visible, disabled} = listProvider.actionPermission(row, rowIndex, item.code)
+                item.visible = visible
+                item.disabled = disabled
+            })
+        })
+        return true;
     }
-}
+})
+
 
 function reload(){
     const $grid = gridRef.value
@@ -137,7 +152,7 @@ defineExpose({
     <vxe-grid
             ref="gridRef"
             v-bind="tableConfig"
-            v-on="tableEvents"
+            v-on="tableEvent"
         >
         <template #toolbar_buttons>
             <ElButton type="primary" @click="listProvider.createNewWorkflow">Add New Workflow</ElButton>

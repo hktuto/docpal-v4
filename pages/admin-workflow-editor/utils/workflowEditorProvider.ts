@@ -7,6 +7,7 @@ interface WorkflowEditorListProvider {
     openLastestVersion:(data:any, openInNewTab?:boolean) => void
     openVersions:(data:any) => void
     saveAsNewWorkflow:(data:any) => void
+    actionPermission:(row:any, index:number, code:string) => {disabled:boolean, visible:boolean}
     createNewWorkflow:() => void
 }
 
@@ -14,8 +15,7 @@ export const WorkflowEditorListProviderKey: InjectionKey<WorkflowEditorListProvi
 
 interface WorkflowEditorVersionListProvider {
     getListApi:(pageParams:any) => Promise<any>
-    editNewTabHandler:(row:any) => void
-    editHandler:(row:any) => void
+    editHandler:(row:any, openInNewTab?:boolean) => void
     actionPermission:(row:any, index:number, code:string) => {disabled:boolean, visible:boolean}
 }
 
