@@ -88,12 +88,12 @@
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from "element-plus";
 import { userProviderKey } from '~/util/userProvider';
-import { VxeGridInstance, VxeGridProps, VxeGridListeners } from 'vxe-pc-ui'
+import type { VxeGridInstance, VxeGridProps, VxeGridListeners } from 'vxe-pc-ui'
 const emits = defineEmits(['filter-change', 'refresh'])
 const userProvider = inject(userProviderKey)
 const isLdapMode: boolean = useIsLDAP();
 const props = defineProps(['condition'])
-const state = reactive<State>({
+const state = reactive({
   ready: false,
   loading: false,
   activeUsers: 10,
@@ -102,7 +102,7 @@ const state = reactive<State>({
   extraParamsFilter: {},
   selectList: [],
 });
-const tableConfig = createTableConfig({
+const tableConfig = reactive(createTableConfig({
     id: 'azureLogTableSetting',
     api: (pageParams:any) => userProvider?.getAllUsersApi(pageParams),
     columns:  [
@@ -123,14 +123,30 @@ const tableConfig = createTableConfig({
             default:'more',
           }
         }
-    ],  
+    ], 
+     
 }, {
+  menuConfig:{
+    body:{
+      options:[
+        [
+          { code:'edit_user', name:"edit.currentTab"},
+        ]
+      ]
+    },
+    trigger: 'cell',
+  },
   checkboxConfig: {
     labelField: 'username',
     highlight: true,
     range: true
+  },
+  rowConfig:{
+      height: 60,
+      isCurrent: true,
+      isHover: true,
   }
-})
+}))
 
 // #endregion
 // #region module:
@@ -244,6 +260,9 @@ function handleGroupSelected() {
 
 const tableRef=ref()
 const gridEvents: VxeGridListeners = {
+  cellDblclick: ({ row, column, rowIndex }) => {
+    userProvider?.openUserDetail(row)
+  },
   checkboxChange ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) { 
     // console.log('checkboxChange', checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event)
     handleSelectionChange()
@@ -255,6 +274,13 @@ const gridEvents: VxeGridListeners = {
   checkboxAll( {$event, checked}){
     // console.log('checkboxAll',  checked, $event)
     handleSelectionChange()
+  },
+  menuClick: ({menu, row, column}:any) => {
+    switch(menu.code){
+      case 'edit_user':
+        alert('edit user')
+        break;
+    }
   }
 }
 

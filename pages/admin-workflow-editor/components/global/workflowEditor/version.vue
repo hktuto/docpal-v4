@@ -25,13 +25,9 @@ async function getWorkflowDetail(){
     routerProvider?.updateTabName(draftData.name + '- versions list' )
 }
 
-function editHandler(row:any){
+function editHandler(row:any, openInNewTab = false){
     const newItem = newWorkflowEditorDetail(row)
-    routerProvider?.navigateTo(newItem)
-}
-
-function editNewTabHandler(row:any){
-    routerProvider?.navigateTo(newWorkflowEditorDetail(row), true)
+    routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
 type ActionPermission = (row:any, index:number, code:string) => {disabled:boolean, visible:boolean}
@@ -59,7 +55,6 @@ onMounted(async () => {
 provide(WorkflowEditorVersionListProviderKey,{
     getListApi : adminApi.workflowVersionController.postPage,
     editHandler,
-    editNewTabHandler,
     actionPermission,
 })
 

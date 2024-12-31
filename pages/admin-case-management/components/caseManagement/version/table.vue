@@ -18,11 +18,11 @@ function reload(){
     gridRef.value?.commitProxy('reload')
 }
 
-const tableConfig = reactive(createTableConfig({
+const { tableConfig , tableEvent } = useVxeTable({
     id: 'adminCaseManagementVersionList',
     api: (pageParams:any) => listProvider?.getListApi(pageParams),
-    sort:true,
-    filter:false,
+    remoteSort: true,
+    defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : [],
     pageSize,
     columns:  [
         {
@@ -73,82 +73,72 @@ const tableConfig = reactive(createTableConfig({
             }
         }
     ],
-},{
-    menuConfig:{
-        body:{
-            options:[
-                [
-                    {
-                        name: "edit",
-                        children:[
-                            {code:'edit_version', name:"edit.currentTab"},
-                            {code:'edit_version_new_tab', name:"edit.newTab"},
-                        ]
-                    },
-                    {
-                        name:'save_as_new_version',
-                        code: 'save_as_new_version',
-                    },
-                    {
-                        code: "promote_version",
-                        name:"promote",
-                    }
-                ]
-            ]
-        },
-        visibleMethod ({options, column, row, rowIndex})  {
-            options.forEach(list => {
-                    list.forEach(item => {
-                        if(item.children){
-                            // loop all children , and set visible and disabled
-                            // if all children are not visible , set iten.visible = false
-                            // if all children are disabled , set item.disabled = true
-                            item.children.forEach(child => {
-                                const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
-                                child.visible = visible
-                                child.disabled = disabled
-                            })
-                            const allVisible = item.children.every(child => child.visible)
-                            const allDisabled = item.children.every(child => child.disabled)
-                            item.visible = allVisible
-                            item.disabled = allDisabled
-                        }else{
-                            const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
-                            item.visible = visible
-                            item.disabled = disabled
-                        }
-                    })
-                })
-                return true;
-        }
-    },
-    sortConfig:{
-        remote: true,
-        defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
-    }
-}))
-
-const tableEvent :VxeGridListeners<any> = {
-    cellDblclick: ({ row, column, event }:any) => {
+    dblClickAction: ({ row, column, event }:any) => {
         listProvider.openVersionDetail(row)
     },
-    menuClick: ({menu, row, column}:any) => {
-        switch(menu.code){
-            case 'edit_version':
-                listProvider.openVersionDetail(row)
-                break;
-            case 'edit_version_new_tab':
-                listProvider.openVersionDetail(row, true)
-                break;
-            case 'save_as_new_version':
-                listProvider.saveAsNewVersion(row)
-                break;
-            case 'promote_version':
-                listProvider.promoteVersion(row)
-                break;
-        }
+    bodyActions: [
+        [
+            {
+                name: "edit",
+                children:[
+                    {
+                        code:'edit_version', 
+                        name:"edit.currentTab",
+                        action: ({row}:any) => {
+                            listProvider.openVersionDetail(row)
+                        }
+                    },
+                    {
+                        code:'edit_version_new_tab', 
+                        name:"edit.newTab",
+                        action: ({row}:any) => {
+                            listProvider.openVersionDetail(row)
+                        }
+                    },
+                ]
+            },
+            {
+                name:'save_as_new_version',
+                code: 'save_as_new_version',
+                action: ({row}:any) => {
+                    listProvider.saveAsNewVersion(row)
+                }
+            },
+            {
+                code: "promote_version",
+                name:"promote",
+                action: ({row}:any) => {
+                    listProvider.promoteVersion(row)
+                }
+            }
+        ]
+    ],
+    visibleMethod ({options, column, row, rowIndex})  {
+        options.forEach(list => {
+            list.forEach(item => {
+                if(item.children){
+                    // loop all children , and set visible and disabled
+                    // if all children are not visible , set iten.visible = false
+                    // if all children are disabled , set item.disabled = true
+                    item.children.forEach(child => {
+                        const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
+                        child.visible = visible
+                        child.disabled = disabled
+                    })
+                    const allVisible = item.children.every(child => child.visible)
+                    const allDisabled = item.children.every(child => child.disabled)
+                    item.visible = allVisible
+                    item.disabled = allDisabled
+                }else{
+                    const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
+                    item.visible = visible
+                    item.disabled = disabled
+                }
+            })
+        })
+        return true;
     }
-}
+})
 
 defineExpose({ reload })
 </script>

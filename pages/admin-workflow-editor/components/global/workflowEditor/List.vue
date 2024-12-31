@@ -60,12 +60,20 @@ function createNewWorkflow(){
     newDialogRef.value.handleOpen()
 }
 
+function actionPermission({row, index, code}:any){
+    return {
+        visible: true,
+        disabled: false
+    }
+}
+
 provide(WorkflowEditorListProviderKey,{
     saveAsNewWorkflow,
     openProductionVersion,
     openLastestVersion,
     openVersions,
     createNewWorkflow,
+    actionPermission,
     getListApi: adminApi.workflowProcessDefinitionController.postPage
 })
 

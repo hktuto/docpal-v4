@@ -3,6 +3,11 @@ import { adminApi } from "api";
 import { userProviderKey } from "~/util/userProvider";
 const tabProvider = inject(TabManagerKey);
 const routerProvider = inject(MenuRouterKey);
+
+definePageMeta({
+  name: "admin-user-list",
+})
+
 if (!tabProvider || !routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
@@ -68,10 +73,19 @@ provide(userProviderKey, {
   },
   openUserDetail,
 });
+
+onActivated(() => {
+  tableRef.value?.reload()
+})
+
+onUnmounted(() => {
+  console.log('unmounted')
+})
 </script>
 
 <template>
   <div class="pageContainer">
+    {{ $options }}
     <UserTable
       ref="tableRef"
       :condition="userCondition"
