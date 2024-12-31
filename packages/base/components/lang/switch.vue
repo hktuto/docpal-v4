@@ -18,8 +18,10 @@
 const router = useRouter()
 // const { userPreference,savePreference } = useUser()
 const { locales, locale, setLocale } = useI18n()
-function handleCommand(newLocale:any) {
-    setLocale(newLocale)
+async function handleCommand(newLocale:any) {
+    await setLocale(newLocale)
+    window.location.reload()
+    
     // userPreference.value.language = newLocale;
     // savePreference()
     // window.location.reload();
