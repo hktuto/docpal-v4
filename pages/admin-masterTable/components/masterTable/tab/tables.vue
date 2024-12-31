@@ -1,5 +1,5 @@
 <template>
-    <VxeGrid ref="tableRef" v-bind="tableConfig"> 
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> 
         <template #toolbar_buttons>
         <div class="flex-x-between">
             <ResponsiveFilter
@@ -14,20 +14,6 @@
         <template #status="{ row }">
             <el-tag v-if="row.status === 'A'" type="success">{{$t('actions.activated')}}</el-tag>
             <el-tag v-else type="danger">{{$t('actions.inactived')}}</el-tag>
-        </template>
-        <template #more="{ row }">
-            <el-dropdown trigger="click" @click.stop @dblclick.stop>
-                <SvgIcon src="/icons/dots.svg" @click.stop @dblclick.stop></SvgIcon>
-                <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item v-loading="state.loading" @click="handleDblclick(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item>
-                        <el-dropdown-item v-if="isSuperAdmin" v-loading="state.loading" @click="handleDelete(row)">{{$t('trash_actions_delete')}}</el-dropdown-item>
-                        <el-dropdown-item v-if="row.status === 'A'" v-loading="state.loading" @click="handleActive(row, 'D')">{{$t('actions.inactive')}}</el-dropdown-item>
-                            <el-dropdown-item v-else v-loading="state.loading" @click="handleActive(row, 'A')">{{$t('actions.active')}}</el-dropdown-item>
-                        <!-- <el-dropdown-item v-loading="state.loading" @click="handleShowSchema(row)">{{$t('masterTable.showSchema')}}</el-dropdown-item> -->
-                    </el-dropdown-menu>
-                </template>
-            </el-dropdown>
         </template>
     </VxeGrid>
 </template>
@@ -54,11 +40,6 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
             default:'status',
           }
         },
-        { title: 'dpTable_actions', 
-          slots:{
-            default:'more',
-          }
-        }
     ], 
     bodyActions: [[
       { 

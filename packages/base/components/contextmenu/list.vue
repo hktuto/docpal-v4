@@ -9,7 +9,7 @@ const {items} = defineProps<{
 </script>
 
 <template>
-    <ul  class="vxe-context-menu--option-wrapper">
+    <ul class="vxe-context-menu--option-wrapper">
         <ContextmenuItem v-for="(item, index) in items" :key="index" :item="item" />
     </ul>
 </template>

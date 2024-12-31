@@ -137,38 +137,14 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             className: 'contextMenuContainer',
             visibleMethod: params.visibleMethod
         },
+        rowConfig:{
+            useKey:true,
+        },
         data:[],
     }, ...optionalConfig} as Config)
 
     const tableEvent = reactive<VxeGridListeners>(optionalEvent)
 
-    // handle api differnece between virtual scroll and normal scroll
-    // if(params.virtualScroll){
-    //     if(!tableConfig.proxyConfig.ajax){
-    //         tableConfig.proxyConfig.ajax = {}
-    //     }
-    //     tableConfig.proxyConfig.ajax = {
-    //         query: async(queryParams:any) => {
-    //             if(!params?.api) {
-    //                 throw new Error('params.api is required')
-    //             }
-    //             return await params?.api(queryParams)   
-    //         }
-    //     }
-    // }else{
-    //     if(!tableConfig.proxyConfig.ajax){
-    //         tableConfig.proxyConfig.ajax = {}
-    //     }
-    //     tableConfig.proxyConfig.ajax = {
-    //         query: async(args:any) => {
-    //             if(!params?.api) {
-    //                 throw new Error('params.api is required')
-    //             }
-    //             console.log("params", args)
-                
-    //           }
-    //         }
-    // }
 
     // #region handle actions column
     
@@ -179,6 +155,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     
     // Step 2: handle body actions
     if(params.bodyActions && params.bodyActions.length > 0){
+        console.log("bodyActions", params.bodyActions)
         tableEvent.menuClick = ({menu, row, column}:any) => {
             if(menu.action){
                 menu.action({menu, row, column});
@@ -202,7 +179,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
         // add click event to action column
         tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
-            if(column.type === 'html' && column.title === 'dpTable_actions'){
+            console.log("column", column)
+            if(column.type === actionsColumn.type && column.title === actionsColumn.title){
+                console.log("actions")
                 if(!params.visibleMethod){
                     throw new Error('visibleMethod is required')
                 }
@@ -229,6 +208,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                     event:$event
                 }
                 bus.emit(evtParams)
+                
             }
         }
         tableEvent.scroll = (scrollParams:VxeGridDefines.ScrollEventParams) => {
