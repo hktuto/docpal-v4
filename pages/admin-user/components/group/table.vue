@@ -35,7 +35,7 @@ const state = reactive<State>({
   groupList: {},
   _groupList: [],
 });
-const tableConfig = ref({
+const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'groupTable',
     columns:  [
         { id: "10",  field: 'name', title: 'user_groupName', fixed: 'left' },
@@ -51,13 +51,15 @@ const tableConfig = ref({
     round: true,
     showOverflow: true,
     height: 'auto',
-    data: [],
     loading: false,
     toolbarConfig: {
         custom:true,
         slots: {
             buttons: 'toolbar_buttons'
         }
+    },
+    optionalConfig: {
+      data: [],
     }
 })
 
@@ -67,7 +69,6 @@ function handleUserDialogShow() {
   UserDialogRef.value.handleOpen();
 }
 function routeDetail(row:any) {
-  console.log("routeDetail", row)
   // router.push(`/user/detail?id=${row.userId}`);
   groupProvider.openGroupDetail(row)
 }
@@ -80,20 +81,19 @@ async function handleDelete(row: any) {
     reload();
   }
 }
-const tableRef=ref()
 // #region module: ResponsiveFilterRef
   const ResponsiveFilterRef = ref()
   function handleFilterFormChange(formModel, filedData) {
     state._groupList = state.groupList.filter((item:any) => {
       return item.name.toLowerCase().includes(formModel.userNameOrEmail.toLowerCase())
     })
-    tableConfig.value.data = state._groupList
+    tableConfig.data = state._groupList
   }
 // #endregion
 async function getGroup() {
   state.groupList = await groupProvider?.GetGroupListApi()
   state._groupList = [...state.groupList]
-  tableConfig.value.data = state._groupList
+  tableConfig.data = state._groupList
 }
 const GroupDialogRef = ref()
 function handleGroupDialogShow() {
@@ -105,9 +105,7 @@ onMounted(() => {
 function refresh() {
   getGroup()
 }
-function reload() {
-  getGroup()
-}
+
 defineExpose({ reload })
 </script>
 

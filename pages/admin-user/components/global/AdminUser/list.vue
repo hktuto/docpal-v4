@@ -85,7 +85,6 @@ onUnmounted(() => {
 
 <template>
   <div class="pageContainer">
-    {{ $options }}
     <UserTable
       ref="tableRef"
       :condition="userCondition"
