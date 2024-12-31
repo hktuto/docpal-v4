@@ -158,6 +158,10 @@ async function getUserPreference()  {
     if(userSetting.uploadFileMaxSize && typeof userSetting.uploadFileMaxSize === 'string') {
         userSetting.uploadFileMaxSize = Number(userSetting.uploadFileMaxSize.replace('M','').replace('G',''))
     }
+    // normalize userSetting
+    if(userSetting.userSetting) {
+        delete userSetting.userSetting
+    }
     preference.value = Object.assign(
         {
             size: '14px',
@@ -169,7 +173,6 @@ async function getUserPreference()  {
         },
         userSetting
     )
-
 }
 
 async function getUser(){
