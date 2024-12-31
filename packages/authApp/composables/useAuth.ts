@@ -14,15 +14,14 @@ export const usePublicPageState = () => useState<string[]>('auth-public-page', (
 export const useLoginHook = () => useState<any>(() => shallowRef([]));
 export const useIsSSO = () => useState<boolean>(() => false);
 export const useIsLDAP = () => useState<boolean>(() => false);
+export const useIsSuperAdmin = () => useState<boolean>(() => true);
 export const useUserPreference = () => useState<Record<string,any>>();
 export const useFeature = () => useState<Record<string,boolean>>('app-feature');
-
 export const useAuth = () => {
     const authReadyState = useAuthReadyState()
     const userState = useUserState()
     const perference = useUserPreference()
-
-
+    
     return {
         loggedIn :computed(() => Boolean(userState.value)),
         logout,
