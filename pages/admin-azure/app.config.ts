@@ -9,7 +9,7 @@ export default defineAppConfig({
       name: 'admin-azure',
       label: "adminMenu.azure",
       icon: "teenyicons:azure-solid",
-      hoverIcon: "logos:azure-icon",
+      hoverIcon: "teenyicons:azure-solid",
       component: "LazyAzurePage",
       props:{},
     }
