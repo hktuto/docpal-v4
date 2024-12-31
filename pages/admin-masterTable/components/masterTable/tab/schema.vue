@@ -1,0 +1,93 @@
+<template>
+    <div style="height: 100%;" v-if="masterTableDetail">
+        <Table ref="tableRef" :columns="tableSetting.columns" :table-data="masterTableDetail.fields" >
+            <template #preSortButton>
+                <el-button  type="primary" @click="handleSingleSchemaAdd">{{ $t('common_add') }}
+                </el-button>
+            </template>
+
+            <template #columnName="{ row }">
+                <div class="masterTable-columnName">
+                    <span>{{ row.columnName }}</span>
+                    <div v-if="row.unique && !isDefault(row)" class="column-dynamic" style="--column-color: #0099FF">
+                        <div class="column-dynamic-point"></div>
+                        {{ $t('marsterTable.unique') }}
+                    </div>
+                    <div v-else-if="row.required && !isDefault(row)" class="column-dynamic" style="--column-color: #7B61FF">
+                        <div class="column-dynamic-point"></div>
+                        {{ $t('marsterTable.required') }}
+                    </div>
+                </div>
+            </template>
+            <template #dataType="{ row }">
+                {{ $t(`marsterTable.type.${row.dataType}`) }}
+                <template v-if="row.relationTable">
+                    - <el-tag round> {{ row.relationTable }}</el-tag>
+                    - <el-tag round> {{ row.relationField }}</el-tag>
+                    <!-- - <el-tag> {{ row.displayField }}</el-tag> -->
+                </template>
+            </template>
+        </Table>
+        <MasterTableNewSchemaDialog ref="schemaDialogRef" type="again" disabledUniqueList="" @add="handleAddSchama"/>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import {
+    getIgnoreSchemas,
+    AddMasterTableColumnApi
+} from 'dp-api'
+
+const emits = defineEmits(['refresh'])
+const props = defineProps(['masterTableDetail'])
+const state = reactive<any>({
+    dataTypeList: []
+})
+const route = useRoute()
+const tableSetting = ref({
+    columns: [
+        { id: '1', label: 'masterTable.columnName', prop: 'columnName', slot: 'columnName' },
+        { id: '2', label: 'masterTable.dataType', prop: 'dataType', slot: 'dataType' },
+    ]
+})
+const defaultList = getIgnoreSchemas()
+function isDefault(row) {
+    return defaultList.includes(row.columnName)
+}
+const schemaDialogRef = ref()
+function handleSingleSchemaAdd() {
+    schemaDialogRef.value.handleOpen()
+}
+async function handleAddSchama(schema: any) {
+    await AddMasterTableColumnApi({
+        id: route.params.id,
+        ...schema
+    })
+    emits('refresh')
+}
+defineExpose({ })
+</script>
+
+<style lang="scss" scoped>
+:deep .tableHeader {
+    margin-bottom: 10px;
+    justify-content: flex-end;
+}
+.masterTable-columnName {
+    display: flex;
+    gap: var(--app-padding)
+}
+.column-dynamic {
+    color: var(--column-color);
+    display: flex;
+    align-items: center;
+    &-point {
+        width: 8px;
+        height: 8px;
+        margin-left: 3px;
+        border-radius: 50%;
+        background-color: var(--column-color);
+    }
+}
+</style>

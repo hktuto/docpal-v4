@@ -102,8 +102,8 @@ const state = reactive({
   extraParamsFilter: {},
   selectList: [],
 });
-const tableConfig = reactive(createTableConfig({
-    id: 'azureLogTableSetting',
+const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
+    id: 'userTableSetting',
     api: (pageParams:any) => userProvider?.getAllUsersApi(pageParams),
     columns:  [
         { id: "10",  field: 'username', title: 'user_username', fixed: 'left',type: 'checkbox' },
@@ -124,29 +124,20 @@ const tableConfig = reactive(createTableConfig({
           }
         }
     ], 
-     
-}, {
-  menuConfig:{
-    body:{
-      options:[
-        [
-          { code:'edit_user', name:"edit.currentTab"},
-        ]
-      ]
-    },
-    trigger: 'cell',
-  },
-  checkboxConfig: {
-    labelField: 'username',
-    highlight: true,
-    range: true
-  },
-  rowConfig:{
-      height: 60,
-      isCurrent: true,
-      isHover: true,
-  }
-}))
+    optionalConfig: {
+      
+      checkboxConfig: {
+        labelField: 'username',
+        highlight: true,
+        range: true
+      },
+      rowConfig:{
+          height: 60,
+          isCurrent: true,
+          isHover: true,
+      }
+    }
+})
 
 // #endregion
 // #region module:
@@ -258,7 +249,6 @@ function handleGroupSelected() {
   UserAddGroupDialogRef.value.handleOpen([], params);
 }
 
-const tableRef=ref()
 const gridEvents: VxeGridListeners = {
   cellDblclick: ({ row, column, rowIndex }) => {
     userProvider?.openUserDetail(row)
@@ -305,11 +295,6 @@ onMounted(() => {
 watch(() => props.condition, (newVal) => {
   if(!!newVal) getFilter(newVal)
 })
-function reload() {
-  tableRef.value.commitProxy('query')
-  
-  // tableRef.value.commitProxy('reload')
-}
 defineExpose({ reload })
 </script>
 

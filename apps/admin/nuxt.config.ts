@@ -12,6 +12,7 @@ export default defineNuxtConfig({
     "../../pages/admin-setting",
     "../../pages/admin-audit",
     "../../pages/admin-azure",
+    "../../pages/admin-masterTable",
   ],
   features:{
     inlineStyles: true,
