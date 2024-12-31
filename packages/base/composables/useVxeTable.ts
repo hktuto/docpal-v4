@@ -1,9 +1,10 @@
+import { en } from 'element-plus/es/locales.mjs';
 
 
 import { clientApi } from "api"
 import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
-import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance  } from 'vxe-table'
+import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
 
 export interface TableMenuActions extends VxeTableDefines.MenuFirstOption {
     name:string,
@@ -43,6 +44,7 @@ export interface UseVxeTableParams<R = any> {
 
 interface Config extends VxeGridProps {
     proxyConfig: VxeGridPropTypes.ProxyConfig
+    data: any[],
     menuConfig: {
         header: VxeTableDefines.MenuOptions,
         body: VxeTableDefines.MenuOptions,
@@ -56,6 +58,12 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     
     const tableRef = ref<VxeGridInstance<any>>()
     const viewport = useViewport()
+    const tableData = ref<any>([])
+    const tablePageParams = ref<any>({
+        currentPage: 1,
+        pageSize: 20,
+        total:0,
+    })
     
     const tableConfig = reactive<Config>({...{
         id: params.id,
@@ -112,6 +120,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             enabled: params.api ? true : false,
             sort: params.remoteSort || false,
             filter: params.remoteFilter || false,
+            ajax:{
+                query: loadData
+            }
         },
         menuConfig:{
             header:{
@@ -124,59 +135,39 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 options: params.footerActions || []
             },
             className: 'contextMenuContainer'
-        }
+        },
+        data:[],
     }, ...optionalConfig} as Config)
 
     const tableEvent = reactive<VxeGridListeners>(optionalEvent)
 
     // handle api differnece between virtual scroll and normal scroll
-    if(params.virtualScroll){
-        if(!tableConfig.proxyConfig.ajax){
-            tableConfig.proxyConfig.ajax = {}
-        }
-        tableConfig.proxyConfig.ajax = {
-            query: async(queryParams:any) => {
-                if(!params?.api) {
-                    throw new Error('params.api is required')
-                }
-                return await params?.api(queryParams)   
-            }
-        }
-    }else{
-        if(!tableConfig.proxyConfig.ajax){
-            tableConfig.proxyConfig.ajax = {}
-        }
-        tableConfig.proxyConfig.ajax = {
-            query: async(args:any) => {
-                if(!params?.api) {
-                    throw new Error('params.api is required')
-                }
-                console.log("params", args)
-                const { page, sorts, filters } = args
-                // 默认接收 Promise<{ result: [], page: { total: 100 } }>
-                let pageParams:any = {
-                    pageSize:page.pageSize, pageNum:page.currentPage - 1
-                }
-                if(sorts && sorts.length > 0) {
-                    pageParams.orderBy = sorts[0].property
-                    pageParams.isDesc = sorts[0].order === "desc"
-                }
-                if(filters && filters.length > 0) {
-                    if(!pageParams.filter) pageParams.filter = {}
-                    filters.forEach( (filter:any) => {
-                        pageParams.filter[filter.property] = filter.datas.join(',')
-                    })
-                }
-                const {data} = await params?.api(pageParams)
-                return {
-                    result: Array.isArray(data) ? data : data.entryList,
-                    page: {
-                        total: data.totalSize
-                    }
-                }
-              }
-            }
-    }
+    // if(params.virtualScroll){
+    //     if(!tableConfig.proxyConfig.ajax){
+    //         tableConfig.proxyConfig.ajax = {}
+    //     }
+    //     tableConfig.proxyConfig.ajax = {
+    //         query: async(queryParams:any) => {
+    //             if(!params?.api) {
+    //                 throw new Error('params.api is required')
+    //             }
+    //             return await params?.api(queryParams)   
+    //         }
+    //     }
+    // }else{
+    //     if(!tableConfig.proxyConfig.ajax){
+    //         tableConfig.proxyConfig.ajax = {}
+    //     }
+    //     tableConfig.proxyConfig.ajax = {
+    //         query: async(args:any) => {
+    //             if(!params?.api) {
+    //                 throw new Error('params.api is required')
+    //             }
+    //             console.log("params", args)
+                
+    //           }
+    //         }
+    // }
 
     // #region handle actions column
     
@@ -239,11 +230,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 bus.emit(evtParams)
             }
         }
-        tableEvent.scroll = ({ scrollTop }:any) => {
+        tableEvent.scroll = (scrollParams:VxeGridDefines.ScrollEventParams) => {
             const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_CLOSE)
-            bus.emit({
-                scrollTop
-            })
+            bus.emit()
         }
     }
     // Step 3: handle header actions
@@ -255,14 +244,118 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableConfig.menuConfig.footer.options = params.footerActions
     }
 
+    async function loadData(args:any) {
+        if(!params?.api) {
+            throw new Error('params.api is required')
+        }
+        if(params.virtualScroll) {
+            return await params?.api(args)  
+        }
+        const { page, sorts, filters } = args
+        // 默认接收 Promise<{ result: [], page: { total: 100 } }>
+        let pageParams:any = {
+            pageSize:page.pageSize, pageNum:page.currentPage - 1
+        }
+        if(sorts && sorts.length > 0) {
+            pageParams.orderBy = sorts[0].property
+            pageParams.isDesc = sorts[0].order === "desc"
+        }
+        if(filters && filters.length > 0) {
+            if(!pageParams.filter) pageParams.filter = {}
+            filters.forEach( (filter:any) => {
+                pageParams.filter[filter.property] = filter.datas.join(',')
+            })
+        }
+        const {data} = await params?.api(pageParams)
+        return {
+            result: Array.isArray(data) ? data : data.entryList,
+            page: {
+                total: data.totalSize
+            }
+        }
+
+    }
+    async function responsiveScrollHandler({scrollTop, direction}:VxeGridDefines.ScrollEventParams){
+        if(params.virtualScroll || !params.api || !viewport.isLessThan('tablet')){  
+            console.log("scrollTop", viewport.isLessThan('tablet'))
+            return;
+        }
+        // 不是 virtualScroll 或者 api 或者 大于 mobile 的时候不处理 scroll
+        
+        console.log("scrollTop", direction)
+        if(direction === 'bottom') {
+            // 向下滚动
+            await lazyLoad()
+        }
+
+    }
+
+    async function lazyLoad(){
+        console.log("lazyLoad")
+        if(tablePageParams.value.total && tablePageParams.value.total === tableConfig.data.length ) {
+            console.log("no more data")
+            return 
+        }
+        tableConfig.loading = true
+        const data = await loadData({
+            page: tablePageParams.value,
+            sorts: [], // TODO : get sorts from config
+            filters: [] // TODO : get filters from config
+        })
+        tableConfig.data.push(...data.result)
+        tablePageParams.value.total = data.page.total
+        tablePageParams.value.currentPage += 1
+        tableConfig.loading = false
+        console.log("data", tablePageParams)
+    }
+
+    function setupPagingnation(){
+        tableConfig.pagerConfig = {
+            enabled: true,
+            pageSize : params.pageSize || 20
+        }
+        tableConfig.proxyConfig.enabled = true;
+    }
+    function setupLazyLoad(){
+        tableConfig.pagerConfig = {
+            enabled: false,
+        }
+        tableConfig.proxyConfig.enabled = false;
+        if(!tableEvent.scrollBoundary) {
+            tableEvent.scrollBoundary = (scrollParams:VxeGridDefines.ScrollEventParams) => {
+                responsiveScrollHandler(scrollParams)
+            }
+        }
+        // @ts-ignore
+        tableConfig.scrollY = {
+            enabled: true,
+            threshold: params.pageSize || 20
+        };
+        tableConfig.data = [];
+        tablePageParams.value.pageNum = 0;
+        tablePageParams.value.total = undefined;
+        tablePageParams.value.pageSize = params.pageSize || 20;
+        lazyLoad()
+    }
 
     watch(viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
         if(viewport.isLessThan('tablet')){
+            // 如果不是 virtualScroll,
+            if(!params.virtualScroll && params.api) {
+                setupLazyLoad()
+            }
             // mobile setting for table
             return
         }
         if(viewport.isGreaterThan('mobile')){
             // desktop setting for table
+            setupPagingnation()
+            tablePageParams.value = {
+                currentPage: 1,
+                pageSize: params.pageSize || 20,
+                total:undefined,
+            }
+            // reload()
             return
         }
     }, {
@@ -270,6 +363,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     })
 
     function reload(){
+        console.log("reload")
         tableRef.value?.commitProxy('reload')
     }
 
