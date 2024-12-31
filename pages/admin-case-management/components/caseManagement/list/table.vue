@@ -6,7 +6,6 @@ const listProvider = inject(CaseManagementListProviderKey)
 if(!listProvider) {
     throw new Error('CaseManagementListProviderKey not found')
 }
-const tableRef = ref<VxeGridInstance<any>>()
 const { t } = useI18n()
 
 const {pageNum, pageSize, orderBy, isDesc, filters}= defineProps<{
@@ -21,7 +20,7 @@ function reload() {
     // tableRef.value.reload()
     tableRef.value?.commitProxy('reload')
 }
-const { tableConfig, tableEvent } = useVxeTable({
+const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'adminCaseManagementList',
     api: (pageParams:any) => listProvider?.getListApi(pageParams),
     remoteSort: true,
