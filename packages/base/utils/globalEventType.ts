@@ -4,6 +4,14 @@ export enum EventType {
     TABLE_CONTEXT_MENU_CLOSE = 'table-context-menu-close', // close table action column dialog
 }
 
+export type TABLE_CONTEXT_PARAMS = {
+    row:any,
+    column:any,
+    rowIndex:number,
+    options:TableMenuActions[][],
+    event:MouseEvent
+}
+
 
 
 

@@ -95,6 +95,8 @@ html, body{
   --gradient-color-2: #637fdc;
   --gradient-color-3: #1dd6c3;
   --gradient-color-4: #9adfee;
+  --vxe-ui-font-family: var(--app-font-family);
+  --vxe-ui-table-menu-item-width: initial;
 }
 
 * {
@@ -115,4 +117,55 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
 // vxe addition style 
 .vxe-toolbar{
   gap: var(--app-space-s);
+}
+
+// vxe table context menu
+.contextMenuContainer{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: auto;
+  background: var(--app-grey-1000);
+  z-index: 2;
+  padding: var(--app-space-xs) !important;
+  border-radius: var(--app-border-radius-s);
+  border: 1px solid var(--app-grey-900) !important;
+  transform: translateY(100vw);
+  box-shadow: none !important;
+  opacity: 0;
+  font-size: var(--app-font-size-s) !important;
+  // display: none;
+  transition: transform .1s ease-in-out , opacity .2s ease-in-out;
+  transition-delay: 0.2s;
+  &.visible, &.is--visible{
+      // display: block !important;
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0s;
+  }
+  .vxe-table--context-menu-clild-wrapper {
+    padding: var(--app-space-xs);
+    border-radius: var(--app-border-radius-s);
+    box-shadow: none !important;
+    font-size: var(--app-font-size-s) !important;
+  }
+  .vxe-context-menu--link{
+      padding: 0 !important;
+      color: var(--app-grey-400);
+      text-decoration: none;
+  }
+  .vxe-context-menu--link-prefix, .vxe-context-menu--link-suffix{
+    min-width: 0 !important;
+    padding: 0 !important;
+  }
+  li{
+    transition: background-color .2s ease-in-out;
+  }
+  .link--active {
+    background-color: var(--app-grey-900) !important;
+    border-color: var(--app-grey-900) !important;
+    .vxe-context-menu--link{
+      color: var(--app-grey-100);
+    }
+  }
 }

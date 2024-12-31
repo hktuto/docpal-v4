@@ -126,31 +126,29 @@ const { tableConfig, tableEvent } = useVxeTable({
         ],
     ],
     visibleMethod: ({options, column, row, rowIndex}) => {
-        options.forEach((list:any) => {
-                list.forEach((item:any) => {
-                    if(item.children){
-                        // loop all children , and set visible and disabled
-                        // if all children are not visible , set iten.visible = false
-                        // if all children are disabled , set item.disabled = true
-                        item.children.forEach(child => {
-                            const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
-                            child.visible = visible
-                            child.disabled = disabled
-                        })
-                        const allVisible = item.children.every(child => child.visible)
-                        const allDisabled = item.children.every(child => child.disabled)
-                        item.visible = allVisible
-                        item.disabled = allDisabled
-                    }else{
-                        const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
-                        item.visible = visible
-                        item.disabled = disabled
-
-                    }
-
-                })
+        options.forEach((section:TableMenuActions[]) => {
+            section.forEach((item:TableMenuActions) => {
+                if(item.children){
+                    // loop all children , and set visible and disabled
+                    // if all children are not visible , set iten.visible = false
+                    // if all children are disabled , set item.disabled = true
+                    item.children.forEach(child => {
+                        const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
+                        child.visible = visible
+                        child.disabled = disabled
+                    })
+                    const allVisible = item.children.every(child => child.visible)
+                    const allDisabled = item.children.every(child => child.disabled)
+                    item.visible = allVisible
+                    item.disabled = allDisabled
+                }else{
+                    const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
+                    item.visible = visible
+                    item.disabled = disabled
+                }
+            })
         })
-        return true;
+        return options;
     },
     dblClickAction:({ row, column, event }:any) => {
         listProvider.openLatestVersion(row)
