@@ -16,10 +16,6 @@ const {pageNum, pageSize, orderBy, isDesc, filters}= defineProps<{
     filters?: any
 }>();
 
-function reload() {
-    // tableRef.value.reload()
-    tableRef.value?.commitProxy('reload')
-}
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'adminCaseManagementList',
     api: (pageParams:any) => listProvider?.getListApi(pageParams),

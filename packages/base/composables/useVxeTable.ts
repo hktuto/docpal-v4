@@ -134,7 +134,8 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             footer:{
                 options: params.footerActions || []
             },
-            className: 'contextMenuContainer'
+            className: 'contextMenuContainer',
+            visibleMethod: params.visibleMethod
         },
         data:[],
     }, ...optionalConfig} as Config)
