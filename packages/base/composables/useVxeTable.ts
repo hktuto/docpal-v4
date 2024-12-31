@@ -292,7 +292,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 
     function setupPagingnation(){
         tableConfig.pagerConfig = {
-            enabled: true,
+            enabled: params.virtualScroll? false : true,
             pageSize : params.pageSize || 20
         }
         tableConfig.proxyConfig.enabled = true;
