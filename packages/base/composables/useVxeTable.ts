@@ -6,7 +6,7 @@ import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
 import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
 
-export interface TableMenuActions extends VxeTableDefines.MenuFirstOption {
+export interface TableMenuActions extends VxeTableDefines.MenuChildOption {
     name:string,
     children?: TableMenuActions[],
     action?: (row:any) => void
@@ -64,6 +64,8 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         pageSize: 20,
         total:0,
     })
+    
+
     
     const tableConfig = reactive<Config>({...{
         id: params.id,
