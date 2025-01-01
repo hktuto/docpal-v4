@@ -5,20 +5,24 @@ import { useEventBus, EventType } from '#imports'
 
 const actions = ref<TableMenuActions[][]>([])
 const visible = ref(false)
+const rowData = ref<any>() 
 const position = ref<any>({x:0, y:0, left:0, top:0})
 const menuItemHeight = 26;
 
 
 const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
-    console.log("contextMenuOpenHandler", args)
     actions.value = args.options
     visible.value = true
+    rowData.value = args.row
     const {clientX, clientY} = args.event
     const x = clientX
     const y = clientY
-    const left = x + 120 > window.innerWidth ? x - 120 : x
+    const maxWidth = actions.value.reduce((total:number, curr:TableMenuActions[]) => {
+       return  total += getActionMaxWidth(curr)
+    },0);
+    const left = x + maxWidth > window.innerWidth ? x - maxWidth : x
     // calculate the total height of actions
-    const totoalActionHeight = actions.value.length * menuItemHeight;// 40 is the height of each action
+    const totoalActionHeight = getRootActionMaxHeight(actions.value, menuItemHeight)
     // check if the top position is out of the screen
     const top = y + totoalActionHeight > window.innerHeight ? y - totoalActionHeight : y
     position.value = {
@@ -27,9 +31,12 @@ const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
         left,
         top
     }
+    
 }
 
 const contextMenuCloseHandler = () => {
+    actions.value= []
+    rowData.value = undefined
     visible.value = false
 }
 
@@ -45,6 +52,6 @@ onUnmounted(() => {
 
 <template>
     <div :class="{contextMenuContainer:true, visible}" :style="{left: position.left + 'px', top: position.top + 'px', ['--context-item-height']: menuItemHeight + 'px'}">
-        {{ actions }}
+        <ContextmenuList v-for="(action, index) in actions" :key="index" :items="action" :menuItemHeight="menuItemHeight" :rowData="rowData" />
     </div>
 </template>
