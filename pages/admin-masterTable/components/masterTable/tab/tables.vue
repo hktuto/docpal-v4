@@ -24,7 +24,6 @@ import { onActivated } from 'vue';
 import { MasterTableProviderKey } from '~/utils/masterTableProvider';
 const emits = defineEmits(['filter-change'])
 const masterTableProvider = inject(MasterTableProviderKey)
-const isSuperAdmin = useIsSuperAdmin()
 const state = reactive<any>({
     loading: false,
 })
@@ -39,7 +38,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
           slots:{
             default:'status',
           }
-        },
+        }
     ], 
     bodyActions: [[
       { 
@@ -50,28 +49,35 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
       { 
         code: 'edit_latest_version', 
         name: 'trash_actions_delete', 
-        action: ({row}:any) => {handleDblclick(row)}
+        action: ({row}:any) => {handleDelete(row)}
       },
       { 
         code: 'edit_latest_version', 
         name: 'actions.inactive', 
-        action: ({row}:any) => {handleDblclick(row)}
+        action: ({row}:any) => {
+            handleActive(row, 'D')}
       },
       { 
         code: 'edit_latest_version', 
         name: 'actions.active', 
-        action: ({row}:any) => {handleDblclick(row)}
+        action: ({row}:any) => {
+            console.log("row", row)
+            handleActive(row, 'A')}
       }
     ]],
     visibleMethod: ({options, column, row, rowIndex}: any) => {
       // options 是 menuConfig 中的 body 配置
       options.forEach((list: any) => {
         list.forEach((item: any) => {
-          if(item.name === 'actions.active' || item.name === 'actions.inactive') {
+          if(item.name === 'actions.active' ) {
+            item.visible = row.status === 'D' ? true : false
+          } 
+          else if(item.name === 'actions.inactive'){
             item.visible = row.status === 'A' ? true : false
-            console.log("item", row.status)
+          }else {
+            item.visible = true
           }
-        })
+         })
       })
       return options;
     }
@@ -84,7 +90,7 @@ async function handleDelete(row: any) {
         ElMessage.error($i18n.t('dpTip.deleteFailed'))
         return
     }
-    refresh()
+    query()
 }
 async function handleActive(row, status: 'A' | 'D') {
     state.loading = true
@@ -94,7 +100,6 @@ async function handleActive(row, status: 'A' | 'D') {
             id: row.id,
             status,
         })
-        // refresh()
         ElMessage.success($i18n.t('dpMsg_success'))
     } catch (error) {
         row.status = row.status = 'A' ? 'D' : 'A'
@@ -103,6 +108,7 @@ async function handleActive(row, status: 'A' | 'D') {
 }
 function handleDblclick(row: any) {
   console.log("handleDblclick", row)
+  masterTableProvider?.openDetail(row)
 }
 function handleAdd () {
     masterTableProvider?.openNew()
@@ -120,17 +126,15 @@ function handleAdd () {
         emits('filter-change', state.extraParams)
     }
 // #endregion
-function refresh() {
-    tableRef.value.commitProxy('query')
-}
+
 onMounted(() => {
     getFilter()
 })
 onActivated(() => {
-    refresh()
+    query()
 })
 
-defineExpose({ refresh, reload })
+defineExpose({ query, reload })
 </script>
 
 <style lang="scss" scoped>

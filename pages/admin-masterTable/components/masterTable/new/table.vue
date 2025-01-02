@@ -45,6 +45,8 @@
 <script lang="ts" setup>
 import { openMasterTablePage } from '~/utils/masterTableProvider'
 import {MenuRouterKey} from '#imports'
+import { getIgnoreSchemas } from '~/utils/masterTableProvider';
+const ignoreList = getIgnoreSchemas()
 const routerProvider = inject(MenuRouterKey)
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
@@ -94,7 +96,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
   }
 })
 function isDefault(row: any) {
-  return ['created_date', 'id', 'modified_date', 'modified_by', 'created_by', 'status'].includes(row.fieldName)
+  return ignoreList.includes(row.fieldName)
 }
 const tableDialogRef = ref()
 const schemaDialogRef = ref()

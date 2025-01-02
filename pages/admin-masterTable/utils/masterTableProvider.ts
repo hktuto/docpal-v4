@@ -12,15 +12,6 @@ interface masterTableProvider {
 }
 
 export const MasterTableProviderKey : InjectionKey<masterTableProvider> = Symbol('masterTableProvider');
-export const openMasterTablePage = () => {
-  return {
-    id:"admin-master-table",
-    name: 'admin-master-table',
-    label: "adminMenu.masterTable",
-    icon: "uil:database-alt",
-    hoverIcon: "uil:database-alt",
-    component: "LazyMasterTablePage",
-    props:{
-    }
-  }
+export function getIgnoreSchemas () {
+  return ['id', 'created_date', 'created_by','modified_date', 'modified_by','status']
 }
