@@ -25,7 +25,7 @@ export function getChildActionMaxHeight(actions:TableMenuActions[], menuItemHeig
 
 interface ContextmenuList {
     selectedItem: Ref<TableMenuActions | undefined>
-    selectItem: (item:TableMenuActions) => void
+    selectItem: (item?:TableMenuActions) => void
 }
 
 export const ContextmenuListKey : InjectionKey<ContextmenuList> = Symbol('contextmenuList')

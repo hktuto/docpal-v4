@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import ContextmenuList from './list.vue'
-const {item, rowData} = defineProps<{
+const {item, rowData, selected} = defineProps<{
     item:TableMenuActions,
     menuItemHeight:number,
     selected: boolean,
@@ -15,19 +15,34 @@ const bus = useEventBus<any>(EventType.TABLE_CONTEXT_MENU_CLOSE)
 const subMenuRef = ref<InstanceType<typeof ContextmenuList>>()
 
 
+watch(isMouseOver, (newVal) => {
+    if(!item.children || item.children.length === 0 ) return
+    if(newVal && !selected) {
+        openSubMenu()
+        return
+    }
+    if(!newVal && !selected) {
+        listProvider?.selectItem()
+    }
+})
+
+function openSubMenu(){
+    listProvider?.selectItem(item)
+    nextTick(() => {
+        subMenuRef.value?.openMenu()
+    })
+}
+
 function itemClickHandler(){
     if(item.disabled) return
     if(item.action) {
         console.log("itemClickHandler", rowData)
-        item.action(rowData)
+        item.action({row:rowData})
         bus.emit()
         return
     }
     if(item.children && item.children.length > 0 ) {
-        listProvider?.selectItem(item)
-        nextTick(() => {
-            subMenuRef.value?.openMenu()
-        })
+        openSubMenu()
     }
 }
 

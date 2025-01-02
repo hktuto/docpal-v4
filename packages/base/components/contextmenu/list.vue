@@ -12,12 +12,17 @@ const postion = ref<any>({x:0, y:0, left:0, top:0})
 
 const selectedItem = ref<TableMenuActions>()
 
-function selectItem(item:TableMenuActions){
+function selectItem(item?:TableMenuActions){
+    if(!item) {
+        selectedItem.value = undefined
+        return;
+    }
     if(!item.children || item.children.length === 0) return
     selectedItem.value = item;
 }
 
 function openMenu(){
+    // TODO : item height may be too high to display.
     const itemTotalHeight = getChildActionMaxHeight(items, menuItemHeight)
     const itemMaxWidth = getActionMaxWidth(items)
     // get parent postion 
@@ -29,8 +34,7 @@ function openMenu(){
         left: - itemMaxWidth,
         top: 0
     }
-    console.log("openMenu", postion.value)
-    
+    console.log("openMenu", postion.value, items)
 }
 
 function reset(){

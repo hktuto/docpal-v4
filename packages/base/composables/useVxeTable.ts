@@ -6,13 +6,15 @@ import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
 import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
 
+export type TableActionsParams = {
+    row:any,
+}
 export interface TableMenuActions extends VxeTableDefines.MenuChildOption {
     name:string,
     children?: TableMenuActions[],
-    action?: (row:any) => void
+    action?: (params:TableActionsParams) => void
 }
-
-export type TableMenuValidataMethod  = (params: {
+export type TableMenuValidateMethodParams = {
     type?: string
     options: TableMenuActions[][]
     columns: VxeGridPropTypes.Columns,
@@ -21,7 +23,8 @@ export type TableMenuValidataMethod  = (params: {
     column?: VxeTableDefines.ColumnInfo
     columnIndex?: number
     event?: MouseEvent
-  }) => TableMenuActions[][]
+}
+export type TableMenuValidataMethod  = (params: TableMenuValidateMethodParams) => TableMenuActions[][]
 export interface UseVxeTableParams<R = any> {
     id:string,
     height?:string, // 'auto' | number
@@ -37,10 +40,12 @@ export interface UseVxeTableParams<R = any> {
     headerActions?:TableMenuActions[][],
     footerActions?:TableMenuActions[][],
     bodyActions?:TableMenuActions[][],
-    visibleMethod?: TableMenuValidataMethod,
+    permissionMethod: (params:PermissionMethodParams) => {visible:boolean, disabled:boolean},
     optionalConfig?: VxeGridProps<R>
     optionalEvent?: VxeGridListeners<R>
 }
+
+export type PermissionMethodParams = {row:any, code?:string, rowIndex?:number}
 
 interface Config extends VxeGridProps {
     proxyConfig: VxeGridPropTypes.ProxyConfig
@@ -52,9 +57,11 @@ interface Config extends VxeGridProps {
     }
 }
 
+
 export const useVxeTable = (params: UseVxeTableParams) => {
     // set Defalut value for params
     const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true } = params
+    const actions : TableMenuActions[][] = JSON.parse(JSON.stringify(params.bodyActions)) 
     
     const tableRef = ref<VxeGridInstance<any>>()
     const viewport = useViewport()
@@ -131,13 +138,37 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 options: params.headerActions || []
             },
             body:{
-                options: params.bodyActions || []
+                options: actions || []
             },
             footer:{
                 options: params.footerActions || []
             },
             className: 'contextMenuContainer',
-            visibleMethod: params.visibleMethod
+            visibleMethod: ({options, column, row, rowIndex}:TableMenuValidateMethodParams) => {
+                options.forEach( list => {
+                    list.forEach(item => {
+                        if(item.children){
+                            // loop all children , and set visible and disabled
+                            // if all children are not visible , set iten.visible = false
+                            // if all children are disabled , set item.disabled = true
+                            item.children.forEach(child => {
+                                const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:child.code})
+                                child.visible = visible
+                                child.disabled = disabled
+                            })
+                            const allVisible = item.children.every(child => child.visible)
+                            const allDisabled = item.children.every(child => child.disabled)
+                            item.visible = allVisible
+                            item.disabled = allDisabled
+                        }else{
+                            const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:item.code})
+                            item.visible = visible
+                            item.disabled = disabled
+                        }
+                    })
+                })
+                return options;
+            }
         },
         rowConfig:{
             useKey:true,
@@ -156,14 +187,13 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     }
     
     // Step 2: handle body actions
-    if(params.bodyActions && params.bodyActions.length > 0){
-        console.log("bodyActions", params.bodyActions)
+    if(actions && actions.length > 0){
         tableEvent.menuClick = ({menu, row, column}:any) => {
             if(menu.action){
                 menu.action({menu, row, column});
             }
         }
-        tableConfig.menuConfig.body.options = params.bodyActions
+        tableConfig.menuConfig.body.options = actions
         // add column to tableConfig
         const actionsColumn:any = {
             title: 'dpTable_actions',
@@ -184,30 +214,45 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             console.log("column", column)
             if(column.type === actionsColumn.type && column.title === actionsColumn.title){
                 console.log("actions")
-                if(!params.visibleMethod){
-                    throw new Error('visibleMethod is required')
+                if(!params.permissionMethod){
+                    throw new Error('permissionMethod is required')
                 }
-                if(!params.bodyActions){
+                if(!actions){
                     throw new Error('bodyActions is required')
                 }
                 if(!params.columns){
                     throw new Error('columns is required')
                 }
                 const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
+                const options = actions.map((list) => {
+                    return list.map((item) => {
+                        if(item.children){
+                            // loop all children , and set visible and disabled
+                            // if all children are not visible , set iten.visible = false
+                            // if all children are disabled , set item.disabled = true
+                            item.children.forEach(child => {
+                                const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:child.code})
+                                child.visible = visible
+                                child.disabled = disabled
+                            })
+                            const allVisible = item.children.every(child => child.visible)
+                            const allDisabled = item.children.every(child => child.disabled)
+                            item.visible = allVisible
+                            item.disabled = allDisabled
+                        }else{
+                            const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:item.code})
+                            item.visible = visible
+                            item.disabled = disabled
+                        }
+                        return item
+                    })
+                })
                 const evtParams:TABLE_CONTEXT_PARAMS = {
                     row,
                     column,
                     rowIndex,
-                    options: params.visibleMethod({
-                        options: params.bodyActions, 
-                        columns: params.columns,
-                        row, 
-                        rowIndex, 
-                        column, 
-                        columnIndex, 
-                        event:$event
-                    }),
-                    event:$event
+                    options,
+                    event:$event,
                 }
                 bus.emit(evtParams)
                 
