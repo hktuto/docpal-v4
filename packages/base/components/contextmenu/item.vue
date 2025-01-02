@@ -36,7 +36,6 @@ function openSubMenu(){
 function itemClickHandler(){
     if(item.disabled) return
     if(item.action) {
-        console.log("itemClickHandler", rowData)
         item.action({row:rowData})
         bus.emit()
         return

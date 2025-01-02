@@ -61,7 +61,7 @@ interface Config extends VxeGridProps {
 export const useVxeTable = (params: UseVxeTableParams) => {
     // set Defalut value for params
     const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true } = params
-    const actions : TableMenuActions[][] = JSON.parse(JSON.stringify(params.bodyActions)) 
+    const actions = params.bodyActions
     
     const tableRef = ref<VxeGridInstance<any>>()
     const viewport = useViewport()
