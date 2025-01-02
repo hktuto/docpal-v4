@@ -40,7 +40,7 @@ async function openVersionDetail(data:any, openInNewTab:boolean = false){
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
-function actionPermission(row:any, code:string) {
+function actionPermission({row, code}:PermissionMethodParams) {
     const isProduction = row.production
     const isLatest = row.version === caseData.value.latestVersion
     switch(code){

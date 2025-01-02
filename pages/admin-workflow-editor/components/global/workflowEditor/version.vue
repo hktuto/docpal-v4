@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import type {VxeGrid} from 'vxe-table'
 import {adminApi} from 'api';
-
+import type {ActionPermissionParams} from '#imports';
 import { newWorkflowEditorDetail } from '~/utils/workflowEditorMenu';
+import type { PermissionMethodParams } from '../../../../../packages/base/composables/useVxeTable';
 
 const { id, name, draftId, latestVersion } = defineProps<{
     id:string,
@@ -30,14 +31,17 @@ function editHandler(row:any, openInNewTab = false){
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
-type ActionPermission = (row:any, index:number, code:string) => {disabled:boolean, visible:boolean}
-function actionPermission({row, index, code}:ActionPermission){
+
+function actionPermission({row, code }:PermissionMethodParams) : {disabled:boolean, visible:boolean}{
     const isProduction = row.isProduction === 'A'
     const isLatest = row.versionNumber === workflowData.value.latestVersion
     let result = {
         visible :true,
         disabled: true
-    }   
+    } 
+    if(!code){
+        return result
+    }  
     if(code === 'edit' || code === 'edit_new_tab'){
         result.disabled = !isLatest || isProduction
     }

@@ -1,10 +1,10 @@
-
+import type {PermissionMethodParams} from '#imports';
 export interface CaseManagementListProvider {
     getListApi: (params:any) => Promise<any>
     updatePageParams:(params:any) => void
     openLatestVersion:(data:any, openInNewTab?:boolean) => void
     openProductionVersion:(data:any, openInNewTab?:boolean) => void
-    actionPermission:(row:any, code:string) => {visible:boolean, disabled:boolean}
+    actionPermission:(args:PermissionMethodParams) => {visible:boolean, disabled:boolean}
     openVersion:(data:any, openInNewTab?:boolean) => void
 }
 export const CaseManagementListProviderKey : InjectionKey<CaseManagementListProvider> = Symbol('caseManagementListProvider')
@@ -14,7 +14,7 @@ export interface CaseManagementVersionProvider {
     saveAsNewVersion:(data:any) => void
     promoteVersion:(data:any) => void
     openVersionDetail:(data:any, openInNewTab?:boolean) => void
-    actionPermission:(row:any, code:string) => {visible:boolean, disabled:boolean}
+    actionPermission:(args:PermissionMethodParams) => {visible:boolean, disabled:boolean}
 }
 export const CaseManagementVersionProviderKey : InjectionKey<CaseManagementVersionProvider> = Symbol('caseManagementVersionProvider')
 
