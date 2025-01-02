@@ -71,6 +71,7 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
     const layout = useTabLayout()
     const components = useTabComponent()
     const panelIndex = layout.value.findIndex(tab => tab.id === panelId)
+    // 如果找不到 panel 则返回
     if(panelIndex !== -1) {
         // cannot delete the last tab
         if(components.value.length === 1) return;
@@ -87,13 +88,12 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
         if(layout.value[panelIndex].tabs.length === 0) {
             layout.value.splice(panelIndex, 1)
         }else{
-            layout.value[panelIndex].showingTabIndex = panelIndex > 0 ? panelIndex - 1 : 0;
+            layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.length - 1;
             const componentIndex = components.value.findIndex( (component:TabItem) => component.id === layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex || 0].id);
             components.value[componentIndex].initized = true
         }
     }else{
         throw new Error(`data not found. tabIndex ${tabIndex} is not correct in ${panelId}`)
-
     }
 
 }
@@ -110,7 +110,7 @@ export function reorderWithEdge(parent:TabPanel, sourceData:TabItem, targetData:
     layout.value[parentId]?.tabs.splice(newItemIndex, 0 , sourceData)
     // final focus on source
     nextTick(( ) => {
-        panelTabFocus(sourceData.parent, newItemIndex)
+        panelTabFocus(sourceData.parent as string, newItemIndex)
     })
 }
 
@@ -129,7 +129,7 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
     if(sourceIndex === -1) {
         return
     }
-    closePanelTab(sourceData.parent, sourceIndex, false)
+    closePanelTab(sourceData.parent as string, sourceIndex, false)
 
     const newSourceData = {
         ...sourceData,
@@ -159,7 +159,7 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
         if(sourceIndex === -1) {
             return
         }
-        closePanelTab(sourceData.parent, sourceIndex, false)
+        closePanelTab(sourceData.parent as string, sourceIndex, false)
         // check if targetParentLayout direction match new direction
         
         if(direction === 'center') {
