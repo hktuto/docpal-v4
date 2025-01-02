@@ -33,7 +33,7 @@ export const useAuth = () => {
 
 export const userDisplayTimeSetting = () => {
     const userPreference = useUserPreference()
-    
+    return 'YYYY-MM-DD'
     return userPreference.value.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD'
 }
 
