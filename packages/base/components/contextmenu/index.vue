@@ -8,7 +8,11 @@ const visible = ref(false)
 const rowData = ref<any>() 
 const position = ref<any>({x:0, y:0, left:0, top:0})
 const menuItemHeight = 26;
+const contextmenuRef = ref<HTMLElement>()
 
+onClickOutside(contextmenuRef, () => {
+    contextMenuCloseHandler()
+})
 
 const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
     actions.value = args.options
@@ -51,7 +55,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div :class="{contextMenuContainer:true, visible}" :style="{left: position.left + 'px', top: position.top + 'px', ['--context-item-height']: menuItemHeight + 'px'}">
+    <div ref="contextmenuRef" :class="{contextMenuContainer:true, visible}" :style="{left: position.left + 'px', top: position.top + 'px', ['--context-item-height']: menuItemHeight + 'px'}">
         <ContextmenuList v-for="(action, index) in actions" :key="index" :items="action" :menuItemHeight="menuItemHeight" :rowData="rowData" />
     </div>
 </template>
