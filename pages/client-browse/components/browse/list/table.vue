@@ -97,7 +97,7 @@ const { tableConfig, tableEvent } = useVxeTable({
     ],
     visibleMethod: ({options, column, row, rowIndex}:any) => {
         console.log(options, column, row, rowIndex)
-        return true
+        return options
     },
     optionalConfig: {
         treeConfig: {
