@@ -74,8 +74,10 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
           } 
           else if(item.name === 'actions.inactive'){
             item.visible = row.status === 'A' ? true : false
+          }else {
+            item.visible = true
           }
-        })
+         })
       })
       return options;
     }

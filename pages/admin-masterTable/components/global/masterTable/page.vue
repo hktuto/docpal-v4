@@ -15,22 +15,16 @@ const state = reactive<any>({
     fields: [],
   },
 });
-function openDetail(row:any) {
-  routerProvider?.navigateTo(newMasterTableDetail(row))
-}
 function openNew() {
-  const newItem = {
-    menuKey: routerProvider?.menuSymbol,
-    id: 'master-table-new-' + new Date().getTime(),
-    name: $t('adminMenu.masterTable') + '/new',
-    label: 'adminMenu.masterTable',
-    icon : 'lucide:columns-2',
-    component: 'LazyMasterTableNewDead',
-    props:{
-    }
-  }
+  const newItem = routeMasterTableNew({
+    name: $t('adminMenu.masterTable') + '/new'
+  });
   console.log("newItem", newItem)
   routerProvider?.navigateTo({...newItem})
+}
+function openDetail(row:any , openInNewTab = false){
+    const newItem = routeMasterTableDetail(row);
+    routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 const logRef = ref()
 const MasterTableTabRecordsRef = ref()
