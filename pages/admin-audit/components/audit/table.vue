@@ -4,72 +4,40 @@ const auditProvider = inject(AuditProviderKey)
 if(!auditProvider) { 
     throw new Error('AuditProviderKey not found')
 }
-const tableConfig = createTableConfig({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     id: 'auditListTableSetting',
     api: (pageParams:any) => auditProvider?.getListApi(pageParams),
     columns:  [
-                {
-                    id: "10",
-                    field: 'principalName',
-                    title: 'User',
-                    fixed: 'left',
-                },
-                {
-                    field: 'currentPath',
-                    title: 'table_path',
-                    slots:{
-                        default:'currentPath'
-                    },
-                },
-                {
-                    field: 'eventCategory',
-                    title: 'category',
-                },
-                {
-                    field:'label',
-                    title: 'Event',
-                   
-                },
-                {
-                    field: 'eventDate',
-                    title: 'Date',
-                    sortable: true,
-                    formatter ({ cellValue }:any) {
-                        const format = userDisplayTimeSetting()
-                        return dayjs(cellValue).format(format)
-                    }
-                },
-            ],    
-},{
-    rowConfig:{
-        useKey:true,
-            drag: true,
+        {
+            field: 'principalName',
+            title: 'User',
+            fixed: 'left',
         },
-    rowDragConfig:{
-        showIcon: true,
-    },
-    sortConfig: {
-        remote: true,
-        defaultSort:[
-        ]
-    },
-}
-)
-const gridRef = ref()
-function query() {
-    gridRef.value.commitProxy('query')
-}
+        {
+            field: 'currentPath',
+            title: 'table_path',
+            slots:{
+                default:'currentPath'
+            },
+        },
+         { field: 'eventCategory', title: 'category',},
+         { field:'label', title: 'Event',},
+         { field: 'eventDate', title: 'Date', sortable: true,
+            formatter ({ cellValue }:any) {
+                const format = userDisplayTimeSetting()
+                return dayjs(cellValue).format(format)
+            }
+        },
+    ],    
+})
 
-function reload() {
-    gridRef.value.commitProxy('reload')
-}
 defineExpose({ reload, query })
 
 </script>
 
 
 <template>
-    <VxeGrid ref="gridRef" v-bind="tableConfig"  >
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"  >
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
         </template>
