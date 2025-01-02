@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import {useI18n, workflowEditorListTableSetting} from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
-import { createTableConfig } from '../../../../../packages/base/utils/tableHelper';
 
 const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {

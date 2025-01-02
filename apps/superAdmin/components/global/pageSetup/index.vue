@@ -16,10 +16,8 @@ const defaultPageList = [
         userGroup: ['admin','member'],
     }
 ]
-
-const tableConfig = createTableConfig({
+const { tableConfig , tableEvent, tableRef } = useVxeTable({
     id: 'pageSetupTableSetting',
-    api:  (pageParams:any) => ({data:{entryList:defaultPageList, totalSize:defaultPageList.length}}),
     columns:  [
         {
             field: 'name',
@@ -45,34 +43,27 @@ const tableConfig = createTableConfig({
             }
         }
     ],
-},{
-    menuConfig:{
-        body:{
-            options:[
-                [
-                    { code:'edit', name: 'Edit' }
-                ]
-            ]
-        }
-    }
-})
-
-const tableEvents = {
-    cellDblclick: ({ row, column, rowIndex }) => {
+    dblClickAction: ({ row, column, event }:any) => {
         handleDblclick(row)
     },
-    menuClick: ({ menu, row, column }) => {
-        switch (menu.code) {
-            case 'edit':
-                handleDblclick(row)
-                break;
-        }
+    bodyActions: [
+        [
+            { 
+                code: 'edit', 
+                name: 'Edit',
+                action: ({row}:any) => {
+                    handleDblclick(row)
+                }
+            }
+        ]
+    ],
+    optionalConfig:{
+        data:defaultPageList
     }
-}
+});
 
 function handleDblclick(data:any){
     const newItem = {
-        menuKey: routerProvider?.menuSymbol,
         id: 'page-setup-detail-' + new Date().getTime(),
         name: 'page-setup-detail-' + data.id,
         label: data.name + ' setting',
@@ -91,8 +82,9 @@ function handleDblclick(data:any){
 <template>
     <div class="pageContainer">
         <vxe-grid
+        ref="tableRef"
             v-bind="tableConfig"
-            v-on="tableEvents"
+            v-on="tableEvent"
         >
         <template #toolbar_buttons>
 
