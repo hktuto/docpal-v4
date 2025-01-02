@@ -41,7 +41,6 @@ function openLatestVersion(data:any, openInNewTab:boolean = false){
 }
 
 function openProductionVersion(data:any, openInNewTab:boolean = false){
-    console.log("openProductionVersion", data)
     const newItem = newCaseManagementDetail(data, data.productionVersion)
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
