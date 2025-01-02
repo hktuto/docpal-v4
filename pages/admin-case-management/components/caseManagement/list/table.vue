@@ -78,11 +78,11 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
                     {
                         code:'edit_latest_version', 
                         name:"edit.currentTab", 
-                        action: (row) => listProvider.openLatestVersion(row)},
+                        action: ({row}) => listProvider.openLatestVersion(row)},
                     {
                         code:'edit_latest_version_new_tab', 
                         name:"edit.newTab", 
-                        action: (row) => listProvider.openLatestVersion(row, true)
+                        action: ({row}) => listProvider.openLatestVersion(row, true)
                     },
                 ]
             },
@@ -92,12 +92,12 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
                     {
                         code:'edit_production_version', 
                         name:"edit.currentTab",
-                        action: (row) =>  listProvider.openProductionVersion(row)
+                        action: ({row}) =>  listProvider.openProductionVersion(row)
                     },
                     {
                         code:'edit_production_new_tab', 
                         name:"edit.newTab",
-                        action: (row) =>  listProvider.openProductionVersion(row, true)
+                        action: ({row}) =>  listProvider.openProductionVersion(row, true)
 
                     },
                 ]
@@ -107,12 +107,12 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
                     {
                         code:'list_version', 
                         name:"list.version",
-                        action:(row) => listProvider.openVersion(row)
+                        action:({row}) => listProvider.openVersion(row)
                     },
                     {
                         code:'list_version_new_tab', 
                         name:"list.newTab",
-                        action:(row) => listProvider.openVersion(row, true)
+                        action:({row}) => listProvider.openVersion(row, true)
                     },
                 ]
             }
@@ -120,31 +120,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
             
         ],
     ],
-    visibleMethod: ({options, column, row, rowIndex}) => {
-        options.forEach((section:TableMenuActions[]) => {
-            section.forEach((item:TableMenuActions) => {
-                if(item.children){
-                    // loop all children , and set visible and disabled
-                    // if all children are not visible , set iten.visible = false
-                    // if all children are disabled , set item.disabled = true
-                    item.children.forEach(child => {
-                        const {visible, disabled} = listProvider.actionPermission(row, child.code as string)
-                        child.visible = visible
-                        child.disabled = disabled
-                    })
-                    const allVisible = item.children.every(child => child.visible)
-                    const allDisabled = item.children.every(child => child.disabled)
-                    item.visible = allVisible
-                    item.disabled = allDisabled
-                }else{
-                    const {visible, disabled} = listProvider.actionPermission(row, item.code as string)
-                    item.visible = visible
-                    item.disabled = disabled
-                }
-            })
-        })
-        return options;
-    },
+    permissionMethod: listProvider.actionPermission,
     dblClickAction:({ row, column, event }:any) => {
         listProvider.openLatestVersion(row)
     },

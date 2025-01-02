@@ -22,7 +22,6 @@ function openLastestVersion(data:any, openInNewTab = false){
 function openProductionVersion(data:any, openInNewTab = false){
     // TODO: open detail page
     const newItem: any = {
-        menuKey: routerProvider?.menuSymbol,
         id: "workflow-editor-detail-" + new Date().getTime(),
         name: "workflow-editor-detail-" + data.id,
         icon: 'dp-icon:flow-outline',
@@ -51,6 +50,7 @@ function saveAsNewWorkflow(data:any){
 
 function openVersions(data:any , openInNewTab = false){
     const newItem = newWorkflowEditorVerionList(data);
+    console.log("openVersions", newItem)
     
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
@@ -60,7 +60,7 @@ function createNewWorkflow(){
     newDialogRef.value.handleOpen()
 }
 
-function actionPermission({row, index, code}:any){
+function actionPermission({row, rowIndex, code}:PermissionMethodParams){
     return {
         visible: true,
         disabled: false

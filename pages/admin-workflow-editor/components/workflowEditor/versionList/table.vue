@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 import type {VxeGrid} from 'vxe-table'
+import type { PermissionMethodParams } from '../../../../../packages/base/composables/useVxeTable';
 
 const listProvider = inject(WorkflowEditorVersionListProviderKey)
 if(!listProvider) {
@@ -59,14 +60,6 @@ const { tableConfig, tableEvent } = useVxeTable({
             minWidth: 120,
             sortable: true,
         },
-        {
-            title: 'Action',
-            width: 65,
-            fixed: 'right',
-            slots:{
-                default:'action'
-            }
-        }
     ],
     dblClickAction: ({ row, column, event }:any) => {
         listProvider.editHandler(row)
@@ -95,17 +88,8 @@ const { tableConfig, tableEvent } = useVxeTable({
             { code: "save_as_new_version", name: "Save as new version", visible: true, disabled: false },
         ]
     ],
-    visibleMethod: ({options, column, row, rowIndex}) => {
-        // options 是 menuConfig 中的 body 配置
-        
-        options.forEach(list => {
-            list.forEach(item => {
-                const {visible, disabled} = listProvider.actionPermission(row, rowIndex, item.code)
-                item.visible = visible
-                item.disabled = disabled
-            })
-        })
-        return true;
+    permissionMethod: (args:PermissionMethodParams) => {
+        return listProvider.actionPermission(args)
     }
 })
 
@@ -117,19 +101,6 @@ const { tableConfig, tableEvent } = useVxeTable({
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
             
-        </template>
-        <template #action="{row, rowIndex}"> 
-            <ElDropdown >
-                <ElButton type="primary" link>
-                    <ElIcon><SvgIcon src="/icons/dots.svg"/></ElIcon>
-                </ElButton>
-                <template #dropdown>
-                    <ElDropdownMenu>
-                        <ElDropdownItem @click="listProvider.editHandler(row)">Edit</ElDropdownItem>
-                        <ElDropdownItem @click="listProvider.editNewTabHandler(row)">Edit in new tab</ElDropdownItem>
-                    </ElDropdownMenu>
-                </template>
-            </ElDropdown>       
         </template>
     </VxeGrid>
 </template>

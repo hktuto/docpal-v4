@@ -65,7 +65,7 @@ onMounted(() => {
     }
 })
 
-function actionPermission(row:any, code:string) {
+function actionPermission({row, code}:PermissionMethodParams) {
     const isProdcution = row.latestVersion === row.productionVersion
     const hasProdcution = !!row.productionVersion
     switch(code){
@@ -97,7 +97,7 @@ provide(CaseManagementListProviderKey,{
             isDesc: params.isDesc,
             filters
         })
-        return adminApi.caseTypeController.postPage(params)
+        return adminApi.caseTypeController.postPage1(params)
     },
     updatePageParams,
     openLatestVersion,

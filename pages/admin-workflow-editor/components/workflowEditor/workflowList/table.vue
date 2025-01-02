@@ -43,14 +43,6 @@ const { tableConfig , tableEvent } = useVxeTable({
             formatter ({ cellValue }:any) {
                 return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
             }
-        },
-        {
-            title: 'Action',
-            fixed: 'right',
-            width: 65,
-            slots:{
-                default:'action'
-            }
         }
     ], 
     bodyActions: [
@@ -120,18 +112,7 @@ const { tableConfig , tableEvent } = useVxeTable({
             },
         ]
     ],
-    visibleMethod: ({options, column, row, rowIndex}) => {
-        // options 是 menuConfig 中的 body 配置
-        
-        options.forEach(list => {
-            list.forEach(item => {
-                const {visible, disabled} = listProvider.actionPermission(row, rowIndex, item.code)
-                item.visible = visible
-                item.disabled = disabled
-            })
-        })
-        return true;
-    }
+    permissionMethod: listProvider.actionPermission
 })
 
 
@@ -157,20 +138,5 @@ defineExpose({
         <template #toolbar_buttons>
             <ElButton type="primary" @click="listProvider.createNewWorkflow">Add New Workflow</ElButton>
         </template>
-            <template #action="{row, rowIndex}"> 
-                <ElDropdown >
-                    <ElButton type="primary" link>
-                        <ElIcon><SvgIcon src="/icons/dots.svg"/></ElIcon>
-                    </ElButton>
-                    <template #dropdown>
-                        <ElDropdownMenu>
-                            <ElDropdownItem @click="listProvider.openLastestVersion(row)">Edit latest version</ElDropdownItem>
-                            <ElDropdownItem v-if="row.productionVersion" @click="listProvider.openProductionVersion(row)">View Production</ElDropdownItem>
-                            <ElDropdownItem @click="listProvider.saveAsNewWorkflow(row)">Save As New Workflow</ElDropdownItem>
-                            <ElDropdownItem @click="listProvider.openVersions(row)">View  Versions</ElDropdownItem>
-                        </ElDropdownMenu>
-                    </template>
-                </ElDropdown>       
-            </template>
         </vxe-grid>
 </template>
