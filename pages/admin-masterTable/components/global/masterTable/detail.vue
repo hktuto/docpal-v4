@@ -26,6 +26,8 @@ async function init() {
   const detail = res.data
   state.masterTable = detail
   console.log("detail", detail) 
+  console.log(MasterTableTabRecordsRef);
+  
   MasterTableTabRecordsRef.value.initTableColumns(detail?.fields)
 }
 onMounted(() => {
@@ -88,4 +90,11 @@ onMounted(() => {
     /> -->
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dp-tabs--auto {
+  height: 100%;
+  .el-tab-pane {
+    height: 100%;
+  }
+}
+</style>

@@ -1,10 +1,10 @@
 <template>
-<FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"
+<FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="formChange"
     @emit="handleEmit">
     <template v-for="(idx, slotName) in $slots" #[slotName]="data">
         <slot :name="slotName" :data="data"></slot>
     </template>
-</FromRenderer>
+</FormRenderer>
 </template>
 <script lang="ts" setup>
 export type variableItem = {
@@ -23,7 +23,7 @@ const props = defineProps<{
     variables: variableItem[],
 }>()
 const emits = defineEmits(['formChange'])
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const formJson = ref({
     "widgetList": [],
     "formConfig": {
@@ -107,30 +107,32 @@ function createJson(variables: variableItem[]) {
         formJson.value.widgetList.push(_item)
     })
     console.log(formJson.value);
+    console.log(FormRendererRef);
     
-    FromRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
+    FormRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
     return formJson.value
 }
 function handleEmit (funName, newValue, oldValue) {
     emits(funName, newValue, oldValue)
 }
 async function getData () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     return data
 }
 async function setFormJson (formJson) {
-    await FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
+    await FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
 }
 async function setData (data) {
-    await FromRendererRef.value.vFormRenderRef.setFormData(data)
+    await FormRendererRef.value.vFormRenderRef.setFormData(data)
+    console.log(data)
 }
 function formChange(formData) {
     emits('formChange', formData)
 }
 function getWidgetRef (name) {
-    return FromRendererRef.value.vFormRenderRef.getWidgetRef(name)
+    return FormRendererRef.value.vFormRenderRef.getWidgetRef(name)
 }
-defineExpose({ createJson, getData, setData, setFormJson, getWidgetRef })
+defineExpose({ createJson, getData, setData, setFormJson, getWidgetRef, FormRendererRef })
 </script>
 <style lang="scss" scoped>
 
