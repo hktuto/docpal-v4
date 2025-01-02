@@ -5,6 +5,7 @@ import { clientApi } from "api"
 import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
 import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
+import { permission } from 'vxe-pc-ui';
 
 export type TableActionsParams = {
     row:any,
@@ -60,7 +61,7 @@ interface Config extends VxeGridProps {
 
 export const useVxeTable = (params: UseVxeTableParams) => {
     // set Defalut value for params
-    const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true } = params
+    const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true, permissionMethod = () => {return {visible:true, disabled: false}} } = params
     const actions = params.bodyActions
     
     const tableRef = ref<VxeGridInstance<any>>()
@@ -152,7 +153,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             // if all children are not visible , set iten.visible = false
                             // if all children are disabled , set item.disabled = true
                             item.children.forEach(child => {
-                                const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:child.code})
+                                const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code})
                                 child.visible = visible
                                 child.disabled = disabled
                             })
@@ -161,7 +162,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             item.visible = allVisible
                             item.disabled = allDisabled
                         }else{
-                            const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:item.code})
+                            const {visible, disabled} =  permissionMethod({row, rowIndex, code:item.code})
                             item.visible = visible
                             item.disabled = disabled
                         }
@@ -213,10 +214,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
             console.log("column", column)
             if(column.type === actionsColumn.type && column.title === actionsColumn.title){
-                console.log("actions")
-                if(!params.permissionMethod){
-                    throw new Error('permissionMethod is required')
-                }
                 if(!actions){
                     throw new Error('bodyActions is required')
                 }
@@ -231,7 +228,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             // if all children are not visible , set iten.visible = false
                             // if all children are disabled , set item.disabled = true
                             item.children.forEach(child => {
-                                const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:child.code})
+                                const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code})
                                 child.visible = visible
                                 child.disabled = disabled
                             })
@@ -240,7 +237,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             item.visible = allVisible
                             item.disabled = allDisabled
                         }else{
-                            const {visible, disabled} =  params.permissionMethod({row, rowIndex, code:item.code})
+                            const {visible, disabled} =  permissionMethod({row, rowIndex, code:item.code})
                             item.visible = visible
                             item.disabled = disabled
                         }
