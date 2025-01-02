@@ -2,7 +2,7 @@
     <el-card>
         <h3>{{$t('azure.OCRTransactionLog')}}</h3>
         <div>
-            <VxeGrid ref="gridRef" v-bind="tableConfig"  :pagination="{ currentPage: 3 }">
+            <VxeGrid ref="gridRef" v-bind="tableConfig"  v-on="tableEvent">
                 <template #toolbar_buttons>
                     <slot name="toolbar_buttons" />
                 </template>
@@ -13,11 +13,12 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 const azureProvider = inject(AzureProviderKey)
-const tableConfig = createTableConfig({
+
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     id: 'azureLogTableSetting',
     api: (pageParams:any) => azureProvider?.GetOCRTransactionLogApi(pageParams),
     columns:  [
-        { id: "10",  field: 'businessName', title: 'dpTableHeader.businessName', fixed: 'left', },
+        { field: 'businessName', title: 'dpTableHeader.businessName', fixed: 'left', },
         { field: 'workflow', title: 'azureDashboard.workflow',},
         { field: 'state', title: 'dpTableHeader.state', },
         { field:'ocrProfileName', title: 'azure.ocrProfileName', },
@@ -29,16 +30,9 @@ const tableConfig = createTableConfig({
                 return dayjs(cellValue).format(format)
             }
         },
-    ],  
+    ],
 })
-const gridRef = ref()
-function query() {
-    gridRef.value.commitProxy('query')
-}
 
-function reload() {
-    gridRef.value.commitProxy('reload')
-}
 defineExpose({ reload, query })
 </script>
 <style lang="scss" scoped>

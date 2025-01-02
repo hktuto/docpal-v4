@@ -4,7 +4,7 @@
         <div v-show="state.selectedRows.length > 0" class="flex-x-between">
             <div class="title-select color__primary flex-x-start">
                 <b class="el-icon--left "> {{ $t("notifications.fileSelected") }}({{ state.selectedRows.length }})</b>
-                <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="handleClearSelection"/>
+                <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="cleanSelectedRows"/>
             </div>
             <el-button type="danger" @click="handleDeleteSelected()">{{
                 $t("common_delete")
@@ -17,13 +17,10 @@
         </div>
     </template>
     <div style="height: 100%; overflow: hidden;">
-        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="gridEvents" >
+        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
             <template #toolbar_buttons>
                 <slot name="toolbar_buttons" />
-            </template>
-            <template #more="{row}">
-                <Icon name="material-symbols:delete-rounded" class="normal cursor-pointer" @click="handleDelete(row)"></Icon>
-            </template>    
+            </template>  
         </VxeGrid>
     </div>
     <GroupAddUserDialog ref="UserAddGroupDialogRef" :group="group" @refresh="getMemberGroupList"></GroupAddUserDialog>
@@ -43,71 +40,53 @@ const props = defineProps<{
 const state = reactive<any>({
     selectedRows: []
 })
-const tableConfig = ref({
-    id: 'azureLogTableSetting',
+const { t } = useI18n()
+const { tableConfig, tableEvent , tableRef ,cleanSelectedRows } = useVxeTable({
+    id: 'userTableSetting',
     columns:  [
-        { id: "10",  field: 'username', title: 'username', fixed: 'left',type: 'checkbox' },
+        { field: 'username', title: 'username', fixed: 'left',type: 'checkbox' },
         { field: 'userId', title: 'user_groupIdentifer',},
-        { title: 'dpTable_actions', 
-          slots:{
-            default:'more',
-          }
-        }
-    ],  
-    checkboxConfig: {
-        labelField: 'username',
-        highlight: true,
-        range: true
+    ],
+    bodyActions:[
+        [
+            {
+                code:'delete_user',
+                name:'table_action.delete',
+                visible: true,
+                disabled: false,
+                action: ({row}:any) => {
+                    handleDelete(row)
+                }
+            }
+        ]
+    ],
+    selectChangeHander: (selectedRows: any[]) => {
+        state.selectedRows = [...selectedRows];
     },
-    data: [],
-    border: true,
-    round: true,
-    showOverflow: true,
-    height: 'auto',
-    loading: false,
+    optionalConfig: {
+    }
 })
-const gridEvents: VxeGridListeners = {
-  checkboxChange ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) { 
-    // console.log('checkboxChange', checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event)
-    handleSelectionChange()
-  },
-  checkboxRangeChange( $event){
-    // console.log('checkboxRangeChange',  $event)
-    handleSelectionChange()
-  },
-  checkboxAll( {$event, checked}){
-    // console.log('checkboxAll',  checked, $event)
-    handleSelectionChange()
-  }
-}
+
 const UserAddGroupDialogRef = ref()
 function handleGroupAddMemberFormShow() {
-    UserAddGroupDialogRef.value.handleOpen(tableConfig.value.data)
+    UserAddGroupDialogRef.value.handleOpen(tableConfig.data)
 }
 async function getMemberGroupList() {
     setTimeout(async() => {
         const res = await groupProviderDetail?.GetMemberListApi({
             groupName: props.group.id
         })
-        tableConfig.value.data = res.data
+        tableRef.value?.loadData(res.data)
     })
 }
-const tableRef = ref();
-function handleClearSelection() {
-tableRef.value.clearCheckboxRow();
-  state.selectedRows = [];
-}
-function handleSelectionChange() {
-const selectList = tableRef.value.getCheckboxRecords()
-  state.selectedRows = [...selectList];
-}
+
 async function handleDeleteSelected() {
-    const action = await ElMessageBox.confirm(`${$i18n.t("userTip.confirmWhetherToDeleteItems")}`);
+    const action = await ElMessageBox.confirm(`${t("userTip.confirmWhetherToDeleteItems")}`);
     if (action !== "confirm") return;
     const ids = state.selectedRows.map((item: any) => item.userId)
     // const noDeleteList = state.selectedRows.filter((item: any) => !item.isCanModified)
     // if(ids.length === 0) {
-    //     ElMessage.warning($i18n.t('groupTip.noValidUser', { userIds: noDeleteList.join(',') }))
+    //     ElMessage.warning(t('groupTip.noValidUser', { userIds: noDeleteList.join(',') }))
     //     return
     // }
     await  groupProviderDetail?.BatchGroupRemoveUsersApi({
@@ -118,7 +97,7 @@ async function handleDeleteSelected() {
     state.selectedRows = [];
 }
 async function handleDelete (row: UserDTO) {
-    const action = await ElMessageBox.confirm(`${$i18n.t('userTip.confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('userTip.confirmWhetherToDelete')}`)
     if (action !== "confirm") return;
     await groupProviderDetail?.BatchGroupRemoveUsersApi({
         userIds: [row.userId], 

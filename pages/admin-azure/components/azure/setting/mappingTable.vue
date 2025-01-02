@@ -3,7 +3,7 @@
         <div class="title">{{ $t('azure.mapping') }}</div>
         <div class="description">{{ $t('azure.mappingDescription') }}</div>
         <div style="overflow: hidden; margin-top: var(--app-space-xs);">
-            <VxeGrid ref="tableRef" v-bind="tableConfig" >
+            <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
                 <template #toolbar_buttons>
                     <slot name="toolbar_buttons" />
                 </template>
@@ -11,20 +11,6 @@
                 <el-tag v-if="row.status === 'open'" type="success">{{$t('actions.activated')}}</el-tag>
              
                 <el-tag v-else type="danger">{{$t('actions.inactived')}}</el-tag>
-                </template>
-                
-                <template #more="{row}">
-                    <el-dropdown>
-                        <SvgIcon src="/icons/dots.svg"></SvgIcon>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item v-loading="tableConfig.loading" @click="handleDblclick(row)">{{$t('dpTool_edit')}}</el-dropdown-item>
-                                <el-dropdown-item v-if="row.status === 'open'" :disabled="tableConfig.loading" @click="handleActive('close', row)">{{$t('actions.inactive')}}</el-dropdown-item>
-                                <el-dropdown-item v-else :disabled="tableConfig.loading" @click="handleActive('open', row)">{{$t('actions.active')}}</el-dropdown-item>
-                                <!-- <el-dropdown-item v-loading="tableConfig.loading" @click="handleActive(row)">{{$t('masterTable.editDetail')}}</el-dropdown-item> -->
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
                 </template>
             </VxeGrid>
         </div>
@@ -41,10 +27,12 @@ const props = defineProps(['tableData'])
 const emits = defineEmits(['refresh'])
 const state = reactive<any>({
 })
-const tableConfig = ref({
+
+const { t } = useI18n()
+const { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
     id: 'azureSettingMappingTableSetting',
     columns:  [
-        { id: "10",  field: 'id', title: 'dpTable_id', fixed: 'left', },
+        { field: 'id', title: 'dpTable_id', fixed: 'left', },
         { field: 'ocrProfileName', title: 'azureSettingMapping.name',},
         { field: 'state', title: 'dpTable_status', 
             slots:{
@@ -67,25 +55,63 @@ const tableConfig = ref({
             }
         },
         { field:'createdBy', title: 'role.creator', },
-        {  title: 'dpTable_actions', 
-            slots:{
-                default:'more',
+        // {  title: 'dpTable_actions', 
+        //     slots:{
+        //         default:'more',
+        //     }
+        // },
+    ], 
+    bodyActions:[
+        [
+            {
+                code : 'edit_mapping',
+                name: "dpTool_edit",
+                action: ({row}:any) => {
+                    AzureSettingMappingDialogRef.value.handleOpen(row)
+                }
+            },
+            {
+                code:'inactive',
+                name:"actions.inactive",
+                action: ({row}:any) => {
+                    handleActive('close', row)
+                }
+            },
+            {
+                code:"active",
+                name:"actions.active",
+                action: ({row}:any) => {
+                    handleActive('open', row)
+                }
             }
-        },
-    ],  
-    border: true,
-    round: true,
-    showOverflow: true,
-    height: 'auto',
-    data: [],
-    loading: false
+        ]
+    ],
+    dblClickAction: ({ row, column, event }:any) => {
+        AzureSettingMappingDialogRef.value.handleOpen(row)
+    },
+    permissionMethod: (args:PermissionMethodParams) => {
+        if(args.code === 'inactive' ){
+            return {
+                visible: args.row.status === 'open',
+                disabled: false
+            }
+        }
+        if(args.code === 'active'){
+            return {
+                visible: args.row.status === 'close',
+                disabled: false
+            }
+        }
+        return {
+            visible:true,
+            disabled: false
+        }
+    }
 })
+
 const AzureSettingMappingDialogRef  = ref()
 function handleAdd () {
     AzureSettingMappingDialogRef.value.handleOpen()
-}
-function handleDblclick(row) {
-    AzureSettingMappingDialogRef.value.handleOpen(row)
 }
 async function handleActive(status: 'close' | 'open', row: any) {
     tableConfig.loading = true
@@ -96,14 +122,14 @@ async function handleActive(status: 'close' | 'open', row: any) {
             status
         })
         emits('refresh')
-        ElMessage.success($i18n.t('dpMsg_success'))
+        ElMessage.success(t('dpMsg_success'))
     } catch (error) {
     }
     tableConfig.loading = false
 }
 watch(() => props.tableData, (newVal) => {
     if(!newVal) return
-    tableConfig.value.data = newVal
+    tableRef.value?.loadData(newVal)
 })
 </script>
 

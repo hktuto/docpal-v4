@@ -54,7 +54,7 @@ function itemClickHandler(){
         <a  class="vxe-context-menu--link" @click="itemClickHandler">
             <div class="vxe-context-menu--link-prefix"></div>
             <div class="vxe-context-menu--link-content">
-                {{ item.name }}
+                {{ $t(item.name) }}
             </div>
             <div class="vxe-context-menu--link-suffix">
                 <i v-if="item.children" class="vxe-table-icon-arrow-right" />

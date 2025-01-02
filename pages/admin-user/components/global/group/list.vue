@@ -9,7 +9,6 @@ if (!tabProvider || !routerProvider) {
 function openGroupDetail(data: any, openInNewTab = false) {
   // TODO: open detail page
   const newItem: any = {
-    menuKey: routerProvider?.menuSymbol,
     id: "group-detail-" + new Date().getTime(),
     name: "group-detail-" + data.id,
     icon: "lucide:user",

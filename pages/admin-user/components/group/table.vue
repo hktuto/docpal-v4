@@ -1,24 +1,14 @@
 <template>
-  <VxeGrid ref="tableRef" v-bind="tableConfig" >
+  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
     <template #toolbar_buttons>
         <ResponsiveFilter
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
           inputKey="userNameOrEmail"
           :inputPlaceHolder="$t('placeHolder.userNameOrEmail')"
-        /><el-button class="el-icon--right button" type="primary"
+        />
+        <el-button class="el-icon--right button" type="primary"
                 @click="handleGroupDialogShow()">{{$t('user_newGroup')}}</el-button>
-    </template>
-    <template #more="{ row }">
-      <el-dropdown>
-        <SvgIcon src="/icons/dots.svg"></SvgIcon>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="routeDetail(row)">{{ $t("common_edit") }}</el-dropdown-item>
-            <el-dropdown-item v-if="!isLdapMode" @click="handleDelete(row)">{{ $t("common_delete") }}</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
     </template>
   </VxeGrid>
   <GroupDialog ref="GroupDialogRef" :groups="state._groupList" @refresh="getGroup"></GroupDialog>
@@ -31,35 +21,47 @@ import { groupProviderKey } from '~/util/userProvider';
 const emits = defineEmits(['filter-change', 'refresh'])
 const groupProvider = inject(groupProviderKey)
 const isLdapMode: boolean = useIsLDAP();
+type State = {
+  groupList: any,
+  _groupList: any[],
+}
 const state = reactive<State>({
   groupList: {},
   _groupList: [],
 });
+const { t } = useI18n()
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'groupTable',
     columns:  [
-        { id: "10",  field: 'name', title: 'user_groupName', fixed: 'left' },
+        { field: 'name', title: 'user_groupName', fixed: 'left' },
         { field: 'id', title: 'Identifer',},
-
-        { title: 'dpTable_actions', 
-          slots:{
-            default:'more',
+    ],
+    dblClickAction: ({ row, column, event }:any) => {
+      groupProvider?.openGroupDetail(row) 
+    },
+    bodyActions: [
+      [
+        {
+          code: 'edit_group',
+          name: 'common_edit',
+          visible: true,
+          disabled: false,
+          action: ({row}:any) => {
+            groupProvider?.openGroupDetail(row)
+          }
+        },
+        {
+          code: 'delete_group',
+          name: 'common_delete',
+          visible: true,
+          disabled: false,
+          action: ({row}:any) => {
+            handleDelete(row)
           }
         }
-    ],  
-    border: true,
-    round: true,
-    showOverflow: true,
-    height: 'auto',
-    loading: false,
-    toolbarConfig: {
-        custom:true,
-        slots: {
-            buttons: 'toolbar_buttons'
-        }
-    },
+      ],
+    ],
     optionalConfig: {
-      data: [],
     }
 })
 
@@ -68,22 +70,19 @@ const UserDialogRef = ref();
 function handleUserDialogShow() {
   UserDialogRef.value.handleOpen();
 }
-function routeDetail(row:any) {
-  // router.push(`/user/detail?id=${row.userId}`);
-  groupProvider.openGroupDetail(row)
-}
+
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
   const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
   if (!!res) {
-    ElMessage.success($i18n.t("dpMsg_success"));
+    ElMessage.success(t("dpMsg_success"));
     reload();
   }
 }
 // #region module: ResponsiveFilterRef
   const ResponsiveFilterRef = ref()
-  function handleFilterFormChange(formModel, filedData) {
+  function handleFilterFormChange(formModel:any, filedData:any) {
     state._groupList = state.groupList.filter((item:any) => {
       return item.name.toLowerCase().includes(formModel.userNameOrEmail.toLowerCase())
     })
@@ -91,9 +90,11 @@ async function handleDelete(row: any) {
   }
 // #endregion
 async function getGroup() {
+  tableConfig.loading = true
   state.groupList = await groupProvider?.GetGroupListApi()
   state._groupList = [...state.groupList]
-  tableConfig.data = state._groupList
+  tableRef.value?.loadData(state._groupList)
+  tableConfig.loading = false
 }
 const GroupDialogRef = ref()
 function handleGroupDialogShow() {
