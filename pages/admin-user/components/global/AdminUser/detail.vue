@@ -68,7 +68,7 @@ provide(userProviderDetailKey, {
   getUser,
   openUserList
 })
-onMounted(async () => {
+onActivated(async () => {
   getUser()
 });
 </script>

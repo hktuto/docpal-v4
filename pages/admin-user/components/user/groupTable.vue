@@ -4,7 +4,7 @@
         <div v-show="state.selectedRows.length > 0" class="flex-x-between">
             <div class="title-select color__primary flex-x-start">
                 <b class="el-icon--left "> {{ $t("notifications.fileSelected") }}({{ state.selectedRows.length }})</b>
-                <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="handleClearSelection"/>
+                <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="cleanSelectedRows"/>
             </div>
             <el-button type="danger" @click="handleDeleteSelected()">{{
                 $t("common_delete")
@@ -16,7 +16,7 @@
                 @click="handleGroupAddMemberFormShow()">{{$t('user_addGroups')}}</el-button>
         </div>
     </template>
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="gridEvents" >
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
         </template>
@@ -37,64 +37,35 @@ if(!userProviderDetail) {
     throw new Error('userProviderDetailKey not found')
 }
 const props = defineProps<{
-    user: obj
+    user: any
 }>()
 const state = reactive<any>({
     selectedRows: []
 })
-const tableConfig = ref({
+const { tableConfig, tableEvent , tableRef ,cleanSelectedRows } = useVxeTable({
     id: 'azureLogTableSetting',
     columns:  [
-        { id: "10",  field: 'name', title: 'user_groupName', fixed: 'left',type: 'checkbox' },
+        { field: 'name', title: 'user_groupName', fixed: 'left',type: 'checkbox' },
         { field: 'id', title: 'user_groupIdentifer',},
-        { title: 'dpTable_actions', 
-          slots:{
-            default:'more',
-          }
-        }
-    ],  
-    checkboxConfig: {
-        labelField: 'name',
-        highlight: true,
-        range: true
+    ],
+    selectChangeHander: (selectedRows: any[]) => {
+        state.selectedRows = [...selectedRows];
     },
-    data: []
 })
-const gridEvents: VxeGridListeners = {
-  checkboxChange ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }) { 
-    // console.log('checkboxChange', checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event)
-    handleSelectionChange()
-  },
-  checkboxRangeChange( $event){
-    // console.log('checkboxRangeChange',  $event)
-    handleSelectionChange()
-  },
-  checkboxAll( {$event, checked}){
-    // console.log('checkboxAll',  checked, $event)
-    handleSelectionChange()
-  }
-}
+
 const noDeleteList = ['members']
 const UserAddGroupDialogRef = ref()
 function handleGroupAddMemberFormShow() {
-    UserAddGroupDialogRef.value.handleOpen(tableConfig.value.data)
+    UserAddGroupDialogRef.value.handleOpen(tableConfig.data)
 }
 async function getMemberGroupList() {
     const res = await userProviderDetail?.MemberGroupGetApi({
         userId: props.user.userId
     })
-    tableConfig.value.data = res.data
+    tableRef.value?.loadData(res.data)
 }
 
-const tableRef = ref();
-function handleClearSelection() {
-tableRef.value.clearCheckboxRow();
-  state.selectedRows = [];
-}
-function handleSelectionChange() {
-  const selectList = tableRef.value.getCheckboxRecords()
-  state.selectedRows = [...selectList];
-}
+
 async function handleDelete (row) {
     const action = await ElMessageBox.confirm(`${$i18n.t("groupTip.confirmWhetherToDeleteItem")}`);
     if (action !== "confirm") return;
@@ -119,6 +90,11 @@ async function handleDeleteSelected() {
     state.selectedRows = [];
     getMemberGroupList()
 }
+
+onMounted(() => {
+    getMemberGroupList()
+})
+
 watch( () => props.user, async(newValue) => {
     if (newValue) getMemberGroupList()
 },{

@@ -41,8 +41,9 @@ export interface UseVxeTableParams<R = any> {
     headerActions?:TableMenuActions[][],
     footerActions?:TableMenuActions[][],
     bodyActions?:TableMenuActions[][],
-    permissionMethod: (params:PermissionMethodParams) => {visible:boolean, disabled:boolean},
-    optionalConfig?: VxeGridProps<R>
+    permissionMethod?: (params:PermissionMethodParams) => {visible:boolean, disabled:boolean},
+    optionalConfig?: VxeGridProps<R>,
+    selectChangeHander?:(selectedRows:any[]) => void,
     optionalEvent?: VxeGridListeners<R>
 }
 
@@ -61,8 +62,15 @@ interface Config extends VxeGridProps {
 
 export const useVxeTable = (params: UseVxeTableParams) => {
     // set Defalut value for params
-    const { optionalConfig = {},  optionalEvent = {}, saveColumnOrder = true, permissionMethod = () => {return {visible:true, disabled: false}} } = params
-    const actions = params.bodyActions
+    const { 
+        optionalConfig = {},  
+        optionalEvent = {}, 
+        saveColumnOrder = true, 
+        columns = [], 
+        permissionMethod = () => {return {visible:true, disabled: false}},
+        bodyActions : actions = [],
+        selectChangeHander = () => { console.log("defauilt selectChangeHander, please implement") },
+    } = params
     
     const tableRef = ref<VxeGridInstance<any>>()
     const viewport = useViewport()
@@ -88,7 +96,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 buttons: 'toolbar_buttons'
             }
         },
-        columns: params.columns || [],
+        columns: columns || [],
         columnConfig: {
             resizable: true,
             useKey: true,
@@ -181,7 +189,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 
 
     // #region handle actions column
-    
     // Step 1: add actions to tableEvent
     if(params.dblClickAction){
         tableEvent.cellDblclick = params.dblClickAction
@@ -217,7 +224,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 if(!actions){
                     throw new Error('bodyActions is required')
                 }
-                if(!params.columns){
+                if(!columns){
                     throw new Error('columns is required')
                 }
                 const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
@@ -269,6 +276,40 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableConfig.menuConfig.footer.options = params.footerActions
     }
 
+    // #endregion
+
+    // #region handle checkbox column
+    if(columns.find(item => item.type === 'checkbox')){
+        const item = columns.find(item => item.type === 'checkbox')
+        if(item) {
+
+            tableConfig.checkboxConfig = {
+                labelField: item.field,
+                highlight: true,
+                range: true
+            }
+        }
+        tableEvent.checkboxChange = ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }:any) => {
+            const selectedRows = tableRef.value?.getCheckboxRecords() || []
+            selectChangeHander(selectedRows)
+        }
+        tableEvent.checkboxRangeChange = ({ $event }:any) => {
+            const selectedRows = tableRef.value?.getCheckboxRecords() || []
+            selectChangeHander(selectedRows)
+        }
+        tableEvent.checkboxAll = ({ $event, checked }:any) => {
+            const selectedRows = tableRef.value?.getCheckboxRecords() || []
+            selectChangeHander(selectedRows)
+        }
+    }
+
+    function cleanSelectedRows(){
+        tableRef.value?.clearCheckboxRow()
+        selectChangeHander([])
+    }
+    // #endregion
+    
+
     async function loadData(args:any) {
         if(!params?.api) {
             throw new Error('params.api is required')
@@ -306,8 +347,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             return;
         }
         // 不是 virtualScroll 或者 api 或者 大于 mobile 的时候不处理 scroll
-        
-        console.log("scrollTop", direction)
         if(direction === 'bottom') {
             // 向下滚动
             await lazyLoad()
@@ -388,19 +427,19 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     })
 
     function reload(){
-        console.log("reload")
         tableRef.value?.commitProxy('reload')
     }
 
     function query(params:any){
         tableRef.value?.commitProxy('query', params)
     }
-
-    // #endregion
+    
+    
     return {
         tableConfig,
         tableEvent,
         tableRef,
+        cleanSelectedRows,
         reload, 
         query
     }

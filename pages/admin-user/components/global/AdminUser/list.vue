@@ -78,9 +78,6 @@ onActivated(() => {
   tableRef.value?.reload()
 })
 
-onUnmounted(() => {
-  console.log('unmounted')
-})
 </script>
 
 <template>

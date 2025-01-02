@@ -26,7 +26,10 @@ interface userProviderDetail {
     GetGroupListApi : () => Promise<any>,
 }
 interface groupProvider {
-
+    openGroupDetail:(data:any, openInNewTab?:boolean) => void,
+    GetGroupListApi : () => Promise<any>,
+    DeleteGroupApi: (params:any) => Promise<any>,
+    CreateGroupApi: (params:any) => Promise<any>,
 }
 interface groupProviderDetail {
     DeleteGroupApi: (params:any) => Promise<any>,
