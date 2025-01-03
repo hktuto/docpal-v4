@@ -80,7 +80,10 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
          })
       })
       return options;
-    }
+    },
+    dblClickAction: ({ row, column, event }:any) => {
+      handleDblclick(row)
+    },
 })
 async function handleDelete(row: any) {
     const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
