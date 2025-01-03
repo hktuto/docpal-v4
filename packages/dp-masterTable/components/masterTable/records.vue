@@ -210,7 +210,6 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
     state.selectList = [...selectedRows];
   },
   dblClickAction: ({ row, column, event }:any) => {
-    console.log(row)
     handleAddRow(row) 
   },
   optionalConfig: {
