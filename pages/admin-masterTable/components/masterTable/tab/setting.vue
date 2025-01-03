@@ -7,19 +7,8 @@
 </template>
 
 <script lang="ts" setup>
-import {
-} from 'dp-api'
+
 const props = defineProps(['table'])
-// #region module: page
-    const route = useRoute()
-    const router = useRouter()
-
-    const state = reactive<any>({
-        loading: false,
-    })
-
-    
-// #endregion
 
 // #region module: init
     function init() {
@@ -37,8 +26,8 @@ defineExpose({  })
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: min-content 1fr;
-    grid-column-gap: var(--app-padding);
-    grid-row-gap: var(--app-padding);
+    grid-column-gap: var(--app-space-xs);
+    grid-row-gap: var(--app-space-xs);
 }
 
 .card-active { grid-area: 1 / 1 / 2 / 2; }

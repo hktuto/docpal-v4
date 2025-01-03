@@ -8,24 +8,23 @@
 </template>
 <script setup lang="ts">
 import { ElMessage} from 'element-plus'
-import { UpdateMasterTableApi } from 'dp-api'
+import { adminApi } from 'api'; 
 const props = defineProps(['table'])
 const state = reactive<any>({
     name: '',
     loading: false
 })
-const route = useRoute()
 async function handleSave() {
     state.loading = true
-    // try {
-        await UpdateMasterTableApi({
-            id: route.params.id,
+    try {
+        await adminApi.masterTableController.putTables({
+            id: props.table.id,
             name: state.name,
 
         })
-    // } catch (error) {
+    } catch (error) {
     //     ElMessage.error($i18n.t('dpMsg_error'))
-    // }
+    }
     setTimeout(() => state.loading = false, 500)
 }
 watch(() => props.table,() => {
@@ -37,7 +36,7 @@ watch(() => props.table,() => {
 <style lang="scss" scoped>
 .el-input {
     width: 100%;
-    padding: var(--app-padding) 0;
+    padding: var(--app-space-xs) 0;
 }
 </style>
         
