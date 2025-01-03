@@ -10,19 +10,17 @@
 </el-card>
 </template>
 <script setup lang="ts">
-import { ElMessage} from 'element-plus'
-import { UpdateMasterTableApi } from 'dp-api'
+import { adminApi } from 'api';
 const props = defineProps(['table'])
 const state = reactive<any>({
     isActive: 'D',
     loading: false
 })
-const route = useRoute()
 async function handleSave() {
     state.loading = true
     try {
-        await UpdateMasterTableApi({
-            id: route.params.id,
+        await adminApi.masterTableController.putTables({
+            id: props.table.id,
             status: state.isActive,
 
         })
@@ -38,7 +36,7 @@ watch(() => props.table,(newVal) => {
 <style lang="scss" scoped>
 .el-select {
     width: 100%;
-    padding: var(--app-padding) 0;
+    padding: var(--app-space-xs) 0;
 }
 </style>
     

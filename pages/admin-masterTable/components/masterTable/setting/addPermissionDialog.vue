@@ -2,42 +2,44 @@
 <el-dialog v-model="state.visible" :title="$t('dpDocument_acl_addLocal')"
     :close-on-click-modal="false"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, getUserListApi, GetGroupListApi, AddMasterTablesAclApi } from 'dp-api'
+import { adminApi } from 'api'
+import type { UserDTO, GroupDTO } from 'api/src/generate/admin'
+import formJson from './addPermissionDialog.vform.json' 
 const props = defineProps<{
-    exitList: Array,
+    exitList: any[],
+    tableId: string,
 }>()
+const { t } = useI18n()
 const emits = defineEmits([
     'refresh'
 ])
-const route = useRoute()
 
 const state = reactive({
     loading: false,
     visible: false,
 
-    userList: [],
-    groupList: []
 })
-const FromRendererRef = ref()
-const formJson = getJsonApi('admin/masterTablePermission.json')
+let userList: never[] | UserDTO[] | undefined | any[] = [] 
+let groupList: never[] | GroupDTO[] | undefined | any[] = []
+const FormRendererRef = ref()
 
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     const params = {
-        masterTableId: route.params.id,
+        masterTableId: props.tableId,
         userId: data.userId,
         ...data
     }
     state.loading = true
     try {
-        await AddMasterTablesAclApi(params)
+        await adminApi.masterTableController.postAdd1(params)
         state.visible = false
         emits('refresh')
     } catch (error) {
@@ -47,34 +49,34 @@ async function handleSubmit () {
 function handleOpen() {
     state.visible = true
     setTimeout(() => {
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         handleOptions()
     }, 100)
 }
 function handleOptions () {
-    const userIdRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('userId')
+    const userIdRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('userId')
     const options = [
-        { value: 'user_groups', label: $i18n.t('user_groups'), options: groupListFilter() },
-        { value: 'user_users', label: $i18n.t('user_users'), options: userListFilter() }
+        { value: 'user_groups', label: t('user_groups'), options: groupListFilter() },
+        { value: 'user_users', label: t('user_users'), options: userListFilter() }
     ]
     userIdRef.loadOptions(options)
     function userListFilter() {
-        return state.userList.filter((allItem:any) => 
+        return userList?.filter((allItem:any) => 
                 !props.exitList.some((exitItem:any) => exitItem.userId === allItem.userId))
     }
     function groupListFilter() {
-        return state.groupList.filter((allItem:any) => 
+        return groupList?.filter((allItem:any) => 
                 !props.exitList.some((exitItem:any) => exitItem.userId === allItem.id))
     }
 }
 onMounted(async() => {
-    state.userList = await getUserListApi()
-    state.userList.forEach(item => {
+    userList = await adminApi.identityNuxeo.postUsers({}).then(res => res.data)
+    userList?.forEach(item => {
         item.value = item.userId
         item.label = item.username
     });
-    state.groupList= await GetGroupListApi()
-    state.groupList.forEach(item => {
+    groupList = await adminApi.identityNuxeo.postGroups3().then(res => res.data)
+    groupList?.forEach(item => {
         item.value = item.id
         item.label = item.name
     });

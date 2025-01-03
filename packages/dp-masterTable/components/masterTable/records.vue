@@ -152,6 +152,7 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
         return dayjs(cellValue).format(format);
       },
     },
+    { field: "created_by", title: "role.creator" },
     { field: "modified_by", title: "modified_by" },
     {
       field: "status",
