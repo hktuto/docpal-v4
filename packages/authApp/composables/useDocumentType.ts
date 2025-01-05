@@ -45,8 +45,8 @@ export const useDocumentType = () => {
                 ...setting,
                 name: documentType,
             }
-        }
-        const res = await adminApi.nuxeoAdminController.getSetting1("")
+        }   
+        const res = await adminApi.api.getNuxeoAdminSetting("")
         if(res && res.data){
             allMetadataSetting.value = res.data
         }
