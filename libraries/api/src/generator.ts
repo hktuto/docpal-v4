@@ -15,11 +15,23 @@ const endpoint = [
 
 async function generate(){
     try{
+        // remove all old file base on endpoint
+        for(let i = 0; i < endpoint.length; i++) {
+            const filePath = path.resolve(process.cwd(), "./src/generate", endpoint[i].name + ".ts")
+            if(fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath)
+            }
+            const filePathJson = path.resolve(process.cwd(), "./src/generate", endpoint[i].name + ".json")
+            if(fs.existsSync(filePathJson)) {
+                fs.unlinkSync(filePathJson)
+            }
+        }
+
         
         await Promise.all(
             endpoint.map( 
                 point => {
-                    let finalRoute:Record<string, Record<string, string[]>> = {}
+                    let finalRoute:Record<string, any> = {}
                     generateApi({
                         name: point.name + '.ts',
                         output: path.resolve(process.cwd(), "./src/generate"),
@@ -28,10 +40,10 @@ async function generate(){
                         generateClient:true,
                         unwrapResponseData:true,
                         apiClassName: point.className,
-                        singleHttpClient:false,
+                        singleHttpClient:true,
                         modular:false,
-                        moduleNameIndex: 1,
-                        moduleNameFirstTag:true,
+                        moduleNameIndex: 0,
+                        moduleNameFirstTag:false,
                         prettier: {
                             // By default prettier config is load from your project
                             printWidth: 120,
@@ -49,27 +61,39 @@ async function generate(){
                                 if(paths[paths.length -1] === '') {
                                     paths[paths.length -1] = 'deprecate'
                                 }
-                                const allPath = paths.reverse().reduce((all, curr, index) => {
-                                    if(paths.length > 5 && all.length > 1) return all
-                                    if(all.length > 0) return all
-                                    if(curr && !curr.includes('{') ) {
-                                        all.push(curr)
+                                const ignoreList = ['api', 'docpal'];
+                                const allPath = paths.reduce((all, curr, index) => {
+                                    if(ignoreList.includes(curr)) return all
+                                    // if curr contain "${}", replace it
+                                    if(curr.includes('${')) {
+                                        const newPath = curr.replace('${', '').replace('}', '')
                                     }
+                                    all.push(curr)
                                     return all
-                                },[]).reverse()
+                                },[])
                                
                                 let newName = routeInfo.method + toPascalCase(allPath.join('-'))
                                 let oldName = newName;
-                                if(!finalRoute[routeInfo.moduleName]){
-                                    finalRoute[routeInfo.moduleName]= {}
+                                if(finalRoute[newName]) {
+                                    newName += finalRoute[newName].length
                                 }
-                                if(!finalRoute[routeInfo.moduleName][oldName]) {
-                                    finalRoute[routeInfo.moduleName][oldName] = []
+                                finalRoute[newName] = {
+                                    name: newName,
+                                    method: routeInfo.method,
+                                    route: routeInfo.route,
+                                    moduleName: routeInfo.moduleName,
                                 }
-                                if(finalRoute[routeInfo.moduleName][oldName].length > 0){
-                                    newName += finalRoute[routeInfo.moduleName][oldName].length
-                                }
-                                finalRoute[routeInfo.moduleName][oldName].push(routeInfo.method +" : " + newName + " : " + routeInfo.route)
+
+                                // if(!finalRoute[routeInfo.moduleName]){
+                                //     finalRoute[routeInfo.moduleName]= {}
+                                // }
+                                // if(!finalRoute[routeInfo.moduleName][oldName]) {
+                                //     finalRoute[routeInfo.moduleName][oldName] = []
+                                // }
+                                // if(finalRoute[routeInfo.moduleName][oldName].length > 0){
+                                //     newName += finalRoute[routeInfo.moduleName][oldName].length
+                                // }
+                                // finalRoute[routeInfo.moduleName][oldName].push(routeInfo.method +" : " + newName + " : " + routeInfo.route)
                                 
                                 return newName
                             }
