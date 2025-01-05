@@ -53,7 +53,7 @@ export async function login() {
     })
     keyCloakState.value.updateToken(10)
     localStorage.setItem('access_token', keyCloakState.value.token || "");
-    const {data} = await clientApi.systemFeatureController.getKeycloakTokenVerification()
+    const {data} = await clientApi.api.getSystemfeatureKeycloakTokenVerification()
     if(!data){
         throw new Error('token not valid')
     }
@@ -83,7 +83,7 @@ export function logout() {
  */
 async function getFeature() {
     const features = useFeature()
-    const {data} = await clientApi.systemFeatureController.getGetfeatures()
+    const {data} = await clientApi.api.getSystemfeatureGetfeatures()
     if(!data) throw new Error('get license feature error')
     features.value = data
 }
@@ -142,7 +142,7 @@ const uiSize = [
  */
 async function getUserPreference()  {
     const preference = useUserPreference()
-    const {data} = await clientApi.nuxeoUserController.getSetting()
+    const {data} = await clientApi.api.getUserSetting()
     if(!data ) {throw new Error('get user preference fail')}
     const userSetting = JSON.parse(data) || {}
     // normalize user preference , user may be come from old version
@@ -177,7 +177,7 @@ async function getUserPreference()  {
 
 async function getUser(){
     const user = useUserState()
-    const {data} = await clientApi.userNuxeo.getGetapplication()
+    const {data} = await clientApi.api.getNuxeoUserGetapplication()
     
     if(!data) throw new Error('Get user info fail');
     user.value = data
