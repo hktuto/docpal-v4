@@ -14,7 +14,7 @@
                 sortable :prop="item">
                 <template #default="{ row }">
                     <el-switch v-model="row[item]" :loading="row.loading" :disabled="item === 'read'"
-                        @change="(value) => handlePermissionChange(value, item, row)"></el-switch>
+                        @change="(value: boolean) => handlePermissionChange(value, item, row)"></el-switch>
                 </template>
             </el-table-column>
             <el-table-column :label="$t('dpTable_actions')">
@@ -25,18 +25,14 @@
         </el-table>
         
     </div>
-    <MasterTableSettingAddPermissionDialog ref="AddPermissionDialogRef" :exitList="state.tableData" @refresh="init"/>
+    <MasterTableSettingAddPermissionDialog ref="AddPermissionDialogRef" :tableId="table.id" :exitList="state.tableData" @refresh="init"/>
 </el-card>
 </template>
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { 
-    GetMasterTablesAclsApi,
-    DeleteMasterTablesAclApi,
-    UpdateMasterTablesAclApi
-} from 'dp-api'
-
-const route = useRoute()
+import { adminApi } from 'api'
+const props = defineProps(['table'])
+const { t } = useI18n()
 const state = reactive<any>({
     loading: false,
     tableData: []
@@ -45,10 +41,10 @@ const AddPermissionDialogRef = ref()
 function handleAdd () {
     AddPermissionDialogRef.value.handleOpen()
 }
-async function handlePermissionChange(boo: boolean, permission: 'read'|'edit'|'create'|'enable', row) {
+async function handlePermissionChange(boo: boolean, permission: string, row: any) {
     row.loading = true
     try {
-        await UpdateMasterTablesAclApi({
+        await adminApi.masterTableController.postRemove({
             ...row,
             [permission]: boo
         })
@@ -56,10 +52,10 @@ async function handlePermissionChange(boo: boolean, permission: 'read'|'edit'|'c
     }
     setTimeout(() => row.loading = false, 500)
 }
-async function handleRemove(row) {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+async function handleRemove(row: any) {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    await DeleteMasterTablesAclApi({
+    await adminApi.masterTableController.postDelete1({
         masterTableId: row.masterTableId,
         userId: row.userId
     })
@@ -69,7 +65,7 @@ async function handleRemove(row) {
 async function init() {
     try {
         state.loading = true
-        state.tableData = await GetMasterTablesAclsApi(route.params.id)
+        state.tableData = await adminApi.masterTableController.getAcls(props.table.id).then(res => res.data)
     } catch (error) {
     }
     state.loading = false
@@ -80,12 +76,12 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .el-button {
-    margin: var(--app-padding) 0;
+    margin: var(--app-space-xs) 0;
 }
 :deep .el-card__body {
     display: grid;
     grid-template-columns: 250px 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     height: 100%;
     overflow: hidden;
 }

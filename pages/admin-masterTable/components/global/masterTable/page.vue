@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api';
 import { MasterTableProviderKey } from '~/utils/masterTableProvider';
+import { routeMasterTableDetail, routeMasterTableNew } from '~/utils/routerHelper';
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 if( !routerProvider) {
@@ -48,12 +49,6 @@ provide(MasterTableProviderKey, {
   },
   UpdateMasterTableApi: (params:any) => {
     return adminApi.masterTableController.putTables(params)
-  },
-  GetMasterTablesLogsApi: (params:any) => {
-    return adminApi.masterTableController.postLogs({...params, ...state.logFilter})
-  },
-  GetMasterTablesLogConditionsApi: (params:any) => {
-    return adminApi.masterTableController.postConditions(params)
   },
   openDetail,
   openNew

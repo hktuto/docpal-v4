@@ -2,29 +2,30 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig"> 
         <template #toolbar_buttons>
             <ResponsiveFilter
-            ref="ResponsiveFilterRef"
-            @form-change="handleFilterFormChange"
-            inputKey="name"
+                ref="ResponsiveFilterRef"
+                @form-change="handleFilterFormChange"
+                inputKey="name"
             />
         </template>
     </VxeGrid>
 </template>
 
 <script lang="ts" setup>
+import { adminApi } from 'api'
 import dayjs from 'dayjs'
 import {useI18n} from '#imports'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { MasterTableProviderKey } from '~/utils/masterTableProvider';
+
+const props = defineProps(['tableName'])
 const emits = defineEmits(['filter-change'])
 const { t } = useI18n()
-const masterTableProvider = inject(MasterTableProviderKey)
-const state = reactive<any>({
-    loading: false,
-})
-
+let extraParams:any = {
+    eventCategory: 'Master Table'
+}
+let filtersParams:any = {
+}
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'masterTableTableSetting',
-    api: (pageParams:any) => masterTableProvider?.GetMasterTablesLogsApi(pageParams),
+    api: (pageParams:any) => adminApi.masterTableController.postLogs({...pageParams, ...extraParams, ...filtersParams}),
     columns:  [
         { id: "10",  field: 'docPath', title: 'masterTable.table', fixed: 'left'},
         { field: 'principalName', title: 'user_username',},
@@ -45,21 +46,23 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
-        const filters = await masterTableProvider?.GetMasterTablesLogConditionsApi()
+        const filters = await adminApi.masterTableController.postConditions({ ...extraParams }).then(res => res.data)
         nextTick(() => {
-            ResponsiveFilterRef.value.init(filters.data)
+            ResponsiveFilterRef.value.init(filters)
         })
     }
     function handleFilterFormChange(formModel: any) {
-        state.extraParams = formModel
-        emits('filter-change', state.extraParams)
+        filtersParams = formModel
     }
 // #endregion
 
 onMounted(() => {
+    if(!!props.tableName) extraParams.name = props.tableName
+    else delete extraParams.name
     getFilter()
 })
 defineExpose({ reload })
+
 </script>
 
 <style lang="scss" scoped>

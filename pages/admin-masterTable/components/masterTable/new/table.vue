@@ -43,7 +43,6 @@
       @update="handleUpdateSchama"/>
 </template>
 <script lang="ts" setup>
-import { openMasterTablePage } from '~/utils/masterTableProvider'
 import {MenuRouterKey} from '#imports'
 import { getIgnoreSchemas } from '~/utils/masterTableProvider';
 const ignoreList = getIgnoreSchemas()
@@ -118,7 +117,7 @@ async function handleSubmit() {
       name: state.name,
       fields: tableConfig.data
     })
-    routerProvider.navigateTo(openMasterTablePage()) 
+    routerProvider.navigateTo(routeMasterTableNew()) 
   } catch (error) {
       
   }
