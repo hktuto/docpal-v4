@@ -39,13 +39,18 @@ provide(
     }
 )
 
-function openTab(tab:TabItem){
-    console.log("openTab")
+async function openTab(tab:TabItem){
     // check if tab is already open
+    try{
+        await focusExistingTab(tab)
+    }catch(error){
+        addTabInCurrentPanel({...tab})
+    } 
+}
+
+function focusExistingTab(tab:TabItem):Promise<void>{
     const existingTab = allComponents.value.find(item => item.name === tab.name)
-    console.log("existingTab", existingTab)
     if(existingTab){
-        console.log("find existingTab")
         const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
         if(panelIndex !== -1) {
             console.log("can find index")
@@ -54,16 +59,26 @@ function openTab(tab:TabItem){
             if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
                 layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true
             }
+            return Promise.resolve()
         }else{
-            console.log("can not find index")
-            addTabInCurrentPanel({...tab})
+            return Promise.reject(new Error("can not find index"))
         }
     }else{
-        console.log("no existingTab")
-        tab.parent = tab.parent || hightLightPanel.value
-        addTabInCurrentPanel({...tab})
+        return Promise.reject(new Error("no existingTab"))
     }
-    // console.log(existingTab, allComponents.value)
+}
+
+async function openInCurrentTab(tab:TabItem){
+    try{
+        await focusExistingTab(tab)
+    }catch(error){
+        const selectedTabIndex = layout.value.findIndex(item => item.id === tab.id)
+        if(selectedTabIndex !== -1) {
+            // get hight light panel
+            const panel = layout.value[selectedTabIndex]
+        }
+    }
+    const existingTab = allComponents.value.find(item => item.name === tab.name)
 }
 
 function setLayout(layout:TabPanel[]){

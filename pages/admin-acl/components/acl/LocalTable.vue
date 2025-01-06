@@ -49,14 +49,14 @@ async function handlePermissionChange (open:boolean, permission: string, row: an
     try {
         row.loading = true
         let res: any
-        if (!open && permission === 'print') res = await adminApi.documentNuxeo.deleteRemove({ idOrPath: props.doc.id, userId: row.userId, permission: 'Print'})
+        if (!open && permission === 'print') res = await adminApi.api.deleteNuxeoDocumentAclRemove({ idOrPath: props.doc.id, userId: row.userId, permission: 'Print'})
         else if (open && permission === 'print') {
             const _data = {
                 ...row,
                 permission: 'Print',
                 idOrPath: props.doc.id
             }
-            res = await adminApi.documentNuxeo.postAdd(_data)
+            res = await adminApi.api.postNuxeoDocumentAclAdd(_data)
         }
         else if (open && !row.acePermission) {
             const _data = {
@@ -64,7 +64,7 @@ async function handlePermissionChange (open:boolean, permission: string, row: an
                 permission: permissionRevert(open, permission),
                 idOrPath: props.doc.id
             }
-            res = await adminApi.documentNuxeo.postAdd(_data)
+            res = await adminApi.api.postNuxeoDocumentAclAdd(_data)
         }
         else {
             const _permission = permissionRevert(open,permission)
@@ -83,7 +83,7 @@ async function handlePermissionChange (open:boolean, permission: string, row: an
                 }
                 if (row.startDate) _data.startDate = row.startDate
                 if (row.endDate) _data.endDate = row.endDate
-                await adminApi.documentNuxeo.putReplace(_data)
+                await adminApi.api.putNuxeoDocumentAclReplace(_data)
             }
         }
         if (res && res.errorCode)  throw new Error(res.message || 'error');
@@ -118,7 +118,7 @@ async function removeLocalAcl (row: any) {
     try {
         let msg = ''
         
-        const isShareInternal = await adminApi.internalShareController.postCheckdocumentisinshare({documentId: props.doc.id, shareToUserId: row.userId})
+        const isShareInternal = await adminApi.api.postInternalshareCheckdocumentisinshare({documentId: props.doc.id, shareToUserId: row.userId})
         if(isShareInternal.data) msg += `<span class="color__danger">${t('msg_isShareInternal')}</span>,`
         
         msg += `${t('msg_confirmWhetherToDelete')}`
@@ -126,7 +126,7 @@ async function removeLocalAcl (row: any) {
             dangerouslyUseHTMLString: true,
         })
         if(action !== 'confirm') throw new Error("cancel");
-        await adminApi.documentNuxeo.deleteRemove({idOrPath: props.doc.id, userId: row.userId})
+        await adminApi.api.deleteNuxeoDocumentAclRemove({idOrPath: props.doc.id, userId: row.userId})
         emits('refresh')
     } catch (error) {
         row.loading = false
