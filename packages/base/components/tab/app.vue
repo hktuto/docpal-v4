@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import 'splitpanes/dist/splitpanes.css'
-import {TabDialog} from '#components'
+import { TabDialog } from '#components'
 const emits = defineEmits(['ready', 'layoutChanged', 'highlightPanelChanged'])
-const {layout, initLayout, allComponents} = useTabsManager()
+const {layout, initLayout, allComponents, allComponentRef} = useTabsManager()
 const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
@@ -35,6 +35,7 @@ provide(
         closeDialog,
         openFocusMode,
         openNewDialog,
+        openInCurrentTab,
         openTab
     }
 )
@@ -72,19 +73,29 @@ async function openInCurrentTab(tab:TabItem){
     try{
         await focusExistingTab(tab)
     }catch(error){
-        const selectedTabIndex = layout.value.findIndex(item => item.id === tab.id)
-        if(selectedTabIndex !== -1) {
-            // get hight light panel
-            const panel = layout.value[selectedTabIndex]
+        const panel = layout.value.find( panel => panel.id === hightLightPanel.value)
+
+        const tabIndex = panel.showingTabIndex
+        const highLightItem = panel.tabs[tabIndex]
+        if(highLightItem){
+            const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
+            console.log("indexInAllComponent", indexInAllComponent, allComponentRef.value[indexInAllComponent])
+            if(allComponentRef.value[indexInAllComponent]){
+                console.log(allComponentRef.value[indexInAllComponent])
+                allComponentRef.value[indexInAllComponent].navigateTo(tab)
+            }
         }
+        
+        
     }
-    const existingTab = allComponents.value.find(item => item.name === tab.name)
+    // const existingTab = allComponents.value.find(item => item.name === tab.name)
 }
 
 function setLayout(layout:TabPanel[]){
     loading.value = true;
     initLayout(layout);
     loading.value = false
+
     // get tab from router
 }
 
@@ -129,13 +140,13 @@ defineExpose({
                         <template v-if="fullscreenItem && fullscreenItem.id === component.id">
                             <Teleport defer :to="`#fullscreen-${component.parent}_${component.id}`">
                                
-                                <TabRouter :tab="component" />
+                                <TabRouter ref="allComponentRef" :tab="component" />
                             </Teleport>
                         </template>
                         <template v-else>
                             
                             <Teleport defer :to="`#${component.parent}_${component.id}`">
-                                <TabRouter :tab="component" />
+                                <TabRouter ref="allComponentRef" :tab="component" />
                             </Teleport>
                         </template>
                         

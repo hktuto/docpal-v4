@@ -22,7 +22,7 @@ function menuItemClick(item:any) {
     // if menu  has no children, open page in new tab
     if(!item.children || item.children.length === 0) {
         console.log("item click", item);
-        tabProvider?.openTab(item)
+        tabProvider?.openInCurrentTab(item)
         return;
     }
     if(selectedMenuItem.value && selectedMenuItem.value.id === item.id) {
