@@ -22,7 +22,8 @@ function menuItemClick(item:any) {
     // if menu  has no children, open page in new tab
     if(!item.children || item.children.length === 0) {
         console.log("item click", item);
-        tabProvider?.openInCurrentTab(item)
+        // TODO : show choose user perference to see if open in new tab or in current tab
+        tabProvider?.openTab(item)
         return;
     }
     if(selectedMenuItem.value && selectedMenuItem.value.id === item.id) {
