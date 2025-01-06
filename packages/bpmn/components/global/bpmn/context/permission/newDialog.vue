@@ -21,7 +21,7 @@ const validationRules = {
     ]
 }
 async function gertUserGroupList() {
-    const response = await adminApi.identityNuxeo.postGroups3()
+    const response = await adminApi.api.postNuxeoIdentityGroups()
     if(!response.data){
         throw new Error("获取用户组列表失败")
     }

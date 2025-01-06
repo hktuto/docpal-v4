@@ -199,7 +199,7 @@ const fieldListApi = computed(() => {
 
 async function formSubmit(){
     const json = fromDesignRef.value.getFormJson()
-    await adminApi.formPropertiesRelationController.postSave({
+    await adminApi.api.postRelationSave({
         processKey: workflowData.value.key,
         userTaskId: selectedStep.value.id,
         jsonValue: JSON.stringify(json),
@@ -209,7 +209,7 @@ async function formSubmit(){
 }
 
 async function getFormByNode(node: Node){
-    const response = await adminApi.formPropertiesRelationController.getQuery({
+    const response = await adminApi.api.getRelationQuery({
         processKey: workflowData.value.key,
         userTaskId: node.data.id,
         versionId: currentVersion.value
@@ -223,7 +223,7 @@ async function getFormByNode(node: Node){
 
 async function saveFormByNode(node: Node, json:any){
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
-    return await adminApi.formPropertiesRelationController.postSave({
+    return await adminApi.api.postRelationSave({
         processKey: workflowData.value.key,
         userTaskId: id,
         jsonValue: JSON.stringify(json),
@@ -235,7 +235,7 @@ const formRenderVisible = ref(false);
 const fromRenderRef = ref();
 async function previewForm(node:Node) {
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
-    const response = await adminApi.formPropertiesRelationController.getQuery({
+    const response = await adminApi.api.getRelationQuery({
         processKey: workflowData.value.key,
         userTaskId: id,
         versionId: currentVersion.value
@@ -271,7 +271,7 @@ const getGraphValue = computed(() => {
 
 async function openForm(node: Node){
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
-    const response = await adminApi.formPropertiesRelationController.getQuery({
+    const response = await adminApi.api.getRelationQuery({
         processKey: workflowData.value.key,
         userTaskId: id,
         versionId: currentVersion.value
@@ -340,13 +340,6 @@ async function pasteForm(node:Node){
 const conditionSetting = ref<Record<string, object>[]>([])
 
 async function getConditionSetting(){
-    // const data = await adminApi.globalSettingController.getSetting()
-    // console.log("getConditionSetting", data);
-    // if(!data || !data.data) {
-    //     conditionSetting.value = []
-    // }else{
-    //     conditionSetting.value = data.data
-    // }
     conditionSetting.value = conditionOptions as any
 }
 const sidebarRef = ref()

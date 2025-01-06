@@ -53,7 +53,8 @@ async function handleSubmit() {
       delete params.data[0].relationRecords
     }
     const tableId = route.params.id || route.query.id
-    await adminApi.masterTableController.putRecord1(tableId, params)
+
+    await adminApi.api.putMasterTablesIdBatchRecord(tableId, params)
     // console.log(params);
     emits("refresh");
     state.visible = false;
