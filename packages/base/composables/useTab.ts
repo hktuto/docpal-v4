@@ -8,11 +8,12 @@ export const useDropEventCallback = () => useState<Record<symbol, any>>('tab-pan
 export const useCurrentTargetPanel = () => useState<string>('tab-current-target-panel',() => "")
 export const useTabComponent = () => useState<TabItem[]>('tab-component', () => ([]))
 export const useCurrentTargetRouter = () => useState<string>('tab-current-target-router',() => "")
-
+export const useAllComponentRef = () => useState('all-component-ref', () => ([]))
 export const useTabsManager = () => {
 
     const layout = useTabLayout()
     const allComponents = useTabComponent()
+    const allComponentRef = useAllComponentRef()
     const hightLightPanel = useCurrentTargetPanel()
     function initLayout(newLayout:TabPanel[]) {
         
@@ -39,7 +40,8 @@ export const useTabsManager = () => {
     return {
         allComponents,
         initLayout,
-        layout
+        layout,
+        allComponentRef
     }
 }
 
@@ -67,7 +69,6 @@ export function paneResized(sizes:{min:number, max:number, size:number}[]) {
 
 
 export function closePanelTab(panelId:string, tabIndex: number, deleteComponent = true) {
-    console.log("closePanelTab")
     const layout = useTabLayout()
     const components = useTabComponent()
     const panelIndex = layout.value.findIndex(tab => tab.id === panelId)

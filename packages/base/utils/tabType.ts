@@ -21,6 +21,7 @@ interface TabManager {
     openFocusMode:(tab:TabItem) => void
     openNewDialog:(args: any) => void
     openTab:(tab:TabItem) => void
+    openInCurrentTab:(tab:TabItem) => void
 }
 
 interface TabComponentHelper {
