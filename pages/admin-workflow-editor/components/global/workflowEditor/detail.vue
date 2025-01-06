@@ -28,17 +28,17 @@ const productionVersion = ref()
 const lastestVewsion = ref()
 async function getWorkflow() {
     console.log("getWorkflow", id, currentVersion)
-    const data = await adminApi.workflowProcessDefinitionController.getDraft(id)
-    const blob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:currentVersion}, {
+    const data = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
+    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
     }) 
-    const json = await adminApi.workflowVersionController.getJson({draftId:id, versionNumber:currentVersion}, {})
+    const json = await adminApi.api.getWorkflowVersionJson({draftId:id, versionNumber:currentVersion}, {})
     // @ts-ignore
     const file = await blob.text()
     draftDetail.value = data.data;
     bpmnFile.value = file
     
-    const {data: draftData}:any = await adminApi.workflowProcessDefinitionController.getDraft(id)
+    const {data: draftData}:any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
     if(!draftData ){
         throw createError("draft not found")
     }

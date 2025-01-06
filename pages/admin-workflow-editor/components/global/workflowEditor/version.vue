@@ -21,7 +21,7 @@ if(!routerProvider ) {
 
 
 async function getWorkflowDetail(){
-    const {data: draftData}:any = await adminApi.workflowProcessDefinitionController.getDraft(draftId)
+    const {data: draftData}:any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(draftId)
     workflowData.value = draftData
     routerProvider?.updateTabName(draftData.name + '- versions list' )
 }
@@ -57,7 +57,7 @@ onMounted(async () => {
 
 
 provide(WorkflowEditorVersionListProviderKey,{
-    getListApi : adminApi.workflowVersionController.postPage,
+    getListApi : adminApi.api.postWorkflowVersionPage,
     editHandler,
     actionPermission,
 })

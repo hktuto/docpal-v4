@@ -36,12 +36,12 @@ const state = reactive<{
 })
 
 async function rootDataGet () {
-    const res = await adminApi.documentNuxeo.getDocument({idOrPath: '/'})
+    const res = await adminApi.api.getNuxeoDocument({idOrPath: '/'})
     return [{ ...res.data, name: 'Root'}]
 }
 
 async function leafDataGet(pageParams:any) {
-    const res = await adminApi.documentNuxeo.postThumbnail(pageParams)
+    const res = await adminApi.api.postNuxeoDocumentChildrenThumbnail(pageParams)
     return res.data
 }
 
@@ -50,7 +50,7 @@ async function handleClick (doc:any) {
     state.loading = true
     try {
         state.doc = deepCopy(doc)
-        const {data} = await adminApi.documentNuxeo.getDocument({idOrPath: state.doc.id})
+        const {data} = await adminApi.api.getNuxeoDocument({idOrPath: state.doc.id})
         state.doc = { ...data, ...doc }
         await getAcls()
     } catch (error) {
@@ -62,7 +62,7 @@ async function handleClick (doc:any) {
 async function getAcls () {
     try {
         if(!state?.doc?.id) throw new Error("no id");
-        const { data } = await adminApi.documentNuxeo.getAcls(state.doc.id)
+        const { data } = await adminApi.api.getNuxeoDocumentDocumentidAcls(state.doc.id)
         if(data && data.inherited && data.local) {
             state.acls = data as any
         }else{

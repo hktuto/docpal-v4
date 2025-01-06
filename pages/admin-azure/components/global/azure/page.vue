@@ -38,11 +38,11 @@ function goClientPath (path) {
     window.open('https://' + config.public.endpoint.docpal + '/browse?path=' + path, '_blank');
 }
 async function GetAzureSetting (){
-    const res = await adminApi.azureOcrController.getQueryazuresetting()
+    const res = await adminApi.api.getAzureOcrQueryazuresetting()
     return res.data
 }
 async function GetOCRConditions (){
-    const res = await adminApi.azureOcrController.getConditions()
+    const res = await adminApi.api.getAzureOcrConditions()
     return res.data
 }
 const logTableRef = ref()
@@ -52,19 +52,19 @@ function handleFilterFormChange(formData:any) {
 }
 provide(AzureProviderKey, {
     UpdateAzureApiKeyApi: (params:any) => {
-        return adminApi.azureOcrController.putUpdateapisetting(params)
+        return adminApi.api.putAzureOcrUpdateapisetting(params)
     },
     UpdateAzureOcrSettingApi: (params:any) => {
-        return adminApi.azureOcrController.putUpdateocrsetting(params)
+        return adminApi.api.putAzureOcrUpdateocrsetting(params)
     },
     CreateAzureOcrMappingApi: (params:any) => {
-        return adminApi.azureOcrController.postCreateocrprofilemapping(params)
+        return adminApi.api.postAzureOcrCreateocrprofilemapping(params)
     },
     UpdateAzureOcrMappingApi: (params:any) => {
-        return adminApi.azureOcrController.putUpdateocrprofilemapping(params)
+        return adminApi.api.putAzureOcrUpdateocrprofilemapping(params)
     },
     GetAzureOcrModelsApi: (params:any) => {
-        return adminApi.azureOcrController.getQueryazureocrmodels(params)
+        return adminApi.api.getAzureOcrQueryazureocrmodels(params)
     },
     GetOCRTransactionLogApi: (params: any) => {
         const filter: any = filterFormdata
@@ -73,7 +73,7 @@ provide(AzureProviderKey, {
                 if(filter[key]) params[key] = filter[key]
             })
         }
-        return adminApi.azureOcrController.postQueryocrtransactionlogs(params)
+        return adminApi.api.postAzureOcrQueryocrtransactionlogs(params)
     },
     goClientPath
 })

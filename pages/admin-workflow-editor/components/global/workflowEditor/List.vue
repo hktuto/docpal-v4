@@ -73,7 +73,7 @@ provide(WorkflowEditorListProviderKey,{
     openVersions,
     createNewWorkflow,
     actionPermission,
-    getListApi: adminApi.workflowProcessDefinitionController.postPage
+    getListApi: adminApi.api.postWorkflowProcessDefinitionDraftPage
 })
 
 function reload(){

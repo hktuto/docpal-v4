@@ -42,7 +42,7 @@ function save(){
 let versionList:any[] = [];
 async function getVersionList() {
     // get version list
-    const response = await adminApi.workflowVersionController.postPage({draftId: data.id || data.draftId})
+    const response = await adminApi.api.postWorkflowVersionPage({draftId: data.id || data.draftId})
     versionList = response.data?.entryList || []
 }
 

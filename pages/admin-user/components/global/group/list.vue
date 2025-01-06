@@ -26,14 +26,14 @@ function openGroupDetail(data: any, openInNewTab = false) {
 provide(groupProviderKey, {
   openGroupDetail,
   GetGroupListApi: async () => {
-    const res = await adminApi.identityNuxeo.postGroups3();
+    const res = await adminApi.api.postNuxeoIdentityGroups();
     return res.data;
   },
   DeleteGroupApi: (params: any) => {
-    return adminApi.identityNuxeo.deleteGroup(params);
+    return adminApi.api.deleteNuxeoIdentityGroup(params);
   },
   CreateGroupApi: (params: any) => {
-    return adminApi.identityNuxeo.postGroup(params);
+    return adminApi.api.postNuxeoIdentityGroupDeprecate(params);
   },
 });
 </script>
