@@ -127,7 +127,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 if(!perference.value.tableSettings) perference.value.tableSettings = {}
                 perference.value.tableSettings[id] = storeData
                 // save perference
-                return clientApi.nuxeoUserController.putSetting(perference.value)
+                return clientApi.api.putUserSetting(perference.value)
             }
         },
         sortConfig:{
