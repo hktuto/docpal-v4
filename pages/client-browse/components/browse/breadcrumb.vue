@@ -16,7 +16,7 @@ async function getBreadcrumb() {
     loading.value = true
     try{
 
-        const {data} = await clientApi.documentNuxeo.postBreadcrumb({idOrPath:idOrPath.value})
+        const {data} = await clientApi.api.postNuxeoDocumentBreadcrumb({idOrPath:idOrPath.value})
         breadcrumbList.value = data || []
     }catch(e){
         console.log(e)

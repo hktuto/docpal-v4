@@ -36,7 +36,7 @@ const allFieldOptions = computed(() => {
 
 
 async function getEmailTemplates(){
-    const response = await adminApi.emailController.getAll1()
+    const response = await adminApi.api.getTemplateEmailAll()
     allEmailTemplates.value = response.data
     const nodeData = node.getData()
     const {data:{extensionElements}} = node.getData()

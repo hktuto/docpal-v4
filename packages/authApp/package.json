@@ -20,7 +20,8 @@
     "nuxt": "3.13.2",
     "nuxt-authorization": "^0.1.0",
     "vue": "3.5.6",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "eventbus": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.14.1",

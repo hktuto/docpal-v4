@@ -26,6 +26,7 @@
 </template>
 <script lang="ts" setup>
 import { Select, CloseBold } from '@element-plus/icons-vue'
+
 import { adminApi } from 'api'
 const props = defineProps<{
     tableData: any[],
@@ -40,7 +41,7 @@ const state = reactive({
 async function unBlockInherited () {
     state.loading = true
     try {
-        await adminApi.documentNuxeo.postUnblock([{idOrPath: props.doc.id}])
+        await adminApi.api.postNuxeoDocumentAclUnblock([{idOrPath: props.doc.id}])
         emits('refresh')
     } catch (error) {
     }
@@ -49,7 +50,7 @@ async function unBlockInherited () {
 async function blockInherited () {
     state.loading = true
     try {
-        await adminApi.documentNuxeo.postBlock([{idOrPath: props.doc.id}])
+        await adminApi.api.postNuxeoDocumentAclBlock([{idOrPath: props.doc.id}])
         emits('refresh')
     } catch (error) {
         

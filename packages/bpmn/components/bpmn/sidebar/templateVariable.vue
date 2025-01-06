@@ -15,7 +15,7 @@ async function getTemplateVariableList() {
     if(!props.templateId) {
         return;
     }
-    const {data} = await adminApi.documentTemplateController.getRefresh(props.templateId)
+    const {data} = await adminApi.api.getTemplateDocumentRefreshId(props.templateId)
     // const {templateVariable} = await GetTemplateVariablesApi(props.templateId);
     
     const varList = [...new Set(JSON.parse(data as any))]

@@ -3,8 +3,11 @@ import formJson from './form.vform.json'
 import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const FromRendererRef = ref()
-function  handleSuccess() {
+function  handleSuccess(metaDateFormat:string) {
+  console.log("metaDateFormat", metaDateFormat)
   ElMessage.success(t('dpMsg_success'))
+  const bus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME)
+  bus.emit(metaDateFormat)
 }
 </script>
 
