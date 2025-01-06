@@ -49,7 +49,7 @@ async function handleSubmit () {
             params.dpId = state.aclItem.dpId
         }
         state.loading = true
-        await adminApi.documentNuxeo.putReplace(params)
+        await adminApi.api.putNuxeoDocumentAclReplace(params)
         state.visible = false
         emits('refresh')
     } catch (error) {

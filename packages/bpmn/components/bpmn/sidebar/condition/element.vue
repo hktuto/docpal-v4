@@ -98,7 +98,7 @@ const masterTableLoading = ref(false)
 const selectedMasterTableOption = ref<any[]>([])
 async function masterTableChange(masterTableId:string) {
     masterTableLoading.value = true
-    const data = await adminApi.masterTableController.getTables1(masterTableId);
+    const data = await adminApi.api.getMasterTablesId(masterTableId);
     if(data.data && data.data.fields){
         selectedMasterTableOption.value = data.data.fields
     }else{
@@ -111,7 +111,7 @@ const castColumnLoading = ref(false)
 const selectedCaseTableOption = ref<any[]>([])
 async function caseTableChange(caseTableId:string) {
     castColumnLoading.value = true
-    const data = await adminApi.caseTableController.getTables1(caseTableId);
+    const data = await adminApi.api.getCaseTablesId(caseTableId);
     console.log("caseTableChange", data)
     if(data.data && data.data.fields){
         selectedCaseTableOption.value = data.data.fields

@@ -50,7 +50,7 @@ async function loopChildren(all:any[], item: any, level = 0, title = ''){
 }
 
 async function getAllTemplate(){
-    const {data} = await adminApi.documentTemplateController.getAll()
+    const {data} = await adminApi.api.getTemplateDocumentAll()
     if(!data) return
     allDocumentTemplates.value = data.map((item: any) => {
         return {
@@ -62,7 +62,7 @@ async function getAllTemplate(){
     const bpmnJson = graphProvider?.bpmnJson.value
     if(bpmnJson && bpmnJson.definitions && bpmnJson.definitions.process && bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping']){
         folderCabinetRootId.value = bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping'][0].attr_id
-        const {data} = await adminApi.folderCabinetController.getTemplate(folderCabinetRootId.value)
+        const {data} = await adminApi.api.getCabinetTemplateId(folderCabinetRootId.value)
         flatCabinetList.value = await loopChildren([], data, 0,'')
         // flatCabinetList.value = props.bpmnJson.definitions.process['flowable:folderCabinetMapping'][0]
     }

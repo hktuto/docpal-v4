@@ -27,7 +27,8 @@ const form = ref<any[]>([])
 
 
 async function loopChildren(all:any, item: any, level = 0) {
-    const response = await adminApi.docPalTypeSettingController.getName(item.documentType);
+
+    const response = await adminApi.api.getDocpaltypeSettingsNameName(item.documentType);
     const meta = response.data
     all.push({...item, level, displayMeta : meta && meta.metadata ? meta.metadata.map((item:any) => item.metadata) : []})
 
@@ -59,7 +60,7 @@ async function getCabinetDetail(id:string) {
         return
     }
     detailLoading.value = true
-    const response = await adminApi.folderCabinetController.getTemplate(id);
+    const response = await adminApi.api.getCabinetTemplateId(id);
     cabinetDetail.value = response.data;
     let arr:any[] =[];
     arr = await loopChildren(arr, cabinetDetail.value, 0)
@@ -116,7 +117,7 @@ async function getCabinetDetail(id:string) {
     setForm()
 }
 async function getList() {
-    const response = await adminApi.folderCabinetController.getList()
+    const response = await adminApi.api.getCabinetList()
     cabinetOptions.value = response.data
 }
 

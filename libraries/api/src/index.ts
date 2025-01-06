@@ -31,7 +31,11 @@ clientApi.instance.interceptors.request.use(
     error => Promise.reject(error)
   );
 clientApi.instance.interceptors.response.use(
-    response => response,
+  response => {
+    console.log("response", response)
+    // if request contenttype not match with response contenttype, throw error
+    return response
+  },
     async error => {
         const originalRequest = error.config;
         console.log('fetch error', error)
@@ -86,7 +90,11 @@ adminApi.instance.interceptors.request.use(
 )
 
 adminApi.instance.interceptors.response.use(
-    response => response,
+    response => {
+      console.log("response", response)
+      // if request contenttype not match with response contenttype, throw error
+      return response
+    },
     async error => {
         const originalRequest = error.config;
         console.log('fetch error', error)
