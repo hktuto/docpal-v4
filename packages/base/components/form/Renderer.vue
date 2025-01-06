@@ -23,9 +23,11 @@ import { clientApi } from 'api';
         options?: Object,
         attachmentDownloadApi?: Function,
     }>(), {
-        attachmentDownloadApi: (id: string) => clientApi.workflow.getDeprecate4({attachmentId:id},{
-                    format: 'blob'
-                })
+        attachmentDownloadApi: (id: string) => clientApi.api.getWorkflowTaskAttachmentInfoDeprecate(
+            {attachmentId:id},
+            {
+                format: 'blob'
+            })
     });
     const vFormRenderRef = ref()
     const fromJsonNormalizer = computed(() => {
@@ -62,7 +64,7 @@ import { clientApi } from 'api';
         emits('emit', funName, newValue, oldValue)
     }
     const ReaderRef = ref()
-    const previewFile = reactive({
+    const previewFile = reactive<any>({
         blob: null,
         name: '',
         id: '',
@@ -80,10 +82,12 @@ import { clientApi } from 'api';
             let fileId = ''
             if (options.uploadName === 'file') {
                 fileId = file.response?.data ? file.response.data.id : file.id
-                previewFile.blob = await clientApi.documentNuxeo.getDownload({idOrPath:fileId})
+                previewFile.blob = await clientApi.api.getNuxeoDocumentDownload({idOrPath:fileId},{
+                    format: 'blob'
+                }) as any
             } else {
                 fileId = file.response?.data && file.response.data.length > 0 ? file.response.data[0].contentId : file.id
-                previewFile.blob = await clientApi.workflow.getDeprecate4({attachmentId:fileId},{
+                previewFile.blob = await clientApi.api.getWorkflowTaskAttachmentInfoDeprecate({attachmentId:fileId},{
                     format: 'blob'
                 })
                 
