@@ -40,7 +40,7 @@ async function generate(){
                         generateClient:true,
                         unwrapResponseData:true,
                         apiClassName: point.className,
-                        singleHttpClient:true,
+                        singleHttpClient:false,
                         modular:false,
                         moduleNameIndex: 0,
                         moduleNameFirstTag:false,
