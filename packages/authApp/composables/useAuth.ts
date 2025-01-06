@@ -33,7 +33,6 @@ export const useAuth = () => {
 
 export const userDisplayTimeSetting = () => {
     const userPreference = useUserPreference()
-    return 'YYYY-MM-DD'
     return userPreference.value.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD'
 }
 
@@ -173,6 +172,12 @@ async function getUserPreference()  {
         },
         userSetting
     )
+
+    if(preference.value.metaDateFormat) {
+        // emit time format change
+        const timeBus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME)
+        timeBus.emit(preference.value.metaDateFormat)
+    }
 }
 
 async function getUser(){

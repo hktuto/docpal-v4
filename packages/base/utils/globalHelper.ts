@@ -1,5 +1,6 @@
+import { userDisplayTimeSetting } from './../../authApp/composables/useAuth';
 import * as mime from 'mime-types'
-
+import dayjs from 'dayjs'
 export const deepCopy  = (data:any) => {
     if (!data) return {}
     return JSON.parse(JSON.stringify(data));
@@ -33,5 +34,4 @@ export function downloadBlob (blob:any, name:string, type = "application/octet-s
     }
     
   }
-
   

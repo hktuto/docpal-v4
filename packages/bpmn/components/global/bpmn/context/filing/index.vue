@@ -60,7 +60,8 @@ async function getForm(){
   const bpmnJson = graphProvider?.bpmnJson.value
   if(bpmnJson && bpmnJson.definitions && bpmnJson.definitions.process && bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping']){
     folderCabinetRootId.value = bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping'][0].attr_id
-    const {data} = await adminApi.folderCabinetController.getTemplate(folderCabinetRootId.value)
+    
+    const {data} = await adminApi.api.getCabinetTemplateId(folderCabinetRootId.value)
     flatCabinetList.value = await loopChildren([], data, 0,'')
     console.log("folderCabinetRootId", folderCabinetRootId)
   }

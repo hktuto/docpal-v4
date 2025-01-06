@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useGlobalSetting } from '#imports'
 import { TabApp } from '#components'
 
 const tabAppRef = ref<InstanceType<typeof TabApp>>()
@@ -49,6 +50,8 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
     localStorage.setItem('app-tab', JSON.stringify(saveData))
 }
 
+
+useGlobalSetting()
 
 
 </script>

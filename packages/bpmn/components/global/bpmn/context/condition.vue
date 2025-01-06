@@ -80,14 +80,14 @@ function updateCondition(newVal:any, index:number){
 
 const userGroupOption = ref<any[]>([]);
 async function getUserGroup() {
-    const data = await adminApi.identityNuxeo.postGroups3();
+    const data = await adminApi.api.postNuxeoIdentityGroups();
     if(data.data){
         userGroupOption.value = data.data
     }
 }
 const masterTableOption = ref<any[]>([]);
 async function getMasterTable() {
-    const data = await adminApi.masterTableController.getTables();
+    const data = await adminApi.api.getMasterTables();
     
     if(data.data){
         masterTableOption.value = data.data
@@ -99,7 +99,7 @@ async function getMasterTable() {
 
 const caseTableOption = ref<any[]>([]);
 async function getCaseTable() {
-    const data = await adminApi.caseTableController.getTables();
+    const data = await adminApi.api.getCaseTables();
     
     if(data.data){
         caseTableOption.value = data.data

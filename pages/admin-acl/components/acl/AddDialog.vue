@@ -41,7 +41,7 @@ async function handleSubmit () {
     state.loading = true
 
     try {
-        await adminApi.documentNuxeo.postAdd(params)
+        await adminApi.api.postNuxeoDocumentAclAdd(params)
         state.visible = false
         emits('refresh')
     } catch (error) {
@@ -72,13 +72,13 @@ function handleOptions () {
     }
 }
 onMounted(async() => {
-    const {data} = await adminApi.identityNuxeo.postUsers({})
+    const {data} = await adminApi.api.postNuxeoIdentityUsers({})
     state.userList = data || [] as any
     state.userList.forEach((item:any) => {
         item.value = item.userId
         item.label = item.username
     });
-    const groupResponse = await adminApi.identityNuxeo.postGroups({})
+    const groupResponse = await adminApi.api.postNuxeoIdentityGroups({})
     state.groupList= groupResponse.data || [] as any
     state.groupList.forEach((item:any) => {
         item.value = item.id
