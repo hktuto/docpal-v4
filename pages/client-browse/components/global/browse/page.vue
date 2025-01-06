@@ -37,7 +37,7 @@ function changeRoute(path:string) {
 }
 provide(BrowseListProviderKey,{
     getchildApi:(pageParams:any) => {
-        return clientApi.documentNuxeo.postThumbnailV2(pageParams)
+        return clientApi.api.postNuxeoDocumentChildrenThumbnailV2(pageParams)
     },
     idOrPath,
     changeRoute,
