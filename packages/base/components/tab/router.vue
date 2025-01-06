@@ -78,12 +78,11 @@ function forward() {
     if(forwardHistory.value.length === 0) return
     const lastItem = forwardHistory.value.pop()
     if(lastItem){
-        history.value.push(lastItem)
-
-        tab.value.component =lastItem.component
-        tab.value.props = lastItem.props
-        tab.value.label = lastItem.label
-        tab.value.initized = true
+        // no need to push history, tab history push in watch function
+        tab.value = {
+            ...lastItem,
+            initized: true
+        }
         panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
     }
 }
@@ -110,6 +109,12 @@ provide(MenuRouterKey,{
     updateProps,
     updateTabName,
     tabData: tab
+})
+
+watch(tab, (newTab, oldTab) => {
+
+},{
+    deep:true
 })
 
 
