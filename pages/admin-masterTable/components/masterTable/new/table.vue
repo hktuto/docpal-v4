@@ -57,8 +57,8 @@ const state = reactive<any>({
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
   id: 'masterTableTableSetting',
   columns:  [
-      { id: "10",  field: 'fieldName', title: 'masterTable.columnName', fixed: 'left',
-      slots:{
+      { field: 'fieldName', title: 'masterTable.columnName', fixed: 'left',
+        slots:{
           default:'columnName',
         }},
       { field: 'dataType', title: 'masterTable.dataType',},
@@ -68,21 +68,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         }
       }
   ],  
-  border: true,
-  round: true,
-  showOverflow: true,
   height: 'auto',
-  loading: false,
-  
-  toolbarConfig: {
-      custom:true,
-      slots: {
-          buttons: 'toolbar_buttons'
-      }
-  },
-  scrollY: {
-    enabled: false,
-  },
   optionalConfig: {
     data: [
       { dataType: "timestamp", fieldName: "created_date", required: true, unique: false },
@@ -113,7 +99,7 @@ async function handleSubmit() {
     return
   }
   try {
-    await adminApi.masterTableController.postTables({
+    await adminApi.api.postMasterTables({
       name: state.name,
       fields: tableConfig.data
     })
@@ -156,7 +142,7 @@ function handleUpdateSchama(schema: any) {
     }
 }
 onMounted(async() => {
-  const res = await adminApi.masterTableController.getMapping()
+  const res = await adminApi.api.getMasterTablesDatatypeMapping()
   state.dataTypeList = res.data
   state.dataTypeList.push({
     value: 'relation', label:  $i18n.t(`marsterTable.type.relation`), unique: false

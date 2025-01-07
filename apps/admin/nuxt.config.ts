@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "../../pages/admin-audit",
     "../../pages/admin-azure",
     "../../pages/admin-masterTable",
+    "../../pages/admin-easy-form"
   ],
   features:{
     inlineStyles: true,

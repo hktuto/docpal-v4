@@ -39,16 +39,16 @@ function handleLogFilterChange(formModel:any) {
 }
 provide(MasterTableProviderKey, {
   GetMasterTablesPageApi: (params:any) => {
-    return adminApi.masterTableController.postPage1({...params, ...state.tableFilter})
+    return adminApi.api.postMasterTablesPage({...params, ...state.tableFilter})
   },
   DeleteMasterTablesApi: (params:any) => {
-    return adminApi.masterTableController.deleteTables(params)
+    return adminApi.api.deleteMasterTablesId(params)
   },
   GetMasterTablesPageConditionApi: (params:any) => {
-    return adminApi.masterTableController.getConditions(params)
+    return adminApi.api.getMasterTablesPageConditions(params)
   },
   UpdateMasterTableApi: (params:any) => {
-    return adminApi.masterTableController.putTables(params)
+    return adminApi.api.putMasterTables(params)
   },
   openDetail,
   openNew
