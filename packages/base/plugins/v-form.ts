@@ -15,6 +15,11 @@ export default defineNuxtPlugin(nuxtApp => {
         window.$i18n = nuxtApp.$i18n
         // @ts-ignore
         window.$t = nuxtApp.$i18n.t
+        // @ts-ignore
+        window.$getCookie = (name) => {
+            const cookie = useCookie(name)
+            return cookie.value || {}
+        }
     }
 })
 
