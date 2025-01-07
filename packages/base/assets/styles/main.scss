@@ -123,6 +123,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   height: 100%;
   overflow: hidden;
   padding: var(--app-space-s);
+  container-type: inline-size;
 }
 .cursor-pointer {
   cursor: pointer;

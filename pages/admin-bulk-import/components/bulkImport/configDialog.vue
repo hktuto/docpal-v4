@@ -16,7 +16,7 @@
             <el-cascader v-model="formData.rootPath" :props="state.cascaderProps" filterable clearable></el-cascader>
         </el-form-item>
     </el-form>
-    <TreeTableForm ref="TreeTableFormRef" :columns="tableSetting.columns" :table-data="state.tableData"
+    <TreeTableForm ref="TreeTableFormRef" :columns="tableColumns" :table-data="state.tableData"
         :treeTableFormRule="state.rules"
         :options="state.options"></TreeTableForm>
     <template #footer>
@@ -26,22 +26,24 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { SaveDocumentTypeProfileApi,
-    GetChildThumbnail,
-    GetBreadcrumb,
-    checkNameOrTitleApi,
-    getJsonApi,
-    TABLE, defaultTableSetting, deepCopy } from 'dp-api'
 
 import fromJson from './adminMetaRelated.vform.json'
-const props = defineProps<{
-    docType: any
-}>()
+import { adminApi } from 'api';
+
+const tableColumns = {
+    columns: [
+            { id: '1', prop: 'title', label: 'title', defaultColumn: true },
+            { id: '2', prop: 'name', label: 'tableHeader_name' }
+        ],
+        events: [],
+        options: { pageSize: 20 }
+}
+
 const emits = defineEmits([
     'refresh'
 ])
 const { name } = defineProps<{
-    name: string
+    name: string,
 }>()
 const { t  } = useI18n()
 const FormRef = ref()
@@ -69,12 +71,12 @@ const state = reactive({
     cascaderProps: {
         checkStrictly: true,
         lazy: true,
-        lazyLoad (node, resolve) {
+        lazyLoad (node:any, resolve:any) {
             const { level, value } = node;
             const idOrPath = level == 0 ? "/" : value
             setTimeout(async() => {
-                let res = await GetChildThumbnail({idOrPath, pageSize: 100000})
-                const nodes = res.entryList.reduce((prev, item) => { 
+                let res = await adminApi.api.postNuxeoDocumentChildrenThumbnail({idOrPath, pageSize: 100000}) as any
+                const nodes = res.entryList.reduce((prev:any, item:any) => { 
                     if (item.isFolder) prev.push({
                         value: item.path,
                         label: item.name
@@ -87,7 +89,7 @@ const state = reactive({
         }
     }
 })
-const formData = reactive({
+const formData = reactive<any>({
     profileID: '',
     profileName: '',
     rootPath: []
@@ -96,9 +98,9 @@ async function handleCheckNameOrTitle (rule:any, value:any, callback:any) {
     if (value === '') {
         callback(new Error(t('form_common_requird') as string))
     } else {
-        const res = await checkNameOrTitleApi({ nameOrTitle: value})
-        if (Number(res.Code) === 500) {
-            callback(new Error(res.Message))
+        const res = await adminApi.api.postWorkflowChecknameortitle({ nameOrTitle: value})
+        if (Number(res.code) === 500) {
+            callback(new Error(res.message))
         }
         callback()
     }
@@ -110,14 +112,14 @@ async function handleSubmit () {
         const configTree = await TreeTableFormRef.value.getFormData()
         const configData = await getFormData()
         if (!configTree || !configData) return false
-        const params = {
+        const params:any = {
             folder: getFolder(configTree),
             documentType: name,
             profileName: configData.profileName,
             rootPath: configData.rootPath.pop(),
         }
         if(state.profileID) params.profileID = state.profileID
-        await SaveDocumentTypeProfileApi(params)
+        await adminApi.api.postWorkflowSavedocumenttypeprofile(params)
         state.visible = false
         emits('refresh')
     } catch (error) {
@@ -163,7 +165,7 @@ async function handleOpen(data:any) {
         formData.profileName = ''
         formData.rootPath = []
     }
-    setTimeout(() => {
+    nextTick(() => {
         TreeTableFormRef.value.initTable()
         FormRef.value.clearValidate()
     })
@@ -176,7 +178,7 @@ async function revertData (profile:any) {
     state.profileID = profile.profileID
     formData.profileName = profile.profileName
     try {
-        const data = await GetBreadcrumb(profile.rootPath)
+        const {data} = await adminApi.api.postNuxeoDocumentBreadcrumb(profile.rootPath) as any
         formData.rootPath = data.reduce((prev:any, item:any) => {
             prev.push(item.path)
             return prev

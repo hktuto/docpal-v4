@@ -1,19 +1,17 @@
 <template>
-<el-card>
-    <template #header>
-        <div class="card-header">
-            <span>{{$t('docType_metaMapping')}}</span>
-            
-        </div>
-    </template>
+<div>
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
+            <div class="tableHeaderRow">
+
+            <span>{{$t('docType_metaMapping')}}</span>
             <el-button class="button" type="primary"
                 @click="handleDialogShow()">{{$t('common_add')}}</el-button>
+            </div>
         </template>
     </VxeGrid>
     <BulkImportMetaMappingDialog ref="BulkImportMetaMappingDialogRef" :docType="docType" :metaMapping="state.metaMapping" @refresh="updateSuccess"></BulkImportMetaMappingDialog>
-</el-card>
+</div>
 </template>
 
 
@@ -120,15 +118,16 @@ function updateSuccess(){
 </script>
 
 <style lang="scss" scoped>
-.el-card {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    :deep(.el-card__body) {
-        overflow: auto;
-    }
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-    }
+.card{
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.tableHeaderRow{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-xs);
 }
 </style>

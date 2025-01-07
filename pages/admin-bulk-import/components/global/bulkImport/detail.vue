@@ -22,7 +22,7 @@ onActivated(async() => {
         <div class="metaSetting-container">
             <BulkImportInfo :docType="docTypeData" :name="documentType"></BulkImportInfo>
             <BulkImportMetaMapping :docType="docTypeData" :name="documentType"></BulkImportMetaMapping>
-            <!--<BulkImportConfig></BulkImportConfig> -->
+            <BulkImportConfig :name="documentType" />
         </div>
     </div>
 </template>
@@ -34,12 +34,19 @@ onActivated(async() => {
     position: relative;
     padding: var(--app-space-xs);
     overflow: hidden;
+
 }
 .metaSetting-container {
     display: grid;
     grid-template-columns: minmax(min-content, 200px) 1fr 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     height: 100%;
     overflow: hidden;
+    @container (max-width: 700px) {
+        grid-template-columns: 1fr;
+    }
+    @media (max-width: 700px) {
+        grid-template-columns: 1fr;
+    }
 }
 </style>
