@@ -1,0 +1,134 @@
+<template>
+<el-card>
+    <template #header>
+        <div class="card-header">
+            <span>{{$t('docType_metaMapping')}}</span>
+            
+        </div>
+    </template>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+        <template #toolbar_buttons>
+            <el-button class="button" type="primary"
+                @click="handleDialogShow()">{{$t('common_add')}}</el-button>
+        </template>
+    </VxeGrid>
+    <BulkImportMetaMappingDialog ref="BulkImportMetaMappingDialogRef" :docType="docType" :metaMapping="state.metaMapping" @refresh="updateSuccess"></BulkImportMetaMappingDialog>
+</el-card>
+</template>
+
+
+<script lang="ts" setup>
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api';
+
+const {name,docType} = defineProps<{
+    docType: object,
+    name:string
+}>()
+const state = reactive<{
+    list: any[],
+    _list: any[],
+    metaMapping: any
+}>({
+    list: [],
+    _list: [],
+    metaMapping: {}
+})
+
+const { t} = useI18n()
+
+
+const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
+    id: 'admin-bulk-import-meta',
+    api: async(params:any) => {
+        const {data} = await adminApi.api.getWorkflowQuerymetadatamapping({ name }) as any
+        if(data.length === 0){
+            return []
+        }
+        state.metaMapping = { ...data[0] }
+        state.metaMapping.metaDataMapper = data[0].metaDataMapper ? JSON.parse(data[0].metaDataMapper) : {}
+        state.list = data.reduce((prev:any, item:any) => {
+            if (item.metaDataMapper) {
+                const _metaDataMapper = JSON.parse(item.metaDataMapper)
+                Object.keys(_metaDataMapper).forEach(key => {
+                    prev.push({ metaData: key, label: _metaDataMapper[key]})
+                }) 
+            }
+            return prev
+        }, [])
+        return deepCopy(state.list) 
+    },
+    virtualScroll: true,
+    columns: [
+        {
+            field: 'metaData',
+            title: 'docType_property',
+        },
+        {
+            field: 'label',
+            title: 'docType_label',
+        }
+    ],
+    bodyActions:[
+        [
+            {
+               name: 'common_edit',
+               action: ({row}:any) => handleDialogShow(row)    
+            },
+            {
+                name: 'common_delete',
+                action: ({row}:any) => handleDelete(row)
+            }
+        ]
+    ],
+    dblClickAction: ({row}:any) => handleDialogShow(row),
+    permissionMethod: (params:PermissionMethodParams) => {
+        return {visible:true, disabled: false}
+    }
+})
+
+async function handleDelete(row:any) {
+    ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+        .then(async() => {
+            const _metaMapping = {
+                name: state.metaMapping.name,
+                metaDataMapper: { ...state.metaMapping.metaDataMapper }
+            }
+            delete _metaMapping.metaDataMapper[row.metaData]
+            await adminApi.api.postWorkflowSavemetadatamapping({
+                documentType: [_metaMapping]
+            })
+            reload()
+        })
+    
+}
+const BulkImportMetaMappingDialogRef = ref()
+function handleDialogShow(data?:any) {
+    BulkImportMetaMappingDialogRef.value.handleOpen(state.list, data)
+}
+
+function updateSuccess(){
+    ElMessage.success(
+            t('dpMsg_success')
+        )
+    reload()
+}
+
+
+
+
+</script>
+
+<style lang="scss" scoped>
+.el-card {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    :deep(.el-card__body) {
+        overflow: auto;
+    }
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+</style>

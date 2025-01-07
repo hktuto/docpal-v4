@@ -1,0 +1,86 @@
+<template>
+<el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editDisplayMeta') : $t('docType_addDisplayMeta')"
+    :close-on-click-modal="false"
+    >
+    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <template #footer>
+        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
+    </template>
+</el-dialog>
+</template>
+<script lang="ts" setup>
+import formJson from './adminMetaMapping.vform.json'
+import { adminApi } from 'api';
+const props = defineProps<{
+    metaMapping: any,
+    docType: any
+}>()
+const emits = defineEmits([
+    'refresh'
+])
+const { t } = useI18n()
+const state = reactive({
+    loading: false,
+    visible: false,
+    isEdit: false,
+    globalSchemaList: []
+})
+const FromRendererRef = ref()
+
+async function handleSubmit () {
+    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    state.loading = true
+    try {
+        const param = {
+            name: props.docType.name,
+            metaDataMapper: {
+                ...props.metaMapping.metaDataMapper,
+                [data.metaData]: data.label
+            }
+        }
+        await adminApi.api.postWorkflowSavemetadatamapping({documentType: [param]})
+        state.visible = false
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+    } catch (error) {
+    }
+    state.loading = false
+}
+function handleOpen(exitList: any, formData: any) {
+    state.visible = true
+    setTimeout(() => {
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        handleOptions(exitList)
+        if (!!formData) {
+            formData.isEdit = true
+            FromRendererRef.value.vFormRenderRef.setFormData(formData)
+            state.isEdit = true
+        } else {
+            state.isEdit = false
+        }
+    })
+}
+async function handleOptions (exitList: any) {
+    const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('metaData')
+    const options = listFilter()
+    idRef.loadOptions(options)
+    function listFilter() {
+        return state.globalSchemaList.reduce((prev: any, item: any) => {
+            const index = exitList.findIndex((exitItem: any) => exitItem.metaData === item.name)
+            item.value = item.name
+            item.label = t(item.name)
+            if (index !== -1) item.disabled = true
+            prev.push(item)
+            return prev
+        }, []);
+    }
+}
+onMounted(async() => {
+    const {data} = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile') as any
+    state.globalSchemaList = data
+})
+defineExpose({ handleOpen })
+</script>
+<style lang="scss" scoped>
+
+</style>

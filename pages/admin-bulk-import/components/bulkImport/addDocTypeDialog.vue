@@ -1,0 +1,94 @@
+<template>
+<el-dialog v-model="state.visible" :title="$t('docType_createDocumentType')"
+    :close-on-click-modal="false"
+    >
+    <FormRenderer ref="FromRendererRef" :form-json="formJson" />
+    <template #footer>
+        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
+    </template>
+</el-dialog>
+</template>
+<script lang="ts" setup>
+import { adminApi } from 'api';
+import formJson from './addDocTypeForm.vfom.json' 
+
+const {metaSettingData} = defineProps<{
+    metaSettingData: any
+}>()
+const exitList = ref()
+const emits = defineEmits([
+    'refresh'
+])
+const { t } = useI18n()
+const state = reactive<{
+    loading: boolean,
+    visible: boolean,  
+    allDocTypeList: any[]
+}>({
+    loading: false,
+    visible: false,
+    allDocTypeList: [],
+})
+const FromRendererRef = ref()
+async function handleSubmit () {
+    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    state.loading = true
+    try {
+        const param = {
+            documentType: data.type,
+            isFolder: getIsFolder(data.type)
+        }
+        metaSettingData[param.documentType] = {
+            isFolder: getIsFolder(data.type),
+            related: []
+        }
+        await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
+        // await AddMetaSettingApi(param)
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        emits('refresh')
+        state.visible = false
+    } catch (error) {
+    }
+    state.loading = false
+}
+function getIsFolder (type: string) {
+    try {
+        const data = state.allDocTypeList.find(item => item.name === type)
+        return data.isFolder
+    } catch (error) {
+        return false
+    }
+}
+function handleOpen(exitList:any) {
+    state.visible = true
+
+    nextTick(() => {
+        FromRendererRef.value.vFormRenderRef.resetForm()
+        handleOptions(exitList)
+    })
+}
+async function handleOptions (exitList:any) {
+    const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('type')
+    const options = listFilter()
+    idRef.loadOptions(options)
+    function listFilter() {
+        return state.allDocTypeList.reduce((prev, item) => {
+            const index = exitList.findIndex((exitItem:any) => exitItem.documentType === item.name)
+            if (index === -1) {
+                item.value = item.name
+                item.label = t(item.name)
+                prev.push(item)
+            }
+            return prev
+        }, []);
+    }
+}
+onMounted(async() => {
+    const { data }:any = await adminApi.api.getTypesActive()
+    state.allDocTypeList = data?.sort((a:any,b:any)=> (a.name.localeCompare(b.name) ))
+})
+defineExpose({ handleOpen })
+</script>
+<style lang="scss" scoped>
+
+</style>
