@@ -39,7 +39,7 @@ async function handleSubmit () {
     }
     state.loading = true
     try {
-        await adminApi.masterTableController.postAdd1(params)
+        await adminApi.api.postMasterTablesAclsAdd(params)
         state.visible = false
         emits('refresh')
     } catch (error) {
@@ -70,12 +70,12 @@ function handleOptions () {
     }
 }
 onMounted(async() => {
-    userList = await adminApi.identityNuxeo.postUsers({}).then(res => res.data)
+    userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
     userList?.forEach(item => {
         item.value = item.userId
         item.label = item.username
     });
-    groupList = await adminApi.identityNuxeo.postGroups3().then(res => res.data)
+    groupList = await adminApi.api.postNuxeoIdentityGroups().then(res => res.data)
     groupList?.forEach(item => {
         item.value = item.id
         item.label = item.name

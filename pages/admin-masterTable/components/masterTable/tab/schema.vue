@@ -60,7 +60,7 @@ const tableConfig = ref<any>({
     ]
 })
 async function handleAddSchama(schema: any) {
-    await adminApi.masterTableController.postAdd({
+    await adminApi.api.postMasterTablesColumnAdd({
         id: props.tableId,
         ...schema
     })
