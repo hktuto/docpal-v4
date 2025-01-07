@@ -44,7 +44,7 @@ function handleAdd () {
 async function handlePermissionChange(boo: boolean, permission: string, row: any) {
     row.loading = true
     try {
-        await adminApi.masterTableController.postRemove({
+        await adminApi.api.postMasterTablesAclsRemove({
             ...row,
             [permission]: boo
         })
@@ -55,7 +55,7 @@ async function handlePermissionChange(boo: boolean, permission: string, row: any
 async function handleRemove(row: any) {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
-    await adminApi.masterTableController.postDelete1({
+    await adminApi.api.postMasterTablesAclsDelete({
         masterTableId: row.masterTableId,
         userId: row.userId
     })
@@ -65,7 +65,7 @@ async function handleRemove(row: any) {
 async function init() {
     try {
         state.loading = true
-        state.tableData = await adminApi.masterTableController.getAcls(props.table.id).then(res => res.data)
+        state.tableData = await adminApi.api.getMasterTablesIdAcls(props.table.id).then(res => res.data)
     } catch (error) {
     }
     state.loading = false

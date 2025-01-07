@@ -28,7 +28,7 @@ function handleClick(tab: any) {
 }
 const MasterTableTabRecordsRef = ref();
 async function init() {
-  const res = await adminApi.masterTableController.getTables1(id);
+  const res = await adminApi.api.getMasterTablesId(id);
   const detail = res.data;
   state.masterTable = detail;
 
@@ -37,7 +37,7 @@ async function init() {
 async function handleTemplateDownload() {
   try {
     state.templateLoading = true;
-    const res = await adminApi.masterTableController.getTemplate(id, {},{ 
+    const res = await adminApi.api.getMasterTablesIdRecordTemplate(id, {},{ 
         format: 'blob',
         timeout: 0 
     })
@@ -79,12 +79,13 @@ async function handleFile(event: any) {
 async function handleExport() {
   try {
     state.exportLoading = true
-    const res = await adminApi.masterTableController.postExport(id, {},{
+    const res = await adminApi.api.postMasterTablesIdRecordExport(id, {},{
       format: 'blob',
       timeout: 0
     })
     downloadBlob(res, state.masterTable?.name as string)
   } catch (error) {
+  } finally {
     state.exportLoading = false
   }
 }

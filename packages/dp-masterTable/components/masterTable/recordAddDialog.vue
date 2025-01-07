@@ -33,7 +33,7 @@ async function handleSubmit() {
     state.loading = true
     const data = await FormVariablesRenderer.value.getData(true)
     if (state.edit) {
-      await adminApi.masterTableController.putRecord(props.tableId, {
+      await adminApi.api.putMasterTablesIdRecord(props.tableId, {
         data: [data],
         where: {
           id: state.setting.id
@@ -41,7 +41,7 @@ async function handleSubmit() {
       })
     }
     else {
-      await adminApi.masterTableController.postRecord({
+      await adminApi.api.postMasterTablesRecord({
         id: props.tableId,
         data: [data]
       })
