@@ -17,8 +17,11 @@
   </el-card>
 </template>
 <script lang="ts" setup>
+import { MenuRouterKey} from '#imports'
 import { ElMessage } from 'element-plus';
+import { routeEasyFormDesigner } from '~/util/routerHelper';
 const props = defineProps(['detail'])
+const routerProvider = inject(MenuRouterKey)
 const { public: { endPoint } } = useRuntimeConfig();
 const { t } = useI18n()
 const state = reactive<any>({
@@ -27,6 +30,7 @@ const state = reactive<any>({
 })
 function handleOpenFormDesign() {
   // router.push(`/easyFormManage/formDesign?id=${props.detail.id}`)
+  routerProvider?.navigateTo(routeEasyFormDesigner(props.detail), false)
 }
 const copy  = (data:any, msg = 'common_copySuccess') => {
     const input = document.createElement('input')
