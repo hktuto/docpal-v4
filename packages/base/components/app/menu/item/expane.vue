@@ -1,20 +1,47 @@
 <script lang="ts" setup generic="T extends MenuItem">
 import type {MenuItem} from '#imports'
 import {menuKey} from '#imports';
-const emits = defineEmits(['itemClick', 'contextmenu'])
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
 const { item, selected, mode='collapse' } = defineProps<{item :MenuItem, selected:boolean, mode:'collapse' | 'expand' }>()
+const emits = defineEmits(['itemClick', 'contextmenu'])
+
+
+const dropOtion:UseDraggableParam = {
+    key: menuKey,
+    dragData: {
+        key: menuKey,
+        type: 'menu',
+        data: item
+    },
+    detectDrop: false,
+}
+
+if(item.onDropItself) {
+    dropOtion.detectDrop = true
+    dropOtion.onDropItself = item.onDropItself;
+}
+
+const { dragState ,setupDrag } = useDragable(dropOtion)
+
 
 const opened = ref(false)
 
 const elRef = ref()
+onMounted(() => {
+    if(!elRef) return
+    setupDrag(elRef.value)
+})
+
+onUnmounted(() => {
+    // cleanup()
+})
 </script>
 <template>
     <div :class="{menuExpanItemContainer:true, opened, selected}">
-       <div class="menuItem" @click="$emit('itemClick', item)">
+       <div ref="elRef"  class="menuItem" @click="$emit('itemClick', item)">
            <div class="menuIcon">
                <Icon :name="item.icon"></Icon>
            </div>
@@ -28,6 +55,11 @@ const elRef = ref()
        <div v-if="opened" class="expendItem">
             <AppMenuItemCollapseSubmenu v-for="subItem in item.children" :key="subItem.id" :subMenuItem="subItem" />
        </div>
+       <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
+            <div class="dropPreviewFile">
+                <Icon v-if="item.icon" :name="item.icon"></Icon>
+            </div>
+        </Teleport>
     </div>
 </template>
 
@@ -80,5 +112,12 @@ const elRef = ref()
 .expendItem{
     padding-inline: var(--app-space-xs) ;
     
+}
+
+.dropPreviewFile{
+    padding: var(--app-space-xs);
+    border-radius: var(--app-border-radius-s);
+    background: var(--app-grey-1000);
+    color: var(--app-main-color);
 }
 </style>
