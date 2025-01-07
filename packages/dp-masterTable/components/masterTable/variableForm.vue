@@ -183,7 +183,7 @@ async function turnFields(fields: any, initData: any, flexible: boolean = false)
   async function getRelationOptions(params: any, field: any): Promise<any> {
     try {
 
-      const data = await adminApi.masterTableController.getRecords(params).then(res => res.data)
+      const data = await adminApi.api.getMasterTablesRecords(params).then(res => res.data)
 
       if(props.isAddRelation) data.push({
         [params.displayField]: 'Add New',
@@ -203,12 +203,12 @@ async function turnFields(fields: any, initData: any, flexible: boolean = false)
   }
   async function getUserGroup(field: any): Promise<any> {
     try {
-      const groups = await adminApi.identityNuxeo.postGroups3({}).then(res => res.data)
+      const groups = await adminApi.api.postNuxeoIdentityGroups({}).then(res => res.data)
       const _groups = groups?.map(item => ({
         label: item.name,
         value: item.id
       }))
-      const users = await adminApi.identityNuxeo.postGetkeycloakallusers({}).then(res => res.data)
+      const users = await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then(res => res.data)
       const _users = users?.map(item => ({
         label: item.username,
         value: item.userId
@@ -240,7 +240,7 @@ async function turnFields(fields: any, initData: any, flexible: boolean = false)
 
   async function getMasterTableOptions(params: any, displayField: string, field: any): Promise<any> {
     // displayField: displayField
-    const record = await adminApi.masterTableController.postNonpermission(params)
+    const record = await adminApi.api.postMasterTablesRecordPageNonpermission(params)
     const options = record.map((item: any) => ({
       label: item[displayField],
       value: item[displayField]
@@ -287,7 +287,7 @@ function handleRenderFlexibleList(formModel: any) {
 async function getRelationFields(tableId: string, fieldName: string) {
   try {
     if(!state.relationfieldsDetail[fieldName].fields) {
-      const relationDeatil = await adminApi.masterTableController.getTables1(tableId).then(res => res.data)
+      const relationDeatil = await adminApi.api.getMasterTablesId(tableId).then(res => res.data)
       console.log("relationDeatil", relationDeatil)
       state.relationfieldsDetail[fieldName].fields = relationDeatil.fields
       state.relationfieldsDetail[fieldName].read = relationDeatil.read
