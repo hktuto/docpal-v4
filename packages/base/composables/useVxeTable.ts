@@ -83,7 +83,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     
 
     
-    const tableConfig = reactive<Config>({...{
+    const tableConfig = reactive<any>({...{
         id: params.id,
         border: true,
         round: true,
@@ -219,7 +219,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
         // add click event to action column
         tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
-            console.log("column", column)
             if(column.type === actionsColumn.type && column.title === actionsColumn.title){
                 if(!actions){
                     throw new Error('bodyActions is required')

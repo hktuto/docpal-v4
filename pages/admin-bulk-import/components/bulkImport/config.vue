@@ -1,22 +1,6 @@
-<template>
-<el-card >
-    <template #header>
-        <div class="card-header">
-            <span>{{$t('docType_captureProfile')}}</span>
-            <el-button class="button" type="primary"
-                @click="handleDialogShow()">{{$t('common_add')}}</el-button>
-        </div>
-    </template>
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-
-    </VxeGrid>
-    
-    <BulkImportConfigDialog :name="name" ref="BulkImportConfigDialogRef" @refresh="newSuccess"></BulkImportConfigDialog>
-</el-card>
-</template>
-
 
 <script lang="ts" setup>
+import {useVxeTable} from '#imports';
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api';
 const { name } = defineProps<{
@@ -35,16 +19,19 @@ function newSuccess() {
 const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     id:'admin-bulk-import-config',
     api: async() => {
-        const { data } = await adminApi.api.getWorkflowQuerydocumenttypeprofileid({ documentType: name }) as any
-        if(data.length > 0) {
+        try{
+            const { data } = await adminApi.api.getWorkflowQuerydocumenttypeprofile({ documentType: name }) as any
+            console.log("data on config",data)
+            
+            return data
+        }catch(e){
             return []
         }
-        return data
     },
     virtualScroll: true,
     columns:[
         {
-            field:"profileID",
+            field:"id",
             title: 'dpTable_id'
         },
         {
@@ -80,20 +67,47 @@ function handleDialogShow(row?:any) {
     const data = row ? deepCopy(row) : ''
     BulkImportConfigDialogRef.value.handleOpen(data)
 }
+// onMounted(async() => {
+//     getTable()
+// })
+
+onActivated(() => {
+    reload();
+})
 
 
 </script>
 
+<template>
+<div class="card">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+        <template #toolbar_buttons>
+            <div class="tableHeaderRow">
+
+            <span>{{$t('docType_captureProfile')}}</span>
+            <el-button class="button" type="primary"
+                @click="handleDialogShow()">{{$t('common_add')}}</el-button>
+            </div>
+            </template>
+    </VxeGrid>
+    
+    <BulkImportConfigDialog  :name="name" ref="BulkImportConfigDialogRef" @refresh="newSuccess"></BulkImportConfigDialog>
+</div>
+</template>
+
+
+
 <style lang="scss" scoped>
-.el-card {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    :deep(.el-card__body) {
-        overflow: auto;
-    }
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-    }
+.card{
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.tableHeaderRow{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-xs);
 }
 </style>
