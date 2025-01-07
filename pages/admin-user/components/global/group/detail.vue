@@ -35,7 +35,7 @@ const state = reactive<any>({
 async function handleDelete() {
   const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
-  const res = await adminApi.identityNuxeo.deleteGroup({ groupId: id })
+  const res = await adminApi.api.postNuxeoIdentityGroup({ groupId: id })
   if(!!res) openGroupList()
 }
 const GroupEditDialogRef = ref()
@@ -61,22 +61,22 @@ function handleEditRefresh(group:any) {
 }
 provide(groupProviderDetailKey, {
   DeleteGroupApi: (params:any) => {
-    return adminApi.identityNuxeo.deleteGroup(params)
+    return adminApi.api.deleteNuxeoIdentityGroup(params)
   },
   GetMemberListApi: (params:any) => {
-    return adminApi.identityNuxeo.postMember(params)
+    return adminApi.api.postNuxeoIdentityGroups(params)
   },
   BatchGroupRemoveUsersApi : (params:any) => {
-    return adminApi.identityNuxeo.postUsers1(params)
+    return adminApi.api.postNuxeoIdentityGroupBatchRemoveUsers(params)
   },
   BatchGroupAddUsersApi : (params:any) => {
-    return adminApi.identityNuxeo.postUsers2(params)
+    return adminApi.api.postNuxeoIdentityGroupBatchAddUsers(params)
   },
   PatchGroupApi: (params:any) => {
-    return adminApi.identityNuxeo.patchGroup(params)
+    return adminApi.api.patchNuxeoIdentityGroup(params)
   },
   getUserListApi : async() => {
-    const res = await adminApi.identityNuxeo.postUsers({})
+    const res = await adminApi.api.postNuxeoIdentityUsers({})
     return res.data
   },
 }

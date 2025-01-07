@@ -35,7 +35,7 @@ async function handleSubmit () {
     form.append('jsonValue', JSON.stringify({}))
     form.append('file', blob, 'workflow.bpmn.xml')
     form.append('isDraft', true)
-    const {data} =await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
+    const {data} =await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},form)
     console.log('data', data)
     // const newItem: any = {
     //     menuKey: routerProvider?.menuSymbol,

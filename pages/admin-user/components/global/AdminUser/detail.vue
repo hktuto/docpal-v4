@@ -30,7 +30,7 @@ function openUserList(openInNewTab: boolean = false){
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 async function getUser() {
-  const res = await adminApi.userNuxeo.getUser(id);
+  const res = await adminApi.api.getNuxeoUserUserid(id);
   if(!res.data) return
   res.data.status = res.data.status === "A" ? "A" : "D";
   state.curUser = res.data;
@@ -38,31 +38,31 @@ async function getUser() {
 }
 provide(userProviderDetailKey, {
   SetUserStatusApi: (params:any) => {
-    return adminApi.userNuxeo.putStatus(params)
+    return adminApi.api.putNuxeoUserStatus(params)
   },
   BatchActiveUserApi: (params:any) => {
-    return adminApi.userNuxeo.postActive(params)
+    return adminApi.api.postNuxeoUserBatchActive(params)
   },
   BatchDeleteUserApi: (params:any) => {
-    return adminApi.identityNuxeo.postDelete(params)
+    return adminApi.api.postNuxeoIdentityUsersBatchDelete(params)
   },
   PatchUserApi: (params:any) => {
-    return adminApi.identityNuxeo.patchUser(params)
+    return adminApi.api.postNuxeoIdentityUser(params)
   },
   PatchUserPasswordApi: (params: any) => {
-    return adminApi.identityNuxeo.patchPassword(params)
+    return adminApi.api.patchNuxeoIdentityUserPassword(params)
   },
   MemberGroupGetApi: (params: any) => {
-    return adminApi.identityNuxeo.postMembergroup(params)
+    return adminApi.api.postNuxeoIdentityMembergroup(params)
   },
   BatchUserRemoveGroupsApi: (params: any) => {
-    return adminApi.identityNuxeo.postGroups1(params)
+    return adminApi.api.postNuxeoIdentityUserBatchRemoveGroups(params)
   },
   BatchUserAddGroupsApi: (params: any) => {
-    return adminApi.identityNuxeo.postGroups2(params)
+    return adminApi.api.postNuxeoIdentityUserBatchAddGroups(params)
   },
   GetGroupListApi : async() => {
-    const res = await adminApi.identityNuxeo.postGroups3()
+    const res = await adminApi.api.postNuxeoIdentityUsers()
     return res.data
   },
   getUser,
