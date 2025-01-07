@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import 'splitpanes/dist/splitpanes.css'
-import {TabDialog} from '#components'
+import { TabDialog } from '#components'
 const emits = defineEmits(['ready', 'layoutChanged', 'highlightPanelChanged'])
-const {layout, initLayout, allComponents} = useTabsManager()
+const {layout, initLayout, allComponents, allComponentRef} = useTabsManager()
 const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
@@ -35,17 +35,23 @@ provide(
         closeDialog,
         openFocusMode,
         openNewDialog,
+        openInCurrentTab,
         openTab
     }
 )
 
-function openTab(tab:TabItem){
-    console.log("openTab")
+async function openTab(tab:TabItem){
     // check if tab is already open
+    try{
+        await focusExistingTab(tab)
+    }catch(error){
+        addTabInCurrentPanel({...tab})
+    } 
+}
+
+function focusExistingTab(tab:TabItem):Promise<void>{
     const existingTab = allComponents.value.find(item => item.name === tab.name)
-    console.log("existingTab", existingTab)
     if(existingTab){
-        console.log("find existingTab")
         const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
         if(panelIndex !== -1) {
             console.log("can find index")
@@ -54,22 +60,42 @@ function openTab(tab:TabItem){
             if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
                 layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true
             }
+            return Promise.resolve()
         }else{
-            console.log("can not find index")
-            addTabInCurrentPanel({...tab})
+            return Promise.reject(new Error("can not find index"))
         }
     }else{
-        console.log("no existingTab")
-        tab.parent = tab.parent || hightLightPanel.value
-        addTabInCurrentPanel({...tab})
+        return Promise.reject(new Error("no existingTab"))
     }
-    // console.log(existingTab, allComponents.value)
+}
+
+async function openInCurrentTab(tab:TabItem){
+    try{
+        await focusExistingTab(tab)
+    }catch(error){
+        const panel = layout.value.find( panel => panel.id === hightLightPanel.value)
+
+        const tabIndex = panel.showingTabIndex
+        const highLightItem = panel.tabs[tabIndex]
+        if(highLightItem){
+            const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
+            console.log("indexInAllComponent", indexInAllComponent, allComponentRef.value[indexInAllComponent])
+            if(allComponentRef.value[indexInAllComponent]){
+                console.log(allComponentRef.value[indexInAllComponent])
+                allComponentRef.value[indexInAllComponent].navigateTo(tab)
+            }
+        }
+        
+        
+    }
+    // const existingTab = allComponents.value.find(item => item.name === tab.name)
 }
 
 function setLayout(layout:TabPanel[]){
     loading.value = true;
     initLayout(layout);
     loading.value = false
+
     // get tab from router
 }
 
@@ -114,13 +140,13 @@ defineExpose({
                         <template v-if="fullscreenItem && fullscreenItem.id === component.id">
                             <Teleport defer :to="`#fullscreen-${component.parent}_${component.id}`">
                                
-                                <TabRouter :tab="component" />
+                                <TabRouter ref="allComponentRef" :tab="component" />
                             </Teleport>
                         </template>
                         <template v-else>
                             
                             <Teleport defer :to="`#${component.parent}_${component.id}`">
-                                <TabRouter :tab="component" />
+                                <TabRouter ref="allComponentRef" :tab="component" />
                             </Teleport>
                         </template>
                         

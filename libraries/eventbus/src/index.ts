@@ -9,3 +9,8 @@ export enum EventType {
     NETWORK_REQUEST__FAIL = 'network-request--fail'
 }
 
+
+export function emitBus(key:EventType, ...args:any) {
+    const bus = useEventBus(key)
+    bus.emit(...args)
+}

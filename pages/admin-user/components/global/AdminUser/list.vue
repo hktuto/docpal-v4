@@ -39,7 +39,7 @@ function handleFilterChange(filter: any) {
 // #endregion
 provide(userProviderKey, {
   getAllUsersApi: async (params: any) => {
-    const res: any = await adminApi.identityNuxeo.postGetallusers({
+    const res: any = await adminApi.api.postNuxeoIdentityGetallusers({
       ...params,
       ...userTableFilter,
     });
@@ -49,26 +49,26 @@ provide(userProviderKey, {
     return { data: page };
   },
   SetUserStatusApi: (params: any) => {
-    return adminApi.userNuxeo.putStatus(params);
+    return adminApi.api.putNuxeoUserStatus(params);
   },
   BatchActiveUserApi: (params: any) => {
-    return adminApi.userNuxeo.postActive(params);
+    return adminApi.api.postNuxeoUserBatchActive(params);
   },
   BatchDeleteUserApi: (params: any) => {
-    return adminApi.identityNuxeo.postDelete(params);
+    return adminApi.api.postNuxeoIdentityUsersBatchDelete(params);
   },
   getAllUserAndActiveCountApi: async () => {
-    const res = await adminApi.identityNuxeo.postGetlicenseusernumandactivecount();
+    const res = await adminApi.api.postNuxeoIdentityGetlicenseusernumandactivecount();
     return res.data;
   },
   CreateUserApi: (params: any) => {
-    return adminApi.identityNuxeo.postUser(params);
+    return adminApi.api.postNuxeoIdentityUser(params);
   },
   BatchUsersToGroupsApi: (params: any) => {
-    return adminApi.identityNuxeo.postGroups(params);
+    return adminApi.api.postNuxeoIdentityGroupBatchAddUsers(params);
   },
   GetGroupListApi: async () => {
-    const res = await adminApi.identityNuxeo.postGroups3();
+    const res = await adminApi.api.postNuxeoIdentityGroups();
     return res.data;
   },
   openUserDetail,

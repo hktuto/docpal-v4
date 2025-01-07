@@ -55,7 +55,7 @@ function goClientPath (path) {
 
 provide(AuditProviderKey,{
     getListApi: (params:any) => {
-        return adminApi.documentNuxeo.postQueryauditevent({...params, ...formData.value})
+        return adminApi.api.postNuxeoDocumentQueryauditevent({...params, ...formData.value})
     },
     goClientPath
 })

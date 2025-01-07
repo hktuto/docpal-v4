@@ -1,6 +1,7 @@
 import {defineNuxtPlugin, useAuth, useKeyCloakState} from '#imports'
-import {clientApi} from 'api'
+import {clientApi, adminApi} from 'api'
 import Keycloak from 'keycloak-js'
+import {requestSuccessHelper, requestErrorHelper, responseSuccessHelper, responseErrorHelper} from '~/utils/axiosResponseHelper'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
     const keyCloakState = useKeyCloakState()
@@ -24,5 +25,23 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     nuxtApp.hook('app:mounted', async() => {
         await useAuth().login()
     })
+
+    // set refresh token to clientApi and adminApi
+    clientApi.instance.interceptors.request.use(
+        requestSuccessHelper,
+        requestErrorHelper
+    )
+    clientApi.instance.interceptors.response.use(
+        responseSuccessHelper,
+        responseErrorHelper
+    )
+    adminApi.instance.interceptors.request.use(
+        requestSuccessHelper,
+        requestErrorHelper
+    )
+    adminApi.instance.interceptors.response.use(
+        responseSuccessHelper,
+        responseErrorHelper
+    )
 
 })
