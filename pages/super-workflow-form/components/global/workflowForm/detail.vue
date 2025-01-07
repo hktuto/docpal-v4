@@ -22,39 +22,52 @@ function handleCommand(command: string){
 
 const GetWorkflowDetail = async(_processKey: string) => {
   if(!workflowList || workflowList.length === 0) {
-    workflowList = await adminApi.api.getWorkflowProcessGetprocessdefinitionlist().then(res => res.data)
+    const res = await adminApi.api.getWorkflowProcessGetprocessdefinitionlist().then(res => res.data)
+    res.forEach(item => {
+      item.userTasks.push({ id:'complete', name: 'complete' })
+    })
+    workflowList = res
   }
   const workflowDetail = workflowList?.find((item: any) => item.key === _processKey)
   state.workflowDetail = workflowDetail
 }
+async function setJson(_taskId) {
+  let json: any = null
+  try {
+    const taskFormJsons = await adminApi.api.getRelationQuery({
+      processKey: processKey,
+      userTaskId: _taskId,
+    }).then(res => res.data)
+    json = JSON.parse(taskFormJsons[0].jsonValue)
+  } catch (error) {
+    
+  } finally {
+    setTimeout(() => {
+      FormDesignerRef.value.setFormJson(json)
+    }, 100)
+  }
+}
 const FormDesignerRef = ref()
 async function init(_taskId: string) {
-  state.activeTaskId = _taskId
-
-  // state.loading = true
-  console.log(_taskId)
-  await GetWorkflowDetail(processKey)
-  // get prop and label list
-  let taskDetail = state.workflowDetail.userTasks.find((item: any) => item.id === _taskId)
-  state.fieldListApi = {
-      labelKey: 'id',
-      nameKey: 'id',
-      data: taskDetail.formProperties ? taskDetail.formProperties : state.workflowDetail.userTasks[0].formProperties
+  try {
+    state.activeTaskId = _taskId
+    state.loading = true
+    await GetWorkflowDetail(processKey)
+    // get prop and label list
+    let taskDetail = state.workflowDetail.userTasks.find((item: any) => item.id === _taskId)
+    state.fieldListApi = {
+        labelKey: 'id',
+        nameKey: 'id',
+        data: taskDetail.formProperties ? taskDetail.formProperties : state.workflowDetail.userTasks[0].formProperties
+    }
+  
+    await setJson(_taskId)
+    
+  } catch (error) {
+    
+  } finally {
+    state.loading = false
   }
-
-  // get json
-  const taskFormJsons = await adminApi.api.getRelationQuery({
-    processKey: processKey,
-    userTaskId: _taskId,
-  }).then(res => res.data)
-  const taskFormJson = {
-    ...taskFormJsons[0],
-    json: JSON.parse(taskFormJsons[0].jsonValue),
-  }
-  setTimeout(() => {
-    FormDesignerRef.value.setFormJson(taskFormJson?.json)
-  }, 100)
-  // state.loading = false
 }
 
 async function handleSubmit() {
@@ -94,7 +107,7 @@ onActivated(async() => {
       </template>
     </el-dropdown>
   </div>
-  <div style="overflow: hidden;">
+  <div style="overflow: hidden;" v-loading="state.loading">
     <FormDesigner ref="FormDesignerRef" :fieldListApi="state.fieldListApi">
       <template #submit>
         <el-button type="text" :loading="state.submitLoading" @click="handleSubmit">{{$t('submit')}}</el-button>

@@ -10,7 +10,9 @@ async function getList () {
   try {
     state.loading = true
     const res = await adminApi.api.getWorkflowProcessGetprocessdefinitionlist().then(res => res.data)
-    console.log(res)
+    res.forEach(item => {
+      item.userTasks.push({ id:'complete', name: 'complete' })
+    })
     state.list = res
     state._list = deepCopy(state.list)
   } catch (error) {
