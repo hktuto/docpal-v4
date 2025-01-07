@@ -24,7 +24,7 @@
     display: grid;
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
-    background: linear-gradient( 110deg,  hsl(var(--app-grey-hue), 46%, 95%) 0%,   var(--app-grey-900) 20%) ;
+    background: var(--app-bg);
     background-color: var(--app-grey-900);
     -webkit-app-region: drag;
     

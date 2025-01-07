@@ -11,7 +11,8 @@ $types: primary, success, warning, danger, error, info;
   // generate grey color in 5 levels
   --app-grey-hue: 200;
   --app-grey-saturation: 15%;
-  
+  // #E6F1F6
+  --app-bg : radial-gradient(72% 72% at 2% -5%, #E6F1F6 0%, #F7F9F9 51%, #F9F9F9 100%);
   // loop through grey levels , each level increase by 2.5%
   @for $i from 1 through 40 {
     $tab: $i * 25;
