@@ -1,5 +1,5 @@
 {
-  "name": "example-package",
+  "name": "admin-dashboard",
   "version": "1.0.0",
   "description": "all DocPal module entry",
   "main": "index.js",
@@ -9,7 +9,7 @@
     "dev": "nuxt dev .playground --dotenv ../../../env/.env.dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare",
+    "prepare": "nuxt prepare ",
     "predev": "npm run prepare"
   },
   "keywords": [],
@@ -19,13 +19,17 @@
     "dayjs": "^1.11.13",
     "nuxt": "3.13.2",
     "vue": "3.5.6",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "echarts": "^5.5.1",
+    "vue3-grid-layout-next": "^1.0.7",
+    "grid-layout-plus": "1.0.5"
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.14.1",
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
     "happy-dom": "^15.7.3",
+    "msw": "^2.4.9",
     "playwright-core": "^1.47.0",
     "sass": "^1.78.0",
     "typescript": "^5.6.2",
