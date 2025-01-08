@@ -16,7 +16,7 @@
             <el-table-column v-for="item in ['read', 'write', 'manage', 'print']" :key="item"
                 :label="$t(`permission.${item}`)" align="center" header-align="center">
                 <template #default="{ row }">
-                    <el-icon v-if="row[item]" style="--color: var(--primary-color)"><Select /></el-icon>
+                    <el-icon v-if="row[item]" style="--color: var(--app-primary-color)"><Select /></el-icon>
                     <el-icon v-else style="--color: #F56C6C"><CloseBold /></el-icon>
                 </template>
             </el-table-column>

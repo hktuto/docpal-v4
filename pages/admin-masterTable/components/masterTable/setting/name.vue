@@ -17,7 +17,7 @@ const state = reactive<any>({
 async function handleSave() {
     state.loading = true
     try {
-        await adminApi.masterTableController.putTables({
+        await adminApi.api.putMasterTables({
             id: props.table.id,
             name: state.name,
 

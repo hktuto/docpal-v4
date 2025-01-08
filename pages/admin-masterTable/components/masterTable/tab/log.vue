@@ -25,7 +25,7 @@ let filtersParams:any = {
 }
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'masterTableTableSetting',
-    api: (pageParams:any) => adminApi.masterTableController.postLogs({...pageParams, ...extraParams, ...filtersParams}),
+    api: (pageParams:any) => adminApi.api.postMasterTablesLogs({...pageParams, ...extraParams, ...filtersParams}),
     columns:  [
         { id: "10",  field: 'docPath', title: 'masterTable.table', fixed: 'left'},
         { field: 'principalName', title: 'user_username',},
@@ -46,7 +46,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
 // #region module: ResponsiveFilterRef
     const ResponsiveFilterRef = ref()
     async function getFilter() {
-        const filters = await adminApi.masterTableController.postConditions({ ...extraParams }).then(res => res.data)
+        const filters = await adminApi.api.postMasterTablesLogsPageConditions({ ...extraParams }).then(res => res.data)
         nextTick(() => {
             ResponsiveFilterRef.value.init(filters)
         })

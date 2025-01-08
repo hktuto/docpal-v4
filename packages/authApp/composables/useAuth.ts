@@ -15,6 +15,7 @@ export const useLoginHook = () => useState<any>(() => shallowRef([]));
 export const useIsSSO = () => useState<boolean>(() => false);
 export const useIsLDAP = () => useState<boolean>(() => false);
 export const useIsSuperAdmin = () => useState<boolean>(() => true);
+export const useUserId = () => useState<string>(() => '');
 export const useUserPreference = () => useState<Record<string,any>>();
 export const useFeature = () => useState<Record<string,boolean>>('app-feature');
 export const useAuth = () => {
@@ -182,8 +183,9 @@ async function getUserPreference()  {
 
 async function getUser(){
     const user = useUserState()
+    const userId = useUserId()
     const {data} = await clientApi.api.getNuxeoUserGetapplication()
-    
+    userId.value = data.userId
     if(!data) throw new Error('Get user info fail');
     user.value = data
 }
