@@ -35,7 +35,6 @@ onMounted(() => {
         filterFormdata.value = filters.value
         ResponsiveFilterRef.value?.setValue('name', filters.value.name)
     }
-    routerProvider.updateTabName(t(routerProvider?.tabData?.value.label))
 })
 
 const dialogRef = ref()

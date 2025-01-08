@@ -152,6 +152,13 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   // display: none;
   transition: transform .1s ease-in-out , opacity .2s ease-in-out;
   transition-delay: 0.2s;
+  &:empty {
+    &:after {
+      content: "No Action";
+      display: block;
+      text-align: center;
+    }
+  }
   &.visible, &.is--visible{
       // display: block !important;
       opacity: 1;

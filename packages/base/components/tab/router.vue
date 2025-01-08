@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type {TabItem, RouterParams} from '#imports';
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
+import { use } from 'vxe-table';
 const {allComponents} = useTabsManager()
 
 const tab = defineModel<TabItem>('tab', { required: true });
@@ -8,6 +9,7 @@ const tabManager = inject(TabManagerKey)
 if(!tabManager) {    
     throw createError('no '+ TabManagerKey.toString + "provided")
 }
+const { t } = useI18n()
 const history = ref<RouterParams[]>([])
 const forwardHistory = ref<RouterParams[]>([])
 
@@ -121,7 +123,7 @@ defineExpose({
         </Teleport>
         <Teleport  v-if="tab.label" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .label`">
             <div class="label">
-                {{  tab.label }} 
+                {{  t(tab.label) }} 
             </div>  
         </Teleport>
         

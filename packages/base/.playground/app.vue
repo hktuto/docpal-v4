@@ -11,7 +11,7 @@
 .sideMenu{
     --menu-gap: var(--app-space-xs);
     --icon-font-size: var(--app-font-size-l);
-    --menu-item-padding: var(--app-space-xs);
+    --menu-item-padding: var(--app-space-xxs);
     --menu-item-radius: var(--app-border-radius-s);
     --menu-item-normal-bg: rgba(0,0,0,0);
     --menu-item-hover-bg: var(--app-grey-950);

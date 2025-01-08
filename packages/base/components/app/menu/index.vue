@@ -124,8 +124,8 @@ onMounted(() => {
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    --menu-gap: var(--app-space-xs);
-    --icon-font-size: var(--app-font-size-l);
+    --menu-gap: var(--app-space-xxs);
+    --icon-font-size: calc(var(--app-font-size-m) * 1.2);
     --menu-item-padding: var(--app-space-xs);
     --menu-item-radius: var(--app-border-radius-m);
     --menu-item-normal-bg: rgba(0,0,0,0);
@@ -147,11 +147,11 @@ onMounted(() => {
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: var(--menu-gap);
+    gap: 0;
     font-size: var(--icon-font-size);
     &.expand{
         justify-content: stretch;
-        gap: var(--app-space-xxs);
+        gap: 0;
         min-width: 200px;
     }
     
