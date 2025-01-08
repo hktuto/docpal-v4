@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="`${$t('dpDocument_acl_editLocal')} (${state.aclItem.userId})`"
     :close-on-click-modal="false"
     >
-    <FormRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -27,11 +27,11 @@ const state = reactive<{
     visible: false,
     aclItem: {}
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 async function handleSubmit () {
     try {
-        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const data = await FormRendererRef.value.vFormRenderRef.getFormData()
         const params:any = {
             idOrPath: props.doc.id,
             userId: state.aclItem.userId

@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('caseManagement.add')"
   :close-on-click-modal="false"
   >
-  <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+  <FormRenderer ref="FormRendererRef" :form-json="formJson" />
   <template #footer>
     <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
   </template>
@@ -22,15 +22,15 @@ const state = reactive({
   loading: false,
   visible: false,
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const formJson = getJsonApi('caseManage/new.json')
 async function handleSubmit () {
-  const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
     state.visible = false
     await adminApi.caseTypeController.postTypes(data)
-    FromRendererRef.value.vFormRenderRef.resetForm()
+    FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
   } catch (error) {
   }

@@ -16,7 +16,7 @@ const props = defineProps<{
 const { page, pageSize, time } = toRefs(props)
 
 const config = useRuntimeConfig()
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 const formData = ref<any>({})
 function handleFormChange (data) {
@@ -66,7 +66,7 @@ provide(AuditProviderKey,{
     <div class="pageContainer">
         <AuditTable ref="tableRef" >
            <template #toolbar_buttons>
-               <FormRenderer ref="FromRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
+               <FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="handleFormChange"/>
            </template>
         </AuditTable>
     </div>

@@ -2,7 +2,7 @@
 import formJson from './form.vform.json'
 import { ElMessage } from 'element-plus'
 const { t } = useI18n()
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 function  handleSuccess(metaDateFormat:string) {
   console.log("metaDateFormat", metaDateFormat)
   ElMessage.success(t('dpMsg_success'))
@@ -14,7 +14,7 @@ function  handleSuccess(metaDateFormat:string) {
 <template>
 <div class="cardCaontainer">
 <h2>{{ t('admin.setting.title')}}</h2>
-    <FormRenderer ref="FromRendererRef" :form-json="formJson" @success="handleSuccess"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" @success="handleSuccess"/>
 </div>
 
 </template>

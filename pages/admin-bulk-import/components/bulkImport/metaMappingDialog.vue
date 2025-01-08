@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editDisplayMeta') : $t('docType_addDisplayMeta')"
     :close-on-click-modal="false"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
     </template>
@@ -25,10 +25,10 @@ const state = reactive({
     isEdit: false,
     globalSchemaList: []
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
         const param = {
@@ -40,7 +40,7 @@ async function handleSubmit () {
         }
         await adminApi.api.postWorkflowSavemetadatamapping({documentType: [param]})
         state.visible = false
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
     }
@@ -49,11 +49,11 @@ async function handleSubmit () {
 function handleOpen(exitList: any, formData: any) {
     state.visible = true
     setTimeout(() => {
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         handleOptions(exitList)
         if (!!formData) {
             formData.isEdit = true
-            FromRendererRef.value.vFormRenderRef.setFormData(formData)
+            FormRendererRef.value.vFormRenderRef.setFormData(formData)
             state.isEdit = true
         } else {
             state.isEdit = false
@@ -61,7 +61,7 @@ function handleOpen(exitList: any, formData: any) {
     })
 }
 async function handleOptions (exitList: any) {
-    const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('metaData')
+    const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metaData')
     const options = listFilter()
     idRef.loadOptions(options)
     function listFilter() {

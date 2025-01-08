@@ -57,7 +57,7 @@ onMounted(async () => {
 
 
 provide(WorkflowEditorVersionListProviderKey,{
-    getListApi : adminApi.api.postWorkflowVersionPage,
+    getListApi: adminApi.api.postWorkflowVersionPage,
     editHandler,
     actionPermission,
 })
