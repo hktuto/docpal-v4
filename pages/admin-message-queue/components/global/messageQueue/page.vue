@@ -13,8 +13,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { adminApi, publicApi } from "api";
+import { ElMessage } from 'element-plus'
+import { adminApi } from "api";
 import dayjs from "dayjs";
 const { t } = useI18n()
 let extraParams: any = {};
@@ -71,7 +71,7 @@ const {
           visible: args.row.status === 'ERROR',
           disabled: false
         }
-        break;
+      //   break;
       default:
         return {
           visible:true,
@@ -80,7 +80,25 @@ const {
     }
   }
 });
+async function handleReSubmit (row) {
+  try {
+    row.loading = true
+    const res = await adminApi.api.postMessageQueueMessageidResubmit(row.messageId, {
+      businessId: row.businessId
+    })
+    if (!!res) {
+      ElMessage.success('success')
+      query()
+    }
+  } catch (error) {
 
+  }
+  finally {
+    setTimeout(() => {
+      row.loading = false
+    }, 500)
+  }
+}
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
@@ -103,8 +121,6 @@ async function getFilter() {
   ResponsiveFilterRef.value.init(data)
 }
 onMounted(() => {
-  console.log(publicApi);
-  publicApi.api.postUserDashboardPage()
   getFilter()
 })
 </script>
