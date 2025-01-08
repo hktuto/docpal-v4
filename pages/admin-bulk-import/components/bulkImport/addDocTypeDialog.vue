@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('docType_createDocumentType')"
     :close-on-click-modal="false"
     >
-    <FormRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
     </template>
@@ -29,9 +29,9 @@ const state = reactive<{
     visible: false,
     allDocTypeList: [],
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
         const param = {
@@ -44,7 +44,7 @@ async function handleSubmit () {
         }
         await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
         // await AddMetaSettingApi(param)
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
         state.visible = false
     } catch (error) {
@@ -63,12 +63,12 @@ function handleOpen(exitList:any) {
     state.visible = true
 
     nextTick(() => {
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         handleOptions(exitList)
     })
 }
 async function handleOptions (exitList:any) {
-    const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('type')
+    const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('type')
     const options = listFilter()
     idRef.loadOptions(options)
     function listFilter() {

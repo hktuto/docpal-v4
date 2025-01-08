@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('VirtualFolder_add')"
     :close-on-click-modal="false"
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -23,10 +23,10 @@ const state = reactive({
     visible: false,
     vList: []
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const formJson = getJsonApi('admin/adminUserVFAddForm.json')
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
         const id = props.mode === 'userAllowList' ? props.userOrGroup.userId : props.userOrGroup.id
@@ -44,7 +44,7 @@ async function handleSubmit () {
         
         await saveAdminVirtualfolder(param)
         state.visible = false
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh', vItem, id)
     } catch (error) {
         
@@ -61,7 +61,7 @@ function handleOpen(selectableList) {
 function handleOptions (selectableList) {
     dpLog({selectableList});
     
-    const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('id')
+    const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('id')
     const options = selectableList.map(item => ({ label: item.name, value: item.id }))
     idRef.loadOptions(options)
 }

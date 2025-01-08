@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('user_addGroups')"
     :close-on-click-modal="false"
     >
-    <FormRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -23,9 +23,9 @@ const state = reactive({
     visible: false,
     groupList: []
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     const param = {
         groupIds: data.id,
@@ -34,7 +34,7 @@ async function handleSubmit () {
     try {
         await userProviderDetail?.BatchUserAddGroupsApi(param)
         state.visible = false
-        FromRendererRef.value.vFormRenderRef.resetForm()
+        FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
         
@@ -48,7 +48,7 @@ function handleOpen(exitList: any) {
     })
 }
 function handleOptions (exitList: any) {
-    const idRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('id')
+    const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('id')
     const options = userListFilter()
     idRef.loadOptions(options)
     function userListFilter() {

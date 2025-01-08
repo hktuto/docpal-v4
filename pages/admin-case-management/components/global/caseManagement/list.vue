@@ -96,7 +96,7 @@ provide(CaseManagementListProviderKey,{
             isDesc: params.isDesc,
             filters
         })
-        return adminApi.caseTypeController.postPage1(params)
+        return adminApi.api.postCaseTypesPage(params)
     },
     updatePageParams,
     openLatestVersion,

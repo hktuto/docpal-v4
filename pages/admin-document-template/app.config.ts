@@ -1,6 +1,5 @@
 import { adminApi } from '../../libraries/api/src/index';
 // create nuxt app config
-import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
   menu:[
@@ -10,8 +9,13 @@ export default defineAppConfig({
       label: "adminMenu.template",
       icon: "lucide:file-sliders",
       hoverIcon: "lucide:file-sliders",
-      component: "LazyDamPage",
-      props:{},
+      component: "LazyDocumentTemplatePage",
+      props:{
+        pageNum: 0,
+        pageSize: 20,
+        orderBy: 'createdDate',
+        isDesc: true
+      },
     }
   ] ,
 
