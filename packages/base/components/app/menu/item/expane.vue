@@ -26,7 +26,7 @@ if(item.onDropItself) {
 
 const { dragState ,setupDrag } = useDragable(dropOtion)
 
-
+const { t} = useI18n()
 const opened = ref(false)
 
 const elRef = ref()
@@ -46,7 +46,7 @@ onUnmounted(() => {
                <Icon :name="item.icon"></Icon>
            </div>
            <div class="menuLabel">
-               {{ item.label }}
+               {{ t(item.label) }}
            </div>
            <div v-if="item.children && item.children.length > 0" class="menuIcon dropdown" >
                 <Icon :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'" @click.stop="opened = !opened" />
