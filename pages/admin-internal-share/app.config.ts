@@ -7,14 +7,12 @@ export default defineAppConfig({
       id:"admin-internal-share",
       name: 'adminMenu.shareInternal',
       label: "adminMenu.shareInternal",
-      icon: "ic:outline-lock-clock",
-      hoverIcon: "ic:outline-lock-clock",
+      icon: "lucide:file-symlink",
+      hoverIcon: "lucide:file-symlink",
       component: "LazyInternalShareList",
       props:{
         pageNum:0,
         pageSize:20,
-        orderBy:'createdTime',
-        isDesc:true,
         filters:{}
       },
     },

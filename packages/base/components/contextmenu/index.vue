@@ -45,7 +45,7 @@ const contextMenuCloseHandler = () => {
 }
 
 
-const displayActions = computed(() => actions.value.filter(item => item.visible))
+const displayActions = computed(() => actions.value.filter(item => item.every(i => i.visible !== false)))
 
 
 const contextMenuBus = useEventBus<TABLE_CONTEXT_PARAMS>(EventType.TABLE_CONTEXT_MENU_OPEN)

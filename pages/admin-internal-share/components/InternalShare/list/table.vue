@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-
-const listProvider = inject(InternalShareListProviderKey)
+import dayjs from 'dayjs';
+const listProvider = inject(InternalShareProviderKey)
 if(!listProvider) {
     throw new Error('InternalShareListProviderKey not found')
 }
@@ -15,25 +15,42 @@ const { pageNum, pageSize, orderBy, isDesc, filters}= defineProps<{
 
 const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     id: 'adminInternalShareList',
-    api: (pageParams:any) => listProvider.getListApi(pageParams),
+    api:  listProvider.getListApi,
     remoteSort:true,
     defaultSort: [
         {
-            field: 'name',
+            field: 'createdDate',
             order: 'desc'
         }
     ],
     columns:  [
         {
-            field: 'name',
-            title: 'table_name',
-            sortable: true,
+            title: 'tableHeader.fileOrFolderName',
             fixed:'left',
+            slots:{
+                default:'docIcon'
+            }
+        },
+        {
+            title:"tableHeader_shareBy",
+            field:'shareByUserId',
+        },
+        {
+            title:"tableHeader_shareTo",
+            field:'shareToUserIds',
+            formatter: ({ cellValue }) => {
+                // const displayValue = cellValue.sort()
+                try{
+                    const displayValue = JSON.parse(cellValue).sort()
+                    return displayValue.join(', ')
+                }catch(error){
+                    return cellValue
+                }
+            }
         },
         {
             field: 'createdDate',
             title: 'workflow_createDate',
-            sortable: true,
             formatter ({ cellValue }) {
                 const format = userDisplayTimeSetting();
                 return dayjs(cellValue).format(format);
@@ -42,31 +59,17 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     ],
     bodyActions: [
         [
-            { 
-                code: 'edit', 
-                name: 'Edit', 
-                visible: true, 
-                disabled: false,
-                action: ({row}:any) => {
-                    listProvider.editHandler(row)
-                }
-             },
-            { 
-                code: 'edit_new_tab', 
-                name: 'Edit in new tab', 
-                visible: true, 
-                disabled: false,
-                action: ({row}:any) => {
-                    listProvider.editHandler(row, true)
-                }
-             },
-            { code: 'promote_to_production', name: 'Promote to Production', visible: true, disabled: false },
-            { code: "save_as_new_version", name: "Save as new version", visible: true, disabled: false },
+            {
+                name:"common_delete",
+                action:({row}) => listProvider.deleteAction(row),
+            }
         ]
     ],
-    permissionMethod: (args:PermissionMethodParams) => {
-        return listProvider.actionPermission(args)
-    }
+    permissionMethod: listProvider?.actionPermission
+})
+
+defineExpose({
+    reload
 })
 </script>
 
@@ -74,8 +77,23 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
-            
         </template>
+        <template #docIcon="{ row, index }">
+            <div class="nameItem">
+                <BrowseItemIcon v-if="!!row" :type="row.isFolder !== 'false' ? 'folder' : 'file'"/>
+                <div class="label">{{row.documentName || row.documentNames}}</div>
+            </div>
+        </template>  
     </VxeGrid>
 
 </template>
+
+<style lang="scss" scoped>
+.nameItem{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-xs);
+}
+</style>
