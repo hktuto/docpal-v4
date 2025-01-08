@@ -14,8 +14,9 @@ export default defineNuxtConfig({
     "../../pages/admin-azure",
     "../../pages/admin-masterTable",
     "../../pages/admin-easy-form",
-    "../../pages/super-workflow-form"
+    "../../pages/super-workflow-form",
     "../../pages/admin-bulk-import",
+    "../../pages/admin-dam",
   ],
   features:{
     inlineStyles: true,
