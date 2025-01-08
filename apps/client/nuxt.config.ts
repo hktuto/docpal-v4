@@ -18,6 +18,11 @@ export default defineNuxtConfig({
         changeOrigin: true,
         prependPath: true
       },
+      '/public-api':{
+        target: process.env.CLIENT_PROXY,
+        changeOrigin: true,
+        prependPath: true
+      },
     }
   }
   
