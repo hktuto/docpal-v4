@@ -11,6 +11,7 @@ import setting from './setting.json'
 const endpoint = [
     {name: 'client', url:`${setting.CLIENT_URL}/v3/api-docs`, className:"Client"},
     {name: 'admin', url:`${setting.ADMIN_URL}/v3/api-docs`, className:"Admin"},
+    {name: 'public', url:`${setting.PUBILC_URL}/v3/api-docs`, className:"Public"},
 ]
 
 async function generate(){
