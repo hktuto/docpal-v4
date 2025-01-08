@@ -143,7 +143,13 @@ const responsiveRef = ref()
 function setValue(key:string, value:string) {
     if(key === props.inputKey) {
         state.inputValue = value
+        return
     }
+    state.list.forEach(item => {
+        if(item.key === key) {
+            item.value = [value]
+        }
+    })
 }
 function init(list: ResSelectData[]) {
     state.list = list.reduce((prev, item) => {
@@ -159,7 +165,7 @@ function init(list: ResSelectData[]) {
         onResize({ width: responsiveRef.value.offsetWidth, height: 0 })
     })
 }
-function handleChange (filedData: {fieldName: string, value: any}) {
+function handleChange (filedData: {fieldName: string, value: any, [key:string]:any}) {
     if(state.interval) clearInterval(state.interval)
     state.interval = setInterval(() => {
         state.moreSelected = 0
