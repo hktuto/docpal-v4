@@ -21,6 +21,7 @@ export default defineNuxtConfig({
     "../../pages/admin-case-management",
     "../../pages/admin-file-policies",
     // "../../pages/admin-dashboard",
+    '../../pages/admin-message-queue',
 
   ],
   features:{
