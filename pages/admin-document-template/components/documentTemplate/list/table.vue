@@ -49,7 +49,45 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
         }
     ],
     bodyActions:[
+        [
+            {
+                code:"preview",
+                name:"common_preview",
+                action: ({row}) => listProvider.dblClickHandle(row)
+            },
+            {
+                code:"replace",
+                name:"tip.templateReplace",
+                action: ({row}) => listProvider.handleReplace(row, true)
+            },
+            {
+                code:"edit",
+               name: 'template.edit',
+               action: ({row}) => listProvider.handleEdit(row)
+            },
+            {
+                code:"info",
+                name: "template.editInfo",
+                action: ({row}) => listProvider.handleEditInfo(row)
+            },
+            {
+                code:"delete",
+                name:"common_delete",
+                action: ({row}) => listProvider.handleDelete(row)
+            },
+            {
+                code:"download",
+                name:"template.download",
+                action: ({row}) => listProvider.handleDownload(row)
+            }
+        ]
     ],
+    permissionMethod: (args:PermissionMethodParams) => {
+        return listProvider.actionPermission(args)
+    },
+    dblClickAction: ({ row, column, event }:any) => {
+        listProvider.dblClickHandle(row)
+    },
     optionalConfig:{
         sortConfig:{
             remote: true,

@@ -4,7 +4,7 @@
 
 <template>
     <div class="pageContainer">
-
+        detail
     </div>
 
 </template>
