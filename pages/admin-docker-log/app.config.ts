@@ -8,7 +8,7 @@ export default defineAppConfig({
       label: "adminMenu.log",
       icon: "mdi:docker",
       hoverIcon: "mdi:docker",
-      component: "LazyDockerSetting",
+      component: "LazyDockerLog",
       props:{},
     }
   ] ,
