@@ -44,6 +44,10 @@ const contextMenuCloseHandler = () => {
     visible.value = false
 }
 
+
+const displayActions = computed(() => actions.value.filter(item => item.visible))
+
+
 const contextMenuBus = useEventBus<TABLE_CONTEXT_PARAMS>(EventType.TABLE_CONTEXT_MENU_OPEN)
 const contextMenuCloseBus = useEventBus<void>(EventType.TABLE_CONTEXT_MENU_CLOSE)
 contextMenuBus.on(contextMenuOpenHandler)
@@ -56,6 +60,6 @@ onUnmounted(() => {
 
 <template>
     <div ref="contextmenuRef" :class="{contextMenuContainer:true, visible}" :style="{left: position.left + 'px', top: position.top + 'px', ['--context-item-height']: menuItemHeight + 'px'}">
-        <ContextmenuList v-for="(action, index) in actions" :key="index" :items="action" :menuItemHeight="menuItemHeight" :rowData="rowData" />
+        <ContextmenuList v-for="(action, index) in displayActions" :key="index" :items="action" :menuItemHeight="menuItemHeight" :rowData="rowData" />
     </div>
 </template>
