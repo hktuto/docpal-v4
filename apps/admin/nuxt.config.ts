@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "../../pages/super-workflow-form",
     "../../pages/admin-bulk-import",
     "../../pages/admin-dam",
+    "../../pages/admin-document-template",
   ],
   features:{
     inlineStyles: true,
