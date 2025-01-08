@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     "../../pages/admin-file-policies",
     "../../pages/admin-docker-log",
     // "../../pages/admin-dashboard",
+    '../../pages/admin-message-queue',
 
   ],
   features:{
