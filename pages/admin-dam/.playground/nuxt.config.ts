@@ -1,16 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+import { defineNuxtConfig } from "nuxt/config";
+
+console.log(process.env.CLIENT_PROXY)
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
-  devtools: { enabled: true },
   ssr:false,
-  modules: ['@nuxt/test-utils/module'],
   extends:[
-    '../../packages/authApp',
-    "../../pages/super-workflow-form",
+    "../",
+    "../../../packages/authApp",
   ],
-  features:{
-    inlineStyles: true,
-  },
   nitro:{
     devProxy:{
       '/api':{
