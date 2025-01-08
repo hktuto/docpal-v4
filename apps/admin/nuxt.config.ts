@@ -19,6 +19,9 @@ export default defineNuxtConfig({
     "../../pages/admin-dam",
     "../../pages/admin-document-template",
     "../../pages/admin-case-management",
+    "../../pages/admin-file-policies",
+    // "../../pages/admin-dashboard",
+
   ],
   features:{
     inlineStyles: true,
