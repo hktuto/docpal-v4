@@ -1,5 +1,5 @@
 <template>
-    <!-- <div style="--icon-color: var(--primary-color)"> -->
+    <!-- <div style="--icon-color: var(--app-primary-color)"> -->
         <!-- <SvgIcon src="/icons/file/changeDocType.svg"  
             :content="$t('tip.changeDocType')"
             @click="iconClickHandler()"></SvgIcon> -->
@@ -11,7 +11,7 @@
             </template>
             <div>
                 <div v-for="(item, key) in commonRegExp" >
-                    <div style="--icon-color: var(--primary-color)" class="flex-x-start regex-title">
+                    <div style="--icon-color: var(--app-primary-color)" class="flex-x-start regex-title">
                         <SvgIcon v-if="!noCopy" size="16" src="/icons/file/copy.svg" @click="handleCopy(item)"></SvgIcon>
                         <b class="el-icon--right">{{$t(`designer.hint.${key}`) }}：</b> 
                     </div>

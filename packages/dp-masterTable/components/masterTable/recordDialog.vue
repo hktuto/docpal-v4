@@ -38,7 +38,7 @@ async function handleSubmit () {
         state.loading = true
         const data = await FormVariablesRendererRef.value.getData(true)
         if(state.edit) {
-            await adminApi.masterTableController.putRecord(props.tableId, {
+            await adminApi.api.putMasterTablesIdRecord(props.tableId, {
                 data: [data],
                 where: {
                 id: state.setting.id
@@ -46,7 +46,7 @@ async function handleSubmit () {
             })
         }
         else {
-            await adminApi.masterTableController.postRecord({
+            await adminApi.api.postMasterTablesRecord({
                 id: props.tableId,
                 data: [data]
             })
@@ -116,7 +116,7 @@ async function turnFields(fields) {
     await Promise.all(pList)
     return resultFields
     async function getRelationOptions(params, field) {
-        const data = await adminApi.masterTableController.getRecords(params).then(res => res.data)
+        const data = await adminApi.api.getMasterTablesRecords(params).then(res => res.data)
         field.type = 'select'
         field.options.optionItems = data?.map(item => ({
             label: item[params.displayField],

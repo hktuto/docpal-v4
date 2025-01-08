@@ -13,6 +13,8 @@ export default defineNuxtConfig({
     "../../pages/admin-audit",
     "../../pages/admin-azure",
     "../../pages/admin-masterTable",
+    "../../pages/admin-easy-form",
+    "../../pages/super-workflow-form"
     "../../pages/admin-bulk-import",
   ],
   features:{

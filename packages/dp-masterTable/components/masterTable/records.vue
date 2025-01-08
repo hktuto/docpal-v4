@@ -128,7 +128,7 @@ const state = reactive<{
 const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = useVxeTable({
   id: "mt_" + props.tableId,
   api: (pageParams: any) =>
-    adminApi.masterTableController.postPage({
+    adminApi.api.postMasterTablesRecordPage({
       ...pageParams,
       ...state.extraParams,
       id: props.tableId,
@@ -223,7 +223,7 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(`${$i18n.t("msg_confirmWhetherToDelete")}`);
   if (action !== "confirm") return;
-  const result = await adminApi.masterTableController.deleteRecord(props.tableId,  {recordId: row.id}, {});
+  const result = await adminApi.api.deleteMasterTablesIdRecord(props.tableId,  {recordId: row.id}, {});
   if (!result) {
     ElMessage.error($i18n.t("dpTip.deleteFailed"));
     return;
@@ -242,7 +242,7 @@ function handleAddRow(row: any) {
 async function handleBatchActive(status: boolean) {
   try {
     const ids = state.selectList.map((item: any) => item.id)
-    await adminApi?.masterTableController.patchStatus1(props.tableId, {
+    await adminApi.api.patchMasterTablesIdBatchRecordStatus(props.tableId, {
       in: {
         id: ids
       },
@@ -258,7 +258,7 @@ async function handleActive(row, status: boolean) {
   try {
     row.loading = true;
     row.status = status;
-    await adminApi?.masterTableController.patchStatus(props.tableId, {
+    await adminApi.api.patchMasterTablesIdRecordStatus(props.tableId, {
       id: row.id,
       status
     });
@@ -341,7 +341,7 @@ async function handleDeleteSelected() {
   );
   if (action !== "confirm") return;
   const ids = state.selectList.map((item: any) => item.id)
-  await adminApi.masterTableController.postDelete({
+  await adminApi.api.postMasterTablesBatchDelete({
     tableId: props.tableId, 
     recordIds: ids});
   ElMessage.success($i18n.t("dpMsg_success"));
