@@ -13,16 +13,17 @@ export default defineNuxtConfig({
   },
   nitro:{
     devProxy:{
+      '/public-api/report/v1/api':{
+        target: process.env.DASHBOARD_PROXY,
+        changeOrigin: true,
+        prependPath: true
+      },
       '/api':{
         target: process.env.CLIENT_PROXY,
         changeOrigin: true,
         prependPath: true
       },
-      '/public-api':{
-        target: process.env.CLIENT_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
+      
     }
   }
   

@@ -13,13 +13,13 @@ export default defineNuxtConfig({
   },
   nitro:{
     devProxy:{
-      '/api':{
-        target: process.env.ADMIN_PROXY,
+      '/public-api/report/v1/api':{
+        target: process.env.DASHBOARD_PROXY,
         changeOrigin: true,
         prependPath: true
       },
-      '/public-api':{
-        target: process.env.CLIENT_PROXY,
+      '/api':{
+        target: process.env.ADMIN_PROXY,
         changeOrigin: true,
         prependPath: true
       },
