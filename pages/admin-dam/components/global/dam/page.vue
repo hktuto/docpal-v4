@@ -43,7 +43,7 @@ provide(DamProviderKey, {
         if(!filteredData.value ){
             const { data:{list} } = await adminApi.api.postDamGetallsetting() as any
             const data = mergeDataByKey(list, 'sourceType') as any
-            console.log(data)
+           
             tableData.value = data
             filteredData.value = data
             return data

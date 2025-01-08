@@ -124,7 +124,6 @@ async function setFormJson (formJson) {
 }
 async function setData (data) {
     await FormRendererRef.value.vFormRenderRef.setFormData(data)
-    console.log(data)
 }
 function formChange(formData) {
     emits('formChange', formData)
