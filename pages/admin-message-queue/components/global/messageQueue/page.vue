@@ -8,6 +8,10 @@
         />
         <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
       </template>
+      <template #status="{row, rowIndex}">
+        <el-tag v-if="row.status === 'ERROR'" type="danger">{{ row.status }}</el-tag>
+        <el-tag v-else type="info">{{ row.status }}</el-tag>
+      </template>
     </VxeGrid>
     <HoldDialog ref="HoldDialogRef" @update="query" />
   </div>
@@ -40,7 +44,11 @@ const {
     { field: "fileName", title: "table_fileName", fixed: "left" },
     { field: "table_path", title: "logicalPath" },
     { field: "category", title: "category" },
-    { field: "status", title: "dpTable_status" },
+    { field: "status", title: "dpTable_status", 
+      slots: {
+        default: 'status'
+      } 
+    },
     {
       field: "lastUpdateDate",
       title: "table_last_update",
