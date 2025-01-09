@@ -1,10 +1,10 @@
-export const routeRetentionDetail  = function(params: any){
+export const routeDashboardManageDetail  = function(params: any){
   return {
-    id: "admin-retention-versions-" + new Date().getTime(),
-    name: "admin-retention-versions-" + params.id,
-    icon: 'streamline:interface-lock-shield-combination-combo-lock-locked-padlock-secure-security-shield-keyhole',
-    label: params.policyName,
-    component: 'LazyRetentionDetail',
+    id: "admin-dashboard-versions-" + new Date().getTime(),
+    name: "admin-dashboard-versions-" + params.id,
+    icon: 'material-symbols:dashboard-customize-outline-rounded',
+    label: params.name,
+    component: 'LazyDashboardManageDetail',
     props: {
       id: params.id,
     }

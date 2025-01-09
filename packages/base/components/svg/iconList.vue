@@ -14,7 +14,8 @@
 const props = defineProps<{
     selectedSrc: string
 }>()
-const svgIconList = ref<{name:string, children:{name:string, src:string}[]}[]>([])
+import { svgIconList } from '~/utils/svg'
+// const svgIconList = ref<{name:string, children:{name:string, src:string}[]}[]>([])
 const value = ref()
 import InlineSvg from 'vue-inline-svg';
 
@@ -49,7 +50,7 @@ defineExpose({ getSvg })
         --icon-size:2rem;
     }
     .selectedSvg {
-        background-color: aquamarine;
+        background-color: var(--app-primary-2);
     }
     :deep(.el-card__body) {
         text-align: center;

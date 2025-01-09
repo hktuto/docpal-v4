@@ -95,8 +95,8 @@ onActivated(async() => {
     display: grid;
     grid-template-columns: 1fr min-content;
     grid-template-rows: min-content 1fr;
-    grid-column-gap: var(--app-padding);
-    grid-row-gap: var(--app-padding);
+    grid-column-gap: var(--app-space-xs);
+    grid-row-gap: var(--app-space-xs);
     height: 100%;
     overflow: auto;
 }
