@@ -317,7 +317,7 @@ defineExpose({ getFormData, getFlatData, initTable })
     .tableHeader{
         display: grid;
         grid-template-columns: 1fr min-content;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
         margin-bottom: 10px;
         align-items: center;
         &-title {

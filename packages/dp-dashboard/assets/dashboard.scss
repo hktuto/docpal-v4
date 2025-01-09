@@ -1,0 +1,71 @@
+.dashboard-item{ 
+  --el-card-border-radius: .8rem;
+  --el-box-shadow-light: none;
+  
+  .vue-resizable-handle{
+    //border-top-right-radius: var(--el-card-border-radius);
+    border-bottom-right-radius: var(--el-card-border-radius);
+    background:none;
+    border-width: 0px 2px 2px 0px;
+    border-color: var(--color-grey-010);
+    border-style: solid;
+  }
+  &:hover{
+    --el-box-shadow-light: 0 0 5px 2px var(--color-grey-010);
+  }
+  &-card {
+    height: 100%;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    overflow: hidden;
+    background-color: var(--setting-color, #fff);
+    .el-card__body {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .el-card__header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: unset;
+      padding: var(--app-space-xs);
+      h4 {
+        padding: unset;
+        margin: unset;
+        color: #464646;
+        font-size: 18px;
+        font-family: Arial;
+      }
+    }
+  }
+  &-tab {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    position: relative;
+    .el-card__body {
+      height: 100%;
+      overflow: hidden;
+    }
+    .setting-icon {
+      position: absolute;
+      right: var(--app-space-xs);
+      top: var(--app-space-xs);
+      z-index: 5;
+    }
+    &--content {
+      height: 100%;
+      display: grid;
+      grid-template-rows: min-content 1fr;
+      overflow: hidden;
+      &--table {
+        overflow: hidden;
+      }
+      .el-tabs {
+        width: 100%;
+        overflow: hidden;
+      }
+    }
+  }
+}

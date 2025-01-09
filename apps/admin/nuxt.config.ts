@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     "../../pages/admin-case-management",
     "../../pages/admin-file-policies",
     "../../pages/admin-docker-log",
-    // "../../pages/admin-dashboard",
+    "../../pages/admin-dashboard",
     '../../pages/admin-message-queue',
     "../../pages/admin-internal-share",
 

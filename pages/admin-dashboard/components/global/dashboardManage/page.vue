@@ -7,20 +7,22 @@
           inputKey="policyName"
           @form-change="handleFilterFormChange"
         />
-        <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
+        <el-button type="primary" @click="handleCreate">{{$t('button.add')}}</el-button>
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.status === 'A'" type="success">{{ $t("actions.activated") }}</el-tag>
         <el-tag v-else type="danger">{{ $t("actions.inactived") }}</el-tag>
       </template>
     </VxeGrid>
-    <HoldDialog ref="HoldDialogRef" @update="query" />
+    <DashboardDialog ref="DashboardDialogRef" @refresh="query({})" @add="handleDblclick"/>
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { adminApi } from "api";
+import { ElMessageBox } from 'element-plus'
+import { publicApi } from "api";
 import dayjs from "dayjs";
+import { routeDashboardManageDetail } from '~/utils/routerHelper';
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {};
 const {
@@ -33,7 +35,7 @@ const {
 } = useVxeTable({
   id: "userTableSetting",
   api: (pageParams: any) =>
-    adminApi.api.postPolicyHoldsPage({ ...pageParams, ...extraParams }),
+  publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
   columns: [
     { field: "name", title: "tableHeader_name", fixed: "left" },
     { field: "access", title: "tableHeader_access" },
@@ -58,6 +60,15 @@ const {
         },
       },
       {
+        code: "hold_config",
+        name: t('common_config'),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleConfig(row)
+        },
+      },
+      {
         code: "hold_delete",
         name: t('common_delete'),
         visible: true,
@@ -66,92 +77,57 @@ const {
           deleteItem(row.id);
         },
       },
-      {
-        code: "hold_active",
-        name: t('actions.active'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleActive(row, 'A');
-        },
-      },
-      {
-        code: "hold_inactive",
-        name: t('actions.inactive'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleActive(row, 'D');
-        },
-      }
     ],
   ],
   dblClickAction: ({ row, column, event }:any) => {
     handleDblclick(row)
   },
-  permissionMethod: (args:PermissionMethodParams) => {
-    switch (args.code) {
-      case 'hold_active':
-        return {
-          visible: args.row.status === 'D',
-          disabled: false
-        }
-        break;
-      case 'hold_inactive':
-        return {
-          visible: args.row.status === 'A',
-          disabled: false
-        }
-        break;
-      default:
-        return {
-          visible:true,
-          disabled: false
-        }
-    }
-  }
 });
-const HoldDialogRef = ref()
-function handleDblclick(row) {
-  HoldDialogRef.value.handleOpen({
+const DashboardDialogRef = ref()
+function handleDblclick(row: any) {
+  routerProvider?.navigateTo(routeDashboardManageDetail(row), false)
+}
+function handleConfig(row: any) {
+  DashboardDialogRef.value.handleOpen({
     ...row,
     isEdit: true
   })
 }
-async function handleActive(row: any, isActive: 'A' | 'D') {
-  try {
-    const result = await adminApi.api.patchPolicyHoldsIdStatusStatus(row.id, isActive).then(res => res.data)
-    if (!!result) {
-      row.status = isActive;
-      ElMessage.success(t('dpMsg_success'))
-    }
-  } catch (error) {
-    
-  }
-}
-async function deleteItem(id: string) {
+async function deleteItem(id: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if(action !== 'confirm') return
-  await adminApi.api.deletePolicyHoldsId(id)
-  query()
+  await publicApi.api.deleteUserDashboardId(id)
+  query({})
 }
 async function handleCreate() {
-  DialogRef.value.handleOpen();
+  DashboardDialogRef.value.handleOpen();
 }
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === 'false' ? false : true
+  let filterParams: any = {
+    name: formModel.name === "" ? undefined : formModel.name,
+    orderBy: formModel.orderBy === undefined || formModel.orderBy === "" ? "createdDate" : formModel.orderBy
+  };
+  filterParams.isDesc = formModel.isDesc
+  extraParams = filterParams;
   reload();
 }
-function handleAdd () {
-  HoldDialogRef.value.handleOpen()
-}
+
 const ResponsiveFilterRef = ref()
 async function getFilter() {
   const data = [
-    { key: "status", label: "user_active", type: "string", isMultiple: false,
+    { key: "orderBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
       options: [
-        { label: "noActive", value: "D" },
-        { label: "isActive", value: "A" }
+        { label: 'table_name', value: 'name' },
+        { label: 'tableHeader_access', value: 'access' },
+        { label: 'filePopover_fileCreatedDate', value: 'createdDate' }
+      ]
+    },
+    { key: "isDesc", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
+      options: [
+        { label: 'tableHeader.desc', value: false },
+        { label: 'tableHeader.asc', value: true }
       ]
     }
   ]
