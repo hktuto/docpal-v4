@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"super-workflow-form",
       name: 'super-workflow-form',
       label: "adminMenu.workflowForm",
-      icon: "teenyicons:azure-solid",
-      hoverIcon: "teenyicons:azure-solid",
+      icon: "material-symbols:dynamic-form-outline-rounded",
+      hoverIcon: "material-symbols:dynamic-form-outline-rounded",
       component: "LazyWorkflowFormPage",
       props:{},
     }
