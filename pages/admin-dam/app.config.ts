@@ -3,9 +3,9 @@ import { adminApi } from '../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
-      id:"DAM_FILE_CONVERTION",
+  menu:{
+    "admin-dam":{
+      id:"admin-dam",
       name: 'DAM_FILE_CONVERTION',
       label: "adminMenu.DAM",
       icon: "lucide:file-scan",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazyDamPage",
       props:{},
     }
-  ] ,
+  },
 
 })

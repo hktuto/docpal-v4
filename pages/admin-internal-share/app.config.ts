@@ -2,8 +2,8 @@
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-internal-share":{
       id:"admin-internal-share",
       name: 'adminMenu.shareInternal',
       label: "adminMenu.shareInternal",
@@ -15,7 +15,7 @@ export default defineAppConfig({
         pageSize:20,
         filters:{}
       },
-    },
-  ] ,
+    }
+  },
 
 })

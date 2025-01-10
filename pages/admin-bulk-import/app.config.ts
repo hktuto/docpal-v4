@@ -3,8 +3,8 @@ import { adminApi } from '../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-bulk-import":{
       id:"admin-bulk-import",
       name: 'bulkImportConfig',
       label: "bulkImportConfig",
@@ -19,6 +19,6 @@ export default defineAppConfig({
         filters:{}
       },
     }
-  ] ,
+  },
 
 })

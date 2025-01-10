@@ -1,8 +1,8 @@
 import {clientApi} from 'api'
 
 export default defineAppConfig({
-    menu:[
-        {
+    menu:{
+        "client-browse":{
             id: 'browse',
             icon: 'dp-icon:browse-outline',
             hoverIcon: 'dp-icon:browse-fill',
@@ -12,6 +12,6 @@ export default defineAppConfig({
                 idOrPath:"/",
                 filter:{}
             }
-        },
-    ]
+        }
+    }
 })

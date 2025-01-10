@@ -2,9 +2,9 @@ import { adminApi } from '../../libraries/api/src/index';
 // create nuxt app config
 
 export default defineAppConfig({
-  menu:[
-    {
-      id:"GENERATE_TEMPLATE",
+  menu:{
+    "admin-document-template": {
+      id:"admin-document-template",
       name: 'GENERATE_TEMPLATE',
       label: "adminMenu.template",
       icon: "lucide:file-sliders",
@@ -17,6 +17,6 @@ export default defineAppConfig({
         isDesc: true
       },
     }
-  ] ,
+  } ,
 
 })

@@ -3,8 +3,8 @@ import { adminApi } from './../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-audit":{
       id:"admin-audit",
       name: 'admin-audit',
       label: "adminMenu.log",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazyAuditPage",
       props:{},
     }
-  ] ,
+  } ,
 
 })

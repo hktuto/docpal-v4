@@ -3,8 +3,8 @@ import { adminApi } from './../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu: {
+    "admin-easy-form":{
       id:"admin-easy-form",
       name: 'admin-easy-form',
       label: "adminMenu.easyForm",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazyEasyFormPage",
       props:{},
     }
-  ] ,
+  } ,
 
 })

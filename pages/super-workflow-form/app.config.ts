@@ -3,8 +3,8 @@ import { adminApi } from 'api';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "super-workflow-form":{
       id:"super-workflow-form",
       name: 'super-workflow-form',
       label: "adminMenu.workflowForm",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazyWorkflowFormPage",
       props:{},
     }
-  ] ,
+  },
 
 })
