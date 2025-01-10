@@ -29,6 +29,11 @@ export default defineNuxtConfig({
   features:{
     inlineStyles: true,
   },
+  runtimeConfig:{
+    public:{
+      plarform:'admin'
+    }
+  },
   nitro:{
     devProxy:{
       '/public-api/report/v1/api':{

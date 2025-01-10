@@ -18,6 +18,11 @@ export default defineNuxtConfig({
   features:{
     inlineStyles: true,
   },
+  runtimeConfig:{
+    public:{
+      plarform:'public'
+    }
+  },
   nitro:{
     devProxy:{
       '/public-api/report/v1/api':{
