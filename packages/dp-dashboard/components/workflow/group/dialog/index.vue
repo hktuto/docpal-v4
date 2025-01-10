@@ -89,7 +89,7 @@ async function handleSubmit() {
 }
 function handleOpen(setting) {
   state.visible = true;
-  state.loading = true
+  // state.loading = true
   setTimeout(async () => {
     state.setting = setting;
     if(!setting.filterHeaderList) setting.filterHeaderList = []
@@ -103,9 +103,9 @@ function handleOpen(setting) {
 
     if (!setting.cardHeaderLayout) setting.cardHeaderLayout = []
     form.value.cardHeaderLayout = [...setting.cardHeaderLayout]
-    
+    console.log(form.value.cardHeaderLayout)
     await getWorkflowProps(form.value.workflowList)
-    state.loading = false;
+    // state.loading = false;
   });
 }
 async function handleDelete() {
