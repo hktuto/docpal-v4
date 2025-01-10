@@ -23,14 +23,14 @@ import DocTypeCoCount from  '../components/doc/coCount/index.vue'
 import DocTypeCount from  '../components/doc/count.vue'
 import DocSizeStatistics from  '../components/doc/sizeStatistics.vue'
 // workflow co-count
-// import WorkflowCoCount from  '../components/workflow/coCount/index.vue'
-// import WorkflowActiveCount from  '../components/workflow/coCount/activeCount.vue'
-// import WorkflowApproveRate from  '../components/workflow/coCount/approveRate.vue'
-// import WorkflowNewCount from  '../components/workflow/coCount/newCount.vue'
-// import WorkflowTimeSpendPerTask from  '../components/workflow/coCount/timeSpendPerTask.vue'
-// import WorkflowTimeSpendPerWorkflow from  '../components/workflow/coCount/timeSpendPerWorkflow.vue'
+import WorkflowCoCount from  '../components/workflow/coCount/index.vue'
+import WorkflowActiveCount from  '../components/workflow/coCount/activeCount.vue'
+import WorkflowApproveRate from  '../components/workflow/coCount/approveRate.vue'
+import WorkflowNewCount from  '../components/workflow/coCount/newCount.vue'
+import WorkflowTimeSpendPerTask from  '../components/workflow/coCount/timeSpendPerTask.vue'
+import WorkflowTimeSpendPerWorkflow from  '../components/workflow/coCount/timeSpendPerWorkflow.vue'
 // workflow group
-// import WorkflowGroup from  '../components/workflow/group/index.vue'
+import WorkflowGroup from  '../components/workflow/group/index.vue'
 // azure
 import AzureThreshold from '../components/azure/threshold.vue'
 import AzureOcrProcessed from '../components/azure/ocrProcessed/index.vue'
@@ -394,14 +394,14 @@ export const widgetComponent = {
     'DocTypeCount': DocTypeCount,
     'DocSizeStatistics': DocSizeStatistics,
 
-//     'WorkflowCoCount': WorkflowCoCount,
-//     'WorkflowActiveCount': WorkflowActiveCount,
-//     'WorkflowApproveRate': WorkflowApproveRate,
-//     'WorkflowNewCount': WorkflowNewCount,
-//     'WorkflowTimeSpendPerTask': WorkflowTimeSpendPerTask,
-//     'WorkflowTimeSpendPerWorkflow': WorkflowTimeSpendPerWorkflow,
+    'WorkflowCoCount': WorkflowCoCount,
+    'WorkflowActiveCount': WorkflowActiveCount,
+    'WorkflowApproveRate': WorkflowApproveRate,
+    'WorkflowNewCount': WorkflowNewCount,
+    'WorkflowTimeSpendPerTask': WorkflowTimeSpendPerTask,
+    'WorkflowTimeSpendPerWorkflow': WorkflowTimeSpendPerWorkflow,
 
-//     'WorkflowGroup': WorkflowGroup,
+    'WorkflowGroup': WorkflowGroup,
 
     'AzureThreshold': AzureThreshold,
     'AzureOcrProcessed': AzureOcrProcessed,

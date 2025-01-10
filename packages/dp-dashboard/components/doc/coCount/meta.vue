@@ -71,7 +71,7 @@ const setting = {
 const state = reactive({
     data: [],
 })
-let options = {}
+let options: any = {}
 function lineFeedLabel(data, length) {
     //data 要处理的字符串
     //length 每行显示长度

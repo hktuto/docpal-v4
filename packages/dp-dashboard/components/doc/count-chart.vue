@@ -86,7 +86,7 @@ const state = reactive({
 })
 const picStore = {
 }
-let options = {}
+let options: any = {}
 
 // #region module: set
     function initStyle () {
