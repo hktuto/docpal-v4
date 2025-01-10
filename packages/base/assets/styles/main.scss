@@ -2,6 +2,7 @@
 @use 'sass:map';
 @use './elements/index.scss' ;
 @use './var.scss' as *;
+@use './flex.scss';
 
 $types: primary, success, warning, danger, error, info;
 
