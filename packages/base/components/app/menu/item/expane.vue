@@ -78,6 +78,9 @@ onUnmounted(() => {
     color: var(--app-grey-350);
     .menuLabel{
         flex:1 0 auto;
+        color: var(--app-grey-500);
+        font-weight: 400;
+        font-size: var(--app-font-size-m);
     }
     cursor: pointer;
     

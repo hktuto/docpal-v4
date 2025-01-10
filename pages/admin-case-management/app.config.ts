@@ -3,9 +3,9 @@ import { adminApi } from './../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
-      id:"admin-setting",
+  menu:{
+    "admin-case-management":{
+      id:"admin-case-management",
       name: 'admin-case-management-list',
       label: "Caese management",
       icon: "dp-icon:case-outline",
@@ -18,6 +18,6 @@ export default defineAppConfig({
           isDesc: true
       },
     }
-  ] ,
+   } ,
 
 })

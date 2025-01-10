@@ -3,8 +3,8 @@ import { adminApi } from 'api';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-azure":{
       id:"admin-azure",
       name: 'admin-azure',
       label: "adminMenu.azure",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazyAzurePage",
       props:{},
     }
-  ] ,
+  }
 
 })

@@ -1,9 +1,9 @@
 // create nuxt app config
 
 export default defineAppConfig({
-  menu:[
-    {
-      id:"'admin-docker-log",
+  menu:{
+    "admin-docker-log":{
+      id:"admin-docker-log",
       name: 'admin-docker-log',
       label: "adminMenu.log",
       icon: "mdi:docker",
@@ -11,6 +11,6 @@ export default defineAppConfig({
       component: "LazyDockerLog",
       props:{},
     }
-  ] ,
+  },
 
 })

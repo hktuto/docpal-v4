@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends MenuItem">
-const  { menu } = useAppConfig()
+const  { menu, appMenu } = useAppConfig()
 const opened = ref('false')
 const mode = ref<'collapse' | 'expand'>('collapse')
 
@@ -8,6 +8,36 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found on menu')
 }
+
+const displayMenu = ref([])
+
+function generateMenu(){
+    let result = []
+    for(let item of appMenu){
+        let menuItem = item;
+        // step 1 check if item has name, if so get it from menu
+        if((item.name && menu[item.name])) {
+            // TODO : check if menu[item.name] has license
+            menuItem = menu[item.name];
+            continue;
+        }
+        let hasVisibleChildren = false;
+        if(item.children) {
+            for(let child of item.children) {
+                if(child.name && menu[child.name]) {
+                    child = menu[child.name];
+                    hasVisibleChildren = true
+                }
+            }
+        }
+        if(hasVisibleChildren) {
+            result.push(menuItem)
+        }
+    }
+    displayMenu.value = result;
+    console.log("displayMenu", displayMenu.value);
+}
+
 const selectedMenuItem = ref<MenuItem>()
 function toggleMenuMode(){
     if(mode.value === 'collapse'){
@@ -36,10 +66,11 @@ function menuItemClick(item:any) {
 }
 
 onMounted(() => {
-    const menuState = localStorage.getItem('app-menu-mode')
-    if(menuState === 'expand'){
-        mode.value = 'expand'
-    }
+    // const menuState = localStorage.getItem('app-menu-mode')
+    // if(menuState === 'expand'){
+    //     mode.value = 'expand'
+    // }
+    generateMenu()
 })
 
 </script>
@@ -52,10 +83,10 @@ onMounted(() => {
             </div>
             <Transition name="fade" appear>
                 <div v-if="mode === 'collapse'" class="menuBody">
-                    <AppMenuItemCollapse v-for="(item, index) in menu" :key="index" :item="item" :selected="!!selectedMenuItem && selectedMenuItem.id === item.id" :mode="mode" @itemClick="menuItemClick(item)" />
+                    <AppMenuItemCollapse v-for="(item, index) in displayMenu" :key="index" :item="item" :selected="!!selectedMenuItem && selectedMenuItem.id === item.id" :mode="mode" @itemClick="menuItemClick(item)" />
                 </div>
                 <div v-else class="menuBody expand">
-                    <AppMenuItemExpane v-for="(item, index) in menu" :key="index" :item="item" :selected="false" :mode="mode" @itemClick="menuItemClick(item)" />
+                    <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item" :selected="false" :mode="mode" @itemClick="menuItemClick(item)" />
                 </div>
             </Transition>
             <div class="menuFooter">

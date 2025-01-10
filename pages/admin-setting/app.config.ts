@@ -3,8 +3,8 @@ import { adminApi } from './../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-setting":{
       id:"admin-setting",
       name: 'admin-setting',
       label: "Setting",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazySettingPage",
       props:{},
     }
-  ] ,
+  }
 
 })

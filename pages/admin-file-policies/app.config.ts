@@ -3,8 +3,8 @@ import { adminApi } from 'api';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-hold-policies":{
       id:"admin-hold-policies",
       name: 'admin-hold-policies',
       label: "adminMenu.holdPoliciesManage",
@@ -13,7 +13,7 @@ export default defineAppConfig({
       component: "LazyHoldPage",
       props:{},
     },
-    {
+    "admin-retention-policies":{
       id:"admin-retention-policies",
       name: 'admin-retention-policies',
       label: "adminMenu.retention",
@@ -22,6 +22,6 @@ export default defineAppConfig({
       component: "LazyRetentionPage",
       props:{},
     }
-  ] ,
+  }
 
 })

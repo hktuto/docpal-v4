@@ -3,8 +3,8 @@ import { adminApi } from './../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-user":{
       id:"admin-user",
       name: 'admin-user-list',
       label: "Admin User",
@@ -13,7 +13,7 @@ export default defineAppConfig({
       component: "LazyAdminUserList",
       props:{},
     },
-    {
+    "admin-group":{
       id:"admin-group",
       name: 'admin-group-list',
       label: "Admin Group",
@@ -22,6 +22,6 @@ export default defineAppConfig({
       component: "LazyGroupList",
       props:{},
     }
-  ] ,
+  }
 
 })

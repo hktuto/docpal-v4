@@ -3,8 +3,8 @@ import { adminApi } from 'api';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-master-table":{
       id:"admin-master-table",
       name: 'admin-master-table',
       label: "adminMenu.masterTable",
@@ -13,6 +13,7 @@ export default defineAppConfig({
       component: "LazyMasterTablePage",
       props:{},
     }
-  ] ,
+  }
+  
 
 })

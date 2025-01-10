@@ -3,8 +3,8 @@ import { adminApi } from './../../libraries/api/src/index';
 import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
-  menu:[
-    {
+  menu:{
+    "admin-acl":{
       id:"admin-acl",
       name: 'admin-acl',
       label: "Access Control List",
@@ -13,6 +13,6 @@ export default defineAppConfig({
       component: "LazyAclPage",
       props:{},
     }
-  ] ,
+  },
 
 })
