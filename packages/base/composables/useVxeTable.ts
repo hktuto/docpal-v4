@@ -89,6 +89,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         round: true,
         stripe: true,
         showOverflow: true,
+        showHeaderOverflow: true,
         height: params.height || 'auto',
         toolbarConfig:{
             custom: saveColumnOrder ,
