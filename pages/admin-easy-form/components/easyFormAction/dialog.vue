@@ -302,7 +302,7 @@ defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 .el-row {
-  // margin-bottom: var(--app-input-padding);
+  // margin-bottom: var(--app-space-xs);
   align-items: center;
 }
 .svgIcon {

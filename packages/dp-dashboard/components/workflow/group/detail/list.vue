@@ -277,7 +277,7 @@ defineExpose({
   color: #dc2525;
 }
 .card-item--label {
-  margin-top: var(--app-input-padding);
+  margin-top: var(--app-space-xs);
   font-size: 12px;
   color: #0F2037;
 }

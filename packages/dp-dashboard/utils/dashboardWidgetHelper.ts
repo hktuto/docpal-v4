@@ -37,18 +37,18 @@ import AzureOcrProcessed from '../components/azure/ocrProcessed/index.vue'
 import AzureOcrProcessedHistory from '../components/azure/ocrProcessHistory/index.vue'
 
 // personal
-// import PersonalDashboard from '../components/personal/dashboard.vue'
-// import PersonalShare from '../components/personal/share/index.vue'
-// import PersonalShareExternal from '../components/personal/share/external.vue'
-// import PersonalShareInternalMe from '../components/personal/share/internalMe.vue'
-// import PersonalShareInternalOther from '../components/personal/share/internalOther.vue'
-// import PersonalPredefinedSearch from '../components/personal/predefinedSearch.vue'
-// import PersonalWorkflowCreate from '../components/personal/workflow/create.vue'
-// import PersonalWorkflow from '../components/personal/workflow/index.vue'
-// import PersonalSearchHistory from '../components/personal/search/history.vue'
-// import PersonalSearchRecentDoc from '../components/personal/search/recentDoc.vue'
-// import PersonalCaseCreate from '../components/personal/case/create.vue'
-// import PersonalCase from '../components/personal/case/index.vue'
+import PersonalDashboard from '../components/personal/dashboard.vue'
+import PersonalShare from '../components/personal/share/index.vue'
+import PersonalShareExternal from '../components/personal/share/external.vue'
+import PersonalShareInternalMe from '../components/personal/share/internalMe.vue'
+import PersonalShareInternalOther from '../components/personal/share/internalOther.vue'
+import PersonalPredefinedSearch from '../components/personal/predefinedSearch.vue'
+import PersonalWorkflowCreate from '../components/personal/workflow/create.vue'
+import PersonalWorkflow from '../components/personal/workflow/index.vue'
+import PersonalSearchHistory from '../components/personal/search/history.vue'
+import PersonalSearchRecentDoc from '../components/personal/search/recentDoc.vue'
+import PersonalCaseCreate from '../components/personal/case/create.vue'
+import PersonalCase from '../components/personal/case/index.vue'
 
 import  '../assets/dashboard.scss'
 
@@ -407,16 +407,16 @@ export const widgetComponent = {
     'AzureOcrProcessed': AzureOcrProcessed,
     'AzureOcrProcessedHistory': AzureOcrProcessedHistory,
 
-//     "PersonalDashboard": PersonalDashboard,
-//     "PersonalShare": PersonalShare,
-//     "PersonalShareExternal": PersonalShareExternal,
-//     "PersonalShareInternalMe": PersonalShareInternalMe,
-//     "PersonalShareInternalOther": PersonalShareInternalOther,
-//     "PersonalPredefinedSearch": PersonalPredefinedSearch,
-//     "PersonalWorkflowCreate": PersonalWorkflowCreate,
-//     "PersonalWorkflow": PersonalWorkflow,
-//     "PersonalSearchHistory": PersonalSearchHistory,
-//     "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
-//     "PersonalCaseCreate": PersonalCaseCreate,
-//     "PersonalCase": PersonalCase
+    "PersonalDashboard": PersonalDashboard,
+    "PersonalShare": PersonalShare,
+    "PersonalShareExternal": PersonalShareExternal,
+    "PersonalShareInternalMe": PersonalShareInternalMe,
+    "PersonalShareInternalOther": PersonalShareInternalOther,
+    "PersonalPredefinedSearch": PersonalPredefinedSearch,
+    "PersonalWorkflowCreate": PersonalWorkflowCreate,
+    "PersonalWorkflow": PersonalWorkflow,
+    "PersonalSearchHistory": PersonalSearchHistory,
+    "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
+    "PersonalCaseCreate": PersonalCaseCreate,
+    "PersonalCase": PersonalCase
 }
