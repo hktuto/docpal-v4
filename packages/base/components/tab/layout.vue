@@ -25,7 +25,7 @@ const { layout } = defineProps<{
     height: 100%;
     width: 100%;
     border-radius: var(--app-border-radius-m);
-    box-shadow: var(--app-shadow-m);
+    box-shadow: var(--app-shadow-s);
     position: relative;
     :deep(.splitpanes) {
         height:100%;
