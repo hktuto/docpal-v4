@@ -172,7 +172,7 @@ defineExpose({
             </template>
         </template>
     </AppWrapper>
-    <TabDialog ref="dialogRef" v-model="dialogOpened" :item="dialogItem" />
+    <TabDialog ref="dialogRef"  v-model="dialogOpened" :item="dialogItem" />
 </template>
 
 

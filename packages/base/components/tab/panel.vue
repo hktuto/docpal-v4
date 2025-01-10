@@ -125,7 +125,7 @@ function backdropClick(index:number){
     height:100%;
     overflow: hidden;
     position: relative;
-    background: var(--app-grey-1000);
+    background: rgba(255,255,255,0.3);
 }
 .tabContent {
     container-type: inline-size;

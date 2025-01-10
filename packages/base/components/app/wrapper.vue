@@ -17,7 +17,7 @@
 
 <style scoped lang="scss">
 .appFullPage{
-    --page-padding:  var(--app-space-s);
+    --page-padding:  0;
     width: 100svw;
     height: 100svh;
     overflow: hidden;
@@ -27,7 +27,6 @@
     background: var(--app-bg);
     background-color: var(--app-grey-900);
     -webkit-app-region: drag;
-    
 }
 .appMainContainer{
     -webkit-app-region: drag;

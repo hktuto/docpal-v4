@@ -53,7 +53,7 @@ export default defineNuxtConfig({
       }
     ],
     strategy:'no_prefix',
-    lazy: true,
+    lazy: false,
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
