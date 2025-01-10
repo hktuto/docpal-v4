@@ -1,3 +1,3 @@
 <template>
-    <SvgIcon src="/icons/logo-dark.svg" />
+    <SvgIcon src="/icons/logo-light.svg" />
 </template>
