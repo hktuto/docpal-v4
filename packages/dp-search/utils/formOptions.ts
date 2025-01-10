@@ -1,0 +1,119 @@
+
+import { clientApi, adminApi } from "api"
+import { useRuntimeConfig } from "nuxt/dist/app/nuxt"
+
+export const conditionType = [
+  { label: 'keyword', value: 'keyword' },
+  { label: 'metadata', value: 'metadata' },
+  { label: 'documentTypes', value: 'documentTypes' },
+  { label: 'mimeTypes', value: 'mimeTypes' },
+  { label: 'creators', value: 'creators' },
+  { label: 'collections', value: 'collections' },
+  { label: 'tags', value: 'tags' },
+  { label: 'authors', value: 'authors' },
+  { label: 'creatorGroups', value: 'creatorGroups' },
+  { label: 'authorGroups', value: 'authorGroups' },
+  { label: 'size', value: 'size' },
+  { label: 'createdDate', value: 'createdDate' },
+  { label: 'modified', value: 'modified' },    
+]
+export const languages = [
+  { label: 'chi_sim', value: 'chi_sim' },
+  { label: 'chi_tra', value: 'chi_tra' },
+  { label: 'eng', value: 'eng' },
+  { label: 'ind', value: 'ind' },
+  { label: 'jpn', value: 'jpn' },
+  { label: 'kor', value: 'kor' },
+  { label: 'tha', value: 'tha' },
+  { label: 'vie', value: 'vie' },
+]
+export const sizes = [
+  { label: 'searchType.100', value: '100' },
+  { label: 'searchType.1000', value: '1000' },
+  { label: 'searchType.10000', value: '10000' },
+  { label: 'searchType.100000', value: '100000' },
+  { label: 'searchType.1000000', value: '1000000' },
+]
+
+export const mimeTypes = [
+  {
+    label: "images",
+    value: 'images',
+    options: [
+      { label:"All Image", value:"image/*"},
+      { label : "JPG", value: "image/jpeg" },
+      { label : "PNG", value: "image/png" },
+      { label : "GIF", value: "image/gif" },
+      { label : "PDF", value: "application/pdf" },
+      { label : "SVG", value: "image/svg+xml" },
+      { label : "TIFF", value: "image/tiff" },
+      { label : "WEBP", value: "image/webp" },
+      { label : "BMP", value: "image/bmp" },
+    ]
+  },
+  {
+    label: "Documents",
+    value: 'Documents',
+    options: [
+      { label:"All Document", value:"application/*" },
+      { label : "DOC", value: "application/msword" },
+      { label : "DOCX", value: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+      { label : "XLS", value: "application/vnd.ms-excel" },
+      { label : "XLSX", value: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" },
+      { label : "PPT", value: "application/vnd.ms-powerpoint" },
+      { label : "PPTX", value: "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+    ]
+  },
+  {
+    label: "Videos",
+    value: 'Videos',
+    options: [
+      { label:"All Video", value:"video/*" },
+      { label : "MP4", value: "video/mp4" },
+      { label : "AVI", value: "video/x-msvideo" },
+      { label : "WMV", value: "video/x-ms-wmv" },
+      { label : "FLV", value: "video/x-flv" },
+      { label : "MKV", value: "video/x-matroska" },
+    ]
+  },
+  {
+    label: "Audios",
+    value: 'Audios',
+    options: [
+      { label:"All Audio", value:"audio/*" },
+      { label : "MP3", value: "audio/mpeg" },
+      { label : "WAV", value: "audio/wav" },
+      { label : "OGG", value: "audio/ogg" },
+      { label : "FLAC", value: "audio/flac" },
+      { label : "AAC", value: "audio/aac" },
+    ]
+  }
+]
+export const getMetadataOptions = async() => {
+  const { public: { plarform } } = useRuntimeConfig();
+  /// TODO: depecate in next version
+  let globalType;
+  if(plarform === 'admin'){
+    const {data} = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile');
+    globalType = data.keywords
+  }else{
+    const { data } = await clientApi.api.getNuxeoTypesDocumenttype('GlobalFile')
+    globalType = data.keywords
+
+  }
+  const optionList = globalType.map((item: any) => ({
+    ...item,
+    label: item.name,
+    value: item.name
+  }))
+  return optionList
+}
+export const getGroupList = async() => {
+  const {data} = await clientApi.api.postNuxeoIdentityGroups()
+  const optionList = data.map((item: any) => ({
+    ...item,
+    label: item.name,
+    value: item.id
+  }))
+  return optionList
+}

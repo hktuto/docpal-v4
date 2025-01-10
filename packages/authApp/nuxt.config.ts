@@ -16,7 +16,6 @@ export default defineNuxtConfig({
         admin : process.env.ADMIN_END_POINT,
         docpal : process.env.DOCPAL_END_POINT,
         office  : process.env.OFFICE_END_POINT,
-        upload : process.env.UPLOAD_END_POINT,
         dashboard : process.env.DASHBOARD_PROXY,
         upload: process.env.UPLOAD_PROXY,
       }

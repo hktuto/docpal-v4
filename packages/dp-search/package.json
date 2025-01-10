@@ -1,0 +1,30 @@
+{
+  "name": "dp-search",
+  "type": "module",
+  "version": "0.0.1",
+  "main": "./nuxt.config.ts",
+  "scripts": {
+    "dev": "nuxi prepare & nuxi dev .playground --dotenv ../../../.env.dev",
+    "build": "nuxi build .playground",
+    "generate": "nuxi generate .playground",
+    "preview": "nuxi preview .playground",
+    "postinstall": "nuxi prepare",
+    "test": "vitest --ui --watch",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "^12.1.0",
+    "api": "workspace:*",
+    "eslint": "^8.28.0",
+    "nuxt": "3.13.0",
+    "typescript": "^4.9.3",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.7.3",
+    "playwright-core": "^1.47.0",
+    "vitest": "2.0.5",
+    "@vitest/ui": "2.0.5"
+  },
+  "dependencies": {
+    "didyoumean2": "^6.0.1"
+  }
+}
