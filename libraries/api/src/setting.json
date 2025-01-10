@@ -1,5 +1,1 @@
-{
-    "CLIENT_URL":"https://app4.wclsolution.com",
-    "ADMIN_URL":"https://admin.app4.wclsolution.com",
-    "PUBILC_URL":"https://app4.wclsolution.com/public-api/report/v1"
-}
+{"CLIENT_URL":"https://app4.wclsolution.com","ADMIN_URL":"https://admin.app4.wclsolution.com"}

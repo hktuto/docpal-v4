@@ -81,6 +81,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         total:0,
     })
     
+    const init = ref(false);
 
     
     const tableConfig = reactive<any>({...{
@@ -97,6 +98,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 buttons: 'toolbar_buttons'
             }
         },
+        class: params.id,
         columns: columns || [],
         columnConfig: {
             resizable: true,
@@ -315,6 +317,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             throw new Error('params.api is required')
         }
         if(params.virtualScroll) {
+            init.value = true;
             return await params?.api(args)  
         }
         const { page, sorts, filters } = args
@@ -333,6 +336,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             })
         }
         const {data} = await params?.api(pageParams)
+        init.value = true;
         return {
             result: Array.isArray(data) ? data : data.entryList,
             page: {
@@ -433,6 +437,12 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     function query(params:any){
         tableRef.value?.commitProxy('query', params)
     }
+
+    onActivated(() => {
+        if(init.value) {
+            reload()
+        }
+    })
     
     
     return {
