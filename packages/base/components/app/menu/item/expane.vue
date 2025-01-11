@@ -81,6 +81,8 @@ onUnmounted(() => {
         color: var(--app-grey-500);
         font-weight: 400;
         font-size: var(--app-font-size-m);
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     cursor: pointer;
     

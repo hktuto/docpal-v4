@@ -10,6 +10,8 @@ const fullscreenItem = ref<TabItem>()
 const dialogRef = ref<InstanceType<typeof TabDialog>>(false)
 const dialogItem = ref<TabItem>()
 
+const menuStick = ref(true)
+
 const dialogOpened = ref(false)
 function closeFullscreen(){
     fullscreenItem.value = undefined
@@ -25,18 +27,18 @@ function openNewDialog(tab:TabItem){
     dialogItem.value = tab
 }
 
-const tabDataKey = Symbol("tab");
 provide(
     TabManagerKey, 
     {
-        tabDataKey,
         fullscreenItem,
         dialogOpened,
         closeDialog,
         openFocusMode,
         openNewDialog,
         openInCurrentTab,
-        openTab
+        openTab,
+        menuStick,
+        toggleMenuStick
     }
 )
 
@@ -101,6 +103,11 @@ function setLayout(layout:TabPanel[]){
 
 function setHightLightPanel(panelId:string){
     hightLightPanel.value = panelId
+}
+
+function toggleMenuStick(){
+    console.log("toggleMenuStick")
+    menuStick.value = !menuStick.value
 }
 
 
