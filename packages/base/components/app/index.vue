@@ -65,6 +65,7 @@ useGlobalSetting()
                 </template>
                 <template #footer>
                     <slot name="footer" />
+                    <LangSwitch />
                 </template>
             </AppMenu>
         </template>
