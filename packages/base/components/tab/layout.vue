@@ -12,8 +12,8 @@ const emits = defineEmits(['ready'])
     <div class="layoutContainer">
 
         <splitpanes vertical @resized="paneResized" :push-other-panes="false" @ready="$emit('ready')">
-            <Pane v-for="tab in layout" :key="tab.id" :size="tab.size">
-                <TabPanel :panel="tab" />
+            <Pane v-for="(tab, index) in layout" :key="tab.id"  :size="tab.size">
+                <TabPanel :panel="tab" :index="index"/>
             </Pane>
         </splitpanes>
     </div>

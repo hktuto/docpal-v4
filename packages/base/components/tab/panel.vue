@@ -13,8 +13,9 @@ function isTabData(
   return data.key === (tabManager as any).tabDataKey;
 }
 
-const {panel} = defineProps<{
-    panel: TabPanel
+const {panel, index} = defineProps<{
+    panel: TabPanel,
+    index: number
 }>()
 
 const elRef = ref()
@@ -80,8 +81,7 @@ function backdropClick(index:number){
 }
 
 const prefixClass = computed(() => {
-    const selectedTab = panel.tabs[panel.showingTabIndex || 0]
-    return `tabPanelActionsContainer tab-prefix-${panel.id}-${selectedTab.id}`
+    return `tabPanelActionsContainer panel-prefix-${panel-0-header-prefix}`
 })
 
 
@@ -92,9 +92,12 @@ const prefixClass = computed(() => {
         
         <TabHeaderList :panel="panel">
             <template #prefix>
-                <div  :class="prefixClass">
-                    <!-- <Icon name="lucide:chevron-left"  />
-                    <Icon name="lucide:chevron-right"  /> -->
+                
+                <div v-if="index === 0 " >
+                    <div class="menuToggleInHeaderContainer">
+
+                        <AppMenuToggle />
+                    </div>
                 </div>
             </template>
         </TabHeaderList>
@@ -111,7 +114,9 @@ const prefixClass = computed(() => {
 
 <style scoped lang="scss">
 
-
+.menuToggleInHeaderContainer{
+    padding-inline: var(--app-space-xs);
+}
 .tabContainer{
     height: 100%;
     width:100%;

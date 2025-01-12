@@ -21,6 +21,7 @@ function generateMenu(){
         if((item.name && _menu[item.name])) {
             // TODO : check if menu[item.name] has license
             menuItem = _menu[item.name];
+            result.push(menuItem)
             continue;
         }
         let hasVisibleChildren = false;
@@ -64,7 +65,7 @@ onMounted(() => {
         <div class="menuContainer">
             <div class="menuHeader">
                 <slot name="header" />
-                <AppMenuToggle />
+                <!-- <AppMenuToggle /> -->
             </div>
             <div class="menuBody">
                 <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item"  />
@@ -108,7 +109,12 @@ onMounted(() => {
 .menuExpaneBody{
     width: 220px;
 }
-
+.menuHeader{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+}
 .wrapper{
     height: 100%;
     width: 100%;

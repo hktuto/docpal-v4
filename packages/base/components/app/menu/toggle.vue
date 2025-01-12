@@ -11,6 +11,20 @@ const icon = computed(() => {
 </script>
 
 <template>
-    <Icon :name="icon" @click="tabProvider.toggleMenuStick" style="cursor: pointer;" />
+    <div class="toggleContainer">
+
+        <Icon :name="icon" @click="tabProvider.toggleMenuStick"/>
+    </div>
 
 </template>
+
+<style lang="scss" scoped>
+.toggleContainer{
+    font-size: var(--app-font-size-m);
+    cursor: pointer;
+    color: var(--app-grey-300);
+    &:hover{
+        color: var(--app-main-color);
+    }
+}
+</style>
