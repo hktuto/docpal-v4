@@ -14,14 +14,15 @@ export type TabPanel = {
 }
 
 interface TabManager {
-    tabDataKey:symbol
     fullscreenItem: Ref<TabItem | undefined>
     dialogOpened: Ref<boolean>,
+    menuStick: Ref<boolean>
     closeDialog:() => void,
     openFocusMode:(tab:TabItem) => void
     openNewDialog:(args: any) => void
     openTab:(tab:TabItem) => void
     openInCurrentTab:(tab:TabItem) => void
+    toggleMenuStick:() => void
 }
 
 interface TabComponentHelper {

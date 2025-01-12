@@ -62,6 +62,7 @@ function newTab() {
 
 <template>
     <div ref="elRef" class="tabHeaderContainer">
+        <slot name="prefix" />
         <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :panel="panel" :index="index" :selected="index === panel.showingTabIndex" />
         <div class="newTabButtonContainer">
             <Icon name="lucide:plus" @click.stop="newTab" />

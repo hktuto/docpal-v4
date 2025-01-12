@@ -5,8 +5,8 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
-const { item, selected, mode='collapse' } = defineProps<{item :MenuItem, selected:boolean, mode:'collapse' | 'expand' }>()
-const emits = defineEmits(['itemClick', 'contextmenu'])
+const { item } = defineProps<{item :MenuItem, selected:boolean, mode:'collapse' | 'expand' }>()
+const emits = defineEmits(['contextmenu'])
 
 
 const dropOtion:UseDraggableParam = {
@@ -22,6 +22,16 @@ const dropOtion:UseDraggableParam = {
 if(item.onDropItself) {
     dropOtion.detectDrop = true
     dropOtion.onDropItself = item.onDropItself;
+}
+
+function itemClick() {
+    if(item.children && item.children.length > 0) {
+        opened.value = !opened.value
+        return;
+    }
+    if(item.component) {
+        tabProvider?.openTab(item)
+    }
 }
 
 const { dragState ,setupDrag } = useDragable(dropOtion)
@@ -41,7 +51,7 @@ onUnmounted(() => {
 </script>
 <template>
     <div :class="{menuExpanItemContainer:true, opened, selected}">
-       <div ref="elRef"  class="menuItem" @click="$emit('itemClick', item)">
+       <div ref="elRef"  class="menuItem"  @click="itemClick">
            <div class="menuIcon">
                <Icon :name="item.icon"></Icon>
            </div>
@@ -49,11 +59,13 @@ onUnmounted(() => {
                {{ t(item.label) }}
            </div>
            <div v-if="item.children && item.children.length > 0" class="menuIcon dropdown" >
-                <Icon :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'" @click.stop="opened = !opened" />
+                <Icon :name="opened ? 'lucide:chevron-up' : 'lucide:chevron-down'"  />
            </div>
        </div>
        <div v-if="opened" class="expendItem">
-            <AppMenuItemCollapseSubmenu v-for="subItem in item.children" :key="subItem.id" :subMenuItem="subItem" />
+        <!-- {{ item.children }} -->
+            <AppMenuItemExpane v-for="subItem in item.children" :key="subItem.id" :item="subItem" :selected="false" :mode="mode" />
+            <!-- <AppMenuItemCollapseSubmenu v-for="subItem in item.children" :key="subItem.id" :subMenuItem="subItem" /> -->
        </div>
        <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
             <div class="dropPreviewFile">
@@ -81,6 +93,8 @@ onUnmounted(() => {
         color: var(--app-grey-500);
         font-weight: 400;
         font-size: var(--app-font-size-m);
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
     cursor: pointer;
     

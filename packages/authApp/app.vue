@@ -30,7 +30,7 @@ onMounted(() => {
                 </template>
                 <template #footer>
                     <Icon name="lucide:log-out" @click="logout"/>
-                    <LangSwitch />
+                    
                 </template>
             </App>
         </template>
