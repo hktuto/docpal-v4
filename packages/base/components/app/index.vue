@@ -36,7 +36,6 @@ async function getTabsFromServer() {
 
 function saveHIghlightPanel(panelID:string){
     localStorage.setItem('app-tab-hightLightPanel', panelID);
-    
 }
 
 async function saveTabsToLocalStorage(layout:TabPanel[]) {
@@ -65,6 +64,7 @@ useGlobalSetting()
                 </template>
                 <template #footer>
                     <slot name="footer" />
+                    <LangSwitch />
                 </template>
             </AppMenu>
         </template>

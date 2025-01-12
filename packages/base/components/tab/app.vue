@@ -10,6 +10,8 @@ const fullscreenItem = ref<TabItem>()
 const dialogRef = ref<InstanceType<typeof TabDialog>>(false)
 const dialogItem = ref<TabItem>()
 
+const menuStick = ref(true)
+
 const dialogOpened = ref(false)
 function closeFullscreen(){
     fullscreenItem.value = undefined
@@ -25,18 +27,18 @@ function openNewDialog(tab:TabItem){
     dialogItem.value = tab
 }
 
-const tabDataKey = Symbol("tab");
 provide(
     TabManagerKey, 
     {
-        tabDataKey,
         fullscreenItem,
         dialogOpened,
         closeDialog,
         openFocusMode,
         openNewDialog,
         openInCurrentTab,
-        openTab
+        openTab,
+        menuStick,
+        toggleMenuStick
     }
 )
 
@@ -103,6 +105,10 @@ function setHightLightPanel(panelId:string){
     hightLightPanel.value = panelId
 }
 
+function toggleMenuStick(){
+    menuStick.value = !menuStick.value
+}
+
 
 watch(hightLightPanel,(item) => {
     emits('highlightPanelChanged', item)
@@ -131,9 +137,7 @@ defineExpose({
                 <LoadingBg />
             </template>
             <template v-else>
-
-                <TabLayout :layout="layout" @ready="$emit('ready')" />
-                
+                <TabLayout :layout="layout" @ready="$emit('ready')" />"
                 <div class="hiddenAllComponent">
                     <template v-for="component in allComponents" :key="component.id">
                         

@@ -103,6 +103,11 @@ provide(MenuRouterKey,{
     tabData: tab
 })
 
+const historyClass = computed(() => {
+    if(isFullscreen.value) return `#fullscreen-tab-header-${tab.value.parent}-${tab.value.id} > .tabLeftTeleportContainer`
+    return `#tab-header-${tab.value.parent}-${tab.value.id} > .tabLeftTeleportContainer`
+})
+
 defineExpose({
     navigateTo,
 })
@@ -112,13 +117,15 @@ defineExpose({
 <template>
 
 <div class="routerContainer">
-        <Teleport defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .tabLeftTeleportContainer`" >
+    <!-- {{ historyClass }} -->
+        <Teleport :to="historyClass" defer>
             <div class="historyContainer">
                 <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
                 <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
             </div>
         </Teleport>
         <Teleport  v-if="tab.icon" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .icon`">
+            
             <Icon :name="tab.icon" />
         </Teleport>
         <Teleport  v-if="tab.label" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .label`">

@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T extends MenuItem">
 const  { menu, appMenu } = useAppConfig()
-const opened = ref('false')
 const mode = ref<'collapse' | 'expand'>('collapse')
 
 
@@ -13,21 +12,31 @@ const displayMenu = ref([])
 
 function generateMenu(){
     let result = []
-    for(let item of appMenu){
+    const _appMenu = deepCopy(appMenu)
+    const _menu = deepCopy(menu)
+    for(let i = 0; i < _appMenu.length; i++) {
+        let item = _appMenu[i];
         let menuItem = item;
         // step 1 check if item has name, if so get it from menu
-        if((item.name && menu[item.name])) {
+        if((item.name && _menu[item.name])) {
             // TODO : check if menu[item.name] has license
-            menuItem = menu[item.name];
+            menuItem = _menu[item.name];
+            result.push(menuItem)
             continue;
         }
         let hasVisibleChildren = false;
         if(item.children) {
-            for(let child of item.children) {
-                if(child.name && menu[child.name]) {
-                    child = menu[child.name];
+            for(let j = 0; j < item.children.length; j++) {
+                if(item.children[j].name && _menu[item.children[j].name]) {
+                    item.children[j] = _menu[item.children[j].name];
                     hasVisibleChildren = true
+                }else{
+                    item.children.splice(j, 1);
+                    j--;
                 }
+            }
+            if(item.children.length === 0) {
+                item.children = undefined
             }
         }
         if(hasVisibleChildren) {
@@ -35,35 +44,11 @@ function generateMenu(){
         }
     }
     displayMenu.value = result;
-    console.log("displayMenu", displayMenu.value);
 }
 
 const selectedMenuItem = ref<MenuItem>()
-function toggleMenuMode(){
-    if(mode.value === 'collapse'){
-        mode.value = 'expand'
-    }else{
-        mode.value = 'collapse'
-    }
-    localStorage.setItem('app-menu-mode', mode.value)
-}
 
-function menuItemClick(item:any) {
-    // if menu  has no children, open page in new tab
-    if(!item.children || item.children.length === 0) {
-        console.log("item click", item);
-        // TODO : show choose user perference to see if open in new tab or in current tab
-        tabProvider?.openTab(item)
-        return;
-    }
-    if(selectedMenuItem.value && selectedMenuItem.value.id === item.id) {
-        selectedMenuItem.value = undefined
-    }else{
 
-        selectedMenuItem.value = item
-    }
-    
-}
 
 onMounted(() => {
     // const menuState = localStorage.getItem('app-menu-mode')
@@ -76,30 +61,24 @@ onMounted(() => {
 </script>
 
 <template>
-    <div :class="{wrapper:true, opened}">
+    <div class="wrapper">
         <div class="menuContainer">
             <div class="menuHeader">
                 <slot name="header" />
+                <!-- <AppMenuToggle /> -->
             </div>
-            <Transition name="fade" appear>
-                <div v-if="mode === 'collapse'" class="menuBody">
-                    <AppMenuItemCollapse v-for="(item, index) in displayMenu" :key="index" :item="item" :selected="!!selectedMenuItem && selectedMenuItem.id === item.id" :mode="mode" @itemClick="menuItemClick(item)" />
-                </div>
-                <div v-else class="menuBody expand">
-                    <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item" :selected="false" :mode="mode" @itemClick="menuItemClick(item)" />
-                </div>
-            </Transition>
+            <div class="menuBody">
+                <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item"  />
+            </div>
+
             <div class="menuFooter">
                 <Icon name="lucide:settings" />
                 <slot name="footer"></slot>
             </div>
         </div>
-        <div v-if="mode === 'collapse' && selectedMenuItem && selectedMenuItem.children" class="levelTwoMenuContainer">
-            <AppMenuItemCollapseSubmenu v-for="item in selectedMenuItem.children" :key="item.id" :subMenuItem="item" />
-        </div>
-        <div class="menuToggleer" @click="toggleMenuMode">
+        <!-- <div class="menuToggleer" @click="toggleMenuMode">
             <Icon class="menuToggleIcon" :name="mode === 'collapse' ? 'lucide:chevron-right' : 'lucide:chevron-left'" />
-        </div>
+        </div> -->
     </div>
 </template> 
 
@@ -130,27 +109,15 @@ onMounted(() => {
 .menuExpaneBody{
     width: 220px;
 }
-.menuToggleer{
-    --toggler-width: 1rem;
-    position: absolute;
-    top: calc(var(--app-space-s) * -1);
-    right: calc( var(--app-space-s) * -1);
-    width: var(--toggler-width);
-    background: linear-gradient( -90deg, var(--app-grey-800), rgba(255,255,255,0)) ;
-    height: calc(100% + var(--app-space-s));
+.menuHeader{
     display: flex;
-    justify-content: center;
+    flex-flow: row wrap;
+    justify-content: flex-start;
     align-items: center;
-    cursor: pointer;
-    opacity: 0;
-    transition: all .2s ease-in-out;
-    &:hover{
-        --toggler-width: 1.5rem;
-        opacity: 1;
-    }
 }
 .wrapper{
     height: 100%;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -167,24 +134,20 @@ onMounted(() => {
     position: relative;
 }
 .menuContainer{
+    width:100%;
     height: 100%;
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     gap: var(--app-space-s);
 }
 .menuBody{
-    
+    width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: flex-start;
+    justify-content: stretch;
     align-items: flex-start;
     gap: 0;
     font-size: var(--icon-font-size);
-    &.expand{
-        justify-content: stretch;
-        gap: 0;
-        min-width: 200px;
-    }
     
 }
 .menuFooter{

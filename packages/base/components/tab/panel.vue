@@ -13,8 +13,9 @@ function isTabData(
   return data.key === (tabManager as any).tabDataKey;
 }
 
-const {panel} = defineProps<{
-    panel: TabPanel
+const {panel, index} = defineProps<{
+    panel: TabPanel,
+    index: number
 }>()
 
 const elRef = ref()
@@ -69,8 +70,6 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
     // dropExternal: true
 })
 
-
-
 onMounted(() => {
     if(!elRef.value) return
     setupDropable(elRef.value)
@@ -81,13 +80,27 @@ function backdropClick(index:number){
     panelTabFocus(panel.id, index);
 }
 
+const prefixClass = computed(() => {
+    return `tabPanelActionsContainer panel-prefix-${panel-0-header-prefix}`
+})
+
 
 </script>
 
 <template>
     <div :class="{tabContainer:true, activePanel: hightLightPanel === panel.id}">
+        
+        <TabHeaderList :panel="panel">
+            <template #prefix>
+                
+                <div v-if="index === 0 " >
+                    <div class="menuToggleInHeaderContainer">
 
-        <TabHeaderList :panel="panel"/>
+                        <AppMenuToggle />
+                    </div>
+                </div>
+            </template>
+        </TabHeaderList>
         
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
                 tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true
@@ -101,7 +114,9 @@ function backdropClick(index:number){
 
 <style scoped lang="scss">
 
-
+.menuToggleInHeaderContainer{
+    padding-inline: var(--app-space-xs);
+}
 .tabContainer{
     height: 100%;
     width:100%;
