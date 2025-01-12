@@ -20,7 +20,7 @@ const icon = computed(() => {
 
 <style lang="scss" scoped>
 .toggleContainer{
-    font-size: var(--app-font-size-m);
+    font-size: var(--app-font-size-l);
     cursor: pointer;
     color: var(--app-grey-300);
     &:hover{
