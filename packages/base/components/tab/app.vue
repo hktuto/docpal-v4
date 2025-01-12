@@ -106,7 +106,6 @@ function setHightLightPanel(panelId:string){
 }
 
 function toggleMenuStick(){
-    console.log("toggleMenuStick")
     menuStick.value = !menuStick.value
 }
 

@@ -12,21 +12,30 @@ const displayMenu = ref([])
 
 function generateMenu(){
     let result = []
-    for(let item of appMenu){
+    const _appMenu = deepCopy(appMenu)
+    const _menu = deepCopy(menu)
+    for(let i = 0; i < _appMenu.length; i++) {
+        let item = _appMenu[i];
         let menuItem = item;
         // step 1 check if item has name, if so get it from menu
-        if((item.name && menu[item.name])) {
+        if((item.name && _menu[item.name])) {
             // TODO : check if menu[item.name] has license
-            menuItem = menu[item.name];
+            menuItem = _menu[item.name];
             continue;
         }
         let hasVisibleChildren = false;
         if(item.children) {
-            for(let child of item.children) {
-                if(child.name && menu[child.name]) {
-                    child = menu[child.name];
+            for(let j = 0; j < item.children.length; j++) {
+                if(item.children[j].name && _menu[item.children[j].name]) {
+                    item.children[j] = _menu[item.children[j].name];
                     hasVisibleChildren = true
+                }else{
+                    item.children.splice(j, 1);
+                    j--;
                 }
+            }
+            if(item.children.length === 0) {
+                item.children = undefined
             }
         }
         if(hasVisibleChildren) {
@@ -34,27 +43,11 @@ function generateMenu(){
         }
     }
     displayMenu.value = result;
-    console.log("displayMenu", displayMenu.value);
 }
 
 const selectedMenuItem = ref<MenuItem>()
 
-function menuItemClick(item:any) {
-    // if menu  has no children, open page in new tab
-    if(!item.children || item.children.length === 0) {
-        console.log("item click", item);
-        // TODO : show choose user perference to see if open in new tab or in current tab
-        tabProvider?.openTab(item)
-        return;
-    }
-    if(selectedMenuItem.value && selectedMenuItem.value.id === item.id) {
-        selectedMenuItem.value = undefined
-    }else{
 
-        selectedMenuItem.value = item
-    }
-    
-}
 
 onMounted(() => {
     // const menuState = localStorage.getItem('app-menu-mode')
@@ -74,7 +67,7 @@ onMounted(() => {
                 <AppMenuToggle />
             </div>
             <div class="menuBody">
-                <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item" :selected="false" :mode="mode" @itemClick="menuItemClick(item)" />
+                <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item"  />
             </div>
 
             <div class="menuFooter">

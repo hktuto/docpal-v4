@@ -4,7 +4,7 @@ import {paneResized} from '#imports'
 const { layout } = defineProps<{
     layout: TabPanel[]
 }>()
-
+const emits = defineEmits(['ready'])
 
 </script>
 

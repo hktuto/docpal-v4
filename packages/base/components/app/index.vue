@@ -36,7 +36,6 @@ async function getTabsFromServer() {
 
 function saveHIghlightPanel(panelID:string){
     localStorage.setItem('app-tab-hightLightPanel', panelID);
-    
 }
 
 async function saveTabsToLocalStorage(layout:TabPanel[]) {
