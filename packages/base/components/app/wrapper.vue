@@ -61,9 +61,12 @@ onUnmounted(() => {
 <template>
     <div class="appFullPage" >
         <Teleport v-if="isMenuStick" to="#appSidebar" defer >
-            <slot name="sidebar" />
+            <slot name="sidebar"/>
         </Teleport>
         <div v-else class="absolutionSidebarContainer">
+            <div class="absolutionToggler">
+                <AppMenuToggle />
+            </div>
             <slot name="sidebar" />
         </div>
         <splitpanes v-show="ready" vertical @resized="paneResized" :push-other-panes="true" @ready="layoutReadyHandler">
@@ -115,29 +118,48 @@ onUnmounted(() => {
 }
 #appSidebar{
     width: 100%;
+    height: 100%;
     padding: var(--app-space-s) 0 var(--app-space-s) var(--app-space-s);
     -webkit-app-region: no-drag;
 }
 .absolutionSidebarContainer{
-    --header-size: 20px;
-    position: absolute;
-    top: var(--header-size);
+    --header-size: calc(30px + var(--app-space-s));
+    position: fixed;
+    top: var(--app-space-xs);
     left: var(--app-space-xs);
-    width: 300px;
-    height: calc(100% - var(--header-size) * 2);
+    width: 280px;
+    height: calc(100% - var(--app-space-xs) * 2);
     z-index: 45;
     padding: var(--app-space-xs);
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    background: var(--app-grey-1000);
-    border-radius: var(--app-border-radius-m);
+    background: rgba(2552,255,255,0.3);
+    backdrop-filter: blur(20px);
+    broder-top: 1px solid var(--app-grey-800);
+    border-radius: var(--app-border-radius-s);
     transform: translateX(-100%);
-    transition: transform .2s ease-in-out;
+    transition: transform .3s ease-in-out;
     &:hover{
         transform: translateX(0);
     }
     &:focus-within{
         transform: translateX(0);
     }
-    
+    &:after {
+        --extend-width: 20px;
+        content: "";
+        position: absolute;
+        height: 100%;
+        width: var(--extend-width);
+        top: 0;
+        right: calc(var(--extend-width) * -1);
+        background: transparent;
+    }
+    .absolutionToggler{
+        position: relative;
+        padding: var(--app-space-xs);
+        // background: var(--app-grey-1000);
+        cursor: pointer;
+        z-index: 2;
+    }
 }
 </style>
