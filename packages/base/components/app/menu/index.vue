@@ -146,8 +146,11 @@ onMounted(() => {
     flex-flow: column nowrap;
     justify-content: stretch;
     align-items: flex-start;
-    gap: 0;
+    gap: var(--app-space-xs);
     font-size: var(--icon-font-size);
+    position: relative;
+    overflow: auto;
+    padding-block: var(--app-space-s);
     
 }
 .menuFooter{

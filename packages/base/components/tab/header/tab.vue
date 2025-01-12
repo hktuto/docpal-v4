@@ -123,6 +123,7 @@ function closeTab(){
 </template>
 
 <style lang="scss" scoped>
+
 .tabLeftTeleportContainer{
     display: none;
     &.selected{
@@ -139,7 +140,7 @@ function closeTab(){
 .tabItem{
     --item-radius: calc(var(--container-radius) - var(--container-padding) );
     padding: var(--app-space-xs) var(--app-space-s);
-    font-size: var(--app-font-size-s);
+    font-size: var(--app-font-size-m);
     color: var(--app-grey-400);
     border-bottom: 2px solid var(--tab-item-border-color);
     cursor: pointer;
@@ -148,8 +149,8 @@ function closeTab(){
     align-items: center;
     flex-flow: row nowrap;
     gap: var(--app-space-xxs);
-    border-top-left-radius: var(--app-border-radius-m);
-    border-top-right-radius: var(--app-border-radius-m);
+    // border-top-left-radius: var(--app-border-radius-m);
+    // border-top-right-radius: var(--app-border-radius-m);
     position: relative;
     max-width: 100%;
     min-width: 60px;
@@ -161,7 +162,7 @@ function closeTab(){
         display: none;
     }
     &:hover {
-        background: var(--app-grey-850);
+        background: rgba(255,255,255,0.7);
         .gripIcon{
             display: block;
         }
@@ -199,7 +200,7 @@ function closeTab(){
 
 }
 .gripIcon{
-    font-size: var(--app-font-size-m);
+    font-size: var(--app-font-size-l);
     display: none;
     position: absolute;
     left:0;
