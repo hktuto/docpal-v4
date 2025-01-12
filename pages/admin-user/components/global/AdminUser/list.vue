@@ -4,9 +4,6 @@ import { userProviderKey } from "~/util/userProvider";
 const tabProvider = inject(TabManagerKey);
 const routerProvider = inject(MenuRouterKey);
 
-definePageMeta({
-  name: "admin-user-list",
-})
 
 if (!tabProvider || !routerProvider) {
   throw new Error("MenuRouterKey is not provided");

@@ -5,10 +5,12 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
-
+const icon = computed(() => {
+    return tabProvider.menuStick.value ? 'tabler:layout-sidebar-left-collapse-filled' : 'tabler:layout-sidebar-left-expand-filled'
+})
 </script>
 
 <template>
-    <Icon name="tabler:layout-sidebar-filled" @click="tabProvider.toggleMenuStick" style="cursor: pointer;" />
+    <Icon :name="icon" @click="tabProvider.toggleMenuStick" style="cursor: pointer;" />
 
 </template>

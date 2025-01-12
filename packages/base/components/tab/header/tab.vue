@@ -100,7 +100,7 @@ function closeTab(){
         <div ref="elRef" :data-tab-id="tab.id" :id="`tab-header-${tab.parent}-${tab.id}`"
         :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" >
 
-            <div class="tabLeftTeleportContainer" >
+            <div :class="{tabLeftTeleportContainer:true, selected}" >
 
             </div>
             <div class="icon"></div>
@@ -123,6 +123,12 @@ function closeTab(){
 </template>
 
 <style lang="scss" scoped>
+.tabLeftTeleportContainer{
+    display: none;
+    &.selected{
+        display: block;
+    }
+}
 .dragPreview{
     --item-radius: calc(var(--container-radius) - var(--container-padding) );
     padding: var(--app-space-xs) var(--app-space-s);
@@ -152,6 +158,7 @@ function closeTab(){
     }
     .closeIcon{
         opacity: 0;
+        display: none;
     }
     &:hover {
         background: var(--app-grey-850);

@@ -69,8 +69,6 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
     // dropExternal: true
 })
 
-
-
 onMounted(() => {
     if(!elRef.value) return
     setupDropable(elRef.value)
@@ -81,13 +79,25 @@ function backdropClick(index:number){
     panelTabFocus(panel.id, index);
 }
 
+const prefixClass = computed(() => {
+    const selectedTab = panel.tabs[panel.showingTabIndex || 0]
+    return `tabPanelActionsContainer tab-prefix-${panel.id}-${selectedTab.id}`
+})
+
 
 </script>
 
 <template>
     <div :class="{tabContainer:true, activePanel: hightLightPanel === panel.id}">
-
-        <TabHeaderList :panel="panel"/>
+        
+        <TabHeaderList :panel="panel">
+            <template #prefix>
+                <div  :class="prefixClass">
+                    <!-- <Icon name="lucide:chevron-left"  />
+                    <Icon name="lucide:chevron-right"  /> -->
+                </div>
+            </template>
+        </TabHeaderList>
         
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
                 tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true
