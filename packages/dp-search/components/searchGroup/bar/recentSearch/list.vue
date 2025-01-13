@@ -80,19 +80,19 @@ defineExpose({
   overflow: auto;
 }
 .el-card {
-  margin-bottom: var(--app-padding);
+  margin-bottom: var(--app-space-xs);
 }
 .search-child {
   // background-color: var(--primary-color);
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   background: var(--el-color-info-light-5);
-  margin-bottom: var(--app-padding);
+  margin-bottom: var(--app-space-xs);
 }
 .search-child-child {
   // background-color: var(--primary-color);
   background: var(--el-color-info-light-7);
-  margin-bottom: var(--app-padding);
-  padding: var(--app-padding);
+  margin-bottom: var(--app-space-xs);
+  padding: var(--app-space-xs);
   border-radius: 4px;
 }
 </style>

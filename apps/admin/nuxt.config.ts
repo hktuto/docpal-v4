@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     "../../pages/admin-dashboard",
     '../../pages/admin-message-queue',
     "../../pages/admin-internal-share",
+    "../../pages/admin-external-connection",
 
   ],
   features:{

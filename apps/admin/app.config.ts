@@ -137,6 +137,9 @@ export default defineAppConfig({
         },
         {
             name:"admin-easy-form"
+        },
+        {
+            name:"admin-external-connection"
         }
     ]
 })

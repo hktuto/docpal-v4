@@ -14,7 +14,7 @@
     {{ $t(`logic.${filters.condition}`)  }}
   </el-divider>
 </div>
-<div style="margin-top: var(--app-padding);" class="flex-x-center">
+<div style="margin-top: var(--app-space-xs);" class="flex-x-center">
   <el-dropdown class="plain-dropdown"  size="small" split-button  @click="handleAddFilter" @command="(command: 'and' | 'or') => handleCommand(command, filters)">
     {{ $t(`logic.${filters.condition}`)  }}
     <template #dropdown>
