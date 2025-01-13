@@ -1,5 +1,13 @@
 <script lang="ts" setup>
 const mode = ref<'filter' | 'search'>('search')
+
+function toggleMode() {
+  mode.value = mode.value === 'filter' ? 'search' : 'filter'
+}
+function handleSearch(params: any) {
+  console.log('handleSearch', params)
+}
+
 </script>
 
 
@@ -10,13 +18,21 @@ const mode = ref<'filter' | 'search'>('search')
         </div>
         <div class="flex-x-start search-group-bar-action">
             <!-- show hide filter and search icon -->
-            <SvgIcon v-if="mode === 'filter'" src="/icons/tools/filter.svg" class="mr-2"></SvgIcon>
-            <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" ></SvgIcon>
+            <SvgIcon v-if="mode === 'search'" src="/icons/tools/filter.svg" class="mr-2" @click="toggleMode"></SvgIcon>
+            <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="toggleMode"></SvgIcon>
             <!-- end show hide filter and search icon -->
             <SearchGroupSavedSearch />
             <SearchGroupRecentSearch />
             <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
             <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" /> -->
+        </div>
+        <div class="search-group-bar-content" v-if="mode === 'search'">
+          <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
+          <SearchGroupFilter ref="filterRef" @search="handleSearch"></SearchGroupFilter>
+        </div>
+        <div class="search-group-bar-content" v-show="mode === 'filter'">
+          <SearchGroupAggregation ref="aggRef" ></SearchGroupAggregation>
+
         </div>
     </div>
 
