@@ -7,7 +7,7 @@
     :close-on-click-modal="false"
     @close="handleClose"
   >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <div class="footer-grid">
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
@@ -26,11 +26,11 @@ const state = reactive({
   setting: {},
   edit: false,
 });
-const FromRendererRef = ref();
+const FormRendererRef = ref();
 const formJson = getJsonApi("dashboard/edit.json");
 const router = useRouter();
 async function handleSubmit() {
-  const data = await FromRendererRef.value.vFormRenderRef.getFormData();
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData();
   state.loading = true;
   const _data = {
     name: data.name,
@@ -61,7 +61,7 @@ function handleOpen(setting?) {
   state.edit = false;
   if (!setting) {
     setTimeout(async () => {
-      FromRendererRef.value.vFormRenderRef.resetForm();
+      FormRendererRef.value.vFormRenderRef.resetForm();
     });
     return;
   }
@@ -71,7 +71,7 @@ function handleOpen(setting?) {
     state.setting = _setting;
     if (_setting.access) _setting.access = _setting.access.split(",");
     else _setting.access = [];
-    await FromRendererRef.value.vFormRenderRef.setFormData({
+    await FormRendererRef.value.vFormRenderRef.setFormData({
       ..._setting,
     });
     state.loading = false;

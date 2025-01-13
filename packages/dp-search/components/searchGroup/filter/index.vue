@@ -52,6 +52,8 @@ async function getData () {
   }
   return params
 }
+
+
 async function getFiltersData (item: searchGroupQuery) {
   const data = await BarFilterRef.value[item.id].getData()
   return {
@@ -82,6 +84,7 @@ function handleAddFilter() {
   }
   if(!filters.value.query) filters.value.query = []
   filters.value.query.push(qItem)
+  console.log(filters.value.query)
 }
 function handleAddQueryFilter(qItem: any) {
   if(!qItem.matchs) qItem.matchs = []

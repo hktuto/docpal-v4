@@ -6,6 +6,7 @@
     @aggSearch="handleAggSearch"
     @searchLog="handleSearchLog"></SearchGroupBar> -->
   <div style="height: 100%; overflow: hidden;">
+    <SearchGroupTable2 ref="tableRef"  @updateAgg="handleUpdateAgg" />
     <!-- <SearchGroupTable ref="tableRef" @updateAgg="handleUpdateAgg"></SearchGroupTable> -->
   </div>
 </div>
@@ -15,14 +16,22 @@ import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 import { SearchListProviderKey } from '~/utils/searchProviderHelper'
 
+const routerProvider = inject(MenuRouterKey)
 
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
 const {t} = useI18n()
 const aggregation = ref<any>()
-const filterRef = ref()
-const aggRef = ref()
-const logRef = ref()
+
 const tableRef = ref()
+
+const state = reactive<any>({
+      expanded: true,
+      firstReady: false,
+      tableData: [],
+      aggregation: {},
+      barParams: {},
+      aggParams: {},
+  })
 
 
 function handleSearch(params: any) {
@@ -31,7 +40,7 @@ function handleSearch(params: any) {
 }
 function handleSearchLog(params: any) {
   searchState = 'firstSearch'
-  tableRef.value.initSearch(params)
+  tableRef.value.reload(params)
 }
 function handleAggSearch(params: any) {
   tableRef.value.initAgg({filter: params})
@@ -66,8 +75,53 @@ async function handleSaveSearch(data: any){
 
 provide(SearchListProviderKey, {
   saveSearch: handleSaveSearch,
+  paramsUpdate:(params:any) => {
+    tableRef.value.reload()
+  },
   search: async(params:any) => {
     console.log('search', params)
+    if(!state.barParams.docId && (!state.barParams.query || state.barParams.query.length === 0)) {
+        state.tableData = []
+        state.aggregation = {}
+        state.options.paginationConfig.total = 0
+        return []
+      }
+    return [];
+  },
+  openDetail:(row:any) => {
+    if(row.isFolder || row.type === 'Collection') {
+      const newItem = {
+        id: 'client-browse',
+        name: row.name,
+        icon: 'dp-icon:browse-outline',
+        hoverIcon: 'dp-icon:browse-fill',
+        label: row.name,
+        component: "LazyBrowsePage",
+        props:{
+          query:{
+            idOrPath:row.path,
+            selectFile: row.name
+          }
+        }
+      }
+      routerProvider?.navigateTo(newItem);
+    } else {
+      const newItem = {
+        id:'client-browse-detail',
+        name: row.name,
+        icon: 'dp-icon:browse-outline',
+        hoverIcon: 'dp-icon:browse-fill',
+        label: row.name,
+        component: "LazyBrowseDetail",
+        props:{
+          query:{
+            idOrPath:row.path,
+            selectFile: row.name
+          }
+        }
+      }
+      routerProvider?.navigateTo(newItem);
+    }
   },
   conditions,
   aggregation
@@ -78,8 +132,9 @@ provide(SearchListProviderKey, {
 <style lang="scss" scoped>
 .search-container {
   height: 100%;
+  width: 100%;
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: clamp(280px, 30%, 400px) 1fr;
   gap: var(--app-space-xs);
   padding: var(--app-space-s);
   overflow: hidden;

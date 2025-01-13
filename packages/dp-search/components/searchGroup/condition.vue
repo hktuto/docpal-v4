@@ -1,11 +1,21 @@
 <script lang="ts" setup>
 const mode = ref<'filter' | 'search'>('search')
 
+const searchProvider = inject(SearchListProviderKey)
+const filterRef = ref()
+const aggRef = ref()
 function toggleMode() {
   mode.value = mode.value === 'filter' ? 'search' : 'filter'
 }
-function handleSearch(params: any) {
-  console.log('handleSearch', params)
+function handleAgg(data: any) {
+  searchProvider?.search(data)
+  // emits('aggSearch', data)
+}
+async function handleSearch() {
+  const params = await filterRef.value.getData()
+  if(!params.docId && params.query.length === 0) return
+  aggRef.value.clear()
+  searchProvider?.search(params)
 }
 
 </script>
@@ -26,12 +36,12 @@ function handleSearch(params: any) {
             <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
             <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" /> -->
         </div>
-        <div class="search-group-bar-content" v-if="mode === 'search'">
+        <div class="search-group-bar-content" v-show="mode === 'search'">
           <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
           <SearchGroupFilter ref="filterRef" @search="handleSearch"></SearchGroupFilter>
         </div>
         <div class="search-group-bar-content" v-show="mode === 'filter'">
-          <SearchGroupAggregation ref="aggRef" ></SearchGroupAggregation>
+          <SearchGroupAggregation ref="aggRef" @filters="handleAgg"></SearchGroupAggregation>
 
         </div>
     </div>

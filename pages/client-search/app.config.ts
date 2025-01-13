@@ -9,7 +9,8 @@ export default defineAppConfig({
             label: "file_search",
             component: "LazySearchPage",
             props:{
-                filter:{}
+                pageSize:20,
+                currentPageIndex: 0,
             }
         }
     }

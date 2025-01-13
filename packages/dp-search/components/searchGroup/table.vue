@@ -48,7 +48,7 @@ import {
   }
   const tableKey = TABLE.CLIENT_SEARCH
   const tableSetting = defaultTableSetting[tableKey]
-  const state = reactive<State>({
+  const state = reactive<any>({
       expanded: true,
       firstReady: false,
       loading: false,

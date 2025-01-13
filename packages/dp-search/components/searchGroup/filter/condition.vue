@@ -5,7 +5,7 @@
   </div>
   <div v-show="mode === 'edit'">
     <div v-for="(item, index) in qItem.matchs" :key="index">
-      <SearchGroupfilterForm :form="item" :ref="el => formRef[item.id] = el"
+      <SearchGroupFilterForm :form="item" :ref="el => formRef[item.id] = el"
         @selectClear="handleDelete(item)"
         @formChange="emits('formChange')"/>
       <el-divider v-if="index !== qItem.matchs.length - 1">

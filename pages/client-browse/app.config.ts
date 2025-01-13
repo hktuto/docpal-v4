@@ -3,7 +3,7 @@ import {clientApi} from 'api'
 export default defineAppConfig({
     menu:{
         "client-browse":{
-            id: 'browse',
+            id: 'client-browse',
             icon: 'dp-icon:browse-outline',
             hoverIcon: 'dp-icon:browse-fill',
             label: "file_browse",
