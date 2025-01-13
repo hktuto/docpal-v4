@@ -14,6 +14,7 @@ const mode = ref<'filter' | 'search'>('search')
             <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" ></SvgIcon>
             <!-- end show hide filter and search icon -->
             <SearchGroupSavedSearch />
+            <SearchGroupRecentSearch />
             <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
             <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" /> -->
         </div>
