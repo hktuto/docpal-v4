@@ -73,7 +73,7 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .log-item {
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   cursor: pointer;
   &:hover {
     background: var(--el-color-primary-light-9);

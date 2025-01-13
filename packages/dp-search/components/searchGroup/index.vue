@@ -37,7 +37,7 @@ function handleUpdateAgg(aggregation: any) {
 provide(SearchListProviderKey, {
 
 })
-
+--app-space-xs
 
 
 </script>

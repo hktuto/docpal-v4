@@ -1,0 +1,137 @@
+<template>
+<el-card>
+  <div class="flex-x-start">
+    <h3 class="el-icon--left">{{ $t("adminMenu.whatapps") }}</h3>
+    <el-switch v-model="state.setting.whatsAppSetting.whatsAppSwitch" :loading="state.switchLoading" @change="handleSwitchChange"></el-switch>
+  </div>
+  <el-form ref="formRef" label-position="top" :model="form">
+    <el-form-item :label="$t('config.accessToken')">
+      <el-input v-model="form.accessToken" :placeholder="$t('config.accessTokenTip')"></el-input>
+    </el-form-item>
+  </el-form>
+  <div>
+    <el-button :loading="state.testLoading" type="info" @click="handleTestConnection">{{$t('config.testConnnection')}}</el-button>
+    <el-button :loading="state.saveLoading" type="primary" @click="handleSave">{{$t('common_save')}}</el-button>
+  </div>
+  <h3>{{ $t('config.statusMonitor') }}</h3>
+  <div class="config-status-monitor">
+    <div class="config-status-monitor-item">
+      <div class="config-status-monitor-item-title">{{ $t('config.responseTime') }}</div>
+      <el-text size="large">{{ state.setting.responseTime }}</el-text>
+    </div>
+    <div class="config-status-monitor-item">
+      <div class="config-status-monitor-item-title">{{ $t('config.uptime') }}</div>
+      <el-text size="large">{{ state.setting.successPercent }}</el-text>
+    </div>
+    <div class="config-status-monitor-item">
+      <div class="config-status-monitor-item-title">{{ $t('config.status') }}</div>
+      <el-text type="success" size="large" v-if="state.setting.status === 'Online'">
+        {{ state.setting.status }}</el-text>
+      <el-text type="danger" size="large" v-else>
+        {{ state.setting.status }}</el-text>
+    </div>
+  </div>
+  <h3>{{ $t('config.errorLog') }}</h3>
+  <div style="height: 50vh;overflow: hidden;">
+    <WhatappsLog />
+  </div>
+</el-card>
+</template>
+<script lang="ts" setup>
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
+const { t } = useI18n()
+const state = reactive<any>({
+  setting: {
+    whatsAppSetting: {
+      whatsAppSwitch: false
+    }
+  },
+  testLoading: false,
+  saveLoading: false,
+  switchLoading: false  
+})
+const form = ref({
+  accessToken: ''
+})
+const formRef = ref()
+async function handleSwitchChange(val) {
+  // state.setting.whatsAppSetting.whatsAppSwitch = val
+  try {
+    state.switchLoading = true
+    const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({
+      whatsAppSwitch: val,
+      accessToken: state.setting.whatsAppSetting.accessToken
+    }).then(res => res.data)
+    if(!!res) {
+      ElMessage.success(t('dpMsg_success'))
+    }
+  } catch (error) {
+  }
+  finally {
+    setTimeout(() => state.switchLoading = false, 500)
+  }
+}
+async function handleSave(val) {
+  // state.setting.whatsAppSetting.whatsAppSwitch = val
+  try {
+    state.saveLoading = true
+    const valid = formRef.value.validate()
+    if(!valid) return
+    const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({
+      whatsAppSwitch: state.setting.whatsAppSetting.whatsAppSwitch,
+      accessToken: form.value.accessToken
+    }).then(res => res.data)
+    if(!!res) {
+      ElMessage.success(t('dpMsg_success'))
+    }
+  } catch (error) {
+  } finally { 
+    setTimeout(() => state.saveLoading = false, 500)
+  }
+}
+async function handleTestConnection() { 
+  try {
+    state.testLoading = true
+    const res = await adminApi.api.getWhatsappTestConnection().then(res => res.data)
+    if(res === 'Online') {
+      ElMessage.success(res)
+    }
+    else {
+      ElMessage.error(res)
+    }
+  } catch (error) {
+    ElMessage.error(error)
+  } finally {
+    setTimeout(() => state.testLoading = false, 500)
+  }
+}
+onMounted(async() => {
+  state.setting = await adminApi.api.postWhatsappOverview({}).then(res => res.data)
+  form.value.accessToken = state.setting.whatsAppSetting.accessToken
+})
+</script>
+<style lang="scss" scoped>
+.config-status-monitor {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: var(--app-grey-950);
+  border-radius: var(--el-border-radius-base);
+  padding: var(--app-space-xs);
+  gap: var(--app-space-xs);
+  &-item {
+    background-color: var(--app-grey-850);
+    padding: var(--app-space-xs);
+    border-radius: var(--el-border-radius-base);
+    &-title {
+      font-size: var(--el-font-size-base);
+      color: var(--el-text-color-secondary);
+    }
+    .el-text {
+      font-weight: bold;
+      padding: var(--app-space-xs) 0;
+      display: block;
+    }
+  }
+}
+</style>

@@ -30,7 +30,7 @@
   grid-row-gap: 0px;
   height: 100%;
   overflow: hidden;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   &-title {
     grid-area: 1 / 1 / 2 / 2;
   }

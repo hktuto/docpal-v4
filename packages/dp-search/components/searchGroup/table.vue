@@ -171,9 +171,9 @@ defineExpose({ initBar, initAgg, initSearch })
 
 <style lang="scss" scoped>
 .summaryItem {
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   background-color: var(--primary-color);
-  margin-bottom: var(--app-padding);
+  margin-bottom: var(--app-space-xs);
   color: var(--color-grey-000);
   border-radius: 4px;
 }
@@ -189,6 +189,6 @@ defineExpose({ initBar, initAgg, initSearch })
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
 }
 </style>
