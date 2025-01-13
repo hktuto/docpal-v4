@@ -6,7 +6,7 @@ export default defineAppConfig({
             id: 'browse',
             icon: 'dp-icon:browse-outline',
             hoverIcon: 'dp-icon:browse-fill',
-            label: "Browse",
+            label: "file_browse",
             component: "LazyBrowsePage",
             props:{
                 idOrPath:"/",
