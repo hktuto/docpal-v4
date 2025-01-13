@@ -71,7 +71,6 @@ provide(SearchListProviderKey, {
   search: async(params:any) => {},
   conditions
 })
---app-space-xs
 
 
 </script>
