@@ -1,11 +1,12 @@
 <template>
 <div class="search-container">
-  <SearchGroupBar ref="BarRef" :aggregation="state.aggregation" 
+  <SearchGroupCondition />
+  <!-- <SearchGroupBar ref="BarRef" :aggregation="state.aggregation" 
     @search="handleSearch"
     @aggSearch="handleAggSearch"
-    @searchLog="handleSearchLog"></SearchGroupBar>
+    @searchLog="handleSearchLog"></SearchGroupBar> -->
   <div style="height: 100%; overflow: hidden;">
-    <SearchGroupTable ref="tableRef" @updateAgg="handleUpdateAgg"></SearchGroupTable>
+    <!-- <SearchGroupTable ref="tableRef" @updateAgg="handleUpdateAgg"></SearchGroupTable> -->
   </div>
 </div>
 </template>
@@ -31,13 +32,22 @@ function handleUpdateAgg(aggregation: any) {
   state.aggregation = aggregation
   searchState = 'aggChange'
 }
+
+
+provide(SearchListProviderKey, {
+
+})
+
+
+
 </script>
 <style lang="scss" scoped>
 .search-container {
   height: 100%;
   display: grid;
   grid-template-columns: 20% 1fr;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
+  padding: var(--app-space-s);
   overflow: hidden;
 }
 </style>

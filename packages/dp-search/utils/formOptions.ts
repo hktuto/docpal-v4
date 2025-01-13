@@ -1,6 +1,5 @@
 
 import { clientApi, adminApi } from "api"
-import { useRuntimeConfig } from "nuxt/dist/app/nuxt"
 
 export const conditionType = [
   { label: 'keyword', value: 'keyword' },

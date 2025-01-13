@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   extends:[
     '../../packages/authApp',
     "../../pages/client-browse",
+    "../../pages/client-search",
   ],
   features:{
     inlineStyles: true,
