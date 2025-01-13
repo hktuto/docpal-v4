@@ -144,7 +144,6 @@ export function conditionDecorators(condition: searchGroup) {
   condition.query.forEach((query: any) => {
     query.id = getUniqueId('query')
     query.matchs.forEach((match: any) => {
-      console.log('match', match)
       match.id = getUniqueId('matchs')
       if(match.queryType === 'metadata') {
         match.metadataKey = match.value.key
