@@ -3,7 +3,7 @@
         v-model="state.dialogVisible"
         :close-on-click-modal="false"
         append-to-body>
-        <FromRenderer ref="FromRendererRef" :form-json="formJson"/>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
         <template #footer>
             <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
         </template>
@@ -20,10 +20,10 @@
     loading: false,
     dialogVisible: false,
   })
-  const FromRendererRef = ref()
+  const FormRendererRef = ref()
   async function handleSubmit () {
     try {
-      const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+      const data = await FormRendererRef.value.vFormRenderRef.getFormData()
       if (!data) return
       await searchProvider?.saveSearch(data)
       state.dialogVisible = false

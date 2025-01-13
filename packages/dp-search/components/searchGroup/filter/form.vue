@@ -1,6 +1,5 @@
 <template>
 <el-form :model="form" label-position="top">
-  form
   <el-form-item :label="$t('search.conditionType')">
     <el-select-v2
       v-model="state.form.queryType"
@@ -35,7 +34,7 @@
     </el-select-v2>
   </el-form-item>
   <el-form-item v-show="isQuertType('metadata')" :label="$t('search.metadataValue')">
-    <SearchGroupBar2Metaform ref="metaForm" :config="state.metadataType" @formChange="handleMetaValueChange"/>
+    <SearchGroupFilterMetaform ref="metaForm" :config="state.metadataType" @formChange="handleMetaValueChange"/>
   </el-form-item>
   <el-form-item v-if="isQuertType('keyword')" :label="$t('search.synonyms')">
     <el-switch
