@@ -4,8 +4,12 @@
     {{ $t('file_search') }}
   </div>
   <div class="flex-x-start search-group-bar-action">
-    <SvgIcon v-if="mode === 'filter'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode"
-      @search="handleSearch"></SvgIcon>
+    <SvgIcon 
+      v-if="mode === 'filter'" src="/icons/tools/filter.svg" 
+      class="mr-2" 
+      @click="handleMode"
+      @search="handleSearch">
+      </SvgIcon>
     <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="handleMode"></SvgIcon>
     <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
     <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />

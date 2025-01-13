@@ -11,12 +11,12 @@
   <div class="list">
     <div v-for="item in state._searchList" :key="item.id" class="log-item flex-x-between" @click="handleSearch(item)">
       <div>{{ item.label }}</div>
-      <SvgIcon style="--icon-size: 16px;--icon-color:var(--color-grey-400);"src="/icons/menu/trash.svg" 
+      <SvgIcon style="--icon-size: 16px;--icon-color:var(--app-grey-400);"src="/icons/menu/trash.svg" 
         @click.stop="handleDelete(item)"></SvgIcon>
     </div>
   </div>
   <el-button type="primary" text @click="handleAdd">{{$t('button.add')}}</el-button>
-  <SearchGroupBarSaveLogAdd ref="addRef" @save="(data: any) => emits('save', data)"></SearchGroupBarSaveLogAdd>
+  <SearchGroupSavedSearchAdd ref="addRef" ></SearchGroupSavedSearchAdd>
   <template #reference>
     <SvgIcon src="/icons/tools/save1.svg" class="mr-2" ></SvgIcon>
   </template>
@@ -26,14 +26,18 @@
 import { Search } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
 import {clientApi} from 'api'
-import { GetSearchApi, DeleteSearchApi } from 'dp-api'
 import { conditionDecorators } from '~/utils/searchFormHelper'
+import { SearchListProviderKey } from '~/utils/searchProviderHelper'
+
+const searchProvider = inject(SearchListProviderKey)
+
 const state = reactive<any>({
   input1: '',
   searchList: [],
   _searchList: []
 })
-const emits = defineEmits(['search', 'save'])
+const { t} = useI18n()
+// const emits = defineEmits(['search', 'save'])
 const popoverRef = ref()
 function hidePopover () {
     popoverRef.value.hide()
@@ -49,22 +53,23 @@ function handleAdd() {
   addRef.value.handleOpen()
   hidePopover()
 }
-function handleSearch(item: any) {
+async function handleSearch(item: any) {
   const query = JSON.parse(item.queryCondition)
   conditionDecorators(query)
-  emits('search', query)
+  await searchProvider?.search(query)
+  // emits('search', query)
   popoverRef.value.hide()
 }
 async function getList() {
-  const {data} = await clientApi.api.getQueryNestedSearchLog() as any
+  const {data} = await clientApi.api.getNuxeoSearchQueryNestedSearchLog() as any
   state.searchList = data
   state._searchList = [ ...state.searchList ]
 }
 
 async function handleDelete(item: any) {
-  const action = await ElMessageBox.confirm($i18n.t('msg_confirmWhetherToDelete'))
+  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
   if (action !== "confirm") throw new Error("cancel");
-  await clientApi.api.deleteDeleteNestedSearchLog(item.id)
+  await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(item.id)
   getList()
 }
 onActivated(() => {
