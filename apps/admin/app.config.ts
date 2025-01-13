@@ -59,7 +59,7 @@ export default defineAppConfig({
             icon:"dp-icon:flow-outline",
             children:[
                 {
-                    name:"admin-running-workflow"
+                    name:"admin-workflow-manage"
                 },
                 {
                     name:"admin-workflow-retry"
@@ -140,6 +140,8 @@ export default defineAppConfig({
         },
         {
             name:"admin-external-connection"
-        }
+        },
+
+        
     ]
 })
