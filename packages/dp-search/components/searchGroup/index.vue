@@ -68,7 +68,9 @@ async function handleSaveSearch(data: any){
 
 provide(SearchListProviderKey, {
   saveSearch: handleSaveSearch,
-  search: async(params:any) => {},
+  search: async(params:any) => {
+    console.log('search', params)
+  },
   conditions
 })
 
