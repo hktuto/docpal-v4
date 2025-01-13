@@ -123,6 +123,7 @@ import {
       },
       { debounce: 200, maxWait: 500, immediate: true }
   )
+  
   const { tableData, loading } = toRefs(state)
 // #endregion
 async function handleDblclick (row) {

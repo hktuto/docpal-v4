@@ -11,11 +11,22 @@
 </div>
 </template>
 <script lang="ts" setup>
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
+import { SearchListProviderKey } from '~/utils/searchProviderHelper'
+
 const state = reactive<any>({
   aggregation: {}
 })
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
+const {t} = useI18n()
+
+const filterRef = ref()
+const aggRef = ref()
+const logRef = ref()
 const tableRef = ref()
+
+
 function handleSearch(params: any) {
   tableRef.value.initBar(params)
   searchState = 'firstSearch'
@@ -33,11 +44,35 @@ function handleUpdateAgg(aggregation: any) {
   searchState = 'aggChange'
 }
 
+const conditions = ref();
+
+async function handleSaveSearch(data: any){
+  // const condition = await filterRef.value.getData()
+  if (!conditions.value.docId && (!conditions.value.query || conditions.value.query.length === 0)) {
+    ElMessage.warning(t('search.noCondition'))
+    return
+  }
+  if (data.includeFilter) {
+    const agg = await aggRef.value.getData()
+    conditions.value.filter = agg
+  }
+  const params = {
+    label: data.label,
+    queryCondition: JSON.stringify(conditions.value)
+  }
+  await clientApi.api.postNuxeoSearchSaveNestedSearchLog(params)
+  ElMessage.success(t('dpMsg_success'))
+  logRef.value.getList()
+}
+
 
 provide(SearchListProviderKey, {
-
+  saveSearch: handleSaveSearch,
+  search: async(params:any) => {
+    console.log('search', params)
+  },
+  conditions
 })
---app-space-xs
 
 
 </script>

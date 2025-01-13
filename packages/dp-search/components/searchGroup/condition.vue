@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-
+const mode = ref<'filter' | 'search'>('search')
 </script>
 
 
 <template>
-    <div class="searchConditionContainer">
+    <div class="search-group-bar">
         <div class="search-group-bar-title">
             {{ $t('file_search') }}
         </div>
@@ -13,16 +13,17 @@
             <SvgIcon v-if="mode === 'filter'" src="/icons/tools/filter.svg" class="mr-2"></SvgIcon>
             <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" ></SvgIcon>
             <!-- end show hide filter and search icon -->
-            <SearchGroupConditionTopTabSaveLog />
-            <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
-            <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
+            <SearchGroupSavedSearch />
+            <SearchGroupRecentSearch />
+            <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
+            <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" /> -->
         </div>
     </div>
 
 </template>
 
 <style lang="scss" scoped>
-.searchConditionContainer {
+.search-group-bar {
   display: grid;
   grid-template-columns: 1fr min-content;
   grid-template-rows: min-content 1fr;
@@ -33,14 +34,15 @@
   gap: var(--app-space-xs);
   &-title {
     grid-area: 1 / 1 / 2 / 2;
+    font-size: var(--app-font-size-l);
   }
   &-action {
     grid-area: 1 / 2 / 2 / 3;
     --icon-size: 16px;
-    --icon-color: var(--color-grey-400);
+    --icon-color: var(--app-grey-400);
     :deep svg {
       cursor: pointer;
-      margin-left: var(--app-input-padding);
+      margin-left: var(--app-space-xs);
     }
   }
   &-content {
