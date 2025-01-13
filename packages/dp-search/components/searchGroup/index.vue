@@ -15,12 +15,10 @@ import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 import { SearchListProviderKey } from '~/utils/searchProviderHelper'
 
-const state = reactive<any>({
-  aggregation: {}
-})
+
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
 const {t} = useI18n()
-
+const aggregation = ref<any>()
 const filterRef = ref()
 const aggRef = ref()
 const logRef = ref()
@@ -38,9 +36,9 @@ function handleSearchLog(params: any) {
 function handleAggSearch(params: any) {
   tableRef.value.initAgg({filter: params})
 }
-function handleUpdateAgg(aggregation: any) {
+function handleUpdateAgg(newAggregation: any) {
   if(searchState === 'aggChange') return
-  state.aggregation = aggregation
+  aggregation.value = newAggregation
   searchState = 'aggChange'
 }
 
@@ -71,7 +69,8 @@ provide(SearchListProviderKey, {
   search: async(params:any) => {
     console.log('search', params)
   },
-  conditions
+  conditions,
+  aggregation
 })
 
 
@@ -80,7 +79,7 @@ provide(SearchListProviderKey, {
 .search-container {
   height: 100%;
   display: grid;
-  grid-template-columns: 20% 1fr;
+  grid-template-columns: 200px 1fr;
   gap: var(--app-space-xs);
   padding: var(--app-space-s);
   overflow: hidden;
