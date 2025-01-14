@@ -5,7 +5,7 @@ export default defineAppConfig({
     "admin-docker-log":{
       id:"admin-docker-log",
       name: 'admin-docker-log',
-      label: "adminMenu.log",
+      label: "adminMenu.systemLog",
       icon: "mdi:docker",
       hoverIcon: "mdi:docker",
       component: "LazyDockerLog",
