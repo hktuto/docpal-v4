@@ -1,0 +1,61 @@
+<template>
+<el-dialog v-model="state.visible" :title="$t('docType.duplicate')"
+    class="scroll-dialog"
+    append-to-body 
+    :close-on-click-modal="false"
+    @close="handleClose"
+    >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" >
+
+    </FormRenderer>
+    <template #footer>
+        <div class="footer-grid">
+            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+        </div>
+    </template>
+</el-dialog>
+</template>
+<script lang="ts" setup>
+import { adminApi } from 'api';
+import formJson from './duplicate.vform.json'
+const emits = defineEmits([
+    'refresh', 'delete'
+])
+const state = reactive({
+    loading: false,
+    visible: false,
+    setting: {},
+})
+const FormRendererRef = ref()
+async function handleSubmit () {
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    state.loading = true
+    try {
+        await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
+        emits('refresh')
+        state.visible = false
+    } catch (error) {
+    } finally {
+        state.loading = false
+    }
+}
+function handleOpen(setting) {
+    state.visible = true
+
+    setTimeout(async () => {
+        state.setting = setting
+        await FormRendererRef.value.vFormRenderRef.setFormData({
+            fromName: setting.name,
+            category: setting.category,
+            dataType: setting.dataType,
+        })
+        state.loading = false
+    })
+}
+
+defineExpose({ handleOpen })
+</script>
+<style lang="scss" scoped>
+
+</style>
+    
