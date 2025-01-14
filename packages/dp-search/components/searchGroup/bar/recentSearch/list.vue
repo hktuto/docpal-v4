@@ -28,7 +28,7 @@
 </div>
 </template>
 <script lang="ts" setup>
-import { GetRecentSearchPage2Api } from 'dp-api'
+import { clientApi } from 'api'
 import { conditionDecorators } from '~/utils/searchFormHelper'
 const state = reactive<any>({
   list: [],
@@ -49,7 +49,7 @@ async function getList() {
   try {
     pageParams.pageNum ++
     state.loading = true
-    const res = await GetRecentSearchPage2Api(pageParams)
+    const {data:res} = clientApi.api.postLogsRecentSearchPageV2(pageParams) as any
     state.list.push(...res.entryList)
     state.scrollNoMore = state.list.length >= res.totalSize
   } catch (error) {
@@ -80,19 +80,19 @@ defineExpose({
   overflow: auto;
 }
 .el-card {
-  margin-bottom: var(--app-space-xs);
+  margin-bottom: var(--app-padding);
 }
 .search-child {
   // background-color: var(--primary-color);
-  padding: var(--app-space-xs);
+  padding: var(--app-padding);
   background: var(--el-color-info-light-5);
-  margin-bottom: var(--app-space-xs);
+  margin-bottom: var(--app-padding);
 }
 .search-child-child {
   // background-color: var(--primary-color);
   background: var(--el-color-info-light-7);
-  margin-bottom: var(--app-space-xs);
-  padding: var(--app-space-xs);
+  margin-bottom: var(--app-padding);
+  padding: var(--app-padding);
   border-radius: 4px;
 }
 </style>

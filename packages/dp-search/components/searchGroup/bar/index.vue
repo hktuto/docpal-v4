@@ -4,12 +4,8 @@
     {{ $t('file_search') }}
   </div>
   <div class="flex-x-start search-group-bar-action">
-    <SvgIcon 
-      v-if="mode === 'filter'" src="/icons/tools/filter.svg" 
-      class="mr-2" 
-      @click="handleMode"
-      @search="handleSearch">
-      </SvgIcon>
+    <SvgIcon v-if="mode === 'filter'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode"
+      @search="handleSearch"></SvgIcon>
     <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="handleMode"></SvgIcon>
     <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
     <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
@@ -24,9 +20,9 @@
 </div>
 </template>
 <script lang="ts" setup>
-
+import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
-import { SaveSearchApi } from 'dp-api'
+const { t } = useI18n();
 const mode = ref<'filter' | 'search'>('filter')
 const props = defineProps(['aggregation'])
 const emits = defineEmits(['search','aggSearch', 'searchLog'])
@@ -65,8 +61,8 @@ async function handleSave(data: any) {
     label: data.label,
     queryCondition: JSON.stringify(condition)
   }
-  await SaveSearchApi(params)
-  ElMessage.success($i18n.t('dpMsg_success'))
+  await clientApi.api.postNuxeoSearchSaveNestedSearchLog(params);
+  ElMessage.success(t('dpMsg_success'))
   logRef.value.getList()
 }
  
@@ -90,7 +86,7 @@ async function handleLogSearch(query: any) {
   grid-row-gap: 0px;
   height: 100%;
   overflow: hidden;
-  gap: var(--app-space-xs);
+  gap: var(--app-padding);
   &-title {
     grid-area: 1 / 1 / 2 / 2;
   }

@@ -25,9 +25,10 @@
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import {clientApi} from 'api'
-import { GetSearchApi, DeleteSearchApi } from 'dp-api'
 import { conditionDecorators } from '~/utils/searchFormHelper'
+import { clientApi } from 'api'
+
+const { t } = useI18n()
 const state = reactive<any>({
   input1: '',
   searchList: [],
@@ -56,18 +57,17 @@ function handleSearch(item: any) {
   popoverRef.value.hide()
 }
 async function getList() {
-  const {data} = await clientApi.api.getQueryNestedSearchLog() as any
-  state.searchList = data
+  const data = await clientApi.api.getNuxeoSearchQueryNestedSearchLog()
+  // state.searchList = await GetSearchApi()
   state._searchList = [ ...state.searchList ]
 }
-
 async function handleDelete(item: any) {
-  const action = await ElMessageBox.confirm($i18n.t('msg_confirmWhetherToDelete'))
+  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
   if (action !== "confirm") throw new Error("cancel");
-  await clientApi.api.deleteDeleteNestedSearchLog(item.id)
+  await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(item.id)
   getList()
 }
-onActivated(() => {
+onMounted(() => {
   getList()
 })
 defineExpose({
@@ -76,7 +76,7 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .log-item {
-  padding: var(--app-space-xs);
+  padding: var(--app-padding);
   cursor: pointer;
   &:hover {
     background: var(--el-color-primary-light-9);

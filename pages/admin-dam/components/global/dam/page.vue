@@ -3,7 +3,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 import {DamListTable} from '#components'
 // deepCopy, GetDocDetailApi
-// import { getAclsApi } from 'dp-api/src/endpoint/admin-acl'
 
 // #region  tree
 const tabProvider = inject(TabManagerKey)

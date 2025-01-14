@@ -76,7 +76,6 @@ import type { Table } from '#imports';
 import {useI18n} from '#imports'
 import { ref, toRefs } from 'vue'
 import draggable from 'vuedraggable'
-// import { UserSettingSaveApi, defaultTableSetting } from 'dp-api'
 import type { TableColumnCtx } from 'element-plus';
 const preference = useUserPreference()
 // const { userPreference } = toRefs(useUser())

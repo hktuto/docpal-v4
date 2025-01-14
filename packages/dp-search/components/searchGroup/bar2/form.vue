@@ -159,7 +159,7 @@
 </el-form>
 </template>
 <script lang="ts" setup>
-import { GetSTypesApi, GetKeyCloakAllUsersApi, GetSCollectionsApi, GetSTagsApi } from 'dp-api'
+import { clientApi } from 'api'
 import { conditionType, getMetadataOptions, languages, mimeTypes,getGroupList, sizes  } from '~/utils/formOptions'
 import { isJSON } from '~/utils/searchFormHelper'
 const props = defineProps(['form'])
@@ -219,13 +219,28 @@ function getFormData() {
   }
 }
 onMounted(async() => {
-  
-  options.docType = await GetSTypesApi()
-  options.users = await GetKeyCloakAllUsersApi()
-  options.collections = await GetSCollectionsApi()
-  options.tags = await GetSTagsApi()
-  options.groupList = await getGroupList()
-  options.metadata = await getMetadataOptions()
+  const [
+    docType,
+    users,
+    collections,
+    tags,
+    groupList,
+    metadata
+  ] = await Promise.all([
+    clientApi.api.getTypesActive(),
+    clientApi.api.postNuxeoIdentityGetkeycloakallusers(),
+    clientApi.api.getNuxeoCollection(),
+    clientApi.api.postNuxeoTagsGetalltags(),
+    getGroupList(),
+    getMetadataOptions()
+  ])
+
+  options.docType = docType.data
+  options.users = users.data
+  options.collections = collections.data
+  options.tags = tags.data
+  options.groupList = groupList
+  options.metadata = metadata
 })
 watch(() => props.form, (newValue) => {
   state.form = {...newValue, ...newValue.option}

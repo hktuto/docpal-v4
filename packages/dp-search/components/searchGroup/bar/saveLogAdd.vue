@@ -3,7 +3,7 @@
       v-model="state.dialogVisible"
       :close-on-click-modal="false"
       append-to-body>
-      <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+      <FromRenderer ref="FromRendererRef" :form-json="formJson"/>
       <template #footer>
           <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
       </template>
@@ -12,18 +12,18 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { getJsonApi } from 'dp-api'
+import formJson from './searchGroupSaveForm.vform.json'
+
 const emits = defineEmits(['save'])
 const state = reactive({
   loading: false,
   dialogVisible: false,
 })
-const FormRendererRef = ref()
+const FromRendererRef = ref()
 
-const formJson = getJsonApi('client/searchGroupSaveForm.json')
 async function handleSubmit () {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     if (!data) return
     emits('save', data)
     state.dialogVisible = false
@@ -36,7 +36,7 @@ async function handleSubmit () {
 function handleOpen () {
   state.dialogVisible = true
   // setTimeout(() => {
-  //   FormRendererRef.value.vFormRenderRef.setFormData()
+  //   FromRendererRef.value.vFormRenderRef.setFormData()
   // })
 }
 
