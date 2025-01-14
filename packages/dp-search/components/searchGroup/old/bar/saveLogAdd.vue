@@ -3,7 +3,7 @@
       v-model="state.dialogVisible"
       :close-on-click-modal="false"
       append-to-body>
-      <FromRenderer ref="FromRendererRef" :form-json="formJson"/>
+      <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
       <template #footer>
           <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
       </template>
@@ -18,12 +18,12 @@ const state = reactive({
   loading: false,
   dialogVisible: false,
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 const formJson = getJsonApi('client/searchGroupSaveForm.json')
 async function handleSubmit () {
   try {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     if (!data) return
     emits('save', data)
     state.dialogVisible = false
@@ -36,7 +36,7 @@ async function handleSubmit () {
 function handleOpen () {
   state.dialogVisible = true
   // setTimeout(() => {
-  //   FromRendererRef.value.vFormRenderRef.setFormData()
+  //   FormRendererRef.value.vFormRenderRef.setFormData()
   // })
 }
 

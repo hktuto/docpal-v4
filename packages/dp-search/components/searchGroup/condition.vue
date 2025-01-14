@@ -1,5 +1,23 @@
 <script lang="ts" setup>
 const mode = ref<'filter' | 'search'>('search')
+
+const searchProvider = inject(SearchListProviderKey)
+const filterRef = ref()
+const aggRef = ref()
+function toggleMode() {
+  mode.value = mode.value === 'filter' ? 'search' : 'filter'
+}
+function handleAgg(data: any) {
+  searchProvider?.search(data)
+  // emits('aggSearch', data)
+}
+async function handleSearch() {
+  const params = await filterRef.value.getData()
+  if(!params.docId && params.query.length === 0) return
+  aggRef.value.clear()
+  searchProvider?.search(params)
+}
+
 </script>
 
 
@@ -10,13 +28,21 @@ const mode = ref<'filter' | 'search'>('search')
         </div>
         <div class="flex-x-start search-group-bar-action">
             <!-- show hide filter and search icon -->
-            <SvgIcon v-if="mode === 'filter'" src="/icons/tools/filter.svg" class="mr-2"></SvgIcon>
-            <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" ></SvgIcon>
+            <SvgIcon v-if="mode === 'search'" src="/icons/tools/filter.svg" class="mr-2" @click="toggleMode"></SvgIcon>
+            <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="toggleMode"></SvgIcon>
             <!-- end show hide filter and search icon -->
             <SearchGroupSavedSearch />
             <SearchGroupRecentSearch />
             <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
             <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" /> -->
+        </div>
+        <div class="search-group-bar-content" v-show="mode === 'search'">
+          <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
+          <SearchGroupFilter ref="filterRef" @search="handleSearch"></SearchGroupFilter>
+        </div>
+        <div class="search-group-bar-content" v-show="mode === 'filter'">
+          <SearchGroupAggregation ref="aggRef" @filters="handleAgg"></SearchGroupAggregation>
+
         </div>
     </div>
 
