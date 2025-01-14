@@ -11,7 +11,6 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { adminApi } from 'api'
-import { getJsonApi, createCaseTypeApi } from 'dp-api'
 const emits = defineEmits([
     'refresh'
 ])
@@ -23,13 +22,13 @@ const state = reactive({
   visible: false,
 })
 const FormRendererRef = ref()
-const formJson = getJsonApi('caseManage/new.json')
+import formJson from './new.vform.json'
 async function handleSubmit () {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
     state.visible = false
-    await adminApi.caseTypeController.postTypes(data)
+    await adminApi.api.postCaseTypes(data)
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
   } catch (error) {

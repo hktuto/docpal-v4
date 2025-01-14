@@ -7,11 +7,11 @@
     border-bottom-right-radius: var(--el-card-border-radius);
     background:none;
     border-width: 0px 2px 2px 0px;
-    border-color: var(--color-grey-010);
+    border-color: var(--app-grey-010);
     border-style: solid;
   }
   &:hover{
-    --el-box-shadow-light: 0 0 5px 2px var(--color-grey-010);
+    --el-box-shadow-light: 0 0 5px 2px var(--app-grey-010);
   }
   &-card {
     height: 100%;

@@ -28,6 +28,8 @@ export default defineNuxtConfig({
     "../../pages/admin-workflow",
     "../../pages/admin-document-type",          
 
+    "../../pages/admin-log-manage",
+    "../../pages/admin-calendar-setting",
   ],
   features:{
     inlineStyles: true,

@@ -29,20 +29,7 @@ const displayPathLabel = computed(() => {
 function openPath(){
   if(props.canOpen){
     const path = props.openParent ? splitPath.value.slice(0, -1).join('/') : props.path
-    const newItem = {
-      id: 'client-browse',
-      name: path,
-      icon: 'dp-icon:browse-outline',
-      hoverIcon: 'dp-icon:browse-fill',
-      label: props.fileName,
-      component: "LazyBrowsePage",
-      props:{
-        query:{
-          idOrPath:path,
-          selectFile: props.fileName
-        }
-      }
-    }
+    const newItem = toBrowseItem(path)
     routerProvider?.navigateTo(newItem);
   }
 }

@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-import { getJsonApi, CreateCabinetTemplateApi } from 'dp-api'
 import { useElementSize } from '@vueuse/core'
 const emit = defineEmits(['update'])
 const el = ref()
