@@ -88,9 +88,9 @@ function tabFocus() {
 }
 
 function closeTab(){
-
     closePanelTab(tab.parent as string, index, true)
 }
+
 
 </script>
 
@@ -106,8 +106,8 @@ function closeTab(){
             <div class="icon"></div>
             <div class="label">
             </div>
-            <Icon  class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
-            <Icon  class="closeIcon" name="lucide:screen-share" @click="openInNewTab" />
+            <!-- <Icon  class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
+            <Icon  class="closeIcon" name="lucide:screen-share" @click="openInNewTab" /> -->
             <Icon class="closeIcon alwaysShow" name="ic:round-close" @click.stop="closeTab"></Icon>
             <!-- <TabDropIndicator 
                 gap="20px" /> -->
