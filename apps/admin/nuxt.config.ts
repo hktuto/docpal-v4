@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     "../../pages/admin-external-connection",
     "../../pages/admin-workflow",
     "../../pages/admin-log-manage",
-
+    "../../pages/admin-calendar-setting",
   ],
   features:{
     inlineStyles: true,
