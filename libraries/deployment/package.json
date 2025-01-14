@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "env:setup" : "pnpm -F deployment start --CLIENT_URL https://app4.wclsolution.com --ADMIN_URL https://admin.app4.wclsolution.com",
+    "env:setup" : "pnpm -F deployment start --CLIENT_URL https://app4.wclsolution.com --ADMIN_URL https://admin.app4.wclsolution.com --PUBLIC_URL https://app4.wclsolution.com/public-api/report/v1",
     "api:setup" : "pnpm -F api start",
     "postinstall": "npm run env:setup && npm run api:setup"
   },
