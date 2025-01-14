@@ -209,7 +209,7 @@ export interface PaginableEntityDTODocumentDTO {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -1131,7 +1131,7 @@ export interface NestedSearchRequestDTO {
      * Current Page Index
      * @format int32
      */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** type */
     type?: string[];
     /** query params in text search */
@@ -1234,7 +1234,7 @@ export interface SearchRequestDTO {
     /** @format int32 */
     pageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     isExport?: boolean;
     filter?: ElasticSearchFilterDTO;
     query?: QueryConditionDTO[];
@@ -1684,7 +1684,7 @@ export interface PaginableEntityDTOVirtualFolderDocumentDTO {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -2015,7 +2015,7 @@ export interface PaginableEntityDTODocumentThumbnailDTO {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -2240,7 +2240,7 @@ export interface CommentRequestDTO {
      * Current Page Index
      * @format int64
      */
-    currentPageIndex?: number;
+    pageNum?: number;
 }
 
 /** Comment */
@@ -2294,7 +2294,7 @@ export interface CollectionRequestDTO {
      * The selected page index
      * @format int32
      */
-    currentPageIndex?: number;
+    pageNum?: number;
     /**
      * The number of entries per page
      * @format int32
@@ -2593,7 +2593,7 @@ export interface PaginableEntityDTOTaskDTO {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -2785,7 +2785,7 @@ export interface PaginableEntityDTOObject {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -2931,7 +2931,7 @@ export interface PaginableEntityDTOInstanceDTO {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -3019,7 +3019,7 @@ export interface PaginableEntityDTOHistoricProcessInstanceEntityImpl {
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -11704,7 +11704,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getDeprecate: (
             query?: {
                 /** @format int32 */
-                currentPageIndex?: number;
+                pageNum?: number;
                 /** @format int32 */
                 pageSize?: number;
             },
@@ -11728,7 +11728,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postDeprecate: (
             query?: {
                 /** @format int32 */
-                currentPageIndex?: number;
+                pageNum?: number;
                 /** @format int32 */
                 pageSize?: number;
             },
@@ -11768,7 +11768,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getCollection: (
             query?: {
                 /** @format int32 */
-                currentPageIndex?: number;
+                pageNum?: number;
                 /** @format int32 */
                 pageSize?: number;
             },
@@ -11792,7 +11792,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postCollection: (
             query?: {
                 /** @format int32 */
-                currentPageIndex?: number;
+                pageNum?: number;
                 /** @format int32 */
                 pageSize?: number;
             },

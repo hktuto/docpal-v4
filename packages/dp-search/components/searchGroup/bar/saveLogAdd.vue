@@ -44,7 +44,7 @@ function handleOpen () {
 defineExpose({
   handleOpen
 })
-onMounted(async() => {
+onActivated(async() => {
 })
 </script>
 

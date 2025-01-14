@@ -10,7 +10,6 @@
 </template>
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
-import { getJsonApi, CreateGroupApi } from 'dp-api'
 import { groupProviderKey } from '~/util/userProvider'; 
 import formJson from './dialog.vform.json'
 const groupProvider = inject(groupProviderKey)

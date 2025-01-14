@@ -36,8 +36,8 @@ function handleUpdateAgg(aggregation: any) {
 .search-container {
   height: 100%;
   display: grid;
-  grid-template-columns: 20% 1fr;
-  gap: var(--app-padding);
+  grid-template-columns: clamp(280px, 30%, 400px) 1fr;
+  gap: var(--app-space-xs);
   overflow: hidden;
 }
 </style>
