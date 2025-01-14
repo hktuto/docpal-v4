@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-audit":{
       id:"admin-audit",
       name: 'admin-audit',
-      label: "adminMenu.log",
+      label: "adminMenu.audit",
       icon: "tabler:align-box-right-bottom",
       hoverIcon: "tabler:align-box-right-bottom-filled",
       component: "LazyAuditPage",
