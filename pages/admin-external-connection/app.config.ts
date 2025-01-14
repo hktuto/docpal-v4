@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-external-connection",
       name: 'admin-external-connection',
       label: "admin.externalConnection",
-      icon: "teenyicons:azure-solid",
-      hoverIcon: "teenyicons:azure-solid",
+      icon: "fluent:communication-person-20-regular",
+      hoverIcon: "fluent:communication-person-20-regular",
       component: "LazyExternalConnectionPage",
       props:{},
     }

@@ -1,0 +1,99 @@
+<template>
+  <div class="pageContainer--padding">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          @form-change="handleFilterFormChange"
+          inputKey="name"
+        />
+        <el-button type="primary" @click="handleDialogShow()">{{ $t('docType.new') }}</el-button>
+      </template>
+    </VxeGrid>
+    <DocTypeDialogAddRelatedType ref="DialogRef" :docType="docTypeDetail" :name="name" @refresh="getList"/>
+  </div>
+</template> 
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import { adminApi } from "api";
+import dayjs from "dayjs";
+const props = defineProps<{
+  docTypeDetail: any;
+  name: string
+}>();
+const { t } = useI18n()
+let _list: any = []
+const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
+  id: "relatedType",
+  columns: [
+    { field: "rootDocPalType", title: "dpTable_documentType", fixed: "left" },
+    {
+      field: "metaData",
+      title: "rightDetail_meta",
+    },
+  ],
+  bodyActions: [
+    [
+      {
+        code: "delete",
+        name: "common_delete",
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleDelete(row)
+        },
+      }
+    ],
+  ],
+  dblClickAction: ({ row, column, event }:any) => {
+    handleDialogShow(row)
+  },
+  virtualScroll: true,
+});
+async function handleDelete(row: any) {
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  if(action !== 'confirm') return
+  try {
+    const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id)
+    await getList()
+  } catch (error) {
+    
+  } finally{
+  }
+}
+const DialogRef = ref()
+function handleDialogShow(data?: any) {
+  DialogRef.value.handleOpen(_list, {
+    ...data,
+    documentType: data?.rootDocPalType,
+    metadata: data?.metaData
+  })
+}
+function handleFilterFormChange(formModel: any) {
+  const name = formModel.name
+  const list = _list.filter((item: any) => {
+      return (!formModel.name || 
+        item.rootDocPalType.toLowerCase().includes(name.toLowerCase())) 
+    })
+  tableRef?.value?.loadData(list)
+}
+async function getList () {
+  _list = await adminApi.api.getDocpaltypeSettingsNameNameRelated(props.name).then(res => res.data)
+  tableRef?.value?.loadData(_list)
+}
+onActivated(() => {
+  getList()
+});
+</script>
+<style lang="scss" scoped>
+:deep .vxe-buttons--wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+.responsive-container {
+  width: 70%;
+  :deep .el-input {
+    width: 200px;
+  }
+}
+</style>

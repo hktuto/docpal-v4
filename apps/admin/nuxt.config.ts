@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     "../../pages/admin-internal-share",
     "../../pages/admin-external-connection",
     "../../pages/admin-workflow",
+    "../../pages/admin-document-type",          
 
   ],
   features:{
