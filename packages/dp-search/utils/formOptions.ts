@@ -108,7 +108,7 @@ export const getMetadataOptions = async() => {
   return optionList
 }
 export const getGroupList = async() => {
-  const {data} = await clientApi.api.postNuxeoIdentityGroups()
+  const {data} = await clientApi.api.postNuxeoIdentityGroups() as any
   const optionList = data.map((item: any) => ({
     ...item,
     label: item.name,

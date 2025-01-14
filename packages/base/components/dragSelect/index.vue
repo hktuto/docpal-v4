@@ -61,7 +61,7 @@ const props = withDefaults(defineProps<{
     showDragTip: false,
     layout: 'tb'
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const emit = defineEmits(['change'])
 function handleClose(element) {
     let addItem

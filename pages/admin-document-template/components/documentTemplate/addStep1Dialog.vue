@@ -4,8 +4,8 @@
     v-model="state.visible" :title="state.isEdit ? $t('template.editInfo') : $t('template.create')"
     :close-on-click-modal="false" append-to-body
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson">
-    </FromRenderer>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson">
+    </FormRenderer>
     <template #footer>
         <!-- <el-button @click="createFile('Excel', 'test')"></el-button> -->
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
@@ -30,10 +30,10 @@ const router = useRouter()
 const form = reactive({
     labelRule: []
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const TemplateAddStep2DialogRef = ref()
 async function handleSubmit() {
-    const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
     if(!formData) return
     try {
         state.loading = true
@@ -67,11 +67,11 @@ async function handleSubmit() {
 async function handleOpen(setting?) {
     state.visible = true
     setTimeout(async() => {
-        await FromRendererRef.value.vFormRenderRef.resetForm()
+        await FormRendererRef.value.vFormRenderRef.resetForm()
         if(setting && setting.isEdit) {
             state.isEdit = true
             state.setting = setting
-            await FromRendererRef.value.vFormRenderRef.setFormData({...state.setting})
+            await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
             state.loading = false
         } else {
             state.isEdit = false
