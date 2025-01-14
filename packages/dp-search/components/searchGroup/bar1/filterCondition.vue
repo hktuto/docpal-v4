@@ -5,13 +5,13 @@
   </div>
   <div v-show="mode === 'edit'">
     <div v-for="(item, index) in qItem.matchs" :key="index">
-      <FormRenderer :ref="el => FormRendererRef[item.id] = el" :form-json="formJson" 
+      <FromRenderer :ref="el => FromRendererRef[item.id] = el" :form-json="formJson" 
         @selectClear="(fieldName) => handleDelete(item, fieldName)"
         @formChange="(data) => handleFormChange(data, item)">
           <template v-slot:metadataSlot>
             <FromVariablesRenderer :ref="el => FromVariablesRendererRef[item.id] = el" @formChange="handleMetaChange"></FromVariablesRenderer>
           </template>
-      </FormRenderer>
+      </FromRenderer>
       <el-divider v-if="index !== qItem.matchs.length - 1">
         {{ $t(`logic.${qItem.condition}`)  }}
       </el-divider>
@@ -44,12 +44,11 @@
 <script lang="ts" setup>
 import type { searchGroup, searchGroupQuery, searchGroupQQ } from '~/typing/search'
 import { Delete, ArrowUp } from '@element-plus/icons-vue'
-import { GetDocumentTypeApi, getJsonApi } from 'dp-api'
 const props = defineProps(['qItem'])
 const emits = defineEmits(['delete', 'deleteChild', 'add', 'command', 'update', 'formChange'])
-const FormRendererRef = ref({})
+const FromRendererRef = ref({})
 const FromVariablesRendererRef = ref({}) 
-const formJson = getJsonApi('client/searchGroupForm.json')
+import formJson from './searchGroupForm.vform.json' 
 const mode = ref('edit')
 function handleAddFilter() {
   emits('add')
@@ -72,7 +71,7 @@ function handleFormChange({fieldName, newValue, oldValue, formModel}, item: sear
   try {
     const id = item.id
     if(fieldName === 'metadataKey' && newValue) {
-      const widget = FormRendererRef.value[id].vFormRenderRef.getWidgetRef(fieldName)
+      const widget = FromRendererRef.value[id].vFormRenderRef.getWidgetRef(fieldName)
       const options = widget.getOptionItems()
       const metadata = options.find((item: any) => item.value === newValue)
       const valueItem =  {
@@ -150,7 +149,7 @@ async function getData() {
 }
 async function getFormData (item: any) {
   const id = item.id
-  const data = await FormRendererRef.value[id].vFormRenderRef.getFormData(true)
+  const data = await FromRendererRef.value[id].vFormRenderRef.getFormData(true)
   const data2 = await FromVariablesRendererRef.value[id].getData(true)
   if (item.metadataType === 'array' && data2.metadataValue) data2.metadataValue = data2.metadataValue.split(',')
   return { ...data, ...data2 }
@@ -158,7 +157,7 @@ async function getFormData (item: any) {
 async function setFormData(qItem: searchGroupQQ) {
   await new Promise(resolve => setTimeout(async () => {
     setTimeout(async() => {
-        FormRendererRef.value[qItem.id].vFormRenderRef.setFormData({ ...qItem, ...qItem.option })
+        FromRendererRef.value[qItem.id].vFormRenderRef.setFormData({ ...qItem, ...qItem.option })
         if(qItem.queryType === 'metadata') {
           const metadataOptions = await getMetadataOptions()
           const metadata = metadataOptions.find((item: any) => item.value === qItem.metadataKey)
@@ -181,20 +180,15 @@ async function setFormData(qItem: searchGroupQQ) {
   
 }
 
-let metadataList = []
-async function getMetadataOptions(){
+let metadataList:any[] = []
+async function setMetadataOptions(){
   if(metadataList.length > 0) return metadataList
-  const globalType = await GetDocumentTypeApi()
-  const optionList = globalType.map(item => ({
-    ...item,
-    label: item.name,
-    value: item.name
-  }))
-  metadataList = optionList
-  return optionList
+  const list = await getMetadataOptions()
+  metadataList = list
+  return list;
 }
 onMounted(async() => {
-  getMetadataOptions()
+  setMetadataOptions()
 })
 defineExpose({
   setFormData, getData
@@ -204,7 +198,7 @@ defineExpose({
 .search-group-bar-filter {
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
-  padding: var(--app-space-xs);
+  padding: var(--app-padding);
   :deep .container-wrapper {
     min-width: unset;
   }
@@ -225,7 +219,7 @@ defineExpose({
   transition: all 0.5s;
 }
 .el-tag {
-  margin-right: var(--app-space-xs);
-  margin-bottom: var(--app-space-xs);
+  margin-right: var(--app-padding);
+  margin-bottom: var(--app-padding);
 }
 </style>

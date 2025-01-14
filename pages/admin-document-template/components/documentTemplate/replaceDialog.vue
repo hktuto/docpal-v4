@@ -11,12 +11,12 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { UpdateTemplateFileApi } from 'dp-api'
+import { adminApi } from 'api'
 
 const emits = defineEmits([
     'refresh'
 ])
-const state = reactive({
+const state = reactive<any>({
     loading: false,
     visible: false,
     accept: '',
@@ -39,19 +39,27 @@ async function handleSubmit() {
         const formData = new FormData()
         formData.append('file', file)
         formData.append('id', state.setting.id)
-        await UpdateTemplateFileApi(formData)
+        await adminApi.api.putTemplateDocumentUpload({requestDTO:{}},formData as any)
+        // await UpdateTemplateFileApi(formData)
         state.visible = false
         emits('refresh')
     } catch (error) {
     }
     state.loading = false
 }
+
+const ExtensionMap:any = {
+    'Word': '.docx',
+    'Excel': '.xlsx',
+    'PPT': '.pptx',
+    'PDF': '.pdf',
+}
 function getName () {
     const ext = state.setting.name.split('.').pop()
     if(['xlsx','pdf','docx','pptx'].includes(ext)) return state.setting.name
     return state.setting.name + ExtensionMap[state.setting.fileType]
 }
-async function handleOpen(setting) {
+async function handleOpen(setting:any) {
     state.visible = true
     state.setting = setting
     state.accept = ExtensionMap[setting.fileType]

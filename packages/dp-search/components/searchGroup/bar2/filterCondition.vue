@@ -5,7 +5,7 @@
   </div>
   <div v-show="mode === 'edit'">
     <div v-for="(item, index) in qItem.matchs" :key="index">
-      <SearchGroupFilterForm :form="item" :ref="el => formRef[item.id] = el"
+      <SearchGroupBar2Form :form="item" :ref="el => formRef[item.id] = el"
         @selectClear="handleDelete(item)"
         @formChange="emits('formChange')"/>
       <el-divider v-if="index !== qItem.matchs.length - 1">
@@ -121,6 +121,8 @@ async function getFormData (item: any) {
   return { ...data }
 }
 
+onMounted(async() => {
+})
 defineExpose({
   getData
 })
@@ -129,7 +131,7 @@ defineExpose({
 .search-group-bar-filter {
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
-  padding: var(--app-space-xs);
+  padding: var(--app-padding);
   :deep .container-wrapper {
     min-width: unset;
   }
@@ -150,7 +152,7 @@ defineExpose({
   transition: all 0.5s;
 }
 .el-tag {
-  margin-right: var(--app-space-xs);
-  margin-bottom: var(--app-space-xs);
+  margin-right: var(--app-padding);
+  margin-bottom: var(--app-padding);
 }
 </style>

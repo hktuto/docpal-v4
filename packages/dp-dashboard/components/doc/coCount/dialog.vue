@@ -22,7 +22,6 @@
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-import { getJsonApi } from 'dp-api'
 const emits = defineEmits([
     'refresh', 'delete'
 ])

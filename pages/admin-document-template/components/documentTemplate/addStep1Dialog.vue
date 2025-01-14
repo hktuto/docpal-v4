@@ -14,7 +14,7 @@
 <TemplateAddStep2Dialog ref="TemplateAddStep2DialogRef"/>
 </template>
 <script lang="ts" setup>
-// import { getJsonApi, CreateTemplateInfoApi, UpdateTemplateInfoApi } from 'dp-api'
+
 import { adminApi } from 'api';
 import formJson from './templateAddStep1.vform.json'
 const emits = defineEmits([
@@ -53,8 +53,8 @@ async function handleSubmit() {
             params.append('name', formData.name)
             params.append('fileType', formData.type)
             params.append('description', formData.description)
-            const templateInfo = await CreateTemplateInfoApi(params)
-            console.log(templateInfo);
+            const {data} = await adminApi.api.postTemplateDocument({requestDTO:{}},params as any) as any
+            const templateInfo = data
             router.push(`/template/${templateInfo.id}`)
             // TemplateAddStep2DialogRef.value.handleOpen(templateInfo)
         }

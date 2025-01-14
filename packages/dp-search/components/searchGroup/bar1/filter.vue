@@ -1,7 +1,7 @@
 <template>
-<!-- <FormRenderer ref="FormRendererRef" :form-json="formJson" 
+<!-- <FromRenderer ref="FromRendererRef" :form-json="formJson" 
   @formChange="handleFormChange">
-</FormRenderer> -->
+</FromRenderer> -->
 <div :class="{ 'loading-container': state.loading }" v-for="(item, index) in filters.query" v-loading="state.loading">
   <SearchGroupBar1FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item" 
     @update="(data: any) =>handleUpdate(data, item)"
@@ -14,7 +14,7 @@
     {{ $t(`logic.${filters.condition}`)  }}
   </el-divider>
 </div>
-<div style="margin-top: var(--app-space-xs);" class="flex-x-center">
+<div style="margin-top: var(--app-padding);" class="flex-x-center">
   <el-dropdown class="plain-dropdown"  size="small" split-button  @click="handleAddFilter" @command="(command: 'and' | 'or') => handleCommand(command, filters)">
     {{ $t(`logic.${filters.condition}`)  }}
     <template #dropdown>
@@ -29,7 +29,7 @@
 <script lang="ts" setup>
 import type { searchGroup, searchGroupQuery, searchGroupQQ } from '~/typing/search'
 import { getUniqueId } from '../../../utils/searchFormHelper'
-// import { getJsonApi } from 'dp-api'
+
 const state = reactive<any>({
   loading: false
 })
