@@ -1,5 +1,38 @@
 <template>
-<Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
+  <VxeGrid ref="tableRef" v-bind="tableConfig"  v-on="tableEvent">
+      <template #toolbar_buttons>
+
+      </template>
+      <template #docTags="{ row, index }">
+          <div v-if="row?.properties && row?.properties['nxtag:tags']">
+              <el-tag v-for="item in row?.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
+          </div>
+      </template>
+      <template #logicalPath="{ row }">
+          <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath" canOpen/>
+      </template>
+      <template #docIcon="{ row, index }">
+          <div class="nameItem">
+              <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
+              <div class="label">{{row.name}}</div>
+          </div>
+      </template> 
+      <template #summary="{ row }">
+          <div v-if="row.properties && row.properties.summarys">
+              <div v-if=" row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary" >
+                  <el-icon :class="row.expandSummary ? 'revert' : 'rotate'">
+                      <ArrowUp />
+                  </el-icon>
+              </div>
+              <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
+                  <div v-for="item in row.properties.summarys" class="summaryItem">
+                      [{{item.summaryKey}}]: <b>{{item.summaryValue}}</b>
+                  </div>
+              </template>
+          </div>
+      </template>
+  </VxeGrid>
+<!-- <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
   @pagination-change="handlePaginationChange"
   @row-dblclick="handleDblclick">
   <template #docTags="{ row, index }">
@@ -28,29 +61,27 @@
       </template>
     </div>
   </template>
-</Table>
+</Table> -->
 </template>
 <script lang="ts" setup>
 import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue';
 import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
-import { 
-  SearchGroupGetApi, 
-  TABLE, defaultTableSetting } from 'dp-api'
+import { clientApi } from 'api'
+import dayjs from 'dayjs'
 
+ 
+const routerProvider = inject(MenuRouterKey)
   const emits = defineEmits(['updateAgg'])
 // #region module: page
   const route = useRoute()
   const router = useRouter()
   let pageParams = {
-      currentPageIndex: 0,
+      pageNum: 0,
       pageSize: 20
   }
-  const tableKey = TABLE.CLIENT_SEARCH
-  const tableSetting = defaultTableSetting[tableKey]
   const state = reactive<any>({
       expanded: true,
-      firstReady: false,
       loading: false,
       tableData: [],
       aggregation: {},
@@ -65,11 +96,106 @@ import {
           sortAll: true
       },
       barParams: {},
-      aggParams: {},
-      columns: tableSetting.columns
+      aggParams: {}
   })
+  const { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
+    id: 'search-result',
+    virtualScroll: false,
+    columns:[
+        {
+            title:"tableHeader_name",
+            fixed: 'left',
+            width: 250,
+            slots:{
+                default: "docIcon"
+            }
+        },
+        {
+            title:"docInfo.fileExtension",
+            field:"mimeType2",
+            width: 80
+        },
+        {
+            title:"search.size",
+            field:"properties.file:content.length",
+            width: 120,
+            formatter:({ cellValue }:any) => {
+              if(!cellValue)  return '-'
+                return displayFileSize(cellValue)
+            }
+        },
+        {
+            title:"tableHeader_path",
+            field:"logicalPath",
+            width: 200,
+            slots:{
+                default:"logicalPath"
+            }
+        },
+        {
+            title: "tableHeader.summary",
+            field:"properties.summaryValue",
+            width: 200,
+            slots:{
+                default: "summary"
+            }
+        },
+        {
+            title:"search.authors",
+            field:"createdBy",
+            width: 240,
+        },
+        {
+            title:"search.contributors",
+            field:"properties.dc:contributors",
+            width: 200,
+            formatter:({ cellValue }: any) => {
+                if(!cellValue) return '-';
+                return cellValue.join(',')
+            }
+        },
+        {
+            title:"tableHeader_modifiedDate",
+            field:"modifiedDate",
+            width: 200,
+            formatter:({ cellValue }: any) => {
+                const format = userDisplayTimeSetting();
+                return dayjs(cellValue).format(format);
+            }
+        },
+        {
+            title:"dpTable_tags",
+            width: 120,
+            slots:{
+                default:"docTags"
+            }
+        }
+    ],
+    bodyActions:[
 
-  async function getList (param) {
+    ],
+    dblClickAction: ({ row, column, event }:any) => {
+      handleDblclick(row)
+    },
+    optionalConfig:{
+      data:[],
+      pagerConfig:{
+        enabled:true,
+        pageSize: state.options.paginationConfig.pageSize,
+        currentPage: state.options.paginationConfig.currentPage + 1 || 1
+      }
+    },
+    optionalEvent:{
+      pageChange:({currentPage, pageSize}) => {
+        tableConfig.pagerConfig.currentPage = currentPage
+        tableConfig.pagerConfig.pageSize = pageSize
+        getList({pageNum: currentPage - 1, pageSize})
+      }
+    }
+})
+  
+
+  async function getList (param:any) {
     try {
       if(!state.barParams.docId && (!state.barParams.query || state.barParams.query.length === 0)) {
         state.tableData = []
@@ -77,9 +203,13 @@ import {
         state.options.paginationConfig.total = 0
         return
       }
-      state.loading = true
-      const res = await SearchGroupGetApi({ ...state.barParams, ...state.aggParams, ...param })
-        state.tableData = res.entryList.map((item) => {
+      tableConfig.loading = true
+      const {data:res} = await clientApi.api.postNuxeoSearchNestedsearchV2({ ...state.barParams, ...state.aggParams, ...param }) as any
+      if(!res || !res.page || !res.page.entryList || !Array.isArray(res.page.entryList) ) {
+        throw new Error("api error")
+      }
+      // const res = await SearchGroupGetApi({ ...state.barParams, ...state.aggParams, ...param })
+        const list = res.page.entryList.map((item) => {
           const _item = { ...item }
           if (item.properties && item.properties['file:content']) {
             const mimeType = item.properties['file:content']['mime-type']
@@ -88,67 +218,83 @@ import {
           return _item
         })
         state.aggregation = res.aggregation
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.currentPageIndex + 1
+        state.options.paginationConfig.total = res.page.totalSize
+        tableConfig.pagerConfig.total = state.options.paginationConfig.total
+        tableConfig.pagerConfig.pageSize = param.pageSize
+        tableConfig.pagerConfig.currentPage = param.pageNum + 1
+        
+        tableRef.value?.loadData(list)
+        state.tableData = list
+        console.log(tableConfig)
+        // tableRef.value?.loadData(state.tableData)
     } catch (error) {
+      console.log("getList", error)
         state.tableData = []
         state.aggregation = {}
         state.options.paginationConfig.total = 0
     } finally {
-      state.loading = false
+      tableConfig.loading = false
       emits('updateAgg', state.aggregation)
     }
   }
   function handlePaginationChange (page: number, pageSize?: number) {
       if(!pageSize) pageSize = pageParams.pageSize
       const time = new Date().valueOf().toString()
-      router.push({
-          query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time }
+      routerProvider?.updateProps({
+        query:{
+          ...routerProvider?.tabData.value.props?.query,
+          ...pageParams, pageNum:page, pageSize, time 
+        }
       })
+      // router.push({
+      //     query: { ...route.query, ...pageParams, pageNum:page, pageSize, time }
+      // })
   }
   watchDebounced(
-      () => route.query,
-      async (newVal, oldVal) => {
-          const { currentPageIndex, pageSize } = newVal
-          if(!currentPageIndex || !pageSize) return
+      () => routerProvider?.tabData,
+      async () => {
+        const query = routerProvider?.tabData.value.props?.query
+        
+          if(!query) return
+          const { pageNum, pageSize } = query
+          if(!pageNum || !pageSize) return
           // pageParams = {...newVal}
-          pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
+          pageParams.pageNum = (Number(pageNum) - 1) > 0 ? (Number(pageNum) - 1) : 0
           pageParams.pageSize = Number(pageSize) || pageParams.pageSize
 
           await getList(pageParams)
-          setTimeout(() => {
-              state.firstReady = true
-          }, 100)
+          // setTimeout(() => {
+          //     state.firstReady = true
+          // }, 100)
       },
-      { debounce: 200, maxWait: 500, immediate: true }
+      { debounce: 200, maxWait: 500, immediate: true, deep:true }
   )
-  
-  const { tableData, loading } = toRefs(state)
 // #endregion
-async function handleDblclick (row) {
-  if(row.isFolder) {
-      goRoute(row.path)
-  } else if(row.type === 'Collection') {
-      goRoute(row.id, '/collection', 'tab')
-  } else{
-    openFileDetail(row.path, {
-      showInfo:true,
-      showHeaderAction:true
-    })
-  }
+async function handleDblclick (row:any) {
+  // TODO : update dblclick method
+  console.log("item click", row)
+  // if(row.isFolder) {
+  //     goRoute(row.path)
+  // } else if(row.type === 'Collection') {
+  //     goRoute(row.id, '/collection', 'tab')
+  // } else{
+  //   openFileDetail(row.path, {
+  //     showInfo:true,
+  //     showHeaderAction:true
+  //   })
+  // }
 
 }
-function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
-  router.push({
-      path,
-      query: {
-          [qPathKey]: qPath,
-      },
-  })
-}
+// function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
+  
+//   router.push({
+//       path,
+//       query: {
+//           [qPathKey]: qPath,
+//       },
+//   })
+// }
 function initBar(searchParams: any, ) {
-  console.log('initBar');
   
     state.barParams = searchParams
     state.aggParams = {}
@@ -160,12 +306,10 @@ function initAgg(searchParams: any, isSearch: boolean = true) {
 }
 function initSearch(searchParams: any) {
   console.log(searchParams);
-  
   state.barParams = searchParams
   handlePaginationChange(1)
 }
-const tableRef = ref()
-onMounted(() => {
+onActivated(() => {
 })
 defineExpose({ initBar, initAgg, initSearch })
 </script>
@@ -175,7 +319,7 @@ defineExpose({ initBar, initAgg, initSearch })
   padding: var(--app-space-xs);
   background-color: var(--primary-color);
   margin-bottom: var(--app-space-xs);
-  color: var(--color-grey-000);
+  color: var(--app-grey-000);
   border-radius: 4px;
 }
 .rotate {

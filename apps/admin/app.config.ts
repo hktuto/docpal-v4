@@ -141,7 +141,9 @@ export default defineAppConfig({
         {
             name:"admin-external-connection"
         },
-
+        {
+            name:"admin-calendar-setting"
+        }
         
     ]
 })

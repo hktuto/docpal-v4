@@ -107,6 +107,6 @@ async function handleDelete(id: string | undefined) {
   border-radius: 4px;
 }
 .action_D {
-  background-color: var(--color-grey-300);
+  background-color: var(--app-grey-300);
 }
 </style>

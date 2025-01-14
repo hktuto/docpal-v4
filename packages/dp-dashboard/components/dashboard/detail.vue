@@ -307,27 +307,27 @@ function dragEnd() {
     overflow-x: hidden;
     position: absolute;
     z-index: -1;
-    background-color: var(--color-grey-200); /* 背景颜色 */
+    background-color: var(--app-grey-200); /* 背景颜色 */
     background-size: calc((100% - 20px) / 12)
       calc(var(--grid-row-height) + var(--grid-row-margin)); /* 网格大小 */
     background-image: linear-gradient(
         to right,
-        var(--color-grey-0000) var(--b-gap),
+        var(--app-grey-0000) var(--b-gap),
         transparent var(--b-gap)
       ),
       linear-gradient(
         to bottom,
-        var(--color-grey-0000) var(--b-gap),
+        var(--app-grey-0000) var(--b-gap),
         transparent var(--b-gap)
       );
   }
 }
 .splitpanes.default-theme .splitpanes__pane {
-  background-color: var(--color-grey-0000);
+  background-color: var(--app-grey-0000);
 }
 
 .dashboard-item-widget {
-  border: 1px solid var(--color-grey-050);
+  border: 1px solid var(--app-grey-050);
   display: flex;
   align-items: center;
     height: 32px;

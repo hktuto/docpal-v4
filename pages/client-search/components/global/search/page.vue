@@ -3,7 +3,7 @@
 const props = defineProps<{
     query?:any,
     pageSize:number,
-    currentPageIndex:number,
+    pageNum:number,
 }>()
 
 </script>
@@ -20,5 +20,6 @@ const props = defineProps<{
     width: 100%;
     position: relative;
     overflow: hidden;
+    padding: var(--app-space-s);
 }
 </style>

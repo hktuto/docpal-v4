@@ -1852,7 +1852,7 @@ export interface SearchRequestDTO {
     /** @format int32 */
     pageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
+    pageNum?: number;
     isExport?: boolean;
     filter?: ElasticSearchFilterDTO;
     query?: QueryConditionDTO[];
@@ -1877,7 +1877,7 @@ export interface NestedSearchRequestDTO {
      * Current Page Index
      * @format int32
      */
-    currentPageIndex?: number;
+    pageNum?: number;
     /** type */
     type?: string[];
     /** query params in text search */

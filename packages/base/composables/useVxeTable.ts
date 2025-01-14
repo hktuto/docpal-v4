@@ -6,6 +6,7 @@ import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
 import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
 import { permission } from 'vxe-pc-ui';
+import { table } from 'console';
 
 export type TableActionsParams = {
     row:any,
@@ -138,7 +139,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             defaultSort: params.defaultSort || []
         },
         proxyConfig:{
-            enabled: params.api ? true : false,
+            enabled: !!params.api ? true : false,
             sort: params.remoteSort || false,
             filter: params.remoteFilter || false,
             ajax:{
@@ -382,7 +383,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             enabled: params.virtualScroll? false : true,
             pageSize : params.pageSize || 20
         }
-        tableConfig.proxyConfig.enabled = true;
+        // tableConfig.proxyConfig.enabled = true;
     }
     function setupLazyLoad(){
         tableConfig.pagerConfig = {
@@ -406,29 +407,29 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         lazyLoad()
     }
 
-    watch(viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
-        if(viewport.isLessThan('tablet')){
-            // 如果不是 virtualScroll,
-            if(!params.virtualScroll && params.api) {
-                setupLazyLoad()
-            }
-            // mobile setting for table
-            return
-        }
-        if(viewport.isGreaterThan('mobile')){
-            // desktop setting for table
-            setupPagingnation()
-            tablePageParams.value = {
-                currentPage: 1,
-                pageSize: params.pageSize || 20,
-                total:undefined,
-            }
-            // reload()
-            return
-        }
-    }, {
-        immediate: true
-    })
+    // watch(viewport.breakpoint, (newBreakpoint, oldBreakpoint) => {
+    //     if(viewport.isLessThan('tablet')){
+    //         // 如果不是 virtualScroll,
+    //         if(!params.virtualScroll && params.api) {
+    //             setupLazyLoad()
+    //         }
+    //         // mobile setting for table
+    //         return
+    //     }
+    //     if(viewport.isGreaterThan('mobile')){
+    //         // desktop setting for table
+    //         setupPagingnation()
+    //         tablePageParams.value = {
+    //             currentPage: 1,
+    //             pageSize: params.pageSize || 20,
+    //             total:undefined,
+    //         }
+    //         // reload()
+    //         return
+    //     }
+    // }, {
+    //     immediate: true
+    // })
 
     function reload(){
         tableRef.value?.commitProxy('reload')

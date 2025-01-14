@@ -13,7 +13,6 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
-import { CreateRetentionApi } from 'dp-api'
 import formJson from './addDialog.vform.json'
 const { t } = useI18n()
 const emits = defineEmits([
