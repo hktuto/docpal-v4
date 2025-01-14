@@ -10,7 +10,7 @@ export default defineAppConfig({
             component: "LazySearchPage",
             props:{
                 pageSize:20,
-                currentPageIndex: 0,
+                pageNum: 0,
             }
         }
     }

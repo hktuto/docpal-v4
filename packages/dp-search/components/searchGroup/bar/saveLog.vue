@@ -11,7 +11,7 @@
   <div class="list">
     <div v-for="item in state._searchList" :key="item.id" class="log-item flex-x-between" @click="handleSearch(item)">
       <div>{{ item.label }}</div>
-      <SvgIcon style="--icon-size: 16px;--icon-color:var(--color-grey-400);"src="/icons/menu/trash.svg" 
+      <SvgIcon style="--icon-size: 16px;--icon-color:var(--app-grey-400);"src="/icons/menu/trash.svg" 
         @click.stop="handleDelete(item)"></SvgIcon>
     </div>
   </div>
@@ -57,9 +57,9 @@ function handleSearch(item: any) {
   popoverRef.value.hide()
 }
 async function getList() {
-  const data = await clientApi.api.getNuxeoSearchQueryNestedSearchLog()
+  const {data} = await clientApi.api.getNuxeoSearchQueryNestedSearchLog() as any
   // state.searchList = await GetSearchApi()
-  state._searchList = [ ...state.searchList ]
+  state._searchList = [ ...data ]
 }
 async function handleDelete(item: any) {
   const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
@@ -67,7 +67,7 @@ async function handleDelete(item: any) {
   await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(item.id)
   getList()
 }
-onMounted(() => {
+onActivated(() => {
   getList()
 })
 defineExpose({
@@ -76,7 +76,7 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .log-item {
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   cursor: pointer;
   &:hover {
     background: var(--el-color-primary-light-9);

@@ -75,3 +75,17 @@ export function mimeTypeToExtension(mimeType:string) {
     // if mimetype is image, return image src
     return mime.extension(mimeType) || '-'
 }
+
+export function toBrowseItem(path:string) {
+    return {
+        id: 'client-browse',
+        name: path,
+        icon: 'dp-icon:browse-outline',
+        hoverIcon: 'dp-icon:browse-fill',
+        label: path,
+        component: "LazyBrowsePage",
+        props:{
+            idOrPath:path
+        }
+      }
+}

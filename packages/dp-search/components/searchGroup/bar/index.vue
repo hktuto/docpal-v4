@@ -86,17 +86,19 @@ async function handleLogSearch(query: any) {
   grid-row-gap: 0px;
   height: 100%;
   overflow: hidden;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   &-title {
     grid-area: 1 / 1 / 2 / 2;
+    font-size: var(--app-font-size-l);
+    font-weight: bold;
   }
   &-action {
     grid-area: 1 / 2 / 2 / 3;
     --icon-size: 16px;
-    --icon-color: var(--color-grey-400);
+    --icon-color: var(--app-grey-400);
     :deep svg {
       cursor: pointer;
-      margin-left: var(--app-input-padding);
+      margin-left: var(--app-space-xs);
     }
   }
   &-content {

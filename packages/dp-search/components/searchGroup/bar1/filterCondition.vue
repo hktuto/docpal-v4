@@ -187,7 +187,7 @@ async function setMetadataOptions(){
   metadataList = list
   return list;
 }
-onMounted(async() => {
+onActivated(async() => {
   setMetadataOptions()
 })
 defineExpose({
@@ -198,7 +198,7 @@ defineExpose({
 .search-group-bar-filter {
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   :deep .container-wrapper {
     min-width: unset;
   }
@@ -219,7 +219,7 @@ defineExpose({
   transition: all 0.5s;
 }
 .el-tag {
-  margin-right: var(--app-padding);
-  margin-bottom: var(--app-padding);
+  margin-right: var(--app-space-xs);
+  margin-bottom: var(--app-space-xs);
 }
 </style>

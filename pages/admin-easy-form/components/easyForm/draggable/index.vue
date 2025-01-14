@@ -99,7 +99,7 @@ function handleEdit(data: any) {
 <style scoped>
 .header{
   font-size: 0.8rem;
-  color: var(--color-grey-500);
+  color: var(--app-grey-500);
 }
 .list-group-item, .header {
   display: grid;
@@ -121,7 +121,7 @@ function handleEdit(data: any) {
     border-top: 1px solid var(--app-grey-875);
   }
   &:nth-child(odd){
-    background: var(--color-grey-000);
+    background: var(--app-grey-000);
   }
   &:last-child{
     border-bottom: 1px solid var(--app-grey-875);

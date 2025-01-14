@@ -68,7 +68,7 @@ import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue';
 import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
 import { clientApi } from 'api'
-
+import dayjs from 'dayjs'
 
  
 const routerProvider = inject(MenuRouterKey)
@@ -77,7 +77,7 @@ const routerProvider = inject(MenuRouterKey)
   const route = useRoute()
   const router = useRouter()
   let pageParams = {
-      currentPageIndex: 0,
+      pageNum: 0,
       pageSize: 20
   }
   const state = reactive<any>({
@@ -104,6 +104,8 @@ const routerProvider = inject(MenuRouterKey)
     columns:[
         {
             title:"tableHeader_name",
+            fixed: 'left',
+            width: 250,
             slots:{
                 default: "docIcon"
             }
@@ -111,18 +113,21 @@ const routerProvider = inject(MenuRouterKey)
         {
             title:"docInfo.fileExtension",
             field:"mimeType2",
-            width: 150
+            width: 80
         },
         {
             title:"search.size",
             field:"properties.file:content.length",
-            formatter:(row:any) => {
-                return displayFileSize(row.properties['file:content']['length'])
+            width: 120,
+            formatter:({ cellValue }:any) => {
+              if(!cellValue)  return '-'
+                return displayFileSize(cellValue)
             }
         },
         {
             title:"tableHeader_path",
             field:"logicalPath",
+            width: 200,
             slots:{
                 default:"logicalPath"
             }
@@ -130,17 +135,20 @@ const routerProvider = inject(MenuRouterKey)
         {
             title: "tableHeader.summary",
             field:"properties.summaryValue",
+            width: 200,
             slots:{
                 default: "summary"
             }
         },
         {
             title:"search.authors",
-            field:"createdBy"
+            field:"createdBy",
+            width: 240,
         },
         {
             title:"search.contributors",
             field:"properties.dc:contributors",
+            width: 200,
             formatter:({ cellValue }: any) => {
                 if(!cellValue) return '-';
                 return cellValue.join(',')
@@ -149,6 +157,7 @@ const routerProvider = inject(MenuRouterKey)
         {
             title:"tableHeader_modifiedDate",
             field:"modifiedDate",
+            width: 200,
             formatter:({ cellValue }: any) => {
                 const format = userDisplayTimeSetting();
                 return dayjs(cellValue).format(format);
@@ -156,6 +165,7 @@ const routerProvider = inject(MenuRouterKey)
         },
         {
             title:"dpTable_tags",
+            width: 120,
             slots:{
                 default:"docTags"
             }
@@ -168,15 +178,18 @@ const routerProvider = inject(MenuRouterKey)
       handleDblclick(row)
     },
     optionalConfig:{
+      data:[],
       pagerConfig:{
         enabled:true,
         pageSize: state.options.paginationConfig.pageSize,
-        currentPage: state.options.paginationConfig.currentPage + 1
+        currentPage: state.options.paginationConfig.currentPage + 1 || 1
       }
     },
     optionalEvent:{
       pageChange:({currentPage, pageSize}) => {
-        
+        tableConfig.pagerConfig.currentPage = currentPage
+        tableConfig.pagerConfig.pageSize = pageSize
+        getList({pageNum: currentPage - 1, pageSize})
       }
     }
 })
@@ -190,13 +203,13 @@ const routerProvider = inject(MenuRouterKey)
         state.options.paginationConfig.total = 0
         return
       }
-      state.loading = true
-      const {data:res} = await clientApi.api.postNuxeoSearchNestedsearchV2({ ...state.barParams, ...state.aggParams, ...param })
-      if(!res || !res.entryList || !Array.isArray(res.entryList) ) {
+      tableConfig.loading = true
+      const {data:res} = await clientApi.api.postNuxeoSearchNestedsearchV2({ ...state.barParams, ...state.aggParams, ...param }) as any
+      if(!res || !res.page || !res.page.entryList || !Array.isArray(res.page.entryList) ) {
         throw new Error("api error")
       }
       // const res = await SearchGroupGetApi({ ...state.barParams, ...state.aggParams, ...param })
-        state.tableData = res.entryList.map((item) => {
+        const list = res.page.entryList.map((item) => {
           const _item = { ...item }
           if (item.properties && item.properties['file:content']) {
             const mimeType = item.properties['file:content']['mime-type']
@@ -205,15 +218,22 @@ const routerProvider = inject(MenuRouterKey)
           return _item
         })
         state.aggregation = res.aggregation
-        state.options.paginationConfig.total = res.totalSize
-        state.options.paginationConfig.pageSize = param.pageSize
-        state.options.paginationConfig.currentPage = param.currentPageIndex + 1
+        state.options.paginationConfig.total = res.page.totalSize
+        tableConfig.pagerConfig.total = state.options.paginationConfig.total
+        tableConfig.pagerConfig.pageSize = param.pageSize
+        tableConfig.pagerConfig.currentPage = param.pageNum + 1
+        
+        tableRef.value?.loadData(list)
+        state.tableData = list
+        console.log(tableConfig)
+        // tableRef.value?.loadData(state.tableData)
     } catch (error) {
+      console.log("getList", error)
         state.tableData = []
         state.aggregation = {}
         state.options.paginationConfig.total = 0
     } finally {
-      state.loading = false
+      tableConfig.loading = false
       emits('updateAgg', state.aggregation)
     }
   }
@@ -223,22 +243,23 @@ const routerProvider = inject(MenuRouterKey)
       routerProvider?.updateProps({
         query:{
           ...routerProvider?.tabData.value.props?.query,
-          ...pageParams, currentPageIndex:page, pageSize, time 
+          ...pageParams, pageNum:page, pageSize, time 
         }
       })
       // router.push({
-      //     query: { ...route.query, ...pageParams, currentPageIndex:page, pageSize, time }
+      //     query: { ...route.query, ...pageParams, pageNum:page, pageSize, time }
       // })
   }
   watchDebounced(
       () => routerProvider?.tabData,
-      async (newVal, oldVal) => {
-          const query = routerProvider?.tabData.value.props?.query
+      async () => {
+        const query = routerProvider?.tabData.value.props?.query
+        
           if(!query) return
-          const { currentPageIndex, pageSize } = query
-          if(!currentPageIndex || !pageSize) return
+          const { pageNum, pageSize } = query
+          if(!pageNum || !pageSize) return
           // pageParams = {...newVal}
-          pageParams.currentPageIndex = (Number(currentPageIndex) - 1) > 0 ? (Number(currentPageIndex) - 1) : 0
+          pageParams.pageNum = (Number(pageNum) - 1) > 0 ? (Number(pageNum) - 1) : 0
           pageParams.pageSize = Number(pageSize) || pageParams.pageSize
 
           await getList(pageParams)
@@ -246,9 +267,8 @@ const routerProvider = inject(MenuRouterKey)
           //     state.firstReady = true
           // }, 100)
       },
-      { debounce: 200, maxWait: 500, immediate: true }
+      { debounce: 200, maxWait: 500, immediate: true, deep:true }
   )
-  const { tableData, loading } = toRefs(state)
 // #endregion
 async function handleDblclick (row:any) {
   // TODO : update dblclick method
@@ -289,17 +309,17 @@ function initSearch(searchParams: any) {
   state.barParams = searchParams
   handlePaginationChange(1)
 }
-onMounted(() => {
+onActivated(() => {
 })
 defineExpose({ initBar, initAgg, initSearch })
 </script>
 
 <style lang="scss" scoped>
 .summaryItem {
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   background-color: var(--primary-color);
-  margin-bottom: var(--app-padding);
-  color: var(--color-grey-000);
+  margin-bottom: var(--app-space-xs);
+  color: var(--app-grey-000);
   border-radius: 4px;
 }
 .rotate {
@@ -314,6 +334,6 @@ defineExpose({ initBar, initAgg, initSearch })
   flex-flow: row nowrap;
   justify-content: flex-start;
   align-items: center;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
 }
 </style>
