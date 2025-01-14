@@ -17,8 +17,8 @@ export default defineAppConfig({
       id:"admin-retention-policies",
       name: 'admin-retention-policies',
       label: "adminMenu.retention",
-      icon: "streamline:interface-lock-shield-combination-combo-lock-locked-padlock-secure-security-shield-keyhole",
-      hoverIcon: "streamline:interface-lock-shield-combination-combo-lock-locked-padlock-secure-security-shield-keyhole",
+      icon: "iconoir:privacy-policy",
+      hoverIcon: "iconoir:privacy-policy",
       component: "LazyRetentionPage",
       props:{},
     }

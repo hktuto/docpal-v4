@@ -26,6 +26,8 @@ export default defineNuxtConfig({
     "../../pages/admin-internal-share",
     "../../pages/admin-external-connection",
     "../../pages/admin-workflow",
+    "../../pages/admin-document-type",          
+
     "../../pages/admin-log-manage",
     "../../pages/admin-calendar-setting",
   ],
