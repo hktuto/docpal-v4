@@ -289,16 +289,15 @@ export function addTabToPanel(panelId:string, newTab: TabItem ) {
     }
 }
 
-export function panelRouteUpdate(panelId:string, tabId:string, routerParams:RouterParams) {
+export function panelRouteUpdate(panelId:string, lastTabId:string, newTabItem:TabItem) {
     const layout = useTabLayout()
-    const allComponents = useTabComponent()
-    const panelIndex = layout.value.findIndex(tab => tab.id === panelId)
+    // const allComponents = useTabComponent()
+    const panelIndex = layout.value.findIndex(panel => panel.id === panelId)
     if(panelIndex !== -1) {
-        const index = layout.value[panelIndex].tabs.findIndex( tab => tab.id === tabId);
+        const index = layout.value[panelIndex].tabs.findIndex( tab => tab.id === lastTabId);
         if(index === -1) throw new Error('Tab not found when router change')
-        layout.value[panelIndex].tabs[index].label = routerParams.label
-        layout.value[panelIndex].tabs[index].component = routerParams.component
-        layout.value[panelIndex].tabs[index].props = routerParams.props
+        layout.value[panelIndex].tabs[index] = deepCopy(newTabItem)
+        console.log("update router", layout.value)
     }
 }
 
@@ -318,5 +317,4 @@ export function addTabInCurrentPanel(newTab: TabItem ) {
             allComponents.value.push(newTab)
         })
     }
-    console.log(layout.value)
 }

@@ -2,7 +2,8 @@
 const  { menu, appMenu } = useAppConfig()
 const mode = ref<'collapse' | 'expand'>('collapse')
 
-
+const layout = useTabLayout()
+const hightLightPanel = useCurrentTargetPanel()
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found on menu')
@@ -48,7 +49,23 @@ function generateMenu(){
 
 const selectedMenuItem = ref<MenuItem>()
 
+function setSelectedMenuItem() {
+    const panelIndex = layout.value.findIndex(panel => panel.id === hightLightPanel.value)
+    if(panelIndex !== -1) {
+        const selected = layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex || 0]
+        if(selected) {
+            selectedMenuItem.value = selected
+        }
+    }
+}
 
+watch(() => [layout, hightLightPanel], () => {
+    // get hightLightPanel
+    setSelectedMenuItem()
+},{
+    deep:true,
+    immediate: true
+})
 
 onMounted(() => {
     // const menuState = localStorage.getItem('app-menu-mode')
@@ -68,7 +85,7 @@ onMounted(() => {
                 <!-- <AppMenuToggle /> -->
             </div>
             <div class="menuBody">
-                <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item"  />
+                <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item" :selectedMenuItem="selectedMenuItem"  />
             </div>
 
             <div class="menuFooter">

@@ -28,22 +28,34 @@ const emits = defineEmits(['ready'])
     border-radius: var(--app-border-radius-m);
     box-shadow: var(--app-shadow-s);
     position: relative;
-    // :deep(.splitpanes) {
-    //     height:100%;
-    // }
-    // :deep(.splitpanes__pane) {
+    // :deep(.splitpanes){
     //     height:100%;
     //     transition: none;
-    //     background: var(--app-grey-925);
-    //     box-shadow: var(--app-shadow-s);
-    //     border-radius: var(--app-border-radius-m);
+    //     // background: var(--app-grey-925);
+    //     // box-shadow: var(--app-shadow-s);
+    //     border-radius: var(--panel-border-radius);
     //     overflow: hidden;
     //     &:has(.activePanel) {
-    //         background: var(--app-grey-975);
+            
+    //         // background: var(--app-grey-975);
     //         box-shadow: var(--app-shadow-l);
     //         z-index: 4;
     //     }
     // }
+    // :deep(.splitpanes) {
+    //     height:100%;
+    // }
+    :deep(.splitpanes__pane) {
+        height:100%;
+        transition: none;
+        box-shadow: var(--app-shadow-s)!important;
+        border-radius: var(--app-border-radius-m);
+        overflow: hidden;
+        &:has(.activePanel) {
+            box-shadow: var(--app-shadow-l)!important;
+            z-index: 4;
+        }
+    }
     
     // // :deep(.splitpanes__pane) {
     // //     // default style for pane

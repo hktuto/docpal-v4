@@ -39,13 +39,15 @@ const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
 }
 
 const contextMenuCloseHandler = () => {
-    actions.value= []
     rowData.value = undefined
     visible.value = false
+    setTimeout(() => {
+        nextTick
+    }, 50)
 }
 
 
-const displayActions = computed(() => actions.value.filter(item => item.every(i => i.visible !== false)))
+const displayActions = computed(() => actions.value.filter(item => item.some(i => i.visible !== false)))
 
 
 const contextMenuBus = useEventBus<TABLE_CONTEXT_PARAMS>(EventType.TABLE_CONTEXT_MENU_OPEN)

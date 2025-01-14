@@ -9,7 +9,6 @@ const hightLightPanel = useCurrentTargetPanel()
 const fullscreenItem = ref<TabItem>()
 const dialogRef = ref<InstanceType<typeof TabDialog>>(false)
 const dialogItem = ref<TabItem>()
-
 const menuStick = ref(true)
 
 const dialogOpened = ref(false)
@@ -57,11 +56,13 @@ function focusExistingTab(tab:TabItem):Promise<void>{
         const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
         if(panelIndex !== -1) {
             console.log("can find index")
-            layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.findIndex(item => item.id === existingTab.id)
+            layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.findIndex(item => item.name === existingTab.name)
+            console.log(layout.value[panelIndex])
             // if panel is not initized, set it to initized
             if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
                 layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true
             }
+            panelTabFocus(layout.value[panelIndex].id,layout.value[panelIndex].showingTabIndex )
             return Promise.resolve()
         }else{
             return Promise.reject(new Error("can not find index"))
@@ -81,10 +82,13 @@ async function openInCurrentTab(tab:TabItem){
         const highLightItem = panel.tabs[tabIndex]
         if(highLightItem){
             const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
-            console.log("indexInAllComponent", indexInAllComponent, allComponentRef.value[indexInAllComponent])
+            
             if(allComponentRef.value[indexInAllComponent]){
-                console.log(allComponentRef.value[indexInAllComponent])
                 allComponentRef.value[indexInAllComponent].navigateTo(tab)
+            }else{
+                console.log("can not find component")
+                // fallback to open in current tab
+                openTab(tab)
             }
         }
         
@@ -115,6 +119,7 @@ watch(hightLightPanel,(item) => {
 })
 
 watch(layout, (newVal) => {
+    console.log("layout changed", newVal)
     emits('layoutChanged', newVal)
 },{
     deep:true
