@@ -103,7 +103,6 @@ function handleOpen(setting) {
 
     if (!setting.cardHeaderLayout) setting.cardHeaderLayout = []
     form.value.cardHeaderLayout = [...setting.cardHeaderLayout]
-    console.log(form.value.cardHeaderLayout)
     await getWorkflowProps(form.value.workflowList)
     // state.loading = false;
   });
