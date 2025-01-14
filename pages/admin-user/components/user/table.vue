@@ -37,7 +37,6 @@
           @form-change="handleFilterFormChange"
           inputKey="userNameOrEmail"
           :inputPlaceHolder="$t('placeHolder.userNameOrEmail')"
-          @clear-filter="handleClearFilter"
         />
         <el-button
           class="el-icon--right"

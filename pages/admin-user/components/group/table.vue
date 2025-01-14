@@ -16,6 +16,7 @@
 
 <script lang="ts" setup>
 import dayjs from 'dayjs'
+import { adminApi } from 'api'
 import { ElMessage, ElMessageBox } from "element-plus";
 import { groupProviderKey } from '~/util/userProvider';
 const emits = defineEmits(['filter-change', 'refresh'])
@@ -86,12 +87,12 @@ async function handleDelete(row: any) {
     state._groupList = state.groupList.filter((item:any) => {
       return item.name.toLowerCase().includes(formModel.userNameOrEmail.toLowerCase())
     })
-    tableConfig.data = state._groupList
+    tableRef.value?.loadData(state._groupList)
   }
 // #endregion
 async function getGroup() {
   tableConfig.loading = true
-  state.groupList = await groupProvider?.GetGroupListApi()
+  state.groupList = await adminApi.api.postNuxeoIdentityGroups()
   state._groupList = [...state.groupList]
   tableRef.value?.loadData(state._groupList)
   tableConfig.loading = false
@@ -100,7 +101,7 @@ const GroupDialogRef = ref()
 function handleGroupDialogShow() {
     GroupDialogRef.value.handleOpen()
 }
-onMounted(() => {
+onActivated(() => {
   getGroup()
 });
 function refresh() {

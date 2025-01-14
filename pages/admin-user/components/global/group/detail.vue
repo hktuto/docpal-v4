@@ -64,7 +64,7 @@ provide(groupProviderDetailKey, {
     return adminApi.api.deleteNuxeoIdentityGroup(params)
   },
   GetMemberListApi: (params:any) => {
-    return adminApi.api.postNuxeoIdentityGroups(params)
+    return adminApi.api.postNuxeoIdentityMember(params)
   },
   BatchGroupRemoveUsersApi : (params:any) => {
     return adminApi.api.postNuxeoIdentityGroupBatchRemoveUsers(params)
