@@ -62,6 +62,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         }
       ],
     ],
+    virtualScroll: true,
     optionalConfig: {
     }
 })
@@ -92,7 +93,7 @@ async function handleDelete(row: any) {
 // #endregion
 async function getGroup() {
   tableConfig.loading = true
-  state.groupList = await adminApi.api.postNuxeoIdentityGroups()
+  state.groupList = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
   state._groupList = [...state.groupList]
   tableRef.value?.loadData(state._groupList)
   tableConfig.loading = false
