@@ -10,3 +10,15 @@ export const routeDocDetail  = function(params: any){
     }
   } as TabItem
 }
+export const routeSmartFolderDetail  = function(params: any){
+  return {
+    id: "admin-smart-folder-versions-" + new Date().getTime(),
+    name: "admin-smart-folder-versions-" + params.id,
+    icon: 'fluent:folder-people-24-regular',
+    label: params.name,
+    component: 'LazySmartFolderDetail',
+    props: {
+      id: params.id,
+    }
+  } as TabItem
+}
