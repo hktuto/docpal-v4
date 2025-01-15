@@ -18,6 +18,7 @@ function generateMenu(){
     for(let i = 0; i < _appMenu.length; i++) {
         let item = _appMenu[i];
         let menuItem = item;
+        console.log(item)
         // step 1 check if item has name, if so get it from menu
         if((item.name && _menu[item.name])) {
             // TODO : check if menu[item.name] has license

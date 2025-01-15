@@ -1,5 +1,6 @@
 import { userDisplayTimeSetting } from './../../authApp/composables/useAuth';
 import * as mime from 'mime-types'
+import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs'
 export const deepCopy  = (data:any) => {
     if (!data) return {}
@@ -51,3 +52,15 @@ export function downloadBlob (blob:any, name:string, type = "application/octet-s
       let size = (value / Math.pow(a, logaN)).toFixed(2);
       return `${size}${sizeList[logaN]}`;
   }
+
+  
+export const copy  = (data:any, msg = 'common_copySuccess') => {
+    const input = document.createElement('input')
+    document.body.appendChild(input)
+    input.value = data
+    input.focus()
+    input.select()
+    document.execCommand('Copy')
+    document.body.removeChild(input)
+    ElMessage.success(msg as string)
+}
