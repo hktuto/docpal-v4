@@ -1,7 +1,7 @@
 <template>
   <VxeGrid ref="tableRef" v-bind="tableConfig"  v-on="tableEvent">
       <template #toolbar_buttons>
-
+        <<slot name="toolbar_buttons"></slot>
       </template>
       <template #docTags="{ row, index }">
           <div v-if="row?.properties && row?.properties['nxtag:tags']">
@@ -32,36 +32,6 @@
           </div>
       </template>
   </VxeGrid>
-<!-- <Table ref="tableRef" v-loading="loading" :columns="state.columns" :table-data="tableData" :options="state.options"
-  @pagination-change="handlePaginationChange"
-  @row-dblclick="handleDblclick">
-  <template #docTags="{ row, index }">
-    <div v-if="row?.properties && row?.properties['nxtag:tags']">
-      <el-tag v-for="item in row?.properties['nxtag:tags']" :key="item.label">{{item.label}}</el-tag>
-    </div>
-  </template>
-  <template #docIcon="{ row, index }">
-    <div class="nameItem">
-      <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
-      <div class="label">{{row.name}}</div>
-    </div>
-  </template> 
-  <template #logicalPath="{ row }">
-    <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath" canOpen/>
-  </template>
-  <template #summary="{ row }">
-    <div v-if="row.properties && row.properties.summarys">
-      <div v-if=" row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary">
-        <el-icon :class="row.expandSummary ? 'revert' : 'rotate'"><ArrowUp /></el-icon>
-      </div>
-      <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
-        <div v-for="item in row.properties.summarys" class="summaryItem">
-          [{{item.summaryKey}}]: <b>{{item.summaryValue}}</b>
-        </div>
-      </template>
-    </div>
-  </template>
-</Table> -->
 </template>
 <script lang="ts" setup>
 import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue';
@@ -104,7 +74,7 @@ const routerProvider = inject(MenuRouterKey)
       aggParams: {}
   })
   const { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
-    id: tableId || 'search-result',
+    id: tableId || 'search-result', // if tableId is value , use tableID to store tab ordering
     virtualScroll: false,
     columns:[
         {

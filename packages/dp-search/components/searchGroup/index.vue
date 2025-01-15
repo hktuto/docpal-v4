@@ -5,7 +5,11 @@
     @aggSearch="handleAggSearch"
     @searchLog="handleSearchLog"></SearchGroupBar>
   <div style="height: 100%; overflow: hidden;">
-    <SearchGroupTable ref="tableRef" :tableId="tableId" @updateAgg="handleUpdateAgg"></SearchGroupTable>
+    <SearchGroupTable ref="tableRef" :tableId="tableId" @updateAgg="handleUpdateAgg">
+      <template #toolbar_buttons>
+        <slot name="toolbar_buttons"></slot>
+      </template>
+    </SearchGroupTable>
   </div>
 </div>
 </template>
