@@ -21,32 +21,36 @@ const isFullscreen = computed(() => {
 
 
 function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
+    console.log("navigateTo", tab.value)
     if(openInNewTab){
         tabManager?.openTab(param)
         return;
     }
     const existingTab = allComponents.value.find(item => item.name === param.name)
     if(existingTab){
-        console.log('existingTab', existingTab)
         tabManager?.openTab(param)
         return;
     }
     // forwardHistory.value = [];
+    const lastId = tab.value.id
     history.value.push({
         ...tab.value,
     })
     tab.value = {
         ...param,
+        parent: tab.value.parent,
+        id: tab.value.id,
         initized: true,
     }
-   
-    panelRouteUpdate(tab.value.parent, tab.value.id, param)
+    panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
 function back(){
     if(history.value.length === 0) return
     const lastItem = history.value.pop()
     if(lastItem){
+    const lastId = tab.value.id
+
         forwardHistory.value.push({
             name: tab.value.name,
             id: tab.value.id,
@@ -57,9 +61,11 @@ function back(){
         })
         tab.value = {
             ...lastItem,
+            parent: tab.value.parent,
+            id: tab.value.id,
             initized: true,
         }
-        panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
+        panelRouteUpdate(tab.value.parent, lastId, tab.value)
     }
 }
 
@@ -68,14 +74,18 @@ function forward() {
     const lastItem = forwardHistory.value.pop()
 
     if(lastItem){
+        const lastId = tab.value.id
+
         history.value.push({
             ...tab.value,
         })
         tab.value = {
             ...lastItem,
+            parent: tab.value.parent,
+            id: tab.value.id,
             initized: true
         }
-        panelRouteUpdate(tab.value.parent, tab.value.id, lastItem)
+        panelRouteUpdate(tab.value.parent, lastId, tab.value)
     }
 }
 

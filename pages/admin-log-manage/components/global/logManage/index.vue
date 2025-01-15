@@ -75,7 +75,7 @@ onActivated(async() => {
 
 <style lang="scss" scoped>
 .pageContainer{
-  padding: calc( var(--app-padding) * 2);
+  padding: var(--app-space-s);
   height: 100%;
   width:100%;
   position: relative;
