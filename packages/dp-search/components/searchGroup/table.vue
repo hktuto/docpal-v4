@@ -70,6 +70,11 @@ import * as mime from 'mime-types'
 import { clientApi } from 'api'
 import dayjs from 'dayjs'
 
+const {tableId} = defineProps<{
+  tableId: string
+}>(
+
+);
  
 const routerProvider = inject(MenuRouterKey)
   const emits = defineEmits(['updateAgg'])
@@ -99,7 +104,7 @@ const routerProvider = inject(MenuRouterKey)
       aggParams: {}
   })
   const { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
-    id: 'search-result',
+    id: tableId || 'search-result',
     virtualScroll: false,
     columns:[
         {
