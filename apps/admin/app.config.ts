@@ -28,7 +28,10 @@ export default defineAppConfig({
                 },
                 {
                     name: 'admin-external-share'
-                }
+                },
+                // {
+                //     name: 'admin-share-list'
+                // }
             ]
 
         },

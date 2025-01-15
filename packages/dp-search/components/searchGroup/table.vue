@@ -1,7 +1,7 @@
 <template>
   <VxeGrid ref="tableRef" v-bind="tableConfig"  v-on="tableEvent">
       <template #toolbar_buttons>
-        <<slot name="toolbar_buttons"></slot>
+        <slot name="toolbar_buttons"></slot>
       </template>
       <template #docTags="{ row, index }">
           <div v-if="row?.properties && row?.properties['nxtag:tags']">
