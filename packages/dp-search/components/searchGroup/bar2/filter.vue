@@ -120,6 +120,10 @@ function handleUpdate(data: searchGroupQQ[], item: searchGroupQuery) {
 async function initForm(query: any) {
   filters.value = query
 }
+function clear() {
+  filters.value.query = []
+  handleAddFilter()
+}
 onActivated(() => {
   const searchParams = sessionStorage.getItem('searchParams')
   if(!!searchParams) {
@@ -134,7 +138,7 @@ onActivated(() => {
   }
 })
 defineExpose({
-  getData, initForm
+  getData, initForm, clear
 })
 </script>
 <style lang="scss" scoped>
