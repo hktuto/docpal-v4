@@ -5,7 +5,11 @@
     @aggSearch="handleAggSearch"
     @searchLog="handleSearchLog"></SearchGroupBar>
   <div style="height: 100%; overflow: hidden;">
-    <SearchGroupTable ref="tableRef" @updateAgg="handleUpdateAgg"></SearchGroupTable>
+    <SearchGroupTable ref="tableRef" :tableId="tableId" @updateAgg="handleUpdateAgg">
+      <template #toolbar_buttons>
+        <slot name="toolbar_buttons"></slot>
+      </template>
+    </SearchGroupTable>
   </div>
 </div>
 </template>
@@ -13,6 +17,9 @@
 const state = reactive<any>({
   aggregation: {}
 })
+const {tableId } = defineProps<{
+  tableId?: string;
+}>()
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
 const tableRef = ref()
 function handleSearch(params: any) {

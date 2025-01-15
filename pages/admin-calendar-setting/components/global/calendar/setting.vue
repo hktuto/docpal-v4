@@ -1,66 +1,81 @@
 <script setup lang="ts">
 import { adminApi } from 'api';
-const setting = ref();
+import { ElFormItem, ElSwitch } from 'element-plus';
+import { useDebounceFn } from '@vueuse/core'
+
+const { setting, getCalendarsSetting } = useCalendarStore();
 const loading = ref(false);
 
-const calendarViewOptions = [
-    "MONTH",
-    "WEEK",
-    "DAY"
-]
+const categoryMasterTable = ref()
 
-const weekDayOptions = [
-    "MONDAY",
-    "SUNDAY",
-]
 
-async function getSetting(){
-    loading.value = true;
-    const { data } = await adminApi.api.getCalendarsSetting();
-    console.log("data", data);
-    setting.value = data;
+const saveSetting = useDebounceFn( async() => {
+    await adminApi.api.postCalendarsSetting(setting.value);
+}, 500)
 
-     // normalize data
-     // setting data
-     if(!calendarViewOptions.includes(setting.value.basic.default_view)) {
-        setting.value.basic.default_view = "MONTH"
-     }
-     if(Number.isNaN(setting.value.basic.default_solt)) {
-        setting.value.basic.default_solt = 0
-     }
-    loading.value = false;
-}
 
 onActivated(() => {
-    getSetting()
+    getCalendarsSetting()
 })
 
 </script>
 
 <template>
-    <div class="pageContainer">
+    <div class="pageContainer" v-loading="loading">
         <template v-if="setting">
             <div class="section basic">
                 <div class="title">{{  $t('calendarSetting.basic') }}</div>
-                <ElForm label-position="top">
+                <ElForm label-position="top" @submit.stop="">
                     <ElFormItem :label="$t('calendarSetting.view')">
-                        <ElSelect v-model="setting.basic.default_view">
+                        <ElSelect v-model="setting.basic.default_view" @change="saveSetting">
                             <ElOption v-for="option in calendarViewOptions" :key="option" :label="$t(`calendarSetting.viewOption.${option}`)" :value="option" />
                         </ElSelect>
                     </ElFormItem>
                     <ElFormItem :label="$t('calendarSetting.firstOfWeek')">
-                        <ElSelect v-model="setting.basic.default_first_week">
+                        <ElSelect v-model="setting.basic.default_first_week" @change="saveSetting">
                             <ElOption v-for="option in weekDayOptions" :key="option" :label="$t(`calendarSetting.weekOption.${option}`)" :value="option" />
                         </ElSelect>
                     </ElFormItem>
                     <ElFormItem :label="$t('calendarSetting.defaultSolt')">
-                        <ElInput v-model="setting.basic.default_solt" type="number" min="0" :step="1" />
+                        <ElInput v-model="setting.basic.default_slot" type="number" min="0" :step="1" @change="saveSetting" >
+                            <template #suffix>
+                                {{  $t('time.minute') }}
+                            </template>
+                        </ElInput>
+                    </ElFormItem>
+                    <ElFormItem 
+                        :label="$t('calendarSetting.allowCustomSlot')"
+                    >
+                        <ElSwitch v-model="setting.basic.allow_custom_slot" @change="saveSetting"/>
                     </ElFormItem>
                 </ElForm>
-                
-                <div class="formContainer"></div>
             </div>
+            <div class="section location">
+                <div class="title">{{  $t('calendarSetting.location') }}</div>
+                <ElForm label-position="top" @submit.stop="">
+                    <ElFormItem :label="$t('calendarSetting.location_masterTable')">
+                        <ElSelect v-model="setting.location.master_table" @change="saveSetting" disabled>
 
+                        </ElSelect>
+                    </ElFormItem>
+                    <ElFormItem :label="$t('calendarSetting.allowCustom')">
+                        <ElSwitch v-model="setting.location.allow_custom" @change="saveSetting"/>
+                    </ElFormItem>
+                    <ElFormItem :label="$t('calendarSetting.allowEmpty')">
+                        <ElSwitch v-model="setting.location.allow_empty" @change="saveSetting"/>
+                    </ElFormItem>
+                </ElForm>
+            </div>
+            <div class="section category">
+                <div class="title">{{  $t('calendarSetting.location') }}</div>
+                <ElForm label-position="top" @submit.stop="">
+                    <ElFormItem :label="$t('calendarSetting.category_masterTable')">
+                        <ElSelect v-model="setting.category.master_table" @change="saveSetting" disabled>
+
+                        </ElSelect>
+                    </ElFormItem>
+                </ElForm>
+            </div>
         </template>
     </div>
 </template>
@@ -74,13 +89,14 @@ onActivated(() => {
     justify-content: flex-start;
     align-items: flex-start;
     gap: var(--app-space-s);
+    padding: var(--app-space-s);
 }
 .section + .section{
     border-top: 1px solid var(--app-grey-800);
 }
 .section {
     width:100%;
-    padding: var(--app-space-s);
+    padding-block: var(--app-space-s);
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
