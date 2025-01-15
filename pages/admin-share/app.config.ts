@@ -15,7 +15,16 @@ export default defineAppConfig({
         pageSize:20,
         filters:{}
       },
-    }
+    },
+    "admin-external-share":{
+      id:"admin-external-share",
+      name: 'admin-external-share',
+      label: "adminMenu.share",
+      icon: "lucide:file-output",
+      hoverIcon: "lucide:file-output",
+      component: "LazyExternalSharePage",
+      props:{},
+    },
   },
 
 })

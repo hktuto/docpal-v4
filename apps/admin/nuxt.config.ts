@@ -23,13 +23,14 @@ export default defineNuxtConfig({
     "../../pages/admin-docker-log",
     "../../pages/admin-dashboard",
     '../../pages/admin-message-queue',
-    "../../pages/admin-internal-share",
+    "../../pages/admin-share",
     "../../pages/admin-external-connection",
     "../../pages/admin-workflow",
     "../../pages/admin-document-type",          
 
     "../../pages/admin-log-manage",
     "../../pages/admin-calendar-setting",
+    // "../../pages/admin-share",
   ],
   features:{
     inlineStyles: true,
