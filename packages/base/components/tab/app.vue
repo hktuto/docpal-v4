@@ -81,8 +81,8 @@ async function openInCurrentTab(tab:TabItem){
         const tabIndex = panel.showingTabIndex
         const highLightItem = panel.tabs[tabIndex]
         if(highLightItem){
-            const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
-            
+            const indexInAllComponent = allComponents.value.findIndex(item => item.id === highLightItem.id)
+            console.log("indexInAllComponent", allComponents )
             if(allComponentRef.value[indexInAllComponent]){
                 allComponentRef.value[indexInAllComponent].navigateTo(tab)
             }else{
