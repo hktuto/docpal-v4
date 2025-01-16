@@ -34,8 +34,8 @@
                 <!-- <DragSelectTag :element="element" @close="handleClose"/> -->
                 <!-- <span v-if="element.suffixSymbol" class="list-drop-item--divider">{{element.suffixSymbol}}</span> -->
                 <el-tag ref="tagRef" :class="{ 'el-tag-normal': !element.noDelete, 'el-tag-drop': true }" :closable="!element.noDelete" @close="handleClose(element)">
-                    <SvgIcon v-if="!element.noDelete" class="canDrag" src="/icons/move-handle.svg" />
-                    {{ $t(element[itemKey]) }}
+                    <el-icon v-if="!element.noDelete" class="canDrag"><Rank /></el-icon>
+                    {{$t(`${element[itemKey]}`)}}
                 </el-tag>
                 <span class="list-drop-item--divider">{{joiner}}</span>
             </span>
@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Warning } from '@element-plus/icons-vue'
+import { Rank } from '@element-plus/icons-vue'
 const props = withDefaults(defineProps<{
     dropList: any,
     dragList: any,
@@ -127,6 +127,7 @@ onMounted(() => {
         :deep(.el-tag__content) {
             display: flex;
             align-items: center;
+            line-height: 22px;
         }
     }
 }
@@ -153,6 +154,7 @@ onMounted(() => {
         }
         .el-tag-drop {
             padding-left: 0;
+            text-align: center;
         }
     }
     .list-drag  { 
