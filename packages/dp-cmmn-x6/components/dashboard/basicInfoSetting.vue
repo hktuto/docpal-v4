@@ -1,0 +1,159 @@
+<template>
+<el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
+    class="scroll-dialog processSetting-dialog"
+    append-to-body 
+    :close-on-click-modal="false"
+    @close="handleClose"
+    >
+    <div>
+        <h3>{{ $t('caseManage.fieldsLayout') }}</h3>
+        <draggable
+            class="list-group flex-zoom"
+            :list="state.setting.layout"
+            group="people"
+            itemKey="id"
+        >
+            <template #item="{ element, index }">
+            <div :style="`--field-width: ${element.width}`" class="list-group-item">
+                <SvgIcon class="handle-icon" src="/icons/drag.svg" />
+                {{ element.name }}
+                <el-dropdown @command="(command) => handleCommand(command, element)">
+                    <SvgIcon class="zoom-icon" src="/icons/tools/zoom.svg" />
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item v-for="item in widthList" :key="item.width" :command="item.width">{{ item.width }}</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+                <div></div>
+                <el-input v-model="state.setting.defaultValue[element.id]" />
+            </div>
+            </template>
+        </draggable>
+    </div>
+    <div>
+        <h3>{{ $t('caseManage.avalibleFields') }}</h3>
+        <draggable
+            class="list-group"
+            :list="state.allList"
+            group="people"
+            itemKey="id"
+        >
+            <template #item="{ element, index }">
+                <div class="list-group-item">
+                    <SvgIcon class="handle-icon" src="/icons/drag.svg" />
+                    {{ element.name }}
+                </div>
+            </template>
+        </draggable>
+    </div>
+    <template #footer>
+      <div class="footer-grid">
+        <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button>
+        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+      </div>
+    </template>
+</el-dialog>
+</template>
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import draggable from "vuedraggable";
+const emits = defineEmits([
+    'refresh', 'delete'
+])
+const widthList = [
+    { width: '25%', label: '25%' },
+    { width: '33%', label: '33%' },
+    { width: '50%', label: '50%' },
+    { width: '100%', label: '100%' },
+]
+const state = reactive({
+    loading: false,
+    visible: false,
+    setting: {},
+    allList: []
+})
+async function handleSubmit () {
+    state.loading = true
+    try {
+        emits('refresh', { 
+            layout: state.setting.layout,
+            defaultValue: state.setting.defaultValue
+        })
+    } catch (error) {
+        state.loading = false
+    }
+    state.visible = false
+    state.loading = false
+}
+function handleOpen(setting, allList) {
+    if(!allList) allList = []
+    state.visible = true
+    setTimeout(async () => {
+        if(!setting.layout) setting.layout = []
+        state.setting = deepCopy(setting)
+        state.allList = allList.filter(item => !state.setting.layout.find(l => item.id === l.id))
+        state.loading = false
+    })
+}
+function handleCommand(command: string, row: any) {
+    row.width = command
+}
+async function handleDelete() {
+    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    if(action !== 'confirm') return
+    emits('delete')
+    state.visible = false
+}
+defineExpose({ handleOpen })
+</script>
+<style lang="scss" scoped>
+.list-group {
+    min-height: 200px;
+    overflow: auto;
+}
+.list-group-item {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    background-color: #fff;
+    padding: var(--app-padding);
+    margin-bottom: var(--app-padding);
+    .el-input {
+        width: 100%;
+    }
+}
+.flex-zoom {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    row-gap: var(--app-padding);
+    column-gap: var(--app-padding);
+    .list-group-item {
+        min-width: 100px;
+        height: fit-content;
+        gap: var(--app-padding);
+        width: calc(var(--field-width, 50%) - var(--app-padding));
+        --icon-size: 1.14rem;
+        margin-bottom: unset;
+    }
+}
+
+</style>
+<style lang="scss" >
+.processSetting-dialog {
+    .el-dialog__body {
+        display: grid;
+        grid-template-columns: 1fr 30%;
+        gap: var(--app-padding);
+        overflow: auto;
+        & > div {
+            background-color: #F2F8F9;
+            padding: var(--app-padding);
+            display: grid;
+            grid-template-rows: min-content 1fr;
+            overflow: hidden;
+        }
+    }
+    
+}
+</style>

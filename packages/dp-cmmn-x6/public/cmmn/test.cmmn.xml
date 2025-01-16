@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL"
+             xmlns:flowable="http://flowable.org/cmmn" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+             xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+             targetNamespace="http://www.flowable.org/casedef" xmlns:docpal="http://www.w3.org/1999/xhtml"
+             exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
+  <case id="employeetest1" name="employeetest1" flowable:initiatorVariableName="initiator">
+    <documentation>employeetest</documentation>
+    <casePlanModel id="id_employee_case1" name="employee_case1" flowable:formFieldValidation="true">
+      <extensionElements>
+        <docpal:form id="caseplanmodel_employee_form" name="employee form" casetable="case_employee_form">
+          <field id="first_name" name="first name" type="string"  ></field>
+          <field id="last_name" name="last name" type="string" ></field>
+          <field id="department" name="department" type="user_group" ></field>
+          <field id="contract" name="contract" type="document" ></field>
+        </docpal:form>
+        <docpal:attributes name="employee_permission" group="member" ref="caseplanmodel_employee_form" >
+          <field id="first_name" accesstype="hidden"></field>
+          <field id="last_name" accesstype="mask"></field>
+          <field id="department" accesstype="edit"></field>
+          <field id="contract" accesstype="read"></field>
+          contract
+        </docpal:attributes>
+        <docpal:attributes name="employee_permission" group="admin" ref="caseplanmodel_employee_form" >
+          <field id="first_name" accesstype="edit"></field>
+          <field id="last_name" accesstype="edit"></field>
+          <field id="department" accesstype="edit"></field>
+          <field id="contract" accesstype="edit"></field>
+        </docpal:attributes>
+      </extensionElements>
+      <planItem id="planItem3" name="On Boarding" definitionRef="sid-9B070859-1670-45EB-BA1C-99029006D89D"></planItem>
+      <planItem id="planItem6" name="Leave Applicatoin" definitionRef="sid-389BEBA4-A595-4391-B08E-4F568161F80D">
+        <itemControl>
+          <repetitionRule flowable:counterVariable="repetitionCounter">
+            <extensionElements></extensionElements>
+            <condition><![CDATA[${vars:getOrDefault('repetitionCounter', 0) <= 5}]]></condition>
+          </repetitionRule>
+        </itemControl>
+      </planItem>
+      
+      <stage id="sid-9B070859-1670-45EB-BA1C-99029006D89D" name="On Boarding">
+        <planItem id="planItem1" name="Create User" definitionRef="id_create_user">
+          <itemControl>
+            <manualActivationRule></manualActivationRule>
+          </itemControl>
+        </planItem>
+        <planItem id="planItem2" name="Test Repetition" definitionRef="id_test_repetition">
+          <itemControl>
+            <repetitionRule flowable:counterVariable="repetitionCounter">
+              <extensionElements></extensionElements>
+            </repetitionRule>
+          </itemControl>
+        </planItem>
+        <humanTask id="id_create_user" name="Create User" flowable:assignee="admin" flowable:formFieldValidation="true">
+          <extensionElements>
+            <modeler:flowable-idm-assignee xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-assignee>
+            <modeler:assignee-info-email xmlns:modeler="http://flowable.org/modeler"><![CDATA[test-admin@example-domain.tld]]></modeler:assignee-info-email>
+            <modeler:assignee-info-firstname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Test]]></modeler:assignee-info-firstname>
+            <modeler:assignee-info-lastname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Administrator]]></modeler:assignee-info-lastname>
+            <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:initiator-can-complete>
+            <flowable:variable name="myVariable" type="string" />
+            <docpal:form id="humanTask_employee_form" name="employee form" casetable="case_employee_form">
+              <field id="sex" name="sex" type="string"  ></field>
+            </docpal:form>
+            <docpal:attributes name="employee_permission" group="member" ref="humanTask_employee_form" >
+              <field id="sex" accesstype="hidden"></field>
+              contract
+            </docpal:attributes>
+            <docpal:attributes name="employee_permission" group="admin" ref="humanTask_employee_form" >
+              <field id="sex" accesstype="edit"></field>
+            </docpal:attributes>
+          </extensionElements>
+        </humanTask>
+        <humanTask id="id_test_repetition" name="Test Repetition" flowable:assignee="admin" flowable:formFieldValidation="true">
+          <extensionElements>
+            <modeler:flowable-idm-assignee xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-assignee>
+            <modeler:assignee-info-email xmlns:modeler="http://flowable.org/modeler"><![CDATA[test-admin@example-domain.tld]]></modeler:assignee-info-email>
+            <modeler:assignee-info-firstname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Test]]></modeler:assignee-info-firstname>
+            <modeler:assignee-info-lastname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Administrator]]></modeler:assignee-info-lastname>
+            <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+            <docpal:form id="humanTask_test_repetition" name="leave form" casetable="case_test_repetition">
+              <field id="name" name="name" type="string"  ></field>
+              <field id="leave_date" name="Leave date" type="string"  ></field>
+              <field id="reason" name="Leave reason" type="string"  ></field>
+            </docpal:form>
+            <docpal:attributes name="leaveform_permission" group="member" ref="humanTask_test_repetition" >
+              <field id="name" accesstype="edit"></field>
+              <field id="leave_date" accesstype="edit"></field>
+              <field id="reason" accesstype="edit"></field>
+              contract
+            </docpal:attributes>
+          </extensionElements>
+        </humanTask>
+      </stage>
+      <stage id="sid-389BEBA4-A595-4391-B08E-4F568161F80D" name="Leave Applicatoin">
+        <planItem id="planItem4" name="Create leave form" definitionRef="id_create_leave_form">
+          <itemControl>
+            <manualActivationRule></manualActivationRule>
+          </itemControl>
+        </planItem>
+        <planItem id="planItem5" name="HR approve" definitionRef="id_hr_approve">
+          <entryCriterion id="sid-BD81E838-A349-48EA-A157-7E28A4E6BACD" sentryRef="sentry1"></entryCriterion>
+        </planItem>
+        <sentry id="sentry1">
+          <planItemOnPart id="sentryOnPart1" sourceRef="planItem4">
+            <standardEvent>complete</standardEvent>
+          </planItemOnPart>
+        </sentry>
+        <humanTask id="id_create_leave_form" name="Create leave form" flowable:assignee="admin" flowable:formKey="leaveform" flowable:formFieldValidation="true">
+          <extensionElements>
+            <modeler:flowable-idm-assignee xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-assignee>
+            <modeler:assignee-info-email xmlns:modeler="http://flowable.org/modeler"><![CDATA[test-admin@example-domain.tld]]></modeler:assignee-info-email>
+            <modeler:assignee-info-firstname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Test]]></modeler:assignee-info-firstname>
+            <modeler:assignee-info-lastname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Administrator]]></modeler:assignee-info-lastname>
+            <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:initiator-can-complete>
+          </extensionElements>
+        </humanTask>
+        <humanTask id="id_hr_approve" name="HR approve" flowable:assignee="admin" flowable:formFieldValidation="true">
+          <extensionElements>
+            <modeler:flowable-idm-assignee xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-assignee>
+            <modeler:assignee-info-email xmlns:modeler="http://flowable.org/modeler"><![CDATA[test-admin@example-domain.tld]]></modeler:assignee-info-email>
+            <modeler:assignee-info-firstname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Test]]></modeler:assignee-info-firstname>
+            <modeler:assignee-info-lastname xmlns:modeler="http://flowable.org/modeler"><![CDATA[Administrator]]></modeler:assignee-info-lastname>
+            <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:initiator-can-complete>
+          </extensionElements>
+        </humanTask>
+      </stage>
+    </casePlanModel>
+  </case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="CMMNDiagram_employee1">
+      <cmmndi:CMMNShape id="CMMNShape_id_employee_case" cmmnElementRef="id_employee_case">
+        <dc:Bounds height="979.0" width="955.5" x="40.0" y="40.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem3" cmmnElementRef="planItem3">
+        <dc:Bounds height="241.0" width="829.0" x="70.5" y="97.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem1" cmmnElementRef="planItem1">
+        <dc:Bounds height="80.0" width="100.0" x="238.5" y="172.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem2" cmmnElementRef="planItem2">
+        <dc:Bounds height="80.0" width="100.0" x="570.0" y="172.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem6" cmmnElementRef="planItem6">
+        <dc:Bounds height="218.0" width="801.0" x="90.0" y="399.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem4" cmmnElementRef="planItem4">
+        <dc:Bounds height="80.0" width="100.0" x="178.5" y="440.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem5" cmmnElementRef="planItem5">
+        <dc:Bounds height="80.0" width="100.0" x="405.0" y="440.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_sid-BD81E838-A349-48EA-A157-7E28A4E6BACD" cmmnElementRef="sid-BD81E838-A349-48EA-A157-7E28A4E6BACD">
+        <dc:Bounds height="22.0" width="14.0" x="397.39309894494767" y="480.90750613060055"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="CMMNEdge_sid-D1D3C1E2-F47E-43B7-9E65-F1B302CBAAA0" cmmnElementRef="sid-BD81E838-A349-48EA-A157-7E28A4E6BACD" targetCMMNElementRef="planItem4">
+        <di:extension>
+          <flowable:docker type="source" x="8.0" y="10.0"></flowable:docker>
+          <flowable:docker type="target" x="50.0" y="40.0"></flowable:docker>
+        </di:extension>
+        <di:waypoint x="398.3063445677062" y="490.47059672174896"></di:waypoint>
+        <di:waypoint x="278.44999999999834" y="483.079995401025"></di:waypoint>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</definitions>
