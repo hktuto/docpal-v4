@@ -18,7 +18,14 @@ export const useCalendarStore = () => {
         "SUNDAY",
     ]
 
+    async function getCalendarMasterTable(){
+        const {data} = await adminApi.api.getCalendarsSettingTables() as any
+        console.log("getCalendarMasterTable", data)
+        return data
+    }
+
     async function getCalendarsSetting(){
+        const masterTable = await getCalendarMasterTable()
         const { data } = await adminApi.api.getCalendarsSetting() as any;
         setting.value = {
             basic: {
@@ -28,12 +35,12 @@ export const useCalendarStore = () => {
                 allow_custom_slot : data.basic.allow_custom_slot !== undefined ? data.basic.allow_custom_slot : false
             },
             location: {
-                master_table : data?.location?.master_table,
+                master_table : masterTable['Event Locations'],
                 allow_custom: data?.location?.allow_custom !== undefined ? data.location.allow_custom : false,
                 allow_empty: data?.location?.allow_empty !== undefined ? data.location.allow_empty : false,
             },
             category: {
-                master_table: data?.category?.master_table,
+                master_table: masterTable['Event Categories'] ,
             }
         };
     }

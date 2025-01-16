@@ -90,6 +90,7 @@ onActivated(() => {
     align-items: flex-start;
     gap: var(--app-space-s);
     padding: var(--app-space-s);
+    overflow: auto;
 }
 .section + .section{
     border-top: 1px solid var(--app-grey-800);
