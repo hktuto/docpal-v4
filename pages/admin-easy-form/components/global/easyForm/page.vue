@@ -110,16 +110,12 @@ async function handleActive(row: any, isActive: boolean) {
     
   }
 }
-async function handleCreate() {
-  DialogRef.value.handleOpen();
-}
+
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
-onMounted(() => {
-  console.log('onMounted', adminApi)
-})
+
 </script>
 <style lang="scss" scoped>
 :deep .el-input {
