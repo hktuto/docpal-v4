@@ -1,0 +1,974 @@
+{
+  "cells": [
+    {
+      "position": {
+        "x": -16,
+        "y": -9
+      },
+      "size": {
+        "width": 712,
+        "height": 473
+      },
+      "attrs": {
+        "text": {
+          "text": "allcasetypes"
+        },
+        "body": {
+          "stroke": "#8f8f8f",
+          "strokeWidth": 1,
+          "fill": "#fff",
+          "rx": 8,
+          "ry": 8
+        },
+        "label": {
+          "textAnchor": "left",
+          "textVerticalAnchor": "top",
+          "fontSize": 20,
+          "refX": 0.01,
+          "refY": 0.01
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "allcasetypes",
+      "zIndex": 1,
+      "data": {
+        "type": "case",
+        "data": {
+          "attr_id": "allcasetypes",
+          "attr_name": "allcasetypes",
+          "flowable:initiatorVariableName": "initiator",
+          "casePlanModel": {
+            "flowable:formFieldValidation": true,
+            "attr_id": "id_case",
+            "attr_name": "case",
+            "extensionElements": {
+              "docpal:attributes": [],
+              "docpal:form": []
+            }
+          }
+        }
+      },
+      "children": [
+        "planItem5",
+        "planItem6",
+        "d6b1ad49-3307-4422-b5c8-76f11a393600"
+      ]
+    },
+    {
+      "position": {
+        "x": 48,
+        "y": 55
+      },
+      "size": {
+        "width": 440,
+        "height": 345
+      },
+      "attrs": {
+        "text": {
+          "text": "stage"
+        },
+        "body": {
+          "stroke": "#8f8f8f",
+          "strokeDasharray": "10,2",
+          "strokeWidth": 2,
+          "fill": "#fff",
+          "rx": 8,
+          "ry": 8
+        },
+        "label": {
+          "textAnchor": "left",
+          "textVerticalAnchor": "top",
+          "x": 0,
+          "refY": 0.01,
+          "textWrap": {
+            "width": -10,
+            "ellipsis": true,
+            "breakWord": true
+          }
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "planItem5",
+      "zIndex": 2,
+      "data": {
+        "type": "stage",
+        "data": {
+          "attr_id": "id_stage",
+          "attr_name": "stage",
+          "planItem": [
+            {
+              "itemControl": {
+                "repetitionRule": {
+                  "extensionElements": "",
+                  "attr_flowable:counterVariable": "repetitionCounter"
+                },
+                "requiredRule": "",
+                "manualActivationRule": ""
+              },
+              "attr_id": "planItem1",
+              "attr_name": "human_task",
+              "attr_definitionRef": "id_human_task"
+            },
+            {
+              "attr_id": "planItem2",
+              "attr_name": "user_event",
+              "attr_definitionRef": "id_user_event"
+            },
+            {
+              "entryCriterion": {
+                "attr_id": "id_workflow_entry",
+                "attr_sentryRef": "sentry1"
+              },
+              "attr_id": "planItem3",
+              "attr_name": "workflow",
+              "attr_definitionRef": "id_workflow"
+            },
+            {
+              "entryCriterion": {
+                "attr_id": "id_sub_case_entry",
+                "attr_sentryRef": "sentry2"
+              },
+              "attr_id": "planItem4",
+              "attr_name": "sub_case",
+              "attr_definitionRef": "id_sub_case"
+            }
+          ]
+        },
+        "planItem": {
+          "itemControl": {
+            "repetitionRule": {
+              "extensionElements": "",
+              "attr_flowable:counterVariable": "repetitionCounter"
+            },
+            "requiredRule": ""
+          },
+          "exitCriterion": {
+            "attr_id": "id_exit",
+            "attr_sentryRef": "sentry3"
+          },
+          "attr_id": "planItem5",
+          "attr_name": "stage",
+          "attr_definitionRef": "id_stage"
+        }
+      },
+      "children": [
+        "id_exit",
+        "planItem1",
+        "planItem2",
+        "planItem3",
+        "planItem4",
+        "df7b760e-2c87-4a27-adb7-838781e06f10",
+        "7ae64acd-726e-4ca4-b2a3-81bdb6582e41"
+      ],
+      "parent": "allcasetypes"
+    },
+    {
+      "position": {
+        "x": 552,
+        "y": 64
+      },
+      "size": {
+        "width": 80,
+        "height": 80
+      },
+      "attrs": {
+        "text": {
+          "text": "milestone"
+        },
+        "body": {
+          "refWidth": 1,
+          "refHeight": 1,
+          "stroke": "#7B61FF",
+          "strokeWidth": 1,
+          "fill": "#7B61FF",
+          "rx": 16,
+          "ry": 16
+        },
+        "label": {
+          "textAnchor": "center",
+          "textAlign": "center",
+          "textVerticalAnchor": "top",
+          "refX": 0,
+          "y": 45,
+          "fill": "#000",
+          "textWrap": {
+            "width": 0,
+            "ellipsis": true,
+            "breakWord": true
+          }
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/milestone-icon.svg",
+          "refWidth": 0.7,
+          "refHeight": 0.7,
+          "refX": 0.15,
+          "refY": 0.15
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "planItem6",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "text",
+          "selector": "label"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 2,
+      "data": {
+        "type": "milestone",
+        "data": {
+          "attr_id": "id_milestone",
+          "attr_name": "milestone"
+        },
+        "planItem": {
+          "entryCriterion": {
+            "attr_id": "id_entry",
+            "attr_sentryRef": "sentry4"
+          },
+          "attr_id": "planItem6",
+          "attr_name": "milestone",
+          "attr_definitionRef": "id_milestone"
+        }
+      },
+      "children": [
+        "id_entry"
+      ],
+      "parent": "allcasetypes"
+    },
+    {
+      "position": {
+        "x": 473,
+        "y": 242.5
+      },
+      "size": {
+        "width": 30,
+        "height": 30
+      },
+      "attrs": {
+        "text": {
+          "text": "exit"
+        },
+        "body": {
+          "stroke": "#266CD6",
+          "strokeWidth": 1,
+          "fill": "#fff",
+          "rx": 20,
+          "ry": 20
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/exit-icon.svg",
+          "refWidth": 0.6,
+          "refHeight": 0.6,
+          "refX": 0.2,
+          "refY": 0.2
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "id_exit",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 3,
+      "data": {
+        "type": "exitCriterion",
+        "planItem": {
+          "itemControl": {
+            "repetitionRule": {
+              "extensionElements": "",
+              "attr_flowable:counterVariable": "repetitionCounter"
+            },
+            "requiredRule": ""
+          },
+          "exitCriterion": {
+            "attr_id": "id_exit",
+            "attr_sentryRef": "sentry3"
+          },
+          "attr_id": "planItem5",
+          "attr_name": "stage",
+          "attr_definitionRef": "id_stage"
+        },
+        "data": {
+          "attr_id": "id_exit",
+          "attr_sentryRef": "sentry3"
+        },
+        "sentry": {
+          "type": "sentry",
+          "data": {
+            "planItemOnPart": {
+              "standardEvent": "occur",
+              "attr_id": "sentryOnPart3",
+              "attr_sourceRef": "planItem2"
+            },
+            "attr_id": "sentry3",
+            "attr_name": "exit"
+          }
+        }
+      },
+      "parent": "planItem5"
+    },
+    {
+      "position": {
+        "x": 128,
+        "y": 128
+      },
+      "size": {
+        "width": 80,
+        "height": 80
+      },
+      "attrs": {
+        "text": {
+          "text": "human_task"
+        },
+        "body": {
+          "refWidth": 1,
+          "refHeight": 1,
+          "stroke": "#0099FF",
+          "strokeWidth": 1,
+          "fill": "#0099FF",
+          "rx": 16,
+          "ry": 16
+        },
+        "label": {
+          "textAnchor": "center",
+          "textAlign": "center",
+          "textVerticalAnchor": "top",
+          "refX": 0,
+          "y": 45,
+          "fill": "#000",
+          "textWrap": {
+            "width": 0,
+            "ellipsis": true,
+            "breakWord": true
+          }
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/user-icon.svg",
+          "refWidth": 0.7,
+          "refHeight": 0.7,
+          "refX": 0.15,
+          "refY": 0.15
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "planItem1",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "text",
+          "selector": "label"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 3,
+      "data": {
+        "type": "humanTask",
+        "data": {
+          "attr_id": "id_human_task",
+          "attr_name": "human_task",
+          "attr_flowable:formFieldValidation": true
+        },
+        "planItem": {
+          "itemControl": {
+            "repetitionRule": {
+              "extensionElements": "",
+              "attr_flowable:counterVariable": "repetitionCounter"
+            },
+            "requiredRule": "",
+            "manualActivationRule": ""
+          },
+          "attr_id": "planItem1",
+          "attr_name": "human_task",
+          "attr_definitionRef": "id_human_task"
+        }
+      },
+      "parent": "planItem5"
+    },
+    {
+      "position": {
+        "x": 256,
+        "y": 128
+      },
+      "size": {
+        "width": 40,
+        "height": 40
+      },
+      "attrs": {
+        "text": {
+          "text": "user_event"
+        },
+        "body": {
+          "stroke": "#FFDA61",
+          "strokeWidth": 1,
+          "fill": "#FFDA61",
+          "rx": 20,
+          "ry": 20
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "planItem2",
+      "zIndex": 3,
+      "data": {
+        "type": "userEventListener",
+        "data": {
+          "attr_id": "id_user_event",
+          "attr_name": "user_event",
+          "attr_flowable:availableCondition": "${myCondition}"
+        },
+        "planItem": {
+          "attr_id": "planItem2",
+          "attr_name": "user_event",
+          "attr_definitionRef": "id_user_event"
+        }
+      },
+      "parent": "planItem5"
+    },
+    {
+      "position": {
+        "x": 344,
+        "y": 128
+      },
+      "size": {
+        "width": 80,
+        "height": 80
+      },
+      "attrs": {
+        "text": {
+          "text": "workflow"
+        },
+        "body": {
+          "refWidth": 1,
+          "refHeight": 1,
+          "stroke": "#29CC6A",
+          "strokeWidth": 1,
+          "fill": "#29CC6A",
+          "rx": 16,
+          "ry": 16
+        },
+        "label": {
+          "textAnchor": "center",
+          "textAlign": "center",
+          "textVerticalAnchor": "top",
+          "refX": 0,
+          "y": 45,
+          "fill": "#000",
+          "textWrap": {
+            "width": 0,
+            "ellipsis": true,
+            "breakWord": true
+          }
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/workflow-icon.svg",
+          "refWidth": 0.7,
+          "refHeight": 0.7,
+          "refX": 0.15,
+          "refY": 0.15
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "planItem3",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "text",
+          "selector": "label"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 3,
+      "data": {
+        "type": "processTask",
+        "data": {
+          "extensionElements": {
+            "flowable:in": [
+              {
+                "attr_source": "username",
+                "attr_target": "name"
+              },
+              {
+                "attr_source": "age",
+                "attr_target": "age"
+              },
+              {
+                "attr_source": "employment_date",
+                "attr_target": "date"
+              }
+            ],
+            "flowable:out": {
+              "attr_source": "is_success",
+              "attr_target": "is_success"
+            }
+          },
+          "processRefExpression": {
+            "__cdata": "accountsetup"
+          },
+          "attr_id": "id_workflow",
+          "attr_name": "workflow",
+          "attr_flowable:fallbackToDefaultTenant": false
+        },
+        "planItem": {
+          "entryCriterion": {
+            "attr_id": "id_workflow_entry",
+            "attr_sentryRef": "sentry1"
+          },
+          "attr_id": "planItem3",
+          "attr_name": "workflow",
+          "attr_definitionRef": "id_workflow"
+        }
+      },
+      "children": [
+        "id_workflow_entry"
+      ],
+      "parent": "planItem5"
+    },
+    {
+      "position": {
+        "x": 112,
+        "y": 256
+      },
+      "size": {
+        "width": 80,
+        "height": 80
+      },
+      "attrs": {
+        "text": {
+          "text": "sub_case"
+        },
+        "body": {
+          "refWidth": 1,
+          "refHeight": 1,
+          "stroke": "#E48F4C",
+          "strokeWidth": 1,
+          "fill": "#E48F4C",
+          "rx": 16,
+          "ry": 16
+        },
+        "label": {
+          "textAnchor": "center",
+          "textAlign": "center",
+          "textVerticalAnchor": "top",
+          "refX": 0,
+          "y": 45,
+          "fill": "#000",
+          "textWrap": {
+            "width": 0,
+            "ellipsis": true,
+            "breakWord": true
+          }
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/caseTask-icon.svg",
+          "refWidth": 0.7,
+          "refHeight": 0.7,
+          "refX": 0.15,
+          "refY": 0.15
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "planItem4",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "text",
+          "selector": "label"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 3,
+      "data": {
+        "type": "caseTask",
+        "data": {
+          "extensionElements": {
+            "flowable:in": [
+              {
+                "attr_source": "username",
+                "attr_target": "employee_name"
+              },
+              {
+                "attr_source": "age",
+                "attr_target": "age"
+              }
+            ],
+            "flowable:out": {
+              "attr_source": "is_complete_subcase",
+              "attr_target": "is_complete_subcase"
+            }
+          },
+          "caseRefExpression": {
+            "__cdata": "employee_cmmn"
+          },
+          "attr_id": "id_sub_case",
+          "attr_name": "sub_case"
+        },
+        "planItem": {
+          "entryCriterion": {
+            "attr_id": "id_sub_case_entry",
+            "attr_sentryRef": "sentry2"
+          },
+          "attr_id": "planItem4",
+          "attr_name": "sub_case",
+          "attr_definitionRef": "id_sub_case"
+        }
+      },
+      "children": [
+        "id_sub_case_entry"
+      ],
+      "parent": "planItem5"
+    },
+    {
+      "position": {
+        "x": 537,
+        "y": 89
+      },
+      "size": {
+        "width": 30,
+        "height": 30
+      },
+      "attrs": {
+        "text": {
+          "text": "entry"
+        },
+        "body": {
+          "stroke": "#266CD6",
+          "strokeWidth": 1,
+          "fill": "#fff",
+          "rx": 20,
+          "ry": 20
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/entry-icon.svg",
+          "refWidth": 0.6,
+          "refHeight": 0.6,
+          "refX": 0.2,
+          "refY": 0.2
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "id_entry",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 3,
+      "data": {
+        "type": "entryCriterion",
+        "planItem": {
+          "entryCriterion": {
+            "attr_id": "id_entry",
+            "attr_sentryRef": "sentry4"
+          },
+          "attr_id": "planItem6",
+          "attr_name": "milestone",
+          "attr_definitionRef": "id_milestone"
+        },
+        "data": {
+          "attr_id": "id_entry",
+          "attr_sentryRef": "sentry4"
+        },
+        "sentry": {
+          "type": "sentry",
+          "data": {
+            "planItemOnPart": {
+              "standardEvent": "complete",
+              "attr_id": "sentryOnPart4",
+              "attr_sourceRef": "planItem5"
+            },
+            "ifPart": {
+              "condition": {
+                "__cdata": "vars:getOrDefault('is_stage_complete', false)"
+              }
+            },
+            "attr_id": "sentry4",
+            "attr_name": "entry"
+          }
+        }
+      },
+      "parent": "planItem6"
+    },
+    {
+      "position": {
+        "x": 329,
+        "y": 153
+      },
+      "size": {
+        "width": 30,
+        "height": 30
+      },
+      "attrs": {
+        "text": {
+          "text": "workflow_entry"
+        },
+        "body": {
+          "stroke": "#266CD6",
+          "strokeWidth": 1,
+          "fill": "#fff",
+          "rx": 20,
+          "ry": 20
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/entry-icon.svg",
+          "refWidth": 0.6,
+          "refHeight": 0.6,
+          "refX": 0.2,
+          "refY": 0.2
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "id_workflow_entry",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 4,
+      "data": {
+        "type": "entryCriterion",
+        "planItem": {
+          "entryCriterion": {
+            "attr_id": "id_workflow_entry",
+            "attr_sentryRef": "sentry1"
+          },
+          "attr_id": "planItem3",
+          "attr_name": "workflow",
+          "attr_definitionRef": "id_workflow"
+        },
+        "data": {
+          "attr_id": "id_workflow_entry",
+          "attr_sentryRef": "sentry1"
+        },
+        "sentry": null
+      },
+      "parent": "planItem3"
+    },
+    {
+      "position": {
+        "x": 97,
+        "y": 281
+      },
+      "size": {
+        "width": 30,
+        "height": 30
+      },
+      "attrs": {
+        "text": {
+          "text": "sub_case_entry"
+        },
+        "body": {
+          "stroke": "#266CD6",
+          "strokeWidth": 1,
+          "fill": "#fff",
+          "rx": 20,
+          "ry": 20
+        },
+        "image": {
+          "xlink:href": "/cmmn/icon/entry-icon.svg",
+          "refWidth": 0.6,
+          "refHeight": 0.6,
+          "refX": 0.2,
+          "refY": 0.2
+        }
+      },
+      "visible": true,
+      "shape": "rect",
+      "id": "id_sub_case_entry",
+      "markup": [
+        {
+          "tagName": "rect",
+          "selector": "body"
+        },
+        {
+          "tagName": "image",
+          "selector": "image"
+        }
+      ],
+      "zIndex": 4,
+      "data": {
+        "type": "entryCriterion",
+        "planItem": {
+          "entryCriterion": {
+            "attr_id": "id_sub_case_entry",
+            "attr_sentryRef": "sentry2"
+          },
+          "attr_id": "planItem4",
+          "attr_name": "sub_case",
+          "attr_definitionRef": "id_sub_case"
+        },
+        "data": {
+          "attr_id": "id_sub_case_entry",
+          "attr_sentryRef": "sentry2"
+        },
+        "sentry": {
+          "type": "sentry",
+          "data": {
+            "planItemOnPart": {
+              "standardEvent": "complete",
+              "attr_id": "sentryOnPart2",
+              "attr_sourceRef": "planItem3"
+            },
+            "ifPart": {
+              "condition": {
+                "__cdata": "vars:getOrDefault('is_success', false)"
+              }
+            },
+            "attr_id": "sentry2",
+            "attr_name": "sub_case_entry"
+          }
+        }
+      },
+      "parent": "planItem4"
+    },
+    {
+      "shape": "edge",
+      "attrs": {
+        "line": {
+          "stroke": "#000",
+          "strokeDasharray": "2,5"
+        }
+      },
+      "id": "df7b760e-2c87-4a27-adb7-838781e06f10",
+      "data": {
+        "type": "edge"
+      },
+      "router": {
+        "name": "manhattan"
+      },
+      "connector": {
+        "name": "rounded"
+      },
+      "source": {
+        "cell": "planItem2"
+      },
+      "target": {
+        "cell": "id_exit",
+        "connectionPoint": {
+          "name": "boundary",
+          "args": {
+            "sticky": true
+          }
+        }
+      },
+      "zIndex": 5,
+      "parent": "planItem5"
+    },
+    {
+      "shape": "edge",
+      "attrs": {
+        "line": {
+          "stroke": "#000",
+          "strokeDasharray": "2,5"
+        }
+      },
+      "id": "7ae64acd-726e-4ca4-b2a3-81bdb6582e41",
+      "data": {
+        "type": "edge"
+      },
+      "router": {
+        "name": "manhattan"
+      },
+      "connector": {
+        "name": "rounded"
+      },
+      "source": {
+        "cell": "planItem3"
+      },
+      "target": {
+        "cell": "id_sub_case_entry",
+        "connectionPoint": {
+          "name": "boundary",
+          "args": {
+            "sticky": true
+          }
+        }
+      },
+      "zIndex": 7,
+      "parent": "planItem5"
+    },
+    {
+      "shape": "edge",
+      "attrs": {
+        "line": {
+          "stroke": "#000",
+          "strokeDasharray": "2,5"
+        }
+      },
+      "id": "d6b1ad49-3307-4422-b5c8-76f11a393600",
+      "data": {
+        "type": "edge"
+      },
+      "router": {
+        "name": "manhattan"
+      },
+      "connector": {
+        "name": "rounded"
+      },
+      "source": {
+        "cell": "planItem5"
+      },
+      "target": {
+        "cell": "id_entry",
+        "connectionPoint": {
+          "name": "boundary",
+          "args": {
+            "sticky": true
+          }
+        }
+      },
+      "zIndex": 8,
+      "parent": "allcasetypes"
+    }
+  ]
+}
