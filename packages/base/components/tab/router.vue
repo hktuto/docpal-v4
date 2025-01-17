@@ -21,7 +21,6 @@ const isFullscreen = computed(() => {
 
 
 function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
-    console.log("navigateTo", tab.value)
     if(openInNewTab){
         tabManager?.openTab(param)
         return;

@@ -24,7 +24,7 @@
     "@antv/x6-plugin-transform": "^2.1.8",
     "@nuxt/icon": "^1.5.1",
     "fast-xml-parser": "^4.5.0",
-    "nuxt": "3.13.2",
+    "nuxt": "3.15.2",
     "vue": "3.5.6",
     "vue-draggable-next": "^2.2.1",
     "vue-router": "latest",
