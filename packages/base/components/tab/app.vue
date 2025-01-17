@@ -76,8 +76,10 @@ async function openInCurrentTab(tab:TabItem){
     try{
         await focusExistingTab(tab)
     }catch(error){
-        const panel = layout.value.find( panel => panel.id === hightLightPanel.value)
-
+        let panel = layout.value.find( panel => panel.id === hightLightPanel.value)
+        if(!panel) {
+            panel = layout.value[0]
+        }
         const tabIndex = panel.showingTabIndex
         const highLightItem = panel.tabs[tabIndex]
         if(highLightItem){

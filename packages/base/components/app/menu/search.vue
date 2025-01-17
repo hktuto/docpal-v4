@@ -16,7 +16,13 @@ function itemClick(item:GlobalSearchItem) {
 
 <template>
     <div class="searchInputButton" @click="opened = true">
+        <div class="left">
+
         <Icon name="lucide:search"  />
+
+            Search
+        </div>
+        <div class="sub">meta + k</div>
     </div>
     <ElDialog v-model="opened" append-to-body modal @opened="keywordRef.focus()" >
         <div class="searchActionContainer">
@@ -49,17 +55,30 @@ function itemClick(item:GlobalSearchItem) {
 <style lang="scss" scoped>
 .searchInputButton{
     width:100%;
-    border-radius: var(--app-border-radius-s);
+    border-radius: var(--app-border-radius-m);
     background: var(--app-grey-1000);
     cursor: pointer;
-    padding: var(--app-space-xs);
+    padding: var(--app-space-s);
     display: flex;
     justify-content: flex-start;
     align-items: center;
     font-size: var(--app-font-size-m);
     color: var(--app-grey-400);
+    .left{
+         flex: 1 0 auto;
+         display: flex;
+         flex-flow: row nowrap;
+         justify-content: flex-start;
+         align-items: center;
+         gap: var(--app-space-xs);
+         line-height: 1;
+    }
+    .sub{
+        font-size: var(--app-font-size-s);
+        color: var(--app-grey-500);
+    }
     &:hover{
-        color: var(--app-main-color);
+        color: var(--app-accent-color);
         box-shadow: var(--app-shadow-m);
         
     }
