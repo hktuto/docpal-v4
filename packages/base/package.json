@@ -30,7 +30,7 @@
     "element-plus": "^2.8.2",
     "eventbus": "workspace:*",
     "mime-types": "^2.1.35",
-    "nuxt": "3.13.2",
+    "nuxt": "3.15.2",
     "nuxt-viewport": "^2.2.0",
     "splitpanes": "^3.1.5",
     "v-form": "github:hktuto/v-form-designer",
