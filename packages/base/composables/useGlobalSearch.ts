@@ -2,10 +2,13 @@ import didYouMean from 'didyoumean2'
 import { set, useMagicKeys, whenever } from '@vueuse/core'
 
 export type GlobalSearchItem = {
-    keyword: string[],
+    keyword?: string[],
     label: string,
     icon ?:string,
-    action: () => void
+    action: ({
+        keyword,
+        tabProvide
+    }:any) => void
 }
 
 export type GlobalSearchList = {
@@ -14,9 +17,9 @@ export type GlobalSearchList = {
     items: GlobalSearchItem[]
 }
 export const useGlobalSearchList = () => useState<GlobalSearchList[]>('global-search-list', () => shallowRef([]))
+export const useGlobalActionList = () => useState<GlobalSearchList[]>('global-search-list', () => shallowRef([]))
 
-
-export const useGlobalSearch = () => {
+export const useGlobalSearch = ( tabProvide : any) => {
     const list = useGlobalSearchList()
     const opened = ref(false);
     const keywordRef = ref();
@@ -54,7 +57,7 @@ export const useGlobalSearch = () => {
                 result.push(newItem)
             }
         })
-        console.log("result", result)
+
         return result
     })
     
