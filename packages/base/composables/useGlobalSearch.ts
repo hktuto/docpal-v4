@@ -4,6 +4,7 @@ import { set, useMagicKeys, whenever } from '@vueuse/core'
 export type GlobalSearchItem = {
     keyword: string[],
     label: string,
+    icon ?:string,
     action: () => void
 }
 
