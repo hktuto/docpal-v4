@@ -1,12 +1,12 @@
 <template>
   <div class="detail-container" v-loading="state.loading" :class="{'not-root': !isRoot}">
-    <div style="overflow: auto;padding: 0 var(--app-padding);">
+    <div style="overflow: auto;padding: 0 var(--app-space-xs);">
       <div class="flex-x-start">
         <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'"/>
         {{ state.setting.label }}
       </div>
       <FormRenderer ref="FormRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange"> </FormRenderer>
-      <div style="padding: 0 var(--app-padding);">
+      <div style="padding: 0 var(--app-space-xs);">
         <el-divider v-if="isRoot" />
         
         <el-form label-position="top" ref="FormRef" :model="form">
@@ -57,7 +57,7 @@
           @refresh="emits('update')"/>
       </div>
     </div>
-    <div style="padding: var(--app-padding); text-align: right;">
+    <div style="padding: var(--app-space-xs); text-align: right;">
       <el-button type="info" @click="handleDelete"> {{ $t('common_delete') }} </el-button>
       <el-button type="primary" @click="handleSave"> {{ $t('button.save') }} </el-button>
     </div>
