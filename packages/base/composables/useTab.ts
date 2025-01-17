@@ -291,13 +291,18 @@ export function addTabToPanel(panelId:string, newTab: TabItem ) {
 
 export function panelRouteUpdate(panelId:string, lastTabId:string, newTabItem:TabItem) {
     const layout = useTabLayout()
-    // const allComponents = useTabComponent()
+    const allComponents = useTabComponent()
     const panelIndex = layout.value.findIndex(panel => panel.id === panelId)
     if(panelIndex !== -1) {
         const index = layout.value[panelIndex].tabs.findIndex( tab => tab.id === lastTabId);
         if(index === -1) throw new Error('Tab not found when router change')
         layout.value[panelIndex].tabs[index] = deepCopy(newTabItem)
         console.log("update router", layout.value)
+        const indexInAllComponent = allComponents.value.findIndex(item => item.id === newTabItem.id)
+        if(indexInAllComponent !== -1) {
+            
+            allComponents.value[indexInAllComponent] = newTabItem
+        }
     }
 }
 

@@ -496,6 +496,55 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6(typescript@5.6.2)
 
+  packages/calendar:
+    dependencies:
+      '@schedule-x/theme-default':
+        specifier: ^2.14.1
+        version: 2.14.1
+      '@schedule-x/vue':
+        specifier: ^2.12.0
+        version: 2.12.0(@schedule-x/calendar@2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3))(@schedule-x/date-picker@2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3))(vue@3.5.6(typescript@5.6.2))
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      nuxt:
+        specifier: 3.13.2
+        version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.0)(sass@1.79.2)(terser@5.33.0)(typescript@5.6.2)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.6.2)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.6.2))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.14.1
+        version: 3.14.2(@vitest/ui@2.0.5)(@vue/test-utils@2.4.6)(h3@1.12.0)(happy-dom@15.7.4)(magicast@0.3.5)(nitropack@2.9.7(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3))(playwright-core@1.47.1)(rollup@4.22.0)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vitest@2.0.5)(vue-router@4.5.0(vue@3.5.6(typescript@5.6.2)))(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.7.3
+        version: 15.7.4
+      playwright-core:
+        specifier: ^1.47.0
+        version: 1.47.1
+      sass:
+        specifier: ^1.78.0
+        version: 1.79.2
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.2
+      vitest:
+        specifier: ^2.0.5
+        version: 2.0.5(@types/node@22.5.5)(@vitest/ui@2.0.5)(happy-dom@15.7.4)(sass@1.79.2)(terser@5.33.0)
+      vue-tsc:
+        specifier: ^2.1.6
+        version: 2.1.6(typescript@5.6.2)
+
   packages/dp-dashboard:
     devDependencies:
       '@nuxtjs/eslint-config-typescript':
@@ -1103,6 +1152,52 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6(typescript@5.6.2)
 
+  pages/admin-document-type:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      nuxt:
+        specifier: 3.13.2
+        version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.0)(sass@1.79.2)(terser@5.33.0)(typescript@5.6.2)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.6.2)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.6.2))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.14.1
+        version: 3.14.2(@vitest/ui@2.0.5)(@vue/test-utils@2.4.6)(h3@1.12.0)(happy-dom@15.7.4)(magicast@0.3.5)(nitropack@2.9.7(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3))(playwright-core@1.47.1)(rollup@4.22.0)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vitest@2.0.5)(vue-router@4.5.0(vue@3.5.6(typescript@5.6.2)))(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.7.3
+        version: 15.7.4
+      msw:
+        specifier: ^2.4.9
+        version: 2.4.9(typescript@5.6.2)
+      playwright-core:
+        specifier: ^1.47.0
+        version: 1.47.1
+      sass:
+        specifier: ^1.78.0
+        version: 1.79.2
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.2
+      vitest:
+        specifier: ^2.0.5
+        version: 2.0.5(@types/node@22.5.5)(@vitest/ui@2.0.5)(happy-dom@15.7.4)(sass@1.79.2)(terser@5.33.0)
+      vue-tsc:
+        specifier: ^2.1.6
+        version: 2.1.6(typescript@5.6.2)
+
   pages/admin-easy-form:
     dependencies:
       '@nuxt/icon':
@@ -1241,7 +1336,7 @@ importers:
         specifier: ^2.1.6
         version: 2.1.6(typescript@5.6.2)
 
-  pages/admin-internal-share:
+  pages/admin-folder-cabinet:
     dependencies:
       dayjs:
         specifier: ^1.11.13
@@ -1258,7 +1353,7 @@ importers:
     devDependencies:
       '@nuxt/test-utils':
         specifier: ^3.14.1
-        version: 3.14.2(@vitest/ui@2.1.1)(@vue/test-utils@2.4.6)(h3@1.12.0)(happy-dom@15.7.4)(magicast@0.3.5)(nitropack@2.9.7(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3))(playwright-core@1.47.1)(rollup@4.22.0)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vitest@2.1.1)(vue-router@4.5.0(vue@3.5.6(typescript@5.6.2)))(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
+        version: 3.14.2(@vitest/ui@2.0.5)(@vue/test-utils@2.4.6)(h3@1.12.0)(happy-dom@15.7.4)(magicast@0.3.5)(nitropack@2.9.7(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3))(playwright-core@1.47.1)(rollup@4.22.0)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vitest@2.0.5)(vue-router@4.5.0(vue@3.5.6(typescript@5.6.2)))(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
@@ -1268,6 +1363,9 @@ importers:
       happy-dom:
         specifier: ^15.7.3
         version: 15.7.4
+      msw:
+        specifier: ^2.4.9
+        version: 2.4.9(typescript@5.6.2)
       playwright-core:
         specifier: ^1.47.0
         version: 1.47.1
@@ -1279,7 +1377,7 @@ importers:
         version: 5.6.2
       vitest:
         specifier: ^2.0.5
-        version: 2.1.1(@types/node@22.5.5)(@vitest/ui@2.1.1)(happy-dom@15.7.4)(msw@2.4.9(typescript@5.6.2))(sass@1.79.2)(terser@5.33.0)
+        version: 2.0.5(@types/node@22.5.5)(@vitest/ui@2.0.5)(happy-dom@15.7.4)(sass@1.79.2)(terser@5.33.0)
       vue-tsc:
         specifier: ^2.1.6
         version: 2.1.6(typescript@5.6.2)
@@ -1467,6 +1565,49 @@ importers:
       vitest:
         specifier: ^2.0.5
         version: 2.1.1(@types/node@22.5.5)(@vitest/ui@2.1.1)(happy-dom@15.7.4)(msw@2.4.9(typescript@5.6.2))(sass@1.79.2)(terser@5.33.0)
+      vue-tsc:
+        specifier: ^2.1.6
+        version: 2.1.6(typescript@5.6.2)
+
+  pages/admin-share:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      nuxt:
+        specifier: 3.13.2
+        version: 3.13.2(@parcel/watcher@2.4.1)(@types/node@22.5.5)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.22.0)(sass@1.79.2)(terser@5.33.0)(typescript@5.6.2)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vue-tsc@2.1.6(typescript@5.6.2))(webpack-sources@3.2.3)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.6.2)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.6.2))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.14.1
+        version: 3.14.2(@vitest/ui@2.0.5)(@vue/test-utils@2.4.6)(h3@1.12.0)(happy-dom@15.7.4)(magicast@0.3.5)(nitropack@2.9.7(encoding@0.1.13)(magicast@0.3.5)(webpack-sources@3.2.3))(playwright-core@1.47.1)(rollup@4.22.0)(vite@5.4.6(@types/node@22.5.5)(sass@1.79.2)(terser@5.33.0))(vitest@2.0.5)(vue-router@4.5.0(vue@3.5.6(typescript@5.6.2)))(vue@3.5.6(typescript@5.6.2))(webpack-sources@3.2.3)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.7.3
+        version: 15.7.4
+      playwright-core:
+        specifier: ^1.47.0
+        version: 1.47.1
+      sass:
+        specifier: ^1.78.0
+        version: 1.79.2
+      typescript:
+        specifier: ^5.6.2
+        version: 5.6.2
+      vitest:
+        specifier: ^2.0.5
+        version: 2.0.5(@types/node@22.5.5)(@vitest/ui@2.0.5)(happy-dom@15.7.4)(sass@1.79.2)(terser@5.33.0)
       vue-tsc:
         specifier: ^2.1.6
         version: 2.1.6(typescript@5.6.2)
@@ -3017,6 +3158,14 @@ packages:
   '@polka/url@1.0.0-next.28':
     resolution: {integrity: sha512-8LduaNlMZGwdZ6qWrKlfa+2M4gahzFkprZiAt2TF8uS0qQgBizKXpXURqvTJ4WtmupWxaLqjRb2UCTe72mu+Aw==}
 
+  '@preact/signals-core@1.8.0':
+    resolution: {integrity: sha512-OBvUsRZqNmjzCZXWLxkZfhcgT+Fk8DDcT/8vD6a1xhDemodyy87UJRJfASMuSD8FaAIeGgGm85ydXhm7lr4fyA==}
+
+  '@preact/signals@1.3.2':
+    resolution: {integrity: sha512-naxcJgUJ6BTOROJ7C3QML7KvwKwCXQJYTc5L/b0eEsdYgPB6SxwoQ1vDGcS0Q7GVjAenVq/tXrybVdFShHYZWg==}
+    peerDependencies:
+      preact: 10.x
+
   '@probe.gl/env@3.6.0':
     resolution: {integrity: sha512-4tTZYUg/8BICC3Yyb9rOeoKeijKbZHRXBEKObrfPmX4sQmYB15ZOUpoVBhAyJkOYVAM8EkPci6Uw5dLCwx2BEQ==}
 
@@ -3193,6 +3342,28 @@ packages:
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
+
+  '@schedule-x/calendar@2.13.0':
+    resolution: {integrity: sha512-6s4nxEP7/4Ta2XJygP4Hf8FMXcy1bp+zzrM0JEPegqU4ZNKQm0+or3Zza3aP2/KERo04RWN9a4AaJiUhv0q23A==}
+    peerDependencies:
+      '@preact/signals': ^1.1.5
+      preact: ^10.19.2
+
+  '@schedule-x/date-picker@2.13.0':
+    resolution: {integrity: sha512-9GoNmE24o98PSO5W3xa0uJ4Oo/GqYpkLz2/kETTRtHUUT977YWTbHG5hBDujmcRCbHn5UBoJ6dInsJo8fhn/ow==}
+    peerDependencies:
+      '@preact/signals': ^1.1.5
+      preact: ^10.19.2
+
+  '@schedule-x/theme-default@2.14.1':
+    resolution: {integrity: sha512-SB8rNwG9my5VqlPVC9COzKgG6fJ9eSNsUOZTayyFvpn5C1XNSYTNQ4fDgqUrT2GVCfPlH6RH+szPcjXZP4lXfg==}
+
+  '@schedule-x/vue@2.12.0':
+    resolution: {integrity: sha512-e0pstihGprGVwk6AbRxG50y5ejE+MBsOWhZ9uUEpGMI1EOBYXeaJJNuioCpa0CicwQXUqnZeRxPl7AjSeaJtIQ==}
+    peerDependencies:
+      '@schedule-x/calendar': 2.13.0
+      '@schedule-x/date-picker': 2.13.0
+      vue: ^3
 
   '@sindresorhus/is@4.6.0':
     resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
@@ -10212,6 +10383,13 @@ snapshots:
 
   '@polka/url@1.0.0-next.28': {}
 
+  '@preact/signals-core@1.8.0': {}
+
+  '@preact/signals@1.3.2(preact@10.24.3)':
+    dependencies:
+      '@preact/signals-core': 1.8.0
+      preact: 10.24.3
+
   '@probe.gl/env@3.6.0':
     dependencies:
       '@babel/runtime': 7.25.6
@@ -10352,6 +10530,24 @@ snapshots:
     optional: true
 
   '@rtsao/scc@1.1.0': {}
+
+  '@schedule-x/calendar@2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3)':
+    dependencies:
+      '@preact/signals': 1.3.2(preact@10.24.3)
+      preact: 10.24.3
+
+  '@schedule-x/date-picker@2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3)':
+    dependencies:
+      '@preact/signals': 1.3.2(preact@10.24.3)
+      preact: 10.24.3
+
+  '@schedule-x/theme-default@2.14.1': {}
+
+  '@schedule-x/vue@2.12.0(@schedule-x/calendar@2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3))(@schedule-x/date-picker@2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3))(vue@3.5.6(typescript@5.6.2))':
+    dependencies:
+      '@schedule-x/calendar': 2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3)
+      '@schedule-x/date-picker': 2.13.0(@preact/signals@1.3.2(preact@10.24.3))(preact@10.24.3)
+      vue: 3.5.6(typescript@5.6.2)
 
   '@sindresorhus/is@4.6.0': {}
 
