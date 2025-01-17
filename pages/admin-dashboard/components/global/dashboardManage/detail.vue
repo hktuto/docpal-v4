@@ -36,7 +36,6 @@ function handleRefresh (layoutSetting:any) {
 }
 function handleAdd(command:DashboardWidget) {
   const item = getWidgetSetting(command)
-  console.log(item)
   state.layout.push({
     x: (state.layout.length * 2) % 4,
     y: state.layout.length +  4, // puts it at the bottom

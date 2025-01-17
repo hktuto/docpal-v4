@@ -8,22 +8,35 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found on menu')
 }
-
+const { t } = useI18n()
 const displayMenu = ref([])
 
+function createSearchItem(item:MenuItem) {
+    return {
+        keyword: [item.name, item.label, t(item.label)],
+        label: t(item.label),
+        icon: item.icon,
+        action: () => {
+            tabProvider?.openInCurrentTab(item)
+        }
+    }
+}
+const searchList = useGlobalSearchList()
 function generateMenu(){
     let result = []
     const _appMenu = deepCopy(appMenu)
     const _menu = deepCopy(menu)
+    const menuSearchList:GlobalSearchItem[] = [];
     for(let i = 0; i < _appMenu.length; i++) {
         let item = _appMenu[i];
         let menuItem = item;
-        console.log(item)
+        
         // step 1 check if item has name, if so get it from menu
         if((item.name && _menu[item.name])) {
             // TODO : check if menu[item.name] has license
             menuItem = _menu[item.name];
             result.push(menuItem)
+            menuSearchList.push( createSearchItem(_menu[item.name]) )
             continue;
         }
         let hasVisibleChildren = false;
@@ -31,6 +44,7 @@ function generateMenu(){
             for(let j = 0; j < item.children.length; j++) {
                 if(item.children[j].name && _menu[item.children[j].name]) {
                     item.children[j] = _menu[item.children[j].name];
+                    menuSearchList.push(createSearchItem(item.children[j] ))
                     hasVisibleChildren = true
                 }else{
                     item.children.splice(j, 1);
@@ -45,6 +59,10 @@ function generateMenu(){
             result.push(menuItem)
         }
     }
+    searchList.value.push({
+        label: "Menu",
+        items: menuSearchList
+    })
     displayMenu.value = result;
 }
 
@@ -86,6 +104,7 @@ onMounted(() => {
                 <!-- <AppMenuToggle /> -->
             </div>
             <div class="menuBody">
+                <AppMenuSearch />
                 <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item" :selectedMenuItem="selectedMenuItem"  />
             </div>
 

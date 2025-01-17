@@ -107,7 +107,6 @@ const state = reactive<any>({
             return prev;
           }
         }
-        console.log(item)
         prev.push({
           name: item.metadata,
           metaData: item.metadata,

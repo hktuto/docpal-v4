@@ -84,6 +84,7 @@ async function openInCurrentTab(tab:TabItem){
             const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
             
             if(allComponentRef.value[indexInAllComponent]){
+                // allComponents.value[indexInAllComponent] = tab;
                 allComponentRef.value[indexInAllComponent].navigateTo(tab)
             }else{
                 console.log("can not find component")
@@ -119,7 +120,6 @@ watch(hightLightPanel,(item) => {
 })
 
 watch(layout, (newVal) => {
-    console.log("layout changed", newVal)
     emits('layoutChanged', newVal)
 },{
     deep:true
@@ -149,7 +149,7 @@ defineExpose({
                         <template v-if="fullscreenItem && fullscreenItem.id === component.id">
                             <Teleport defer :to="`#fullscreen-${component.parent}_${component.id}`">
                                
-                                <TabRouter ref="allComponentRef" :tab="component" />
+                                <TabRouter ref="allComponentRef" :tab="component"  />
                             </Teleport>
                         </template>
                         <template v-else>
