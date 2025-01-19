@@ -1,0 +1,123 @@
+<script lang="ts" setup>
+
+import {Graph, Cell, View} from "@antv/x6";
+import {useEventListener} from "@vueuse/core";
+
+
+
+const state = reactive<{
+    loading: boolean
+    opened: boolean
+    items: any[]
+    node: Cell
+    view: View
+    position: {
+        x: number
+        y: number
+    }
+}>({
+    loading: false,
+    opened:false,
+    items:[],
+    node: null,
+    view: null,
+    position:{
+        x:0,
+        y:0
+    }
+})
+
+
+function openContextMenu({detail}){
+    const event = detail.e as MouseEvent
+    state.position = {
+        x: event.clientX,
+        y: event.clientY
+    }
+    state.node = detail.cell
+    state.view = detail.view
+    setTimeout(() => {
+        state.opened = true
+    },33)
+}
+
+function itemClickHandler(item){
+    state.opened = false
+}
+
+
+useEventListener(window, 'cmmn-node-contextMenu-open', openContextMenu)
+useEventListener(window, 'cmmn-node-contextMenu-close', () => {
+    state.opened = false
+})
+</script>
+
+<template>
+    <div :class="{contextMenuContainer:true, opened:state.opened}" :style="`--x:${state.position.x}px;--y:${state.position.y}px`" v-loading="state.loading">
+        <template v-if="state.opened">
+            
+            <div class="nodeName" v-if="state.opened">
+                {{ state.node.label }}
+            </div>
+            <CmmnNodeContextMenuConnection  v-bind="state" @clicked="itemClickHandler" />
+            <div class="divider"></div>
+            <CmmnNodeContextMenuRemove  v-bind="state" @clicked="itemClickHandler" />
+        </template>
+    </div>
+</template>
+
+<style scoped lang="scss">
+.contextMenuContainer{
+    border-radius: 0.5rem;
+    background: var(--color-grey-0000);
+    border: 1px solid var(--color-grey-050);
+    box-shadow: 0 2px 5px rgba(0,0,0,.2);
+    position: fixed;
+    top:var(--y);
+    left:var(--x);
+    z-index: 100;
+    transform: translateY(100px);
+    padding: var(--app-padding);
+    opacity: 0;
+    &.opened{
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s;
+    }
+}
+:deep {
+    .actionItemGroup{
+        
+    }
+    .actionItem{
+        --icon-size: .8rem;
+        --icon-color: var(--secondary-color);
+        display: flex;
+        flex-flow: row nowrap;
+        gap: var(--app-padding);
+        justify-content: flex-start;
+        align-items: center;
+        padding-block: calc(var(--app-padding) /2);
+        padding-inline: var(--app-padding);
+        cursor: pointer;
+        &:not(:last-child){
+            border-bottom: 1px solid var(--color-grey-300);
+        }
+        &:hover{
+            --icon-color: var(--primary-color);
+            background: var(--color-grey-000);
+        }
+        &.disabled{
+            --icon-color: var(--color-grey-400);
+            cursor: not-allowed;
+            color: var(--color-grey-400);
+        }
+    }
+}
+.divider{
+    margin-block: calc(var(--app-padding) / 2) ;
+    width:100%;
+    height: 1px;
+    background: var(--color-grey-000);
+}
+</style>
