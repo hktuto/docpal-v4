@@ -31,6 +31,7 @@ export default defineNuxtConfig({
     "../../pages/admin-log-manage",
     "../../pages/admin-calendar-setting",
     "../../pages/admin-folder-cabinet",
+    "../../pages/admin-email-template"
     // "../../pages/admin-share",
   ],
   features:{
