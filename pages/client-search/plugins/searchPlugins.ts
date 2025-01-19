@@ -13,8 +13,6 @@ actionList.value.push({
             label: 'action.search.file',
             icon: 'lucide:search',
             action: ({tabProvider,keyword}) => {
-                console.log("keyword", keyword)
-                console.log("tabProvider", tabProvider)
                 const newItem = {
                     id: 'client-search',
                     icon: 'lucide:search',
@@ -44,7 +42,7 @@ actionList.value.push({
                         }
                     }
                 }
-                tabProvider.openInCurrentTab(newItem)
+                tabProvider.openTab(newItem, true)
             }
         }
     ]

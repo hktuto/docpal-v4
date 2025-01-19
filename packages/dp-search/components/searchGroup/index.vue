@@ -45,7 +45,8 @@ function handleUpdateAgg(aggregation: any) {
   searchState = 'aggChange'
 }
 
-onMounted(() => {
+onActivated(() => {
+  console.log('onActivated')
   if(searchParams) {
     BarRef.value.setQuery(searchParams)
     tableRef.value.initBar(searchParams)
