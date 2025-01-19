@@ -95,7 +95,7 @@ function closeTab(){
 </script>
 
 <template>
-    <div class="wrapper" @click="tabFocus">
+    <div class="tabWrapper" @click="tabFocus">
 
         <div ref="elRef" :data-tab-id="tab.id" :id="`tab-header-${tab.parent}-${tab.id}`"
         :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" >
