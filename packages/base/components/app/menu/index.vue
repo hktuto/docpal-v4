@@ -9,7 +9,7 @@ if(!tabProvider) {
     throw createError('tab manger not found on menu')
 }
 const { t } = useI18n()
-const displayMenu = ref([])
+const displayMenu = ref<any[]>([])
 
 function createSearchItem(item:MenuItem) {
     return {
@@ -63,10 +63,11 @@ function generateMenu(){
         label: "Menu",
         items: menuSearchList
     })
+    console.log("displayMenu", result)
     displayMenu.value = result;
 }
 
-const selectedMenuItem = ref<MenuItem>()
+const selectedMenuItem = ref<TabItem>()
 
 function setSelectedMenuItem() {
     const panelIndex = layout.value.findIndex(panel => panel.id === hightLightPanel.value)
@@ -105,7 +106,11 @@ onMounted(() => {
             </div>
             <div class="menuBody">
                 <AppMenuSearch />
-                <AppMenuItemExpane v-for="(item, index) in displayMenu" :key="index" :item="item" :selectedMenuItem="selectedMenuItem"  />
+                <AppMenuItemExpane 
+                    v-for="(item, index) in displayMenu" 
+                    :key="index" 
+                    :item="item" 
+                    :selectedMenuItem="selectedMenuItem"  />
             </div>
 
             <div class="menuFooter">

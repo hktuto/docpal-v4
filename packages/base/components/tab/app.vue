@@ -7,7 +7,7 @@ const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
 const fullscreenItem = ref<TabItem>()
-const dialogRef = ref<InstanceType<typeof TabDialog>>(false)
+const dialogRef = ref<InstanceType<typeof TabDialog>>()
 const dialogItem = ref<TabItem>()
 const menuStick = ref(true)
 
@@ -80,7 +80,7 @@ async function openInCurrentTab(tab:TabItem){
         if(!panel) {
             panel = layout.value[0]
         }
-        const tabIndex = panel.showingTabIndex
+        const tabIndex = panel.showingTabIndex as number
         const highLightItem = panel.tabs[tabIndex]
         if(highLightItem){
             const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
@@ -183,7 +183,7 @@ defineExpose({
             </template>
         </template>
     </AppWrapper>
-    <TabDialog ref="dialogRef"  v-model="dialogOpened" :item="dialogItem" />
+    <!-- <TabDialog ref="dialogRef"  v-model="dialogOpened" :item="dialogItem" /> -->
 </template>
 
 
