@@ -5,7 +5,7 @@ const actionList = useGlobalActionList()
 
 const { t } = useI18n()
 
-const tabProvider = inject(MenuRouterKey)
+const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
@@ -39,24 +39,6 @@ function itemClick(item:GlobalSearchItem) {
             </div>
             <div class="searchListContainer">
                 <div class="searchList" v-for="(list, listIndex) in displayList" :key="listIndex">
-                    <div class="searchListLabel">{{ t(list.label) }}</div>
-                    <ul class="listItemsContainer">
-                        <li v-for="(item, itemIndex) in list.items" :key="itemIndex" 
-                            :class="{searchListItem:true ,seleted: selectedItemIndex === listIndex + '-' + itemIndex, ['item-'+listIndex + '-' + itemIndex] :true}"
-                            @click="itemClick(item)"
-                            @mouseenter="selectedItemIndex = listIndex + '-' + itemIndex"
-                            >
-                            <div class="label">
-
-                                <Icon v-if="item.icon" :name="item.icon" />
-                                {{ t(item.label) }}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="searchListContainer">
-                <div class="searchList" v-for="(list, listIndex) in actionList" :key="listIndex">
                     <div class="searchListLabel">{{ t(list.label) }}</div>
                     <ul class="listItemsContainer">
                         <li v-for="(item, itemIndex) in list.items" :key="itemIndex" 

@@ -9,7 +9,8 @@
     "dev": "nuxt dev --dotenv ../../env/.env.dev --port 8088",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "prepare": "nuxt prepare"
+    "prepare": "nuxt prepare",
+    "upgrade": "nuxi upgrade"
   },
   "keywords": [],
   "author": "",
@@ -20,13 +21,13 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.14.1",
+    "@nuxt/test-utils": "^3.15.4",
     "@vue/test-utils": "^2.4.6",
-    "happy-dom": "^15.7.3",
-    "playwright-core": "^1.47.0",
-    "sass": "^1.78.0",
-    "typescript": "^5.6.2",
-    "vue-tsc": "^2.1.6"
+    "happy-dom": "^15.11.7",
+    "playwright-core": "^1.49.1",
+    "sass": "^1.83.4",
+    "typescript": "^5.7.3",
+    "vue-tsc": "^2.2.0"
   },
   "engines": {
     "pnpm": ">=8.5.0",

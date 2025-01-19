@@ -6,6 +6,7 @@ const tabAppRef = ref<InstanceType<typeof TabApp>>()
 
 async function getTabsFromServer() {
     const storageTabs = localStorage.getItem('app-tab')
+    console.log("storageTabs", storageTabs)
     if(storageTabs) {
         const newLayout = JSON.parse(storageTabs);
         console.log("storageTabs", newLayout)
@@ -24,6 +25,7 @@ async function getTabsFromServer() {
                         {
                             id: 'new-tab-001',
                             label: "New Tab",
+                            name: "new-tab-001",
                             parent: "dummy-tab-container",
                             component: 'LazyTabEmpty',
                         }
@@ -52,6 +54,11 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
 
 useGlobalSetting()
 
+
+onMounted(() => {
+    console.log("tabAppRef", tabAppRef)
+    getTabsFromServer()
+})
 
 </script>
 
