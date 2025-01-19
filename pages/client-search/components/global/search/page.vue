@@ -1,9 +1,7 @@
 <script lang="ts" setup>
 
 const props = defineProps<{
-    query?:any,
-    pageSize:number,
-    pageNum:number,
+    searchParams?:any,
 }>()
 
 </script>
