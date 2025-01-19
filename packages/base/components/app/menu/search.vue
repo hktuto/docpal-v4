@@ -28,7 +28,7 @@ function itemClick(item:GlobalSearchItem) {
 
         <Icon name="lucide:search"  />
 
-            Search
+            Quick Actions
         </div>
         <div class="sub">meta + k</div>
     </div>
