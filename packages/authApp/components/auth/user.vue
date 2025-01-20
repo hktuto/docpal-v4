@@ -4,6 +4,12 @@ const user = useUserState()
 
 const { locales, locale, setLocale } = useI18n()
 
+function changeLanguage(langCode:string) {
+    setLocale(langCode);
+    nextTick(() => {
+        window.location.reload()
+    })
+}
 
 </script>
 
@@ -22,7 +28,7 @@ const { locales, locale, setLocale } = useI18n()
                     <ElDropdownItem disabled>Setting</ElDropdownItem>
                     <ElDivider />
                     <ElDropdownItem v-for="lang in locales" :key="lang.code" 
-                        :disabled="lang.code === locale" @click="setLocale(lang.code)">
+                        :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
                         {{$t(lang.code)}}
                     </ElDropdownItem>
                     <ElDivider />
