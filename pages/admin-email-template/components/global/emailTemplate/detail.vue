@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
 import { adminApi } from "api";
+const routerProvider = inject(MenuRouterKey)
+const { t } = useI18n()
 const { id } = defineProps<{
   id: string;
 }>();
@@ -43,6 +45,7 @@ async function handleInit() {
   ready.value = true;
   return res;
 }
+
 /**
  * Step 1: 從後端取得 template 資料
  */
@@ -81,9 +84,15 @@ async function save() {
       emailLayoutId: selectedLayout.value,
       emailTemplateJson: JSON.stringify(json),
       emailTemplateVariable: JSON.stringify(variable),
-    });
+    }).then(res => res.data)
+    if(result?.id) {
+        routerProvider?.updateProps({
+          label: result.id,
+          id: result.id
+        })
+    }
     // router.push(`/emailTemplate/${result.id}`);
-  editInfoOpened.value = false;
+    editInfoOpened.value = false;
     showClose.value = true;
     // TODO : add notification
     return;
@@ -91,6 +100,7 @@ async function save() {
   // update new variable
   // test save json to backend
   await adminApi.api.putTemplateEmailTemplate({
+    id: id,
     ...data.value,
     // TODO : send html to body
     // url encode html
@@ -99,11 +109,14 @@ async function save() {
     emailTemplateJson: JSON.stringify(json),
     emailTemplateVariable: JSON.stringify(variable),
   });
+  ElMessage.success(t('dpMsg_success'))
   editInfoOpened.value = false;
-  // console.log(html);
   // TODO : add notification
 }
-
+function handleEdit() {
+  editInfoOpened.value = true;
+  showClose.value = true;
+}
 /**
  *  送出測試信
  */
@@ -120,7 +133,7 @@ onActivated(async () => {
     <Editorjs v-if="data" ref="editorEl" :data="data" :layout="layoutHtml">
       <template #name>
         <div class="editButton">
-          <SvgIcon :src="'/icons/edit.svg'" @click="editInfoOpened = true" />
+          <SvgIcon :src="'/icons/edit.svg'" @click="handleEdit" />
         </div>
       </template>
       <template #action>
@@ -149,7 +162,7 @@ onActivated(async () => {
       :close-on-press-escape="showClose"
       :close-on-click-modal="showClose"
       :show-close="showClose"
-    >11
+    >
       <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data" />
       <template #footer>
         <!-- <ElButton v-if="!showClose" type="primary" @click="$router.back()">{{
