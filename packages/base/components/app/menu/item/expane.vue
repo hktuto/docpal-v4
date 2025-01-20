@@ -63,7 +63,10 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
 
 onMounted(() => {
     if(!elRef) return
-    setupDrag(elRef.value)
+    if(!props.item.children || props.item.children.length === 0) {
+        // only dragable if no children
+        setupDrag(elRef.value)
+    }
 })
 
 onUnmounted(() => {
@@ -72,7 +75,7 @@ onUnmounted(() => {
 </script>
 <template>
     <div :class="{menuExpanItemContainer:true, opened, selected, children: item.children && item.children.length > 0}">
-       <div ref="elRef"  class="menuItem"  @click="itemClick">
+       <div ref="elRef" :id="(item.id || item.label) + 'menu' "  class="menuItem"  @click="itemClick">
            <div class="menuIcon">
                <Icon :name="item.icon"></Icon>
            </div>
