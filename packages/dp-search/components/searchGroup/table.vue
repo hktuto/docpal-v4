@@ -292,7 +292,7 @@ defineExpose({ initBar, initAgg, initSearch })
 <style lang="scss" scoped>
 .summaryItem {
   padding: var(--app-space-xs);
-  background-color: var(--primary-color);
+  background-color: var(--app-primary-color);
   margin-bottom: var(--app-space-xs);
   color: var(--app-grey-000);
   border-radius: 4px;

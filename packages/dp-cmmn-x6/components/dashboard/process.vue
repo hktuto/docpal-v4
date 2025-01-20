@@ -132,7 +132,7 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
 <style lang="scss" scoped>
 .card-main {
   display: flex;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   flex-wrap: warp;
   --icon-size: 18px;
 }
@@ -143,19 +143,19 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
   .title {
     display: flex;
     flex-wrap: nowrap;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
   }
   .el-progress {
-    margin-top: var(--app-padding);
+    margin-top: var(--app-space-xs);
   }
   .el-divider--horizontal {
     margin: 12px 0;
   }
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   border-radius: 5px;
   &--sub {
     display: flex;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
   }
   &:last-child {
     flex: 1;

@@ -124,9 +124,9 @@ defineExpose({ init })
 <style lang="scss" scoped>
 .permissionCard {
   background: var(--color-grey-000);
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   color: var(--color-grey-700);
-  border-radius: calc(var(--app-padding) / 3 );
+  border-radius: calc(var(--app-space-xs) / 3 );
   // width: 200px;
   .title {
     font-weight: bold;
@@ -138,7 +138,7 @@ defineExpose({ init })
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-template-rows: masonry;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
 
 }
 </style>

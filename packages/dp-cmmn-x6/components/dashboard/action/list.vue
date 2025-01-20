@@ -39,8 +39,8 @@ async function handleTask(actionItem) {
 .action-item {
   display: flex;
   align-items: center;
-  gap: var(--app-padding);
-  padding: var(--app-padding);
+  gap: var(--app-space-xs);
+  padding: var(--app-space-xs);
   background-color: var(--b-color);
   border-radius: 20px;
   color: #fff;
