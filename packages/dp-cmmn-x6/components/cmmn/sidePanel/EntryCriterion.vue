@@ -43,7 +43,7 @@ watch(node, ()=> {
             <el-tab-pane label="Criteria" name="criteria">
                 <CmmnSidePanelDraggable :list="criteriaList" :graph="graph"
                     :dragHeader="dragHeader" 
-                    formJsonUrl="cmmn/sentry.json"
+                    formJsonUrl="sentry"
                     @change="handleSave">
                 </CmmnSidePanelDraggable>
             </el-tab-pane>

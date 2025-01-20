@@ -50,7 +50,7 @@ watch(node, ()=> {
                 <CmmnSidePanelDraggable :list="state.inData" 
                     :node="node" :graph="graph"
                     :dragHeader="inputHeader" 
-                    formJsonUrl="cmmn/flowableIn.json"
+                    formJsonUrl="flowableIn"
                     @change="handleSave('flowable:in', state.inData)">
                 </CmmnSidePanelDraggable>
             </el-tab-pane>
@@ -59,7 +59,7 @@ watch(node, ()=> {
                     :node="node" :graph="graph"
                     :list="state.outData" 
                     :dragHeader="outputHeader" 
-                    formJsonUrl="cmmn/flowableOut.json"
+                    formJsonUrl="flowableOut"
                     @change="handleSave('flowable:out', state.outData)">
                 </CmmnSidePanelDraggable>
             </el-tab-pane>

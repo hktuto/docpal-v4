@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('Add / Edit Properties')"
     :close-on-click-modal="false" destroy-on-close
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJsonUrl" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -10,6 +10,12 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
+import fieldForm from './form/field.vform.json'
+import humanTaskFieldsForm from './form/humanTaskFields.vform.json'
+import flowableInForm from './form/flowableIn.vform.json'
+import flowableOutForm from './form/flowableOut.vform.json'
+import sentryForm from './form/sentry.vform.json'
+
 const props = defineProps<{
     formJsonUrl: any,
     node: any,
@@ -19,6 +25,22 @@ const props = defineProps<{
 const emits = defineEmits([
     'refresh', 'edit', 'create'
 ])
+const formJson = computed(() => {
+    switch (props.formJsonUrl) {
+        case 'field':
+            return fieldForm
+        case 'humanTaskFields':
+            return humanTaskFieldsForm
+        case 'flowableIn':
+            return flowableInForm
+        case 'flowableOut':
+            return flowableOutForm
+        case 'sentry':
+            return sentryForm
+        default:
+            return {}
+    }
+})
 const { caseId } = useCmmnGraph();
 const state = reactive({
     visible: false,
@@ -47,28 +69,28 @@ async function setFormOptions(row: any) {
     let workflowProperties: any = []
     let filterList
     switch (props.formJsonUrl) {
-        case 'cmmn/field.json':
+        case 'field':
             setFileterList(row)
             break
-        case 'cmmn/humanTaskFields.json':
+        case 'humanTaskFields':
             filterList = setFileterList(row)
             loadCaseInfomationOptions('name', filterList)
             break
-        case 'cmmn/flowableIn.json':
+        case 'flowableIn':
             const inWorkflowTarget = FormRendererRef.value.vFormRenderRef.getWidgetRef('target')
             workflowProperties = await getWorkflowProperties()
             inWorkflowTarget.loadOptions(workflowProperties)
             filterList = getFilterList(row, 'source')
             loadCaseInfomationOptions('source', filterList, 'source')
             break;
-        case 'cmmn/flowableOut.json':
+        case 'flowableOut':
             const outWorkflowSource = FormRendererRef.value.vFormRenderRef.getWidgetRef('source')
             workflowProperties = await getWorkflowProperties()
             outWorkflowSource.loadOptions(workflowProperties)
             filterList = getFilterList(row, 'target')
             loadCaseInfomationOptions('target', filterList, 'target')
             break;
-        case 'cmmn/sentry.json':
+        case 'sentry':
             // filterList = getFilterList(row, 'target')
             loadCaseInfomationOptions('properties')
             break;
@@ -130,8 +152,7 @@ function getCaseInformation(graph) {
         return []
     }
 }
-onMounted(async() => {
-})
+
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
