@@ -2,7 +2,7 @@
 <el-dialog v-model="state.visible" :title="$t('Add / Edit Properties')"
     :close-on-click-modal="false" destroy-on-close
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJsonUrl" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJsonUrl" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
@@ -25,10 +25,10 @@ const state = reactive({
     isEdit: false,
     workflowProperties: []
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 // const formJson = getJsonApi('admin/adminAclForm.json')
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     if(state.isEdit) emits('edit', {...data})
     else emits('create', {...data})
     state.visible = false
@@ -37,9 +37,9 @@ function handleOpen(row: any) {
     state.isEdit = !!row ? true : false
     state.visible = true
     setTimeout(async() => {
-        // FromRendererRef.value.vFormRenderRef.setFormJson(formJson)
-        FromRendererRef.value.vFormRenderRef.resetForm()
-        if(state.isEdit && !!row) await FromRendererRef.value.vFormRenderRef.setFormData({...row})
+        // FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
+        FormRendererRef.value.vFormRenderRef.resetForm()
+        if(state.isEdit && !!row) await FormRendererRef.value.vFormRenderRef.setFormData({...row})
         setFormOptions(row)
     })
 }
@@ -55,14 +55,14 @@ async function setFormOptions(row: any) {
             loadCaseInfomationOptions('name', filterList)
             break
         case 'cmmn/flowableIn.json':
-            const inWorkflowTarget = FromRendererRef.value.vFormRenderRef.getWidgetRef('target')
+            const inWorkflowTarget = FormRendererRef.value.vFormRenderRef.getWidgetRef('target')
             workflowProperties = await getWorkflowProperties()
             inWorkflowTarget.loadOptions(workflowProperties)
             filterList = getFilterList(row, 'source')
             loadCaseInfomationOptions('source', filterList, 'source')
             break;
         case 'cmmn/flowableOut.json':
-            const outWorkflowSource = FromRendererRef.value.vFormRenderRef.getWidgetRef('source')
+            const outWorkflowSource = FormRendererRef.value.vFormRenderRef.getWidgetRef('source')
             workflowProperties = await getWorkflowProperties()
             outWorkflowSource.loadOptions(workflowProperties)
             filterList = getFilterList(row, 'target')
@@ -90,12 +90,12 @@ function getFilterList(row: any = {}, uniqueName: string = 'name') {
 }
 function setFileterList(row: any, uniqueName: string = 'filterList') {
     const filterList = getFilterList(row)
-    const filterListRef = FromRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
+    const filterListRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
     filterListRef.loadOptions(filterList)
     return filterList
 }
 async function loadCaseInfomationOptions(uniqueName: string, filterList: any = null, prop: string = 'id') {
-    const widgetRef = FromRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
+    const widgetRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
     let caseProperties = await getCaseInformation(props.graph)
     if(!!filterList) {
         caseProperties = caseProperties.filter(item => !filterList.find(f => f[prop] === item.value))

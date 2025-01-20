@@ -1,7 +1,7 @@
 <template>
-  <!-- <FromRenderer ref="FromRendererRef" :form-json="formJson" 
+  <!-- <FormRenderer ref="FormRendererRef" :form-json="formJson" 
   @formChange="handleFormChange">
-</FromRenderer> -->
+</FormRenderer> -->
 <div :class="{ 'loading-container': state.loading }" v-for="(item, index) in filters.query" v-loading="state.loading">
   <SearchGroupBar2FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item" 
     @update="(data: any) =>handleUpdate(data, item)"
