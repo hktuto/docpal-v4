@@ -5,6 +5,9 @@ export default defineAppConfig({
         },
         {
             name:'client-search'
+        },
+        {
+            name:'client-master-table'
         }
     ],
 })

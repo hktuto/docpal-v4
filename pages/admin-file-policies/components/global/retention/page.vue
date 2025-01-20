@@ -23,7 +23,7 @@
             />
       </template>
       <template #isAuto="{ row }">
-        <el-icon v-if="row.isAuto" style="--color: var(--primary-color)"><Select /></el-icon>
+        <el-icon v-if="row.isAuto" style="--color: var(--app-primary-color)"><Select /></el-icon>
         <el-icon v-else style="--color: #F56C6C"><CloseBold /></el-icon>
       </template>
       <template #status="{ row }">

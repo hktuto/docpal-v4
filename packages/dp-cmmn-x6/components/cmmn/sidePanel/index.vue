@@ -61,7 +61,7 @@ useEventListener(window, 'cmmn-node-click', nodeClickHandler)
     width:100%;
     height:100%;
     overflow: auto;
-    padding: var(--app-padding, 12px);
+    padding: var(--app-space-xs, 12px);
     background: var(--color-grey-0000, white);
 }
 .position-button {

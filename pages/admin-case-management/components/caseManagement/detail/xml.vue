@@ -101,7 +101,7 @@ defineExpose({ save })
   :deep .el-card__body{
     display: grid;
     grid-template-rows: min-content 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     position: relative;
     height: 100%;
     width: 100%;

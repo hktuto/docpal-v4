@@ -17,6 +17,6 @@
     overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr;
-    padding: calc( var(--app-padding) * 1.5);
+    padding: calc( var(--app-space-xs) * 1.5);
 }
 </style>

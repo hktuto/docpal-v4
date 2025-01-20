@@ -15,7 +15,7 @@
       :size="leftSize"
       class="dp-left-pane"
     >
-      <el-icon class="cursorPointer" color="var(--primary-color)" @click="handleEditMode"
+      <el-icon class="cursorPointer" color="var(--app-primary-color)" @click="handleEditMode"
         ><Setting
       /></el-icon>
       <el-collapse v-if="leftSize > 10" v-model="activeNames">

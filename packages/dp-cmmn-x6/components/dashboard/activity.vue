@@ -72,7 +72,7 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .el-timeline {
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   overflow: auto;
 }
 </style>

@@ -261,7 +261,7 @@ defineExpose({ initColumn })
   }
   // .list-group-item.sortable-chose {}
   .list-group-item.sortable-ghost {
-    background: var(--hover-text-color);
+    background: var(--app-grey-950);
   }
 }
 </style>
