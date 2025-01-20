@@ -36,13 +36,14 @@ function handleFilterFormChange(formData:any) {
 }
 
 function openLatestVersion(data:any, openInNewTab:boolean = false){
-    const newItem = newCaseManagementDetail(data, data.latestVersion)
+    const newItem = newCaseManagementDetail(data.latestVersionId, data.name, data.latestVersion)
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
 function openProductionVersion(data:any, openInNewTab:boolean = false){
-    const newItem = newCaseManagementDetail(data, data.productionVersion)
-    routerProvider?.navigateTo(newItem, openInNewTab)
+    // TODO : promote to production
+    // const newItem = newCaseManagementDetail(data, data.productionVersion)
+    // routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
 function openVersion(data:any, openInNewTab:boolean = false){
@@ -119,7 +120,7 @@ provide(CaseManagementListProviderKey,{
                 </div>
             </template>
         </CaseManagementListTable>
-      <CaseManageNewDialog ref="dialogRef" @refresh="reload"/>
+      <CaseManagementNewDialog ref="dialogRef" @refresh="reload"/>
 
     </div>
 </template>

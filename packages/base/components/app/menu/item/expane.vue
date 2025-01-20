@@ -45,7 +45,6 @@ const elRef = ref()
 watch(selectedMenuItem, (newSelectedMenuItem) => {
     if(!newSelectedMenuItem) return
     if(props.item.name && newSelectedMenuItem.name === props.item.name) {
-        console.log("selectedMenuItem", props.item)
         selected.value = true
         return
     }

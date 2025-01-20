@@ -1,3 +1,4 @@
+import { CaseManagementDetail } from './../../../apps/admin/.nuxt/components.d';
 import type {PermissionMethodParams} from '#imports';
 export interface CaseManagementListProvider {
     getListApi: (params:any) => Promise<any>
@@ -18,6 +19,14 @@ export interface CaseManagementVersionProvider {
 }
 export const CaseManagementVersionProviderKey : InjectionKey<CaseManagementVersionProvider> = Symbol('caseManagementVersionProvider')
 
+export interface CaseManagementDetailProvider {
+    caseData: any,
+    currentVersion: string
+}
+
+export const CaseManagementDetailProviderKey : InjectionKey<CaseManagementDetailProvider> = Symbol('caseManagementDetailProvider')
+
+
 export const newCaseManagementListLink = (data:any) => {
     return {
         id: "case-management-list-" + new Date().getTime(),
@@ -34,17 +43,17 @@ export const newCaseManagementListLink = (data:any) => {
     } as TabItem
 }
 
-export const newCaseManagementDetail = function(data:any, version:string) {
+export const newCaseManagementDetail = function(versionId:string, name:string, version:string) {
     return {
         id: "case-management-detail-" + new Date().getTime(),
-        name: "case-management-detail-" + data.caseTypeId,
+        name: "case-management-detail-" + versionId,
         icon: 'dp-icon:case-outline',
-        label: data.name,
+        label: name,
         component: 'LazyCaseManagementDetail',
         props: {
-            caseTypeId: data.caseTypeId,
+            caseTypeId: versionId,
             currentVersion: version,
-            name: data.name,
+            name,
         }
     } as TabItem
 }
