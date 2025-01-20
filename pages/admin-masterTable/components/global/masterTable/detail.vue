@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import { ElNotification } from "element-plus";
 import { adminApi } from "api";
 import type { MasterTableResponseDTO } from "api/src/generate/admin";
 import { getIgnoreSchemas } from "~/utils/masterTableProvider";
+const { t } = useI18n()
 const { id } = defineProps<{
   id: string;
 }>();
@@ -37,64 +39,85 @@ async function init() {
 async function handleTemplateDownload() {
   try {
     state.templateLoading = true;
-    const res = await adminApi.api.getMasterTablesIdRecordTemplate(id, {},{ 
-        format: 'blob',
-        timeout: 0 
-    })
+    const res = await adminApi.api.getMasterTablesIdRecordTemplate(
+      id,
+      {},
+      {
+        format: "blob",
+        timeout: 0,
+      }
+    );
     downloadBlob(res, state.masterTable?.name + "-template");
-  } catch (error) {}
-  finally {
+  } catch (error) {
+  } finally {
     state.templateLoading = false;
   }
 }
-const inputRef = ref()
+const inputRef = ref();
 function handleImport() {
-  inputRef.value.click()
+  inputRef.value.click();
 }
 // TODO: 导入文件接口改造
 async function handleFile(event: any) {
   // try {
   //   state.importLoading = true
-    // const json = await xlsxToJson(event.target.files[0])
-    
-    // const data = await ImportMasterTablesJsonApi({
-    //     id: route.params.id,
-    //     data: json
-    // })
-    const formData:any = new FormData()
-    formData.append('file', event.target.files[0])
-    formData.append('id', id)
-    console.log("formData", formData)
-    
-    const data = await adminApi.masterTableController.postFile({requestDTO:{}},formData).then(res => res.data)
-    console.log("data", data)
-    // if (data?.failureNumber > 0) downloadFailList()
-    event.target.value = ''
-  //   handleRefresh()
+  // const json = await xlsxToJson(event.target.files[0])
+
+  // const data = await ImportMasterTablesJsonApi({
+  //     id: route.params.id,
+  //     data: json
+  // })
+  const formData: any = new FormData();
+  formData.append("file", event.target.files[0]);
+  formData.append("id", id);
+
+  const data:any = await adminApi.api
+    .postMasterTablesRecordImportFile(formData, formData)
+    .then((res) => res.data);
+  if (data?.failureNumber > 0) downloadFailList();
+  event.target.value = "";
+  handleRefresh()
   // } catch (error) {
   // } finally {
   //   state.importLoading = false
   // }
 }
+async function downloadFailList() {
+  const noti = ElNotification({
+    title: t("masterTable.importFailList"),
+    showClose: true,
+    duration: 0,
+    type: "warning",
+  });
+  const res = await adminApi.api.getMasterTablesDownloadFailure({id}, {
+    format: "blob",
+    timeout: 0,
+  });
+  downloadBlob(res, state.masterTable.name + "-failure");
+}
 async function handleExport() {
   try {
-    state.exportLoading = true
-    const res = await adminApi.api.postMasterTablesIdRecordExport(id, {},{
-      format: 'blob',
-      timeout: 0
-    })
-    downloadBlob(res, state.masterTable?.name as string)
+    state.exportLoading = true;
+    const res = await adminApi.api.postMasterTablesIdRecordExport(
+      id,
+      {},
+      {
+        format: "blob",
+        timeout: 0,
+      }
+    );
+    downloadBlob(res, state.masterTable?.name as string);
   } catch (error) {
   } finally {
-    state.exportLoading = false
+    state.exportLoading = false;
   }
 }
-const MasterTableNewRowDialogRef = ref()
-function handleAddRow (row: any = null) {
-  MasterTableNewRowDialogRef.value.handleOpen(state.masterTable?.fields, row)
+const MasterTableNewRowDialogRef = ref();
+function handleAddRow(row: any = null) {
+  MasterTableNewRowDialogRef.value.handleOpen(state.masterTable?.fields, row);
 }
 function handleRefresh() {
-  MasterTableTabRecordsRef.value.query()
+  MasterTableTabRecordsRef.value.query();
 }
 onMounted(() => {
   init();
@@ -146,7 +169,8 @@ onMounted(() => {
     </div>
     <MasterTableRecordAddDialog
       ref="MasterTableNewRowDialogRef"
-      :ignoreList="ignoreList" :tableId="id"
+      :ignoreList="ignoreList"
+      :tableId="id"
       @refresh="handleRefresh()"
     />
     <input
