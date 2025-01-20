@@ -19,14 +19,14 @@ watch(loggedIn, (bool) => {
    <AuthState>
         <template #default="{ loggedIn, logout }">
             <AppEntry>
-                <template #header>
-                    <div class="logoContainer">
-                        <AppLogo />
-                    </div>
-                </template>
-                <template #footer>
-                    <Icon name="lucide:log-out" @click="logout"/>
-                    
+                <template #sidebar>
+                    <AppMenu class="sideMenu">
+                        <template #header>
+                            <AuthUser />
+                        </template>
+                        <template #footer>
+                        </template>
+                    </AppMenu>
                 </template>
             </AppEntry>
         </template>

@@ -41,9 +41,10 @@ provide(
     }
 )
 
-async function openTab(tab:TabItem){
+async function openTab(tab:TabItem, ignoreFocus:boolean = false){
     // check if tab is already open
     try{
+        if(ignoreFocus) throw new Error("ignoreFocus")
         await focusExistingTab(tab)
     }catch(error){
         addTabInCurrentPanel({...tab})
@@ -55,14 +56,13 @@ function focusExistingTab(tab:TabItem):Promise<void>{
     if(existingTab){
         const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
         if(panelIndex !== -1) {
-            console.log("can find index")
             layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.findIndex(item => item.name === existingTab.name)
-            console.log(layout.value[panelIndex])
             // if panel is not initized, set it to initized
             if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
                 layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true
             }
             panelTabFocus(layout.value[panelIndex].id,layout.value[panelIndex].showingTabIndex )
+
             return Promise.resolve()
         }else{
             return Promise.reject(new Error("can not find index"))
@@ -84,7 +84,6 @@ async function openInCurrentTab(tab:TabItem){
         const highLightItem = panel.tabs[tabIndex]
         if(highLightItem){
             const indexInAllComponent = allComponents.value.findIndex(item => item.id === highLightItem.id)
-            console.log("indexInAllComponent", allComponents )
             if(allComponentRef.value[indexInAllComponent]){
                 // allComponents.value[indexInAllComponent] = tab;
                 allComponentRef.value[indexInAllComponent].navigateTo(tab)

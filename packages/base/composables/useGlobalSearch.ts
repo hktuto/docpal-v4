@@ -17,13 +17,20 @@ export type GlobalSearchList = {
     items: GlobalSearchItem[]
 }
 export const useGlobalSearchList = () => useState<GlobalSearchList[]>('global-search-list', () => shallowRef([]))
-export const useGlobalActionList = () => useState<GlobalSearchList[]>('global-search-list', () => shallowRef([]))
+export const useGlobalActionList = () => useState<GlobalSearchList[]>('global-action-list', () => shallowRef([]))
 
 export const useGlobalSearch = ( tabProvide : any) => {
     const list = useGlobalSearchList()
+    const actionList = useGlobalActionList()
     const opened = ref(false);
     const keywordRef = ref();
     const keyword = ref('')
+
+    
+const tabProvider = inject(TabManagerKey)
+if(!tabProvider) {
+    throw createError('tab manger not found')
+}
 
     /**
      * Selected item index
@@ -36,7 +43,9 @@ export const useGlobalSearch = ( tabProvide : any) => {
         if(!keyword.value ) {
             return list.value
         }
-        const result:GlobalSearchList[] = []
+        const result:GlobalSearchList[] = [
+
+        ]
         list.value.forEach( (listItem:GlobalSearchList) => {
             let listItemMatchList:GlobalSearchItem[] = [];
             listItem.items.forEach(item => {
@@ -57,7 +66,7 @@ export const useGlobalSearch = ( tabProvide : any) => {
                 result.push(newItem)
             }
         })
-
+        result.push(...actionList.value)
         return result
     })
     
@@ -76,7 +85,10 @@ export const useGlobalSearch = ( tabProvide : any) => {
         const [listIndex, itemIndex] = selectedItemIndex.value.split('-');
         const item = displayList.value[parseInt(listIndex)].items[parseInt(itemIndex)]
         if(item) {
-            item.action()
+            item.action({
+                keyword:keyword.value,
+                tabProvider,
+            })
         }
         opened.value = false
     })

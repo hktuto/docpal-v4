@@ -90,6 +90,7 @@ function forward() {
 
 function updateProps(newProps:any){
     tab.value.props = { ...tab.value.props, ...newProps }
+    panelRouteUpdate(tab.value.parent, tab.value.id, tab.value)
 }
 
 function updateTabName(newName:string){
