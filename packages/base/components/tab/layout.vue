@@ -6,12 +6,22 @@ const { layout } = defineProps<{
 }>()
 const emits = defineEmits(['ready'])
 
+function layoutReadyHandler(){
+    console.log("layout ready")
+    emits('ready')
+}
+
+onMounted(() => {
+    console.log("layout ready")
+    emits('ready')
+})
+
 </script>
 
 <template>
     <div class="layoutContainer">
 
-        <splitpanes vertical @resized="paneResized" :push-other-panes="false" @ready="$emit('ready')">
+        <splitpanes vertical @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
             <Pane v-for="(tab, index) in layout" :key="tab.id"  :size="tab.size">
                 <TabPanel :panel="tab" :index="index"/>
             </Pane>

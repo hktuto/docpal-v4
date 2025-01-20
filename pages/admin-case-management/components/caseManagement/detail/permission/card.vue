@@ -1,0 +1,118 @@
+<template>
+  <div v-if="!!data" class="permissionCard" >
+    <el-row class="title">{{$t('user_groupName')}}</el-row>
+    <el-row class="content">{{data.name}}</el-row>
+
+    <template v-if="filedCondition.length > 0">
+      <el-row class="title">{{$t('caseManage.recordPermission')}}</el-row>
+      <el-table :data="filedCondition">
+        <el-table-column prop="id" label="id"  />
+        <el-table-column prop="condition" label="condition" />
+        <el-table-column prop="__cdata" label="__cdata" >
+          
+          <template #default="{row}">
+            {{ getI18n(row.__cdata)  }}
+          </template>
+        </el-table-column>
+      </el-table>
+    </template>
+    <el-row class="title">{{$t('caseManage.fieldPermission')}}</el-row>
+    <div  v-for="(item, key) in fieldList" :class="{fieldList:true, hidden:key === 'hidden' }" >
+      <template v-if="key !== 'hidden'">
+        <el-row class="title">{{key}}</el-row>
+        <el-tag type="primary" effect="plain" v-for="(field,index) in item">{{field.id}}</el-tag>
+      </template>
+    </div>
+    <el-icon class="absoluteTop" @click="handleEdit"><Setting /></el-icon>
+    <CaseManageDetailPermissionDialog ref="dialogRef" :caseInformation="caseInformation" @refresh="handleRefresh" @delete="(data) => emits('delete', data)"/>
+  </div>
+</template>
+<script lang="ts" setup>
+import { Setting } from '@element-plus/icons-vue'
+const props = defineProps(['data', 'caseInformation'])
+const emits = defineEmits(['refresh', 'delete'])
+const fieldList = computed(() => {
+  try {
+    const result = props.data.permission.field.reduce((prev,item) => {
+      if(!prev[item.accesstype]) prev[item.accesstype] = []
+      prev[item.accesstype].push(item)
+      return prev
+    }, {})
+    return result
+  } catch (error) {
+    return {}
+  }
+})
+const filedCondition = computed(() => {
+  try {
+    const result = props.data.filter.filed_condition.reduce((prev,item) => {
+      prev.push(item)
+      return prev
+    }, [])
+    return result
+  } catch (error) {
+    return []
+  }
+})
+const dialogRef = ref()
+function handleEdit() {
+  dialogRef.value.handleOpen({...props.data, fieldList: fieldList.value})
+}
+function handleRefresh(data:any) {
+  emits('refresh', data)
+}
+function getI18n(value: string) {
+  if(value.includes('UserGroupId') || value.includes('UserId')) {
+    const keys = value.split(':')
+    keys[0] = $i18n.t('case.' + keys[0])
+    return keys.join(':')
+  }
+  else {
+    return value
+  }
+}
+</script>
+<style lang="scss" scoped>
+.permissionCard {
+  height: 100%;
+  background: var(--primary-gradient);
+  padding: var(--app-padding);
+  color: #fff;
+  border-radius: 5px;
+  position: relative;
+  .title {
+    margin: var(--app-input-padding) 0;
+    opacity: 0.9;
+    font-size: 0.7rem;
+    // color: #687A8F;
+  }
+  .content {
+    font-size: 1rem;
+    font-weight: 600;
+    word-break: break-all;
+  }
+}
+.fieldList {
+  border-top: 1px solid var(--color-grey-050);
+  padding-block : calc( var(--app-padding) / 2);
+  &.hidden{
+    border-top: none;
+    display: none;
+  }
+  .title{
+    margin:0;
+  }
+  .item+.item::before {
+    content: ', '
+  }
+  .el-tag {
+    margin: 2px;
+  }
+}
+.absoluteTop {
+  cursor: pointer;
+  position: absolute;
+  top: var(--app-padding);
+  right: var(--app-padding);
+}
+</style>

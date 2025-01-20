@@ -7,7 +7,7 @@ const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
 const fullscreenItem = ref<TabItem>()
-const dialogRef = ref<InstanceType<typeof TabDialog>>(false)
+const dialogRef = ref<InstanceType<typeof TabDialog>>()
 const dialogItem = ref<TabItem>()
 const menuStick = ref(true)
 
@@ -76,13 +76,15 @@ async function openInCurrentTab(tab:TabItem){
     try{
         await focusExistingTab(tab)
     }catch(error){
-        const panel = layout.value.find( panel => panel.id === hightLightPanel.value)
-
-        const tabIndex = panel.showingTabIndex
+        let panel = layout.value.find( panel => panel.id === hightLightPanel.value)
+        if(!panel) {
+            panel = layout.value[0]
+        }
+        const tabIndex = panel.showingTabIndex as number
         const highLightItem = panel.tabs[tabIndex]
         if(highLightItem){
-            const indexInAllComponent = allComponents.value.findIndex(item => item.name === highLightItem.name)
-            
+            const indexInAllComponent = allComponents.value.findIndex(item => item.id === highLightItem.id)
+            console.log("indexInAllComponent", allComponents )
             if(allComponentRef.value[indexInAllComponent]){
                 // allComponents.value[indexInAllComponent] = tab;
                 allComponentRef.value[indexInAllComponent].navigateTo(tab)
@@ -181,7 +183,7 @@ defineExpose({
             </template>
         </template>
     </AppWrapper>
-    <TabDialog ref="dialogRef"  v-model="dialogOpened" :item="dialogItem" />
+    <!-- <TabDialog ref="dialogRef"  v-model="dialogOpened" :item="dialogItem" /> -->
 </template>
 
 

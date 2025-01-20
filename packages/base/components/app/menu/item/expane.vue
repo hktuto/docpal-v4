@@ -5,7 +5,7 @@ const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
 }
-const props = defineProps<{item :MenuItem, selectedMenuItem:TabItem, mode:'collapse' | 'expand' }>()
+const props = defineProps<{item :MenuItem, selectedMenuItem?:TabItem}>()
 const { selectedMenuItem } = toRefs(props)
 const emits = defineEmits(['contextmenu'])
 
@@ -85,7 +85,7 @@ onUnmounted(() => {
        </div>
        <div v-show="opened" class="expendItem">
         <!-- {{ item.children }} -->
-            <AppMenuItemExpane v-for="subItem in item.children" :key="subItem.id" :item="subItem" :selectedMenuItem="selectedMenuItem" :mode="mode" />
+            <AppMenuItemExpane v-for="subItem in item.children" :key="subItem.id" :item="subItem" :selectedMenuItem="selectedMenuItem" />
             <!-- <AppMenuItemCollapseSubmenu v-for="subItem in item.children" :key="subItem.id" :subMenuItem="subItem" /> -->
        </div>
        <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">

@@ -12,17 +12,13 @@ watch(loggedIn, (bool) => {
 })
 
 
-onMounted(() => {
-    const route = useRoute()
-    console.log(route);
-})
 
 </script>
 
 <template>
    <AuthState>
         <template #default="{ loggedIn, logout }">
-            <App>
+            <AppEntry>
                 <template #header>
                     <div class="logoContainer">
                         <AppLogo />
@@ -32,7 +28,7 @@ onMounted(() => {
                     <Icon name="lucide:log-out" @click="logout"/>
                     
                 </template>
-            </App>
+            </AppEntry>
         </template>
         <template #placeholder>
             <LoadingBg >

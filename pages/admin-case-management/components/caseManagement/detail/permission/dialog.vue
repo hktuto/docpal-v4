@@ -1,0 +1,283 @@
+<template>
+<el-dialog v-model="state.visible" :title="$t('caseManagement.add/editPermission')"
+  :close-on-click-modal="false" class="scroll-dialog"
+  >
+  <el-form ref="FormRef" style="--icon-size: 1.2rem;" label-position="top" :model="form">
+    <el-form-item prop="name" :label="$t('case.groupName')"
+      :rules="[inputRule]">
+      <el-select-v2 v-model="form.name" :options="state.groupList" @change="handleRecordChange" />
+    </el-form-item>
+    <el-form-item prop="record" :label="$t('record')"
+      :rules="[inputRule]">
+      <el-select-v2 v-model="form.record" :options="[
+        {value: 'all', label: $t('All Record')},
+        {value: 'some', label: $t('Some Record')},
+      ]" @change="handleRecordChange" />
+
+    </el-form-item>
+    <template v-if="form.record === 'some'">
+      <el-row :gutter="20">
+        <el-col :span="5">{{$t('easyForm.fields')}}</el-col>
+        <el-col :span="5">{{ $t('case.condition') }}</el-col>
+        <el-col :span="12">{{$t('case.value')}}</el-col>
+      </el-row>
+      <el-row :gutter="20" v-for="(item,index) in form.filed_condition" :key="index">
+        <el-col :span="5">
+          <el-form-item :prop="`filed_condition[${index}].id`"
+            :rules="[selectRule]">
+            <el-select-v2 v-model="item.id" :options="state.caseInformation" @change="(value: any) => handleRowIdChange(value, index)" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item :prop="`filed_condition[${index}].condition`"
+            :rules="[selectRule]">
+            <el-select-v2 v-model="item.condition" :options="item.conditionList" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item :prop="`filed_condition[${index}].__cdata`">
+            <CaseManageDetailPermissionValueField ref="metaForm" :config="item" @formChange="(value: any, label: string) => handleValueChange(value, label, index)"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="1"><SvgIcon class="svgIcon" src="/icons/menu/trash.svg" @click="handleDeleteRow(index)" /></el-col>
+      </el-row>
+      <el-button type="text" @click="handleAdd">{{ $t('easyForm.actionsAdd') }}</el-button>
+    </template>
+  </el-form>
+  <CaseManageDetailPermissionDrag :list="state.permissionField"/>
+  <template #footer>
+    <el-button v-if="state.setting?.name" type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button>
+    <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+  </template>
+</el-dialog>
+</template>
+<script lang="ts" setup>
+
+const inputRule = { required: true, message: $i18n.t('tip.input'), trigger: 'blur' }
+const selectRule = { required: true, message: $i18n.t('el.select.placeholder'), trigger: 'change' }
+import {ElMessage} from 'element-plus'
+import { getJsonApi, GetGroupListApi } from 'dp-api'
+const emits = defineEmits([
+    'refresh', 'delete'
+])
+
+const props = defineProps<{
+  groups:any[],
+  caseInformation: []
+}>()
+const state = reactive<any>({
+  loading: false,
+  visible: false,
+  setting: {},
+  permissionField: {
+    mask: [],
+    hidden: [],
+    edit: [],
+    read: []
+  },
+  caseInformationMap: {},
+  conditionList: [
+    { label: 'Equal To', value: 'equal' },
+    { label: 'Not Equal To', value: 'not equal' },
+    { label: 'Greaten Than', value: 'Greaten Than' },
+    { label: 'Less Than', value: 'Less Than' },
+    { label: 'In Between', value: 'In Between' },
+    { label: 'Not Between', value: 'Not Between' }
+  ],
+  groupList: []
+})
+const form = ref<any>({
+  name: '',
+  record: 'all',
+  filed_condition: []
+})
+const FormRef = ref()
+async function handleSubmit () {
+  // try {
+    const valid = FormRef.value.validate()
+    if(!valid) return
+    state.visible = false
+    let permission: any = {
+      group: form.value.name,
+    }
+    let filter: any = {
+      group: form.value.name,
+    }
+    if (state.setting?.permission) permission = {
+      ...state.setting.permission, ...permission
+    }
+    if (state.setting?.filter) filter = {
+      ...state.setting.filter, ...filter, 
+      filed_condition: form.value.filed_condition.map((item: any) => ({
+        id: item.id,
+        condition: item.condition,
+        __cdata: item.__cdata,
+        type: item.type,
+        label: item.label
+      }))
+    }
+    permission.field = Object.keys(state.permissionField).reduce((prev: any, key: string) => {
+      const fields = state.permissionField[key]
+      fields.forEach((item: any) => {
+        prev.push({
+          ...item,
+          accesstype: key
+        })
+      })
+      return prev
+    }, [])
+    // throw new Error('test')
+    emits('refresh', {
+      name: form.value.name,
+      permission,
+      filter
+    })
+
+  // } catch (error) {
+  // } finally {
+  // }
+}
+function handleDelete() {
+  state.visible = false
+  emits('delete', state.setting)
+}
+function handleOpen(setting: any) {
+  state.visible = true
+  state.permissionField = {
+    hidden: [],
+    mask: [],
+    read: [],
+    edit: []
+  }
+  if(!!setting) {
+    state.setting = setting
+    Object.keys(setting.fieldList).forEach(key => {
+      state.permissionField[key] = [...setting.fieldList[key]]
+    })
+  }
+
+  setTimeout(() => {
+    initOptions()
+    if(!!setting) {
+      form.value.name = setting.name
+      form.value.record = setting?.filter?.filed_condition?.length > 0  ? 'some' : 'all'
+      form.value.filed_condition = setting.filter.filed_condition.map((item: any) => {
+        const info = getRowInfo(item.id)
+        const _item: any = {
+          id: item.id,
+          condition: item.condition,
+          __cdata: item.__cdata,
+          conditionList: getConditionList(item.id),
+          type: info.type
+        }
+        if(info.masterTable) {
+          _item.masterTable = info.masterTable
+          _item.displayField = info.displayField
+        }
+        return _item
+      })
+    } else {
+      state.permissionField.hidden = props.caseInformation
+    }
+  })
+}
+function initOptions() {
+  let caseInformation:any[] = []
+  if(props.caseInformation) caseInformation = props.caseInformation
+  state.caseInformation = caseInformation.map(((item: any) => ({
+    ...item,
+    value: item.id,
+    label: item.name,
+    type: item.type
+  })))       
+}
+function handleRecordChange(value) {
+  form.value.filed_condition = []
+  if(value === 'some') handleAdd()
+}
+function handleAdd() {
+  if(!form.value.filed_condition) form.value.filed_condition = []
+  form.value.filed_condition.push({
+    id: '',
+    condition: '',
+    __cdata: '',
+    type: '',
+    conditionList: []
+  })
+}
+function handleDeleteRow(index: number) {
+  form.value.filed_condition.splice(index, 1)
+}
+function handleValueChange(value: any, label: string, index: number) {
+  form.value.filed_condition[index].__cdata = value
+  form.value.filed_condition[index].label = label
+}
+function handleRowIdChange(fieldId: any, index: number) {
+  const info = getRowInfo(fieldId)
+  const data: any = {
+    ...form.value.filed_condition[index],
+    type: info.type,
+    __cdata: '',
+    conditionList: getConditionList(fieldId)
+  }
+  if(info.type === 'master_table') {
+    data.masterTable = info.masterTable
+    data.displayField = info.displayField
+  }
+  form.value.filed_condition[index] = data
+}
+function getRowInfo(fieldId: string) {
+  const info = state.caseInformation.find((item: any) => item.value === fieldId)
+  return {...info}
+}
+function getConditionList(fieldId: string) {
+  const info = state.caseInformation.find((item: any) => item.value === fieldId)
+  switch (info.type) {
+    case 'float':
+    case 'number':
+      return [
+        { label: 'Equal To', value: 'equal' },
+        { label: 'Not Equal To', value: 'not equal' },
+        { label: 'Greaten Than', value: 'Greaten Than' },
+        { label: 'Less Than', value: 'Less Than' },
+        { label: 'In Between', value: 'In Between' },
+        { label: 'Not Between', value: 'Not Between' },
+      ]
+    case 'date':
+      return [
+        { label: 'Equal To', value: 'equal' },
+        { label: 'Not Equal To', value: 'not equal' },
+        { label: 'In Between', value: 'In Between' },
+        { label: 'Not Between', value: 'Not Between' },
+      ]
+    case 'boolean':
+    case 'master_table':
+    case 'user_group':
+      return [
+        { label: 'Equal To', value: 'equal' },
+        { label: 'Not Equal To', value: 'not equal' },
+      ]
+    
+    default:
+      return [
+        { label: 'Equal To', value: 'equal' },
+        { label: 'Not Equal To', value: 'not equal' },
+        { label: 'Contains', value: 'Contains' },
+      ]
+  }
+}
+async function getGroup() {
+  const res = await GetGroupListApi()
+  state.groupList = res.map(item => ({
+    label: item.name,
+    value: item.id
+  }))
+}
+onMounted(async() => {
+  getGroup()
+})
+defineExpose({ handleOpen })
+</script>
+<style lang="scss" scoped>
+
+</style>

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/cmmn" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" targetNamespace="Business_CaseModel" xmlns:docpal="http://www.w3.org/1999/xhtml" exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
+   <case xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" id="docpalSetup" name="docpal setup">
+       <casePlanModel id="casePlanModel">
+           <extensionElements/>
+           <planItem id="planItem17" name="User Resign" definitionRef="sid-2281A912-E684-4726-BDE2-58775568A9FE"/>
+           <planItem id="planItem16" name="User Resign" definitionRef="sid-B72C5C8D-86EA-4595-B70D-0420A8EFBA26">
+               <entryCriterion id="sid-2DD1193A-308B-43B9-A929-9557F1F37748" sentryRef="sentry9"/>
+           </planItem>
+           <planItem id="planItem9" name="Account Setup" definitionRef="sid-1C4F9B1C-5B0E-4A98-82D6-4BB0EEC59AAD">
+               <entryCriterion id="sid-55122509-522B-4C59-A72B-3746750788DD" sentryRef="sentry6"/>
+           </planItem>
+           <planItem id="planItem8" name="User On Boarding" definitionRef="sid-034F645A-A098-4B92-933F-E4600872D412">
+               <entryCriterion id="sid-D34ACDA1-1496-40A9-B2B6-90FCB203F311" sentryRef="sentry5"/>
+           </planItem>
+           <planItem id="planItem2" definitionRef="sid-317E41B5-3963-4106-B113-1A3A4071379B"/>
+           <sentry id="sentry10">
+               <planItemOnPart id="sentryOnPart7" sourceRef="planItem16">
+                   <standardEvent>complete</standardEvent>
+               </planItemOnPart>
+           </sentry>
+           <stage id="sid-317E41B5-3963-4106-B113-1A3A4071379B">
+               <planItem id="planItem15" name="Reset Hardware" definitionRef="sid-86243152-69AA-40EA-9FB6-62C752AF7C4D">
+                   <entryCriterion id="sid-796261C8-D661-4171-A08C-DAC975E02B9D" sentryRef="sentry7"/>
+               </planItem>
+               <planItem id="planItem13" name="Remove Account" definitionRef="sid-A59F20C5-77BE-42D5-A2DE-F659360A241C">
+                   <entryCriterion id="sid-A9E06439-1473-49ED-A651-00A8E128141A" sentryRef="sentry8"/>
+               </planItem>
+               <planItem id="planItem11" name="Resign Form" definitionRef="sid-D45DFF69-CD93-4F2C-960D-A0ED316A1D14"/>
+               <planItem id="planItem7" name="Docpal Setup" definitionRef="sid-4B02FCDD-BEC1-4F80-A6D4-BBB29F2B2C15">
+                   <entryCriterion id="sid-2F1F896A-899B-483F-9A8D-91CF0324970D" sentryRef="sentry4"/>
+               </planItem>
+               <planItem id="planItem5" name="Computer Setup" definitionRef="sid-A9C18FE5-94B6-453B-A0E7-C82138927CC1">
+                   <exitCriterion id="sid-1C5398AF-220F-44C9-877F-EB1B558B0C86" sentryRef="sentry3"/>
+               </planItem>
+               <planItem id="planItem1" name="Create User" definitionRef="sid-074CD410-AA5F-4A80-95D7-670336873B33">
+                   <itemControl>
+                       <requiredRule/>
+                   </itemControl>
+               </planItem>
+               <sentry id="sentry7"/>
+               <sentry id="sentry8"/>
+               <sentry id="sentry4">
+                   <planItemOnPart id="sentryOnPart3" sourceRef="planItem5">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+               </sentry>
+               <sentry id="sentry3">
+                   <planItemOnPart id="sentryOnPart1" sourceRef="planItem3">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+                   <planItemOnPart id="sentryOnPart2" sourceRef="planItem4">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+               </sentry>
+               <stage id="sid-A9C18FE5-94B6-453B-A0E7-C82138927CC1" name="Computer Setup">
+                   <planItem id="planItem6" name="Docpal Setup" definitionRef="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C"/>
+                   <planItem id="planItem4" name="ZH Account Setup" definitionRef="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7">
+                       <entryCriterion id="sid-84026CC2-01C4-4EC0-BBE2-C9945FD835C8" sentryRef="sentry2"/>
+                   </planItem>
+                   <planItem id="planItem3" name="HK Account Setup" definitionRef="sid-CEAA9681-8B59-48EC-8567-736F2677000A">
+                       <entryCriterion id="sid-8D19247E-0BC4-4ED1-8DFA-F74EE8521DFE" sentryRef="sentry1"/>
+                   </planItem>
+                   <sentry id="sentry2"/>
+                   <sentry id="sentry1"/>
+                   <processTask id="sid-CEAA9681-8B59-48EC-8567-736F2677000A" name="HK Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7" name="ZH Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C" name="Docpal Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-4B02FCDD-BEC1-4F80-A6D4-BBB29F2B2C15" name="Docpal Setup">
+                   <planItem id="planItem6" name="Docpal Setup" definitionRef="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C"/>
+                   <planItem id="planItem4" name="ZH Account Setup" definitionRef="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7">
+                       <entryCriterion id="sid-84026CC2-01C4-4EC0-BBE2-C9945FD835C8" sentryRef="sentry2"/>
+                   </planItem>
+                   <planItem id="planItem3" name="HK Account Setup" definitionRef="sid-CEAA9681-8B59-48EC-8567-736F2677000A">
+                       <entryCriterion id="sid-8D19247E-0BC4-4ED1-8DFA-F74EE8521DFE" sentryRef="sentry1"/>
+                   </planItem>
+                   <sentry id="sentry2"/>
+                   <sentry id="sentry1"/>
+                   <processTask id="sid-CEAA9681-8B59-48EC-8567-736F2677000A" name="HK Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7" name="ZH Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C" name="Docpal Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-D45DFF69-CD93-4F2C-960D-A0ED316A1D14" name="Resign Form">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-A59F20C5-77BE-42D5-A2DE-F659360A241C" name="Remove Account">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-86243152-69AA-40EA-9FB6-62C752AF7C4D" name="Reset Hardware">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-074CD410-AA5F-4A80-95D7-670336873B33" name="Create User">
+                   <extensionElements/>
+               </humanTask>
+           </stage>
+           <stage id="sid-034F645A-A098-4B92-933F-E4600872D412" name="User On Boarding">
+               <planItem id="planItem15" name="Reset Hardware" definitionRef="sid-86243152-69AA-40EA-9FB6-62C752AF7C4D">
+                   <entryCriterion id="sid-796261C8-D661-4171-A08C-DAC975E02B9D" sentryRef="sentry7"/>
+               </planItem>
+               <planItem id="planItem13" name="Remove Account" definitionRef="sid-A59F20C5-77BE-42D5-A2DE-F659360A241C">
+                   <entryCriterion id="sid-A9E06439-1473-49ED-A651-00A8E128141A" sentryRef="sentry8"/>
+               </planItem>
+               <planItem id="planItem11" name="Resign Form" definitionRef="sid-D45DFF69-CD93-4F2C-960D-A0ED316A1D14"/>
+               <planItem id="planItem7" name="Docpal Setup" definitionRef="sid-4B02FCDD-BEC1-4F80-A6D4-BBB29F2B2C15">
+                   <entryCriterion id="sid-2F1F896A-899B-483F-9A8D-91CF0324970D" sentryRef="sentry4"/>
+               </planItem>
+               <planItem id="planItem5" name="Computer Setup" definitionRef="sid-A9C18FE5-94B6-453B-A0E7-C82138927CC1">
+                   <exitCriterion id="sid-1C5398AF-220F-44C9-877F-EB1B558B0C86" sentryRef="sentry3"/>
+               </planItem>
+               <planItem id="planItem1" name="Create User" definitionRef="sid-074CD410-AA5F-4A80-95D7-670336873B33">
+                   <itemControl>
+                       <requiredRule/>
+                   </itemControl>
+               </planItem>
+               <sentry id="sentry7"/>
+               <sentry id="sentry8"/>
+               <sentry id="sentry4">
+                   <planItemOnPart id="sentryOnPart3" sourceRef="planItem5">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+               </sentry>
+               <sentry id="sentry3">
+                   <planItemOnPart id="sentryOnPart1" sourceRef="planItem3">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+                   <planItemOnPart id="sentryOnPart2" sourceRef="planItem4">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+               </sentry>
+               <stage id="sid-A9C18FE5-94B6-453B-A0E7-C82138927CC1" name="Computer Setup">
+                   <planItem id="planItem6" name="Docpal Setup" definitionRef="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C"/>
+                   <planItem id="planItem4" name="ZH Account Setup" definitionRef="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7">
+                       <entryCriterion id="sid-84026CC2-01C4-4EC0-BBE2-C9945FD835C8" sentryRef="sentry2"/>
+                   </planItem>
+                   <planItem id="planItem3" name="HK Account Setup" definitionRef="sid-CEAA9681-8B59-48EC-8567-736F2677000A">
+                       <entryCriterion id="sid-8D19247E-0BC4-4ED1-8DFA-F74EE8521DFE" sentryRef="sentry1"/>
+                   </planItem>
+                   <sentry id="sentry2"/>
+                   <sentry id="sentry1"/>
+                   <processTask id="sid-CEAA9681-8B59-48EC-8567-736F2677000A" name="HK Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7" name="ZH Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C" name="Docpal Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-4B02FCDD-BEC1-4F80-A6D4-BBB29F2B2C15" name="Docpal Setup">
+                   <planItem id="planItem6" name="Docpal Setup" definitionRef="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C"/>
+                   <planItem id="planItem4" name="ZH Account Setup" definitionRef="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7">
+                       <entryCriterion id="sid-84026CC2-01C4-4EC0-BBE2-C9945FD835C8" sentryRef="sentry2"/>
+                   </planItem>
+                   <planItem id="planItem3" name="HK Account Setup" definitionRef="sid-CEAA9681-8B59-48EC-8567-736F2677000A">
+                       <entryCriterion id="sid-8D19247E-0BC4-4ED1-8DFA-F74EE8521DFE" sentryRef="sentry1"/>
+                   </planItem>
+                   <sentry id="sentry2"/>
+                   <sentry id="sentry1"/>
+                   <processTask id="sid-CEAA9681-8B59-48EC-8567-736F2677000A" name="HK Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7" name="ZH Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C" name="Docpal Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-D45DFF69-CD93-4F2C-960D-A0ED316A1D14" name="Resign Form">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-A59F20C5-77BE-42D5-A2DE-F659360A241C" name="Remove Account">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-86243152-69AA-40EA-9FB6-62C752AF7C4D" name="Reset Hardware">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-074CD410-AA5F-4A80-95D7-670336873B33" name="Create User">
+                   <extensionElements/>
+               </humanTask>
+           </stage>
+           <stage id="sid-B72C5C8D-86EA-4595-B70D-0420A8EFBA26" name="User Resign">
+               <planItem id="planItem15" name="Reset Hardware" definitionRef="sid-86243152-69AA-40EA-9FB6-62C752AF7C4D">
+                   <entryCriterion id="sid-796261C8-D661-4171-A08C-DAC975E02B9D" sentryRef="sentry7"/>
+               </planItem>
+               <planItem id="planItem13" name="Remove Account" definitionRef="sid-A59F20C5-77BE-42D5-A2DE-F659360A241C">
+                   <entryCriterion id="sid-A9E06439-1473-49ED-A651-00A8E128141A" sentryRef="sentry8"/>
+               </planItem>
+               <planItem id="planItem11" name="Resign Form" definitionRef="sid-D45DFF69-CD93-4F2C-960D-A0ED316A1D14"/>
+               <planItem id="planItem7" name="Docpal Setup" definitionRef="sid-4B02FCDD-BEC1-4F80-A6D4-BBB29F2B2C15">
+                   <entryCriterion id="sid-2F1F896A-899B-483F-9A8D-91CF0324970D" sentryRef="sentry4"/>
+               </planItem>
+               <planItem id="planItem5" name="Computer Setup" definitionRef="sid-A9C18FE5-94B6-453B-A0E7-C82138927CC1">
+                   <exitCriterion id="sid-1C5398AF-220F-44C9-877F-EB1B558B0C86" sentryRef="sentry3"/>
+               </planItem>
+               <planItem id="planItem1" name="Create User" definitionRef="sid-074CD410-AA5F-4A80-95D7-670336873B33">
+                   <itemControl>
+                       <requiredRule/>
+                   </itemControl>
+               </planItem>
+               <sentry id="sentry7"/>
+               <sentry id="sentry8"/>
+               <sentry id="sentry4">
+                   <planItemOnPart id="sentryOnPart3" sourceRef="planItem5">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+               </sentry>
+               <sentry id="sentry3">
+                   <planItemOnPart id="sentryOnPart1" sourceRef="planItem3">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+                   <planItemOnPart id="sentryOnPart2" sourceRef="planItem4">
+                       <standardEvent>complete</standardEvent>
+                   </planItemOnPart>
+               </sentry>
+               <stage id="sid-A9C18FE5-94B6-453B-A0E7-C82138927CC1" name="Computer Setup">
+                   <planItem id="planItem6" name="Docpal Setup" definitionRef="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C"/>
+                   <planItem id="planItem4" name="ZH Account Setup" definitionRef="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7">
+                       <entryCriterion id="sid-84026CC2-01C4-4EC0-BBE2-C9945FD835C8" sentryRef="sentry2"/>
+                   </planItem>
+                   <planItem id="planItem3" name="HK Account Setup" definitionRef="sid-CEAA9681-8B59-48EC-8567-736F2677000A">
+                       <entryCriterion id="sid-8D19247E-0BC4-4ED1-8DFA-F74EE8521DFE" sentryRef="sentry1"/>
+                   </planItem>
+                   <sentry id="sentry2"/>
+                   <sentry id="sentry1"/>
+                   <processTask id="sid-CEAA9681-8B59-48EC-8567-736F2677000A" name="HK Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7" name="ZH Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C" name="Docpal Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-4B02FCDD-BEC1-4F80-A6D4-BBB29F2B2C15" name="Docpal Setup">
+                   <planItem id="planItem6" name="Docpal Setup" definitionRef="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C"/>
+                   <planItem id="planItem4" name="ZH Account Setup" definitionRef="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7">
+                       <entryCriterion id="sid-84026CC2-01C4-4EC0-BBE2-C9945FD835C8" sentryRef="sentry2"/>
+                   </planItem>
+                   <planItem id="planItem3" name="HK Account Setup" definitionRef="sid-CEAA9681-8B59-48EC-8567-736F2677000A">
+                       <entryCriterion id="sid-8D19247E-0BC4-4ED1-8DFA-F74EE8521DFE" sentryRef="sentry1"/>
+                   </planItem>
+                   <sentry id="sentry2"/>
+                   <sentry id="sentry1"/>
+                   <processTask id="sid-CEAA9681-8B59-48EC-8567-736F2677000A" name="HK Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-56683CAC-2CA8-477C-824C-A3B8293FF7E7" name="ZH Account Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-14AC7C4C-27B4-44F8-BEAD-3A4B368DEC7C" name="Docpal Setup" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-D45DFF69-CD93-4F2C-960D-A0ED316A1D14" name="Resign Form">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-A59F20C5-77BE-42D5-A2DE-F659360A241C" name="Remove Account">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <stage id="sid-86243152-69AA-40EA-9FB6-62C752AF7C4D" name="Reset Hardware">
+                   <planItem id="planItem14" name="Hardware Check" definitionRef="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96"/>
+                   <planItem id="planItem12" name="Remove Account" definitionRef="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB"/>
+                   <planItem id="planItem10" name="Resign Form" definitionRef="sid-C7F19967-46B1-4B12-BEC8-14431613200A"/>
+                   <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-C7F19967-46B1-4B12-BEC8-14431613200A" name="Resign Form">
+                       <extensionElements/>
+                   </humanTask>
+                   <processTask id="sid-0E32C5F5-A7D3-4149-A03C-DEE200DCECEB" name="Remove Account" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+                   <processTask id="sid-C82D1A4A-2E9E-47AC-933C-4F108C414C96" name="Hardware Check" xmlns:flowable="http://flowable.org/cmmn" flowable:fallbackToDefaultTenant="false"/>
+               </stage>
+               <humanTask xmlns:flowable="http://flowable.org/cmmn" flowable:assignee="${creator}" flowable:formFieldValidation="true" id="sid-074CD410-AA5F-4A80-95D7-670336873B33" name="Create User">
+                   <extensionElements/>
+               </humanTask>
+           </stage>
+           <milestone id="sid-1C4F9B1C-5B0E-4A98-82D6-4BB0EEC59AAD" name="Account Setup"/>
+           <userEventListener id="sid-2281A912-E684-4726-BDE2-58775568A9FE" name="User Resign"/>
+           <exitCriterion id="sid-EAE39621-E3B2-49C6-AFA2-3FE9D5CE9877" sentryRef="sentry10"/>
+       </casePlanModel>
+   </case>
+</definitions>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/cmmn" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI"
+             xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI"
+             targetNamespace="TestSpaces" xmlns:docpal="http://www.w3.org/1999/xhtml"
+             exporter="Flowable Open Source Modeler" exporterVersion="6.8.0">
+  <case id="docpalOrderModel" name="DocPal Order Model" flowable:initiatorVariableName="initiator">
+    <casePlanModel id="orderCasePlanModel" flowable:formFieldValidation="true" autoComplete="true">
+      <extensionElements>
+        <docpal:form id="docpal_order_case_form" name="DocPal Order Case Form" casetable="docpal_order_case_form">
+          <field id="product_name" name="Product Name" type="string"></field>
+          <field id="quantity" name="quantity" type="number"></field>
+          <field id="origin_price" name="origin price" type="float"></field>
+        </docpal:form>
+        <docpal:attributes name="docpal_order_case_form_permission" group="members" ref="docpal_order_case_form">
+          <field id="product_name" accesstype="read"></field>
+          <field id="quantity" accesstype="read"></field>
+          <field id="origin_price" accesstype="read"></field>
+        </docpal:attributes>
+        <docpal:attributes name="docpal_order_case_form_permission" group="administrators" ref="docpal_order_case_form">
+          <field id="product_name" accesstype="edit"></field>
+          <field id="quantity" accesstype="edit"></field>
+          <field id="origin_price" accesstype="edit"></field>
+        </docpal:attributes>
+        <docpal:data_filter name="docpal_order_case_form_data_permission" group="administrators" ref="docpal_order_case_form">
+          <filed_condition id="product_name" condition="equal"><![CDATA[car]]></filed_condition>
+        </docpal:data_filter>
+      </extensionElements>
+      <planItem id="planItem8" name="submit order Stage" definitionRef="submitOrderStage"></planItem>
+      <planItem id="planItem13" name="Payment Order Stage" definitionRef="PayOrderStage"></planItem>
+      <stage id="submitOrderStage" name="submit order Stage">
+        <documentation>submit order by user stage</documentation>
+        <planItem id="planItem2" name="Stock Stage" definitionRef="stock_stage">
+          <exitCriterion id="sid-1E54860D-FDEF-464B-B16A-A924DE419A84" sentryRef="sentry2"></exitCriterion>
+        </planItem>
+        <planItem id="planItem3" name="Stock And Order Milestone" definitionRef="stockOrderMilestone"></planItem>
+        <planItem id="planItem6" name="Create Order Stage" definitionRef="createOrderStage"></planItem>
+        <planItem id="planItem7" definitionRef="sid-30B7A21D-0D6A-40B5-8C23-7C206C2FDB4E"></planItem>
+        <sentry id="sentry2">
+          <planItemOnPart id="sentryOnPart1" sourceRef="planItem1">
+            <standardEvent>complete</standardEvent>
+          </planItemOnPart>
+          <ifPart>
+            <condition><![CDATA[${var:eq(stockCompleted, true)}]]></condition>
+          </ifPart>
+        </sentry>
+        <stage id="stock_stage" name="Stock Stage">
+          <planItem id="planItem1" name="Submit Stock" definitionRef="submitStock">
+            <itemControl>
+              <manualActivationRule/>
+            </itemControl>
+          </planItem>
+          <humanTask id="submitStock" name="Submit Stock" flowable:formFieldValidation="true">
+            <documentation>Submit Stock from shopping</documentation>
+            <extensionElements>
+              <flowable:taskListener event="create" expression="${startTaskListener}"></flowable:taskListener>
+              <docpal:form id="docpal_order_case_stock_form" name="DocPal Order Case Stock Form" casetable="docpal_order_case_stock">
+                <field id="product_name" name="Product Name" type="string"></field>
+                <field id="quantity" name="quantity" type="number"></field>
+                <field id="origin_price" name="origin price" type="float"></field>
+                <field id="amount" name="Amount" type="float"></field>
+                <field id="stock_number" name="Stock Number" type="number"></field>
+              </docpal:form>
+            </extensionElements>
+          </humanTask>
+        </stage>
+        <milestone id="stockOrderMilestone" name="Stock And Order Milestone" flowable:milestoneVariable="CompletedOrderMilestone">
+          <documentation>Stock Order Milestone</documentation>
+        </milestone>
+        <stage id="createOrderStage" name="Create Order Stage">
+          <documentation>Create Order Stage</documentation>
+          <planItem id="planItem4" name="Submit Order Information" definitionRef="submitOrder"></planItem>
+          <planItem id="planItem5" name="Create Order Task" definitionRef="createOrder">
+            <entryCriterion id="sid-782DACE0-E580-4699-AE2E-520E2A75D51C" sentryRef="sentry3"></entryCriterion>
+          </planItem>
+          <sentry id="sentry3">
+            <planItemOnPart id="sentryOnPart2" sourceRef="planItem4">
+              <standardEvent>complete</standardEvent>
+            </planItemOnPart>
+          </sentry>
+          <humanTask id="submitOrder" name="Submit Order Information" flowable:assignee="${initiator}" flowable:formFieldValidation="true">
+            <documentation>Submit Order Information Task</documentation>
+            <extensionElements>
+              <modeler:flowable-idm-initiator xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-initiator>
+              <docpal:form id="docpal_order_case_order_info" name="DocPal Order Information Form" casetable="docpal_order_case_order_info">
+                <field id="product_name" name="Product Name" type="string"></field>
+                <field id="quantity" name="quantity" type="number"></field>
+                <field id="origin_price" name="origin price" type="float"></field>
+                <field id="discount" name="Discount" type="float"></field>
+                <field id="amount" name="Amount" type="float"></field>
+              </docpal:form>
+            </extensionElements>
+          </humanTask>
+          <humanTask id="createOrder" name="Create Order Task" flowable:assignee="${initiator}" flowable:formFieldValidation="true">
+            <documentation>create order task</documentation>
+            <extensionElements>
+              <modeler:flowable-idm-initiator xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-initiator>
+              <docpal:form id="docpal_order_case_order_info" name="DocPal Order Information Form" casetable="docpal_order_case_order_info">
+                <field id="product_name" name="Product Name" type="string"></field>
+                <field id="quantity" name="quantity" type="number"></field>
+                <field id="origin_price" name="origin price" type="float"></field>
+                <field id="amount" name="Amount" type="float"></field>
+                <field id="order_no" name="Order No" type="string"></field>
+              </docpal:form>
+            </extensionElements>
+          </humanTask>
+        </stage>
+        <userEventListener id="sid-30B7A21D-0D6A-40B5-8C23-7C206C2FDB4E" flowable:availableCondition="var:eq(createOrder, complete)"></userEventListener>
+      </stage>
+      <stage id="PayOrderStage" name="Payment Order Stage" autoComplete="true">
+        <documentation>For Pay Order Stage</documentation>
+        <planItem id="planItem11" name="Calculate Discount Stage" definitionRef="discountStage"></planItem>
+        <planItem id="planItem12" name="Pay Milestone" definitionRef="PayMilestone">
+          <entryCriterion id="sid-0A68BF6D-E842-468A-97FA-D0D2FF02786E" sentryRef="sentry6"></entryCriterion>
+        </planItem>
+        <sentry id="sentry6">
+          <planItemOnPart id="sentryOnPart3" sourceRef="planItem11">
+            <standardEvent>occur</standardEvent>
+          </planItemOnPart>
+        </sentry>
+        <stage id="discountStage" name="Calculate Discount Stage" autoComplete="true">
+          <documentation>Calculate Discount Stage</documentation>
+          <planItem id="planItem9" name="Calculate Discount Service Task" definitionRef="calculateDiscountTask"></planItem>
+          <planItem id="planItem10" name="Payment Task" definitionRef="paytask"></planItem>
+          <humanTask id="calculateDiscountTask" name="Calculate Discount Service Task" isBlocking="false" flowable:type="java" flowable:delegateExpression="${calculateDiscountService}"></humanTask>
+          <humanTask id="paytask" name="Payment Task" flowable:assignee="${initiator}" flowable:formFieldValidation="true">
+            <extensionElements>
+              <modeler:flowable-idm-initiator xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:flowable-idm-initiator>
+              <flowable:planItemLifecycleListener sourceState="available" targetState="active" expression="#{payOrderService.pay(op.asMap().put('orderNo', &quot;order_123456&quot;).put('businessKey', &quot;case_123456&quot;).done())}"></flowable:planItemLifecycleListener>
+              <docpal:form id="docpal_order_case_payment" name="DocPal Payment Order Form" casetable="docpal_order_case_payment">
+                <field id="payment_no" name="Payment No" type="string"></field>
+                <field id="order_no" name="Order No" type="string"></field>
+                <field id="amount" name="Order Amount" type="float"></field>
+                <field id="quantity" name="Quantity" type="number"></field>
+                <field id="price" name="Product Price" type="float"></field>
+                <field id="pay_amount" name="Pay Amount" type="float"></field>
+              </docpal:form>  
+            </extensionElements>
+          </humanTask>
+        </stage>
+        <milestone id="PayMilestone" name="Pay Milestone" flowable:milestoneVariable="PayComplete"></milestone>
+      </stage>
+    </casePlanModel>
+  </case>
+</definitions>
