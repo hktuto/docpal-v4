@@ -40,7 +40,7 @@ function addConnection(item:any){
         connector: {name: 'rounded'},
         attrs: {
             line: {
-                stroke: 'var(--primary-color)',
+                stroke: 'var(--app-primary-color)',
             }
         },
 
@@ -90,19 +90,19 @@ onMounted(() => {
 .connectionList{
     display : flex;
     flex-flow: column nowrap;
-    gap: calc( var(--app-padding) / 4 );
+    gap: calc( var(--app-space-xs) / 4 );
     max-height:200px;
     overflow: auto;
     .item{
         --icon-size: 14px;
         font-size: 1rem;
-        padding: calc(var(--app-padding) / 2) var(--app-padding);
+        padding: calc(var(--app-space-xs) / 2) var(--app-space-xs);
         cursor: pointer;
         display: flex;
         flex-flow: row nowrap;
         justify-content: flex-startx;
         align-items: center;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
         //border-bottom: 1px solid var(--color-grey-000);
         &:hover{
             background: var(--color-grey-000);

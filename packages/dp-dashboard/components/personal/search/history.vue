@@ -55,7 +55,7 @@ defineExpose({
     margin: var(--app-space-xs) 0;
   }
   &:hover {
-    background-color: var(--primary-color);
+    background-color: var(--app-primary-color);
     color: #fff;
   }
   

@@ -77,7 +77,7 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
     left:var(--x);
     z-index: 100;
     transform: translateY(100px);
-    padding: var(--app-padding);
+    padding: var(--app-space-xs);
     opacity: 0;
     &.opened{
         opacity: 1;
@@ -94,17 +94,17 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
         --icon-color: var(--secondary-color);
         display: flex;
         flex-flow: row nowrap;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
         justify-content: flex-start;
         align-items: center;
-        padding-block: calc(var(--app-padding) /2);
-        padding-inline: var(--app-padding);
+        padding-block: calc(var(--app-space-xs) /2);
+        padding-inline: var(--app-space-xs);
         cursor: pointer;
         &:not(:last-child){
             border-bottom: 1px solid var(--color-grey-300);
         }
         &:hover{
-            --icon-color: var(--primary-color);
+            --icon-color: var(--app-primary-color);
             background: var(--color-grey-000);
         }
         &.disabled{
@@ -115,7 +115,7 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
     }
 }
 .divider{
-    margin-block: calc(var(--app-padding) / 2) ;
+    margin-block: calc(var(--app-space-xs) / 2) ;
     width:100%;
     height: 1px;
     background: var(--color-grey-000);

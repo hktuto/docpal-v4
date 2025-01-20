@@ -92,12 +92,12 @@ defineExpose({
 <style scoped lang="scss">
 .cmmnToolbarContainer{
     position: absolute;
-    top: var(--app-padding);
-    left: var(--app-padding);
+    top: var(--app-space-xs);
+    left: var(--app-space-xs);
     z-index: 3;
     display: flex;
     flex-flow: column nowrap;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .group{
         --icon-color:#000;
         background: var(--color-grey-0000);
@@ -106,7 +106,7 @@ defineExpose({
         box-shadow: 0 0 0.5rem rgba(0,0,0,0.2);
         display: flex;
         flex-flow: column nowrap;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
     }
 }
 </style>

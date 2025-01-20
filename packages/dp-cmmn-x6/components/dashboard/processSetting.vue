@@ -99,10 +99,10 @@ defineExpose({ handleOpen })
 .list-group-item {
     display: flex;
     align-items: center;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     background-color: #fff;
-    margin-bottom: var(--app-padding);
-    padding: var(--app-padding);
+    margin-bottom: var(--app-space-xs);
+    padding: var(--app-space-xs);
     .handle-icon {
         --icon-size: 1.14rem;
     }
@@ -113,10 +113,10 @@ defineExpose({ handleOpen })
     .el-dialog__body {
         display: grid;
         grid-template-columns: 1fr 30%;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
         & > div {
             background-color: #F2F8F9;
-            padding: var(--app-padding);
+            padding: var(--app-space-xs);
             display: grid;
             grid-template-rows: min-content 1fr;
             overflow: hidden;

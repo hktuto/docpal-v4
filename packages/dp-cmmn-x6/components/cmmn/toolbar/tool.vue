@@ -51,10 +51,10 @@ function mousedown(ev) {
 .icon{
     cursor: grab;
     &:hover{
-        --icon-color: var(--primary-color);
+        --icon-color: var(--app-primary-color);
     }
     &:active{
-         --icon-color: var(--primary-color);
+         --icon-color: var(--app-primary-color);
      }
 }
 </style>

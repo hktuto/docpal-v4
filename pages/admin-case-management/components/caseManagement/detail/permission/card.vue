@@ -76,7 +76,7 @@ function getI18n(value: string) {
 .permissionCard {
   height: 100%;
   background: var(--primary-gradient);
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   color: #fff;
   border-radius: 5px;
   position: relative;
@@ -94,7 +94,7 @@ function getI18n(value: string) {
 }
 .fieldList {
   border-top: 1px solid var(--color-grey-050);
-  padding-block : calc( var(--app-padding) / 2);
+  padding-block : calc( var(--app-space-xs) / 2);
   &.hidden{
     border-top: none;
     display: none;
@@ -112,7 +112,7 @@ function getI18n(value: string) {
 .absoluteTop {
   cursor: pointer;
   position: absolute;
-  top: var(--app-padding);
-  right: var(--app-padding);
+  top: var(--app-space-xs);
+  right: var(--app-space-xs);
 }
 </style>

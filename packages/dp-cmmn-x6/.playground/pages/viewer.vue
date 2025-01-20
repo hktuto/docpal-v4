@@ -40,11 +40,11 @@ async function getFileAndDisplay(){
     overflow: hidden;
     display: grid;
     grid-template-rows: 1fr min-content;
-    padding: calc( var(--app-padding) * 1.5);
+    padding: calc( var(--app-space-xs) * 1.5);
 }
 .bottom{
     width:100%;
-    padding: calc(var(--app-padding) * 2);
+    padding: calc(var(--app-space-xs) * 2);
     border-top: 1px solid var(--color-grey-400);
 }
 </style>

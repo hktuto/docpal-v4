@@ -107,15 +107,15 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  row-gap: var(--app-padding);
-  column-gap: var(--app-padding);
+  row-gap: var(--app-space-xs);
+  column-gap: var(--app-space-xs);
   overflow: auto;
   .list-group-item {
     min-width: 100px;
     height: fit-content;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     background-color: #fff;
-    width: calc(var(--field-width, 25%) - var(--app-padding));
+    width: calc(var(--field-width, 25%) - var(--app-space-xs));
     --icon-size: 1.14rem;
     .header {
       margin: var(--app-input-padding) 0;

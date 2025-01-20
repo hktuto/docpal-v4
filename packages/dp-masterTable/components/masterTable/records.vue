@@ -101,7 +101,8 @@ import type { MTColumnInfo } from "api/src/generate/admin";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onActivated } from "vue";
 const emits = defineEmits(["filter-change"]);
-const masterTableProvider = inject(MasterTableProviderKey);
+
+const { t } = useI18n()
 const {
   public: { endPoint },
 } = useRuntimeConfig();
@@ -124,17 +125,8 @@ const state = reactive<{
   slot: [],
   selectList: []
 });
-
-const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = useVxeTable({
-  id: "mt_" + props.tableId,
-  api: (pageParams: any) =>
-    adminApi.api.postMasterTablesRecordPage({
-      ...pageParams,
-      ...state.extraParams,
-      id: props.tableId,
-    }),
-  columns: [
-    { type: 'checkbox', fixed: "left", width: 47 },
+const baseTableColumns: any = [
+  { type: 'checkbox', fixed: "left", width: 47 },
     { field: "id", title: "masterTable_id", },
     {
       field: "created_date",
@@ -160,32 +152,40 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
       slots: {
         default: "status",
       },
-    },
-  ],
+    }]
+const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = useVxeTable({
+  id: "mt_" + props.tableId,
+  api: (pageParams: any) =>
+    adminApi.api.postMasterTablesRecordPage({
+      ...pageParams,
+      ...state.extraParams,
+      id: props.tableId,
+    }),
+  columns: [...baseTableColumns],
   bodyActions: [
     [{
-        code: "edit_latest_version",
+        code: "edit",
         name: "common_edit",
         action: ({ row }: any) => {
           handleAddRow(row);
         },
       },
       {
-        code: "edit_latest_version",
+        code: "delete",
         name: "trash_actions_delete",
         action: ({ row }: any) => {
           handleDelete(row);
         },
       },
       {
-        code: "edit_latest_version",
+        code: "inactive",
         name: "actions.inactive",
         action: ({ row }: any) => {
           handleActive(row, false);
         },
       },
       {
-        code: "edit_latest_version",
+        code: "active",
         name: "actions.active",
         action: ({ row }: any) => {
           handleActive(row, true);
@@ -193,18 +193,34 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
       },
     ],
   ],
-  visibleMethod: ({ options, column, row, rowIndex }: any) => {
+  permissionMethod: (args: PermissionMethodParams) => {
     // options 是 menuConfig 中的 body 配置
-    options.forEach((list: any) => {
-      list.forEach((item: any) => {
-        if(item.name === 'actions.active' ) {
-          item.visible = row.status ? false : true;
-        } else if(item.name === 'actions.inactive'){
-          item.visible = row.status ? true : false;
+    switch (args.code) {
+      case 'edit':
+        return {
+          visible: props.permission.edit,
+          disabled: false
         }
-      });
-    });
-    return options;
+      case 'delete':
+        return {
+          visible: endPoint === 'admin',
+          disabled: false
+        }
+      case 'active':
+        return {
+          visible: props.permission.enable && !args.row.status,
+          disabled: false
+        }
+      case 'inactive':
+        return {
+          visible: props.permission.enable && args.row.status,
+          disabled: false
+        }
+    }
+    return {
+      visible: true,
+      disabled: false
+    }
   },
   selectChangeHander: (selectedRows: any[]) => {
     state.selectList = [...selectedRows];
@@ -221,11 +237,11 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
   }
 });
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${$i18n.t("msg_confirmWhetherToDelete")}`);
+  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
   if (action !== "confirm") return;
   const result = await adminApi.api.deleteMasterTablesIdRecord(props.tableId,  {recordId: row.id}, {});
   if (!result) {
-    ElMessage.error($i18n.t("dpTip.deleteFailed"));
+    ElMessage.error(t("dpTip.deleteFailed"));
     return;
   }
   query();
@@ -236,7 +252,10 @@ function handleBatchEdit() {
   BatchDialogRef.value.handleOpen(fields, state.selectList)
 }
 const MasterTableNewRowDialogRef = ref();
-function handleAddRow(row: any) {
+function handleAddRow(row?: any) {
+  console.log("handleAddRow", row);
+  console.log("handleAddRow", state.fields);
+  
   MasterTableNewRowDialogRef.value.handleOpen(state.fields, row);
 }
 async function handleBatchActive(status: boolean) {
@@ -248,7 +267,7 @@ async function handleBatchActive(status: boolean) {
       },
       status,
     });
-    ElMessage.success($i18n.t("dpMsg_success"));
+    ElMessage.success(t("dpMsg_success"));
     query()
   } catch (error) {
   } finally {
@@ -262,7 +281,7 @@ async function handleActive(row, status: boolean) {
       id: row.id,
       status
     });
-    ElMessage.success($i18n.t("dpMsg_success"));
+    ElMessage.success(t("dpMsg_success"));
   } catch (error) {
     row.status = row.status ? false : true;
   } finally {
@@ -276,7 +295,7 @@ function handleFilterFormChange(formModel: any) {
   console.log("handleFilterFormChange", state.extraParams);
   reload()
 }
-function getColor(prop: any, option?: "unique" | "required" | "optional") {
+function getColor(prop: any, option?: any) {
   try {
     if (!!prop) {
       const mItem: any = state.fields.find((item: any) => item.columnName === prop);
@@ -301,7 +320,7 @@ async function initTableColumns(fields: any) {
   state.slot = [];
   state.fields = fields;
   const columns = fields
-    .filter((item: any) => !tableConfig.columns.find((c) => c.field === item.columnName))
+    .filter((item: any) => !baseTableColumns.find((c) => c.field === item.columnName))
     .map((item: any) => {
       if (!item.columnName) return item;
       const _item: any = {
@@ -323,28 +342,30 @@ async function initTableColumns(fields: any) {
       return _item;
     });
   // TODO: endPoint
-  if (!props.permission?.edit && !props.permission?.enable && endPoint !== "admin") {
-    const index = tableConfig.columns.findIndex(
-      (item) => item.title === "dpTable_actions"
-    );
-    if (index !== -1) tableConfig.columns.splice(index, 1);
-  }
-
-  let selectItemIndex = tableConfig.columns.findIndex((item: any) => item.field === "id");
+  // if (!props.permission?.edit && !props.permission?.enable && endPoint !== "admin") {
+  //   const index = baseTableColumns.findIndex(
+  //     (item) => item.title === "dpTable_actions"
+  //   );
+  //   if (index !== -1)baseTableColumns.splice(index, 1);
+  // }
+  const newColumns = [...baseTableColumns];
+  let selectItemIndex = newColumns.findIndex((item: any) => item.field === "id");
   if (selectItemIndex < 0) selectItemIndex = 0;
   else selectItemIndex++;
-  tableConfig.columns.splice(selectItemIndex, 0, ...columns);
+  newColumns.splice(selectItemIndex, 0, ...columns);
+  console.log("newColumns", newColumns);
+  tableConfig.columns = newColumns;
 }
 async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
-    `${$i18n.t("msg_confirmWhetherToDeletes")}`
+    `${t("msg_confirmWhetherToDeletes")}`
   );
   if (action !== "confirm") return;
   const ids = state.selectList.map((item: any) => item.id)
   await adminApi.api.postMasterTablesBatchDelete({
     tableId: props.tableId, 
     recordIds: ids});
-  ElMessage.success($i18n.t("dpMsg_success"));
+  ElMessage.success(t("dpMsg_success"));
   if (ids.length === tableConfig.data.length) query();
   else reload();
 }
@@ -353,7 +374,13 @@ onMounted(() => {});
 onActivated(() => {
   // query()
 });
-
+watch(
+  () => props.tableId,
+  (newValue: any) => {
+    reload()
+  },
+  { immediate: true, deep: true }
+);
 defineExpose({ query, reload, initTableColumns });
 </script>
 

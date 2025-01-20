@@ -27,12 +27,12 @@ const props = defineProps(['list'])
 .drag-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
 }
 .list-group {
   height: 100%;
   background-color: #606266;
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   &-item {
     background-color: #fff;
     margin-bottom: var(--app-input-padding);

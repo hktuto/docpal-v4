@@ -220,7 +220,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
     z-index: 0;
     display: grid;
     grid-template-rows: 1fr min-content;
-    padding: calc( var(--app-padding) * 1.5);
+    padding: calc( var(--app-space-xs) * 1.5);
     .bottom{
         position: absolute;
         bottom:0;
@@ -228,7 +228,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
         right:0;
         background-color: var(--color-grey-0000);
         width:100%;
-        padding: calc(var(--app-padding) * 2);
+        padding: calc(var(--app-space-xs) * 2);
         border-top: 1px solid var(--color-grey-400);
         
     }

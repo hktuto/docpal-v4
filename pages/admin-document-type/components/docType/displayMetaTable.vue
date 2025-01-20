@@ -17,7 +17,7 @@
           @change="handleDisplayChange(row)"></el-switch>    
       </template>    
       <template #isRequire="{ row }">
-        <el-icon v-if="row.isRequire" style="--color: var(--primary-color)"><Select /></el-icon>
+        <el-icon v-if="row.isRequire" style="--color: var(--app-primary-color)"><Select /></el-icon>
         <el-icon v-else style="--color: #F56C6C"><CloseBold /></el-icon>
       </template> 
     </VxeGrid>

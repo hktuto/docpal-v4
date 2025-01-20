@@ -84,13 +84,13 @@ defineExpose({
   margin-bottom: var(--app-space-xs);
 }
 .search-child {
-  // background-color: var(--primary-color);
+  // background-color: var(--app-primary-color);
   padding: var(--app-space-xs);
   background: var(--el-color-info-light-5);
   margin-bottom: var(--app-space-xs);
 }
 .search-child-child {
-  // background-color: var(--primary-color);
+  // background-color: var(--app-primary-color);
   background: var(--el-color-info-light-7);
   margin-bottom: var(--app-space-xs);
   padding: var(--app-space-xs);

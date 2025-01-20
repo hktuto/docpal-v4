@@ -111,7 +111,7 @@ defineExpose({ resize });
   padding: 3px 0;
   border-radius: 5px;
   &:hover {
-    background-color: var(--primary-color);
+    background-color: var(--app-primary-color);
     color: #fff;
   }
 }
