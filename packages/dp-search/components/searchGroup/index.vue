@@ -48,6 +48,7 @@ function handleUpdateAgg(aggregation: any) {
 onActivated(() => {
   console.log('onActivated')
   if(searchParams) {
+    // TODO : save query to tab if changed
     BarRef.value.setQuery(searchParams)
     tableRef.value.initBar(searchParams)
   }
