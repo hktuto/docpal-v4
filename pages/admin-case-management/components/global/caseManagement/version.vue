@@ -20,13 +20,16 @@ const { pageNum, pageSize, orderBy, isDesc } = toRefs(props)
 const caseData = ref();
 
 async function getCaseData(){
-    const { data } = await adminApi.caseTypeController.getTypes1(props.caseTypeId)
+
+    const { data } = await adminApi.api.getCaseTypesId(props.caseTypeId)
     caseData.value = data
     console.log(caseData.value)
 }
 
 async function saveAsNewVersion(data:any){
-    await adminApi.caseTypeController.postNew(data.id)
+    console.log("saveAsNewVersion", data)
+    // TODO : save as case logic
+    await adminApi.api.postCaseTypesVersionVersionidNew(data.id)
     tableRef.value?.reload()
     ElNotification.success(`${data.versionNumber} has save to new version`)
 }
@@ -36,12 +39,14 @@ async function promoteVersion(data:any){
 }
 
 async function openVersionDetail(data:any, openInNewTab:boolean = false){
-    const newItem = newCaseManagementDetail(data, data.version)
+    const newItem = newCaseManagementDetail(data.id, data.name, data.version)
+    console.log("openVersionDetail", newItem)
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
 function actionPermission({row, code}:PermissionMethodParams) {
     const isProduction = row.production
+    console.log("actionPermission", row, code, caseData.value)
     const isLatest = row.version === caseData.value.latestVersion
     switch(code){
         case 'edit_version':
@@ -65,7 +70,7 @@ provide(CaseManagementVersionProviderKey,{
             orderBy: params.orderBy,
             isDesc: params.isDesc,
         })
-        return adminApi.caseTypeController.postPage({...params, caseTypeId: props.caseTypeId})
+        return adminApi.api.postCaseTypesVersionPage({...params, caseTypeId: props.caseTypeId})
     },
     actionPermission,
     saveAsNewVersion,

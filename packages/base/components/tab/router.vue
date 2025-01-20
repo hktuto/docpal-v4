@@ -14,6 +14,7 @@ const history = ref<RouterParams[]>([])
 const forwardHistory = ref<RouterParams[]>([])
 
 
+
 const isFullscreen = computed(() => {
     if(!tabManager.fullscreenItem.value) return false
     return tabManager.fullscreenItem.value?.id === tab.value.id
