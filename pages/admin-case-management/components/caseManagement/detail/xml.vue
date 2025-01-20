@@ -14,7 +14,7 @@
 </template>
 <script lang="ts" setup>
 import { Edit } from '@element-plus/icons-vue'
-import {downloadXmlCaseTypeApi, getJsonCaseTypeApi, saveXmlCaseTypeApi} from 'dp-api'
+import {saveXmlCaseTypeApi} from 'dp-api'
 import { adminApi } from 'api'
 
 const caseDetailProvider = inject(CaseManagementDetailProviderKey)
@@ -33,12 +33,12 @@ const state = reactive<any>({
 })
 function save() {
   const data = editorEl.value.save()
-  console.log(data);
   // ordercase,test
   const bslob = xmlStringToFile(data.xml, 'ordercase.cmmn.xml')
   const formData = new FormData()
   formData.append('file', bslob)
-  saveXmlCaseTypeApi(props.id, formData)
+  await adminApi.api.patchCaseTypesVersionVersionidSave(props.id, formData)
+  // saveXmlCaseTypeApi(props.id, formData)
   updateCaseInfo()
 }
 function xmlStringToFile(xmlString, fileName) {
