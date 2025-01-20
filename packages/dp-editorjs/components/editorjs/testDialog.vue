@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import {api} from "dp-api";
+  import {adminApi} from "api";
   import {useEditor} from "~/composables/useEditorjs";
 
   const props = defineProps<{
@@ -42,8 +42,7 @@
         body.variables[key] = body.variables[key].replace(/(?:\r\n|\r|\n)/g, '<br/>');
       }
     })
-    console.log(body)
-    const res = await api.post('/docpal/template/email/send', body);
+    const res = await adminApi.instance.post('/docpal/template/email/send', body);
   }
   
   function addRow(key:string) {

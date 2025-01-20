@@ -7,6 +7,7 @@ if(!tabProvider) {
 }
 const ready = ref(false)
 function layoutReadyHandler(){
+    console.log("layout ready")
     ready.value = true
 }
 const minSize = ref(20)
@@ -69,7 +70,7 @@ onUnmounted(() => {
             </div>
             <slot name="sidebar" />
         </div>
-        <splitpanes v-show="ready" vertical @resized="paneResized" :push-other-panes="true" @ready="layoutReadyHandler">
+        <splitpanes vertical @resized="paneResized" :push-other-panes="true" @ready="layoutReadyHandler">
             <Pane v-if="isMenuStick" :min-size="minSize" :size="displayUserDefineSize" width="20" >
                 <div id="appSidebar">
                 </div>
