@@ -16,6 +16,6 @@ const props = defineProps<{
     font-weight: 800;
     display: block;
     margin-bottom: 1px solid var(--color-grey-000);
-    padding: var(--app-padding) 0 ;
+    padding: var(--app-space-xs) 0 ;
 }
 </style>

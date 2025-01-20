@@ -140,7 +140,7 @@ defineExpose({
   flex-flow: row nowrap;
   gap: var(--app-space-xs);
   justify-content: flex-start;
-  color: var(--primary-color);
+  color: var(--app-primary-color);
   align-items: center;
   white-space: nowrap;
   cursor: pointer;

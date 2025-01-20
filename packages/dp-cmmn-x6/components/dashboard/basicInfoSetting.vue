@@ -116,8 +116,8 @@ defineExpose({ handleOpen })
     display: grid;
     grid-template-columns: min-content 1fr min-content;
     background-color: #fff;
-    padding: var(--app-padding);
-    margin-bottom: var(--app-padding);
+    padding: var(--app-space-xs);
+    margin-bottom: var(--app-space-xs);
     .el-input {
         width: 100%;
     }
@@ -126,13 +126,13 @@ defineExpose({ handleOpen })
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    row-gap: var(--app-padding);
-    column-gap: var(--app-padding);
+    row-gap: var(--app-space-xs);
+    column-gap: var(--app-space-xs);
     .list-group-item {
         min-width: 100px;
         height: fit-content;
-        gap: var(--app-padding);
-        width: calc(var(--field-width, 50%) - var(--app-padding));
+        gap: var(--app-space-xs);
+        width: calc(var(--field-width, 50%) - var(--app-space-xs));
         --icon-size: 1.14rem;
         margin-bottom: unset;
     }
@@ -144,11 +144,11 @@ defineExpose({ handleOpen })
     .el-dialog__body {
         display: grid;
         grid-template-columns: 1fr 30%;
-        gap: var(--app-padding);
+        gap: var(--app-space-xs);
         overflow: auto;
         & > div {
             background-color: #F2F8F9;
-            padding: var(--app-padding);
+            padding: var(--app-space-xs);
             display: grid;
             grid-template-rows: min-content 1fr;
             overflow: hidden;

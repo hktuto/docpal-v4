@@ -97,7 +97,7 @@ function handleEdit(data: any) {
 .list-group-item, .header {
   display: grid;
   grid-template-columns: min-content repeat(var(--column-num), 1fr) min-content;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   align-items: center;
   margin-bottom: 4px;
   font-size: 0.8rem;

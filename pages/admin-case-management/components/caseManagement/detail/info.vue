@@ -79,6 +79,6 @@ function handleFocus(e) {
 }
 .el-button {
   width: 100%;
-  margin-top: var(--app-padding);
+  margin-top: var(--app-space-xs);
 }
 </style>

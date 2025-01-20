@@ -9,14 +9,14 @@ $loader-color: rgba(29, 32, 43, 0.3);
 }
 
 a.ce-link-item{
-    background: var(--primary-color);
+    background: var(--app-primary-color);
     padding: 2px 4px;
     color: #fff;
     font-style: normal;
     text-decoration: none;
     border-radius: 2px;
     &:hover {
-        background: var(--primary-color) !important;
+        background: var(--app-primary-color) !important;
     }
 }
 .ce-link-autocomplete {

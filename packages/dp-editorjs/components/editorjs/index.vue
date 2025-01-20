@@ -153,7 +153,7 @@ defineExpose({
   .desktop, .mobile{
     cursor: pointer;
     &.active{
-      --icon-color: var(--primary-color);
+      --icon-color: var(--app-primary-color);
     }
   }
 }
