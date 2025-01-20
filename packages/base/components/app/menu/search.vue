@@ -32,7 +32,7 @@ function itemClick(item:GlobalSearchItem) {
         </div>
         <div class="sub">meta + k</div>
     </div>
-    <ElDialog v-model="opened" append-to-body modal @opened="keywordRef.focus()" >
+    <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => keywordRef.focus() )" >
         <div class="searchActionContainer">
             <div class="searchInput">
                 <ElInput ref="keywordRef" v-model="keyword" placeholder="Search" clearable></ElInput>
