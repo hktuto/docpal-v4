@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { opened, displayList, keyword, keywordRef, selectedItemIndex } = useGlobalSearch()
 
-const actionList = useGlobalActionList()
 
 const { t } = useI18n()
 
@@ -11,9 +10,10 @@ if(!tabProvider) {
 }
 
 function itemClick(item:GlobalSearchItem) {
+    console.log("item click", tabProvider)
     item.action({
         keyword,
-        tabProvide: tabProvider
+        tabProvider
     })
     opened.value = false
 }

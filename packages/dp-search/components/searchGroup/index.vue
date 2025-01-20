@@ -14,15 +14,21 @@
 </div>
 </template>
 <script lang="ts" setup>
+import { on } from 'events';
+
 const state = reactive<any>({
   aggregation: {}
 })
-const {tableId } = defineProps<{
+const {tableId, searchParams } = defineProps<{
   tableId?: string;
+  searchParams?: any;
+
 }>()
+const BarRef = ref()
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
 const tableRef = ref()
 function handleSearch(params: any) {
+  console.log('handleSearch', params)
   tableRef.value.initBar(params)
   searchState = 'firstSearch'
 }
@@ -38,6 +44,15 @@ function handleUpdateAgg(aggregation: any) {
   state.aggregation = aggregation
   searchState = 'aggChange'
 }
+
+onActivated(() => {
+  console.log('onActivated')
+  if(searchParams) {
+    // TODO : save query to tab if changed
+    BarRef.value.setQuery(searchParams)
+    tableRef.value.initBar(searchParams)
+  }
+})
 </script>
 <style lang="scss" scoped>
 .search-container {

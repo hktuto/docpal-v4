@@ -65,17 +65,8 @@ onMounted(() => {
 <template>
     <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHIghlightPanel">
         <template #sidebar>
-            <AppMenu class="sideMenu">
-                <template #header>
-                    <slot name="header" />
-                </template>
-                <template #footer>
-                    <slot name="footer" />
-                    <LangSwitch />
-                </template>
-            </AppMenu>
+            <slot name="sidebar" />
         </template>
-        
     </TabApp>
     <Contextmenu />
 </template>

@@ -76,6 +76,14 @@ async function handleLogSearch(query: any) {
     isHistory = false
   }, 2000)
 }
+
+function setQuery(query: any) {
+  filterRef.value.initForm(query)
+}
+defineExpose({
+  setQuery
+})
+
 </script>
 <style lang="scss" scoped>
 .search-group-bar {
