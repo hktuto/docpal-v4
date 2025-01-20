@@ -2,8 +2,8 @@
 <el-dialog v-model="state.visible" :title="$t('caseManagement.addOrEditDashboard')"
   :close-on-click-modal="false"
   >
-  <FromRenderer ref="FromRendererRef" :form-json="formJson" >
-  </FromRenderer>
+  <FormRenderer ref="FormRendererRef" :form-json="formJson" >
+  </FormRenderer>
   <template #footer>
     <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
   </template>
@@ -27,11 +27,11 @@ const state = reactive({
   isEdit: false
 })
 const route = useRoute()
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const formJson = getJsonApi('caseManage/dashboard.json')
 async function handleSubmit () {
   // try {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     const params = {
       caseTypeId: route.params.id,
       label: data.label,
@@ -60,7 +60,7 @@ function handleOpen(setting: any) {
     state.isEdit = true
     state.setting = setting
     setTimeout(async () => {
-      FromRendererRef.value.vFormRenderRef.setFormData({
+      FormRendererRef.value.vFormRenderRef.setFormData({
         label: setting.label,
         userGroup: setting.userGroup.split(',')
       })
@@ -68,7 +68,7 @@ function handleOpen(setting: any) {
   } else {
     state.isEdit = false
     setTimeout(async () => {
-      FromRendererRef.value.vFormRenderRef.setFormData({})
+      FormRendererRef.value.vFormRenderRef.setFormData({})
     })
   }
 }

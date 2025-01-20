@@ -5,13 +5,13 @@
   </div>
   <div v-show="mode === 'edit'">
     <div v-for="(item, index) in qItem.matchs" :key="index">
-      <FromRenderer :ref="el => FromRendererRef[item.id] = el" :form-json="formJson" 
+      <FormRenderer :ref="el => FormRendererRef[item.id] = el" :form-json="formJson" 
         @selectClear="(fieldName) => handleDelete(item, fieldName)"
         @formChange="(data) => handleFormChange(data, item)">
           <template v-slot:metadataSlot>
             <FromVariablesRenderer :ref="el => FromVariablesRendererRef[item.id] = el" @formChange="handleMetaChange"></FromVariablesRenderer>
           </template>
-      </FromRenderer>
+      </FormRenderer>
       <el-divider v-if="index !== qItem.matchs.length - 1">
         {{ $t(`logic.${qItem.condition}`)  }}
       </el-divider>
@@ -46,7 +46,7 @@ import type { searchGroup, searchGroupQuery, searchGroupQQ } from '~/typing/sear
 import { Delete, ArrowUp } from '@element-plus/icons-vue'
 const props = defineProps(['qItem'])
 const emits = defineEmits(['delete', 'deleteChild', 'add', 'command', 'update', 'formChange'])
-const FromRendererRef = ref({})
+const FormRendererRef = ref({})
 const FromVariablesRendererRef = ref({}) 
 import formJson from './searchGroupForm.vform.json' 
 const mode = ref('edit')
@@ -71,7 +71,7 @@ function handleFormChange({fieldName, newValue, oldValue, formModel}, item: sear
   try {
     const id = item.id
     if(fieldName === 'metadataKey' && newValue) {
-      const widget = FromRendererRef.value[id].vFormRenderRef.getWidgetRef(fieldName)
+      const widget = FormRendererRef.value[id].vFormRenderRef.getWidgetRef(fieldName)
       const options = widget.getOptionItems()
       const metadata = options.find((item: any) => item.value === newValue)
       const valueItem =  {
@@ -149,7 +149,7 @@ async function getData() {
 }
 async function getFormData (item: any) {
   const id = item.id
-  const data = await FromRendererRef.value[id].vFormRenderRef.getFormData(true)
+  const data = await FormRendererRef.value[id].vFormRenderRef.getFormData(true)
   const data2 = await FromVariablesRendererRef.value[id].getData(true)
   if (item.metadataType === 'array' && data2.metadataValue) data2.metadataValue = data2.metadataValue.split(',')
   return { ...data, ...data2 }
@@ -157,7 +157,7 @@ async function getFormData (item: any) {
 async function setFormData(qItem: searchGroupQQ) {
   await new Promise(resolve => setTimeout(async () => {
     setTimeout(async() => {
-        FromRendererRef.value[qItem.id].vFormRenderRef.setFormData({ ...qItem, ...qItem.option })
+        FormRendererRef.value[qItem.id].vFormRenderRef.setFormData({ ...qItem, ...qItem.option })
         if(qItem.queryType === 'metadata') {
           const metadataOptions = await getMetadataOptions()
           const metadata = metadataOptions.find((item: any) => item.value === qItem.metadataKey)

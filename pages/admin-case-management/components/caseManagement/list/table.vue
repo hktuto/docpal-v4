@@ -127,7 +127,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     optionalConfig:{
         sortConfig:{
             remote: true,
-            defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : []
+            defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : [{field:"createDate"}]
         },
         rowConfig:{
             height: 60,
