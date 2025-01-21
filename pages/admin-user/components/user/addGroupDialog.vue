@@ -50,15 +50,16 @@ function handleOpen(exitList: any) {
 function handleOptions (exitList: any) {
     const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('id')
     const options = userListFilter()
+    console.log(options)
     idRef.loadOptions(options)
     function userListFilter() {
         return state.groupList.reduce((prev: any, item: any) => {
             const index = exitList.findIndex((exitItem: any) => exitItem.id === item.id)
             if (index === -1) {
                 item.value = item.id
-                item.label = item.name
+                item.label = item.name || item.username
                 if (!item.isCanModified) item.disabled = true
-                prev.push(item)
+                prev.push(JSON.parse(JSON.stringify(item)))
             }
             return prev
         }, []);

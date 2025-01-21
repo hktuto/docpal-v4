@@ -7,7 +7,7 @@
 </el-card>
 </template>
 <script lang="ts" setup>
-import { getCDActionsApi, getCDVActionsApi } from 'dp-api'
+
 import { ElMessageBox } from 'element-plus'
 const props = withDefaults( defineProps<{
     dates?: any;
@@ -33,8 +33,14 @@ const route = useRoute()
 async function init() {
   const id = route.query.instanceId
   const caseTypeId = route.query.caseId
-  if(id) state.data = await getCDActionsApi(id, userId)
-  else if(caseTypeId) state.data = await getCDVActionsApi(caseTypeId)
+  if(id){
+    const {data: userAction} = await adminApi.api.getCaseDefinitionActions({id},{userId})
+    state.data = userAction
+  } 
+  else if(caseTypeId){ 
+    const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(caseTypeId)
+    state.data = dashboardActions
+  }
 }
 
 onMounted(() => {

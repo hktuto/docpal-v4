@@ -18,7 +18,14 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { Graph, Node } from "@antv/x6";
-import { getAvailableWorkflowApi, getBpmnApi } from 'dp-api'
+
+import { adminApi } from 'api'
+
+const caseManagementDetailProvider = inject(CaseManagementDetailProviderKey)
+if(!caseManagementDetailProvider) {
+    throw new Error('CaseManagementDetailProviderKey not found')
+}
+
 const props = withDefaults(defineProps<{
   graph: Graph,
   node: Node
@@ -54,7 +61,11 @@ function handleChange(value: string) {
 const getBpmn = async (processKey: string) => {
   state.workflowLoading = true
   try {
-    const blob = await getBpmnApi({processKey})
+    const blob = await adminApi.api.postWorkflowProcessModel({
+      processKey
+    }, {
+      format: 'blob'
+    })
     const text = await blob.text()
     bpmnFile.value = text
   } catch (error) {
@@ -63,7 +74,8 @@ const getBpmn = async (processKey: string) => {
   state.workflowLoading = false
 }
 onMounted(async() => {
-  state.options = await getAvailableWorkflowApi()
+  const { data} = await adminApi.api.postWorkProcessList({requestDTO:{}})
+  state.options = data
 })
 watch(node, ()=> {
   if(node.value) {
