@@ -8,6 +8,7 @@
 
 import { useEventListener } from '@vueuse/core'
 import { SaveAnnotation, GetAnnotation } from 'dp-api'
+import { clientApi } from 'api'
 type PdfJsOptions = {
     print: boolean,
     loadAnnotations: boolean,
@@ -37,7 +38,7 @@ const colorMode = useColorMode();
 const emits = defineEmits()
 async function getAnnotation():Promise<Object> {
     if(!props.options.loadAnnotations) return new Map();
-    const annotation = await GetAnnotation(props.doc.id);
+    const annotation = await clientApi.api.getNuxeoAnnotation(props.doc.id);
     let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
@@ -85,7 +86,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
         },
         comments
     }
-    await SaveAnnotation([param])
+    await clientApi.api.postNuxeoAnnotation([param])
     //  TODO : show notification
 }
 
