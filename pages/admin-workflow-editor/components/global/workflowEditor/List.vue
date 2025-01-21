@@ -12,33 +12,41 @@ if(!routerProvider) {
 const tableRef = ref()
 
 async function openLastestVersion(data:any, openInNewTab = false){   
+    console.log("openLastestVersion", data)
     // REMARK: 在列表頁面是拿不到 version 的 draftId 的，所以需要先取得 version 再打开
-    const {data:{ entryList}} = await adminApi.api.postWorkflowVersionPage({draftId:data.id, orderBy:'versionNumber', isDesc:true, pageSize:1})
-    if(!entryList || entryList.length === 0) {
-        throw new Error('no version found')
+    // const {data:{ entryList}} = await adminApi.api.postWorkflowVersionPage({draftId:data.id, orderBy:'versionNumber', isDesc:true, pageSize:1})
+    // console.log("openLastestVersion", entryList)
+    const praams = {
+        ...data,
+        draftId: data.id,
     }
-    let newItem = newWorkflowEditorDetail(entryList[0]) as any;
+    let newItem = newWorkflowEditorDetail(praams) as any;
     newItem.props.currentVersion = data.latestVersion
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
 function openProductionVersion(data:any, openInNewTab = false){
     // TODO: open detail page
-    const newItem: any = {
-        id: "workflow-editor-detail-" + new Date().getTime(),
-        name: "workflow-editor-detail-" + data.id,
-        icon: 'dp-icon:flow-outline',
-        label: data.name,
-        component: 'LazyWorkflowEditorDetail',
-        props: {
-            id: data.id,
-            currentVersion: data.productionVersion,
-            productionVersion: data.productionVersion,
-            name: data.name,
-            item: data,
-        }
-    }        
+    const praams = {
+        ...data,
+        draftId: data.id,
+    }
+    const newItem = newWorkflowEditorDetail(praams) as any;
     routerProvider?.navigateTo({...newItem}, openInNewTab)
+    // const newItem: any = {
+    //     id: "workflow-editor-detail-" + new Date().getTime(),
+    //     name: "workflow-editor-detail-" + data.id,
+    //     icon: 'dp-icon:flow-outline',
+    //     label: data.name,
+    //     component: 'LazyWorkflowEditorDetail',
+    //     props: {
+    //         id: data.id,
+    //         currentVersion: data.productionVersion,
+    //         productionVersion: data.productionVersion,
+    //         name: data.name,
+    //         item: data,
+    //     }
+    // }        
 
 }
 
