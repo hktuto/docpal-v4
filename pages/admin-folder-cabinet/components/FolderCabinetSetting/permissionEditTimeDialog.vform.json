@@ -39,7 +39,7 @@
         "labelTooltip": null,
         "onCreated": "",
         "onMounted": "",
-        "onChange": "const dateRangeRef = this.getWidgetRef('dateRange')\nconsole.log({dateRangeRef})\nif(value === 'permanent') {\n  dateRangeRef.setHidden(true)\n  dateRangeRef.setRequired(false)\n} else {\n  dateRangeRef.setHidden(false)\n  dateRangeRef.setRequired(true)\n}",
+        "onChange": "const dateRangeRef = this.getWidgetRef('dateRange')\nif(value === 'permanent') {\n  dateRangeRef.setHidden(true)\n  dateRangeRef.setRequired(false)\n} else {\n  dateRangeRef.setHidden(false)\n  dateRangeRef.setRequired(true)\n}",
         "onValidate": ""
       },
       "id": "radio26932"

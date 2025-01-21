@@ -1,0 +1,83 @@
+<template>
+  <div class="pageContainer--padding">
+    <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
+      <el-tab-pane
+        v-for="item in state.tabList"
+        :key="item.id"
+        :name="item.id"
+        v-loading="state.loading"
+      >
+        <template #label>
+          <div class="tab-label" :title="item.label">{{ item.label }}</div>
+        </template>
+      </el-tab-pane>
+    </el-tabs>
+    <main>
+      <FolderCabinetTable ref="tableRef" :id="state.activeTab" @row-click="handleRowClick">
+        <!-- <template #suffixSortButton>
+          <el-button data-testid="folderCabinet-new-button" @click="handleNewItem()">{{
+            $t("folderCabinet.newItem")
+          }}</el-button> -->
+          <!-- <el-button class="suffixSortButton" @click="handleNextItem()">{{$t('handleNextItem.newItem')}}</el-button> -->
+          <!-- <el-button
+            type="info"
+            data-testid="folderCabinet-export-button"
+            @click="handleDownload()"
+            >{{ $t("export") }}</el-button
+          >
+          <el-button v-if="state.uploading" :loading="state.uploading" text></el-button>
+        </template> -->
+      </FolderCabinetTable>
+    </main>
+  </div>
+</template>
+<script lang="ts" setup>
+import { clientApi } from "api";
+import { ElMessageBox } from "element-plus";
+const state = reactive<any>({
+  loading: false,
+  activeTab: "",
+  tabList: [],
+  uploadList: [],
+  uploading: false,
+  curFolderCabinet: {},
+});
+const tableRef = ref()
+function tabChange(tab: string) {
+  console.log("tabChange", tab);
+  state.activeTab = tab;
+  setTimeout(() => {
+    tableRef?.value.reload()
+  }, 100);
+  // router.push({ query: { tab, time } });
+}
+
+// #region module: init
+async function init() {
+  state.loading = true;
+  try {
+    state.tabList = await clientApi.api.getCabinetLoginuserList().then((res) => res.data);
+  } catch (error) {}
+  state.loading = false;
+}
+// #endregion
+function handleRowClick() {
+
+}
+onMounted(async () => {
+  await init();
+  if (!state.activeTab && state.tabList.length > 0) {
+    tabChange(state.tabList[0].id);
+  }
+});
+</script>
+<style lang="scss" scoped>
+.pageContainer--padding {
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: var(--app-space-xs);
+}
+main {
+  overflow: hidden;
+}
+</style>

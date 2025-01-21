@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     '../../packages/authApp',
     "../../pages/client-browse",
     "../../pages/client-search",
-    "../../pages/client-master-table"
+    "../../pages/client-master-table",
+    "../../pages/client-folder-cabinet"
   ],
   features:{
     inlineStyles: true,
