@@ -14,9 +14,7 @@ import { adminApi } from 'api'
 const emits = defineEmits([
     'refresh'
 ])
-const props = defineProps<{
-  groups:any[]
-}>()
+
 const state = reactive({
   loading: false,
   visible: false,

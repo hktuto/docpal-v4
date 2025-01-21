@@ -15,6 +15,13 @@
 <script lang="ts" setup>
 import { Edit } from '@element-plus/icons-vue'
 import {downloadXmlCaseTypeApi, getJsonCaseTypeApi, saveXmlCaseTypeApi} from 'dp-api'
+import { adminApi } from 'api'
+
+const caseDetailProvider = inject(CaseManagementDetailProviderKey)
+if(!caseDetailProvider) {
+    throw new Error('CaseManagementDetailProviderKey not found')
+}
+
 const props = defineProps(['id'])
 const emits = defineEmits(['getCase'])
 const router = useRouter()
@@ -42,8 +49,12 @@ function xmlStringToFile(xmlString, fileName) {
   return file;
 }
 async function init(){
-  const blob = await downloadXmlCaseTypeApi(props.id)
-  let styleJson = await getJsonCaseTypeApi(props.id)
+  
+  const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.id, { versionNumber: caseDetailProvider?.currentVersion },{
+    format:'blob'
+  }) as any
+  console.log(blob)
+  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(props.id, { versionNumber: caseDetailProvider?.currentVersion })
   styleJson = styleJson ? JSON.parse(styleJson) : null
   const cmmnString = await blob.text()
   console.log("cmmnString", cmmnString)
