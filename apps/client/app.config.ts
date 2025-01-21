@@ -8,6 +8,9 @@ export default defineAppConfig({
         },
         {
             name:'client-master-table'
+        },
+        {
+            name:'client-folder-cabinet'
         }
     ],
 })
