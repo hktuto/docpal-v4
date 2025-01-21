@@ -22,7 +22,7 @@ export default defineAppConfig({
         },
         {
             label:"file_uploads",
-            icon: "dp-icon:flow-outline",
+            icon: "hugeicons:cloud-upload",
             children: [
                 {
                     name: "clientAIUpload"
@@ -34,7 +34,7 @@ export default defineAppConfig({
         },
         {
             label:"file_share_module",
-            icon: "dp-icon:flow-outline",
+            icon: "lucide:file-symlink",
             children: [
                 {
                     name: "client-share"
@@ -61,7 +61,7 @@ export default defineAppConfig({
         },
         {
             label:"retention_policies",
-            icon: "dp-icon:flow-outline",
+            icon: "ic:outline-lock-clock",
             children: [
                 {
                     name: "client-retention"
@@ -73,7 +73,7 @@ export default defineAppConfig({
         },
         {
             label:"DASHBOARD",
-            icon: "dp-icon:flow-outline",
+            icon: "material-symbols:dashboard-customize-outline-rounded",
             children: [
                 {
                     name: "client-work-panel"
