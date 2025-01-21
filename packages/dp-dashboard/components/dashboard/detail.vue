@@ -93,6 +93,7 @@ import "splitpanes/dist/splitpanes.css";
 import { GridLayout, GridItem } from "grid-layout-plus";
 import { widgetComponent } from "~/utils/dashboardWidgetHelper";
 import type { DashboardWidgetSetting } from "~/utils/dashboardWidgetHelper";
+import { useDebounceFn } from '@vueuse/core'
 const props = withDefaults(
   defineProps<{
     // layout: DashboardWidgetSetting[],
@@ -128,7 +129,7 @@ const layout = defineModel<DashboardWidgetSetting>("layout");
 //         emits('update:layout', val)
 //     }
 // })
-const emits = defineEmits(["refreshSetting", "delete", "update:layout"]);
+const emits = defineEmits(["refreshSetting", "delete", "update:layout", 'save']);
 
 const sheetRefs = ref<any>({});
 function handleEditMode() {
@@ -142,15 +143,12 @@ function handleRefreshSetting(setting: any, row: any) {
   row.setting = setting;
   emits("refreshSetting", row);
 }
-function chartResize(row: any) {
-  console.log(sheetRefs.value);
-  
+const chartResize = useDebounceFn((row: any) => {
   if (sheetRefs.value[row.i]) {
-    setTimeout(() => {
-      sheetRefs.value[row.i].resize();
-    }, 10);
+    sheetRefs.value[row.i].resize();
   }
-}
+  emits('save')
+}, 1000, { maxWait: 5000 })
 
 const dropId = "drop";
 let dragItem = { x: -1, y: -1, w: 2, h: 2, i: "" };

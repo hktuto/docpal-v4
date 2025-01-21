@@ -14,14 +14,14 @@
         <el-tag v-else type="danger">{{ $t("actions.inactived") }}</el-tag>
       </template>
     </VxeGrid>
-    <DashboardDialog ref="DashboardDialogRef" @refresh="query({})" @add="handleDblclick"/>
+    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="query({})" @add="handleDblclick"/>
   </div>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-import { publicApi } from "api";
+import { adminApi } from "api";
 import dayjs from "dayjs";
-import { routeDashboardManageDetail } from '~/utils/routerHelper';
+import { routePersonalDashboardDetail } from '~/utils/routerHelper';
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {};
@@ -35,7 +35,7 @@ const {
 } = useVxeTable({
   id: "userTableSetting",
   api: (pageParams: any) =>
-  publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
+  adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
   columns: [
     { field: "name", title: "tableHeader_name", fixed: "left" },
     { field: "access", title: "tableHeader_access" },
@@ -85,7 +85,7 @@ const {
 });
 const DashboardDialogRef = ref()
 function handleDblclick(row: any) {
-  routerProvider?.navigateTo(routeDashboardManageDetail(row), false)
+  routerProvider?.navigateTo(routePersonalDashboardDetail(row), false)
 }
 function handleConfig(row: any) {
   DashboardDialogRef.value.handleOpen({
@@ -96,7 +96,7 @@ function handleConfig(row: any) {
 async function deleteItem(id: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if(action !== 'confirm') return
-  await publicApi.api.deleteUserDashboardId(id)
+  await adminApi.api.deletePersonalDashboardId(id)
   query({})
 }
 async function handleCreate() {
