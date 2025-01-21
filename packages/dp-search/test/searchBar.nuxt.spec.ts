@@ -261,7 +261,7 @@ describe('SearchGroupBarSaveLogAdd', () => {
   });
   it('submits form data correctly', async () => {
     const mockData = { key: 'value' };
-    wrapper.vm.FromRendererRef = {
+    wrapper.vm.FormRendererRef = {
       vFormRenderRef: {
         getFormData: vi.fn(() => Promise.resolve(mockData)),
       },
@@ -273,7 +273,7 @@ describe('SearchGroupBarSaveLogAdd', () => {
     expect(wrapper.vm.state.dialogVisible).toBe(false);
   });
   it('does not emit save if form data is empty', async () => {
-    wrapper.vm.FromRendererRef = {
+    wrapper.vm.FormRendererRef = {
       vFormRenderRef: {
         getFormData: vi.fn(() => Promise.resolve(null)),
       },
@@ -284,7 +284,7 @@ describe('SearchGroupBarSaveLogAdd', () => {
     expect(wrapper.emitted().save).toBeUndefined();
   });
   it('handles errors during form submission', async () => {
-    wrapper.vm.FromRendererRef = {
+    wrapper.vm.FormRendererRef = {
       vFormRenderRef: {
         getFormData: vi.fn(() => Promise.reject(new Error('Error fetching data'))),
       },

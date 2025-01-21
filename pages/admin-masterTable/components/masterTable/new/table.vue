@@ -99,13 +99,13 @@ async function handleSubmit() {
     return
   }
   try {
-    await adminApi.api.postMasterTables({
+    const {data} = await adminApi.api.postMasterTables({
       name: state.name,
       fields: tableConfig.data
     })
-    routerProvider.navigateTo(routeMasterTableNew()) 
+    routerProvider.navigateTo(routeMasterTableDetail(data)) 
   } catch (error) {
-      
+      console.log(error)
   }
 }
 function checkDisabledUniqueAndOpenSchemaDialog(row: any, edit: boolean = false) {

@@ -42,8 +42,8 @@ function openLatestVersion(data:any, openInNewTab:boolean = false){
 
 function openProductionVersion(data:any, openInNewTab:boolean = false){
     // TODO : promote to production
-    // const newItem = newCaseManagementDetail(data, data.productionVersion)
-    // routerProvider?.navigateTo(newItem, openInNewTab)
+    const newItem = newCaseManagementDetail(data.productionVersionId, data.name, data.productionVersion)
+    routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
 function openVersion(data:any, openInNewTab:boolean = false){

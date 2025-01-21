@@ -1,3 +1,4 @@
+import { TabItem } from './../../../packages/base/utils/tabType';
 import { CaseManagementDetail } from './../../../apps/admin/.nuxt/components.d';
 import type {PermissionMethodParams} from '#imports';
 export interface CaseManagementListProvider {
@@ -21,6 +22,8 @@ export const CaseManagementVersionProviderKey : InjectionKey<CaseManagementVersi
 
 export interface CaseManagementDetailProvider {
     caseData: any,
+    caseId: Ref<any>,
+    currentVersionId: string,
     currentVersion: string
 }
 
@@ -74,4 +77,19 @@ export const newCaseManagementVersionList = function(data:any, version:string) {
             name: data.name,
         }
     } as TabItem
+}
+
+export function newCaseManagmentEditor(caseTypeId:string, name:string, version:string) {
+    return {
+        id: 'case-management-editor-' + new Date().getTime(),
+        name: 'case-management-editor-' + caseTypeId,
+        icon: 'dp-icon:case-outline',
+        label: 'caseManagement.title',
+        component: 'LazyCaseManagementEditor',
+        props: {
+            caseTypeId,
+            name,
+            currentVersion: version
+        }
+    }
 }

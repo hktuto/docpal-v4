@@ -39,8 +39,7 @@ async function promoteVersion(data:any){
 }
 
 async function openVersionDetail(data:any, openInNewTab:boolean = false){
-    const newItem = newCaseManagementDetail(data.id, data.name, data.version)
-    console.log("openVersionDetail", newItem)
+    const newItem = newCaseManagementDetail(data.id, caseData.value.name, data.version)
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 

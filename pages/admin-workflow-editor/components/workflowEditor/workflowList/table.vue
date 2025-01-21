@@ -11,6 +11,9 @@ const gridRef = ref()
 const { tableConfig , tableEvent } = useVxeTable({
     id: 'workflowEditorListTableSetting',
     api: (pageParams:any) => listProvider.getListApi(pageParams),
+    dblClickAction: ({ row, column, event }:any) => {
+        listProvider.openLastestVersion(row)
+    },
     columns:  [
         {
             field: 'name',
