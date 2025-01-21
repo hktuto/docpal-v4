@@ -58,6 +58,7 @@ async function handleOptions (exitList:UserDTO[]) {
     const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('id')
 
     const options = userListFilter()
+    
     idRef.loadOptions(options)
     function userListFilter() {
         return state.userList.reduce((prev: any[], item: UserDTO & any) => {
