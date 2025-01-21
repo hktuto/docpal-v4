@@ -35,9 +35,7 @@
                 @click="goMetaEdit"
                 >({{ $t("tip.clickToEditDisplayMeta") }})</span
               > -->
-            </template>{{ form.labelRule }} 
-            111
-            {{ state.dragList }}
+            </template>
             <DragSelect
               :dragList="state.dragList"
               :dropList="form.labelRule"
