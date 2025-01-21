@@ -1,6 +1,6 @@
 <template>
 <div v-loading="state.loading" style="height: 100%;">
-    <FromVariablesRenderer class="meta-render-form" ref="FromVariablesRendererRef" @formChange="formChange"
+    <FormVariablesRenderer class="meta-render-form" ref="FormVariablesRendererRef" @formChange="formChange"
         @handleApply="handleApply" >
         <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
           <div class="ai-suggestion-wrapper">
@@ -22,23 +22,21 @@
             </div>
           </div>
         </template>
-    </FromVariablesRenderer>
+    </FormVariablesRenderer>
 </div>
 </template>
 
 <script lang="ts" setup> 
+import { clientApi } from 'api'
 import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import { 
-    GetDocpalTypeMetaApi, 
-    GetActiveDocpalTypeWithIsFolderApi, 
-    UpdateAiDocumentApi,
-    getOcrSupportedLanguage } from 'dp-api'
+import { getMetaApplyFormGridItem, getMetaApplyButton, getMetaAISlot } from '~/utils/metaFormHelper'
 type initMetaFormOptions = {
     isFolder?: boolean,
     aiAnalysis?: any,
     aiDocId?: string
 }
+const { t } = useI18n()
 /**
  * fileRequest ： apply按钮, meta form
  * upload ：doc name,docType, meta form
@@ -57,8 +55,7 @@ const props = withDefaults(defineProps<{
 
 const emits = defineEmits(['formChange', 'handleApply'])
 const route = useRoute()
-const metaDateFormat = useUser().getMetaDateFormat()
-
+const metaDateFormat = userDisplayTimeSetting()
 const state = reactive<any>({
     loading: false,
     data: [],
@@ -71,8 +68,8 @@ const state = reactive<any>({
 })
 const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor', 'dc:created', 'dc:publisher', 'dc:contributors', 'common:icon', 'common:icon-expanded', 'uid:uid', 'uid:major_version', 'uid:minor_version', 'file:content', 'files:files', 'nxtag:tags', 'relatedtext:relatedtextresources', 'sec:clearanceLevel', 'sec:securityKeyword']
 // #region module: Variables
-    const FromVariablesRendererRef = ref()
-    async function getVariables(isFolder?: boolean) {
+    const FormVariablesRendererRef = ref()
+    async function getVariables(isFolder: boolean = false) {
         try {
             const date = new Date().valueOf()
             state.variables = []
@@ -81,7 +78,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                 if(item.display && ignoreList.indexOf(item.metaData) === -1) {
                     const _item: any = {
                         name: item.metaData,
-                        label: $i18n.t(item.metaData),
+                        label: t(item.metaData),
                         type: item.dataType || 'input',
                         required: item.isRequire || false,
                         options: {}
@@ -125,11 +122,11 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             //     const language = await getOcrSupportedLanguage()
             //     state.variables.unshift({
             //         name: 'dc:language',
-            //         label: $i18n.t('filePopover_OCRLanguages'),
+            //         label: t('filePopover_OCRLanguages'),
             //         type: 'select',
             //         required: true,
             //         options: {
-            //             optionItems: language.map((item) => ({ label: $i18n.t(`dpLanuage.${item}`), value: item }) ),
+            //             optionItems: language.map((item) => ({ label: t(`dpLanuage.${item}`), value: item }) ),
             //             clearable: false,
             //             filterable: true,
             //             multipleLimit: 2,
@@ -141,7 +138,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             if(['ai', 'upload', 'changeDocType'].includes(props.mode)) {
                 state.variables.unshift({
                     name: 'documentType',
-                    label: $i18n.t('search.documentType'),
+                    label: t('search.documentType'),
                     type: 'select',
                     required: true,
                     options: {
@@ -155,7 +152,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             if(['ai', 'upload', 'folderCabinet'].includes(props.mode)) {
                 state.variables.unshift({
                     name: 'docName',
-                    label: $i18n.t('tableHeader_name'),
+                    label: t('tableHeader_name'),
                     type: 'input',
                     required: true,
                     options: {
@@ -166,14 +163,14 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             
             
             nextTick(async () => {
-                const formJson = await FromVariablesRendererRef.value.createJson(state.variables)
+                const formJson = await FormVariablesRendererRef.value.createJson(state.variables)
                 if (props.mode === 'fileRequest') {
                     const newFormJson = getApplyFormJson(formJson)
-                    FromVariablesRendererRef.value.setFormJson(newFormJson)
+                    FormVariablesRendererRef.value.setFormJson(newFormJson)
                 }
                 else if (props.mode === 'ai' || props.mode === 'ai-edit') {
                     const newFormJson = getAIFormJson(formJson)
-                    FromVariablesRendererRef.value.setFormJson(newFormJson)
+                    FormVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
         } catch (error) {
@@ -210,7 +207,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
     }
     function clear() {
         state.variables = []
-        FromVariablesRendererRef.value.createJson(state.variables )
+        FormVariablesRendererRef.value.createJson(state.variables )
     }
     async function init(documentType: any, initOptions: initMetaFormOptions) {
         state.initOptions = { ...initOptions, documentType }
@@ -222,7 +219,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             state.loading = true
             state.data = []
             state.variables = []
-            state.data = await GetDocpalTypeMetaApi(documentType)
+            state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
             
             await getVariables(initOptions?.isFolder)
             if(props.mode === 'ai' || props.mode === 'ai-edit') {
@@ -253,12 +250,12 @@ async function setData(properties: any) {
         }
     })
     setTimeout(() => {
-        FromVariablesRendererRef.value.setData(data)
+        FormVariablesRendererRef.value.setData(data)
     })
-    // return await FromVariablesRendererRef.value.setData(properties)
+    // return await FormVariablesRendererRef.value.setData(properties)
 }
 async function getData() {
-    const data = await FromVariablesRendererRef.value.getData()
+    const data = await FormVariablesRendererRef.value.getData()
     state.variables.forEach((item: any) => {
         switch (item.type) {
             case 'textarea':
@@ -287,7 +284,7 @@ async function formChange(formData: any) {
     }
 }
 async function aiFormChange (key: any, analysis: any) {
-    FromVariablesRendererRef.value.setData({
+    FormVariablesRendererRef.value.setData({
         [key]: analysis.value
     })
 }
@@ -308,7 +305,7 @@ async function deleteAiSuggestion(deleteName: string) {
         aiId:  state.aiDocId
     }
     try {
-        const res = await UpdateAiDocumentApi(params)
+        const res = await clientApi.api.patchNuxeoDocumentUpdateaidocumentDeprecate(params)
         delete state.aiAnalysis[deleteName]
     } catch (error) {
         
@@ -320,7 +317,7 @@ function handleApply(formModel: any) {
 // #region module: Validate
     async function getValidateMsg (documentType: string, properties?: any) {
         let msg = ''
-        const metaList = await GetDocpalTypeMetaApi(documentType)
+        const metaList = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
         if (!metaList) return msg
         metaList.forEach((metaItem: any) => {
             if (!metaItem.display || ignoreList.includes(metaItem.metaData)) return
@@ -328,7 +325,7 @@ function handleApply(formModel: any) {
                 if(!properties 
                     || !properties[metaItem.metaData]
                     || (properties[metaItem.metaData] instanceof Array && properties[metaItem.metaData].length === 0)) {
-                        msg += `[${$i18n.t(metaItem.metaData)}]: ${$i18n.t('common_canNotEmpty')}<br/>`
+                        msg += `[${t(metaItem.metaData)}]: ${t('common_canNotEmpty')}<br/>`
                     }
             } 
         })
@@ -350,9 +347,9 @@ function handleApply(formModel: any) {
         let errorMessage = await Promise.all(pList)
         errorMessage = errorMessage.filter(item => !!item)
         if(errorMessage.length > 0) {
-            ElMessageBox.confirm(errorMessage.join('<br>'), $i18n.t('dpTip_warning'), {
+            ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
                 dangerouslyUseHTMLString: true,
-                confirmButtonText: $i18n.t('dpButtom_confirm'),
+                confirmButtonText: t('dpButtom_confirm'),
             })
             // throw new Error("error");
         } 
@@ -360,7 +357,19 @@ function handleApply(formModel: any) {
         
     }
 // #endregion
-
+function GetActiveDocpalTypeWithIsFolderApi(isFolder: boolean) {
+    try {
+        const docList: any = clientApi.api.getTypesActive().then(res => res.data)
+        return docList?.filter(item => item.isFolder === isFolder).map((item) => ({
+            ...item,
+            value: item.name,
+            label: item.name,
+        }))
+    } catch (error) {
+        return []
+    }
+        
+}
 
 defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
 </script>
