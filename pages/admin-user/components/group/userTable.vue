@@ -16,7 +16,7 @@
                 @click="handleGroupAddMemberFormShow()">{{$t('user_addUser')}}</el-button>
         </div>
     </template>
-    <div style="height: 100%; overflow: hidden;">
+    <div style="height: 100%; overflow: hidden;position: relative;">
         <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
             <template #toolbar_buttons>
                 <slot name="toolbar_buttons" />
@@ -116,8 +116,10 @@ watch( () => props.group, async(newValue) => {
 .el-card {
     display: grid;
     grid-template-rows: min-content 1fr;
-    .el-card__body {
+    :deep(.el-card__body){
         overflow: hidden;
+        height: 100%;
+        position: relative;
     }
 }
 .flex-x-between {

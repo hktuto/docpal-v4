@@ -62,7 +62,7 @@ provide(userProviderDetailKey, {
     return adminApi.api.postNuxeoIdentityUserBatchAddGroups(params)
   },
   GetGroupListApi : async() => {
-    const res = await adminApi.api.postNuxeoIdentityUsers()
+    const res = await adminApi.api.postNuxeoIdentityGroups({})
     return res.data
   },
   getUser,
@@ -97,5 +97,20 @@ onActivated(async () => {
     'list group virtualFolder';
   height: 100%;
   overflow: hidden;
+  :deep(.el-card){
+    height: 100%;
+    overflow: hidden;
+
+  }
+  :deep(.el-card__header) {
+    min-height: 45px !important;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+    > * {
+      width: 100%;;
+    }
+  }
 }
 </style>

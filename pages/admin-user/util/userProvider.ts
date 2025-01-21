@@ -35,7 +35,7 @@ interface groupProviderDetail {
     DeleteGroupApi: (params:any) => Promise<any>,
     GetMemberListApi: (params:any) => Promise<any>,
     BatchGroupRemoveUsersApi: (params:any) => Promise<any>,
-
+    BatchGroupAddUsersApi: (params:any) => Promise<any>,
 }
 export const userProviderKey: InjectionKey<userProvider> = Symbol('userProvider');
 export const userProviderDetailKey: InjectionKey<userProviderDetail> = Symbol('userProviderDetail');
