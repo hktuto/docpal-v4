@@ -15,7 +15,6 @@ import { onActivated } from "vue";
 const { id } = defineProps<{
   id: number;
 }>();
-const dateFormat = userDisplayTimeSetting();
 const { t } = useI18n()
 const state = reactive({
   info: {
@@ -25,8 +24,8 @@ const state = reactive({
   loading: false,
   saveLoading: false,
   dates: [
-    dayjs().startOf("year").format(dateFormat),
-    dayjs(new Date()).format(dateFormat),
+    dayjs().startOf("year").format('YYYY-MM-DD'),
+    dayjs(new Date()).format('YYYY-MM-DD'),
   ],
 });
 function handleRefresh (layoutSetting:any) {
