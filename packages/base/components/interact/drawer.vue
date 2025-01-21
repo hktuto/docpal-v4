@@ -44,7 +44,7 @@ const interact = reactive({
 });
 const style = computed(() => {
   let s = `--drawer-width: ${interact.w}px;`;
-  s += `--drawer-padding: ${interact.w === 0 ? 0 + "px" : "var(--app-padding)"};`;
+  s += `--drawer-padding: ${interact.w === 0 ? 0 + "px" : "var(--app-space-xs)"};`;
   s += `--drawer-min-width: ${interact.w === 0 ? 0 : props.minWidth}px;`;
   return s;
 });

@@ -9,7 +9,7 @@
         @selectClear="(fieldName) => handleDelete(item, fieldName)"
         @formChange="(data) => handleFormChange(data, item)">
           <template v-slot:metadataSlot>
-            <FromVariablesRenderer :ref="el => FromVariablesRendererRef[item.id] = el" @formChange="handleMetaChange"></FromVariablesRenderer>
+            <FormVariablesRenderer :ref="el => FormVariablesRendererRef[item.id] = el" @formChange="handleMetaChange"></FormVariablesRenderer>
           </template>
       </FormRenderer>
       <el-divider v-if="index !== qItem.matchs.length - 1">
@@ -47,7 +47,7 @@ import { Delete, ArrowUp } from '@element-plus/icons-vue'
 const props = defineProps(['qItem'])
 const emits = defineEmits(['delete', 'deleteChild', 'add', 'command', 'update', 'formChange'])
 const FormRendererRef = ref({})
-const FromVariablesRendererRef = ref({}) 
+const FormVariablesRendererRef = ref({}) 
 import formJson from './searchGroupForm.vform.json' 
 const mode = ref('edit')
 function handleAddFilter() {
@@ -84,9 +84,9 @@ function handleFormChange({fieldName, newValue, oldValue, formModel}, item: sear
         }
       }
       item.metadataType = metadata.type 
-      FromVariablesRendererRef.value[id].createJson([valueItem])
+      FormVariablesRendererRef.value[id].createJson([valueItem])
     } else {
-      FromVariablesRendererRef.value[id].createJson([])
+      FormVariablesRendererRef.value[id].createJson([])
     }
   } catch (error) {
     
@@ -150,7 +150,7 @@ async function getData() {
 async function getFormData (item: any) {
   const id = item.id
   const data = await FormRendererRef.value[id].vFormRenderRef.getFormData(true)
-  const data2 = await FromVariablesRendererRef.value[id].getData(true)
+  const data2 = await FormVariablesRendererRef.value[id].getData(true)
   if (item.metadataType === 'array' && data2.metadataValue) data2.metadataValue = data2.metadataValue.split(',')
   return { ...data, ...data2 }
 }
@@ -172,7 +172,7 @@ async function setFormData(qItem: searchGroupQQ) {
               defaultValue: qItem.metadataValue
             }
           }
-          FromVariablesRendererRef.value[qItem.id].createJson([valueItem])
+          FormVariablesRendererRef.value[qItem.id].createJson([valueItem])
         }
         resolve()
     })

@@ -374,7 +374,7 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
 </script>
 <style lang="scss" scoped>
 .ai-button-list {
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .el-button {
         margin: unset;
         padding: unset;
@@ -391,22 +391,22 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-bottom: calc(var(--app-padding) * 2 );
+  margin-bottom: calc(var(--app-space-xs) * 2 );
 }
 // padding: 24px 0 18px;
 .ai-suggestion-content {
     --icon-color: #fff;
     --icon-size: 0.8rem;
     font-size: 0.8rem;
-    padding: var(--app-padding) ;
+    padding: var(--app-space-xs) ;
     background-color: #FFC401;
     color: #fff;
-    border-radius: calc(var(--app-padding) * 2);
+    border-radius: calc(var(--app-space-xs) * 2);
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     line-height: 1;
     
     pre {
@@ -426,7 +426,7 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
   }
 } 
 .meta-render-form {
-    // padding: var(--app-padding);
+    // padding: var(--app-space-xs);
     width: 99%;
     overflow: auto;
     .static-content-item {
