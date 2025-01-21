@@ -34,6 +34,7 @@ import { clientApi } from 'api';
 const emits = defineEmits([
     'refresh'
 ])
+const { t } = useI18n()
 const state = reactive({
     initLoading: false,
     loading: false,
