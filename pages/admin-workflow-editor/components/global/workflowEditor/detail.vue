@@ -118,6 +118,7 @@ async function saveAsNewVersion(){
 
 
 watch(() => [id,currentVersion], (newWorkflowId) => {
+    console.log("watch", newWorkflowId)
     if(newWorkflowId[0] && newWorkflowId[1]) {
         getWorkflow()
     }

@@ -46,6 +46,7 @@ export type NewWorkflowVersionDetailParams = {
     [key:string]:any
 }
 export const newWorkflowEditorDetail = function(params:NewWorkflowVersionDetailParams){
+    console.log("newWorkflowEditorDetail", params)
     return {
         id: "workflow-editor-detail-" + new Date().getTime(),
         name: "workflow-editor-detail-" + params.draftId,

@@ -11,9 +11,15 @@ if(!routerProvider) {
 
 const tableRef = ref()
 
-function openLastestVersion(data:any, openInNewTab = false){
+async function openLastestVersion(data:any, openInNewTab = false){
     // TODO: open detail page'
-    let newItem = newWorkflowEditorDetail(data) as any;
+    
+    // get lastest version draft id
+    const {data:{ entryList}} = await adminApi.api.postWorkflowVersionPage({draftId:data.id, orderBy:'versionNumber', isDesc:true, pageSize:1})
+    if(!entryList || entryList.length === 0) {
+        throw new Error('no version found')
+    }
+    let newItem = newWorkflowEditorDetail(entryList[0]) as any;
     newItem.props.currentVersion = data.latestVersion
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
