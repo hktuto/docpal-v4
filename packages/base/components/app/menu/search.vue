@@ -1,6 +1,7 @@
 <script setup lang="ts">
-const { opened, displayList, keyword, keywordRef, selectedItemIndex } = useGlobalSearch()
+const { opened, displayList, keyword, selectedItemIndex } = useGlobalSearch()
 
+const keywordRef = ref()
 
 const { t } = useI18n()
 
@@ -18,6 +19,10 @@ function itemClick(item:GlobalSearchItem) {
     opened.value = false
 }
 
+function focus() {
+    keywordRef.value.focus()
+}
+
 
 </script>
 
@@ -32,7 +37,7 @@ function itemClick(item:GlobalSearchItem) {
         </div>
         <div class="sub">meta + k</div>
     </div>
-    <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => keywordRef.focus() )" >
+    <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => focus() )" >
         <div class="searchActionContainer">
             <div class="searchInput">
                 <ElInput ref="keywordRef" v-model="keyword" placeholder="Search" clearable></ElInput>
