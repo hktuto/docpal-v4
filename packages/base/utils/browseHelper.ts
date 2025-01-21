@@ -1,3 +1,4 @@
+import { clientApi } from 'api';
 import * as mime from 'mime-types'
 
 export function canCollaboraEdit(mimeType:string) {
@@ -88,4 +89,16 @@ export function toBrowseItem(path:string) {
             idOrPath:path
         }
       }
+}
+
+export const getUniqueName = async(file:any) => {
+    try {
+        const fileName = file.fileName || file.name
+        // TODO: check if deprecated
+        const res = await clientApi.api.postNuxeoDocumentIsduplicatename({ path: file.goPath, titles: [ fileName ]}).then(res => res.data)
+        const name = res[fileName]?.uniqueName || fileName
+        return name
+    } catch (error) {
+        return file.fileName || file.name
+    }
 }
