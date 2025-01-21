@@ -10,6 +10,15 @@ export default defineAppConfig({
       hoverIcon: "material-symbols:dashboard-customize-outline-rounded",
       component: "LazyDashboardManagePage",
       props:{},
+    },
+    "admin-work-panel":{
+      id:"admin-work-panel",
+      name: 'admin-work-panel',
+      label: "adminMenu.workPanel",
+      icon: "carbon:dashboard",
+      hoverIcon: "carbon:dashboard",
+      component: "LazyPersonalDashboardManagePage",
+      props:{},
     }
   }
   
