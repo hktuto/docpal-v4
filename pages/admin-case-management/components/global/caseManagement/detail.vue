@@ -3,7 +3,7 @@ import {CaseManagementDetailProviderKey} from '#imports'
 import { adminApi } from 'api'
 
 const props = defineProps<{
-  caseTypeId: string,
+    caseTypeId: string,
     name: string,
     currentVersion: string,
 }>()
@@ -13,10 +13,8 @@ if(!routerProvider) {
     throw new Error('MenuRouterKey not found')
 }
 
-const state = reactive<any>({
-  detail: null,
-
-})
+const loading = ref(false)
+const caseInfo = ref<any>()
 
 const xmlRef = ref()
 function handleSave() {
@@ -35,7 +33,7 @@ const permissionRef = ref()
 function getCase(data: any) {
   caseData.caseNode = data.caseNode
   caseData.caseInformation = data.caseInformation
-  console.log("case data", data);
+  console.log("getCase", data);
 
   caseData.cmmn = data.cmmn
   permissionRef.value.init(caseData.caseNode.data)
@@ -45,14 +43,17 @@ function handleUpdate(){
   // add missing function
 }
 onActivated(async()=> {
+loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
-    console.log("case data", data)
-    state.detail = data
+    caseInfo.value = data
+    loading.value = false
 })
 
 
 provide(CaseManagementDetailProviderKey, {
   caseData,
+  caseInfo,
+  currentVersionId: props.caseTypeId,
   currentVersion: props.currentVersion,
 })
 
@@ -60,8 +61,8 @@ provide(CaseManagementDetailProviderKey, {
 </script>
 
 <template>
-    <div class="pageContainer">
-      <CaseManagementDetailInfo :detail="state.detail"/>
+    <div v-if="!loading" class="pageContainer">
+      <CaseManagementDetailInfo />
       <CaseManagementDetailCaseInfomation :caseInformation="caseData.caseInformation" :node="caseData.caseNode" @save="handleSave" />
      <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
      <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->

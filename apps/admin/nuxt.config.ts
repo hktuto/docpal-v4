@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     "../../pages/super-workflow-form",
     "../../pages/admin-bulk-import",
     "../../pages/admin-dam",
-    // "../../pages/admin-document-template",
+    "../../pages/admin-document-template",
     // "../../pages/admin-case-management",
     "../../pages/admin-file-policies",
     "../../pages/admin-docker-log",

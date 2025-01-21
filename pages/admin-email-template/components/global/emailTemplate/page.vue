@@ -48,6 +48,9 @@ const {
     { field: "emailLayoutName", title: "emailTemplate.layout",  },
     { field: "createdBy", title: "role.creator",  },
   ],
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row);
+  },
   bodyActions: [
     [
       {
