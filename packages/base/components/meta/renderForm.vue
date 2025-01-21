@@ -30,7 +30,6 @@
 import { clientApi } from 'api'
 import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-// import { getMetaApplyFormGridItem, getMetaApplyButton, getMetaAISlot } from '~/utils/metaFormHelper'
 type initMetaFormOptions = {
     isFolder?: boolean,
     aiAnalysis?: any,
