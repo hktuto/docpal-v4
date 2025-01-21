@@ -136,7 +136,6 @@ export function getExtentionProperties(element: any, prop: CmmnExtentionProperti
         }
         return result
     } catch (error) {
-        dpLog('info: no extensionElements')
         return []
     }
     function revert(list: any) {

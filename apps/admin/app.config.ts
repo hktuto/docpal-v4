@@ -136,6 +136,21 @@ export default defineAppConfig({
             ]
         },
         {
+            label:"adminMenu.system",
+            icon :"lucide:server",
+            children:[
+                {
+                    name:"admin-acl"
+                },
+                {
+                    name: "admin-message-queue"
+                },
+                {
+                    name:"admin-external-connection"
+                },
+            ]
+        },
+        {
             name:'admin-azure'
         },
         {
@@ -143,9 +158,6 @@ export default defineAppConfig({
         },
         {
             name:"admin-easy-form"
-        },
-        {
-            name:"admin-external-connection"
         },
         {
             name:"admin-calendar-setting"

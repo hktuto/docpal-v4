@@ -42,6 +42,7 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
         id: tab.value.id,
         initized: true,
     }
+    console.log("panelRouteUpdate", tab.value.parent, lastId, tab.value)
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 

@@ -98,7 +98,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="wrapper">
+    <div class="appWrapper">
         <div class="menuContainer">
             <div class="menuHeader">
                 <slot name="header" />
@@ -157,7 +157,7 @@ onMounted(() => {
     justify-content: flex-start;
     align-items: center;
 }
-.wrapper{
+.appWrapper{
     height: 100%;
     width: 100%;
     display: flex;

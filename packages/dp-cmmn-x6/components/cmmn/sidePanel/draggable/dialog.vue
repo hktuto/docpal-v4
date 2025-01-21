@@ -134,7 +134,7 @@ async function getWorkflowProperties() {
                 value: item.id
             }))
     } catch (error) {
-        dpLog('no workflow')
+        
         return []
     }
 }

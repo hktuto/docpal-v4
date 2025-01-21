@@ -29,7 +29,13 @@
 <script lang="ts" setup>
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { adminApi } from 'api'
-const props = defineProps(['detail','id'])
+
+
+const caseDetailProvider = inject(CaseManagementDetailProviderKey)
+if(!caseDetailProvider) {
+    throw new Error('CaseManagementDetailProviderKey not found')
+}
+
 const state = reactive<any>({
   initValue: '',
   publishLoading: false
@@ -42,7 +48,7 @@ async function handlePublish() {
     const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToPublish')}`)
     if(action !== 'confirm') throw new Error("");
     state.publishLoading = true
-    await adminApi.api.postCaseTypesIdPublish(props.id,{});
+    await adminApi.api.postCaseTypesIdPublish(caseDetailProvider?.caseInfo.value.id,{});
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
     
@@ -60,14 +66,14 @@ async function handleBlur(e) {
     // const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToSave')}`)
     // if(action !== 'confirm') throw new Error("");
     await adminApi.api.putCaseTypes({
-      ...props.detail,
+      ...caseDetailProvider?.caseInfo.value,
       name: value,
       id: props.id
     })
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
-    props.detail.name = state.initValue
-  }
+    caseDetailProvider.caseInfo.value.name = state.initValue
+  } 
 }
 function handleFocus(e) {
   state.initValue = e.target.value

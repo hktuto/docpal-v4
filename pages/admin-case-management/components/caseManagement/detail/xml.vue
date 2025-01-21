@@ -22,6 +22,11 @@ if(!caseDetailProvider) {
     throw new Error('CaseManagementDetailProviderKey not found')
 }
 
+const routerProvider = inject(MenuRouterKey)
+if(!routerProvider) {
+    throw new Error('MenuRouterKey not found')
+}
+
 const props = defineProps(['id'])
 const emits = defineEmits(['getCase'])
 const router = useRouter()
@@ -31,7 +36,7 @@ const state = reactive<any>({
   caseNode: {},
   caseInformation: {}
 })
-function save() {
+async function save() {
   const data = editorEl.value.save()
   // ordercase,test
   const bslob = xmlStringToFile(data.xml, 'ordercase.cmmn.xml')
@@ -50,11 +55,10 @@ function xmlStringToFile(xmlString, fileName) {
 }
 async function init(){
   
-  const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.id, { versionNumber: caseDetailProvider?.currentVersion },{
+  const blob = await adminApi.api.getCaseTypesIdDownloadXml(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: caseDetailProvider?.currentVersion },{
     format:'blob'
   }) as any
-  console.log(blob)
-  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(props.id, { versionNumber: caseDetailProvider?.currentVersion })
+  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: caseDetailProvider?.currentVersion })
   styleJson = styleJson ? JSON.parse(styleJson) : null
   const cmmnString = await blob.text()
   console.log("cmmnString", cmmnString)
@@ -84,7 +88,9 @@ function updateCaseInfo() {
 }
 function handleEdit() {
   // 
-  router.push(`/caseManage/editor?id=${props.id}`)
+  console.log("caseDetailProvider?.caseInfo", caseDetailProvider?.caseInfo)
+  const newItm = newCaseManagmentEditor(caseDetailProvider?.caseInfo.value.caseTypeId, caseDetailProvider?.caseInfo.value.name, caseDetailProvider?.currentVersion)
+  routerProvider?.navigateTo(newItm)
 }
 onMounted(() => {
   init()
