@@ -46,12 +46,13 @@ export type NewWorkflowVersionDetailParams = {
     [key:string]:any
 }
 export const newWorkflowEditorDetail = function(params:NewWorkflowVersionDetailParams){
+    console.log("newWorkflowEditorDetail", params)
     return {
         id: "workflow-editor-detail-" + new Date().getTime(),
         name: "workflow-editor-detail-" + params.draftId,
         icon: 'dp-icon:flow-outline',
         label: params.name,
-        component: 'LazyWorkflowEditorDetail',
+        component: 'LazyWorkflowEditorDetailDead',
         props: {
             id: params.draftId,
             draftId: params.draftId,

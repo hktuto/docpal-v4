@@ -71,7 +71,7 @@ function newTab() {
 </template>
 
 <style lang="scss" scoped>
-.wrapper + .wrapper{
+.tabWrapper + .tabWrapper{
     border-left: 1px solid var(--app-grey-850);
 }
 .tabHeaderContainer{

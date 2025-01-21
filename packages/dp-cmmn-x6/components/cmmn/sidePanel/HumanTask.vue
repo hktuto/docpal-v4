@@ -52,7 +52,7 @@ watch(node, ()=> {
             <el-tab-pane :label="$t('workflowEdior.formField')" name="field">
                 <CmmnSidePanelDraggable :list="state.data" :graph="graph"
                     :dragHeader="dragHeader" 
-                    formJsonUrl="cmmn/humanTaskFields.json"
+                    formJsonUrl="humanTaskFields"
                     @change="handleSave">
                 </CmmnSidePanelDraggable>
             </el-tab-pane>

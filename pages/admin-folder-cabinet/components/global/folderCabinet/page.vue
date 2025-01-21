@@ -16,7 +16,7 @@
         <el-tag v-else type="danger">{{ $t("actions.inactived") }}</el-tag>
       </template>
     </VxeGrid>
-    <FolderCabinetSettingAddDialog ref="FolderCabinetSettingAddDialogRef" @update="query({})" />
+    <FolderCabinetSettingAddDialog ref="FolderCabinetSettingAddDialogRef" @update="handleUpdateOrCreate" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -29,6 +29,18 @@ if (!routerProvider) {
 }
 const { t } = useI18n();
 let extraParams: any = {};
+
+function handleUpdateOrCreate({ edit, response }: any) {
+  if(!edit) {
+    console.log("handleUpdateOrCreate", response)
+    routerProvider?.navigateTo(routeFolderCabinetDetail(response), false);
+  }else{
+    reload()
+  }
+
+}
+
+
 const {
   tableConfig,
   tableEvent,

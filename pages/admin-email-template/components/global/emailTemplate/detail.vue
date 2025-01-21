@@ -28,7 +28,7 @@ async function handleInit() {
     ready.value = true;
     await getTemplateLayout("");
     editInfoOpened.value = true;
-    showClose.value = false;
+    showClose.value = true;
     return {
       subject: "new template",
       body: "",
@@ -61,6 +61,12 @@ async function getTemplateLayout(templateId?: any) {
   layouts.value = res?.entryList;
   selectedLayout.value = templateId || layouts.value[0].id;
   // selectedLayout.value = templateId || entryList[0].id;
+}
+
+function handleClose() {
+  if(id === 'new') {
+    routerProvider?.navigateTo(routeLayoutTemplatePage())
+  }
 }
 
 /**
@@ -162,6 +168,7 @@ onActivated(async () => {
       :close-on-press-escape="showClose"
       :close-on-click-modal="showClose"
       :show-close="showClose"
+      @closed="handleClose"
     >
       <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data" />
       <template #footer>

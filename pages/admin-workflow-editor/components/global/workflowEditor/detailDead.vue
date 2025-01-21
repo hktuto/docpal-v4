@@ -6,6 +6,9 @@ import type { ToolBar } from '../../../../../packages/base/components/app/toolba
 import { saveWorkflowFormToNewVersion } from '~/utils/workflowEditorhelpers';
 const { t } = useI18n()
 
+defineOptions({
+    name: 'WorkflowEditorDetailDead'
+})
 
 const { id, currentVersion } = defineProps<{
     id:string
@@ -118,6 +121,7 @@ async function saveAsNewVersion(){
 
 
 watch(() => [id,currentVersion], (newWorkflowId) => {
+    console.log("watch", newWorkflowId)
     if(newWorkflowId[0] && newWorkflowId[1]) {
         getWorkflow()
     }

@@ -41,23 +41,30 @@ async function handleSubmit() {
     }
     try {
         state.loading = true
+        let response ;
         if (state.isEdit) {
             params.id = state.setting.id
-            await adminApi.api.patchCabinetTemplate({
+            const { data:patchData } = await adminApi.api.patchCabinetTemplate({
                 ...params,
                 rootId: data.cabinetRoot.pop()
             })
+            response = patchData
         } else { 
-            await adminApi.api.postCabinetTemplate({ 
+            const {data:createData} = await adminApi.api.postCabinetTemplate({ 
                 documentType: 'Folder',
                 ...params, 
                 rootId: data.cabinetRoot.pop(), 
                 status: 'A' })
+            response = createData
         }
         FormRendererRef.value.vFormRenderRef.resetForm()
         state.visible = false
-        emits('update')
+        emits('update', {
+            edit: state.isEdit,
+            response
+        })
     } catch (error) {
+        console.log(error)
     }
     state.loading = false
 }

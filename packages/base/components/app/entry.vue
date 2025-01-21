@@ -56,7 +56,6 @@ useGlobalSetting()
 
 
 onMounted(() => {
-    console.log("tabAppRef", tabAppRef)
     getTabsFromServer()
 })
 

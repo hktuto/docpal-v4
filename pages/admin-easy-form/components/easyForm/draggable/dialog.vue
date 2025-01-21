@@ -23,16 +23,16 @@ import easyFormInfomation from './easyFormInfomation.vform.json'
 import easyFormTransform from './easyFormTransform.vform.json'
 const jsonMap = {
   // "cmmn/field.json": caseFieldJson,
-  // "cmmn/flowableIn.json": caseFlowableInJson,
-  // "cmmn/flowableOut.json": caseFlowableOutJson, 
-  // "cmmn/humanTaskFields.json": caseHumanTaskFieldsJson,
-  // "cmmn/sentry.json": caseSentryJson,
+  // "flowableIn": caseFlowableInJson,
+  // "flowableOut": caseFlowableOutJson, 
+  // "humanTaskFields": caseHumanTaskFieldsJson,
+  // "sentry": caseSentryJson,
   "admin/easyFormInfomation.json": easyFormInfomation,
   "admin/easyFormTransform.json": easyFormTransform
 }
 const props = withDefaults(
   defineProps<{
-    // 'cmmn/field.json'| 'cmmn/flowableIn.json' | 'cmmn/flowableOut.json' | 'cmmn/humanTaskFields.json' | 'cmmn/sentry.json' |
+    // 'cmmn/field.json'| 'flowableIn' | 'flowableOut' | 'humanTaskFields' | 'sentry' |
     formJsonUrl:  'admin/easyFormInfomation.json' | 'admin/easyFormTransform.json';
     filterList: any;
     options: any;
