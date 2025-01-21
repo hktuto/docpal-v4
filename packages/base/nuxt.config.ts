@@ -35,6 +35,11 @@ export default defineNuxtConfig({
     },
     
   },
+  runtimeConfig:{
+    public:{
+      pdfReaderUrl: process.env.pdfReaderUrl
+    }
+  },
   i18n: {
     defaultLocale:'en-US',
     langDir:'lang',

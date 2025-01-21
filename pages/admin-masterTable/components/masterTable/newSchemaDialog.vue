@@ -6,7 +6,7 @@
     >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" @form-change="handleFormChange">
     <template #defaultValues>
-        <MasterTableVariableForm ref="FromVariablesRendererRef" />
+        <MasterTableVariableForm ref="FormVariablesRendererRef" />
     </template>
     </FormRenderer>
     <template #footer>
@@ -68,7 +68,7 @@ const FormRendererRef = ref()
             state.options.disabledRequired = false
         }
     }
-    const FromVariablesRendererRef = ref()
+    const FormVariablesRendererRef = ref()
     function handleFormChange({fieldName, formModel, newValue, oldValue}: any) {
         if(props.type === 'again') {
             handleAgainFormChange({fieldName, formModel, newValue, oldValue})
@@ -108,7 +108,7 @@ const FormRendererRef = ref()
             field.relationTable =  formModel.relationTable
             field.relationField =  formModel.relationField
             field.displayField =  formModel.displayField
-            FromVariablesRendererRef.value.init([field], {})
+            FormVariablesRendererRef.value.init([field], {})
             state.curDefaultField = { ...state.curDefaultField, ...field }
             renderDefaultFieldForm()
         } else if(fieldName === 'dataType' && newValue !== 'relation' && newValue && defaultDataType.includes(newValue)) {
@@ -123,14 +123,14 @@ const FormRendererRef = ref()
     function setFieldRequired() {
         state.curDefaultField.required = state.form.required
         try {
-            const widget = FromVariablesRendererRef.value.getWidgetRef('defaultValue')
+            const widget = FormVariablesRendererRef.value.getWidgetRef('defaultValue')
             widget.setRequired(state.form.required)
         } catch (error) {
         }
     }
     function renderDefaultFieldForm() {
         const renderFields = state.curDefaultField.label ? [state.curDefaultField] : []
-        FromVariablesRendererRef.value.init(renderFields, {})
+        FormVariablesRendererRef.value.init(renderFields, {})
     }
 // #endregion
 async function handleOpen(row: any = {}) {
@@ -162,7 +162,7 @@ async function handleConfirm() {
         return prev 
     }, {});
     if(props.type === 'again') {
-        const defaultForm = await FromVariablesRendererRef.value.getData()
+        const defaultForm = await FormVariablesRendererRef.value.getData()
         if(defaultForm.defaultValue || defaultForm.defaultValue === 0) {
             data.defaultValue = defaultForm.defaultValue
         }

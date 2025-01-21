@@ -209,11 +209,11 @@ defineExpose({ handleOpen })
 <style lang="scss" scoped>
 main {
     display: grid;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
 }
 .row-item {
     &-top {
-        padding: var(--app-padding) 0;
+        padding: var(--app-space-xs) 0;
     }
 }
 </style>
