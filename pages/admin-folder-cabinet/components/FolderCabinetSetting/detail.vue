@@ -35,11 +35,13 @@
                 @click="goMetaEdit"
                 >({{ $t("tip.clickToEditDisplayMeta") }})</span
               > -->
-            </template>
+            </template>{{ form.labelRule }} 
+            111
+            {{ state.dragList }}
             <DragSelect
               :dragList="state.dragList"
               :dropList="form.labelRule"
-              itemKey="metaData"
+              itemKey="metadata"
               nullTip="tip.pleaseGoToConfigDisplayMetaOrSelectDocumentType"
             />
           </el-form-item>
@@ -127,7 +129,7 @@ const state = reactive<any>({
 });
 // #region module:
 const form = reactive({
-  labelRule: [{ metaData: "fc:docTitle", dataType: "string", noDelete: true }],
+  labelRule: [{ metadata: "fc:docTitle", dataType: "string", noDelete: true }],
   allow: false,
   multiple: false,
   repeatName: false,
@@ -147,7 +149,7 @@ function handleDocTypeChange(data) {
       }
       prev.push({
         name: item.metadata,
-        metaData: item.metadata,
+        metadata: item.metadata || item.metaData,
         dataType: item.metaDataType,
       });
     }
@@ -162,7 +164,7 @@ function handleDocTypeChange(data) {
   );
   if (form.labelRule.length > 0) {
     state.dragList = state.dragList.filter((allItem: any) =>
-      form.labelRule.some((exitItem: any) => exitItem.metadata === allItem.metadata)
+      !form.labelRule.some((exitItem: any) => exitItem.metadata === allItem.metadata || exitItem.metaData === allItem.metadata)
     );
   }
   FormVariablesRendererRef.value.init(
@@ -171,7 +173,7 @@ function handleDocTypeChange(data) {
         id: item.metadata,
         name: item.metadata,
         label: item.metadata,
-        metaData: item.metadata,
+        metadata: item.metadata || item.metaData,
         required: item.isRequire,
         dataType: item.metaDataType,
         // vocabulary: ,
@@ -205,7 +207,9 @@ function init(row) {
     form.multiple = row.multiple || false;
     form.repeatName = row.repeatName || false;
     if (row.labelRule) {
-      form.labelRule = JSON.parse(row.labelRule);
+      const labelRule = JSON.parse(row.labelRule)
+      labelRule.forEach((item: any) => item.metadata = item.metaData);
+      form.labelRule = labelRule
     } else {
       form.labelRule = [];
     }
