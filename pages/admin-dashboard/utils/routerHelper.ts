@@ -10,3 +10,15 @@ export const routeDashboardManageDetail  = function(params: any){
     }
   } as TabItem
 }
+export const routePersonalDashboardDetail = function(params: any){
+  return {
+    id: "admin-personal-dashboard-" + new Date().getTime(),
+    name: "admin-personal-dashboard-" + params.id,
+    icon: 'carbon:dashboard',
+    label: params.name,
+    component: 'LazyPersonalDashboardManageDetail',
+    props: {
+      id: params.id,
+    }
+  } as TabItem
+}
