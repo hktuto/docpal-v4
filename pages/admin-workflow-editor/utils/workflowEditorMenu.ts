@@ -52,7 +52,7 @@ export const newWorkflowEditorDetail = function(params:NewWorkflowVersionDetailP
         name: "workflow-editor-detail-" + params.draftId,
         icon: 'dp-icon:flow-outline',
         label: params.name,
-        component: 'LazyWorkflowEditorDetail',
+        component: 'LazyWorkflowEditorDetailDead',
         props: {
             id: params.draftId,
             draftId: params.draftId,

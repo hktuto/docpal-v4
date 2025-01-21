@@ -6,6 +6,9 @@ import type { ToolBar } from '../../../../../packages/base/components/app/toolba
 import { saveWorkflowFormToNewVersion } from '~/utils/workflowEditorhelpers';
 const { t } = useI18n()
 
+defineOptions({
+    name: 'WorkflowEditorDetailDead'
+})
 
 const { id, currentVersion } = defineProps<{
     id:string
