@@ -52,13 +52,12 @@ import draggable from 'vuedraggable'
 const props = withDefaults(defineProps<{
   list: any,
   dragHeader: any,
-  showEdit: boolean,
-  formJsonUrl: string,
-  node: any,
-  graph: any
+  showEdit?: boolean,
+  formJsonUrl: any,
+  node?: any,
+  graph?: any
 }>(),{
   showEdit: true,
-  formJsonUrl: 'cmmn/field.json'
 })
 
 const emits = defineEmits(['change'])
@@ -78,7 +77,7 @@ async function removeAt(row, idx) {
   emits('change')
 }
 const dialogRef = ref()
-function handleOpenDialog(row: any) {
+function handleOpenDialog(row?: any) {
   if(!!row) state.curRow = row
   dialogRef.value.handleOpen(row)
 }

@@ -2,22 +2,20 @@
 <el-dialog v-model="state.visible" :title="$t('Add / Edit Properties')"
     :close-on-click-modal="false" destroy-on-close
     >
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" />
+    <FromRenderer ref="FromRendererRef" :form-json="formJsonUrl" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
     </template>
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getJsonApi, getFormPropsApi } from 'dp-api'
-const props = withDefaults(defineProps<{
-    formJsonUrl: string,
+import { adminApi } from 'api'
+const props = defineProps<{
+    formJsonUrl: any,
     node: any,
     graph: any,
     filterList: any
-}>(),{
-    formJsonUrl: 'cmmn/field.json'
-})
+}>()
 const emits = defineEmits([
     'refresh', 'edit', 'create'
 ])
@@ -28,7 +26,6 @@ const state = reactive({
     workflowProperties: []
 })
 const FromRendererRef = ref()
-let formJson = getJsonApi(props.formJsonUrl)
 // const formJson = getJsonApi('admin/adminAclForm.json')
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
@@ -108,7 +105,8 @@ async function loadCaseInfomationOptions(uniqueName: string, filterList: any = n
 async function getWorkflowProperties() {
     try {
         const workflow = props.node.data.data.processRefExpression.__cdata
-        const options = await getFormPropsApi({ processKey: workflow })
+        
+        const options = await adminApi.api.postWorkflowProperties({processKey:workflow})
         return options.map(item => ({
                 label: item.name,
                 value: item.id
