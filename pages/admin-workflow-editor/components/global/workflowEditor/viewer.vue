@@ -73,11 +73,11 @@ onMounted(() => {
     }
     .production{
         background-color: var(--app-main-color);
-        color: var(--app-white);
+        color: var(--app-paper);
     }
     .latest {
         background-color: var(--app-accent-color);
-        color: var(--app-white);
+        color: var(--app-paper);
 
     }
 }

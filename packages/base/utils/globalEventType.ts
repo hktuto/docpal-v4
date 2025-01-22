@@ -4,7 +4,8 @@ export enum EventType {
     TABLE_CONTEXT_MENU_CLOSE = 'table-context-menu-close', // close table action column dialog
     USER_PREFERENCE_CHANGE__TIME = 'user-preference-change--time', // user preference changed
     USER_LOGIN__SUCCESS = 'user-login--success',
-    USER_LOGIN__EXPIRE = 'user-login--expire'
+    USER_LOGIN__EXPIRE = 'user-login--expire',
+    
 }
 
 export type TABLE_CONTEXT_PARAMS = {

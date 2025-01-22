@@ -13,7 +13,7 @@ $types: primary, success, warning, danger, error, info;
   --app-grey-hue: 200;
   --app-grey-saturation: 15%;
   // #E6F1F6
-  --app-bg : radial-gradient(72% 72% at 2% -5%, #E6F1F6 0%, #F7F9F9 51%, #F9F9F9 100%);
+  --app-bg : radial-gradient(72% 72% at 2% -5%, #dbe7ec 0%, #e8efef 51%, #f3f0f0 100%);
   // loop through grey levels , each level increase by 2.5%
   @for $i from 1 through 40 {
     $tab: $i * 25;
@@ -44,7 +44,7 @@ $types: primary, success, warning, danger, error, info;
   
   
   // generate white and black color
-  --app-white: #fff;
+  --app-paper: #fff;
   --app-black: #000;
   --app-text-color: #000;
   
@@ -85,6 +85,18 @@ $types: primary, success, warning, danger, error, info;
 
 }
 
+html.dark{
+  --app-bg : radial-gradient(72% 72% at 2% -5%, #2d3234 0%, #2f3737 51%, #3f3f3f 100%);
+  @for $i from 1 through 40 {
+    $tab: $i * 25;
+    @if $i < 4 {
+      --app-grey-0#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{100 - $i * 2.5%});
+    } @else {
+      --app-grey-#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{100 - $i * 2.5%});
+    }
+    
+  }
+}
 
 html, body{
   padding: 0;

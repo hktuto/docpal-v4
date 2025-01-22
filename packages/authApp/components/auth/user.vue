@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import {emitBus, EventType} from 'eventbus';
 import {logout} from '#imports'
 const user = useUserState()
 
@@ -9,6 +10,11 @@ function changeLanguage(langCode:string) {
     nextTick(() => {
         window.location.reload()
     })
+}
+
+function openSetting(){
+
+    emitBus(EventType.OPEN_SETTINGS, "");
 }
 
 </script>
@@ -25,7 +31,7 @@ function changeLanguage(langCode:string) {
                     <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
                 </ElButton>
                 <template #dropdown>
-                    <ElDropdownItem disabled>Setting</ElDropdownItem>
+                    <ElDropdownItem @click="openSetting">Setting</ElDropdownItem>
                     <ElDivider />
                     <ElDropdownItem v-for="lang in locales" :key="lang.code" 
                         :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
