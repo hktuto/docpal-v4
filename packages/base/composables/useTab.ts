@@ -31,7 +31,6 @@ export const useTabsManager = () => {
                     panel.tabs[panel.showingTabIndex || 0].initized = true
                 }
               })
-              console.log("initLayout", layout.value)
         })
         // loop thought layout and push all components
         

@@ -25,7 +25,6 @@ function updateStyle() {
     const htmlElement = document.querySelector('html');
     if(!htmlElement) return;
     // step 2 : set style
-    console.log('updateStyle', userPreference.value)
     htmlElement.style.fontSize = fontSize.value + 'px';
     // set html light or dark mode class
     if(!userPreference.value || userPreference.value.color === 'light'){

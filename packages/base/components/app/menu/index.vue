@@ -63,7 +63,6 @@ function generateMenu(){
         label: "Menu",
         items: menuSearchList
     })
-    console.log("displayMenu", result)
     displayMenu.value = result;
 }
 

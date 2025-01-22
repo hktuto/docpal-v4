@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import {ElNotification } from 'element-plus';
 import type {VxeGrid} from 'vxe-table'
 import {adminApi} from 'api';
 import type {ActionPermissionParams} from '#imports';
@@ -17,7 +18,7 @@ const routerProvider = inject(MenuRouterKey)
 if(!routerProvider ) {
     throw new Error('MenuRouterKey is not provided')
 }
-
+const { t} = useI18n()
 const tableRef = ref();
 
 async function getWorkflowDetail(){
@@ -32,11 +33,42 @@ function editHandler(row:any, openInNewTab = false){
 }
 
 async function promoteToProductionHandler(row:any) {
+    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:row.draftId, versionNumber:row.versionNumber}, {
+        format: 'blob'
+    }) 
+    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:row.draftId, versionNumber:row.versionNumber}, {})
+    const xml = await blob.text()
+    const form:any = new FormData();
+    form.append('file', blob, 'workflow.bpmn.xml')
+    form.append('jsonValue', json || "")
+
+    const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(row.id,{requestDTO:{}},form) as any
+    await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.versionNumber, data.latestVersion)
+    ElNotification.success(t('common.success'))
+
     tableRef.value?.reload()
 }
 
 async function saveAsNewVersionHandler(row:any) {
-    console.log("saveAsNewVersionHandler", row);
+    
+    // get xml from workflow
+    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:row.draftId, versionNumber:row.versionNumber}, {
+        format: 'blob'
+    }) 
+    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:row.draftId, versionNumber:row.versionNumber}, {})
+    
+    const form:any = new FormData();
+    form.append('file', blob, 'workflow.bpmn.xml')
+    form.append('jsonValue', json || "")
+    form.append('draftId', row.draftId)
+    
+
+    const xml = await blob.text()
+    const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
+    await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.versionNumber, data.versionNumber)
+
+    ElNotification.success(t('common.success'))
+
     tableRef.value?.reload()
 }
 
@@ -65,7 +97,7 @@ function actionPermission({row, code }:PermissionMethodParams) : {disabled:boole
         return result
     }
     if(code === 'save_as_new_version'){
-        result.disabled = isProduction || isLatest
+        result.disabled = false
     }
     return result
 }

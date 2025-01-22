@@ -30,7 +30,6 @@ const state = reactive<any>({
 const productionVersion = ref()
 const lastestVewsion = ref()
 async function getWorkflow() {
-    console.log("getWorkflow", id, currentVersion)
     const data = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
     const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
@@ -102,11 +101,10 @@ async function promoteToProdocution(){
     form.append('jsonValue', JSON.stringify(x6Json))
     form.append('file', blob, 'workflow.bpmn.xml')
     const { data:workflowVersionData } = await adminApi.api.getWorkflowVersion({draftId:id, versionNumber:currentVersion}) as any
-    console.log("workflowVersionData", xml, x6Json)
+
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, currentVersion, data.latestVersion)
+    await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion)
     ElNotification.success(t('common.success'))
-    console.log("promoteToProdocution", data)
 }
 
 
@@ -119,7 +117,7 @@ async function saveAsNewVersion(){
     form.append('file', blob, 'workflow.bpmn.xml')
     // save all forms to new version
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, workflowData.value.key, currentVersion, data.versionNumber)
+    await saveWorkflowFormToNewVersion(xml, workflowData.value.key, currentVersion, data.versionNumber)
 
     ElNotification.success(t('common.success'))
 
@@ -134,7 +132,6 @@ async function saveAsNewVersion(){
 
 
 watch(() => [id,currentVersion], (newWorkflowId) => {
-    console.log("watch", newWorkflowId)
     if(newWorkflowId[0] && newWorkflowId[1]) {
         getWorkflow()
     }
