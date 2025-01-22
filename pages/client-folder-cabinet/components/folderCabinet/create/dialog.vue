@@ -1,6 +1,5 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')"
-    :close-on-click-modal="false"
     class="scroll-dialog"
            append-to-body
     >
@@ -35,7 +34,7 @@ const emits = defineEmits([
     'refresh'
 ])
 const { t } = useI18n()
-const state = reactive({
+const state = reactive<any>({
     initLoading: false,
     loading: false,
     visible: false,
@@ -68,7 +67,7 @@ const FromRendererRef = ref()
         state.loading = true
         try {
             let fileName = await getMetaName()
-            const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.rootPath, fileName } )
+            const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName } )
             if (fileName !== _fileName) {
                 const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => { return action })
                 if(check !== 'confirm') {
@@ -78,7 +77,7 @@ const FromRendererRef = ref()
                     fileName = _fileName
                 }
             }
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${fileName}`
+            const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
             // 上传最上层数据
             const res = await clientApi.api.postCabinetCreate({
                 ...formData,
@@ -158,38 +157,37 @@ const FromRendererRef = ref()
 // #endregion
 
 // #region module: init
-    async function handleOpen(setting) {
+    async function handleOpen(id: string) {
         state.initLoading = true
         state.loading = false
         state.visible = true
-        let defaultValue = {}
         try {
-            state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(setting.id)
+            let defaultValue = {}
+            state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(id).then(res => res.data)
             if (state.cabinetTemplate.metadataValue) {
                 defaultValue = JSON.parse(state.cabinetTemplate.metadataValue)
             }
-            const rootDetail = await clientApi.api.getNuxeoDocument(state.cabinetTemplate.rootId).then(res => res.data)
-            state.cabinetTemplate.rootPath = rootDetail?.path
-            state.cabinetTemplate.rootName = rootDetail?.name
+            setTimeout(async()=> {
+            // console.log(MetaFormRef)
+                await MetaFormRef.value.init(state.cabinetTemplate.documentType, defaultValue)
+                await FromRendererRef.value.vFormRenderRef.resetForm()
+                MetaFormRef.value.setData(defaultValue)
+                FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
+                state.previewName = await getMetaName()
+            }, 10)
         } catch (error) {
-            ElMessage.error(`${t('dpMsg_error')}`)
-            state.visible = false
+            ElMessage.error(t('dpMsg_error'))
+            // state.visible = false
         }
-        setTimeout(async()=> {
-            await MetaFormRef.value.init(setting.documentType, defaultValue)
-            await FromRendererRef.value.vFormRenderRef.resetForm()
-            MetaFormRef.value.setData(defaultValue)
-            FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
-            state.previewName = await getMetaName()
-        })
+        
         state.initLoading = false
-        function getReminder(data, revertList) {
-            return revertList.reduce((prev, item) => {
+        function getReminder(data: any, revertList: any) {
+            return revertList.reduce((prev: any, item: any) => {
                 if(!data[item].tos) data[item].tos = []
                 if(!data[item].ccs) data[item].ccs = []
-                const toCreateByIndex = data[item].tos.findIndex(item => item === 'createBy')
+                const toCreateByIndex = data[item].tos.findIndex((item: any) => item === 'createBy')
                 if (toCreateByIndex !== -1) data[item].tos[toCreateByIndex] = userId
-                const ccCreateByIndex = data[item].ccs.findIndex(item => item === 'createBy')
+                const ccCreateByIndex = data[item].ccs.findIndex((item: any) => item === 'createBy')
                 if (ccCreateByIndex !== -1) data[item].ccs[ccCreateByIndex] = userId
                 prev[`${item}.intervalTime`] = data[item].intervalTime
                 prev[`${item}.tos`] = data[item].tos
@@ -200,7 +198,7 @@ const FromRendererRef = ref()
     }
 // #endregion
 // #region module: form change
-    async function formChange ({ fieldName, formModel, newValue, oldValue}) {
+    async function formChange ({ fieldName, formModel, newValue, oldValue}: any) {
         state.previewName = await getMetaName()
     }
 // #endregion

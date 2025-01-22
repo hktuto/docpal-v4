@@ -1,6 +1,6 @@
 <template>
-<div v-loading="state.loading" style="height: 100%;">
-    <FormVariablesRenderer class="meta-render-form" ref="FormVariablesRendererRef" @formChange="formChange"
+<div v-loading="state.loading" style="height: 100%;">ssssssss
+    <!-- <FormVariablesRenderer class="meta-render-form" ref="FormVariablesRendererRef" @formChange="formChange"
         @handleApply="handleApply" >
         <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
           <div class="ai-suggestion-wrapper">
@@ -13,16 +13,16 @@
                 <div class="flex-x-start ai-button-list">
                   <ElIcon class="iconButton" @click="aiFormChange(item.name, state.aiAnalysis[item.name])"><Check /> 
                   </ElIcon >
-                  <ElIcon class="iconButton"  @click="deleteAiSuggestion(item.name)"><Close /> </ElIcon>
+                  <ElIcon class="iconButton"  @click="deleteAiSuggestion(item.name)"><Close /> </ElIcon> -->
 <!--                    <el-button :icon="Check" type="link" text style="color: #fff"-->
 <!--                        ></el-button>-->
 <!--                    <el-button :icon="Close" type="link" text class="el-icon&#45;&#45;right" style="color: #fff"-->
 <!--                       ></el-button>-->
-                </div>
+                <!-- </div>
             </div>
           </div>
         </template>
-    </FormVariablesRenderer>
+    </FormVariablesRenderer> -->
 </div>
 </template>
 
@@ -209,25 +209,25 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         FormVariablesRendererRef.value.createJson(state.variables )
     }
     async function init(documentType: any, initOptions: initMetaFormOptions) {
-        state.initOptions = { ...initOptions, documentType }
-        if (!documentType) {
-            clear()
-            return
-        }
-        try {
-            state.loading = true
-            state.data = []
-            state.variables = []
-            state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
+        // state.initOptions = { ...initOptions, documentType }
+        // if (!documentType) {
+        //     clear()
+        //     return
+        // }
+        // try {
+        //     state.loading = true
+        //     state.data = []
+        //     state.variables = []
+        //     state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
             
-            await getVariables(initOptions?.isFolder)
-            if(props.mode === 'ai' || props.mode === 'ai-edit') {
-                if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
-                if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
-            }
-        } catch (error) {
-        }
-        state.loading = false
+        //     await getVariables(initOptions?.isFolder)
+        //     if(props.mode === 'ai' || props.mode === 'ai-edit') {
+        //         if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
+        //         if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
+        //     }
+        // } catch (error) {
+        // }
+        // state.loading = false
     }
 // #endregion
 async function setData(properties: any) {
