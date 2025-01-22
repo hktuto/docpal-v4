@@ -24,7 +24,7 @@ const emits = defineEmits([
     'refresh'
 ])
 const { t } = useI18n()
-const userId:string = useUserId()
+const userId:string = useUserId().value
 const state = reactive<any>({
     loading: false,
     treeLoading: false,
@@ -50,7 +50,7 @@ const state = reactive<any>({
                 const res = await Promise.all(pList)
                 state.loading = false
                 state.visible = false
-                ElMessage.success($i18n.t('dpMsg_success'))
+                ElMessage.success(t('dpMsg_success'))
                 emits('refresh')
             }, 2000)
         } catch (error) {
@@ -153,37 +153,38 @@ const state = reactive<any>({
         })
     }
     
-    function getLabelList(row) {
+    function getLabelList(row: any) {
         const labelRule = row.labelRule ? JSON.parse(row.labelRule) : [
-            { dataType: "string", metaData: "fc:docTitle", noDelete: true }
+            { dataType: "string", metadata: "fc:docTitle", noDelete: true }
         ]
         return labelRule
     }
-    function getMetaName(formData = {}, row) {
+    function getMetaName(formData: any = {}, row: any) {
         const date = new Date()
         const labelRule = getLabelList(row)
-        return labelRule.reduce((prev, rule, index) => {
+        return labelRule.reduce((prev: any, rule: any, index: number) => {
             const joiner = index === 0 ? '' : '-'
-            if(rule.metaData === 'fc:createDate') {
-                prev += joiner + formatDate(date)
+            if(!rule.metadata) rule.metadata = rule.metaData
+            if(rule.metadata === 'fc:createDate') {
+                prev += joiner + formatDate(date, 'YYYY-MM-DD')
             }
-            else if(rule.metaData === 'fc:label'){
+            else if(rule.metadata === 'fc:label'){
                 prev += joiner + formData.label
             }
-            else if(rule.metaData === 'fc:creator'){
+            else if(rule.metadata === 'fc:creator'){
                 prev += joiner + userId
             }
-            else if(rule.metaData === 'fc:docTitle'){
+            else if(rule.metadata === 'fc:docTitle'){
                 if(!formData.docName) prev += joiner + ''
                 else prev += joiner + formData.docName
             }
             else if(rule.dataType === 'date') {
-                if(!formData[rule.metaData]) prev += joiner + ''
-                else prev += joiner + formatDate(formData[rule.metaData])
+                if(!formData[rule.metadata]) prev += joiner + ''
+                else prev += joiner + formatDate(formData[rule.metadata], 'YYYY-MM-DD')
             } 
             else {
-                if(!formData[rule.metaData]) prev += joiner + ''
-                else prev += joiner + formData[rule.metaData]
+                if(!formData[rule.metadata]) prev += joiner + ''
+                else prev += joiner + formData[rule.metadata]
             }
             return prev
         }, '')

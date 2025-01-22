@@ -53,7 +53,6 @@ const props = withDefaults(defineProps<{
 })
 
 const emits = defineEmits(['formChange', 'handleApply'])
-const route = useRoute()
 const metaDateFormat = userDisplayTimeSetting()
 const state = reactive<any>({
     loading: false,
@@ -94,7 +93,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                         case 'date':
                             if(metaDateFormat) {
                                 _item.options.format = metaDateFormat
-                                if(item.options.formatDate.includes('HH') || item.options.formatDate.includes('hh')) _item.options.type = 'datetime'
+                                if(item.options.formatDate?.includes('HH') || item.options.formatDate?.includes('hh')) _item.options.type = 'datetime'
                             }
                             break;
                         case 'select':
@@ -113,7 +112,6 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     state.variables.push(_item)
                 }
             });
-            
             // if(props.showOcrLanguage) {
             //     const index = state.variables.findIndex(item => item.name === 'dc:language')
             //     if(index !== -1) state.variables.splice(index, 1)
@@ -208,7 +206,8 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         state.variables = []
         FormVariablesRendererRef.value.createJson(state.variables )
     }
-    async function init(documentType: any, initOptions: initMetaFormOptions) {
+    async function init(documentType: any, initOptions: initMetaFormOptions = {}) {
+        
         state.initOptions = { ...initOptions, documentType }
         if (!documentType) {
             clear()
@@ -218,6 +217,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             state.loading = true
             state.data = []
             state.variables = []
+            
             state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
             
             await getVariables(initOptions?.isFolder)

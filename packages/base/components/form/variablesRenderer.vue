@@ -49,6 +49,8 @@ const formJson = ref({
     }
 })
 function createJson(variables: variableItem[]) {
+    console.log("createJson", variables)
+    
     const date = new Date().valueOf()
     formJson.value.widgetList = []
     variables.forEach((item, index) => {

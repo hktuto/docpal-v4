@@ -39,7 +39,7 @@ export type searchGroupQuery = {
 }
 export type searchGroupQQ = {
     queryType: 'keyword' | 'metadata' | 'documentTypes' | 'mimeTypes' | 'creators' | 'collections' | 'tags' | 'authors' | 'creatorGroups' | 'authorGroups' | 'size' | 'createdDate' | 'modified' | 'fileModified',
-    value: string | string[] | {"key": string, 'value': string | number | date | array},
+    value: string | string[] | {"key": string, 'value': string | number | Date | Array<any>},
     type: 'string' | 'array' | 'metadata',
     id: string,
     option?:{
