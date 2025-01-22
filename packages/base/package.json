@@ -38,7 +38,7 @@
     "nuxt": "3.15.2",
     "nuxt-viewport": "^2.2.0",
     "splitpanes": "^3.1.8",
-    "v-form": "github:hktuto/v-form-designer",
+    "v-form": "file:..\\dp-form\\dist\\V-form.tar.gz",
     "vue": "3.5.6",
     "vue-router": "latest",
     "vue-virt-list": "^1.5.9",
