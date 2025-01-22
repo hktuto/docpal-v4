@@ -112,7 +112,7 @@ function handleFilterFormChange(formModel: any) {
 }
 const ResponsiveFilterRef = ref();
 async function initFilter(id) {
-  tableConfig.id = "fc" + id;
+  tableConfig.id = "fc-" + id;
   let data: any = await clientApi.api
     .getCabinetTemplateidPageConditions(id)
     .then((res) => res.data);

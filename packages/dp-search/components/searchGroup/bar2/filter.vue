@@ -2,7 +2,7 @@
   <!-- <FormRenderer ref="FormRendererRef" :form-json="formJson" 
   @formChange="handleFormChange">
 </FormRenderer> -->
-<div :class="{ 'loading-container': state.loading }" v-for="(item, index) in filters.query" v-loading="state.loading">
+<div :class="{ 'loading-container': state.loading }" v-for="(item, index) in filters.query" :key="item.id" v-loading="state.loading">
   <SearchGroupBar2FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item" 
     @update="(data: any) =>handleUpdate(data, item)"
     @add="handleAddQueryFilter(item)" 
