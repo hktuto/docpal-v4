@@ -75,14 +75,16 @@ if(!tabProvider) {
     const keys = useMagicKeys({
         passive:false,
         onEventFired: (e) => {
-            if (keys['meta_k']) {
+            if (keys['meta_k'] || keys['ctrl_k']) {
                 e.preventDefault();
             }
         }
     })
     whenever(keys.meta_k, (e) => {
         opened.value = true;
-        console.log("ctrl_k")
+    })
+    whenever(keys.ctrl_k, (e) => {
+        opened.value = true;
     })
 
     whenever(keys.enter, () => {
