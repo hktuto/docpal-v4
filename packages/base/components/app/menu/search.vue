@@ -11,7 +11,6 @@ if(!tabProvider) {
 }
 
 function itemClick(item:GlobalSearchItem) {
-    console.log("item click", tabProvider)
     item.action({
         keyword,
         tabProvider
@@ -35,7 +34,7 @@ function focus() {
 
             Quick Actions
         </div>
-        <div class="sub">meta + k</div>
+        <div class="sub">Ctrl + k</div>
     </div>
     <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => focus() )" >
         <div class="searchActionContainer">
@@ -87,8 +86,11 @@ function focus() {
          line-height: 1;
     }
     .sub{
-        font-size: var(--app-font-size-s);
+        font-size: var(--app-font-size-xs);
         color: var(--app-grey-500);
+        padding: var(--app-space-xxs);
+        border: 1px solid var(--app-grey-800);
+        border-radius: var(--app-border-radius-s);
     }
     &:hover{
         color: var(--app-accent-color);
