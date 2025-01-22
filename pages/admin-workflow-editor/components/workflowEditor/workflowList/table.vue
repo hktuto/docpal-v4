@@ -59,15 +59,15 @@ const { tableConfig , tableEvent } = useVxeTable({
                     listProvider.openLastestVersion(row)
                 }
             },
-            { 
-                code: 'edit_latest_version_new_tab', 
-                name: 'Edit Latest Version in New Tab', 
-                visible: true, 
-                disabled: false,
-                action: ({row}:any) => {
-                    listProvider.openLastestVersion(row, true)
-                }
-            },
+            // { 
+            //     code: 'edit_latest_version_new_tab', 
+            //     name: 'Edit Latest Version in New Tab', 
+            //     visible: true, 
+            //     disabled: false,
+            //     action: ({row}:any) => {
+            //         listProvider.openLastestVersion(row, true)
+            //     }
+            // },
             { 
                 code : 'view_production', 
                 name: 'View Production', 
@@ -77,15 +77,15 @@ const { tableConfig , tableEvent } = useVxeTable({
                     listProvider.openProductionVersion(row)
                 }
             },
-            { 
-                code : 'view_production_new_tab', 
-                name: 'View Production in New Tab', 
-                visible: true, 
-                disabled: false,
-                action: ({row}:any) => {
-                    listProvider.openProductionVersion(row, true)
-                }
-            },
+            // { 
+            //     code : 'view_production_new_tab', 
+            //     name: 'View Production in New Tab', 
+            //     visible: true, 
+            //     disabled: false,
+            //     action: ({row}:any) => {
+            //         listProvider.openProductionVersion(row, true)
+            //     }
+            // },
             { 
                 code : 'save_as_new_workflow', 
                 name: 'Save as new workflow', 
@@ -104,15 +104,15 @@ const { tableConfig , tableEvent } = useVxeTable({
                     listProvider.openVersions(row)
                 }
             },
-            { 
-                code : 'view_versions_new_tab', 
-                name: 'View Versions in New Tab', 
-                visible: true, 
-                disabled: false,
-                action: ({row}:any) => {
-                    listProvider.openVersions(row, true)
-                }
-            },
+            // { 
+            //     code : 'view_versions_new_tab', 
+            //     name: 'View Versions in New Tab', 
+            //     visible: true, 
+            //     disabled: false,
+            //     action: ({row}:any) => {
+            //         listProvider.openVersions(row, true)
+            //     }
+            // },
         ]
     ],
     permissionMethod: listProvider.actionPermission

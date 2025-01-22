@@ -7,12 +7,10 @@ const { layout } = defineProps<{
 const emits = defineEmits(['ready'])
 
 function layoutReadyHandler(){
-    console.log("layout ready")
     emits('ready')
 }
 
 onMounted(() => {
-    console.log("layout ready")
     emits('ready')
 })
 

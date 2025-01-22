@@ -7,7 +7,6 @@ if(!tabProvider) {
 }
 const ready = ref(false)
 function layoutReadyHandler(){
-    console.log("layout ready")
     ready.value = true
 }
 const minSize = ref(20)

@@ -6,10 +6,8 @@ const tabAppRef = ref<InstanceType<typeof TabApp>>()
 
 async function getTabsFromServer() {
     const storageTabs = localStorage.getItem('app-tab')
-    console.log("storageTabs", storageTabs)
     if(storageTabs) {
         const newLayout = JSON.parse(storageTabs);
-        console.log("storageTabs", newLayout)
         // need to delay initLayout to wait for splitpanes to render
         tabAppRef.value?.setLayout(newLayout)
     }else{
