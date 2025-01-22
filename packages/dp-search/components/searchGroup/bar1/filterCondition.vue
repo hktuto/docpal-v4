@@ -4,7 +4,7 @@
     <el-icon :class="[mode === 'edit' ? 'rotateLast' : 'rotateFirst', 'cursorPointer']" @click="handleUp"><ArrowUp /></el-icon>
   </div>
   <div v-show="mode === 'edit'">
-    <div v-for="(item, index) in qItem.matchs" :key="index">
+    <div v-for="(item, index) in qItem.matchs" :key="item.id">
       <FormRenderer :ref="el => FormRendererRef[item.id] = el" :form-json="formJson" 
         @selectClear="(fieldName) => handleDelete(item, fieldName)"
         @formChange="(data) => handleFormChange(data, item)">
@@ -29,7 +29,7 @@
     </div>
   </div>
   <div v-show="mode === 'view'">
-    <el-tag v-for="(item, index) in qItem.matchs" :key="index" class="el-tag--ellipsis" closable 
+    <el-tag v-for="(item, index) in qItem.matchs" :key="item.id" class="el-tag--ellipsis" closable 
       @close="handleDelete(item)">
       <template v-if="item.queryType !== 'metadata'">
         {{ item.queryType }}: {{ item.value }}
