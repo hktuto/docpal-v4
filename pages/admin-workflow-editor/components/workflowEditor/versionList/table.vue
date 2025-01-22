@@ -12,8 +12,7 @@ const { draftId } = defineProps<{
     draftId:string
 }>()
 
-const tableRef = ref<InstanceType<typeof VxeGrid>>()
-const { tableConfig, tableEvent } = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     id: 'workflowEditorVersionTableSetting',
     api: (pageParams:any) => listProvider.getListApi({...pageParams, draftId}),
     remoteSort:true,
@@ -66,11 +65,16 @@ const { tableConfig, tableEvent } = useVxeTable({
     },
     bodyActions: [
         [
+            {
+                code:"view",
+                name: "View",
+                action: ({row}:any) => {
+                    listProvider.editHandler(row)
+                }
+            },
             { 
                 code: 'edit', 
                 name: 'Edit', 
-                visible: true, 
-                disabled: false,
                 action: ({row}:any) => {
                     listProvider.editHandler(row)
                 }
@@ -78,21 +82,28 @@ const { tableConfig, tableEvent } = useVxeTable({
             { 
                 code: 'edit_new_tab', 
                 name: 'Edit in new tab', 
-                visible: true, 
-                disabled: false,
                 action: ({row}:any) => {
                     listProvider.editHandler(row, true)
                 }
              },
-            { code: 'promote_to_production', name: 'Promote to Production', visible: true, disabled: false },
-            { code: "save_as_new_version", name: "Save as new version", visible: true, disabled: false },
+            { code: 'promote_to_production', name: 'Promote to Production',
+               action: ({row}:any) => {
+                   listProvider.promoteToProductionHandler(row)
+               }
+            },
+            { code: "save_as_new_version", name: "Save as new version",
+                action:({row}:any) => {
+                    listProvider.saveAsNewVersionHandler(row)
+                }
+             },
         ]
     ],
-    permissionMethod: (args:PermissionMethodParams) => {
-        return listProvider.actionPermission(args)
-    }
+    permissionMethod: listProvider.actionPermission
 })
 
+defineExpose({
+    reload,
+})
 
 </script>
 
