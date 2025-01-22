@@ -22,10 +22,13 @@
 import InlineSvg from 'vue-inline-svg';
 const emit = defineEmits(['update'])
 import { useWatermark } from '../../composables/Watermark'
-const router = useRouter()
+
 const form = ref({
   name: ''
 })
+
+const routerProvider = inject(MenuRouterKey)
+
 const { createWatermarkTemplate } = useWatermark();
 async function submit() {
   if(!form.value.name){
@@ -33,11 +36,13 @@ async function submit() {
     return;
   }
   const newItem = await createWatermarkTemplate(form.value);
-  emit('update')
-  router.push({
-    path: '/watermark',
-    query: { id: newItem.id }
-  })
+  console.log("newItem", newItem)
+  routerProvider?.updateProps({
+      id:newItem.id
+    })
+    setTimeout(() => {
+        emit('update')
+    },100)
 }
 </script>
 

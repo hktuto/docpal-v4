@@ -91,7 +91,7 @@ export const useWatermark = () => {
 
 
   async function createWatermarkTemplate(template: {name:string}) {
-    const { data } = clientApi.api.postWatermarkTemplates(template) as any
+    const { data } = await clientApi.api.postWatermarkTemplates(template) as any
     return data;
   }
 
