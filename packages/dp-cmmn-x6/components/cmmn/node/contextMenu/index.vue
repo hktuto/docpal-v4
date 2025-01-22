@@ -69,8 +69,8 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
 <style scoped lang="scss">
 .contextMenuContainer{
     border-radius: 0.5rem;
-    background: var(--color-grey-0000);
-    border: 1px solid var(--color-grey-050);
+    background: var(--app-grey-0000);
+    border: 1px solid var(--app-grey-050);
     box-shadow: 0 2px 5px rgba(0,0,0,.2);
     position: fixed;
     top:var(--y);
@@ -101,16 +101,16 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
         padding-inline: var(--app-space-xs);
         cursor: pointer;
         &:not(:last-child){
-            border-bottom: 1px solid var(--color-grey-300);
+            border-bottom: 1px solid var(--app-grey-300);
         }
         &:hover{
             --icon-color: var(--app-primary-color);
-            background: var(--color-grey-000);
+            background: var(--app-grey-000);
         }
         &.disabled{
-            --icon-color: var(--color-grey-400);
+            --icon-color: var(--app-grey-400);
             cursor: not-allowed;
-            color: var(--color-grey-400);
+            color: var(--app-grey-400);
         }
     }
 }
@@ -118,6 +118,6 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
     margin-block: calc(var(--app-space-xs) / 2) ;
     width:100%;
     height: 1px;
-    background: var(--color-grey-000);
+    background: var(--app-grey-000);
 }
 </style>

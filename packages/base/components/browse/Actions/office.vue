@@ -55,7 +55,7 @@ function handleClose() {
 <style lang="scss" scoped>
 .closeCollaboraText {
     text-align: center;
-    padding-top: var(--app-padding);
+    padding-top: var(--app-space-xs);
     font-size: 24px;
     font-weight: bold;
     line-height: 22px;

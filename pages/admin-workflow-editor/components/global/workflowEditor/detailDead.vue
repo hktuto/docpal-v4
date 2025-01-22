@@ -95,6 +95,20 @@ function openVersionList(){
 }
 
 
+async function promoteToProdocution(){
+    const { xml, x6Json } = WorkflowEditorRef.value.getData()
+    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+    const form:any = new FormData();
+    form.append('jsonValue', JSON.stringify(x6Json))
+    form.append('file', blob, 'workflow.bpmn.xml')
+    const { data:workflowVersionData } = await adminApi.api.getWorkflowVersion({draftId:id, versionNumber:currentVersion}) as any
+    console.log("workflowVersionData", xml, x6Json)
+    const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
+    // await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, currentVersion, data.versionNumber)
+    ElNotification.success(t('common.success'))
+    console.log("promoteToProdocution", data)
+}
+
 
 async function saveAsNewVersion(){
     const { xml, x6Json } = WorkflowEditorRef.value.getData()
@@ -103,10 +117,8 @@ async function saveAsNewVersion(){
     form.append('jsonValue', JSON.stringify(x6Json))
     form.append('draftId', id)
     form.append('file', blob, 'workflow.bpmn.xml')
-
     // save all forms to new version
-    
-    const {data}:any = await adminApi.workflowVersionController.postNew({requestDTO:{}},form)
+    const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, currentVersion, data.versionNumber)
 
     ElNotification.success(t('common.success'))
@@ -140,7 +152,7 @@ watch(() => [id,currentVersion], (newWorkflowId) => {
             
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">
-                    <ElButton type="primary">Promote To Prodocution : {{ currentVersion }}</ElButton>
+                    <ElButton type="primary" @click="promoteToProdocution">Promote To Prodocution : {{ currentVersion }}</ElButton>
                 </template>
                 <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
                 <ElButton @click="openVersionList" type="primary">Version List</ElButton>

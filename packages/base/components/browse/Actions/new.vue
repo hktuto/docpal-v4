@@ -39,10 +39,10 @@ function handleCommand(command) {
 </script>
 <style lang="scss" scoped>
 .mg-r {
-    margin-right: var(--app-padding);
+    margin-right: var(--app-space-xs);
 }
 .el-dropdown{
-    color: var(--color-grey-950);
+    color: var(--app-grey-950);
 
     .buttonContainer{
         width: 100%;

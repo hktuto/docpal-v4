@@ -93,7 +93,7 @@ function getI18n(value: string) {
   }
 }
 .fieldList {
-  border-top: 1px solid var(--color-grey-050);
+  border-top: 1px solid var(--app-grey-050);
   padding-block : calc( var(--app-space-xs) / 2);
   &.hidden{
     border-top: none;

@@ -62,7 +62,7 @@ useEventListener(window, 'cmmn-node-click', nodeClickHandler)
     height:100%;
     overflow: auto;
     padding: var(--app-space-xs, 12px);
-    background: var(--color-grey-0000, white);
+    background: var(--app-grey-0000, white);
 }
 .position-button {
     position: absolute;

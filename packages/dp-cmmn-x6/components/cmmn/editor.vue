@@ -47,7 +47,7 @@ function init(cmmnString:string,x6Json?: any) {
             }
         },
         background: {
-            color: 'var(--color-grey-0000)',
+            color: 'var(--app-grey-0000)',
         },
         autoResize: true,
         panning: {
@@ -226,10 +226,10 @@ defineExpose({ getGraphJson, init, centerGraph, save })
         bottom:0;
         left:0;
         right:0;
-        background-color: var(--color-grey-0000);
+        background-color: var(--app-grey-0000);
         width:100%;
         padding: calc(var(--app-space-xs) * 2);
-        border-top: 1px solid var(--color-grey-400);
+        border-top: 1px solid var(--app-grey-400);
         
     }
     
@@ -238,7 +238,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
     background-color: transparent !important;
 }
 .main-right{
-    background-color: var(--color-grey-0000);
+    background-color: var(--app-grey-0000);
     z-index:2;
 }
 .editorPanelContainer{
@@ -250,7 +250,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
 }
 :deep{
     .splitpanes.default-theme .splitpanes__pane{
-        background-color: var(--color-grey-0000);
+        background-color: var(--app-grey-0000);
     }
     .splitpanes__splitter{
         z-index: 2;
@@ -268,7 +268,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
 }
 :deep{
     .splitpanes.default-theme .splitpanes__pane{
-        background-color: var(--color-grey-0000);
+        background-color: var(--app-grey-0000);
     }
 }
 </style>

@@ -4,7 +4,7 @@
     <template #header>
         <div class="flex-x-between">
             <div>{{name}}</div>
-            <div style="padding: 0 var(--app-padding)">
+            <div style="padding: 0 var(--app-space-xs)">
                 <slot name="header"></slot>
             </div>
         </div>
@@ -77,9 +77,9 @@ defineExpose({ handleOpen, handleClose })
 </style>
 <style lang="scss">
 .reader-dialog {
-    --el-dialog-margin-top: var(--app-padding) !important;
-    --el-dialog-width: calc(100vw - 2 * var(--app-padding)) !important;
-    height: calc( 100vh - 2 * var(--app-padding) - 50px);
+    --el-dialog-margin-top: var(--app-space-xs) !important;
+    --el-dialog-width: calc(100vw - 2 * var(--app-space-xs)) !important;
+    height: calc( 100vh - 2 * var(--app-space-xs) - 50px);
     max-width: 1024px;
     max-height: 1024px;
     display: grid;
@@ -96,7 +96,7 @@ defineExpose({ handleOpen, handleClose })
     .el-dialog__body{
         overflow: auto;
         display: flex;
-        padding: var(--app-padding) var(--el-dialog-padding-primary);
+        padding: var(--app-space-xs) var(--el-dialog-padding-primary);
     }
 }
 </style>

@@ -119,7 +119,7 @@ function handleEdit(data: any) {
   line-height: 2.5rem;
 }
 .list-group-item + .list-group-item {
-  border-top: 1px solid var(--color-grey-000);
+  border-top: 1px solid var(--app-grey-000);
 }
 .position-icon {
   position: absolute;

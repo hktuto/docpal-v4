@@ -140,7 +140,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div ref="rightClickEl" :class="{contextMenuContainer:true, show:contextMenuOpened}" :style="`--x: ${position.x}px; --y: ${position.y}px`">
+    <div ref="rightClickEl" :class="{workflowContextMenuContainer:true, show:contextMenuOpened}" :style="`--x: ${position.x}px; --y: ${position.y}px`">
         <div class="contextAction" @click="editItem">
             <Icon name="lucide:settings-2" />
             <div class="label">Edit</div>
@@ -167,7 +167,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 
-.contextMenuContainer{
+.workflowContextMenuContainer{
     position: fixed;
     z-index: 10;
     background-color: var(--app-grey-1000);
@@ -177,6 +177,7 @@ onMounted(() => {
     display: none;
     left: var(--x);
     top: var(--y);
+    transform: translateX(0);
     &.show{
         display: flex;
         flex-flow: column nowrap;

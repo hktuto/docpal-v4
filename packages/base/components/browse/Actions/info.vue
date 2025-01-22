@@ -29,7 +29,7 @@ onMounted(() => {
 
 <style lang="scss">
 #infoActionButton{
-    color: var(--color-grey-900);
+    color: var(--app-grey-900);
 }
 </style>
 
