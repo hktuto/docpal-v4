@@ -8,7 +8,7 @@
     destroy-on-close
     @close="handleClose"
   >
-    <MasterTableVariableForm ref="FromVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible />
+    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible />
     <template #footer>
       <div class="footer-grid">
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit')
@@ -43,7 +43,7 @@ const router = useRouter();
 async function handleSubmit() {
   try {
     state.loading = true;
-    const data = await FromVariablesRendererRef.value.getData(true);
+    const data = await FormVariablesRendererRef.value.getData(true);
     const params: any = {
       data: [{ ...data }],
       in: { id: state.rows.map(item => item.id)}
@@ -66,7 +66,7 @@ async function handleSubmit() {
 }
 // #endregion
 
-const FromVariablesRendererRef = ref();
+const FormVariablesRendererRef = ref();
 async function handleOpen(fields, rows) {
   state.visible = true;
   state.loading = false;
@@ -78,7 +78,7 @@ async function handleOpen(fields, rows) {
 }
 function initForm(row: any) {
   console.log(state.fields)
-  FromVariablesRendererRef.value.init(state.fields, row);
+  FormVariablesRendererRef.value.init(state.fields, row);
 }
 defineExpose({ handleOpen });
 </script>

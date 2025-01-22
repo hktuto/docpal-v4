@@ -21,8 +21,8 @@ function changeLanguage(langCode:string) {
         </div>
         <div class="actions">
             <ElDropdown>
-                <ElButton link>
-                    <ElIcon><SvgIcon src="/icons/dots.svg"/></ElIcon>
+                <ElButton size="small" link >
+                    <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
                 </ElButton>
                 <template #dropdown>
                     <ElDropdownItem disabled>Setting</ElDropdownItem>
@@ -49,7 +49,11 @@ function changeLanguage(langCode:string) {
     align-items: center;
     gap: var(--app-space-s);
     line-height: 1;
+    padding-right: var(--app-space-xs);
     
+}
+.dropdownIcon{
+    --icon-size: var(--app-font-size-m);
 }
 .username{
     flex: 1 0 auto;

@@ -20,7 +20,7 @@ export type variableItem = {
     // onValidate?: string
 }
 const props = defineProps<{
-    variables: variableItem[],
+    variables?: variableItem[],
 }>()
 const emits = defineEmits(['formChange'])
 const FormRendererRef = ref()

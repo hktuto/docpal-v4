@@ -70,7 +70,7 @@ const svgRoundClass = computed(() => {
     width: var(--icon-bg-size, 32px);
     height: var(--icon-bg-size, 32px);
     color: var(--icon-color, --app-grey-950)!important;
-    background-color: var(--icon-bg-color, var(--app-grey-150));
+    background-color: var(--icon-bg-color, var(--app-grey-950));
     border-radius: 50%;
     display: grid;
     place-items: center;

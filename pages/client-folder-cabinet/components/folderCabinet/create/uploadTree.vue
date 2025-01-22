@@ -274,7 +274,7 @@ defineExpose({
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
   @media( max-width: 640px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
@@ -287,7 +287,7 @@ defineExpose({
     & > div {
         display: flex;
         align-items: center;
-        gap: calc(var(--app-padding) / 3);
+        gap: calc(var(--app-space-xs) / 3);
     }
 }
 .lack-item {
