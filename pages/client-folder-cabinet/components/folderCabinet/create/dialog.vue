@@ -1,6 +1,5 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')"
-    :close-on-click-modal="false"
     class="scroll-dialog"
            append-to-body
     >
@@ -12,7 +11,7 @@
         <template v-slot:namingRule>
             <div>{{$t('tableHeader_labelRule')}}：
                 <template v-for="(item, index) in getLabelList()" :key="index">
-                    <el-tag >{{$t(item.metaData)}}</el-tag>
+                    <el-tag >{{$t(item.metadata || item.metaData)}}</el-tag>
                     <template v-if="index !== getLabelList().length - 1"> - </template>
                 </template>
             </div>
@@ -25,7 +24,7 @@
         <el-button :loading="state.loading" data-testid="folderCabinet-next-button" @click="handleSubmit">{{$t('button.next')}}</el-button>
     </template>
 </el-dialog>
-<FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="(loading)=>emits('refresh', loading)"/>
+<FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="(loading: boolean)=>emits('refresh', loading)"/>
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -35,15 +34,14 @@ const emits = defineEmits([
     'refresh'
 ])
 const { t } = useI18n()
-const state = reactive({
+const state = reactive<any>({
     initLoading: false,
     loading: false,
     visible: false,
     cabinetTemplate: {},
     previewName: ''
 })
-const userId:string = useUserId()
-const route = useRoute()
+const userId:string = useUserId().value
 const NextDialogRef = ref()
 const FromRendererRef = ref()
 // #region module: handleSubmit
@@ -68,7 +66,7 @@ const FromRendererRef = ref()
         state.loading = true
         try {
             let fileName = await getMetaName()
-            const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.rootPath, fileName } )
+            const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName } )
             if (fileName !== _fileName) {
                 const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => { return action })
                 if(check !== 'confirm') {
@@ -78,7 +76,7 @@ const FromRendererRef = ref()
                     fileName = _fileName
                 }
             }
-            const idOrPath = `${state.cabinetTemplate.rootPath}/${fileName}`
+            const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
             // 上传最上层数据
             const res = await clientApi.api.postCabinetCreate({
                 ...formData,
@@ -86,7 +84,7 @@ const FromRendererRef = ref()
                 type: state.cabinetTemplate.documentType,
                 idOrPath,
                 properties: metaFormData,
-                templateId: route.query.tab
+                templateId: state.cabinetTemplate.id
             }).then(res => res.data)
             if(res?.path) {
                 NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path)
@@ -108,46 +106,36 @@ const FromRendererRef = ref()
             const data = await FromRendererRef.value.vFormRenderRef.getFormData()
             const metadataForm = await MetaFormRef.value.getData()
             if(data) formData = { ...formData, ...data, ...metadataForm}
-            // if(metadataForm.formModel) {
-            //     formData = { ...formData, ...metadataForm.formModel }
-            // }
         } catch (error) {
         }
         const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
         
         if (!labelRule || labelRule.length === 0) throw new Error("no labelRule");
         else {
-            return labelRule.reduce((prev, rule, index) => {
+            const name = labelRule.reduce((prev:any, rule: any, index: number) => {
+                if(!rule.metadata) rule.metadata = rule.metaData
                 const joiner = index === 0 ? '' : '-'
-                if(rule.metaData === 'fc:createDate') {
-                    prev += joiner + formatDate(date)
+                if(rule.metadata === 'fc:createDate') {
+                    prev += joiner + formatDate(date, 'YYYY-MM-DD')
                 }
-                else if(rule.metaData === 'fc:label'){
+                else if(rule.metadata === 'fc:label'){
                     prev += joiner + state.cabinetTemplate.label
                 }
-                else if(rule.metaData === 'fc:creator'){
+                else if(rule.metadata === 'fc:creator'){
                     prev += joiner + userId
                 }
-                else if(rule.metaData === 'fc:docTitle'){
-                    if(!formData.title) prev += joiner + ''
-                    else prev += joiner + formData.title
+                else if(rule.metadata === 'fc:docTitle'){
+                    prev += formData.title ? joiner + formData.title : ''
                 }
                 else if(rule.dataType === 'date') {
-                    if(!formData[rule.metaData]) prev += joiner + ''
-                    else prev += joiner + formatDate(formData[rule.metaData])
+                    prev += formData[rule.metadata] ? joiner + formatDate(formData[rule.metadata], 'YYYY-MM-DD') : ''
                 } 
                 else {
-                    
-                    if(!formData[rule.metaData]) {
-                        prev += joiner + ''
-                    } else {
-                        
-                        prev += joiner + formData[rule.metaData]
-                        console.log("formData", prev, formData[rule.metaData])
-                    } 
+                    prev += formData[rule.metadata] ? joiner + formData[rule.metadata] : ''
                 }
                 return prev
             }, '')
+            return name
         } 
         // return state.cabinetTemplate.label + '-' + formatDate(date,'YYYY-MM-DD')
     }
@@ -158,38 +146,38 @@ const FromRendererRef = ref()
 // #endregion
 
 // #region module: init
-    async function handleOpen(setting) {
+    async function handleOpen(id: string) {
         state.initLoading = true
         state.loading = false
         state.visible = true
-        let defaultValue = {}
         try {
-            state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(setting.id)
+            let defaultValue = {}
+            state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(id).then(res => res.data)
             if (state.cabinetTemplate.metadataValue) {
                 defaultValue = JSON.parse(state.cabinetTemplate.metadataValue)
             }
-            const rootDetail = await clientApi.api.getNuxeoDocument(state.cabinetTemplate.rootId).then(res => res.data)
-            state.cabinetTemplate.rootPath = rootDetail?.path
-            state.cabinetTemplate.rootName = rootDetail?.name
+            setTimeout(async()=> {
+            // console.log(MetaFormRef)
+                await MetaFormRef.value.init(state.cabinetTemplate.documentType, defaultValue)
+                await FromRendererRef.value.vFormRenderRef.resetForm()
+                MetaFormRef.value.setData(defaultValue)
+                FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
+                setTimeout(async() => {
+                    state.previewName = await getMetaName()
+                    state.initLoading = false
+                }, 10)
+            }, 10)
         } catch (error) {
-            ElMessage.error(`${t('dpMsg_error')}`)
-            state.visible = false
+            ElMessage.error(t('dpMsg_error'))
+            // state.visible = false
         }
-        setTimeout(async()=> {
-            await MetaFormRef.value.init(setting.documentType, defaultValue)
-            await FromRendererRef.value.vFormRenderRef.resetForm()
-            MetaFormRef.value.setData(defaultValue)
-            FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
-            state.previewName = await getMetaName()
-        })
-        state.initLoading = false
-        function getReminder(data, revertList) {
-            return revertList.reduce((prev, item) => {
+        function getReminder(data: any, revertList: any) {
+            return revertList.reduce((prev: any, item: any) => {
                 if(!data[item].tos) data[item].tos = []
                 if(!data[item].ccs) data[item].ccs = []
-                const toCreateByIndex = data[item].tos.findIndex(item => item === 'createBy')
+                const toCreateByIndex = data[item].tos.findIndex((item: any) => item === 'createBy')
                 if (toCreateByIndex !== -1) data[item].tos[toCreateByIndex] = userId
-                const ccCreateByIndex = data[item].ccs.findIndex(item => item === 'createBy')
+                const ccCreateByIndex = data[item].ccs.findIndex((item: any) => item === 'createBy')
                 if (ccCreateByIndex !== -1) data[item].ccs[ccCreateByIndex] = userId
                 prev[`${item}.intervalTime`] = data[item].intervalTime
                 prev[`${item}.tos`] = data[item].tos
@@ -200,7 +188,9 @@ const FromRendererRef = ref()
     }
 // #endregion
 // #region module: form change
-    async function formChange ({ fieldName, formModel, newValue, oldValue}) {
+    async function formChange ({ fieldName, formModel, newValue, oldValue}: any) {
+        console.log('??????????');
+        if(state.initLoading) return
         state.previewName = await getMetaName()
     }
 // #endregion
