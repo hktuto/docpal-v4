@@ -84,7 +84,7 @@ const { allowFeature } = useLayout()
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: center;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     > button{
         width: 100%;
         text-align: left;

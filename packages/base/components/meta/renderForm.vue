@@ -1,6 +1,6 @@
 <template>
-<div v-loading="state.loading" style="height: 100%;">ssssssss
-    <!-- <FormVariablesRenderer class="meta-render-form" ref="FormVariablesRendererRef" @formChange="formChange"
+<div v-loading="state.loading" style="height: 100%;">
+    <FormVariablesRenderer class="meta-render-form" ref="FormVariablesRendererRef" @formChange="formChange"
         @handleApply="handleApply" >
         <template v-for="item in state.variables" v-slot:[`slot-${item.name}`]>
           <div class="ai-suggestion-wrapper">
@@ -13,16 +13,16 @@
                 <div class="flex-x-start ai-button-list">
                   <ElIcon class="iconButton" @click="aiFormChange(item.name, state.aiAnalysis[item.name])"><Check /> 
                   </ElIcon >
-                  <ElIcon class="iconButton"  @click="deleteAiSuggestion(item.name)"><Close /> </ElIcon> -->
+                  <ElIcon class="iconButton"  @click="deleteAiSuggestion(item.name)"><Close /> </ElIcon>
 <!--                    <el-button :icon="Check" type="link" text style="color: #fff"-->
 <!--                        ></el-button>-->
 <!--                    <el-button :icon="Close" type="link" text class="el-icon&#45;&#45;right" style="color: #fff"-->
 <!--                       ></el-button>-->
-                <!-- </div>
+                </div>
             </div>
           </div>
         </template>
-    </FormVariablesRenderer> -->
+    </FormVariablesRenderer>
 </div>
 </template>
 
@@ -53,7 +53,6 @@ const props = withDefaults(defineProps<{
 })
 
 const emits = defineEmits(['formChange', 'handleApply'])
-const route = useRoute()
 const metaDateFormat = userDisplayTimeSetting()
 const state = reactive<any>({
     loading: false,
@@ -69,7 +68,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
 // #region module: Variables
     const FormVariablesRendererRef = ref()
     async function getVariables(isFolder: boolean = false) {
-        try {
+        // try {
             const date = new Date().valueOf()
             state.variables = []
             state.data.forEach((item: any, index: any) => {
@@ -92,9 +91,11 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                             if(!_item.options.maxLength) _item.options.maxLength = 200
                             break;
                         case 'date':
+                            console.log(metaDateFormat);
+                            
                             if(metaDateFormat) {
                                 _item.options.format = metaDateFormat
-                                if(item.options.formatDate.includes('HH') || item.options.formatDate.includes('hh')) _item.options.type = 'datetime'
+                                if(item.options.formatDate?.includes('HH') || item.options.formatDate?.includes('hh')) _item.options.type = 'datetime'
                             }
                             break;
                         case 'select':
@@ -113,7 +114,6 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     state.variables.push(_item)
                 }
             });
-            
             // if(props.showOcrLanguage) {
             //     const index = state.variables.findIndex(item => item.name === 'dc:language')
             //     if(index !== -1) state.variables.splice(index, 1)
@@ -159,6 +159,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     }
                 })
             }
+            console.log(state.variables);
             
             
             nextTick(async () => {
@@ -172,8 +173,8 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     FormVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
-        } catch (error) {
-        }
+        // } catch (error) {
+        // }
     } 
     function getApplyFormJson (formJson: any) {
         const widgetList:any = []
@@ -208,26 +209,29 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
         state.variables = []
         FormVariablesRendererRef.value.createJson(state.variables )
     }
-    async function init(documentType: any, initOptions: initMetaFormOptions) {
-        // state.initOptions = { ...initOptions, documentType }
-        // if (!documentType) {
-        //     clear()
-        //     return
-        // }
+    async function init(documentType: any, initOptions: initMetaFormOptions = {}) {
+        
+        state.initOptions = { ...initOptions, documentType }
+        if (!documentType) {
+            clear()
+            return
+        }
         // try {
-        //     state.loading = true
-        //     state.data = []
-        //     state.variables = []
-        //     state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
+            state.loading = true
+            state.data = []
+            state.variables = []
             
-        //     await getVariables(initOptions?.isFolder)
-        //     if(props.mode === 'ai' || props.mode === 'ai-edit') {
-        //         if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
-        //         if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
-        //     }
+            state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
+            console.log("state.data", state.data)
+            
+            await getVariables(initOptions?.isFolder)
+            if(props.mode === 'ai' || props.mode === 'ai-edit') {
+                if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
+                if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
+            }
         // } catch (error) {
         // }
-        // state.loading = false
+        state.loading = false
     }
 // #endregion
 async function setData(properties: any) {

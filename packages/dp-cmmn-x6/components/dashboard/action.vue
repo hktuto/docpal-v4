@@ -28,7 +28,7 @@ const state = reactive<any>({
   data: [],
   loading: false
 })
-const userId:string = useUserId()
+const userId:string = useUserId().value
 const route = useRoute()
 async function init() {
   const id = route.query.instanceId

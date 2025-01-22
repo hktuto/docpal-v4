@@ -13,7 +13,7 @@
       </el-tab-pane>
     </el-tabs>
     <main>
-      <FolderCabinetTable ref="tableRef" :id="state.activeTab" :detail="state.activeFolderCabinet" @row-click="handleRowClick">
+      <FolderCabinetTable ref="tableRef" :id="state.activeTab" :detail="state.activeFCSetting" @row-click="handleRowClick">
         <!-- <template #suffixSortButton>
           <el-button data-testid="folderCabinet-new-button" @click="handleNewItem()">{{
             $t("folderCabinet.newItem")
@@ -28,6 +28,14 @@
           <el-button v-if="state.uploading" :loading="state.uploading" text></el-button>
         </template> -->
       </FolderCabinetTable>
+      <InteractDrawer ref="InteractDrawerRef" :minWidth="240">
+                <FolderCabinetMatchingResult ref="MatchingResultRef" :folderCabinet="state.curFolderCabinet"/>
+                <!-- <template #drawerAction> -->
+                    <!-- <el-button text> -->
+                        <!-- {{ formatDate(state.curFolderCabinet.modifiedDate, 'YYYY-MM-DD hh:mm:ss') }} -->
+                    <!-- </el-button> -->
+                <!-- </template> -->
+            </InteractDrawer>
     </main>
   </div>
 </template>
@@ -37,7 +45,7 @@ import { ElMessageBox } from "element-plus";
 const state = reactive<any>({
   loading: false,
   activeTab: "",
-  activeFolderCabinet: {},
+  activeFCSetting: {},
   tabList: [],
   uploadList: [],
   uploading: false,
@@ -47,7 +55,7 @@ const tableRef = ref()
 function tabChange(tab: string) {
   console.log("tabChange", tab);
   state.activeTab = tab;
-  state.activeFolderCabinet = state.tabList.find((item: any) => item.id === state.activeTab)
+  state.activeFCSetting = state.tabList.find((item: any) => item.id === state.activeTab)
   setTimeout(() => {
     tableRef?.value.reload()
   }, 100);
@@ -63,8 +71,13 @@ async function init() {
   state.loading = false;
 }
 // #endregion
-function handleRowClick() {
-
+const MatchingResultRef = ref<any>(null)
+const InteractDrawerRef = ref<any>(null)
+function handleRowClick(row: any) {
+  console.log("handleRowClick", row)
+  state.curFolderCabinet = row
+  MatchingResultRef.value.init(row, state.activeTab)
+  InteractDrawerRef.value.handleOpen()
 }
 onMounted(async () => {
   await init();
@@ -81,5 +94,8 @@ onMounted(async () => {
 }
 main {
   overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  gap: var(--app-space-xs);
 }
 </style>

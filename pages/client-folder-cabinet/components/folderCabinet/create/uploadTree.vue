@@ -32,7 +32,7 @@
             </div>
             <div>{{$t('tableHeader_labelRule')}}：
                 <template v-for="(item, index) in getLabelList()" :key="index">
-                    <el-tag >{{$t(item.metaData)}}</el-tag>
+                    <el-tag >{{$t(item.metadata || item.metaData)}}</el-tag>
                     <template v-if="index !== getLabelList().length - 1"> - </template>
                 </template>
             </div>
@@ -66,7 +66,7 @@ const state = reactive({
     isCheck: true,
     selectedRow: {}
 })
-const userId:string = useUserId()
+const userId:string = useUserId().value
 const treeRef = ref()
 const MetaFormRef = ref()
 const MetaFormRef2 = ref()
@@ -122,7 +122,7 @@ async function getData (isValidate: boolean = false) {
 
 function getLabelList() {
     const labelRule = state.selectedRow.labelRule ? JSON.parse(state.selectedRow.labelRule) : [
-        { dataType: "string", metaData: "fc:docTitle", noDelete: true }
+        { dataType: "string", metadata: "fc:docTitle", noDelete: true }
     ]
     return labelRule
 }
@@ -140,26 +140,27 @@ function getMetaName(formData: any = {}) {
         else {
             return labelRule.reduce((prev, rule, index) => {
                 const joiner = index === 0 ? '' : '-'
-                if(rule.metaData === 'fc:createDate') {
+                if(!rule.metadata) rule.metadata = rule.metaData
+                if(rule.metadata === 'fc:createDate') {
                     prev += joiner + formatDate(date)
                 }
-                else if(rule.metaData === 'fc:label'){
+                else if(rule.metadata === 'fc:label'){
                     prev += joiner + formData.label
                 }
-                else if(rule.metaData === 'fc:creator'){
+                else if(rule.metadata === 'fc:creator'){
                     prev += joiner + userId
                 }
-                else if(rule.metaData === 'fc:docTitle'){
+                else if(rule.metadata === 'fc:docTitle'){
                     if(!formData.docName) prev += joiner + ''
                     else prev += joiner + formData.docName
                 }
                 else if(rule.dataType === 'date') {
-                    if(!formData[rule.metaData]) prev += joiner + ''
-                    else prev += joiner + formatDate(formData[rule.metaData])
+                    if(!formData[rule.metadata]) prev += joiner + ''
+                    else prev += joiner + formatDate(formData[rule.metadata])
                 } 
                 else {
-                    if(!formData[rule.metaData]) prev += joiner + ''
-                    else prev += joiner + formData[rule.metaData]
+                    if(!formData[rule.metadata]) prev += joiner + ''
+                    else prev += joiner + formData[rule.metadata]
                 }
                 return prev
             }, '')

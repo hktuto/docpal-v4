@@ -374,7 +374,7 @@ onMounted(async() => {
       row-gap: 0.5rem;
       column-gap: 1rem;
       height: 70vh;
-      padding: 0 calc(var(--app-padding) * 2) var(--app-padding);
+      padding: 0 calc(var(--app-space-xs) * 2) var(--app-space-xs);
   }
   .sidebar {
       grid-area: sidebar;
@@ -390,13 +390,13 @@ onMounted(async() => {
   }
 }
 .row-expand {
-    padding: 0 var(--app-padding) 0 calc(var(--app-padding) * 5);
+    padding: 0 var(--app-space-xs) 0 calc(var(--app-space-xs) * 5);
     display: grid;
     grid-template-columns: 1fr min-content;
     grid-template-rows: min-content min-content;
-    grid-column-gap: var(--app-padding);
+    grid-column-gap: var(--app-space-xs);
     &-top {
-        padding: var(--app-padding) 0;
+        padding: var(--app-space-xs) 0;
         grid-area: 1 / 1 / 2 / 3;
     }
     &-bottom-left { grid-area: 2 / 1 / 3 / 2; }
