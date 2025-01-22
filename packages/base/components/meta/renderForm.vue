@@ -68,7 +68,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
 // #region module: Variables
     const FormVariablesRendererRef = ref()
     async function getVariables(isFolder: boolean = false) {
-        // try {
+        try {
             const date = new Date().valueOf()
             state.variables = []
             state.data.forEach((item: any, index: any) => {
@@ -173,8 +173,8 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     FormVariablesRendererRef.value.setFormJson(newFormJson)
                 }
             })
-        // } catch (error) {
-        // }
+        } catch (error) {
+        }
     } 
     function getApplyFormJson (formJson: any) {
         const widgetList:any = []
