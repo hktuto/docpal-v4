@@ -5,6 +5,15 @@ const keywordRef = ref()
 
 const { t } = useI18n()
 
+const metaKey = computed(() => {
+    // return different icon for different OS
+    if(navigator.platform.toLowerCase().includes('mac')) {
+        return '⌘'
+    }else{
+        return 'Ctrl'
+    }
+})
+
 const tabProvider = inject(TabManagerKey)
 if(!tabProvider) {
     throw createError('tab manger not found')
@@ -34,7 +43,7 @@ function focus() {
 
             Quick Actions
         </div>
-        <div class="sub">Ctrl + k</div>
+        <div class="sub">{{ metaKey }} + k</div>
     </div>
     <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => focus() )" >
         <div class="searchActionContainer">
