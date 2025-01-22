@@ -13,7 +13,7 @@
       </el-tab-pane>
     </el-tabs>
     <main>
-      <FolderCabinetTable ref="tableRef" :id="state.activeTab" @row-click="handleRowClick">
+      <FolderCabinetTable ref="tableRef" :id="state.activeTab" :detail="state.activeFolderCabinet" @row-click="handleRowClick">
         <!-- <template #suffixSortButton>
           <el-button data-testid="folderCabinet-new-button" @click="handleNewItem()">{{
             $t("folderCabinet.newItem")
@@ -37,6 +37,7 @@ import { ElMessageBox } from "element-plus";
 const state = reactive<any>({
   loading: false,
   activeTab: "",
+  activeFolderCabinet: {},
   tabList: [],
   uploadList: [],
   uploading: false,
@@ -46,6 +47,7 @@ const tableRef = ref()
 function tabChange(tab: string) {
   console.log("tabChange", tab);
   state.activeTab = tab;
+  state.activeFolderCabinet = state.tabList.find((item: any) => item.id === state.activeTab)
   setTimeout(() => {
     tableRef?.value.reload()
   }, 100);

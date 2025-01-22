@@ -17,13 +17,13 @@
       <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
     </template>
   </VxeGrid>
-    <FolderCabinetCreateDialog ref="FolderCabinetNewItemDialogRef" @refresh="refreshTable"/>
+    <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="refreshTable"/>
 </template>
 <script lang="ts" setup>
 import dayjs from "dayjs";
 import { ElMessageBox } from "element-plus";
 import { clientApi } from "api";
-const props = defineProps(["id"]);
+const props = defineProps(["id", "detail"]);
 const { t } = useI18n();
 let extraParams: any = {};
 const basicColumns = [
@@ -93,9 +93,9 @@ const {
 function handleDblclick(row) {
   // routerProvider?.navigateTo(routeFolderCabinetDetail(row), false);
 }
-const FolderCabinetNewItemDialogRef = ref();
-function handleAdd(row?: any) {
-  FolderCabinetNewItemDialogRef.value.handleOpen(row);
+const CreateDialogRef = ref();
+function handleAdd() {
+  CreateDialogRef.value.handleOpen(props.id);
 }
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true;
