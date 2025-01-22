@@ -103,9 +103,9 @@ onMounted(() => {
         justify-content: flex-startx;
         align-items: center;
         gap: var(--app-space-xs);
-        //border-bottom: 1px solid var(--color-grey-000);
+        //border-bottom: 1px solid var(--app-grey-000);
         &:hover{
-            background: var(--color-grey-000);
+            background: var(--app-grey-000);
         }
     }
 }

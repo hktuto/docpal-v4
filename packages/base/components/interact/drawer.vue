@@ -85,7 +85,7 @@ defineExpose({
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
   overflow: auto;
   transition: all 0.5s;
-  background: var(--drawer-bg, --color-grey-0000);
+  background: var(--drawer-bg, --app-grey-0000);
 }
 .drawer-close {
   display: flex;

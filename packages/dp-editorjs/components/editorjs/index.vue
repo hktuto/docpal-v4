@@ -149,7 +149,7 @@ defineExpose({
   border-radius: 8px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  --icon-color: var(--color-grey-600);
+  --icon-color: var(--app-grey-600);
   .desktop, .mobile{
     cursor: pointer;
     &.active{

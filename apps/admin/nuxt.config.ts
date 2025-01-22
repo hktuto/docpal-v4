@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     "../../pages/admin-bulk-import",
     "../../pages/admin-dam",
     "../../pages/admin-document-template",
-    // "../../pages/admin-case-management",
+    "../../pages/admin-case-management",
     "../../pages/admin-file-policies",
     "../../pages/admin-docker-log",
     "../../pages/admin-dashboard",
@@ -31,7 +31,8 @@ export default defineNuxtConfig({
     "../../pages/admin-log-manage",
     "../../pages/admin-calendar-setting",
     "../../pages/admin-folder-cabinet",
-    "../../pages/admin-email-template"
+    "../../pages/admin-email-template",
+    "../../pages/admin-watermark",
     // "../../pages/admin-share",
   ],
   features:{

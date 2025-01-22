@@ -1,5 +1,5 @@
 <template>
-    <div style="--icon-color: var(--primary-color)">
+    <div style="--icon-color: var(--app-primary-color)">
         <SvgIcon src="/icons/file/changeDocType.svg"  
             :content="$t('tip.changeDocType')"
             @click="iconClickHandler(doc)"></SvgIcon>
@@ -126,7 +126,7 @@ defineExpose({ iconClickHandler })
 main {
     display: grid;
     grid-template-columns: 30% min-content 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .border {
         border-right: 1px solid #ddd;
     }

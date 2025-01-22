@@ -156,6 +156,6 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 .el-dropdown {
-    color: var(--color-grey-950);
+    color: var(--app-grey-950);
 }
 </style>

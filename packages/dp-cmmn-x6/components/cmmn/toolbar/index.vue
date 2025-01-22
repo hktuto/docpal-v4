@@ -100,7 +100,7 @@ defineExpose({
     gap: var(--app-space-xs);
     .group{
         --icon-color:#000;
-        background: var(--color-grey-0000);
+        background: var(--app-grey-0000);
         border-radius: 0.5rem;
         padding: 0.5rem;
         box-shadow: 0 0 0.5rem rgba(0,0,0,0.2);

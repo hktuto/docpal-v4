@@ -45,6 +45,6 @@ async function getFileAndDisplay(){
 .bottom{
     width:100%;
     padding: calc(var(--app-space-xs) * 2);
-    border-top: 1px solid var(--color-grey-400);
+    border-top: 1px solid var(--app-grey-400);
 }
 </style>

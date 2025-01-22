@@ -15,18 +15,18 @@ const props = defineProps<{
 .buttonContainer{
   display: flex;
   flex-flow: row nowrap;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
   @media (max-width: 1024px) {
     &:hover {
-      background: var(--primary-color-02);
+      background: var(--app-primary-color-02);
     }
   }
   .label {
     display: none;
-    color: var(--color-grey-900);
+    color: var(--app-grey-900);
     @media (max-width: 1024px) {
       display: block;
     }
