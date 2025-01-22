@@ -15,7 +15,7 @@ const props = defineProps<{
 .buttonContainer{
   display: flex;
   flex-flow: row nowrap;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;

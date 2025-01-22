@@ -126,7 +126,7 @@ defineExpose({ iconClickHandler })
 main {
     display: grid;
     grid-template-columns: 30% min-content 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .border {
         border-right: 1px solid #ddd;
     }

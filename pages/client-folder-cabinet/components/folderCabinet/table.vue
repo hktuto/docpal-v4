@@ -1,4 +1,5 @@
 <template>
+  <div style="height: 100%;overflow: hidden">
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
       <ResponsiveFilter
@@ -17,16 +18,20 @@
       <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
     </template>
   </VxeGrid>
-    <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="refreshTable"/>
+</div>
+    <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="query({})"/>
 </template>
 <script lang="ts" setup>
 import dayjs from "dayjs";
+import type { VxeGridPropTypes  } from 'vxe-table'
+
 import { ElMessageBox } from "element-plus";
 import { clientApi } from "api";
 const props = defineProps(["id", "detail"]);
+const emits = defineEmits(['row-click'])
 const { t } = useI18n();
 let extraParams: any = {};
-const basicColumns = [
+const basicColumns:VxeGridPropTypes.Columns = [
   {
     field: "status",
     title: "tableHeader_status",
@@ -90,7 +95,8 @@ const {
   },
 });
 
-function handleDblclick(row) {
+function handleDblclick(row: any) {
+  emits("row-click", row)
   // routerProvider?.navigateTo(routeFolderCabinetDetail(row), false);
 }
 const CreateDialogRef = ref();
