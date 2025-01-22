@@ -17,6 +17,7 @@ async function reset(){
 
 async function saveToServer(){
     clientApi.api.putUserSetting(userPreference.value as any)
+    opened.value = false;
 }
 
 function updateStyle() {

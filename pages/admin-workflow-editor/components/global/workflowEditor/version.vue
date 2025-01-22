@@ -36,6 +36,7 @@ async function promoteToProductionHandler(row:any) {
 }
 
 async function saveAsNewVersionHandler(row:any) {
+    console.log("saveAsNewVersionHandler", row);
     tableRef.value?.reload()
 }
 
@@ -52,13 +53,19 @@ function actionPermission({row, code }:PermissionMethodParams) : {disabled:boole
     if(code === 'view'){
         result.visible = !isLatest 
         result.disabled = false;
+        return result
     }
     if(code === 'edit' || code === 'edit_new_tab'){
         result.visible = isLatest && !isProduction
         result.disabled = !isLatest || isProduction
+        return result
     }
     if(code === 'promote_to_production'){
         result.disabled = isProduction
+        return result
+    }
+    if(code === 'save_as_new_version'){
+        result.disabled = isProduction || isLatest
     }
     return result
 }
