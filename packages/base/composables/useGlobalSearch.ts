@@ -75,7 +75,7 @@ if(!tabProvider) {
     const keys = useMagicKeys({
         passive:false,
         onEventFired: (e) => {
-            if (keys['meta_k'] || keys['ctrl_k']) {
+            if (keys['meta_k'].value || keys['ctrl_k'].value) {
                 e.preventDefault();
             }
         }
