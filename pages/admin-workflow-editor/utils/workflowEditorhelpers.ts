@@ -25,8 +25,9 @@ export async function saveWorkflowFormToNewVersion(graph:Graph,processKey:string
         let json;
         if(!response || !response.data || response.data.length === 0){
             json = {}
+        }else{
+            json = JSON.parse(response.data[0].jsonValue || "{}")
         }
-        json = JSON.parse(response.data[0].jsonValue || "{}")
         await adminApi.api.postRelationSave({
             processKey: processKey,
             userTaskId: formId,
