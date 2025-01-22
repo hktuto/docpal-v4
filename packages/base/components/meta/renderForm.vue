@@ -91,8 +91,6 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                             if(!_item.options.maxLength) _item.options.maxLength = 200
                             break;
                         case 'date':
-                            console.log(metaDateFormat);
-                            
                             if(metaDateFormat) {
                                 _item.options.format = metaDateFormat
                                 if(item.options.formatDate?.includes('HH') || item.options.formatDate?.includes('hh')) _item.options.type = 'datetime'
@@ -159,7 +157,6 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                     }
                 })
             }
-            console.log(state.variables);
             
             
             nextTick(async () => {
@@ -216,21 +213,20 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
             clear()
             return
         }
-        // try {
+        try {
             state.loading = true
             state.data = []
             state.variables = []
             
             state.data = await clientApi.api.postTypesMetadatas({name: documentType}).then(res => res.data)
-            console.log("state.data", state.data)
             
             await getVariables(initOptions?.isFolder)
             if(props.mode === 'ai' || props.mode === 'ai-edit') {
                 if(initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
                 if(initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
             }
-        // } catch (error) {
-        // }
+        } catch (error) {
+        }
         state.loading = false
     }
 // #endregion
