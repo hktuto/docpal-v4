@@ -4,8 +4,8 @@
     v-model="state.visible" :title="state.isEdit ? $t('template.editInfo') : $t('template.create')"
     :close-on-click-modal="false" append-to-body
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson">
-    </FormRenderer>
+    <FromRenderer ref="FromRendererRef" :form-json="formJson">
+    </FromRenderer>
     <template #footer>
         <!-- <el-button @click="createFile('Excel', 'test')"></el-button> -->
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
@@ -14,13 +14,13 @@
 <TemplateAddStep2Dialog ref="TemplateAddStep2DialogRef"/>
 </template>
 <script lang="ts" setup>
-
-import { adminApi } from 'api';
+import { CreateTemplateInfoApi, UpdateTemplateInfoApi } from 'dp-api'
+import { adminApi } from 'api'
 import formJson from './templateAddStep1.vform.json'
 const emits = defineEmits([
     'update'
 ])
-const state = reactive<any>({
+const state = reactive({
     loading: false,
     visible: false,
     setting: {},
@@ -30,17 +30,17 @@ const router = useRouter()
 const form = reactive({
     labelRule: []
 })
-const FormRendererRef = ref()
+const FromRendererRef = ref()
 const TemplateAddStep2DialogRef = ref()
 async function handleSubmit() {
-    const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
     if(!formData) return
     try {
         state.loading = true
         if(state.isEdit) {
             await adminApi.api.putTemplateDocument({
                 name: formData.name,
-                description: foDirmData.description,
+                description: formData.description,
                 id: state.setting.id,
                 fileType: state.setting.fileType
             })
@@ -53,8 +53,9 @@ async function handleSubmit() {
             params.append('name', formData.name)
             params.append('fileType', formData.type)
             params.append('description', formData.description)
-            const {data} = await adminApi.api.postTemplateDocument({requestDTO:{}},params as any) as any
+            const { data } = await adminApi.api.postTemplateDocument({requestDTO:{}},params as any) as any
             const templateInfo = data
+            console.log(templateInfo);
             router.push(`/template/${templateInfo.id}`)
             // TemplateAddStep2DialogRef.value.handleOpen(templateInfo)
         }
@@ -67,11 +68,11 @@ async function handleSubmit() {
 async function handleOpen(setting?) {
     state.visible = true
     setTimeout(async() => {
-        await FormRendererRef.value.vFormRenderRef.resetForm()
+        await FromRendererRef.value.vFormRenderRef.resetForm()
         if(setting && setting.isEdit) {
             state.isEdit = true
             state.setting = setting
-            await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
+            await FromRendererRef.value.vFormRenderRef.setFormData({...state.setting})
             state.loading = false
         } else {
             state.isEdit = false

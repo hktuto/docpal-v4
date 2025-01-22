@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" append-to-body
     :close-on-click-modal="false" destroy-on-close @close="handleClose">
-    <MasterTableVariableForm ref="FromVariablesRendererRef" :ignoreList="ignoreList" />
+    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" />
     <template #footer>
       <div class="footer-grid">
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
@@ -32,7 +32,7 @@ const router = useRouter()
 async function handleSubmit() {
   state.loading = true
   try {
-    const data = await FromVariablesRendererRef.value.getData(true)
+    const data = await FormVariablesRendererRef.value.getData(true)
     await completeHumanTaskApi({
       caseInstanceId: state.setting.caseInstanceId,
       taskId: state.setting.referenceId,
@@ -46,7 +46,7 @@ async function handleSubmit() {
   state.loading = false
 }
 
-const FromVariablesRendererRef = ref()
+const FormVariablesRendererRef = ref()
 async function handleOpen(taskId, actionItem) {
   state.visible = true
   state.loading = true
@@ -75,7 +75,7 @@ async function handleOpen(taskId, actionItem) {
   // )
   state.loading = false
   setTimeout(() => {
-    if(!!fields) FromVariablesRendererRef.value.init(fields, initData)
+    if(!!fields) FormVariablesRendererRef.value.init(fields, initData)
   })
 }
 defineExpose({ handleOpen })

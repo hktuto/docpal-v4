@@ -59,7 +59,7 @@ defineExpose({ handleOpen })
     & > div {
         display: flex;
         align-items: center;
-        gap: calc(var(--app-padding) / 3);
+        gap: calc(var(--app-space-xs) / 3);
     }
 }
 </style>

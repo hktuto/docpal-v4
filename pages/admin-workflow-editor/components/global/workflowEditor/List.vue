@@ -33,20 +33,6 @@ function openProductionVersion(data:any, openInNewTab = false){
     }
     const newItem = newWorkflowEditorDetail(praams) as any;
     routerProvider?.navigateTo({...newItem}, openInNewTab)
-    // const newItem: any = {
-    //     id: "workflow-editor-detail-" + new Date().getTime(),
-    //     name: "workflow-editor-detail-" + data.id,
-    //     icon: 'dp-icon:flow-outline',
-    //     label: data.name,
-    //     component: 'LazyWorkflowEditorDetail',
-    //     props: {
-    //         id: data.id,
-    //         currentVersion: data.productionVersion,
-    //         productionVersion: data.productionVersion,
-    //         name: data.name,
-    //         item: data,
-    //     }
-    // }        
 
 }
 
