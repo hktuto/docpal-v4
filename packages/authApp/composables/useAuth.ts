@@ -1,7 +1,7 @@
 
 
 import {useState, createError} from '#imports'
-
+import { EventType, emitBus } from 'eventbus'
 import {clientApi} from 'api'
 import type Keycloak from 'keycloak-js'
 
@@ -64,6 +64,7 @@ export async function login() {
         getFeature(),
         getUserPreference()
     ])
+    emitBus(EventType.USER_LOGIN__SUCCESS, "")
 }
 
 
@@ -139,20 +140,14 @@ const uiSize = [
 /**
  *  從後台拿回 user 的 setting, 包括文字大小，color mode ...
  */
-async function getUserPreference()  {
+export async function getUserPreference()  {
     const preference = useUserPreference()
     const {data} = await clientApi.api.getUserSetting()
     if(!data ) {throw new Error('get user preference fail')}
     const userSetting = JSON.parse(data) || {}
     // normalize user preference , user may be come from old version
-    const userSizeValid = uiSize.find((c) => c.value === userSetting.size);
-    if(!userSizeValid) {
-        delete userSetting.size;
-      }
-    const userColorValid = colorModeOption.find( c => c.value === userSetting.color);
-    if(!userColorValid) {
-        delete userSetting.color;
-    }
+    userSetting.size ||= '14px';
+    userSetting.color ||= 'light';
       // normalize uploadFileMaxSize
     if(userSetting.uploadFileMaxSize && typeof userSetting.uploadFileMaxSize === 'string') {
         userSetting.uploadFileMaxSize = Number(userSetting.uploadFileMaxSize.replace('M','').replace('G',''))

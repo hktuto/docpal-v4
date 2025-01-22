@@ -119,7 +119,7 @@ async function saveAsNewVersion(){
     form.append('file', blob, 'workflow.bpmn.xml')
     // save all forms to new version
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, currentVersion, data.versionNumber)
+    await saveWorkflowFormToNewVersion(WorkflowEditorRef.value.getGraphValue, workflowData.value.key, currentVersion, data.versionNumber)
 
     ElNotification.success(t('common.success'))
 

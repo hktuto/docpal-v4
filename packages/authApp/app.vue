@@ -23,6 +23,7 @@ watch(loggedIn, (bool) => {
                     <AppMenu class="sideMenu">
                         <template #header>
                             <AuthUser />
+                            <AuthSetting />
                         </template>
                         <template #footer>
                         </template>

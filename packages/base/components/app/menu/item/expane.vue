@@ -166,7 +166,7 @@ onUnmounted(() => {
                 }
             }
         }
-        --menu-bg: var(--app-grey-900);
+        --menu-bg: var(--app-grey-950);
         border-radius: var(--app-border-radius-s);
         > .menuItem{
             .menuLabel, .menuIcon{
