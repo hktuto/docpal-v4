@@ -18,7 +18,7 @@ if(!routerProvider ) {
     throw new Error('MenuRouterKey is not provided')
 }
 
-
+const tableRef = ref();
 
 async function getWorkflowDetail(){
     const {data: draftData}:any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(draftId)
@@ -31,18 +31,30 @@ function editHandler(row:any, openInNewTab = false){
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
+async function promoteToProductionHandler(row:any) {
+    tableRef.value?.reload()
+}
+
+async function saveAsNewVersionHandler(row:any) {
+    tableRef.value?.reload()
+}
 
 function actionPermission({row, code }:PermissionMethodParams) : {disabled:boolean, visible:boolean}{
     const isProduction = row.isProduction === 'A'
     const isLatest = row.versionNumber === workflowData.value.latestVersion
     let result = {
-        visible :true,
+        visible : true,
         disabled: true
     } 
     if(!code){
         return result
     }  
+    if(code === 'view'){
+        result.visible = !isLatest 
+        result.disabled = false;
+    }
     if(code === 'edit' || code === 'edit_new_tab'){
+        result.visible = isLatest && !isProduction
         result.disabled = !isLatest || isProduction
     }
     if(code === 'promote_to_production'){
@@ -60,6 +72,8 @@ provide(WorkflowEditorVersionListProviderKey,{
     getListApi: adminApi.api.postWorkflowVersionPage,
     editHandler,
     actionPermission,
+    saveAsNewVersionHandler,
+    promoteToProductionHandler,
 })
 
 </script>

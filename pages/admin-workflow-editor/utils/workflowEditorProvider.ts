@@ -18,6 +18,8 @@ interface WorkflowEditorVersionListProvider {
     getListApi:(pageParams:any) => Promise<any>
     editHandler:(row:any, openInNewTab?:boolean) => void
     actionPermission:(arg: PermissionMethodParams) => {disabled:boolean, visible:boolean}
+    saveAsNewVersionHandler:(row:any) => void
+    promoteToProductionHandler:(row:any) => void
 }
 
 export const WorkflowEditorVersionListProviderKey: InjectionKey<WorkflowEditorVersionListProvider> = Symbol('workflowEditorVersionListProvider');

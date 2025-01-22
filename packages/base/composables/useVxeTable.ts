@@ -157,7 +157,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 options: params.footerActions || []
             },
             className: 'contextMenuContainer',
-            permissionMethod: ({options, column, row, rowIndex}:TableMenuValidateMethodParams) => {
+            visibleMethod: ({options, column, row, rowIndex}:TableMenuValidateMethodParams) => {
                 options.forEach( list => {
                     list.forEach(item => {
                         if(item.children){
