@@ -113,7 +113,6 @@ onMounted(() => {
             </div>
 
             <div class="menuFooter">
-                <Icon name="lucide:settings" />
                 <slot name="footer"></slot>
             </div>
         </div>
