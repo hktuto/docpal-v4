@@ -13,7 +13,7 @@
             <el-button v-if="isPdf" type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
             <!-- download pdf and annotation -->
             <el-button v-if="isPdf" type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation</el-button>
-            <BrowseActionsDownloadConversion v-if="allowFeature('DOCUMENT_CONVERSION')" :doc="doc"></BrowseActionsDownloadConversion>
+            <BrowseActionsDownloadConversion v-if="checkLicenseFeatures('DOCUMENT_CONVERSION')" :doc="doc"></BrowseActionsDownloadConversion>
         </div>
     </ElDialog>
 </template>
@@ -33,7 +33,7 @@ const props = defineProps<{
 }>()
 const { doc } = toRefs(props)
 const popupOpened = ref(false)
-const { allowFeature } = useLayout()
+const { checkLicenseFeatures } = useLayout()
 // #region module: download
     async function downloadAsPdfHandler(){
         // TODO : impelment action
