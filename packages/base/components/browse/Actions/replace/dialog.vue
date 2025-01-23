@@ -7,7 +7,7 @@
                 :rules="[{ required: true, message: $t('form_common_requird')}]">
                 <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1"></BrowseActionsReplaceUpload>
         </el-form-item>
-        <el-checkbox v-if="allowFeature('AI_CLASSIFICATION')" v-model="form.openAiAnalyzeMetadata">{{ $t('ai.checkAI') }}</el-checkbox>
+        <el-checkbox v-if="checkLicenseFeatures('AI_CLASSIFICATION')" v-model="form.openAiAnalyzeMetadata">{{ $t('ai.checkAI') }}</el-checkbox>
     </el-form>
     <template #footer>
         <el-button style="width: 100%" type="primary" :loading="state.loading" @click="handleConfirm">{{$t('common_submit')}}</el-button>
@@ -20,7 +20,7 @@ const emits = defineEmits([
     'update'
 ])
 
-const { allowFeature } = useLayout()
+const { checkLicenseFeatures } = useLayout()
 const state = reactive({
     loading: false,
     visible: false,
