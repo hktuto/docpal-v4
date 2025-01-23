@@ -69,6 +69,8 @@ function handleAction(command: string, row: EasyFormResult) {
   }
 }
 async function handleActive(row: EasyFormResult) {
+  console.log(row);
+  
   try {
     const action = await adminApi.api.postFormDesignSaveFormresultAppend({
       id: props.detail.id,
@@ -76,7 +78,7 @@ async function handleActive(row: EasyFormResult) {
         ...row, 
         status: row.status === 'D' ? 'A' : 'D'
       }
-    })
+    }).then(res => res.data)
     emits('refresh', action)
   } catch (error) {
     

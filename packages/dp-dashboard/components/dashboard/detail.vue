@@ -161,11 +161,11 @@ function syncMousePosition(event: MouseEvent) {
   mouseAt.x = event.clientX;
   mouseAt.y = event.clientY;
 }
-onMounted(() => {
+onActivated(() => {
   document.addEventListener("dragover", syncMousePosition);
 });
 
-onBeforeUnmount(() => {
+onDeactivated(() => {
   document.removeEventListener("dragover", syncMousePosition);
 });
 const wrapper = ref<HTMLElement>();
