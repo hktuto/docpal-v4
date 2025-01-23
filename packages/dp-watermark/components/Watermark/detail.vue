@@ -434,7 +434,7 @@ watch(detail, (newVal) => {
   }
 })
 
-onMounted(() => {
+onActivated(() => {
   initFabric();
 })
 
