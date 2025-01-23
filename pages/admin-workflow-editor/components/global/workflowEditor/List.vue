@@ -76,6 +76,7 @@ provide(WorkflowEditorListProviderKey,{
 })
 
 function reload(){
+    console.log("reload")
     if(tableRef.value && tableRef.value.reload) {
         tableRef.value.reload()
     }
@@ -87,7 +88,7 @@ function reload(){
     <div class="pageContainer">
         <!-- <TablePage :config="tableConfig" /> -->
         <LazyWorkflowEditorWorkflowListTable ref="tableRef" />
-        <LazyWorkflowEditorNewDialog ref="newDialogRef" @click="reload" />
+        <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="reload" />
         <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion" :data="newWorkflowDialogData" @close="reload" />
     </div>
 </template>

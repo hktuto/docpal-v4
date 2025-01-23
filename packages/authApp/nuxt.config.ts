@@ -1,6 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-
-
-export default defineNuxtConfig({
+const config = {
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   modules: [
@@ -21,4 +20,10 @@ export default defineNuxtConfig({
       }
     }
   }
-})
+} as any
+if(process.env.NODE_ENV === 'development'){
+  // TODO : remove this park in production
+}
+config.extends.push('../dp-language')
+
+export default defineNuxtConfig(config)

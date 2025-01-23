@@ -34,20 +34,21 @@ const emit = defineEmits(['update:modelValue', 'change','delete', 'anchorChange'
 function fileChange(e) {
     const file = e.raw;
     const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
-    const isLt100k = file.size / 1024 / 1024 < 0.1;
+    // check size is below 2MB
+    const isSizeLt2MB = file.size / 1024 / 1024 / 1024 < 2;
+    // const isLt100k = file.size / 1024 / 1024 < 0.1;
 
     if (!isJPG) {
         ElMessage.error('Image must be JPG or PNG format!');
     }
-    if (!isLt100k) {
-        ElMessage.error('Image size can not exceed 100kb!');
+    if (!isSizeLt2MB) {
+        ElMessage.error('Image size can not exceed 2MB!');
     }
-    if(!isJPG || !isLt100k) return;
+    if(!isJPG || !isSizeLt2MB) return;
     const ob:any = props.modelValue;
     const imgEL = new Image();
     
     imgEL.onload = (ev) => {
-        console.log("file loaded")
         ob.width = imgEL.width;
         ob.height = imgEL.height;
         ob.scaleX = imgEL.width > 300 ? 300 / imgEL.width : 1;
