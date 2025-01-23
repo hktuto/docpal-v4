@@ -27,7 +27,7 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['success'])
 
-const { allowFeature } = useLayout()
+const { checkLicenseFeatures } = useLayout()
 const dialogOpened = ref(false)
 const formRef = ref()
 const form = ref({
@@ -48,7 +48,7 @@ async function openDialog(detail:any){
     dialogOpened.value = true
     nextTick(async() => {
         const analysis = await GetDocumentAiAnalyzeApi(state.doc.id)
-        state.MetaRenderMode = allowFeature('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
+        state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
         await MetaFormRef.value.init(props.doc.type, {
             aiAnalysis: analysis.metaDatas,
             aiDocId: analysis.aiId
