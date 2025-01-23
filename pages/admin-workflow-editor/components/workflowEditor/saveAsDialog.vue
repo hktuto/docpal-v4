@@ -36,7 +36,6 @@ function close(){
 }
 
 async function save(){
-    console.log(data);
     const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:data.id, versionNumber:form.copyVersion}, {
         format: 'blob'
     }) 
@@ -50,13 +49,13 @@ async function save(){
     const bpmnFile = text.replaceAll(data.key, nameToId).replaceAll(data.name, newName);
 
     const newBlob = new Blob([bpmnFile], {type: "text/xml;charset=utf-8"});
-    newForm.append('name', newName)
+    newForm.append('name', form.name)
     newForm.append('attr_id', nameToId)
     newForm.append('versionId', 'V1')
     newForm.append('jsonValue', json || "")
     newForm.append('file', newBlob, 'workflow.bpmn.xml')
     newForm.append('isDraft', true)
-    const { data } = await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
+    await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
     const forms = await getAllFormFromXML(bpmnFile, data.key, form.copyVersion)
     await batchSaveForm(forms, nameToId, 'V1');
     opened.value = false
