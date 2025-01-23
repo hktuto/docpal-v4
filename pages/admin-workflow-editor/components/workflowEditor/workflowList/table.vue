@@ -7,10 +7,16 @@ if(!listProvider) {
     throw new Error('WorkflowEditorListProviderKey not found')
 }
 
-const gridRef = ref()
-const { tableConfig , tableEvent } = useVxeTable({
+const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
     id: 'workflowEditorListTableSetting',
-    api: (pageParams:any) => listProvider.getListApi(pageParams),
+    api: (pageParams:any) => {
+        if(!pageParams.orderBy){
+            pageParams.orderBy = 'modifiedDate'
+            pageParams.isDesc = true
+        } 
+        console.log("pageParams", pageParams)
+        return listProvider.getListApi(pageParams)
+    },
     dblClickAction: ({ row, column, event }:any) => {
         listProvider.openLastestVersion(row)
     },
@@ -126,13 +132,6 @@ const { tableConfig , tableEvent } = useVxeTable({
 })
 
 
-function reload(){
-    const $grid = gridRef.value
-  if ($grid) {
-    $grid.commitProxy('reload')
-  }
-}
-
 defineExpose({
     reload
 })
@@ -141,7 +140,7 @@ defineExpose({
 
 <template>
     <vxe-grid
-            ref="gridRef"
+            ref="tableRef"
             v-bind="tableConfig"
             v-on="tableEvent"
         >

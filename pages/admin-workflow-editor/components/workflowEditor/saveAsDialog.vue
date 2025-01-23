@@ -29,13 +29,14 @@ function validateName(rule:any, value:string, callback:any) {
 }
 
 const opened  = ref(false)
-
+const loading = ref(false)
 function close(){
     opened.value = false
     emits('close')
 }
 
 async function save(){
+    loading.value = true
     const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:data.id, versionNumber:form.copyVersion}, {
         format: 'blob'
     }) 
@@ -58,8 +59,13 @@ async function save(){
     await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
     const forms = await getAllFormFromXML(bpmnFile, data.key, form.copyVersion)
     await batchSaveForm(forms, nameToId, 'V1');
-    opened.value = false
-    emits('close')
+    
+    setTimeout(() => {
+        emits('close')
+        loading.value = false
+        opened.value = false
+    }, 500);
+    
 }
 
 let versionList:any[] = [];
@@ -88,7 +94,7 @@ defineExpose({ open })
 
 <template>
     <ElDialog v-model="opened" :title="$t('workflowEditor_saveAs_title')" append-to-body :close-on-click-modal="false" >
-        <el-form ref="formRef" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" status-icon>
+        <el-form ref="formRef" v-loading="loading" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" status-icon>
             <el-form-item :label="$t('workflowEditor.name')" prop="name">
                 <el-input v-model="form.name" :placeholder="$t('workflowEditor.name')" />
             </el-form-item>
@@ -99,8 +105,8 @@ defineExpose({ open })
             </el-form-item>
         </el-form>
         <template #footer>
-            <el-button @click="save">{{$t('common_save')}}</el-button>
             <el-button @click="close">{{$t('common_cancel')}}</el-button>
+            <el-button type="primary" @click="save">{{$t('common_save')}}</el-button>
         </template>
     </ElDialog>
 </template>

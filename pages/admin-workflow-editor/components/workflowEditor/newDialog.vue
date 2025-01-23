@@ -55,8 +55,9 @@ async function handleSubmit () {
     // routerProvider?.navigateTo({...newItem})
     setTimeout(() => {
         emits('created')
+        state.visible = false
     }, 300);
-    state.visible = false
+    
 }
 
 
@@ -78,7 +79,7 @@ defineExpose({ handleOpen })
 
 <template>
 <el-dialog v-model="state.visible" :title="$t('workflowEditor.add')"
-    :close-on-click-modal="false"
+    :close-on-click-modal="false" distroy-on-close
     >
     <el-form ref="formRef" :model="state.form" label-position="top"
         class="demo-ruleForm" status-icon

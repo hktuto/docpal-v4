@@ -2,7 +2,7 @@
 import {emitBus, EventType} from 'eventbus';
 import {logout} from '#imports'
 const user = useUserState()
-
+const config = useRuntimeConfig()
 const { locales, locale, setLocale } = useI18n()
 
 function changeLanguage(langCode:string) {
@@ -32,6 +32,11 @@ function openSetting(){
                 </ElButton>
                 <template #dropdown>
                     <ElDropdownItem @click="openSetting">Setting</ElDropdownItem>
+                    <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
+                    <Language />
+                    <template v-if="config.public.NODE_ENV === 'development'">
+                        <Language />
+                    </template>
                     <ElDivider />
                     <ElDropdownItem v-for="lang in locales" :key="lang.code" 
                         :disabled="lang.code === locale" @click="changeLanguage(lang.code)">

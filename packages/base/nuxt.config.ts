@@ -4,7 +4,7 @@ import { dirname, join } from 'path'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
-export default defineNuxtConfig({
+const config = {
   compatibilityDate: '2024-04-03',
   devtools: { 
     enabled: true,
@@ -37,7 +37,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      pdfReaderUrl: process.env.pdfReaderUrl
+      pdfReaderUrl: process.env.pdfReaderUrl,
+      NODE_ENV: process.env.NODE_ENV
     }
   },
   i18n: {
@@ -76,4 +77,7 @@ export default defineNuxtConfig({
       }
     }    
   },
-})
+} as any
+
+
+export default defineNuxtConfig(config)
