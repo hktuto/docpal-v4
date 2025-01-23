@@ -14,6 +14,13 @@ const { tableConfig , tableEvent } = useVxeTable({
     dblClickAction: ({ row, column, event }:any) => {
         listProvider.openLastestVersion(row)
     },
+    remoteSort:true,
+    defaultSort:[
+        {
+            field:"modifiedDate",
+            order: "desc"
+        }
+    ],
     columns:  [
         {
             field: 'name',
