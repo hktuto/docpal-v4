@@ -62,7 +62,7 @@ function focus() {
                             <div class="label">
 
                                 <Icon v-if="item.icon" :name="item.icon" />
-                                {{ t(item.label) }}
+                                <span v-html="t(item.label)" />
                             </div>
                         </li>
                     </ul>
@@ -124,7 +124,11 @@ function focus() {
     padding: var(--app-space-xs);
     margin: 0;
     list-style: none;
-    
+    :deep(.hightlight){
+        background: var(--app-success-1);
+        padding-inline: var(--app-space-xs);
+        font-weight: bold;
+    }
 }
 .searchListItem{
     padding: var(--app-space-xs);
