@@ -19,8 +19,6 @@ async function getDetail() {
   state.detail = await adminApi.api.getFormDesignDraftId(id).then(res => res.data)
 }
 function handleUpdateAction(action) {
-  console.log(action);
-  
   const index = state.detail.formResult.findIndex(item => item.id === action.id)
   if (index !== -1) state.detail.formResult[index] = action
   else state.detail.formResult.push(action)
