@@ -29,11 +29,11 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         },
         {
             field:'latestVersion',
-            title: 'workflow_latestVersion',
+            title: 'dpTable.productionVersion',
         },
         {
             field:'productionVersion',
-            title: 'workflow_productionVersion',
+            title: 'dpTable.latestVersion',
         },
         {
             field:'createdDate',

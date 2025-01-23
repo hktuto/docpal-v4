@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-acl":{
       id:"admin-acl",
       name: 'admin-acl',
-      label: "Access Control List",
+      label: "adminMenu.ACL",
       icon: "lucide:file-cog",
       hoverIcon: "lucide:file-cog",
       component: "LazyAclPage",

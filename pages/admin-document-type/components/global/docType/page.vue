@@ -38,7 +38,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     });
   },
   columns: [
-    { field: "name", title: "docType_DocType", fixed: "left" },
+    { field: "name", title: "search.type", fixed: "left" },
     {
       field: "category",
       title: "docType.category",

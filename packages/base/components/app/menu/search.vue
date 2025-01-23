@@ -41,7 +41,7 @@ function focus() {
 
         <Icon name="lucide:search"  />
 
-            Quick Actions
+            {{$t('quickAction.label')}}
         </div>
         <div class="sub">{{ metaKey }} + k</div>
     </div>
@@ -93,6 +93,8 @@ function focus() {
          align-items: center;
          gap: var(--app-space-xs);
          line-height: 1;
+         color: var(--app-grey-600);
+         font-weight: 500;
     }
     .sub{
         font-size: var(--app-font-size-xs);

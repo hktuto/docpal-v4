@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-case-management":{
       id:"admin-case-management",
       name: 'admin-case-management-list',
-      label: "Caese management",
+      label: "adminMenu.caseManagement",
       icon: "dp-icon:case-outline",
       hoverIcon: "dp-icon:case-fill",
       component: "LazyCaseManagementList",

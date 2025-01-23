@@ -1,7 +1,7 @@
 <template>
 <el-card>
   <div class="flex-x-start">
-    <h3 class="el-icon--left">{{ $t("adminMenu.whatapps") }}</h3>
+    <h3 class="el-icon--left">{{ $t("adminMenu.whatsApps") }}</h3>
     <el-switch v-model="state.setting.whatsAppSetting.whatsAppSwitch" :loading="state.switchLoading" @change="handleSwitchChange"></el-switch>
   </div>
   <el-form ref="formRef" label-position="top" :model="form">

@@ -35,7 +35,7 @@ function openSetting(){
                     <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
                     <Language />
                     <template v-if="config.public.NODE_ENV === 'development'">
-                        <Language />
+                        <!-- <Language /> -->
                     </template>
                     <ElDivider />
                     <ElDropdownItem v-for="lang in locales" :key="lang.code" 
