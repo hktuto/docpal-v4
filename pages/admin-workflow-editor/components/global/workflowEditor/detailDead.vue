@@ -77,7 +77,7 @@ async function saveDraft() {
     form.append('jsonValue', JSON.stringify(x6Json))
     form.append('file', blob, 'workflow.bpmn.xml')
     form.append('isDraft', true)
-    await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}}, form)
+    await adminApi.api.postWorkflowProcessDefinitionSave({requestDTO:{}}, form as any)
     // await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
     // 如果是修改了名称，则更新 tab 的名称
     routerInject?.updateTabName(newName + ` - (${currentVersion})`)

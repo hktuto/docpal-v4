@@ -1,16 +1,21 @@
 import didYouMean from 'didyoumean2'
 import { set, useMagicKeys, whenever } from '@vueuse/core'
-
+import { watchDebounced } from '@vueuse/core'
 export type GlobalSearchItem = {
-    keyword?: string[],
-    label: string,
-    icon ?:string,
+    keyword: string[], // if no visibleFn is provide, use keyword to calculate should item show or not
+    label: string, // function to set the label
+    labelFn?: (keyword:string) => string, // function to set the label in html format, if present, label will be ignore
+    icon ?:string, // icon show in quick action dialog
+    visibleFn?: (keyword:string) => Promise<GlobalSearchItem[] | void> // function to set item visivle or not 
     action: ({
         keyword,
         tabProvide
-    }:any) => void
+    }:any) => void // action when item click
 }
 
+/**
+ * 
+ */
 export type GlobalSearchList = {
     label: string,
     icon ?:string,
@@ -27,10 +32,10 @@ export const useGlobalSearch = ( tabProvide : any) => {
     const keyword = ref('')
 
     
-const tabProvider = inject(TabManagerKey)
-if(!tabProvider) {
-    throw createError('tab manger not found')
-}
+    const tabProvider = inject(TabManagerKey)
+    if(!tabProvider) {
+        throw createError('tab manger not found')
+    }
 
     /**
      * Selected item index
@@ -38,20 +43,20 @@ if(!tabProvider) {
      */
     const selectedItemIndex = ref<string>('')
 
-    const displayList = computed(() => {
-        // 
-        if(!keyword.value ) {
-            return list.value
-        }
-        const result:GlobalSearchList[] = [
+    const displayList = ref<GlobalSearchList[]>([]);
+    
 
-        ]
+    async function calculateDisplayList(){
+        console.log("calculateDisplayList")
+        // reset display list
+        displayList.value = []
+        // calcuate menu list
         list.value.forEach( (listItem:GlobalSearchList) => {
             let listItemMatchList:GlobalSearchItem[] = [];
             listItem.items.forEach(item => {
                 const matchList = didYouMean(keyword.value, item.keyword, {
                     caseSensitive:false,
-                    threshold:0.3,
+                    threshold:0.4,
                 })
                 const contains = item.keyword.some(k => keyword.value.includes(k))
                 if(matchList && matchList.length > 0 || contains) {
@@ -63,14 +68,41 @@ if(!tabProvider) {
                     label: listItem.label,
                     items: listItemMatchList
                 }
-                result.push(newItem)
+                displayList.value.push(newItem)
             }
         })
-        result.push(...actionList.value)
-        return result
-    })
-    
+        // calcuate action list
+        for (const action of actionList.value) {
+            action.items.forEach( async (item) => {
+                const visibleItems = await item.visibleFn?.(keyword.value)
+                
+                if(visibleItems && visibleItems.length > 0) {
+                    // check if displayList already has this item
+                    const displayItem = displayList.value.find((item) => item.label === action.label)
+                    if(displayItem) {
+                        displayItem.items.push(...visibleItems)
+                        return;
+                    }else{
+                        displayList.value.push({
+                            label: action.label,
+                            icon: action.icon,
+                            items: visibleItems
+                        })
+                    }
+                }
+            })
+            
+        }
+    }
 
+    function itemClick(item:GlobalSearchItem) {
+        if(item.action) {
+            item.action({
+                keyword:keyword.value,
+                tabProvider,
+            })
+        }
+    }
 
     const keys = useMagicKeys({
         passive:false,
@@ -80,9 +112,11 @@ if(!tabProvider) {
             }
         }
     })
+
     whenever(keys.meta_k, (e) => {
         opened.value = true;
     })
+
     whenever(keys.ctrl_k, (e) => {
         opened.value = true;
     })
@@ -94,10 +128,7 @@ if(!tabProvider) {
         const [listIndex, itemIndex] = selectedItemIndex.value.split('-');
         const item = displayList.value[parseInt(listIndex)].items[parseInt(itemIndex)]
         if(item) {
-            item.action({
-                keyword:keyword.value,
-                tabProvider,
-            })
+            itemClick(item)
         }
         opened.value = false
     })
@@ -148,6 +179,17 @@ if(!tabProvider) {
         }
     })
 
+    watchDebounced(keyword, async (newVal) => {
+        if(!newVal) {
+            displayList.value = []
+            return;
+        }
+        await calculateDisplayList()
+    },{
+        debounce: 300,
+        maxWait: 1000,
+    })
+
     watch(opened, (newVal) => {
         if(!newVal) {
             keyword.value = ''
@@ -158,7 +200,8 @@ if(!tabProvider) {
         opened,
         keyword,
         displayList,
-        selectedItemIndex
+        selectedItemIndex,
+        itemClick
     }
 
 

@@ -18,6 +18,7 @@ async function openLastestVersion(data:any, openInNewTab = false){
     // console.log("openLastestVersion", entryList)
     const praams = {
         ...data,
+        versionNumber:data.latestVersion,
         draftId: data.id,
     }
     let newItem = newWorkflowEditorDetail(praams) as any;
@@ -29,6 +30,7 @@ function openProductionVersion(data:any, openInNewTab = false){
     // TODO: open detail page
     const praams = {
         ...data,
+        versionNumber:data.productionVersion,
         draftId: data.id,
     }
     const newItem = newWorkflowEditorDetail(praams) as any;

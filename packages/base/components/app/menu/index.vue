@@ -13,7 +13,7 @@ const displayMenu = ref<any[]>([])
 
 function createSearchItem(item:MenuItem) {
     return {
-        keyword: [item.name, item.label, t(item.label)],
+        keyword: ['menu', item.name, item.label, t(item.label)],
         label: t(item.label),
         icon: item.icon,
         action: () => {
