@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-bulk-import":{
       id:"admin-bulk-import",
       name: 'bulkImportConfig',
-      label: "bulkImportConfig",
+      label: "adminMenu.bulkImportConfig",
       icon: "flowbite:file-import-outline",
       hoverIcon: "flowbite:file-import-solid",
       component: "LazyBulkImportPage",

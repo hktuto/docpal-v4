@@ -105,7 +105,7 @@ defineExpose({ open })
             </el-form-item>
         </el-form>
         <template #footer>
-            <el-button @click="close">{{$t('common_cancel')}}</el-button>
+            <el-button @click="close">{{$t('cancelText')}}</el-button>
             <el-button type="primary" @click="save">{{$t('common_save')}}</el-button>
         </template>
     </ElDialog>

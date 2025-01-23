@@ -70,9 +70,9 @@ export default defineAppConfig({
                 {
                     name:"admin-workflow-editor"
                 },
-                {
-                    name: "super-workflow-form"
-                }
+                // {
+                //     name: "super-workflow-form"
+                // }
             ]
         },
         {

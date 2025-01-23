@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-user":{
       id:"admin-user",
       name: 'admin-user-list',
-      label: "Admin User",
+      label: "adminMenu.User",
       icon: "lucide:user",
       hoverIcon: "lucide:user",
       component: "LazyAdminUserList",
@@ -16,7 +16,7 @@ export default defineAppConfig({
     "admin-group":{
       id:"admin-group",
       name: 'admin-group-list',
-      label: "Admin Group",
+      label: "adminMenu.group",
       icon: "mingcute:group-line",
       hoverIcon: "mingcute:group-line",
       component: "LazyGroupList",

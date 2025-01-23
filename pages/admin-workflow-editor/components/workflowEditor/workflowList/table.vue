@@ -36,24 +36,24 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
         },
         {
             field: 'productionVersion',
-            title: 'productionVersion',
+            title: 'dpTable.productionVersion',
             minWidth: 120,
             
         },
         {
             field: 'latestVersion',
-            title: 'latestVersion',
+            title: 'dpTable.latestVersion',
             minWidth: 120,
         },
         {
             field:'modifiedBy',
-            title: 'modifiedBy',
+            title: 'modified_by',
             minWidth: 120,
             sortable: true,
         },
         {
             field: 'modifiedDate',
-            title: 'modifiedDate',
+            title: 'search.modifiedDate',
             minWidth: 120,
             sortable: true,
             formatter ({ cellValue }:any) {

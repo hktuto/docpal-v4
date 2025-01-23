@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-workflow-editor":{
       id:'admin-workflow-editor',
       name: 'workflow-editor-list',
-      label: "Workflow Editor",
+      label: "adminMenu.workflowEditor",
       icon: "dp-icon:flow-outline",
       hoverIcon: "dp-icon:flow-fill",
       component: "LazyWorkflowEditorList",

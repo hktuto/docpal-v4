@@ -46,9 +46,7 @@ export const useGlobalSearch = ( tabProvide : any) => {
     const displayList = ref<GlobalSearchList[]>([]);
     
 
-    async function calculateDisplayList(){
-        console.log("calculateDisplayList")
-        // reset display list
+    async function calculateDisplayList(){        // reset display list
         displayList.value = []
         // calcuate menu list
         list.value.forEach( (listItem:GlobalSearchList) => {
