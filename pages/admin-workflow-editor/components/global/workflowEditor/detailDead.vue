@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import {MenuRouterKey} from '#imports'
-import { ElMessageBox, ElNotification } from 'element-plus'
+import { ElNotification } from 'element-plus'
 import { adminApi } from 'api';
-import type { ToolBar } from '../../../../../packages/base/components/app/toolbar/index.vue';
 import { saveWorkflowFormToNewVersion } from '~/utils/workflowEditorhelpers';
 const { t } = useI18n()
 
@@ -49,11 +48,7 @@ async function getWorkflow() {
     
     // check read only logic
       console.log("can not edit", currentVersion, draftDetail.value)
-    if(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value) {
-        readonly.value = true
-    }else{
-        readonly.value = false
-    }
+    readonly.value = !!(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value);
     workflowData.value = draftData
     routerInject?.updateTabName(draftData.name + ` - (${currentVersion})`)
     nextTick(() => {
