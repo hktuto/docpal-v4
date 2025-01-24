@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import {ElNotification } from 'element-plus';
-import type {VxeGrid} from 'vxe-table'
+
 import {adminApi} from 'api';
-import type {ActionPermissionParams} from '#imports';
+
 import { newWorkflowEditorDetail } from '~/utils/workflowEditorMenu';
-import type { PermissionMethodParams } from '../../../../../packages/base/composables/useVxeTable';
+import type { PermissionMethodParams } from 'base/composables/useVxeTable';
 
 const { id, name, draftId, latestVersion } = defineProps<{
     id:string,
