@@ -70,7 +70,7 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
 .contextMenuContainer{
     border-radius: 0.5rem;
     background: var(--app-grey-0000);
-    border: 1px solid var(--app-grey-050);
+    border: 1px solid var(--app-grey-825);
     box-shadow: 0 2px 5px rgba(0,0,0,.2);
     position: fixed;
     top:var(--y);

@@ -48,7 +48,7 @@ if(!editorProvider) {
 .indentItem{
     width: var(--app-space-s);
     height:100px;
-    border-left: 1px solid var(--app-grey-050);
+    border-left: 1px solid var(--app-grey-825);
 }
 .collapseTitleContainer{
     --icon-size: 12px;

@@ -10,7 +10,8 @@ export default defineNuxtConfig({
     "../../pages/client-search",
     "../../pages/client-master-table",
     "../../pages/client-folder-cabinet",
-    "../../pages/client-workflow"
+    "../../pages/client-workflow",
+    "../../packages/dp-dashboard"
   ],
   features:{
     inlineStyles: true,
