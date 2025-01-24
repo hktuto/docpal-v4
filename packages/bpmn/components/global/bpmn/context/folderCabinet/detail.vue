@@ -3,7 +3,7 @@
 const props = defineProps<{
     field: any[],
     folderCabinetItem:any
-    allField: any[]
+    allField?: any[]
 }>()
 const emits = defineEmits(['update:field'])
 const activeName = ref("")

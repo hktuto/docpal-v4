@@ -59,9 +59,12 @@ async function getAllTemplate(){
             value: item
         }
     });
-    const bpmnJson = graphProvider?.bpmnJson.value
-    if(bpmnJson && bpmnJson.definitions && bpmnJson.definitions.process && bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping']){
-        folderCabinetRootId.value = bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping'][0].attr_id
+  const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
+  const cell = graphProvider?.graph.value?.getCellById(id) as any
+  const rootCellDate = cell.getData()
+    if(rootCellDate && rootCellDate.data &&  rootCellDate.data.extensionElements['flowable:folderCabinetMapping']){
+        folderCabinetRootId.value = rootCellDate.data.extensionElements['flowable:folderCabinetMapping'][0].attr_id
+
         const {data} = await adminApi.api.getCabinetTemplateId(folderCabinetRootId.value)
         flatCabinetList.value = await loopChildren([], data, 0,'')
         // flatCabinetList.value = props.bpmnJson.definitions.process['flowable:folderCabinetMapping'][0]
@@ -72,7 +75,6 @@ async function getAllTemplate(){
 
 async function getForm(){
   const nodeData = node.getData()
-  console.log("nodeData getForm,", nodeData)
     if(!nodeData.data || !nodeData.data.extensionElements) {
         form.value = {
             templateId:"",
@@ -119,7 +121,6 @@ async function getForm(){
         })
         form.value.variables = ""
     }
-    console.log("form", form.value)
 }
 
 function updateField(key:string, value:any){

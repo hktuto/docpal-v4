@@ -45,9 +45,10 @@ async function getWorkflow() {
         throw createError("draft not found")
     }
     productionVersion.value = draftData.productionVersion
-    lastestVewsion.value = draftData.latestVersion 
+    lastestVewsion.value = draftData.latestVersion || currentVersion // if latest version is null , then current version must be latest
     
     // check read only logic
+      console.log("can not edit", currentVersion, draftDetail.value)
     if(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value) {
         readonly.value = true
     }else{
@@ -94,7 +95,7 @@ function openVersionList(){
 }
 
 
-async function promoteToProdocution(){
+async function promoteToProduction(){
     const { xml, x6Json } = WorkflowEditorRef.value.getData()
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
@@ -103,7 +104,7 @@ async function promoteToProdocution(){
     const { data:workflowVersionData } = await adminApi.api.getWorkflowVersion({draftId:id, versionNumber:currentVersion}) as any
 
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion)
+    await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
     ElNotification.success(t('common.success'))
 }
 
@@ -149,7 +150,7 @@ watch(() => [id,currentVersion], (newWorkflowId) => {
             
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">
-                    <ElButton type="primary" @click="promoteToProdocution">Promote To Prodocution : {{ currentVersion }}</ElButton>
+                    <ElButton type="primary" @click="promoteToProduction">Promote To Prodocution : {{ currentVersion }}</ElButton>
                 </template>
                 <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
                 <ElButton @click="openVersionList" type="primary">Version List</ElButton>
