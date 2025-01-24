@@ -57,13 +57,14 @@ async function getForm(){
       form.value = nodeData.data.extensionElements['flowable:folderCabinetMapping'].field
     }
   }
-  const bpmnJson = graphProvider?.bpmnJson.value
-  if(bpmnJson && bpmnJson.definitions && bpmnJson.definitions.process && bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping']){
-    folderCabinetRootId.value = bpmnJson.definitions.process.extensionElements['flowable:folderCabinetMapping'][0].attr_id
+  const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
+  const cell = graphProvider?.graph.value?.getCellById(id) as any
+  const rootCellDate = cell.getData()
+  if(rootCellDate && rootCellDate.data &&  rootCellDate.data.extensionElements['flowable:folderCabinetMapping']){
+    folderCabinetRootId.value = brootCellDate.data.extensionElements['flowable:folderCabinetMapping'][0].attr_id
     
     const {data} = await adminApi.api.getCabinetTemplateId(folderCabinetRootId.value)
     flatCabinetList.value = await loopChildren([], data, 0,'')
-    console.log("folderCabinetRootId", folderCabinetRootId)
   }
 }
 
