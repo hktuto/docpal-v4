@@ -48,6 +48,7 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
 
 function back(){
     if(history.value.length === 0) return
+    console.log("back", history.value)
     const lastItem = history.value.pop()
     if(lastItem){
     const lastId = tab.value.id
