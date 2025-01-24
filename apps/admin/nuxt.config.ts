@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     "../../pages/admin-folder-cabinet",
     "../../pages/admin-email-template",
     "../../pages/admin-watermark",
+    "../../pages/admin-message-template"
     // "../../pages/admin-share",
   ],
   features:{
