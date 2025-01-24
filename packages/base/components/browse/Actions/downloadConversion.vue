@@ -27,7 +27,7 @@ import * as mime from 'mime-types'
 const props = defineProps<{
     doc?: any,
 }>()
-const { checkLicenseFeatures } = useLayout()
+
 const form = ref<any>({
     targetFile: ''
 })

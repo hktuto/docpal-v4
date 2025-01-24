@@ -17,7 +17,8 @@ const WorkflowRef = ref()
 const WorkflowPopoverDownloadRef = ref()
 async function handleDownload() {
   const params = WorkflowRef.value.getDownloadParams();
-  WorkflowPopoverDownloadRef.value.handleOpen(params);
+  console.log(params)
+  WorkflowPopoverDownloadRef.value.handleOpen(params, state.activeTab);
 }
 </script>
 <template>
@@ -30,8 +31,8 @@ async function handleDownload() {
         @click="handleDownload"
         >{{ $t("export") }}</el-button
       >
-      <!-- <WorkflowPopoverPersonal />
-      <WorkflowPopoverNewTask @created="tabChange(state.activeTab)" /> -->
+      <WorkflowPopoverPersonal />
+      <WorkflowPopoverNewTask @created="tabChange(state.activeTab)" />
     </div>
     <el-tabs
       v-model="state.activeTab"
@@ -62,7 +63,7 @@ async function handleDownload() {
       </el-tab-pane> -->
     </el-tabs>
 
-    <!-- <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/> -->
+    <WorkflowPopoverDownload ref="WorkflowPopoverDownloadRef"/>
   </div>
 </template>
 <style lang="scss" scoped>

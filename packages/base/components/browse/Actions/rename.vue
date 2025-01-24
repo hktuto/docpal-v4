@@ -27,7 +27,7 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['success'])
 
-const { checkLicenseFeatures } = useLayout()
+
 const dialogOpened = ref(false)
 const formRef = ref()
 const form = ref({

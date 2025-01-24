@@ -7,6 +7,19 @@ export const routeWorkflowDetail  = function(params: any){
     component: 'LazyWorkflowDetail',
     props: {
       id: params.id,
+      workflowType: params.workflowType,
+    }
+  } as TabItem
+}
+export const routeWorkflowPage  = function(params: any){
+  return {
+    id: "client-workflow",
+    name: "client-workflow",
+    icon: 'dp-icon:flow-outline',
+    label: 'menus_workflow',
+    component: 'LazyWorkflowPage',
+    props: {
+      workflowType: params.workflowType,
     }
   } as TabItem
 }
