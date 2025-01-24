@@ -39,14 +39,15 @@
       }}
     </div>
   </div>
-  <el-button class="f-g" v-if="isAssigneeUser" type="primary" :loading="loading"
-             @click="handleUnclaim">
-    {{ $t('workflow_Unclaim') }}
-  </el-button>
-  <el-button class="f-g" v-else-if="!props.taskDetail.assignee" type="primary" :loading="loading"
-             @click="handleClaim">
-    {{$t('workflow_claim')}}
-  </el-button>
+  <div class="flex-x-start">
+    <el-button class="f-g" v-if="isAssigneeUser" type="primary" :loading="state.loading"
+              @click="handleUnclaim">
+      {{ $t('workflow_Unclaim') }}
+    </el-button>
+    <el-button class="f-g" v-else-if="!props.taskDetail.assignee" type="primary" :loading="state.loading"
+              @click="handleClaim">
+      {{$t('workflow_claim')}}
+    </el-button>
   <el-popover :visible="state.deletePopoverShow" placement="top" :width="160">
     <p>{{$t('msg_confirmWhetherToDelete')}}</p>
     <div class="flex-x-end" style="text-align: right; margin: 0">
@@ -59,6 +60,7 @@
       <el-button v-if="isStartedUser" @click="state.deletePopoverShow = true">{{$t('common_delete')}}</el-button>
     </template>
   </el-popover>
+  </div>
 
 </div>
 </template>
