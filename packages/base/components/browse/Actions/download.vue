@@ -33,7 +33,7 @@ const props = defineProps<{
 }>()
 const { doc } = toRefs(props)
 const popupOpened = ref(false)
-const { checkLicenseFeatures } = useLayout()
+
 // #region module: download
     async function downloadAsPdfHandler(){
         // TODO : impelment action

@@ -37,9 +37,9 @@ onMounted(() => {
     }
 })
 
-const dialogRef = ref()
+// const dialogRef = ref()
 function handleAdd() {
-    dialogRef.value.handleOpen()
+    TemplateAddStep1DialogRef.value.handleOpen()
 }
 
 async function handleActive(row: any, enable: boolean) {
@@ -159,8 +159,8 @@ provide(DocumentTemplateProviderKey, {
             </template>
             
         </DocumentTemplateListTable>
-        <DocumentTemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="tableRef?.reload"></DocumentTemplateAddStep1Dialog>
-        <DocumentTemplateReplaceDialog ref="TemplateReplaceDialogRef" @refresh="tableRef?.reload"/>
+        <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="tableRef?.reload"></TemplateAddStep1Dialog>
+        <TemplateReplaceDialog ref="TemplateReplaceDialogRef" @refresh="tableRef?.reload"/>
     </div>
 
 </template>

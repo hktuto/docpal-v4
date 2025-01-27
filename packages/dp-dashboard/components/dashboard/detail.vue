@@ -325,7 +325,7 @@ function dragEnd() {
 }
 
 .dashboard-item-widget {
-  border: 1px solid var(--app-grey-050);
+  border: 1px solid var(--app-grey-825);
   display: flex;
   align-items: center;
     height: 32px;
