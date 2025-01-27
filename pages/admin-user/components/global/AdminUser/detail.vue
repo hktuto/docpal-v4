@@ -34,7 +34,6 @@ async function getUser() {
   if(!res.data) return
   res.data.status = res.data.status === "A" ? "A" : "D";
   state.curUser = res.data;
-  console.log("getUser", state.curUser);
 }
 provide(userProviderDetailKey, {
   SetUserStatusApi: (params:any) => {
