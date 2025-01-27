@@ -204,6 +204,7 @@ function init(row) {
     form.allow = row.allow;
     form.multiple = row.multiple || false;
     form.repeatName = row.repeatName || false;
+
     if (row.labelRule) {
       const labelRule = JSON.parse(row.labelRule)
         console.log("labelRule", labelRule);
@@ -224,6 +225,7 @@ function init(row) {
       ...getReminder(row, ["notificationReminder", "emailReminder", "emailReport"]),
       showNotification: props.isRoot,
     });
+    console.log("form", form)
     state.loading = false;
   });
 }
