@@ -265,6 +265,10 @@ function handleGroupSelected() {
   }
 // #endregion
 
+onActivated(() => {
+    state.selectList = []
+})
+
 watch(() => props.condition, (newVal) => {
   if(!!newVal) getFilter(newVal)
 })
