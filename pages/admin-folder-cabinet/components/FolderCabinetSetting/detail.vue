@@ -206,6 +206,7 @@ function init(row) {
     form.repeatName = row.repeatName || false;
     if (row.labelRule) {
       const labelRule = JSON.parse(row.labelRule)
+        console.log("labelRule", labelRule);
       labelRule.forEach((item: any) => item.metadata = item.metaData);
       form.labelRule = labelRule
     } else {
