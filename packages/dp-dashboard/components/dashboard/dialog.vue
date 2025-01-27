@@ -44,15 +44,16 @@ async function handleSubmit () {
         else {
             const res = await publicApi.api.postUserDashboard(_data)
             // router.push(`/data-dashboard/${res.id}`)
-            emits('add')
+            emits('add', res.data)
         }
         state.visible = false
     } catch (error) {
+        console.log(error)
     } finally {
         state.loading = false
     }
 }
-function handleOpen(setting?) {
+function handleOpen(setting?:any) {
     state.visible = true
     state.edit = false
     if(!setting) {

@@ -432,9 +432,11 @@ watch(detail, (newVal) => {
     console.log("detail update", detail)
     initFabric();
   }
+},{
+    deep: true,
 })
 
-onActivated(() => {
+onMounted(() => {
   initFabric();
 })
 
