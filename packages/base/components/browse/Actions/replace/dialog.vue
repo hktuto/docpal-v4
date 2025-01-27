@@ -20,7 +20,7 @@ const emits = defineEmits([
     'update'
 ])
 
-const { checkLicenseFeatures } = useLayout()
+
 const state = reactive({
     loading: false,
     visible: false,
