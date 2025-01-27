@@ -1,5 +1,5 @@
 <template>
-<el-dropdown popper-class="auto" trigger="click" @command="workflowClickHandler">
+<el-dropdown popper-class="popover-auto" trigger="click" @command="workflowClickHandler">
     <el-button type="primary">
         {{$t('workflow_newWorkflow')}}<el-icon class="el-icon--right"><arrow-down /></el-icon>
     </el-button>
@@ -35,14 +35,16 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
-
+// @ts-ignore
 import {useWorkflow} from "~/composables/useWorkflow";
 import { publicApi, adminApi, clientApi } from 'api';
 const { formStartHandle } = useWorkflow()
-const router = useRouter()
+// @ts-ignore
 const graphEl = ref()
 const emits = defineEmits(['created']);
+// @ts-ignore
 const activeName = ref('Form')
+// @ts-ignore
 const state = reactive({
     availableWorkflow: [],
     formDialogVisible: false,
@@ -54,18 +56,18 @@ const state = reactive({
 function tabChangeHandler(){
     console.log(activeName.value)
     if(activeName.value === 'Graph'){
+        // @ts-ignore
         nextTick( async() => {
             console.log(state.selectedWorkflow)
             graphEl.value.init(state.bpmnXml)
         })
     }
 }
-const modelProps = ref('form')
 
 async function getAvailableWorkflow () {
     state.availableWorkflow = await publicApi.api.postWorkflowProcessList({}).then(res => res.data)
 }
-async function workflowClickHandler (item: Workflow) {
+async function workflowClickHandler (item: any) {
     let step = 'start'
     if (formStartHandle.value[item.key]) {
         const result = formStartHandle.value[item.key].cb(item.key)
@@ -78,8 +80,9 @@ async function workflowClickHandler (item: Workflow) {
     }
     
     state.formDialogVisible = true
+    // @ts-ignore
     state.selectedWorkflow = deepCopy(item)
-    initForm(item.key, step)
+    initForm(item.key)
     // createWorkflowForm.value = await workflowStore.getFromProperties(item.key)
 
     // opened.value = true
@@ -90,6 +93,7 @@ async function workflowClickHandler (item: Workflow) {
     // VformRenderRef.value.setFormDataAndJson(formJson, formData, createWorkflowForm.value)
 }
 // #region module: vform
+    // @ts-ignore
     const vFormRef = ref()
     async function checkAndSubmit () {
         const data = await vFormRef.value.getFormData()
@@ -121,7 +125,7 @@ async function workflowClickHandler (item: Workflow) {
         setTimeout(() => {
             vFormRef.value.setForm(formJson, formData, props)
         })
-        const blob = await clientApi.api.postWorkflowProcessModel({ processKey }, {
+        const blob: any = await clientApi.api.postWorkflowProcessModel({ processKey }, {
             format: 'blob'
         })
         const text = await blob.text()
@@ -138,12 +142,13 @@ async function workflowClickHandler (item: Workflow) {
                 }, {})
     }
     async function formJsonGet (userTaskId:string, processKey:string) {
-        const response = await clientApi.api.getRelationQuery({relation:{userTaskId, processKey}}).then(res => res.data)
+        const response: any = await clientApi.api.getRelationQuery({relation:{userTaskId, processKey}}).then(res => res.data)
         if (!response[0] ||
             response[0] && !response[0].jsonValue) return {}
         return JSON.parse(response[0].jsonValue)
     }
 // #endregion
+// @ts-ignore
 onMounted(() => {
     getAvailableWorkflow()
 })
@@ -152,5 +157,12 @@ defineExpose({ workflowClickHandler })
 <style lang="scss" scoped>
 .graphContent{
     height: 500px;
+}
+
+</style>
+<style lang="scss">
+.popover-auto {
+    max-height: 70vh;
+    overflow: auto;
 }
 </style>

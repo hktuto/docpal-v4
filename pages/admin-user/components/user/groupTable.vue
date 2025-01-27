@@ -62,6 +62,7 @@ async function getMemberGroupList() {
     const res = await userProviderDetail?.MemberGroupGetApi({
         userId: props.user.userId
     })
+    console.log("getMemberGroupList", res)
     tableRef.value?.loadData(res.data)
 }
 
@@ -91,9 +92,11 @@ async function handleDeleteSelected() {
     getMemberGroupList()
 }
 
-onMounted(() => {
+onActivated(() => {
     getMemberGroupList()
+    state.selectedRows = []
 })
+
 
 watch( () => props.user, async(newValue) => {
     if (newValue) getMemberGroupList()
@@ -103,6 +106,11 @@ watch( () => props.user, async(newValue) => {
 </script>
 
 <style lang="scss" scoped>
+.el-card{
+  :deep(.el-card__body) {
+      height: 100%;
+  }
+}
 .flex-x-between {
     display: flex; 
     justify-content: space-between;
