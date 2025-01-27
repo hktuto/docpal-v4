@@ -29,6 +29,7 @@ if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
 const { t } = useI18n();
+// @ts-ignore
 const userId: string = useUserId().value;
 let extraParams: any = {};
 const {
@@ -68,6 +69,7 @@ const {
       field: "createDate",
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
+        // @ts-ignore
         const format = userDisplayTimeSetting();
         return dayjs(cellValue).format(format);
       },
@@ -76,6 +78,7 @@ const {
       field: "dueDate",
       title: "workflow_dueDate",
       formatter({ cellValue }: any) {
+        // @ts-ignore
         const format = userDisplayTimeSetting();
         return dayjs(cellValue).format(format);
       },
@@ -85,12 +88,15 @@ const {
     handleDblclick(row);
   },
 });
-function handleDblclick(row) {
+function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeWorkflowDetail(row), false);
+  routerProvider?.navigateTo(routeWorkflowDetail({
+    ...row, 
+    name: row.taskInstance.businessKey,
+    workflowType: 'myTask' }), false);
 }
 
-async function claimTask(row) {
+async function claimTask(row: any) {
   await clientApi.api.postWorkflowTaskClaim({
     taskId: row.id,
     userId,
@@ -105,8 +111,8 @@ function getDownloadParams() {
     ...deepCopy(extraParams),
   };
 }
-function handleFormChange(data) {
-  const params = Object.keys(data.formModel).reduce((prev, key) => {
+function handleFormChange(data: any) {
+  const params = Object.keys(data.formModel).reduce((prev: any, key: string) => {
     if (data.formModel[key] && data.formModel[key].length > 0)
       prev[key] = data.formModel[key];
     return prev;

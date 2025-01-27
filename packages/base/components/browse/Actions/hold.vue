@@ -94,7 +94,7 @@ const svgContent = computed(() => {
             return $i18n.t('hp.addHold')
     }
 })
-const userId:string = useUser().getUserId()
+const userId:string = useUserId().value
 // #region module: status: R || ''
     const BrowseActionsHoldAddDialogRef = ref()
     function handleAdd(holdDetail) {
