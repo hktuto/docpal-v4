@@ -4,14 +4,17 @@ import {CaseItemType} from "../../../utils/cmmn";
 const props = defineProps<{
     setting: NodeSettingItem
     type: CaseItemType
+    disabled: boolean
 }>();
 
 const emits = defineEmits(['mousedown'])
 
 
 
-function mousedown(ev) {
-    
+function mousedown(ev:any) {
+    if(props.disabled) {
+        return;
+    }
     const newTaskId = props.type + new Date().getTime()
     const newPlanItemId = "planItem_" + newTaskId
     const style = props.setting.nodeStyle
@@ -37,24 +40,31 @@ function mousedown(ev) {
 </script>
 
 <template>
-    <div class="toolItemContainer">
-        <ElTooltip placement="right" :content="setting.toolBarLabel">
+    <div :class="{toolItemContainer:true, disabled}">
+        <ElTooltip v-if="!disabled" placement="right" :content="setting.toolBarLabel">
             <SvgIcon class="icon" :src="setting.toolBarIcon" @mousedown.native="mousedown"></SvgIcon>
         </ElTooltip>
+        <SvgIcon v-else class="icon" :src="setting.toolBarIcon" ></SvgIcon>
     </div>
 </template>
 
 <style scoped lang="scss">
 .toolItemContainer{
     --color:#000;
+    --icon-color: var(--app-grey-000);
+    --cursor: grab;
+    cursor: var(--cursor);
+    &:hover {
+        --icon-color: var(--app-main-color);
+    }
+    &.disabled {
+        --icon-color: var(--app-grey-500) !important;
+        --cursor: not-allowed;
+    }
 }
 .icon{
-    cursor: grab;
-    &:hover{
-        --icon-color: var(--app-primary-color);
+    :deep(svg) {
+        cursor: var(--cursor);
     }
-    &:active{
-         --icon-color: var(--app-primary-color);
-     }
 }
 </style>

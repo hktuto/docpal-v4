@@ -6,6 +6,7 @@ const props = defineProps<{
     caseTypeId: string,
     name: string,
     currentVersion: string,
+
 }>()
 
 const routerProvider = inject(MenuRouterKey)
@@ -46,6 +47,7 @@ onActivated(async()=> {
 loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
     caseInfo.value = data
+    console.log("caseInfo.value", caseInfo.value)
     loading.value = false
 })
 

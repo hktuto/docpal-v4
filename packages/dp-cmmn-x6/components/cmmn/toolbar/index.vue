@@ -5,9 +5,10 @@ import {nodeSetting} from '../../../utils/cmmnX6Elements'
 
 const localGraphRef = ref();
 const dnd = ref();
-
-function init(graph:Graph){
+const readOnly = ref(false)
+function init(graph:Graph , isReadOnly = false){
     if(!graph) throw new Error("Graph is not defined when toolbar init")
+    readOnly.value = isReadOnly
     localGraphRef.value = graph
     dnd.value = new Dnd({
         target: graph,
@@ -84,7 +85,7 @@ defineExpose({
 <template>
     <div class="cmmnToolbarContainer">
         <div v-for="group in toolsInGroup" :key="group.id" class="group">
-            <CmmnToolbarTool v-for="tool in group.tools" :key="tool.name" :type="tool.name" :setting="tool.setting" @mousedown="dragItemToGraph" />
+            <CmmnToolbarTool v-for="tool in group.tools" :key="tool.name" :type="tool.name" :setting="tool.setting" @mousedown="dragItemToGraph" :disabled="readOnly" />
         </div>
     </div>
 </template>

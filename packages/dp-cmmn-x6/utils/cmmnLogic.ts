@@ -3,44 +3,48 @@ import {nodeSetting} from "./cmmnX6Elements";
 // global key Stoke is pressed
 let ctrlPressed = false
 
-let globalGraph;
+let globalGraph:any;
 
 
 
-export const registerGraphEvents = (graph:Graph) => {
+export const registerGraphEvents = (graph:Graph, isReadOnly = false) => {
     globalGraph = graph
     graph.on('node:change:position', positionChangeEvent)
     graph.on('node:embedding', embeddingRule)
     graph.on('node:embedded', embeddedRule)
     graph.on('node:click', nodeClickRule)
-    graph.on('node:contextmenu',nodeContextMenu);
-    graph.on('node:change:size', sizeChangeRule)
-    // graph.on('edge:change:source', edgeConnectRule)
-    graph.on('edge:mouseenter', ({cell}:any) => {
-        cell.addTools([
-            {
-                name: 'vertices',
-                args: {
-                    attrs: { fill: '#666' },
+    if(!isReadOnly) {
+
+
+        graph.on('node:contextmenu',nodeContextMenu);
+        graph.on('node:change:size', sizeChangeRule)
+        // graph.on('edge:change:source', edgeConnectRule)
+        graph.on('edge:mouseenter', ({cell}:any) => {
+            cell.addTools([
+                {
+                    name: 'vertices',
+                    args: {
+                        attrs: { fill: '#666' },
+                    },
                 },
-            },
-            {
-                name: 'button-remove',
-                args:{
-                    distance: -20
+                {
+                    name: 'button-remove',
+                    args:{
+                        distance: -20
+                    }
                 }
-            }
-        ])
-    })
-    graph.on('edge:mouseleave', ({cell}:any) => {
-        cell.removeTools()
-    })
-    graph.on('edge:removed', (args) => edgeRemovedRule(args, graph))
-    graph.on('edge:connected', edgeConnectedChangeRule)
+            ])
+        })
+        graph.on('edge:mouseleave', ({cell}:any) => {
+            cell.removeTools()
+        })
+        graph.on('edge:removed', (args) => edgeRemovedRule(args, graph))
+        graph.on('edge:connected', edgeConnectedChangeRule)
+    }
     graph.on('blank:click', blankClickRule)
 }
 
-const edgeConnectedChangeRule = ({isNew,edge}) => {
+const edgeConnectedChangeRule = ({isNew,edge}:any) => {
     const targetNode = edge.getTargetCell()
     const sourceNode = edge.getSourceNode()
     console.log("edgeConnectedChangeRule", targetNode, sourceNode)

@@ -15,12 +15,12 @@ async function openLastestVersion(data:any, openInNewTab = false){
     // REMARK: 在列表頁面是拿不到 version 的 draftId 的，所以需要先取得 version 再打开
     // const {data:{ entryList}} = await adminApi.api.postWorkflowVersionPage({draftId:data.id, orderBy:'versionNumber', isDesc:true, pageSize:1})
     // console.log("openLastestVersion", entryList)
-    const praams = {
+    const params = {
         ...data,
         versionNumber:data.latestVersion,
         draftId: data.id,
     }
-    let newItem = newWorkflowEditorDetail(praams) as any;
+    let newItem = newWorkflowEditorDetail(params) as any;
     newItem.props.currentVersion = data.latestVersion
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }

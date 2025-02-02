@@ -14,7 +14,7 @@ export default defineAppConfig({
       props:{
           pageNum: 0,
           pageSize: 20,
-          orderBy: 'createdDate',
+          orderBy: 'modifiedDate',
           isDesc: true
       },
     }

@@ -12,8 +12,12 @@ const { t } = useI18n()
 const displayMenu = ref<any[]>([])
 
 function createSearchItem(item:MenuItem) {
+  const keyword = ['menu'];
+  const label = t(item.label)
+  keyword.push(... label.toLowerCase().split(' '))
+  console.log(keyword)
     return {
-        keyword: ['menu', item.name, item.label, t(item.label)],
+        keyword,
         label: t(item.label),
         icon: item.icon,
         action: () => {

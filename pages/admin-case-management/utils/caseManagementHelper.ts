@@ -1,4 +1,4 @@
-import { TabItem } from './../../../packages/base/utils/tabType';
+
 import { CaseManagementDetail } from './../../../apps/admin/.nuxt/components.d';
 import type {PermissionMethodParams} from '#imports';
 export interface CaseManagementListProvider {
@@ -22,12 +22,20 @@ export const CaseManagementVersionProviderKey : InjectionKey<CaseManagementVersi
 
 export interface CaseManagementDetailProvider {
     caseData: any,
-    caseId: Ref<any>,
+    caseInfo: Ref<any>,
     currentVersionId: string,
     currentVersion: string
 }
 
 export const CaseManagementDetailProviderKey : InjectionKey<CaseManagementDetailProvider> = Symbol('caseManagementDetailProvider')
+
+
+export interface CaseManagementEditorProvider {
+    readOnly: Ref<boolean>,
+    graph: Ref<Graph>,
+
+}
+export const CaseManagementEditorKey: InjectionKey<CaseManagementEditorProvider> = Symbol('caseManagementEditorKey')
 
 
 export const newCaseManagementListLink = (data:any) => {
@@ -79,7 +87,9 @@ export const newCaseManagementVersionList = function(data:any, version:string) {
     } as TabItem
 }
 
-export function newCaseManagmentEditor(caseTypeId:string, name:string, version:string) {
+
+
+export function newCaseManagementEditor(caseTypeId:string, name:string, version:string, versionId:string) {
     return {
         id: 'case-management-editor-' + new Date().getTime(),
         name: 'case-management-editor-' + caseTypeId,
@@ -89,7 +99,8 @@ export function newCaseManagmentEditor(caseTypeId:string, name:string, version:s
         props: {
             caseTypeId,
             name,
-            currentVersion: version
+            currentVersion: version,
+            versionId
         }
     }
 }

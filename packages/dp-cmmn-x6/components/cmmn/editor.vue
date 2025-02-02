@@ -9,7 +9,8 @@ import {
     registerGraphEvents
 } from "../../utils/cmmnLogic";
 import {convertX6JsonToCmmnJson} from "../../utils/cmmnSaveHelper";
-
+import { History } from '@antv/x6-plugin-history'
+import {CaseManagementEditorKey} from "admin-case-management/utils/caseManagementHelper";
 
 const { graph, setupCanvas ,getGraphJson, centerGraph, caseNode,caseId, caseInformation } = useCmmnGraph();
 const containerEl = ref()
@@ -35,7 +36,9 @@ const undoState = ref({
     canUndo: false,
     canRedo: false,
 })
-function init(cmmnString:string,x6Json?: any) {
+
+const readOnly = ref(false)
+function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
     const options = {
         container: containerEl.value,
         grid:{
@@ -55,7 +58,7 @@ function init(cmmnString:string,x6Json?: any) {
             eventTypes: ['leftMouseDown', 'mouseWheel'],
         },
         embedding: {
-            enabled: true,
+            enabled: !isReadOnly,
             validate: embeddingValidateRule
         },
         highlighting: {
@@ -69,6 +72,17 @@ function init(cmmnString:string,x6Json?: any) {
                 },
             },
         },
+      interacting: !isReadOnly ? true : () => {
+          return {
+            nodeMovable: false,
+            edgeMovable: false,
+            edgeLabelMovable: false,
+            arrowheadMovable: false,
+            vertexMovable: false,
+            vertexDeletable: false,
+            vertexAddable: false
+          }
+        } ,
         scroller: {
             enabled: true,
             pannable: true,
@@ -85,32 +99,40 @@ function init(cmmnString:string,x6Json?: any) {
             clearOnBlankMouseDown: true,
         },
         resizing: {
-            enabled: true
+            enabled: !isReadOnly
         },
         translating: {
-            restrict: cmmnDragRule
+            enabled: !isReadOnly,
+            restrict: !isReadOnly ? cmmnDragRule : true
         },
         connecting:{
+            enabled: !isReadOnly,
             allowBlank:false,
             snap: false,
-            allowMulti:true,
-            allowLoop:false,
+            allowMulti: true,
+            allowLoop: false,
             allowNode: allowConnectToNode
         }
     }
 
     
     setupCanvas(cmmnString, x6Json,options);
-    graph.value.use(new Transform({
-        resizing: {
-            enabled: nodeResizingRule,
-            minWidth: 5,
-            minHeight: 50,
-            orthogonal: false,
-            restrict: false,
-            preserveAspectRatio: false,
-        },
-    }),)
+    readOnly.value = isReadOnly
+    if(!isReadOnly){
+
+
+      graph.value.use(new Transform({
+          resizing: {
+              enabled: nodeResizingRule,
+              minWidth: 5,
+              minHeight: 50,
+              orthogonal: false,
+              restrict: false,
+              preserveAspectRatio: false,
+          },
+      }),)
+
+    }
     // graph.value.use(
     //     new Selection({
     //         enabled: true,
@@ -121,24 +143,30 @@ function init(cmmnString:string,x6Json?: any) {
     //         showNodeSelectionBox: true,
     //     }),
     // )
+    toolbarEl.value.init(graph.value, isReadOnly)
     registerGraphEvents(graph.value);
     
-    toolbarEl.value.init(graph.value)
+
     dragging.value = false;
     
 
-    // graph.value.use(
-    //     new History({
-    //         enabled: true,
-    //     }),
-    // )
+    graph.value.use(
+        new History({
+            enabled: !readonly.value,
+            beforeAddCommand:(event:any, args:any) => {
+                const ignoreKeys = ['tools', 'ports']
+                if(ignoreKeys.includes(args.key)) return false
+            }
+        }),
+    )
 
-    // graph.value.on('history:change', () => {
-    //     undoState.value= {
-    //         canRedo: graph.value.canRedo(),
-    //         canUndo: graph.value.canUndo(),
-    //     }
-    // })
+    graph.value.on('history:change', () => {
+        undoState.value= {
+            canRedo: graph.value.canRedo(),
+            canUndo: graph.value.canUndo(),
+        }
+    })
+    graph.value.cleanHistory()
 }
 
 
@@ -153,6 +181,13 @@ function save() {
     const {xml, json} = convertX6JsonToCmmnJson(graph.value,caseId.value)
     return { xml, json }
 }
+
+
+provide(CaseManagementEditorKey, {
+    readOnly,
+    graph,
+})
+
 
 
 
@@ -199,8 +234,8 @@ defineExpose({ getGraphJson, init, centerGraph, save })
             <div class="canvas" ref="containerEl"  >
 
             </div>
-                <CmmnToolbar ref="toolbarEl" :graph="graph" />
-                <CmmnNodeContextMenu :graph="graph" />
+                <CmmnToolbar  ref="toolbarEl" :graph="graph"  />
+                <CmmnNodeContextMenu v-if="!readOnly" :graph="graph" />
             <div class="bottom">
                 <slot name="actions" />
             </div>
@@ -226,10 +261,10 @@ defineExpose({ getGraphJson, init, centerGraph, save })
         bottom:0;
         left:0;
         right:0;
-        background-color: var(--app-grey-0000);
+        background-color: var(--app-grey-1000);
         width:100%;
         padding: calc(var(--app-space-xs) * 2);
-        border-top: 1px solid var(--app-grey-400);
+        border-top: 1px solid var(--app-grey-850);
         
     }
     
