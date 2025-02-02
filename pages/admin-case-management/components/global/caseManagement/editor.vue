@@ -2,16 +2,32 @@
 import { ElMessage } from 'element-plus'
 
 import { adminApi } from 'api'
+import {newWorkflowEditorVerionList} from "admin-workflow-editor/utils/workflowEditorMenu";
 
 const props = defineProps<{
   caseTypeId: string,
   name: string,
   currentVersion: string,
+  versionId:string
 }>()
 const editorEl = ref()
+const readOnly = ref(false);
 const state = reactive<any>({
   loading: false
 })
+const caseInfo = ref<any>()
+const production = ref(false);
+const routerProvider = inject(MenuRouterKey)
+if(!routerProvider) {
+    throw createError('menu manger not found')
+}
+async function getCaseData() {
+
+    const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.versionId) as any
+    readOnly.value = data.production;
+    production.value = data.production
+    caseInfo.value = data
+}
 async function getFileAndDisplay(path: string){
   // ordercase | test
   const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
@@ -36,8 +52,7 @@ async function loadJsonAndXml () {
     format:'blob'
   }) as any
   const cmmnString = await blob.text()
-  console.log("loadJsonAndXml", cmmnString, styleJson)
-  editorEl.value.init(cmmnString, styleJson)
+  editorEl.value.init(cmmnString, styleJson, readOnly.value)
 }
 async function init(){
   loadJsonAndXml()
@@ -49,17 +64,24 @@ async function handleSave() {
     state.loading = true
     const data = editorEl.value.save()
     console.log("save data", data);
-    const bslob = xmlStringToFile(data.xml, 'file.cmmn.xml')
+    const blob = xmlStringToFile(data.xml, 'file.cmmn.xml')
     const formData = new FormData()
-    formData.append('file', bslob)
-    await adminApi.api.patchCaseTypesVersionVersionidSave(props.caseTypeId, formData)
-    await adminApi.api.patchCaseTypesStyleJsonSave(
-        {
-            caseTypeId: props.caseTypeId,
-            versionNumber: props.currentVersion,
-            styleJson: JSON.stringify(data.json)
-        }
-    )
+    formData.append('file', blob)
+    console.log("caseInfo", caseInfo.value)
+    // TODO : method are not correct in swagger, tem use instance.
+    await adminApi.instance.patch(`/api/docpal/case/types/version/${props.versionId}/save`,formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    // await adminApi.api.patchCaseTypesVersionVersionidSave(props.versionId, formData as any)
+    // await adminApi.api.patchCaseTypesStyleJsonSave(
+    //     {
+    //         caseTypeId: props.caseTypeId,
+    //         versionNumber: props.currentVersion,
+    //         styleJson: JSON.stringify(data.json)
+    //     }
+    // )
     ElMessage.success($i18n.t('dpMsg_success'))
   } catch (error) {
     console.log(error)
@@ -83,8 +105,30 @@ async function getSavedData() {
   editorEl.value.init(cmmnString, x6Json)
 }
 
-onMounted(() => {
-    init()
+function openVersionList(){
+    const params = {
+        ...caseInfo.value,
+        name: routerProvider?.tabData.value.label,
+        id: props.caseTypeId,
+        draftId: props.caseTypeId
+    }
+    const newItem = newCaseManagementVersionList(params)
+
+    console.log(newItem, params)
+    routerProvider?.navigateTo(newItem)
+}
+
+function saveAsNewVersion(){
+
+}
+
+function promoteToProduction(){
+
+}
+
+onActivated(async () => {
+    await getCaseData()
+    await init()
 })
 </script>
 
@@ -92,7 +136,12 @@ onMounted(() => {
   <div class="pageContainer">
       <CmmnEditor ref="editorEl"  >
         <template #actions>
-          <ElButton type="primary" :loading="state.loading" @click="handleSave"> {{$t('dpTool_save')}}</ElButton>
+            <template v-if="!production">
+                <ElButton type="primary" @click="promoteToProduction">Promote To Prodocution : {{ currentVersion }}</ElButton>
+            </template>
+            <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
+            <ElButton @click="openVersionList" type="primary">Version List</ElButton>
+<!--          <ElButton type="primary" :loading="state.loading" :disabled="readOnly" @click="handleSave"> {{$t('dpTool_save')}}</ElButton>-->
         </template>
       </CmmnEditor>
     </div>

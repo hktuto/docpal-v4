@@ -1,30 +1,17 @@
-<template>
-  <el-card class="viewer">
-    <template #header>
-      <div class="flex-x-between">
-        <span>Design</span>
-        <el-icon class="color__primary__hover cursorPointer" size="20" @click="handleEdit">
-          <Edit />
-        </el-icon>
-      </div>
-      
-    </template>
-    <CmmnViewer class="xmlViewer" ref="editorEl" :padding="20" :options="{panning:{enable:false},mousewheel:{enable:false}}"/>
-  </el-card>
-</template>
 <script lang="ts" setup>
 import { Edit } from '@element-plus/icons-vue'
 import {saveXmlCaseTypeApi} from 'dp-api'
 import { adminApi } from 'api'
+import {newCaseManagementEditor} from "~/utils/caseManagementHelper";
 
 const caseDetailProvider = inject(CaseManagementDetailProviderKey)
 if(!caseDetailProvider) {
-    throw new Error('CaseManagementDetailProviderKey not found')
+  throw new Error('CaseManagementDetailProviderKey not found')
 }
 
 const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
-    throw new Error('MenuRouterKey not found')
+  throw new Error('MenuRouterKey not found')
 }
 
 const props = defineProps(['id'])
@@ -54,7 +41,7 @@ function xmlStringToFile(xmlString, fileName) {
   return file;
 }
 async function init(){
-  
+
   const blob = await adminApi.api.getCaseTypesIdDownloadXml(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: caseDetailProvider?.currentVersion },{
     format:'blob'
   }) as any
@@ -63,7 +50,7 @@ async function init(){
   const cmmnString = await blob.text()
   console.log("cmmnString", cmmnString)
   state.cmmn = editorEl.value.init(cmmnString, styleJson)
-  
+
   updateCaseInfo()
 }
 function updateCaseInfo() {
@@ -74,7 +61,7 @@ function updateCaseInfo() {
     state.caseInformation = null
     // getFileAndDisplay
     state.caseNode = state.cmmn.graph.getCellById(state.cmmn.caseId)
-    
+
     // getCaseInformation
     console.log("caseNode", state.cmmn.graph.getNodes() );
     if(!state.caseNode) {
@@ -87,9 +74,14 @@ function updateCaseInfo() {
   }, 300)
 }
 function handleEdit() {
-  // 
-  console.log("caseDetailProvider?.caseInfo", caseDetailProvider?.caseInfo)
-  const newItm = newCaseManagmentEditor(caseDetailProvider?.caseInfo.value.caseTypeId, caseDetailProvider?.caseInfo.value.name, caseDetailProvider?.currentVersion)
+  //
+  console.log("caseDetailProvider?.caseInfo", caseDetailProvider?.currentVersionId)
+  const newItm = newCaseManagementEditor(
+      caseDetailProvider?.caseInfo.value.caseTypeId,
+      caseDetailProvider?.caseInfo.value.name,
+      caseDetailProvider?.currentVersion,
+      caseDetailProvider.currentVersionId
+  )
   routerProvider?.navigateTo(newItm)
 }
 onMounted(() => {
@@ -97,6 +89,22 @@ onMounted(() => {
 })
 defineExpose({ save })
 </script>
+
+<template>
+  <el-card class="viewer">
+    <template #header>
+      <div class="flex-x-between">
+        <span>Design</span>
+        <el-icon class="color__primary__hover cursorPointer" size="20" @click="handleEdit">
+          <Edit />
+        </el-icon>
+      </div>
+      
+    </template>
+    <CmmnViewer class="xmlViewer" ref="editorEl" :padding="20" :options="{panning:{enable:false},mousewheel:{enable:false}}"/>
+  </el-card>
+</template>
+
 <style lang="scss" scoped>
 .xmlViewer{
   height: 500px;

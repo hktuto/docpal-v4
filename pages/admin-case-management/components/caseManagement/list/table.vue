@@ -20,6 +20,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'adminCaseManagementList',
     api: (pageParams:any) => listProvider?.getListApi(pageParams),
     remoteSort: true,
+    defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : [{field:"modifiedDate", order: "desc"}] ,
     columns:  [
         {
             field:'name',
@@ -45,7 +46,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
             }
         },
         {
-            field:'updatedDate',
+            field:'modifiedDate',
             title: 'workflow_updateDate',
             sortable: true,
             formatter ({ cellValue }:any) {
@@ -125,10 +126,6 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         listProvider.openLatestVersion(row)
     },
     optionalConfig:{
-        sortConfig:{
-            remote: true,
-            defaultSort: orderBy ? [{field: orderBy, order: isDesc ? 'desc' : 'asc'}] : [{field:"createDate"}]
-        },
         rowConfig:{
             height: 60,
             isCurrent: true,

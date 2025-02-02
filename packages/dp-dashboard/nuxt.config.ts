@@ -1,8 +1,7 @@
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-  extends:[ 
-    '../../packages/base' 
+  extends:[
   ],
   modules: [
     '@nuxt/test-utils/module'
