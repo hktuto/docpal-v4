@@ -178,7 +178,6 @@ export const useGlobalSearch = ( tabProvide : any) => {
     })
 
     watchDebounced(keyword, async (newVal) => {
-        console.log("keyword changed", newVal)
         if(!newVal) {
             displayList.value = [...list.value]
             console.log(displayList.value)

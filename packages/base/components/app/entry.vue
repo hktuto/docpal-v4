@@ -51,7 +51,6 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
 }
 const languageReady = ref(false)
 async function getLocale(){
-    console.log("start get locale")
     const { locale, availableLocales, setLocaleMessage } = useI18n()
     await Promise.all( availableLocales.map( async(code) => {
 
@@ -80,7 +79,6 @@ async function getLocale(){
             
         })
     )
-    console.log("locale", locale.value, availableLocales)
     emits('ready')
 }
 
@@ -90,7 +88,6 @@ useGlobalSetting()
 
 onMounted(async() => {
     await getLocale();
-    console.log("mounted")
     getTabsFromServer()
 })
 

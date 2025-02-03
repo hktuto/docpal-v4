@@ -41,7 +41,6 @@ provide(userProviderKey, {
       ...userTableFilter,
     });
     const { conditions, page } = res.data;
-    console.log("conditions", conditions, res);
     userCondition.value = conditions;
     return { data: page };
   },

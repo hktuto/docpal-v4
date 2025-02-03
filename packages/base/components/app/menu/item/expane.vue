@@ -52,7 +52,6 @@ watch(selectedMenuItem, (newSelectedMenuItem) => {
         const selectedChild = props.item.children.some(subItem => subItem.name === newSelectedMenuItem.name)
         
         if(selectedChild) {
-            console.log("selectedChild", selectedChild)
             selected.value = true
             return
         }
