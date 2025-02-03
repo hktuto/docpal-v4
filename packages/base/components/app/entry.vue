@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useGlobalSetting } from '#imports'
 import { TabApp } from '#components'
-
+import { clientApi } from 'api'
 const tabAppRef = ref<InstanceType<typeof TabApp>>()
-
+const emits = defineEmits(['ready'])
 async function getTabsFromServer() {
     const storageTabs = localStorage.getItem('app-tab')
     if(storageTabs) {
@@ -31,6 +31,7 @@ async function getTabsFromServer() {
                 }
             ])
     }
+    
 } 
 
 
@@ -48,12 +49,48 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
     })
     localStorage.setItem('app-tab', JSON.stringify(saveData))
 }
+const languageReady = ref(false)
+async function getLocale(){
+    console.log("start get locale")
+    const { locale, availableLocales, setLocaleMessage } = useI18n()
+    await Promise.all( availableLocales.map( async(code) => {
+
+            const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
+                    locale:code, 
+                    languageKey: 'client'
+                }) as any
+            const clientJson = JSON.parse(clientData[0].languageContent)
+
+            const { data:adminData } = await clientApi.api.getRelationQuerylanguage({
+                    locale:code, 
+                    languageKey: 'admin'
+                }) as any
+            const adminJson = JSON.parse(adminData[0].languageContent)
+
+            const { data:metaData } = await clientApi.api.getRelationQuerylanguage({
+                    locale:code, 
+                    languageKey: 'meta'
+                }) as any
+            const metaJson = JSON.parse(metaData[0].languageContent)
+            setLocaleMessage(code, {
+                ...clientJson,
+                ...adminJson,
+                ...metaJson
+            })
+            
+        })
+    )
+    console.log("locale", locale.value, availableLocales)
+    emits('ready')
+}
 
 
 useGlobalSetting()
 
 
-onMounted(() => {
+onMounted(async() => {
+    await getLocale();
+    console.log("mounted")
     getTabsFromServer()
 })
 

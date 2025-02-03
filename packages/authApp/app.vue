@@ -4,6 +4,7 @@ import { on } from 'events'
 const { loggedIn } = useAuth()
 const authReadyState = useAuthReadyState()
 const { locale, loadLocaleMessages} = useI18n()
+const localeReady = ref(false)
 watch(loggedIn, (bool) => {
   if(bool) {
     loadLocaleMessages(locale.value)
@@ -18,8 +19,8 @@ watch(loggedIn, (bool) => {
 <template>
    <AuthState>
         <template #default="{ loggedIn, logout }">
-            <AppEntry>
-                <template #sidebar>
+            <AppEntry @ready="localeReady = true">
+                <template v-if="localeReady" #sidebar>
                     <AppMenu class="sideMenu">
                         <template #header>
                             <AuthUser />
