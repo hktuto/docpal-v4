@@ -48,7 +48,7 @@ function focus() {
     <ElDialog v-model="opened" append-to-body modal @opened="nextTick(() => focus() )" >
         <div class="searchActionContainer">
             <div class="searchInput">
-                <ElInput ref="keywordRef" v-model="keyword" placeholder="Search" clearable></ElInput>
+                <ElInput ref="keywordRef" v-model="keyword" placeholder="Quick Actions" clearable></ElInput>
             </div>
             <div class="searchListContainer">
                 <div class="searchList" v-for="(list, listIndex) in displayList" :key="listIndex">
