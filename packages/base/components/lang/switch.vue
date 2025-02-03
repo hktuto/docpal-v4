@@ -20,6 +20,7 @@ const router = useRouter()
 const { locales, locale, setLocale } = useI18n()
 async function handleCommand(newLocale:any) {
     await setLocale(newLocale)
+    console.log("newLocale",newLocale)
     // window.location.reload()
     
     // userPreference.value.language = newLocale;
