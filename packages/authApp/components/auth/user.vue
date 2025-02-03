@@ -7,9 +7,6 @@ const { locales, locale, setLocale } = useI18n()
 
 function changeLanguage(langCode:string) {
     setLocale(langCode);
-    // nextTick(() => {
-    //     window.location.reload()
-    // })
 }
 
 function openSetting(){
@@ -31,7 +28,7 @@ function openSetting(){
                     <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
                 </ElButton>
                 <template #dropdown>
-                    <ElDropdownItem @click="openSetting">Setting</ElDropdownItem>
+                    <ElDropdownItem @click="openSetting">{{  $t('adminMenu.setting') }}</ElDropdownItem>
                     <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
                     <Language />
                     <template v-if="config.public.NODE_ENV === 'development'">

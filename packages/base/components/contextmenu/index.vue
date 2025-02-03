@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { useEventBus, EventType } from '#imports'
+import { useEventBus, EventType } from 'eventbus'
+// import { useEventBus, EventType } from '#imports'
 
 
 
