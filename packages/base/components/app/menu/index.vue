@@ -11,13 +11,26 @@ if(!tabProvider) {
 const { t } = useI18n()
 const displayMenu = ref<any[]>([])
 
-function createSearchItem(item:MenuItem) {
+function createSearchItem(item:MenuItem, parentKey?:string) {
+    const { availableLocales, messages } = useI18n()
   const keyword = ['menu'];
-  const label = t(item.label)
-  keyword.push(... label.toLowerCase().split(' '))
-  console.log(keyword)
+  availableLocales.forEach( (code) => {
+        const codeMessage = messages.value[code]
+        const label = item.label.split('.').reduce((acc, cur) => acc[cur] || "", codeMessage)
+        if(label) {
+            keyword.push(... label.toLowerCase().split(' '), label)
+        }
+        // if parentKey is not null, add parentKey to keyword
+        if(parentKey) {
+            const parentKeyLabel = parentKey.split('.').reduce((acc, cur) => acc[cur] || "", codeMessage)
+            if(parentKeyLabel) {
+                keyword.push(... parentKeyLabel.toLowerCase().split(' '), parentKeyLabel)
+            }
+        }
+    })
+    // console.log(messages)
     return {
-        keyword,
+        keyword:[...new Set(keyword)],
         label: t(item.label),
         icon: item.icon,
         action: () => {
@@ -28,6 +41,7 @@ function createSearchItem(item:MenuItem) {
 const searchList = useGlobalSearchList()
 function generateMenu(){
     let result = []
+    
     const _appMenu = deepCopy(appMenu)
     const _menu = deepCopy(menu)
     const menuSearchList:GlobalSearchItem[] = [];
@@ -48,7 +62,7 @@ function generateMenu(){
             for(let j = 0; j < item.children.length; j++) {
                 if(item.children[j].name && _menu[item.children[j].name]) {
                     item.children[j] = _menu[item.children[j].name];
-                    menuSearchList.push(createSearchItem(item.children[j] ))
+                    menuSearchList.push(createSearchItem(item.children[j], item.label  || "" ))
                     hasVisibleChildren = true
                 }else{
                     item.children.splice(j, 1);

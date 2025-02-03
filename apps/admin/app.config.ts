@@ -146,9 +146,6 @@ export default defineAppConfig({
                     name:"admin-acl"
                 },
                 {
-                    name: "admin-message-queue"
-                },
-                {
                     name:"admin-external-connection"
                 },
             ]
