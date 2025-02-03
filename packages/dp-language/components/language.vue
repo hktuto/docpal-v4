@@ -214,7 +214,6 @@ onMounted(async() => {
     const {data} = await adminApi.api.getNuxeoAdminSettingLanguage() as any;
 
     state.locales = JSON.parse(data).locale
-    console.log(state.locales)
     GetLanguages()
 })
 </script>
