@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends TabItem, B extends boolean, I extends number">
-
+import { useEventBus, EventType } from 'eventbus'
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 
 import type { TabItem, TabPanel } from '#imports';
@@ -65,6 +65,37 @@ function openInFocusMode() {
 onMounted(() => {
     setupDrag(elRef.value)
 })
+const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
+const stopBus = useEventBus(EventType.TABLE_CONTEXT_MENU_CLOSE)
+function openContextmenu(ev:any){
+    ev.preventDefault()
+    ev.stopPropagation()
+    const evtParams:TABLE_CONTEXT_PARAMS = {
+        row: null,
+        column: null,
+        rowIndex: 0,
+        options: [
+            [
+                {
+                    name: "Copy Url",
+                    label: "Copy Url",
+                    visible: true,
+                    action:({row}) => {
+                        const item = tab
+                        // copy to clipboard
+                        navigator.clipboard.writeText(JSON.stringify(item))
+                        console.log("copied to clipboard")
+                        stopBus.emit()
+                    }
+                }
+            ]
+
+        ],
+        event:ev,
+    }
+    console.log("context on tab", evtParams)
+    bus.emit(evtParams)
+}
 
 function openInNewTab() {
     if((window as any).isDesktopMode) {
@@ -98,7 +129,7 @@ function closeTab(){
     <div class="tabWrapper" @click="tabFocus">
 
         <div ref="elRef" :data-tab-id="tab.id" :id="`tab-header-${tab.parent}-${tab.id}`"
-        :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" >
+        :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" @contextmenu.stop="openContextmenu">
 
             <div :class="{tabLeftTeleportContainer:true, selected}" >
 
