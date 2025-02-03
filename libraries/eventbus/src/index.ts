@@ -9,6 +9,17 @@ export enum EventType {
     NETWORK_REQUEST__FAIL = 'network-request--fail',
     OPEN_SETTINGS = 'open-settings',
     CLOSE_SETTINGS = 'close-settings',
+    
+}
+
+export enum GlobalPasteEvent {
+    TAB_COPY_PATH = 'tab-copy-path',
+    TAB_PASTE_PATH = 'tab-paste-path',
+}
+
+export type GlobalPasteItem = {
+    type: GlobalPasteEvent,
+    data: any
 }
 
 
