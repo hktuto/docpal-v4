@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {useEventBus, GlobalPasteEvent } from 'eventbus'
 import 'splitpanes/dist/splitpanes.css'
 import { TabDialog } from '#components'
 const emits = defineEmits(['ready', 'layoutChanged', 'highlightPanelChanged'])
@@ -10,6 +11,9 @@ const fullscreenItem = ref<TabItem>()
 const dialogRef = ref<InstanceType<typeof TabDialog>>()
 const dialogItem = ref<TabItem>()
 const menuStick = ref(true)
+
+
+
 
 const dialogOpened = ref(false)
 function closeFullscreen(){
@@ -125,6 +129,12 @@ watch(layout, (newVal) => {
 },{
     deep:true
 })
+const PasteDialogRef = ref();
+const copyTabBus = useEventBus(GlobalPasteEvent.TAB_COPY_PATH)
+copyTabBus.on((data:any) => {
+    console.log("copy tab", data)
+    PasteDialogRef.value?.open(data)
+})
 
 defineExpose({
     setLayout,
@@ -182,7 +192,7 @@ defineExpose({
             </template>
         </template>
     </AppWrapper>
-    <!-- <TabDialog ref="dialogRef"  v-model="dialogOpened" :item="dialogItem" /> -->
+    <TabPastePathDialog ref="PasteDialogRef"   @openInNewTab="(data) => openTab(data, true)" />
 </template>
 
 

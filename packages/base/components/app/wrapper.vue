@@ -134,7 +134,7 @@ onUnmounted(() => {
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     background: rgba(2552,255,255,0.3);
     backdrop-filter: blur(20px);
-    broder-top: 1px solid var(--app-grey-800);
+    border-top: 1px solid var(--app-grey-800);
     border-radius: var(--app-border-radius-s);
     transform: translateX(-100%);
     transition: transform .3s ease-in-out;

@@ -1,10 +1,11 @@
 <script lang="ts" setup generic="T extends TabItem, B extends boolean, I extends number">
-import { useEventBus, EventType } from 'eventbus'
+import { useEventBus, EventType, GlobalPasteItem, GlobalPasteEvent  } from 'eventbus'
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 
 import type { TabItem, TabPanel } from '#imports';
 import {TabManagerKey, } from '#imports'
 import {useDragable} from '../../../composables/useDnD'
+import { ElNotification } from 'element-plus'
 
 const { tab, selected, index, panel } = defineProps<{tab: T, selected:B, index:I , panel:TabPanel}>()
 const tabManger = inject(TabManagerKey)
@@ -13,7 +14,7 @@ if(!tabManger) {
 }
 const elRef = ref()
 
-
+const { t } = useI18n()
 function isTabData(
   data: Record<string | symbol, unknown>,
 ):boolean {
@@ -67,9 +68,14 @@ onMounted(() => {
 })
 const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
 const stopBus = useEventBus(EventType.TABLE_CONTEXT_MENU_CLOSE)
-function openContextmenu(ev:any){
+async function openContextmenu(ev:any){
     ev.preventDefault()
     ev.stopPropagation()
+    const evtObj: GlobalPasteItem = {
+        type : GlobalPasteEvent.TAB_COPY_PATH,
+        data: tab
+    }
+
     const evtParams:TABLE_CONTEXT_PARAMS = {
         row: null,
         column: null,
@@ -81,10 +87,9 @@ function openContextmenu(ev:any){
                     label: "Copy Url",
                     visible: true,
                     action:({row}) => {
-                        const item = tab
                         // copy to clipboard
-                        navigator.clipboard.writeText(JSON.stringify(item))
-                        console.log("copied to clipboard")
+                        navigator.clipboard.writeText(JSON.stringify(evtObj))
+                        ElNotification.success(t('common_copySuccess'))
                         stopBus.emit()
                     }
                 }
@@ -95,6 +100,7 @@ function openContextmenu(ev:any){
     }
     console.log("context on tab", evtParams)
     bus.emit(evtParams)
+   
 }
 
 function openInNewTab() {
