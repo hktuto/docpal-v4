@@ -42,13 +42,11 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
         id: tab.value.id,
         initized: true,
     }
-    console.log("panelRouteUpdate", tab.value.parent, lastId, tab.value)
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
 function back(){
     if(history.value.length === 0) return
-    console.log("back", history.value)
     const lastItem = history.value.pop()
     if(lastItem){
     const lastId = tab.value.id

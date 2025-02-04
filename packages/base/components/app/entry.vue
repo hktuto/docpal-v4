@@ -5,10 +5,13 @@ import { clientApi } from 'api'
 const tabAppRef = ref<InstanceType<typeof TabApp>>()
 const emits = defineEmits(['ready'])
 async function getTabsFromServer() {
+    // check if new tab
+    const route = useRoute()
+
     const storageTabs = localStorage.getItem('app-tab')
     if(storageTabs) {
         const newLayout = JSON.parse(storageTabs);
-        // need to delay initLayout to wait for splitpanes to render
+         // TODO : check if storageTabs is array, and handle restore other tabs
         tabAppRef.value?.setLayout(newLayout)
     }else{
         // init a basic layout
