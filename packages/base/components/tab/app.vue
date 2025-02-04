@@ -149,7 +149,7 @@ defineExpose({
                 <LoadingBg />
             </template>
             <template v-else>
-                <TabLayout :layout="layout" @ready="$emit('ready')" />"
+                <TabLayout :layout="layout" @ready="$emit('ready')" />
                 <div class="hiddenAllComponent">
                     <template v-for="component in allComponents" :key="component.id">
                         
