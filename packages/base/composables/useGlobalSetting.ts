@@ -58,6 +58,7 @@ export const useGlobalSetting = () => {
         if(Object.values(GlobalPasteEvent).includes(clipboardData.type)){
             console.log(clipboardData.type)
             const bus = useEventBus(clipboardData.type)
+            navigator.clipboard.writeText("")
             bus.emit(clipboardData.data)
         }
         // clean up url
