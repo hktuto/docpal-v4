@@ -1,14 +1,23 @@
 <script lang="ts" setup>
 import { Splitpanes, Pane } from 'splitpanes'
+
 import {paneResized} from '#imports'
 const { layout } = defineProps<{
     layout: TabPanel[]
 }>()
 const emits = defineEmits(['ready'])
 
+const tabMinSize = ref(640);
+
+const minSize = computed(() => {
+    return (layout ? layout.length : 1) * 640;
+})
+
 function layoutReadyHandler(){
     emits('ready')
 }
+const splitRef = ref<InstanceType<typeof Splitpanes>>()
+
 
 onMounted(() => {
     emits('ready')
@@ -17,10 +26,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="layoutContainer">
-
-        <splitpanes vertical @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
-            <Pane v-for="(tab, index) in layout" :key="tab.id"  :size="tab.size">
+    <div class="layoutContainer" :style="`--panel-min-size: ${minSize}px`">
+        
+        <splitpanes vertical ref="splitRef" @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
+            <Pane v-for="(tab, index) in layout" :key="tab.id"  :size="tab.size" >
                 <TabPanel :panel="tab" :index="index"/>
             </Pane>
         </splitpanes>
@@ -36,6 +45,10 @@ onMounted(() => {
     border-radius: var(--app-border-radius-m);
     box-shadow: var(--app-shadow-s);
     position: relative;
+    overflow: auto;
+    :deep(.splitpanes){
+        min-width: var(--panel-min-size);
+    }
     // :deep(.splitpanes){
     //     height:100%;
     //     transition: none;

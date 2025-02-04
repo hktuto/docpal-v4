@@ -103,7 +103,7 @@ onUnmounted(() => {
     // background-color: var(--app-grey-1000);
     // box-shadow: var(--app-shadow-xl);
     // border-radius: var(--container-radius);
-    background: var(--app-grey-1000);
+    // background: var(--app-grey-1000);
     overflow: hidden;
     padding: var(--app-space-xs);
     height:100%;
