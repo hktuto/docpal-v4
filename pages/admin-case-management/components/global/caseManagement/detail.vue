@@ -69,7 +69,7 @@ provide(CaseManagementDetailProviderKey, {
      <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
      <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
       <CaseManagementDetailXml ref="xmlRef" @getCase="getCase" @update="handleUpdate"/>
-       <!-- <CaseManagementDetailDashboard :caseDetail="state.detail"/> -->
+      <CaseManagementDetailDashboard :caseDetail="state.detail"/>
     </div>
 </template>
 

@@ -44,11 +44,9 @@
 <script lang="ts" setup>
 import { Edit } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import {
-  getCaseDashboardPageApi,
-  deleteCaseDashboardApi,
-  datesFormat
-} from 'dp-api'
+import {adminApi} from 'api'
+
+import dayjs from "dayjs";
 const props = defineProps(['caseDetail'])
 const router = useRouter()
 const route = useRoute()
@@ -59,6 +57,64 @@ const pageParams = {
   isDesc: true,
   caseTypeId: route.params.id
 }
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
+  id: 'case-dashboard-table',
+    api: async(params:any) => {
+      if(!params.orderBy) {
+          params.orderBy = 'createdDate';
+          params.isDesc = false
+      }
+      return await adminApi.api.postCaseDashboardPage(params)
+    },
+    remoteSort: true,
+    defaultSort:[{
+        field: 'createdDate',
+        order: 'desc',
+    }],
+  columns: [
+      {
+          field:'label',
+          title: "table_name",
+          fixed: 'left',
+      },
+      {
+          field: 'createdDate',
+          title: "workflow_createDate",
+          sortable:true,
+          formatter ({ cellValue }:any) {
+              const format = userDisplayTimeSetting()
+              return dayjs(cellValue).format(format)
+          }
+      },
+      {
+          field: "modifiedDate",
+          title: "table_modifiedDate",
+          formatter ({ cellValue }:any) {
+              const format = userDisplayTimeSetting()
+              return dayjs(cellValue).format(format)
+          }
+      },
+      {
+          field: "publishStatus",
+          title: "caseManagement.userGroup",
+      },
+      {
+          field: "publishStatus",
+          title : "dpTable_status"
+      }
+  ],
+    bodyActions:[
+        [
+            {
+                code: "edit",
+                name: "workflowEditor.editInfo",
+                action:({row}) => {
+
+                }
+            }
+        ]
+    ]
+})
 const tableSetting = {
   columns: [
     { id: '1', label: 'table_name', prop: 'label', defaultColumn: true },
@@ -94,7 +150,7 @@ const state = reactive<State>({
 async function getList (param) {
   state.loading = true
   try {
-    const res = await getCaseDashboardPageApi({ 
+    const { data } = await adminApi.api.getCaseDashboardPage({ 
       ...param, 
       ...state.extraParams
      })
@@ -138,7 +194,8 @@ async function handleDelete(row) {
   if(action !== 'confirm') return
   try {
     state.loading = true
-    await deleteCaseDashboardApi(row.id)
+    await adminApi.api.deleteCaseDashboardId(row.id)
+    // await deleteCaseDashboardApi(row.id)
     handlePaginationChange(1)
   } catch (error) {
     state.loading = false
