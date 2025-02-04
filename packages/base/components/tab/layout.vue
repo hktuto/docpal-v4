@@ -7,7 +7,6 @@ const { layout } = defineProps<{
 }>()
 const emits = defineEmits(['ready'])
 
-const tabMinSize = ref(640);
 
 const minSize = computed(() => {
     return (layout ? layout.length : 1) * 640;
@@ -27,7 +26,6 @@ onMounted(() => {
 
 <template>
     <div class="layoutContainer" :style="`--panel-min-size: ${minSize}px`">
-        
         <splitpanes vertical ref="splitRef" @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
             <Pane v-for="(tab, index) in layout" :key="tab.id"  :size="tab.size" >
                 <TabPanel :panel="tab" :index="index"/>
