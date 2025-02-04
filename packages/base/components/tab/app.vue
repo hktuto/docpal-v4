@@ -1,22 +1,19 @@
 <script setup lang="ts">
 import {useEventBus, GlobalPasteEvent } from 'eventbus'
 import 'splitpanes/dist/splitpanes.css'
-import { TabDialog } from '#components'
 const emits = defineEmits(['ready', 'layoutChanged', 'highlightPanelChanged'])
 const {layout, initLayout, allComponents, allComponentRef} = useTabsManager()
 const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
 const fullscreenItem = ref<TabItem>()
-const dialogRef = ref<InstanceType<typeof TabDialog>>()
+
 const dialogItem = ref<TabItem>()
 const menuStick = ref(true)
 
-
-
-
 const dialogOpened = ref(false)
 function closeFullscreen(){
+    console.log("close fullscreen")
     fullscreenItem.value = undefined
 }
 function openFocusMode(tab:TabItem){
@@ -97,8 +94,7 @@ async function openInCurrentTab(tab:TabItem){
                 openTab(tab)
             }
         }
-        
-        
+           
     }
     // const existingTab = allComponents.value.find(item => item.name === tab.name)
 }
@@ -159,7 +155,6 @@ defineExpose({
                         
                         <template v-if="fullscreenItem && fullscreenItem.id === component.id">
                             <Teleport defer :to="`#fullscreen-${component.parent}_${component.id}`">
-                               
                                 <TabRouter ref="allComponentRef" :tab="component"  />
                             </Teleport>
                         </template>
@@ -168,6 +163,7 @@ defineExpose({
                             <Teleport defer :to="`#${component.parent}_${component.id}`">
                                 <TabRouter ref="allComponentRef" :tab="component" />
                             </Teleport>
+
                         </template>
                         
                     </template>
@@ -192,7 +188,7 @@ defineExpose({
             </template>
         </template>
     </AppWrapper>
-    <TabPastePathDialog ref="PasteDialogRef"   @openInNewTab="(data) => openTab(data, true)" />
+    <TabPastePathDialog ref="PasteDialogRef"  @openInNewTab="(data) => openTab(data, true)" />
 </template>
 
 

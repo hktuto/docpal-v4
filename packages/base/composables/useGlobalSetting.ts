@@ -5,8 +5,10 @@ export const useDisplayTimeFormat = () => useState('display-time-format', () => 
 
 
 
-export const useGlobalSetting = () => {
+export const useLastClipboard = () => useState('last-clipboard', () => '')
 
+export const useGlobalSetting = () => {
+    const lastClipboard = useLastClipboard()
 
         // global bus event 
     const fontSizeBus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME)
@@ -15,7 +17,6 @@ export const useGlobalSetting = () => {
         console.log('Document is focused');
         checkClicpBoard()
     }
-    const lastClipboard = ref("")
     async function checkClicpBoard(){
         // check document is focused
         if(!document.hasFocus()) return
@@ -30,16 +31,38 @@ export const useGlobalSetting = () => {
         lastClipboard.value = clipboardText
         // check clipboardText is valid json
         try {
-            const clipboardData = JSON.parse(clipboardText)
-            // check clipboardData.type is include in GlobalPasteEvent
-            if(Object.values(GlobalPasteEvent).includes(clipboardData.type)){
-                console.log(clipboardData.type)
-                const bus = useEventBus(clipboardData.type)
-                bus.emit(clipboardData.data)
-            }
+            // check if clipboardText is a url and the origin is same as current page
+            // if url is not valid, throw error
+            await decodeUrlActions(clipboardText)
+            //  check if url is same as current page
+            
         } catch (error) {
+            // do nothing
             console.log("error", error)
         }
+    }
+
+    async function decodeUrlActions(url:string) {
+        const newUrl = new URL(url)
+        if(newUrl.origin !== location.origin) {
+            throw new Error('Invalid URL')
+        }
+        console.log("url is valid")
+        // get actions from query string
+        const actions = newUrl.searchParams.get('actions')
+        console.log("actions", actions)
+        if(!actions) return
+        const clipboardData = JSON.parse(atob(actions))
+        console.log("actionsObj", clipboardData)
+        // check clipboardData.type is include in GlobalPasteEvent
+        if(Object.values(GlobalPasteEvent).includes(clipboardData.type)){
+            console.log(clipboardData.type)
+            const bus = useEventBus(clipboardData.type)
+            bus.emit(clipboardData.data)
+        }
+        // clean up url
+        const route = useRoute()
+        route.query = {}
     }
 
     function handleTimeSettingChange(newValue:string) {
@@ -60,7 +83,6 @@ export const useGlobalSetting = () => {
     onMounted(() => {
         window.onfocus = handleDocumentFocus;
         checkClicpBoard();
-        // document.addEventListener('focus', handleDocumentFocus, true);
     } )
 
 

@@ -60,7 +60,6 @@ const {dragState ,setupDrag} = useDragable({
 
 function openInFocusMode() {
     tabManger?.openFocusMode(tab)
-
 }
 
 onMounted(() => {
@@ -71,10 +70,6 @@ const stopBus = useEventBus(EventType.TABLE_CONTEXT_MENU_CLOSE)
 async function openContextmenu(ev:any){
     ev.preventDefault()
     ev.stopPropagation()
-    const evtObj: GlobalPasteItem = {
-        type : GlobalPasteEvent.TAB_COPY_PATH,
-        data: tab
-    }
 
     const evtParams:TABLE_CONTEXT_PARAMS = {
         row: null,
@@ -87,9 +82,31 @@ async function openContextmenu(ev:any){
                     label: "Copy Url",
                     visible: true,
                     action:({row}) => {
-                        // copy to clipboard
-                        navigator.clipboard.writeText(JSON.stringify(evtObj))
-                        ElNotification.success(t('common_copySuccess'))
+                        copyToClipboard(tab)
+                        stopBus.emit()
+                    }
+                },
+                {
+                    name: "Open in focus mode",
+                    visible:true,
+                    action:({row}) => {
+                        openInFocusMode()
+                        stopBus.emit()
+                    }
+                },
+                {
+                    name: "Open in New Window",
+                    visible:true,
+                    action:({row}) => {
+                        openInNewTab()
+                        stopBus.emit()
+                    }
+                },
+                {
+                    name: "Close Tab",
+                    visible:true,
+                    action:({row}) => {
+                        closeTab()
                         stopBus.emit()
                     }
                 }
@@ -98,9 +115,21 @@ async function openContextmenu(ev:any){
         ],
         event:ev,
     }
-    console.log("context on tab", evtParams)
+
     bus.emit(evtParams)
    
+}
+
+async function copyToClipboard(tab:TabItem) {
+    const evtObj: GlobalPasteItem = {
+        type : GlobalPasteEvent.TAB_COPY_PATH,
+        data: tab
+    }
+    const url = location.origin + '/?actions=' + btoa(JSON.stringify(evtObj))
+    const lastClipboard = useLastClipboard()
+    lastClipboard.value = url
+    navigator.clipboard.writeText(url)
+    ElNotification.success(t('common_copySuccess'))
 }
 
 function openInNewTab() {
@@ -134,8 +163,12 @@ function closeTab(){
 <template>
     <div class="tabWrapper" @click="tabFocus">
 
-        <div ref="elRef" :data-tab-id="tab.id" :id="`tab-header-${tab.parent}-${tab.id}`"
-        :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" @contextmenu.stop="openContextmenu">
+        <div ref="elRef" 
+            :data-tab-id="tab.id" 
+            :id="`tab-header-${tab.parent}-${tab.id}`"
+            :class="{tabItem:true, showing:selected, [dragState.type]:true, [(dragState as any).closestEdge] :true}" 
+            @contextmenu.stop="openContextmenu"
+        >
 
             <div :class="{tabLeftTeleportContainer:true, selected}" >
 
@@ -143,11 +176,10 @@ function closeTab(){
             <div class="icon"></div>
             <div class="label">
             </div>
-            <!-- <Icon  class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
-            <Icon  class="closeIcon" name="lucide:screen-share" @click="openInNewTab" /> -->
-            <Icon class="closeIcon alwaysShow" name="ic:round-close" @click.stop="closeTab"></Icon>
-            <!-- <TabDropIndicator 
-                gap="20px" /> -->
+            <Icon class="closeIcon" name="lucide:share-2" @click="copyToClipboard(tab)" />
+            <Icon class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
+            <Icon class="closeIcon" name="lucide:screen-share" @click="openInNewTab" />
+            <Icon class="closeIcon alwaysShow" name="ic:round-close" @click.stop="closeTab" />
         </div>
 
         <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
@@ -186,8 +218,6 @@ function closeTab(){
     align-items: center;
     flex-flow: row nowrap;
     gap: var(--app-space-xxs);
-    // border-top-left-radius: var(--app-border-radius-m);
-    // border-top-right-radius: var(--app-border-radius-m);
     position: relative;
     max-width: 100%;
     min-width: 60px;
@@ -207,15 +237,13 @@ function closeTab(){
             display: block;
         }
         .closeIcon{
+            display: block;
             opacity: 1;
         }
     }
     &.showing{
         background: var(--app-grey-1000);
         color: var(--app-grey-100);
-        .closeIcon{
-            display: block;
-        }
     }
     &.is-dragging-over {
         &:before {
