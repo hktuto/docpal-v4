@@ -93,7 +93,7 @@ const ignoreList = ['dc:title', 'dc:creator', 'dc:modified', 'dc:lastContributor
                         case 'date':
                             if(metaDateFormat) {
                                 _item.options.format = metaDateFormat
-                                if(item.options.formatDate?.includes('HH') || item.options.formatDate?.includes('hh')) _item.options.type = 'datetime'
+                                if(metaDateFormat?.includes('HH') || metaDateFormat?.includes('hh')) _item.options.type = 'datetime'
                             }
                             break;
                         case 'select':
