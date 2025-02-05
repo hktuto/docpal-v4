@@ -116,6 +116,7 @@ async function promoteToProduction(){
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
     ElNotification.success(t('common.success'))
+    await getWorkflow()
     loading.value = false
 }
 

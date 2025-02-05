@@ -49,7 +49,6 @@ async function getDetail(id: string) {
     console.log("detail", detail.value)
     if(detail.value.type === 'dynamic') detail.value.contentType = detail.value.content
   }catch(error) {
-    console.log("error", error)
     detail.value = null
   }
 }
