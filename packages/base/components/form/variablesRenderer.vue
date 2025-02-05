@@ -108,9 +108,6 @@ function createJson(variables: variableItem[]) {
         if (item.options) _item.options = { ..._item.options, ...item.options }
         formJson.value.widgetList.push(_item)
     })
-    console.log(formJson.value);
-    console.log(FormRendererRef);
-    
     FormRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
     return formJson.value
 }
