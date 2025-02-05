@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import type {TabItem, RouterParams} from '#imports';
+import {ElMEssage, ElNotification } from 'element-plus';
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
 import { use } from 'vxe-table';
 const {allComponents} = useTabsManager()
+
 
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
@@ -106,11 +108,72 @@ function updateTabName(newName:string){
    
 }
 
+const showError = ref(false);
+const errorMessage = ref("");
+function showErrorPage(error:Error){
+    showError.value = true
+    errorMessage.value = error.message
+}
+function retryError(){
+    showError.value = false
+}
+const routerContainer = computed(( ) => {
+    return document.getElementById(tab.value.parent + "_" + tab.value.id)
+})
 const menuSymbol = Symbol(tab.value.id)
+
+function createMessage(type:string, ...args:any[]){
+    if(args.length === 1 && typeof args[0] === 'string'){
+        ElMessage({
+            type,
+            appendTo: routerContainer.value,
+            message:args[0]
+        })
+    }else{
+        ElMessage({
+            type,
+            appendTo: routerContainer.value,
+            ...args
+        })
+    }
+}
+
+function createNotification(type:string, ...args:any[]){
+    if(args.length === 1 && typeof args[0] === 'string'){
+        ElNotification({
+            type,
+            appendTo: routerContainer.value,
+            message:args[0]
+        })
+    }else{
+        ElNotification({
+            type,
+            appendTo: routerContainer.value,
+            ...args
+        })
+    }
+}
+
 provide(MenuRouterKey,{
     navigateTo,
     updateProps,
     updateTabName,
+    routerContainer,
+    message:{
+        success: (...args) => createMessage('success', ...args),
+        error: (...args) => createMessage('error', ...args),
+        warning: (...args) => createMessage('warning', ...args),
+        info: (...args) => createMessage('info', ...args),
+        loading: (...args) => createMessage('loading', ...args)
+    },
+    notification:{
+        success: (...args) => createNotification('success', ...args),
+        error: (...args) => createNotification('error', ...args),
+        warning: (...args) => createNotification('warning', ...args),
+        info: (...args) => createNotification('info', ...args),
+        loading: (...args) => createNotification('loading', ...args)
+    },
+    showErrorPage,
     tabData: tab
 })
 
@@ -128,7 +191,6 @@ defineExpose({
 <template>
 
 <div class="routerContainer">
-    <!-- {{ historyClass }} -->
         <Teleport :to="historyClass" defer>
             <div class="historyContainer">
                 <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
@@ -145,7 +207,7 @@ defineExpose({
             </div>  
         </Teleport>
         
-        <template v-if="tab.initized">
+        <template v-if="tab.initized && !showError">
             <Transition >
                 <KeepAlive :exclude="/Dead/">
                     <Suspense>
@@ -156,6 +218,19 @@ defineExpose({
                     </Suspense>
                 </KeepAlive>
             </Transition>
+    </template>
+    <template v-else>
+        <div class="errorContainer">
+            <div class="errorIcon">
+                <Icon name="lucide:alert-triangle" size="24" />
+            </div>
+            <div class="errorMessage">
+                {{ errorMessage }}
+            </div>
+            <div class="errorRetry" @click="retryError">
+                Retry
+            </div>
+        </div>
     </template>
 </div>
 </template>
