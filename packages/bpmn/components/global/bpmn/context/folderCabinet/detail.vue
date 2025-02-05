@@ -27,16 +27,13 @@ if(!editorProvider) {
                 <div class="fieldContainer">
                     <div class="indentItem" v-for="i in item.attr_level" :key="i"></div>
                     <div class="content">
-                        <div class="fieldMappingItemContainer" v-for="metaField in item.field" :key="metaField.metadata">
-                            <ElForm label-position="top" @native.enter="() => {}">
-                                <ElFormItem :label="metaField.attr_metadata">
-                                    
+                            <ElForm label-position="top" @sumit.stop>
+                                <ElFormItem  v-for="metaField in item.field" :key="metaField.metadata" :label="metaField.attr_metadata">
                                     <ElSelect v-model="metaField.attr_formProperty" @change="emits('update:field', field)" :disabled="editorProvider.readonly.value" clearable>
                                         <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name" :value="option.attr_id" />
                                     </ElSelect>
                                 </ElFormItem>
                             </ElForm>
-                        </div>
                     </div>
                 </div>
             </ElCollapseItem>
