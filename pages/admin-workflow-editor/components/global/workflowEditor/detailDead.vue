@@ -9,6 +9,8 @@ defineOptions({
     name: 'WorkflowEditorDetailDead'
 })
 
+const routerProvider = inject(MenuRouterKey)
+
 const { id, currentVersion, versionId } = defineProps<{
     id:string
     versionId: string
@@ -16,7 +18,6 @@ const { id, currentVersion, versionId } = defineProps<{
 }>()
 
 const draftDetail = ref<any>({})
-const routerInject = inject(MenuRouterKey)
 const readonly = ref(true);
 const bpmnFile = ref()
 const WorkflowEditorRef = ref()
@@ -52,7 +53,7 @@ async function getWorkflow() {
       console.log("can not edit", currentVersion, draftDetail.value)
     readonly.value = !!(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value);
     workflowData.value = draftData
-    routerInject?.updateTabName(draftData.name + ` - (${currentVersion})`)
+    routerProvider?.updateTabName(draftData.name + ` - (${currentVersion})`)
     nextTick(() => {
         
         if(json && json.data){
@@ -81,7 +82,7 @@ async function saveDraft() {
     await adminApi.api.postWorkflowProcessDefinitionSave({requestDTO:{}}, form as any)
     // await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
     // 如果是修改了名称，则更新 tab 的名称
-    routerInject?.updateTabName(newName + ` - (${currentVersion})`)
+    routerProvider?.updateTabName(newName + ` - (${currentVersion})`)
     loading.value = false
 }
 
@@ -100,7 +101,7 @@ function openVersionList(){
     }
     const newItem = newWorkflowEditorVerionList(params);
     console.log("newItem", newItem)
-    routerInject?.navigateTo(newItem)
+    routerProvider?.navigateTo(newItem)
 }
 
 
@@ -115,7 +116,7 @@ async function promoteToProduction(){
 
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
-    ElNotification.success(t('common.success'))
+    routerProvider?.message?.success(t('common.success'))
     await getWorkflow()
     loading.value = false
 }
@@ -132,11 +133,11 @@ async function saveAsNewVersion(){
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, workflowData.value.key, currentVersion, data.versionNumber)
 
-    ElNotification.success(t('common.success'))
+    routerProvider?.message.success(t('common.success'))
 
     // TODO : check if this is correct
     console.log("save as data", data);
-    routerInject?.updateProps({
+    routerProvider?.updateProps({
         id,
         currentVersion: data.versionNumber,
         versionId: data.id,
