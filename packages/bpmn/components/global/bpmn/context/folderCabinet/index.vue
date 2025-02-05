@@ -72,6 +72,7 @@ async function getCabinetDetail(id:string) {
     const processData = processNode.getData().data;
     const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping'];
     if(cabinetMapping){
+
         form.value = arr.map(item => {
             const fields = item.displayMeta.reduce((allMeta:any, meta:any) => {
                 const bpmnItem =  cabinetMapping.find((oldItem:any) => item.id === oldItem.attr_id)
@@ -89,6 +90,16 @@ async function getCabinetDetail(id:string) {
                 }
                 return allMeta
             }, [])
+            // add folderCabinetId to arr
+            fields.unshift({
+                attr_id: "folderCabinetId",
+                attr_name: "Folder Cabinet Id",
+                attr_level: 0,
+                field: [{
+                    attr_ormProperty:"",
+                    attr_metadata: "folderCabinetId"
+                }]
+            })
             return {
                 attr_id: item.id,
                 attr_name: item.label,
