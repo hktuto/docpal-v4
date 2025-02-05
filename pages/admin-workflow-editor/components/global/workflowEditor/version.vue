@@ -28,7 +28,15 @@ async function getWorkflowDetail(){
 }
 
 function editHandler(row:any, openInNewTab = false){
-    const newItem = newWorkflowEditorDetail(row)
+    // console.log("row data", row)
+    const params: NewWorkflowVersionDetailParams = {
+        id: row.id,
+        name: row.name,
+        draftId: row.draftId,
+        versionNumber: row.versionNumber,
+        versionId: row.id
+    }
+    const newItem = newWorkflowEditorDetail(params)
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 

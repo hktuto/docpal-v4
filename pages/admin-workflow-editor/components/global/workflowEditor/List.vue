@@ -11,16 +11,19 @@ if(!routerProvider) {
 const tableRef = ref()
 
 async function openLastestVersion(data:any, openInNewTab = false){   
-    console.log("openLastestVersion", data)
+
     // REMARK: 在列表頁面是拿不到 version 的 draftId 的，所以需要先取得 version 再打开
     // const {data:{ entryList}} = await adminApi.api.postWorkflowVersionPage({draftId:data.id, orderBy:'versionNumber', isDesc:true, pageSize:1})
     // console.log("openLastestVersion", entryList)
-    const params = {
-        ...data,
-        versionNumber:data.latestVersion,
+    const params: NewWorkflowVersionDetailParams = {
+        id: data.id,
+        name: data.name,
         draftId: data.id,
+        versionNumber: data.latestVersion,
+        versionId: data.latestVersionId
     }
     let newItem = newWorkflowEditorDetail(params) as any;
+    console.log("openLatestVersion", newItem, data)
     newItem.props.currentVersion = data.latestVersion
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
@@ -30,6 +33,7 @@ function openProductionVersion(data:any, openInNewTab = false){
     const praams = {
         ...data,
         versionNumber:data.productionVersion,
+        versionId: data.productionVersionId,
         draftId: data.id,
     }
     const newItem = newWorkflowEditorDetail(praams) as any;
@@ -47,6 +51,7 @@ function saveAsNewWorkflow(data:any){
 }
 
 function openVersions(data:any , openInNewTab = false){
+    
     const newItem = newWorkflowEditorVerionList(data);
     console.log("openVersions", newItem)
     
