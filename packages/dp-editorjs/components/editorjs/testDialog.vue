@@ -42,7 +42,7 @@
         body.variables[key] = body.variables[key].replace(/(?:\r\n|\r|\n)/g, '<br/>');
       }
     })
-    const res = await adminApi.instance.post('/docpal/template/email/send', body);
+    const res = await adminApi.api.postTemplateEmailSend(body);
   }
   
   function addRow(key:string) {
