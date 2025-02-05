@@ -15,7 +15,7 @@ import {CaseManagementEditorKey} from "admin-case-management/utils/caseManagemen
 const { graph, setupCanvas ,getGraphJson, centerGraph, caseNode,caseId, caseInformation } = useCmmnGraph();
 const containerEl = ref()
 const toolbarEl = ref()
-
+const emits = defineEmits(['historyChange'])
 
 ///#region splitPanes
     const middleSize = ref(80)
@@ -50,7 +50,7 @@ function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
             }
         },
         background: {
-            color: 'var(--app-grey-0000)',
+            color: 'var(--app-grey-1000)',
         },
         autoResize: true,
         panning: {
@@ -115,9 +115,10 @@ function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
         }
     }
 
-    
+    dragging.value = false;
     setupCanvas(cmmnString, x6Json,options);
     readOnly.value = isReadOnly
+    toolbarEl.value.init(graph.value, isReadOnly)
     if(!isReadOnly){
 
 
@@ -132,41 +133,36 @@ function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
           },
       }),)
 
+        graph.value.use(
+            new History({
+                enabled: !readonly.value,
+                beforeAddCommand:(event:any, args:any) => {
+                    const ignoreKeys = ['tools', 'ports']
+                    if(ignoreKeys.includes(args.key)) return false
+                }
+            }),
+        )
+
+        graph.value.on('history:change', () => {
+            undoState.value= {
+                canRedo: graph.value.canRedo(),
+                canUndo: graph.value.canUndo(),
+            }
+            emits('historyChange')
+
+            // save draft
+        })
+        graph.value.cleanHistory()
+
     }
-    // graph.value.use(
-    //     new Selection({
-    //         enabled: true,
-    //         modifiers:['meta'],
-    //         multiple: true,
-    //         rubberband: true,
-    //         movable: true,
-    //         showNodeSelectionBox: true,
-    //     }),
-    // )
-    toolbarEl.value.init(graph.value, isReadOnly)
+
     registerGraphEvents(graph.value);
     
 
-    dragging.value = false;
+
     
 
-    graph.value.use(
-        new History({
-            enabled: !readonly.value,
-            beforeAddCommand:(event:any, args:any) => {
-                const ignoreKeys = ['tools', 'ports']
-                if(ignoreKeys.includes(args.key)) return false
-            }
-        }),
-    )
 
-    graph.value.on('history:change', () => {
-        undoState.value= {
-            canRedo: graph.value.canRedo(),
-            canUndo: graph.value.canUndo(),
-        }
-    })
-    graph.value.cleanHistory()
 }
 
 
@@ -273,7 +269,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
     background-color: transparent !important;
 }
 .main-right{
-    background-color: var(--app-grey-0000);
+    background-color: var(--app-grey-1000);
     z-index:2;
 }
 .editorPanelContainer{
@@ -285,7 +281,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
 }
 :deep{
     .splitpanes.default-theme .splitpanes__pane{
-        background-color: var(--app-grey-0000);
+        background-color: var(--app-grey-1000);
     }
     .splitpanes__splitter{
         z-index: 2;
@@ -303,7 +299,7 @@ defineExpose({ getGraphJson, init, centerGraph, save })
 }
 :deep{
     .splitpanes.default-theme .splitpanes__pane{
-        background-color: var(--app-grey-0000);
+        background-color: var(--app-grey-1000);
     }
 }
 </style>

@@ -52,7 +52,7 @@ async function promoteToProductionHandler(row:any) {
 
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(row.id,{requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.versionNumber, data.latestVersion)
-    ElNotification.success(t('common.success'))
+    ElNotification.success(t('dpMsg_success'))
 
     tableRef.value?.reload()
 }
@@ -75,7 +75,7 @@ async function saveAsNewVersionHandler(row:any) {
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.versionNumber, data.versionNumber)
 
-    ElNotification.success(t('common.success'))
+    ElNotification.success(t('dpMsg_success'))
 
     tableRef.value?.reload()
 }

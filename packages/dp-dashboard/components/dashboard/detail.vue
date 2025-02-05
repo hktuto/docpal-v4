@@ -310,18 +310,18 @@ function dragEnd() {
       calc(var(--grid-row-height) + var(--grid-row-margin)); /* 网格大小 */
     background-image: linear-gradient(
         to right,
-        var(--app-grey-0000) var(--b-gap),
+        var(--app-grey-1000) var(--b-gap),
         transparent var(--b-gap)
       ),
       linear-gradient(
         to bottom,
-        var(--app-grey-0000) var(--b-gap),
+        var(--app-grey-1000) var(--b-gap),
         transparent var(--b-gap)
       );
   }
 }
 .splitpanes.default-theme .splitpanes__pane {
-  background-color: var(--app-grey-0000);
+  background-color: var(--app-grey-1000);
 }
 
 .dashboard-item-widget {

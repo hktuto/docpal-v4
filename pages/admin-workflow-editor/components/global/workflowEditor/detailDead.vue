@@ -116,7 +116,7 @@ async function promoteToProduction(){
 
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
-    routerProvider?.message?.success(t('common.success'))
+    routerProvider?.message?.success(t('dpMsg_success'))
     await getWorkflow()
     loading.value = false
 }
@@ -133,7 +133,7 @@ async function saveAsNewVersion(){
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, workflowData.value.key, currentVersion, data.versionNumber)
 
-    routerProvider?.message.success(t('common.success'))
+    routerProvider?.message.success(t('dpMsg_success'))
 
     // TODO : check if this is correct
     console.log("save as data", data);

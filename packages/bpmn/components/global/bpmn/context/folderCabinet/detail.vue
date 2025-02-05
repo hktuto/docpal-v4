@@ -1,7 +1,7 @@
 
 <script lang="ts" setup>
+const field = defineModel<any[]>('field', { required: true });
 const props = defineProps<{
-    field: any[],
     folderCabinetItem:any
     allField?: any[]
 }>()

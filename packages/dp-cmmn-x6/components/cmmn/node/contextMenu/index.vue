@@ -30,9 +30,10 @@ const state = reactive<{
 
 function openContextMenu({detail}){
     const event = detail.e as MouseEvent
+    console.log("openContextMenu", detail)
     state.position = {
-        x: event.clientX,
-        y: event.clientY
+        x: event.offsetX,
+        y: event.offsetY
     }
     state.node = detail.cell
     state.view = detail.view
@@ -69,7 +70,7 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
 <style scoped lang="scss">
 .contextMenuContainer{
     border-radius: 0.5rem;
-    background: var(--app-grey-0000);
+    background: var(--app-grey-1000);
     border: 1px solid var(--app-grey-825);
     box-shadow: 0 2px 5px rgba(0,0,0,.2);
     position: fixed;
