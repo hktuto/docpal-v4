@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type {TabItem, RouterParams} from '#imports';
+import {ElMEssage, ElNotification } from 'element-plus';
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
 import { use } from 'vxe-table';
 const {allComponents} = useTabsManager()
@@ -121,15 +122,15 @@ const routerContainer = computed(( ) => {
 })
 const menuSymbol = Symbol(tab.value.id)
 
-function createMessage(type:string, ...args){
+function createMessage(type:string, ...args:any[]){
     if(args.length === 1 && typeof args[0] === 'string'){
-        ElMEssage({
+        ElMessage({
             type,
             appendTo: routerContainer.value,
             message:args[0]
         })
     }else{
-        ElMEssage({
+        ElMessage({
             type,
             appendTo: routerContainer.value,
             ...args
@@ -137,15 +138,15 @@ function createMessage(type:string, ...args){
     }
 }
 
-function createNotification(type:string, ...args){
+function createNotification(type:string, ...args:any[]){
     if(args.length === 1 && typeof args[0] === 'string'){
-        ElMNotification({
+        ElNotification({
             type,
             appendTo: routerContainer.value,
             message:args[0]
         })
     }else{
-        ElMNotification({
+        ElNotification({
             type,
             appendTo: routerContainer.value,
             ...args
