@@ -10,7 +10,7 @@ const containerEl = ref()
 const graph = ref<Graph>();
 
 const {options = {}} = defineProps<{
-    options: any
+    options?: any
 }>()
 const emits = defineEmits(['graphReady']);
 const flatGraphObject = ref<any>({})
@@ -98,7 +98,120 @@ function init(bpmnXml :string, x6Json?:any){
     })
     emits('graphReady', x6Json)
 }
-
+function dim(cellIds:string[]){
+    const nodes = graph.value?.getNodes()
+    nodes?.forEach( (node:Node) => {
+        //if node.id is not include in cellIds, 
+        if(!cellIds.includes(node.id)){
+            if(node.data.type === 'exclusiveGateway' || node.data.type === 'boundaryEvent') {
+                const allNodeConnectedToExclusiveGateway = graph.value?.getConnectedEdges(node)
+                let isAllConnectedNodeDone = true;
+                allNodeConnectedToExclusiveGateway?.forEach( (connectedEdge: any) => {
+                    if(connectedEdge.source.cell === node.id) {
+                        if( !cellIds.includes(connectedEdge.target.cell)){
+                            isAllConnectedNodeDone = false
+                        }
+                        
+                    } else if(connectedEdge.target.cell === node.id) {
+                        if( !cellIds.includes(connectedEdge.source.cell)){
+                            isAllConnectedNodeDone = false
+                        }
+                    }
+                })
+                if(!isAllConnectedNodeDone) {
+                    allNodeConnectedToExclusiveGateway?.forEach( (edge: any) => {
+                        edge.attr('line/stroke', '#ccc')
+                        edge.attr('line/strokeDasharray', '')
+                        edge.attr('line/style/animation', '')
+                    })
+                    node.attr('body/fill', '#ccc')
+                    node.attr('body/stroke', '#ccc')
+                }
+            }else{
+                
+                node.attr('body/fill', '#ccc')
+                node.attr('body/stroke', '#ccc')
+                // dim connection
+                const edges = graph.value?.getConnectedEdges(node)
+                edges?.forEach( (edge) => {
+                    edge.attr('line/stroke', '#ccc')
+                    edge.attr('line/strokeDasharray', '')
+                    edge.attr('line/style/animation', '')
+                })
+            }
+        }
+        else{
+            nodes?.forEach( (node:Node) => {
+                const view = graph.value?.findView(node)
+                view?.unhighlight(null)
+                // dim connection
+                const edges = graph.value?.getConnectedEdges(node)
+                edges?.forEach( (edge) => {
+                    edge.attr('line/stroke', '#000')
+                    edge.attr('line/strokeDasharray', '')
+                    edge.attr('line/style/animation', '')
+                })
+            })
+        }
+    })
+    
+}
+function highlightCell(cellIds:string[], allNodes:string[]) {
+    dim(allNodes)
+    if(cellIds && cellIds.length > 0){
+        cellIds.forEach( id => {
+            const node: any = graph.value?.getCellById(id)
+            const view = graph.value?.findView(node)
+            view?.highlight(null, {
+                // @ts-ignore
+                name: "className",
+            })
+            // highlight connected edge
+            const edges = graph.value?.getConnectedEdges(node)
+            edges?.forEach( (edge: any) => {
+                if(allNodes.includes(edge.source.cell) && allNodes.includes(edge.target.cell) ){
+                    edge.attr('line/stroke', 'var(--primary-color)')
+                    edge.attr('line/strokeDasharray', 5)
+                    edge.attr('line/style/animation', 'running-line 30s infinite linear');
+                    return
+                }
+                // check if edge source is exclusive gateway or boundary event
+                const sourceNode = graph.value?.getCellById(edge.source.cell)
+                const targetNode = graph.value?.getCellById(edge.target.cell)
+                if(
+                    sourceNode?.data.type === 'exclusiveGateway' ||
+                    sourceNode?.data.type === 'boundaryEvent' ) {
+                    // find edge connected to this source
+                    const allNodeConnectedToExclusiveGateway = graph.value?.getConnectedEdges(sourceNode)
+                    allNodeConnectedToExclusiveGateway?.forEach( (connectedEdge: any) => {
+                        if(connectedEdge.target.cell === sourceNode.id) {
+                            if( allNodes.includes(connectedEdge.source.cell)){
+                                edge.attr('line/stroke', 'var(--primary-color)')
+                                edge.attr('line/strokeDasharray', 5)
+                                edge.attr('line/style/animation', 'running-line 30s infinite linear');
+                            }
+                        }
+                    })
+                    
+                } else if(targetNode?.data.type === 'exclusiveGateway' ||
+                    targetNode?.data.type === 'boundaryEvent' ) {
+                    // if sourceNode is include in allNodes
+                    const allNodeConnectedToExclusiveGateway: any = graph.value?.getConnectedEdges(targetNode)
+                    allNodeConnectedToExclusiveGateway.forEach( (connectedEdge: any) => {
+                        if(connectedEdge.source.cell === targetNode.id) {
+                            if( allNodes.includes(connectedEdge.target.cell)){
+                                edge.attr('line/stroke', 'var(--primary-color)')
+                                edge.attr('line/strokeDasharray', 5)
+                                edge.attr('line/style/animation', 'running-line 30s infinite linear');
+                            }
+                        }
+                    })
+                }
+            })
+            
+        })
+    }
+}
 function autoLayout(xml:string){
     const {json, flatObj} = bpmnStringToJson(xml)
     // flatGraphObject.value = flatObj
@@ -141,7 +254,10 @@ defineExpose({
     init,
     graph,
     bpmnJson,
-    allFormField
+    allFormField,
+    autoLayout,
+    highlightCell,
+    dim
 })
 
 </script>
