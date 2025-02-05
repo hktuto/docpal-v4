@@ -43,10 +43,10 @@ export type NewWorkflowVersionDetailParams = {
     draftId:string,
     name:string
     versionNumber:string
+    versionId: string,
     [key:string]:any
 }
 export const newWorkflowEditorDetail = function(params:NewWorkflowVersionDetailParams){
-    console.log("newWorkflowEditorDetail", params)
     return {
         id: "workflow-editor-detail-" + new Date().getTime(),
         name: "workflow-editor-detail-" + params.draftId,
@@ -56,6 +56,7 @@ export const newWorkflowEditorDetail = function(params:NewWorkflowVersionDetailP
         props: {
             id: params.draftId,
             draftId: params.draftId,
+            versionId: params.versionId,
             currentVersion: params.versionNumber,
             name: params.name,
             item: params,
