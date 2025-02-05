@@ -139,6 +139,7 @@ const prefixClass = computed(() => {
     height:100%;
     overflow: hidden;
     position: relative;
+    transform: scale(1);
 }
 .tabContent {
     container-type: inline-size;
