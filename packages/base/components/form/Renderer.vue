@@ -97,7 +97,6 @@ import { clientApi } from 'api';
             previewFile.id = fileId
             previewFile.name = file.name
         } catch (error) {
-          console.log("error", error)
         }
         previewFile.loading = false
     }
