@@ -20,7 +20,8 @@ const caseInfo = ref<any>()
 const xmlRef = ref()
 function handleSave() {
 
-xmlRef.value.save()
+  console.log(caseData.caseNode)
+  xmlRef.value.save()
 }
 
 const caseData = reactive<any>({
@@ -32,6 +33,7 @@ const caseData = reactive<any>({
 const permissionRef = ref()
 
 function getCase(data: any) {
+  console.log("getCase", data);
   caseData.caseNode = data.caseNode
   caseData.caseInformation = data.caseInformation
 
