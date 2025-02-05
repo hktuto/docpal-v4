@@ -38,7 +38,6 @@ export const useGlobalSetting = () => {
             
         } catch (error) {
             // do nothing
-            console.log("error", error)
         }
     }
 

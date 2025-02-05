@@ -22,6 +22,22 @@ interface MenuProvider {
     navigateTo:(param:TabItem, openInNewTab?:boolean) => void
     updateProps(newProps:any):void
     updateTabName(newName:string):void
+    routerContainer: Ref<HTMLElement | null>,
+    message:{
+        success: (...args) => void,
+        error: (...args) => void,
+        warning: (...args) => void,
+        info: (...args) => void,
+        loading: (...args) => void
+    },
+    notification:{
+        success: (...args) => void,
+        error: (...args) => void,
+        warning: (...args) => void,
+        info: (...args) => void,
+        loading: (...args) => void
+    },
+    showErrorPage:(error:Error) => void,
     tabData: Ref<TabItem>
 }
 

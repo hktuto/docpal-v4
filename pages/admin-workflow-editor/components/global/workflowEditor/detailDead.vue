@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {MenuRouterKey} from '#imports'
+import {MenuRouterKey, type NewWorkflowVersionDetailParams, type NewWorkflowVersionListParams} from '#imports'
 import { ElNotification } from 'element-plus'
 import { adminApi } from 'api';
 import { saveWorkflowFormToNewVersion } from '~/utils/workflowEditorhelpers';
@@ -9,8 +9,9 @@ defineOptions({
     name: 'WorkflowEditorDetailDead'
 })
 
-const { id, currentVersion } = defineProps<{
+const { id, currentVersion, versionId } = defineProps<{
     id:string
+    versionId: string
     currentVersion: string,
 }>()
 
@@ -25,10 +26,11 @@ const state = reactive<any>({
     loading: false,
     newStatus: false
 })
-
+const loading = ref(false);
 const productionVersion = ref()
 const lastestVewsion = ref()
 async function getWorkflow() {
+    loading.value = true
     const data = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
     const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:id, versionNumber:currentVersion}, {
         format: 'blob'
@@ -59,16 +61,19 @@ async function getWorkflow() {
             WorkflowEditorRef.value.init( bpmnFile.value)
         }    
     })
+    loading.value = false
 }
 
 
 async function saveDraft() {
+    loading.value = true
     const { xml, json, x6Json } = WorkflowEditorRef.value.getData()
     const newName = json.definitions.process.attr_name
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
+
     form.append('name', newName)
-    form.append('versionId', currentVersion)
+    form.append('versionId', versionId)
     form.append('draftId', id)
     form.append('jsonValue', JSON.stringify(x6Json))
     form.append('file', blob, 'workflow.bpmn.xml')
@@ -77,6 +82,7 @@ async function saveDraft() {
     // await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
     // 如果是修改了名称，则更新 tab 的名称
     routerInject?.updateTabName(newName + ` - (${currentVersion})`)
+    loading.value = false
 }
 
 provide('workflowDetail',{
@@ -84,13 +90,22 @@ provide('workflowDetail',{
 })
 
 function openVersionList(){
-    const newItem = newWorkflowEditorVerionList(workflowData.value);
-    
+    console.log("workflowData", workflowData.value)
+    const params: NewWorkflowVersionListParams = {
+        id: workflowData.value.draftId,
+        name: workflowData.value.name,
+        draftId: workflowData.value.draftId,
+        latestVersion: workflowData.value.latestVersion,
+        productionVersion: workflowData.value.productionVersion
+    }
+    const newItem = newWorkflowEditorVerionList(params);
+    console.log("newItem", newItem)
     routerInject?.navigateTo(newItem)
 }
 
 
 async function promoteToProduction(){
+    loading.value = true
     const { xml, x6Json } = WorkflowEditorRef.value.getData()
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
@@ -101,6 +116,8 @@ async function promoteToProduction(){
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
     ElNotification.success(t('common.success'))
+    await getWorkflow()
+    loading.value = false
 }
 
 
@@ -117,19 +134,23 @@ async function saveAsNewVersion(){
 
     ElNotification.success(t('common.success'))
 
-    
+    // TODO : check if this is correct
+    console.log("save as data", data);
     routerInject?.updateProps({
         id,
         currentVersion: data.versionNumber,
+        versionId: data.id,
         productionVersion: data.productionVersion
     })
-
+    await getWorkflow()
 }
 
 
-watch(() => [id,currentVersion], (newWorkflowId) => {
+watch(() => [id,versionId], (newWorkflowId) => {
     if(newWorkflowId[0] && newWorkflowId[1]) {
         getWorkflow()
+    }else{
+        console.log("id or versionId not valid")
     }
 },{
     immediate:true
