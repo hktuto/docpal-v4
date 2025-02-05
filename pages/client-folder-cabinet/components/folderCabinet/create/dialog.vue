@@ -157,11 +157,11 @@ const FromRendererRef = ref()
                 defaultValue = JSON.parse(state.cabinetTemplate.metadataValue)
             }
             setTimeout(async()=> {
-            // console.log(MetaFormRef)
                 await MetaFormRef.value.init(state.cabinetTemplate.documentType, defaultValue)
                 await FromRendererRef.value.vFormRenderRef.resetForm()
                 MetaFormRef.value.setData(defaultValue)
                 FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
+                setTitleRequired()
                 setTimeout(async() => {
                     state.previewName = await getMetaName()
                     state.initLoading = false
@@ -185,11 +185,16 @@ const FromRendererRef = ref()
                 return prev
             }, {})
         }
+        function setTitleRequired() {
+            const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
+            const titleIndex = labelRule.findIndex((item: any) => item.metaData === 'fc:docTitle')
+            const titleWidget = FromRendererRef.value.vFormRenderRef.getWidgetRef('title')
+            titleWidget.setRequired(titleIndex !== -1)
+        }
     }
 // #endregion
 // #region module: form change
     async function formChange ({ fieldName, formModel, newValue, oldValue}: any) {
-        console.log('??????????');
         if(state.initLoading) return
         state.previewName = await getMetaName()
     }
