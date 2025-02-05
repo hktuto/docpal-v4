@@ -12,7 +12,7 @@ import {convertX6JsonToCmmnJson} from "../../utils/cmmnSaveHelper";
 import { History } from '@antv/x6-plugin-history'
 import {CaseManagementEditorKey} from "admin-case-management/utils/caseManagementHelper";
 
-const { graph, setupCanvas ,getGraphJson, centerGraph, caseNode,caseId, caseInformation } = useCmmnGraph();
+const { graph, setupCanvas ,getGraphJson, centerGraph, caseNode, caseId, caseInformation } = useCmmnGraph();
 const containerEl = ref()
 const toolbarEl = ref()
 const emits = defineEmits(['historyChange'])
@@ -158,11 +158,6 @@ function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
 
     registerGraphEvents(graph.value);
     
-
-
-    
-
-
 }
 
 
@@ -178,10 +173,29 @@ function save() {
     return { xml, json }
 }
 
+ const allInfo = computed(() => {
+    const caseNode = graph.value.getCellById(caseId.value)
+    if(!caseNode) return []
+    const casePlanModel = caseNode.data.data.casePlanModel ? caseNode.data.data.casePlanModel : caseNode.data.data.data.casePlanModel
+    if(!casePlanModel) return []
+    const field = casePlanModel.extensionElements['docpal:form'][0]?.field || []
+    console.log(casePlanModel);
+    field.push({
+        attr_id: 'folderCabinetId',
+        attr_name: " Folder Cabinet Id"
+    })
+    // add default field
+    return field.map(item => ({
+            ...item,
+            label: item.attr_name,
+            value: item.attr_id
+        }))
+})
 
 provide(CaseManagementEditorKey, {
     readOnly,
     graph,
+    allInfo
 })
 
 

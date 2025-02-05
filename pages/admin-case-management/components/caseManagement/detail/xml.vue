@@ -9,7 +9,6 @@ const routerProvider = inject(MenuRouterKey)
 if(!caseDetailProvider || !routerProvider) {
   throw new Error('CaseManagementDetailProviderKey not found')
 }
-
 const props = defineProps(['id'])
 const emits = defineEmits(['getCase'])
 const router = useRouter()
@@ -25,7 +24,12 @@ async function save() {
   const bslob = xmlStringToFile(data.xml, 'ordercase.cmmn.xml')
   const formData = new FormData()
   formData.append('file', bslob)
-  await adminApi.api.patchCaseTypesVersionVersionidSave(props.id, formData)
+  await adminApi.instance.patch(`/api/docpal/case/types/version/${caseDetailProvider?.currentVersionId}/save`,formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  // await adminApi.api.patchCaseTypesVersionVersionidSave(props.id, formData)
   // saveXmlCaseTypeApi(props.id, formData)
   updateCaseInfo()
 }

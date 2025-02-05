@@ -1,3 +1,4 @@
+import { Graph } from '@antv/x6';
 
 import { CaseManagementDetail } from './../../../apps/admin/.nuxt/components.d';
 import type {PermissionMethodParams} from '#imports';
@@ -32,8 +33,8 @@ export const CaseManagementDetailProviderKey : InjectionKey<CaseManagementDetail
 
 export interface CaseManagementEditorProvider {
     readOnly: Ref<boolean>,
-    graph: Ref<Graph>,
-
+    graph: Ref<Graph | null>,
+    allInfo: Ref<any[]>
 }
 export const CaseManagementEditorKey: InjectionKey<CaseManagementEditorProvider> = Symbol('caseManagementEditorKey')
 
