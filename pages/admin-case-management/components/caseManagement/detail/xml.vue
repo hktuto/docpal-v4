@@ -5,13 +5,9 @@ import { adminApi } from 'api'
 import {newCaseManagementEditor} from "~/utils/caseManagementHelper";
 
 const caseDetailProvider = inject(CaseManagementDetailProviderKey)
-if(!caseDetailProvider) {
-  throw new Error('CaseManagementDetailProviderKey not found')
-}
-
 const routerProvider = inject(MenuRouterKey)
-if(!routerProvider) {
-  throw new Error('MenuRouterKey not found')
+if(!caseDetailProvider || !routerProvider) {
+  throw new Error('CaseManagementDetailProviderKey not found')
 }
 
 const props = defineProps(['id'])

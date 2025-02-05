@@ -1,5 +1,5 @@
 import { en } from 'element-plus/es/locales.mjs';
-
+import { useEventBus, EventType } from 'eventbus'
 
 import { clientApi } from "api"
 import { useViewport } from '#imports';

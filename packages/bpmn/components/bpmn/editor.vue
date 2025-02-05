@@ -400,14 +400,14 @@ defineExpose({
         <BpmnNode v-if="ready" ref="nodeEl" @openForm="openForm"/>
         
     </BpmnViewer>
-    <ElDialog v-model="formDialogVisible" width="100%" top="0" distroy-on-closed>
+    <ElDialog v-model="formDialogVisible" width="100%" top="0" append-to-body distroy-on-closed>
         <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi"  >
             <template #submit>
                 <ElButton type="primary" @click="formSubmit">{{ $t('submit')}}</ElButton>
             </template>
         </FormDesigner>
     </ElDialog>
-    <ElDialog v-model="formRenderVisible" width="90%"  draggable>
+    <ElDialog v-model="formRenderVisible" width="90%"   draggable>
         <FormRenderer ref="fromRenderRef" />
     </ElDialog>
     <div class="actions">
