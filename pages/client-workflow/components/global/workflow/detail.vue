@@ -71,7 +71,7 @@ async function handleGetActivity() {
     state.taskDetail.instanceId || state.taskDetail.processInstanceId;
   state.activityList = await clientApi.api.postWorkflowHistoryActivity({
     processInstanceId,
-  });
+  }).then((res: any) => res.data?.list.filter(i => i.activityName).reverse());
 }
 // #region module: form
 const vFormRef = ref();
@@ -251,7 +251,7 @@ onActivated(() => {
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
         <!-- need to use v-if for bpmn, if not  svg graph will not show -->
-        <!-- <WorkflowDetailGraph
+        <WorkflowDetailGraph
           v-if="state.activeTab === 'graph'"
           :processDefinitionId="
             state.taskDetail?.processDefinitionId ||
@@ -261,7 +261,7 @@ onActivated(() => {
             state.taskDetail?.deploymentId || state.taskDetail?.taskInstance?.deploymentId
           "
           :steps="state.activityList"
-        /> -->
+        />
       </el-tab-pane>
       <el-tab-pane
         v-if=" state.taskDetail &&  state.taskDetail.instanceId && isMobile"

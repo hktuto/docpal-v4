@@ -34,7 +34,7 @@ export const useAuth = () => {
 
 export const userDisplayTimeSetting = () => {
     const userPreference = useUserPreference()
-    return userPreference.value.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD'
+    return userPreference.value?.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD'
 }
 /**
  *  從 keycloak 拿回用戶 token, 放到 localStorage, 
