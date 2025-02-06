@@ -178,8 +178,7 @@ function save() {
     if(!caseNode) return []
     const casePlanModel = caseNode.data.data.casePlanModel ? caseNode.data.data.casePlanModel : caseNode.data.data.data.casePlanModel
     if(!casePlanModel) return []
-    const field = casePlanModel.extensionElements['docpal:form'][0]?.field || []
-    console.log(casePlanModel);
+    const field = [...casePlanModel.extensionElements['docpal:form'][0]?.field] || []
     field.push({
         attr_id: 'folderCabinetId',
         attr_name: " Folder Cabinet Id"

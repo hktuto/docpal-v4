@@ -20,7 +20,6 @@ const caseInfo = ref<any>()
 const xmlRef = ref()
 function handleSave() {
 
-  console.log(caseData.caseNode)
   xmlRef.value.save()
 }
 
@@ -33,12 +32,11 @@ const caseData = reactive<any>({
 const permissionRef = ref()
 
 function getCase(data: any) {
-  console.log("getCase", data);
-  caseData.caseNode = data.caseNode
-  caseData.caseInformation = data.caseInformation
+    caseData.caseNode = data.caseNode
+    caseData.caseInformation = data.caseInformation
 
-  caseData.cmmn = data.cmmn
-  permissionRef.value.init(caseData.caseNode.data)
+    caseData.cmmn = data.cmmn
+    permissionRef.value.init(caseData.caseNode.data)
 }
 
 function handleUpdate(){
@@ -48,6 +46,7 @@ onActivated(async()=> {
     loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
     caseInfo.value = data
+    // TODO : no way to get case name in version, use another api to get, and update tab name
     loading.value = false
 })
 
