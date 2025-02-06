@@ -22,24 +22,51 @@ function handleSave(type: 'flowable:in'|'flowable:out', data) {
 }
 
 const workflowVariable = ref<any[] | null>();
-async function init(nodeData: any) {
+const inForm = ref();
+const outForm = ref();
+async function init() {
+    const nodeData = node.value.getData()
     try {
+        inForm.value = nodeData.data.extensionElements['flowable:in'] || []
+        outForm.value = nodeData.data.extensionElements['flowable:out'] || []
+        console.log("init", inForm.value, outForm.value)
         if(nodeData.data.processRefExpression.__cdata) {
             const {data} = await adminApi.api.postWorkflowProperties({processKey:nodeData.data.processRefExpression.__cdata})
             workflowVariable.value = data
         }else{
             workflowVariable.value = null
         }
-        state.inData = getExtentionProperties(nodeData.data, 'flowable:in')
+       
         // state.outData = getExtentionProperties(nodeData.data, 'flowable:out')
     } catch (error) {
         workflowVariable.value = null
     }
 }
+
+function inOutFormChange(newForm: any, type: 'in' | 'out') {
+    const formKey = type === 'in' ? 'flowable:in' : 'flowable:out'
+    const nodeData = node.value.getData()
+    const newData = {
+        ...nodeData,
+        version: nodeData.version + 1 || 1,
+        data:{
+            ...nodeData.data,
+            extensionElements:{
+                ...nodeData.data.extensionElements,
+                [formKey]: newForm
+            }
+        }
+    }
+    node.value.setData(newData, {
+        overwrite: true
+    })
+    console.log("inOutFormChange", newForm, nodeData)
+}
 function handleClick() {}
+
 watch(node, async()=> {
     if(node.value) {
-        await init(node.value.data)
+        await init()
     }
 },{
     immediate: true,
@@ -54,10 +81,10 @@ watch(node, async()=> {
         <CmmnSidePanelUiItemControl :node="node"/>
         <el-tabs v-model="state.activeName" @tab-click="handleClick">
             <el-tab-pane :label="$t('workflow_workflow')" name="workflow">
-                <CmmnSidePanelUiWorkflow :node="node" />
+                <CmmnSidePanelUiWorkflow :node="node" @change="init"/>
             </el-tab-pane>
             <el-tab-pane v-if="workflowVariable" :label="$t('cmmn.input')" name="input">
-                <CmmnSidePanelUiWorkflowInOut type="in" :workflowInfos="workflowVariable" />
+                <CmmnSidePanelUiWorkflowInOut type="in" :workflowInfos="workflowVariable" :form="inForm" @change="(newForm) => inOutFormChange(newForm, 'in')" />
                 <!-- <CmmnSidePanelDraggable :list="state.inData" 
                     :node="node" :graph="graph"
                     :dragHeader="inputHeader" 
@@ -66,7 +93,7 @@ watch(node, async()=> {
                 </CmmnSidePanelDraggable> -->
             </el-tab-pane>
             <el-tab-pane v-if="workflowVariable" :label="$t('cmmn.output')" name="output">
-                <CmmnSidePanelUiWorkflowInOut type="out" :workflowInfos="workflowVariable" />
+                <CmmnSidePanelUiWorkflowInOut type="out" :workflowInfos="workflowVariable" :form="outForm" @change="(newForm) => inOutFormChange(newForm, 'out')"  />
                 
                 <!-- <CmmnSidePanelDraggable 
                     :node="node" :graph="graph"

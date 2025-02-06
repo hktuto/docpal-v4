@@ -10,6 +10,7 @@ const props = withDefaults(defineProps<{
 }>(),{
 })
 const {node} = toRefs(props)
+const emits = defineEmits(['change'])
 const form = ref<any>({
     workflow: ''
 })
@@ -33,16 +34,38 @@ function init(nodeData: any) {
 const bpmnViewerRef = ref();
 function handleChange(value: string) {
     try {
-        const nodeData = node.value.data
-        if(!nodeData.data.processRefExpression) nodeData.data.processRefExpression = {}
-        nodeData.data.processRefExpression.__cdata = value
-        getBpmn(value)
+        const nodeData = node.value.getData()
+        const newData = {
+            ...nodeData,
+            version: nodeData.version + 1 || 1,
+            data:{
+                ...nodeData.data,
+                extensionElements:{
+                    ...nodeData.data?.extensionElements,
+                    'flowable:in':[],
+                    'flowable:out':[]
+                },
+                processRefExpression:{
+                    ...nodeData.data?.processRefExpression,
+                    __cdata: value
+                }
+            }
+        }
+        if(value) {
+            getBpmn(value)
+        }else{
+            bpmnFile.value = null
+        }
+        node.value.setData(newData, {
+            overwrite: true
+        })
+        emits('change')
+
     } catch (error) {
 
     }
 }
 const getBpmn = async (processKey: string) => {
-    console.log("getBpmn", processKey)
     state.workflowLoading = true
     try {
         const blob = await adminApi.api.postWorkflowProcessModel({
@@ -79,7 +102,7 @@ watch(node, ()=> {
     :model="form" @submit.prevent>
     <el-formItem label="workflow" prop="workflow"
         :rules="[{ required: true, message: $t('form_common_requird')}]">
-        <el-select v-model="form.workflow" filterable allow-create @change="handleChange">
+        <el-select v-model="form.workflow" filterable clearable allow-create @change="handleChange">
           <el-option v-for="item in state.options" :key="item.key" 
             :label="item.name" :value="item.key">
           </el-option>
