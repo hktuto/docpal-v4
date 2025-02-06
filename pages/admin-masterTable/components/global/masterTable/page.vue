@@ -58,7 +58,7 @@ provide(MasterTableProviderKey, {
 <template>
   <div class="pageContainer--padding">
     <el-tabs class="dp-tabs--auto" v-model="state.activeName">
-      <el-tab-pane :label="$t('masterTable.tabels')" name="tabels">
+      <el-tab-pane :label="$t('masterTable.Tables')" name="tabels">
         <MasterTableTabTables ref="MasterTableTabRecordsRef"  @filter-change="handleTableFilterChange"></MasterTableTabTables>
       </el-tab-pane>
       <el-tab-pane :label="$t('masterTable.log')" name="log">

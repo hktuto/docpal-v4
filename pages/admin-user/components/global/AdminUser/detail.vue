@@ -45,9 +45,6 @@ provide(userProviderDetailKey, {
   BatchDeleteUserApi: (params:any) => {
     return adminApi.api.postNuxeoIdentityUsersBatchDelete(params)
   },
-  PatchUserApi: (params:any) => {
-    return adminApi.api.postNuxeoIdentityUser(params)
-  },
   PatchUserPasswordApi: (params: any) => {
     return adminApi.api.patchNuxeoIdentityUserPassword(params)
   },
