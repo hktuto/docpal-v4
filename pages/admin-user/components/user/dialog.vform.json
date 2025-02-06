@@ -43,7 +43,7 @@
         "onChange": "const userIdRef = this.getWidgetRef('userId')\nuserIdRef.setValue(value)",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "",
+        "onValidate": "if(!/^[A-Za-z\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input91235"
@@ -139,7 +139,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "",
+        "onValidate": "if(!/^[A-Za-z\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input69479"
@@ -187,7 +187,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "",
+        "onValidate": "if(!/^[A-Za-z\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input47313"
@@ -283,7 +283,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "",
+        "onValidate": "if(!/^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$/.test(value)) {\r  callback(new Error($t('tip.inputUserPassword')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input37775"
@@ -348,6 +348,7 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
+    "dhList": [],
     "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
