@@ -64,7 +64,8 @@ const { tableConfig, tableEvent , tableRef ,cleanSelectedRows } = useVxeTable({
         state.selectedRows = [...selectedRows];
     },
     optionalConfig: {
-    }
+    },
+    virtualScroll: true
 })
 
 const UserAddGroupDialogRef = ref()
@@ -116,11 +117,6 @@ watch( () => props.group, async(newValue) => {
 .el-card {
     display: grid;
     grid-template-rows: min-content 1fr;
-    :deep(.el-card__body){
-        overflow: hidden;
-        height: 100%;
-        position: relative;
-    }
 }
 .flex-x-between {
     display: flex; 
