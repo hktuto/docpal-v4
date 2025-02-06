@@ -13,7 +13,7 @@ const inputHeader = [
 ]
 const outputHeader = [
     { name: 'source', label: 'Workflow Variables' },
-    { name: 'target', label: 'Case Infomation' }
+    { name: 'target', label: 'Case Information' }
 ]
 function handleSave(type: 'flowable:in'|'flowable:out', data) {
     const nodeData = node.value.data

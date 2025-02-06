@@ -34,7 +34,6 @@ const permissionRef = ref()
 function getCase(data: any) {
   caseData.caseNode = data.caseNode
   caseData.caseInformation = data.caseInformation
-  console.log("getCase", data);
 
   caseData.cmmn = data.cmmn
   permissionRef.value.init(caseData.caseNode.data)
@@ -44,10 +43,9 @@ function handleUpdate(){
   // add missing function
 }
 onActivated(async()=> {
-loading.value = true
+    loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
     caseInfo.value = data
-    console.log("caseInfo.value", caseInfo.value)
     loading.value = false
 })
 
@@ -63,13 +61,13 @@ provide(CaseManagementDetailProviderKey, {
 </script>
 
 <template>
-    <div v-if="!loading" class="pageContainer">
+    <div v-if="!loading && caseInfo" class="pageContainer">
       <CaseManagementDetailInfo />
       <CaseManagementDetailCaseInfomation :caseInformation="caseData.caseInformation" :node="caseData.caseNode" @save="handleSave" />
      <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
      <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
       <CaseManagementDetailXml ref="xmlRef" @getCase="getCase" @update="handleUpdate"/>
-      <CaseManagementDetailDashboard :caseDetail="state.detail"/>
+      <CaseManagementDetailDashboard :caseDetail="caseInfo"/>
     </div>
 </template>
 
@@ -83,5 +81,8 @@ provide(CaseManagementDetailProviderKey, {
     flex-flow: column nowrap;
     gap: var(--app-space-xs);
     overflow: auto;
+    > * {
+        flex: 1 0 auto;
+    }
 }
 </style>

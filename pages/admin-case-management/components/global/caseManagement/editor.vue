@@ -3,6 +3,7 @@ import { ElMessage } from 'element-plus'
 
 import { adminApi } from 'api'
 import {newWorkflowEditorVerionList} from "admin-workflow-editor/utils/workflowEditorMenu";
+import {CaseManagementDetailProviderKey} from "~/utils/caseManagementHelper";
 
 const props = defineProps<{
   caseTypeId: string,
@@ -10,6 +11,7 @@ const props = defineProps<{
   currentVersion: string,
   versionId:string
 }>()
+const{ t } = useI18n()
 const editorEl = ref()
 const readOnly = ref(false);
 const state = reactive<any>({
@@ -74,15 +76,14 @@ async function handleSave() {
         'Content-Type': 'multipart/form-data'
       }
     })
-    // await adminApi.api.patchCaseTypesVersionVersionidSave(props.versionId, formData as any)
-    // await adminApi.api.patchCaseTypesStyleJsonSave(
-    //     {
-    //         caseTypeId: props.caseTypeId,
-    //         versionNumber: props.currentVersion,
-    //         styleJson: JSON.stringify(data.json)
-    //     }
-    // )
-    ElMessage.success($i18n.t('dpMsg_success'))
+      await adminApi.api.postCaseTypesStylejsonSave(
+        {
+          caseTypeId: props.caseTypeId,
+          versionNumber: props.currentVersion,
+          styleJson: JSON.stringify(data.json)
+        }
+      )
+
   } catch (error) {
     console.log(error)
   } finally {
@@ -125,6 +126,13 @@ function saveAsNewVersion(){
 function promoteToProduction(){
 
 }
+//
+// provide(CaseManagementDetailProviderKey, {
+//     caseData,
+//     caseInfo,
+//     currentVersionId: props.caseTypeId,
+//     currentVersion: props.currentVersion,
+// })
 
 onActivated(async () => {
     await getCaseData()
@@ -134,7 +142,7 @@ onActivated(async () => {
 
 <template>
   <div class="pageContainer">
-      <CmmnEditor ref="editorEl"  >
+      <CmmnEditor ref="editorEl"  @historyChange="handleSave">
         <template #actions>
             <template v-if="!production">
                 <ElButton type="primary" @click="promoteToProduction">Promote To Prodocution : {{ currentVersion }}</ElButton>

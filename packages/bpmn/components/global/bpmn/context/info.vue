@@ -58,7 +58,7 @@ onMounted(() => {
 
 <template>
   <el-form ref="FormRef" label-position="top"
-           :model="form" @submit.stop>
+           :model="form" @submit.stop="() => {}">
     <el-formItem label="Name" prop="name"
                  :rules="[{ required: true, message: 'Workflow Name is required'}]">
       <el-input v-model="form.name" @change="nameChange" :disabled="editorProvider.readonly.value"  placeholder="Name" />

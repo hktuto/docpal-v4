@@ -50,7 +50,7 @@ async function getForm(){
   if(!nodeData.data.extensionElements || !nodeData.data.extensionElements['flowable:folderCabinetMapping'].field){
     form.value = []
   }else{
-    if( typeof nodeData.dataextensionElements['flowable:folderCabinetMapping'].field === 'string' ||
+    if( typeof nodeData.data.extensionElements['flowable:folderCabinetMapping'].field === 'string' ||
         !Array.isArray(nodeData.data.extensionElements['flowable:folderCabinetMapping'].field) ){
       form.value = [nodeData.data.extensionElements['flowable:folderCabinetMapping'].field]
     }else{
@@ -60,8 +60,9 @@ async function getForm(){
   const id = graphProvider?.bpmnJson.value.definitions.process.attr_id
   const cell = graphProvider?.graph.value?.getCellById(id) as any
   const rootCellDate = cell.getData()
+    console.log("rootCellDate", rootCellDate)
   if(rootCellDate && rootCellDate.data &&  rootCellDate.data.extensionElements['flowable:folderCabinetMapping']){
-    folderCabinetRootId.value = brootCellDate.data.extensionElements['flowable:folderCabinetMapping'][0].attr_id
+    folderCabinetRootId.value = rootCellDate.data.extensionElements['flowable:folderCabinetMapping'][0].attr_id
     
     const {data} = await adminApi.api.getCabinetTemplateId(folderCabinetRootId.value)
     flatCabinetList.value = await loopChildren([], data, 0,'')
@@ -179,6 +180,7 @@ onMounted(async() => {
 <div class="fromContainer">
     <BpmnSidebarFormLabel :node="node" />
     <div class="formContainer">
+        {{folderCabinetRootId}}
         <div v-if="folderCabinetRootId" class="bpmnSidebarItemContainer">
           <div class="filingItemContainer">
             <ElTable :data="form">

@@ -19,7 +19,6 @@ function init(cmmnString:string,x6Json?: any){
         container: containerEl.value,
         grid:true,
         background: {
-            color: 'var(--app-grey-0000)',
         },
         autoResize: true,
         panning: {

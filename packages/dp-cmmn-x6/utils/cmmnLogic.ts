@@ -15,7 +15,6 @@ export const registerGraphEvents = (graph:Graph, isReadOnly = false) => {
     graph.on('node:click', nodeClickRule)
     if(!isReadOnly) {
 
-
         graph.on('node:contextmenu',nodeContextMenu);
         graph.on('node:change:size', sizeChangeRule)
         // graph.on('edge:change:source', edgeConnectRule)

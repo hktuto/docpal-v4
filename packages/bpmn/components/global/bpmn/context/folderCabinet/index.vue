@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type {Node} from '@antv/x6'
-import { adminApi } from 'api';
+import {adminApi} from 'api';
 
 const { node } = defineProps<{
     node:Node
@@ -30,7 +30,7 @@ async function loopChildren(all:any, item: any, level = 0) {
 
     const response = await adminApi.api.getDocpaltypeSettingsNameName(item.documentType);
     const meta = response.data
-    all.push({...item, level, displayMeta : meta && meta.metadata ? meta.metadata.map((item:any) => item.metadata) : []})
+    all.push({...item, level, displayMeta : meta && meta.metadata ? ['folderCabinetId', ...meta.metadata.map((item:any) => item.metadata) ]: ['folderCabinetId'] })
 
     if(item.children){
         level ++ ;
@@ -71,6 +71,7 @@ async function getCabinetDetail(id:string) {
     }
     const processData = processNode.getData().data;
     const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping'];
+    console.log("cabinetMapping", cabinetMapping)
     if(cabinetMapping){
 
         form.value = arr.map(item => {
@@ -91,15 +92,6 @@ async function getCabinetDetail(id:string) {
                 return allMeta
             }, [])
             // add folderCabinetId to arr
-            fields.unshift({
-                attr_id: "folderCabinetId",
-                attr_name: "Folder Cabinet Id",
-                attr_level: 0,
-                field: [{
-                    attr_ormProperty:"",
-                    attr_metadata: "folderCabinetId"
-                }]
-            })
             return {
                 attr_id: item.id,
                 attr_name: item.label,
@@ -194,8 +186,7 @@ function setForm(){
     
     // check if data is different
     const currentCabinetMapping = node.getData().data.extensionElements['flowable:folderCabinetMapping'];
-    const newCabinetMapping = saveItem;
-    if(JSON.stringify(currentCabinetMapping) !== JSON.stringify(newCabinetMapping)) {
+    if(JSON.stringify(currentCabinetMapping) !== JSON.stringify(saveItem)) {
         node.setData({
             ...node.data,
             version: node.data.version ? node.data.version + 1 : 1,
