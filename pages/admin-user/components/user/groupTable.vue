@@ -32,6 +32,7 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { userProviderDetailKey } from '~/util/userProvider';
+const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 if(!userProviderDetail) {
     throw new Error('userProviderDetailKey not found')
@@ -51,6 +52,7 @@ const { tableConfig, tableEvent , tableRef ,cleanSelectedRows } = useVxeTable({
     selectChangeHander: (selectedRows: any[]) => {
         state.selectedRows = [...selectedRows];
     },
+    virtualScroll: true
 })
 
 const noDeleteList = ['members']
@@ -62,13 +64,11 @@ async function getMemberGroupList() {
     const res = await userProviderDetail?.MemberGroupGetApi({
         userId: props.user.userId
     })
-    console.log("getMemberGroupList", res)
     tableRef.value?.loadData(res.data)
 }
 
-
-async function handleDelete (row) {
-    const action = await ElMessageBox.confirm(`${$i18n.t("groupTip.confirmWhetherToDeleteItem")}`);
+async function handleDelete (row: any) {
+    const action = await ElMessageBox.confirm(`${t("groupTip.confirmWhetherToDeleteItem")}`);
     if (action !== "confirm") return;
     await userProviderDetail?.BatchUserRemoveGroupsApi({
         groupIds: [row.id], 
@@ -77,11 +77,11 @@ async function handleDelete (row) {
     getMemberGroupList()
 }
 async function handleDeleteSelected() {
-    const action = await ElMessageBox.confirm(`${$i18n.t("groupTip.confirmWhetherToDeleteItems")}`);
+    const action = await ElMessageBox.confirm(`${t("groupTip.confirmWhetherToDeleteItems")}`);
     if (action !== "confirm") return;
     const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
     if(ids.length === 0) {
-        ElMessage.warning($i18n.t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
+        ElMessage.warning(t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
         return
     }
     await userProviderDetail?.BatchUserRemoveGroupsApi({
@@ -98,7 +98,7 @@ onActivated(() => {
 })
 
 
-watch( () => props.user, async(newValue) => {
+watch( () => props.user, async(newValue: any) => {
     if (newValue) getMemberGroupList()
 },{
     immediate:true 
@@ -107,9 +107,8 @@ watch( () => props.user, async(newValue) => {
 
 <style lang="scss" scoped>
 .el-card{
-  :deep(.el-card__body) {
-      height: 100%;
-  }
+  display: grid;
+  grid-template-rows: min-content 1fr;
 }
 .flex-x-between {
     display: flex; 
