@@ -10,6 +10,7 @@
 </template>
 <script lang="ts" setup>
 import { Select, CloseBold } from '@element-plus/icons-vue'
+import { adminApi } from 'api'
 import { userProviderKey } from '~/util/userProvider';
 import formJson from './dialog.vform.json'
 const userProvider = inject(userProviderKey)
@@ -25,12 +26,15 @@ async function handleSubmit () {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        await userProvider?.CreateUserApi(data)
+        await adminApi.api.postNuxeoIdentityUser(data)
         state.visible = false
+        await adminApi.api.postNuxeoIdentityUserBatchAddGroups({
+            userId: data.userId,
+            groupIds: data.groupList
+        })
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
-        
     }
     state.loading = false
 }

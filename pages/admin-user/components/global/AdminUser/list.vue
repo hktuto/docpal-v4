@@ -57,9 +57,7 @@ provide(userProviderKey, {
     const res = await adminApi.api.postNuxeoIdentityGetlicenseusernumandactivecount();
     return res.data;
   },
-  CreateUserApi: (params: any) => {
-    return adminApi.api.postNuxeoIdentityUser(params);
-  },
+
   BatchUsersToGroupsApi: (params: any) => {
     return adminApi.api.postNuxeoIdentityGroupBatchAddUsers(params);
   },
