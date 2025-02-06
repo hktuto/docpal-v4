@@ -9,9 +9,8 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { userProviderDetailKey } from '~/util/userProvider';
+import { adminApi } from 'api'
 import formJson from './editDialog.vform.json'
-const userProviderDetail = inject(userProviderDetailKey)
 const props = defineProps<{
     user: any,
 }>()
@@ -27,7 +26,7 @@ async function handleSubmit () {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        await userProviderDetail?.PatchUserApi({ ...props.user, properties: null, ...data })
+        await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')

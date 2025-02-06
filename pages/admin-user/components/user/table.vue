@@ -105,7 +105,10 @@ const state = reactive<TableState>({
 const { t } = useI18n()
 const { tableConfig, tableEvent , tableRef, reload, cleanSelectedRows } = useVxeTable({
     id: 'userTableSetting',
-    api: (pageParams:any) => userProvider?.getAllUsersApi(pageParams),
+    api: async(pageParams:any) => {
+      cleanSelectedRows()
+      return await userProvider?.getAllUsersApi(pageParams)
+    },
     columns:  [
         { field: 'username', title: 'user_username', fixed: 'left',type: 'checkbox' },
         { field: 'email', title: 'user_email',},
