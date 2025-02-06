@@ -14,7 +14,6 @@ const { graph, caseId, setupCanvas ,getGraphJson } = useCmmnGraph();
 const containerEl = ref()
 
 function init(cmmnString:string,x6Json?: any){
-    console.log("init", cmmnString, x6Json)
     const options = Object.assign({
         container: containerEl.value,
         grid:true,

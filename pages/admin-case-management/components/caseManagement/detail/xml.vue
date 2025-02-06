@@ -9,7 +9,11 @@ const routerProvider = inject(MenuRouterKey)
 if(!caseDetailProvider || !routerProvider) {
   throw new Error('CaseManagementDetailProviderKey not found')
 }
-const props = defineProps(['id'])
+const props = defineProps<{
+    caseTypeId: string,
+    name: string,
+    currentVersion: string,
+}>()
 const emits = defineEmits(['getCase'])
 const router = useRouter()
 const editorEl = ref()
@@ -48,7 +52,6 @@ async function init(){
   let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: caseDetailProvider?.currentVersion })
   styleJson = styleJson ? JSON.parse(styleJson) : null
   const cmmnString = await blob.text()
-  console.log("cmmnString", cmmnString)
   state.cmmn = editorEl.value.init(cmmnString, styleJson)
 
   updateCaseInfo()
@@ -63,25 +66,23 @@ function updateCaseInfo() {
     state.caseNode = state.cmmn.graph.getCellById(state.cmmn.caseId)
 
     // getCaseInformation
-    console.log("caseNode", state.cmmn.graph.getNodes() );
     if(!state.caseNode) {
       throw new Error('caseNode is null')
       return
     }
     state.caseInformation = getExtentionProperties(state.caseNode.data.data.casePlanModel, 'docpal:form')
     emits('getCase', state)
-    console.log(state.cmmn);
   }, 300)
 }
 function handleEdit() {
   //
-  console.log("caseDetailProvider?.caseInfo", caseDetailProvider?.currentVersionId)
   const newItm = newCaseManagementEditor(
       caseDetailProvider?.caseInfo.value.caseTypeId,
-      caseDetailProvider?.caseInfo.value.name,
-      caseDetailProvider?.currentVersion,
-      caseDetailProvider.currentVersionId
+      props.name,
+      props.currentVersion,
+      props.caseTypeId
   )
+  console.log("newItm", newItm)
   routerProvider?.navigateTo(newItm)
 }
 onMounted(() => {

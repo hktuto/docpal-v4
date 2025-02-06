@@ -29,6 +29,7 @@ async function getCaseData() {
     readOnly.value = data.production;
     production.value = data.production
     caseInfo.value = data
+  routerProvider?.updateTabName(props.name)
 }
 async function getFileAndDisplay(path: string){
   // ordercase | test
@@ -48,13 +49,14 @@ async function loadXml () {
   editorEl.value.init(cmmnString)
 }
 async function loadJsonAndXml () {
-  let {data:styleJson} = await await adminApi.api.getCaseTypesIdStylejson(props.caseTypeId, { versionNumber: props?.currentVersion })
+  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(props.caseTypeId, { versionNumber: props?.currentVersion })
   styleJson = styleJson ? JSON.parse(styleJson) : null
   const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, { versionNumber: props?.currentVersion },{
     format:'blob'
   }) as any
   const cmmnString = await blob.text()
   editorEl.value.init(cmmnString, styleJson, readOnly.value)
+  
 }
 async function init(){
   loadJsonAndXml()
@@ -106,6 +108,13 @@ async function getSavedData() {
   editorEl.value.init(cmmnString, x6Json)
 }
 
+function openDetail() {
+  
+  const newItem = newCaseManagementDetail(props.versionId, props.name, props.currentVersion)
+
+  routerProvider?.navigateTo(newItem)
+}
+
 function openVersionList(){
     const params = {
         ...caseInfo.value,
@@ -137,6 +146,7 @@ function promoteToProduction(){
 onActivated(async () => {
     await getCaseData()
     await init()
+
 })
 </script>
 
@@ -149,6 +159,7 @@ onActivated(async () => {
             </template>
             <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
             <ElButton @click="openVersionList" type="primary">Version List</ElButton>
+            <ElButton @click="openDetail" type="primary">View Detail</ElButton>
 <!--          <ElButton type="primary" :loading="state.loading" :disabled="readOnly" @click="handleSave"> {{$t('dpTool_save')}}</ElButton>-->
         </template>
       </CmmnEditor>
