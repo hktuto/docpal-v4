@@ -55,6 +55,25 @@ export const newCaseManagementListLink = (data:any) => {
     } as TabItem
 }
 
+export type NewCaseDashboardParams = {
+    id: string,
+    name: string,
+}
+export const newCaseDashboardLink = (data:any) => {
+    return {
+        id: "case-dashboard-list-" + new Date().getTime(),
+        name: "case-dashboard-" + data.id,
+        icon: 'dp-icon:case-outline',
+        label: data.name,
+        component: 'LazyCaseManagementDashboard',
+        props: {
+            caseTypeId: data.id,
+            name: data.name,
+        }
+
+    }
+}
+
 export const newCaseManagementDetail = function(versionId:string, name:string, version:string) {
     return {
         id: "case-management-detail-" + new Date().getTime(),

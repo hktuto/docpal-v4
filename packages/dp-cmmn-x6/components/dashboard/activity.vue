@@ -19,8 +19,11 @@
 <script lang="ts" setup>
 import { Finished, Select } from '@element-plus/icons-vue'
 import { getCDActivityApi, getCDVActivityApi } from 'dp-api'
+import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 const props = withDefaults( defineProps<{
+    instanceId?: string,
+    caseId?: string,
     dates?: any;
     setting?: any;
     hideSetting?: boolean,
@@ -28,9 +31,11 @@ const props = withDefaults( defineProps<{
     setting: {},
     hideSetting: false
 })
+
+const { t } = useI18n()
 const emits = defineEmits(['delete'])
 async function handleDelete() {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
     emits('delete')
 }
@@ -61,10 +66,16 @@ function getSize(state: string) {
 }
 const route = useRoute()
 async function init() {
-  const id = route.query.instanceId
-  const caseTypeId = route.query.caseId
-  if(id) state.activityList = await getCDActivityApi(id)
-  else if(caseTypeId) state.activityList = await getCDVActivityApi(caseTypeId)
+  const id = props.instanceId
+  const caseTypeId = props.caseId
+  if(id){
+    const { data } = await adminApi.api.getCaseDashboardInstanceCaseidActivity(props.instanceId) as any
+    state.activityList = data
+  } 
+  else if(caseTypeId){
+    const { data } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActivity(caseTypeId) as any
+    state.activityList = data
+  } 
 }
 onMounted(() => {
   init()

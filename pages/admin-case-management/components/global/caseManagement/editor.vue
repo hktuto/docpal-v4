@@ -71,7 +71,6 @@ async function handleSave() {
     const blob = xmlStringToFile(data.xml, 'file.cmmn.xml')
     const formData = new FormData()
     formData.append('file', blob)
-    console.log("caseInfo", caseInfo.value)
     // TODO : method are not correct in swagger, tem use instance.
     await adminApi.instance.patch(`/api/docpal/case/types/version/${props.versionId}/save`,formData, {
       headers: {
@@ -132,8 +131,11 @@ function saveAsNewVersion(){
 
 }
 
-function promoteToProduction(){
-
+async function promoteToProduction(){
+   const { data } = await adminApi.api.postCaseTypesVersionVersionidActive(props.versionId)
+   routerProvider?.message.success(t('dpMsg_success'))
+   await getCaseData()
+    await init()
 }
 //
 // provide(CaseManagementDetailProviderKey, {

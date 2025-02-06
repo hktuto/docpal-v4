@@ -42,17 +42,50 @@ function getCase(data: any) {
 function handleUpdate(){
   // add missing function
 }
+
+function promoteToProduction() {
+
+}
+function saveAsNewVersion() {
+
+}
+
+function openVersionList() {
+  const params = {
+    ...caseInfo.value,
+    name: routerProvider?.tabData.value.label,
+    id: caseTypeInfo.value.id,
+    draftId: props.caseTypeId
+  }
+  const newItem = newCaseManagementVersionList(params)
+  routerProvider?.navigateTo(newItem)
+}
+
+function openEditor(){
+  const newItm = newCaseManagementEditor(
+      caseInfo.value.caseTypeId,
+      props.name,
+      props.currentVersion,
+      props.caseTypeId
+  )
+  console.log("newItm", newItm)
+  routerProvider?.navigateTo(newItm)
+}
+const production = ref(false);
 onActivated(async()=> {
     loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
     const { data: removeCaseTypeInfo } = await adminApi.api.getCaseTypesId(data.caseTypeId) as any
-    console.log("caseTypeInfo", removeCaseTypeInfo)
+    
     caseTypeInfo.value = removeCaseTypeInfo
     caseInfo.value = data
+    production.value = caseInfo.value.production
     // TODO : no way to get case name in version, use another api to get, and update tab name
     loading.value = false
     routerProvider?.updateTabName(props.name)
 })
+
+
 
 
 provide(CaseManagementDetailProviderKey, {
@@ -68,12 +101,19 @@ provide(CaseManagementDetailProviderKey, {
 <template>
     <div v-if="!loading && caseInfo" class="pageContainer">
 
-      <CaseManagementDetailInfo :detail="caseTypeInfo" />
+      <CaseManagementDetailInfo :detail="caseTypeInfo" >
+            <template v-if="!production">
+                <ElButton type="primary" @click="promoteToProduction">Promote To Prodocution : {{ currentVersion }}</ElButton>
+            </template>
+            <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
+            <ElButton @click="openVersionList" type="primary">Version List</ElButton>
+            <ElButton @click="openEditor" type="primary">Open Editor</ElButton>
+      </CaseManagementDetailInfo>
       <CaseManagementDetailCaseInfomation :caseInformation="caseData.caseInformation" :node="caseData.caseNode" @save="handleSave" />
      <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
      <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
       <CaseManagementDetailXml ref="xmlRef" v-bind="props" @getCase="getCase" @update="handleUpdate"/>
-      <CaseManagementDetailDashboard :caseDetail="caseInfo"/>
+      <CaseManagementDetailDashboard :caseDetail="caseTypeInfo" v-bind="props"/>
     </div>
 </template>
 

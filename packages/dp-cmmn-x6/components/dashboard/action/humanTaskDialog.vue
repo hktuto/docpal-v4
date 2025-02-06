@@ -10,7 +10,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {  getCaseHumanTaskFormApi, completeHumanTaskApi, deepCopy } from 'dp-api'
+import { adminApi } from 'api'
 const props = withDefaults(defineProps<{
   ignoreList: string[],
 }>(), {
@@ -19,13 +19,14 @@ const props = withDefaults(defineProps<{
 const emits = defineEmits([
   'refresh', 'delete'
 ])
+const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false,
   setting: {},
   fields: [],
   edit: false,
-  title: $i18n.t('masterTable.newRow')
+  title: t('masterTable.newRow')
 })
 const route = useRoute()
 const router = useRouter()
@@ -33,11 +34,12 @@ async function handleSubmit() {
   state.loading = true
   try {
     const data = await FormVariablesRendererRef.value.getData(true)
-    await completeHumanTaskApi({
+    await adminApi.api.postCaseInstanceTasksComplete({
       caseInstanceId: state.setting.caseInstanceId,
       taskId: state.setting.referenceId,
       variables: data
     })
+    
     state.visible = false
     emits('refresh')
   } catch (error) {
@@ -52,8 +54,8 @@ async function handleOpen(taskId, actionItem) {
   state.loading = true
   state.title = actionItem.name
   state.setting = actionItem
-  const res = await getCaseHumanTaskFormApi(taskId)
-  const fields = res.fields.reduce((prev,item) => {
+  const { data } = await adminApi.api.getCaseInstanceTasksTaskidForm(taskId) as any
+  const fields = data.fields.reduce((prev,item) => {
     prev.push({
       ...item,
       name: item.id,
@@ -63,7 +65,7 @@ async function handleOpen(taskId, actionItem) {
     })
     return prev
   }, [])
-  const initData = res.rows.reduce((prev,item) => {
+  const initData = data.rows.reduce((prev,item) => {
     if(item.value) prev[item.id] = item.value
     return prev
   }, {})
