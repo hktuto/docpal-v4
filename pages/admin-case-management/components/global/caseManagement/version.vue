@@ -39,7 +39,7 @@ async function promoteVersion(data:any){
 }
 
 async function openVersionDetail(data:any, openInNewTab:boolean = false){
-    const newItem = newCaseManagementDetail(data.id, caseData.value.name, data.version)
+    const newItem = newCaseManagementDetail(data.id, caseData.value.name, data.versionNumber)
     routerProvider?.navigateTo(newItem, openInNewTab)
 }
 
@@ -69,6 +69,7 @@ provide(CaseManagementVersionProviderKey,{
             orderBy: params.orderBy,
             isDesc: params.isDesc,
         })
+        console.log("get version table")
         return adminApi.api.postCaseTypesVersionPage({...params, caseTypeId: props.caseTypeId})
     },
     actionPermission,
@@ -77,8 +78,12 @@ provide(CaseManagementVersionProviderKey,{
     openVersionDetail
 })
 
-onMounted(async () => {
+onActivated(async () => {
     await getCaseData()
+    if(tableRef.value) {
+        console.log("onActivated")
+        tableRef.value.reload()
+    }
 })
 
 </script>

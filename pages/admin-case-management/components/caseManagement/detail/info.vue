@@ -23,7 +23,10 @@
         <el-input v-model="detail.startNumber" disabled />
       </el-col>
     </el-row>
-    <el-button :loading="state.publishLoading" type="primary" @click="handlePublish">{{$t('button.publish')}}</el-button>
+    <div class="actions">
+      <slot />
+    </div>
+    <!-- <el-button :loading="state.publishLoading" type="primary" @click="handlePublish">{{$t('button.publish')}}</el-button> -->
   </el-card>
 </template>
 <script lang="ts" setup>
@@ -88,5 +91,14 @@ function handleFocus(e) {
 .el-button {
   width: 100%;
   margin-top: var(--app-space-xs);
+}
+.actions{
+  padding-block: var(--app-space-s);
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-space-xxs);
+  
 }
 </style>

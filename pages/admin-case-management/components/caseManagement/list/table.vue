@@ -47,7 +47,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         },
         {
             field:'modifiedDate',
-            title: 'workflow_updateDate',
+            title: 'table_modifiedDate',
             sortable: true,
             formatter ({ cellValue }:any) {
                 const format = userDisplayTimeSetting()
