@@ -18,7 +18,6 @@ interface userProviderDetail {
     SetUserStatusApi: (params:any) => Promise<any>,
     BatchActiveUserApi: (params:any) => Promise<any>,
     BatchDeleteUserApi: (params:any) => Promise<any>,
-    PatchUserApi: (params:any) => Promise<any>,
     PatchUserPasswordApi: (params:any) => Promise<any>,
     MemberGroupGetApi: (params:any) => Promise<any>,
     BatchUserRemoveGroupsApi: (params:any) => Promise<any>,
