@@ -18,7 +18,7 @@
       v-model="state.form.keyword"
       :placeholder="$t('tip.input')"
       clearable size="small" 
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('metadata')" :label="$t('search.metadataKey')">
@@ -40,7 +40,7 @@
     <el-switch
       v-model="state.form.synonyms" 
       size="small" 
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('keyword')" :label="$t('search.includeLanguages')">
@@ -49,7 +49,7 @@
       :options="languages"
       :placeholder="$t('dpTip.choose')" clearable filterable
       size="small" multiple
-      @change="handleChange(value)"
+      @change="handleChange"
     >
       <template #default="{item}">{{ $t('languages.' + item.label) }}</template>
       <template #label="row">{{ $t('languages.' + row.label) }}</template>
@@ -62,7 +62,7 @@
       :options="options.docType"
       :placeholder="$t('dpTip.choose')" clearable filterable
       size="small" multiple
-      @change="handleChange(value)"
+      @change="handleChange"
     >
     </el-select-v2>
   </el-form-item>
@@ -72,7 +72,7 @@
       :options="mimeTypes"
       :placeholder="$t('dpTip.choose')" clearable filterable
       size="small" multiple
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('creators')" :label="$t('searchGroup.creators')">
@@ -81,7 +81,7 @@
       :options="options.users"
       :placeholder="$t('dpTip.choose')" clearable filterable
       size="small" multiple
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('authors')" :label="$t('searchGroup.authors')">
@@ -90,7 +90,7 @@
       :options="options.users"
       :placeholder="$t('dpTip.choose')" clearable filterable
       size="small" multiple
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('collections')" :label="$t('searchGroup.collections')">
@@ -99,7 +99,7 @@
       :options="options.collections"
       :placeholder="$t('dpTip.choose')" clearable filterable
       size="small" multiple
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tags')">
@@ -109,7 +109,7 @@
       :options="options.tags"
       :placeholder="$t('dpTip.choose')"
       size="small" multiple clearable filterable
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('creatorGroups')" :label="$t('searchGroup.creatorGroups')">
@@ -118,7 +118,7 @@
       :options="options.groupList"
       :placeholder="$t('dpTip.choose')"
       size="small" multiple clearable filterable
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('authorGroups')" :label="$t('searchGroup.authorGroups')">
@@ -127,7 +127,7 @@
       :options="options.groupList"
       :placeholder="$t('dpTip.choose')"
       size="small" multiple clearable filterable
-      @change="handleChange(value)"
+      @change="handleChange"
     />
   </el-form-item>
   <el-form-item v-if="isQuertType('size')" :label="$t('searchGroup.size')">
@@ -136,7 +136,7 @@
       :options="sizes"
       :placeholder="$t('dpTip.choose')"
       size="small"
-      @change="handleChange(value)"
+      @change="handleChange"
     >
       <template #default="{item}">{{$t(item.label)}}</template>
       <!-- <template #label="{item}">{{item}}111</template> -->
@@ -147,14 +147,14 @@
     <el-date-picker
         v-model="state.form.createdDate"
         type="daterange" size="small"
-      @change="handleChange(value)"
+      @change="handleChange"
       />
   </el-form-item>
   <el-form-item v-if="isQuertType('modified')" :label="$t('searchGroup.modified')">
     <el-date-picker
         v-model="state.form.modified"
         type="daterange" size="small"
-      @change="handleChange(value)"
+      @change="handleChange"
       />
   </el-form-item>
 </el-form>
@@ -238,7 +238,7 @@ onMounted(async() => {
 
   options.docType = docType.data?.map((item:any) => ({label:item.name, value:item.name}))
   options.users = users.data?.map((item:any) => ({label:item.username, value:item.userId}))
-  options.collections = collections?.data?.entryList?.map((item:any) => ({label:item.name, value:item.id}))
+  options.collections = collections?.data?.map((item:any) => ({label: item.createdBy + ' - ' + item.name, value:item.id}))
   options.tags = tags.data?.map((item:any) => ({label:item, value:item}))
   options.groupList = groupList
   options.metadata = metadata
