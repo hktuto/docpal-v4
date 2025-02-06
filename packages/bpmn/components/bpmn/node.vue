@@ -6,8 +6,8 @@ import { ElPopconfirm } from 'element-plus';
 
 const graphProvider = inject(BPMN_PROVIDER)
 const editorProvider = inject(EDITOR_PROVIDER);
-
-if(!graphProvider || !editorProvider) {
+const routerProvider = inject(MenuRouterKey)
+if(!graphProvider || !editorProvider || !routerProvider) {
     throw createError('graph provider not found')
 }
 
@@ -60,16 +60,20 @@ const contextMenuOpened = ref(false)
 const contextSelectedNode = ref()
 const rightClickEl = ref()
 
-function contextMenuHandler({e,x,y,view,node}:any) {
+function contextMenuHandler({e,view,node}:any) {
     if(editorProvider?.readonly.value) return;
     if(ignoreTypeList.includes(node.data.type || "")) {
         return
     }
     console.log("contextMenuHandler", node)
     contextSelectedNode.value = node
+    const routerContainer = routerProvider?.routerContainer.value
+    // clientX and ClientY should relative to the routerContainer
+    const x = e.clientX - routerContainer.getBoundingClientRect().left
+    const y = e.clientY - routerContainer.getBoundingClientRect().top
     position.value = {
-        x:e.clientX,
-        y:e.clientY
+        x,
+        y
     }
     contextMenuOpened.value = true
 }

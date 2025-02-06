@@ -16,7 +16,6 @@ function nodeClickHandler({detail}) {
     }
     nodeType.value = detail?.data?.type
     nodeData.value = detail
-    console.log(nodeData);
     
 }
 const editComponent = computed(() => {
@@ -62,7 +61,7 @@ useEventListener(window, 'cmmn-node-click', nodeClickHandler)
     height:100%;
     overflow: auto;
     padding: var(--app-space-xs, 12px);
-    background: var(--app-grey-0000, white);
+    background: var(--app-grey-1000, white);
 }
 .position-button {
     position: absolute;

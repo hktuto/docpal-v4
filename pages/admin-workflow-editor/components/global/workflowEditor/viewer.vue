@@ -12,6 +12,7 @@ const viewerRef = ref<InstanceType<typeof BpmnViewer>>();
     
 async function getData() {
     loading.value = true;
+
     const xmlBlob = await adminApi.workflowVersionController.getBpmnxml({draftId:id, versionNumber:latestVersion}, {
         format: 'blob'
     }) as unknown as Blob
