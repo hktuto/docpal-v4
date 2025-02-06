@@ -35,7 +35,9 @@ const caseDetailProvider = inject(CaseManagementDetailProviderKey)
 if(!caseDetailProvider) {
     throw new Error('CaseManagementDetailProviderKey not found')
 }
-
+const props = defineProps<{
+  detail: any,
+}>();
 const state = reactive<any>({
   initValue: '',
   publishLoading: false
@@ -43,21 +45,21 @@ const state = reactive<any>({
 
 const { t} = useI18n()
 
-async function handlePublish() {
-  try {
-    const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToPublish')}`)
-    if(action !== 'confirm') throw new Error("");
-    state.publishLoading = true
-    await adminApi.api.postCaseTypesIdPublish(caseDetailProvider?.caseInfo.value.id,{});
-    ElMessage.success(t('dpMsg_success'))
-  } catch (error) {
+// async function handlePublish() {
+//   try {
+//     const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToPublish')}`)
+//     if(action !== 'confirm') throw new Error("");
+//     state.publishLoading = true
+//     await adminApi.api.postCaseTypesIdPublish(caseDetailProvider?.caseInfo.value.id,{});
+//     ElMessage.success(t('dpMsg_success'))
+//   } catch (error) {
     
-  } finally {
-    setTimeout(() => {
-      state.publishLoading = false
-    }, 100);
-  }
-}
+//   } finally {
+//     setTimeout(() => {
+//       state.publishLoading = false
+//     }, 100);
+//   }
+// }
 async function handleBlur(e) {
   try {
     const value = e.target.value
@@ -66,13 +68,13 @@ async function handleBlur(e) {
     // const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToSave')}`)
     // if(action !== 'confirm') throw new Error("");
     await adminApi.api.putCaseTypes({
-      ...caseDetailProvider?.caseInfo.value,
+      ...props.detail,
       name: value,
-      id: props.id
+      
     })
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
-    caseDetailProvider.caseInfo.value.name = state.initValue
+   
   } 
 }
 function handleFocus(e) {

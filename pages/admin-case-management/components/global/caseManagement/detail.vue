@@ -22,7 +22,7 @@ function handleSave() {
 
   xmlRef.value.save()
 }
-
+const caseTypeInfo = ref<any>()
 const caseData = reactive<any>({
     caseNode: null,
     caseInformation: null,
@@ -45,9 +45,13 @@ function handleUpdate(){
 onActivated(async()=> {
     loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
+    const { data: removeCaseTypeInfo } = await adminApi.api.getCaseTypesId(data.caseTypeId) as any
+    console.log("caseTypeInfo", removeCaseTypeInfo)
+    caseTypeInfo.value = removeCaseTypeInfo
     caseInfo.value = data
     // TODO : no way to get case name in version, use another api to get, and update tab name
     loading.value = false
+    routerProvider?.updateTabName(props.name)
 })
 
 
@@ -63,11 +67,12 @@ provide(CaseManagementDetailProviderKey, {
 
 <template>
     <div v-if="!loading && caseInfo" class="pageContainer">
-      <CaseManagementDetailInfo />
+
+      <CaseManagementDetailInfo :detail="caseTypeInfo" />
       <CaseManagementDetailCaseInfomation :caseInformation="caseData.caseInformation" :node="caseData.caseNode" @save="handleSave" />
      <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
      <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
-      <CaseManagementDetailXml ref="xmlRef" @getCase="getCase" @update="handleUpdate"/>
+      <CaseManagementDetailXml ref="xmlRef" v-bind="props" @getCase="getCase" @update="handleUpdate"/>
       <CaseManagementDetailDashboard :caseDetail="caseInfo"/>
     </div>
 </template>

@@ -14,7 +14,7 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-import fromJsom from '~/assets/cmmn/field.vform.json'
+import fromJsom from './form/field.vform.json'
 const props = defineProps(['caseInformation', 'node'])
 const emits = defineEmits(['save'])
 const { t } = useI18n()
