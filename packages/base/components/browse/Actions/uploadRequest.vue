@@ -25,7 +25,7 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { saveFileRequestListApi, getJsonApi } from 'dp-api'
+import { clientApi } from 'api'
 const emits = defineEmits(['success'])
 const props = defineProps<{
   doc?: any
@@ -43,7 +43,7 @@ function uploadDialog(){
   // open upload dialog
 }
 // #region module:
-  const formJson = getJsonApi('clientFileRequest.json')
+  import formJson from './form/clientFileRequest.vform.json'
   const FromRendererRef = ref()
   async function handleSubmit () {
     state.loading = true
@@ -53,7 +53,7 @@ function uploadDialog(){
       if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
       data.idOrPath = props.doc.path
-      const res = await saveFileRequestListApi(data)
+      const res = await clientApi.api.postNuxeoFilerequest(data)
       state.loading = false
       if (res.errorCode) throw new Error(res.message || 'error');
       state.dialogOpened = false

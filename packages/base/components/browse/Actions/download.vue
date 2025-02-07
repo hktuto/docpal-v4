@@ -19,7 +19,6 @@
 </template>
 
 <script lang="ts" setup>
-import { DownloadDocApi, downloadDocRecord } from "dp-api"
 import { Download } from '@element-plus/icons-vue';
 import { ElNotification, ElMessage} from 'element-plus'
 import { useEventListener } from "@vueuse/core";

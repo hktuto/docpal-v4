@@ -49,7 +49,7 @@
 
 </template>
 <script lang="ts" setup>
-import { GetMasterTablesRecordApi, GetKeyCloakAllUsersApi, GetGroupListApi } from 'dp-api'
+import { clientApi } from 'api'
 const props = defineProps(['config', 'value'])
 const emits = defineEmits(['formChange'])
 const state = reactive<any>({
@@ -121,7 +121,7 @@ async function getMasterTableOptions(masterTableId: string, displayField: string
     id: masterTableId,
   }
   // displayField: displayField
-  const record = await GetMasterTablesRecordApi(params)
+  const record = await clientApi.api.postMasterTablesRecordPageNonpermission(params)
   state.recordOptions = record.map((item: any) => ({
     label: item[displayField],
     value: item[displayField]
@@ -129,9 +129,14 @@ async function getMasterTableOptions(masterTableId: string, displayField: string
 }
 async function getUserGroupOptions() {
   if(state.userOptions.length > 0) return
-  const userList = await GetKeyCloakAllUsersApi()
-  const groups = await GetGroupListApi()
-  // const record = await GetMasterTablesRecordApi(params)
+  const {data:userData} = await clientApi.api.postNuxeoIdentityGetkeycloakallusers()
+  const userList = userData.map((item: any) => ({
+    value: item.userId || item.username,
+    label: item.username || item.userId
+  }))
+  const { data: groupData } = await clientApi.api.postNuxeoIdentityGroups()
+  const groups = groupData.sort((a, b) => a.name.localeCompare(b.name))
+
   state.userOptions = [
     {
       label: $t('user_groups'),

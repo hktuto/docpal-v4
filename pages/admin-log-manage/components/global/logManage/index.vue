@@ -21,7 +21,6 @@
 import { useI18n } from "vue-i18n";
 import {useVxeTable} from '#imports'
 import { adminApi } from 'api';
-// import { getLoggersApi, setLoggersApi } from 'dp-api/src/endpoint/admin-log'
 const { t } = useI18n();
 const logKey = 'ROOT'
 const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({

@@ -19,7 +19,7 @@
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { useUploadAIStore } from '../../../composables/uploadAI'
-import {  } from 'dp-api'
+
 const props = withDefaults(defineProps<{
     accept?: string,
     backPath?: string

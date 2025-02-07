@@ -24,7 +24,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-import { CreateFoldersApi, getJsonApi } from 'dp-api'
+
+import { clientApi } from 'api'
 const dialogOpened = ref(false)
 const { t } = useI18n()
 const props = defineProps<{
@@ -50,7 +51,7 @@ function iconClickHandler(doc:any){
     })
     
 }
-const formJson = getJsonApi('fileNewFolder.json')
+import formJson from './form/fileNewFolder.vform.json'
 function formChange ({fieldName,newValue,oldValue,formModel}) {
     if(fieldName === 'type') MetaFormRef.value.init(newValue)
     // if(fieldName === 'type') MetaFormRef.value.initMeta(newValue)
@@ -74,7 +75,7 @@ async function handleSubmit () {
         if(isDuplicate){
             throw new Error("dpTip.newFolderDuplicateName");
         }
-        const res = await CreateFoldersApi(params)
+        const res = await clientApi.api.postNuxeoDocumentCreatefolders(params)
         dialogOpened.value = false
         emits('success', state.doc)
         state.loading = false
