@@ -4,7 +4,8 @@ import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { copyDocumentApi, moveDocumentApi } from 'dp-api'
+
+import { clientApi} from 'api'
 const { t } = useI18n()
 const emits = defineEmits(['success'])
 const state = reactive({
@@ -53,8 +54,8 @@ async function pasteItem(doc){
         position: 'bottom-right'
     });
     try {
-        if (state.action === 'copy')  await copyDocumentApi(param)
-        else await moveDocumentApi(param)
+        if (state.action === 'copy')  await clientApi.api.postNuxeoDocumentCopy(param)
+        else await clientApi.api.postNuxeoDocumentMove(param)
     } catch (error) {}
     noti.close()
     emits('success', doc, state.action)

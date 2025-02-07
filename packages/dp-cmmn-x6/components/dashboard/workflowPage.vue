@@ -19,8 +19,9 @@
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-import { getCDInstancePageApi, 
-  getCDInstancePageConditionsApi, datesFormat } from 'dp-api'
+import { 
+  datesFormat } from 'dp-api'
+  import { adminApi, clientApi } from 'api'
 const props = withDefaults( defineProps<{
     dates?: any;
     setting?: any;
@@ -92,7 +93,7 @@ const router = useRouter()
         state.options.paginationConfig.currentPage = 1
         return
       }
-      const res = await getCDInstancePageApi(instanceId, { ...param, ...state.extraParams })
+      const res = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(instanceId, { ...param, ...state.extraParams })
       state.tableData = res.entryList
       state.options.paginationConfig.total = res.totalSize
       state.options.paginationConfig.pageSize = param.pageSize
@@ -134,7 +135,7 @@ const router = useRouter()
     const instanceId = route.query.instanceId
     if(!instanceId) return
     try {
-      const data = await getCDInstancePageConditionsApi(instanceId)
+      const data = await clientApi.api.getCaseDashboardInstanceCaseidProcessInstancePageConditions(instanceId)
       ResponsiveFilterRef.value.init(data)
     } catch (error) {
     }
