@@ -1,6 +1,6 @@
 <template>
 <div>
-    <el-button ref="buttonRef" text v-click-outside="onClickOutside">
+    <el-button ref="buttonRef" text :index="index" v-click-outside="onClickOutside">
         {{$t(selectData.label)}}
         <el-tag v-if="selectData.value && selectData.value.length > 0" class="el-icon--right" effect="dark" round size="small">{{selectData.value.length > 9 ? '9+' : selectData.value.length}}</el-tag>
         <el-icon class="el-icon--right"><ArrowDownBold /></el-icon>
@@ -45,6 +45,7 @@ import { ArrowDownBold } from '@element-plus/icons-vue'
 import { ClickOutside as vClickOutside } from 'element-plus'
 const props = defineProps<{
     selectData: typeof ResSelectData,
+    index: number
 }>();
 const emits = defineEmits(['change'])
 const buttonRef = ref()
