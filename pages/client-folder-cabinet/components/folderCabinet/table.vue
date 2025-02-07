@@ -111,7 +111,7 @@ function handleFilterFormChange(formModel: any) {
   reload();
 }
 const ResponsiveFilterRef = ref();
-async function initFilter(id) {
+async function initFilter(id: string) {
   tableConfig.id = "fc-" + id;
   let data: any = await clientApi.api
     .getCabinetTemplateidPageConditions(id)
@@ -145,7 +145,7 @@ async function initFilter(id) {
   );
   ResponsiveFilterRef.value.init(data);
   const ignoreList = ["createdBy", "complete", "isDesc", "orderBy", "state"];
-  const columns = data.reduce((prev, item) => {
+  const columns = data.reduce((prev: any, item: any) => {
     if (!ignoreList.includes(item.key)) {
       prev.push(getColumn(item));
     }

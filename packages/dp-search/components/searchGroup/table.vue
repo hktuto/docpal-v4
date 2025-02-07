@@ -175,7 +175,9 @@ const routerProvider = inject(MenuRouterKey)
       if(!state.barParams.docId && (!state.barParams.query || state.barParams.query.length === 0)) {
         state.tableData = []
         state.aggregation = {}
-        state.options.paginationConfig.total = 0
+        tableConfig.pagerConfig.total = 0
+        tableConfig.pagerConfig.pageSize = 20
+        tableConfig.pagerConfig.currentPage = 1
         return
       }
       tableConfig.loading = true
@@ -198,7 +200,7 @@ const routerProvider = inject(MenuRouterKey)
         tableConfig.pagerConfig.pageSize = param.pageSize
         tableConfig.pagerConfig.currentPage = param.pageNum + 1
         
-        tableRef.value?.loadData(list)
+        // tableRef.value?.loadData(list)
         state.tableData = list
         console.log(tableConfig)
         // tableRef.value?.loadData(state.tableData)
@@ -209,6 +211,7 @@ const routerProvider = inject(MenuRouterKey)
         state.options.paginationConfig.total = 0
     } finally {
       tableConfig.loading = false
+      tableRef.value?.loadData(state.tableData)
       emits('updateAgg', state.aggregation)
     }
   }
@@ -229,7 +232,7 @@ const routerProvider = inject(MenuRouterKey)
       () => routerProvider?.tabData,
       async () => {
         const query = routerProvider?.tabData.value.props?.query
-        
+        console.log(query)
           if(!query) return
           const { pageNum, pageSize } = query
           if(!pageNum || !pageSize) return
@@ -284,8 +287,7 @@ function initSearch(searchParams: any) {
   state.barParams = searchParams
   handlePaginationChange(1)
 }
-onActivated(() => {
-})
+
 defineExpose({ initBar, initAgg, initSearch })
 </script>
 
@@ -296,6 +298,9 @@ defineExpose({ initBar, initAgg, initSearch })
   margin-bottom: var(--app-space-xs);
   color: var(--app-grey-000);
   border-radius: 4px;
+  b {
+
+  }
 }
 .rotate {
   transition: all 1s;
