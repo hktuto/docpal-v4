@@ -173,6 +173,7 @@ const FromRendererRef = ref()
         }
         function getReminder(data: any, revertList: any) {
             return revertList.reduce((prev: any, item: any) => {
+                if(!data[item]) data[item] = {}
                 if(!data[item].tos) data[item].tos = []
                 if(!data[item].ccs) data[item].ccs = []
                 const toCreateByIndex = data[item].tos.findIndex((item: any) => item === 'createBy')
