@@ -11,11 +11,11 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage} from 'element-plus'
-import { completeEventTaskApi } from 'dp-api'
+import { adminApi } from 'api'
 
 const props = defineProps(['actionList'])
 const emits = defineEmits(['refresh'])
-
+const { t } = useI18n()
 function getBColor(type, state) {
   if(state === 'completed') return '#D9D9D9'
   const map = {
@@ -29,8 +29,9 @@ async function handleTask(actionItem) {
   if (actionItem.planItemDefinitionType === 'humantask') {
     dialogRef.value.handleOpen(actionItem.referenceId, actionItem)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
-    await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)
-    ElMessage.success($i18n.t('dpMsg_success'))
+    await adminApi.api.postCaseInstanceCaseinstanceidEventsEventidTrigger(actionItem.id, actionItem.planItemDefinitionId)
+    // await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)
+    ElMessage.success(t('dpMsg_success'))
     emits('refresh')
   }
 } 

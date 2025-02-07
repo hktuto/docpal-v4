@@ -25,6 +25,24 @@ function handleSave() {
     const nodeData = node.value.data
     const casePlanModel = nodeData.data.casePlanModel ? nodeData.data.casePlanModel : nodeData.data.data.casePlanModel
     const data = updateExtentionProperties(casePlanModel, 'docpal:form', state.data, caseId.value)
+    const newData = {
+        ...nodeData,
+        version: nodeData.version + 1 || 1,
+        data:{
+            ...nodeData.data,
+            casePlanModel:{
+                ...nodeData.data.casePlanModel,
+                extensionElements:{
+                    ...nodeData.data.casePlanModel.extensionElements,
+                    'docpal:form':data
+                }
+            }
+        }
+    }
+    console.log("handleSave", newData)
+    node.value.setData(newData, {
+        overwrite: true
+    })
 }
 watch(node, ()=> {
     if(node.value) {

@@ -1,0 +1,130 @@
+<script lang="ts" setup>
+import { watch } from 'vue';
+
+
+
+const caseEditorProvider = inject(CaseManagementEditorKey)
+const emits = defineEmits(['change'])
+
+const props = defineProps<{
+    workflowInfos: any[]
+    type: 'in' | 'out',
+    form: any
+}>();
+const { workflowInfos, form} = toRefs(props);
+const formData = ref<any>([]);
+
+function makeForm() {
+    formData.value = []
+    console.log("form", form.value)
+    if(!workflowInfos.value ) {
+        
+        return
+    }
+    workflowInfos.value.forEach((info) => {
+        // check if from data has this workflow info
+        const newItem = {
+            workflowInfoName:"",
+            workflowInfoId:"",
+            caseInfoId:"",
+        }
+        const caseInfoKey = props.type === 'in' ? 'attr_target' : 'attr_source'
+        const originalValue = form.value.find((formItem:any) => {
+            console.log("find item in form", formItem[caseInfoKey] === info.id , formItem, info)
+            return formItem[caseInfoKey] === info.id
+        })
+        newItem.workflowInfoId = info.id;
+        newItem.workflowInfoName = info.name;
+        newItem.caseInfoId = originalValue ? originalValue[caseInfoKey] : ""
+        formData.value.push(newItem)
+    })
+}
+
+function fieldUpdate(item:any, val:string, index:number) {
+    const caseInfoKey = props.type === 'in' ? 'attr_source' : 'attr_target'
+    const workflowInfoKey = props.type === 'in' ? 'attr_target' : 'attr_source'
+    // update local form data
+    formData.value[index].caseInfoId = val;
+
+    // update case node form
+    // check if item is in form
+    const originalValue = form.value.find((formItem:any) => {
+        console.log("formItem", workflowInfoKey,  formItem[workflowInfoKey] === item.workflowInfoId,  formItem, item )
+        return formItem[workflowInfoKey] === item.workflowInfoId
+    })
+    if(originalValue) {
+        originalValue[caseInfoKey] = val
+    }else{
+        form.value.push({
+            [caseInfoKey]: val,
+            [workflowInfoKey]: item.workflowInfoId
+        })
+    }
+
+    emits('change', form.value)
+    console.log("fieldUpdate", form.value)
+}
+
+watch(() => [workflowInfos],() => {
+    // workflowinfo or form change, should recalculate form data
+    makeForm()
+},{
+    deep: true,
+    immediate: true
+})
+
+
+</script>
+
+
+<template>
+    <div class="formContainer" >
+        <div v-for="(item, index) in formData" :key="index" :class="['row', type]">
+            <div class="col workflow">
+                {{ item.workflowInfoName }}
+            </div>
+            <div class="col icon">
+                <Icon name="lucide:arrow-right" />
+            </div>
+            <div class="col case">
+                <ElSelect v-model="item.caseInfoId" clearable placeholder="Select Case Infomation" @change="(val) => fieldUpdate(item, val, index)">
+                    <ElOption v-for="item in caseEditorProvider?.allInfo.value" :key="item.value" :label="item.label" :value="item.value" />
+                </ElSelect>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<style lang="scss" scoped>
+.formContainer{
+
+}
+.row{
+    display: grid;
+    grid-template-columns: 1fr 24px 1fr;
+    grid-template-areas: "workflow icon case";
+    flex-flow: var(--direction) nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--app-space-xs);
+    padding-block: var(--app-space-s);
+    &.in {
+        grid-template-areas: "case icon workflow";
+    }
+    & + .row{
+        border-top : 1px solid var(--app-grey-850);
+    }
+}
+.workflow{
+    grid-area: workflow;
+}
+.case {
+    grid-area: case;
+}
+.icon{
+    grid-area: icon;
+}
+.col{
+}
+</style>

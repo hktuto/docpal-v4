@@ -12,15 +12,20 @@
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
 import { createCaseDashboardPageApi, updateCaseDashboardApi, getJsonApi } from 'dp-api'
+import formJson from './form/dashobard.vform.json'
+import { adminApi } from 'api'
+
 const emits = defineEmits([
     'refresh'
 ])
 
 const props = defineProps<{
-  groups:any[],
-  caseInformation: []
+    caseDetail: any,
+    caseTypeId: string,
+    name: string,
+    currentVersion: string,
 }>()
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false,
   setting: {},
@@ -28,23 +33,24 @@ const state = reactive({
 })
 const route = useRoute()
 const FormRendererRef = ref()
-const formJson = getJsonApi('caseManage/dashboard.json')
+
 async function handleSubmit () {
   // try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     const params = {
-      caseTypeId: route.params.id,
+      caseTypeId: props.caseDetail.id,
       label: data.label,
       userGroup: data.userGroup.join(',')
     }
+    console.log("params", params)
     state.visible = false
     if(!state.isEdit) {
-      await createCaseDashboardPageApi(params)
+      await adminApi.api.postCaseDashboard(params as any)
     } else {
-      await updateCaseDashboardApi({
+      await adminApi.api.putCaseDashboard({
         ...params,
         id: state.setting.id
-      })
+      } as any)
     }
     emits('refresh')
 

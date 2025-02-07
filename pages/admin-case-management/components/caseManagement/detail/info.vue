@@ -23,7 +23,10 @@
         <el-input v-model="detail.startNumber" disabled />
       </el-col>
     </el-row>
-    <el-button :loading="state.publishLoading" type="primary" @click="handlePublish">{{$t('button.publish')}}</el-button>
+    <div class="actions">
+      <slot />
+    </div>
+    <!-- <el-button :loading="state.publishLoading" type="primary" @click="handlePublish">{{$t('button.publish')}}</el-button> -->
   </el-card>
 </template>
 <script lang="ts" setup>
@@ -35,7 +38,9 @@ const caseDetailProvider = inject(CaseManagementDetailProviderKey)
 if(!caseDetailProvider) {
     throw new Error('CaseManagementDetailProviderKey not found')
 }
-
+const props = defineProps<{
+  detail: any,
+}>();
 const state = reactive<any>({
   initValue: '',
   publishLoading: false
@@ -43,21 +48,21 @@ const state = reactive<any>({
 
 const { t} = useI18n()
 
-async function handlePublish() {
-  try {
-    const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToPublish')}`)
-    if(action !== 'confirm') throw new Error("");
-    state.publishLoading = true
-    await adminApi.api.postCaseTypesIdPublish(caseDetailProvider?.caseInfo.value.id,{});
-    ElMessage.success(t('dpMsg_success'))
-  } catch (error) {
+// async function handlePublish() {
+//   try {
+//     const action = await ElMessageBox.confirm(`${t('msg.confirmWhetherToPublish')}`)
+//     if(action !== 'confirm') throw new Error("");
+//     state.publishLoading = true
+//     await adminApi.api.postCaseTypesIdPublish(caseDetailProvider?.caseInfo.value.id,{});
+//     ElMessage.success(t('dpMsg_success'))
+//   } catch (error) {
     
-  } finally {
-    setTimeout(() => {
-      state.publishLoading = false
-    }, 100);
-  }
-}
+//   } finally {
+//     setTimeout(() => {
+//       state.publishLoading = false
+//     }, 100);
+//   }
+// }
 async function handleBlur(e) {
   try {
     const value = e.target.value
@@ -66,13 +71,13 @@ async function handleBlur(e) {
     // const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToSave')}`)
     // if(action !== 'confirm') throw new Error("");
     await adminApi.api.putCaseTypes({
-      ...caseDetailProvider?.caseInfo.value,
+      ...props.detail,
       name: value,
-      id: props.id
+      
     })
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
-    caseDetailProvider.caseInfo.value.name = state.initValue
+   
   } 
 }
 function handleFocus(e) {
@@ -86,5 +91,14 @@ function handleFocus(e) {
 .el-button {
   width: 100%;
   margin-top: var(--app-space-xs);
+}
+.actions{
+  padding-block: var(--app-space-s);
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-space-xxs);
+  
 }
 </style>

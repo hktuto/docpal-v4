@@ -1,3 +1,4 @@
+import { Graph } from '@antv/x6';
 
 import { CaseManagementDetail } from './../../../apps/admin/.nuxt/components.d';
 import type {PermissionMethodParams} from '#imports';
@@ -32,8 +33,8 @@ export const CaseManagementDetailProviderKey : InjectionKey<CaseManagementDetail
 
 export interface CaseManagementEditorProvider {
     readOnly: Ref<boolean>,
-    graph: Ref<Graph>,
-
+    graph: Ref<Graph | null>,
+    allInfo: Ref<any[]>
 }
 export const CaseManagementEditorKey: InjectionKey<CaseManagementEditorProvider> = Symbol('caseManagementEditorKey')
 
@@ -52,6 +53,25 @@ export const newCaseManagementListLink = (data:any) => {
             isDesc: data.isDesc || false,
         }
     } as TabItem
+}
+
+export type NewCaseDashboardParams = {
+    id: string,
+    name: string,
+}
+export const newCaseDashboardLink = (data:any) => {
+    return {
+        id: "case-dashboard-list-" + new Date().getTime(),
+        name: "case-dashboard-" + data.id,
+        icon: 'dp-icon:case-outline',
+        label: data.name,
+        component: 'LazyCaseManagementDashboard',
+        props: {
+            caseTypeId: data.id,
+            name: data.name,
+        }
+
+    }
 }
 
 export const newCaseManagementDetail = function(versionId:string, name:string, version:string) {
