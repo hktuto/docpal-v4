@@ -22,6 +22,7 @@ const readonly = ref(true);
 const bpmnFile = ref()
 const WorkflowEditorRef = ref()
 const workflowData = ref()
+const processKey = ref('')
 const state = reactive<any>({
     detail: {},
     loading: false,
@@ -42,6 +43,11 @@ async function getWorkflow() {
     draftDetail.value = data.data;
     bpmnFile.value = file
     
+    // regex to get progress key
+    const xmlJson = bpmnStringToJson(file)
+    processKey.value = xmlJson.json.definitions.process.attr_id
+
+
     const {data: draftData}:any = await adminApi.api.getWorkflowProcessDefinitionDraftDraftid(id)
     if(!draftData ){
         throw createError("draft not found")
@@ -50,9 +56,10 @@ async function getWorkflow() {
     lastestVewsion.value = draftData.latestVersion || currentVersion // if latest version is null , then current version must be latest
     
     // check read only logic
-      console.log("can not edit", currentVersion, draftDetail.value)
     readonly.value = !!(currentVersion !== lastestVewsion.value || productionVersion.value && currentVersion === productionVersion.value);
     workflowData.value = draftData
+    // key 
+    workflowData.value.key = draftData.key || draftData.name 
     routerProvider?.updateTabName(draftData.name + ` - (${currentVersion})`)
     nextTick(() => {
         
@@ -67,7 +74,7 @@ async function getWorkflow() {
 
 
 async function saveDraft() {
-    loading.value = true
+
     const { xml, json, x6Json } = WorkflowEditorRef.value.getData()
     const newName = json.definitions.process.attr_name
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
@@ -83,7 +90,7 @@ async function saveDraft() {
     // await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
     // 如果是修改了名称，则更新 tab 的名称
     routerProvider?.updateTabName(newName + ` - (${currentVersion})`)
-    loading.value = false
+
 }
 
 provide('workflowDetail',{
@@ -91,7 +98,6 @@ provide('workflowDetail',{
 })
 
 function openVersionList(){
-    console.log("workflowData", workflowData.value)
     const params: NewWorkflowVersionListParams = {
         id: workflowData.value.draftId,
         name: workflowData.value.name,
@@ -136,7 +142,6 @@ async function saveAsNewVersion(){
     routerProvider?.message.success(t('dpMsg_success'))
 
     // TODO : check if this is correct
-    console.log("save as data", data);
     routerProvider?.updateProps({
         id,
         currentVersion: data.versionNumber,
@@ -163,7 +168,7 @@ watch(() => [id,versionId], (newWorkflowId) => {
 
 <template>
     <div class="pageContainer">
-        <BpmnEditor ref="WorkflowEditorRef" :workflow-data="workflowData" :currentVersion="currentVersion" :id="id" :readonly="readonly">
+        <BpmnEditor v-loading="loading" ref="WorkflowEditorRef" :workflow-data="workflowData" :currentVersion="currentVersion" :processKey="processKey" :currentVersionId="versionId" :id="id" :readonly="readonly">
             
             <template #actions>
                 <template v-if="!productionVersion || productionVersion !== currentVersion">

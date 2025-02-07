@@ -18,8 +18,12 @@ const props = defineProps<{
     options?: any
     workflowData: any,
     currentVersion: string
+    currentVersionId: string
     readonly:boolean
+    processKey:string
 }>()
+
+
 
 const { options={}, workflowData, currentVersion, readonly} = toRefs(props)
 
@@ -178,7 +182,6 @@ const fieldListApi = computed(() => {
     // if selected step is end step, return allField
     if(selectedStep.value?.id === 'end') {
         const allField = viewerRef.value.allFormField
-        console.log("allField", allField)
         data = Object.keys(allField).map((key) => {
             return {
                 attr_name: allField[key].attr_name,
@@ -200,17 +203,17 @@ const fieldListApi = computed(() => {
 async function formSubmit(){
     const json = fromDesignRef.value.getFormJson()
     await adminApi.api.postRelationSave({
-        processKey: workflowData.value.key,
+        processKey: props.processKey,
         userTaskId: selectedStep.value.id,
         jsonValue: JSON.stringify(json),
-        versionId: currentVersion.value
+        versionId: props.currentVersionId
     })
     formDialogVisible.value = false;
 }
 
 async function getFormByNode(node: Node){
     const response = await adminApi.api.getRelationQuery({
-        processKey: workflowData.value.key,
+        processKey: props.processKey,
         userTaskId: node.data.id,
         versionId: currentVersion.value
     });
@@ -224,10 +227,10 @@ async function getFormByNode(node: Node){
 async function saveFormByNode(node: Node, json:any){
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
     return await adminApi.api.postRelationSave({
-        processKey: workflowData.value.key,
+        processKey: props.processKey,
         userTaskId: id,
         jsonValue: JSON.stringify(json),
-        versionId: currentVersion.value
+        versionId: props.currentVersionId
     })
 }
 
@@ -236,9 +239,9 @@ const fromRenderRef = ref();
 async function previewForm(node:Node) {
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
     const response = await adminApi.api.getRelationQuery({
-        processKey: workflowData.value.key,
+        processKey: props.processKey,
         userTaskId: id,
-        versionId: currentVersion.value
+        versionId: props.currentVersionId
     });
     if(!response || !response.data){
         throw createError('Server Error');
@@ -271,10 +274,11 @@ const getGraphValue = computed(() => {
 
 async function openForm(node: Node){
     const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
+
     const response = await adminApi.api.getRelationQuery({
-        processKey: workflowData.value.key,
+        processKey: props.processKey,
         userTaskId: id,
-        versionId: currentVersion.value
+        versionId: props.currentVersionId
     });
     if(!response || !response.data){
         throw createError('Server Error');
@@ -302,7 +306,7 @@ async function copyForm(node:Node, obj:any) {
     copyObj.value = obj
     console.log('copyed', copyObj.value, node.data)
     ElNotification.success(
-        `${node.data.name}'s form has copied`
+        `${node.data.name || node.data.id} form has copied`
     )
 
 }
@@ -330,7 +334,7 @@ async function pasteForm(node:Node){
 
     // notify user
     ElNotification.success(
-        `${node.data.name} has paste the copied content`
+        `${node.data.name || node.data.id} has paste the copied content`
     )
     // reset copyObj
 }

@@ -117,6 +117,15 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
                     listProvider.openVersions(row)
                 }
             },
+            {
+                code: "delete",
+                name: "Delete",
+                visible: true,
+                disabled: false,
+                action:({row}) => {
+                    listProvider.deleteWorkflow(row)
+                }
+            }
             // { 
             //     code : 'view_versions_new_tab', 
             //     name: 'View Versions in New Tab', 
