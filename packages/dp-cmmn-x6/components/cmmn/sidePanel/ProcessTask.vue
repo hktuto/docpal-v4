@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { updateExtentionProperties, getExtentionProperties } from '../../../utils/cmmnConfig'
+import {adminApi} from 'api'
 const props = defineProps(['graph', 'node'])
 const {node} = toRefs(props)
 const state = reactive<any>({
@@ -19,17 +20,53 @@ function handleSave(type: 'flowable:in'|'flowable:out', data) {
     const nodeData = node.value.data
     updateExtentionProperties(nodeData.data, type, data)
 }
-function init(nodeData: any) {
+
+const workflowVariable = ref<any[] | null>();
+const inForm = ref();
+const outForm = ref();
+async function init() {
+    const nodeData = node.value.getData()
     try {
-        state.inData = getExtentionProperties(nodeData.data, 'flowable:in')
-        state.outData = getExtentionProperties(nodeData.data, 'flowable:out')
+        inForm.value = nodeData.data.extensionElements['flowable:in'] || []
+        outForm.value = nodeData.data.extensionElements['flowable:out'] || []
+        console.log("init", inForm.value, outForm.value)
+        if(nodeData.data.processRefExpression.__cdata) {
+            const {data} = await adminApi.api.postWorkflowProperties({processKey:nodeData.data.processRefExpression.__cdata})
+            workflowVariable.value = data
+        }else{
+            workflowVariable.value = null
+        }
+       
+        // state.outData = getExtentionProperties(nodeData.data, 'flowable:out')
     } catch (error) {
+        workflowVariable.value = null
     }
 }
+
+function inOutFormChange(newForm: any, type: 'in' | 'out') {
+    const formKey = type === 'in' ? 'flowable:in' : 'flowable:out'
+    const nodeData = node.value.getData()
+    const newData = {
+        ...nodeData,
+        version: nodeData.version + 1 || 1,
+        data:{
+            ...nodeData.data,
+            extensionElements:{
+                ...nodeData.data.extensionElements,
+                [formKey]: newForm
+            }
+        }
+    }
+    node.value.setData(newData, {
+        overwrite: true
+    })
+    console.log("inOutFormChange", newForm, nodeData)
+}
 function handleClick() {}
-watch(node, ()=> {
+
+watch(node, async()=> {
     if(node.value) {
-        init(node.value.data)
+        await init()
     }
 },{
     immediate: true,
@@ -44,24 +81,27 @@ watch(node, ()=> {
         <CmmnSidePanelUiItemControl :node="node"/>
         <el-tabs v-model="state.activeName" @tab-click="handleClick">
             <el-tab-pane :label="$t('workflow_workflow')" name="workflow">
-                <CmmnSidePanelUiWorkflow :node="node" />
+                <CmmnSidePanelUiWorkflow :node="node" @change="init"/>
             </el-tab-pane>
-            <el-tab-pane :label="$t('cmmn.input')" name="input">
-                <CmmnSidePanelDraggable :list="state.inData" 
+            <el-tab-pane v-if="workflowVariable" :label="$t('cmmn.input')" name="input">
+                <CmmnSidePanelUiWorkflowInOut type="in" :workflowInfos="workflowVariable" :form="inForm" @change="(newForm) => inOutFormChange(newForm, 'in')" />
+                <!-- <CmmnSidePanelDraggable :list="state.inData" 
                     :node="node" :graph="graph"
                     :dragHeader="inputHeader" 
                     formJsonUrl="flowableIn"
                     @change="handleSave('flowable:in', state.inData)">
-                </CmmnSidePanelDraggable>
+                </CmmnSidePanelDraggable> -->
             </el-tab-pane>
-            <el-tab-pane :label="$t('cmmn.output')" name="output">
-                <CmmnSidePanelDraggable 
+            <el-tab-pane v-if="workflowVariable" :label="$t('cmmn.output')" name="output">
+                <CmmnSidePanelUiWorkflowInOut type="out" :workflowInfos="workflowVariable" :form="outForm" @change="(newForm) => inOutFormChange(newForm, 'out')"  />
+                
+                <!-- <CmmnSidePanelDraggable 
                     :node="node" :graph="graph"
                     :list="state.outData" 
                     :dragHeader="outputHeader" 
                     formJsonUrl="flowableOut"
                     @change="handleSave('flowable:out', state.outData)">
-                </CmmnSidePanelDraggable>
+                </CmmnSidePanelDraggable> -->
             </el-tab-pane>
         </el-tabs>
     </div>
