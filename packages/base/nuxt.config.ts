@@ -68,13 +68,17 @@ const config = {
   },
   
   vite: {
+    esbuild: {
+      drop: ['debugger'],
+      pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
+    },
     vue: {
       features: {
         propsDestructure: true,
       },
       script:{
         defineModel:true
-      }
+      },
     }    
   },
 } as any

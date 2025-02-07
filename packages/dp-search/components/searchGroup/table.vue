@@ -202,10 +202,8 @@ const routerProvider = inject(MenuRouterKey)
         
         // tableRef.value?.loadData(list)
         state.tableData = list
-        console.log(tableConfig)
         // tableRef.value?.loadData(state.tableData)
     } catch (error) {
-      console.log("getList", error)
         state.tableData = []
         state.aggregation = {}
         state.options.paginationConfig.total = 0
@@ -250,7 +248,6 @@ const routerProvider = inject(MenuRouterKey)
 // #endregion
 async function handleDblclick (row:any) {
   // TODO : update dblclick method
-  console.log("item click", row)
   // if(row.isFolder) {
   //     goRoute(row.path)
   // } else if(row.type === 'Collection') {
