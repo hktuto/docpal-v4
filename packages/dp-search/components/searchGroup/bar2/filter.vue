@@ -133,7 +133,7 @@ onActivated(() => {
       sessionStorage.setItem('searchParams', '')
     },100)
   }
-  else {
+  else if(filters.value?.query?.length === 0){
     handleAddFilter()
   }
 })
