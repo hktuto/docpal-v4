@@ -194,7 +194,7 @@ defineExpose({
 
 <template>
 
-<div class="routerContainer">
+<div :class="['routerContainer', [tab.name]]">
         <Teleport :to="historyClass" defer>
             <div class="historyContainer">
                 <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
