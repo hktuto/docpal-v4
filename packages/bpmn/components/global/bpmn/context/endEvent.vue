@@ -12,6 +12,10 @@ if(!graphProvider || !editorProvider) {
 }
 const fieldEditorRef = ref()
 
+async function pasteForm(){
+    await editorProvider?.pasteForm(node);
+}
+
 function editCompleteForm() {
     // get all form field
 
@@ -24,5 +28,10 @@ function editCompleteForm() {
     
     <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >Edit Form</ElButton>
     <ElButton type="primary" @click="editorProvider.previewForm(node)" >Preview Form</ElButton>
+    <div class="actionsContainer">
+            <ElButton type="link" size="small" @click="copyFormAndFieldSetting" :disabled="editorProvider.readonly.value">Copy Form and Field setting</ElButton>
+
+            <ElButton v-if="editorProvider.copyKey.value && editorProvider.copyKey.value !== node.data.id" type="link" size="small" :disabled="editorProvider.readonly.value" @click="pasteForm">Paste Form</ElButton>
+        </div>
 </div>
 </template>
