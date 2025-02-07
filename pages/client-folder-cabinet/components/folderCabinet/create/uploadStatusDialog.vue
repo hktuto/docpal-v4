@@ -5,7 +5,7 @@
     >
     <div v-for="item in state.uploadList">
         <div>{{item.name}}</div>
-        <el-tree ref="treeRef" :data="item.treeData" :props="state.defaultProps"
+        <el-tree ref="treeRef" :data="item.treeData" 
             nodeKey="id" default-expand-all :expand-on-click-node="false"
             @node-click="handleNodeClick" >
             <template #default="{ node, data }">
@@ -32,7 +32,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-const state = reactive({
+const state = reactive<any>({
     loading: false,
     visible: false,
     uploadList: []
@@ -41,9 +41,7 @@ const state = reactive({
     function handleConfirm () {
         state.visible = false
     }
-    async function handleOpen(uploadList) {
-        console.log(uploadList);
-        
+    async function handleOpen(uploadList: any) {
         state.visible = true
         state.uploadList = uploadList
     }

@@ -47,7 +47,7 @@
     <input  v-show="false" ref="fileUploaderRef"
                 multiple
                 type="file"
-                @change="uploadHandler($event, 'fileUploader')"/>
+                @change="uploadHandler($event)"/>
 </div>
 </template>
 
@@ -57,7 +57,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 const props = defineProps<{
     treeData: Object
 }>();
-const state = reactive({
+const state = reactive<any>({
     defaultProps: {
         children: 'children',
         label: 'label',
@@ -67,6 +67,7 @@ const state = reactive({
     selectedRow: {}
 })
 const userId:string = useUserId().value
+const { t } = useI18n()
 const treeRef = ref()
 const MetaFormRef = ref()
 const MetaFormRef2 = ref()
@@ -113,7 +114,7 @@ async function getData (isValidate: boolean = false) {
     } catch (error) {
         
     }
-    async function getErrorMessage (doc) {
+    async function getErrorMessage (doc: any) {
         const _msg = await MetaFormRef2.value.getValidateMsg(doc.documentType , deepCopy(doc.properties) )
         if (_msg) return `<h4 class="msg-h4">${doc.label}:</h4>${_msg}`
         return ''
@@ -138,7 +139,7 @@ function getMetaName(formData: any = {}) {
         const labelRule = getLabelList()
         if (!labelRule || labelRule.length === 0) throw new Error("no labelRule");
         else {
-            return labelRule.reduce((prev, rule, index) => {
+            return labelRule.reduce((prev: any, rule: any, index: number) => {
                 const joiner = index === 0 ? '' : '-'
                 if(!rule.metadata) rule.metadata = rule.metaData
                 if(rule.metadata === 'fc:createDate') {
@@ -165,12 +166,12 @@ function getMetaName(formData: any = {}) {
                 return prev
             }, '')
         } 
-    } catch (error) {
-        
+    } catch (error: any) {
+        ElMessage.error(error)
     }
     return formData.label + '-' + formatDate(date)
 }
-function handleNodeClick (row) {
+function handleNodeClick (row: any) {
     state.selectedRow = row
     let defaultValue = {}
     if (state.selectedRow.metadataValue) defaultValue = JSON.parse(state.selectedRow.metadataValue)
@@ -185,19 +186,19 @@ function handleNodeClick (row) {
             , ...defaultValue })
     })
 }
-async function handleMetaChange(data) {
+async function handleMetaChange(data: any) {
     // if(state.ready) state.selectedRow.properties = deepCopy(data.formModel)
     state.selectedRow.properties = deepCopy(data.formModel)
     state.selectedRow.previewName = getMetaName()
 }
 // #region module: style
-    function getCss(data) {
+    function getCss(data: any) {
         if(!state.isCheck) return ''
         if(data.folder === false && data.children && data.children.length === 0) {
             return 'lack-item'
         }
     }
-    function showAddButton(data) {
+    function showAddButton(data: any) {
         return data.folder === false &&
                 !(!data.multiple && data.children && data.children.length > 0)
     }
@@ -206,25 +207,25 @@ async function handleMetaChange(data) {
 
 // #region module: tree actions
     const fileUploaderRef = ref()
-    function handleAddFile (treeItem) {
+    function handleAddFile (treeItem: any) {
         state.treeItem = treeItem
         fileUploaderRef.value.click()
     }
 
     let num = 1
-    async function uploadHandler (e) {
-        const files = Array.from(e.target.files)
+    async function uploadHandler (e: any) {
+        const files: any = Array.from(e.target.files)
         state.treeItem.loading = true
         const pList: any = []
         const childData: any = getParentChildren(state.treeItem)
-        files.forEach(async(file) => {
+        files.forEach(async(file: any) => {
             pList.push(append(file))
         })
         e.target.value = '' // 解决不能上传相同文件问题
         const res = await Promise.all(pList)
         state.treeItem.loading = false
         
-        async function append(file) {
+        async function append(file: File) {
             const index = childData.findIndex((item: any) => item.label === file.name)
             if(index > -1) {
                 ElMessage.warning('tip.fileExists')
@@ -243,13 +244,13 @@ async function handleMetaChange(data) {
             }
             treeRef.value.append(param, state.treeItem)
         }
-        function getParentChildren (curTreeItem) {
+        function getParentChildren (curTreeItem: any) {
             if(!curTreeItem.parentId) return
             const pNode = treeRef.value.getNode(curTreeItem.parentId)
             const children: any = []
             getChild([pNode])
             return children
-            function getChild(nodes) {
+            function getChild(nodes: any) {
                 nodes.forEach((node: any) => {
                     if(!!node && !node.isLeaf) {
                         if(node.data && node.data.folder === false && node.data.children){
@@ -261,7 +262,7 @@ async function handleMetaChange(data) {
             }
         }
     }
-    function handleDeleteFile (treeItem) {
+    function handleDeleteFile (treeItem: any) {
         treeRef.value.remove(treeItem)
     }
 // #endregion

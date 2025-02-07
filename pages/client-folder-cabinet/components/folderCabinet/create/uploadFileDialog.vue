@@ -48,7 +48,7 @@ function getMetaName(formData: any = {}) {
         
     }
     formData.label = state.setting.label
-    return labelRule.reduce((prev, rule, index) => {
+    return labelRule.reduce((prev: any, rule: any, index: number) => {
         const joiner = index === 0 ? '' : '-'
         if(!rule.metadata) rule.metadata = rule.metaData
         if(rule.metadata === 'fc:createDate') {
@@ -85,7 +85,7 @@ async function handleChange() {
     const file = state.fileList[0]
     await MetaFormRef.value.setData({ docName: file.name.split('.').shift()  })
 }
-async function handleMetaChange(data) {
+async function handleMetaChange(data: any) {
     state.metaFormData = data.formModel
     state.setting.previewName = getMetaName()
 }
@@ -111,16 +111,16 @@ async function handleSubmit () {
         }
         const file = state.fileList[0]
         state.loading = true
-        const document = {
+        const inputFile: any = {
             name: state.setting.previewName,
             properties: metaFormData,
             idOrPath: state.setting.documentPath + '/' + state.setting.previewName,
             type: state.setting.documentType,
         }
-        const duplicateResult = await clientApi.api.postNuxeoDocumentIsduplicatename({
+        const duplicateResult: any = await clientApi.api.postNuxeoDocumentIsduplicatename({
             path: state.setting.documentPath, 
             titles: [state.setting.previewName] 
-        })
+        }).then(res => res.data)
         if(duplicateResult[state.setting.previewName]){
             if (state.setting.repeatName) {
                 handleReplace({
@@ -129,33 +129,33 @@ async function handleSubmit () {
                 }, file)
                 return
             } else {
-                document.name = duplicateResult[state.setting.previewName].uniqueName
-                document.idOrPath = state.setting.documentPath + '/' + document.name
+                inputFile.name = duplicateResult[state.setting.previewName].uniqueName
+                inputFile.idOrPath = state.setting.documentPath + '/' + inputFile.name
             }
         }
-        document.templateId = route.query.tab
-        document.layoutId = state.setting.templateId
-        delete document.properties.docName
+        inputFile.templateId = route.query.tab
+        inputFile.layoutId = state.setting.templateId
+        delete inputFile.properties.docName
         const formData: any = new FormData()
         formData.append('files', file.raw)
-        formData.append('document', JSON.stringify(document))
+        formData.append('document', JSON.stringify(inputFile))
         const res = await clientApi.api.postNuxeoDocumentCreatedocument(formData)
-        emits('success', document)
+        emits('success', inputFile)
         state.dialogOpened = false
     } catch (error) {
     } finally {
         state.loading = false
     }
 }
-async function handleReplace(document, file) {
+async function handleReplace(inputFile: any, file: any) {
     const formData:any = new FormData()
     formData.append('file', file.raw)
-    formData.append('document', JSON.stringify(document))
+    formData.append('document', JSON.stringify(inputFile))
     state.loading = true
     try {
-        const res = await clientApi.api.patchNuxeoDocumentReplacefileV2(formData)
+        const res = await clientApi.api.patchNuxeoDocumentReplacefileV2(formData, formData)
         state.dialogOpened = false
-        emits('success', document)
+        emits('success', inputFile)
     } catch (error) {
         
     } finally {
