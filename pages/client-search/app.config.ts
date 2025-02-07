@@ -14,6 +14,16 @@ export default defineAppConfig({
                 pageNum: 0,
 
             }
+        },
+        "client-smartFolder": {
+            id: 'client-smartFolder',
+            name: 'client-smartFolder',
+            icon: 'icon-park-outline:document-folder',
+            hoverIcon: 'icon-park-outline:document-folder',
+            label: "file_smartFolder",
+            component: "LazySmartFolderPage",
+            props:{
+            }
         }
     }
 })
