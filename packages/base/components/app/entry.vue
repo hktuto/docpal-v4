@@ -4,6 +4,9 @@ import { TabApp } from '#components'
 import { clientApi } from 'api'
 const tabAppRef = ref<InstanceType<typeof TabApp>>()
 const emits = defineEmits(['ready'])
+import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
+import enUS from 'vxe-table/lib/locale/lang/en-US'
+import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
 async function getTabsFromServer() {
     // check if new tab
     const route = useRoute()
@@ -56,7 +59,7 @@ const languageReady = ref(false)
 async function getLocale(){
     const { locale, availableLocales, setLocaleMessage } = useI18n()
     await Promise.all( availableLocales.map( async(code) => {
-
+            const vxeLang = code === 'zh-CN' ? zhCN : code === 'en-US' ? enUS : zhHK
             const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
                     locale:code, 
                     languageKey: 'client'
@@ -77,11 +80,13 @@ async function getLocale(){
             setLocaleMessage(code, {
                 ...clientJson,
                 ...adminJson,
-                ...metaJson
+                ...metaJson,
+                ...vxeLang
             })
             
         })
     )
+    languageReady.value = true
     emits('ready')
 }
 
@@ -97,12 +102,20 @@ onMounted(async() => {
 </script>
 
 <template>
+    <template v-if="languageReady">
+
     <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHIghlightPanel">
         <template #sidebar>
             <slot name="sidebar" />
         </template>
     </TabApp>
     <Contextmenu />
+    </template>
+    <template v-else>
+        <LoadingBg >
+                <h1 style="color: #fff;">{{ $t('loading') }}</h1>
+            </LoadingBg>
+    </template>
 </template>
 
 <style lang="scss" scoped>
