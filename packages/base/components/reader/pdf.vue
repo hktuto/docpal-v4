@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 
 import { useEventListener } from '@vueuse/core'
-import { SaveAnnotation, GetAnnotation } from 'dp-api'
+import {clientApi} from 'api'
 import { clientApi } from 'api'
 type PdfJsOptions = {
     print: boolean,

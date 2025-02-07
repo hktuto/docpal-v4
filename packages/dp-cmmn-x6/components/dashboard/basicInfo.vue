@@ -18,7 +18,7 @@
 </template>
 <script lang="ts" setup>
 import { set, watchDebounced } from '@vueuse/core'
-import { getCDBasciInfoApi, getCDVBasciInfoApi } from 'dp-api'
+import {adminApi } from 'api'
 const props = withDefaults( defineProps<{
     dates?: any;
     setting?: any;
@@ -59,10 +59,20 @@ async function getCDBasciInfo() {
     const caseTypeId = route.query.caseId
     if(id) {
       state.mode = 'normal'
-      state.data = await getCDBasciInfoApi(id)
+      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
+      state.data = data
     } else if(caseTypeId) {
       state.mode = 'develop'
-      state.data = await getCDVBasciInfoApi(caseTypeId)
+      const {data:form} = await adminApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(caseTypeId)
+      form.rows = form.fields.reduce((prev, item) => {
+        let value = item.type
+        if (item.type === 'date') value = '2024-01-01'
+        else if (item.type === 'number') value = 100
+        else value = $i18n.t(`virtual.${item.type}_${item.name}`)
+        prev.push({ ...item, value })
+        return prev
+      }, [])
+      state.data = form
       
     }
   } catch (error) {

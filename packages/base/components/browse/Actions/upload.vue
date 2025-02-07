@@ -92,12 +92,8 @@
 import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-import { 
-    CreateDocumentApi,
-    replaceFileDocumentApi,
-    getDocTypeListApi, 
-    metaValidationRuleGetApi,
-    TABLE,defaultTableSetting } from 'dp-api'
+
+import {clientApi } from 'api'
 const emits = defineEmits(['success'])
 const dialogOpened = ref(false)
 
@@ -126,8 +122,9 @@ function uploadDialog(doc){
   state._doc = doc
 }
 // #region module: table
-  const tableKey = TABLE.CLIENT_FILE_UPLOAD
-  const tableSetting = defaultTableSetting[tableKey]
+
+  import tableSetting from "./uploadTableSetting.ts"
+ 
   function tableDataAdd (list: Array) {
     list.forEach(async(item, index) => {
       const fileMetaList = await metaListGet('File', item.name)
@@ -173,9 +170,10 @@ function uploadDialog(doc){
   }
 
   async function metaListGet(documentType: string, name) {
-    const res = await metaValidationRuleGetApi(documentType)
-    if(!res) return []
-    res.forEach(item => {
+    const { data } = await clientApi.api.getWorkflowQuerymetavalidationrule({entity:{documentType}})
+
+    if(!data) return []
+    data.forEach(item => {
       if (item.metaData === 'dc:title') {
         item.value = name
       }
@@ -185,7 +183,7 @@ function uploadDialog(doc){
       }
       else item.value = ''
     })
-    return res
+    return data
   }
   function handleChildOptions (list = []) {
     const result = []
@@ -314,7 +312,7 @@ const handleCreateDocument = async(file) => {
   
   formData.append('files', file.raw)
   formData.append('document', JSON.stringify(document))
-  return CreateDocumentApi(formData).then((res) => {
+  return clientApi.api.postNuxeoDocumentCreatedocument(formData).then((res) => {
     return !!res
   })
 }
@@ -325,7 +323,7 @@ async function handleReplaceDocument (file) {
   const formData = new FormData()
   formData.append('file', file.raw)
   formData.append('document', JSON.stringify(document))
-  const res = await replaceFileDocumentApi(formData)
+  const res = await clientApi.api.patchNuxeoDocumentReplacefile(formData)
   return !!res
 }
 async function waitAll (promiseList:any) {
@@ -353,8 +351,8 @@ async function waitAll (promiseList:any) {
 }
 onMounted(async() => {
   useEventListener(document, 'docActionAddFile', (event) => uploadDialog(event.detail))  
-  const res = await getDocTypeListApi()
-  state.fileTypes = res.filter((item) => !item.isFolder)
+  const { data }:any = await adminApi.api.getTypesActive()
+  state.fileTypes = data?.sort((a:any,b:any)=> (a.name.localeCompare(b.name) )).filter((item) => !item.isFolder)
 })
 </script>
 <style lang="scss" scope="this api replaced by slot-scope in 2.5.0+">

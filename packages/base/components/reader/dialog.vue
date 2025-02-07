@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import { Picture as IconPicture, Download } from '@element-plus/icons-vue'
-import { deepCopy } from 'dp-api'
+
 const emits = defineEmits(['download'])
 export type readerOptions = {
     noDownload?: Boolean,
