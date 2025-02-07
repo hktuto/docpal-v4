@@ -1,37 +1,3 @@
-<template>
-    <div class="detail">
-
-        <div ref="containerEl" class="detail__container">
-          <div class="detail__bg">
-          </div>
-            <div class="detail__tools">
-                <div class="actions">
-                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('Click to switch vertical screen')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
-                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('Click to switch to landscape')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
-                </div>
-                <div class="actions">
-                  <SvgIcon class="icon tools text" :content="$t('Click to add Text')" src="/icons/newText.svg" @click="newWatermark('text')"/>
-                  <SvgIcon class="icon tools image" :content="$t('Click to add Image')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
-                </div>
-            </div>
-            <div class="detail__canvas__container">
-                <canvas id="canvas" ref="canvasEl" :class="{'detail__canvas':true, orientation:true}"></canvas>
-            </div>
-            <div v-if="selectedObject && state.watermarkEditShow" class="detail__property">
-                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model:modelValue="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
-                <WatermarkEditImage v-else v-model:modelValue="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
-                <WatermarkPreset v-model="selectedObject" @change="objectUpdated" />
-            </div>
-        </div>
-
-        <div class="detail__footer">
-          <slot name="footer">
-
-          </slot>
-          <!-- <ElButton type="primary" :loading="state.loading" @click="save">{{ $t('button.save') }}</ElButton> -->
-        </div>
-    </div>
-</template>
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
@@ -59,9 +25,12 @@ let fabricCanvas;
 const canvasEl = ref<any>(null);
 const containerEl = ref<any>(null);
 const itemToDelete = ref([]);
-
+const scaleContainerRef = ref();
 const selectedObject = ref<any>(null);
 const canvasScale = ref(1);
+
+
+
 function newWatermark(type: 'text' | 'image') {
   switch (type) {
     case 'text':
@@ -106,17 +75,16 @@ function newWatermark(type: 'text' | 'image') {
 
 function changeOrientation(newOrientation: "ver" | "hoz") {
   orientation.value = newOrientation
-  initFabric();
+  // initFabric();
 }
 
-function setUpFabric() {
-  if (fabricCanvas) {
-    fabricCanvas.dispose();
-  }
+function setCanvasScale() {
+  // get canvas container size 
   const containerSize = containerEl.value.getBoundingClientRect();
-  const containerOrientation = containerSize.width > containerSize.height ? 'hoz' : 'ver';
+  const containerOrientation = orientation.value
   let width = 0;
   let height = 0;
+  // default proposion is 1500 * 1000
   if (containerOrientation === 'ver') {
     width = containerSize.width - 120;
     height = width * (orientation.value === 'ver' ? 1.5 : 0.6666)
@@ -124,6 +92,7 @@ function setUpFabric() {
       height = containerSize.height - 40;
       width = height * (orientation.value === 'ver' ? 0.6666 : 1.5);
     }
+    canvasScale.value = width / 1000 
   } else {
     height = containerSize.height - 40;
     width = height * (orientation.value === 'ver' ? 0.6666 : 1.5);
@@ -131,12 +100,26 @@ function setUpFabric() {
       width = containerSize.width - 120;
       height = width * (orientation.value === 'ver' ? 1.5 : 0.6666);
     }
+    canvasScale.value = width / 1500 
   }
-  canvasEl.value.width = width;
-  canvasEl.value.height = height;
+  
+  
+}
+
+function setUpFabric() {
+  if (fabricCanvas) {
+    fabricCanvas.dispose();
+  }
+  const containerSize = containerEl.value.getBoundingClientRect();
+  const containerOrientation = orientation.value
+  
+  let width = 0;
+  let height = 0;
+
+  canvasEl.value.width = containerOrientation === 'ver' ? 1000 : 1500;
+  canvasEl.value.height = containerOrientation === 'ver' ? 1500 : 1000;
   // canvasScale is the ratio of canvas size to the original size
   // use height to calculate because font resize is based on height
-  canvasScale.value = height / (orientation.value === 'ver' ? 640 : 960 )
   // init fabric canvas
   fabricCanvas = new fabric.Canvas('canvas');
 
@@ -171,6 +154,7 @@ function setUpFabric() {
   fabricCanvas.on('object:modified', (e) => {
     objectModified(e);
   })
+  setCanvasScale()
 }
 function initFabric() {
   selectedObject.value = null;
@@ -186,26 +170,7 @@ function initFabric() {
 
 function resizeFabric() {
 
-  setUpFabric();
-  fabricStore.value.forEach( item => {
-    if(isTextWatermark(item.type)){
-      item.set({
-        left: item.offset.x * fabricCanvas.getWidth(),
-        top: item.offset.y * fabricCanvas.getHeight(),
-        fontSize: fontSizeConverter(item.font.size, fabricCanvas.getHeight()),
-      })
-    }else{
-
-      item.set({
-        left: item.offset.x * fabricCanvas.getWidth(),
-        top: item.offset.y * fabricCanvas.getHeight(),
-        scaleX: item.scaleX ,
-        scaleY: item.scaleY ,
-      })
-      item.setSrc(item.data);
-    }
-    fabricCanvas.add(item);
-  })
+  setCanvasScale()
 }
 function renderWatermark() {
   props.detail.watermarkSettings.forEach( (item:any) => {
@@ -319,6 +284,13 @@ function objectModified({target}) {
     x : target.getCenterPoint().x / fabricCanvas.getWidth(),
     y : target.getCenterPoint().y / fabricCanvas.getHeight()
   };
+  switch (target.type){
+    case 'text':
+      target.relativeSize = {
+
+      }
+  }
+  console.log('target', target)
     updateData()
 }
 function updateData () {
@@ -429,7 +401,6 @@ async function save() {
 
 watch(detail, (newVal) => {
   if (newVal) {
-    console.log("detail update", detail)
     initFabric();
   }
 },{
@@ -449,6 +420,43 @@ defineExpose({
 })
 
 </script>
+
+
+
+<template>
+    <div class="detail">
+
+        <div ref="containerEl" class="detail__container">
+          <div class="detail__bg">
+          </div>
+            <div class="detail__tools">
+                <div class="actions">
+                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('Click to switch vertical screen')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('Click to switch to landscape')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
+                </div>
+                <div class="actions">
+                  <SvgIcon class="icon tools text" :content="$t('Click to add Text')" src="/icons/newText.svg" @click="newWatermark('text')"/>
+                  <SvgIcon class="icon tools image" :content="$t('Click to add Image')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
+                </div>
+            </div>
+            <div ref="scaleContainerRef" class="detail__canvas__container" :style="{transform: `scale(${canvasScale})`}">
+                <canvas id="canvas" ref="canvasEl" :class="{'detail__canvas':true, orientation:true}"></canvas>
+            </div>
+            <div v-if="selectedObject && state.watermarkEditShow" class="detail__property">
+                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model:modelValue="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
+                <WatermarkEditImage v-else v-model:modelValue="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
+                <WatermarkPreset v-model="selectedObject" @change="objectUpdated" />
+            </div>
+        </div>
+
+        <div class="detail__footer">
+          <slot name="footer">
+
+          </slot>
+          <!-- <ElButton type="primary" :loading="state.loading" @click="save">{{ $t('button.save') }}</ElButton> -->
+        </div>
+    </div>
+</template>
 
 
 <style lang="scss" scoped>
@@ -486,8 +494,10 @@ defineExpose({
         width: 100%;
         height: 100%;
         padding: 20px;
-        display: grid;
-        place-items: center;
+        display: flex
+;
+    justify-content: center;
+    align-items: center;
     }
     &__property{
       position: absolute;

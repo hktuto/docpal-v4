@@ -19,6 +19,12 @@ export const responseSuccessHelper = (response:any, axiosInstance:typeAxiosInsta
 export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInstance) => {
     const originalRequest = error.config;
     console.log('fetch error', error)
+    if(error.response.status === 420) {
+      // TODO : may need to handle error message
+      emitBus(EventType.USER_LOGIN__EXPIRE)
+          // TODO : remove logout, should use event bus
+        logout()
+    }
     if(error.response.status >= 500) {
       return Promise.reject(error);
     }
@@ -31,7 +37,6 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
         const refreshToken = localStorage.getItem('refresh_token');
         localStorage.setItem("access_token", refreshToken as string);
 
-        console.log("refresh token", refreshToken)
         const { data } = await axiosInstance.post('/api/auth/nuxeo/token',{}, {
             headers:{
                 Authorization: 'Bearer ' + refreshToken
