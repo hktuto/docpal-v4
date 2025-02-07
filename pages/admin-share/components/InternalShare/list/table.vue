@@ -36,6 +36,10 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
             field:'shareByUserId',
         },
         {
+            title:"table_path",
+            field:'path',
+        },
+        {
             title:"tableHeader_shareTo",
             field:'shareToUserIds',
             formatter: ({ cellValue }) => {
