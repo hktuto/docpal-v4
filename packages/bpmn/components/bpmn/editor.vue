@@ -215,17 +215,19 @@ async function getFormByNode(node: Node){
     const response = await adminApi.api.getRelationQuery({
         processKey: props.processKey,
         userTaskId: node.data.id,
-        versionId: currentVersion.value
+        versionId: props.currentVersionId
     });
+    console.log("getFormByNode", response)
     if(!response || !response.data || response.data.length === 0){
         return {};
     }
     const json = JSON.parse(response.data[0].jsonValue || "{}")
+    console.log("getFormByNode", json)
     return json
 }
 
 async function saveFormByNode(node: Node, json:any){
-    const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
+    const id = node.data ? node.data.id : node.id === 'end' ? 'end' : node.id
     return await adminApi.api.postRelationSave({
         processKey: props.processKey,
         userTaskId: id,
@@ -312,6 +314,7 @@ async function copyForm(node:Node, obj:any) {
 }
 async function pasteForm(node:Node){
     const {form, fields} = copyObj.value
+    console.log("pasteForm", form, fields)
     await saveFormByNode(node, form);
     if(node.id !== 'end') {
         graph.value?.startBatch('update-from-data')
