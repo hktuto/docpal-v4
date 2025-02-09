@@ -8,7 +8,6 @@
 
 import { useEventListener } from '@vueuse/core'
 import {clientApi} from 'api'
-import { clientApi } from 'api'
 type PdfJsOptions = {
     print: boolean,
     loadAnnotations: boolean,
