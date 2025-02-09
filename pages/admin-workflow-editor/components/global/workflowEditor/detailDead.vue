@@ -112,19 +112,24 @@ function openVersionList(){
 
 
 async function promoteToProduction(){
-    loading.value = true
-    const { xml, x6Json } = WorkflowEditorRef.value.getData()
-    const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-    const form:any = new FormData();
-    form.append('jsonValue', JSON.stringify(x6Json))
-    form.append('file', blob, 'workflow.bpmn.xml')
-    const { data:workflowVersionData } = await adminApi.api.getWorkflowVersion({draftId:id, versionNumber:currentVersion}) as any
+    try {
+        loading.value = true
+        const { xml, x6Json } = WorkflowEditorRef.value.getData()
+        const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
+        const form:any = new FormData();
+        form.append('jsonValue', JSON.stringify(x6Json))
+        form.append('file', blob, 'workflow.bpmn.xml')
+        const { data:workflowVersionData } = await adminApi.api.getWorkflowVersion({draftId:id, versionNumber:currentVersion}) as any
 
-    const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
-    routerProvider?.message?.success(t('dpMsg_success'))
-    await getWorkflow()
-    loading.value = false
+        const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
+        await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
+        routerProvider?.message?.success(t('dpMsg_success'))
+        await getWorkflow()
+    } catch (error) {
+        routerProvider?.message?.error(t('commons_error'))
+    } finally {
+        loading.value = false
+    }
 }
 
 

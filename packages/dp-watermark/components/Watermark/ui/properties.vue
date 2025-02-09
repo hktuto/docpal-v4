@@ -4,7 +4,8 @@
   <div class="editFormContainer">
     <div class="header">
       <span class="header__title">{{ $t('admin_watermark_properties')}}</span>
-      <el-popconfirm @confirm="$emit('delete')">
+
+      <el-popconfirm @confirm="$emit('delete')" :title="$t('deleteDocument_msg')">
         <template #reference>
           <div class="listItemDelete" >
             <SvgIcon class="deleteIcon" src="/icons/menu/trash.svg" />

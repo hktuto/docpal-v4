@@ -17,7 +17,6 @@ async function getTemplateVariableList() {
     }
     const {data} = await adminApi.api.getTemplateDocumentRefreshId(props.templateId)
     // const {templateVariable} = await GetTemplateVariablesApi(props.templateId);
-    console.log("getTemplateVariableList", data)
     const varList = [...new Set(JSON.parse(data.templateVariable as any))]
     // check if templateCData is in varList
     const cdata = props.templateCData ? JSON.parse(props.templateCData) : {};

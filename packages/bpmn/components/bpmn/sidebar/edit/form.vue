@@ -15,7 +15,6 @@ const editorProvider = inject(EDITOR_PROVIDER);
 
 if(!graphProvider || !editorProvider) {
     throw createError('provider not found')
-    
 }
 
 function setUpListener(){
@@ -144,6 +143,9 @@ watch(() => node, ()=> {
 
 <template>
     <div class="formComponentContainer">
+        <div class="title">
+            Form Field
+        </div>
         <div class="listContainer">
             <div v-for="(item, index) in formItems" :key="item.attr_id" class="formFieldItem">
                 <div class="header">
