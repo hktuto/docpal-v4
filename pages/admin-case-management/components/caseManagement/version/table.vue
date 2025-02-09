@@ -72,23 +72,11 @@ const { tableConfig , tableEvent, tableRef, reload, qyery } = useVxeTable({
     bodyActions: [
         [
             {
+                code:'edit_version', 
                 name: "edit",
-                children:[
-                    {
-                        code:'edit_version', 
-                        name:"edit.currentTab",
-                        action: ({row}:any) => {
+                action: ({row}:any) => {
                             listProvider.openVersionDetail(row)
                         }
-                    },
-                    {
-                        code:'edit_version_new_tab', 
-                        name:"edit.newTab",
-                        action: ({row}:any) => {
-                            listProvider.openVersionDetail(row)
-                        }
-                    },
-                ]
             },
             {
                 name:'save_as_new_version',

@@ -5,7 +5,7 @@ export default defineAppConfig({
   menu:{
     "admin-document-template": {
       id:"admin-document-template",
-      name: 'GENERATE_TEMPLATE',
+      name: 'document-template',
       label: "adminMenu.template",
       icon: "lucide:file-sliders",
       hoverIcon: "lucide:file-sliders",

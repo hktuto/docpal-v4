@@ -5,7 +5,7 @@ export default defineAppConfig({
   menu:{
     "admin-internal-share":{
       id:"admin-internal-share",
-      name: 'adminMenu.shareInternal',
+      name: 'share-internal',
       label: "adminMenu.shareInternal",
       icon: "lucide:file-symlink",
       hoverIcon: "lucide:file-symlink",

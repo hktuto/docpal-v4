@@ -74,48 +74,18 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     bodyActions: [
         [ 
             {
+                code:'edit_latest_version', 
                 name:"editLatest",
-                children:[
-                    {
-                        code:'edit_latest_version', 
-                        name:"edit.currentTab", 
-                        action: ({row}) => listProvider.openLatestVersion(row)},
-                    {
-                        code:'edit_latest_version_new_tab', 
-                        name:"edit.newTab", 
-                        action: ({row}) => listProvider.openLatestVersion(row, true)
-                    },
-                ]
+                action: ({row}) => listProvider.openLatestVersion(row),
             },
             {
+                code:'edit_production_version', 
                 name:"editProduction",
-                children:[
-                    {
-                        code:'edit_production_version', 
-                        name:"edit.currentTab",
-                        action: ({row}) =>  listProvider.openProductionVersion(row)
-                    },
-                    {
-                        code:'edit_production_new_tab', 
-                        name:"edit.newTab",
-                        action: ({row}) =>  listProvider.openProductionVersion(row, true)
-
-                    },
-                ]
+                action: ({row}) =>  listProvider.openProductionVersion(row)
             },{
+                code:'list_version', 
                 name:"listVersion",
-                children:[
-                    {
-                        code:'list_version', 
-                        name:"list.version",
-                        action:({row}) => listProvider.openVersion(row)
-                    },
-                    {
-                        code:'list_version_new_tab', 
-                        name:"list.newTab",
-                        action:({row}) => listProvider.openVersion(row, true)
-                    },
-                ]
+                action:({row}) => listProvider.openVersion(row)
             }
             
             
