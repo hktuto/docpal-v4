@@ -5,7 +5,7 @@ export default defineAppConfig({
   menu:{
     "admin-log-manage":{
       id:"admin-log-manage",
-      name: 'adminMenu.logManage',
+      name: 'log-manage',
       label: "adminMenu.logManage",
       icon: "lucide:file-symlink",
       hoverIcon: "lucide:file-symlink",

@@ -128,9 +128,6 @@ export default defineAppConfig({
                     name: "admin-audit"
                 },
                 {
-                    name: "admin-docker-log"
-                },
-                {
                     name: 'admin-message-queue'
                 },
                 {
@@ -161,6 +158,9 @@ export default defineAppConfig({
         },
         {
             name:"admin-calendar-setting"
+        },
+        {
+            name: "admin-setting"
         }
         
     ]
