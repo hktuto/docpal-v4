@@ -7,7 +7,6 @@
       @row-dblclick="handleDblclick"
       @pagination-change="handlePaginationChange">
       <template #preSortButton>
-          <!-- {{ $t('msg.confirmWhetherToDeactivate') }} -->
           <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
               inputKey="q"/>
       </template> 
@@ -19,8 +18,6 @@
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-import { 
-  datesFormat } from 'dp-api'
   import { adminApi, clientApi } from 'api'
 const props = withDefaults( defineProps<{
     dates?: any;
@@ -66,10 +63,10 @@ const router = useRouter()
       { id:3, label: 'common_status', prop: 'name', class: 'danger-tag round', showOverflowTooltip: true },
       { id:4, label: 'workflow_assignee', prop: 'assignee' },
       { id:5, label: 'workflow_createDate', prop: 'createDate', 
-          formatList: [ datesFormat('createDate') ]  
+          // formatList: [ datesFormat('createDate') ]  
       },
       { id:6, label: 'workflow_dueDate', prop: 'dueDate', 
-          formatList: [ datesFormat('dueDate') ]  
+          // formatList: [ datesFormat('dueDate') ]  
       }
     ],
     events: ['delete'],

@@ -18,8 +18,8 @@
 </el-card>
 </template>
 <script lang="ts" setup>
-import { getCDInstancePageApi, datesFormat } from 'dp-api'
 import { ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 const props = withDefaults( defineProps<{
     dates?: any;
     setting?: any;
@@ -84,7 +84,7 @@ const router = useRouter()
         state.options.paginationConfig.currentPage = 1
         return
       }
-      const res = await getCDInstancePageApi(instanceId, { ...param, ...state.extraParams })
+      const { dat:res } = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(instanceId, { ...param, ...state.extraParams })
       state.tableData = res.entryList
       state.options.paginationConfig.total = res.totalSize
       state.options.paginationConfig.pageSize = param.pageSize
