@@ -19,7 +19,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import {useEventListener} from '@vueuse/core';
-import { getJsonApi, CreateOfficeFileApi } from 'dp-api'
 const emits = defineEmits([
     'success'
 ])
@@ -30,7 +29,7 @@ const state = reactive({
 })
 const FromRendererRef = ref()
 const MetaFormRef = ref()
-const formJson = getJsonApi('client/newFile.json')
+import formJson from '../form/newFile.vform.json'
 function formChange ({fieldName,newValue,oldValue,formModel}) {
     if(fieldName === 'documentType') MetaFormRef.value.init(newValue)
 }
@@ -57,7 +56,8 @@ async function handleSubmit () {
         }
         data.metaData = JSON.stringify(metaFormData)
         state.loading = true
-        const docId = await CreateOfficeFileApi(data)
+        const { data } = await clientApi.api.postNuxeoDocumentOfficeCreate(data)
+        const docId = data
         if(docId) {
             openFileDetail(docId,{
                 editMode:true,

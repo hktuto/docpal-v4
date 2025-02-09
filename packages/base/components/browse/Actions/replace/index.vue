@@ -10,16 +10,17 @@
 </template>
 
 <script lang="ts" setup>
-import {GetDocumentOCRStatus, replaceFileDocumentApi} from 'dp-api'
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n'
+import { clientApi } from 'api'
 const { t } = useI18n()
 const props = defineProps<{doc:any}>();
 const emits = defineEmits(['success'])
 const BrowseActionsReplaceDialogRef = ref()
 async function handleOpenReplaceDialog(doc:any) {
     // check is the doc OCR status is pending
-    const status = await GetDocumentOCRStatus(doc.id);
+    const { data } = await clientApi.api.getNuxeoDocumentDocumentidOcrState(doc.id)
+    const status = data;
     if(status !== "FINISH") {
         // Need to update user menu
         ElMessage({

@@ -18,7 +18,6 @@
 </template>
 <script lang="ts" setup>
 import { Finished, Select } from '@element-plus/icons-vue'
-import { getCDActivityApi, getCDVActivityApi } from 'dp-api'
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 const props = withDefaults( defineProps<{

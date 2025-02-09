@@ -15,7 +15,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ReplaceFileAiDocumentApi } from 'dp-api'
+import { clientApi } from 'api'
 const emits = defineEmits([
     'update'
 ])
@@ -48,7 +48,7 @@ async function handleConfirm () {
     formData.append('openAiAnalyzeMetadata', form.value.openAiAnalyzeMetadata)
     state.loading = true
     try {
-        const res = await ReplaceFileAiDocumentApi(formData)
+        await clientApi.api.patchNuxeoDocumentReplacefileV2Deprecated(formData)
         state.visible = false
         form.value = {
             fileList: [],

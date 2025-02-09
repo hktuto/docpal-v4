@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { Edit } from '@element-plus/icons-vue'
-import {saveXmlCaseTypeApi} from 'dp-api'
 import { adminApi } from 'api'
 import {newCaseManagementEditor} from "~/utils/caseManagementHelper";
 
@@ -34,7 +33,7 @@ async function save() {
       }
     })
   // await adminApi.api.patchCaseTypesVersionVersionidSave(props.id, formData)
-  // saveXmlCaseTypeApi(props.id, formData)
+
   updateCaseInfo()
 }
 function xmlStringToFile(xmlString, fileName) {
