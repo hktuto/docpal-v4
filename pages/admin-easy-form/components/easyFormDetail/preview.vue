@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import { MenuRouterKey} from '#imports'
 import { ElMessage } from 'element-plus';
-import { routeEasyFormDesigner } from '~/util/routerHelper';
+import {routeEasyFormDesigner} from '~/util/easyFormRouterHelper';
 const props = defineProps(['detail'])
 const routerProvider = inject(MenuRouterKey)
 const { public: { endPoint } } = useRuntimeConfig();
@@ -30,7 +30,8 @@ const state = reactive<any>({
 })
 function handleOpenFormDesign() {
   // router.push(`/easyFormManage/formDesign?id=${props.detail.id}`)
-  routerProvider?.navigateTo(routeEasyFormDesigner(props.detail), false)
+  const newItem = routeEasyFormDesigner(props.detail)
+  routerProvider?.navigateTo(newItem)
 }
 const copy  = (data:any, msg = 'common_copySuccess') => {
     const input = document.createElement('input')
@@ -40,7 +41,7 @@ const copy  = (data:any, msg = 'common_copySuccess') => {
     input.select()
     document.execCommand('Copy')
     document.body.removeChild(input)
-    ElMessage.success(msg as string)
+    routerProvider.message.success(msg as string)
 }
 function handleCopyUrl() {
   const origin = endPoint?.upload
@@ -54,12 +55,21 @@ function handleCopyIframe() {
   copy(iframe, t('dpTip.embedCodeCopied'))
 }
 watch(() => props.detail, (newValue, oldValue) => {
-  if(!!oldValue && newValue.previewStyle === oldValue.previewStyle) return
+  console.log("watch", newValue, oldValue)
+  // if(!!oldValue && newValue.previewStyle === oldValue.previewStyle) return
   if (newValue.previewStyle) {
     state.formJsonLoad = false
-    
-    state.formJson = JSON.parse(newValue.previewStyle)
-    state.formJsonLoad = true
+    nextTick(() => {
+      state.formJson = JSON.parse(newValue.previewStyle)
+      state.formJsonLoad = true
+    })
+  }else{
+    state.formJsonLoad = false
+    // empty form
+    nextTick(() => {
+      state.formJson = JSON.parse(newValue.previewStyle)
+      state.formJsonLoad = true
+    })
   }
 })
 </script>

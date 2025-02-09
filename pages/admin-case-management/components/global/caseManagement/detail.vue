@@ -46,8 +46,11 @@ function handleUpdate(){
 function promoteToProduction() {
 
 }
-function saveAsNewVersion() {
-
+async function saveAsNewVersion() {
+  // console.log("props",props);
+  // TODO : end point is not correct
+  const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
+  // console.log("data", data)
 }
 
 function openVersionList() {
