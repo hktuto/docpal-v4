@@ -27,7 +27,7 @@ async function save() {
   const bslob = xmlStringToFile(data.xml, 'ordercase.cmmn.xml')
   const formData = new FormData()
   formData.append('file', bslob)
-  await adminApi.instance.patch(`/api/docpal/case/types/version/${caseDetailProvider?.currentVersionId}/save`,formData, {
+  await adminApi.instance.patch(`/docpal/case/types/version/${props.caseTypeId}/save`,formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -44,11 +44,11 @@ function xmlStringToFile(xmlString, fileName) {
   return file;
 }
 async function init(){
-
-  const blob = await adminApi.api.getCaseTypesIdDownloadXml(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: caseDetailProvider?.currentVersion },{
+  console.log("xml init")
+  const blob = await adminApi.api.getCaseTypesIdDownloadXml(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: props.currentVersion },{
     format:'blob'
   }) as any
-  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: caseDetailProvider?.currentVersion })
+  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(caseDetailProvider?.caseInfo.value.caseTypeId, { versionNumber: props.currentVersion })
   styleJson = styleJson ? JSON.parse(styleJson) : null
   const cmmnString = await blob.text()
   state.cmmn = editorEl.value.init(cmmnString, styleJson)
