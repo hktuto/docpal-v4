@@ -2,7 +2,7 @@
 export function getActionMaxWidth(actions:TableMenuActions[]):number{
     return actions.reduce((max:number, curr:TableMenuActions) => {
         if(curr.visible === false) return max
-        const itemWidth = curr.name.length * 6 + 24 // 16 is the width of each character
+        const itemWidth = curr.name.length * 6 + 12 // 16 is the width of each character
         if(itemWidth > max) return itemWidth
         return max
     }, 0)
