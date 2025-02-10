@@ -37,7 +37,10 @@
         <el-form-item v-for="(item,index) in form.dataMapping" :key="index"
            :label="getTargetLabel(item.target)">
            <!-- :prop="`dataMapping[${index}].source`" -->
-          <el-select-v2 v-model="item.source" filterable :placeholder="$t('easyform.actionFieldSelect')" :options="sourceList" clearable />
+           <ElSelect v-model="item.source" filterable :placeholder="$t('easyform.actionFieldSelect')"  clearable >
+              <ElOption v-for="option in sourceList" :key="option.value" :label="option.label" :value="option.value" />
+            </ElSelect>
+          <!-- <el-select-v2 v-model="item.source" filterable :placeholder="$t('easyform.actionFieldSelect')" :options="sourceList" clearable /> -->
         </el-form-item>
       </div>
     </template>
@@ -296,8 +299,6 @@ const FormRef = ref()
 }
 // #endregion
 
-onMounted(() => {
-})
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>

@@ -37,7 +37,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-import { GetActiveDocpalTypeApi, ChangeDocpalTypeApi, GetDocDetail, GetDocpalTypeMetaApi, getJsonApi } from 'dp-api'
+import { clientApi } from 'api'
 const props = defineProps<{
     doc: any,
 }>()
@@ -57,10 +57,13 @@ const MetaFormRef = ref()
 async function iconClickHandler(doc:any){
     dialogOpened.value = true
     state.docPath = doc.path 
-    state.doc = await GetDocDetail(doc.id)
-    await GetActiveDocpalTypeApi()
-    
-    state.dispalyMeta = await GetDocpalTypeMetaApi(doc.type || doc.documentType || doc.docpalType)
+    const {data} =  await clientApi.api.postNuxeoDocument({idOrPath:doc.id})
+     state.doc =data
+    // await clientApi.api.getTypesActive()
+    const { data } = await clientApi.api.postTypesMetadatas({
+        idOrPath: doc.type || doc.documentType || doc.docpalType
+    })
+    state.dispalyMeta = data
     await MetaFormRef.value.init(doc.type || doc.documentType || doc.docpalType, {
         isFolder: doc.isFolder
     })
@@ -85,7 +88,7 @@ async function handleSubmit () {
             // idOrPath: `${parentPath}/new Folder${timestamp}`,
         }
         delete params.properties.documentType
-        const res = await ChangeDocpalTypeApi(params)
+        const res = await clientApi.api.patchNuxeoDocumentChangeType(params)
         dialogOpened.value = false
         if (state.doc.id !== route.query.docId) {
             setTimeout(() => {

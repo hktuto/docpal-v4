@@ -11,7 +11,6 @@
 </template>
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
-import { createCaseDashboardPageApi, updateCaseDashboardApi, getJsonApi } from 'dp-api'
 import formJson from './form/dashobard.vform.json'
 import { adminApi } from 'api'
 

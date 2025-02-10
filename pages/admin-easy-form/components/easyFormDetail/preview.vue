@@ -27,22 +27,31 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-import { MenuRouterKey } from "#imports";
-import { ElMessage } from "element-plus";
-import { routeEasyFormDesigner } from "~/util/routerHelper";
-const props = defineProps(["detail"]);
-const routerProvider = inject(MenuRouterKey);
-const {
-  public: { endPoint },
-} = useRuntimeConfig();
-const { t } = useI18n();
+import { MenuRouterKey} from '#imports'
+import { ElMessage } from 'element-plus';
+import {routeEasyFormDesigner} from '~/util/easyFormRouterHelper';
+const props = defineProps(['detail'])
+const routerProvider = inject(MenuRouterKey)
+const { public: { endPoint } } = useRuntimeConfig();
+const { t } = useI18n()
 const state = reactive<any>({
   formJsonLoad: false,
   formJson: {},
 });
 function handleOpenFormDesign() {
   // router.push(`/easyFormManage/formDesign?id=${props.detail.id}`)
-  routerProvider?.navigateTo(routeEasyFormDesigner(props.detail), false);
+  const newItem = routeEasyFormDesigner(props.detail)
+  routerProvider?.navigateTo(newItem)
+}
+const copy  = (data:any, msg = 'common_copySuccess') => {
+    const input = document.createElement('input')
+    document.body.appendChild(input)
+    input.value = data
+    input.focus()
+    input.select()
+    document.execCommand('Copy')
+    document.body.removeChild(input)
+    routerProvider.message.success(msg as string)
 }
 const copy = (data: any, msg = "common_copySuccess") => {
   const input = document.createElement("input");
@@ -65,21 +74,24 @@ function handleCopyIframe() {
   const iframe = `<iframe width=800 height=500 frameborder="no" scrolling="no" allowtransparency="no"  src="${url}"></iframe>`;
   copy(iframe, t("dpTip.embedCodeCopied"));
 }
-watch(
-  () => props.detail,
-  (newValue: any, oldValue) => {
-    console.log(newValue, oldValue);
-
-    if (!!oldValue && newValue.previewStyle === oldValue.previewStyle) return;
-    if (newValue.previewStyle) {
-      state.formJsonLoad = false;
-
-      state.formJson = JSON.parse(newValue.previewStyle);
-      state.formJsonLoad = true;
-    }
-  },
-  {
-    deep: true,
+watch(() => props.detail, (newValue, oldValue) => {
+  console.log("watch", newValue, oldValue)
+  // if(!!oldValue && newValue.previewStyle === oldValue.previewStyle) return
+  if (newValue.previewStyle) {
+    state.formJsonLoad = false
+    nextTick(() => {
+      state.formJson = JSON.parse(newValue.previewStyle)
+      state.formJsonLoad = true
+    })
+  }else{
+    state.formJsonLoad = false
+    // empty form
+    nextTick(() => {
+      state.formJson = JSON.parse(newValue.previewStyle)
+      state.formJsonLoad = true
+    })
+  }, {
+    deep: true
   }
 );
 </script>

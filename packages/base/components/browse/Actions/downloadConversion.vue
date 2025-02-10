@@ -21,8 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-import { getSupportedFormatApi, submitExportRequestApi } from "dp-api"
 import { ElMessage} from 'element-plus'
+import { clientApi } from 'api'
 import * as mime from 'mime-types'
 const props = defineProps<{
     doc?: any,
@@ -50,7 +50,8 @@ const supportedFormatObject = ref<any>({})
             targetFileType: form.value.targetFile.targetFileType,
             fileType: form.value.targetFile.type,
         }
-        const response = await submitExportRequestApi([param])
+        
+        const response = await clientApi.api.postNuxeoConversionSubmitexportrequest([param])
         if (response.result ) {
             ElMessage.success(`${$i18n.t('convert_transferring')}`)
             formRef.value.resetFields()
@@ -64,8 +65,8 @@ const supportedFormatObject = ref<any>({})
         }
     const handleGetSupportedFormat = async() => {
         if (supportedFormatObject.value instanceof Object && Object.keys(supportedFormatObject.value).length !== 0) return
-        const response = await getSupportedFormatApi()
-        supportedFormatObject.value = response
+        const {data} = await clientaApi.api.getNuxeoConversionGetsupportedformat()
+        supportedFormatObject.value = data
     }
     const filterArrObj = (arr,filterField) =>{
         const newArr = arr.reduce((pre,cur) => pre.some(item => item[filterField] === cur[filterField]) ?

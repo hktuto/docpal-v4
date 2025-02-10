@@ -11,7 +11,6 @@
 import { useEventListener } from '@vueuse/core'
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { trashApi, CheckShareInternalApi } from 'dp-api'
 const props = defineProps<{
     doc?: any
 }>()

@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
-import { trashApi, CheckShareInternalApi } from 'dp-api'
+import { clientApi } from 'api'
 const props = defineProps<{
     selectedList: any
 }>()
@@ -30,7 +30,7 @@ async function deleteSelected () {
             position: 'bottom-right'
         });
         const params = props.selectedList.map(item => ({ idOrPath: item.id }))
-        const response = await trashApi(params)
+        await clientApi.api.deleteNuxeoDocumentTrash(params)
         emits('success')
         noti.close()
         ElNotification({
@@ -50,7 +50,7 @@ async function checkAllShareInternal () {
     await Promise.all(pList)
     return msg ? `<span class="color__danger">${msg} ${$i18n.t('msg_isShareInternalFiles')}, </span>` : ''
     async function checkShareInternal (row) {
-        const isShareInternal = await CheckShareInternalApi({
+        const isShareInternal = await clientApi.api.postInternalshareCheckdocumentisinshare({
             documentId: row.id
         })
         if (msg) msg += ','

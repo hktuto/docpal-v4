@@ -57,7 +57,7 @@ async function save() {
   const data = await watermarkDetail.value.save()
   if(!data) return
   const promise = []
-  promise.push(updateWatermarkTemplateDetail(data.update));
+  await updateWatermarkTemplateDetail(data.update)
 
 }
 

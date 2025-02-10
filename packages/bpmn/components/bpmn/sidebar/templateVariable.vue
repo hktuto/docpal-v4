@@ -17,8 +17,7 @@ async function getTemplateVariableList() {
     }
     const {data} = await adminApi.api.getTemplateDocumentRefreshId(props.templateId)
     // const {templateVariable} = await GetTemplateVariablesApi(props.templateId);
-    
-    const varList = [...new Set(JSON.parse(data as any))]
+    const varList = [...new Set(JSON.parse(data.templateVariable as any))]
     // check if templateCData is in varList
     const cdata = props.templateCData ? JSON.parse(props.templateCData) : {};
     variableList.value = varList.reduce((all:any,key:any) => {
@@ -28,6 +27,7 @@ async function getTemplateVariableList() {
         
         return all
     },{})
+    console.log("getTemplateVariableList", variableList.value, data)
 }
 
 function updateData(){

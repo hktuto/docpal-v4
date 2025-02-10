@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import {  } from 'dp-api'
+
 const props = defineProps<{
     doc?: any
 }>()

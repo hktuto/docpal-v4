@@ -358,6 +358,16 @@ export const bpmnElement:BpmnElement = {
                     bgColor = '#0F2037';
                     textColor = '#fff';
                     break;
+                case '${sendWhatsAppMsgDelegate}': 
+                    icon = '/bpmn/icons/whatsapp.svg'
+                    type = "WhatsApp"
+                    color = '#7B61FF';
+                    break;
+                case '${updateDataDelegate}':
+                    icon = '/bpmn/icons/updateData.svg'
+                    type = "Update Data"
+                    color = '#7B61FF';
+                    break;
             }
             return {
                 ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
@@ -500,6 +510,68 @@ export const bpmnElement:BpmnElement = {
                     })
                 })
 
+            },
+            {
+                icon:'bpmn:whatsapp',
+                label: 'WhatsApp',
+                dropData: (id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                        ['attr_flowable:delegateExpression']:'${sendWhatsAppMsgDelegate}',
+                        extensionElements:{
+                            ['flowable:field']:[
+                                {
+                                    attr_name: 'template_name',
+                                    'flowable:string': {
+                                        "__cdata": ""
+                                    }
+                                }
+                            ]
+                        }
+                    }),
+                    label: 'New WhatsApp',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New WhatsApp', {
+                        attr_id:id,
+                        attr_name:'New WhatsApp',
+                        ['attr_flowable:delegateExpression']:'${sendWhatsAppMsgDelegate}',
+                        extensionElements:{
+                            ['flowable:field']:[
+                                {
+                                    attr_name: 'template_name',
+                                    'flowable:string': {
+                                        "__cdata": ""
+                                    }
+                                }
+                            ]
+                        }
+                    })
+                })
+            },
+            {
+                icon:'bpmn:updateData',
+                label: 'Update Data',
+                dropData: (id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                        ['attr_flowable:delegateExpression']:'${updateDataDelegate}',
+                        extensionElements:{
+                            ['flowable:field']:[
+                                
+                            ]
+                        }
+                    }),
+                    label: 'New Update Data',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Update Date', {
+                        attr_id:id,
+                        attr_name:'New Update Date',
+                        ['attr_flowable:delegateExpression']:'${updateDataDelegate}',
+                        extensionElements:{
+                            ['flowable:field']:[
+                                
+                            ]
+                        }
+                    })
+                })
             }
         ],
         newNodeData:(id,label,data) => ({
@@ -524,6 +596,10 @@ export const bpmnElement:BpmnElement = {
                     return 'LazyBpmnContextFiling'
                 case '${conditionValidateDelegate}':
                     return 'LazyBpmnContextCondition'
+                case '${sendWhatsAppMsgDelegate}':
+                    return 'LazyBpmnContextWhatsApp'
+                case '${updateDataDelegate}':
+                    return 'LazyBpmnContextUpdateData'
             }
         },
 

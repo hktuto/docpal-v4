@@ -9,6 +9,8 @@ const { node } = defineProps<{
 <template>
 <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
+    <BpmnSidebarEditAssignee :node="node" />
+    <BpmnSidebarEditCandidateGroup :node="node" />
     <BpmnSidebarEditForm :node="node" />
 </div>
 </template>

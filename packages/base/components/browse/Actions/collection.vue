@@ -18,7 +18,8 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-import { addCollectionApi, createCollectionApi, getJsonApi } from 'dp-api'
+import formJson from './form/addToCollection.vform.json'
+import { clientApi } from 'api'
 const props = defineProps<{
     selectedList?: any,
     doc?: any,
@@ -29,7 +30,6 @@ const state = reactive({
     dialogOpened: false
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('client/addToCollection.json')
 
 function handleClick(doc:any){
     state.dialogOpened = true
@@ -47,7 +47,7 @@ async function handleSubmit(collection) {
             documents: props.selectedList.map(item => ({ idOrPath: item.id })),
             collection
         }
-        await addCollectionApi(param)
+        await clientApi.api.postNuxeoCollectionAdd(param)
         state.dialogOpened = false
         ElMessage.success($i18n.t('dpMsg_success'))
         emits('clearSelected')

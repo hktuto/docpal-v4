@@ -26,7 +26,7 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import { patchDocumentApi, GetDocumentAiAnalyzeApi } from 'dp-api'
+import { clientApi } from 'api'
 import {ElMessage} from 'element-plus'
 const props = defineProps<{
     doc?: any,
@@ -54,7 +54,7 @@ async function openDialog(){
     form.value.path = props.doc.path
     dialogOpened.value = true
     nextTick(async() => {
-        const analysis = await GetDocumentAiAnalyzeApi(state.doc.id)
+        const analysis = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
         state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
         await MetaFormRef.value.init(props.doc.type, {
             aiAnalysis: analysis.metaDatas,
@@ -82,7 +82,7 @@ async function handleSave(){
             state.loading = false
             return
         }
-        await patchDocumentApi({
+        await clientApi.api.patchNuxeoDocument({
             idOrPath: form.value.id,
             name: form.value.name,
             properties: metaFormData,

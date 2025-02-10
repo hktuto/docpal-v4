@@ -10,7 +10,6 @@
 </template>
 <script lang="ts" setup>
 import { Select, CloseBold } from '@element-plus/icons-vue'
-import { getJsonApi, CreateUserApi } from 'dp-api'
 const emits = defineEmits([
     'submit', 'remove'
 ])
@@ -20,7 +19,7 @@ const state = reactive({
     setting: {}
 })
 const FromRendererRef = ref()
-const formJson = getJsonApi('client/updateHold.json')
+import formJson from '../form/updateHold.vform.json'
 async function handleSubmit () {
     const data = await FromRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true

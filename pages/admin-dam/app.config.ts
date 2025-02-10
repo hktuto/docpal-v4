@@ -6,7 +6,7 @@ export default defineAppConfig({
   menu:{
     "admin-dam":{
       id:"admin-dam",
-      name: 'DAM_FILE_CONVERTION',
+      name: 'dam-file-conversion',
       label: "adminMenu.DAM",
       icon: "lucide:file-scan",
       hoverIcon: "lucide:file-scan",

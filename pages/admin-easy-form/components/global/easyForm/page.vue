@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { adminApi } from "api";
 import dayjs from "dayjs";
-import { routeEasyFormDetail } from "~/util/routerHelper";
+import { routeEasyFormDetail } from "~/util/easyFormRouterHelper";
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
