@@ -11,6 +11,7 @@ export default defineNuxtPlugin(nuxtApp => {
     if(window){
         // @ts-ignore
         window.$api = clientApi.instance;
+
         // @ts-ignore
         window.$i18n = nuxtApp.$i18n
         // @ts-ignore

@@ -6,32 +6,12 @@ export async function saveWorkflowFormToNewVersion(xml:string, processKey:string
     if(!xml) {
         throw new Error('Graph is not found')
     }
-    const allFormsID:string[] = []
+    
     // convert xml to json 
     const allForm = await getAllFormFromXML(xml, processKey, oldVersion);
+    console.log("allForm", allForm)
     await batchSaveForm(allForm, processKey, newVersion)
-    // loop all form and get form object and save to new version
-    // allFormsID.forEach(async(formId) => {
-    //     const response = await adminApi.api.getRelationQuery({
-    //         processKey: processKey,
-    //         userTaskId: formId,
-    //         versionId: oldVersion
-    //     });
-    //     console.log(response)
-    //     let json;
-    //     if(!response || !response.data || response.data.length === 0){
-    //         json = "{}"
-    //     }else{
-    //         json = response.data[0].jsonValue
-    //     }
-    //     await adminApi.api.postRelationSave({
-    //         processKey: processKey,
-    //         userTaskId: formId,
-    //         jsonValue: json,
-    //         versionId: newVersion
-    //     })
-    // })
-    // console.log("allFormsID", allFormsID)
+    console.log("xml", processKey, oldVersion, newVersion)
 
 }
 type BatchForms = {formId:string, json:string}[]
@@ -50,8 +30,7 @@ export async function getAllFormFromXML(xml:string, processKey:string, version:s
     json.definitions.process.endEvent.forEach((endEvent:any) => {
         allFormsID.push(endEvent.attr_id)
     })
-
-    allFormsID.forEach(async(formId) => {
+    for await (const formId of allFormsID) {
         const response = await adminApi.api.getRelationQuery({
             processKey: processKey,
             userTaskId: formId,
@@ -66,19 +45,40 @@ export async function getAllFormFromXML(xml:string, processKey:string, version:s
         result.push({
             formId,
             json
-        })
-    })
+        })  
+    }
+    // allFormsID.forEach(async(formId) => {
+    //     const response = await adminApi.api.getRelationQuery({
+    //         processKey: processKey,
+    //         userTaskId: formId,
+    //         versionId: version
+    //     });
+    //     let json = "";
+    //     if(!response || !response.data || response.data.length === 0){
+    //         json = "{}"
+    //     }else{
+    //         json = response.data[0].jsonValue || ""
+    //     }
+    //     result.push({
+    //         formId,
+    //         json
+    //     })
+    // })
+    console.log("result", result.length, result)
     return result
 
 }
 
 export async function batchSaveForm(forms:BatchForms, processKey:string, version:string) {
     forms.forEach(async(form) => {
-        await adminApi.api.postRelationSave({
+        
+
+        const res = await adminApi.api.postRelationSave({
             processKey: processKey,
             userTaskId: form.formId,
             jsonValue: form.json,
             versionId: version
         })
+        console.log("forms", form.formId, processKey, version, res)
     })
 }
