@@ -53,6 +53,16 @@ async function generate(){
                             parser: "typescript",
                         },
                         hooks:{
+                            onCreateRoute:(routeData) => {
+                                // if routeData.route start with /api, remove it
+                                // console.log("onCreateRoute", routeData.request.path)
+                                // @ts-ignore
+                                if(routeData.request.path && routeData.request.path.startsWith('/api')){
+                                    // @ts-ignore
+                                    routeData.request.path = routeData.request.path.replace('/api','')
+                                }
+                                return routeData
+                            },
                             onCreateRouteName:(routeNameInfo, rawRouteInfo) => {
                                 return routeNameInfo
                             },

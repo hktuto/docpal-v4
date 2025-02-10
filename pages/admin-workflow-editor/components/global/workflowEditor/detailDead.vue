@@ -120,9 +120,9 @@ async function promoteToProduction(){
         form.append('jsonValue', JSON.stringify(x6Json))
         form.append('file', blob, 'workflow.bpmn.xml')
         const { data:workflowVersionData } = await adminApi.api.getWorkflowVersion({draftId:id, versionNumber:currentVersion}) as any
-
+        console.log("xml", xml, workflowVersionData)
         const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id,{requestDTO:{}},form) as any
-        await saveWorkflowFormToNewVersion(xml, currentVersion, data.latestVersion, data.latestVersion)
+       
         routerProvider?.message?.success(t('dpMsg_success'))
         await getWorkflow()
     } catch (error) {
@@ -142,7 +142,8 @@ async function saveAsNewVersion(){
     form.append('file', blob, 'workflow.bpmn.xml')
     // save all forms to new version
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
-    await saveWorkflowFormToNewVersion(xml, workflowData.value.key, currentVersion, data.versionNumber)
+
+    await saveWorkflowFormToNewVersion(xml, workflowData.value.key, versionId, data.id)
 
     routerProvider?.message.success(t('dpMsg_success'))
 
