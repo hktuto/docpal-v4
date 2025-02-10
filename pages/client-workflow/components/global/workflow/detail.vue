@@ -81,7 +81,7 @@ async function handleFormDataGet() {
   switch (workflowType) {
     case state.processState.completeTask:
       formData = state.taskDetail.processVariables;
-      formJson = await formJsonGet("complete", state.taskDetail.processDefinitionKey);
+      formJson = await formJsonGet("end", state.taskDetail.processDefinitionKey);
 
       vFormRef.value.setForm(formJson, formData);
       break;
