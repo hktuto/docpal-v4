@@ -69,7 +69,7 @@ function handleAction(command: string, row: EasyFormResult) {
   }
 }
 async function handleActive(row: EasyFormResult) {
-  console.log(row);
+  console.log("row", row);
   
   try {
     const action = await adminApi.api.postFormDesignSaveFormresultAppend({

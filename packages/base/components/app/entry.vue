@@ -11,7 +11,8 @@ async function getTabsFromServer() {
     // check if new tab
     const route = useRoute()
 
-    const storageTabs = localStorage.getItem('app-tab')
+    let storageTabs = localStorage.getItem('app-tab')
+    // storageTabs = null
     if(storageTabs) {
         const newLayout = JSON.parse(storageTabs);
          // TODO : check if storageTabs is array, and handle restore other tabs

@@ -14,7 +14,7 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElNotification } from 'element-plus'
-import { getJsonApi } from 'dp-api'
+
 import anime from 'animejs'
 const router = useRouter()
 const route = useRoute()

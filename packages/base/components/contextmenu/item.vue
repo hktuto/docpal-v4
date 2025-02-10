@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import ContextmenuList from './list.vue'
+const { current } = useMagicKeys()
 const {item, rowData, selected} = defineProps<{
     item:TableMenuActions,
     menuItemHeight:number,
@@ -25,6 +26,7 @@ watch(isMouseOver, (newVal) => {
         listProvider?.selectItem()
     }
 })
+
 
 function openSubMenu(){
     listProvider?.selectItem(item)

@@ -25,7 +25,6 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import * as XLSX from 'xlsx'
-import { GetAvailableLanguage, GetLanguageApi, SetLanguageApi } from 'dp-api'
 type TranslationSection = "client" | "admin" | "meta"
 import { adminApi} from 'api'
 const opened = ref(false);

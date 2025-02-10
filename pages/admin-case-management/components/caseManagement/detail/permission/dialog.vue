@@ -56,7 +56,7 @@
 const inputRule = { required: true, message: $i18n.t('tip.input'), trigger: 'blur' }
 const selectRule = { required: true, message: $i18n.t('el.select.placeholder'), trigger: 'change' }
 import {ElMessage} from 'element-plus'
-import { getJsonApi, GetGroupListApi } from 'dp-api'
+import { clientApi } from 'api'
 const emits = defineEmits([
     'refresh', 'delete'
 ])
@@ -267,8 +267,8 @@ function getConditionList(fieldId: string) {
   }
 }
 async function getGroup() {
-  const res = await GetGroupListApi()
-  state.groupList = res.map(item => ({
+  const {data:groupList} = await clientApi.api.postNuxeoIdentityGroups()
+  state.groupList = groupList.sort((a, b) => a.name.localeCompare(b.name)).map(item => ({
     label: item.name,
     value: item.id
   }))

@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 
 import { useEventListener } from '@vueuse/core'
-import { GetDocDetail } from 'dp-api';
-
+import { clientApi } from 'api'
 const dialogOpend = ref(false)
 const router = useRouter()
 
 async function handleWatermark(doc: any) {
     let mimeType:any = '';
     if(!doc.properties){
-        const data = await GetDocDetail(doc.id);
+        const data = await clientApi.api.postNuxeoDocument({idOrPath:doc.id});
          mimeType = getMimeTypeFromDocument(data)
     }else{
         mimeType = getMimeTypeFromDocument(doc)

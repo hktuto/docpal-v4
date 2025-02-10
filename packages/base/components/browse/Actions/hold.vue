@@ -68,7 +68,7 @@
 
 <script lang="ts" setup>
 import { ClickOutside as vClickOutside } from 'element-plus'
-import { AddHoldApi,GetDocPermission, GetHoldPoliciesApi, SetDocumentHoldApi, DeleteHoldApi, deepCopy } from 'dp-api'
+import { clientApi } from 'api'
 const status = ref('D')
 const props = defineProps<{
     doc?: any,
@@ -105,7 +105,7 @@ const userId:string = useUserId().value
     }
     async function addHold (params, cb?) {
         params.documentId = props.doc.id
-        const res = await AddHoldApi(params)
+        const res = await clientApi.api.postPolicyDocumentsAdd(params)
         await refreshHold()
         if(cb) cb()
     }
@@ -122,7 +122,7 @@ const userId:string = useUserId().value
     }
     async function removeHold (params?, cb?) {
         params.id = hold.value.id
-        const res = await DeleteHoldApi(params)
+        const res = await clientApi.api.postPolicyDocumentsRemove(params)
         if(res) await refreshHold()
         if(cb) cb()
     }
@@ -134,20 +134,23 @@ const userId:string = useUserId().value
     }
     async function handelAudit (approved: boolean) {
         state.loading = true
-        const result = await SetDocumentHoldApi(hold.value.id, approved)
+        const result = await clientApi.api.patchPolicyDocumentsIdStatusStatus(hold.value.id, approved)
         if (result) await refreshHold()
         state.dVisible = false
         state.loading = false
     }
 // #endregion
 async function refreshHold () {
-    let _permission:any = await GetDocPermission(props.doc.id, userId, true)
+    let {data: _permission}:any = await clientApi.api.getNuxeoDocumentAclPermission({
+        docId: props.doc.id,
+        userId: userId,
+    })
     if(!_permission) _permission = {}
     if(!_permission.hold) _permission.hold = {}
     props.permission.hold = _permission.hold
 }
 async function getHoldPolicies () {
-    state.holdList = await GetHoldPoliciesApi()
+    state.holdList = await clientApi.api.getPolicyHolds()
 }
 
 onMounted(() => {

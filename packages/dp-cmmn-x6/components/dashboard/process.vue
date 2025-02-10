@@ -26,7 +26,7 @@
 </template>
 <script lang="ts" setup>
 import { watchDebounced } from '@vueuse/core'
-import { getCDProcessApi, getCDVProcessApi } from 'dp-api'
+import { adminApi } from 'api'
 const props = withDefaults( defineProps<{
     dates?: any;
     setting?: any;
@@ -94,9 +94,11 @@ async function getCDProcess() {
     const id = route.query.instanceId
     const caseTypeId = route.query.caseId
     if(id) {
-      state.data = await getCDProcessApi(id)
+      const {data} = await adminApi.api.getCaseDashboardInstanceCaseidStages(id)
+      state.data = data
     } else if(caseTypeId) {
-      state.data = await getCDVProcessApi(caseTypeId)
+      const {data: caseTypeData } = await adminApi.api.getCaseDashboardCasetypeCasetypeidStages(caseTypeId)
+      state.data = caseTypeData
     }
   } catch (error) {
     state.data = []

@@ -254,7 +254,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                         return item
                     })
                 })
-                console.log("actions", options)
                 const evtParams:TABLE_CONTEXT_PARAMS = {
                     row,
                     column,

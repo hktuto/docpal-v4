@@ -2,6 +2,7 @@
 import type {TabItem, RouterParams} from '#imports';
 import {ElMessage, ElNotification } from 'element-plus';
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
+const { current } = useMagicKeys()
 import { use } from 'vxe-table';
 const {allComponents} = useTabsManager()
 
@@ -24,7 +25,7 @@ const isFullscreen = computed(() => {
 
 
 function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
-    if(openInNewTab){
+    if(current.has('meta') || current.has('ctrl') || openInNewTab){
         tabManager?.openTab(param)
         return;
     }
@@ -102,7 +103,6 @@ function updateTabName(newName:string){
     allComponents.value.forEach( item => {
         if(item.id === tab.value.id){
             item.label = newName
-            item.name = newName
         }
     })
    
