@@ -9,6 +9,11 @@ function changeLanguage(langCode:string) {
     setLocale(langCode);
 }
 
+function openHelp(){
+    const url = "https://docpal-admin-guide.vercel.app/"
+    window.open(url, "_blank");
+}
+
 function openSetting(){
 
     emitBus(EventType.OPEN_SETTINGS, "");
@@ -31,9 +36,7 @@ function openSetting(){
                     <ElDropdownItem @click="openSetting">{{  $t('adminMenu.setting') }}</ElDropdownItem>
                     <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
                     <Language />
-                    <template v-if="config.public.NODE_ENV === 'development'">
-                        <!-- <Language /> -->
-                    </template>
+                    <ElDropdownItem @click="openHelp">Help</ElDropdownItem>
                     <ElDivider />
                     <ElDropdownItem v-for="lang in locales" :key="lang.code" 
                         :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
