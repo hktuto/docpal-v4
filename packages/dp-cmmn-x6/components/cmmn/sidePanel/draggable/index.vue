@@ -31,7 +31,7 @@
 
           <div class="action flex-x-center" >
             <el-icon v-if="showEdit" class="cursorPointer el-icon--left" @click="handleOpenDialog(element)"><Edit /></el-icon>
-            <el-icon class="cursorPointer" @click="removeAt(element, index)"><Delete /></el-icon>
+            <el-icon class="cursorPointer" v-if="!element.noDelete" @click="removeAt(element, index)"><Delete /></el-icon>
           </div>
         </li>
       </template>
