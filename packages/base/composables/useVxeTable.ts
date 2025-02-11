@@ -100,7 +100,12 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             }
         },
         class: params.id,
-        columns: columns || [],
+        columns: (columns || []).map(col => {
+            if(!col.width && !col.minWidth) {
+                col.minWidth = '200px'
+            }
+            return col
+        }),
         columnConfig: {
             resizable: true,
             useKey: true,
@@ -188,7 +193,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         },
         data:[],
     }, ...optionalConfig} as Config)
-
+    console.log("tableConfig", tableConfig)
     const tableEvent = reactive<VxeGridListeners>(optionalEvent)
 
 

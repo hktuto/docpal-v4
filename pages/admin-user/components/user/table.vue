@@ -112,7 +112,7 @@ const { tableConfig, tableEvent , tableRef, reload, cleanSelectedRows } = useVxe
     columns:  [
         { field: 'username', title: 'user_username', fixed: 'left',type: 'checkbox' },
         { field: 'email', title: 'user_email',},
-        { field: 'group', title: 'user_groupName',  
+        { field: 'groupDTOList', title: 'user_groupName',  
           slots:{
             default:'group',
           }
@@ -153,8 +153,17 @@ const { tableConfig, tableEvent , tableRef, reload, cleanSelectedRows } = useVxe
       },
       tooltipConfig:{
         contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }:any) => {
-            console.log(items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event)
-            return 'test'
+            const key = column.property
+            const value = row[key]
+            if(key === 'groupDTOList') {
+                return value.map(item => item.name).join(', ')
+            }
+            if(typeof value === 'string') { 
+                return value
+            }
+            if(Array.isArray(value)) {  
+                return value.join(',')
+            }
         }
       }
     },
