@@ -6,8 +6,8 @@ const props = defineProps<{
     caseTypeId: string,
     name: string,
     currentVersion: string,
-
 }>()
+const { caseTypeId, name, currentVersion } = toRefs(props)
 
 const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
@@ -51,6 +51,14 @@ async function saveAsNewVersion() {
   // TODO : end point is not correct
   const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
   // console.log("data", data)
+  routerProvider?.updateProps({
+    caseTypeId: data.id,
+    currentVersion: data.versionNumber,
+  })
+  console.log("new props", props)
+  nextTick(() => {
+    init();
+  })
 }
 
 function openVersionList() {
@@ -75,8 +83,9 @@ function openEditor(){
   routerProvider?.navigateTo(newItm)
 }
 const production = ref(false);
-onActivated(async()=> {
-    loading.value = true
+
+async function init(){
+  loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
     const { data: removeCaseTypeInfo } = await adminApi.api.getCaseTypesId(data.caseTypeId) as any
     
@@ -85,7 +94,10 @@ onActivated(async()=> {
     production.value = caseInfo.value.production
     // TODO : no way to get case name in version, use another api to get, and update tab name
     loading.value = false
-    routerProvider?.updateTabName(props.name)
+    routerProvider?.updateTabName(props.name + ` - (${props.currentVersion})`)
+}
+onActivated(async()=> {
+  init()
 })
 
 
@@ -94,8 +106,8 @@ onActivated(async()=> {
 provide(CaseManagementDetailProviderKey, {
   caseData,
   caseInfo,
-  currentVersionId: props.caseTypeId,
-  currentVersion: props.currentVersion,
+  currentVersionId: caseTypeId,
+  currentVersion: currentVersion,
 })
 
 

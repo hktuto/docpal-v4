@@ -45,16 +45,7 @@ function handleOpenFormDesign() {
   const newItem = routeEasyFormDesigner(props.detail);
   routerProvider?.navigateTo(newItem);
 }
-const copy = (data: any, msg = "common_copySuccess") => {
-  const input = document.createElement("input");
-  document.body.appendChild(input);
-  input.value = data;
-  input.focus();
-  input.select();
-  document.execCommand("Copy");
-  document.body.removeChild(input);
-  routerProvider.message.success(msg as string);
-};
+
 const copy = (data: any, msg = "common_copySuccess") => {
   const input = document.createElement("input");
   document.body.appendChild(input);

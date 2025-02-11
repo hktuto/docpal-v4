@@ -19,25 +19,30 @@ const contextMenuOpenHandler = (args:TABLE_CONTEXT_PARAMS)=>{
     actions.value = args.options
     visible.value = true
     rowData.value = args.row
-    const {clientX,layerX, layerY,clientY} = args.event
-    const x = clientX
-    const y = clientY
-    console.log("contextMenuOpenHandler", x, y)
-    const maxWidth = actions.value.reduce((total:number, curr:TableMenuActions[]) => {
-       return  total += getActionMaxWidth(curr)
-    },0);
-    const left = x + maxWidth > window.innerWidth ? x - maxWidth : x
-    // calculate the total height of actions
-    const totoalActionHeight = getRootActionMaxHeight(actions.value, menuItemHeight)
-    // check if the top position is out of the screen
-    const top = y + totoalActionHeight > window.innerHeight ? y - totoalActionHeight : y
+    // container may not be ready to calculate the width
+    nextTick(() => {
 
-    position.value = {
-        x,
-        y,
-        left,
-        top
-    }
+    
+        const {clientX,layerX, layerY,clientY} = args.event
+        const x = clientX
+        const y = clientY
+        
+        const el = contextmenuRef.value
+        const maxWidth = el?.getBoundingClientRect().width || 0;
+        const left = x + maxWidth > window.innerWidth ? x - maxWidth : x
+        // calculate the total height of actions
+        const totoalActionHeight = getRootActionMaxHeight(actions.value, menuItemHeight)
+        // check if the top position is out of the screen
+        const top = y + totoalActionHeight > window.innerHeight ? y - totoalActionHeight : y
+
+        position.value = {
+            x,
+            y,
+            left,
+            top
+        }
+    })
+    
     
 }
 

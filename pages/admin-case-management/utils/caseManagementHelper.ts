@@ -24,8 +24,8 @@ export const CaseManagementVersionProviderKey : InjectionKey<CaseManagementVersi
 export interface CaseManagementDetailProvider {
     caseData: any,
     caseInfo: Ref<any>,
-    currentVersionId: string,
-    currentVersion: string
+    currentVersionId: Ref<string>,
+    currentVersion: Ref<string>
 }
 
 export const CaseManagementDetailProviderKey : InjectionKey<CaseManagementDetailProvider> = Symbol('caseManagementDetailProvider')

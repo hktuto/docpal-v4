@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import ContextmenuList from './list.vue'
+import {useEventBus} from 'eventbus'
 const { current } = useMagicKeys()
 const {item, rowData, selected} = defineProps<{
     item:TableMenuActions,
