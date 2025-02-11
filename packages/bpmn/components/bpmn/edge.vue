@@ -52,61 +52,19 @@ function setupEdge(){
         if(editorProvider?.readonly.value) return;
         cell.removeTools()
     })
-
     graphProvider?.graph.value?.on("edge:connected", ({edge, isNew}) => {
         if(editorProvider?.readonly.value) return;
         const source = edge.getSourceCell()
         if(!source) return;
         // #region exclusiveGateway 
-        const allNodeConnected = graphProvider?.graph.value?.getConnectedEdges(source)
+        const allNodeConnected = graphProvider?.graph.value?.getConnectedEdges(source).filter((connectedEdge:any) => {
+            // console.log(connectedEdge.source.cell, source.id)
+            return connectedEdge.source.cell === source.id
+        })
         if(!allNodeConnected || allNodeConnected.length === 0) {
                 return;
         }
-        if(source.data.type === 'exclusiveGateway') {
-            let newData = {...edge.data};
-            let label = "Approved";
-            allNodeConnected.forEach( connectedEdge => {
-                if(connectedEdge.id !== edge.id && connectedEdge.data && connectedEdge.data?.data?.conditionExpression &&
-                    connectedEdge.data?.data?.conditionExpression?.__cdata) {
 
-                    const approveField = connectedEdge.data.data.conditionExpression.__cdata.replace('${','').replace('}','').replace('!','')
-                    
-                    if(connectedEdge.data.data.conditionExpression.__cdata.includes('!')) {
-                        newData.data = {
-                            conditionExpression:{
-                                    ['attr_xsi:type']:"tFormalExpression",
-                                    __cdata: '${' + approveField + '}'
-                                }
-                        }
-                        
-                    }else{
-                        newData.data = {
-                            conditionExpression:{
-                                    ['attr_xsi:type']:"tFormalExpression",
-                                    __cdata: '${!' + approveField + '}'
-                                }
-                        }
-                        label = 'Rejected';
-                    }
-                    
-                }
-            })
-            
-            if(!edge.data || !edge.data.data) {
-                newData.data = {
-                    conditionExpression:{
-                        ['attr_xsi:type']:"tFormalExpression",
-                        __cdata: '${approve}'
-                    }
-                }
-            }
-            graphProvider.graph.value?.startBatch('updateEdge')
-            edge.setRouter('manhattan')
-            edge.setData(newData, {overwrite:true, deep:true})
-            edge.setLabels(label)
-            graphProvider.graph.value?.stopBatch('updateEdge')
-            return
-        }
         // #endregion
         if(source.data.type === 'serviceTask' && source.data.data['attr_flowable:delegateExpression'] === '${conditionValidateDelegate}')  {
             let newData = {...edge.data};
@@ -114,10 +72,17 @@ function setupEdge(){
             
             // 如果是新的連線，先看看 allNodeConnected 有沒有 conditionValidateDelegate
             if(isNew){
-                const hasApprovEdge = allNodeConnected.find((connectedEdge:any) => 
-                    connectedEdge.data?.data?.conditionExpression?.__cdata && 
-                    connectedEdge.data?.data?.conditionExpression?.__cdata === '${conditionResult}');
-                console.log("conditionValidateDelegate isNew", isNew, hasApprovEdge, allNodeConnected);
+                if(allNodeConnected.length > 2){
+                    console.log("allNodeConnected", allNodeConnected)
+                    // remove edge
+                    graphProvider.graph.value?.removeEdge(edge.id)
+                    return
+                }
+                const hasApprovEdge = allNodeConnected.find((connectedEdge:any) => {
+                    return connectedEdge.data?.data?.conditionExpression?.__cdata && 
+                    connectedEdge.data?.data?.conditionExpression?.__cdata === '${conditionResult}'
+                });
+                
                     newData.data = {
                         conditionExpression:{
                             ['attr_xsi:type']:"tFormalExpression",
@@ -128,15 +93,20 @@ function setupEdge(){
             }
             
             
-            console.log("newData", newData);
             graphProvider.graph.value?.startBatch('updateEdge')
             edge.setRouter('manhattan')
             edge.setData(newData, {overwrite:true, deep:true})
-            edge.setLabels(label)
+            if(isNew) {
+                edge.setLabels(label)
+            }
             graphProvider.graph.value?.stopBatch('updateEdge')
             return
         }
-
+        if(allNodeConnected.length >= 1){
+                    // remove edge
+                    graphProvider.graph.value?.removeEdge(edge.id)
+                    return
+                }
         // other edge
         if(isNew){
             console.log("new edge", edge);

@@ -118,7 +118,6 @@ provide(WorkflowEditorListProviderKey,{
 
 const ResponsiveFilterRef = ref()
 const filter = ref<any>({
-    publishStatus: 'A'
 });
 function handleFilterFormChange(formModel:any) {
     filter.value = formModel;
