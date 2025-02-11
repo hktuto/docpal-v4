@@ -4,6 +4,8 @@ import { dirname, join } from 'path'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
 
+
+
 const config = {
   compatibilityDate: '2024-04-03',
   devtools: { 
@@ -117,6 +119,7 @@ const config = {
     }    
   },
 } as any
+
 
 
 export default defineNuxtConfig(config)
