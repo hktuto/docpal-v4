@@ -43,21 +43,5 @@ export default defineNuxtConfig({
     public:{
       plarform:'admin'
     }
-  },
-  nitro:{
-    devProxy:{
-      '/public-api/report/v1/api':{
-        target: process.env.DASHBOARD_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-      '/api':{
-        target: process.env.ADMIN_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-      
-    }
-  }
-  
+  },  
 })
