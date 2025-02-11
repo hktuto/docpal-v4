@@ -59,7 +59,7 @@ provide(userProviderKey, {
   },
 
   BatchUsersToGroupsApi: (params: any) => {
-    return adminApi.api.postNuxeoIdentityGroupBatchAddUsers(params);
+    return adminApi.api.postNuxeoIdentityUsersBatchAddGroups(params);
   },
   GetGroupListApi: async () => {
     const res = await adminApi.api.postNuxeoIdentityGroups();

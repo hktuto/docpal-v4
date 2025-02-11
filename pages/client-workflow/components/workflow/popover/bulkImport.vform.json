@@ -82,7 +82,7 @@
         "labelIconPosition": "rear",
         "labelTooltip": null,
         "onCreated": "",
-        "onMounted": "$api.get('/api/docpal/workflow/queryDocumentTypeProFileSettings').then(res => {\n  console.log({res})\n   res = res.data.data\n    console.log({res})\n  const reponse = []\n  Object.keys(res).forEach((key) => {\n    const item = ({ value: key, label: key, options: [] })\n    res[key].forEach((childItem) => {\n      item.options.push({\n        value: key + ':' +childItem.profileID,\n        label: childItem.profileName\n      })\n    })\n    reponse.push(item)\n    console.log({item})\n    console.log({reponse})\n  })\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
+        "onMounted": "$api.get('/docpal/workflow/queryDocumentTypeProFileSettings').then(res => {\n  console.log({res})\n   res = res.data.data\n    console.log({res})\n  const reponse = []\n  Object.keys(res).forEach((key) => {\n    const item = ({ value: key, label: key, options: [] })\n    res[key].forEach((childItem) => {\n      item.options.push({\n        value: key + ':' +childItem.profileID,\n        label: childItem.profileName\n      })\n    })\n    reponse.push(item)\n    console.log({item})\n    console.log({reponse})\n  })\n  this.loadOptions(reponse)\n}).catch(err => {\n})",
         "onRemoteQuery": "",
         "onChange": "",
         "onFocus": "",

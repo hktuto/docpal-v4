@@ -8,6 +8,8 @@ interface WorkflowEditorListProvider {
     openLastestVersion:(data:any, openInNewTab?:boolean) => void
     openVersions:(data:any, openInNewTab?:boolean) => void
     saveAsNewWorkflow:(data:any) => void
+    deleteWorkflow:(data:any) => void
+    activeWorkflow:(data:any) => void
     actionPermission:(params:PermissionMethodParams) => {disabled:boolean, visible:boolean}
     createNewWorkflow:() => void
 }

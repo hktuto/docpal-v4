@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     "../../pages/client-master-table",
     "../../pages/client-folder-cabinet",
     "../../pages/client-workflow",
-    "../../packages/dp-dashboard"
+    "../../packages/dp-dashboard",
+    "../../pages/client-share"
   ],
   features:{
     inlineStyles: true,

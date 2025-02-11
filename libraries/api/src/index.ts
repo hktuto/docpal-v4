@@ -5,8 +5,8 @@ import {Public} from './generate/public'
 // import {logout} from '~/utils/auth'
 
 
-let clientBaseURL = '/';
-let adminBaseURL = '/';
+let clientBaseURL = '/api';
+let adminBaseURL = '/api';
 let publicBaseURL = '/public-api/report/v1/'
 // if(process.env && process.env.NODE_ENV === "development") {
 //     clientBaseURL = '/';

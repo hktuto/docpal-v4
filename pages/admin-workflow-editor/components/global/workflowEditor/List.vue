@@ -63,11 +63,38 @@ function createNewWorkflow(){
     newDialogRef.value.handleOpen()
 }
 
-function actionPermission({row, rowIndex, code}:PermissionMethodParams){
+function actionPermission({row, rowIndex, code}:any){
+    if(code === 'delete') {
+        return {
+            visible: row.status === 'A',
+            disabled: false
+        }
+    }
+    // TODO : active workflow api has bug
+    if(code === 'active') {
+        return {
+            visible: row.status === 'P',
+            disabled: false
+        }
+    }
     return {
         visible: true,
         disabled: false
     }
+}
+
+async function deleteWorkflow(row:any){
+    const {data} = await adminApi.api.deleteWorkflowProcessDefinitionRemoveDraftid(row.id)
+    if(data ){
+        routerProvider?.message?.success(t('dpMsg_success'))
+        reload()
+    }
+}
+
+async function activeWorkflow(row:any){
+    await adminApi.api.postWorkflowProcessDefinitionActiveDraftid(row.id)
+    routerProvider?.message?.success(t('dpMsg_success'))
+    reload()
 }
 
 provide(WorkflowEditorListProviderKey,{
@@ -77,7 +104,51 @@ provide(WorkflowEditorListProviderKey,{
     openVersions,
     createNewWorkflow,
     actionPermission,
-    getListApi: adminApi.api.postWorkflowProcessDefinitionDraftPage
+    deleteWorkflow,
+    activeWorkflow,
+    getListApi: (params) => {
+        Object.keys(filter.value).forEach(key => {
+            if(filter.value[key]) {
+                params[key] = filter.value[key]
+            }
+        })
+        return adminApi.api.postWorkflowProcessDefinitionDraftPage(params)
+    } 
+})
+
+const ResponsiveFilterRef = ref()
+const filter = ref<any>({
+    publishStatus: 'A'
+});
+function handleFilterFormChange(formModel:any) {
+    filter.value = formModel;
+    reload()
+}
+async function getFilter() {
+  const data = [
+    {
+        key: "status", label: "common_status", type: "string", isMultiple: false,
+        options: [
+            { label: 'active', value: 'A' },
+            { label: 'inactive', value: 'P' }
+        ]
+    },
+    {
+        key:"publishStatus", label: "workflow_published", type: "string", isMultiple: false,
+        options: [
+            { label: 'published', value: 'A' },
+            { label: 'unpublished', value: 'D' }
+        ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+  nextTick(() => {
+    ResponsiveFilterRef.value.setValue('publishStatus', 'A');
+  })
+}
+
+onMounted(() => {
+    getFilter()
 })
 
 function reload(){
@@ -92,7 +163,17 @@ function reload(){
 <template>
     <div class="pageContainer">
         <!-- <TablePage :config="tableConfig" /> -->
-        <LazyWorkflowEditorWorkflowListTable ref="tableRef" />
+        <LazyWorkflowEditorWorkflowListTable ref="tableRef" >
+            <template #toolbar_buttons>
+                <div class="actions">
+                    <div class="filter">
+
+                        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"  />
+                    </div>
+                <ElButton type="primary" @click="createNewWorkflow">Add New Workflow</ElButton>
+                </div>
+            </template>
+        </LazyWorkflowEditorWorkflowListTable>
         <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="reload" />
         <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion" :data="newWorkflowDialogData" @close="reload" />
     </div>
@@ -104,5 +185,10 @@ function reload(){
     height: 100%;
     overflow: hidden;
     position: relative;
+}
+.actions{
+    width:100%;
+    display: grid;
+    grid-template-columns: 1fr min-content;
 }
 </style>
