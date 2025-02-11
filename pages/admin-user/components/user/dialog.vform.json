@@ -29,8 +29,8 @@
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
-        "minLength": 2,
-        "maxLength": 64,
+        "minLength": 3,
+        "maxLength": 200,
         "showWordLimit": false,
         "prefixIcon": "",
         "suffixIcon": "",
@@ -43,7 +43,7 @@
         "onChange": "const userIdRef = this.getWidgetRef('userId')\nuserIdRef.setValue(value)",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "if(!value) {\r  callback();  //pass\r  return\r}\rif(!/^[A-Za-z\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
+        "onValidate": "if(!value) {\r  callback();  //pass\r  return\r}\rif(!/^[a-zA-Z][a-zA-Z0-9_-]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input91235"
@@ -125,7 +125,7 @@
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
-        "minLength": null,
+        "minLength": 1,
         "maxLength": 64,
         "showWordLimit": false,
         "prefixIcon": "",
@@ -139,7 +139,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "if(!value) {\r  callback();  //pass\r  return\r}\rif(!/^[A-Za-z\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
+        "onValidate": "if(!value) {\r  callback();  //pass\r  return\r}\rif(!/^[a-zA-Z0-9\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserFirstName')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input69479"
@@ -173,7 +173,7 @@
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
-        "minLength": null,
+        "minLength": 1,
         "maxLength": 64,
         "showWordLimit": false,
         "prefixIcon": "",
@@ -187,7 +187,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "if(!value) {\r  callback();  //pass\r  return\r}\rif(!/^[A-Za-z\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserName')))\r}\relse {\r  callback();  //pass\r}",
+        "onValidate": "if(!value) {\r  callback();  //pass\r  return\r}\rif(!/^[a-zA-Z0-9_\\u4e00-\\u9fa5_]+$/.test(value)) {\r  callback(new Error($t('tip.inputUserFirstName')))\r}\relse {\r  callback();  //pass\r}",
         "onAppendButtonClick": ""
       },
       "id": "input47313"
@@ -312,7 +312,8 @@
         "automaticDropdown": false,
         "multiple": true,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+        ],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -349,9 +350,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
