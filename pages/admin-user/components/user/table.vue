@@ -150,6 +150,12 @@ const { tableConfig, tableEvent , tableRef, reload, cleanSelectedRows } = useVxe
           height: 60,
           isCurrent: true,
           isHover: true,
+      },
+      tooltipConfig:{
+        contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }:any) => {
+            console.log(items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event)
+            return 'test'
+        }
       }
     },
     selectChangeHander: (selectedRows: any[]) => {
@@ -157,7 +163,7 @@ const { tableConfig, tableEvent , tableRef, reload, cleanSelectedRows } = useVxe
     },
     dblClickAction: ({ row, column, event }:any) => {
       userProvider?.openUserDetail(row) 
-    }
+    }, 
 })
 
 // #endregion

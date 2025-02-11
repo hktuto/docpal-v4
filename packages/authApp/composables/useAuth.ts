@@ -75,6 +75,7 @@ export function logout() {
     keyCloakState.value?.logout()
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
+    console.log("logout")
     userState.value = null;
 }
 
