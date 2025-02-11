@@ -193,7 +193,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         },
         data:[],
     }, ...optionalConfig} as Config)
-    console.log("tableConfig", tableConfig)
     const tableEvent = reactive<VxeGridListeners>(optionalEvent)
 
 

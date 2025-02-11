@@ -185,6 +185,14 @@ export const checkX6Json = function(x6Json:any, bpmnJson:BPMNJSON){
     if(!x6Json || !x6Json.cells) {
         x6Json.cells = []
     }
+    x6Json.cells.forEach((node:any) => {
+        
+        if(node.shape === 'edge' && node.labels && !node.labels[0])  {
+            console.log("node.labels", node.labels)
+            delete node.labels
+            // delete node.labels
+        }
+    })
     if(!x6Json.cells.find((node:any) => node.id === processId)) {
         x6Json.cells.push({
             id: processId,
