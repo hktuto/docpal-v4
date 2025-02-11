@@ -548,7 +548,7 @@ export const bpmnElement:BpmnElement = {
                 })
             },
             {
-                icon:'bpmn:updateData',
+                icon:'bpmn:update-data',
                 label: 'Update Data',
                 dropData: (id:string) => ({
                     id,
