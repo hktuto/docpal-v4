@@ -24,7 +24,7 @@
       </template>
     </div>
     <el-icon class="absoluteTop" @click="handleEdit"><Setting /></el-icon>
-    <CaseManageDetailPermissionDialog ref="dialogRef" :caseInformation="caseInformation" @refresh="handleRefresh" @delete="(data) => emits('delete', data)"/>
+    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="caseInformation" @refresh="handleRefresh" @delete="(data) => emits('delete', data)"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -75,7 +75,7 @@ function getI18n(value: string) {
 <style lang="scss" scoped>
 .permissionCard {
   height: 100%;
-  background: var(--primary-gradient);
+  background: var(--app-grey-850);
   padding: var(--app-space-xs);
   color: #fff;
   border-radius: 5px;

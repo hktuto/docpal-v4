@@ -13,8 +13,7 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
         if(!pageParams.orderBy){
             pageParams.orderBy = 'modifiedDate'
             pageParams.isDesc = true
-        } 
-        console.log("pageParams", pageParams)
+        }
         return listProvider.getListApi(pageParams)
     },
     dblClickAction: ({ row, column, event }:any) => {
@@ -59,7 +58,15 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             formatter ({ cellValue }:any) {
                 return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
             }
-        }
+        },
+        {
+            field: 'status',
+            title: 'status',
+            sortable: true,
+            formatter ({ cellValue }:any) {
+                return cellValue
+            }
+        },
     ], 
     bodyActions: [
         [
@@ -119,11 +126,20 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             },
             {
                 code: "delete",
-                name: "Delete",
+                name: "Inactive",
                 visible: true,
                 disabled: false,
                 action:({row}) => {
                     listProvider.deleteWorkflow(row)
+                }
+            },
+            {
+                code: "active",
+                name: "Active",
+                visible: true,
+                disabled: false,
+                action:({row}) => {
+                    listProvider.activeWorkflow(row)
                 }
             }
             // { 
@@ -154,7 +170,8 @@ defineExpose({
             v-on="tableEvent"
         >
         <template #toolbar_buttons>
-            <ElButton type="primary" @click="listProvider.createNewWorkflow">Add New Workflow</ElButton>
+            <slot name="toolbar_buttons" />
+            
         </template>
         </vxe-grid>
 </template>

@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('caseManagement.add/editPermission')"
-  :close-on-click-modal="false" class="scroll-dialog"
+  :close-on-click-modal="false" class="scroll-dialog" append-to-body
   >
   <el-form ref="FormRef" style="--icon-size: 1.2rem;" label-position="top" :model="form">
     <el-form-item prop="name" :label="$t('case.groupName')"
@@ -36,7 +36,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item :prop="`filed_condition[${index}].__cdata`">
-            <CaseManageDetailPermissionValueField ref="metaForm" :config="item" @formChange="(value: any, label: string) => handleValueChange(value, label, index)"/>
+            <CaseManagementDetailPermissionValueField ref="metaForm" :config="item" @formChange="(value: any, label: string) => handleValueChange(value, label, index)"/>
           </el-form-item>
         </el-col>
         <el-col :span="1"><SvgIcon class="svgIcon" src="/icons/menu/trash.svg" @click="handleDeleteRow(index)" /></el-col>
@@ -44,7 +44,7 @@
       <el-button type="text" @click="handleAdd">{{ $t('easyForm.actionsAdd') }}</el-button>
     </template>
   </el-form>
-  <CaseManageDetailPermissionDrag :list="state.permissionField"/>
+  <CaseManagementDetailPermissionDrag :list="state.permissionField"/>
   <template #footer>
     <el-button v-if="state.setting?.name" type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button>
     <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>

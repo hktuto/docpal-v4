@@ -6,13 +6,13 @@
       </div>
     </template>
     <div class="permissionItemContainer">
-      <CaseManageDetailPermissionCard v-for="(item, index) in state.groups" :key="index" :data="item" :caseInformation="state.caseInformation"
+      <CaseManagementDetailPermissionCard v-for="(item, index) in state.groups" :key="index" :data="item" :caseInformation="state.caseInformation"
           @refresh="(data) => handleRefresh(data, index)"
           @delete="handleDelete"/>
     </div>
     <el-button type="primary" text @click="handleAdd()"> {{ $t('caseManagement.addPermission')}} </el-button>
 
-    <CaseManageDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation" @refresh="handleRefresh"
+    <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation" @refresh="handleRefresh"
       />
   </el-card>
 </template>
@@ -123,9 +123,9 @@ defineExpose({ init })
 
 <style lang="scss" scoped>
 .permissionCard {
-  background: var(--app-grey-000);
+  background: var(--app-grey-950);
   padding: var(--app-space-xs);
-  color: var(--app-grey-700);
+  color: var(--app-grey-300);
   border-radius: calc(var(--app-space-xs) / 3 );
   // width: 200px;
   .title {

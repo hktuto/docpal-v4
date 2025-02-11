@@ -72,7 +72,7 @@ async function handleSave() {
     const formData = new FormData()
     formData.append('file', blob)
     // TODO : method are not correct in swagger, tem use instance.
-    await adminApi.instance.patch(`/api/docpal/case/types/version/${props.versionId}/save`,formData, {
+    await adminApi.instance.patch(`/docpal/case/types/version/${props.versionId}/save`,formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

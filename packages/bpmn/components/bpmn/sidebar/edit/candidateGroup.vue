@@ -40,9 +40,12 @@ function candidateGroupChanged(newVal: string) {
     const group = allUserGroup.value.find((item) => item.id === newVal);
     if(group) {
         data.data.extensionElements['modeler:group-info-name-' + group.id] = {
-            value: group.name
+            __cdata: group.id,
+            ['attr_xmlns:modeler']:"http://flowable.org/modeler"
         }
         data.data['attr_flowable:candidateGroups'] = group.id;
+    }else {
+        delete data.data['attr_flowable:candidateGroups'];
     }
     node.setData({
         ...data,
