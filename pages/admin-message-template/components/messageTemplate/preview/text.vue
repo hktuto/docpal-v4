@@ -1,34 +1,35 @@
 <script setup lang="ts">
-const { template, variables, bgColor = '#f1f1f1', title = 'Whatsapp', showConfirm=false } = defineProps<{
+const { template, headerParameters, bodyParameters, bgColor = '#f1f1f1', title = 'Whatsapp', showConfirm=false } = defineProps<{
     template: any,
-    variables: any,
+    headerParameters: any,
+    bodyParameters: any,
     bgColor: string,
     title: string,
     showConfirm: boolean,
 }>()
 
-function replaceVariables(str:string, variables:any) {
+function replaceVariables(str:string, variables:any[]) {
     if(!str) return ''
     if(!variables) return str
     return str.replace(/{{(.*?)}}/g, (match:any, p1:any) => {
-        if(!variables || !variables[p1]) return match
-        return variables[p1]
+        const val = variables.find((item:any) => item.name === p1)
+        return val.value || match
     })
 }
 
 const displayHeader = computed(() => {
     // replace {{}}
-    return replaceVariables(template.header, variables)
+    return replaceVariables(template.header, headerParameters)
 })
 
 const displayBody = computed(() => {
     // replace {{}}
-    return replaceVariables(template.body, variables)
+    return replaceVariables(template.body, bodyParameters)
 })
 
 const displayFooter = computed(() => {
     // replace {{}}
-    return replaceVariables(template.footer, variables)
+    return template.footer
 })
 
 </script>

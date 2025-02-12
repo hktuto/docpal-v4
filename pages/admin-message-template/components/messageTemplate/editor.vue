@@ -1,28 +1,45 @@
 <script setup lang="ts">
-const {content, row = 4} = defineProps<{
-    content: string,
-    row: number
+const content  = defineModel<string>('content', {required:false, default:''})
+const parameters = defineModel<any[]>('parameters', {required:false, default: []})
+const {row = 4, showVariables = true} = defineProps<{
+    row: number,
+    showVariables?: boolean,
 }>();
+
 const emits = defineEmits(['update', 'update:content']);
 const newVariableDialogRef = ref();
 const currentPointer = ref<any>([])
 const handleNewVariableAdded = (newVariable:string) => {
     if(!content) return
     // if currentPointer is same, inset newVariable
-    if(currentPointer.value[0] === currentPointer.value[1]) {
-        const newContent = content.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
-        emits('update:content', newContent)
+    if(currentPointer.value[0] === currentPointer.value[1] && content.value) {
+        content.value = content.value.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
         return
     }
     // if currentPointer is not same, replace current content
-    const newContent = content.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
+    content.value = content.value.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
+    // calculate new parameters
+    calculateParaameters()
 
-    emits('update:content', newContent)
 }
-function updateContent(e:any) {
-    console.log(e.target.value)
-    const value = e.target.value
-    emits('update:content', value)
+function calculateParaameters() {
+    if(!content.value || !showVariables) return
+
+    if(!parameters.value|| !Array.isArray(parameters.value)) {
+        parameters.value = []
+    }
+    
+    const newParameters = content.value.match(/\{\{(.*?)\}\}/g)?.map((item:any) => item.replace('{{', '').replace('}}', '')) || []
+    // loop parameters and update value
+    parameters.value = newParameters.map((item:any) => {
+
+        const oldValue = parameters.value ?  parameters.value.find((param:any) => param.name === item) : null
+        return {
+            name: item,
+            value: oldValue?.value || '',
+        }
+        
+    })
 }
 const textarea = ref()
 function openNewVariableDialog() {
@@ -33,17 +50,25 @@ function openNewVariableDialog() {
     newVariableDialogRef.value.open()
 }
 
-
-
+onMounted(() => {
+    calculateParaameters()
+})
 </script>
 
 <template>
 <div class="textEditorContainer">
     <div class="inputContainer">
-        <textarea ref="textarea" :value="content" @input="updateContent" :rows="row" ></textarea>
+        <textarea ref="textarea" v-model="content" @input="calculateParaameters" :rows="row" ></textarea>
     </div>
-    <div class="actions">
+    <div v-if="showVariables" class="actions">
         <ElButton  @click="openNewVariableDialog">Variable</ElButton>
+    </div>
+    <div v-if="showVariables && parameters && parameters.length > 0" class="variableList">
+        <ElForm :model="parameters" label-position="top">
+            <ElFormItem v-for="(item, index) in parameters" :key="index" :label="item.name">
+                <ElInput v-model="item.value" placeholder="Variable value"></ElInput>
+            </ElFormItem>
+        </ElForm>
     </div>
     <MessageTemplateNewVariableDialog ref="newVariableDialogRef" @added="handleNewVariableAdded" />
 </div>
