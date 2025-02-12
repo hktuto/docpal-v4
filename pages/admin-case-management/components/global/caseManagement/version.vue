@@ -14,6 +14,7 @@ const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
     throw new Error('MenuRouterKey is not provided')
 }
+const { t } = useI18n()
 const tableRef = ref<InstanceType<typeof CaseManagementVersionTable>>()
 const { pageNum, pageSize, orderBy, isDesc } = toRefs(props)
 
@@ -34,8 +35,10 @@ async function saveAsNewVersion(data:any){
     ElNotification.success(`${data.versionNumber} has save to new version`)
 }
 
-async function promoteVersion(data:any){
-    
+async function promoteVersion(row:any){
+    const { data } = await adminApi.api.postCaseTypesVersionVersionidActive(row.id)
+    routerProvider?.message.success(t('dpMsg_success'))
+    init()
 }
 
 async function openVersionDetail(data:any, openInNewTab:boolean = false){
@@ -61,6 +64,14 @@ function actionPermission({row, code}:PermissionMethodParams) {
     }
 }
 
+async function init(){
+    await getCaseData()
+    if(tableRef.value) {
+        console.log("onActivated")
+        tableRef.value.reload()
+    }
+}
+
 provide(CaseManagementVersionProviderKey,{
     getListApi: (params:any) => {
         routerProvider?.updateProps({
@@ -79,11 +90,7 @@ provide(CaseManagementVersionProviderKey,{
 })
 
 onActivated(async () => {
-    await getCaseData()
-    if(tableRef.value) {
-        console.log("onActivated")
-        tableRef.value.reload()
-    }
+    init()
 })
 
 </script>
