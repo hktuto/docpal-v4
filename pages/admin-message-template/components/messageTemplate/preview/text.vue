@@ -1,8 +1,6 @@
 <script setup lang="ts">
-const { template, headerParameters, bodyParameters, bgColor = '#f1f1f1', title = 'Whatsapp', showConfirm=false } = defineProps<{
+const { template,  bgColor = '#f1f1f1', title = 'Whatsapp', showConfirm=false } = defineProps<{
     template: any,
-    headerParameters: any,
-    bodyParameters: any,
     bgColor: string,
     title: string,
     showConfirm: boolean,
@@ -17,14 +15,18 @@ function replaceVariables(str:string, variables:any[]) {
     })
 }
 
+const displayMessage = computed(() => {
+    return replaceVariables(template.textMessage, template.textParameters)
+})
+
 const displayHeader = computed(() => {
     // replace {{}}
-    return replaceVariables(template.header, headerParameters)
+    return replaceVariables(template.header, template.headerParameters)
 })
 
 const displayBody = computed(() => {
     // replace {{}}
-    return replaceVariables(template.body, bodyParameters)
+    return replaceVariables(template.body, template.bodyParameters)
 })
 
 const displayFooter = computed(() => {
@@ -57,7 +59,7 @@ const displayFooter = computed(() => {
             {{template.confirmButtonName}}
         </div>
         <div v-if="template.needConfirm" class="afterMessage message">
-            {{template.textMessage}}
+            {{ displayMessage }}
         </div>
     </div>
 </div>
