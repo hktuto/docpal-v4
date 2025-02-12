@@ -213,17 +213,6 @@ export const useEditor = () => {
         newVariable.push(...getAllVariablesFromString(data.value.subject));
         //sprint data.To, data.CC, data.BCC by , and check if it is email, if not push to variable
         
-        const to = data.value.to ? data.value.to.split(',') : [];
-        const cc = data.value.cc ? data.value.cc.split(',') : [];
-        const bcc = data.value.bcc ? data.value.bcc.split(',') : [];
-        const allEmail = [...to, ...cc, ...bcc];
-        allEmail.forEach((email) => {
-            if(!email.includes('@')) {
-                // remove all space
-                email = email.replace(/\s/g, '');
-                newVariable.push(email);
-            }
-        })
         // variables.value = newVariable;
         // remove duplicate
         
