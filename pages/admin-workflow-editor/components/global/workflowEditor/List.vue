@@ -99,11 +99,11 @@ provide(WorkflowEditorListProviderKey,{
     deleteWorkflow,
     activeWorkflow,
     getListApi: (params) => {
-        Object.keys(filter.value).forEach(key => {
-            if(filter.value[key]) {
-                params[key] = filter.value[key]
-            }
-        })
+        // Object.keys(filter.value).forEach(key => {
+        //     if(filter.value[key]) {
+        //         params[key] = filter.value[key]
+        //     }
+        // })
         return adminApi.api.postWorkflowProcessDefinitionDraftPage(params)
     } 
 })
@@ -115,22 +115,22 @@ function handleFilterFormChange(formModel:any) {
     filter.value = formModel;
     reload()
 }
-async function getFilter() {
-  const data = [
-    {
-        key: "status", label: "common_status", type: "string", isMultiple: false,
-        options: [
-            { label: 'active', value: 'A' },
-            { label: 'inactive', value: 'P' }
-        ]
-    },
-  ]
-  ResponsiveFilterRef.value.init(data)
+// async function getFilter() {
+//   const data = [
+//     {
+//         key: "publishStatus", label: "common_status", type: "string", isMultiple: false,
+//         options: [
+//             { label: 'active', value: 'A' },
+//             { label: 'inactive', value: 'P' }
+//         ]
+//     },
+//   ]
+//   ResponsiveFilterRef.value.init(data)
 
-}
+// }
 
 onMounted(() => {
-    getFilter()
+    // getFilter()
 })
 
 function reload(){
@@ -147,12 +147,13 @@ function reload(){
         <!-- <TablePage :config="tableConfig" /> -->
         <LazyWorkflowEditorWorkflowListTable ref="tableRef" >
             <template #toolbar_buttons>
+                <ElButton type="primary" @click="createNewWorkflow">Add New Workflow</ElButton>
                 <div class="actions">
-                    <div class="filter">
+                    <!-- <div class="filter">
 
                         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"  />
-                    </div>
-                <ElButton type="primary" @click="createNewWorkflow">Add New Workflow</ElButton>
+                    </div> -->
+                
                 </div>
             </template>
         </LazyWorkflowEditorWorkflowListTable>
