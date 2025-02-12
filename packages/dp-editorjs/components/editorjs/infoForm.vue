@@ -38,18 +38,6 @@ defineExpose({
       <ElFormItem label="Subject" required prop="subject">
         <ElInput v-model="data.subject"></ElInput>
       </ElFormItem>
-
-      <ElFormItem label="To">
-        <ElInput v-model="data.to"></ElInput>
-      </ElFormItem>
-
-      <ElFormItem label="CC">
-        <ElInput v-model="data.cc"></ElInput>
-      </ElFormItem>
-
-      <ElFormItem label="BCC">
-        <ElInput v-model="data.bcc"></ElInput>
-      </ElFormItem>
     </ElForm>
     
   </div>
