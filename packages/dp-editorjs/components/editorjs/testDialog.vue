@@ -9,7 +9,9 @@
   const {variables} = useEditor()
   
   const testForm = ref({
-    to: '',
+    tos:[],
+    ccs:[],
+    bcc:[],
     templateId: props.data.id,
     variables: variables.value.reduce((acc:any, cur:any) => {
       
@@ -34,6 +36,8 @@
   
   async function send() {
     const body = testForm.value;
+    // templateId may be null in init state, so set it later
+    body.templateId = props.data.id;
     // loop variables in body , and replace /n with <br>
     Object.keys( body.variables).forEach((key) => {
       // remove line break to <br/>
@@ -70,7 +74,15 @@
     <div class="form">
         <ElForm :data="testForm" label-position="top">
           <ElFormItem label="To">
-            <ElInput v-model="testForm.to"></ElInput>
+            <ElSelect v-model="testForm.tos" multiple filterable allow-create placeholder="Please input email">
+            </ElSelect>
+          </ElFormItem>
+          <ElFormItem label="CC">
+            <ElSelect v-model="testForm.ccs" multiple filterable allow-create placeholder="Please input email">
+            </ElSelect>
+          </ElFormItem>
+          <ElFormItem label="BCC">
+            <ElSelect v-model="testForm.bcc" multiple filterable allow-create placeholder="Please input email"></ElSelect>
           </ElFormItem>
           <template v-for="(value,key) in testForm.variables" :key="key">
             <ElFormItem v-if="typeof value === 'string'"  :label="key" :key="key">
