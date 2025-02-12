@@ -48,7 +48,7 @@ async function handleChange(value) {
 async function handlePublish() {
   try {
     state.publishLoading = true
-    await adminApi.api.postFormDesignPublish(props.detail.id)
+    await adminApi.api.postFormDesignPublish({id:props.detail.id})
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
     
