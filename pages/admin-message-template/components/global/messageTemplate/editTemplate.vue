@@ -12,6 +12,7 @@ async function getData() {
     loading.value = true
     const { data } = await adminApi.api.getMessageTemplateDetailsId(id)
     detailData.value = data
+    console.log("detailData", detailData.value)
     loading.value = false
 }
 
@@ -39,44 +40,90 @@ onActivated(async() => {
 <template>
     <div class="pageContainer">
         <div v-if="detailData" class="infoContainer section">
-            <ElForm :model="detailData.template" label-position="top">
-                <ElRow :gutter="12">
-                    <ElCol :span="18">
-                        <ElFormItem label="Name">
-                            <ElInput v-model="detailData.template.name" placeholder="Name" />
-                        </ElFormItem>
-                    </ElCol>
-                    <ElCol :span="6">
-                        <ElFormItem label="Language">
-                            <ElSelect v-model="detailData.template.language" placeholder="Language">
-                                <ElOption v-for="item in languageOptions" :key="item.code" :label="item.name" :value="item.code" />
-                            </ElSelect>
-                        </ElFormItem>
-                    </ElCol>
-                </ElRow>
-            </ElForm>
-            <ElDivider />
-            <div class="subSection">
-                <div class="title">
-                    Header
+            <div class="form">
+                <ElForm :model="detailData.template" label-position="top">
+                    <ElRow :gutter="12">
+                        <ElCol :span="18">
+                            <ElFormItem label="Name">
+                                <ElInput v-model="detailData.template.name" placeholder="Name" />
+                            </ElFormItem>
+                        </ElCol>
+                        <ElCol :span="6">
+                            <ElFormItem label="Language">
+                                <ElSelect v-model="detailData.template.language" placeholder="Language">
+                                    <ElOption v-for="item in languageOptions" :key="item.code" :label="item.name" :value="item.code" />
+                                </ElSelect>
+                            </ElFormItem>
+                        </ElCol>
+                    </ElRow>
+                </ElForm>
+                <ElDivider />
+                <div class="subSection">
+                    <div class="title">
+                        Header
+                    </div>
                 </div>
+                <!-- {{detailData.template.header}} -->
+                <MessageTemplateEditor :row="1" v-model:content="detailData.template.header" v-model:parameters="detailData.template.hedaerParameters" />
+                
+                <ElDivider />
+                <div class="subSection">
+                    <div class="title">
+                        Footer
+                    </div>
+                </div>
+                <MessageTemplateEditor 
+                    :row="6" 
+                    v-model:content="detailData.template.body" 
+                    v-model:parameters="detailData.template.bodyParameters" />
+                
+                <ElDivider />
+                <div class="subSection">
+                    <div class="title">
+                        Footer
+                    </div>
+                </div>
+                <MessageTemplateEditor 
+                    :row="1" 
+                    v-model:content="detailData.template.footer" 
+                    :show-variables="false" />
+
+                <ElDivider />
+                <ElSwitch v-model="detailData.template.needConfirm" active-text="Confirm" inactive-text="No confirm" />
+
+                <ElDivider />
+                <template v-if="detailData.template.needConfirm">
+                    <div class="subSection">
+                        <div class="title">
+                            Content
+                        </div>
+                    </div>
+                    {{ detailData.template.textMessage }}
+                    <MessageTemplateEditor 
+                        :row="6" 
+                        v-model:content="detailData.template.textMessage" 
+                        v-model:parameters="detailData.template.textParameters" />
+                </template>
             </div>
-            {{detailData.template.header}}
-            <MessageTemplateEditor :row="1" v-model="detailData.template.header" />
-            <ElDivider />
+            <div class="actions">
+
+            </div>
         </div>
         <div v-if="detailData" class="preview section">
             <MessageTemplatePreviewText
                 :template="detailData.template"
-                :variables="{'1': 'sean', '2': 'peter', '3': 'john'}"
+                :headerParameters="detailData.template.hedaerParameters"
+                :bodyParameters="detailData.template.bodyParameters"
                 title="Whatsapp"
                 :showConfirm="true"
                 bgColor="#F6EBCF"
             />
             <MessageTemplatePreviewText
                 :template="detailData.template"
-                :variables="{'1': 'sean', '2': 'peter', '3': 'john'}"
+                 :headerParameters="detailData.template.hedaerParameters"
+                :bodyParameters="detailData.template.bodyParameters"
                 title="Wechat"
+                :showConfirm="false"
                 bgColor="#E2F6CF"
             />
         </div>
@@ -84,6 +131,15 @@ onActivated(async() => {
 </template>
 
 <style scoped lang="scss">
+.infoContainer{
+    display: grid;
+    grid-template-rows: 1fr min-content;
+    gap: var(--app-space-xs);
+    overflow: hidden;
+    .form {
+        overflow: auto;
+    }
+}
 .pageContainer{
     width: 100%;
     height: 100%;
