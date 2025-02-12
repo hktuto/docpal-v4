@@ -38,7 +38,7 @@ export const newMessageTemplateDetailPageRoute = (row:RowData) => {
     const newItem:TabItem = {
         id:"admin-message-template-detail",
         name:"admin-message-template-detail-" + row.id,
-        label: row.templateName,
+        label: "adminMenu.messageTemplate",
         icon: "lucide:message-circle-code",
         component: "LazyMessageTemplateDetail",
         props:{
@@ -53,7 +53,7 @@ export const newMessageTemplateTemplatePageRoute = (row:RowData) => {
     const newItem: TabItem = {
         id: "admin-message-template-template",
         name: "admin-message-template-template-" + row.id,
-        label: row.templateName,
+        label: "adminMenu.messageTemplate",
         icon: "lucide:message-circle-code",
         component: "MessageTemplateEditTemplate",
         props: {

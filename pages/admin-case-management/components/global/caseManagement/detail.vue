@@ -13,7 +13,7 @@ const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
     throw new Error('MenuRouterKey not found')
 }
-
+const { t } = useI18n()
 const loading = ref(false)
 const caseInfo = ref<any>()
 
@@ -43,8 +43,10 @@ function handleUpdate(){
   // add missing function
 }
 
-function promoteToProduction() {
-
+async function promoteToProduction() {
+  const { data } = await adminApi.api.postCaseTypesVersionVersionidActive(props.caseTypeId)
+   routerProvider?.message.success(t('dpMsg_success'))
+    await init()
 }
 async function saveAsNewVersion() {
   // console.log("props",props);
