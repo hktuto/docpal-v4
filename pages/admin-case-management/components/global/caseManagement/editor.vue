@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
 
 import { adminApi } from 'api'
-import {newWorkflowEditorVerionList} from "admin-workflow-editor/utils/workflowEditorMenu";
-import {CaseManagementDetailProviderKey} from "~/utils/caseManagementHelper";
+
 
 const props = defineProps<{
   caseTypeId: string,
@@ -123,7 +121,6 @@ function openVersionList(){
     }
     const newItem = newCaseManagementVersionList(params)
 
-    console.log(newItem, params)
     routerProvider?.navigateTo(newItem)
 }
 

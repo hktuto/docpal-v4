@@ -63,8 +63,9 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             field: 'status',
             title: 'status',
             sortable: true,
+            width: 120,
             formatter ({ cellValue }:any) {
-                return cellValue
+                return cellValue === 'P' ? "Inactive" : 'Active'
             }
         },
     ], 
@@ -133,24 +134,7 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
                     listProvider.deleteWorkflow(row)
                 }
             },
-            {
-                code: "active",
-                name: "Active",
-                visible: true,
-                disabled: false,
-                action:({row}) => {
-                    listProvider.activeWorkflow(row)
-                }
-            }
-            // { 
-            //     code : 'view_versions_new_tab', 
-            //     name: 'View Versions in New Tab', 
-            //     visible: true, 
-            //     disabled: false,
-            //     action: ({row}:any) => {
-            //         listProvider.openVersions(row, true)
-            //     }
-            // },
+
         ]
     ],
     permissionMethod: listProvider.actionPermission

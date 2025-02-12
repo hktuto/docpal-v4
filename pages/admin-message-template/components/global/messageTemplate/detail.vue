@@ -92,14 +92,12 @@ onActivated(() => {
     <div  v-if="detailData" class="preview section">
         <MessageTemplatePreviewText
             :template="detailData.template"
-            :variables="{'1': 'sean', '2': 'peter', '3': 'john'}"
             title="Whatsapp"
             :showConfirm="true"
             bgColor="#F6EBCF"
         />
         <MessageTemplatePreviewText
             :template="detailData.template"
-            :variables="{'1': 'sean', '2': 'peter', '3': 'john'}"
             title="Wechat"
             bgColor="#E2F6CF"
         />

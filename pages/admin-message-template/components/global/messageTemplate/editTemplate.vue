@@ -5,7 +5,11 @@ import {adminApi} from "api";
 const{ id } = defineProps<{
     id: number
 }>()
-
+const routerProvider = inject(MenuRouterKey)
+if(!routerProvider) {
+    throw createError('menu manger not found')
+}
+const { t } = useI18n()
 const loading = ref(false)
 const detailData = ref()
 async function getData() {
@@ -30,9 +34,26 @@ async function saveTemplate() {
     await getData()
 }
 
-onActivated(async() => {
+async function init(){
     await getLanguageOptions()
     await getData()
+}
+
+async function saveData(){
+    try{
+        const params = detailData.value.template
+        params.recordId = id
+        const {data} = await adminApi.api.postMessageTemplateEdit(params)
+        routerProvider?.message.success(t('dpMsg_success'))
+    }catch(e){
+        routerProvider?.message.error(t('dpMsg_fail'))
+    }finally{
+        init()
+    }
+}
+
+onActivated(async() => {
+    await init()
 })
 
 </script>
@@ -69,7 +90,7 @@ onActivated(async() => {
                 <ElDivider />
                 <div class="subSection">
                     <div class="title">
-                        Footer
+                        Body
                     </div>
                 </div>
                 <MessageTemplateEditor 
@@ -90,15 +111,16 @@ onActivated(async() => {
 
                 <ElDivider />
                 <ElSwitch v-model="detailData.template.needConfirm" active-text="Confirm" inactive-text="No confirm" />
-
+                <ElFormItem label="Confirm Button">
+                        <ElInput v-model="detailData.template.confirmButtonName" />
+                    </ElFormItem>
                 <ElDivider />
-                <template v-if="detailData.template.needConfirm">
+                <template v-if="detailData.template.needConfirm && detailData.template.confirmButtonName">
                     <div class="subSection">
                         <div class="title">
                             Content
                         </div>
                     </div>
-                    {{ detailData.template.textMessage }}
                     <MessageTemplateEditor 
                         :row="6" 
                         v-model:content="detailData.template.textMessage" 
@@ -106,22 +128,25 @@ onActivated(async() => {
                 </template>
             </div>
             <div class="actions">
-
+                <el-popconfirm title="All unsave change will lost"
+                @confirm="init"
+                >
+                    <template #reference>
+                        <ElButton text >Discard</ElButton>
+                    </template>
+                </el-popconfirm>
+                <ElButton type="primary" @click="saveData">Save</ElButton>
             </div>
         </div>
         <div v-if="detailData" class="preview section">
             <MessageTemplatePreviewText
                 :template="detailData.template"
-                :headerParameters="detailData.template.hedaerParameters"
-                :bodyParameters="detailData.template.bodyParameters"
                 title="Whatsapp"
                 :showConfirm="true"
                 bgColor="#F6EBCF"
             />
             <MessageTemplatePreviewText
                 :template="detailData.template"
-                 :headerParameters="detailData.template.hedaerParameters"
-                :bodyParameters="detailData.template.bodyParameters"
                 title="Wechat"
                 :showConfirm="false"
                 bgColor="#E2F6CF"
@@ -131,6 +156,12 @@ onActivated(async() => {
 </template>
 
 <style scoped lang="scss">
+.actions{
+    display: flex;
+    gap: var(--app-space-xs);
+    justify-content: space-between;
+    align-items: center;
+}
 .infoContainer{
     display: grid;
     grid-template-rows: 1fr min-content;
@@ -145,7 +176,7 @@ onActivated(async() => {
     height: 100%;
     position: relative;
     overflow: hidden;
-    padding: var(--app-space-xs);
+    padding: var(--app-space-s);
     display: grid;
     grid-template-columns:1fr min-content;
     gap: var(--app-space-s);

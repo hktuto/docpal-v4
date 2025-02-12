@@ -23,7 +23,6 @@ async function openLastestVersion(data:any, openInNewTab = false){
         versionId: data.latestVersionId
     }
     let newItem = newWorkflowEditorDetail(params) as any;
-    console.log("openLatestVersion", newItem, data)
     newItem.props.currentVersion = data.latestVersion
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
@@ -53,7 +52,6 @@ function saveAsNewWorkflow(data:any){
 function openVersions(data:any , openInNewTab = false){
     
     const newItem = newWorkflowEditorVerionList(data);
-    console.log("openVersions", newItem)
     
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
@@ -70,13 +68,7 @@ function actionPermission({row, rowIndex, code}:any){
             disabled: false
         }
     }
-    // TODO : active workflow api has bug
-    if(code === 'active') {
-        return {
-            visible: row.status === 'P',
-            disabled: false
-        }
-    }
+
     return {
         visible: true,
         disabled: false
@@ -132,18 +124,9 @@ async function getFilter() {
             { label: 'inactive', value: 'P' }
         ]
     },
-    {
-        key:"publishStatus", label: "workflow_published", type: "string", isMultiple: false,
-        options: [
-            { label: 'published', value: 'A' },
-            { label: 'unpublished', value: 'D' }
-        ]
-    }
   ]
   ResponsiveFilterRef.value.init(data)
-  nextTick(() => {
-    ResponsiveFilterRef.value.setValue('publishStatus', 'A');
-  })
+
 }
 
 onMounted(() => {
