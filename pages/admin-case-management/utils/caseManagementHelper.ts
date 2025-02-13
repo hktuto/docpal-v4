@@ -9,6 +9,7 @@ export interface CaseManagementListProvider {
     openProductionVersion:(data:any, openInNewTab?:boolean) => void
     actionPermission:(args:PermissionMethodParams) => {visible:boolean, disabled:boolean}
     openVersion:(data:any, openInNewTab?:boolean) => void
+    saveAsNewCase:(data:any) => void
 }
 export const CaseManagementListProviderKey : InjectionKey<CaseManagementListProvider> = Symbol('caseManagementListProvider')
 
