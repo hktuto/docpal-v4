@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {CaseManagementListProviderKey, MenuRouterKey} from '#imports';
-import {ResponsiveFilter, CaseManagementNewDialog} from '#components'
+import {ResponsiveFilter, CaseManagementNewDialog , CaseManagementSaveAsDialog} from '#components'
 import { adminApi} from 'api'
 import { newCaseManagementDetail } from '~/utils/caseManagementHelper';
 import tableComponent from '../../caseManagement/list/table.vue'
@@ -19,6 +19,7 @@ const props= defineProps<{
 const { pageNum, pageSize, isDesc, orderBy, filters } = toRefs(props)
 const filterFormdata = ref();
 const dialogRef = ref<InstanceType<typeof CaseManagementNewDialog>>()
+const saveAsDialogRef = ref<InstanceType<typeof CaseManagementSaveAsDialog>>()
 function updatePageParams({pageNum, pageSize, sort, filters}:any){
     routerProvider?.updateProps({
         pageNum,
@@ -38,6 +39,14 @@ function handleFilterFormChange(formData:any) {
 function openLatestVersion(data:any, openInNewTab:boolean = false){
     const newItem = newCaseManagementDetail(data.latestVersionId, data.name, data.latestVersion)
     routerProvider?.navigateTo(newItem, openInNewTab)
+}
+
+const selectedItem = ref({
+    latestVersion:""
+})
+function saveAsNewCase(data:any){
+    selectedItem.value = data
+    saveAsDialogRef.value?.open()
 }
 
 function openProductionVersion(data:any, openInNewTab:boolean = false){
@@ -103,7 +112,8 @@ provide(CaseManagementListProviderKey,{
     openLatestVersion,
     openProductionVersion,
     actionPermission,
-    openVersion
+    openVersion,
+    saveAsNewCase
 })
 
 </script>
@@ -121,7 +131,7 @@ provide(CaseManagementListProviderKey,{
             </template>
         </CaseManagementListTable>
       <CaseManagementNewDialog ref="dialogRef" @refresh="reload"/>
-
+        <CaseManagementSaveAsDialog ref="saveAsDialogRef" :copyVersion="selectedItem.latestVersion" :data="selectedItem" @close="reload" />
     </div>
 </template>
 

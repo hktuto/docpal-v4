@@ -86,6 +86,11 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
                 code:'list_version', 
                 name:"listVersion",
                 action:({row}) => listProvider.openVersion(row)
+            },
+            {
+                code:'save_as',
+                name:"Save As New Case",
+                action: ({row}) => listProvider.saveAsNewCase(row)
             }
             
             
