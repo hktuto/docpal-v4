@@ -7,7 +7,7 @@ import {Public} from './generate/public'
 
 let clientBaseURL = '/api';
 let adminBaseURL = '/api';
-let publicBaseURL = '/public-api/report/v1/'
+let publicBaseURL = '/public-api/report/v1/api'
 // if(process.env && process.env.NODE_ENV === "development") {
 //     clientBaseURL = '/';
 //     adminBaseURL = '/'

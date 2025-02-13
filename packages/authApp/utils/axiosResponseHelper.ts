@@ -1,5 +1,5 @@
 import { typeAxiosInstance } from 'axios';
-
+import {ElMessage} from "element-plus";
 import { useEventBus, EventType, emitBus } from 'eventbus';
 
 export const requestSuccessHelper = (config:any, axiosInstance:typeAxiosInstance) => {
@@ -18,14 +18,19 @@ export const responseSuccessHelper = (response:any, axiosInstance:typeAxiosInsta
 }
 export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInstance) => {
     const originalRequest = error.config;
-    console.log('fetch error', error)
+    
     if(error.response.status === 420) {
+      console.log("token expired, clear token and redirect to login page")
       // TODO : may need to handle error message
       emitBus(EventType.USER_LOGIN__EXPIRE)
           // TODO : remove logout, should use event bus
         logout()
+        return;
     }
+    
     if(error.response.status >= 500) {
+      const message = error.response.data.message || error.message
+              ElMessage.error(message)
       return Promise.reject(error);
     }
     console.log("error", error, this)
