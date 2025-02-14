@@ -8,7 +8,7 @@ if(!routerProvider) {
     throw createError('menu manger not found')
 }
 const { t } = useI18n()
-const { setting, getCalendarsSetting } = useCalendarStore();
+const { setting, getCalendarsSetting, calendarViewOptions, weekDayOptions } = useCalendarStore();
 const loading = ref(false);
 
 const categoryMasterTable = ref()
@@ -26,7 +26,7 @@ provide(CalendarSettingKey,{
 
 
 onActivated(() => {
-    getCalendarsSetting()
+    // getCalendarsSetting()
 })
 
 </script>

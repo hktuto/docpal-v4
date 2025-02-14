@@ -2,7 +2,7 @@ import { get } from '@vueuse/core';
 import { adminApi } from '../../../libraries/api/src/index';
 import { onMounted } from "vue";
 
-export const useCalendarSetting = () => useState('calendarSetting');
+export const useCalendarSetting = () => useState<any>('calendarSetting');
 
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
@@ -23,8 +23,10 @@ export const useCalendarStore = () => {
         return data
     }
 
+    const categoriesColumn = ref<any[]>([])
     async function getCatergories(){
-
+        const {data} = await adminApi.api.getMasterTablesId(setting.value.category.master_table) as any
+        categoriesColumn.value = data.fields;
     }
 
     async function getLocations(){
@@ -42,7 +44,7 @@ export const useCalendarStore = () => {
                 allow_custom_slot : data.basic.allow_custom_slot !== undefined ? data.basic.allow_custom_slot : false
             },
             location: {
-                master_table : masterTable['Event Locations'],
+                master_table : masterTable['Event Location'],
                 allow_custom: data?.location?.allow_custom !== undefined ? data.location.allow_custom : false,
                 allow_empty: data?.location?.allow_empty !== undefined ? data.location.allow_empty : false,
             },
@@ -50,23 +52,31 @@ export const useCalendarStore = () => {
                 master_table: masterTable['Event Categories'] ,
             }
         };
+        console.log(setting.value)
         // get master table detail of event location and event categories
-        if(masterTable['Event Categories']){
-
+        if(setting.value.category.master_table){
+            
+            await getCatergories()
         }
 
-        if(masterTable['Event Locations']) {
-            
+        if(setting.value.location.master_table) {
+            await getLocations()
         }
     }
 
     onMounted(() => {
-        getCalendarsSetting()
+        if(!setting.value){
+
+            getCalendarsSetting()
+        }
     })
 
     return {
         setting,
-        getCalendarsSetting
+        getCalendarsSetting,
+        calendarViewOptions,
+        weekDayOptions,
+        categoriesColumn
     }
 
 }
