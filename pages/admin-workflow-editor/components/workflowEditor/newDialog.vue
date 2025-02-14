@@ -25,7 +25,7 @@ async function handleSubmit () {
     let name = state.form.name
     const timestamp = new Date().getTime();
     const nameToId = name.toLowerCase().replaceAll(' ', '_') + '_' + timestamp;
-    const bpmnFile = text.replaceAll('workflowId', nameToId).replaceAll('workflowName', name);
+    const bpmnFile = text.replaceAll('workflowId', nameToId).replaceAll('workflowName', state.form.name);
     // convert to blob
     const blob = new Blob([bpmnFile], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
