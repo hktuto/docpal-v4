@@ -55,7 +55,9 @@ export const useCalendarStore = () => {
 
         }
 
-        if(masterTable['Event Locations'])
+        if(masterTable['Event Locations']) {
+            
+        }
     }
 
     onMounted(() => {
