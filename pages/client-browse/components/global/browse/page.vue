@@ -25,14 +25,5 @@ const props = defineProps<{
 </template>
 
 <style lang="scss" scoped>
-.actionRow{
-    width:auto;
-    display: flex;
-    flex-flow: column nowrap;
-}
-.pageContainer{
-    height: 100%;
-    position: relative;
-    padding: var(--app-space-s);
-}
+
 </style>
