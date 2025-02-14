@@ -1,18 +1,25 @@
 <script lang="ts" setup>
-import { adminApi } from 'api';
 import { ElDialog } from 'element-plus';
+import { adminApi } from 'api';
 
+const opened  = ref(false)
+const loading = ref(false)
+const emits = defineEmits(['close'])
 
 const { data, copyVersion } = defineProps<{
   data: any 
   copyVersion: string 
 }>();
 
-const emits = defineEmits(['close'])
+
 const form = reactive({
     name:'',
     copyVersion: "V1"
 })
+function close(){
+    opened.value = false
+    emits('close')
+}
 
 const rules = {
     name: [
@@ -28,55 +35,14 @@ function validateName(rule:any, value:string, callback:any) {
     callback()
 }
 
-const opened  = ref(false)
-const loading = ref(false)
-function close(){
-    opened.value = false
-    emits('close')
-}
-
-async function save(){
-    loading.value = true
-    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:data.id, versionNumber:form.copyVersion}, {
-        format: 'blob'
-    }) 
-    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:data.id, versionNumber:form.copyVersion}, {})
-    const timestamp = new Date().getTime();
-
-    const newForm:any = new FormData();
-    const newName = data.name + '_copy';
-    const nameToId = newName.toLowerCase().replaceAll(' ', '_') + '_' + timestamp;
-    const text = await blob.text()
-    const bpmnFile = text.replaceAll(data.key, nameToId).replaceAll(data.name, newName);
-
-    const newBlob = new Blob([bpmnFile], {type: "text/xml;charset=utf-8"});
-    newForm.append('name', form.name)
-    newForm.append('attr_id', nameToId)
-    newForm.append('versionId', 'V1')
-    newForm.append('jsonValue', json || "")
-    newForm.append('file', newBlob, 'workflow.bpmn.xml')
-    newForm.append('isDraft', true)
-    const newVersionData =await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
-    const forms = await getAllFormFromXML(bpmnFile, data.key, form.copyVersion)
-    await batchSaveForm(forms, nameToId, 'V1');
-    
-    setTimeout(() => {
-        emits('close')
-        loading.value = false
-        opened.value = false
-    }, 500);
-    
-}
-
 let versionList:any[] = [];
 async function getVersionList() {
     // get version list
-    const response = await adminApi.api.postWorkflowVersionPage({draftId: data.id || data.draftId})
+    const response = await adminApi.api.postCaseTypesVersionPage({pageNum:0, pageSize:1000, caseTypeId: data.id || data.draftId})
     versionList = response.data?.entryList || []
 }
 
 async function open(){
-    
     await getVersionList()
     // 因為 props 有可能未更新，所以在 nextTick 中再次設置 form 的值
     nextTick(() => {
@@ -86,14 +52,15 @@ async function open(){
     })
 }
 
+async function save(){
+
+}
 
 defineExpose({ open })
-
 </script>
 
-
 <template>
-    <ElDialog v-model="opened" :title="$t('workflowEditor_saveAs_title')" append-to-body :close-on-click-modal="false" >
+<ElDialog v-model="opened" append-to-body>
         <el-form ref="formRef" v-loading="loading" :model="form" :rules="rules" label-position="top" class="demo-ruleForm" status-icon>
             <el-form-item :label="$t('workflowEditor.name')" prop="name">
                 <el-input v-model="form.name" :placeholder="$t('workflowEditor.name')" />
@@ -104,9 +71,10 @@ defineExpose({ open })
                 </el-select>
             </el-form-item>
         </el-form>
-        <template #footer>
+    <template #footer>
             <el-button @click="close">{{$t('cancelText')}}</el-button>
             <el-button type="primary" @click="save">{{$t('common_save')}}</el-button>
         </template>
-    </ElDialog>
+</ElDialog>
+
 </template>
