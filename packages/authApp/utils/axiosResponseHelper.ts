@@ -33,6 +33,14 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
               ElMessage.error(message)
       return Promise.reject(error);
     }
+    if(error.response.status === 403) {
+      console.log("token expired, clear token and redirect to login page")
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+      emitBus(EventType.USER_LOGIN__EXPIRE)
+      logout()
+      return Promise.reject(error);
+    }
     console.log("error", error, this)
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;

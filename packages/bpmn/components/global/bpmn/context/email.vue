@@ -206,3 +206,10 @@ watch( () => node, async() => {
     </ElForm> 
 </div>
 </template>
+
+
+<style lang="scss" scoped>
+.fromContainer{
+    overflow: auto;
+}
+</style>

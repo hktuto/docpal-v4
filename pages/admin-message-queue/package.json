@@ -17,24 +17,24 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.13",
+    "echarts": "^5.6.0",
+    "grid-layout-plus": "1.0.5",
     "nuxt": "3.15.2",
     "vue": "3.5.6",
     "vue-router": "latest",
-    "echarts": "^5.5.1",
-    "vue3-grid-layout-next": "^1.0.7",
-    "grid-layout-plus": "1.0.5"
+    "vue3-grid-layout-next": "^1.0.7"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.14.1",
+    "@nuxt/test-utils": "^3.15.4",
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
-    "happy-dom": "^15.7.3",
-    "msw": "^2.4.9",
-    "playwright-core": "^1.47.0",
-    "sass": "^1.78.0",
-    "typescript": "^5.6.2",
-    "vitest": "^2.0.5",
-    "vue-tsc": "^2.1.6"
+    "happy-dom": "^15.11.7",
+    "msw": "^2.7.0",
+    "playwright-core": "^1.50.1",
+    "sass": "^1.85.0",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.9",
+    "vue-tsc": "^2.2.0"
   },
   "engines": {
     "pnpm": ">=8.5.0",
