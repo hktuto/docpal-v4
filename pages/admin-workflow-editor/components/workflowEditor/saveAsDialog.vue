@@ -56,7 +56,7 @@ async function save(){
     newForm.append('jsonValue', json || "")
     newForm.append('file', newBlob, 'workflow.bpmn.xml')
     newForm.append('isDraft', true)
-    await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
+    const newVersionData =await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
     const forms = await getAllFormFromXML(bpmnFile, data.key, form.copyVersion)
     await batchSaveForm(forms, nameToId, 'V1');
     

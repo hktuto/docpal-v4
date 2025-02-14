@@ -43,19 +43,40 @@ async function getEmailTemplates(){
     const index = extensionElements['flowable:field'].findIndex((item: any) => item.attr_name === "notificationType")
     const item = extensionElements['flowable:field'][index]
     if(!item) throw createError("notificationType not found")
-    const varList = allEmailTemplates.value.find((ii: any) => ii.id === item['flowable:string']['__cdata']).emailTemplateVariable;
+    let varList = allEmailTemplates.value.find((ii: any) => ii.id === item['flowable:string']['__cdata']);
+    varList = varList?.emailTemplateVariable || null;
     if(!varList || !JSON.parse(varList)) {
         nodeData.data.extensionElements['flowable:field'] = [item]
-            
+        nodeData.data.extensionElements['flowable:field'].push({
+            "attr_name":"tos",
+            "flowable:expression": {
+                    "__cdata": ''
+                }
+        },{
+            "attr_name":"ccs",
+            "flowable:expression": {
+                    "__cdata": ''
+                }
+        },
+        {
+            "attr_name":"bcc",
+            "flowable:expression": {
+                    "__cdata": ''
+                }
+        }
+    )
         
     }else{
-        const variable = JSON.parse(varList).filter(j => !j.includes(",")).map((item: any) => {
+        const varListJson = JSON.parse(varList)
+        varListJson.unshift("tos", "ccs", "bcc")
+        // varList = "tos,ccs,bcc," + varList
+        const variable = varListJson.filter(j => !j.includes(",")).map((item: any) => {
             const exist = extensionElements['flowable:field'].find((field: any) => field.attr_name === item);
             if(exist) return exist;
             return {
                 "attr_name": item,
                 "flowable:expression": {
-                "__cdata": ''
+                    "__cdata": ''
                 }
             }
         })
@@ -64,6 +85,7 @@ async function getEmailTemplates(){
             ...variable
         ]
     }
+    console.log("Set data", nodeData)
     node.setData(nodeData)
     templateVariables.value = nodeData.data.extensionElements['flowable:field'].filter((item: any) => !(item.attr_name === "notificationType") && !(item.attr_name === "hostUrl") && !(item.attr_name === "processInstanceId") && !(item.attr_name.includes(',')));
 
@@ -92,9 +114,29 @@ function setEmailTemplateId(value:string) {
     const varList = allEmailTemplates.value.find((item: any) => item.id === value)?.emailTemplateVariable;
     if(!varList || !JSON.parse(varList)) {
         nodeData.data.extensionElements['flowable:field'] = [newItem]
-
+        nodeData.data.extensionElements['flowable:field'].push(
+            {
+                "attr_name":"tos",
+                "flowable:expression": {
+                        "__cdata": ''
+                    }
+            },{
+                "attr_name":"ccs",
+                "flowable:expression": {
+                        "__cdata": ''
+                    }
+            },
+            {
+                "attr_name":"bcc",
+                "flowable:expression": {
+                        "__cdata": ''
+                    }
+            }
+        )
     }else{
-        const variable = JSON.parse(varList).filter(j => !j.includes(",")).map((item: any) => {
+        const varListJson = JSON.parse(varList)
+        varListJson.unshift("tos", "ccs", "bcc")
+        const variable = varListJson.filter(j => !j.includes(",")).map((item: any) => {
             const exist = nodeData.data.extensionElements['flowable:field'].find((field: any) => field.attr_name === item);
             if(exist) return exist;
             return {
