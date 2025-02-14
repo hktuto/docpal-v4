@@ -53,10 +53,11 @@ provide(BrowseListProviderKey,{
 <template> 
     <BrowseListTable ref="tableRef" >
         <template #toolbar_buttons> 
-            <div class="toolsBarContainer">
-                
-                <BrowseBreadcrumb :idOrPath="idOrPath" />
-            </div>
+            <slot name="toolbar_buttons">
+                <div class="toolsBarContainer">
+                    <BrowseBreadcrumb :idOrPath="idOrPath" />
+                </div>
+            </slot>
         </template>
     </BrowseListTable>
 </template>
