@@ -15,7 +15,6 @@ const config = {
     '@nuxt/test-utils/module',
     '@nuxtjs/i18n',
     '@nuxtjs/color-mode',
-    '@nuxt/icon',
     '@vueuse/nuxt',
     'nuxt-viewport'
   ],
@@ -24,19 +23,7 @@ const config = {
   ],
   extends:[
   ],
-  icon:{
-    customCollections:[
-      {
-        prefix:'dp-icon',
-        dir: join(currentDir, './assets/dp-icons')
-      }
-    ],
-    clientBundle:{
-      scan: true,
-      includeCustomCollections: true, 
-    },
-    
-  },
+  
   runtimeConfig:{
     public:{
       pdfReaderUrl: process.env.pdfReaderUrl,
@@ -104,7 +91,15 @@ const config = {
       //     }
       // }
   },
+  experimental: { appManifest: false },
   vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: "modern-compiler"
+        },
+      },
+    },
     esbuild: {
       drop: ['debugger'],
       pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],

@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   },
   telemetry:false,
   extends:[
-    '../web',
+    '../client',
   ],
   features:{
     inlineStyles: true,

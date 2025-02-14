@@ -1,5 +1,6 @@
 @use 'sass:math';
 @use 'sass:map';
+@use 'sass:color';
 @use './elements/index.scss' ;
 @use './var.scss' as *;
 @use './flex.scss';
@@ -30,13 +31,13 @@ $types: primary, success, warning, danger, error, info;
     @for $i from 1 through 3 {
         // generate color in 5 levels mix with white
         --app-#{$type}-#{$i}: #{
-          mix( map.get($app-color, $type, 'base'), white, $i * 10%)
+          color.mix(map.get($app-color, $type, 'base'), white , $weight: $i * 10%)
         };
     }
     @for $i from 4 through 6 {
       // generate color in 5 levels mix with black
       --app-#{$type}-#{$i}: #{
-          mix(black, map.get($app-color, $type, 'base'), ($i - 3) * 20%)
+          color.mix(map.get($app-color, $type, 'base'), black , $weight: ($i - 3) * 20%)
         };
     }
   }
