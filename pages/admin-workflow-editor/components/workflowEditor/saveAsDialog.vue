@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api';
 import { ElDialog } from 'element-plus';
+import { th } from 'element-plus/es/locales.mjs';
 
 
 const { data, copyVersion } = defineProps<{
@@ -47,8 +48,7 @@ async function save(){
     const newName = data.name + '_copy';
     const nameToId = newName.toLowerCase().replaceAll(' ', '_') + '_' + timestamp;
     const text = await blob.text()
-    const bpmnFile = text.replaceAll(data.key, nameToId).replaceAll(data.name, newName);
-
+    const bpmnFile = text.replaceAll(data.key, nameToId).replaceAll(data.name, form.name);
     const newBlob = new Blob([bpmnFile], {type: "text/xml;charset=utf-8"});
     newForm.append('name', form.name)
     newForm.append('attr_id', nameToId)
@@ -56,9 +56,13 @@ async function save(){
     newForm.append('jsonValue', json || "")
     newForm.append('file', newBlob, 'workflow.bpmn.xml')
     newForm.append('isDraft', true)
-    const newVersionData =await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm)
+    const {data:newVersionData} =await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm) as any
+    console.log("newVersionData", newVersionData)
+    if(!newVersionData){
+        throw new Error('newVersionData not found')
+    }
     const forms = await getAllFormFromXML(bpmnFile, data.key, form.copyVersion)
-    await batchSaveForm(forms, nameToId, 'V1');
+    await batchSaveForm(forms, nameToId, newVersionData.latestVersionId);
     
     setTimeout(() => {
         emits('close')
@@ -70,8 +74,11 @@ async function save(){
 
 let versionList:any[] = [];
 async function getVersionList() {
+    if(!data || !data.id){
+        throw new Error('data or data.id not found')
+    }
     // get version list
-    const response = await adminApi.api.postWorkflowVersionPage({draftId: data.id || data.draftId})
+    const response = await adminApi.api.postWorkflowVersionPage({pageNum:0, pageSize:100, draftId: data.id || data.draftId})
     versionList = response.data?.entryList || []
 }
 
@@ -100,7 +107,7 @@ defineExpose({ open })
             </el-form-item>
             <el-form-item :label="$t('workflowEditor.copyVersion')" prop="copyVersion">
                 <el-select v-model="form.copyVersion" placeholder="Select">
-                    <el-option v-for="item in versionList" :key="item.versionNumber" :label="item.versionNumber" :value="item.versionNumber" />
+                    <el-option v-for="item in versionList" :key="item.versionNumber" :label="item.versionNumber" :value="item.id" />
                 </el-select>
             </el-form-item>
         </el-form>

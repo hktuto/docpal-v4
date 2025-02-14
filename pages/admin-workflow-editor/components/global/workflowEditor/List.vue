@@ -46,7 +46,9 @@ const newWorkflowDialogData = ref({
 })
 function saveAsNewWorkflow(data:any){
     newWorkflowDialogData.value = data
-    saveAsDialogRef.value.open()
+    nextTick(() => {
+        saveAsDialogRef.value.open()
+    })
 }
 
 function openVersions(data:any , openInNewTab = false){
