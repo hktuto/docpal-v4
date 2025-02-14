@@ -150,7 +150,7 @@ onActivated(() => {
         ></MasterTableTabLog>
       </el-tab-pane>
       <el-tab-pane :label="$t('masterTable.setting')" name="setting">
-        <MasterTableTabSetting :table="state.masterTable"></MasterTableTabSetting>
+        <MasterTableTabSetting v-if="state.masterTable && state.masterTable.id" :table="state.masterTable"></MasterTableTabSetting>
       </el-tab-pane>
     </el-tabs>
     <div class="absolute-btns">
