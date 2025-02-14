@@ -33,9 +33,38 @@ const WidgetNames = {
     upload: ['file-upload'],
     select: ['select']
 }
+const defaultFormJson = {
+  "widgetList": [],
+  "formConfig": {
+    "modelName": "formData",
+    "refName": "vForm",
+    "rulesName": "rules",
+    "labelWidth": 80,
+    "labelPosition": "top",
+    "size": "",
+    "labelAlign": "label-left-align",
+    "cssCode": "",
+    "customClass": [],
+    "functions": "",
+    "layoutType": "PC",
+    "jsonVersion": 3,
+    "onFormCreated": "",
+    "onFormMounted": "",
+    "onFormDataChange": "",
+    "dhList": [],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
+  }
+}
 const FormRendererRef = ref()
 // #region module: set
     async function setForm (json: string | object, data?: object, properties:any[] = []) {
+        if(JSON.stringify(json) === '{}') {
+            FormRendererRef.value.setFormJson(defaultFormJson)
+            return
+        }
         state.formJson = json
         FormRendererRef.value.setFormJson(json)
         if (data && properties) {
