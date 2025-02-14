@@ -42,3 +42,10 @@ const time = computed({
 
 </div>
 </template>
+
+
+<style lang="scss" scoped>
+.fromContainer{
+    overflow: auto;
+}
+</style>
