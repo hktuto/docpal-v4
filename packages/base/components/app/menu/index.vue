@@ -202,14 +202,13 @@ onMounted(() => {
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: stretch;
+    justify-content: flex-start;
     align-items: flex-start;
     gap: var(--app-space-xs);
     font-size: var(--icon-font-size);
     position: relative;
     overflow: auto;
     padding-block: var(--app-space-s);
-    
 }
 .menuFooter{
     font-size: var(--icon-font-size);
