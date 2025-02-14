@@ -69,7 +69,7 @@ function setupEdge(){
         if(source.data.type === 'serviceTask' && source.data.data['attr_flowable:delegateExpression'] === '${conditionValidateDelegate}')  {
             let newData = {...edge.data};
             let label = "Approved";
-            
+            console.log("source", source)
             // 如果是新的連線，先看看 allNodeConnected 有沒有 conditionValidateDelegate
             if(isNew){
                 if(allNodeConnected.length > 2){
@@ -102,7 +102,8 @@ function setupEdge(){
             graphProvider.graph.value?.stopBatch('updateEdge')
             return
         }
-        if(allNodeConnected.length >= 1){
+        if(allNodeConnected.length >= 2){
+            console.log("allNodeConnected", allNodeConnected)
                     // remove edge
                     graphProvider.graph.value?.removeEdge(edge.id)
                     return
