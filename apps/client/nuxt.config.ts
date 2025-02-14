@@ -5,6 +5,7 @@ export default defineNuxtConfig({
   ssr:false,
   modules: ['@nuxt/test-utils/module'],
   extends:[
+    "../../packages/icon",
     '../../packages/authApp',
     "../../pages/client-browse",
     "../../pages/client-search",
