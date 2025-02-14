@@ -20,8 +20,15 @@ export const useCalendarStore = () => {
 
     async function getCalendarMasterTable(){
         const {data} = await adminApi.api.getCalendarsSettingTables() as any
-        console.log("getCalendarMasterTable", data)
         return data
+    }
+
+    async function getCatergories(){
+
+    }
+
+    async function getLocations(){
+        
     }
 
     async function getCalendarsSetting(){
@@ -43,6 +50,12 @@ export const useCalendarStore = () => {
                 master_table: masterTable['Event Categories'] ,
             }
         };
+        // get master table detail of event location and event categories
+        if(masterTable['Event Categories']){
+
+        }
+
+        if(masterTable['Event Locations'])
     }
 
     onMounted(() => {

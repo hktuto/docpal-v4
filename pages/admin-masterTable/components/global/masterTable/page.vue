@@ -31,7 +31,7 @@ const logRef = ref()
 const MasterTableTabRecordsRef = ref()
 function handleTableFilterChange(formModel:any) {
   state.tableFilter = formModel
-  MasterTableTabRecordsRef.value.refresh()
+  MasterTableTabRecordsRef.value.reload()
 }
 function handleLogFilterChange(formModel:any) {
   state.logFilter = formModel
