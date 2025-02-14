@@ -3,6 +3,11 @@ import { adminApi } from 'api';
 import { ElFormItem, ElSwitch } from 'element-plus';
 import { useDebounceFn } from '@vueuse/core'
 
+const routerProvider = inject(MenuRouterKey)
+if(!routerProvider) {
+    throw createError('menu manger not found')
+}
+const { t } = useI18n()
 const { setting, getCalendarsSetting } = useCalendarStore();
 const loading = ref(false);
 
@@ -11,7 +16,13 @@ const categoryMasterTable = ref()
 
 const saveSetting = useDebounceFn( async() => {
     await adminApi.api.postCalendarsSetting(setting.value);
+    routerProvider?.message.success(t('dpMsg_success'))
 }, 500)
+
+
+provide(CalendarSettingKey,{
+    saveSetting
+})
 
 
 onActivated(() => {
@@ -39,7 +50,7 @@ onActivated(() => {
                     <ElFormItem :label="$t('calendarSetting.defaultSolt')">
                         <ElInput v-model="setting.basic.default_slot" type="number" min="0" :step="1" @change="saveSetting" >
                             <template #suffix>
-                                {{  $t('time.minute') }}
+                                {{  $t('time.minutes') }}
                             </template>
                         </ElInput>
                     </ElFormItem>
@@ -66,16 +77,7 @@ onActivated(() => {
                     </ElFormItem>
                 </ElForm>
             </div>
-            <div class="section category">
-                <div class="title">{{  $t('calendarSetting.location') }}</div>
-                <ElForm label-position="top" @submit.stop="">
-                    <ElFormItem :label="$t('calendarSetting.category_masterTable')">
-                        <ElSelect v-model="setting.category.master_table" @change="saveSetting" disabled>
-
-                        </ElSelect>
-                    </ElFormItem>
-                </ElForm>
-            </div>
+            <CalendarSettingCategories />
         </template>
     </div>
 </template>
