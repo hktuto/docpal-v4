@@ -19,7 +19,8 @@
     "dayjs": "^1.11.13",
     "nuxt": "3.15.2",
     "vue": "3.5.6",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "js-base64": "^3.7.7"
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.14.1",
