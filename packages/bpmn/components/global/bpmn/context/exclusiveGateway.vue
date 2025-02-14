@@ -11,3 +11,10 @@ const { node } = defineProps<{
     {{ node }}
 </div>
 </template>
+
+
+<style lang="scss" scoped>
+.fromContainer{
+    overflow: auto;
+}
+</style>
