@@ -65,7 +65,7 @@ function tabChangeHandler(){
 }
 
 async function getAvailableWorkflow () {
-    state.availableWorkflow = await publicApi.api.postWorkflowProcessList({}).then(res => res.data)
+    state.availableWorkflow = await clientApi.api.postWorkflowProcessList({}).then(res => res.data)
 }
 async function workflowClickHandler (item: any) {
     let step = 'start'
@@ -82,7 +82,7 @@ async function workflowClickHandler (item: any) {
     state.formDialogVisible = true
     // @ts-ignore
     state.selectedWorkflow = deepCopy(item)
-    initForm(item.key)
+    initForm(item.key, item.versionId)
     // createWorkflowForm.value = await workflowStore.getFromProperties(item.key)
 
     // opened.value = true
@@ -118,10 +118,10 @@ async function workflowClickHandler (item: any) {
         }
         state.loading = false
     }
-    async function initForm (processKey) {
+    async function initForm (processKey: string, versionId: string) {
         const props = await clientApi.api.postWorkflowProperties({ processKey }).then(res => res.data)
         const formData = formDataGet(props)
-        const formJson = await formJsonGet('start', processKey)
+        const formJson = await formJsonGet('start', processKey, versionId)
         setTimeout(() => {
             vFormRef.value.setForm(formJson, formData, props)
         })
@@ -141,8 +141,8 @@ async function workflowClickHandler (item: any) {
                     return prev
                 }, {})
     }
-    async function formJsonGet (userTaskId:string, processKey:string) {
-        const response: any = await clientApi.api.getRelationQuery({relation:{userTaskId, processKey}}).then(res => res.data)
+    async function formJsonGet (userTaskId:string, processKey:string, versionId: string) {
+        const response: any = await clientApi.api.getRelationQuery({userTaskId, processKey }).then(res => res.data)
         if (!response[0] ||
             response[0] && !response[0].jsonValue) return {}
         return JSON.parse(response[0].jsonValue)
