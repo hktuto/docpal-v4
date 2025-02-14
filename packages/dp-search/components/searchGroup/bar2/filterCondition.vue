@@ -132,15 +132,13 @@ defineExpose({
   border: 1px solid var(--el-border-color);
   border-radius: 4px;
   padding: var(--app-space-xs);
-  :deep .container-wrapper {
+  :deep(.container-wrapper) {
     min-width: unset;
   }
-  :deep {
-    .static-content-item {
-      min-height: unset;
-    }
+  :deep(.static-content-item){
+    min-height: unset;
   }
-  :deep .el-form .el-row {
+  :deep(.el-form .el-row) {
     padding: unset;
   }
 }
