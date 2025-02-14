@@ -30,8 +30,6 @@ async function getDetail() {
   try {
     state.loading = true;
     state.error = null;
-    console.log(workflowType);
-
     switch (workflowType) {
       case state.processState.completeTask:
         const historyList: any = await clientApi.api
@@ -81,7 +79,7 @@ async function handleFormDataGet() {
   switch (workflowType) {
     case state.processState.completeTask:
       formData = state.taskDetail.processVariables;
-      formJson = await formJsonGet("end", state.taskDetail.processDefinitionKey);
+      formJson = await formJsonGet("end", state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
 
       vFormRef.value.setForm(formJson, formData);
       break;
@@ -99,7 +97,8 @@ async function handleFormDataGet() {
       formData = formDataGetFromProps(properties);
       formJson = await formJsonGet(
         state.taskDetail.taskDefinitionKey,
-        state.taskDetail.taskInstance.processDefinitionKey
+        state.taskDetail.taskInstance.processDefinitionKey,
+        state.taskDetail.processDefinitionVersionId
       );
       console.log(formData);
 
@@ -125,9 +124,9 @@ function formDataGetFromProps(list: any) {
     return prev;
   }, {});
 }
-async function formJsonGet(userTaskId: string, processKey: string) {
+async function formJsonGet(userTaskId: string, processKey: string, versionId: string) {
   // @ts-ignore
-  const response: any = await clientApi.api.getRelationQuery({ userTaskId, processKey }).then((res) => res.data);
+  const response: any = await clientApi.api.getRelationQuery({ userTaskId, processKey, versionId }).then((res) => res.data);
   if (!response || !response[0] || (response[0] && !response[0].jsonValue)) return {};
   return JSON.parse(response[0].jsonValue);
 }
