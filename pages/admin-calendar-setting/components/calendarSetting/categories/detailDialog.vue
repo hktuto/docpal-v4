@@ -5,6 +5,10 @@ import { adminApi } from 'api';
 const { setting, categoriesColumn } = useCalendarStore();
 const opened = ref(false);
 
+const {selectedItem} = defineProps<{
+    selectedItem?: any
+}>()
+
 const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
     throw createError('menu manger not found')
@@ -33,18 +37,36 @@ function createFormFromColumn() {
             required: item.required,
         }
     })
+    if(selectedItem){
+        form.value.forEach(item => {
+            if(selectedItem[item.field]) {
+                item.value = selectedItem[item.field]
+            }
+        })
+    }
 }
 
 async function submit(){
     const data:Record<string, any> = form.value.reduce((result:any, item) => {
         result[item.field] = item.value
         return result
-    },{}) 
-    await adminApi.api.postMasterTablesRecord({
-        id: setting.value.category.master_table,
-        data: [data]
-      })   
+    },{})
+    if(selectedItem){
+        // edit item
+        await adminApi.api.putMasterTablesIdRecord(setting.value.category.master_table, {
+        data: [data],
+        where: {
+          id: selectedItem.id
+        }
+      })
+    }else{
 
+        await adminApi.api.postMasterTablesRecord({
+            id: setting.value.category.master_table,
+            data: [data]
+        })   
+        
+    }
     emits('submit')
     routerProvider?.message.success(t('dpMsg_success'))
     opened.value = false

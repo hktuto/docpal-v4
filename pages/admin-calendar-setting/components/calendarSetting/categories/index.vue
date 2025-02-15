@@ -5,7 +5,9 @@ import { adminApi } from 'api';
 const { setting, categoriesColumn } = useCalendarStore();
 
 const calendarProvider = inject(CalendarSettingKey);
-const addDialogRef = ref();
+const detailDialogRef = ref();
+
+const selectedItem = ref();
 
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     id: 'calendarSetting_categories',
@@ -37,19 +39,26 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             code: 'edit',
             name: 'common_edit',
             action: ({ row }: any) => {
-                addDialogRef.value.open(row)
+                selectedItem.value = row;
+                detailDialogRef.value.open()
             },
-        }]
+        },
+        {
+            code: 'delete',
+            name: "delete",
+            action: async ({row}:any) => {
+                await adminApi.api.deleteMasterTablesIdRecord(setting.value.category.master_table,  {recordId: row.id}, {});
+                reload();
+            }
+        }
+    ]
     ]
 })
-console.log("tableConfig", tableConfig)
 
-onMounted(() => {
-    console.log(categoriesColumn.value)
-})
 
 function addRecord(){
-    addDialogRef.value.open()
+    selectedItem.value = null;
+    detailDialogRef.value.open()
 }
 
 
@@ -74,7 +83,7 @@ function addRecord(){
             </template>
         </VxeGrid>
     </div>
-    <CalendarSettingCategoriesAddDialog ref="addDialogRef" @submit="reload" />
+    <CalendarSettingCategoriesDetailDialog ref="detailDialogRef" :selectedItem="selectedItem" @submit="reload" />
 </div>
 </template>
 
