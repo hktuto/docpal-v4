@@ -8,7 +8,7 @@ if(!routerProvider) {
     throw createError('menu manger not found')
 }
 const { t } = useI18n()
-const { setting, getCalendarsSetting, calendarViewOptions, weekDayOptions } = useCalendarStore();
+const { setting, getCalendarsSetting, calendarViewOptions, weekDayOptions, categoriesColumn } = useCalendarStore();
 const loading = ref(false);
 
 const categoryMasterTable = ref()
@@ -77,7 +77,7 @@ onActivated(() => {
                     </ElFormItem>
                 </ElForm>
             </div>
-            <CalendarSettingCategories />
+            <CalendarSettingCategories v-if="categoriesColumn" />
         </template>
     </div>
 </template>
