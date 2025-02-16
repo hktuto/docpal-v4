@@ -7,7 +7,6 @@ const { setting, categoriesColumn } = useCalendarStore();
 const calendarProvider = inject(CalendarSettingKey);
 const detailDialogRef = ref();
 
-const selectedItem = ref();
 
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     id: 'calendarSetting_categories',
@@ -39,8 +38,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             code: 'edit',
             name: 'common_edit',
             action: ({ row }: any) => {
-                selectedItem.value = row;
-                detailDialogRef.value.open()
+                detailDialogRef.value.open(row)
             },
         },
         {
@@ -57,7 +55,6 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
 
 
 function addRecord(){
-    selectedItem.value = null;
     detailDialogRef.value.open()
 }
 
@@ -83,7 +80,7 @@ function addRecord(){
             </template>
         </VxeGrid>
     </div>
-    <CalendarSettingCategoriesDetailDialog ref="detailDialogRef" :selectedItem="selectedItem" @submit="reload" />
+    <CalendarSettingCategoriesDetailDialog ref="detailDialogRef"  @submit="reload" />
 </div>
 </template>
 

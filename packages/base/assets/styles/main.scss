@@ -9,7 +9,12 @@ $types: primary, success, warning, danger, error, info;
 
 :root{
   --app-main-color: #{map.get($app-color, 'primary', 'base')};
+ 
   --app-accent-color: #{map.get($app-color, 'success', 'base')};
+
+  // calendar 
+  --sx-color-primary : var(--app-accent-color) !important;
+
   // generate grey color in 5 levels
   --app-grey-hue: 200;
   --app-grey-saturation: 15%;
@@ -99,6 +104,8 @@ html.dark{
     }
     
   }
+
+  
 }
 
 html, body{

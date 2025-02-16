@@ -72,7 +72,8 @@ export type DashboardWidgetSetting = {
     type ?: 'personal' | 'document' | 'workflow' | 'azure' | 'default'
 }
 
-export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidgetSetting } = {
+
+export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting } = {
     DocSizeStatistics: {
         label: 'docTypeSizeChart',
         minW: 2,
@@ -371,6 +372,22 @@ export const dashboardWidgetSetting: { [key in DashboardWidget] : DashboardWidge
         setting : {
             caseKeys: []
         }
+    },
+    CalendarWidget: {
+        divided: true,
+        type: 'personal',
+        label: 'CalendarWidget',
+        minW: 2,
+        minH: 6,
+        maxW: 12,
+        maxH: 12,
+        w: 6,
+        h: 8,
+        component : 'CalendarWidget',
+        setting : {
+            editable: true,
+        }
+
     }
 }
 
@@ -389,34 +406,36 @@ export const getNormalizeSetting= (setting: DashboardWidget) => {
     }
 }
 
+// TODO : 删除
 export const widgetComponent = {
-    'DocTypeCoCount': DocTypeCoCount,
-    'DocTypeCount': DocTypeCount,
-    'DocSizeStatistics': DocSizeStatistics,
+    'DocTypeCoCount': 'DocTypeCoCount',
+    'DocTypeCount': "DocTypeCount",
+    'DocSizeStatistics': "DocSizeStatistics",
 
-    'WorkflowCoCount': WorkflowCoCount,
-    'WorkflowActiveCount': WorkflowActiveCount,
-    'WorkflowApproveRate': WorkflowApproveRate,
-    'WorkflowNewCount': WorkflowNewCount,
-    'WorkflowTimeSpendPerTask': WorkflowTimeSpendPerTask,
-    'WorkflowTimeSpendPerWorkflow': WorkflowTimeSpendPerWorkflow,
+    'WorkflowCoCount': "WorkflowCoCount",
+    'WorkflowActiveCount': "WorkflowActiveCount",
+    'WorkflowApproveRate': 'WorkflowApproveRate',
+    'WorkflowNewCount': 'WorkflowNewCount',
+    'WorkflowTimeSpendPerTask': 'WorkflowTimeSpendPerTask',
+    'WorkflowTimeSpendPerWorkflow': 'WorkflowTimeSpendPerWorkflow',
 
-    'WorkflowGroup': WorkflowGroup,
+    'WorkflowGroup': 'WorkflowGroup',
 
-    'AzureThreshold': AzureThreshold,
-    'AzureOcrProcessed': AzureOcrProcessed,
-    'AzureOcrProcessedHistory': AzureOcrProcessedHistory,
+    'AzureThreshold': 'AzureThreshold',
+    'AzureOcrProcessed': 'AzureOcrProcessed',
+    'AzureOcrProcessedHistory': 'AzureOcrProcessedHistory',
 
-    "PersonalDashboard": PersonalDashboard,
-    "PersonalShare": PersonalShare,
-    "PersonalShareExternal": PersonalShareExternal,
-    "PersonalShareInternalMe": PersonalShareInternalMe,
-    "PersonalShareInternalOther": PersonalShareInternalOther,
-    "PersonalPredefinedSearch": PersonalPredefinedSearch,
-    "PersonalWorkflowCreate": PersonalWorkflowCreate,
-    "PersonalWorkflow": PersonalWorkflow,
-    "PersonalSearchHistory": PersonalSearchHistory,
-    "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
-    "PersonalCaseCreate": PersonalCaseCreate,
-    "PersonalCase": PersonalCase
+    "PersonalDashboard": 'PersonalDashboard',
+    "PersonalShare": 'PersonalShare',
+    "PersonalShareExternal": 'PersonalShareExternal',
+    "PersonalShareInternalMe": 'PersonalShareInternalMe',
+    "PersonalShareInternalOther": 'PersonalShareInternalOther',
+    "PersonalPredefinedSearch": 'PersonalPredefinedSearch',
+    "PersonalWorkflowCreate": 'PersonalWorkflowCreate',
+    "PersonalWorkflow": 'PersonalWorkflow',
+    "PersonalSearchHistory": 'PersonalSearchHistory',
+    "PersonalSearchRecentDoc": 'PersonalSearchRecentDoc',
+    "PersonalCaseCreate": 'PersonalCaseCreate',
+    "PersonalCase": 'PersonalCase',
+    "CalendarWidget": "CalendarWidget"
 }

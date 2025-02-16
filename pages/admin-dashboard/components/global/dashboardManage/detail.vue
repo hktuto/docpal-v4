@@ -73,6 +73,9 @@ async function getInfo() {
     state.layout = temLayout.map((item) => {
       return Object.assign(item, getNormalizeSetting(item.component));
     });
+  }else{
+    // dashboard is new, set layout to empty array
+    state.layout = []
   }
 }
 onActivated(() => {
