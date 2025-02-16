@@ -5,10 +5,8 @@ import { adminApi } from 'api';
 const { setting, categoriesColumn } = useCalendarStore();
 const opened = ref(false);
 
-const {selectedItem} = defineProps<{
-    selectedItem?: any
-}>()
 
+const currentData = ref();
 const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
     throw createError('menu manger not found')
@@ -37,26 +35,28 @@ function createFormFromColumn() {
             required: item.required,
         }
     })
-    if(selectedItem){
+    if(currentData.value){
         form.value.forEach(item => {
-            if(selectedItem[item.field]) {
-                item.value = selectedItem[item.field]
+            if(currentData.value[item.field]) {
+                item.value = currentData.value[item.field]
             }
         })
     }
 }
 
 async function submit(){
+    
+
     const data:Record<string, any> = form.value.reduce((result:any, item) => {
         result[item.field] = item.value
         return result
     },{})
-    if(selectedItem){
+    if(currentData.value){
         // edit item
         await adminApi.api.putMasterTablesIdRecord(setting.value.category.master_table, {
         data: [data],
         where: {
-          id: selectedItem.id
+          id: currentData.value.id
         }
       })
     }else{
@@ -72,7 +72,12 @@ async function submit(){
     opened.value = false
 }
 
-function open() {
+function open(item?:any) {
+    if(item){
+        currentData.value = item
+    }else{
+        currentData.value = null
+    }
     createFormFromColumn()
     opened.value = true;
 }
@@ -97,7 +102,7 @@ defineExpose({
             </ElFormItem>
         </ElForm>
         <template #footer>
-            <ElButton type="primary" @click="submit">{{ $t("Add") }}</ElButton>
+            <ElButton type="primary" @click="submit">{{ currentData ? $t("common_edit") : $t("Add") }}</ElButton>
         </template>
     </ElDialog>
 </template>
