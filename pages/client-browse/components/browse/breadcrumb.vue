@@ -1,8 +1,11 @@
 <script lang="ts" setup>
 import {ArrowRight} from '@element-plus/icons-vue'
 import { clientApi } from 'api';
+import { MenuRouterKey } from '#imports';
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-    idOrPath: string
+    idOrPath: string,
+    home: any,
 }>();
 const { idOrPath } = toRefs(props)
 const listProvider = inject(BrowseListProviderKey)
@@ -15,11 +18,15 @@ const loading = ref(false)
 async function getBreadcrumb() {
     loading.value = true
     try{
-
-        const {data} = await clientApi.api.postNuxeoDocumentBreadcrumb({idOrPath:idOrPath.value})
+        const {data}: any = await clientApi.api.postNuxeoDocumentBreadcrumb({idOrPath:idOrPath.value})
+        if(props.home) {
+            const index = data?.findIndex((item: any) => item.id === props.home.secondId)
+            if(index !== -1) {
+                data.splice(0, index)
+            }
+        }
         breadcrumbList.value = data || []
     }catch(e){
-        console.log(e)
     }
     loading.value = false
 }
@@ -27,7 +34,11 @@ async function getBreadcrumb() {
 function navigate(idOrPath?:string) {
     if(idOrPath) {
         listProvider?.changeRoute(idOrPath)
-    }else{
+    }
+    else if (props.home?.homeRouteItem) {
+        routerProvider?.navigateTo(props.home.homeRouteItem)
+    }
+    else{
         listProvider?.changeRoute('/')
     }
 }
