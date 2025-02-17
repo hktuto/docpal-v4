@@ -45,19 +45,24 @@ const form = ref({
     field:[]
 })
 
-function refreshData(){  
+async function refreshData(){  
     const data = node.getData()
     if(data.data.extensionElements['flowable:mastertableRecord']) {
         form.value = data.data.extensionElements['flowable:mastertableRecord']
     }
+    if(form.value.attr_masterTableId) {
+        const { data } = await adminApi.api.getMasterTablesId(form.value.attr_masterTableId)
+        allColumnInMasterTable.value = data.fields
+    }
 }
 
 const ignoreList = ['id', 'created_date', 'created_by', 'modified_date', 'status', 'modified_by'];
+const allColumnInMasterTable = ref([])
 async function masterTableIdChange(newId) {
     if(newId) {
         // get all columns from master table
         const { data } = await adminApi.api.getMasterTablesId(newId)
-        const fields = data.fields.filter(item => !ignoreList.includes(item.columnName))
+        const fields = [...data.fields].filter(item => !ignoreList.includes(item.columnName))
         form.value.field = fields.map( column => {
             return {
                 attr_formProperty: "",
@@ -66,6 +71,7 @@ async function masterTableIdChange(newId) {
         })
     }else{
         form.value.field = []
+        allColumnInMasterTable.value = []
     }
     refreshData()
 }
@@ -77,7 +83,10 @@ function updateData(){
         version: data.version + 1 || 1,
         data:{
             ...data.data,
-            ...form.value
+            extensionElements:{
+                ...data.data.extensionElements,
+                'flowable:mastertableRecord':form.value
+            }
         }
     }
     node.setData(newData,{ overwrite: true, deep:true });
@@ -109,10 +118,16 @@ onMounted(async() => {
                         <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
                     </ElSelect>
                 </ElFormItem>
+                <ElFormItem  label="Record Column">
+
+                    <ElSelect v-model="form.attr_tableColumn" placeholder="Field" @change="updateData">
+                        <ElOption v-for="item in allColumnInMasterTable" :key="item.columnName" :label="item.columnName" :value="item.columnName" />
+                    </ElSelect>
+                </ElFormItem>
                 <ElDivider />
                 <h4>Fields</h4>
                 <ElFormItem v-for="item in form.field" :key="item.attr_tableColumn" :label="item.attr_tableColumn">
-                    <ElSelect v-model="form.attr_formProperty" placeholder="Field" @change="updateData">
+                    <ElSelect v-model="item.attr_formProperty" placeholder="Field" @change="updateData">
                         <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
                     </ElSelect>
                 </ElFormItem>
