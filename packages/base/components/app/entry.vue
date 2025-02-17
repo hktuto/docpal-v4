@@ -90,8 +90,6 @@ async function getLocale(){
     languageReady.value = true
     emits('ready')
 }
-
-
 useGlobalSetting()
 
 
