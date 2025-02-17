@@ -61,18 +61,7 @@ function init(bpmnXml :string, x6Json?:any){
             validateMagnet({ magnet }:any) {
                 return !readonly.value
             },
-
             validateConnection({ sourceMagnet, targetMagnet }:any) {
-                // 只能从输出连接桩创建连接
-                // if (!sourceMagnet || sourceMagnet.getAttribute('port-group') === 'from') {
-                //     return false
-                // }
-
-                // // 只能连接到输入连接桩
-                // if (!targetMagnet || targetMagnet.getAttribute('port-group') !== 'from') {
-                //     return false
-                // }
-
                 return !readonly.value
             },
         }
