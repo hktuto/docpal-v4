@@ -7,10 +7,11 @@ const emits = defineEmits(['remove'])
 
 const conditionTypeOption = [
     'Update_Number',
-    'Look_Up_User_Group',
-    'Look_Up_User',
-    'Look_Up_Master_Table',
-    'Look_Up_Case_info'
+    // TODO : other type is not implemented yet
+    // 'Look_Up_User_Group',
+    // 'Look_Up_User',
+    // 'Look_Up_Master_Table',
+    // 'Look_Up_Case_info'
 ]
 
 function remove() {
