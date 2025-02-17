@@ -12,12 +12,11 @@ export const routeShareMePage = function(params: any){
 export const routeShareMePageFolder = function(params: any){
   return {
     id: "internal-share-me-page-folder-versions-" + new Date().getTime(),
-    name: "internal-share-me-page-folder-" + params.id,
+    name: "internal-share-me-page-folder-" + params.documentIds,
     icon: 'icon-park-outline:document-folder',
     label: params.documentNames,
     component: 'LazyInternalShareMePageFolder',
     props: {
-      id: params.id,
       idOrPath: params.documentIds,
       homeId: params.documentIds
     }
@@ -38,12 +37,13 @@ export const routeShareOtherPage = function(params: any){
 export const routeShareOtherPageFolder = function(params: any){
   return {
     id: "internal-share-other-page-folder-versions-" + new Date().getTime(),
-    name: "internal-share-other-page-folder-" + params.id,
+    name: "internal-share-other-page-folder-" + params.documentIds,
     icon: 'icon-park-outline:document-folder',
     label: params.name,
     component: 'LazyInternalShareOtherPageFolder',
     props: {
-      id: params.id,
+      idOrPath: params.documentIds,
+      homeId: params.documentIds
     }
   } as TabItem
 }

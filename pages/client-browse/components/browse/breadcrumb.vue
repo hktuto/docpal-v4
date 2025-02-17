@@ -21,7 +21,7 @@ async function getBreadcrumb() {
         const {data}: any = await clientApi.api.postNuxeoDocumentBreadcrumb({idOrPath:idOrPath.value})
         if(props.home) {
             const index = data?.findIndex((item: any) => item.id === props.home.secondId)
-            if(index !== -1) {
+            if(index > 0) {
                 data.splice(0, index)
             }
         }
