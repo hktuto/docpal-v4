@@ -142,7 +142,7 @@ async function workflowClickHandler (item: any) {
                 }, {})
     }
     async function formJsonGet (userTaskId:string, processKey:string, versionId: string) {
-        const response: any = await clientApi.api.getRelationQuery({userTaskId, processKey }).then(res => res.data)
+        const response: any = await clientApi.api.getRelationQuery({userTaskId, processKey, versionId }).then(res => res.data)
         if (!response[0] ||
             response[0] && !response[0].jsonValue) return {}
         return JSON.parse(response[0].jsonValue)
