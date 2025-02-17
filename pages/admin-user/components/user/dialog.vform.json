@@ -260,7 +260,7 @@
         "disabled": false,
         "hidden": false,
         "clearable": true,
-        "showPassword": false,
+        "showPassword": true,
         "required": true,
         "requiredHint": "",
         "validation": "",

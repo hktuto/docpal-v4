@@ -29,7 +29,6 @@ const state = reactive({
   ],
 });
 function handleRefresh (layoutSetting:any) {
-  console.log(layoutSetting)
   const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
   handleSave() 
@@ -69,13 +68,21 @@ function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
 }
 async function getInfo() {
+  state.info = 
   state.info = await adminApi.api.getPersonalDashboardId(id).then(res => res.data);
-  if (!state.info || !state.info.styleJson) return;
+  console.log("getInfo", state.info)
+  if (!state.info || !state.info.styleJson) {
+    
+    return;
+  };
   const temLayout = JSON.parse(state.info.styleJson);
   if (Array.isArray(temLayout)) {
     state.layout = temLayout.map((item) => {
       return Object.assign(item, getNormalizeSetting(item.component));
     });
+  }else{
+    // dashboard is new, set layout to empty array
+    state.layout = []
   }
 }
 onActivated(() => {
@@ -101,7 +108,7 @@ onActivated(() => {
                 <el-dropdown-item
                   v-if="
                     (!item.feature || checkLicenseFeatures(item.feature)) &&
-                    item.type !== 'personal'
+                    item.type === 'personal'
                   "
                   :command="key"
                   :divided="item.divided"

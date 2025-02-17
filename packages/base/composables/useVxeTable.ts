@@ -444,6 +444,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     }
 
     onActivated(() => {
+        console.log("table onActivated")
         if(init.value) {
             reload()
         }

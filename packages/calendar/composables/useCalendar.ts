@@ -3,6 +3,8 @@ import { adminApi } from '../../../libraries/api/src/index';
 import { onMounted } from "vue";
 
 export const useCalendarSetting = () => useState<any>('calendarSetting');
+export const useCategoriesColumn = () => useState<any[]>('categoriesColumn');
+export const useCalenarCategories = () => useState<any[]>('calendarCategories', () =>([]));
 
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
@@ -23,7 +25,7 @@ export const useCalendarStore = () => {
         return data
     }
 
-    const categoriesColumn = ref<any[]>([])
+    const categoriesColumn = useCategoriesColumn()
     async function getCatergories(){
         const {data} = await adminApi.api.getMasterTablesId(setting.value.category.master_table) as any
         categoriesColumn.value = data.fields;
@@ -52,7 +54,6 @@ export const useCalendarStore = () => {
                 master_table: masterTable['Event Categories'] ,
             }
         };
-        console.log(setting.value)
         // get master table detail of event location and event categories
         if(setting.value.category.master_table){
             
@@ -64,10 +65,10 @@ export const useCalendarStore = () => {
         }
     }
 
-    onMounted(() => {
+    onMounted(async () => {
         if(!setting.value){
 
-            getCalendarsSetting()
+            await getCalendarsSetting()
         }
     })
 

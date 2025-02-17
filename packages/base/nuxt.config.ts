@@ -57,6 +57,7 @@ const config = {
   },
   nitro:{
     routeRules:{
+      '/public-api/report/v1/api': {proxy: {to: process.env.DASHBOARD_PROXY}},
       '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
       '/notification/api/**': {proxy: {to: process.env.NOTIFICATION_PROXY+"/**"}},
       '/dashboard/**': {proxy: {to:process.env.DASHBOARD_PROXY+"/**"}},
@@ -64,6 +65,12 @@ const config = {
     },
 
       devProxy:{
+        
+        '/public-api/report/v1/api':{
+          target: process.env.DASHBOARD_PROXY,
+          changeOrigin: true,
+          prependPath: true
+        },
         '/api':{
           target: process.env.PROXY,
           changeOrigin: true,
@@ -83,7 +90,7 @@ const config = {
           target: process.env.CLIENT_PROXY,
           changeOrigin: true,
           prependPath: true
-        }
+        },
       }
       // routeRules: {
       //     '/dashboard/**': {
