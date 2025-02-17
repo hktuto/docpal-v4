@@ -10,6 +10,7 @@ defineOptions({
 const props = defineProps<{ 
     idOrPath: string ,
     filter: any,
+    home: any,
 }>();
 const { idOrPath } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
@@ -55,7 +56,7 @@ provide(BrowseListProviderKey,{
         <template #toolbar_buttons> 
             <slot name="toolbar_buttons">
                 <div class="toolsBarContainer">
-                    <BrowseBreadcrumb :idOrPath="idOrPath" />
+                    <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
                 </div>
             </slot>
         </template>

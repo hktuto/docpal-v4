@@ -1,7 +1,6 @@
 <script lang="tsx" setup>
 import {BrowseListProviderKey} from '#imports'
 import {Grid, type VxeGridInstance, type VxeGridListeners} from 'vxe-table'
-import { createLazyLoadTableConfig } from '../../../../../packages/base/utils/tableHelper';
 
 const listProvider = inject(BrowseListProviderKey);
 if(!listProvider) {

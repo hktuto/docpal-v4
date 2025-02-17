@@ -35,6 +35,8 @@ const {
   api: (pageParams: any) => clientApi.api.postInternalshareMe({  ...pageParams, ...extraParams }),
   columns: [
     { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },
+    { field: "path", title: "search.logicalPath" },
+    
     { field: "createdUserId", title: "tableHeader_shareBy" },
     {
       field: "createdDate",
@@ -92,8 +94,6 @@ const {
     handleDblclick(row)
   },
 });
-
-const shareInfoDialogRef = ref()
 
 function handleDblclick (row: any) {
   if(row.isFolder) {
