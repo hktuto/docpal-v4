@@ -5,6 +5,18 @@ import { BpmnElementType, bpmnElement } from "./bpmnElement";
 import { at } from "vitest/dist/chunks/reporters.WnPwkmgA.js";
 
 
+export const nodeXmltoJson = function(nodeXml: string) {
+    const parser = new XMLParser( {
+        ignoreAttributes: false,
+        attributeNamePrefix : "attr_",
+        cdataPropName:     "__cdata",
+        allowBooleanAttributes: true,
+        parseAttributeValue: true
+    });
+    let json = parser.parse(nodeXml)
+
+    return json
+}
 
 export const bpmnStringToJson = function(bpmnString: string) {
     const parser = new XMLParser( {
