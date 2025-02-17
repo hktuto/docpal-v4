@@ -6,7 +6,7 @@
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv ../../env/.env.app2.admin --port 8088",
+    "dev": "nuxt dev --dotenv ../../env/.env.app4.admin --port 8088",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
