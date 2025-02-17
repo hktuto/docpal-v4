@@ -7,7 +7,7 @@
 <script lang="ts" setup>
 import * as echarts from "echarts";
 import { useEventListener, watchDebounced } from '@vueuse/core'
-import { publicApi } from "../../../../../libraries/api/src";
+import { publicApi } from "api";
 const props = withDefaults( defineProps<{
     dates?: any;
     documentType?: string,
