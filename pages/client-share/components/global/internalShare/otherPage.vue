@@ -37,7 +37,13 @@ const {
     { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },
     { field: "path", title: "search.logicalPath" },
     
-    { field: "userOrGroupIds", title: "tableHeader_shareTo" },
+    { field: "shareUserIds", title: "tableHeader_shareTo",
+      formatter({ cellValue }: any) {
+        if(!cellValue) return ''
+        const userList = JSON.parse(cellValue)
+        return userList.join(',')
+      }
+    },
     {
       field: "createdDate",
       title: "tableHeader_shareDate",
