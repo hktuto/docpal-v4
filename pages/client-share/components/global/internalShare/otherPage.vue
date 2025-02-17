@@ -1,102 +1,113 @@
-<script lang="ts" setup>
-import { clientApi } from "api";
-import { provide } from "vue";
-import { ElMessageBox } from "element-plus";
-
-const routerProvider = inject(MenuRouterKey);
-if (!routerProvider) {
-  throw new Error("MenuRouterKey is not provided");
-}
-
-const props = defineProps<{
-  pageNum: number;
-  pageSize: number;
-  filters?: any;
-}>();
-const { pageNum, pageSize, filters } = toRefs(props);
-
-const { t } = useI18n();
-const filterData = ref();
-const ResponsiveFilterRef = ref();
-const tableRef = ref();
-
-function handleFilterFormChange(formData: any) {
-  filterData.value = formData;
-  console.log("handleFilterFormChange", formData, tableRef.value);
-  tableRef.value?.reload();
-}
-function handleClearFilter() {
-  filterData.value = {};
-  tableRef.value?.reload();
-}
-onMounted(() => {
-  ResponsiveFilterRef.value.init([
-    {
-      key: "orderBy",
-      label: "tableHeader.sortBy",
-      type: "string",
-      isMultiple: false,
-      options: [
-        { label: "tableHeader_documentName", value: "documentNames" },
-        { label: "tableHeader_shareBy", value: "shareByUserId" },
-        { label: "tableHeader_shareTo", value: "shareToUserIds" },
-        { label: "filePopover_fileCreatedDate", value: "createdDate" },
-      ],
-    },
-    {
-      key: "isDesc",
-      label: "tableHeader.sortOrder",
-      type: "string",
-      isMultiple: false,
-      options: [
-        { label: "tableHeader.desc", value: false },
-        { label: "tableHeader.asc", value: true },
-      ],
-    },
-  ]);
-  if (filters.value) {
-    console.log("set filters", filters.value);
-    filterData.value = filters.value;
-    nextTick(() => {
-      Object.keys(filters.value).forEach((key) => {
-        ResponsiveFilterRef.value.setValue(key, filters.value[key]);
-      });
-      // tableRef.value?.reload()
-    });
-  }
-});
-
-async function deleteAction(row: any) {
-  ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`).then(async () => {
-    // param.push(...row.detailIds.split(','))
-    await clientApi.api.deleteInternalshare({ internalShareId: row.internalShareId });
-    tableRef.value?.reload();
-  });
-  return;
-}
-</script>
-
 <template>
-  <div class="pageContainer">
-    <InternalShareListTable ref="tableRef">
+  <div class="pageContainer--padding">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="documentName"
-          @clear-filter="handleClearFilter"
-          inputPlaceHolder="tableHeader_documentName"
-        />
+            
+          </template>
+      <template #status="{ row }">
+        <el-tag v-if="row.status === 0" type="info">{{ $t('dpStatus.pending') }}</el-tag>
+          <el-tag v-else-if="row.status === 1" type="primary">{{ $t('dpStatus.shared') }}</el-tag>
+          <el-tag v-else-if="row.status === 2" type="danger">{{ $t('dpStatus.stopSharing') }}</el-tag>
+          <el-tag v-else-if="row.status === 3" type="info">{{ $t('dpStatus.expired') }}</el-tag>
       </template>
-    </InternalShareListTable>
+    </VxeGrid>
   </div>
 </template>
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import { clientApi } from "api";
+import dayjs from "dayjs";
+import { routeShareOtherPageFolder } from "~/utils/routerHelper";
+import { MenuRouterKey } from '#imports';
 
+const routerProvider = inject(MenuRouterKey)
+const { t } = useI18n();
+let extraParams: any = {};
+const {
+  tableConfig,
+  tableEvent,
+  tableRef,
+  query,
+  reload,
+  cleanSelectedRows,
+} = useVxeTable({
+  id: "userTableSetting",
+  api: (pageParams: any) => clientApi.api.postInternalshareOthers({  ...pageParams, ...extraParams }),
+  columns: [
+    { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },
+    { field: "path", title: "search.logicalPath" },
+    
+    { field: "shareUserIds", title: "tableHeader_shareTo",
+      formatter({ cellValue }: any) {
+        if(!cellValue) return ''
+        const userList = JSON.parse(cellValue)
+        return userList.join(',')
+      }
+    },
+    {
+      field: "createdDate",
+      title: "tableHeader_shareDate",
+      formatter({ cellValue }: any) {
+        const format = userDisplayTimeSetting();
+        return dayjs(cellValue).format(format);
+      },
+    },
+    {
+      field: "startDate",
+      title: "el.datepicker.startDate",
+      formatter({ cellValue }: any) {
+        const format = userDisplayTimeSetting();
+        return dayjs(cellValue).format(format);
+      },
+    },
+    {
+      field: "expiredDate",
+      title: "el.datepicker.endDate",
+      formatter({ cellValue }: any) {
+        const format = userDisplayTimeSetting();
+        return dayjs(cellValue).format(format);
+      },
+    },
+    {
+      field: "permission",
+      title: "dpTable_permission",
+      formatter({ cellValue }: any) {
+        return t(`permission.${cellValue}`);
+      },
+    },
+    {
+      field: "status",
+      title: "common_status",
+      slots: {
+        default: "status",
+      },
+    }
+  ],
+  bodyActions: [
+    [
+      {
+        code: "preview",
+        name: t("common_preview"),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleDblclick(row);
+        },
+      }
+    ],
+  ],
+  dblClickAction: ({ row, column, event }:any) => {
+    handleDblclick(row)
+  },
+});
+function handleDblclick (row: any) {
+  if(row.isFolder) {
+    routerProvider?.navigateTo(routeShareOtherPageFolder(row), false)
+  }
+}
+</script>
 <style lang="scss" scoped>
-.pageContainer {
-  width: 100%;
-  height: 100%;
-  padding: var(--app-space-s);
-  overflow: hidden;
+:deep .el-input {
+  width: 200px;
 }
 </style>
