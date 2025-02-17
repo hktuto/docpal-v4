@@ -179,7 +179,7 @@ onMounted(async() => {
 
 <template>
 <div class="fromContainer">
-    <BpmnSidebarFormLabel :node="node" />
+    <BpmnSidebarEditLabel :node="node" />
     <div class="formContainer">
       <div v-if="folderCabinetRootId" class="generateDocumentFormContainer">
             <ElForm  label-position="top">

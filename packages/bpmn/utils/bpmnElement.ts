@@ -364,8 +364,13 @@ export const bpmnElement:BpmnElement = {
                     color = '#7B61FF';
                     break;
                 case '${updateDataDelegate}':
-                    icon = '/bpmn/icons/updateData.svg'
+                    icon = '/bpmn/icons/update-data.svg'
                     type = "Update Data"
+                    color = '#7B61FF';
+                    break;
+                case '${masterTableRecordDelegate}':
+                    icon = '/bpmn/icons/master-table.svg'
+                    type = "Master Table"
                     color = '#7B61FF';
                     break;
             }
@@ -572,6 +577,40 @@ export const bpmnElement:BpmnElement = {
                         }
                     })
                 })
+            },
+            {
+                icon:'bpmn:master-table',
+                label: 'Master Table',
+                dropData: (id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                        ['attr_flowable:delegateExpression']:'${masterTableRecordDelegate}',
+                        extensionElements:{
+                            "flowable:mastertableRecord": {
+                                attr_allowUpdate: false,
+                                attr_masterTableId:"",
+                                attr_workflowInfo:"",
+                                attr_tableColumn:"",
+                                field:[]
+                            }
+                        }
+                    }),
+                    label: 'New Master Table',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Master Table', {
+                        attr_id:id,
+                        attr_name:'New Master Table',
+                        ['attr_flowable:delegateExpression']:'${masterTableRecordDelegate}',
+                        extensionElements:{
+                            "flowable:mastertableRecord": {
+                                attr_allowUpdate: false,
+                                attr_masterTableId:"",
+                                attr_workflowInfo:"",
+                                attr_tableColumn:"",
+                                field:[]
+                            }
+                        }
+                    })
+                })
             }
         ],
         newNodeData:(id,label,data) => ({
@@ -585,7 +624,7 @@ export const bpmnElement:BpmnElement = {
         contextMenuComponent:(item:any) => {
             const type = item['attr_flowable:delegateExpression']
             if(!type) {
-                return 'LazyBpmnContextServiceTask'
+                return 'LazyBpmnContextCustomeService'
             }
             switch(type){
                 case '${sendNotificationDelegate}':
@@ -600,6 +639,10 @@ export const bpmnElement:BpmnElement = {
                     return 'LazyBpmnContextWhatsApp'
                 case '${updateDataDelegate}':
                     return 'LazyBpmnContextUpdateData'
+                case '${masterTableRecordDelegate}':
+                    return 'LazyBpmnContextUpdateMasterTable'
+                default:
+                    return 'LazyBpmnContextCustomeService'
             }
         },
 
