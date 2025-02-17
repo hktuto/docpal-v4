@@ -1,16 +1,31 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:folderCabinetMapping="http://www.w3.org/1999/xhtml" xmlns:permissions="http://www.w3.org/1999/xhtml" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
-    <process  id="workflowId" isExecutable="true" name="workflowName" >
-        <extensionElements>
-            
-        </extensionElements>
-        <startEvent id="Start" flowable:formFieldValidation="true" name="Start">
-            <extensionElements>
-                
-            </extensionElements>
-        </startEvent>
-        <endEvent id="end">
-            
-        </endEvent>
-        
-    </process>
+   <process id="test_space_in_name_1739502357760" isExecutable="true" name="test space in name_copy">
+       <extensionElements></extensionElements>
+       <startEvent id="Start" flowable:formFieldValidation="true" name="Start">
+           <extensionElements>
+               <flowable:formProperty id="tableId" name="tableId" type="string">
+                   <_X_ROW_KEY>row_321</_X_ROW_KEY>
+               </flowable:formProperty>
+               <flowable:formProperty id="regon_code" name="regon_code" type="string">
+                   <_X_ROW_KEY>row_322</_X_ROW_KEY>
+               </flowable:formProperty>
+               <flowable:formProperty id="regon_name" name="regon_name" type="string">
+                   <_X_ROW_KEY>row_323</_X_ROW_KEY>
+               </flowable:formProperty>
+               <flowable:formProperty id="language" name="language" type="string"></flowable:formProperty>
+           </extensionElements>
+       </startEvent>
+       <endEvent id="end"></endEvent>
+       <serviceTask id="new_1739777483847" name="New Master Table" flowable:delegateExpression="${masterTableRecordDelegate}">
+           <extensionElements>
+               <flowable:mastertableRecord allowUpdate="true" masterTableId="12680d28-df8b-452f-854e-af70b1749eb2" workflowInfo="tableId" tableColumn="id">
+                   <field formProperty="language" tableColumn="Language"></field>
+                   <field formProperty="regon_code" tableColumn="Region_Code"></field>
+                   <field formProperty="regon_name" tableColumn="Region_Name"></field>
+               </flowable:mastertableRecord>
+           </extensionElements>
+       </serviceTask>
+       <sequenceFlow id="edge-a01f413b-f925-47f2-b2f8-f9abcc568fdb" sourceRef="Start" targetRef="new_1739777483847"></sequenceFlow>
+       <sequenceFlow id="edge-294cd1be-3c82-4569-a01b-fcdaa9345889" sourceRef="new_1739777483847" targetRef="end"></sequenceFlow>
+   </process>
 </definitions>
