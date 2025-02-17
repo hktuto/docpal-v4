@@ -8,7 +8,7 @@
 import * as echarts from "echarts";
 import { useEventListener, watchDebounced } from '@vueuse/core'
 import dayjs from 'dayjs'
-import { getYearMonthDates } from '../../../utils/tool'
+import { getYearMonthDates } from '../../../../utils/tool'
 import { publicApi } from 'api'
 const props = withDefaults( defineProps<{
     dataType?: string,
