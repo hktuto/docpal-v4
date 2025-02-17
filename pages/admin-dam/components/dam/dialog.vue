@@ -183,10 +183,10 @@ function handleActionChange (clearAction: boolean = true) {
 }
 const handleTypeListGet = async() => {
     state.typeList = []
-    const res = await adminApi.api.getDamGetsupportedformat() as any
-    if(!res) return
-    Object.keys(res).forEach(key => {
-        state.typeList.push({name: key, targetList: res[key]})
+    const {data} = await adminApi.api.getDamGetsupportedformat() as any
+    if(!data) return
+    Object.keys(data).forEach(key => {
+        state.typeList.push({name: key, targetList: data[key]})
     })
 }
 const handleSourceTypeChange = async(value:any, clearTargetType:boolean = true) => {
