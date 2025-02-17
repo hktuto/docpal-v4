@@ -11,24 +11,26 @@ if(!graphProvider || !editorProvider) {
 }
 
 
+
 const defaultCondition = {
     attr_type: "Update_Number",
     attr_function: "Increase_By",
-    source: "",
-    updateFieldName: "",
-    step: "1"
+    attr_source: "form",
+    attr_updateFieldName: "",
+    attr_step: "1"
 }
 const conditions = ref();
 
 
 function refreshData() {
+    console.log("refreshData")
     const nodeData = node.getData()
-    if(nodeData.data?.extensionElement && nodeData.data?.extensionElements['flowable:field']) {
+    if(nodeData.data?.extensionElements && nodeData.data?.extensionElements['flowable:field']) {  
         conditions.value = nodeData.data.extensionElements['flowable:field']
     }else{
         conditions.value = [{...defaultCondition}]
     }
-
+   
 }
 
 function addCondition(){
@@ -48,6 +50,31 @@ function setUpListener(){
     })
 }
 
+function updateCondition() {
+    const nodeData = node.getData()
+    const newData = {
+        ...nodeData,
+        version: nodeData.version + 1 || 1,
+        data:{
+            ...nodeData.data,
+            extensionElements:{
+                ...nodeData.data.extensionElements,
+                'flowable:field': JSON.parse(JSON.stringify(conditions.value))
+            }
+        }
+    } 
+    console.log("condition update", newData)
+    node.setData(newData, { overwrite: true, deep: true })
+}
+
+watch(conditions, (newVal) => {
+    if(newVal){
+        updateCondition()
+    }
+},{
+    deep: true
+})
+
 onMounted(async () => {
     setUpListener()
     refreshData()
@@ -60,9 +87,9 @@ onMounted(async () => {
     <div class="formContainer">
         <BpmnSidebarEditLabel :node="node" />
         <div class="conditionContainer">
-            <BpmnContextUpdateDataCondition v-for="(item, index) in conditions" :key="index" :condition="item" @remove="removeCondition(index)" />
+            <BpmnContextUpdateDataCondition v-for="(item, index) in conditions" :key="index" :condition="item" :disabled="editorProvider.readonly.value" @remove="removeCondition(index)" />
             <div class="addCondition">
-                <ElButton text @click="addCondition">Add</ElButton>
+                <ElButton text :disabled="editorProvider.readonly.value" @click="addCondition">Add</ElButton>
             </div>
         </div>
     </div>
