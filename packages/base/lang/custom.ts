@@ -3,6 +3,8 @@ import {useNuxtApp, defineI18nLocale} from '#imports'
 import { clientApi } from 'api'
 
 export default defineI18nLocale(async(locale:string) => {
+    console.log('?????customcustom?????', locale);
+    
     const config  = useRuntimeConfig()
     if(config.public.needAuth ){
         // @ts-ignore
