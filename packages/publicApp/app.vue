@@ -15,7 +15,7 @@ initPublicLayout()
       <div class="loadState-container">
         <div>
           <img src="/logoWithName.png" />
-          <div>{{loadState}}</div>
+          <h1>{{loadState}}</h1>
         </div>
       </div>
   </div>
