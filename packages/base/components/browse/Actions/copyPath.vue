@@ -14,15 +14,17 @@
 
 <script lang="ts" setup>
 import {ElNotification } from 'element-plus'
+import { useRuntimeConfig } from 'nuxt/app';
 const props = defineProps<{
     doc?: any
 }>()
 
-const { externalEndpoint } = useSetting()
+const config = useRuntimeConfig()
 function copyPath(){
     // copy path to clipboard
+    // TODO : use object to copy
     const el = document.createElement('textarea');
-    el.value = 'https://' + externalEndpoint.value.docpal + '/browse?path=' +  encodeURIComponent(props.doc.path);
+    el.value = 'https://' + config.public.DOCPAL_END_POINT + '/browse?path=' +  encodeURIComponent(props.doc.path);
     document.body.appendChild(el);
     el.select();
     document.execCommand('copy');

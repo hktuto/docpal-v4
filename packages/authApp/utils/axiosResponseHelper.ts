@@ -50,7 +50,7 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
         // 使用 refresh token 获取新的 access token
         const refreshToken = localStorage.getItem('refresh_token');
         localStorage.setItem("access_token", refreshToken as string);
-
+        
         const { data } = await axiosInstance.post('/auth/nuxeo/token',{}, {
             headers:{
                 Authorization: 'Bearer ' + refreshToken
@@ -61,6 +61,8 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
         
         localStorage.setItem('access_token', data.data.access_token);
         localStorage.setItem('refresh_token', data.data.refresh_token);
+        const token = useToken()
+        token.value = data.data.access_token
         return axiosInstance(originalRequest);
       } catch (refreshError:any) {
         console.log("refresh error", refreshError)

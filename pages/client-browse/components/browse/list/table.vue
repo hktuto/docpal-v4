@@ -31,7 +31,15 @@ const { tableConfig, tableEvent } = useVxeTable({
             title: 'Name',
             minWidth: 60,
             treeNode: true,
-            sortable: true
+            sortable: true,
+            type:'html',
+            formatter: ({ cellValue, row }:any) => {
+                let icon = '/icons/doc/file.svg';
+                if(row.isFolder){
+                    icon = '/icons/doc/folder.svg';
+                }
+                return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span>`
+            }
         },
         {
             field: 'mimeType',
@@ -54,13 +62,14 @@ const { tableConfig, tableEvent } = useVxeTable({
             },
         },
     ],
+    customeToolBar:true,
     virtualScroll: true,
     remoteSort: false,
     remoteFilter: false,
     dblClickAction: ({ row, column, event }) => {
-            if(row.isFolder) {
-                listProvider.changeRoute(row.path)
-            }
+        if(row.isFolder) {
+            listProvider.changeRoute(row.path)
+        }
     },
     bodyActions: [
         [
@@ -95,8 +104,10 @@ const { tableConfig, tableEvent } = useVxeTable({
         ]
     ],
     permissionMethod: ({options, column, row, rowIndex}:any) => {
-        console.log(options, column, row, rowIndex)
-        return options
+        return {
+            visible: true,
+            disabled: false
+        }
     },
     optionalConfig: {
         treeConfig: {
@@ -191,8 +202,8 @@ defineExpose({
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
         </template>
-        <template #actions="{row}">
-            <SvgIcon src="/icons/dots.svg"></SvgIcon>
+        <template #toolbarTools>
+            <slot name="toolbarTools" />
         </template>
     </VxeGrid>
 </div>
@@ -202,6 +213,14 @@ defineExpose({
 .tableContainer{
     height: 100%;
     position: relative;
-
+    :deep(.browseFileIcon){
+        width: var(--app-space-m)
+    }
+    :deep(.browseNameCell){
+        display: flex;
+        align-items: center;
+        gap: var(--app-space-s);
+        cursor: pointer;
+    }
 }
 </style>

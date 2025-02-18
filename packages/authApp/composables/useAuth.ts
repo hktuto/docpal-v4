@@ -18,6 +18,7 @@ export const useIsSuperAdmin = () => useState<boolean>(() => true);
 export const useUserId = () => useState<string>(() => '');
 export const useUserPreference = () => useState<Record<string,any>>();
 export const useFeature = () => useState<Record<string,boolean>>('app-feature');
+export const useToken = () => useState<string>('auth-token');
 export const useAuth = () => {
     const authReadyState = useAuthReadyState()
     const userState = useUserState()
@@ -43,7 +44,7 @@ export const userDisplayTimeSetting = () => {
  */
 export async function login() {
     const keyCloakState = useKeyCloakState()
-
+    const token = useToken()
     if(!keyCloakState.value) {
        throw createError('Keycloak is not define') 
     }
@@ -58,7 +59,7 @@ export async function login() {
     }
     localStorage.setItem('access_token', data.access_token)
     localStorage.setItem('refresh_token', data.refresh_token)
-
+    token.value = data.access_token
     await Promise.all([
         getUser(),        
         getFeature(),
