@@ -2,13 +2,13 @@ import { clientApi } from "api"
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import enUS from 'vxe-table/lib/locale/lang/en-US'
 import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
-export const useLoadState = () => useState<string>(() => 'init');
+export const useLoadState = () => useState<string>(() => 'Init');
 export const initPublicLayout = async() => {
     const loadState = useLoadState()
     loadState.value = await getLocale()
     setTimeout(() => {
-        loadState.value = 'ready'
-    }, 2000)
+        loadState.value = 'Ready'
+    }, 3000)
 }
 export async function getLocale(){
   const { locale, availableLocales, setLocaleMessage } = useI18n()
@@ -40,5 +40,5 @@ export async function getLocale(){
           
       })
   )
-  return 'language ready'
+  return 'Language ready'
 }
