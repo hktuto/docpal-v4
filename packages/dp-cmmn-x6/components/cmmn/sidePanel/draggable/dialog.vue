@@ -2,7 +2,6 @@
 <el-dialog v-model="state.visible" :title="$t('Add / Edit Properties')"
     :close-on-click-modal="false" destroy-on-close
     >
-    {{ formJsonUrl }}
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
         <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
