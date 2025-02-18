@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
- extends:["../element-ui"
+ extends:[
  ],
  modules: [
   '@nuxt/test-utils/module'
