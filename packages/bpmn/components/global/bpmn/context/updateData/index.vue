@@ -107,6 +107,6 @@ onMounted(async () => {
 .addCondition{
     width: 100%;
     display: grid;
-    place-item: center;
+    place-items: center;
 }
 </style>

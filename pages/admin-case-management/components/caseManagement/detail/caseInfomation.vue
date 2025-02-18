@@ -8,13 +8,12 @@
     <CmmnSidePanelDraggable 
       :list="caseInformation" 
       :dragHeader="dragHeader" 
-      formJsonUrl="fromJsom"
+      formJsonUrl="field"
       @change="handleSave">
     </CmmnSidePanelDraggable>
   </el-card>
 </template>
 <script lang="ts" setup>
-import fromJsom from './form/field.vform.json'
 const props = defineProps(['caseInformation', 'node'])
 const emits = defineEmits(['save'])
 const { t } = useI18n()

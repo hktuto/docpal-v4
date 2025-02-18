@@ -37,7 +37,7 @@
       </template>
     </draggable>
     <el-button type="info" text @click="handleOpenDialog()">{{ $t('workflowEditor.addField') }}</el-button>
-    <CmmnSidePanelDraggableDialog ref="dialogRef" formJsonUrl="field"
+    <CmmnSidePanelDraggableDialog ref="dialogRef" :formJsonUrl="formJsonUrl"
       :node="node" :graph="graph" :filterList="props.list"
       @create="handleAdd"
       @edit="handleEdit"
