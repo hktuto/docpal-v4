@@ -27,8 +27,11 @@ const config = {
   runtimeConfig:{
     public:{
       pdfReaderUrl: process.env.pdfReaderUrl,
-      NODE_ENV: process.env.NODE_ENV
-      OFFICE_END_POINT: process.env.OFFICE_END_POINT
+      NODE_ENV: process.env.NODE_ENV,
+      OFFICE_END_POINT: process.env.OFFICE_END_POINT,
+      UPLOAD_END_POINT: process.env.UPLOAD_END_POINT,
+      DOCPAL_END_POINT: process.env.DOCPAL_END_POINT,
+      ADMIN_END_POINT: process.env.ADMIN_END_POINT,
     }
   },
   i18n: {
