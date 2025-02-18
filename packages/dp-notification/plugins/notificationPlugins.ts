@@ -1,4 +1,4 @@
-import { useEventBus, EventType } from 'eventBus'
+import { useEventBus, EventType } from 'eventbus'
 
 export default defineNuxtPlugin(nuxtApp => {
     const { connect, disconnect, messageHandlers, notiData, notiError} = useNotification()
