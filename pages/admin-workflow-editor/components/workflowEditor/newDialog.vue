@@ -5,7 +5,8 @@ const emits = defineEmits(['created'])
 const routerProvider = inject(MenuRouterKey)    
 
 const workflowTemplateList = [
-    { id: 'Blank', name: 'Blank', icon: '/icons/workflow/singleStepIcon.svg', tip: 'blankStepTip', url: "/bpmn/blank.xml"}
+    { id: 'Blank', name: 'Blank', icon: '/icons/workflow/singleStepIcon.svg', tip: 'blankStepTip', url: "/bpmn/blank.xml"},
+    { id: 'Single', name: 'Single Approval', icon: '/icons/workflow/singleStepIcon.svg', tip: 'blankStepTip', url: "/bpmn/single.xml"}
 ]
 
 const state = reactive({
@@ -93,7 +94,7 @@ defineExpose({ handleOpen })
                     <div class="workflow-template-step">
                         <SvgIcon class="workflow-template-step-icon" :src="item.icon" />
                         <h3 class="workflow-template-step-label">{{item.name}}</h3>
-                        <tip class="workflow-template-step-tip">{{$t(item.tip)}}</tip>
+                        <!-- <tip class="workflow-template-step-tip">{{$t(item.tip)}}</tip> -->
                     </div>
                 </el-radio>
             </el-radio-group>
@@ -104,3 +105,22 @@ defineExpose({ handleOpen })
     </template>
 </el-dialog>
 </template>
+
+<style lang="scss" scoped>
+:deep(.el-radio-group) {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    font-size: 0;
+    flex-direction: column;
+    gap: calc(var(--app-padding) * 2);
+}
+.el-radio {
+    height: unset;
+}
+.workflow-template-step {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    grid-column-gap: var(--app-space-xs);
+}
+</style>
