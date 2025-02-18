@@ -1,37 +1,38 @@
-<script lang="ts" setup>
-const { loggedIn } = useAuth()
-const authReadyState = useAuthReadyState()
-const { locale, loadLocaleMessages} = useI18n()
-watch(loggedIn, (bool) => {
-  if(bool) {
-    loadLocaleMessages(locale.value)
-    authReadyState.value = true;
-  }
-})
-</script>
-
 <template>
-<App>
-    <template #header>
-        <div class="logoContainer">
-            <AppLogo />
-        </div>
-    </template>
-    <template #footer>
-        <Icon name="lucide:log-out"/>
-        <LangSwitch />
-    </template>
-</App>
-
+<div class="main-container">
+  <LoadingBg></LoadingBg>
+  <div class="bg">
+    <img src="/logoWithName.png" />
+  </div>
+</div>
 </template>
-
-
-<style scoped lang="scss">
-
-.logoContainer{
-    // padding: var(--menu-item-padding);
-    --icon-size: calc(var(--icon-font-size) + (var(--menu-item-padding) * 2));
+<style lang="scss" scoped>
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.bg {
+  width: 40%;
+  height: 40vh;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  img {
+    width: 80%
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
 }
 </style>
-
-

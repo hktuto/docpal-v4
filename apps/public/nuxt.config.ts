@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   extends:[
     "../../packages/icon",
     '../../packages/publicApp',
+    '../../pages/public-share',
   ],
   typescript: {
     typeCheck: true,
@@ -23,6 +24,14 @@ export default defineNuxtConfig({
     public:{
       plarform:'public'
     }
+  },
+  vite:{
+    optimizeDeps:{
+        include: []
+    }
+  },
+  features: {
+    inlineStyles: false // or a function to determine inlining
   },
   nitro:{
     devProxy:{
