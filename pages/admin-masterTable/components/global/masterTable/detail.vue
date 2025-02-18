@@ -4,7 +4,7 @@ import { adminApi } from "api";
 import type { MasterTableResponseDTO } from "api/src/generate/admin";
 import { getIgnoreSchemas } from "~/utils/masterTableProvider";
 import { onActivated } from "vue";
-const { t } = useI18n()
+const { t } = useI18n();
 const { id } = defineProps<{
   id: string;
 }>();
@@ -72,12 +72,12 @@ async function handleFile(event: any) {
   formData.append("file", event.target.files[0]);
   formData.append("id", id);
 
-  const data:any = await adminApi.api
+  const data: any = await adminApi.api
     .postMasterTablesRecordImportFile(formData, formData)
     .then((res) => res.data);
   if (data?.failureNumber > 0) downloadFailList();
   event.target.value = "";
-  handleRefresh()
+  handleRefresh();
   // } catch (error) {
   // } finally {
   //   state.importLoading = false
@@ -90,10 +90,13 @@ async function downloadFailList() {
     duration: 0,
     type: "warning",
   });
-  const res = await adminApi.api.getMasterTablesDownloadFailure({id}, {
-    format: "blob",
-    timeout: 0,
-  });
+  const res = await adminApi.api.getMasterTablesDownloadFailure(
+    { id },
+    {
+      format: "blob",
+      timeout: 0,
+    }
+  );
   downloadBlob(res, state.masterTable.name + "-failure");
 }
 async function handleExport() {
@@ -150,7 +153,11 @@ onActivated(() => {
         ></MasterTableTabLog>
       </el-tab-pane>
       <el-tab-pane :label="$t('masterTable.setting')" name="setting">
-        <MasterTableTabSetting v-if="state.masterTable && state.masterTable.id" :table="state.masterTable"></MasterTableTabSetting>
+        <MasterTableTabSetting
+          v-if="state.masterTable && state.masterTable.id"
+          :table="state.masterTable"
+          :tableId="id"
+        ></MasterTableTabSetting>
       </el-tab-pane>
     </el-tabs>
     <div class="absolute-btns">
