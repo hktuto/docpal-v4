@@ -14,7 +14,7 @@ const emits = defineEmits(['change'])
 const allFieldOptions = computed(() => {
     if(!graphProvider.allFormField.value) return []
     const allFieldToArray = Object.keys(graphProvider.allFormField.value).map((key) => graphProvider.allFormField.value[key])
-    return allFieldToArray.filter((item:any) => !fields.find((field:any) => field.attr_id === item.attr_id))
+    return allFieldToArray
 })
 
 const filteredFieldOptions = computed(() => {
@@ -38,7 +38,6 @@ const selectedField = computed(() => {
 })
 
 function fieldUpdate(value:string[]) {
-    console.log("select change", value, allFieldOptions.value)
     emits('change', filteredFieldOptions.value.filter((item:any) => value.includes(item.attr_id)))
 }
 
