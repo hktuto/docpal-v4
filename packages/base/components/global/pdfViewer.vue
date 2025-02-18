@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts" setup>
-import {GetDocumentPreview, GetAnnotation, SaveAnnotation} from 'dp-api'
 import {clientApi } from 'api'
 import { useEventListener } from '@vueuse/core'
 type PdfJsOptions = {

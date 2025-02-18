@@ -32,7 +32,7 @@
   <!-- </div> -->
 </template>
 <script lang="ts" setup>
-import { getNotificationList2Api, notiStatusSetApi } from 'dp-api'
+import { clientApi } from 'api'
 import { notiShowView, notiHandleView } from '../../../utils/notificationHelper.ts'
 const props = defineProps(['type'])
 const emits = defineEmits(['close', 'unreadCountChange'])
@@ -61,7 +61,7 @@ async function getList () {
   if (props.type !== 'Unread') param.type = props.type
   try {
     state.loading = true
-    const res = await getNotificationList2Api({ ...param, ...pageParams.value})
+    const { data:res} = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value})
     res.entryList.map(item => {
       if(typeof item.content === 'string') {
         item.content = JSON.parse(item.content)
@@ -83,7 +83,7 @@ async function getList () {
 async function handleDismiss(item) {
   try {
     item.loading = true
-    await notiStatusSetApi(item.id)
+    await clientApi.api.putNotificationIdStatusStatus(item.id)
     const index = state.list.findIndex(lItem => lItem.id === item.id)
     state.list.splice(index, 1)
     emits('unreadCountChange', item)
