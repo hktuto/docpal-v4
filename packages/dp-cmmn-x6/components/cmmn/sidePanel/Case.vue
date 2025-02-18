@@ -65,7 +65,7 @@ watch(node, ()=> {
                     <CmmnSidePanelDraggable 
                         :list="state.data" 
                         :dragHeader="dragHeader" 
-                        formJsonUrl="cmmn/field.json"
+                        formJsonUrl="field"
                         @change="handleSave">
                     </CmmnSidePanelDraggable>
                 </el-tab-pane>

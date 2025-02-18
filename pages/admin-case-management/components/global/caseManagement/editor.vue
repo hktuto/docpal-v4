@@ -151,7 +151,7 @@ onActivated(async () => {
 
 <template>
   <div class="pageContainer">
-      <CmmnEditor ref="editorEl"  @historyChange="handleSave">
+      <CmmnEditor ref="editorEl" >
         <template #actions>
             <template v-if="!production">
                 <ElButton type="primary" @click="promoteToProduction">Promote To Prodocution : {{ currentVersion }}</ElButton>
@@ -159,7 +159,7 @@ onActivated(async () => {
             <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
             <ElButton @click="openVersionList" type="primary">Version List</ElButton>
             <ElButton @click="openDetail" type="primary">View Detail</ElButton>
-<!--          <ElButton type="primary" :loading="state.loading" :disabled="readOnly" @click="handleSave"> {{$t('dpTool_save')}}</ElButton>-->
+         <ElButton type="primary" :loading="state.loading" :disabled="readOnly" @click="handleSave"> {{$t('dpTool_save')}}</ElButton>
         </template>
       </CmmnEditor>
     </div>
