@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module'
   ],
   extends:[
-    "../base",
-    "../../pages/public-share"
+    "../../packages/base",
   ]
 })
