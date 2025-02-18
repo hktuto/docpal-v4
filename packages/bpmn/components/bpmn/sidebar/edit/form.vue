@@ -203,9 +203,16 @@ watch(() => node, ()=> {
         </div>
         <div class="actionsContainer">
 
-            <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value" >Edit Field</ElButton>
-            <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >Edit Form</ElButton>
-            <ElButton type="primary" @click="editorProvider.previewForm(node)" >Preview Form</ElButton>
+            <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value" >
+                Edit Field
+                </ElButton>
+            <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >
+                
+                Edit Form
+                </ElButton>
+            <ElButton type="primary" @click="editorProvider.previewForm(node)" >
+                Preview Form
+            </ElButton>
         </div>
         <Eldivider />
         <div class="actionsContainer">
@@ -263,11 +270,16 @@ watch(() => node, ()=> {
 }
 .actionsContainer{
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: column nowrap;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     margin-block: var(--app-font-size-xs);
     gap: var(--app-space-xs);
+    padding-block: var(--app-space-xs);
+    border-top: 1px solid var(--app-grey-850);
+    > *{
+        width:100%;
+    }
     :deep(.el-button + .el-button){
         margin-left: 0;
     }

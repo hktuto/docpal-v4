@@ -74,7 +74,7 @@ defineExpose({
 <style scoped lang="scss">
 .contextHandler{
     position: absolute;
-    width: 280px;
+    width: 320px;
     height: calc(100% - var(--app-space-xs) * 2);
     overflow: auto;
     right: var(--app-space-xs);
@@ -83,7 +83,7 @@ defineExpose({
     background: rgba(255,255,255,0.5);
     backdrop-filter: blur(10px);
     opacity: 0;
-    padding: var(--app-space-xs);
+    padding: var(--app-space-s);
     border-radius: var(--app-border-radius-m);
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
     backdrop-filter: blur(10px);

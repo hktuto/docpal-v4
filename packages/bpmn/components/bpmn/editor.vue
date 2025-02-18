@@ -29,6 +29,12 @@ const { options={}, workflowData, currentVersion, readonly} = toRefs(props)
 
 const graphOptions = ref({})
 function init(bpmnXml :string, x6Json?:any){
+    // check if ready
+    if(ready.value && graph.value) {
+        // reset graph
+        ready.value = false
+        graph.value.dispose();
+    }
     graphOptions.value = {
         interacting: !readonly.value,
         panning: {
@@ -61,18 +67,7 @@ function init(bpmnXml :string, x6Json?:any){
             validateMagnet({ magnet }:any) {
                 return !readonly.value
             },
-
             validateConnection({ sourceMagnet, targetMagnet }:any) {
-                // 只能从输出连接桩创建连接
-                // if (!sourceMagnet || sourceMagnet.getAttribute('port-group') === 'from') {
-                //     return false
-                // }
-
-                // // 只能连接到输入连接桩
-                // if (!targetMagnet || targetMagnet.getAttribute('port-group') !== 'from') {
-                //     return false
-                // }
-
                 return !readonly.value
             },
         }
@@ -92,6 +87,7 @@ const dnd = ref()
 
 
 function graphReady(){
+    console.log("graph ready")
     ready.value = true
     graph.value = viewerRef.value.graph;
     graph.value.use(
@@ -193,10 +189,9 @@ const fieldListApi = computed(() => {
         
         data = [...selectedStep.value?.data.extensionElements['flowable:formProperty']]
     }
-    console.log("field update", data)
     return {
-        labelKey: 'attr_id',
-        nameKey: 'attr_name',
+        labelKey: 'attr_name',
+        nameKey: 'attr_id',
         data
     }
 })
