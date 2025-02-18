@@ -9,7 +9,7 @@
             <template #title>
                 <strong class="primaryTitle">{{ $t('tip.addToCollection') }}</strong>
             </template>
-            <FromRenderer ref="FromRendererRef" :form-json="formJson" @handleSubmit="handleSubmit"/>
+            <FormRenderer ref="FormRendererRef" :form-json="formJson" @handleSubmit="handleSubmit"/>
         </el-dialog>
     </div>
     
@@ -29,7 +29,7 @@ const state = reactive({
     loading: false,
     dialogOpened: false
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 function handleClick(doc:any){
     state.dialogOpened = true
@@ -38,7 +38,7 @@ function handleClick(doc:any){
     })
 }
 function initData() {
-    const buttonRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('submit')
+    const buttonRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('submit')
     buttonRef.setDisabled(false)
 }
 async function handleSubmit(collection) {

@@ -2,6 +2,7 @@
 import {BrowseListProviderKey} from '#imports'
 import {clientApi} from 'api'
 import {BrowseListTable} from '#components'
+import { useEventBus } from 'eventbus'
 import { actions, ActionsFilter } from '../../../../packages/base/utils/browseActions'
 const props = defineProps<{ 
     idOrPath: string ,
@@ -50,22 +51,30 @@ async function getDoc(){
     docPermission.value = permission
 }
 function selectedChangeHandler(selectedRows:any[]) {
+    console.log("selected change", selectedRows)
     selectedList.value = selectedRows
 }
-const folderActions = computed(() => {
+const docActions = computed(() => {
   if (!docDetail.value || !docPermission.value) return {};
-  return ActionsFilter(actions, docPermission.value, docDetail.value.isFolder ? "showInFolder" : "showInDetail");
+  if(selectedList.value.length > 0) {
+    return ActionsFilter(actions, docPermission.value, "showInShare");
+  }
+  return ActionsFilter(actions, docPermission.value, "showInFolder");
 });
 
-const shareActions = computed(() => {
-    if (!docDetail.value || !docPermission.value) return {};
-  return ActionsFilter(actions, docPermission.value, "showInShare");
-});
 
+
+function handleClearSelected(){
+    if(tableRef.value) {
+        tableRef.value.cleanSelected()
+    }
+}
 
 
 function handleRefresh(){
-
+    if(tableRef.value) {
+        tableRef.value.reload()
+    }
 }
 
 function itemDeleted(){
@@ -90,61 +99,69 @@ provide(BrowseListProviderKey,{
     removeFromSelection,
 })
 
-
-
+const bus = useEventBus(EventType.FILE_NEED_REFRESH)
+bus.on(({relatedPath}) => {
+    if(relatedPath === idOrPath.value) {
+        handleRefresh()
+    }
+})
 </script>
 
 <template> 
-    <BrowseListTable ref="tableRef" @selectedChange="selectedChangeHandler">
+    <BrowseListTable ref="tableRef" :class="{'selected': selectedList.length > 0}" @selectedChange="selectedChangeHandler">
         <template #toolbar_buttons> 
             <slot name="toolbar_buttons">
                 <div class="toolsBarContainer">
-                    <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
+                    <template v-if="selectedList.length === 0">
+
+                        <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
+                    </template>
+                    <template v-else>
+                        <div class="selectedNoteContainer">
+                            {{ $t("dpDocument_fileSelected") }}({{ selectedList.length }})
+                            <Icon name="mdi:close" @click="handleClearSelected" />
+                        </div>
+                    </template>
                 </div>
             </slot>
             <slot name="toolbarTools">
-                <template v-if="selectedList.length === 0">
-                    <CollapseMenu>
-                        <template #default="{ collapse }">
-                            <template v-for="(group, key) in folderActions" :key="key">
+                <CollapseMenu>
+                    <template #default="{ collapse }">
+                        <template v-for="(group, key) in docActions" :key="key">
                             <template v-for="item in group" :key="item.name">
                                 <component
-                                :is="item.component"
-                                :doc="docDetail"
-                                :permission="docPermission"
-                                @success="handleRefresh"
-                                @delete="itemDeleted"
-                                />
-                            </template>
-                            <div :class="{ actionDivider: true, collapse }"></div>
-                            </template>
-                        </template>
-                    </CollapseMenu>
-                </template>
-                <template v-else>
-                    <CollapseMenu>
-                        <template #default="{ collapse }">
-                            <template v-for="(group, key) in shareActions" :key="key">
-                                <template v-for="item in group" :key="item.name">
-                                    <component
                                     :is="item.component"
                                     :doc="docDetail"
                                     :permission="docPermission"
+                                    :selectedList="selectList"
+                                    @clearSelected="handleClearSelected"
                                     @success="handleRefresh"
                                     @delete="itemDeleted"
-                                    />
-                                </template>
-                                <div :class="{ actionDivider: true, collapse }"></div>
+                                />
                             </template>
+                            <div :class="{ actionDivider: true, collapse }"></div>
                         </template>
-                    </CollapseMenu>
-                </template>
+                    </template>
+                </CollapseMenu>
+                <BrowseActionsInfo
+                    :doc="docDetail"
+                    :permission="docPermission"
+                />
             </slot>
         </template>
     </BrowseListTable>
 </template>
 
 <style lang="scss" scoped>
+.selectedNoteContainer{
+    padding-left: var(--app-space-s);
+    line-height: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--app-space-xs);
+}
 .toolsBarContainer{
     flex: 1 0 auto;
 }

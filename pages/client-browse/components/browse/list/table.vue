@@ -3,11 +3,12 @@ import {BrowseListProviderKey} from '#imports'
 import {Grid, type VxeGridInstance, type VxeGridListeners} from 'vxe-table'
 
 const listProvider = inject(BrowseListProviderKey);
-if(!listProvider) {
+const routerProvider = inject(MenuRouterKey)
+if(!listProvider || !routerProvider) {
     throw new Error('BrowseListProviderKey not found')
 }
-const tableRef = ref<VxeGridInstance<any>>()
 const tableContainer = ref<HTMLElement>()
+const emits = defineEmits(['selectedChange'])
 async function loadData(entry:any[], path?:string, pageNum:number = 0) {
     const {data} = await listProvider?.getchildApi({idOrPath: path, pageSize:1000, pageNum})
     entry.push(...data.entryList)
@@ -17,7 +18,7 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
         return entry
     }
 }
-const { tableConfig, tableEvent } = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     id: 'browseTableSetting',
     api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
     columns:  [
@@ -67,40 +68,17 @@ const { tableConfig, tableEvent } = useVxeTable({
     remoteSort: false,
     remoteFilter: false,
     dblClickAction: ({ row, column, event }) => {
-        if(row.isFolder) {
-            listProvider.changeRoute(row.path)
-        }
+        dblClickHandler(row)
     },
     bodyActions: [
         [
             {
                 code: 'open',
                 name: 'Open',
-                action: (row:any) => {
-                    if(row.isFolder) {
-                        listProvider.changeRoute(row.path)
-                    }
+                action: ({row}:any) => {
+                    dblClickHandler(row)
                 }
             },
-            {
-                name: "subnmenu",
-                children: [
-                    {
-                        code: 'edit',
-                        name: 'Edit',
-                        action: (row:any) => {
-                            console.log("edit", row)
-                        }
-                    },
-                    {
-                        code: 'delete',
-                        name: 'Delete',
-                        action: (row:any) => {
-                            console.log("delete", row)
-                        }
-                    }
-                ]
-            }
         ]
     ],
     permissionMethod: ({options, column, row, rowIndex}:any) => {
@@ -108,6 +86,9 @@ const { tableConfig, tableEvent } = useVxeTable({
             visible: true,
             disabled: false
         }
+    },
+    selectChangeHander:(selectedRows:any[]) => {
+        emits('selectedChange', selectedRows)
     },
     optionalConfig: {
         treeConfig: {
@@ -144,6 +125,18 @@ const { tableConfig, tableEvent } = useVxeTable({
 })
 
 
+function dblClickHandler(row:any) {
+    if(row.isFolder) {
+        listProvider.changeRoute(row.path)
+    }else{
+        const params = createDetailPageParams({
+            id: row.id,
+            docName: row.name,
+        })
+        routerProvider?.navigateTo(params)
+    }
+}
+
 
 async function loadAllChildren(entry:any[] = [], path?:string, pageNum:number = 0) {
     tableConfig.loading = true
@@ -173,7 +166,8 @@ function selectAll(){
 
 function cleanSelected(){
     if(tableRef.value) {
-        tableRef.value.toggleAllCheckboxRow();
+        tableRef.value.setAllCheckboxRow(false);
+        emits('selectedChange', [])
     }
 }
 
@@ -191,6 +185,7 @@ watch(() => listProvider.idOrPath, ()=> {
 defineExpose({
     selectAll,
     cleanSelected,
+    reload
 })
 
 </script>
@@ -213,6 +208,16 @@ defineExpose({
 .tableContainer{
     height: 100%;
     position: relative;
+    
+    &.selected{
+        :deep(.vxe-buttons--wrapper){
+            border-radius: var(--app-border-radius-m);
+            overflow: hidden;
+            background: var(--app-grey-900);
+            padding-block: var(--app-space-xs);
+            --vxe-ui-layout-background-color: var(--app-grey-900);
+        }
+    }
     :deep(.browseFileIcon){
         width: var(--app-space-m)
     }
