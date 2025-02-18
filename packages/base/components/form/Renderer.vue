@@ -48,6 +48,7 @@ import { clientApi } from 'api';
         return json
     })
     function setFormJson (json) {
+        console.log("setFormJson", json)
         let st = JSON.stringify(json);
         st = st.replaceAll('this.$axios','$api').replaceAll('_$api','$api');
         st = st.replaceAll('this.$cookies.get','$getCookie')

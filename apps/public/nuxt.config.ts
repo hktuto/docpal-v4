@@ -10,6 +10,8 @@ export default defineNuxtConfig({
     "../../packages/icon",
     '../../packages/publicApp',
     '../../pages/public-share',
+    '../../pages/public-upload',
+    '../../pages/public-easy-form',
   ],
   typescript: {
     typeCheck: true,
