@@ -92,10 +92,17 @@ async function init() {
   } catch (error) {}
   state.loading = false;
 }
-
-onActivated(() => {
-  init();
-});
+watch(
+  () => props.tableId,
+  (newVal) => {
+    if (newVal) {
+      init();
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 </script>
 <style lang="scss" scoped>
 .el-button {
