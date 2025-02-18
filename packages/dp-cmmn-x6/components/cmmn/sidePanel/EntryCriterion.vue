@@ -39,9 +39,11 @@ watch(node, ()=> {
     <div class="cmmnSidebarItemContainer">
         <CmmnSidePanelUiHeader title="Entry Criterion" />
         <CmmnSidePanelUiLabel :node="node"/>
-        <el-tabs v-model="state.activeName" @tab-click="handleClick">
+        <el-tabs v-model="state.activeName" >
             <el-tab-pane label="Criteria" name="criteria">
-                <CmmnSidePanelDraggable :list="criteriaList" :graph="graph"
+                <CmmnSidePanelDraggable 
+                    :list="criteriaList" 
+                    :graph="graph"
                     :dragHeader="dragHeader" 
                     formJsonUrl="sentry"
                     @change="handleSave">

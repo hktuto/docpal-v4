@@ -25,5 +25,7 @@ const props = defineProps<{
 </template>
 
 <style lang="scss" scoped>
-
+.pageContainer {
+  height: 100%;
+}
 </style>
