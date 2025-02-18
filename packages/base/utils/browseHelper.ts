@@ -222,3 +222,44 @@ export function allowFeature(f: string) {
       return false
     }
   }
+
+
+/**
+ *
+ * @param idOrPath parent id or path
+ * @param list list of files to check for duplicates
+ * @returns {isDuplicate: boolean, list: any[]}
+ */
+export const duplicateNameFilter = async (idOrPath: string, list:any) => {
+    try {
+        let result = false
+        const titles = list.reduce((prev:any, item:any) => {
+            prev.push(item.fileName || item.name)
+            return prev
+        }, [])
+        const {data: res}= await clientApi.api.postNuxeoDocumentIsduplicatename({
+            path:idOrPath,
+            titles
+        }) as any
+        list.forEach((doc:any) => {
+            const name = doc.fileName || doc.name
+            if (res[name] || res[name]) {
+                result = true
+                doc.goPath = idOrPath
+                doc.isDuplicate = true
+                doc.originalPath = res[name].idOrPath
+                doc.uniqueName = res[name].uniqueName
+            }
+        })
+        return {
+            isDuplicate: result,
+            list,
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            isDuplicate: true,
+            list: []
+        }
+    }
+}

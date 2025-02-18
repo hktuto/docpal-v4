@@ -14,7 +14,7 @@ import BrowseActionsDeleteSelected from "../components/browse/Actions/deleteSele
 import BrowseActionsInfo from "../components/browse/Actions/info.vue";
 import BrowseActionsWatermarkBtn from "../components/browse/Actions/WatermarkBtn.vue";
 // import BrowseActionsAi from "../components/browse/Actions/ai/index.vue";
-import {AllPermission, Permission} from "./permissionHelper";
+import type{AllPermission, Permission} from "./permissionHelper";
 import {allowFeature} from "./browseHelper";
 export type BrowseActionItem = {
     name: string
@@ -152,7 +152,7 @@ export const shareActions:ShareActionItem[] = [
 ]
 
 export const ActionsFilter = (actions: BrowseActionItem[], permission:AllPermission, booleanKey:'showInFolder' | 'showInDetail' | 'showInShare') => {
-    console.log("actions", actions)
+    
     return actions
         .filter((item) => {
             if(!item.needFeature || item.needFeature.length === 0 ) return true

@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-import { useUploadAIStore } from '../../../composables/uploadAI'
+// import { useUploadAIStore } from '../../../composables/uploadAI'
 
 const props = withDefaults(defineProps<{
     accept?: string,
@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<{
     accept: '',
     backPath: '/browse'
 })
-const { userPreference } = useUser()
+const userPreference = useUserPreference()
 const handleOpenUploadDrawer = inject('handleOpenUploadDrawer')
 const state = reactive({
     doc: {}

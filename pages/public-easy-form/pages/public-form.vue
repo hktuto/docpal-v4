@@ -2,7 +2,7 @@
   <div class="public-form">
     <div class="form-main" v-loading="state.formJsonLoad">
     <FormRenderer
-        ref="FromRendererRef"
+        ref="FormRendererRef"
         :form-json="state.formJson"
       />
     </div>
@@ -22,7 +22,7 @@ const state = reactive<any>({
   formJson: {},
   detail: {}
 });
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 async function getFormJson() {
   try {
@@ -31,7 +31,7 @@ async function getFormJson() {
     
     const json = state.detail.previewStyle
     state.formJson = JSON.parse(json)
-    FromRendererRef.value.setFormJson(state.formJson)
+    FormRendererRef.value.setFormJson(state.formJson)
     
   } catch (error) {
     // const json = '{"widgetList":[{"key":37325,"type":"input","icon":"text-field","formItemFlag":true,"options":{"name":"age","label":"age","labelAlign":"","type":"text","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"readonly":false,"disabled":false,"hidden":false,"clearable":true,"showPassword":false,"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"minLength":null,"maxLength":null,"showWordLimit":false,"prefixIcon":"","suffixIcon":"","appendButton":false,"appendButtonText":"","prependText":"","appendButtonDisabled":false,"buttonIcon":"custom-search","onCreated":"","onMounted":"","onInput":"","onChange":"","onFocus":"","onBlur":"","onEnter":"","onValidate":"","onAppendButtonClick":""},"id":"input51245"},{"key":37325,"type":"input","icon":"text-field","formItemFlag":true,"options":{"name":"User Name","label":"user name","labelAlign":"","type":"text","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"readonly":false,"disabled":false,"hidden":false,"clearable":true,"showPassword":false,"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":"","labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"minLength":null,"maxLength":null,"showWordLimit":false,"prefixIcon":"","suffixIcon":"","appendButton":false,"appendButtonText":"","prependText":"","appendButtonDisabled":false,"buttonIcon":"custom-search","onCreated":"","onMounted":"","onInput":"","onChange":"","onFocus":"","onBlur":"","onEnter":"","onValidate":"","onAppendButtonClick":""},"id":"input44496"}],"formConfig":{"modelName":"formData","refName":"vForm","rulesName":"rules","labelWidth":80,"labelPosition":"top","size":"","labelAlign":"label-left-align","cssCode":"","customClass":"","functions":"","layoutType":"PC","jsonVersion":3,"onFormCreated":"","onFormMounted":"","onFormDataChange":"","saveRemoteOptions":"never","labelFormUniqueName":true,"onFormValidate":"","dataSources":[]}}'
@@ -43,7 +43,7 @@ async function getFormJson() {
 
 async function handleSubmit() {
   try {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData(true, false)
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData(true, false)
     const params = Object.keys(data).reduce((prev,key) => {
       const item = data[key]
       if (item instanceof Array && item[0].response) {

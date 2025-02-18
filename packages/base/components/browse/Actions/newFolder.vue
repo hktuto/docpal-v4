@@ -10,7 +10,7 @@
                 <strong class="primaryTitle">{{ $t('filePopover_newFolder') }}</strong>
                 {{ 'in /' + state.doc.name }}
             </template>
-            <FromRenderer :ref="(el) => FromRendererRef = el" :form-json="formJson" 
+            <FormRenderer :ref="(el) => FormRendererRef = el" :form-json="formJson" 
                 @formChange="formChange"/>
             <MetaRenderForm2 ref="MetaFormRef"></MetaRenderForm2>
             <template #footer>
@@ -24,8 +24,9 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-
+import { emitBus } from 'eventbus'
 import { clientApi } from 'api'
+import {duplicateNameFilter } from '../../../../packages/base/utils/browseHelper'
 const dialogOpened = ref(false)
 const { t } = useI18n()
 const props = defineProps<{
@@ -38,7 +39,7 @@ const state = reactive({
     docPath: '',
     doc: {},
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const MetaFormRef = ref()
 function iconClickHandler(doc:any){
     dialogOpened.value = true
@@ -61,7 +62,7 @@ async function handleSubmit () {
         const timestamp = new Date().valueOf()
         const metaFormData = await MetaFormRef.value.getData()
         if(!metaFormData) return
-        const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const data = await FormRendererRef.value.vFormRenderRef.getFormData()
         const parentPath = state.docPath === '/' ? '' : state.docPath
         state.loading = true
         const params = {
@@ -77,7 +78,11 @@ async function handleSubmit () {
         }
         const res = await clientApi.api.postNuxeoDocumentCreatefolders(params)
         dialogOpened.value = false
-        emits('success', state.doc)
+        console.log("emitBus", state.docPath)
+        emitBus(EventType.FILE_NEED_REFRESH, {
+            relatedPath: state.docPath
+        })
+        // emits('success', state.doc)
         state.loading = false
     } catch (error) {
         if(error.message === 'dpTip.newFolderDuplicateName') {
@@ -86,14 +91,15 @@ async function handleSubmit () {
                 type: 'error'
             })
         }
+        console.log("error", error)
         state.loading = false
     }
     
 }
 function handleReset() {
-    if(FromRendererRef.value.vFormRenderRef) {
-        FromRendererRef.value.vFormRenderRef.resetForm()
-        const typeRef = FromRendererRef.value.vFormRenderRef.getWidgetRef('type')
+    if(FormRendererRef.value.vFormRenderRef) {
+        FormRendererRef.value.vFormRenderRef.resetForm()
+        const typeRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('type')
         typeRef.setValue('Folder')
     }
     

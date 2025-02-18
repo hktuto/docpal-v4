@@ -90,7 +90,7 @@ async function getLocale(){
     languageReady.value = true
     emits('ready')
 }
-useGlobalSetting()
+const { globalSlots } =useGlobalSetting()
 
 
 onMounted(async() => {
@@ -108,12 +108,13 @@ onMounted(async() => {
             <slot name="sidebar" />
         </template>
     </TabApp>
+    <component v-for="s in globalSlots" :key="s.name" :is="s.component" v-bind="$props" />
     <Contextmenu />
     </template>
     <template v-else>
         <LoadingBg >
-                <h1 style="color: #fff;">{{ $t('loading') }}</h1>
-            </LoadingBg>
+            <h1 style="color: #fff;">{{ $t('loading') }}</h1>
+        </LoadingBg>
     </template>
 </template>
 

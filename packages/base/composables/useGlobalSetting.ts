@@ -1,15 +1,19 @@
 
 import {GlobalPasteEvent, useEventBus} from 'eventbus';
-
+type AppSlot = {
+    name: string,
+    order: number,
+    component: any
+}
 export const useDisplayTimeFormat = () => useState('display-time-format', () => 'YYYY-MM-DD')
 
-
+export const useGlobalComponents = () => useState('global-components', () => shallowRef<AppSlot[]>([]))
 
 export const useLastClipboard = () => useState('last-clipboard', () => '')
 
 export const useGlobalSetting = () => {
     const lastClipboard = useLastClipboard()
-
+    const globalSlots = useGlobalComponents()
         // global bus event 
     const fontSizeBus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME)
 
@@ -49,7 +53,6 @@ export const useGlobalSetting = () => {
         console.log("url is valid")
         // get actions from query string
         const actions = newUrl.searchParams.get('actions')
-        console.log("actions", actions)
         if(!actions) return
         const clipboardData = JSON.parse(atob(actions))
         console.log("actionsObj", clipboardData)
@@ -85,6 +88,9 @@ export const useGlobalSetting = () => {
         checkClicpBoard();
     } )
 
+    return {
+        globalSlots
+    }
 
 }
 

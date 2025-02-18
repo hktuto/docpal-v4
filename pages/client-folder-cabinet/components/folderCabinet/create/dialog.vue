@@ -3,7 +3,7 @@
     class="scroll-dialog"
            append-to-body
     >
-    <FormRenderer ref="FromRendererRef" :form-json="formJson" v-loading="state.initLoading"
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" v-loading="state.initLoading"
         @formChange="formChange">
         <template v-slot:metaForm>
             <MetaRenderForm ref="MetaFormRef" @formChange="formChange"></MetaRenderForm>
@@ -43,12 +43,12 @@ const state = reactive<any>({
 })
 const userId:string = useUserId().value
 const NextDialogRef = ref()
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 // #region module: handleSubmit
     const MetaFormRef = ref()
     async function handleSubmit () {
         // 获取 v-form 数据
-        const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+        const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
         const arr = ['notificationReminder', 'emailReminder', 'emailReport']
         arr.forEach(key => {
             formData[key] = {}
@@ -103,7 +103,7 @@ const FromRendererRef = ref()
         const date = new Date()
         let formData:any = {};
         try {
-            const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+            const data = await FormRendererRef.value.vFormRenderRef.getFormData()
             const metadataForm = await MetaFormRef.value.getData()
             if(data) formData = { ...formData, ...data, ...metadataForm}
         } catch (error) {
@@ -158,9 +158,9 @@ const FromRendererRef = ref()
             }
             setTimeout(async()=> {
                 await MetaFormRef.value.init(state.cabinetTemplate.documentType, defaultValue)
-                await FromRendererRef.value.vFormRenderRef.resetForm()
+                await FormRendererRef.value.vFormRenderRef.resetForm()
                 MetaFormRef.value.setData(defaultValue)
-                FromRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
+                FormRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
                 setTitleRequired()
                 setTimeout(async() => {
                     state.previewName = await getMetaName()
@@ -189,7 +189,7 @@ const FromRendererRef = ref()
         function setTitleRequired() {
             const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
             const titleIndex = labelRule.findIndex((item: any) => item.metaData === 'fc:docTitle')
-            const titleWidget = FromRendererRef.value.vFormRenderRef.getWidgetRef('title')
+            const titleWidget = FormRendererRef.value.vFormRenderRef.getWidgetRef('title')
             titleWidget.setRequired(titleIndex !== -1)
         }
     }
