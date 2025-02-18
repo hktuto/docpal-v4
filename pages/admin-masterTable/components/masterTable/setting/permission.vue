@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from "element-plus";
 import { adminApi } from "api";
-const props = defineProps(["table"]);
+const props = defineProps(["table", "tableId"]);
 const { t } = useI18n();
 const state = reactive<any>({
   loading: false,
@@ -87,7 +87,7 @@ async function init() {
   try {
     state.loading = true;
     state.tableData = await adminApi.api
-      .getMasterTablesIdAcls(props.table.id)
+      .getMasterTablesIdAcls(props.tableId)
       .then((res) => res.data);
   } catch (error) {}
   state.loading = false;
