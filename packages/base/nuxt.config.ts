@@ -28,6 +28,7 @@ const config = {
     public:{
       pdfReaderUrl: process.env.pdfReaderUrl,
       NODE_ENV: process.env.NODE_ENV
+      OFFICE_END_POINT: process.env.OFFICE_END_POINT
     }
   },
   i18n: {
