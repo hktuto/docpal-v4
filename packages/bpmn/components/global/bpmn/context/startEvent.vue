@@ -9,6 +9,7 @@ const emits = defineEmits(['openForm'])
 <template>
 <div class="fromContainer">
     <BpmnSidebarEditLabel :node="node" />
+    <BpmnSidebarEditStartCandidate :node="node" />
     <BpmnSidebarEditForm :node="node" />
 </div>
 </template>
