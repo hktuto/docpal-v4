@@ -7,12 +7,18 @@ initPublicLayout()
 
 <template>
 <div class="pageContainer--padding">
-    <div v-if="loadState === 'ready'">111
+    <template v-if="loadState === 'Ready'" class="main-container">
         <NuxtPage />
-    </div>
-    <div v-else class="loadState-container">
-        <div>loadState: {{loadState}}</div>
-    </div>
+    </template>
+    <div v-else style="height: 100%;width: 100%;">
+      <LoadingBg></LoadingBg>
+      <div class="loadState-container">
+        <div>
+          <img src="/logoWithName.png" />
+          <div>{{loadState}}</div>
+        </div>
+      </div>
+  </div>
 </div>
 
 </template>
@@ -24,15 +30,37 @@ initPublicLayout()
 }
 
 .loadState-container {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;   
+  div:first-child {
+    font-size: 28px;
+    width: 40%;
+    height: 40vh;
+    border-radius: 6px;
+    position: relative;
+    text-align: center;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center;   
-    div {
-        font-size: 28px;
-    } 
+    img {
+      width: 80%;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: rgba(255, 255, 255, 0.6);
+    }
+  } 
 }
 .logoContainer{
     // padding: var(--menu-item-padding);
