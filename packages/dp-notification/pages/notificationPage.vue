@@ -49,15 +49,21 @@
 </template>
 <script lang="ts" setup>
 
-import { 
-  getNotificationList2Api,
-  getNotiPageConditionsApi,
-  notiDeleteApi,
-  notiDissmissByIdsApi,
-  datesFormat
-} from 'dp-api'
+import { clientApi } from 'api'
 import { notiShowView, notiHandleView } from '../utils/notificationHelper.ts'
 const route = useRoute()
+
+function datesFormat(prop: string = 'modifiedDate') {
+    return {
+        "joiner": "",
+        "prop": prop,
+        "formatFun": "dateFormat",
+        "params": {
+            "format": ""
+        },
+        "index": 0
+    }
+}
 
 const state = reactive<any>({
   tableData: [],
@@ -108,7 +114,8 @@ const state = reactive<any>({
   async function getList (param) {
     try {
       state.loading = true
-      const res = await getNotificationList2Api({ ...param, ...state.extraParams })
+      const {data:res} = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...state.extraParams })
+      
       res.entryList.map(item => {
         if(typeof item.content === 'string') {
           item.content = JSON.parse(item.content)
@@ -169,7 +176,7 @@ function handleAction (command:string, row: any, rowIndex: number) {
     let ids: string[] = []
     if(!!row) ids = [row.id]
     else ids = state.selectList.map(item => item.id)
-    await notiDeleteApi(ids)
+    await clientApi.api.deleteNotification(ids)
     handlePaginationChange(1)
     if(!!row && row.readStatus === 'READED') return
     updateNotificationUnreadCount()
@@ -179,7 +186,7 @@ function handleAction (command:string, row: any, rowIndex: number) {
     let ids: string[] = []
     if(!!row) ids = [row.id]
     else ids = state.selectList.map(item => item.id)
-    await notiDissmissByIdsApi(ids)
+    await clientApi.api.putNotificationDissmissByIds(ids)
     handlePaginationChange(1)
     if(!!row && row.readStatus === 'READED') return
     updateNotificationUnreadCount()
@@ -194,7 +201,8 @@ function handleAction (command:string, row: any, rowIndex: number) {
   async function initCondition () {
     let defaultFilters = []
     try {
-      defaultFilters = await getNotiPageConditionsApi()
+      const {data} = await clientApi.api.getNotificationQueryNotificationFilter()
+      defaultFilters = data
     } catch (error) {
     }
     const filters = [

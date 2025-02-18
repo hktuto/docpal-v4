@@ -148,7 +148,7 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { getNotificationListApi, notiDeleteApi, notiStatusSetApi, notiReadAllApi } from 'dp-api';
+import { clientApi} from 'api'
 const props = defineProps<{
     unreadCount: number,
 }>()
@@ -178,7 +178,7 @@ const state = reactive({
     scrollNoMore: false,
 })
 const router = useRouter()
-const userId:string = useUser().getUserId()
+const userId = useUserId()
 // const scrollNoMore = computed(() => {
 //     return state.notiList.length >= state.notiTotal
 // })
@@ -189,7 +189,7 @@ const userId:string = useUser().getUserId()
 const {displayTime} = useTime()
 async function getNotiPage () {
     state.loading = true
-    const res = await getNotificationListApi(userId, state.notiPageParam)
+    const {data:res} = await clientApi.api.postNotificationPage(state.notiPageParam, {receiveId:userId.value})
     
     if(res && res.content) {
       const content = res.content.map(item => {
@@ -213,7 +213,7 @@ function handleCheckedNotisChange (value) {
 }
 // #region module: delete
     async function handleDeleteSelected () {
-        await notiDeleteApi(state.checkedNotis)
+      await clientApi.api.deleteNotifications(state.checkedNotis)
         state.checkAll = false
         state.checkedNotis = []
         state.notiList = []
@@ -224,7 +224,7 @@ function handleCheckedNotisChange (value) {
         if (item.loading) return 
         item.loading = true
         try {
-            const res = await notiDeleteApi([item.id])
+            const {data:res} = await clientApi.api.deleteNotifications([item.id])
             if (res) {
                 state.notiList.splice(index, 1)
                 const notiIndex = state.checkedNotis.findIndex(notiId => notiId === item.id)
@@ -244,14 +244,14 @@ function handleCheckedNotisChange (value) {
 
 // #region module: read
     async function handleRead (item) {
-        const res = await notiStatusSetApi(item.id)
+        const { data:res} = await clientApi.api.putNotificationIdStatusStatus(item.id)
         if (res && item.status !== 'READED'){
           item.status = 'READED'
           emit('unreadCountChange', props.unreadCount - 1)
         } 
     }
     async function handleReadAll () {
-        const res = await notiReadAllApi()
+        const {data:res} = await clientApi.api.postNotificationReadAll()
         if (res) {
             state.notiList.forEach(item => {item.status = 'READED'})
             emit('unreadCountChange', 0)

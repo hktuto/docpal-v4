@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { ElNotification } from 'element-plus'
-import { getUnreadNotificationNumberApi } from 'dp-api';
+import { clientApi  }   from 'api'
 const unreadCount = ref(0);
 const notificationStore = ref()
 const NotificationDialogRef = ref();
@@ -24,7 +24,7 @@ function handleOpen () {
     NotificationDialogRef.value.handleOpen()
 }
 async function getUnreadCount() {
-    const res = await getUnreadNotificationNumberApi();
+    const {data:res} = await clientApi.api.getNotificationUnreadNumber();
     unreadCount.value = res;
 }
 function handleUnreadCountChange (count:number) {

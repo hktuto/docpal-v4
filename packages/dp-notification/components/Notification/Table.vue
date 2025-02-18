@@ -56,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getNotificationListApi } from 'dp-api';
+import { clientApi } from 'api';
 type Notification = {
     id: number;
     title: string;
@@ -92,7 +92,7 @@ async function getNotificationList() {
       pageSize: 20,
     }
     try {
-      const res = await getNotificationListApi(userId, param);
+      const {data:res} = clientApi.api.postNotificationPage(param, {receiveId:userId.value});
        res.content.forEach(item => {
           item.content = JSON.parse(item.content) || {}
           item.createDate = formatDate(item.createdDate) || null

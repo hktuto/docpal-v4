@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts" setup>
-import { getUnreadNotificationNumberApi } from 'dp-api';
+import { clientApi } from 'api';
 const unreadCount = ref(0);
 const dialogOpened = ref(false);
 async function getUnreadCount() {
-    const {result} = await getUnreadNotificationNumberApi();
+    const { data:{result}} = await clientApi.api.getNotificationUnreadNumber()
     unreadCount.value = result;
 }
 onMounted(() => {
