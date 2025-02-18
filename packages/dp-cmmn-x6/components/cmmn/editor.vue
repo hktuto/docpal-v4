@@ -39,6 +39,9 @@ const undoState = ref({
 
 const readOnly = ref(false)
 function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
+    if(graph.value) {
+        graph.value.dispose()
+    }
     const options = {
         container: containerEl.value,
         grid:{
