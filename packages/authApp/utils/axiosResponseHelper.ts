@@ -29,6 +29,7 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
     }
     
     if(error.response.status >= 500) {
+      if (error.config.headers.noThrowError) return
       const message = error.response.data.message || error.message
               ElMessage.error(message)
       return Promise.reject(error);
