@@ -4,8 +4,6 @@ export default defineNuxtConfig({
   ],
   extends:[
     "../",
-    "../../i18n",
-    "../../element-ui"
   ]
 
 })
