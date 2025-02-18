@@ -42,7 +42,7 @@ function handleCommand(command) {
     margin-right: var(--app-space-xs);
 }
 .el-dropdown{
-    color: var(--app-grey-950);
+    color: var(--app-grey-300);
 
     .buttonContainer{
         width: 100%;

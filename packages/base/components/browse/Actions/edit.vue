@@ -56,6 +56,7 @@ async function openDialog(){
     nextTick(async() => {
         const analysis = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
         state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
+        console.log(MetaFormRef.value)
         await MetaFormRef.value.init(props.doc.type, {
             aiAnalysis: analysis.metaDatas,
             aiDocId: analysis.aiId

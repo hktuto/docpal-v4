@@ -33,6 +33,7 @@ export interface UseVxeTableParams<R = any> {
     api?:Function,
     remoteSort?:boolean,
     remoteFilter?:boolean,
+    customeToolBar?:boolean,
     defaultSort?: { field: string, order: VxeTablePropTypes.SortOrder }[],
     columns:VxeGridPropTypes.Columns<R>,
     saveColumnOrder?:boolean,
@@ -195,6 +196,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     }, ...optionalConfig} as Config)
     const tableEvent = reactive<VxeGridListeners>(optionalEvent)
 
+    if(params.customeToolBar){
+        tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
+    }
 
     // #region handle actions column
     // Step 1: add actions to tableEvent
