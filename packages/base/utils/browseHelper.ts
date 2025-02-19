@@ -1,4 +1,6 @@
 import { clientApi } from 'api';
+import { Download, Loading } from '@element-plus/icons-vue';
+import { ElNotification, ElMessage} from 'element-plus'
 import * as mime from 'mime-types'
 
 export function canCollaboraEdit(mimeType:string) {
@@ -100,5 +102,164 @@ export const getUniqueName = async(file:any) => {
         return name
     } catch (error) {
         return file.fileName || file.name
+    }
+}
+
+
+export const getDocDetail = async (idOrPath:string, userId:string) => {
+    let doc: any = {
+    }
+    let permission: any = {}
+    try{
+        console.log(idOrPath, userId)
+        const promise = [];
+        promise.push(
+            clientApi.api.postNuxeoDocument({idOrPath}),
+            getPermission(idOrPath, userId)
+        )
+        let [ {data:doc}, permission ] = await Promise.all(promise)
+        const displayMeta = await getDocumentAdditional(doc.type)
+        doc.displayMeta = displayMeta
+        return {
+            doc,
+            permission
+        }
+
+    }catch(err){
+        throw err
+    }
+}
+
+export const getDocumentAdditional = async(type:string):Promise<any[]> => {
+    // cache type into window object
+    try{
+        if( window["docTypeCache"] && window["docTypeCache"][type]) {
+            return window["docTypeCache"][type]
+        }
+        const { data } = await clientApi.api.postTypesMetadatas({name:type},{
+            headers: { 'noThrowError' : "true" }
+        })
+        if(!data){
+            throw new Error('no type found')
+        }
+        if(!window["docTypeCache"]) {
+            window["docTypeCache"] = {[type]: data}
+        } else {
+            window["docTypeCache"][type] = data
+        }
+        return data
+    } catch(err) {
+        return []
+    }
+}
+
+export const getPermission = async(idOrPath:string, userId:string):Promise<any> => {
+    if(!idOrPath || !userId){
+        return {}
+    }
+    const { data } = await clientApi.api.getNuxeoDocumentAclPermission({docId: idOrPath, userId})
+    if(!data){
+        throw new Error('no permission found')
+    }
+    return {
+        ...data,
+        hold: data.hold || {}
+    }
+}
+
+async function DownloadDocApi(idOrPath:string, cb?:Function) {
+    return clientApi.api.postNuxeoDocumentDownload({idOrPath},{
+       format:'blob',
+       timeout:0,
+       onDownloadProgress: function (progressEvent) {
+            if(cb) cb(progressEvent)
+        }
+    })
+}
+
+export async function downloadFileHandler(doc: any){
+    
+    const { t } = useI18n()
+    // exportFolderStructureApi
+    const id = new Date().valueOf() + doc.name
+    const notification = ElNotification({
+        title: '',
+        icon: Download,
+        dangerouslyUseHTMLString: true,
+        message: `<span id="${id}">0%</span> ${doc.name}`,
+        showClose: false,
+        customClass: 'download-notification',
+        duration: 0,
+        position: 'bottom-right'
+    });
+    try{
+        const blob = await DownloadDocApi(doc.id, (e: any) => {
+        const el = document.getElementById(id)
+        if(el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+        })
+        await downloadBlob(blob, doc.name)
+        // await DownloadDocApi(props.doc.id)
+    } catch(error:any) {
+        ElMessage.error(t('download_noFile') as string)
+    }
+    setTimeout(() => {
+        notification.close()
+    }, 3000)
+}
+
+export function allowFeature(f: string) {
+    
+    
+    // if (f === 'DOCUMENT_CONVERSION') return true
+    // if(f === 'DOC_COMMENT') return false
+    // if(f === 'DOC_ANNOTATION') return false
+    // if(f === 'WORKFLOW_ADHOC') return false
+    try {
+    const features = useFeature()
+      // @ts-ignore
+      return feature[pageFeatures[f]] || feature[f]
+    } catch (error) {
+      return false
+    }
+  }
+
+
+/**
+ *
+ * @param idOrPath parent id or path
+ * @param list list of files to check for duplicates
+ * @returns {isDuplicate: boolean, list: any[]}
+ */
+export const duplicateNameFilter = async (idOrPath: string, list:any) => {
+    try {
+        let result = false
+        const titles = list.reduce((prev:any, item:any) => {
+            prev.push(item.fileName || item.name)
+            return prev
+        }, [])
+        const {data: res}= await clientApi.api.postNuxeoDocumentIsduplicatename({
+            path:idOrPath,
+            titles
+        }) as any
+        list.forEach((doc:any) => {
+            const name = doc.fileName || doc.name
+            if (res[name] || res[name]) {
+                result = true
+                doc.goPath = idOrPath
+                doc.isDuplicate = true
+                doc.originalPath = res[name].idOrPath
+                doc.uniqueName = res[name].uniqueName
+            }
+        })
+        return {
+            isDuplicate: result,
+            list,
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            isDuplicate: true,
+            list: []
+        }
     }
 }

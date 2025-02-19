@@ -33,6 +33,7 @@ export interface UseVxeTableParams<R = any> {
     api?:Function,
     remoteSort?:boolean,
     remoteFilter?:boolean,
+    customeToolBar?:boolean,
     defaultSort?: { field: string, order: VxeTablePropTypes.SortOrder }[],
     columns:VxeGridPropTypes.Columns<R>,
     saveColumnOrder?:boolean,
@@ -203,6 +204,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     }, ...optionalConfig} as Config)
     const tableEvent = reactive<VxeGridListeners>(optionalEvent)
 
+    if(params.customeToolBar){
+        tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
+    }
 
     // #region handle actions column
     // Step 1: add actions to tableEvent
@@ -306,6 +310,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
         tableEvent.checkboxChange = ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
+            console.log("checkboxChange", selectedRows)
             selectChangeHander(selectedRows)
         }
         tableEvent.checkboxRangeChange = ({ $event }:any) => {

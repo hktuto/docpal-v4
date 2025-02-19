@@ -15,7 +15,7 @@
             :close-on-click-modal="false"
             :title="`${$t('publicUpload_requestFileUpload')}`"
             >
-            <WorkflowDetailFormRender ref="FromRendererRef" :form-json="formJson"/>
+            <WorkflowDetailFormRender ref="FormRendererRef" :form-json="formJson"/>
             <template #footer>
               <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('dpButtom_confirm') }}</el-button>
             </template>
@@ -38,17 +38,17 @@ function uploadDialog(){
   state.dialogOpened = true
   setTimeout(() => {
 
-    FromRendererRef.value.vFormRenderRef.resetForm()
+    FormRendererRef.value.vFormRenderRef.resetForm()
   })
   // open upload dialog
 }
 // #region module:
   import formJson from './form/clientFileRequest.vform.json'
-  const FromRendererRef = ref()
+  const FormRendererRef = ref()
   async function handleSubmit () {
     state.loading = true
     try {
-      const data = await FromRendererRef.value.getFormData(true, false)
+      const data = await FormRendererRef.value.getFormData(true, false)
       if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
       if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')

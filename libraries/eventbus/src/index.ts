@@ -9,7 +9,7 @@ export enum EventType {
     NETWORK_REQUEST__FAIL = 'network-request--fail',
     OPEN_SETTINGS = 'open-settings',
     CLOSE_SETTINGS = 'close-settings',
-    
+    FILE_NEED_REFRESH = 'file-need-refresh',
 }
 
 export enum GlobalPasteEvent {
