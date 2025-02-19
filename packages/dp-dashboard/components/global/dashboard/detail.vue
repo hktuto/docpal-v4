@@ -48,7 +48,7 @@
           :class="{ 'vue-grid-layout--edit': editMode }"
           v-model:layout="layout"
           :col-num="colNum"
-          :margin="[20, 20]"
+          :margin="[12, 12]"
           :row-height="rowHeight"
           :is-draggable="draggable"
           :is-resizable="resizable"

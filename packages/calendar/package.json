@@ -16,9 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@schedule-x/calendar-controls": "^2.20.0",
     "@schedule-x/current-time": "^2.19.0",
     "@schedule-x/drag-and-drop": "^2.19.0",
     "@schedule-x/event-modal": "^2.19.0",
+    "@schedule-x/events-service": "^2.20.0",
     "@schedule-x/resize": "^2.19.0",
     "@schedule-x/theme-default": "^2.19.0",
     "@schedule-x/vue": "^2.17.0",
