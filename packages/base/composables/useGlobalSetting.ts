@@ -3,6 +3,7 @@ import {GlobalPasteEvent, useEventBus} from 'eventbus';
 type AppSlot = {
     name: string,
     order: number,
+    show?: boolean,
     component: any
 }
 export const useDisplayTimeFormat = () => useState('display-time-format', () => 'YYYY-MM-DD')

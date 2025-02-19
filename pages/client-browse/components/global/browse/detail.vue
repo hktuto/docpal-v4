@@ -96,6 +96,7 @@ watch(idOrPath, () => {
 
 <template>
     <div class="pageContainer" >
+        {{docDetail}}
         <template v-if="docDetail">
             <div class="header">
 

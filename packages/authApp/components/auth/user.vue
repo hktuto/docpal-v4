@@ -28,6 +28,7 @@ function openSetting(){
             {{ user.username }}
         </div>
         <div class="actions">
+            <Notification  />
             <ElDropdown>
                 <ElButton size="small" link >
                     <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
