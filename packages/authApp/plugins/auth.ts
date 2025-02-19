@@ -28,7 +28,10 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
     // set refresh token to clientApi and adminApi
     publicApi.instance.interceptors.request.use(
-        (config) => requestSuccessHelper(config, publicApi.instance),
+        (config) => {
+            console.log("publicApi", config.baseURL);
+            return requestSuccessHelper(config, publicApi.instance)
+        },
         (error) => requestErrorHelper(error, publicApi.instance)
     )
     publicApi.instance.interceptors.response.use(
