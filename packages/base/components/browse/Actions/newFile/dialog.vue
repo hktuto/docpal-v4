@@ -9,7 +9,7 @@
         {{ 'in /' + state.setting.name }}
     </template>
     <!-- TODO : duplicate -->
-    <FromRenderer ref="FromRendererRef" :form-json="formJson" @formChange="formChange"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="formChange"/>
     <MetaRenderForm2 ref="MetaFormRef"></MetaRenderForm2>
     <template #footer>
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
@@ -27,14 +27,14 @@ const state = reactive({
     visible: false,
     setting: {},
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const MetaFormRef = ref()
 import formJson from '../form/newFile.vform.json'
 function formChange ({fieldName,newValue,oldValue,formModel}) {
     if(fieldName === 'documentType') MetaFormRef.value.init(newValue)
 }
 async function handleSubmit () {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     try {
         data.path = state.setting.path
         const _fileName = await getUniqueName({ goPath: data.path, fileName: data.fileName } )
@@ -73,13 +73,13 @@ async function handleSubmit () {
     }
 }
 function handleClose() {
-    FromRendererRef.value.vFormRenderRef.resetForm()
+    FormRendererRef.value.vFormRenderRef.resetForm()
 }
 function handleOpen(setting) {
     state.visible = true
     setTimeout(async () => {
         state.setting = setting
-        await FromRendererRef.value.vFormRenderRef.setFormData({ documentType: 'File'})
+        await FormRendererRef.value.vFormRenderRef.setFormData({ documentType: 'File'})
         state.loading = false
     })
 }

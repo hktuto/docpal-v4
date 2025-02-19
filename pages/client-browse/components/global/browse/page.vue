@@ -1,15 +1,9 @@
 <script lang="ts" setup>
-import {BrowseListProviderKey} from '#imports'
-import {clientApi} from 'api'
-import {BrowseListTable} from '#components'
-
-defineOptions({
-    name: 'BrowsePage'
-})
 
 const props = defineProps<{ 
     idOrPath: string ,
     filter: any,
+    home: any,
 }>();
 
 
@@ -17,7 +11,6 @@ const props = defineProps<{
 </script>
 
 <template>
-        
     <div class="pageContainer" >
         <BrowsePageComponent v-bind="props" >
         </BrowsePageComponent>
@@ -27,5 +20,7 @@ const props = defineProps<{
 <style lang="scss" scoped>
 .pageContainer {
   height: 100%;
+  width: 100%;
+  padding: var(--app-space-s);
 }
 </style>

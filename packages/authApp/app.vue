@@ -5,6 +5,7 @@ const { loggedIn } = useAuth()
 const authReadyState = useAuthReadyState()
 const { locale, loadLocaleMessages} = useI18n()
 const localeReady = ref(false)
+
 watch(loggedIn, (bool) => {
   if(bool) {
     loadLocaleMessages(locale.value)
@@ -31,6 +32,7 @@ watch(loggedIn, (bool) => {
                     </AppMenu>
                 </template>
             </AppEntry>
+            
         </template>
         <template #placeholder>
             <LoadingBg >
