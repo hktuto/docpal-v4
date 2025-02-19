@@ -1,43 +1,54 @@
 <template>
-<LoadingBg />
-<el-card class="formContainer">
-    <div class="flex-x-start">
-        <img src="/logoWithName.png" style="width: 80%" class="logo" />
+  <div style="height: 100%; width: 100%">
+    <LoadingBg></LoadingBg>
+    <div class="loadState-container">
+      <div>
+        <img src="/logoWithName.png" />
+        <h1>{{ $t(`dpTip_${tip}`) }}</h1>
+      </div>
     </div>
-    <h1>{{$t(`dpTip_${tip}`)}}</h1>
-</el-card>
+  </div>
 </template>
 
-
 <script lang="ts" setup>
-const route = useRoute()
+const route = useRoute();
 const tip = computed(() => {
-    return route.query.tip || 'publicToLogin'
-})
+  return route.query.tip || "publicToLogin";
+});
 </script>
 
 <style lang="scss" scoped>
-.el-card {
-    // position: fixed;
-    min-width: 300px;
-    max-width: 600px;
-    width: 100%;
+.loadState-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  div:first-child {
+    font-size: 28px;
+    width: 40%;
+    height: 40vh;
+    border-radius: 6px;
+    position: relative;
+    text-align: center;
     display: flex;
-    flex-flow: column nowrap;
-    justify-content: flex-start;
-    align-items: stretch;
-
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    .logo{
-        width: 80%;
-        max-width: 200px;
-        margin: 0 auto var(--el-component-size-small) auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 80%;
     }
-    h1 {
-        text-align: center;
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: rgba(255, 255, 255, 0.6);
     }
+  }
 }
 </style>
