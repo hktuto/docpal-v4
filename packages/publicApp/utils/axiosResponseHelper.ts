@@ -3,11 +3,13 @@ import {ElMessage} from "element-plus";
 import { useEventBus, EventType, emitBus } from 'eventbus';
 
 export const requestSuccessHelper = (config:any, axiosInstance:typeAxiosInstance) => {
-    const token = localStorage.getItem('access_token');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config
+  const locale = localStorage.getItem('v_form_locale') || 'en-US'
+  const token = localStorage.getItem('access_token');
+  if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      config.headers['accept-language'] = locale;
+  }
+  return config
 }
 export const requestErrorHelper = (error:any, axiosInstance:typeAxiosInstance) => {
     return Promise.reject(error)
