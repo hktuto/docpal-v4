@@ -28,7 +28,7 @@ export const useSubscribe = () => {
 
     async function unSubscribe(folderId:string) {
         const userId = useUserId()
-        await clientApi.api.deleteNotificationSubscriberSubscriberSubscriberIdorpathIdorpath(folderId, userId.value)
+        await clientApi.api.deleteNotificationSubscriberSubscriberSubscriberIdorpathIdorpath(userId.value, folderId)
         
         await getSubscribeList()
     }

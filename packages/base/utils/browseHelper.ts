@@ -17,6 +17,13 @@ export function canCollaboraEdit(mimeType:string) {
     return false;
   }
 
+export function getMimeTypeFromDocument(doc:any):string | undefined{
+    const properties = doc.properties as any
+    const mimeType:string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
+    if(!mimeType) return undefined;
+    return mimeType
+}
+
 
 export const formatFileSize = (size:number) => {
     if(!size) return ''
