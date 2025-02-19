@@ -123,20 +123,28 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             storage: saveColumnOrder,
             restoreStore ({ id }) {
                 // TODO : move useUserPreference to a composable to store and cache tabel config
-                // @ts-ignore
-                const perference = useUserPreference()
-                if(perference.value && perference.value.tableSettings && perference.value.tableSettings[id]) {
-                    return perference.value.tableSettings[id]
+                try {
+                    // @ts-ignore
+                    const perference = useUserPreference()
+                    if(perference.value && perference.value.tableSettings && perference.value.tableSettings[id]) {
+                        return perference.value.tableSettings[id]
+                    }
+                } catch (error) {
+                    
                 }
             },
             updateStore ({ id, storeData }) {
                 // TODO : move useUserPreference to a composable to store and cache tabel config
-                // @ts-ignore
-                const perference = useUserPreference()
-                if(!perference.value.tableSettings) perference.value.tableSettings = {}
-                perference.value.tableSettings[id] = storeData
-                // save perference
-                return clientApi.api.putUserSetting(perference.value)
+                try {
+                    // @ts-ignore
+                    const perference = useUserPreference()
+                    if(!perference.value.tableSettings) perference.value.tableSettings = {}
+                    perference.value.tableSettings[id] = storeData
+                    // save perference
+                    return clientApi.api.putUserSetting(perference.value)
+                } catch (error) {
+                    
+                }
             }
         },
         sortConfig:{

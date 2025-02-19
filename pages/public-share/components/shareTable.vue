@@ -1,0 +1,140 @@
+<template>
+  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <template #toolbar_buttons>
+      <slot name="toolbar_buttons"></slot>
+    </template>
+    <template #logicalPath="{ row }">
+      <el-button v-if="row.readOnly" type="primary" text disabled>
+        {{ $t("readOnly") }}
+      </el-button>
+      <el-button v-else-if="row.watermarkStatus === 'NO'" type="primary" text disabled>
+        {{ $t("Converting") }}...
+      </el-button>
+      <el-button
+        v-else-if="!row.watermarkStatus || row.watermarkStatus === 'YES'"
+        type="primary"
+        :loading="row.downloading"
+        @click="handleDownload(row)"
+      >
+        {{ $t("download") }}
+      </el-button>
+      <el-button v-else text type="danger" disabled>
+        {{ $t("Conversion failed") }}
+      </el-button>
+    </template>
+  </VxeGrid>
+  <ReaderDialog
+    ref="ReaderRef"
+    v-bind="previewFile"
+    :options="{ readOnly: true, print: false, loadAnnotations: false }"
+  >
+  </ReaderDialog>
+</template>
+<script lang="ts" setup>
+import { ElMessageBox } from "element-plus";
+import { clientApi } from "api";
+import dayjs from "dayjs";
+import { routeShareMePageFolder } from "~/utils/routerHelper";
+
+const { t } = useI18n();
+let extraParams: any = {};
+const {
+  tableConfig,
+  tableEvent,
+  tableRef,
+  query,
+  reload,
+  cleanSelectedRows,
+} = useVxeTable({
+  id: "userTableSetting",
+  columns: [
+    { field: "title", title: "tableHeader_name", fixed: "left" },
+    { field: "fileExtension", title: "docInfo.fileExtension" },
+
+    { field: "fileSize", title: "search.size" },
+    {
+      field: "lastModified",
+      title: "tableHeader_modifiedDate",
+      formatter({ cellValue }: any) {
+        return dayjs(cellValue).format("YYYY-MM-DD HH:mm:ss");
+      },
+    },
+    {
+      field: "type",
+      title: "tableHeader_type",
+    },
+    {
+      title: "tableHeader_actions",
+
+      slots: {
+        default: "logicalPath",
+      },
+    },
+  ],
+
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row);
+  },
+});
+const ReaderRef = ref();
+const previewFile = reactive({
+  blob: null,
+  name: "",
+  id: "",
+  loading: false,
+  options: {
+    noDownload: true,
+    print: false,
+    loadAnnotations: false,
+    readOnly: true,
+  },
+});
+const route = useRoute();
+async function handleDblclick(row: any) {
+  ReaderRef.value.handleOpen();
+  previewFile.loading = true;
+  const fileId = row.id;
+  try {
+    const params = {
+      token: route.query.token,
+      password: sessionStorage.getItem("sharePWD"),
+      documentId: fileId,
+    };
+    previewFile.blob = await clientApi.api.getNuxeoPublicSharePreview(params, {
+      format: "blob",
+    });
+  } catch (error) {}
+  previewFile.id = fileId;
+  previewFile.name = row.title;
+  previewFile.loading = false;
+}
+async function handleDownload(row: any) {
+  // ReaderRef.value.handleOpen(row);
+  row.downloading = true;
+  try {
+    const params = {
+      token: route.query.token,
+      password: sessionStorage.getItem("sharePWD"),
+      documentId: row.id,
+    };
+    const blob = await clientApi.api.getNuxeoPublicShareDownload(params, {
+      format: "blob",
+    });
+    downloadBlob(blob, row.name || row.title, blob.type);
+  } catch (error) {
+  } finally {
+    row.downloading = false;
+  }
+}
+function loadData(arr: any) {
+  tableRef.value?.loadData(arr);
+}
+defineExpose({
+  loadData,
+});
+</script>
+<style lang="scss" scoped>
+:deep .el-input {
+  width: 200px;
+}
+</style>
