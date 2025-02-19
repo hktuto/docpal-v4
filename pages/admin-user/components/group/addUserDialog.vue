@@ -1,17 +1,18 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_addUser')"
-    :close-on-click-modal="false"
-    >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+    <el-dialog v-model="state.visible" :title="$t('user_addUsersToUserGroup')" :close-on-click-modal="false">
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { groupProviderDetailKey } from '~/util/userProvider';
+import {groupProviderDetailKey} from '~/util/userProvider';
 import formJson from './addUserDialog.vform.json'
-import type { UserDTO, GroupDTO } from 'api/src/generate/admin'
+import type {UserDTO, GroupDTO} from 'api/src/generate/admin'
+
+const {t} = useI18n()
+const routerProvider = inject(MenuRouterKey)
 const groupProviderDetail = inject(groupProviderDetailKey)
 const props = defineProps<{
     group: GroupDTO,
@@ -29,7 +30,8 @@ const state = reactive<{
     userList: []
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
@@ -38,7 +40,11 @@ async function handleSubmit () {
             userIds: data.id
         }
         await groupProviderDetail?.BatchGroupAddUsersApi(param)
-        setTimeout(() => { state.visible = false }, 300)
+        setTimeout(() => {
+            state.visible = false
+        }, 300)
+        routerProvider?.message.success(t('user_addUserGroupSuccessMsg'));
+
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
@@ -46,20 +52,23 @@ async function handleSubmit () {
     }
     state.loading = false
 }
-function handleOpen(exitList:UserDTO[]) {
+
+function handleOpen(exitList: UserDTO[]) {
     state.visible = true
     setTimeout(() => {
         handleOptions(exitList)
-    },100)
+    }, 100)
 }
-async function handleOptions (exitList:UserDTO[]) {
+
+async function handleOptions(exitList: UserDTO[]) {
     console.log(exitList)
-    if(!state.userList || state.userList.length === 0) state.userList = await groupProviderDetail?.getUserListApi()
+    if (!state.userList || state.userList.length === 0) state.userList = await groupProviderDetail?.getUserListApi()
     const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('id')
 
     const options = userListFilter()
-    
+
     idRef.loadOptions(options)
+
     function userListFilter() {
         return state.userList.reduce((prev: any[], item: UserDTO & any) => {
             const index = exitList.findIndex(exitItem => exitItem.userId === item.userId)
@@ -72,7 +81,8 @@ async function handleOptions (exitList:UserDTO[]) {
         }, []);
     }
 }
-defineExpose({ handleOpen })
+
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

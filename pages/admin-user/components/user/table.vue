@@ -113,16 +113,16 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         return await userProvider?.getAllUsersApi(pageParams)
     },
     columns: [
-        {field: 'username', title: `${t('user_username')}`, fixed: 'left', type: 'checkbox'},
-        {field: 'email', title: `${t('user_email')}`,},
+        {field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox'},
+        {field: 'email', title: 'user_email',},
         {
-            field: 'groupDTOList', title: `${t('user_groups')}`,
+            field: 'groupDTOList', title: 'user_groups',
             slots: {
                 default: 'group',
             }
         },
         {
-            field: 'status', title: `${t('user_active')}`,
+            field: 'status', title: 'user_active',
             slots: {
                 default: 'status',
             }

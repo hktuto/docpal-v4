@@ -39,7 +39,6 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {userProviderDetailKey} from '~/util/userProvider';
 
 const {t} = useI18n()
-const routerProvider = inject(MenuRouterKey)
 const userProviderDetail = inject(userProviderDetailKey)
 if (!userProviderDetail) {
     throw new Error('userProviderDetailKey not found')
@@ -53,8 +52,8 @@ const state = reactive<any>({
 const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
     id: 'azureLogTableSetting',
     columns: [
-        {field: 'name', title: `${t('user_userGroupName')}`, fixed: 'left', type: 'checkbox'},
-        {field: 'id', title: `${t('user_userGroupIdentifer')}`,},
+        {field: 'name', title: 'user_userGroupName', fixed: 'left', type: 'checkbox'},
+        {field: 'id', title: 'user_userGroupIdentifer',},
     ],
     selectChangeHander: (selectedRows: any[]) => {
         state.selectedRows = [...selectedRows];
