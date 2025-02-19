@@ -130,7 +130,7 @@ function dblClickHandler(row:any) {
         listProvider.changeRoute(row.path)
     }else{
         const params = createDetailPageParams({
-            id: row.id,
+            idOrPath: row.id,
             docName: row.name,
         })
         routerProvider?.navigateTo(params)
