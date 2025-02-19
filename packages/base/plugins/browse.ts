@@ -21,30 +21,37 @@ export default defineNuxtPlugin(() => {
     {
         name: 'emptyDelete',
         component: BrowseActionsEmptyDelete,
+        show: false,
         order: 100,
     },{
         name: 'paste',
         component: BrowseActionsPaste,
+        show: false,
         order: 100,
     },{
         name: 'newFolder',
         component: BrowseActionsNewFolder,
+        show: false,
         order: 100,
     },{
         name: 'uploadDoc',
         component: BrowseActionsUploadDoc,
+        show: false,
         order: 100,
     },{
         name: 'rename',
         component: BrowseActionsRename,
+        show: false,
         order: 100,
     },{
         name: 'newFileDialog',
         component: BrowseActionsNewFileDialog,
+        show: false,
         order: 100,
     },{
         name: 'watermark',
         component: BrowseActionsWatermark,
+        show: false,
         order: 100,
     })
 })

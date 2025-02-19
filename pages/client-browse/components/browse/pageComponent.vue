@@ -83,8 +83,15 @@ function itemDeleted(){
 
 watch(idOrPath, () => {
     getDoc()
+
 },{
     immediate:true,
+})
+
+onActivated(() => {
+    if(tableRef.value) {
+        tableRef.value.reload()
+    }
 })
 
 provide(BrowseListProviderKey,{
