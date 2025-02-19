@@ -7,6 +7,8 @@ const emits = defineEmits(['ready'])
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import enUS from 'vxe-table/lib/locale/lang/en-US'
 import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
+
+
 async function getTabsFromServer() {
     // check if new tab
     const route = useRoute()
@@ -108,7 +110,7 @@ onMounted(async() => {
             <slot name="sidebar" />
         </template>
     </TabApp>
-    <component v-for="s in globalSlots" :key="s.name" :is="s.component" v-bind="$props" />
+    <component v-for="s in globalSlots" v-show=s.show :key="s.name" :is="s.component" v-bind="$props" />
     <Contextmenu />
     </template>
     <template v-else>

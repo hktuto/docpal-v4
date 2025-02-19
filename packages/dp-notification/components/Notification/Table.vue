@@ -71,7 +71,7 @@ const list = ref<Notification[]>([]);
 const total = ref(0);
 
 const loading = ref(false);
-const userId:string = useUser().getUserId()
+const userId = useUserId()
 function handleDelete(item: Notification, index: number) {
     dpLog(item, index);
 

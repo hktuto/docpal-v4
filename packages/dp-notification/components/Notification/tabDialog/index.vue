@@ -1,39 +1,8 @@
-<template>
-  <el-dialog
-    v-model="state.visible"
-    class="scroll-dialog notification-tag-dialog"
-    :title="$t('notifications.text')"
-    :close-on-click-modal="false"
-    append-to-body
-  >
-    <el-tabs v-model="state.activeName" class="dp-tabs--auto" @tab-click="handleClick">
-      <ElTabPane v-for="item in state.list" :key="item.type" :name="item.type">
-        <template #label>
-          <el-badge :value="item.unreadCount" :hidden="item.unreadCount === 0"  type="primary">
-            {{ item.type }}
-          </el-badge>
-        </template>
-        <NotificationTabDialogDetail v-if="item.type === state.activeName" 
-          :ref="el => { detailRef[item.type] = el }"
-          :type="item.type"
-          @unreadCountChange="handleUnreadCountChange"
-          @close="state.visible = false"
-        ></NotificationTabDialogDetail>
-      </ElTabPane>
-    </el-tabs>
-    <template #footer>
-      <div class="flex-x-between">
-        <el-button test-id="notification-dismiss-button" :loading="dismissLoading" type="info" text @click="handleDismissAll">{{$t('button.dismissAll')}}</el-button>
-        <el-button test-id="notification-view-more-button" type="primary" @click="handleViewMore">{{ $t('button.viewMore') }}</el-button>
-      </div>
-    </template>
-  </el-dialog>
-</template>
 <script lang="ts" setup>
 import { ElTabs, ElTabPane, ElButton, ElDialog, ElBadge } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 
-import { clientApi} from 'api'
+import { clientApi } from 'api'
 const props = defineProps<{
   unreadCount?: number;
 }>();
@@ -68,8 +37,8 @@ function handleClick() {
   
 }
 async function getTypeList() {
-  const { data} = await clietnApi.api.getNotificationQueryNotificationUnreadCountList()
-  state.list =
+  const { data} = await clientApi.api.getNotificationQueryNotificationUnreadCountList()
+  state.list = data
   const unreadCount = state.list.reduce((prev, item) => {
     prev += item.unreadCount
     return prev 
@@ -128,9 +97,40 @@ onMounted(() => {
 useEventListener(window, 'updateNotificationUnreadCount', initData)
 defineExpose({ handleOpen, initData });
 </script>
-<style lang="scss" scoped>
 
-</style>
+<template>
+  <el-dialog
+    v-model="state.visible"
+    class="scroll-dialog notification-tag-dialog"
+    :title="$t('notifications.text')"
+    :close-on-click-modal="false"
+    append-to-body
+  >
+    <el-tabs v-model="state.activeName" class="dp-tabs--auto" @tab-click="handleClick">
+      <ElTabPane v-for="item in state.list" :key="item.type" :name="item.type">
+        <template #label>
+          <el-badge :value="item.unreadCount" :hidden="item.unreadCount === 0"  type="primary">
+            {{ item.type }}
+          </el-badge>
+        </template>
+        <NotificationTabDialogDetail v-if="item.type === state.activeName" 
+          :ref="el => { detailRef[item.type] = el }"
+          :type="item.type"
+          @unreadCountChange="handleUnreadCountChange"
+          @close="state.visible = false"
+        ></NotificationTabDialogDetail>
+      </ElTabPane>
+    </el-tabs>
+    <template #footer>
+      <div class="flex-x-between">
+        <el-button test-id="notification-dismiss-button" :loading="dismissLoading" type="info" text @click="handleDismissAll">{{$t('button.dismissAll')}}</el-button>
+        <el-button test-id="notification-view-more-button" type="primary" @click="handleViewMore">{{ $t('button.viewMore') }}</el-button>
+      </div>
+    </template>
+  </el-dialog>
+</template>
+
+
 
 <style  lang="scss">
 .notification-tag-dialog {
