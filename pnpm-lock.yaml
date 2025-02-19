@@ -611,7 +611,7 @@ importers:
         version: 8.57.1
       nuxt:
         specifier: 3.15.4
-        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(yaml@2.7.0)
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
@@ -751,6 +751,42 @@ importers:
       typescript:
         specifier: ^4.9.5
         version: 4.9.5
+
+  packages/dp-notification:
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.14.1
+        version: 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vitest@2.1.9)(yaml@2.7.0)
+      '@nuxtjs/eslint-config-typescript':
+        specifier: ^12.0.0
+        version: 12.1.0(eslint@8.57.1)(typescript@4.9.5)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      eslint:
+        specifier: ^8.28.0
+        version: 8.57.1
+      eventbus:
+        specifier: workspace:*
+        version: link:../../libraries/eventbus
+      happy-dom:
+        specifier: ^15.7.3
+        version: 15.11.7
+      nuxt:
+        specifier: 3.15.4
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(yaml@2.7.0)
+      playwright-core:
+        specifier: ^1.47.0
+        version: 1.50.1
+      typescript:
+        specifier: ^4.9.3
+        version: 4.9.5
+      vitest:
+        specifier: ^2.0.5
+        version: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.4)(typescript@4.9.5))(sass@1.85.0)(terser@5.39.0)
 
   packages/dp-search:
     dependencies:
@@ -2354,6 +2390,55 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.7.3)
 
+  pages/client-trash:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      js-base64:
+        specifier: ^3.7.7
+        version: 3.7.7
+      nuxt:
+        specifier: 3.15.4
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.7.3)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.7.3))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.15.4
+        version: 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.11.7
+        version: 15.11.7
+      msw:
+        specifier: ^2.7.0
+        version: 2.7.0(@types/node@22.13.4)(typescript@5.7.3)
+      playwright-core:
+        specifier: ^1.50.1
+        version: 1.50.1
+      sass:
+        specifier: ^1.85.0
+        version: 1.85.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(jsdom@19.0.0(canvas@2.11.2(encoding@0.1.13)))(msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3))(sass@1.85.0)(terser@5.39.0)
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.0(typescript@5.7.3)
+
   pages/client-workflow:
     dependencies:
       dayjs:
@@ -2397,7 +2482,105 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.7.3)
 
+  pages/public-easy-form:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      js-base64:
+        specifier: ^3.7.7
+        version: 3.7.7
+      nuxt:
+        specifier: 3.15.4
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.7.3)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.7.3))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.15.4
+        version: 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.11.7
+        version: 15.11.7
+      msw:
+        specifier: ^2.7.0
+        version: 2.7.0(@types/node@22.13.4)(typescript@5.7.3)
+      playwright-core:
+        specifier: ^1.50.1
+        version: 1.50.1
+      sass:
+        specifier: ^1.85.0
+        version: 1.85.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(jsdom@19.0.0(canvas@2.11.2(encoding@0.1.13)))(msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3))(sass@1.85.0)(terser@5.39.0)
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.0(typescript@5.7.3)
+
   pages/public-share:
+    dependencies:
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      js-base64:
+        specifier: ^3.7.7
+        version: 3.7.7
+      nuxt:
+        specifier: 3.15.4
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.7.3)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.7.3))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.15.4
+        version: 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.11.7
+        version: 15.11.7
+      msw:
+        specifier: ^2.7.0
+        version: 2.7.0(@types/node@22.13.4)(typescript@5.7.3)
+      playwright-core:
+        specifier: ^1.50.1
+        version: 1.50.1
+      sass:
+        specifier: ^1.85.0
+        version: 1.85.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(jsdom@19.0.0(canvas@2.11.2(encoding@0.1.13)))(msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3))(sass@1.85.0)(terser@5.39.0)
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.0(typescript@5.7.3)
+
+  pages/public-upload:
     dependencies:
       dayjs:
         specifier: ^1.11.13
@@ -8961,8 +9144,8 @@ packages:
     engines: {node: '>= 4'}
 
   v-form@file:packages/dp-form/dist/V-form.tar.gz:
-    resolution: {integrity: sha512-+5P5hNmsVB8thTbyeOuif2c3jSTFFOV2cS2x20gdUAf0buYBXSbhH0pel1a0OLZvgiugr3s3PAW8yiguFW/M5Q==, tarball: file:packages/dp-form/dist/V-form.tar.gz}
-    version: 3.1.0
+    resolution: {integrity: sha512-pN2pIITtaXeZlgatf+GGoVTo0LjYKdVDdpi/2CHWPuo+xhKkXdcn+CX2i85AjKVAUaBzNY8JVGY41mQy34yijQ==, tarball: file:packages/dp-form/dist/V-form.tar.gz}
+    version: 3.1.1
 
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -11045,6 +11228,56 @@ snapshots:
       - typescript
       - yaml
 
+  '@nuxt/test-utils@3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vitest@2.1.9)(yaml@2.7.0)':
+    dependencies:
+      '@nuxt/kit': 3.15.4(magicast@0.3.5)
+      '@nuxt/schema': 3.15.4
+      c12: 2.0.2(magicast@0.3.5)
+      consola: 3.4.0
+      defu: 6.1.4
+      destr: 2.0.3
+      estree-walker: 3.0.3
+      fake-indexeddb: 6.0.0
+      get-port-please: 3.1.2
+      h3: 1.15.0
+      local-pkg: 1.0.0
+      magic-string: 0.30.17
+      node-fetch-native: 1.6.6
+      ofetch: 1.4.1
+      pathe: 2.0.3
+      perfect-debounce: 1.0.0
+      radix3: 1.1.2
+      scule: 1.3.0
+      std-env: 3.8.0
+      tinyexec: 0.3.2
+      ufo: 1.5.4
+      unenv: 1.10.0
+      unplugin: 2.2.0
+      vite: 6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0)
+      vitest-environment-nuxt: 1.0.1(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vitest@2.1.9)(yaml@2.7.0)
+      vue: 3.5.13(typescript@4.9.5)
+    optionalDependencies:
+      '@vitest/ui': 2.1.9(vitest@2.1.9)
+      '@vue/test-utils': 2.4.6
+      happy-dom: 15.11.7
+      playwright-core: 1.50.1
+      vitest: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.4)(typescript@4.9.5))(sass@1.85.0)(terser@5.39.0)
+    transitivePeerDependencies:
+      - '@types/node'
+      - jiti
+      - less
+      - lightningcss
+      - magicast
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - typescript
+      - yaml
+
   '@nuxt/test-utils@3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0)':
     dependencies:
       '@nuxt/kit': 3.15.4(magicast@0.3.5)
@@ -11923,6 +12156,15 @@ snapshots:
       '@vitest/utils': 2.1.9
       chai: 5.1.2
       tinyrainbow: 1.2.0
+
+  '@vitest/mocker@2.1.9(msw@2.7.0(@types/node@22.13.4)(typescript@4.9.5))(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))':
+    dependencies:
+      '@vitest/spy': 2.1.9
+      estree-walker: 3.0.3
+      magic-string: 0.30.17
+    optionalDependencies:
+      msw: 2.7.0(@types/node@22.13.4)(typescript@4.9.5)
+      vite: 5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0)
 
   '@vitest/mocker@2.1.9(msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3))(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))':
     dependencies:
@@ -15650,6 +15892,32 @@ snapshots:
 
   ms@2.1.3: {}
 
+  msw@2.7.0(@types/node@22.13.4)(typescript@4.9.5):
+    dependencies:
+      '@bundled-es-modules/cookie': 2.0.1
+      '@bundled-es-modules/statuses': 1.0.1
+      '@bundled-es-modules/tough-cookie': 0.1.6
+      '@inquirer/confirm': 5.1.5(@types/node@22.13.4)
+      '@mswjs/interceptors': 0.37.6
+      '@open-draft/deferred-promise': 2.2.0
+      '@open-draft/until': 2.1.0
+      '@types/cookie': 0.6.0
+      '@types/statuses': 2.0.5
+      graphql: 16.10.0
+      headers-polyfill: 4.0.3
+      is-node-process: 1.2.0
+      outvariant: 1.4.3
+      path-to-regexp: 6.3.0
+      picocolors: 1.1.1
+      strict-event-emitter: 0.5.1
+      type-fest: 4.34.1
+      yargs: 17.7.2
+    optionalDependencies:
+      typescript: 4.9.5
+    transitivePeerDependencies:
+      - '@types/node'
+    optional: true
+
   msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3):
     dependencies:
       '@bundled-es-modules/cookie': 2.0.1
@@ -18652,6 +18920,35 @@ snapshots:
       - vitest
       - yaml
 
+  vitest-environment-nuxt@1.0.1(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vitest@2.1.9)(yaml@2.7.0):
+    dependencies:
+      '@nuxt/test-utils': 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@4.9.5)(vitest@2.1.9)(yaml@2.7.0)
+    transitivePeerDependencies:
+      - '@cucumber/cucumber'
+      - '@jest/globals'
+      - '@playwright/test'
+      - '@testing-library/vue'
+      - '@types/node'
+      - '@vitest/ui'
+      - '@vue/test-utils'
+      - happy-dom
+      - jiti
+      - jsdom
+      - less
+      - lightningcss
+      - magicast
+      - playwright-core
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - tsx
+      - typescript
+      - vitest
+      - yaml
+
   vitest-environment-nuxt@1.0.1(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0):
     dependencies:
       '@nuxt/test-utils': 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0)
@@ -18744,6 +19041,43 @@ snapshots:
       '@vitest/ui': 2.1.9(vitest@2.1.9)
       happy-dom: 15.11.7
       jsdom: 19.0.0(canvas@2.11.2(encoding@0.1.13))
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vitest@2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(msw@2.7.0(@types/node@22.13.4)(typescript@4.9.5))(sass@1.85.0)(terser@5.39.0):
+    dependencies:
+      '@vitest/expect': 2.1.9
+      '@vitest/mocker': 2.1.9(msw@2.7.0(@types/node@22.13.4)(typescript@4.9.5))(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
+      '@vitest/pretty-format': 2.1.9
+      '@vitest/runner': 2.1.9
+      '@vitest/snapshot': 2.1.9
+      '@vitest/spy': 2.1.9
+      '@vitest/utils': 2.1.9
+      chai: 5.1.2
+      debug: 4.4.0(supports-color@9.4.0)
+      expect-type: 1.1.0
+      magic-string: 0.30.17
+      pathe: 1.1.2
+      std-env: 3.8.0
+      tinybench: 2.9.0
+      tinyexec: 0.3.2
+      tinypool: 1.0.2
+      tinyrainbow: 1.2.0
+      vite: 5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0)
+      vite-node: 2.1.9(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 22.13.4
+      '@vitest/ui': 2.1.9(vitest@2.1.9)
+      happy-dom: 15.11.7
     transitivePeerDependencies:
       - less
       - lightningcss

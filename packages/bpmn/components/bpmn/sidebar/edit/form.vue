@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-
+import { formTypeOptions } from '../../../../utils/bpmnType';
 import draggable from "vuedraggable";
 
 const { node } = defineProps<{
@@ -180,9 +180,7 @@ watch(() => node, ()=> {
                             <ElCol :span="12">                            
                                 <ElFormItem label="Type">
                                     <ElSelect v-model="item.attr_type" :disabled="editorProvider.readonly.value" @change="formChange">
-                                        <ElOption label="String" value="string"></ElOption>
-                                        <ElOption label="Number" value="number"></ElOption>
-                                        <ElOption label="Boolean" value="boolean"></ElOption>
+                                        <ElOption v-for="option in formTypeOptions" :key="option.value" :label="option.label" :value="option.value" />
                                     </ElSelect>
                                 </ElFormItem>
                             </ElCol>
