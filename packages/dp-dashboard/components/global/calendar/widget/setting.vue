@@ -8,9 +8,11 @@ const {setting} = defineProps<{
 const form = ref({
     editable: false
 })
+const viewName = [
+    'day','week','month-grid','month-agenda'
+]
 function open() {
     opened.value = true;
-    console.log("open", setting)
     Object.keys(setting).forEach(key => {
         console.log("open", key, setting[key])
         if(setting[key]) {
@@ -36,6 +38,14 @@ defineExpose({
     <ElForm :model="form" label-position="top" @submit.stop="" show-close>
         <ElFormItem label="editable">
             <ElSwitch v-model="form.editable"></ElSwitch>
+        </ElFormItem>
+        <ElFormItem label="allowCreate">
+            <ElSwitch v-model="form.allowCreate"></ElSwitch>
+        </ElFormItem>
+        <ElFormItem label="view">
+            <ElSelect v-model="form.view" placeholder="view">
+                <ElOption v-for="item in viewName" :key="item" :label="item" :value="item"></ElOption>
+            </ElSelect>
         </ElFormItem>
     </ElForm>
     <template #footer>
