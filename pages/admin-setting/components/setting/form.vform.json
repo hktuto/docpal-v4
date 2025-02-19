@@ -19,7 +19,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "metaDateFormat",
-                "label": "metaDateFormat",
+                "label": "Date Format",
                 "labelAlign": "",
                 "defaultValue": "YYYY-MM-DD",
                 "placeholder": "",

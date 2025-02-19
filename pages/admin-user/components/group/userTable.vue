@@ -3,7 +3,7 @@
     <template #header>
         <div v-show="state.selectedRows.length > 0" class="flex-x-between">
             <div class="title-select color__primary flex-x-start">
-                <b class="el-icon--left "> {{ $t("notifications.fileSelected") }}({{ state.selectedRows.length }})</b>
+                <b class="el-icon--left "> {{ $t("notifications.userSelected") }}({{ state.selectedRows.length }})</b>
                 <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="cleanSelectedRows"/>
             </div>
             <el-button type="danger" @click="handleDeleteSelected()">{{
