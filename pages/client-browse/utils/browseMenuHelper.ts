@@ -1,6 +1,6 @@
 
 export type BrowseDetailPageParams = {
-    id: string,
+    idOrPath: string,
     docName: string,
     showHeaderAction: boolean,
     [key:string]: any
@@ -12,7 +12,6 @@ export function createDetailPageParams(params:BrowseDetailPageParams){
         label: params.docName,
         component: 'ClientBrowseDetail',
         props: {
-            idOrPath: params.id,
             ...params
         }
     }
