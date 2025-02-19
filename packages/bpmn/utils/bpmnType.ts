@@ -6,7 +6,9 @@ import type { Graph, Node, Edge, Cell } from '@antv/x6'
 
 export const formTypeOptions = [
     {label:"String", value:"string"},
+    {label:"Number", value:"long"},
     {label:"Date", value:'date'},
+    {label:"Boolean", value:'boolean'},
 ]
 
 export const BPMN_PROVIDER: InjectionKey<BPMNProvider> = Symbol('BPMN_PROVIDER_KEY')
