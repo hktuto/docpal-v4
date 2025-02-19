@@ -22,7 +22,7 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "user_usernameIsRequired",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -118,7 +118,7 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "user_firstNameIsRequired",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -166,7 +166,7 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "user_lastNameIsRequired",
         "validation": "",
         "validationHint": "",
         "customClass": "",
@@ -214,9 +214,9 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "user_emailIsRequired",
         "validation": "email",
-        "validationHint": "",
+        "validationHint": "user_emailFormatError",
         "customClass": [],
         "labelIconClass": null,
         "labelIconPosition": "rear",
@@ -262,7 +262,7 @@
         "clearable": true,
         "showPassword": true,
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "user_passwordIsRequired",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -295,7 +295,7 @@
       "formItemFlag": true,
       "options": {
         "name": "groupList",
-        "label": "user_groupName",
+        "label": "user_addUserGroupName",
         "labelAlign": "",
         "defaultValue": [],
         "placeholder": "",
@@ -313,6 +313,34 @@
         "multiple": true,
         "multipleLimit": 0,
         "optionItems": [
+          {
+            "id": "administrators",
+            "name": "Administrators group",
+            "isCanModified": true,
+            "value": "administrators",
+            "label": "Administrators group"
+          },
+          {
+            "id": "members",
+            "name": "Members group",
+            "isCanModified": true,
+            "value": "members",
+            "label": "Members group"
+          },
+          {
+            "id": "powerusers",
+            "name": "Power users group",
+            "isCanModified": true,
+            "value": "powerusers",
+            "label": "Power users group"
+          },
+          {
+            "id": "RecordManager",
+            "name": "RecordManager",
+            "isCanModified": true,
+            "value": "RecordManager",
+            "label": "RecordManager"
+          }
         ],
         "required": false,
         "requiredHint": "",
@@ -350,9 +378,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }

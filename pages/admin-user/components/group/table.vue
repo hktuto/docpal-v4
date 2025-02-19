@@ -5,7 +5,7 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
           inputKey="userNameOrEmail"
-          :inputPlaceHolder="$t('placeHolder.userNameOrEmail')"
+          :inputPlaceHolder="$t('placeHolder.userGroupName')"
         />
         <el-button class="el-icon--right button" type="primary"
                 @click="handleGroupDialogShow()">{{$t('user_newGroup')}}</el-button>
