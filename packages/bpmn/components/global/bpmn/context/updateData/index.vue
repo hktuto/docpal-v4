@@ -25,8 +25,13 @@ const conditions = ref();
 function refreshData() {
     console.log("refreshData")
     const nodeData = node.getData()
-    if(nodeData.data?.extensionElements && nodeData.data?.extensionElements['flowable:field']) {  
-        conditions.value = nodeData.data.extensionElements['flowable:field']
+    if(nodeData.data?.extensionElements 
+        && 
+        nodeData.data?.extensionElements['docpal:updateDatas']
+        &&
+        nodeData.data?.extensionElements['docpal:updateDatas'].action
+    ) {  
+        conditions.value = nodeData.data.extensionElements['docpal:updateDatas'].action
     }else{
         conditions.value = [{...defaultCondition}]
     }
@@ -59,11 +64,12 @@ function updateCondition() {
             ...nodeData.data,
             extensionElements:{
                 ...nodeData.data.extensionElements,
-                'flowable:field': JSON.parse(JSON.stringify(conditions.value))
+                'docpal:updateDatas': {
+                    action: JSON.parse(JSON.stringify(conditions.value))
+                }
             }
         }
     } 
-    console.log("condition update", newData)
     node.setData(newData, { overwrite: true, deep: true })
 }
 

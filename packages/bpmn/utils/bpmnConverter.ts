@@ -258,6 +258,7 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
             ['attr_xmlns:omgdi']:"http://www.omg.org/spec/DD/20100524/DI",
             ['attr_xmlns:folderCabinetMapping']:"http://www.w3.org/1999/xhtml",
             ['attr_xmlns:permissions']:"http://www.w3.org/1999/xhtml",
+            ['attr_xmlns:docpal']:"http://flowable.org/bpmn",
             attr_typeLanguage:"http://www.w3.org/2001/XMLSchema",
             attr_expressionLanguage:"http://www.w3.org/1999/XPath",
             attr_targetNamespace:"business_processes",

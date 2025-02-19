@@ -36,7 +36,6 @@ const allFields = computed(() => {
 
 <template>
     <ElFormItem label="Form Info">
-        {{ disabled }}
         <ElSelect v-model="condition.attr_updateFieldName" placeholder="Form Info" :disabled="disabled">
             <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
         </ElSelect>

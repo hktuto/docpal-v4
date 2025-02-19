@@ -76,6 +76,7 @@ async function getWorkflow() {
 async function saveDraft() {
 
     const { xml, json, x6Json } = WorkflowEditorRef.value.getData()
+    console.log(xml)
     const newName = json.definitions.process.attr_name
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();

@@ -10,6 +10,7 @@ export enum EventType {
     OPEN_SETTINGS = 'open-settings',
     CLOSE_SETTINGS = 'close-settings',
     FILE_NEED_REFRESH = 'file-need-refresh',
+    FILE_DELETED = 'FILE_DELETED'
 }
 
 export enum GlobalPasteEvent {
