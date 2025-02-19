@@ -10,7 +10,7 @@ export function createDetailPageParams(params:BrowseDetailPageParams){
         id: 'client-browse-detail' + '-' + params.id,
         name: 'client-browse-detail' + '-' + params.id,
         label: params.docName,
-        component: 'ClientBrowseDetail',
+        component: 'LazyBrowseDetail',
         props: {
             ...params
         }
