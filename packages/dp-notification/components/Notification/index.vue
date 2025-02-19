@@ -9,6 +9,8 @@
 <script lang="ts" setup>
 import { ElNotification } from 'element-plus'
 import { clientApi  }   from 'api'
+import {allowFeature } from '#imports'
+
 const unreadCount = ref(0);
 const notificationStore = ref()
 const NotificationDialogRef = ref();
@@ -16,9 +18,9 @@ const router = useRouter()
 
 const { uploadState }  = useUploadAIStore()
 const { messageHandlers } = useNotification()
-const { allowFeature } = useLayout()
 
-const userId:string = useUser().getUserId()
+
+const userId = useUserId()
 const failList = ['FAIL']
 function handleOpen () {
     NotificationDialogRef.value.handleOpen()
@@ -119,5 +121,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss" scoped>
-
+.actionIcons{
+    --icon-size: var(--app-font-size-m);
+}
 </style>

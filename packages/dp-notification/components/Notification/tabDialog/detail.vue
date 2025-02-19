@@ -39,11 +39,11 @@ const emits = defineEmits(['close', 'unreadCountChange'])
 
 const router = useRouter()
 
-const userId:string = useUser().getUserId()
+const userId = useUserId()
 const pageParams = ref({
   pageNum: 0,
   pageSize: 10,
-  receiveId: userId,
+  receiveId: userId.value,
   orderBy: 'createdDate',
   isDesc: true
 })
