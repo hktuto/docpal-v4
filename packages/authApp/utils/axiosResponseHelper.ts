@@ -4,6 +4,7 @@ import { useEventBus, EventType, emitBus } from 'eventbus';
 
 function getBaseUrl(baseURL:string) {
   const { public:{ DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY, PROXY } } = useRuntimeConfig();
+  console.log("DASHBOARD_PROXY", DASHBOARD_PROXY)
   if (baseURL === '/dashboard') return DASHBOARD_PROXY
   if (baseURL === '/client') return CLIENT_PROXY
   if (baseURL === '/admin') return ADMIN_PROXY

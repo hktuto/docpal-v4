@@ -20,11 +20,15 @@ import { createEventsServicePlugin } from '@schedule-x/events-service'
 import {CalendarOptions, viewName} from '../../utils/calendarHelper'
 import { clientApi } from 'api'
 const { setting } = useCalendarStore();
-const {options} = defineProps<{
+const {options = {
+    editable: false,
+    allowCreate: false,
+
+}} = defineProps<{
     options?: CalendarOptions;
 }>();
 
-let calendarApp ;
+let calendarApp:any ;
 const showCalendar = ref(false)
 
 const viewName = [
@@ -129,6 +133,11 @@ function reloadCalendar(){
     calendarApp.reload()
 }
 
+function getFormData(){
+    return "calendar"
+}
+
+
 onMounted( () => {
 
 })
@@ -145,6 +154,11 @@ watch(() => [setting, options],() =>{
 },{
     deep: true,
     immediate: true
+})
+
+
+defineExpose({
+    getFormData
 })
 
 </script>

@@ -115,10 +115,10 @@ const config = {
         },
       },
     },
-    esbuild: {
-      drop: ['debugger'],
-      pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
-    },
+    // esbuild: {
+    //   drop: ['debugger'],
+    //   pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
+    // },
     vue: {
       features: {
         propsDestructure: true,
@@ -130,6 +130,6 @@ const config = {
   },
 } as any
 
-
+console.log("config", config.runtimeConfig.public)
 
 export default defineNuxtConfig(config)
