@@ -28,6 +28,10 @@ const config = {
     public:{
       pdfReaderUrl: process.env.pdfReaderUrl,
       NODE_ENV: process.env.NODE_ENV,
+      CLIENT_PROXY: process.env.CLIENT_PROXY,
+      ADMIN_PROXY: process.env.ADMIN_PROXY,
+      PROXY: process.env.PROXY,
+      DASHBOARD_PROXY: process.env.DASHBOARD_PROXY,
       OFFICE_END_POINT: process.env.OFFICE_END_POINT,
       UPLOAD_END_POINT: process.env.UPLOAD_END_POINT,
       DOCPAL_END_POINT: process.env.DOCPAL_END_POINT,
