@@ -36,7 +36,7 @@
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
 // @ts-ignore
-import { publicApi, adminApi, clientApi } from 'api';
+import { clientApi } from 'api';
 const { formStartHandle } = useWorkflow()
 // @ts-ignore
 const graphEl = ref()
@@ -68,6 +68,10 @@ async function getAvailableWorkflow () {
 }
 async function workflowClickHandler (item: any) {
     let step = 'start'
+    console.log("start", item)
+    //TODO : get xml and check if need to open new page
+    // const getXml = await clientApi.api.getWorkflowVersionBpmnxml()
+    // get bpmn 
     if (formStartHandle.value[item.key]) {
         const result = formStartHandle.value[item.key].cb(item.key)
         if (result && result.step) {
