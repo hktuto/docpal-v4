@@ -155,12 +155,25 @@ const baseTableColumns: any = [
     }]
 const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = useVxeTable({
   id: "mt_" + props.tableId,
-  api: (pageParams: any) =>
-    adminApi.api.postMasterTablesRecordPage({
+  api: async (pageParams: any) => {
+    if(!props.tableId) return {
+      data: {
+        entryList: [],
+        totalSize: 0
+      }
+    }
+    const {data} = await adminApi.api.postMasterTablesRecordPage({
       ...pageParams,
       ...state.extraParams,
       id: props.tableId,
-    }),
+    })
+    return {
+      data: {
+        entryList: data?.entryList || [],
+        totalSize: data?.totalSize || 0
+      }
+    }
+  },
   columns: [...baseTableColumns],
   bodyActions: [
     [{
