@@ -6,7 +6,9 @@
                 ></WorkflowDetailReader>
         </template>
 
-        <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]>
+        
+        <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]="slotsData">
+            {{ slotsData }}
             <component :is="item.component" :ref="(el: any) => formRenderSlotsRef[item.name] = el" 
                 :disabled="state.readonly"
                 :formData="state.formData"
@@ -16,6 +18,7 @@
 </template>
 
 <script lang="ts" setup>
+
 import { clientApi } from 'api'
 const props = defineProps<{
     options?: Object,
@@ -241,7 +244,7 @@ const FormRendererRef = ref()
     }
 // #endregion
 onMounted(() => {
-
+    console.log("formRenderSlots", formRenderSlots.value)
 })
 const { formData, formJson } = toRefs(state)
 defineExpose({ setForm, getFormData, disableForm, enableForm })

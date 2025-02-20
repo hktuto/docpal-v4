@@ -36,7 +36,6 @@
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
 // @ts-ignore
-import {useWorkflow} from "~/composables/useWorkflow";
 import { publicApi, adminApi, clientApi } from 'api';
 const { formStartHandle } = useWorkflow()
 // @ts-ignore

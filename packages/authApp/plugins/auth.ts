@@ -23,6 +23,11 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     })
 
     nuxtApp.hook('app:mounted', async() => {
+        const publicPage = usePublicPageState()
+        // check is path public
+        if(publicPage.value.includes(window.location.pathname)){ 
+            return
+        }
         await useAuth().login()
     })
 

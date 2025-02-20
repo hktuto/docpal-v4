@@ -92,7 +92,7 @@ async function getLocale(){
     languageReady.value = true
     emits('ready')
 }
-const { globalSlots } =useGlobalSetting()
+const { globalSlots } = useGlobalSetting()
 
 
 onMounted(async() => {
@@ -105,13 +105,14 @@ onMounted(async() => {
 <template>
     <template v-if="languageReady">
 
-    <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHIghlightPanel">
-        <template #sidebar>
-            <slot name="sidebar" />
-        </template>
-    </TabApp>
-    <component v-for="s in globalSlots" v-show=s.show :key="s.name" :is="s.component" v-bind="$props" />
-    <Contextmenu />
+        <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHIghlightPanel">
+            <template #sidebar>
+                <slot name="sidebar" />
+            </template>
+        </TabApp>
+        <component v-for="s in globalSlots" v-show=s.show :key="s.name" :is="s.component" v-bind="$props" />
+        <Contextmenu />
+        
     </template>
     <template v-else>
         <LoadingBg >
