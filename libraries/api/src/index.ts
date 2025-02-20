@@ -8,11 +8,7 @@ import {Public} from './generate/public'
 let clientBaseURL = '/api';
 let adminBaseURL = '/api';
 let publicBaseURL = '/public-api/report/v1/api'
-if(process.env && process.env.NODE_ENV !== "development") {
-    clientBaseURL = '/api';
-    adminBaseURL = '/api'
-    publicBaseURL = process.env.DASHBOARD_PROXY
-}
+
 
 console.log("publicBaseURL", publicBaseURL)
 

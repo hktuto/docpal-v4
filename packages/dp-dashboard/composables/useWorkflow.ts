@@ -9,7 +9,12 @@ type FormStartHandle = {
   isContinue: boolean
 }
 export const useWorkflow = () => {
-  const formRenderSlots = useState<FormRenderSlotsType[]>('formRenderSlots', () => shallowRef<FormRenderSlotsType[]>([]));
+  const formRenderSlots = useState<FormRenderSlotsType[]>('formRenderSlots', () => shallowRef<FormRenderSlotsType[]>([
+    {
+      name: "calendar",
+      component: 'calendarViewer'
+    }
+  ]));
   const formStartHandle = useState<any>('formRenderSlots', () => ({}));
   const customStartCallBackList = useState<any>('customStartCallBack', () => ({}));
   const customWorkflowHandler = useState('customWorkflowHandler', () => shallowRef<any[]>([]));
