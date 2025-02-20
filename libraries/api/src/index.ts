@@ -10,7 +10,6 @@ let adminBaseURL = '/api';
 let publicBaseURL = '/public-api/report/v1/api'
 
 
-console.log("publicBaseURL", publicBaseURL)
 
 export const clientApi = new Client({
     baseURL:clientBaseURL,

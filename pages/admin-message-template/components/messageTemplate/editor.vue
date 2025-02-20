@@ -23,6 +23,7 @@ const handleNewVariableAdded = (newVariable:string) => {
 
 }
 function calculateParaameters() {
+    console.log("calculateParaameters")
     if(!content.value || !showVariables) return
 
     if(!parameters.value|| !Array.isArray(parameters.value)) {
@@ -40,6 +41,7 @@ function calculateParaameters() {
         }
         
     })
+    console.log("parameters", parameters.value)
 }
 const textarea = ref()
 function openNewVariableDialog() {
