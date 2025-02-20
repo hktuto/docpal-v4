@@ -89,10 +89,10 @@ export const mimeTypes = [
   }
 ]
 export const getMetadataOptions = async() => {
-  const { public: { plarform } } = useRuntimeConfig();
+  const { public: { platform } } = useRuntimeConfig();
   /// TODO: depecate in next version
   let globalType;
-  if(plarform === 'admin'){
+  if(platform === 'admin'){
     const {data} = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile');
     globalType = data.keywords
   }else{

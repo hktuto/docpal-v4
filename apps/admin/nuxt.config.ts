@@ -44,7 +44,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      plarform:'admin'
+      platform:'admin'
     }
   },  
 })

@@ -2,10 +2,11 @@
 
 <script lang="ts" setup>
 import { adminApi } from 'api';
-const { setting, categoriesColumn } = useCalendarStore();
+const { setting } = useCalendarStore();
 
 const calendarProvider = inject(CalendarSettingKey);
 const detailDialogRef = ref();
+const categoriesColumn = useCategoriesColumn()
 
 
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({

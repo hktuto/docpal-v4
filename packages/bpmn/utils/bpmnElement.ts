@@ -272,7 +272,7 @@ export const bpmnElement:BpmnElement = {
     boundaryEvent:{
         nodeStyle:(item:any) => ({
             
-            ... circleNodeStyle('#eee', '/bpmn/icons/clock.svg'),
+            ...circleNodeStyle('#eee', '/bpmn/icons/clock.svg'),
             shape:'bpmn-node',
             ports: {
                 items:[
@@ -373,6 +373,10 @@ export const bpmnElement:BpmnElement = {
                     type = "Master Table"
                     color = '#7B61FF';
                     break;
+                case '${calendarEventDelegate}':
+                    icon = '/bpmn/icons/calendar.svg'
+                    type = "Calendar"
+                    color = '#7B61FF';
             }
             return {
                 ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
@@ -611,6 +615,52 @@ export const bpmnElement:BpmnElement = {
                         }
                     })
                 })
+            },
+            {
+                icon:'bpmn:calendar',
+                label: 'Calendar',
+                dropData: (id:string) => ({
+                    id,
+                    ...bpmnElement.serviceTask.nodeStyle({
+                        ['attr_flowable:delegateExpression']:'${calendarEventDelegate}',
+                        extensionElements:{
+                            "flowable:calendarEvent": {
+                                attr_eventId: '',
+                                attr_eventName:"",
+                                attr_actionType:"",
+                                attr_description:"",
+                                attr_category:"",
+                                attr_location:"",
+                                attr_startTime:"",
+                                attr_endTime:"",
+                                attr_isAllDay:"",
+                                related:[],
+                                reminder:[]
+                            }
+                        }
+                    }),
+                    label: 'New Calendar Task',
+                    data: bpmnElement.serviceTask.newNodeData(id, 'New Calendar Task', {
+                        attr_id:id,
+                        attr_name:'New Calendar Task',
+                        ['attr_flowable:delegateExpression']:'${calendarEventDelegate}',
+                        extensionElements:{
+                            "flowable:calendarEvent": {
+                                attr_eventId: false,
+                                attr_eventName:"",
+                                attr_actionType:"",
+                                attr_description:"",
+                                attr_category:"",
+                                attr_location:"",
+                                attr_startTime:"",
+                                attr_endTime:"",
+                                attr_isAllDay:"",
+                                related:[],
+                                reminder:[]
+                            }
+                        }
+                    })
+                })
             }
         ],
         newNodeData:(id,label,data) => ({
@@ -641,6 +691,8 @@ export const bpmnElement:BpmnElement = {
                     return 'LazyBpmnContextUpdateData'
                 case '${masterTableRecordDelegate}':
                     return 'LazyBpmnContextUpdateMasterTable'
+                case '${calendarEventDelegate}':
+                    return 'LazyBpmnContextCalendar'
                 default:
                     return 'LazyBpmnContextCustomeService'
             }

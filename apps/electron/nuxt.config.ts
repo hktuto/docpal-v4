@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      plarform:'client'
+      platform:'client'
     }
   },
   nitro:{

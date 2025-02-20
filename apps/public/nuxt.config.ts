@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      plarform:'public'
+      platform:'public'
     }
   },
   vite:{
