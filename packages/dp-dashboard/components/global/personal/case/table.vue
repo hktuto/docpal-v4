@@ -1,20 +1,20 @@
 <template>
   <div class="pageContainer--padding">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    </VxeGrid>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 import { clientApi } from "api";
 import dayjs from "dayjs";
-const routerProvider = inject(MenuRouterKey)
-const { t } = useI18n()
+import { watch } from "vue";
+const routerProvider = inject(MenuRouterKey);
+const { t } = useI18n();
 const {
   public: { endPoint },
 } = useRuntimeConfig();
-let extraParams: any = {
-};
+let extraParams: any = {};
+let caseId = "";
 const {
   tableConfig,
   tableEvent,
@@ -27,34 +27,56 @@ const {
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "case_id", title: "caseManagement.name", fixed: "left" },
-    { field: "modified_date", title: "table_modifiedDate",
+    {
+      field: "modified_date",
+      title: "table_modifiedDate",
       formatter({ cellValue }: any) {
         const format = userDisplayTimeSetting();
         return dayjs(cellValue).format(format);
-      }
+      },
     },
   ],
-  dblClickAction: ({ row, column, event }:any) => {
-    handleDblclick(row)
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row);
   },
-  saveColumnOrder: false
+  saveColumnOrder: false,
 });
-async function getData(params: any = {}) {
-  if(endPoint === 'admin') return
-  const res = await clientApi.api.postCaseTypesCasetypeidRecordsPage({ ...params, ...extraParams }).then(res => res.data)
+async function getData(
+  params: any = {
+    pageNum: 0,
+    pageSize: 20,
+  }
+) {
+  if (!caseId)
+    return {
+      data: {
+        entryList: [],
+        totalSize: 0,
+      },
+    };
+  if (endPoint === "admin") return;
+  const res = await clientApi.api
+    .postCaseTypesCasetypeidRecordsPage(caseId, { ...params, ...extraParams })
+    .then((res) => res.data);
   return {
     data: {
       entryList: res?.entryList,
-      totalSize: res?.totalSize
-    }
-  }
+      totalSize: res?.totalSize,
+    },
+  };
 }
 function handleDblclick(row: any) {
-  ElMessage.info('Need to add routing jump event')
+  ElMessage.info("Need to add routing jump event");
   // routerProvider?.navigateTo(routeDashboardDetail(row), false)
 }
-onMounted(() => {
-})
+async function setCaseId(id: string) {
+  caseId = id;
+  reload();
+}
+
+defineExpose({
+  setCaseId,
+});
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {
@@ -68,4 +90,3 @@ onMounted(() => {
   }
 }
 </style>
- 
