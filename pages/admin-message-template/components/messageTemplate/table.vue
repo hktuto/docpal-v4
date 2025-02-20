@@ -41,7 +41,7 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
             type: 'html',
             sortable: true,
             formatter: ({ cellValue }) => {
-                return `<div class="${cellValue} tag">${cellValue}</div>`
+                return cellValue ? `<div class="${cellValue} tag">${cellValue}</div>` : ""
             }
         },
         {
