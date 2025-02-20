@@ -14,6 +14,13 @@ const newTemplateRef = ref();
 const duplicateTemplateRef = ref();
 const deleteDialogRef = ref();
 
+function itemReload(){
+    console.log("relaod")
+    if(tableRef.value) {
+        tableRef.value.reload()
+    }
+}
+
 provide(MessageTemplateProviderKey, {
     getListApi: (params:any) => adminApi.api.postMessageTemplateList(params),
     openDetail: (row:any) => {
@@ -44,9 +51,9 @@ provide(MessageTemplateProviderKey, {
                 <ElButton type="primary" @click="newTemplateRef.open()">New Template</ElButton>
             </template>
         </MessageTemplateTable>
-        <MessageTemplateNewDialog ref="newTemplateRef"  />
-        <MessageTemplateDuplicateDialog ref="duplicateTemplateRef" />
-        <MessageTemplateDeleteDialog ref="deleteDialogRef" @success="tableRef.reload()" />
+        <MessageTemplateNewDialog ref="newTemplateRef"  @success="itemReload"/>
+        <MessageTemplateDuplicateDialog ref="duplicateTemplateRef" @success="itemReload"/>
+        <MessageTemplateDeleteDialog ref="deleteDialogRef" @success="itemReload" />
     </div>
 </template>
 
