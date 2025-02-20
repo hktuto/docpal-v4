@@ -7,9 +7,9 @@ const emits = defineEmits(['remove'])
 
 const conditionTypeOption = [
     'Update_Number',
+    'Look_Up_User_Group',
+    'Look_Up_User',
     // TODO : other type is not implemented yet
-    // 'Look_Up_User_Group',
-    // 'Look_Up_User',
     // 'Look_Up_Master_Table',
     // 'Look_Up_Case_info'
 ]
@@ -32,17 +32,18 @@ function updateCondition(newCondition:any) {
         </div>
         <ElForm :model="condition" label-position="top" width="100%">
             <ElFormItem label="Condition Type">
-                <ElSelect v-model="condition.attr_type" placeholder="请选择" :disabled="disabled">
-                    <ElOption v-for="item in conditionTypeOption" :key="item" :label="item" :value="item" />
+                <ElSelect v-model="condition.attr_type"   :disabled="disabled">
+                    <ElOption v-for="item in conditionTypeOption" :key="item" :label="item"  :value="item" />
                 </ElSelect>
             </ElFormItem>
             <template v-if="condition.attr_type === 'Update_Number'">
-                <BpmnContextUpdateDataConditionNumber v-model:condition="condition" :disabled="disabled" @update="updateCondition"/>
+                <BpmnContextUpdateDataConditionNumber v-model:condition="condition" :disabled="disabled" />
             </template>
             <template v-else-if="condition.attr_type === 'Look_Up_User_Group'">
-
+                <BpmnContextUpdateDataConditionUserGroup v-model:condition="condition" :disabled="disabled" />
             </template>
             <template v-else-if="condition.attr_type === 'Look_Up_User'">
+                <BpmnContextUpdateDataConditionUser v-model:condition="condition" :disabled="disabled" />
             </template>
             <template v-else-if="condition.attr_type === 'Look_Up_Master_Table'">
             </template>

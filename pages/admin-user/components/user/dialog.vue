@@ -1,19 +1,21 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_newUser')"
-    :close-on-click-modal="false"
+    <el-dialog v-model="state.visible" :title="$t('user_newUser')"
+               :close-on-click-modal="false"
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { Select, CloseBold } from '@element-plus/icons-vue'
-import { adminApi } from 'api'
-import { userProviderKey } from '~/util/userProvider';
+import {adminApi} from 'api'
+import {userProviderKey} from '~/util/userProvider';
 import formJson from './dialog.vform.json'
+
+const {t} = useI18n()
 const userProvider = inject(userProviderKey)
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits([
     'refresh'
 ])
@@ -32,18 +34,21 @@ async function handleSubmit () {
             userId: data.userId,
             groupIds: data.groupList
         })
+        routerProvider?.message.success(t('user_createdSuccessMsg'));
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {
     }
     state.loading = false
 }
+
 function handleOpen() {
     state.visible = true
 }
-onMounted(async() => {
+
+onMounted(async () => {
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

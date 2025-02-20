@@ -10,13 +10,13 @@ if(!graphProvider){
     throw new Error('Missing provider')
 }
 
-const userGroupList = ref<any[]>([])
+const userList = ref<any[]>([])
 
-async function getUserGroupList(){
-    const {data} = await adminApi.api.postNuxeoIdentityGroups()
-    userGroupList.value = data
+async function getUserList(){
+    const {data} = await adminApi.api.postNuxeoIdentityUsers()
+    console.log(data)
+    userList.value = data
 }
-
 
 const allFields = computed(() => {
     return Object.keys(graphProvider.allFormField.value).map((key:string) => {
@@ -25,7 +25,7 @@ const allFields = computed(() => {
 })
 
 onMounted(() => {
-    getUserGroupList()
+    getUserList()
 })
 
 </script>
@@ -38,7 +38,7 @@ onMounted(() => {
     </ElFormItem>
     <ElFormItem label="User Group">
         <ElSelect v-model="condition.attr_value" placeholder="User Group" :disabled="disabled">
-            <ElOption v-for="item in userGroupList" :key="item.id" :label="item.name" :value="item.id" />
+            <ElOption v-for="item in userList" :key="item.id" :label="item.username" :value="item.userId" />
         </ElSelect>
     </ElFormItem>
 </template>
