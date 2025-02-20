@@ -1,4 +1,21 @@
-
+export type BrowseListPageParams = {
+    idOrPath: string,
+    [key:string]: any
+}
+export function createBrowseListPageParams(params:BrowseListPageParams){
+    return {
+        id: 'client-browse',
+        name: 'client-browse-' + params.idOrPath,
+        icon: 'dp-icon:browse-outline',
+        hoverIcon: 'dp-icon:browse-fill',
+        label: "file_browse",
+        component: "LazyBrowsePage",
+        props:{
+            idOrPath: params.idOrPath,
+            filter:{}
+        }
+    }
+}
 export type BrowseDetailPageParams = {
     idOrPath: string,
     docName: string,
@@ -7,8 +24,8 @@ export type BrowseDetailPageParams = {
 }
 export function createDetailPageParams(params:BrowseDetailPageParams){
     return {
-        id: 'client-browse-detail' + '-' + params.id,
-        name: 'client-browse-detail' + '-' + params.id,
+        id: 'client-browse-detail' + '-' + params.idOrPath,
+        name: 'client-browse-detail' + '-' + params.idOrPath,
         label: params.docName,
         component: 'LazyBrowseDetail',
         props: {

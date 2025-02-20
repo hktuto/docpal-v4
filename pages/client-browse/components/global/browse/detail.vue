@@ -1,11 +1,27 @@
 <script lang="ts" setup>
+import * as mime from 'mime-types'
 import { clientApi } from 'api'
-const props = defeineProps<{
-    idOrPath: string,
-    showHeaderAction?: boolean,
-    home: any,
-}>();
+import {getMimeTypeFromDocument } from '#imports'
+const props = withDefaults(
+    defineProps<{
+        idOrPath: string,
+        showHeaderAction?: boolean,
+        showInfo: boolean,
+        commentId: string,
+        home: any,
+    }>(),
+    {
+    idOrPath : '',
+    showHeaderAction: true,
+    showInfo: false,
+    commentId: '',
+    home: ""
+    })
 const { idOrPath } = toRefs(props)
+const itemRefs = ref({});
+defineOptions({
+    name: 'LazyBrowseDetailDead'
+})
 
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
@@ -22,17 +38,18 @@ async function getDetail() {
     loading.value = true
     docDetail.value = null
     docPermission.value = null
-    selectedList.value = []
     const userId = useUserId()
     const { doc, permission } = await getDocDetail(idOrPath.value, userId.value);
     docDetail.value = doc
     docPermission.value = permission
     loading.value = false
+    console.log("doc detail", docDetail.value)
 }
-
+const isPdf = ref(false)
 const readerType = computed(() => {
     try {
         isPdf.value = false
+        
         if(!docDetail.value){
           loading.value =true;
           return resolveComponent('LazyOtherPlayer');
@@ -40,6 +57,7 @@ const readerType = computed(() => {
         const mimeType = getMimeTypeFromDocument(docDetail.value);
         if(!mimeType) return resolveComponent('LazyPdfViewer'); // set to pdf for testing
         // check if it is excel
+        
         if(canCollaboraEdit(mimeType)){
             return resolveComponent('LazyCollaboraViewer')
         }
@@ -61,12 +79,28 @@ const readerType = computed(() => {
         }
         return resolveComponent('LazyOtherPlayer');
     } catch (error) {
+        console.log("canCollaboraEdit", error)
         return resolveComponent('LazyOtherPlayer')
     }
 });
+function closePreview(ev){
+    console.log("ev", ev)
+    // if(detail.id === docDetail.value.id) {
+    //     const newItem = createBrowseListPageParams({
+    //         idOrPath: docDetail.value.parentRef
+    //     })
+    //     routerProvider?.navigateTo(newItem)
+    // }
+}
+function itemDeleted() {
+    const newItem = createBrowseListPageParams({
+        idOrPath: docDetail.value.parentRef
+    })
+    routerProvider?.navigateTo(newItem)
+}
 const PreviewRef = ref()
 function handleRefresh(needRefresh:boolean = true) {
-    getDoc()
+    getDetail()
     if(PreviewRef.value && needRefresh) {
         if(PreviewRef.value.refresh) PreviewRef.value.refresh()
     }
@@ -82,12 +116,14 @@ function mobileActionsOpenedChanged(bool:boolean) {
 }
 
 const detailActions = computed(()=> {
-    if(!doc.value || !permission.value) return {}
-    return ActionsFilter(actions, permission.value, 'showInDetail')
+    if(!docDetail.value || !docPermission.value) return {}
+    return ActionsFilter(actions, docPermission.value, 'showInDetail')
 })
 
+useEventListener(document, 'closeFilePreview', (event: any) => closePreview())
+
 watch(idOrPath, () => {
-    getDoc()
+    getDetail()
 },{
     immediate:true,
 })
@@ -96,14 +132,12 @@ watch(idOrPath, () => {
 
 <template>
     <div class="pageContainer" >
-        {{docDetail}}
         <template v-if="docDetail">
             <div class="header">
-
                 <div class="fileNameContainer">
                     <div class="fileName">
                         {{ docDetail.name }}
-                        <el-tag v-if="docDetail.properties && docDetail.properties['file:content'] && docDetail.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(doc.properties['file:content']['mime-type']) }}</el-tag>
+                        <el-tag v-if="docDetail.properties && docDetail.properties['file:content'] && docDetail.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(docDetail.properties['file:content']['mime-type']) }}</el-tag>
                     </div>
                 </div>
                 <div class="actions">
@@ -112,7 +146,7 @@ watch(idOrPath, () => {
                             <template #default="{collapse}">
                             <template v-for="(group,key) in detailActions" :key="key">
                                 <template v-for="item in group" :key="item.name">
-                                <component :is="item.component" :doc="doc" :ref="(el) => itemRefs[item.name] = el" :permission="permission"  
+                                <component :is="item.component" :doc="docDetail" :ref="(el) => itemRefs[item.name] = el" :permission="docPermission"  
                                     :isPdf="isPdf"
                                     @success="handleRefresh" 
                                     @delete="itemDeleted" 
@@ -125,7 +159,7 @@ watch(idOrPath, () => {
                             </template>
                         </CollapseMenu>
                         
-                        <BrowseActionsInfo  :doc="doc"  @click="infoOpened = !infoOpened"/>
+                        <BrowseActionsInfo  :doc="docDetail"  @click="infoOpened = !infoOpened"/>
                         <div  :class="{actionDivider:true, collapse}"></div>
                     </template>
                 </div>
@@ -140,11 +174,11 @@ watch(idOrPath, () => {
                         :is="readerType" 
                         ref="PreviewRef" 
                         :docId="docDetail.id"
-                        :doc="docDetail" :editMode="options.editMode"
+                        :doc="docDetail" :editMode="editMode"
                         fileType="NUXEO" 
                         :readonly="true" 
-                        :editable="AllowTo({feature:'ReadWrite', permission })"
-                        :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: permission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission }) || !allowFeature('DOC_ANNOTATION')}"
+                        :editable="AllowTo({feature:'ReadWrite', docPermission })"
+                        :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: docPermission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')}"
                         @saved="() => handleRefresh(false)"
                     />
                     <!-- <BrowseAiPopover v-if="appStore.licenseFeatures.ASK_AI"  :doc="docDetail"></BrowseAiPopover> -->
@@ -154,7 +188,7 @@ watch(idOrPath, () => {
                 </h2>
               </template>
                 <div class="info">
-                    <BrowseInfo v-if="options.showInfo" :doc="doc" :commentId="options.commentId" :permission="permission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false"
+                    <BrowseInfo v-if="showInfo" :doc="docDetail" :commentId="commentId" :permission="docPermission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false"
                         @refresh="handleRefresh"  />
                 </div>
             </div>
@@ -178,9 +212,7 @@ watch(idOrPath, () => {
     display: grid;
     grid-template-columns: 1fr min-content;
     gap: var(--app-space-s);
-    padding-inline: var(--el-component-size-small);
-    padding-top: var(--app-space-s);
-    color: var(--color-grey-000);
+    color: var(--app-grey-000);
     align-content: center;
     .actions {
         display: flex;
@@ -199,7 +231,6 @@ watch(idOrPath, () => {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr min-content;
-    padding: var(--el-component-size-small);
     overflow: hidden;
     position: relative;
     @media (max-width: 640px) {
@@ -220,7 +251,7 @@ watch(idOrPath, () => {
   
 }
 .noSupportContainer, :deep .noSupportContainer {
-    color: var(--color-grey-000);
+    color: var(--app-grey-000);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -235,7 +266,6 @@ watch(idOrPath, () => {
 .fileName{
     font-size: var(--el-font-size-large);
     text-align: left;
-    color: #fff !important;
     word-break: break-all;
     display: flex;
     gap: var(--app-padding);
@@ -245,15 +275,15 @@ watch(idOrPath, () => {
 :deep {
     .actionIconContainer{
         font-size: var(--icon-size);
-        background: var(--color-grey-150);
+        background: var(--app-grey-150);
         padding: 8px;
         border-radius: 50%;
         display: grid;
         place-items: center;
-        color: var(--color-grey-950);
+        color: var(--app-grey-950);
         cursor: pointer;
         &:hover{
-            background: var(--color-grey-200);
+            background: var(--app-grey-200);
         }
     }
 }

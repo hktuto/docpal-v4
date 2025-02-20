@@ -1,8 +1,19 @@
-import { typeAxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios';
 import {ElMessage} from "element-plus";
 import { useEventBus, EventType, emitBus } from 'eventbus';
 
-export const requestSuccessHelper = (config:any, axiosInstance:typeAxiosInstance) => {
+function getBaseUrl(baseURL:string) {
+  const { public:{ DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY, PROXY } } = useRuntimeConfig();
+  if (baseURL === '/dashboard') return DASHBOARD_PROXY
+  if (baseURL === '/client') return CLIENT_PROXY
+  if (baseURL === '/admin') return ADMIN_PROXY
+  if (baseURL === '/api') return PROXY
+  if(baseURL === '/docpalApi') return PROXY
+  if(baseURL === '/public-api/report/v1/api') return DASHBOARD_PROXY
+  return baseURL
+}
+
+export const requestSuccessHelper = (config:any, axiosInstance:AxiosInstance) => {
   // const {locale} = useI18n()
   // console.log(locale)
     const locale = localStorage.getItem('v_form_locale') || 'en-US'
@@ -11,16 +22,22 @@ export const requestSuccessHelper = (config:any, axiosInstance:typeAxiosInstance
         config.headers.Authorization = `Bearer ${token}`;
         config.headers['accept-language'] = locale;
     }
+    if(process.env.NODE_ENV !== 'development') {
+      config.baseURL = getBaseUrl(config.baseURL)
+      config.headers['Access-Control-Allow-Credentials'] = true
+      config.headers['Access-Control-Allow-Origin'] = config.baseURL
+    }
+    // 
     return config
 }
-export const requestErrorHelper = (error:any, axiosInstance:typeAxiosInstance) => {
+export const requestErrorHelper = (error:any, axiosInstance:AxiosInstance) => {
     return Promise.reject(error)
 }
 
-export const responseSuccessHelper = (response:any, axiosInstance:typeAxiosInstance) => {
+export const responseSuccessHelper = (response:any, axiosInstance:AxiosInstance) => {
     return response
 }
-export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInstance) => {
+export const responseErrorHelper = async(error:any, axiosInstance:AxiosInstance) => {
   console.log("error", error)
     const originalRequest = error.config;
     

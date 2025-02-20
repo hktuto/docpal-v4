@@ -81,6 +81,9 @@ provide(groupProviderDetailKey, {
   },
 }
 )
+watch(() => name, () => {
+    state.name = name
+})
 </script>
 <style lang="scss" scoped>
 .group-detail {

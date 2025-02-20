@@ -34,7 +34,7 @@ const { options } = toRefs(props)
 const blob = ref();
 async function getAnnotation():Promise<Object> {
     if(!props.options.loadAnnotations) return new Map();
-    const {data:annotation} = await clientApi.api.getAnnotation({idOrPath: props.doc.id});
+    const {data:annotation} = await clientApi.api.getNuxeoAnnotation({idOrPath: props.doc.id});
     let annotationObj = []
     if(annotation.length > 0) {
         if(annotation[0].object.paths) {
@@ -56,7 +56,7 @@ async function sendPdfAndAnnotation() {
     if(props.doc.isFolder) return; // 如果是文件夹，不要拿预览
     loading.value = true;
     try {
-        const b = await clientApi.api.postPreview({idOrPath: props.doc.id},{
+        const b = await clientApi.api.postNuxeoDocumentPreview({idOrPath: props.doc.id},{
             format:'blob',
             timeout: 0,
             headers: {
@@ -69,11 +69,9 @@ async function sendPdfAndAnnotation() {
             loading.value = false;
             return
         }
-        const {data:annotation} = await clientApi.api.getAnnotation({idOrPath: props.doc.id});
-
+        const {data:annotations} = await clientApi.api.getNuxeoAnnotation({idOrPath: props.doc.id});
         const frame = iframe.value?.contentWindow;
         frame?.postMessage({blob:blob.value, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
-        console.log(blob.value)
     } catch (error) {
         console.log(error);
     }

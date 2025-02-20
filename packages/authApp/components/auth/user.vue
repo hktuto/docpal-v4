@@ -7,6 +7,7 @@ const { locales, locale, setLocale } = useI18n()
 
 function changeLanguage(langCode:string) {
     setLocale(langCode);
+    window.location.reload()
 }
 
 function openHelp(){

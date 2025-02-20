@@ -1,16 +1,18 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('user_editUser')"
-    :close-on-click-modal="false"
-    >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+    <el-dialog v-model="state.visible" :title="$t('user_editUser')" :close-on-click-modal="false">
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import {adminApi} from 'api'
 import formJson from './editDialog.vform.json'
+import {ElNotification} from 'element-plus'
+
+const routerProvider = inject(MenuRouterKey)
+const {t} = useI18n()
 const props = defineProps<{
     user: any,
 }>()
@@ -26,7 +28,8 @@ async function handleSubmit () {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })
+        await adminApi.api.patchNuxeoIdentityUser({...props.user, properties: null, ...data})
+        routerProvider?.message.success(t('user_userInfoUpdatedSuccessMsg'));
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
@@ -35,15 +38,17 @@ async function handleSubmit () {
     }
     state.loading = false
 }
+
 function handleOpen() {
     state.visible = true
     setTimeout(() => {
         FormRendererRef.value.vFormRenderRef.setFormData(props.user)
     })
 }
-onMounted(async() => {
+
+onMounted(async () => {
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

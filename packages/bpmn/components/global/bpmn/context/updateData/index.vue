@@ -25,8 +25,13 @@ const conditions = ref();
 function refreshData() {
     console.log("refreshData")
     const nodeData = node.getData()
-    if(nodeData.data?.extensionElements && nodeData.data?.extensionElements['flowable:field']) {  
-        conditions.value = nodeData.data.extensionElements['flowable:field']
+    if(nodeData.data?.extensionElements 
+        && 
+        nodeData.data?.extensionElements['docpal:updateDatas']
+        &&
+        nodeData.data?.extensionElements['docpal:updateDatas'].action
+    ) {  
+        conditions.value = nodeData.data.extensionElements['docpal:updateDatas'].action
     }else{
         conditions.value = [{...defaultCondition}]
     }
@@ -50,6 +55,45 @@ function setUpListener(){
     })
 }
 
+function checkConditions(conditions:any[]) {
+    return conditions.map( con => {
+        switch(con.attr_type) {
+            case 'Update_Number' :
+                const temData = {
+                    attr_type: "Update_Number",
+                    attr_function: con.attr_function || "Increase_By",
+                    attr_source: "form",
+                    attr_updateFieldName: con.attr_updateFieldName || "",
+                    attr_step: con.attr_step || "1",
+                    attr_value: con.attr_value || ""
+                }
+                if(temData.attr_function === 'Set_Value') {
+                    delete temData.attr_step
+                }else{
+                    delete temData.attr_value
+                }
+                return temData
+            case 'Look_Up_User_Group':
+                return {
+                    attr_type: "Look_Up_User_Group",
+                    attr_function: "Set_Value",
+                    attr_source: "form",
+                    attr_updateFieldName: con.attr_updateFieldName || "",
+                    attr_value: con.attr_value || ""
+                }
+
+            case 'Look_Up_User':
+                return {
+                    attr_type: "Look_Up_User",
+                    attr_function: "Set_Value",
+                    attr_source: "form",
+                    attr_updateFieldName: con.attr_updateFieldName || "",
+                    attr_value: con.attr_value || ""
+                }
+            }
+    })
+}
+
 function updateCondition() {
     const nodeData = node.getData()
     const newData = {
@@ -59,12 +103,14 @@ function updateCondition() {
             ...nodeData.data,
             extensionElements:{
                 ...nodeData.data.extensionElements,
-                'flowable:field': JSON.parse(JSON.stringify(conditions.value))
+                'docpal:updateDatas': {
+                    action: JSON.parse(JSON.stringify(checkConditions(conditions.value)))
+                }
             }
         }
     } 
-    console.log("condition update", newData)
     node.setData(newData, { overwrite: true, deep: true })
+    console.log("udpate data")
 }
 
 watch(conditions, (newVal) => {

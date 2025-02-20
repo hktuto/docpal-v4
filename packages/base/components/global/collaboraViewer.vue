@@ -27,7 +27,7 @@ const xlsxIframe = ref()
 const emit = defineEmits(['saved'])
 async function displayIframe(){
   iframeReady.value = false;
-    const { data } = await clientApi.api.getGetofficetoken(props.docId, {
+    const { data } = await clientApi.api.getNuxeoGetofficetokenId(props.docId, {
       fileType: props.fileType
     })
     token.value = data
@@ -75,8 +75,8 @@ const officeUrl = (docId:string) =>{
 }
 
 function gotMessageFromIframe(e:MessageEvent){
-  
-   const data = e.data !== 'unchanged' ? JSON.parse(e.data) : undefined;
+    console.log("gotMessageFromIframe",e)
+   const data = e.data !== 'unchanged' ? JSON.parse(e.data) ? JSON.parse(e.data) : undefined : undefined;
    if(!data) return
    if(data.MessageId === "App_LoadingStatus"){
      iframeReady.value = true

@@ -310,7 +310,6 @@ async function copyForm(node:Node, obj:any) {
 }
 async function pasteForm(node:Node){
     const {form, fields} = copyObj.value
-    console.log("pasteForm", form, fields)
     await saveFormByNode(node, form);
     if(node.id !== 'end') {
         graph.value?.startBatch('update-from-data')
