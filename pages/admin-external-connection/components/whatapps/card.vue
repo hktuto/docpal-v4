@@ -8,6 +8,12 @@
     <el-form-item :label="$t('config.accessToken')">
       <el-input v-model="form.accessToken" :placeholder="$t('config.accessTokenTip')"></el-input>
     </el-form-item>
+    <el-form-item :label="$t('config.phoneNum')">
+      <el-input v-model="form.phoneNum" :placeholder="$t('config.phoneNumbTip')"></el-input>
+    </el-form-item>
+    <el-form-item :label="$t('config.accountNum')">
+      <el-input v-model="form.accountNum" :placeholder="$t('config.ccountNumberTip')"></el-input>
+    </el-form-item>
   </el-form>
   <div>
     <el-button :loading="state.testLoading" type="info" @click="handleTestConnection">{{$t('config.testConnnection')}}</el-button>
@@ -52,7 +58,10 @@ const state = reactive<any>({
   switchLoading: false  
 })
 const form = ref({
-  accessToken: ''
+  accessToken: '',
+  accountNum: "",
+  phoneNum:""
+
 })
 const formRef = ref()
 async function handleSwitchChange(val) {
@@ -109,6 +118,8 @@ async function handleTestConnection() {
 onMounted(async() => {
   state.setting = await adminApi.api.postWhatsappOverview({}).then(res => res.data)
   form.value.accessToken = state.setting.whatsAppSetting.accessToken
+  form.value.phoneNum = state.setting.whatsAppSetting.phoneNum || ""
+  form.value.accountNum = state.setting.whatsAppSetting.accountNum || ""
 })
 </script>
 <style lang="scss" scoped>
