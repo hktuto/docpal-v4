@@ -1,42 +1,45 @@
 <template>
-    <div class="LoginContainer">
-        <LoadingBg></LoadingBg>
-        <div class="fromContainer card glass">
-            <Logo class="logo" mode="withName"/>
-        <template v-if="status === 'submitted'">
-            <div class="tip">
-              {{$t('The operation is successful, please go to the mailbox to reset the password')}}
+    <AppPublic>
+        <div class="LoginContainer">
+            <LoadingBg></LoadingBg>
+            <div class="fromContainer card glass">
+                <AppBigLogo class="logo" mode="withName"/>
+                <template v-if="status === 'submitted'">
+                    <div class="tip">
+                    {{$t('The operation is successful, please go to the mailbox to reset the password')}}
+                    </div>
+                </template>
+            <template v-else>
+                <el-form label-position="top" ref="FormRef" :status-icon="true" :model="form" @submit.native.prevent>
+                <template v-if="status === 'beforeSubmit'">
+                    <el-form-item :label="$t('login_username')" prop="userId" class="intro"
+                                :rules="[{ required: true, message: $t('form_common_requird')}]">
+                        <el-input v-model="form.userId" type="text" @keyup.enter.native="handleSubmit"/>
+                    </el-form-item>
+                    <el-button class="fullSize" type="primary" size="large" :block="true" @click="handleSubmit" :loading="loading">
+                            {{ $t('dpButtom_confirm') }}
+                    </el-button>
+                </template>
+                </el-form>
+            </template>
+            <el-button class="intro" @click="login" link>
+                {{ $t('login') }}
+            </el-button>
+            <div v-if="state.time > 0">
+                <h3>
+                {{$t('dpTip_autoLogin')}}: {{state.time}}s 
+                </h3>
             </div>
-          </template>
-          <template v-else>
-            <el-form label-position="top" ref="FormRef" :status-icon="true" :model="form" @submit.native.prevent>
-              <template v-if="status === 'beforeSubmit'">
-                  <el-form-item :label="$t('login_username')" prop="userId" class="intro"
-                            :rules="[{ required: true, message: $t('form_common_requird')}]">
-                    <el-input v-model="form.userId" type="text" @keyup.enter.native="handleSubmit"/>
-                  </el-form-item>
-                  <el-button class="fullSize" type="primary" size="large" :block="true" @click="handleSubmit" :loading="loading">
-                          {{ $t('dpButtom_confirm') }}
-                  </el-button>
-              </template>
-            </el-form>
-          </template>
-          <el-button class="intro" @click="login" link>
-            {{ $t('login') }}
-          </el-button>
-          <div v-if="state.time > 0">
-            <h3>
-              {{$t('dpTip_autoLogin')}}: {{state.time}}s 
-            </h3>
-          </div>
+            </div>
         </div>
-    </div>
+    </AppPublic>
 </template>
     
     
 <script lang="ts" setup>
     import { ElMessage} from 'element-plus'
     import {clientApi } from 'api'
+
     const { public: { DEFAULT_PATH } } = useRuntimeConfig(); 
     const status = ref('beforeSubmit')
     const loading = ref(false)
@@ -87,10 +90,12 @@
           path: '/'
         })
     }
-    </script> 
+
+    
+</script> 
     
     
-    <style scoped lang="scss">
+<style scoped lang="scss">
     .LoginContainer{
       width: 100%;
       height: 100%;
@@ -109,13 +114,26 @@
     }
     .logo{
         width: 80%;
-        max-width: 200px;
         margin: 0 auto var(--el-component-size-small) auto;
     }
     .tip {
       padding: var(--app-padding);
       font-size: 1.2rem;
       text-align: center;
-      color: var(--color-grey-500);
+      color: var(--app-grey-500);
     }
-    </style>
+    .card{
+        padding: var(--el-component-size-small);
+        border-radius: var(--el-border-radius-round);
+    }
+
+    .glass{
+        /* From https://css.glass */
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(6.3px);
+        -webkit-backdrop-filter: blur(6.3px);
+        border: 1px solid rgba(255, 255, 255, 0.31);
+    }
+</style>
