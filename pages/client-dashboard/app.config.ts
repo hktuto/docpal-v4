@@ -1,0 +1,26 @@
+import { defineAppConfig } from '#imports'
+export default defineAppConfig({
+    menu: {
+        'client-dashboard': {
+            id:'client-dashboard',
+            name : 'client-dashboard',
+            label: "adminMenu.dashboard",
+            icon: 'carbon:dashboard',
+            hoverIcon : 'carbon:dashboard',
+            component: "LazyDashboardPage",
+            props:{}
+        },
+        'client-work-panel': {
+            id:'client-work-panel',
+            name : 'client-work-panel',
+            label: "adminMenu.workPanel",
+            icon: 'material-symbols:dashboard-customize-outline-rounded',
+            hoverIcon : 'material-symbols:dashboard-customize-outline-rounded',
+            component: "LazyHomePage",
+            props:{}
+        }
+    }
+
+})
+
+

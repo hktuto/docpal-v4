@@ -14,7 +14,8 @@ export default defineNuxtConfig({
         "../../pages/client-workflow",
         "../../packages/dp-dashboard",
         "../../pages/client-share",
-        "../../pages/client-trash"
+        "../../pages/client-trash",
+        "../../pages/client-dashboard"
     ],
     features: {
         inlineStyles: true,
