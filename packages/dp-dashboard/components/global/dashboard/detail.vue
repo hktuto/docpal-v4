@@ -15,7 +15,10 @@
       :size="leftSize"
       class="dp-left-pane"
     >
-      <el-icon class="cursorPointer" color="var(--app-primary-color)" @click="handleEditMode"
+      <el-icon
+        class="cursorPointer"
+        color="var(--app-primary-color)"
+        @click="handleEditMode"
         ><Setting
       /></el-icon>
       <el-collapse v-if="leftSize > 10" v-model="activeNames">
@@ -25,7 +28,8 @@
           :title="key"
           :name="key"
         >
-          <div class="dashboard-item-widget"
+          <div
+            class="dashboard-item-widget"
             v-for="(c, ckey) in item"
             :key="ckey"
             draggable="true"
@@ -33,9 +37,14 @@
             @dragstart="(e) => dragStart(c)"
             @drag="drag"
             @dragend="dragEnd"
-          > 
-            <SvgIcon v-if="c.icon" class="el-icon--left" :src="`/icons/dashboard/${c.icon}.svg`" style="--icon-size: 12px"/>
-              {{ $t(`dashboard.${c.label}`) }}
+          >
+            <SvgIcon
+              v-if="c.icon"
+              class="el-icon--left"
+              :src="`/icons/dashboard/${c.icon}.svg`"
+              style="--icon-size: 12px"
+            />
+            {{ $t(`dashboard.${c.label}`) }}
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -66,7 +75,7 @@
             @resize="chartResize(item)"
           >
             <component
-              :is="item.component"
+              :is="componentMap[item.component]"
               :ref="
                 (el) => {
                   sheetRefs[item.i] = el;
@@ -76,7 +85,6 @@
               :setting="item.setting"
               :hideSetting="hideSetting"
               :dates="dates"
-              
               @delete="handleDelete(item)"
               @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
             ></component>
@@ -94,7 +102,8 @@ import "splitpanes/dist/splitpanes.css";
 // import { GridLayout, GridItem } from "vue3-grid-layout-next";
 import { GridLayout, GridItem } from "grid-layout-plus";
 import type { DashboardWidgetSetting } from "~/utils/dashboardWidgetHelper";
-import { useDebounceFn } from '@vueuse/core'
+import { widgetComponent } from "~/utils/dashboardWidgetHelper";
+import { useDebounceFn } from "@vueuse/core";
 const props = withDefaults(
   defineProps<{
     // layout: DashboardWidgetSetting[],
@@ -106,6 +115,7 @@ const props = withDefaults(
     dates?: any;
     editMode?: boolean;
     dashboardSettingList?: any;
+    componentMap?: any;
   }>(),
   {
     // layout: [],
@@ -114,6 +124,7 @@ const props = withDefaults(
     hideSetting: false,
     colNum: 12,
     rowHeight: 100,
+    componentMap: widgetComponent,
   }
 );
 const activeNames = ref(["default", "2", "3", "4"]);
@@ -128,7 +139,7 @@ const layout = defineModel<DashboardWidgetSetting>("layout");
 //         emits('update:layout', val)
 //     }
 // })
-const emits = defineEmits(["refreshSetting", "delete", "update:layout", 'save']);
+const emits = defineEmits(["refreshSetting", "delete", "update:layout", "save"]);
 
 const sheetRefs = ref<any>({});
 function handleEditMode() {
@@ -142,12 +153,16 @@ function handleRefreshSetting(setting: any, row: any) {
   row.setting = setting;
   emits("refreshSetting", row);
 }
-const chartResize = useDebounceFn((row: any) => {
-  if (sheetRefs.value[row.i]) {
-    sheetRefs.value[row.i].resize();
-  }
-  emits('save')
-}, 1000, { maxWait: 5000 })
+const chartResize = useDebounceFn(
+  (row: any) => {
+    if (sheetRefs.value[row.i]) {
+      sheetRefs.value[row.i].resize();
+    }
+    emits("save");
+  },
+  1000,
+  { maxWait: 5000 }
+);
 
 const dropId = "drop";
 let dragItem = { x: -1, y: -1, w: 2, h: 2, i: "" };
@@ -170,7 +185,7 @@ onDeactivated(() => {
 const wrapper = ref<HTMLElement>();
 const gridLayout = ref();
 function dragStart(c) {
-  dragItem = JSON.parse(JSON.stringify(c))
+  dragItem = JSON.parse(JSON.stringify(c));
 }
 const drag = () => {
   // dragItem = JSON.parse(JSON.stringify(item));
@@ -327,18 +342,18 @@ function dragEnd() {
   border: 1px solid var(--app-grey-825);
   display: flex;
   align-items: center;
-    height: 32px;
-    line-height: 32px;
-    width: fit-content;
-    float: left;
-    margin: 2px 6px 6px 0;
-    cursor: move;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    background: #fff;
-    border: 1px solid #e8e9eb;
-    border-radius: 4px;
-    padding: 0 8px;
+  height: 32px;
+  line-height: 32px;
+  width: fit-content;
+  float: left;
+  margin: 2px 6px 6px 0;
+  cursor: move;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e8e9eb;
+  border-radius: 4px;
+  padding: 0 8px;
 }
 </style>
