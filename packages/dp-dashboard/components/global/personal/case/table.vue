@@ -47,23 +47,28 @@ async function getData(
     pageSize: 20,
   }
 ) {
-  if (!caseId)
+  try {
+    if (!caseId) {
+      throw new Error("caseId is null");
+    }
+    if (endPoint === "admin") return;
+    const res = await clientApi.api
+      .postCaseTypesCasetypeidRecordsPage(caseId, { ...params, ...extraParams })
+      .then((res) => res.data);
+    return {
+      data: {
+        entryList: res?.entryList,
+        totalSize: res?.totalSize,
+      },
+    };
+  } catch (error) {
     return {
       data: {
         entryList: [],
         totalSize: 0,
       },
     };
-  if (endPoint === "admin") return;
-  const res = await clientApi.api
-    .postCaseTypesCasetypeidRecordsPage(caseId, { ...params, ...extraParams })
-    .then((res) => res.data);
-  return {
-    data: {
-      entryList: res?.entryList,
-      totalSize: res?.totalSize,
-    },
-  };
+  }
 }
 function handleDblclick(row: any) {
   ElMessage.info("Need to add routing jump event");
