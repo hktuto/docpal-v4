@@ -70,7 +70,9 @@ async function handleSwitchChange(val) {
     state.switchLoading = true
     const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({
       whatsAppSwitch: val,
-      accessToken: state.setting.whatsAppSetting.accessToken
+      accessToken: state.setting.whatsAppSetting.accessToken,
+      phoneNum: form.value.phoneNum,
+      accountNum: form.value.accountNum
     }).then(res => res.data)
     if(!!res) {
       ElMessage.success(t('dpMsg_success'))
@@ -89,7 +91,9 @@ async function handleSave(val) {
     if(!valid) return
     const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({
       whatsAppSwitch: state.setting.whatsAppSetting.whatsAppSwitch,
-      accessToken: form.value.accessToken
+      accessToken: form.value.accessToken,
+      phoneNum: form.value.phoneNum,
+      accountNum: form.value.accountNum
     }).then(res => res.data)
     if(!!res) {
       ElMessage.success(t('dpMsg_success'))
