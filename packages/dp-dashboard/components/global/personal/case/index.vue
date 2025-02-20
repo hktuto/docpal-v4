@@ -7,23 +7,34 @@
       style="--icon-size: 1.14rem; --icon-color: #8796a4"
       @click="openSetting"
     />
-    <PersonalCaseContent :isTabView="setting.isTabView" @tab-change="handleTabChange" />
+    <PersonalCaseContent
+      :isTabView="setting.isTabView"
+      :setting="setting"
+      @tab-change="handleTabChange"
+    />
 
-    <PersonalCaseSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh"/>
+    <PersonalCaseSetting
+      ref="settingRef"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
   </el-card>
 </template>
 <script lang="ts" setup>
-import {  } from "element-plus";
-const emits = defineEmits(['delete', 'refreshSetting']);
-const props = withDefaults( defineProps<{
+import {} from "element-plus";
+const emits = defineEmits(["delete", "refreshSetting"]);
+const props = withDefaults(
+  defineProps<{
     dates?: any;
     setting?: any;
-    hideSetting?: boolean,
-}>() , {
+    hideSetting?: boolean;
+  }>(),
+  {
     setting: {},
-    hideSetting: false
-})
-const activeTab = ref<string>('')
+    hideSetting: false,
+  }
+);
+const activeTab = ref<string>("");
 async function handleDelete() {
   emits("delete");
 }
@@ -32,17 +43,14 @@ function openSetting() {
   settingRef.value.handleOpen(props.setting);
 }
 function handleTabChange(tab: string) {
-  activeTab.value = tab
+  activeTab.value = tab;
 }
 function handleRefresh(chartSetting) {
-  emits('refreshSetting', chartSetting)
+  emits("refreshSetting", chartSetting);
 }
-function resize() {
-}
+function resize() {}
 defineExpose({
-  resize
-})
+  resize,
+});
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
