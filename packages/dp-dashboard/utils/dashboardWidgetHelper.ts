@@ -19,36 +19,37 @@ export type DashboardWidget = "DocTypeCoCount" |
     "PersonalCaseCreate" |
     "PersonalCase"
 export type WorkflowCoCountWidget = "WorkflowActiveCount" | "WorkflowApproveRate" | "WorkflowNewCount"  | "WorkflowTimeSpendPerTask" | "WorkflowTimeSpendPerWorkflow"  
-import DocTypeCoCount from  '../components/doc/coCount/index.vue'
-import DocTypeCount from  '../components/doc/count.vue'
-import DocSizeStatistics from  '../components/doc/sizeStatistics.vue'
+import DocTypeCoCount from  '../components/global/doc/coCount/index.vue'
+import DocTypeCount from  '../components/global/doc/count.vue'
+import DocSizeStatistics from  '../components/global/doc/sizeStatistics.vue'
 // workflow co-count
-import WorkflowCoCount from  '../components/workflow/coCount/index.vue'
-import WorkflowActiveCount from  '../components/workflow/coCount/activeCount.vue'
-import WorkflowApproveRate from  '../components/workflow/coCount/approveRate.vue'
-import WorkflowNewCount from  '../components/workflow/coCount/newCount.vue'
-import WorkflowTimeSpendPerTask from  '../components/workflow/coCount/timeSpendPerTask.vue'
-import WorkflowTimeSpendPerWorkflow from  '../components/workflow/coCount/timeSpendPerWorkflow.vue'
+import WorkflowCoCount from  '../components/global/workflow/coCount/index.vue'
+import WorkflowActiveCount from  '../components/global/workflow/coCount/activeCount.vue'
+import WorkflowApproveRate from  '../components/global/workflow/coCount/approveRate.vue'
+import WorkflowNewCount from  '../components/global/workflow/coCount/newCount.vue'
+import WorkflowTimeSpendPerTask from  '../components/global/workflow/coCount/timeSpendPerTask.vue'
+import WorkflowTimeSpendPerWorkflow from  '../components/global/workflow/coCount/timeSpendPerWorkflow.vue'
 // workflow group
-import WorkflowGroup from  '../components/workflow/group/index.vue'
+import WorkflowGroup from  '../components/global/workflow/group/index.vue'
 // azure
-import AzureThreshold from '../components/azure/threshold.vue'
-import AzureOcrProcessed from '../components/azure/ocrProcessed/index.vue'
-import AzureOcrProcessedHistory from '../components/azure/ocrProcessHistory/index.vue'
+import AzureThreshold from '../components/global/azure/threshold.vue'
+import AzureOcrProcessed from '../components/global/azure/ocrProcessed/index.vue'
+import AzureOcrProcessedHistory from '../components/global/azure/ocrProcessHistory/index.vue'
 
 // personal
-import PersonalDashboard from '../components/personal/dashboard.vue'
-import PersonalShare from '../components/personal/share/index.vue'
-import PersonalShareExternal from '../components/personal/share/external.vue'
-import PersonalShareInternalMe from '../components/personal/share/internalMe.vue'
-import PersonalShareInternalOther from '../components/personal/share/internalOther.vue'
-import PersonalPredefinedSearch from '../components/personal/predefinedSearch.vue'
-import PersonalWorkflowCreate from '../components/personal/workflow/create.vue'
-import PersonalWorkflow from '../components/personal/workflow/index.vue'
-import PersonalSearchHistory from '../components/personal/search/history.vue'
-import PersonalSearchRecentDoc from '../components/personal/search/recentDoc.vue'
-import PersonalCaseCreate from '../components/personal/case/create.vue'
-import PersonalCase from '../components/personal/case/index.vue'
+import PersonalDashboard from '../components/global/personal/dashboard.vue'
+import PersonalShare from '../components/global/personal/share/index.vue'
+import PersonalShareExternal from '../components/global/personal/share/external.vue'
+import PersonalShareInternalMe from '../components/global/personal/share/internalMe.vue'
+import PersonalShareInternalOther from '../components/global/personal/share/internalOther.vue'
+import PersonalPredefinedSearch from '../components/global/personal/predefinedSearch.vue'
+import PersonalWorkflowCreate from '../components/global/personal/workflow/create.vue'
+import PersonalWorkflow from '../components/global/personal/workflow/index.vue'
+import PersonalSearchHistory from '../components/global/personal/search/history.vue'
+import PersonalSearchRecentDoc from '../components/global/personal/search/recentDoc.vue'
+import PersonalCaseCreate from '../components/global/personal/case/create.vue'
+import PersonalCase from '../components/global/personal/case/index.vue'
+import CalendarWidget from '../components/global/calendar/widget/index.vue'
 
 import  '../assets/dashboard.scss'
 
@@ -408,34 +409,34 @@ export const getNormalizeSetting= (setting: DashboardWidget) => {
 
 // TODO : 删除
 export const widgetComponent = {
-    'DocTypeCoCount': 'DocTypeCoCount',
-    'DocTypeCount': "DocTypeCount",
-    'DocSizeStatistics': "DocSizeStatistics",
+    'DocTypeCoCount': DocTypeCoCount,
+    'DocTypeCount': DocTypeCount,
+    'DocSizeStatistics': DocSizeStatistics,
 
-    'WorkflowCoCount': "WorkflowCoCount",
-    'WorkflowActiveCount': "WorkflowActiveCount",
-    'WorkflowApproveRate': 'WorkflowApproveRate',
-    'WorkflowNewCount': 'WorkflowNewCount',
-    'WorkflowTimeSpendPerTask': 'WorkflowTimeSpendPerTask',
-    'WorkflowTimeSpendPerWorkflow': 'WorkflowTimeSpendPerWorkflow',
+    'WorkflowCoCount': WorkflowCoCount,
+    'WorkflowActiveCount': WorkflowActiveCount,
+    'WorkflowApproveRate': WorkflowApproveRate,
+    'WorkflowNewCount': WorkflowNewCount,
+    'WorkflowTimeSpendPerTask': WorkflowTimeSpendPerTask,
+    'WorkflowTimeSpendPerWorkflow': WorkflowTimeSpendPerWorkflow,
 
-    'WorkflowGroup': 'WorkflowGroup',
+    'WorkflowGroup': WorkflowGroup,
 
-    'AzureThreshold': 'AzureThreshold',
-    'AzureOcrProcessed': 'AzureOcrProcessed',
-    'AzureOcrProcessedHistory': 'AzureOcrProcessedHistory',
+    'AzureThreshold': AzureThreshold,
+    'AzureOcrProcessed': AzureOcrProcessed,
+    'AzureOcrProcessedHistory': AzureOcrProcessedHistory,
 
-    "PersonalDashboard": 'PersonalDashboard',
-    "PersonalShare": 'PersonalShare',
-    "PersonalShareExternal": 'PersonalShareExternal',
-    "PersonalShareInternalMe": 'PersonalShareInternalMe',
-    "PersonalShareInternalOther": 'PersonalShareInternalOther',
-    "PersonalPredefinedSearch": 'PersonalPredefinedSearch',
-    "PersonalWorkflowCreate": 'PersonalWorkflowCreate',
-    "PersonalWorkflow": 'PersonalWorkflow',
-    "PersonalSearchHistory": 'PersonalSearchHistory',
-    "PersonalSearchRecentDoc": 'PersonalSearchRecentDoc',
-    "PersonalCaseCreate": 'PersonalCaseCreate',
-    "PersonalCase": 'PersonalCase',
-    "CalendarWidget": "CalendarWidget"
+    "PersonalDashboard": PersonalDashboard,
+    "PersonalShare": PersonalShare,
+    "PersonalShareExternal": PersonalShareExternal,
+    "PersonalShareInternalMe": PersonalShareInternalMe,
+    "PersonalShareInternalOther": PersonalShareInternalOther,
+    "PersonalPredefinedSearch": PersonalPredefinedSearch,
+    "PersonalWorkflowCreate": PersonalWorkflowCreate,
+    "PersonalWorkflow": PersonalWorkflow,
+    "PersonalSearchHistory": PersonalSearchHistory,
+    "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
+    "PersonalCaseCreate": PersonalCaseCreate,
+    "PersonalCase": PersonalCase,
+    "CalendarWidget": CalendarWidget
 }

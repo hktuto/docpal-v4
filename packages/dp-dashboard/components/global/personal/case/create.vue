@@ -12,28 +12,41 @@
       </div>
     </template>
     <div class="workflow-create-content">
-      <el-button v-for="item in state.caseList" type="primary" :key="item.id" @click="handleClick(item)">{{item.name}}</el-button>
+      <el-button
+        v-for="item in state.caseList"
+        type="primary"
+        :key="item.id"
+        @click="handleClick(item)"
+        >{{ item.name }}</el-button
+      >
     </div>
-    <PersonalCaseCreateDialog ref="settingRef" @delete="handleDelete" @refresh="handleRefresh"/>
+    <PersonalCaseCreateDialog
+      ref="settingRef"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
     <!-- <CaseNewDialog ref="dialogRef" @refresh="handleNewCase"/> -->
   </el-card>
 </template>
 <script lang="ts" setup>
 import { clientApi } from "api";
 import { onActivated } from "vue";
-const emits = defineEmits(['delete', 'refreshSetting']);
+const emits = defineEmits(["delete", "refreshSetting"]);
 
-const props = withDefaults( defineProps<{
+const props = withDefaults(
+  defineProps<{
     dates?: any;
     setting?: any;
-    hideSetting?: boolean,
-}>() , {
+    hideSetting?: boolean;
+  }>(),
+  {
     setting: {},
-    hideSetting: false
-})
+    hideSetting: false,
+  }
+);
 const state = reactive<any>({
-  caseList: []
-})
+  caseList: [],
+});
 async function handleDelete() {
   emits("delete");
 }
@@ -41,47 +54,52 @@ const settingRef = ref();
 function openSetting() {
   settingRef.value.handleOpen({
     caseList: state.caseList,
-    caseKeys: props.setting.caseKeys
+    caseKeys: props.setting.caseKeys,
   });
 }
-const dialogRef = ref()
-function handleClick (item: any) {
-  log.info('handleClick', item)
+const dialogRef = ref();
+function handleClick(item: any) {
   // dialogRef.value.handleOpen(item)
 }
-function handleNewCase() {
-}
+function handleNewCase() {}
 function handleRefresh(chartSetting, caseList) {
-  console.log({caseList});
-  
-  state.caseList = caseList
-  emits('refreshSetting', chartSetting)
+  console.log({ caseList });
+
+  state.caseList = caseList;
+  emits("refreshSetting", chartSetting);
 }
 async function getList() {
   try {
-    const res = await clientApi.api.postCaseTypesPage({}).then(res => res.data)
-    console.log({res})
-    return res?.entryList
+    const res = await clientApi.api.postCaseTypesPage({}).then((res) => res.data);
+    console.log({ res });
+    return res?.entryList;
   } catch (error) {
-    return []
+    return [];
   }
 }
-onActivated(async() => {
-  console.log('onActivated', props.setting.caseKeys )
-  if(props.setting.caseKeys && props.setting.caseKeys.length > 0) {
+async function getCaseList() {
+  if (props.setting.caseKeys && props.setting.caseKeys.length > 0) {
     const list = await getList();
     state.caseList = props.setting.caseKeys.reduce((prev, id: any) => {
-      const caseItem = list?.find((cases: any) => cases.id === id)
-      prev.push({ ...caseItem })
-      return prev
-    }, [])
+      const caseItem = list?.find((cases: any) => cases.id === id);
+      prev.push({ ...caseItem });
+      return prev;
+    }, []);
   }
-})
-function resize() {
 }
+watch(
+  () => props.setting.caseKeys,
+  () => {
+    getCaseList();
+  },
+  {
+    immediate: true,
+  }
+);
+function resize() {}
 defineExpose({
-  resize
-})
+  resize,
+});
 </script>
 <style lang="scss" scoped>
 .workflow-create-content {
@@ -91,5 +109,4 @@ defineExpose({
     margin-bottom: var(--app-space-xs);
   }
 }
-
 </style>
