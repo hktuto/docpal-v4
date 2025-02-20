@@ -11,7 +11,7 @@ function replaceVariables(str:string, variables:any[]) {
     if(!variables) return str
     return str.replace(/{{(.*?)}}/g, (match:any, p1:any) => {
         const val = variables.find((item:any) => item.name === p1)
-        return val.value || match
+        return val || match
     })
 }
 

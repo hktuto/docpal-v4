@@ -10,16 +10,22 @@ const emits = defineEmits(['update', 'update:content']);
 const newVariableDialogRef = ref();
 const currentPointer = ref<any>([])
 const handleNewVariableAdded = (newVariable:string) => {
-    if(!content) return
-    // if currentPointer is same, inset newVariable
-    if(currentPointer.value[0] === currentPointer.value[1] && content.value) {
+    if(!content.value) return
+    // if no currentPointer, inset add end
+    if(!currentPointer.value || !currentPointer.value[0]) {
+        content.value = content.value + ' {{' + newVariable + '}}'
+    }else if(currentPointer.value[0] === currentPointer.value[1] && content.value) {
         content.value = content.value.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
-        return
+
+    }else {
+        // if currentPointer is not same, replace current content
+        content.value = content.value.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
+        console.log("content change", content.value)
     }
-    // if currentPointer is not same, replace current content
-    content.value = content.value.substring(0, currentPointer.value[0]) + '{{' + newVariable + '}}' + content.value.substring(currentPointer.value[1])
     // calculate new parameters
-    calculateParaameters()
+    nextTick(() => {
+        calculateParaameters()
+    })
 
 }
 function calculateParaameters() {
@@ -32,9 +38,10 @@ function calculateParaameters() {
     
     const newParameters = content.value.match(/\{\{(.*?)\}\}/g)?.map((item:any) => item.replace('{{', '').replace('}}', '')) || []
     // loop parameters and update value
+    console.log("all newParameters", newParameters)
     parameters.value = newParameters.map((item:any) => {
 
-        const oldValue = parameters.value ?  parameters.value.find((param:any) => param.name === item) : null
+        const oldValue = parameters.value ?  parameters.value.find((param:any) => param.name === item) : ""
         return {
             name: item,
             value: oldValue?.value || '',
