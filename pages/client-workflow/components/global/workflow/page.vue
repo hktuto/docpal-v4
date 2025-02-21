@@ -84,4 +84,8 @@ async function handleDownload() {
   top: calc(var(--app-space-xs) * 2);
   z-index: 2;
 }
+.dp-tabs--auto {
+  width: 100%;
+  overflow: hidden;
+}
 </style>
