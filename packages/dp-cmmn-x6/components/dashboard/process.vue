@@ -106,14 +106,14 @@ async function getCDProcess() {
   try {
     if (state.data.length > 0) return state.data;
     const id = CMDProvider.instanceId?.value || null;
-    const _caseTypeId = CMDProvider.caseTypeId?.value || null;
+    const caseVersionId = CMDProvider.caseVersionId?.value || null;
     if (id) {
-      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id);
+      const { data } = await adminApi.api.getCaseDashboardVersionVersionidStages(id);
       state.data = data;
-    } else if (_caseTypeId) {
+    } else if (caseVersionId) {
       const {
-        data: caseTypeData,
-      } = await adminApi.api.getCaseDashboardCasetypeCasetypeidStages(_caseTypeId);
+        data,
+      } = await adminApi.api.getCaseDashboardVersionVersionidStages(caseVersionId);
       state.data = caseTypeData;
     }
   } catch (error) {

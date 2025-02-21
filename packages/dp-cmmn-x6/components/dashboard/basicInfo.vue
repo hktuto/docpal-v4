@@ -57,14 +57,15 @@ async function getCDBasciInfo() {
   try {
     if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null;
-    const caseTypeId = caseProvider.caseTypeId?.value || null
+    const caseVersionId = CMDProvider.caseVersionId?.value || null;
+
     if(id) {
       state.mode = 'normal'
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       state.data = data
-    } else if(caseTypeId) {
+    } else if(caseVersionId) {
       state.mode = 'develop'
-      const {data:form} = await adminApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(caseTypeId)
+      const {data:form} = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
       form.rows = form.fields.reduce((prev, item) => {
         let value = item.type
         if (item.type === 'date') value = '2024-01-01'
