@@ -1,4 +1,5 @@
 <template>
+    <div class="workflowFormContainer">
     <FormRenderer :class="{vformReadonly: state.readonly, workflowForm: true}" ref="FormRendererRef" :formJson="formJson" :data="formData"
         @previewFileInit="handlePreviewFileInit">
         <template v-slot:previewFile="{data}">
@@ -6,15 +7,28 @@
                 ></WorkflowDetailReader>
         </template>
 
+        <template #calendar="data">
+            calendar settings
+            <pre>
+                {{ data }}
+            </pre>
+            <pre>
+
+                {{ state.formData }}
+            </pre>
+        </template>
+            
         
         <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]="slotsData">
-            {{ slotsData }}
+
             <component :is="item.component" :ref="(el: any) => formRenderSlotsRef[item.name] = el" 
                 :disabled="state.readonly"
                 :formData="state.formData"
              />
         </template>
     </FormRenderer>
+    <slot name="action" />
+</div>
 </template>
 
 <script lang="ts" setup>
@@ -63,7 +77,7 @@ const defaultFormJson = {
 }
 const FormRendererRef = ref()
 // #region module: set
-    async function setForm (json: string | object, data?: object, properties:any[] = []) {
+    async function setForm (json: string | object, data?: object, properties:any[] = [], xml?:string) {
         if(JSON.stringify(json) === '{}') {
             FormRendererRef.value.setFormJson(defaultFormJson)
             return
@@ -77,6 +91,10 @@ const FormRendererRef = ref()
             handleTypeIds(properties)
         } else {
             state.formData = { ...data }
+        }
+        if(xml){
+            const xmlJson = bpmnStringToJson(xml)
+            console.log("xmlJson", xmlJson)
         }
     }
     async function handleData(data: any) {
@@ -259,5 +277,12 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
         overflow-x: hidden;
         overflow-y: auto;
     }
+}
+.workflowFormContainer{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr min-content;
 }
 </style>

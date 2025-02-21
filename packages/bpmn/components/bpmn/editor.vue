@@ -255,10 +255,11 @@ async function previewForm(node:Node) {
         if(response?.data.length > 0) {
             const json = JSON.parse(response.data[0].jsonValue || "{}")
             console.log("preview json :", json)
-            fromRenderRef.value.setFormJson(json)
+            console.log("fromRenderRef", fromRenderRef.value)
+            fromRenderRef.value.setForm(json)
         }else{
             console.log("preview json : empty")
-            fromRenderRef.value.setFormJson({})
+            fromRenderRef.value.setForm({})
         }
     })
 }
@@ -410,7 +411,7 @@ defineExpose({
         </FormDesigner>
     </ElDialog>
     <ElDialog v-model="formRenderVisible" width="90%"   draggable>
-        <FormRenderer ref="fromRenderRef" />
+        <WorkflowDetailFormRender ref="fromRenderRef" />
     </ElDialog>
     <div class="actions">
         <slot name="actions" />
