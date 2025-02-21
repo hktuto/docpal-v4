@@ -4,15 +4,15 @@
       <template #toolbar_buttons> </template>
       <template #status="{ row }">
         <el-tag v-if="row.status === 0" type="info">{{ $t("dpStatus.pending") }}</el-tag>
-        <el-tag v-else-if="row.status === 1" type="primary">{{
-          $t("dpStatus.shared")
-        }}</el-tag>
-        <el-tag v-else-if="row.status === 2" type="danger">{{
-          $t("dpStatus.stopSharing")
-        }}</el-tag>
-        <el-tag v-else-if="row.status === 3" type="info">{{
-          $t("dpStatus.expired")
-        }}</el-tag>
+        <el-tag v-else-if="row.status === 1" type="primary">
+          {{ $t("dpStatus.shared") }}
+        </el-tag>
+        <el-tag v-else-if="row.status === 2" type="danger">
+          {{ $t("dpStatus.stopSharing") }}
+        </el-tag>
+        <el-tag v-else-if="row.status === 3" type="info">
+          {{ $t("dpStatus.expired") }}
+        </el-tag>
       </template>
     </VxeGrid>
   </div>
