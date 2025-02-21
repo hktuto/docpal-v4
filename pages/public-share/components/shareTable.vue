@@ -34,10 +34,8 @@
 import { ElMessageBox } from "element-plus";
 import { clientApi } from "api";
 import dayjs from "dayjs";
-import { routeShareMePageFolder } from "~/utils/routerHelper";
 
 const { t } = useI18n();
-let extraParams: any = {};
 const {
   tableConfig,
   tableEvent,
@@ -77,7 +75,7 @@ const {
   },
 });
 const ReaderRef = ref();
-const previewFile = reactive({
+const previewFile = reactive<any>({
   blob: null,
   name: "",
   id: "",
@@ -95,7 +93,7 @@ async function handleDblclick(row: any) {
   previewFile.loading = true;
   const fileId = row.id;
   try {
-    const params = {
+    const params: any = {
       token: route.query.token,
       password: sessionStorage.getItem("sharePWD"),
       documentId: fileId,
@@ -112,12 +110,12 @@ async function handleDownload(row: any) {
   // ReaderRef.value.handleOpen(row);
   row.downloading = true;
   try {
-    const params = {
+    const params:any = {
       token: route.query.token,
       password: sessionStorage.getItem("sharePWD"),
       documentId: row.id,
     };
-    const blob = await clientApi.api.getNuxeoPublicShareDownload(params, {
+    const blob:any = await clientApi.api.getNuxeoPublicShareDownload(params, {
       format: "blob",
     });
     downloadBlob(blob, row.name || row.title, blob.type);

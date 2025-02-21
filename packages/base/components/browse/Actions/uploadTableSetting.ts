@@ -31,4 +31,4 @@ export default {
     ],
     events: [],
     options: { }
-},
+}

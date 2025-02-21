@@ -1,8 +1,7 @@
-import { typeAxiosInstance } from 'axios';
 import {ElMessage} from "element-plus";
 import { useEventBus, EventType, emitBus } from 'eventbus';
 
-export const requestSuccessHelper = (config:any, axiosInstance:typeAxiosInstance) => {
+export const requestSuccessHelper = (config:any, axiosInstance:any) => {
   const locale = localStorage.getItem('v_form_locale') || 'en-US'
   const token = localStorage.getItem('access_token');
   if (token) {
@@ -11,22 +10,20 @@ export const requestSuccessHelper = (config:any, axiosInstance:typeAxiosInstance
   }
   return config
 }
-export const requestErrorHelper = (error:any, axiosInstance:typeAxiosInstance) => {
+export const requestErrorHelper = (error:any, axiosInstance:any) => {
     return Promise.reject(error)
 }
 
-export const responseSuccessHelper = (response:any, axiosInstance:typeAxiosInstance) => {
+export const responseSuccessHelper = (response:any, axiosInstance:any) => {
     return response
 }
-export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInstance) => {
+export const responseErrorHelper = async(error:any, axiosInstance:any) => {
     const originalRequest = error.config;
     
     if(error.response.status === 420) {
       console.log("token expired, clear token and redirect to login page")
       // TODO : may need to handle error message
       emitBus(EventType.USER_LOGIN__EXPIRE)
-          // TODO : remove logout, should use event bus
-        logout()
         return;
     }
     
@@ -40,7 +37,6 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
           localStorage.removeItem('access_token');
           localStorage.removeItem('refresh_token');
       emitBus(EventType.USER_LOGIN__EXPIRE)
-      logout()
       return Promise.reject(error);
     }
     console.log("error", error, this)
@@ -72,8 +68,6 @@ export const responseErrorHelper = async(error:any, axiosInstance:typeAxiosInsta
           localStorage.removeItem('refresh_token');
           // notify other via event bus
           emitBus(EventType.USER_LOGIN__EXPIRE)
-          // TODO : remove logout, should use event bus
-          logout()
         }
 
         return Promise.reject(refreshError);

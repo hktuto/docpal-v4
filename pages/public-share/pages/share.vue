@@ -21,23 +21,24 @@
 import { clientApi } from "api";
 import { ElMessage, ElMessageBox } from "element-plus";
 const route = useRoute();
-const state = reactive({
+const state = reactive<any>({
   shareState: "",
   shareList: [],
   loading: false,
 });
 const { shareState, shareList } = toRefs(state);
+const { t } = useI18n()
 function getData() {
   const password = sessionStorage.getItem("sharePWD");
   if (password) handleGetPublicDocument({ password });
 }
 const tableRef = ref();
-async function handleGetPublicDocument(formData) {
+async function handleGetPublicDocument(formData: any) {
   try {
     state.loading = true;
     formData.token = route.query.token;
-    if (!formData.token) throw new Error(`${$i18n.t("responseMsg_errorCode_2")}`);
-    const res = await clientApi.api
+    if (!formData.token) throw new Error(`${t("responseMsg_errorCode_2")}`);
+    const res: any = await clientApi.api
       .getNuxeoPublicDocument(formData)
       .then((res) => res.data);
     if (res.errorCode) {

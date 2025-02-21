@@ -27,7 +27,7 @@ const FormRendererRef = ref()
 async function getFormJson() {
   try {
     state.formJsonLoad = true
-    state.detail = await clientApi.api.getFormDesignIdDetail(route.query.id).then(res => res.data);
+    state.detail = await clientApi.api.getFormDesignIdDetail(route.query.id as string).then(res => res.data);
     
     const json = state.detail.previewStyle
     state.formJson = JSON.parse(json)
@@ -44,7 +44,7 @@ async function getFormJson() {
 async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData(true, false)
-    const params = Object.keys(data).reduce((prev,key) => {
+    const params = Object.keys(data).reduce((prev: any,key) => {
       const item = data[key]
       if (item instanceof Array && item[0].response) {
         const ids = item.reduce((prevd, dItem) => {
@@ -58,7 +58,7 @@ async function handleSubmit() {
       return prev
     }, {})
     await clientApi.api.postFormDesignSubmitData({
-      id: route.query.id,
+      id: route.query.id as string,
       params
     })
     router.push('/public/uploadTip?tip=easyFormSubmitSuccessfully')
