@@ -80,7 +80,7 @@ main {
   overflow: hidden;
   width: 100%;
   height: 100%;
-  padding: var(--app-padding) calc(var(--app-padding) * 3) 1rem;
+  padding: var(--app-space-xs) calc(var(--app-space-xs) * 3) 1rem;
 }
 .expired {
   padding-top: 10%;
@@ -94,7 +94,7 @@ main {
   font-weight: 700;
   white-space: nowrap;
   color: var(--primary-color);
-  padding: 1rem calc(var(--app-padding) * 3);
+  padding: 1rem calc(var(--app-space-xs) * 3);
   background: var(--header-bg);
   margin: unset;
 }

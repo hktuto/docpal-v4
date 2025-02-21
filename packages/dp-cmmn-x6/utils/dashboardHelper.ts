@@ -1,7 +1,7 @@
 interface CaseDashboardProvider {
-    caseTypeId: string,
-    instanceId: string,
-    name: string,
+    caseTypeId: Ref<string | null>,
+    instanceId?: Ref<string | null>,
+    name: Ref<string | null>,
 }
 
 export const CaseManagementDashboardKey:InjectionKey<CaseDashboardProvider> = Symbol('caseManagementDashboard')

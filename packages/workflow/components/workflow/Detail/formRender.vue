@@ -16,6 +16,7 @@
 
                 {{ state.formData }}
             </pre>
+            <CalendarViewer />
         </template>
             
         

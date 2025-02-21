@@ -111,12 +111,12 @@ defineExpose({ initData })
 </script>
 <style lang="scss" scoped>
 .el-divider--horizontal {
-  margin: var(--app-padding) 0;
+  margin: var(--app-space-xs) 0;
 }
 .notificationContent {
   display: flex;
   flex-direction: column;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
 }
 .center {
   text-align: center;

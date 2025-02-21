@@ -27,6 +27,8 @@ const props = withDefaults( defineProps<{
     setting: {},
     hideSetting: false
 })
+
+const caseProvider = inject(CaseManagementDashboardKey)
 const emits = defineEmits([
   'refreshSetting', 'delete'
 ])
@@ -50,13 +52,12 @@ const state = reactive<any>({
   }
 // #endregion
 
-const route = useRoute()
 
 async function getCDBasciInfo() {
   try {
     if (state.data?.fields?.length > 0) return state.data
-    const id = route.query.instanceId
-    const caseTypeId = route.query.caseId
+    const id = caseProvider.instanceId?.value || null;
+    const caseTypeId = caseProvider.caseTypeId?.value || null
     if(id) {
       state.mode = 'normal'
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
@@ -76,6 +77,7 @@ async function getCDBasciInfo() {
       
     }
   } catch (error) {
+    console.log(error)
     state.data = {
       fields: [],
       rows: []

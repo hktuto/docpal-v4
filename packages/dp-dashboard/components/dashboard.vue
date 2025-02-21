@@ -145,7 +145,7 @@ onMounted(async () => {
 .template-container {
   display: grid;
   grid-template-rows: 1fr min-content;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   overflow-y: auto !important;
   height: 100%;
   .vue-grid-layout {

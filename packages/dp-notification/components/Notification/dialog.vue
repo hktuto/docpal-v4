@@ -361,7 +361,7 @@ defineExpose({ handleOpen, initData });
     flex-flow: row nowrap;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     :deep .el-badge__content {
       left: -8px;
       top: 5px;
@@ -377,7 +377,7 @@ defineExpose({ handleOpen, initData });
     justify-content: flex-start;
     align-items: flex-start;
     height: auto;
-    padding-block: var(--app-padding);
+    padding-block: var(--app-space-xs);
     :deep {
       .el-checkbox__label {
         display: none;
@@ -386,7 +386,7 @@ defineExpose({ handleOpen, initData });
   }
   p {
     text-align: center;
-    padding: var(--app-padding);
+    padding: var(--app-space-xs);
   }
   table {
     tr {
@@ -395,13 +395,13 @@ defineExpose({ handleOpen, initData });
       td:first-child {
         text-align: right;
         text-align-last: justify;
-        padding-right: var(--app-padding);
+        padding-right: var(--app-space-xs);
       }
     }
   }
 }
 .el-checkbox-group {
-  margin-inline: calc(var(--app-padding) * -1);
+  margin-inline: calc(var(--app-space-xs) * -1);
 }
 .body {
 }
@@ -413,7 +413,7 @@ defineExpose({ handleOpen, initData });
 }
 .notificationContent {
   line-height: 1.2;
-  padding-block: var(--app-padding);
+  padding-block: var(--app-space-xs);
 }
 .notificationContentList {
   > * {

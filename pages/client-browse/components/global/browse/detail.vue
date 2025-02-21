@@ -238,10 +238,10 @@ watch(idOrPath, () => {
         .info {
             position: absolute;
             z-index: 2;
-            top: var(--app-padding);
-            left: var(--app-padding);
-            width: calc( 100% - var(--app-padding) * 2);
-            height: calc( 100% - var(--app-padding) * 2);
+            top: var(--app-space-xs);
+            left: var(--app-space-xs);
+            width: calc( 100% - var(--app-space-xs) * 2);
+            height: calc( 100% - var(--app-space-xs) * 2);
         }
     }
     .info {
@@ -261,14 +261,14 @@ watch(idOrPath, () => {
     flex-flow: row nowrap;
     justify-content: flex-start;
     align-items: center;
-    gap: calc(var(--app-padding) / 2 );
+    gap: calc(var(--app-space-xs) / 2 );
 }
 .fileName{
     font-size: var(--el-font-size-large);
     text-align: left;
     word-break: break-all;
     display: flex;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     align-items: center;
 }
 

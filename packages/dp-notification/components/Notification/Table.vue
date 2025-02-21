@@ -118,7 +118,7 @@ onMounted(() => {
   height: 70vh;
   overflow: auto;
   .infinite-list-item {
-    margin: var(--app-padding);
+    margin: var(--app-space-xs);
       :deep .el-badge__content {
         left: 0;
         top: 5px;
@@ -126,7 +126,7 @@ onMounted(() => {
     :deep .el-card__header {
       padding: unset;
       .el-badge {
-        padding: var(--app-padding);
+        padding: var(--app-space-xs);
         line-height: 2rem;
         display: grid;
         grid-template-columns: 1fr min-content;
@@ -142,7 +142,7 @@ onMounted(() => {
   }
   p {
     text-align: center;
-    padding: var(--app-padding);
+    padding: var(--app-space-xs);
   }
   table {
     tr {
@@ -151,7 +151,7 @@ onMounted(() => {
       td:first-child {
         text-align: right;
         text-align-last: justify;
-        padding-right: var(--app-padding);
+        padding-right: var(--app-space-xs);
       }
     }
   }

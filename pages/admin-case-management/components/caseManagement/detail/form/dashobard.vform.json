@@ -103,7 +103,7 @@
         "labelPosition": "top",
         "size": "",
         "labelAlign": "label-left-align",
-        "cssCode": ".caseManagePermission .slot-wrapper-render {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: var(--app-padding);\n}",
+        "cssCode": ".caseManagePermission .slot-wrapper-render {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  gap: var(--app-space-xs);\n}",
         "customClass": [
             "caseManagePermission"
         ],

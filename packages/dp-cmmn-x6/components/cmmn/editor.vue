@@ -293,7 +293,9 @@ defineExpose({ getGraphJson, init, centerGraph, save })
     height:100%;
     position: relative;
     overflow: hidden;
-    
+    :deep(.splitpanes){
+        min-width: initial !important;
+    }
 }
 :deep{
     .splitpanes.default-theme .splitpanes__pane{
