@@ -7,8 +7,9 @@ const routerProvider = inject(MenuRouterKey)
 if(!routerProvider) {
     throw createError('menu manger not found')
 }
+const categoriesColumn = useCategoriesColumn()
 const { t } = useI18n()
-const { setting, getCalendarsSetting, calendarViewOptions, weekDayOptions, categoriesColumn } = useCalendarStore();
+const { setting, getCalendarsSetting, calendarViewOptions, weekDayOptions } = useCalendarStore();
 const loading = ref(false);
 
 const categoryMasterTable = ref()

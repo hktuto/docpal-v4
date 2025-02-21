@@ -1,3 +1,4 @@
+ 
 <definitions
 	xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -7,20 +8,48 @@
 	xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
 	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
 	xmlns:folderCabinetMapping="http://www.w3.org/1999/xhtml"
-	xmlns:permissions="http://www.w3.org/1999/xhtml" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
-	<process id="update_data_test_1739944407005" isExecutable="true" name="update data test">
+	xmlns:permissions="http://www.w3.org/1999/xhtml"
+	xmlns:docpal="http://flowable.org/bpmn" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2">
+	<process id="calendar_test_1740036140307" isExecutable="true" name="calendar test">
 		<extensionElements></extensionElements>
-		<startEvent id="Start" flowable:formFieldValidation="true" name="Start" flowable:candidateStarterGroups="administrators">
+		<startEvent id="Start" flowable:formFieldValidation="true" name="Start">
 			<extensionElements>
-				<flowable:formProperty id="number" name="number" type="string"></flowable:formProperty>
+				<flowable:formProperty id="username" name="username" type="string">
+					
+				</flowable:formProperty>
+				<flowable:formProperty id="starttime" name="starttime" type="date">
+
+				</flowable:formProperty>
+				<flowable:formProperty id="endtime" name="endtime" type="date">
+
+				</flowable:formProperty>
+				<flowable:formProperty id="eventId" name="eventId" type="string">
+
+				</flowable:formProperty>
+				<flowable:formProperty id="description" name="description" type="string">
+
+				</flowable:formProperty>
+				<flowable:formProperty id="location" name="location" type="string">
+
+				</flowable:formProperty>
+				<flowable:formProperty id="category" name="category" type="string"></flowable:formProperty>
 			</extensionElements>
 		</startEvent>
 		<endEvent id="end"></endEvent>
-		<userTask flowable:candidateGroups="administrators" flowable:formFieldValidation="true" id="new_1739944431244" name="New User Task">
+		<serviceTask id="new_1740036918541" name="create event" flowable:delegateExpression="${calendarEventDelegate}">
 			<extensionElements>
-				<flowable:formProperty id="number" name="number" type="string">
-					<_X_ROW_KEY>row_9</_X_ROW_KEY>
-				</flowable:formProperty>
+				<flowable:calendarEvent eventId="eventId" eventName="username" actionType="Create" description="description" category="category" location="location" startTime="starttime" endTime="endtime" isAllDay="false">
+				</flowable:calendarEvent>
+			</extensionElements>
+		</serviceTask>
+		<serviceTask id="new_1740038253766" name="update event" flowable:delegateExpression="${calendarEventDelegate}">
+			<extensionElements>
+				<flowable:calendarEvent eventId="eventId" eventName="username" actionType="Update" description="description" category="category" location="location" startTime="starttime" endTime="endtime" isAllDay="true">
+				</flowable:calendarEvent>
+			</extensionElements>
+		</serviceTask>
+		<userTask flowable:candidateGroups="" flowable:formFieldValidation="true" id="new_1740037868166" name="New User Task">
+			<extensionElements>
 				<modeler:activiti-idm-candidate-group
 					xmlns:modeler="http://flowable.org/modeler">
 					<![CDATA[true]]>
@@ -29,21 +58,11 @@
 					xmlns:modeler="http://flowable.org/modeler">
 					<![CDATA[false]]>
 				</modeler:initiator-can-complete>
-				<modeler:group-info-name-administrators
-					xmlns:modeler="http://flowable.org/modeler">
-					<![CDATA[administrators]]>
-				</modeler:group-info-name-administrators>
 			</extensionElements>
 		</userTask>
-		<serviceTask id="new_1739949290968" name="New Update Date" flowable:delegateExpression="${updateDataDelegate}">
-			<extensionElements>
-				<docpal:updateDatas>
-					<action type="Update_Number" function="Increase_By" source="form" updateFieldName="number" step="1"></action>
-				</docpal:updateDatas>
-			</extensionElements>
-		</serviceTask>
-		<sequenceFlow id="edge-b45afd37-540b-4037-8a16-2d7c16adf497" sourceRef="new_1739944431244" targetRef="end"></sequenceFlow>
-		<sequenceFlow id="edge-999067f2-ccc1-4c6b-978e-acd2c49881e7" sourceRef="Start" targetRef="new_1739949290968"></sequenceFlow>
-		<sequenceFlow id="edge-ad763bfa-ace0-417a-a27b-ae45acd202a9" sourceRef="new_1739949290968" targetRef="new_1739944431244"></sequenceFlow>
+		<sequenceFlow id="edge-baa0b947-842d-4d64-8359-c4d013452be5" sourceRef="Start" targetRef="new_1740036918541"></sequenceFlow>
+		<sequenceFlow id="edge-346d510d-8121-487a-a179-67a84b501c3a" sourceRef="new_1740036918541" targetRef="new_1740037868166"></sequenceFlow>
+		<sequenceFlow id="edge-876daae7-ee4e-4e85-89cb-cc18cd11fe0d" sourceRef="new_1740037868166" targetRef="new_1740038253766"></sequenceFlow>
+		<sequenceFlow id="edge-d8cb1ce6-2e54-4af1-8f96-5202b8d78dba" sourceRef="new_1740038253766" targetRef="end"></sequenceFlow>
 	</process>
-</definitions>
+</definitions> 

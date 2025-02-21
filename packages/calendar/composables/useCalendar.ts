@@ -20,24 +20,37 @@ export const useCalendarStore = () => {
         "SUNDAY",
     ]
 
+    const categoriesColumn = useCategoriesColumn()
+    async function getCatergoriesColumn(){
+        const {data} = await adminApi.api.getMasterTablesId(setting.value.category.master_table) as any
+        categoriesColumn.value = data.fields;
+    }
+
     async function getCalendarMasterTable(){
         const {data} = await adminApi.api.getCalendarsSettingTables() as any
         return data
     }
 
-    const categoriesColumn = useCategoriesColumn()
-    async function getCatergories(){
-        const {data} = await adminApi.api.getMasterTablesId(setting.value.category.master_table) as any
-        categoriesColumn.value = data.fields;
+    const categoriesOption = ref<any>([])
+    async function getCategories(){
+        const { data } = await adminApi.api.postMasterTablesRecords({
+            id: setting.value.category.master_table
+        });
+        categoriesOption.value = data || []
     }
 
+    const locationsOption = ref<any>([])
     async function getLocations(){
-        
+        const { data } = await adminApi.api.postMasterTablesRecords({
+            id: setting.value.location.master_table
+        });
     }
 
     async function getCalendarsSetting(){
         const masterTable = await getCalendarMasterTable()
         const { data } = await adminApi.api.getCalendarsSetting() as any;
+        const { public: { platform } } = useRuntimeConfig();
+
         setting.value = {
             basic: {
                 default_view : calendarViewOptions.includes(data.basic.default_view) ? data.basic.default_view : "MONTH",
@@ -57,12 +70,16 @@ export const useCalendarStore = () => {
         // get master table detail of event location and event categories
         if(setting.value.category.master_table){
             
-            await getCatergories()
+            await getCategories()
+            if(platform === 'admin') {
+                await getCatergoriesColumn()
+            }
         }
 
         if(setting.value.location.master_table) {
             await getLocations()
         }
+        
     }
 
     onMounted(async () => {
@@ -77,7 +94,8 @@ export const useCalendarStore = () => {
         getCalendarsSetting,
         calendarViewOptions,
         weekDayOptions,
-        categoriesColumn
+        categoriesOption,
+        locationsOption
     }
 
 }
