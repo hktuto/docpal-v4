@@ -61,6 +61,7 @@ export type NewCaseDashboardParams = {
     name: string,
 }
 export const newCaseDashboardLink = (data:any) => {
+    
     return {
         id: "case-dashboard-list-" + new Date().getTime(),
         name: "case-dashboard-" + data.id,
@@ -68,7 +69,8 @@ export const newCaseDashboardLink = (data:any) => {
         label: data.name,
         component: 'LazyCaseManagementDashboard',
         props: {
-            caseTypeId: data.id,
+            id:data.id,
+            caseTypeId: data.caseTypeId,
             name: data.name,
         }
 
