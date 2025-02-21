@@ -124,8 +124,17 @@ function openVersionList(){
     routerProvider?.navigateTo(newItem)
 }
 
-function saveAsNewVersion(){
-
+async function saveAsNewVersion(){
+  const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
+  // console.log("data", data)
+  routerProvider?.updateProps({
+    caseTypeId: data.id,
+    currentVersion: data.versionNumber,
+  })
+  console.log("new props", props)
+  nextTick(() => {
+    init();
+  })
 }
 
 async function promoteToProduction(){
