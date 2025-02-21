@@ -1,3 +1,12 @@
+interface CaseDashboardProvider {
+    caseTypeId: string,
+    instanceId: string,
+    name: string,
+}
+
+export const CaseManagementDashboardKey:InjectionKey<CaseDashboardProvider> = Symbol('caseManagementDashboard')
+
+
 import type { DashboardWidgetSetting } from '../../dp-dashboard/utils/dashboardWidgetHelper'
 import Action from  '../components/dashboard/action.vue'
 import BasicInfo from  '../components/dashboard/basicInfo.vue'
@@ -5,6 +14,7 @@ import Activity from  '../components/dashboard/activity.vue'
 import Process from  '../components/dashboard/process.vue'
 import TaskPage from  '../components/dashboard/taskPage.vue'
 import WorkflowPage from  '../components/dashboard/workflowPage.vue'
+import { InjectionKey } from 'vue'
 export type CmmnDashboardWidget = 'Action' | 
 'BasicInfo' | 
 'Process'  | 
