@@ -35,17 +35,17 @@ function openSetting(){
                     <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
                 </ElButton>
                 <template #dropdown>
-                    <ElDropdownItem @click="openSetting">{{  $t('adminMenu.setting') }}</ElDropdownItem>
+                    <ElDropdownItem @click="openSetting">{{ $t('adminMenu.setting') }}</ElDropdownItem>
                     <!-- TODO: remove this part from prodction, or mark it avalible only for super admin -->
                     <Language />
-                    <ElDropdownItem @click="openHelp">Help</ElDropdownItem>
+                    <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
                     <ElDivider />
                     <ElDropdownItem v-for="lang in locales" :key="lang.code" 
                         :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
                         {{$t(lang.code)}}
                     </ElDropdownItem>
                     <ElDivider />
-                    <ElDropdownItem @click="logout">Logout</ElDropdownItem>
+                    <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
                 </template>
             </ElDropdown>
         </div>
