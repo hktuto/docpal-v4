@@ -33,10 +33,11 @@ const props = defineProps<{
   fileMaxSize: number;
 }>();
 const emits = defineEmits(["change"]);
-const state = reactive({
+const state = reactive<any>({
   fileList: [],
   _fileList: [],
 });
+const { t } = useI18n()
 const uploadRef = ref();
 // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
 const onChange = useDebounceFn(
@@ -48,7 +49,7 @@ const onChange = useDebounceFn(
           "[" +
             item.name +
             "]" +
-            $i18n.t("render.hint.fileSizeExceed") +
+            t("render.hint.fileSizeExceed") +
             props.fileMaxSize +
             "MB"
         );

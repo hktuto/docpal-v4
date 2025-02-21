@@ -30,7 +30,7 @@ export type TableColumnItem = {
     cellStyle?: Object
     headerStyle?: Object
     prop?: string,
-    type: string,
+    type?: string,
     hide?: boolean,
     system?: boolean,
     class?: string,
@@ -42,7 +42,8 @@ export type TableColumnItem = {
     defaultColumn?: boolean
     hideSort?:boolean
     show?:boolean,
-    children?:any[]
+    children?:any[],
+    moreActionSlot?: any
 }
 export type TableBase = {
     commands: any[]

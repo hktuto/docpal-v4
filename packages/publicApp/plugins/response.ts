@@ -1,6 +1,6 @@
 import {defineNuxtPlugin} from '#imports'
 import {clientApi, adminApi, publicApi} from 'api'
-import {requestSuccessHelper, requestErrorHelper, responseSuccessHelper, responseErrorHelper} from '~/utils/axiosResponseHelper'
+import {requestSuccessHelper, requestErrorHelper, responseSuccessHelper, responseErrorHelper} from '../utils/axiosResponseHelper'
 
 export default defineNuxtPlugin(async () => {
     // set refresh token to clientApi and adminApi

@@ -17,10 +17,10 @@ const FormRendererRef = ref();
 async function handleSubmit() {
   const formData = await FormRendererRef.value.vFormRenderRef
     .getFormData()
-    .then((res) => {
+    .then((res:any) => {
       return res;
     })
-    .catch((error) => {
+    .catch((error:any) => {
       return false;
     });
   emits("submit", deepCopy(formData));

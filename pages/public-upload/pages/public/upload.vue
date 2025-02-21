@@ -15,14 +15,14 @@ import { clientApi } from "api";
 import { ElMessage, ElMessageBox } from "element-plus";
 const route = useRoute();
 const router = useRouter();
-const state = reactive({
+const state = reactive<any>({
   uploadState: "",
   loading: false,
   fileRequestDetail: {},
   password: "",
 });
 const { uploadState, fileRequestDetail } = toRefs(state);
-async function handleGetPublicDocument(formData) {
+async function handleGetPublicDocument(formData: any) {
   state.password = formData.password;
   try {
     state.loading = true;
@@ -39,9 +39,9 @@ async function handleGetPublicDocument(formData) {
     state.loading = false;
   }, 100);
 }
-function getFormData(properties) {
+function getFormData(properties: any) {
   const result = <any>{};
-  properties.forEach((item) => {
+  properties.forEach((item: any) => {
     result[item.id] = item.value;
   });
   return result;
@@ -50,13 +50,11 @@ function getFormData(properties) {
 async function handleWorkflow(fileList: any) {
   state.loading = true;
   try {
-    const formData = new FormData();
+    const formData: any = new FormData();
     formData.append("taskId", state.fileRequestDetail.task.id);
     formData.append("password", state.password);
     formData.append("token", route.query.token);
-    fileList.forEach((file) => {
-      console.log(file.raw);
-
+    fileList.forEach((file: any) => {
       formData.append("files", file.raw);
     });
     const res = await clientApi.api.postNuxeoPublicFilerequest(formData);
