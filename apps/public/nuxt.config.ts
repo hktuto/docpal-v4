@@ -13,12 +13,6 @@ export default defineNuxtConfig({
     '../../pages/public-upload',
     '../../pages/public-easy-form',
   ],
-  typescript: {
-    typeCheck: true,
-  },
-  build:{
-    analyze:true
-  },
   features:{
     inlineStyles: true,
   },
@@ -27,26 +21,4 @@ export default defineNuxtConfig({
       platform:'public'
     }
   },
-  vite:{
-    optimizeDeps:{
-        include: []
-    }
-  },
-  features: {
-    inlineStyles: false // or a function to determine inlining
-  },
-  nitro:{
-    devProxy:{
-      '/public-api/report/v1/api':{
-        target: process.env.DASHBOARD_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-      '/api':{
-        target: process.env.CLIENT_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-    }
-  }
 })
