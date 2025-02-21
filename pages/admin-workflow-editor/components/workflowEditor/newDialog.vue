@@ -113,7 +113,7 @@ defineExpose({ handleOpen })
     flex-wrap: wrap;
     font-size: 0;
     flex-direction: column;
-    gap: calc(var(--app-padding) * 2);
+    gap: calc(var(--app-space-xs) * 2);
 }
 .el-radio {
     height: unset;

@@ -248,7 +248,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 :deep .headerLeftExpand {
   width: 100%;
-  margin-bottom: var(--app-padding);
+  margin-bottom: var(--app-space-xs);
   .el-input {
     width: 200px;
   }

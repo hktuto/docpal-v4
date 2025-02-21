@@ -74,10 +74,10 @@ onMounted(() => {
 .public-form {
   height: 100%;
   overflow: hidden;
-  padding: var(--app-padding);
+  padding: var(--app-space-xs);
   display: grid;
   grid-template-rows: 1fr min-content;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   .form-main {
     overflow: auto;
   }

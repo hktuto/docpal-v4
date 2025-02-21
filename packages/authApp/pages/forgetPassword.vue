@@ -117,7 +117,7 @@
         margin: 0 auto var(--el-component-size-small) auto;
     }
     .tip {
-      padding: var(--app-padding);
+      padding: var(--app-space-xs);
       font-size: 1.2rem;
       text-align: center;
       color: var(--app-grey-500);

@@ -143,7 +143,8 @@ function handleCommand(command:{type:string,item:any,index:number}){
   }
 }
 function displayFormProperty(id:any){
-    return allFields.value[id] ? allFields.value[id].attr_field_label : id
+  console.log("displayFormProperty", id, allFields.value)
+    return allFields.value[id] ? allFields.value[id].attr_name : id
   // const item = allFields.value.find((item:any) => item.attr_id === id)
   // return item ? item.attr_name : ''
 }
@@ -180,12 +181,12 @@ onMounted(async() => {
 <div class="fromContainer">
     <BpmnSidebarFormLabel :node="node" />
     <div class="formContainer">
-        {{folderCabinetRootId}}
         <div v-if="folderCabinetRootId" class="bpmnSidebarItemContainer">
           <div class="filingItemContainer">
             <ElTable :data="form">
               <ElTableColumn prop="attr_formProperty" label="Form File Field" >
                 <template #default="scope">
+                  {{ row }}
                   {{displayFormProperty(scope.row.attr_formProperty)}}
                 </template>
               </ElTableColumn>

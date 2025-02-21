@@ -1,6 +1,5 @@
 <template>
   <div class="pageContainer">
-    dashboard
     <div class="dashboard-page">
       <div class="dashboard-page--header">
         <el-dropdown trigger="click" @command="createDashboard">
@@ -40,7 +39,8 @@ const props = defineProps<{
     caseTypeId: string,
     name: string,
 }>()
-
+const {caseTypeId, name} = toRefs(props)
+const routerProvider = inject(MenuRouterKey)
 const state = reactive({
   info: {
     name: ''
@@ -80,6 +80,12 @@ async function handleSave() {
     state.saveLoading = false
   }
 }
+
+provide(CaseManagementDashboardKey, {
+  caseTypeId: caseTypeId,
+  name: name
+})
+
 onMounted(async () => {
   const { data } = await adminApi.api.getCaseDashboardId(props.caseTypeId)
   state.detail = data
@@ -89,6 +95,8 @@ onMounted(async () => {
       return Object.assign(item, getCmmnNormalizeSetting(item.component))
     })
   }
+  console.log(data.label)
+  routerProvider?.updateTabName(data.label)
 })
 </script>
 <style lang="scss" scoped>
@@ -97,8 +105,8 @@ onMounted(async () => {
   overflow: hidden;
   display: grid;
   grid-template-rows: min-content 1fr;
-  padding: var(--app-padding);
-  gap: var(--app-padding);
+  padding: var(--app-space-xs);
+  gap: var(--app-space-xs);
   &--header {
     text-align: right;
   }
@@ -113,7 +121,7 @@ onMounted(async () => {
     overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     h3 {
       margin: unset;
     }
@@ -122,8 +130,8 @@ onMounted(async () => {
     --icon-size: 1.14rem;
     --icon-color: #8796A4;
     position: absolute;
-    top: var(--app-padding);
-    right: var(--app-padding);
+    top: var(--app-space-xs);
+    right: var(--app-space-xs);
   }
 }
 :deep .responsive-container {
