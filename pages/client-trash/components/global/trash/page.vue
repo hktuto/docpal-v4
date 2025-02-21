@@ -32,8 +32,6 @@ import dayjs from "dayjs";
 type TableState = {
     ready: boolean,
     loading: boolean,
-    activeUsers: number,
-    licenseUsers: number,
     extraParams: any,
     extraParamsFilter: any,
     selectList: any[],
@@ -41,8 +39,6 @@ type TableState = {
 const state = reactive<TableState>({
     ready: false,
     loading: false,
-    activeUsers: 10,
-    licenseUsers: 50,
     extraParams: {},
     extraParamsFilter: {},
     selectList: [],
@@ -60,6 +56,7 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
         {
             field: 'name',
             title: 'tableHeader_name',
+            type: 'html',
             formatter: ({ cellValue, row }: any) => {
                 let icon = "/icons/doc/file.svg";
                 if (row.isFolder) {
@@ -204,7 +201,7 @@ function handleMsg(selectList, ids) {
         ElNotification.error({
             title: '',
             dangerouslyUseHTMLString: true,
-            message: `${num} ${t('Fail')}: ${fileNames}`
+            message: `${nm} ${t('Fail')}: ${fileNames}`
         })
     } else {
         ElNotification.success(`${t('commons_success')}`)
