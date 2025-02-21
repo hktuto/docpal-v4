@@ -13,7 +13,8 @@ export default defineNuxtConfig({
     '@nuxt/icon',
   ],
   extends:[
-    "../calendar"
+    "../calendar",
+    "../workflow"
   ],
   icon:{
     customCollections:[

@@ -6,9 +6,5 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module'
   ],
   extends:[
-    "../../packages/base",
-    "../../packages/bpmn",
-    "../../packages/workflow",
-    "../../packages/calendar"
   ]
 })

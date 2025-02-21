@@ -93,7 +93,7 @@ async function handleFormDataGet() {
         .postWorkflowProperties({ taskId: id })
         .then((res) => res.data);
       console.log("properties", properties);
-
+      
       formData = formDataGetFromProps(properties);
       formJson = await formJsonGet(
         state.taskDetail.taskDefinitionKey,
@@ -101,8 +101,9 @@ async function handleFormDataGet() {
         state.taskDetail.processDefinitionVersionId
       );
       console.log(formData);
-
-      vFormRef.value.setForm(formJson, formData);
+      const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
+      console.log("getXml", xml)
+      vFormRef.value.setForm(formJson, formData, [], xml);
 
       break;
   }
@@ -240,13 +241,17 @@ onActivated(() => {
         name="form"
         v-loading="state.loading"
       >
-        <WorkflowDetailFormRender ref="vFormRef" />
-        <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
-          <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
-          <el-button type="primary" @click="handleSubmit">{{
-            $t("common_submit")
-          }}</el-button>
-        </div>
+        <WorkflowDetailFormRender ref="vFormRef" >
+            <template #action>
+              <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
+                <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
+                <el-button type="primary" @click="handleSubmit">{{
+                  $t("common_submit")
+                }}</el-button>
+              </div>
+            </template>
+          </WorkflowDetailFormRender>
+        
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
         <!-- need to use v-if for bpmn, if not  svg graph will not show -->
