@@ -1,135 +1,155 @@
 <template>
-<el-card class="o-auto">
-  <h3>{{ $t('dashboard.cmmnProcess') }}</h3>
-  <div class="card-main">
-    <el-card class="process-item" v-for="item in state.layout">
-      <div class="title">
-        <SvgIcon :style="`--icon-color: ${getIconColor(item.state)}`" :src="`/icons/status/${getIcon(item.state)}.svg`"></SvgIcon>
-        {{ item.name }}
-      </div>
-      <el-progress :percentage="getPercent(item)" />
-      <el-divider />
-      <div>
-        <div class="process-item--sub" v-for="sItem in item.subItems">
-          <SvgIcon :style="`--icon-color: ${getIconColor(sItem.state)}`" :src="`/icons/status/${getIcon(sItem.state)}.svg`"></SvgIcon>
-          {{ sItem.name }}
+  <el-card class="o-auto">
+    <h3>{{ $t("dashboard.cmmnProcess") }}</h3>
+    <div class="card-main">
+      <el-card class="process-item" v-for="item in state.layout">
+        <div class="title">
+          <SvgIcon
+            :style="`--icon-color: ${getIconColor(item.state)}`"
+            :src="`/icons/status/${getIcon(item.state)}.svg`"
+          ></SvgIcon>
+          {{ item.name }}
         </div>
-      </div>
-    </el-card>
-  </div>
-  <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/setting.svg"
-    @click="openSetting"/>
-  <DashboardProcessSetting ref="settingRef" 
-    @delete="handleDelete"
-    @refresh="handleRefresh"/>
-</el-card>
+        <el-progress :percentage="getPercent(item)" />
+        <el-divider />
+        <div>
+          <div class="process-item--sub" v-for="sItem in item.subItems">
+            <SvgIcon
+              :style="`--icon-color: ${getIconColor(sItem.state)}`"
+              :src="`/icons/status/${getIcon(sItem.state)}.svg`"
+            ></SvgIcon>
+            {{ sItem.name }}
+          </div>
+        </div>
+      </el-card>
+    </div>
+    <SvgIcon
+      v-if="!hideSetting"
+      class="setting--icon"
+      src="/icons/setting.svg"
+      @click="openSetting"
+    />
+    <DashboardProcessSetting
+      ref="settingRef"
+      @delete="handleDelete"
+      @refresh="handleRefresh"
+    />
+  </el-card>
 </template>
 <script lang="ts" setup>
-import { watchDebounced } from '@vueuse/core'
-import { adminApi } from 'api'
-const props = withDefaults( defineProps<{
+import { watchDebounced } from "@vueuse/core";
+import { adminApi } from "api";
+const props = withDefaults(
+  defineProps<{
     dates?: any;
     setting?: any;
-    hideSetting?: boolean,
-}>() , {
+    hideSetting?: boolean;
+  }>(),
+  {
     setting: {},
-    hideSetting: false
-})
-const emits = defineEmits([
-    'refreshSetting', 'delete'
-])
+    hideSetting: false,
+  }
+);
+const emits = defineEmits(["refreshSetting", "delete"]);
 const state = reactive<any>({
   data: [],
-  layout: []
-})
+  layout: [],
+});
 // #region module: dialog
-  const settingRef = ref()
-  function openSetting() {
-    settingRef.value.handleOpen(props.setting, state.data)
-  }
-  function handleDelete() {
-    emits('delete')
-  }
-  function handleRefresh(chartSetting) {
-    emits('refreshSetting', chartSetting)
-  }
+const settingRef = ref();
+function openSetting() {
+  settingRef.value.handleOpen(props.setting, state.data);
+}
+function handleDelete() {
+  emits("delete");
+}
+function handleRefresh(chartSetting) {
+  emits("refreshSetting", chartSetting);
+}
 // #endregion
 
 function getIcon(state) {
   switch (state) {
-    case 'active':
-      return 'pendding'
-    case 'completed':
-      return 'finish'
+    case "active":
+      return "pendding";
+    case "completed":
+      return "finish";
     default:
-      return 'pendding'
+      return "pendding";
   }
 }
 function getIconColor(state) {
   switch (state) {
-    case 'completed':
-      return '#266CD6'
+    case "completed":
+      return "#266CD6";
     default:
-      return '#000'
+      return "#000";
   }
 }
 function getPercent(process) {
   if (process.subItems && process.subItems.length > 0) {
     let finish = 0,
-    total = 0
-    process.subItems.forEach(element => {
-      if (element.state === 'completed') finish ++
-      total ++
-    })
-    return (finish / total * 100).toFixed(0)
+      total = 0;
+    process.subItems.forEach((element) => {
+      if (element.state === "completed") finish++;
+      total++;
+    });
+    return ((finish / total) * 100).toFixed(0);
   } else {
-    return process.state === 'completed' ? 100 : 0
+    return process.state === "completed" ? 100 : 0;
   }
 }
-const route = useRoute()
+const { t } = useI18n();
 
+const CMDProvider = inject(CaseManagementDashboardKey)
 async function getCDProcess() {
   try {
-    if (state.data.length > 0) return state.data
-    const id = route.query.instanceId
-    const caseTypeId = route.query.caseId
-    if(id) {
-      const {data} = await adminApi.api.getCaseDashboardInstanceCaseidStages(id)
-      state.data = data
-    } else if(caseTypeId) {
-      const {data: caseTypeData } = await adminApi.api.getCaseDashboardCasetypeCasetypeidStages(caseTypeId)
-      state.data = caseTypeData
+    if (state.data.length > 0) return state.data;
+    const id = CMDProvider.instanceId?.value || null;
+    const _caseTypeId = CMDProvider.caseTypeId?.value || null;
+    if (id) {
+      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id);
+      state.data = data;
+    } else if (_caseTypeId) {
+      const {
+        data: caseTypeData,
+      } = await adminApi.api.getCaseDashboardCasetypeCasetypeidStages(_caseTypeId);
+      state.data = caseTypeData;
     }
   } catch (error) {
-    state.data = []
+    state.data = [];
   } finally {
-    return state.data
+    return state.data;
   }
 }
 async function initLayout() {
-  const list = await getCDProcess()
+  const list = await getCDProcess();
   state.layout = props.setting.layout.reduce((prev, item) => {
-    const _item = list.find(d => d.planItemDefinitionId === item.planItemDefinitionId)
-    if(_item) {
-      _item.state = _item.state ? _item.state : 'NULL'
-      prev.push(_item)
+    const _item = list.find((d) => d.planItemDefinitionId === item.planItemDefinitionId);
+    if (_item) {
+      _item.state = _item.state ? _item.state : "NULL";
+      prev.push(_item);
     }
-    return prev
-  }, [])
+    return prev;
+  }, []);
 }
-watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
+watchDebounced(
+  () => props.setting.layout,
+  (newValue, oldValue) => {
     nextTick(() => {
-      if(!!newValue) {
+      if (!!newValue) {
         // if(oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) return
-        initLayout()
+        initLayout();
       }
-    })
-}, {
-    debounce: 200, 
+    });
+  },
+  {
+    debounce: 200,
     maxWait: 500,
     deep: true,
-    immediate: true
-})
+    immediate: true,
+  }
+);
 </script>
 <style lang="scss" scoped>
 .card-main {
@@ -164,6 +184,6 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
   }
 }
 .o-auto > .el-card__body {
-    overflow: auto;
+  overflow: auto;
 }
 </style>
