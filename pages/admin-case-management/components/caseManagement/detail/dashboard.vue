@@ -148,7 +148,9 @@ const state = reactive<State>({
 })
 
 async function handleDblclick(row) {
+  console.log(row)
   const newItem = newCaseDashboardLink(row)
+  console.log("newItem", newItem)
     routerProvider?.navigateTo(newItem)
 }
 async function handleDelete(row) {
