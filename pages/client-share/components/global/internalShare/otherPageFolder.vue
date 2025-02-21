@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
 import { routeShareOtherPage } from "~/utils/routerHelper";
-import { MenuRouterKey } from '#imports';
-
-const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{ 
     idOrPath: string ,
     filter: any,
@@ -16,7 +13,7 @@ const props = defineProps<{
   <div class="pageContainer--padding">
     <BrowsePageComponent :idOrPath="idOrPath" :home="{
       secondId: homeId,
-      homeRouteItem: routeShareOtherPage()
+      homeRouteItem: routeShareOtherPage({})
     }">
     </BrowsePageComponent>
   </div>
