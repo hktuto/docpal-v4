@@ -273,6 +273,8 @@ const FormRef = ref()
     }
   }
   async function getCaseProps(id: string) {
+    // get case latest production version
+    // const {data} = await 
     const options = await adminApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id).then(res => res.data)
     return options.fields.map(item => ({
       label: item.name,
