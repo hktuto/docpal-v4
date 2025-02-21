@@ -14,21 +14,26 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
 import dayjs from "dayjs";
-let extraParams = {}
+import { routeHoldPageFolder } from '../../../utils/routerHelper.ts'
+import { MenuRouterKey } from '#imports';
+const routerProvider = inject(MenuRouterKey)
+let extraParams = {};
 const { t } = useI18n();
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  reload,
-  query,
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: "clientTrashList",
   api: async (pageParams: any) => {
-    return clientApi.api.postPolicyDocumentsPage({...pageParams, ...extraParams});
+    return clientApi.api.postPolicyDocumentsPage({ ...pageParams, ...extraParams });
   },
   columns: [
-    { field: "documentName",  title: "tableHeader.folderName"},
+    {
+      field: "documentName",
+      title: "tableHeader.folderName",
+      type: "html",
+      formatter: ({ cellValue, row }: any) => {
+        let icon = "/icons/doc/folder.svg";
+        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
+      },
+    },
     { field: "documentPath", title: "tableHeader_path" },
     { field: "policyHoldName", title: "tableHeader_policyName" },
     { field: "applyBy", title: "tableHeader_applyBy" },
@@ -52,27 +57,33 @@ const {
         action: ({ row }: any) => {
           // trashProvider?.openUserDetail(row)
         },
-      }
+      },
     ],
   ],
+  dblClickAction: ({ row, column, event }:any) => {
+    handleDblclick(row)
+  },
 });
-
 
 // #region module: ResponsiveFilterRef
 const ResponsiveFilterRef = ref();
 async function getFilter() {
-  const data = await clientApi.api.getPolicyDocumentsPageConditions().then(res => res.data);
+  const data = await clientApi.api
+    .getPolicyDocumentsPageConditions()
+    .then((res) => res.data);
   ResponsiveFilterRef.value.init(data);
 }
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
-  reload()
+  reload();
 }
 // #endregion
-
+function handleDblclick(row: any) {
+  routerProvider?.navigateTo(routeHoldPageFolder(row), false)
+}
 onMounted(() => {
-  getFilter()
-})
+  getFilter();
+});
 </script>
 
 <style lang="scss" scoped>
