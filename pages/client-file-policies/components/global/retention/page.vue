@@ -60,6 +60,7 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
         {
             field: 'name',
             title: 'tableHeader_name',
+            type: "html",
             formatter: ({ cellValue, row }: any) => {
                 let icon = "/icons/doc/file.svg";
                 if (row.isFolder) {

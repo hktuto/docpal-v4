@@ -5,8 +5,8 @@ export default defineAppConfig({
             id:'client-holdPolicies',
             name : 'client-holdPolicies',
             label: "client_holdPolicies",
-            icon: 'lucide:trash-2',
-            hoverIcon : 'lucide:trash-2',
+            icon: 'ic:outline-lock-clock',
+            hoverIcon : 'ic:outline-lock-clock',
             component: "LazyHoldPage",
             props:{}
         },
@@ -14,8 +14,8 @@ export default defineAppConfig({
             id:'client-retention',
             name : 'client-retention',
             label: "client_retention",
-            icon: 'lucide:trash-2',
-            hoverIcon : 'lucide:trash-2',
+            icon: 'iconoir:privacy-policy',
+            hoverIcon : 'iconoir:privacy-policy',
             component: "LazyRetentionPage",
             props:{}
         }
