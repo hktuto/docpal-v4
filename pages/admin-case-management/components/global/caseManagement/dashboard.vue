@@ -36,6 +36,7 @@
 
 import { adminApi } from 'api'
 const props = defineProps<{
+    id: string,
     caseTypeId: string,
     name: string,
 }>()
@@ -72,7 +73,7 @@ async function handleSave() {
   try {
     state.saveLoading = true
     await adminApi.api.postCaseDashboardSaveStyle({
-      id: props.caseTypeId,
+      id: props.id,
       styleJson: JSON.stringify(state.layout)
     })
   } catch (error) {
@@ -82,12 +83,12 @@ async function handleSave() {
 }
 
 provide(CaseManagementDashboardKey, {
-  caseTypeId: caseTypeId,
-  name: name
+  caseTypeId,
+  name
 })
 
 onMounted(async () => {
-  const { data } = await adminApi.api.getCaseDashboardId(props.caseTypeId)
+  const { data } = await adminApi.api.getCaseDashboardId(props.id)
   state.detail = data
   const temLayout = JSON.parse(data.styleJson)
   if(Array.isArray(temLayout)){
@@ -96,6 +97,7 @@ onMounted(async () => {
     })
   }
   console.log(data.label)
+  name.value = data.label
   routerProvider?.updateTabName(data.label)
 })
 </script>
