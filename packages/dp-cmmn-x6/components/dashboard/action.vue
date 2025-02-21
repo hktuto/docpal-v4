@@ -7,7 +7,7 @@
 </el-card>
 </template>
 <script lang="ts" setup>
-
+import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 const props = withDefaults( defineProps<{
     dates?: any;
@@ -17,9 +17,11 @@ const props = withDefaults( defineProps<{
     setting: {},
     hideSetting: false
 })
+const { t } = useI18n()
+const CMDProvider = inject(CaseManagementDashboardKey)
 const emits = defineEmits(['delete'])
 async function handleDelete() {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
     emits('delete')
 }
@@ -29,16 +31,17 @@ const state = reactive<any>({
   loading: false
 })
 const userId:string = useUserId().value
-const route = useRoute()
 async function init() {
-  const id = route.query.instanceId
-  const caseTypeId = route.query.caseId
+  
+  const id = CMDProvider.instanceId?.value || null
+  const _caseTypeId = CMDProvider.caseTypeId?.value || null
+  console.log(_caseTypeId,id, 'getCaseDashboardInstanceCaseidActions??????' );
   if(id){
-    const {data: userAction} = await adminApi.api.getCaseDefinitionActions({id},{userId})
+    const {data: userAction} = await adminApi.api.getCaseDashboardInstanceCaseidActions(id,{userId})
     state.data = userAction
   } 
-  else if(caseTypeId){ 
-    const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(caseTypeId)
+  else if(_caseTypeId){ 
+    const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
     state.data = dashboardActions
   }
 }

@@ -30,7 +30,7 @@ const props = withDefaults( defineProps<{
 })
 const emits = defineEmits(['delete'])
 async function handleDelete() {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
     emits('delete')
 }
@@ -55,8 +55,9 @@ const state = reactive<any>({
   },
   extraParams: {}
 })
-const route = useRoute()
-const router = useRouter()
+const { t } = useI18n();
+
+const CMDProvider = inject(CaseManagementDashboardKey)
 // #region module: 
   const tableSetting = {
     columns: [
@@ -76,15 +77,16 @@ const router = useRouter()
   async function getList (param) {
     try {
       state.loading = true
-      const instanceId = route.query.instanceId
-      if(!instanceId) {
+      const _instanceId = CMDProvider.instanceId?.value || null
+
+      if(!_instanceId) {
         state.tableData = []
         state.options.paginationConfig.total = 0
         state.options.paginationConfig.pageSize = 20
         state.options.paginationConfig.currentPage = 1
         return
       }
-      const { dat:res } = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(instanceId, { ...param, ...state.extraParams })
+      const { data:res }: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(instanceId, { ...param, ...state.extraParams })
       state.tableData = res.entryList
       state.options.paginationConfig.total = res.totalSize
       state.options.paginationConfig.pageSize = param.pageSize
