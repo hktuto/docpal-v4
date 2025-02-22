@@ -57,7 +57,7 @@ async function getCDBasciInfo() {
   try {
     if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null;
-    const caseVersionId = CMDProvider.caseVersionId?.value || null;
+    const caseVersionId = caseProvider.caseVersionId?.value || null;
 
     if(id) {
       state.mode = 'normal'
@@ -76,6 +76,11 @@ async function getCDBasciInfo() {
       }, [])
       state.data = form
       
+    } else {
+      state.data = {
+        fields: [],
+        rows: []
+      }
     }
   } catch (error) {
     console.log(error)
@@ -88,12 +93,16 @@ async function getCDBasciInfo() {
   }
 } 
 async function initLayout() {
+ 
   const data = await getCDBasciInfo()
   state.layout = props.setting.layout.reduce((prev, item) => {
     const _item = data.rows.find(d => d.id === item.id)
+    
     if(_item) {
       if(!item.width) item.width = '50%'
       prev.push({...item, ..._item })
+    }else{
+      prev.push({...item})
     }
     return prev
   }, [])
@@ -103,6 +112,7 @@ async function initLayout() {
 
 watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
     setTimeout(() => {
+      console.log("initLayout", newValue)
       if(!!newValue) {
         // if(oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) return
         initLayout()

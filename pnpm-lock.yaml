@@ -65,7 +65,7 @@ importers:
     dependencies:
       nuxt:
         specifier: 3.15.4
-        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
       vue:
         specifier: 3.5.6
         version: 3.5.6(typescript@5.7.3)
@@ -369,8 +369,8 @@ importers:
         specifier: ^3.1.8
         version: 3.1.8(vue@3.5.6(typescript@5.7.3))
       v-form:
-        specifier: file:../dp-form/dist/v-form-designer-3.1.11.tar.gz
-        version: file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz(ace-builds@1.38.0)(typescript@5.7.3)
+        specifier: file:../dp-form/dist/v-form-designer-3.1.12.tar.gz
+        version: file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz(ace-builds@1.38.0)(typescript@5.7.3)
       vue:
         specifier: 3.5.6
         version: 3.5.6(typescript@5.7.3)
@@ -989,7 +989,7 @@ importers:
         version: 1.11.13
       nuxt:
         specifier: 3.15.4
-        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
       vue:
         specifier: 3.5.6
         version: 3.5.6(typescript@5.7.3)
@@ -9296,9 +9296,9 @@ packages:
     resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
     engines: {node: '>= 4'}
 
-  v-form@file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz:
-    resolution: {integrity: sha512-YACrEohPTvzJ6wGQWT0AjIl16dwJs0VVmniAwlr/VVTg39MtZM/9rN8YGK1XSNujnaKqQ1I0V4/4sY3zJvGqag==, tarball: file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz}
-    version: 3.1.11
+  v-form@file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz:
+    resolution: {integrity: sha512-VU1lWwvvi4E/wYcyBvyyca/TX9hkFlW1UbI/JBXvDUfMZ422GL9PSaSdKf8MCWy2lAgbDpRYX8Saw9o151fZxA==, tarball: file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz}
+    version: 3.1.12
 
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -11120,7 +11120,7 @@ snapshots:
   '@nuxt/devtools@1.7.0(rollup@4.34.6)(vue@3.5.13(typescript@4.9.5))':
     dependencies:
       '@antfu/utils': 0.7.10
-      '@nuxt/devtools-kit': 1.7.0(magicast@0.3.5)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
+      '@nuxt/devtools-kit': 1.7.0(magicast@0.3.5)(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
       '@nuxt/devtools-wizard': 1.7.0
       '@nuxt/kit': 3.15.4(magicast@0.3.5)
       '@vue/devtools-core': 7.6.8(vue@3.5.13(typescript@4.9.5))
@@ -11152,8 +11152,8 @@ snapshots:
       sirv: 3.0.0
       tinyglobby: 0.2.10
       unimport: 3.14.6(rollup@4.34.6)
-      vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.34.6)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
-      vite-plugin-vue-inspector: 5.3.1(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
+      vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.34.6)(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
+      vite-plugin-vue-inspector: 5.3.1(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
       which: 3.0.1
       ws: 8.18.0
     transitivePeerDependencies:
@@ -11166,10 +11166,10 @@ snapshots:
   '@nuxt/devtools@1.7.0(rollup@4.34.6)(vue@3.5.13(typescript@5.7.3))':
     dependencies:
       '@antfu/utils': 0.7.10
-      '@nuxt/devtools-kit': 1.7.0(magicast@0.3.5)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
+      '@nuxt/devtools-kit': 1.7.0(magicast@0.3.5)(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
       '@nuxt/devtools-wizard': 1.7.0
       '@nuxt/kit': 3.15.4(magicast@0.3.5)
-      '@vue/devtools-core': 7.6.8(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue@3.5.13(typescript@5.7.3))
+      '@vue/devtools-core': 7.6.8(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))(vue@3.5.13(typescript@5.7.3))
       '@vue/devtools-kit': 7.6.8
       birpc: 0.2.19
       consola: 3.4.0
@@ -11198,8 +11198,8 @@ snapshots:
       sirv: 3.0.0
       tinyglobby: 0.2.10
       unimport: 3.14.6(rollup@4.34.6)
-      vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.34.6)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
-      vite-plugin-vue-inspector: 5.3.1(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
+      vite-plugin-inspect: 0.8.9(@nuxt/kit@3.15.4(magicast@0.3.5))(rollup@4.34.6)(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
+      vite-plugin-vue-inspector: 5.3.1(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
       which: 3.0.1
       ws: 8.18.0
     transitivePeerDependencies:
@@ -12535,7 +12535,7 @@ snapshots:
       mitt: 3.0.1
       nanoid: 5.0.9
       pathe: 1.1.2
-      vite-hot-client: 0.2.4(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))
+      vite-hot-client: 0.2.4(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0))
       vue: 3.5.13(typescript@4.9.5)
     transitivePeerDependencies:
       - vite
@@ -18619,7 +18619,7 @@ snapshots:
 
   utility-types@3.11.0: {}
 
-  v-form@file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz(ace-builds@1.38.0)(typescript@5.7.3):
+  v-form@file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz(ace-builds@1.38.0)(typescript@5.7.3):
     dependencies:
       '@element-plus/icons-vue': 0.2.7(vue@3.5.13(typescript@5.7.3))
       '@wangeditor/editor': 5.1.23

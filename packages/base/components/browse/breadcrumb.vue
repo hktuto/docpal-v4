@@ -34,13 +34,18 @@ async function getBreadcrumb() {
 function navigate(idOrPath?:string) {
     if(idOrPath) {
         listProvider?.changeRoute(idOrPath)
+        return
     }
-    else if (props.home?.homeRouteItem) {
+    if (props.home?.homeRouteItem) {
         routerProvider?.navigateTo(props.home.homeRouteItem)
+        return
     }
-    else{
-        listProvider?.changeRoute('/')
+    if(props.home?.secondId) {
+        listProvider?.changeRoute(props.home.secondId)
+        return
     }
+    
+    listProvider?.changeRoute('/')
 }
 
 watch(idOrPath, ()=> {

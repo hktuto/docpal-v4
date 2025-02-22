@@ -16,7 +16,8 @@ export default defineNuxtConfig({
         "../../pages/client-share",
         "../../pages/client-trash",
         "../../pages/client-dashboard",
-        "../../pages/client-file-policies"
+        "../../pages/client-file-policies",
+        "../../packages/dp-cmmn-x6"
     ],
     features: {
         inlineStyles: true,

@@ -254,8 +254,6 @@ async function previewForm(node:Node) {
         if(!response || !response.data) return;
         if(response?.data.length > 0) {
             const json = JSON.parse(response.data[0].jsonValue || "{}")
-            console.log("preview json :", json)
-            console.log("fromRenderRef", fromRenderRef.value)
             fromRenderRef.value.setForm(json)
         }else{
             console.log("preview json : empty")

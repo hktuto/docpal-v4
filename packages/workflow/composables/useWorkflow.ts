@@ -10,10 +10,18 @@ type FormStartHandle = {
 }
 export const useWorkflow = () => {
   const formRenderSlots = useState<FormRenderSlotsType[]>('formRenderSlots', () => shallowRef<FormRenderSlotsType[]>([
-    // {
-    //   name: "calendar",
-    //   component: 'calendarViewer'
-    // }
+    {
+      name: "calendar",
+      component: 'formWidgetCalendar'
+    },
+    {
+      name: 'folderCabinet',
+      component: 'formWidgetBrowse'
+    },
+    {
+      name: 'caseInfo',
+      component: 'formWidgetCaseInfo'
+    }
   ]));
   const formStartHandle = useState<any>('formRenderSlots', () => ({}));
   const customStartCallBackList = useState<any>('customStartCallBack', () => ({}));

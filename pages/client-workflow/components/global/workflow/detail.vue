@@ -169,7 +169,6 @@ async function handleSubmit() {
     const res: any = await clientApi.api
       .postWorkflowFormSubmit(param)
       .then((res) => res.data);
-    console.log(res);
     ElMessage.success(`${t("msg_successfulOperation")}`);
     routerProvider?.navigateTo(
       routeWorkflowPage({
@@ -178,9 +177,11 @@ async function handleSubmit() {
       false
     );
   } catch (error) {
+    console.log('error', error)
     // ElMessage.error(error.message)
-  }
-  state.loading = false;
+  }finally{
+    state.loading = false;
+  }  
 }
 // #endregion
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
@@ -241,7 +242,7 @@ onActivated(() => {
         name="form"
         v-loading="state.loading"
       >
-        <WorkflowDetailFormRender ref="vFormRef" >
+        <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
             <template #action>
               <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
                 <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
