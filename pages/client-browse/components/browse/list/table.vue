@@ -1,5 +1,4 @@
 <script lang="tsx" setup>
-import {BrowseListProviderKey} from '#imports'
 import {Grid, type VxeGridInstance, type VxeGridListeners} from 'vxe-table'
 
 const listProvider = inject(BrowseListProviderKey);
