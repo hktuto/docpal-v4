@@ -66,6 +66,7 @@ watch(() => props.blob, (newBlob:Blob) => {
     state.fileType = newBlob.type
     const urlCreator = window.URL || window.webkitURL
     state.url = urlCreator.createObjectURL(newBlob)
+    console.log("state.url", state.url)
 }, { immediate: true })
 defineExpose({ handleDownload })
 </script>

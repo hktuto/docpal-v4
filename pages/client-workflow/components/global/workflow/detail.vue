@@ -100,11 +100,10 @@ async function handleFormDataGet() {
         state.taskDetail.taskInstance.processDefinitionKey,
         state.taskDetail.processDefinitionVersionId
       );
-      console.log(formData);
+      console.log("formData", formData);
       const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      console.log("getXml", xml)
       vFormRef.value.setForm(formJson, formData, [], xml);
-
+      handleAdditionalSetting(xml, state.taskDetail, formData)
       break;
   }
 }
@@ -184,6 +183,45 @@ async function handleSubmit() {
   }  
 }
 // #endregion
+
+type AdditionalButton = {
+    props: any,
+    component: string,
+}
+const additionalButton = ref<AdditionalButton[]>([])
+function handleAdditionalSetting(xml:any, taskDetail: any, formData:any) {
+    const xmlJson = bpmnStringToJson(xml)
+    const currentTask = xmlJson.flatObj[state.taskDetail.taskDefinitionKey]
+    // check generate document button 
+    const generateDocumentComponent = "LazyBpmnButtonGenerateDocument"
+    if(currentTask.extensionElements && currentTask.extensionElements['docpal:previewDocumentButton']){
+        if(Array.isArray(currentTask.extensionElements['docpal:previewDocumentButton'])){
+            currentTask.extensionElements['docpal:previewDocumentButton'].forEach((item:any) => {
+                additionalButton.value.push({
+                    props: {
+                        ...item,
+                        xml,
+                        formData,
+                        taskDetail
+                    },
+                    component: generateDocumentComponent
+                })
+            })
+        }else{
+            additionalButton.value.push({
+                props: {
+                   ...currentTask.extensionElements['docpal:previewDocumentButton'],
+                   xml,
+                   formData,
+                   taskDetail
+                },
+                component: generateDocumentComponent
+            })
+        }
+    }
+}
+
+
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   try {
     state.taskDetail = { ...taskDetailRes };
@@ -245,6 +283,9 @@ onActivated(() => {
         <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
             <template #action>
               <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
+                <template v-for="(item,index) in additionalButton" :key="index">
+                    <component :is="item.component" v-bind="item.props" />
+                </template>
                 <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
                 <el-button type="primary" @click="handleSubmit">{{
                   $t("common_submit")

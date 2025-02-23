@@ -25,7 +25,7 @@ defineOptions({
 
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
-const selectedItem = ref<any[]>([])
+
 if(!tabProvider || !routerProvider) {
     throw createError('provider not found')
 }
@@ -83,14 +83,14 @@ const readerType = computed(() => {
         return resolveComponent('LazyOtherPlayer')
     }
 });
-function closePreview(ev){
-    console.log("ev", ev)
-    // if(detail.id === docDetail.value.id) {
-    //     const newItem = createBrowseListPageParams({
-    //         idOrPath: docDetail.value.parentRef
-    //     })
-    //     routerProvider?.navigateTo(newItem)
-    // }
+function closePreview({detail}:any){
+    if(!detail) return
+    if(detail.id === docDetail.value.id) {
+        const newItem = createBrowseListPageParams({
+            idOrPath: docDetail.value.parentRef
+        })
+        routerProvider?.navigateTo(newItem)
+    }
 }
 function itemDeleted() {
     const newItem = createBrowseListPageParams({
@@ -120,7 +120,15 @@ const detailActions = computed(()=> {
     return ActionsFilter(actions, docPermission.value, 'showInDetail')
 })
 
-useEventListener(document, 'closeFilePreview', (event: any) => closePreview())
+function goParent(){
+    console.log("goParent", docDetail.value)
+    const newItem = createBrowseListPageParams({
+        idOrPath: docDetail.value.parentRef
+    })
+    routerProvider?.navigateTo(newItem, false, true)
+}
+
+useEventListener(document, 'closeFilePreview', closePreview)
 
 watch(idOrPath, () => {
     getDetail()
@@ -136,6 +144,10 @@ watch(idOrPath, () => {
             <div class="header">
                 <div class="fileNameContainer">
                     <div class="fileName">
+                        <ElTooltip :content="$t('common_back')" placement="top">
+
+                            <Icon name="tabler:arrow-back" @click="goParent" />
+                        </ElTooltip>
                         {{ docDetail.name }}
                         <el-tag v-if="docDetail.properties && docDetail.properties['file:content'] && docDetail.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(docDetail.properties['file:content']['mime-type']) }}</el-tag>
                     </div>
@@ -177,7 +189,7 @@ watch(idOrPath, () => {
                         :doc="docDetail" :editMode="editMode"
                         fileType="NUXEO" 
                         :readonly="true" 
-                        :editable="AllowTo({feature:'ReadWrite', docPermission })"
+                        :editable="AllowTo({feature:'ReadWrite', permission:docPermission })"
                         :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: docPermission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')}"
                         @saved="() => handleRefresh(false)"
                     />
@@ -231,7 +243,7 @@ watch(idOrPath, () => {
     height: 100%;
     display: grid;
     grid-template-columns: 1fr min-content;
-    overflow: hidden;
+    // overflow: hidden;
     position: relative;
     @media (max-width: 640px) {
         grid-template-columns: 1fr;

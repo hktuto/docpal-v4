@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 
-import { useEventBus, EventType } from 'eventbus'
 import { clientApi } from 'api'
-const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 const home = ref({secondId:'8fbbac85-5998-429f-ab00-a0e67f3f5ff8'})
 const idOrPath = ref('8fbbac85-5998-429f-ab00-a0e67f3f5ff8')
 
-bus.on(({relatedPath}) => {
-    if(relatedPath === idOrPath.value) {
-        handleRefresh()
+const tableRef = ref()
+function handleRefresh(){
+    if(tableRef.value) {
+        tableRef.value.reload()
     }
-})
+}
 
 const {disabled, formData, options} = defineProps<{
     disabled: boolean,
@@ -54,7 +53,7 @@ onMounted(() => {
 
 <template>
     <div class="browse-cabinet-container">
-     <BrowseMiniTable :home="home" >
+     <BrowseMiniTable ref="tableRef" :home="home" >
         <template #toolbar_buttons> 
             <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
         </template>

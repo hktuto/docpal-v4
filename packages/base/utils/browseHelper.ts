@@ -18,6 +18,7 @@ export function canCollaboraEdit(mimeType: string) {
 }
 
 export function getMimeTypeFromDocument(doc: any): string | undefined {
+  console.log("getMimeTypeFromDocument", doc)
   const properties = doc.properties as any
   const mimeType: string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
   if (!mimeType) return undefined;
