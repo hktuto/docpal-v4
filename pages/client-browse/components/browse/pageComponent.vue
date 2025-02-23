@@ -153,7 +153,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
                                     :is="item.component"
                                     :doc="docDetail"
                                     :permission="docPermission"
-                                    :selectedList="selectList"
+                                    :selectedList="selectedList"
                                     @clearSelected="handleClearSelected"
                                     @success="handleRefresh"
                                     @delete="itemDeleted"

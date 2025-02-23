@@ -46,3 +46,20 @@ export function createBrowseWatermarkPageParams(params:BrowseDetailPageParams){
         }
     }
 }
+
+type SharePageParams = {
+    backPath: string
+}
+export const createSharePageParams = (params:SharePageParams) => {
+    return {
+        id: 'client-share',
+        name: 'client-share',
+        icon: 'lucide:file-share',
+        hoverIcon: 'lucide:file-share',
+        label: "share.shareQueue",
+        component: "LazyBrowseShare",
+        props: {
+            ...params
+        }
+    }
+}

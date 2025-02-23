@@ -30,7 +30,11 @@ async function getPreviewFile () {
     state.previewFile.loading = true
     try {
         const blob = await adminApi.api.postNuxeoDocumentPreviewDeprecate({idOrPath: state.info.documentId},{
-            format: 'blob'
+            format: 'blob',
+            timeout: 0,
+            headers: {
+                key: 'preview'
+            }
         })
         state.previewFile.blob = blob
     } catch (error) {

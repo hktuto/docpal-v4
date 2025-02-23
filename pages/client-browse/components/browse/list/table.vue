@@ -18,7 +18,7 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
         return entry
     }
 }
-const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
     id: 'browseTableSetting',
     api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
     columns:  [
@@ -88,6 +88,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         }
     },
     selectChangeHander:(selectedRows:any[]) => {
+        console.log("selectedRows", selectedRows)
         emits('selectedChange', selectedRows)
     },
     optionalConfig: {
@@ -106,9 +107,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         },
         checkboxConfig: {
             checkStrictly: true,
-            showHeader: false,
+            showHeader: true,
             highlight: true,
             range: false,
+            visibleMethod: ({row}:any) => !row.isFolder
         },
         rowConfig:{
             height: 60,
@@ -212,7 +214,7 @@ defineExpose({
     &.selected{
         :deep(.vxe-buttons--wrapper){
             border-radius: var(--app-border-radius-m);
-            overflow: hidden;
+            // overflow: hidden;
             background: var(--app-grey-900);
             padding-block: var(--app-space-xs);
             --vxe-ui-layout-background-color: var(--app-grey-900);

@@ -50,8 +50,13 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExi
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
-function back(){
-    if(history.value.length === 0) return
+function back(fallback:any){
+    if(history.value.length === 0) {
+        if(fallback){
+            navigateTo(fallback)
+        }    
+        return
+    }
     const lastItem = history.value.pop()
     if(lastItem){
     const lastId = tab.value.id
