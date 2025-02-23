@@ -300,7 +300,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     // #region handle checkbox column
     if(columns.find(item => item.type === 'checkbox')){
         const item = columns.find(item => item.type === 'checkbox')
-        if(item) {
+        if(item && !tableConfig.checkboxConfig) {
 
             tableConfig.checkboxConfig = {
                 labelField: item.field,

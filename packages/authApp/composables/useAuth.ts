@@ -47,28 +47,34 @@ export const userDisplayTimeSetting = () => {
 export async function login() {
     const keyCloakState = useKeyCloakState()
     const token = useToken()
-    if(!keyCloakState.value) {
-       throw createError('Keycloak is not define') 
+    try {
+
+        if(!keyCloakState.value) {
+        throw createError('Keycloak is not define') 
+        }
+        await keyCloakState.value.init({
+            onLoad:'login-required'
+        })
+        keyCloakState.value.updateToken(10)
+        localStorage.setItem('access_token', keyCloakState.value.token || "");
+        const {data} = await clientApi.api.getSystemfeatureKeycloakTokenVerification()
+        if(!data){
+            throw new Error('token not valid')
+        }
+        localStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('refresh_token', data.refresh_token)
+        token.value = data.access_token
+        await Promise.all([
+            getUser(),        
+            getFeature(),
+            getUserPreference(),
+            getOCRSetting()
+        ])
+        emitBus(EventType.USER_LOGIN__SUCCESS, "")
+    }catch(error) {
+        console.log("login error", error)
+        logout()
     }
-    await keyCloakState.value.init({
-        onLoad:'login-required'
-    })
-    keyCloakState.value.updateToken(10)
-    localStorage.setItem('access_token', keyCloakState.value.token || "");
-    const {data} = await clientApi.api.getSystemfeatureKeycloakTokenVerification()
-    if(!data){
-        throw new Error('token not valid')
-    }
-    localStorage.setItem('access_token', data.access_token)
-    localStorage.setItem('refresh_token', data.refresh_token)
-    token.value = data.access_token
-    await Promise.all([
-        getUser(),        
-        getFeature(),
-        getUserPreference(),
-        getOCRSetting()
-    ])
-    emitBus(EventType.USER_LOGIN__SUCCESS, "")
 }
 
 export function getOCRSetting() {
