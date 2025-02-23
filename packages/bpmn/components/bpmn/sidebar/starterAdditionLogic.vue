@@ -29,7 +29,6 @@ function setForm(){
             }
         }
     }
-    console.log("setForm", newData)
     node.setData(newData, {
         deep: true,
         overwrite: true
@@ -41,7 +40,7 @@ function getForm(){
     if(nodeData.data && nodeData.data.extensionElements && nodeData.data.extensionElements['docpal:additionaSetting']){
         form.value = nodeData.data.extensionElements['docpal:additionaSetting'];
     }else{
-        form.value = {...defaultForm.value}
+        form.value = {...defaultForm}
     }
 }
 
