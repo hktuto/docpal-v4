@@ -2,7 +2,7 @@
     <div class="collection-container withPadding">
         <div :class="['collection-container--left', { collapse: style.collapse }]">
             <div class="flex-x-end">
-                <el-button :loading="fileFormAddLoading" @click="openCollectionDialog(false)">
+                <el-button :loading="fileFormAddLoading" @click="openAddCollectionDialog()">
                     {{ t('collections_new') }}
                 </el-button>
                 <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']"
@@ -28,7 +28,7 @@
                 <template #toolbar_buttons>
                     <div class="flex-x-between">{{ state.curCollection.name }}
                         <SvgIcon src="/icons/edit.svg" class="el-icon--right"
-                                 @click="openCollectionDialog(true)"/>
+                                 @click="openEditCollectionDialog()"/>
                     </div>
                     <div class="flex-x-end">
                         <template v-if="state">
@@ -43,8 +43,10 @@
             </VxeGrid>
         </div>
 
-        <LazyCollectionDialog ref="collectionDialog" @refresh="reloadPage">
-        </LazyCollectionDialog>
+        <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @refresh="reloadPage">
+        </LazyCollectionAddCollectionDialog>
+        <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reload">
+        </LazyCollectionEditCollectionDialog>
     </div>
 </template>
 
@@ -120,13 +122,18 @@ function handleDocDelete(row) {
         })
 }
 
-const collectionDialog = ref()
+const addCollectionDialog = ref()
+const editCollectionDialog = ref()
 
 const fileFormAddLoading = ref(false)
 const fileFormEditLoading = ref(false)
 
-function openCollectionDialog(status: boolean) {
-    collectionDialog.value.handleOpen(status, state.curCollection)
+function openAddCollectionDialog() {
+    addCollectionDialog.value.handleOpen()
+}
+
+function openEditCollectionDialog() {
+    editCollectionDialog.value.handleOpen(state.curCollection)
 }
 
 async function submitNewCollection(form) {
