@@ -4,7 +4,7 @@ import {logout} from '#imports'
 const user = useUserState()
 const config = useRuntimeConfig()
 const { locales, locale, setLocale } = useI18n()
-
+const { uploadState } = useUploadAIStore()
 function changeLanguage(langCode:string) {
     setLocale(langCode);
     window.location.reload()
@@ -20,6 +20,11 @@ function openSetting(){
     emitBus(EventType.OPEN_SETTINGS, "");
 }
 
+function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {
+    const ev = new CustomEvent('openUploadDrawer', { detail: action })
+    document.dispatchEvent(ev)
+}
+
 </script>
 
 <template>
@@ -29,6 +34,7 @@ function openSetting(){
             {{ user.username }}
         </div>
         <div class="actions">
+            <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
             <Notification  />
             <ElDropdown>
                 <ElButton size="small" link >
