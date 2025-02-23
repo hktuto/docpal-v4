@@ -1,7 +1,6 @@
 <template>
-<ElDrawer v-model="drawerOpen"  :with-header="false" :modal=false :show-close="true">
+<ElDrawer v-model="drawerOpen" :title="$t('upload.upload')" :with-header="true" :size="300" :modal=false :show-close="true">
     
-    <div style="margin-bottom: 10px;">{{$t('upload.upload')}}</div>
     <el-collapse v-model="activeNames" >
         <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :name="index.toString()">
             <template #title>
