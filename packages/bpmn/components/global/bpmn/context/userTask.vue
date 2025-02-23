@@ -12,6 +12,7 @@ const { node } = defineProps<{
     <BpmnSidebarEditAssignee :node="node" />
     <BpmnSidebarEditCandidateGroup :node="node" />
     <BpmnSidebarEditForm :node="node" />
+    <BpmnSidebarPreviewDocument :node="node" />
 </div>
 </template>
 

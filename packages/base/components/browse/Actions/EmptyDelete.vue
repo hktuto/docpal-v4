@@ -43,6 +43,8 @@ async function deleteItem(doc:any, deleteType?: 'folder' | 'file'){
             emits('delete', idOrPath)
         }
         else if(deleteType === 'folder') {
+            const ev = new CustomEvent('closeFilePreview', { detail: doc })
+            document.dispatchEvent(ev)
             emits('delete', idOrPath)
         } 
         else{

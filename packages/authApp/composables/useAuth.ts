@@ -19,6 +19,8 @@ export const useUserId = () => useState<string>(() => '');
 export const useUserPreference = () => useState<Record<string,any>>();
 export const useFeature = () => useState<Record<string,boolean>>('app-feature');
 export const useToken = () => useState<string>('auth-token');
+export const useOcrSetting = () => useState<any>('ocr-setting');
+
 export const useAuth = () => {
     const authReadyState = useAuthReadyState()
     const userState = useUserState()
@@ -45,27 +47,45 @@ export const userDisplayTimeSetting = () => {
 export async function login() {
     const keyCloakState = useKeyCloakState()
     const token = useToken()
-    if(!keyCloakState.value) {
-       throw createError('Keycloak is not define') 
+    try {
+
+        if(!keyCloakState.value) {
+        throw createError('Keycloak is not define') 
+        }
+        await keyCloakState.value.init({
+            onLoad:'login-required'
+        })
+        keyCloakState.value.updateToken(10)
+        localStorage.setItem('access_token', keyCloakState.value.token || "");
+        const {data} = await clientApi.api.getSystemfeatureKeycloakTokenVerification()
+        if(!data){
+            throw new Error('token not valid')
+        }
+        localStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('refresh_token', data.refresh_token)
+        token.value = data.access_token
+        await Promise.all([
+            getUser(),        
+            getFeature(),
+            getUserPreference(),
+            getOCRSetting()
+        ])
+        emitBus(EventType.USER_LOGIN__SUCCESS, "")
+    }catch(error) {
+        console.log("login error", error)
+        logout()
     }
-    await keyCloakState.value.init({
-        onLoad:'login-required'
-    })
-    keyCloakState.value.updateToken(10)
-    localStorage.setItem('access_token', keyCloakState.value.token || "");
-    const {data} = await clientApi.api.getSystemfeatureKeycloakTokenVerification()
-    if(!data){
-        throw new Error('token not valid')
-    }
-    localStorage.setItem('access_token', data.access_token)
-    localStorage.setItem('refresh_token', data.refresh_token)
-    token.value = data.access_token
-    await Promise.all([
-        getUser(),        
-        getFeature(),
-        getUserPreference()
-    ])
-    emitBus(EventType.USER_LOGIN__SUCCESS, "")
+}
+
+export function getOCRSetting() {
+    const ocrSetting = useOcrSetting()
+    ocrSetting.value = clientApi.instance.get('/nuxeo/admin/setting/OCR').then(res => res.data);
+}
+
+export function canOCR(extension: string): boolean {
+    if(!allowFeature('OCR')) return false;
+    const ocrSetting = useOcrSetting()
+    return ocrSetting.value.supportedInputFormats.includes(extension);
 }
 
 

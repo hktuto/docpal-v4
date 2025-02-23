@@ -15,29 +15,28 @@ export type SimplifiedDocDetail = {
 }
 
 export const useShareStore = () => {
-    const state = reactive({
-        shareList: <SimplifiedDocDetail[]>[]
-    })
+    const shareList = useState<SimplifiedDocDetail[]>('share-state', () => ([]))
+
     async function getMineTypeShareList() {
         // const data = await DocumentThumbnailListGetApi(state.shareList.map((item:any) => item.id))
-        return state.shareList.map((item:any) => {
+        return shareList.value.map((item:any) => {
             if(!item.mimeType && item.properties['file:content']['mime-type']) item.mimeType = item.properties['file:content']['mime-type']
             return {...item, readOnly: true}
         })
     }
     function updateShareList(list: SimplifiedDocDetail[]) {
-        state.shareList = [...list]
-        sessionStorage.setItem('shareList', JSON.stringify(state.shareList))
+        shareList.value = [...list]
+        sessionStorage.setItem('shareList', JSON.stringify(shareList.value))
     }
-    function addToShareList(list: SimplifiedDocDetail[], className: string) {
-        if(!state.shareList) state.shareList = []
+    function addToShareList(list: SimplifiedDocDetail[], className?: string) {
+        if(!shareList.value) shareList.value = []
         list.forEach(item => {
-            if(state.shareList.findIndex(i => {
+            if(shareList.value.findIndex(i => {
                 if(item.isFolder) return -1
                 return i.id === item.id
-            }) === -1) state.shareList.push(item)
+            }) === -1) shareList.value.push(item)
         })
-        sessionStorage.setItem('shareList', JSON.stringify(state.shareList))
+        sessionStorage.setItem('shareList', JSON.stringify(shareList.value))
     }
 
     function getUseWatermark(mimeType :string) {
@@ -46,13 +45,13 @@ export const useShareStore = () => {
     }
     onMounted(() => {
         const data = sessionStorage.getItem('shareList')
-        if(!!data) state.shareList = JSON.parse(data)
+        if(!!data) shareList.value = JSON.parse(data)
     })
     return {
         getUseWatermark,
         getMineTypeShareList,
         updateShareList,
         addToShareList,
-        state
+        shareList
     }
 }

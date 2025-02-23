@@ -6,25 +6,13 @@
             <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef"
                 ></WorkflowDetailReader>
         </template>
-
-        <template #calendar="data">
-            calendar settings
-            <pre>
-                {{ data }}
-            </pre>
-            <pre>
-
-                {{ state.formData }}
-            </pre>
-            <CalendarViewer />
-        </template>
-            
-        
-        <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]="slotsData">
-
+ 
+        <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]="{data}">
             <component :is="item.component" :ref="(el: any) => formRenderSlotsRef[item.name] = el" 
                 :disabled="state.readonly"
                 :formData="state.formData"
+                :options="data.options.dynamicConfig"
+                :taskDetail="props.taskDetail"
              />
         </template>
     </FormRenderer>
@@ -37,6 +25,7 @@
 import { clientApi } from 'api'
 const props = defineProps<{
     options?: Object,
+    taskDetail?:any
 }>();
 const state = reactive<any>({
     formData: {},
@@ -76,6 +65,8 @@ const defaultFormJson = {
     "dataSources": []
   }
 }
+
+
 const FormRendererRef = ref()
 // #region module: set
     async function setForm (json: string | object, data?: object, properties:any[] = [], xml?:string) {
@@ -93,10 +84,7 @@ const FormRendererRef = ref()
         } else {
             state.formData = { ...data }
         }
-        if(xml){
-            const xmlJson = bpmnStringToJson(xml)
-            console.log("xmlJson", xmlJson)
-        }
+        
     }
     async function handleData(data: any) {
         
@@ -277,6 +265,28 @@ defineExpose({ setForm, getFormData, disableForm, enableForm })
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
+    }
+    :deep(.flex-col){
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: var(--app-space-xs);
+        .field-wrapper{
+            width:100%;
+            &:has(.full-height){
+                flex: 1 0 auto;
+                .slot-wrapper-render, .static-content-item{
+                    height: 100%;
+                }
+            }
+            .full-height{
+                height: 100%;
+                > *{
+                    height: 100%;
+                }
+            }
+        }
     }
 }
 .workflowFormContainer{
