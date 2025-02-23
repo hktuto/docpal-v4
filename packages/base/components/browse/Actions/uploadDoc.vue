@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<{
     backPath: '/browse'
 })
 const userPreference = useUserPreference()
-const handleOpenUploadDrawer = inject('handleOpenUploadDrawer')
+// const handleOpenUploadDrawer = inject('handleOpenUploadDrawer')
 const state = reactive({
     doc: {}
 })
@@ -36,7 +36,10 @@ const router = useRouter()
 const { createUploadRequest } = useUploadAIStore()
 const fileUploaderRef = ref()
 const folderUploaderRef = ref()
-
+function handleOpenUploadDrawer(){
+    const ev = new CustomEvent('openUploadDrawer', { detail: true })
+    document.dispatchEvent(ev)
+}
 function uploadHandler (e: any) {
     const files: File[] = Array.from(e.target?.files) 
     const uploadFiles = files.reduce((prev: any, file, index) => {

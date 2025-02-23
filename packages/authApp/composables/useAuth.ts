@@ -19,6 +19,8 @@ export const useUserId = () => useState<string>(() => '');
 export const useUserPreference = () => useState<Record<string,any>>();
 export const useFeature = () => useState<Record<string,boolean>>('app-feature');
 export const useToken = () => useState<string>('auth-token');
+export const useOcrSetting = () => useState<any>('ocr-setting');
+
 export const useAuth = () => {
     const authReadyState = useAuthReadyState()
     const userState = useUserState()
@@ -63,9 +65,21 @@ export async function login() {
     await Promise.all([
         getUser(),        
         getFeature(),
-        getUserPreference()
+        getUserPreference(),
+        getOCRSetting()
     ])
     emitBus(EventType.USER_LOGIN__SUCCESS, "")
+}
+
+export function getOCRSetting() {
+    const ocrSetting = useOcrSetting()
+    ocrSetting.value = clientApi.instance.get('/nuxeo/admin/setting/OCR').then(res => res.data);
+}
+
+export function canOCR(extension: string): boolean {
+    if(!allowFeature('OCR')) return false;
+    const ocrSetting = useOcrSetting()
+    return ocrSetting.value.supportedInputFormats.includes(extension);
 }
 
 

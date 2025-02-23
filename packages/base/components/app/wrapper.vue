@@ -11,7 +11,7 @@ function layoutReadyHandler(){
 }
 const minSize = ref(20)
 const userDefineSize = useStorage('app-tab-size', 200) // user define sie in pexel
-
+const haveInteractDrawer = ref(false)
 function updateSize(){
     /**
      *  panel size is based on persentage of window width
@@ -55,6 +55,20 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('resize', updateSize)
 })
+const interactDrawerAction = ref('')
+const InteractDrawerRef = ref()
+  function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {
+    console.log({action});
+    haveInteractDrawer.value = true
+    interactDrawerAction.value = action
+    InteractDrawerRef.value.handleSwitch(show)
+  }
+  function closeDrawer() {
+    haveInteractDrawer.value = false
+    interactDrawerAction.value = ''
+  }
+
+provide('handleOpenUploadDrawer', handleOpenUpload)
 
 </script>
 

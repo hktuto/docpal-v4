@@ -25,7 +25,7 @@ export default defineAppConfig({
             icon: "hugeicons:cloud-upload",
             children: [
                 {
-                    name: "clientAIUpload"
+                    name: "client-ai-upload"
                 },
                 {
                     name: "client-fileRequest"

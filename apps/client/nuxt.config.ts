@@ -13,6 +13,8 @@ export default defineNuxtConfig({
         "../../pages/client-folder-cabinet",
         "../../pages/client-workflow",
         "../../packages/dp-dashboard",
+        "../../pages/client-ai-upload",
+        "../../pages/client-collections",
         "../../pages/client-share",
         "../../pages/client-trash",
         "../../pages/client-dashboard",
