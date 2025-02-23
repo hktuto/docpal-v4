@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {BrowseListProviderKey} from '#imports'
+
 import {clientApi} from 'api'
 import {BrowseListTable} from '#components'
 import { useEventBus, EventType } from 'eventbus'
