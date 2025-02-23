@@ -65,6 +65,8 @@ const defaultFormJson = {
     "dataSources": []
   }
 }
+
+
 const FormRendererRef = ref()
 // #region module: set
     async function setForm (json: string | object, data?: object, properties:any[] = [], xml?:string) {
@@ -82,10 +84,7 @@ const FormRendererRef = ref()
         } else {
             state.formData = { ...data }
         }
-        if(xml){
-            const xmlJson = bpmnStringToJson(xml)
-            console.log("xmlJson", xmlJson)
-        }
+        
     }
     async function handleData(data: any) {
         

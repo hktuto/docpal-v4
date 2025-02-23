@@ -2,7 +2,7 @@
 import {BrowseListProviderKey} from '#imports'
 import {clientApi} from 'api'
 import {BrowseListTable} from '#components'
-import { useEventBus } from 'eventbus'
+import { useEventBus, EventType } from 'eventbus'
 import { actions, ActionsFilter } from '../../../../packages/base/utils/browseActions'
 const props = defineProps<{ 
     idOrPath: string ,
@@ -54,6 +54,16 @@ function selectedChangeHandler(selectedRows:any[]) {
     console.log("selected change", selectedRows)
     selectedList.value = selectedRows
 }
+
+function closePreview({detail}:any){
+    if(!detail) return
+    if(detail.id === docDetail.value.id) {
+        const newItem = createBrowseListPageParams({
+            idOrPath: docDetail.value.parentRef
+        })
+        routerProvider?.navigateTo(newItem)
+    }
+}
 const docActions = computed(() => {
   if (!docDetail.value || !docPermission.value) return {};
   if(selectedList.value.length > 0) {
@@ -69,7 +79,6 @@ function handleClearSelected(){
         tableRef.value.cleanSelected()
     }
 }
-
 
 function handleRefresh(){
     if(tableRef.value) {
@@ -107,11 +116,15 @@ provide(BrowseListProviderKey,{
 })
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
-bus.on(({relatedPath}) => {
-    if(relatedPath === idOrPath.value) {
+bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
+    console.log("relatedIdOrPath", relatedIdOrPath)
+    if(relatedIdOrPath === docDetail.value.id) {
         handleRefresh()
+        
     }
 })
+
+useEventListener(document, 'closeFilePreview', closePreview)
 </script>
 
 <template> 

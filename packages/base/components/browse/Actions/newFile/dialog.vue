@@ -17,12 +17,14 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
+import { emitBus, EventType } from 'eventbus'
 import { ElMessageBox } from 'element-plus'
 import {useEventListener} from '@vueuse/core';
+import {clientApi} from 'api';
 const emits = defineEmits([
     'success'
 ])
-const state = reactive({
+const state = reactive<any>({
     loading: false,
     visible: false,
     setting: {},
@@ -30,6 +32,9 @@ const state = reactive({
 const FormRendererRef = ref()
 const MetaFormRef = ref()
 import formJson from '../form/newFile.vform.json'
+
+const tabProvider = inject(TabManagerKey)
+
 function formChange ({fieldName,newValue,oldValue,formModel}) {
     if(fieldName === 'documentType') MetaFormRef.value.init(newValue)
 }
@@ -56,17 +61,25 @@ async function handleSubmit () {
         }
         data.metaData = JSON.stringify(metaFormData)
         state.loading = true
-        const { data } = await clientApi.api.postNuxeoDocumentOfficeCreate(data)
-        const docId = data
+        const { data:newDoc } = await clientApi.api.postNuxeoDocumentOfficeCreate(data)
+        console.log("newDoc", newDoc)
+        const docId = newDoc
         if(docId) {
-            openFileDetail(docId,{
-                editMode:true,
-                showHeaderAction:true
+            emitBus(EventType.FILE_NEED_REFRESH, {
+                relatedIdOrPath: state.setting.id,
             })
+            const newItem  = createDetailPageParams({
+                idOrPath: newDoc,
+                docName: data.fileName,
+                showHeaderAction: true,
+            })
+            tabProvider?.openTab(newItem)
+           
             state.visible = false
             emits('success')
         }
     } catch (error) {
+        console.log("error", error)
     } finally{
 
         state.loading = false
@@ -77,6 +90,7 @@ function handleClose() {
 }
 function handleOpen(setting) {
     state.visible = true
+    console.log("handleOpen", setting)
     setTimeout(async () => {
         state.setting = setting
         await FormRendererRef.value.vFormRenderRef.setFormData({ documentType: 'File'})

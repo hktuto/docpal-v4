@@ -58,6 +58,7 @@ function focusExistingTab(tab:TabItem):Promise<void>{
         const panelIndex = layout.value.findIndex(panel => panel.id === existingTab.parent)
         if(panelIndex !== -1) {
             layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.findIndex(item => item.name === existingTab.name)
+            console.log("focusExistingTab", layout.value[panelIndex].showingTabIndex)
             // if panel is not initized, set it to initized
             if(!layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized) {
                 layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex].initized = true

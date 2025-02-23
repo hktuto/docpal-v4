@@ -14,6 +14,9 @@ import { vi } from 'vitest'
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
  */
+ const routerProvider = inject(MenuRouterKey);
+
+
 const props = defineProps<{
     options?: any
     workflowData: any,
@@ -302,7 +305,7 @@ async function copyForm(node:Node, obj:any) {
     copyKey.value = node.data.id;
     copyObj.value = obj
     console.log('copyed', copyObj.value, node.data)
-    ElNotification.success(
+    routerProvider?.message.success(
         `${node.data.name || node.data.id} form has copied`
     )
 
@@ -330,7 +333,7 @@ async function pasteForm(node:Node){
     
 
     // notify user
-    ElNotification.success(
+    routerProvider.message.success(
         `${node.data.name || node.data.id} has paste the copied content`
     )
     // reset copyObj
