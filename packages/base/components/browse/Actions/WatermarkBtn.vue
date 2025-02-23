@@ -1,13 +1,34 @@
 <script lang="ts" setup>
-const props = defineProps<{
+import { clientApi } from 'api'
+const dialogOpend = ref(false)
+const {doc} = defineProps<{
     doc: any
 }>()
 const router = useRouter()
-function addWartermark(){
-    const ev2 = new CustomEvent('closeFilePreview', )
-    document.dispatchEvent(ev2);
-    const ev = new CustomEvent('docWatermark', {detail: props.doc})
-    document.dispatchEvent(ev)
+const routerProvider = inject(MenuRouterKey)
+async function addWartermark(){
+    let mimeType:any = '';
+    if(!doc.properties){
+        const data = await clientApi.api.postNuxeoDocument({idOrPath:doc.id});
+         mimeType = getMimeTypeFromDocument(data)
+    }else{
+        mimeType = getMimeTypeFromDocument(doc)
+    }
+    if(!mimeType || (!mimeType.includes('image') && !mimeType.includes('pdf') && !mimeType.includes('video'))){
+        dialogOpend.value = true;
+    }else{
+        const newItem = createBrowseWatermarkPageParams({
+            docId: doc.id,
+            docName: doc.name
+        })
+        routerProvider?.navigateTo(newItem)
+        // router.push({
+        //     path: '/browse/watermark',
+        //     query: {
+        //         docId: doc.id
+        //     }
+        // })
+    }
 }
 
 </script>
@@ -19,4 +40,9 @@ function addWartermark(){
     <SvgIcon src="/icons/menu/watermark.svg" round :content="$t('filePopover_watermark')"
                 ></SvgIcon>
   </BrowseActionsButton> 
+  <ElDialog v-model="dialogOpend" >
+        <div class="warning">
+            {{  $t('error_watermark_mimetype') }}
+        </div>
+    </ElDialog>
 </template>

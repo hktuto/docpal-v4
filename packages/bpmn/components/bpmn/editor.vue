@@ -14,6 +14,9 @@ import { vi } from 'vitest'
  *  options: bpmn viewer options 
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
  */
+ const routerProvider = inject(MenuRouterKey);
+
+
 const props = defineProps<{
     options?: any
     workflowData: any,
@@ -254,8 +257,6 @@ async function previewForm(node:Node) {
         if(!response || !response.data) return;
         if(response?.data.length > 0) {
             const json = JSON.parse(response.data[0].jsonValue || "{}")
-            console.log("preview json :", json)
-            console.log("fromRenderRef", fromRenderRef.value)
             fromRenderRef.value.setForm(json)
         }else{
             console.log("preview json : empty")
@@ -304,7 +305,7 @@ async function copyForm(node:Node, obj:any) {
     copyKey.value = node.data.id;
     copyObj.value = obj
     console.log('copyed', copyObj.value, node.data)
-    ElNotification.success(
+    routerProvider?.message.success(
         `${node.data.name || node.data.id} form has copied`
     )
 
@@ -332,7 +333,7 @@ async function pasteForm(node:Node){
     
 
     // notify user
-    ElNotification.success(
+    routerProvider.message.success(
         `${node.data.name || node.data.id} has paste the copied content`
     )
     // reset copyObj

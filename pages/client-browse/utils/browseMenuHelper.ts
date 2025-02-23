@@ -33,3 +33,33 @@ export function createDetailPageParams(params:BrowseDetailPageParams){
         }
     }
 }
+
+export function createBrowseWatermarkPageParams(params:BrowseDetailPageParams){
+    const {docId, docName} = params
+    return {
+        id: 'client-browse-watermark' + '-' + docId,
+        name: 'client-browse-watermark' + '-' + docName,
+        label: docName,
+        component: 'LazyBrowseWatermark',
+        props: {
+            ...params
+        }
+    }
+}
+
+type SharePageParams = {
+    backPath: string
+}
+export const createSharePageParams = (params:SharePageParams) => {
+    return {
+        id: 'client-share',
+        name: 'client-share',
+        icon: 'lucide:file-share',
+        hoverIcon: 'lucide:file-share',
+        label: "share.shareQueue",
+        component: "LazyBrowseShare",
+        props: {
+            ...params
+        }
+    }
+}

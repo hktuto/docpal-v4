@@ -108,9 +108,9 @@ onMounted(async() => {
         <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHIghlightPanel">
             <template #sidebar>
                 <slot name="sidebar" />
+                <component v-for="s in globalSlots" v-show=s.show :key="s.name" :is="s.component" v-bind="$props" />
             </template>
         </TabApp>
-        <component v-for="s in globalSlots" v-show=s.show :key="s.name" :is="s.component" v-bind="$props" />
         <Contextmenu />
         
     </template>

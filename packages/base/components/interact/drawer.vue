@@ -35,6 +35,7 @@ const props = withDefaults(
     close: true,
   }
 );
+const emits = defineEmits(["closed"]);
 const interact = reactive({
   // maxWidth: 600,
   // minWidth: 120,
@@ -50,7 +51,9 @@ const style = computed(() => {
 });
 function handleSwitch(isOpen: boolean = false) {
   console.log(isOpen, "isOpen");
-
+  if(!isOpen) {
+    emits('closed')
+  }
   if (interact.w === 0 || isOpen) {
     interact.w = props.defaultW;
     interact.closeShow = true;

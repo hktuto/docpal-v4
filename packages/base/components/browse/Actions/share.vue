@@ -2,8 +2,8 @@
     <div class="flex-x-center">
         <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
         <BrowseActionsButton id="shareActionButton" :label="$t('tip.addToShare')"  >
-            <el-badge :value="shareState.shareList.length" :max="99" 
-                :hidden="shareState.shareList.length === 0" type="success">
+            <el-badge :value="shareList.length" :max="99" 
+                :hidden="shareList.length === 0" type="success">
                 <SvgIcon src="/icons/file/share.svg" round :content="$t('tip.addToShare')"
                     @click="iconClickHandler"></SvgIcon>
             </el-badge>
@@ -16,9 +16,8 @@
 import { ElMessage, ElNotification } from 'element-plus'
 
 import anime from 'animejs'
-const router = useRouter()
-const route = useRoute()
-const { state:shareState, addToShareList } = useShareStore()
+
+const { shareList, addToShareList } = useShareStore()
 // const shareList = inject('selectList')
 const props = defineProps<{
     selectedList?: any,

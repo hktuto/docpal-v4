@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-import { emitBus } from 'eventbus'
+import { emitBus, EventType } from 'eventbus'
 import { clientApi } from 'api'
 import {duplicateNameFilter } from '../../../../packages/base/utils/browseHelper'
 const dialogOpened = ref(false)
@@ -76,11 +76,11 @@ async function handleSubmit () {
         if(isDuplicate){
             throw new Error("dpTip.newFolderDuplicateName");
         }
-        const res = await clientApi.api.postNuxeoDocumentCreatefolders(params)
+        const {data:newDoc} = await clientApi.api.postNuxeoDocumentCreatefolders(params) as any
         dialogOpened.value = false
-        console.log("emitBus", state.docPath)
         emitBus(EventType.FILE_NEED_REFRESH, {
-            relatedPath: state.docPath
+            relatedIdOrPath: newDoc.parentRef,
+            highlightIdOrPath:  newDoc.id
         })
         // emits('success', state.doc)
         state.loading = false

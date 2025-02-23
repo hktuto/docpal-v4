@@ -17,13 +17,14 @@ import { createResizePlugin } from '@schedule-x/resize'
 import { createEventModalPlugin } from '@schedule-x/event-modal'
 import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
-import {CalendarOptions, viewName} from '../../utils/calendarHelper'
+import {type CalendarOptions} from '../../../utils/calendarHelper'
 import { clientApi } from 'api'
+import { ElRow } from 'element-plus'
 const { setting } = useCalendarStore();
 const {options = {
     editable: false,
     allowCreate: false,
-
+    
 }} = defineProps<{
     options?: CalendarOptions;
 }>();
@@ -37,17 +38,63 @@ const viewName = [
 
 const calendarControls = createCalendarControlsPlugin()
 const eventsServicePlugin = createEventsServicePlugin();
+const userFiterOptions = ref<any>([])
+const locationFiterOptions = ref<any>([])
+const categoryFiterOptions = ref<any>([])
 // dialog ref
 const newFormRef = ref()
+
+type SiteEvent = {
+    actionType : string
+    assignee : string
+    bizId : string
+    category : string
+    createdBy : string
+    createdDate : string
+    endTime : string
+    eventId : string
+    eventName :  "username"
+    id : string
+    isAllDay : true
+    level :  0
+    location : string
+    modifiedBy : string
+    modifiedDate : string
+    relatedCases : any
+    relatedUsers : any
+    relatedWorkflows : any
+    reminders: any[]
+    startTime: string
+    status : string
+    taskId : string
+    title :  String
+}
+type CalendarEvent = {
+    id: string
+    start: string,
+    end: string,
+    [key: string]: any
+}
+function convertSiteEventToCalendarEvent(event:SiteEvent):CalendarEvent {
+    return {
+        id: event.eventId,
+        start: dayjs(event.startTime).format('YYYY-MM-DD HH:mm'),
+        end: dayjs(event.endTime).format('YYYY-MM-DD HH:mm'),
+        title: event.title,
+        description: event.eventName,
+        detail: event
+    }
+}
 
 async function getCurrentRangeEvent(){
     const range = calendarControls.getRange()
     const { data } = await clientApi.api.postCalendarsList({
         startTime: dayjs(range.start).toISOString(),
         endTime: dayjs(range.end).toISOString(),
-    })
-    console.log('onRangeUpdate', data)
-    calendarApp.eventsService.set(data);
+    }) as any
+    const events = data.map(convertSiteEventToCalendarEvent)
+    console.log('onRangeUpdate', events)
+    calendarApp.eventsService.set(events);
 }
 
 function onEventUpdate(event) {
@@ -166,6 +213,35 @@ defineExpose({
 
 <template>
     <div class="calendarViewerContainer">
+        <template v-if="options.showLocationFilter || options.showUserFilter || options.showCategoryFilter">
+            <div class="filterContainer">
+                <ElRow :gutter="20">
+                    <ElCol :span="8">
+                        <ElFormItem label="Location">
+                            <ElSelect v-model="locationFiterOptions" multiple placeholder="Select">
+                                <ElOption v-for="item in locationFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            </ElSelect>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="8">
+                        <ElFormItem label="User">
+                            <ElSelect v-model="userFiterOptions" multiple placeholder="Select">
+                                <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            </ElSelect>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="8">
+                        <ElFormItem label="Category">
+                            <ElSelect v-model="categoryFiterOptions" multiple placeholder="Select">
+                                <ElOption v-for="item in categoryFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            </ElSelect>
+                        </ElFormItem>   
+                        </ElCol>
+                </ElRow>
+                
+               
+            </div>
+        </template>
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" />
         <CalendarNewEventForm ref="newFormRef" @reload="reloadCalendar" />
     </div>

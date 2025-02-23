@@ -24,15 +24,17 @@ const isFullscreen = computed(() => {
 })
 
 
-function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
+function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExist:boolean = false) {
     if(current.has('meta') || current.has('ctrl') || openInNewTab){
         tabManager?.openTab(param)
         return;
     }
-    const existingTab = allComponents.value.find(item => item.name === param.name)
-    if(existingTab){
-        tabManager?.openTab(param)
-        return;
+    if(!ignoreExist){
+        const existingTab = allComponents.value.find(item => item.name === param.name)
+        if(existingTab){
+            tabManager?.openTab(param)
+            return;
+        }
     }
     // forwardHistory.value = [];
     const lastId = tab.value.id
@@ -48,8 +50,13 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false) {
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
-function back(){
-    if(history.value.length === 0) return
+function back(fallback:any){
+    if(history.value.length === 0) {
+        if(fallback){
+            navigateTo(fallback)
+        }    
+        return
+    }
     const lastItem = history.value.pop()
     if(lastItem){
     const lastId = tab.value.id

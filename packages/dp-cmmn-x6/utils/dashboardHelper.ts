@@ -1,10 +1,5 @@
-interface CaseDashboardProvider {
-    caseTypeId: Ref<string | null>,
-    instanceId?: Ref<string | null>,
-    name: Ref<string | null>,
-}
 
-export const CaseManagementDashboardKey:InjectionKey<CaseDashboardProvider> = Symbol('caseManagementDashboard')
+
 
 
 import type { DashboardWidgetSetting } from '../../dp-dashboard/utils/dashboardWidgetHelper'

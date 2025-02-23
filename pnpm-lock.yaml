@@ -369,8 +369,14 @@ importers:
         specifier: ^3.1.8
         version: 3.1.8(vue@3.5.6(typescript@5.7.3))
       v-form:
-        specifier: file:../dp-form/dist/v-form-designer-3.1.11.tar.gz
-        version: file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz(ace-builds@1.38.0)(typescript@5.7.3)
+        specifier: file:../dp-form/dist/v-form-designer-3.1.12.tar.gz
+        version: file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz(ace-builds@1.38.0)(typescript@5.7.3)
+      v-viewer:
+        specifier: ^3.0.21
+        version: 3.0.21(viewerjs@1.11.7)(vue@3.5.6(typescript@5.7.3))
+      viewerjs:
+        specifier: ^1.11.7
+        version: 1.11.7
       vue:
         specifier: 3.5.6
         version: 3.5.6(typescript@5.7.3)
@@ -989,7 +995,7 @@ importers:
         version: 1.11.13
       nuxt:
         specifier: 3.15.4
-        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
       vue:
         specifier: 3.5.6
         version: 3.5.6(typescript@5.7.3)
@@ -2199,6 +2205,49 @@ importers:
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(jsdom@19.0.0(canvas@2.11.2(encoding@0.1.13)))(msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3))(sass@1.85.0)(terser@5.39.0)
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.0(typescript@5.7.3)
+
+  pages/client-ai-upload:
+    dependencies:
+      nuxt:
+        specifier: 3.15.4
+        version: 3.15.4(@parcel/watcher@2.5.1)(@types/node@22.13.4)(db0@0.2.4)(encoding@0.1.13)(eslint@8.57.1)(ioredis@5.5.0)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.34.6)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.1.0(@types/node@22.13.4)(jiti@2.4.2)(sass@1.85.0)(terser@5.39.0)(yaml@2.7.0))(vue-tsc@2.2.0(typescript@5.7.3))(yaml@2.7.0)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.7.3)
+      vue-router:
+        specifier: latest
+        version: 4.5.0(vue@3.5.6(typescript@5.7.3))
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.15.4
+        version: 3.15.4(@types/node@22.13.4)(@vitest/ui@2.1.9)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(jiti@2.4.2)(magicast@0.3.5)(playwright-core@1.50.1)(sass@1.85.0)(terser@5.39.0)(typescript@5.7.3)(vitest@2.1.9)(yaml@2.7.0)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.11.7
+        version: 15.11.7
+      playwright-core:
+        specifier: ^1.50.1
+        version: 1.50.1
+      sass:
+        specifier: ^1.85.0
+        version: 1.85.0
+      typescript:
+        specifier: ^5.7.3
+        version: 5.7.3
+      vitest:
+        specifier: ^2.1.9
+        version: 2.1.9(@types/node@22.13.4)(@vitest/ui@2.1.9)(happy-dom@15.11.7)(jsdom@19.0.0(canvas@2.11.2(encoding@0.1.13)))(msw@2.7.0(@types/node@22.13.4)(typescript@5.7.3))(sass@1.85.0)(terser@5.39.0)
+      vue-inline-svg:
+        specifier: ^3.1.4
+        version: 3.1.4(vue@3.5.6(typescript@5.7.3))
       vue-tsc:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.7.3)
@@ -9296,9 +9345,15 @@ packages:
     resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
     engines: {node: '>= 4'}
 
-  v-form@file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz:
-    resolution: {integrity: sha512-YACrEohPTvzJ6wGQWT0AjIl16dwJs0VVmniAwlr/VVTg39MtZM/9rN8YGK1XSNujnaKqQ1I0V4/4sY3zJvGqag==, tarball: file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz}
-    version: 3.1.11
+  v-form@file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz:
+    resolution: {integrity: sha512-VU1lWwvvi4E/wYcyBvyyca/TX9hkFlW1UbI/JBXvDUfMZ422GL9PSaSdKf8MCWy2lAgbDpRYX8Saw9o151fZxA==, tarball: file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz}
+    version: 3.1.12
+
+  v-viewer@3.0.21:
+    resolution: {integrity: sha512-FyorVqtWiv9LvDG36XEh8HDv8TAcVnMn0+s4b9yKUdBriAZNlYJvgyhGnhyBH/w9yK1PlLVyhorKEj26B6JK1Q==}
+    peerDependencies:
+      viewerjs: ^1.11.0
+      vue: ^3.0.0
 
   v8-compile-cache-lib@3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
@@ -9309,6 +9364,9 @@ packages:
   verror@1.10.1:
     resolution: {integrity: sha512-veufcmxri4e3XSrT0xwfUR7kguIkaxBeosDg00yDWhk49wdwkSUrvvsm7nc75e1PUyvIeZj6nS8VQRYz2/S4Xg==}
     engines: {node: '>=0.6.0'}
+
+  viewerjs@1.11.7:
+    resolution: {integrity: sha512-0JuVqOmL5v1jmEAlG5EBDR3XquxY8DWFQbFMprOXgaBB0F7Q/X9xWdEaQc59D8xzwkdUgXEMSSknTpriq95igg==}
 
   vite-hot-client@0.2.4:
     resolution: {integrity: sha512-a1nzURqO7DDmnXqabFOliz908FRmIppkBKsJthS8rbe8hBEXwEwe4C3Pp33Z1JoFCYfVL4kTOMLKk0ZZxREIeA==}
@@ -18619,7 +18677,7 @@ snapshots:
 
   utility-types@3.11.0: {}
 
-  v-form@file:packages/dp-form/dist/v-form-designer-3.1.11.tar.gz(ace-builds@1.38.0)(typescript@5.7.3):
+  v-form@file:packages/dp-form/dist/v-form-designer-3.1.12.tar.gz(ace-builds@1.38.0)(typescript@5.7.3):
     dependencies:
       '@element-plus/icons-vue': 0.2.7(vue@3.5.13(typescript@5.7.3))
       '@wangeditor/editor': 5.1.23
@@ -18640,6 +18698,12 @@ snapshots:
       - debug
       - typescript
 
+  v-viewer@3.0.21(viewerjs@1.11.7)(vue@3.5.6(typescript@5.7.3)):
+    dependencies:
+      lodash-es: 4.17.21
+      viewerjs: 1.11.7
+      vue: 3.5.6(typescript@5.7.3)
+
   v8-compile-cache-lib@3.0.1: {}
 
   validate-npm-package-license@3.0.4:
@@ -18653,6 +18717,8 @@ snapshots:
       core-util-is: 1.0.2
       extsprintf: 1.4.1
     optional: true
+
+  viewerjs@1.11.7: {}
 
   vite-hot-client@0.2.4(vite@5.4.14(@types/node@22.13.4)(sass@1.85.0)(terser@5.39.0)):
     dependencies:
