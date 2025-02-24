@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { routeHoldPage } from "~/utils/routerHelper";
+import { routeRetentionPage } from "~/utils/routerHelper";
 
 const props = defineProps<{ 
     idOrPath: string ,
@@ -13,7 +13,7 @@ const props = defineProps<{
   <div class="pageContainer--padding">
     <BrowsePageComponent :idOrPath="idOrPath" :home="{
       secondId: homeId,
-      homeRouteItem: routeHoldPage({})
+      homeRouteItem: routeRetentionPage({})
     }">
     </BrowsePageComponent>
   </div>

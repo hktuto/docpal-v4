@@ -22,5 +22,29 @@ export const routeHoldPageFolder = function(params: any){
     }
   } as TabItem
 }
-
+export const routeRetentionPage = function(params: any){
+  return {
+    id: "retention-page-versions-" + new Date().getTime(),
+    name: "retention-page-",
+    icon: 'ic:outline-lock-clock',
+    label: 'client_retention',
+    component: 'LazyRetentionPage',
+    props: {
+      tab: params.tab
+    }
+  } as TabItem
+}
+export const routeRetentionPageFolder = function(params: any){
+  return {
+    id: "retention-page-folder-versions-" + new Date().getTime(),
+    name: "retention-page-folder-" + params.documentId,
+    icon: 'ic:outline-lock-clock',
+    label: params.documentName,
+    component: 'LazyRetentionPageFolder',
+    props: {
+      idOrPath: params.documentId,
+      homeId: params.documentId
+    }
+  } as TabItem
+}
 // iconoir:privacy-policy
