@@ -25,6 +25,18 @@ export default defineAppConfig({
                 idOrPath: "/",
                 filter: {}
             }
+        },
+        "client-fileRequest": {
+            id: 'client-fileRequest',
+            name: 'client-fileRequest',
+            icon: 'icon-park-outline:layers',
+            hoverIcon: 'icon-park-twotone:layers',
+            label: "file_uploads",
+            component: "LazyUploadRequestPage",
+            props: {
+                idOrPath: "/",
+                filter: {}
+            }
         }
     }
 })
