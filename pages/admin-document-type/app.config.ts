@@ -17,8 +17,8 @@ export default defineAppConfig({
       id:"admin-smart-folder",
       name: 'admin-smart-folder',
       label: "adminMenu.smartFolder",
-      icon: "fluent:folder-people-24-regular",
-      hoverIcon: "fluent:folder-people-24-regular",
+      icon: "material-symbols:map-search-outline-rounded",
+      hoverIcon: "material-symbols:map-search-outline-rounded",
       component: "LazySmartFolderPage",
       props:{},
     }
