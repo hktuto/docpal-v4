@@ -122,17 +122,22 @@ export const useUploadAIStore = () => {
                 const formData = new FormData()
                 formData.append('file', doc.file)
                 formData.append('uploadTempFileRequestStr', JSON.stringify(_document)) 
-                result = await clientApi.api.postNuxeoDocumentUploadtempfile(
-                    {
-                        uploadTempFileRequestStr:""
-                    },
-                    formData as any,
-                    {
-                        onUploadProgress: (e: any) => {
-                            doc.progress = Math.round((e.loaded / e.total) * 100)
-                        }
+                const result = await clientApi.instance.post('/nuxeo/document/uploadTempFile',formData,{
+                    headers:{
+                        'Content-Type': 'multipart/form-data'
                     }
-                )
+                }).then(res => res.data)
+                // result = await clientApi.api.postNuxeoDocumentUploadtempfile(
+                //     {
+                //         uploadTempFileRequestStr:""
+                //     },
+                //     formData as any,
+                //     {
+                //         onUploadProgress: (e: any) => {
+                //             doc.progress = Math.round((e.loaded / e.total) * 100)
+                //         }
+                //     }
+                // )
             }
             doc.status = 'success'
         } catch (error) {
