@@ -75,7 +75,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         [
             {
                 code: 'docOpen',
-                name: 'Open',
+                name: 'common_open',
                 action: ({row}:any) => {
                     dblClickHandler(row)
                 }
