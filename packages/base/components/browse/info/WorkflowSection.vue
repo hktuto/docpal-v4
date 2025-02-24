@@ -64,9 +64,9 @@ const loading = ref(false)
       }
     })
 
+    const userList = ref([])
     // #region module: befor audit
     // TODO : add method to get UserList
-    const { userList, getUserList } = useUser();
     // const { userList } = toRefs(UseUser()) TODO : 
     const userListFilter = computed(() => {
       if (!userList) return []
@@ -177,5 +177,8 @@ const loading = ref(false)
       canApproval.value = await clientApi.api.getWorkflowIsdocumetidcanapproval({documentId:newValue.id, userId: userId.value} ).then(res => res.data) as any
     }, { immediate: true })
 
-    onMounted(() => getUserList())
+    onMounted(async () => {
+      const res = await clientApi.api.postNuxeoIdentityUsers().then(res => res.data) as any
+      userList.value = res.sort((a, b) => a.username.localeCompare(b.username))
+    })
 </script>
