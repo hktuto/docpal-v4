@@ -244,7 +244,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             tableConfig.columns.push(actionsColumn)
         }
         // add click event to action column
-        tableEvent.cellClick = ({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
+        tableEvent.cellClick = async({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
             if(column.type === actionsColumn.type && column.title === actionsColumn.title){
                 if(!actions){
                     throw new Error('bodyActions is required')
@@ -253,6 +253,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                     throw new Error('columns is required')
                 }
                 const bus = useEventBus(EventType.TABLE_CONTEXT_MENU_OPEN)
+                let additionalData:any;
+                if(params.additionalPermission){
+                    additionalData = await params.additionalPermission({column, row, rowIndex});
+                }
                 const options = actions.map((list) => {
                     return list.map((item) => {
                         if(item.children){
@@ -260,7 +264,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             // if all children are not visible , set iten.visible = false
                             // if all children are disabled , set item.disabled = true
                             item.children.forEach(child => {
-                                const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code})
+                                const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code, additionalData})
                                 child.visible = visible
                                 child.disabled = disabled
                             })
@@ -269,7 +273,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             item.visible = allVisible
                             item.disabled = allDisabled
                         }else{
-                            const {visible, disabled} =  permissionMethod({row, rowIndex, code:item.code})
+                            const {visible, disabled} =  permissionMethod({row, rowIndex, code:item.code, additionalData})
                             item.visible = visible
                             item.disabled = disabled
                         }

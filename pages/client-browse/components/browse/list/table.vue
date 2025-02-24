@@ -4,6 +4,9 @@ const routerProvider = inject(MenuRouterKey)
 if(!listProvider || !routerProvider) {
     throw new Error('BrowseListProviderKey not found')
 }
+const {selectedRows} = defineProps<{
+    selectedRows: any[]
+}>()
 const tableContainer = ref<HTMLElement>()
 const emits = defineEmits(['selectedChange'])
 async function loadData(entry:any[], path?:string, pageNum:number = 0) {
@@ -15,6 +18,7 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
         return entry
     }
 }
+
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
     id: 'browseTableSetting',
     api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
@@ -216,6 +220,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         ]
     ],
     additionalPermission: async({row}) => {
+        if(!row) return null
         const userId = useUserId()
         const permission = await getPermission(row.id, userId.value)
         return permission
@@ -223,12 +228,12 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     permissionMethod: ({options, code, column, row, rowIndex, additionalData}:any) => {
         // if click on empty row, return empty
         if(!row){
+
             return {
                 visible: false,
                 disabled: false
             }
         }
-        console.log("additionalData", additionalData)
         const publicActionsCode= ['docActionRefresh','docActionNewTab', 'docOpen'];
         if(publicActionsCode.includes(code)) {
             return {visible: true, disabled: false}
@@ -236,6 +241,18 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         // hide all action when click on temp file
         if(row.source === 'tempFile') {
             return {visible: false, disabled: false}
+        }
+        const actionThatFolderAndFileHave =  ['docActionRename', 'docActionInternalShare', 'docActionChangeDocType', 'docActionCopy', 'docActionCut', 'docActionPaste', 'docActionDelete'];
+        if(actionThatFolderAndFileHave.includes(code)) {
+            const ManageCode = ['docActionInternalShare']
+            if(ManageCode.includes(code)) {
+                return {
+                    visible: AllowTo({feature:'ManageRecord', permission:additionalData})
+                }
+            }
+            return {
+                visible: AllowTo({feature:'ReadWrite', permission:additionalData}),
+            }
         }
         // get permission 
         const folderActionsCode = ['docActionAddFolder','docActionNewFile','docActionUploadFile','docActionUploadFolder']
@@ -251,10 +268,12 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 disabled: false
             }
         }
-        
+        return {
+            visible: false,
+            disabled: false
+        }
     },
     selectChangeHander:(selectedRows:any[]) => {
-        console.log("selectedRows", selectedRows)
         emits('selectedChange', selectedRows)
     },
     optionalConfig: {
