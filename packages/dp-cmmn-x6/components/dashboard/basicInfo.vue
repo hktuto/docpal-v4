@@ -58,7 +58,7 @@ async function getCDBasciInfo() {
     if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null;
     const caseVersionId = caseProvider.caseVersionId?.value || null;
-
+    
     if(id) {
       state.mode = 'normal'
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)

@@ -75,11 +75,12 @@ function updateCaseInfo() {
 }
 function handleEdit() {
   //
+  
   const newItm = newCaseManagementEditor(
       caseDetailProvider?.caseInfo.value.caseTypeId,
       props.name,
       props.currentVersion,
-      props.caseTypeId
+      caseDetailProvider?.caseInfo.value.id
   )
   console.log("newItm", newItm)
   routerProvider?.navigateTo(newItm)

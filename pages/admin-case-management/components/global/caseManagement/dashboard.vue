@@ -81,16 +81,14 @@ async function handleSave() {
     state.saveLoading = false
   }
 }
+const caseVersionId = ref()
 
-provide(CaseManagementDashboardKey, {
-  caseTypeId,
-  name
-})
 
 
 
 onActivated(async () => {
   const { data } = await adminApi.api.getCaseDashboardId(props.id)
+  caseVersionId.value = data.cmmnVersionId;
   state.detail = data
   const temLayout = JSON.parse(data.styleJson)
   if(Array.isArray(temLayout)){
@@ -100,6 +98,12 @@ onActivated(async () => {
   }
   name.value = data.label
   routerProvider?.updateTabName(data.label)
+})
+
+provide(CaseManagementDashboardKey, {
+  caseTypeId,
+  caseVersionId,
+  name
 })
 </script>
 <style lang="scss" scoped>

@@ -202,33 +202,33 @@ defineExpose({
 <template>
 
 <div :class="['routerContainer', [tab.name]]">
-        <Teleport :to="historyClass" defer>
-            <div class="historyContainer">
-                <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
-                <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
-            </div>
-        </Teleport>
-        <Teleport  v-if="tab.icon" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .icon`">
-            
-            <Icon :name="tab.icon" />
-        </Teleport>
-        <Teleport  v-if="tab.label" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .label`">
-            <div class="label">
-                {{  t(tab.label) }} 
-            </div>  
-        </Teleport>
+    <Teleport :to="historyClass" defer>
+        <div class="historyContainer">
+            <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
+            <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
+        </div>
+    </Teleport>
+    <Teleport  v-if="tab.icon" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .icon`">
         
-        <template v-if="tab.initized && !showError">
-            <Transition >
-                <KeepAlive :exclude="/Dead/">
-                    <Suspense>
-                        <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
-                        <template #fallback>
-                            <LoadingBgInline />
-                        </template>
-                    </Suspense>
-                </KeepAlive>
-            </Transition>
+        <Icon :name="tab.icon" />
+    </Teleport>
+    <Teleport  v-if="tab.label" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .label`">
+        <div class="label">
+            {{  t(tab.label) }} 
+        </div>  
+    </Teleport>
+    
+    <template v-if="tab.initized && !showError">
+        <Transition >
+            <KeepAlive :exclude="/Dead/">
+                <Suspense>
+                    <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
+                    <template #fallback>
+                        <LoadingBgInline />
+                    </template>
+                </Suspense>
+            </KeepAlive>
+        </Transition>
     </template>
     <template v-else>
         <div class="errorContainer">

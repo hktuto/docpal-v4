@@ -1,7 +1,35 @@
-import { clientApi } from 'api';
+import { adminApi, clientApi } from 'api';
 import { Download, Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessage } from 'element-plus'
 import * as mime from 'mime-types'
+
+export function downloadHandler(doc: any) {
+  
+  if(!doc.isFolder) downloadFileHandler(doc)
+  else downloadFolderHandler(doc)
+}
+
+export async function downloadFolderHandler(doc: any) {
+  const noti = ElNotification({
+      title: '',
+      dangerouslyUseHTMLString: true,
+      icon: Loading,
+      message: `downloading ~ ${doc.name}`,
+      showClose: false,
+      customClass: 'loading-notification',
+      duration: 0,
+      position: 'bottom-right'
+  });
+  const blob = await adminApi.api.postNuxeoFolderstructureExport({
+    idOrPath: doc.id
+  },{
+    format: 'blob',
+    timeout: 0,
+    headers: {'white': 'true'}
+  })
+  downloadBlob(blob, doc.name + '.zip', 'application/zip')
+  noti.close()
+}
 
 export function canCollaboraEdit(mimeType: string) {
   // is mimeType is .doc or .docx file
@@ -205,6 +233,7 @@ export async function downloadFileHandler(doc: any) {
       const el = document.getElementById(id)
       if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
     })
+    // TODO : add externsion to file name
     await downloadBlob(blob, doc.name)
     // await DownloadDocApi(props.doc.id)
   } catch (error: any) {
