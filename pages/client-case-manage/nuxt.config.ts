@@ -8,6 +8,7 @@ export default defineNuxtConfig({
   extends:[
     "../../packages/dp-watermark",
     "../../packages/base",
-    "../../packages/dp-notification"
+    "../../packages/dp-notification",
+    "../../packages/dp-cmmn-x6",
   ]
 })

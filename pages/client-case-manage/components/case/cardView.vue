@@ -14,10 +14,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getCaseInstansePageApi } from 'dp-api'
-const props = defineProps(['fields'])
+import {clientApi} from 'api'
+const props = defineProps(['fields', 'id'])
 
-const route = useRoute()
+
 const state = reactive<any>({
   data: [],
   totalSize: 0,
@@ -25,7 +25,7 @@ const state = reactive<any>({
   fields: []
 })
 async function getList(params) {
-  const res = await getCaseInstansePageApi(route.params.id, params)
+  const res = await clientApi.api.postCaseTypesCasetypeidRecordsPage(props.id, params).then(res => res.data) as any
   state.data = res.entryList
   state.totalSize = res.totalSize
 }
