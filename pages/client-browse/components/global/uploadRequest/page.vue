@@ -67,7 +67,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       },
       {
         code: "toFolder",
-        name: "common_position",
+        name: "common_viewFolder",
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
