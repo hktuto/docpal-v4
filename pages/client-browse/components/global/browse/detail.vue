@@ -247,8 +247,15 @@ function calMinWidth(){
 .detailContainer{
     height: 100%;
     overflow: hidden;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 .header{
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr min-content;
     gap: var(--app-space-s);
