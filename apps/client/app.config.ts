@@ -90,7 +90,7 @@ export default defineAppConfig({
             name: "client-trash"
         },
         {
-            name: "client-case"
+            name: "client-case-manage"
         }
     ]
 })
