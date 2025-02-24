@@ -96,7 +96,7 @@ const dialogVisible = ref(false);
 .tag {
   border-radius: 4px;
   margin: calc(var(--app-space-xs) / 3) calc(var(--app-space-xs) / 2);
-  background: var(--app-grey-050);
+  background: var(--app-grey-950);
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
