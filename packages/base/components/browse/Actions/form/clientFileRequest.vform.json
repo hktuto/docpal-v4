@@ -177,7 +177,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "const max = this.getWidgetRef('maximum').getValue()\nif ((value > 100) || (value < 0)) {\n  callback(new Error('1-100'))  //fail\n} else if(max && value >= max) {\n  callback(new Error('Less than max'))\n} else {\n  callback();  //pass\n}"
+        "onValidate": "const max = this.getWidgetRef('maximum').getValue()\nif ((value > 100) || (value < 0)) {\n  callback(new Error('1-100'))  //fail\n} else if(max && value > max) {\n  callback(new Error('Less than max'))\n} else {\n  callback();  //pass\n}"
       },
       "id": "input105763"
     },
@@ -224,7 +224,7 @@
         "onChange": "",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "const min = this.getWidgetRef('minimum').getValue()\nif ((value > 100) || (value < 0)) {\n  callback(new Error('1-100'))  //fail\n} else if(min && value <= min) {\n  callback(new Error('More than min'))\n} else {\n  callback();  //pass\n}"
+        "onValidate": "const min = this.getWidgetRef('minimum').getValue()\nif ((value > 100) || (value < 0)) {\n  callback(new Error('1-100'))  //fail\n} else if(min && value < min) {\n  callback(new Error('More than min'))\n} else {\n  callback();  //pass\n}"
       },
       "id": "input51982"
     },
@@ -301,7 +301,7 @@
         "onFocus": "",
         "onBlur": "",
         "onValidate": "",
-        "defaultValue": []
+        "defaultValue": ""
       },
       "id": "select38750"
     },
@@ -366,9 +366,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

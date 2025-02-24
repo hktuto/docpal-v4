@@ -15,7 +15,7 @@
             :close-on-click-modal="false"
             :title="`${$t('publicUpload_requestFileUpload')}`"
             >
-            <WorkflowDetailFormRender ref="FormRendererRef" :form-json="formJson"/>
+            <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
             <template #footer>
               <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('dpButtom_confirm') }}</el-button>
             </template>
@@ -26,6 +26,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { clientApi } from 'api'
+import formJson from './form/clientFileRequest.vform.json'
 const emits = defineEmits(['success'])
 const props = defineProps<{
   doc?: any
@@ -34,6 +35,7 @@ const state = reactive({
   loading: false,
   dialogOpened: false
 })
+const {t} = useI18n()
 function uploadDialog(){
   state.dialogOpened = true
   setTimeout(() => {
@@ -43,21 +45,22 @@ function uploadDialog(){
   // open upload dialog
 }
 // #region module:
-  import formJson from './form/clientFileRequest.vform.json'
   const FormRendererRef = ref()
   async function handleSubmit () {
     state.loading = true
     try {
-      const data = await FormRendererRef.value.getFormData(true, false)
-      if (!data) throw new Error(`${$i18n.t('incompleteData')}`);
+      const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+      if (!data) throw new Error(`${t('incompleteData')}`);
       if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
       data.idOrPath = props.doc.path
-      const res = await clientApi.api.postNuxeoFilerequest(data)
+      console.log(data);
+      
+      const res: any = await clientApi.api.postNuxeoFilerequest(data).then(res => res.data)
       state.loading = false
-      if (res.errorCode) throw new Error(res.message || 'error');
+      if (res?.errorCode) throw new Error(res.message || 'error');
       state.dialogOpened = false
-      ElMessage.success($i18n.t('publicUpload_success'))
+      ElMessage.success(t('publicUpload_success'))
       emits('success')
     } catch (error) {
       // ElMessage.error(error.message)
