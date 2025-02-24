@@ -10,7 +10,7 @@ const {t} = useI18n()
 const emits = defineEmits(['filter-change', 'refresh'])
 const keyword = ref()
 const title = ref()
-
+const routerProvider = inject(MenuRouterKey)
 type TableState = {
     ready: boolean,
     loading: boolean,
@@ -40,11 +40,11 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
         return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams)
     },
     defaultSort: {
-        field: "createdDate",
+        field: "created_date",
         order: 'desc'
     },
     columns: [
-        {field: 'name', title: 'search.name'},
+        {field: 'case_id', title: 'caseManagement.name'},
         {field: 'folderCabinet', title: 'folderCabinet'},
         {field: 'title', title: 'title'},
         {
