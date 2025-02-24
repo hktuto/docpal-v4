@@ -33,14 +33,9 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
-import type { DashboardWidgetSetting } from "../../../../packages/dp-dashboard/utils/dashboardWidgetHelper";
-import {
-  CmmnWidgetComponent
-} from "../../../../packages/dp-cmmn-x6/utils/dashboardHelper";
-import { 
-  getCaseDashboardsApi,
-  getCaseDashboardDetailApi
-} from 'dp-api'
+
+import {clientApi} from 'api'
+const routerProvider = inject(MenuRouterKey)
 const state = reactive({
   loading: false,
   layout: [] as DashboardWidgetSetting[],
@@ -48,11 +43,12 @@ const state = reactive({
   selectedDashboard: {},
   time: 3
 })
-const route = useRoute()
-const router = useRouter()
+const {caseId} = defineProps<{
+  caseId: string
+}>()
 async function getDashboardList() {
   try {
-    state.dashboardList = await getCaseDashboardsApi(route.query.caseId)
+    state.dashboardList = await clientApi.api.getCaseDashboardCasetypeCasetypeidPermission(caseId).then(res => res.data) as any
     const dashboardId = sessionStorage.getItem('case-dashboard-id')
     let index = state.dashboardList.findIndex(item => item.id === dashboardId )
     if(!index || index < 0) index = 0
@@ -65,7 +61,9 @@ async function getDashboardList() {
   }
 }
 function goBack() {
-  router.push(`/case/${route.query.caseId}`)
+  // TODO: add fallback to case list
+  routerProvider.back()
+  // router.push(`/case/${route.query.caseId}`)
 }
 async function getLayout(id: string, row: any) {
   try {
@@ -76,7 +74,7 @@ async function getLayout(id: string, row: any) {
       return
     }
     sessionStorage.setItem('case-dashboard-id', id)
-    const detail = await getCaseDashboardDetailApi(id)
+    const detail = await clientApi.api.getCaseDashboardId(id).then(res => res.data) as any
     if(!detail.styleJson) throw new Error("");
     state.layout = JSON.parse(detail.styleJson)
     row.layout = state.layout
