@@ -48,13 +48,15 @@ onUnmounted(() => {
 })
 
 function newTab() {
-    const newData:TabItem = {
-        id:'newTab-' + new Date().getTime(),
-        label: "New Tab",
-        parent: panel.id,
-        component: 'LazyTabEmpty'
+    const config = useRuntimeConfig()
+    if(config.public.defaultTab){
+        const newItem:any = config.public.defaultTab
+        newItem.parent = panel.id
+        newItem.id += '-' + new Date().valueOf()
+        newItem.name += '-' + new Date().valueOf()
+        addTabToPanel(panel.id, newItem)
     }
-    addTabToPanel(panel.id, newData)
+   
 }
 
 
