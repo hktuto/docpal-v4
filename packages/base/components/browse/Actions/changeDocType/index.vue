@@ -57,8 +57,8 @@ const MetaFormRef = ref()
 async function iconClickHandler(doc:any){
     dialogOpened.value = true
     state.docPath = doc.path 
-    const {data} =  await clientApi.api.postNuxeoDocument({idOrPath:doc.id})
-     state.doc =data
+    const {data:docData} =  await clientApi.api.postNuxeoDocument({idOrPath:doc.id})
+     state.doc =docData
     // await clientApi.api.getTypesActive()
     const { data } = await clientApi.api.postTypesMetadatas({
         idOrPath: doc.type || doc.documentType || doc.docpalType

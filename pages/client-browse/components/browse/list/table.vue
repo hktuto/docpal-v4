@@ -207,6 +207,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .tableContainer{
+    width: 100%;
     height: 100%;
     position: relative;
     

@@ -43,7 +43,11 @@ const form = reactive({
 const imgBlob = ref();
 async function getImgPreviewBlob() {
   const blob: any = await clientApi.api.postNuxeoDocumentThumbnail(form.templatePath, {
-    format: 'blob'
+    format: 'blob',
+    timeout: 0,
+    headers: {
+        key: 'preview'
+    }
   })
   const urlCreator = window.URL || window.webkitURL
   imgBlob.value = urlCreator.createObjectURL(blob)

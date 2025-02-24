@@ -136,13 +136,13 @@ function createMessage(type:string, ...args:any[]){
             type,
             message: args[0],
             appendTo: '#'+ tab.value.parent + "_" + tab.value.id,
-        },)
+        } as any)
     }else{
         ElMessage({
             type,
             appendTo: routerContainer.value,
             ...args,
-        })
+        } as any)
     }
 }
 
@@ -151,17 +151,16 @@ function createNotification(type:string, ...args:any[]){
         ElNotification({
             type,
             message:args[0]
-        },{
+        } as any,{
             appendTo: routerContainer.value,
-        })
+        }as any)
     }else{
         ElNotification({
             type,
-
             ...args
-        },{
+        } as any,{
             appendTo: routerContainer.value,
-        })
+        } as any)
     }
 }
 
@@ -170,6 +169,7 @@ provide(MenuRouterKey,{
     updateProps,
     updateTabName,
     routerContainer,
+    back,
     message:{
         success: (...args) => createMessage('success', ...args),
         error: (...args) => createMessage('error', ...args),

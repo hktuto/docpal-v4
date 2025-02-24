@@ -1,0 +1,233 @@
+<script lang="ts" setup>
+import * as mime from 'mime-types'
+
+const { infoSlots } = useBrowse()
+
+const BrowseActionsEditRef = ref();
+const props = withDefaults(defineProps<{
+    doc?: any,
+    infoOpened?:boolean,
+    hidePreview?:boolean,
+    draggable?:boolean,
+    resizeOption?: any,
+    listData?: any,
+    permission?: any,
+    commentId?: string
+}>(),{
+    doc: null,
+})
+const userId = useUserId()
+
+const { doc } = toRefs(props)
+const currentTab = ref('info')
+
+
+
+function checkPermission(permission) {
+    if(!!permission?.hold?.status) {
+        return ['A', 'L', 'P'].includes(permission.hold.status)
+    }
+    else if(!!permission?.retention?.status) {
+        return ['A', 'D', 'P'].includes(permission.retention.status)
+    }
+    else return false 
+}
+
+
+const loading = ref(false);
+const detail = ref<any>();
+const permission = ref<any>();
+
+
+function openEditInfo() {
+    if(BrowseActionsEditRef.value) {
+        BrowseActionsEditRef.value.openDialog()
+    }
+}
+function ocrPermission(doc:any) {
+    try {
+      if(!allowFeature('OCR') || !doc.properties['file:content'] || !doc.properties['file:content']['mime-type']) return false;
+      
+      const ext = doc.properties['file:content']['mime-type'];
+        const extension = '.' + mime.extension(ext)
+        return canOCR(extension)
+                
+    } catch (error) {
+      console.log(error)
+        return false
+    }
+}
+
+async function docUpdated(forceRefresh?: boolean = false) {
+
+    if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
+        detail.value = deepCopy(props.listData.doc)
+        permission.value = props.permission;
+        
+        return
+    }
+    loading.value = true;
+    try {
+        // @ts-ignore
+        detail.value = null; // set detail to null to reset all tab
+        // check doc is Folder or not, if is folder but tag is convert or relate, switch back to info
+        if(doc.value.isFolder && ['convert', 'relate'].includes(currentTab.value)) {
+            currentTab.value = 'info'
+        }
+        // get detail
+        //   const response = await getDocumentDetail(doc.value.id, userId);
+        const response = await getDocDetail(doc.value.id, userId.value);
+        detail.value = response.doc;
+        permission.value = response.permission;
+        //scroll to top
+        const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
+        if(tabContent) {
+            tabContent.scrollTop = 0;
+        }
+    } catch (error) {
+        
+    }
+    loading.value = false;
+}
+
+watch(doc, async() => {
+    if(!doc.value) return;
+    docUpdated()
+},{immediate:true})
+watch(() => props.commentId, async() => {
+    if (props.commentId) {
+        currentTab.value = 'comments'
+    }
+},{immediate:true})
+
+</script>
+
+<template>
+<div class="infoContainer">
+<!-- doc preview and name -->
+<div class="infoHeaderSection">
+    <slot name="header" />
+    <div class="headerTopRow">
+        <div class="name"><div class="namespan" @dblclick="openEditInfo">{{ doc ? doc.name : '' }}</div> 
+            <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="$emit('refresh')"/>
+        </div>
+        
+        <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
+    </div>
+</div>
+  <template v-if="detail">
+<el-tabs   class="tabContainer dp-tabs--auto" v-model="currentTab" >
+    <el-tab-pane :label="$t('rightDetail_info')" name="info">
+        <div class="infoTagContainer">
+            <div v-if="!hidePreview" class="infoPreviewContainer">
+                <BrowseInfoPreview :doc="detail"  />
+            </div>
+            <BrowseInfoDocInfo :doc="detail" :permission="permission" @update="docUpdated" @refresh="$emit('refresh')"/>
+        </div>
+    </el-tab-pane>
+    <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
+        <BrowseInfoActivities v-if="currentTab === 'activities'" :doc="detail" />
+    </el-tab-pane>
+    <el-tab-pane v-if="ocrPermission(detail)" :label="$t('rightDetail_ocr')" name="ocr">
+        <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
+    </el-tab-pane>
+    <el-tab-pane v-if="allowFeature('DOC_COMMENT')" :label="$t('rightDetail_comments')" name="comments">
+        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :commentId="commentId" :disabled="checkPermission(permission)"/>
+    </el-tab-pane>
+    <el-tab-pane v-if="!detail.isFolder && allowFeature('DOCUMENT_CONVERSION')" :label="$t('convert_convert')" name="convert">
+        <BrowseInfoPicture v-if="allowFeature('DAM_FILE_CONVERTION')" :doc="detail" />
+        <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
+    </el-tab-pane>
+    <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
+      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permission}" />
+    </el-tab-pane> 
+</el-tabs>
+  </template>
+<!--  <div  v-loading="loading" class="loadingContainer">-->
+<!--    {{ detail }}-->
+<!--  </div>-->
+</div>
+</template>
+
+
+
+<style lang="scss" scoped>
+.infoContainer{
+    width: 100%;
+    height: 100%;
+    padding-inline: var(--app-space-xs);
+
+}
+.infoPreviewContainer{
+    background: var(--app-grey-950);
+    padding: var(--app-space-xs);
+}
+.infoHeaderSection{
+  padding-block: var(--app-space-xs);
+}
+.headerTopRow{
+    --icon-size: var(--app-font-size-m);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+  align-items: center;
+  > * {
+    flex-shrink: 0;
+    min-width: var(--icon-size);
+  }
+  .name {
+    flex: 1 0 auto;
+    font-weight: 800;
+    font-size: 1.2rem;
+    word-break: break-all;
+    display: flex;
+    flex-flow:row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap:calc(var(--app-space-xs));
+  }
+}
+.infoContainer {
+    background: var(--app-grey-1000);
+    height: 100%;
+    user-select: none;
+    -ms-touch-action: none;
+    touch-action: none;
+    overflow: auto;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    border-radius: 12px;
+    position: relative;
+    padding:0;
+    &.infoOpened{
+        padding: var(--app-space-xs);
+    }
+    &.draggable{
+        cursor: move;
+        position: fixed;
+    }
+  @media (max-width: 640px) {
+    margin-left: 0;
+  }
+}
+.infoTagContainer{
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 6px;
+    overflow: auto;
+}
+.tabContainer{
+    min-width: 180px;
+}
+
+.resize-drag {
+  box-sizing: border-box;
+  background: #41b883;
+
+  /* To prevent interact.js warnings */
+  user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+}
+</style>

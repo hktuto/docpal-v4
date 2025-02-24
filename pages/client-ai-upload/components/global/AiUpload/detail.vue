@@ -47,10 +47,10 @@
               :dragging="dragging"
               :minSizeInPixel="300"
           >
-              <div class="flex-x-between" v-show="state.selectedDoc" style="padding:var(--app-padding);">
+              <div class="flex-x-between" v-show="state.selectedDoc" style="padding:var(--app-space-xs);">
                 {{ state.selectedDoc.name }}
               </div>
-              <div :class="['vformRender', { 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }]" style="padding-top:var(--app-padding);">
+              <div :class="['vformRender', { 'vform-dp-docName_color__danger': state.repearNameIdList.includes(state.selectedDoc.id) }]" style="padding-top:var(--app-space-xs);">
   <!--                <el-button v-if="allowFeature('AI_CLASSIFICATION')" type="primary" @click="applyAllAi">{{ $t('ai.applyAll')}}</el-button>-->
                   <MetaRenderForm2 ref="MetaFormRef" :showOcrLanguage="state.selectedDoc.canOcr" :mode="allowFeature('AI_CLASSIFICATION') ? 'ai' : 'upload'" @formChange="handleMetaChange"></MetaRenderForm2>
               </div>
@@ -400,10 +400,10 @@ onMounted(async() => {
     position: relative;
     gap:0;
   :deep{
-    .splitpanes.default-theme .splitpanes__pane {background-color: var(--color-grey-0000);}
+    .splitpanes.default-theme .splitpanes__pane {background-color: var(--app-grey-0000);}
     .splitpanes__splitter {
       width: 2px;
-      background-color: var(--color-grey-050);position: relative;
+      background-color: var(--app-grey-050);position: relative;
       &:before {
         content: '';
         position: absolute;
@@ -428,8 +428,8 @@ onMounted(async() => {
     }
   }
   .upload-footer{
-    border-top:1px solid var(--color-grey-050);
-    padding: var(--app-padding) calc(var(--app-padding) * 2);
+    border-top:1px solid var(--app-grey-050);
+    padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
     
   }
 }
@@ -445,7 +445,7 @@ onMounted(async() => {
         overflow: hidden;
         display: grid;
         grid-template-rows: min-content 1fr;
-        padding: var(--app-padding) calc(var(--app-padding) * 2);
+        padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
         .vformRender {
             overflow: auto;
         }
@@ -453,9 +453,9 @@ onMounted(async() => {
 }
 .tree-item {
     width: 100%;
-    padding-right: var(--app-padding);
+    padding-right: var(--app-space-xs);
     display: flex;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
 }
 :deep(.el-tree-node.is-current > .el-tree-node__content) {
     background-color: var(--el-tree-node-hover-bg-color);
@@ -467,10 +467,10 @@ onMounted(async() => {
 }
 .disabled-line {
     text-decoration: line-through;
-    color: var(--color-grey-500);
+    color: var(--app-grey-500);
 }
 :deep .formContainer  {
-    margin: 0 var(--app-padding);
+    margin: 0 var(--app-space-xs);
 }
 .splitpanes {
     overflow: hidden;

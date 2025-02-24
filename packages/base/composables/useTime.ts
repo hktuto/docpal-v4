@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 export const useTime = () => {
     const { t } = useI18n()
-    const dateFormat = useUser().getDateFormat()
+    const dateFormat = useDisplayTimeFormat()
     const pickerOptions = {
         shortcuts: [{
             text: `1 ${t('common_day')}`,
@@ -30,12 +30,12 @@ export const useTime = () => {
     const today = new Date();
 
     const makeDueDay = (time:string) => {
-        return dayjs(time).add(3, 'day').format(dateFormat)
+        return dayjs(time).add(3, 'day').format(dateFormat.value)
     }
     const displayTime = (time:string) => {
-        return dayjs(time).format(dateFormat)
+        return dayjs(time).format(dateFormat.value)
     }
-    const formatDate = (time:string, format: string = dateFormat, isDefault:Boolean = false) => {
+    const formatDate = (time:string, format: string = dateFormat.value, isDefault:Boolean = false) => {
         const defaultTime = isDefault ? today : ''
         const result = dayjs(time).format(format)
         return result === 'Invalid Date' ? '' : result

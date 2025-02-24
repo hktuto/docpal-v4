@@ -40,7 +40,7 @@ import { clientApi } from 'api'
 const { updateShareList, getMineTypeShareList, getUseWatermark } = useShareStore()
 import formJson from './shareRequest.vform.json'
 const FromRendererRef = ref()
-
+const { diffMinute } = useTime()
 const routerProvider = inject(MenuRouterKey)
 
 const props = defineProps<{
@@ -96,7 +96,7 @@ async function handleDblclick (row) {
                 }
             }, 1000)
         } else {
-            previewFile.blob = await clientApi.api.postNuxeoDocumentPreview(row.id,{
+            previewFile.blob = await clientApi.api.postNuxeoDocumentPreview({idOrPath: row.id},{
                 format: 'blob'
             })
             previewFile.loading = false
@@ -121,7 +121,7 @@ async function handleSubmit () {
             emailList: formData.emailList,
             documentList: documentIdListGet(),
             password: formData.password ? formData.password : '',
-            tokenLiveInMinutes: diffMinute(formData.dueDate)
+            tokenLiveInMinutes: diffMinute(formData.dueDate) 
         }
         const response = await clientApi.api.postNuxeoShareNew(param).then(res => res.data)
         ElMessage.success($i18n.t('share_success'))
@@ -214,7 +214,7 @@ onUnmounted(() => {
     display: grid;
     grid-template-columns: 1.3fr 1fr;
     grid-template-rows: min-content 1fr min-content;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     .div1 { grid-area: 1 / 1 / 2 / 2; }
     .div2 { grid-area: 1 / 2 / 3 / 3; }
     .div3 { grid-area: 2 / 1 / 3 / 2; }

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { Splitpanes, Pane } from 'splitpanes'
 
 import {clientApi} from 'api'
 import {BrowseListTable} from '#components'
@@ -8,18 +9,19 @@ const props = defineProps<{
     idOrPath: string ,
     filter: any,
     home: any,
+    commentId?: string
 }>();
 
 const { idOrPath } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 const selectedItem = ref<any[]>([])
-
+const infoOpened = ref(false)
 if(!tabProvider || !routerProvider) {
     throw createError('provider not found')
 }
 const tableRef = ref<InstanceType<typeof BrowseListTable>>();
-
+const browswInfoRef = ref()
 function addToSelection(items: any[]){
     selectedItem.value.push(...items)
 }
@@ -124,16 +126,32 @@ bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
     }
 })
 
+const minSize = ref(20)
+const lastSize = ref()
+function calMinWidth(){
+    // panel size is 280px, check the percentage of window width
+    const windowWidth = window.innerWidth
+    minSize.value = 280 / windowWidth * 100
+    if(!lastSize.value) {
+        lastSize.value = minSize.value
+    }
+}
+
+useEventListener(window, 'resize', calMinWidth)
+
 useEventListener(document, 'closeFilePreview', closePreview)
 </script>
 
 <template> 
+<div class="browseContainer">
+    <splitpanes>
+
+    <Pane>
     <BrowseListTable ref="tableRef" :class="{'selected': selectedList.length > 0}" @selectedChange="selectedChangeHandler">
         <template #toolbar_buttons> 
             <slot name="toolbar_buttons">
                 <div class="toolsBarContainer">
                     <template v-if="selectedList.length === 0">
-
                         <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
                     </template>
                     <template v-else>
@@ -145,7 +163,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
                 </div>
             </slot>
             <slot name="toolbarTools">
-                <CollapseMenu>
+                <CollapseMenu v-if="idOrPath !== '/'">
                     <template #default="{ collapse }">
                         <template v-for="(group, key) in docActions" :key="key">
                             <template v-for="item in group" :key="item.name">
@@ -164,15 +182,36 @@ useEventListener(document, 'closeFilePreview', closePreview)
                     </template>
                 </CollapseMenu>
                 <BrowseActionsInfo
+                    v-if="idOrPath !== '/'"
                     :doc="docDetail"
                     :permission="docPermission"
+                    @itemClicked="infoOpened = !infoOpened"
                 />
             </slot>
         </template>
     </BrowseListTable>
+    </Pane>
+    <Pane v-if="idOrPath !== '/' && infoOpened" :min-size="minSize" :size="minSize">
+        <BrowseInfo 
+            :doc="docDetail" 
+            :permission="docPermission"
+            :infoOpened="infoOpened" 
+            :commentId="commentId" 
+            @close="infoOpened = false"
+            @refresh="handleRefresh"
+        />
+    </Pane>
+    </splitpanes>
+</div>
 </template>
 
 <style lang="scss" scoped>
+.browseContainer{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
 .selectedNoteContainer{
     padding-left: var(--app-space-s);
     line-height: 1;
