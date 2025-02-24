@@ -127,14 +127,11 @@ bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
 })
 
 const minSize = ref(20)
-const lastSize = ref()
 function calMinWidth(){
     // panel size is 280px, check the percentage of window width
     const windowWidth = window.innerWidth
     minSize.value = 280 / windowWidth * 100
-    if(!lastSize.value) {
-        lastSize.value = minSize.value
-    }
+
 }
 
 useEventListener(window, 'resize', calMinWidth)
