@@ -5,7 +5,7 @@
       <!-- <img class="cursorPointer" src="/icons/sort.svg" /> -->
     </div>
     <div class="activitiesDetail">
-      <el-timeline>
+      <el-timeline >
         <el-timeline-item
           v-for="(activity, index) in activities"
           :key="index"
@@ -103,6 +103,10 @@ watch(
   .activitiesDetail {
     overflow: auto;
     padding: var(--app-space-xs);
+    :deep(ul){
+      margin: 0;
+      padding: 0;
+    }
     // max-height: 400px;
     // overflow: auto;
     .timeline {
@@ -122,11 +126,12 @@ watch(
         line-height: 0.5625rem;
       }
       .userOrAction {
-        background: var(--color-b2);
+        background: var(--app-grey-950);
         border-radius: 1.5rem;
         padding: 0.25rem 0.75rem;
         font-size: .8rem;
         font-weight: 500;
+        color: var(--app-grey-100);
       }
     }
   }

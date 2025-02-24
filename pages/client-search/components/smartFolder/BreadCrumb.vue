@@ -2,7 +2,7 @@
     <el-breadcrumb :separator-icon="ArrowRight">
         <el-breadcrumb-item v-for="(item,index) in breadcrumbs" :key="item.path"
             @click="goRoute(item, index)">
-            <SvgIcon v-if="item.icon" :src="item.icon"></SvgIcon>
+            <Icon v-if="item.icon" name="dp-icon:breadcrumb-home" />
             {{item.name}}
         </el-breadcrumb-item>
     </el-breadcrumb>
