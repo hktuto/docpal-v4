@@ -29,8 +29,8 @@ export default defineAppConfig({
         "client-fileRequest": {
             id: 'client-fileRequest',
             name: 'client-fileRequest',
-            icon: 'icon-park-outline:layers',
-            hoverIcon: 'icon-park-twotone:layers',
+            icon: 'uil:upload',
+            hoverIcon: 'uil:upload',
             label: "file_uploads",
             component: "LazyUploadRequestPage",
             props: {
