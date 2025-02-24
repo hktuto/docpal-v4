@@ -1,6 +1,4 @@
 <script lang="tsx" setup>
-import {Grid, type VxeGridInstance, type VxeGridListeners} from 'vxe-table'
-
 const listProvider = inject(BrowseListProviderKey);
 const routerProvider = inject(MenuRouterKey)
 if(!listProvider || !routerProvider) {
@@ -72,19 +70,188 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     bodyActions: [
         [
             {
-                code: 'open',
+                code: 'docOpen',
                 name: 'Open',
                 action: ({row}:any) => {
                     dblClickHandler(row)
                 }
             },
+            {  
+                code: 'docActionAddFolder',
+                name: 'filePopover_newFolder',
+                action: ({row}) => {
+                    const ev = new CustomEvent('docActionAddFolder', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code: 'docActionNewFile',
+                name: 'filePopover_newFile',
+                action: ({row}) => {
+                    const ev = new CustomEvent('docActionNewFile', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code: 'docActionUploadFile',
+                name: 'filePopover_uploadFile',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionUploadFile', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code: 'docActionUploadFolder',
+                name : 'filePopover_uploadFolder',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionUploadFolder', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionRename',
+                name:'filePopover_rename',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionRename', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionChangeDocType',
+                name:'filePopover_changeDocType',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionChangeDocType', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docWatermark',
+                name:'filePopover_watermark',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionWatermark', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionCopy',
+                name:'filePopover_copy',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionCopy', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionCut',
+                name: 'filePopover_cut',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionCut', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionPaste',
+                name:'filePopover_paste',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionPaste', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionInternalShare',
+                name :'filePopover_internalShare',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionInternalShare', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionDelete',
+                name: 'filePopover_delete',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionDelete', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionRefresh',
+                name: 'common_refresh',
+                action:({row}) => {
+                    const ev = new CustomEvent('docActionRefresh', {detail: row})
+                    document.dispatchEvent(ev)
+                }
+            },
+            {
+                code:'docActionNewTab',
+                name: "rightClick.newTab",
+                action:({row}) => {
+                    if(row.source === 'tempFile') {
+                        const newItem = createAiUploadDetail({
+                            id: row.doc.uploadId
+                        })
+                        routerProvider?.navigateTo(newItem, true)
+                        return
+                    }
+                    if(row.isFolder){
+                        const link = createBrowseListPageParams({
+                            idOrPath: row.id
+                        })
+                        routerProvider?.navigateTo(link, true)
+                        return
+                    }
+                    const detailLink = createDetailPageParams({
+                        idOrPath: row.id,
+                        docName: row.name,
+                        showHeaderAction: true
+                    })
+                    routerProvider?.navigateTo(detailLink, true)
+                }
+            },
+            {
+                code:'docActionDownload',
+                name:'rightClick.download',
+                action: ({row}) => {
+                    downloadHandler(row)
+                }
+            }
         ]
     ],
-    permissionMethod: ({options, column, row, rowIndex}:any) => {
-        return {
-            visible: true,
-            disabled: false
+    additionalPermission: async({row}) => {
+        const userId = useUserId()
+        const permission = await getPermission(row.id, userId.value)
+        return permission
+    },
+    permissionMethod: ({options, code, column, row, rowIndex, additionalData}:any) => {
+        // if click on empty row, return empty
+        if(!row){
+            return {
+                visible: false,
+                disabled: false
+            }
         }
+        console.log("additionalData", additionalData)
+        const publicActionsCode= ['docActionRefresh','docActionNewTab', 'docOpen'];
+        if(publicActionsCode.includes(code)) {
+            return {visible: true, disabled: false}
+        }
+        // hide all action when click on temp file
+        if(row.source === 'tempFile') {
+            return {visible: false, disabled: false}
+        }
+        // get permission 
+        const folderActionsCode = ['docActionAddFolder','docActionNewFile','docActionUploadFile','docActionUploadFolder']
+        // handle folder actions
+        if(folderActionsCode.includes(code)){
+            return {
+                visible: row.isFolder && AllowTo({feature:'ReadWrite', permission:additionalData}),
+                disabled: false
+            }
+        }else{
+            return {
+                visible: !row.isFolder && AllowTo({feature:'ReadWrite', permission:additionalData}),
+                disabled: false
+            }
+        }
+        
     },
     selectChangeHander:(selectedRows:any[]) => {
         console.log("selectedRows", selectedRows)

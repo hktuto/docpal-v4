@@ -112,7 +112,7 @@ async function getCDProcess() {
       state.data = data;
     } else if (caseVersionId) {
       const {
-        data,
+        data : caseTypeData,
       } = await adminApi.api.getCaseDashboardVersionVersionidStages(caseVersionId);
       state.data = caseTypeData;
     }

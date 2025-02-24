@@ -22,7 +22,6 @@ const state = reactive({
     accept: '',
     setting: {},
 })
-const router = useRouter()
 const form = reactive({
     fileList: []
 })

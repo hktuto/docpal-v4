@@ -14,11 +14,6 @@ import ShareBtn from "../components/browse/share/publicButton.vue";
 export default defineNuxtPlugin(() => {
     const { globalSlots } = useGlobalSetting()
     globalSlots.value.push(
-    //     {
-    //     name: 'sharePublicButton',
-    //     component: SharePublicButton,
-    //     order: 100,
-    // },
     {
         name: 'emptyDelete',
         component: BrowseActionsEmptyDelete,
@@ -52,7 +47,7 @@ export default defineNuxtPlugin(() => {
     },{
         name: 'watermark',
         component: BrowseActionsWatermark,
-        show: false,
+        show: true,
         order: 100,
     },{
         name:"uploadDrawer",

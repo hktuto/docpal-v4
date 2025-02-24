@@ -47,9 +47,10 @@ export interface UseVxeTableParams<R = any> {
     optionalConfig?: VxeGridProps<R>,
     selectChangeHander?:(selectedRows:any[]) => void,
     optionalEvent?: VxeGridListeners<R>
+    additionalPermission?: (params:any) => Promise<any>
 }
 
-export type PermissionMethodParams = {row:any, code?:string, rowIndex?:number}
+export type PermissionMethodParams = {row:any, code?:string, rowIndex?:number, additionalData?:any}
 
 interface Config extends VxeGridProps {
     proxyConfig: VxeGridPropTypes.ProxyConfig
@@ -171,15 +172,20 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 options: params.footerActions || []
             },
             className: 'contextMenuContainer',
-            visibleMethod: ({options, column, row, rowIndex}:TableMenuValidateMethodParams) => {
+            visibleMethod: async({options, column, row, rowIndex}:TableMenuValidateMethodParams) => {
+                let additionalData:any;
+                if(params.additionalPermission){
+                    additionalData = await params.additionalPermission({column, row, rowIndex});
+                }
                 options.forEach( list => {
                     list.forEach(item => {
                         if(item.children){
                             // loop all children , and set visible and disabled
                             // if all children are not visible , set iten.visible = false
                             // if all children are disabled , set item.disabled = true
+                            
                             item.children.forEach(child => {
-                                const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code})
+                                const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code, additionalData})
                                 child.visible = visible
                                 child.disabled = disabled
                             })
@@ -188,7 +194,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             item.visible = allVisible
                             item.disabled = allDisabled
                         }else{
-                            const {visible, disabled} =  permissionMethod({row, rowIndex, code:item.code})
+                            const {visible, disabled} =  permissionMethod({row, rowIndex, code:item.code, additionalData})
                             item.visible = visible
                             item.disabled = disabled
                         }

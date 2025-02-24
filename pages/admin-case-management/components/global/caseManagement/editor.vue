@@ -125,7 +125,7 @@ function openVersionList(){
 }
 
 async function saveAsNewVersion(){
-  const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
+  const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.versionId)
   // console.log("data", data)
   routerProvider?.updateProps({
     caseTypeId: data.id,

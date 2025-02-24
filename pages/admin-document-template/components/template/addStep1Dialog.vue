@@ -26,7 +26,8 @@ const state = reactive({
     setting: {},
     isEdit: false
 })
-const router = useRouter()
+
+const routerProvider = inject(MenuRouterKey)
 const form = reactive({
     labelRule: []
 })
@@ -55,8 +56,12 @@ async function handleSubmit() {
             params.append('description', formData.description)
             const { data } = await adminApi.api.postTemplateDocument({requestDTO:{}},params as any) as any
             const templateInfo = data
-            console.log(templateInfo);
-            router.push(`/template/${templateInfo.id}`)
+            const link = createNewDocumentTemplateDetail({
+                id: templateInfo.id,
+                name: templateInfo.name,
+                item: templateInfo
+            })
+            routerProvider?.navigateTo(link)
             // TemplateAddStep2DialogRef.value.handleOpen(templateInfo)
         }
         state.visible = false
