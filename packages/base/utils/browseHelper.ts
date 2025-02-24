@@ -268,9 +268,10 @@ export const duplicateNameFilter = async (idOrPath: string, list: any) => {
       path: idOrPath,
       titles
     }) as any
+    if(!res) return {isDuplicate: false}
     list.forEach((doc: any) => {
       const name = doc.fileName || doc.name
-      if (res[name] || res[name]) {
+      if (res && res[name] || res[name]) {
         result = true
         doc.goPath = idOrPath
         doc.isDuplicate = true

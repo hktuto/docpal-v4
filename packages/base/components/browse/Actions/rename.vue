@@ -18,6 +18,7 @@
 </template>
 
 <script lang="ts" setup>
+import {emitBus, EventType} from 'eventbus'
 import { useEventListener } from '@vueuse/core'
 import {ElMessage} from 'element-plus'
 import { clientApi } from 'api'
@@ -39,7 +40,6 @@ const state = reactive({
     loading: false,
     MetaRenderMode: 'ai-edit'
 })
-const MetaFormRef = ref()
 async function openDialog(detail:any){
     state.doc = detail
     form.value.name = detail.name
@@ -58,22 +58,23 @@ async function openDialog(detail:any){
         }, {})
         const analysis = {
             aiId: data.aiId,
-            metaDatas
+            metaDatas: metadatas
         }
-        state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
-        await MetaFormRef.value.init(props.doc.type, {
-            aiAnalysis: analysis.metaDatas,
-            aiDocId: analysis.aiId
-        })
-        MetaFormRef.value.setData(props.doc.properties)
+        // state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
+        // await MetaFormRef.value.init(props.doc.type, {
+        //     aiAnalysis: analysis.metaDatas,
+        //     aiDocId: analysis.aiId
+        // })
+        // MetaFormRef.value.setData(props.doc.properties)
     })
 }
 async function handleSave(){
     state.loading = true
+    const detail = await clientApi.api.postNuxeoDocument({ idOrPath:state.doc.id }).then(res => res.data)
+
     try {
-        
         // check if the name is exist in the folder
-        const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
+        const { isDuplicate } = await duplicateNameFilter(detail.parentRef, [form.value]);
 
         if(isDuplicate && form.value.name !== props.doc.name){
             ElMessage({
@@ -90,7 +91,13 @@ async function handleSave(){
         dialogOpened.value = false
         emits('success', state.doc)
     } catch (error) {
-        
+        console.log(error)
+    } finally {
+        console.log("finally", state.doc)
+        emitBus(EventType.FILE_NEED_REFRESH, {
+            relatedIdOrPath: detail.parentRef,
+            highlightIdOrPath:  state.doc.id
+        })
     }
     state.loading = false
 }
