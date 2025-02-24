@@ -30,9 +30,6 @@ async function openPreivew(){
         if(!templateId || !varible) return;
         const templateIdValue = templateId['flowable:expression']['__cdata']
         // get template path from template id
-        const allTemplate = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) as any
-        const templateDetail = allTemplate.find(item => item.id === templateIdValue)
-        console.log("templateDetail", templateDetail, allTemplate, templateIdValue)
         const varibleList = varible['flowable:expression']['__cdata'] ? JSON.parse(varible['flowable:expression']['__cdata']) : {}
 
         // create mapping 
@@ -40,7 +37,6 @@ async function openPreivew(){
         Object.keys(varibleList).forEach((key:string) => {
             if(varibleList[key] ) {
                 const vari = varibleList[key].replace('${variables:get(','').replace(')}', '')
-                console.log("vari", vari)
                 const value = props.formData[vari]
                 if(value) {
                     map[key] = value
@@ -48,7 +44,7 @@ async function openPreivew(){
             }
         })
         const res: any = await clientApi.api.postNuxeoTemplateSummitanddownloadfile({
-                idOrPath: templateIdValue,
+                templateId: templateIdValue,
                 paramsMap: map
             }, {
                 format: 'blob'

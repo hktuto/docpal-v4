@@ -107,7 +107,7 @@ function replyBoxShow () {
         font-weight: normal;
         // font-size: 0.75rem;
         line-height: 1.5rem;
-        color: var(--app-grey-900);
+        color: var(--app-grey-050);
         &>span {
             white-space: break-spaces;
             word-break: break-word;
@@ -119,13 +119,13 @@ function replyBoxShow () {
     &_name {
         grid-area: 1 / 2 / 2 / 3;
         font-weight: bold;
-        font-size: 14px;
+        font-size: var(--app-font-size-m);
     }
     &_date {
         grid-area: 2 / 2 / 3 / 3;
         font-weight: normal;
-        font-size: 8px;
-        color: var(--app-grey-725);
+        font-size: var(--app-font-size-s);
+        color: var(--app-grey-200);
     }
     &_ribbon {
         position: absolute;
@@ -146,7 +146,7 @@ function replyBoxShow () {
             display: none;
         }
         &_replyNum {
-            color: var(--app-grey-400);
+            color: var(--app-grey-200);
         }
         .el-button + .el-button {
             margin-left: var(--app-input-padding);
@@ -183,6 +183,7 @@ function replyBoxShow () {
 }
 .commentCard_text {
     user-select: text;
+    color: var(--app-grey-050);
 }
 .highlight-comments {
     background: var(--header-bg);

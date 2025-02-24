@@ -87,7 +87,9 @@ provide(CaseManagementDashboardKey, {
   name
 })
 
-onMounted(async () => {
+
+
+onActivated(async () => {
   const { data } = await adminApi.api.getCaseDashboardId(props.id)
   state.detail = data
   const temLayout = JSON.parse(data.styleJson)
@@ -96,7 +98,6 @@ onMounted(async () => {
       return Object.assign(item, getCmmnNormalizeSetting(item.component))
     })
   }
-  console.log(data.label)
   name.value = data.label
   routerProvider?.updateTabName(data.label)
 })

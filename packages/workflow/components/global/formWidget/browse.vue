@@ -29,7 +29,6 @@ function changeRoute(path:string) {
 
 function getInfo(){
     // get options
-    console.log("getInfo", options.data.folderCabinetId, formData)
     if(options.data.folderCabinetId && formData[options.data.folderCabinetId]) {
         // console.log({formData});
         home.value = formData[options.data.folderCabinetId]

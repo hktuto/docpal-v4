@@ -65,7 +65,8 @@ async function handleReplyDelete (item, parentItem) {
 async function handleCommentsGet () {
     try {
         state.loading = true
-        await getUserList()
+        if(state.userList.length == 0) await getUserList()
+        console.log("doc", props.doc)
         const res = await getCommentList({ documentIdOrPath: props.doc.id}) 
         if (!res) return
         for(const item of res) {
@@ -77,13 +78,13 @@ async function handleCommentsGet () {
         state.commentList = res
         if(state.commentList.length > 0) handleScroll()
     } catch (error) {
-        
+        console.log('get comment', error)
     } finally {
         state.loading = false
     }
 }
 async function getUserList() {
-    const userList = await clientApi.api.postNuxeoIdentityUsers()
+    const userList = await clientApi.api.postNuxeoIdentityUsers().then(res => res.data)
     state.userList = userList.sort((a, b) => a.username.localeCompare(b.username)).map(item => ({
         label: item.firstName && item.lastName && item.firstName !== item.lastName ?  item.firstName + ' ' + item.lastName : item.username,
         value: item.userId
