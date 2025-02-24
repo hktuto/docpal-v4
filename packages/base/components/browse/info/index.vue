@@ -155,7 +155,7 @@ watch(() => props.commentId, async() => {
 .infoContainer{
     width: 100%;
     height: 100%;
-    padding-inline: var(--app-space-xs);
+    padding-inline: var(--app-space-s);
 
 }
 .infoPreviewContainer{
@@ -188,7 +188,6 @@ watch(() => props.commentId, async() => {
   }
 }
 .infoContainer {
-    background: var(--app-grey-1000);
     height: 100%;
     user-select: none;
     -ms-touch-action: none;
@@ -198,7 +197,6 @@ watch(() => props.commentId, async() => {
     grid-template-rows: min-content 1fr;
     border-radius: 12px;
     position: relative;
-    padding:0;
     &.infoOpened{
         padding: var(--app-space-xs);
     }
@@ -219,6 +217,10 @@ watch(() => props.commentId, async() => {
 }
 .tabContainer{
     min-width: 180px;
+    :deep(.el-tab-pane){
+        height: 100%;
+        overflow: auto;
+    }
 }
 
 .resize-drag {

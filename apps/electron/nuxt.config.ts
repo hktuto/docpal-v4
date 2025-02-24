@@ -34,19 +34,5 @@ export default defineNuxtConfig({
       platform:'client'
     }
   },
-  nitro:{
-    devProxy:{
-      '/public-api/report/v1/api':{
-        target: process.env.DASHBOARD_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-      '/api':{
-        target: process.env.CLIENT_PROXY,
-        changeOrigin: true,
-        prependPath: true
-      },
-    }
-  },
   
 })

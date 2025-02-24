@@ -124,6 +124,9 @@ const contributors = computed(() => props.doc?.properties?.['dc:contributors'] |
   flex-flow: column nowrap;
   gap: var(--app-space-xs);
   color: var(--app-grey-300);
+  :deep(.el-divider--horizontal){
+    margin: var(--app-space-m) 0!important;
+  }
 
   :deep {
     > * {
@@ -132,22 +135,22 @@ const contributors = computed(() => props.doc?.properties?.['dc:contributors'] |
 
     .infoSection{
 
-      margin-bottom: 2px;
+      margin-bottom: var(--app-space-s);
     }
     .infoTitle {
-      font-size: 0.6rem;
+      font-size: var(--app-font-size-s);
       display: block;
       color: var(--app-grey-600);
       margin-bottom: 2px;
     }
     .infoContent{
-      font-size: .8rem;
+      font-size: var(--app-font-size-m);
       font-weight: 500;
       min-height: 1rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      --icon-size: 1.125rem;
+      --icon-size: var(--app-font-size-m) ;
     }
   }
 }

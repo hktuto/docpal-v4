@@ -97,8 +97,9 @@ watch(() => props.mentionData, (newValue) => {
 <style lang="scss" scoped>
 .commentInputBox {
   border-radius: 5px;
-  background-color: var(--app-grey-825);
+  background-color: var(--app-grey-950);
   padding: var(--app-space-xs);
+  color: var(--app-grey-050);
   :deep(.el-textarea__inner) {
     border: unset;
     box-shadow: unset;
