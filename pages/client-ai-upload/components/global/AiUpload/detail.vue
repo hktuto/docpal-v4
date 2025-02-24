@@ -328,6 +328,7 @@ async function handleSubmit () {
         }
         else throw new Error($i18n.t('dpMsg_503'))
     } catch (error) {
+        console.log("error", error)
         if(error.message) ElMessage.error(error.message)
     }
     setTimeout(() => { state.submitLoading = false }, 1000)
@@ -343,7 +344,7 @@ async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean>
             })
             return prev
         }, [])
-    }).then(res => res.data.data.checkFailedList)
+    }).then(res => res.data.checkFailedList)
     state.repearNameIdList = []
     const fileNames = checkFailedList.reduce((prev, item) => {
         prev.push(item.docName)
@@ -365,6 +366,7 @@ async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean>
 }
 async function init() {
     let docList = await clientApi.api.postNuxeoDocumentQueryuploadfiledetaildtolist({userId:userId.value, uploadId: id}).then(res => res.data)
+    console.log("docList", docList)
     docList = docList.map(item => ({
         ...item,
         isFolder: item.fileType === 'Folder'
@@ -378,7 +380,7 @@ async function init() {
         }, 100);
     }
 }
-onMounted(async() => {
+onActivated(async() => {
     init()
     leftMin.value = CalMax()
     rightMin.value = CalMax()

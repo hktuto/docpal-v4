@@ -68,6 +68,9 @@ const readerType = computed(() => {
         if(mimeType.includes('tiff')) {
             return resolveComponent('LazyTiffViewer');
         }
+        if(mimeType === 'image/bmp') {
+            return resolveComponent('LazyImageViewer');
+        }
         if(mimeType.includes('image')) {
             return resolveComponent('LazyPdfViewer');
         }
