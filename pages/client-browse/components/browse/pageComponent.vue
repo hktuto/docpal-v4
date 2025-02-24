@@ -144,7 +144,10 @@ useEventListener(document, 'closeFilePreview', closePreview)
     <splitpanes>
 
     <Pane>
-    <BrowseListTable ref="tableRef" :class="{'selected': selectedList.length > 0}" @selectedChange="selectedChangeHandler">
+    <BrowseListTable ref="tableRef" 
+        :class="{'selected': selectedList.length > 0}" 
+        :selectedRows="selectedItem"
+        @selectedChange="selectedChangeHandler">
         <template #toolbar_buttons> 
             <slot name="toolbar_buttons">
                 <div class="toolsBarContainer">
