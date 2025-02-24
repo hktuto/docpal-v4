@@ -15,7 +15,7 @@ export type TableColumnSettingOptions = {
 export type TableColumnItem = {
     id?: string | any,
     property?: string,
-    label: string,
+    label?: string,
     sortable?:boolean,
     slot ?: string,
     headerSlot ?: string,
@@ -43,7 +43,8 @@ export type TableColumnItem = {
     hideSort?:boolean
     show?:boolean,
     children?:any[],
-    moreActionSlot?: any
+    moreActionSlot?: any,
+    copy?: any
 }
 export type TableBase = {
     commands: any[]

@@ -50,12 +50,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   bodyActions: [
     [
       {
-        code: "position",
-        name: "position",
+        code: "preview",
+        name: "common_preview",
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
-          // trashProvider?.openUserDetail(row)
+          handleDblclick(row)
         },
       },
     ],
