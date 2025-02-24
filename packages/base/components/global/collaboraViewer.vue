@@ -145,7 +145,7 @@ defineExpose({
   border-radius: var(--app-space-s);
 }
 .editToggleButton{
-  --icon-color: var(--color-grey-000);
+  --icon-color: var(--app-grey-000);
   --icon-size: .8rem;
   position: absolute;
   left: calc(50% - 60px);

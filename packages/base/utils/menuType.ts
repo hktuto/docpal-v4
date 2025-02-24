@@ -23,6 +23,7 @@ interface MenuProvider {
     updateProps(newProps:any):void
     updateTabName(newName:string):void
     routerContainer: Ref<HTMLElement | null>,
+    back: (fallbackItem?:TabItem) => void,
     message:{
         success: (...args) => void,
         error: (...args) => void,

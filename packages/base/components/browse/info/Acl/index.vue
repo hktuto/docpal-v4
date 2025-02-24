@@ -1,0 +1,151 @@
+<template>
+   <div class="infoSection" >
+    <span class="infoTitle">{{ $t('rightDetail_userGroup') }}</span>
+    <div class="infoContent">
+      <div class="listSection">
+        <div class="listTitle">{{ $t('permission.read') }}</div>
+        <div class="listContent">
+          <BrowseInfoAclItem v-for="(ace, i) in ReadList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Read')"/> -->
+        </div>
+      </div>
+
+      <div class="listSection">
+        <div class="listTitle">{{ $t('permission.write') }}</div>
+        <div class="listContent">
+          <BrowseInfoAclItem v-for="(ace, i) in ReadWriteList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('ReadWrite')"/> -->
+        </div>
+      </div>
+
+      <!-- <div class="listSection">
+        <div class="listTitle">{{ $t('permission.manage') }}</div>
+        <div class="listContent">
+          <BrowseInfoAclItem v-for="(ace, i) in ManageRecordList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
+        </div>
+      </div> -->
+
+      <div class="listSection">
+        <div class="listTitle">{{ $t('permission.manage') }}</div>
+        <div class="listContent">
+          <BrowseInfoAclItem v-for="(ace, i) in EverythingList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
+          <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Everything')"/> -->
+        </div>
+      </div>
+      
+      
+    </div>
+    <BrowseInfoAclEditDialog ref="dialogEl" @handleSubmit="handleAddLocalAclSubmit" @handleUpdate="handleUpdateLocalAclSubmit"/>
+  </div> 
+</template>
+
+
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+import { clientApi } from 'api'
+const props = defineProps<{doc: any, permission: any}>();
+const { doc, permission } = toRefs(props);
+const { t } = useI18n();
+
+const aces = ref([])
+const userId = useUserId()
+const dialogEl = ref();
+
+async function handleDataGet () {
+    aces.value = []
+    const res = await clientApi.api.postNuxeoDocumentAcl({idOrPath: props.doc.id}).then(res => res.data)
+    res.forEach(item => {
+        item.aces.forEach(aceItem => {
+            aceItem.type = item.name
+            aces.value.push(aceItem)
+            })
+    })
+    aces.value = aces.value.filter( a =>  !a.id.includes('false') )
+}
+
+const ReadList = computed(() => {
+    return aces.value.filter(ace => ace.permission === 'Read')
+})
+const ReadWriteList = computed(() => {
+    return aces.value.filter(ace => ace.permission === 'ReadWrite')
+})
+const ManageRecordList = computed(() => {
+    return aces.value.filter(ace => ace.permission === 'ManageRecord')
+})
+const EverythingList = computed(() => {
+    return aces.value.filter(ace => ace.permission === 'Everything')
+})
+
+// #region module: handle Edit
+    async function handleRemove (ace) {
+      const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`,{
+          confirmButtonText: `${t('dpButtom_confirm')}`,
+          cancelButtonText: `${t('dpButtom_cancel')}`
+      }).catch((action) => { return action })
+      if(action !== 'confirm') return
+      await clientApi.api.deleteNuxeoDocumentAclRemove({ idOrPath: props.doc.id, userId: ace.userId })
+      handleDataGet()
+    }
+    function handleEdit (ace) {
+      
+      if (ace.type !== 'local' ||!AllowTo({feature:'ManageRecord', permission })) return
+      dialogEl.value.handleOpen(deepCopy(ace), true)
+    }
+    function handleAdd (type?:string) {
+      const data = {
+        permission: type,
+      }
+      dialogEl.value.handleOpen(data)
+    }
+    async function handleAddLocalAclSubmit (_data:any, cb) {
+      _data.idOrPath = props.doc.id
+      await clientApi.api.postNuxeoDocumentAclAdd(_data)
+      handleDataGet()
+      cb()
+    }
+    async function handleUpdateLocalAclSubmit(_data:any,cb) {
+      _data.idOrPath = props.doc.id
+      _data.aceId = _data.id
+      delete _data.isPermanent
+      delete _data.id
+      await clientApi.api.putNuxeoDocumentAclReplace(_data)
+      handleDataGet()
+      cb()
+    }
+// #endregion
+
+
+
+watch(doc, async (val: String) => {
+    if(val) {
+    await handleDataGet()
+    }
+}, { immediate: true })
+
+
+
+</script>
+
+
+
+<style lang="scss" scoped>
+.listTitle{
+  font-size: .8rem;
+  margin-block: 6px;
+}
+.listSection{
+  width: 100%;
+  margin-bottom: 6px;
+  & + & {
+    border-top: 1px solid var(--app-grey-100);
+  }
+}
+
+.infoContent, .listContent{
+  display: flex !important;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+</style>

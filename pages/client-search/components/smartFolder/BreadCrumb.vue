@@ -50,7 +50,7 @@ function goRoute (bItem, index) {
     .el-breadcrumb__item {
         :deep(.el-breadcrumb__inner) {
             cursor: pointer;
-            color: var(--color-grey-700);
+            color: var(--app-grey-700);
             font-weight: bold;
             &:hover {
                 color: var(--primary-color);
@@ -61,7 +61,7 @@ function goRoute (bItem, index) {
                 line-height: 24px;
                 cursor: text;
                 font-weight: unset;
-                color: var(--color-grey-600);
+                color: var(--app-grey-600);
             }
         }
     }

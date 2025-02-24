@@ -50,7 +50,7 @@ watch(doc, () => {
     place-items: center;
     margin: 0 auto;
     overflow: hidden;
-    background: var(--color-grey-0000);
+    background: var(--app-grey-0000);
     border-radius: 12px;
     position: relative;
     video {

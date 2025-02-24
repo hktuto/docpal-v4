@@ -99,9 +99,9 @@ h2 {
     display: grid;
     grid-template-columns: 1fr min-content;
     grid-template-rows: min-content min-content;
-    grid-column-gap: var(--app-padding);
+    grid-column-gap: var(--app-space-xs);
     &-top {
-        padding: var(--app-padding) 0;
+        padding: var(--app-space-xs) 0;
         grid-area: 1 / 1 / 2 / 3;
     }
     &-bottom-left { grid-area: 2 / 1 / 3 / 2; }

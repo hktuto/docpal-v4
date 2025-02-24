@@ -143,7 +143,7 @@ main {
       flex: 1 0 auto;
 }
 .i__back {
-  color: var(--color-grey-400);
+  color: var(--app-grey-400);
   font-size: 1.2rem;
   cursor: pointer;
 }
