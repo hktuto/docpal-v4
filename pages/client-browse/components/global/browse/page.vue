@@ -22,5 +22,7 @@ const props = defineProps<{
   height: 100%;
   width: 100%;
   padding: var(--app-space-s);
+  overflow: hidden;
+  position: relative;
 }
 </style>
