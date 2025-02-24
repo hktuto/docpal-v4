@@ -63,3 +63,33 @@ export const createSharePageParams = (params:SharePageParams) => {
         }
     }
 }
+
+export const createUploadRequestDetailParams = (params:any) => {
+    return {
+        id: 'client-fileRequest-' + params.id,
+        name: 'client-fileRequest' + params.id,
+        icon: 'lucide:file-share',
+        hoverIcon: 'lucide:file-share',
+        label: "file_uploads",
+        component: "LazyUploadRequestDetail",
+        props: {
+            ...params,
+            id: params.taskId
+        }
+    }
+}
+
+
+export const createUploadRequestPageParams = (params:any) => {
+    return {
+        id: 'client-fileRequest',
+        name: 'client-fileRequest',
+        icon: 'icon-park-outline:layers',
+        hoverIcon: 'icon-park-twotone:layers',
+        label: "file_uploads",
+        component: "LazyUploadRequestPage",
+        props: {
+            ...params,
+        }
+    }
+}
