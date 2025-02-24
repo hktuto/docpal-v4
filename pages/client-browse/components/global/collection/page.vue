@@ -2,7 +2,7 @@
     <div class="collection-container withPadding">
         <div :class="['collection-container--left', { collapse: style.collapse }]">
             <div class="flex-x-end">
-                <el-button :loading="fileFormAddLoading" @click="openAddCollectionDialog()">
+                <el-button @click="openAddCollectionDialog">
                     {{ t('collections_new') }}
                 </el-button>
                 <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']"
@@ -28,7 +28,7 @@
                 <template #toolbar_buttons>
                     <div class="flex-x-between">{{ state.curCollection.name }}
                         <SvgIcon src="/icons/edit.svg" class="el-icon--right"
-                                 @click="openEditCollectionDialog()"/>
+                                 @click="openEditCollectionDialog"/>
                     </div>
                     <div class="flex-x-end">
                         <template v-if="state">
@@ -56,11 +56,11 @@ import {clientApi} from 'api'
 import {ElMessageBox} from "element-plus";
 import {createBrowseListPageParams, createDetailPageParams} from "~/utils/browseMenuHelper";
 import {ArrowDownBold, Delete} from '@element-plus/icons-vue'
+
 const routerProvider = inject(MenuRouterKey)
 
 const {t} = useI18n()
 const route = useRoute()
-const router = useRouter()
 const pageParams = {
     pageIndex: 0,
     pageSize: 20
@@ -125,44 +125,12 @@ function handleDocDelete(row) {
 const addCollectionDialog = ref()
 const editCollectionDialog = ref()
 
-const fileFormAddLoading = ref(false)
-const fileFormEditLoading = ref(false)
-
 function openAddCollectionDialog() {
     addCollectionDialog.value.handleOpen()
 }
 
 function openEditCollectionDialog() {
     editCollectionDialog.value.handleOpen(state.curCollection)
-}
-
-async function submitNewCollection(form) {
-    try {
-        fileFormAddLoading.value = true
-        await clientApi.api.postNuxeoCollectionCreate(form)
-        setTimeout(async () => {
-            await getCollectionList()
-            fileFormAddLoading.value = false
-        }, 500)
-    } catch (error) {
-    } finally {
-        fileFormAddLoading.value = false
-    }
-}
-
-async function saveCollection(form) {
-    try {
-        fileFormEditLoading.value = true
-        form.idOrPath = state.curCollection.id
-        await clientApi.api.patchNuxeoCollection(form)
-        setTimeout(async () => {
-            await getCollectionList()
-            fileFormAddLoading.value = false
-        }, 800)
-    } catch (error) {
-    } finally {
-        fileFormAddLoading.value = false
-    }
 }
 
 const style = reactive({
@@ -177,7 +145,7 @@ function handleCollapse() {
 async function handleShare() {
     const data = await clientApi.api.postNuxeoCollectionAlldocuments({idOrPath: state.curCollection.id})
     // TODO 未調試
-    addToShareList(data)
+    // addToShareList(data)
 
     nextTick(() => {
         const shareDraggableButton = document.getElementById('share-draggable-button')
@@ -286,6 +254,7 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
                 showHeaderAction: true
             });
         }
+        console.log("--: "+newItem)
         routerProvider.navigateTo(newItem)
     },
     selectChangeHander: (selectedRows: any[]) => {

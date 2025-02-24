@@ -1,0 +1,10 @@
+- [ ] list / table / preview
+	- [ ] right click
+- [ ] Tree view
+- [ ] edit
+- [ ] copy
+- [ ] cut
+- [ ] delete
+- [ ] internal share
+- [ ] external share
+- [ ] annotation
