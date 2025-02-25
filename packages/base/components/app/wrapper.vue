@@ -9,19 +9,9 @@ const ready = ref(false)
 function layoutReadyHandler(){
     ready.value = true
 }
-const minSize = ref(20)
 const userDefineSize = useStorage('app-tab-size', 200) // user define sie in pexel
 const haveInteractDrawer = ref(false)
-function updateSize(){
-    /**
-     *  panel size is based on persentage of window width
-     *  sidebar min-width is 200px
-     *  calculate the size of panel based on window width
-     * 
-     */
-    const windowWidth = window.innerWidth
-    minSize.value = 200 / windowWidth * 100
-}
+
 
 const displayUserDefineSize = computed(() => {
     if(userDefineSize.value > window.innerWidth) return 200 / window.innerWidth * 100;
@@ -48,13 +38,9 @@ const isMenuStick = computed(() => {
 
 
 onMounted(() => {
-    updateSize()
-    window.addEventListener('resize', updateSize)
+    calMinWidth()
 })
 
-onUnmounted(() => {
-    window.removeEventListener('resize', updateSize)
-})
 const interactDrawerAction = ref('')
 const InteractDrawerRef = ref()
   function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 'upload') {
@@ -67,6 +53,16 @@ const InteractDrawerRef = ref()
     haveInteractDrawer.value = false
     interactDrawerAction.value = ''
   }
+
+const minSize = ref(20)
+function calMinWidth(){
+    // panel size is 280px, check the percentage of window width
+    const windowWidth = window.innerWidth
+    minSize.value = 280 / windowWidth * 100
+
+}
+
+useEventListener(window, 'resize', calMinWidth)
 
 provide('handleOpenUploadDrawer', handleOpenUpload)
 
@@ -84,7 +80,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
             <slot name="sidebar" />
         </div>
         <splitpanes vertical @resized="paneResized" :push-other-panes="true" @ready="layoutReadyHandler">
-            <Pane v-if="isMenuStick" :min-size="minSize" :size="displayUserDefineSize" width="20" >
+            <Pane v-if="isMenuStick" :min-size="minSize" :size="minSize" >
                 <div id="appSidebar">
                 </div>
             </Pane>
