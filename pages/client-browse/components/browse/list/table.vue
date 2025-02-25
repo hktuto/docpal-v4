@@ -7,6 +7,7 @@ if(!listProvider || !routerProvider) {
 const {selectedRows} = defineProps<{
     selectedRows: any[]
 }>()
+const copyDocumentList = useCopyDocumnetList()
 const tableContainer = ref<HTMLElement>()
 const emits = defineEmits(['selectedChange'])
 async function loadData(entry:any[], path?:string, pageNum:number = 0) {
@@ -132,7 +133,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code:'docWatermark',
                 name:'filePopover_watermark',
                 action:({row}) => {
-                    const ev = new CustomEvent('docActionWatermark', {detail: row})
+                    const ev = new CustomEvent('docWatermark', {detail: row})
                     document.dispatchEvent(ev)
                 }
             },
@@ -140,8 +141,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code:'docActionCopy',
                 name:'filePopover_copy',
                 action:({row}) => {
-                    const ev = new CustomEvent('docActionCopy', {detail: row})
-                    document.dispatchEvent(ev)
+                    copyDocumentList.value = [{
+                        type: 'copy',
+                        doc: row
+                    }]
                 }
             },
             {
@@ -241,6 +244,13 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         // hide all action when click on temp file
         if(row.source === 'tempFile') {
             return {visible: false, disabled: false}
+        }
+        // need other permissiion check list 
+        if( code === 'docActionPaste') {
+            return {
+                visible: AllowTo({feature:'ReadWrite', permission:additionalData}) && copyDocumentList.value.length > 0,
+                disabled: false
+            }
         }
         const actionThatFolderAndFileHave =  ['docActionRename', 'docActionInternalShare', 'docActionChangeDocType', 'docActionCopy', 'docActionCut', 'docActionPaste', 'docActionDelete'];
         if(actionThatFolderAndFileHave.includes(code)) {

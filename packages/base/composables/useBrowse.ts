@@ -3,7 +3,12 @@ type SlotData = {
     order: number,
     component: any
 }
-const useCpoyDocumnetList = () => useState("browseCopyDocumemt", () => ([]))
+
+type CopyDocumentParams = {
+    type: 'copy' | 'cut',
+    doc: any
+}
+export const useCopyDocumnetList = () => useState<CopyDocumentParams[]>("browseCopyDocumemt", () => ([]))
 export const useBrowse = () => {
     const infoSlots = useState<SlotData[]>('infoSlots', () => shallowRef<SlotData[]>([]));
 
