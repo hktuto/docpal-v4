@@ -13,7 +13,7 @@ const props = withDefaults(
 );
 const emits = defineEmits(["refreshSetting", "delete"]);
 const caseDetail = ref<any>();
-const home = ref({ secondId: "/" });
+const home = ref({ secondId: "/", disabled: true });
 const idOrPath = ref("/");
 const homeId = ref("");
 function changeRoute(path: string) {
@@ -56,7 +56,10 @@ async function getHomeId() {
   caseDetail.value = await getCDBasciInfo();
   if (caseDetail.value.rows) {
     const _item = caseDetail.value.rows.find((d: any) => d.id === props.setting.home)
-    if(!!_item && _item.value) homeId.value = _item.value
+    if(!!_item && _item.value) {
+      homeId.value = _item.value
+      home.value.secondId = _item.value
+    }
   }
 }
 // #region module: setting
@@ -95,7 +98,7 @@ provide(BrowseListProviderKey, {
     <div v-if="homeId" class="rootContainer">
       <BrowseMiniTable ref="tableRef" :home="props.setting.home">
         <template #toolbar_buttons>
-          <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
+          <BrowseBreadcrumb :idOrPath="homeId" :home="home" />
         </template>
       </BrowseMiniTable>
     </div>
