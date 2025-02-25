@@ -82,14 +82,20 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
 const languageReady = ref(false)
 async function getLocale(){
     const { locale, availableLocales, setLocaleMessage } = useI18n()
+    const config = useRuntimeConfig()
     await Promise.all( availableLocales.map( async(code) => {
             const vxeLang = code === 'zh-CN' ? zhCN : code === 'en-US' ? enUS : zhHK
-            const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
-                    locale:code, 
-                    languageKey: 'client'
-                }) as any
-            const clientJson = JSON.parse(clientData[0].languageContent)
-
+            let clientJson;
+            if(config.public.isProduction){
+                const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
+                        locale:code, 
+                        languageKey: 'client'
+                    }) as any
+                clientJson = JSON.parse(clientData[0].languageContent)
+            }else{
+                const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
+                clientJson = jsonFile
+            }
             const { data:adminData } = await clientApi.api.getRelationQuerylanguage({
                     locale:code, 
                     languageKey: 'admin'

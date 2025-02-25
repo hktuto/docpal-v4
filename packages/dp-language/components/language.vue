@@ -127,7 +127,6 @@ function mergeData() {
                 ...state.languageStores[key],
                 languageContent: JSON.stringify(json[item.code])
             }
-            
             pList.push(adminApi.api.postRelationUpdatelanguage(params))
         })
         const res = await Promise.all(pList)
