@@ -78,10 +78,14 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
     }
 });
 
-const ResponsiveFilterRef = ref()
-
-async function getFilter(conditions) {
-    ResponsiveFilterRef.value.init(conditions);
+const responsiveFilterWidth = ref()
+async function initCondition() {
+    try {
+        const {data} = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id)
+        console.log(data)
+        responsiveFilterWidth.value.init(data)
+    } catch (error) {
+    }
 }
 
 function handleFilterFormChange(formModel) {
@@ -129,6 +133,7 @@ function handleAddCaseDialog() {
 
 onActivated(() => {
     reorderColumn()
+    initCondition()
 });
 
 </script>
@@ -138,31 +143,40 @@ onActivated(() => {
         <template #toolbar_buttons>
             <header class="header-flex">
                 <ResponsiveFilter
-                    ref="ResponsiveFilterRef"
+                    ref="responsiveFilterWidth"
                     @form-change="handleFilterFormChange"
-                    inputKey="userNameOrEmail"
+                    inputKey="q"
                     :inputPlaceHolder="t('tip.filterByName')"
                 />
+                <div class="flex-x-end">
+                    <el-button type="primary" @click="handleAddCaseDialog">
+                        {{ $t("common_add") }}
+                    </el-button>
+                </div>
             </header>
-            <div class="flex-x-end">
-                <el-button type="primary" @click="handleAddCaseDialog">
-                    {{ $t("common_add") }}
-                </el-button>
-            </div>
         </template>
     </VxeGrid>
     <LazyCaseAddCaseDialog ref="addCaseDialog" @refresh="reload"></LazyCaseAddCaseDialog>
 </template>
 
 <style lang="scss" scoped>
-:deep .headerLeftExpand {
-    .el-input {
-        width: 200px;
-    }
+.el-input {
+    width: 200px;
+    --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
 }
 
 .flex-x-end {
     display: flex;
     justify-content: end;
+}
+
+.header-flex {
+    width: 100%;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: var(--app-space-xs);
+    padding: var(--app-space-xs);
+    background: var(--el-color-primary-light-9);
 }
 </style>
