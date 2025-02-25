@@ -9,45 +9,32 @@ const {id, name} = defineProps<{
 
 const {t} = useI18n()
 const emits = defineEmits(['filter-change', 'refresh'])
-const keyword = ref()
-const title = ref()
 const routerProvider = inject(MenuRouterKey)
 type TableState = {
-    ready: boolean,
-    loading: boolean,
-    keyword: string,
-    title: string,
-    detail: any,
-    extraParamsFilter: any,
     columns: any,
-    selectList: any[],
+    where: any[],
 }
 const state = reactive<TableState>({
-    ready: false,
-    loading: false,
-    keyword: "",
-    title: "",
-    detail: {},
-    extraParamsFilter: {},
     columns: [],
-    selectList: [],
+    where: {},
 });
 const tableReady = ref(false);
 const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = useVxeTable({
     id: "clientCaseTableList",
     api: async (pageParams: any) => {
-        if (keyword.value) {
-            pageParams.q = keyword.value
-        }
-        if (title.value) {
-            pageParams.where.title = title.value
+        pageParams.isDesc = true;
+        pageParams.orderBy = "created_date";
+
+        if (Object.entries(state.where).length !== 0) {
+            if (state.where.q) {
+                pageParams.q = state.where.q
+            }
+            delete state.where.q
+            pageParams.where = state.where
         }
         return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams)
     },
-    defaultSort: {
-        field: "created_date",
-        order: 'desc'
-    },
+    defaultSort: {},
     optionalConfig: {
         tooltipConfig: {
             // contentMethod: ({
@@ -78,19 +65,19 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
     }
 });
 
-const responsiveFilterWidth = ref()
+const responsiveFilter = ref()
+
 async function initCondition() {
     try {
         const {data} = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id)
-        console.log(data)
-        responsiveFilterWidth.value.init(data)
+        responsiveFilter.value.init(data)
     } catch (error) {
     }
 }
 
 function handleFilterFormChange(formModel) {
-    state.extraParamsFilter = formModel;
-    emits('filter-change', state.extraParamsFilter)
+    state.where = formModel
+    reload();
 }
 
 async function reorderColumn() {
@@ -143,7 +130,7 @@ onActivated(() => {
         <template #toolbar_buttons>
             <header class="header-flex">
                 <ResponsiveFilter
-                    ref="responsiveFilterWidth"
+                    ref="responsiveFilter"
                     @form-change="handleFilterFormChange"
                     inputKey="q"
                     :inputPlaceHolder="t('tip.filterByName')"
@@ -160,16 +147,6 @@ onActivated(() => {
 </template>
 
 <style lang="scss" scoped>
-.el-input {
-    width: 200px;
-    --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
-}
-
-.flex-x-end {
-    display: flex;
-    justify-content: end;
-}
-
 .header-flex {
     width: 100%;
     overflow: hidden;
@@ -178,5 +155,15 @@ onActivated(() => {
     gap: var(--app-space-xs);
     padding: var(--app-space-xs);
     background: var(--el-color-primary-light-9);
+}
+
+.flex-x-end {
+    display: flex;
+    justify-content: end;
+}
+
+.header-flex .el-input {
+    width: 200px;
+    --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
 }
 </style>
