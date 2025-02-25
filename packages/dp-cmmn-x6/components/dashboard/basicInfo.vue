@@ -28,11 +28,11 @@ const props = withDefaults( defineProps<{
     hideSetting: false
 })
 
-const caseProvider = inject(CaseManagementDashboardKey)
+const caseProvider: any = inject(CaseManagementDashboardKey)
 const emits = defineEmits([
   'refreshSetting', 'delete'
 ])
-
+const { t } = useI18n()
 const state = reactive<any>({
   data: {},
   layout: [],
@@ -47,7 +47,7 @@ const state = reactive<any>({
   function handleDelete() {
     emits('delete')
   }
-  function handleRefresh(chartSetting) {
+  function handleRefresh(chartSetting: any) {
     emits('refreshSetting', chartSetting)
   }
 // #endregion
@@ -58,19 +58,18 @@ async function getCDBasciInfo() {
     if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null;
     const caseVersionId = caseProvider.caseVersionId?.value || null;
-    
     if(id) {
       state.mode = 'normal'
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       state.data = data
     } else if(caseVersionId) {
       state.mode = 'develop'
-      const {data:form} = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
-      form.rows = form.fields.reduce((prev, item) => {
+      const {data:form}: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
+      form.rows = form.fields.reduce((prev: any, item: any) => {
         let value = item.type
         if (item.type === 'date') value = '2024-01-01'
         else if (item.type === 'number') value = 100
-        else value = $i18n.t(`virtual.${item.type}_${item.name}`)
+        else value = t(`virtual.${item.type}_${item.name}`)
         prev.push({ ...item, value })
         return prev
       }, [])
@@ -95,8 +94,8 @@ async function getCDBasciInfo() {
 async function initLayout() {
  
   const data = await getCDBasciInfo()
-  state.layout = props.setting.layout.reduce((prev, item) => {
-    const _item = data.rows.find(d => d.id === item.id)
+  state.layout = props.setting.layout.reduce((prev: any, item: any) => {
+    const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
     
     if(_item) {
       if(!item.width) item.width = '50%'

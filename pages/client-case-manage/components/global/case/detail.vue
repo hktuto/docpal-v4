@@ -93,7 +93,7 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
         }
     },
     dblClickAction: ({row}) => {
-        routerProvider.navigateTo(newItem)
+        routerProvider?.navigateTo(caseManageDashboardPage({...row, id, versionId: row.caseDefinitionVersionId}))
     }
 });
 

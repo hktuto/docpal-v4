@@ -1,2 +1,3 @@
 src/generate/*.ts
 src/generate/*.json
+generate_backup
