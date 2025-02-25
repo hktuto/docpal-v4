@@ -41,13 +41,14 @@ const { updateShareList, getMineTypeShareList, getUseWatermark } = useShareStore
 import formJson from './shareRequest.vform.json'
 const FromRendererRef = ref()
 const { diffMinute } = useTime()
+const {t} = useI18n()
 const routerProvider = inject(MenuRouterKey)
 
 const props = defineProps<{
     backPath: string
 }>()
 
-const state = reactive({
+const state = reactive<any>({
     minTypeShareList: [],
     interval: null,
     loading: false,
@@ -55,7 +56,7 @@ const state = reactive({
     loadingFileFail: false
 })
 
-const previewFile = reactive({
+const previewFile = reactive<any>({
     blob: null,
     name: '',
     id: '',
@@ -124,7 +125,7 @@ async function handleSubmit () {
             tokenLiveInMinutes: diffMinute(formData.dueDate) 
         }
         const response = await clientApi.api.postNuxeoShareNew(param).then(res => res.data)
-        ElMessage.success($i18n.t('share_success'))
+        ElMessage.success(t('share_success'))
         updateShareList([])
         const item = createBrowseListPageParams({
             idOrPath: props.backPath
@@ -158,7 +159,7 @@ function handleDeleteRow (row) {
     updateShareList(state.minTypeShareList)
 }
 async function handleDiscard () {
-    const action = await ElMessageBox.confirm(`${$i18n.t('tip.confirmWhetherToDiscardShareQueue')}`)
+    const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
     if(action !== 'confirm') return
     if(!!state.interval) clearInterval(state.interval)
     updateShareList([])
