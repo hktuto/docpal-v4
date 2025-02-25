@@ -7,6 +7,8 @@ import {
 } from "../../../../../packages/dp-cmmn-x6/utils/dashboardHelper";
 import { onActivated } from 'vue';
 import { clientApi } from 'api';
+import { MenuRouterKey } from '#imports';
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   id: string;
   instanceId: string;
@@ -37,7 +39,7 @@ async function getDashboardList() {
 }
 function goBack() {
   // TODO: add fallback to case list
-  routerProvider.back()
+  routerProvider?.back()
 }
 async function getLayout(layoutId: string, row: any) {
   try {
@@ -67,12 +69,10 @@ provide(CaseManagementDashboardKey, {
 })
 onActivated(() => {
   getDashboardList()
-  console.log(instanceId, id);
-  
 })
 </script>
 <template>
-  <div class="pageContainer--padding">
+  <div class="pageContainer--padding case-dashboard">
     <el-dropdown trigger="click">
       <span class="el-dropdown-link">
         <div class="ellipsis">{{ state.selectedDashboard.label }}</div>
@@ -93,7 +93,7 @@ onActivated(() => {
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <div class="dashboard-page" v-loading="state.loading">
+    <div class="case-dashboard-main" v-loading="state.loading">
       <DashboardDetail
         v-if="!state.loading"
         ref="DashboardDetailRef"
@@ -106,4 +106,12 @@ onActivated(() => {
     </div>
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.case-dashboard {
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  &-main {
+    overflow: auto;
+  }
+}
+</style>
