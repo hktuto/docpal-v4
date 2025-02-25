@@ -11,7 +11,7 @@ function getBaseUrl(baseURL:string) {
   if (baseURL === '/api') return PROXY
   if(baseURL === '/docpalApi') return PROXY
   if(baseURL === '/public-api/report/v1/api') return DASHBOARD_PROXY
-  return baseURL
+  return PROXY
 }
 
 export const requestSuccessHelper = (config:any, axiosInstance:AxiosInstance) => {
