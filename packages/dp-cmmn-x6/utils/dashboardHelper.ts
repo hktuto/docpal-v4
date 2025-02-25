@@ -9,13 +9,14 @@ import Activity from  '../components/dashboard/activity.vue'
 import Process from  '../components/dashboard/process.vue'
 import TaskPage from  '../components/dashboard/taskPage.vue'
 import WorkflowPage from  '../components/dashboard/workflowPage.vue'
-import { InjectionKey } from 'vue'
+import DocumentRoot  from  '../components/dashboard/DocumentRoot.vue'
 export type CmmnDashboardWidget = 'Action' | 
 'BasicInfo' | 
 'Process'  | 
 'TaskPage' | 
 'WorkflowPage' | 
-'Activity' 
+'Activity' |
+'DocumentRoot'
 export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : DashboardWidgetSetting } = {
   BasicInfo: {
     label: 'cmmnBasicInfo',
@@ -95,6 +96,19 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
     setting : {
       
     }
+  },
+  DocumentRoot: {
+    label: 'cmmnDocumentRoot',
+    minW: 6,
+    minH: 6,
+    maxW: 12,
+    maxH: 12,
+    w: 8,
+    h: 4,
+    component: 'DocumentRoot',
+    setting : {
+      home: ''
+    }
   }
 }
 
@@ -117,4 +131,5 @@ export const CmmnWidgetComponent = {
   'Process': Process,
   'TaskPage': TaskPage,
   'WorkflowPage': WorkflowPage,
+  'DocumentRoot': DocumentRoot
 }
