@@ -90,30 +90,34 @@ function handleFilterFormChange(formModel) {
 }
 
 async function reorderColumn() {
-    const {data: {fields}} = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id)
-    const columns = [
-        {field: 'case_id', title: 'caseManagement.name'},
-        {
-            field: 'created_date',
-            title: 'workflow_createDate',
-            formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
-            }
-        },
-        {
-            field: 'modified_date',
-            title: 'table_modifiedDate',
-            formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
-            }
-        },
-    ]
-    fields.slice().reverse().forEach(row => {
-        columns.splice(1, 0, {field: row.id, title: row.name});
-    })
-    tableConfig.columns = columns;
+    try {
+        const {data: {fields}} = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id)
+        const columns = [
+            {field: 'case_id', title: 'caseManagement.name'},
+            {
+                field: 'created_date',
+                title: 'workflow_createDate',
+                formatter({cellValue}: any) {
+                    const format = userDisplayTimeSetting()
+                    return dayjs(cellValue).format(format)
+                }
+            },
+            {
+                field: 'modified_date',
+                title: 'table_modifiedDate',
+                formatter({cellValue}: any) {
+                    const format = userDisplayTimeSetting()
+                    return dayjs(cellValue).format(format)
+                }
+            },
+        ]
+        fields.slice().reverse().forEach(row => {
+            columns.splice(1, 0, {field: row.id, title: row.name});
+        })
+        tableConfig.columns = columns;
+    } catch (e) {
+
+    }
     tableReady.value = true;
 }
 
@@ -123,8 +127,8 @@ function handleAddCaseDialog() {
     addCaseDialog.value.handleOpen(id)
 }
 
-onMounted(async () => {
-    await reorderColumn()
+onActivated(() => {
+    reorderColumn()
 });
 
 </script>
