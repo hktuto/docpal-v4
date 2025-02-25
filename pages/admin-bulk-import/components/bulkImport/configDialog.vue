@@ -1,29 +1,3 @@
-<template>
-<el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editCaptureProfile') : $t('docType_addCaptureProfile')"
-    :close-on-click-modal="false"
-    >
-    <el-form v-loading="state.pathLoading" :model="formData" ref="FormRef" label-position="top" @submit.native.prevent>
-        <el-form-item :label="$t('docType_profileName')"
-                prop="profileName"
-                :rules="[{ required: true, message: $t('form_common_requird')}]"
-        >
-            <el-input type="text" v-model="formData.profileName" />
-        </el-form-item>
-        <el-form-item :label="$t('dpTable_rootPath')"
-                prop="rootPath"
-                :rules="[{ required: true, message: $t('form_common_requird')}]"
-        >
-            <el-cascader v-model="formData.rootPath" :props="state.cascaderProps" filterable clearable></el-cascader>
-        </el-form-item>
-    </el-form>
-    <TreeTableForm ref="TreeTableFormRef" :columns="tableColumns" :table-data="state.tableData"
-        :treeTableFormRule="state.rules"
-        :options="state.options"></TreeTableForm>
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
-</template>
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 
@@ -75,7 +49,7 @@ const state = reactive({
             const { level, value } = node;
             const idOrPath = level == 0 ? "/" : value
             setTimeout(async() => {
-                let res = await adminApi.api.postNuxeoDocumentChildrenThumbnail({idOrPath, pageSize: 100000}) as any
+                let res = await adminApi.api.postNuxeoDocumentChildrenThumbnail({idOrPath, pageSize: 100000}).then(res => res.data) as any
                 const nodes = res.entryList.reduce((prev:any, item:any) => { 
                     if (item.isFolder) prev.push({
                         value: item.path,
@@ -119,13 +93,19 @@ async function handleSubmit () {
             rootPath: configData.rootPath.pop(),
         }
         if(state.profileID) params.profileID = state.profileID
-        await adminApi.api.postWorkflowSavedocumenttypeprofile(params)
+        const res = await adminApi.api.postWorkflowSavedocumenttypeprofile(params)
+        if(!res.result){
+            ElMessage.error(res.message)
+            return
+        }
+        console.log("res", res)
         state.visible = false
         emits('refresh')
     } catch (error) {
         
+    }finally{
+        state.loading = false
     }
-    state.loading = false
 }
 async function getFormData () {
     const valid = await FormRef.value.validate((valid:any, fields:any) => {
@@ -191,6 +171,34 @@ async function revertData (profile:any) {
 
 defineExpose({ handleOpen })
 </script>
+
+<template>
+<el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editCaptureProfile') : $t('docType_addCaptureProfile')"
+    :close-on-click-modal="false"
+    >
+    <el-form v-loading="state.pathLoading" :model="formData" ref="FormRef" label-position="top" @submit.native.prevent>
+        <el-form-item :label="$t('docType_profileName')"
+                prop="profileName"
+                :rules="[{ required: true, message: $t('form_common_requird')}]"
+        >
+            <el-input type="text" v-model="formData.profileName" />
+        </el-form-item>
+        <el-form-item :label="$t('dpTable_rootPath')"
+                prop="rootPath"
+                :rules="[{ required: true, message: $t('form_common_requird')}]"
+        >
+            <el-cascader v-model="formData.rootPath" :props="state.cascaderProps" filterable clearable></el-cascader>
+        </el-form-item>
+    </el-form>
+    <TreeTableForm ref="TreeTableFormRef" :columns="tableColumns.columns" :table-data="state.tableData"
+        :treeTableFormRule="state.rules"
+        :options="state.options"></TreeTableForm>
+    <template #footer>
+        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
+    </template>
+</el-dialog>
+</template>
+
 <style lang="scss" scoped>
 :deep(.el-cascader){
     width: 100%

@@ -6,7 +6,7 @@ const { documentType } = defineProps<{
 }>()
 
 onActivated(async() => {
-    const {data:metaSettingData} = await adminApi.api.getNuxeoAdminSetting(""); 
+    const {data:metaSettingData} = await adminApi.api.getNuxeoAdminSetting("");
     if(metaSettingData && metaSettingData[documentType]) {
         docTypeData.value = {
             ...metaSettingData[documentType],
