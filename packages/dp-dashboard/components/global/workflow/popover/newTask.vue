@@ -67,7 +67,7 @@ async function getAvailableWorkflow () {
     state.availableWorkflow = await clientApi.api.postWorkflowProcessList({}).then(res => res.data)
 }
 async function workflowClickHandler (item: any) {
-    let tep = 'Start'
+    let step = 'Start'
    
     //TODO : get xml and check if need to open new page
     const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(item.versionId)
@@ -75,7 +75,7 @@ async function workflowClickHandler (item: any) {
     const startEvent = flatObj.Start;
     console.log("Start", startEvent)
     // check start event additional setting
-    if(startEvent.extensionElements && startEvent.extensionElements['docpal:additionaSetting']){
+    if(startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']){
         const openInNewPage = startEvent.extensionElements['docpal:additionaSetting'].attr_openInNewPage
         if(openInNewPage){
             console.log("openInNewPage", openInNewPage)
