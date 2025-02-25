@@ -35,7 +35,7 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
     ],
     dblClickAction: ({row}) => {
         routerProvider?.navigateTo(caseManageDetailPage({
-            name: "caseManageDetail",
+            name: row.name,
             id: row.id,
         }))
     }
