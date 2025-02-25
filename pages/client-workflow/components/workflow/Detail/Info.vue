@@ -90,7 +90,7 @@ async function handleUnclaim () {
     try{
         state.loading = true
         const response = await clientApi.api.postWorkflowTaskUnclaim({ taskId: props.id })
-        emits('change', response, false)
+        // emits('change', response, false)
         props.taskDetail.assignee = ''
     } catch (error) {
         // ElMessage.error(error.response.data.message)
