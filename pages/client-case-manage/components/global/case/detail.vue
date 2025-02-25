@@ -162,8 +162,7 @@ onActivated(() => {
     justify-content: end;
 }
 
-.header-flex .el-input {
+:deep(.el-input)  {
     width: 200px;
-    --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
 }
 </style>
