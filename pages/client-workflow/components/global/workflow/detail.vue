@@ -76,12 +76,14 @@ const vFormRef = ref();
 async function handleFormDataGet() {
   let formJson;
   let formData;
+  let xml;
   switch (workflowType) {
     case state.processState.completeTask:
       formData = state.taskDetail.processVariables;
       formJson = await formJsonGet("end", state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
-
-      vFormRef.value.setForm(formJson, formData);
+      xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
+      vFormRef.value.setForm(formJson, formData, [], xml);
+      handleAdditionalSetting(xml, state.taskDetail, formData)
       break;
     default:
       console.log(
@@ -101,7 +103,7 @@ async function handleFormDataGet() {
         state.taskDetail.processDefinitionVersionId
       );
       console.log("formData", formData);
-      const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
+      xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       vFormRef.value.setForm(formJson, formData, [], xml);
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break;

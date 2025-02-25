@@ -4,8 +4,9 @@ import { useEventListener } from '@vueuse/core'
 import { clientApi } from 'api'
 const dialogOpend = ref(false)
 const router = useRouter()
-
+const tabProvider = inject(TabManagerKey)
 async function handleWatermark(doc: any) {
+    console.log("watermark trigger")
     let mimeType:any = '';
     if(!doc.properties){
         const data = await clientApi.api.postNuxeoDocument({idOrPath:doc.id});
@@ -16,12 +17,11 @@ async function handleWatermark(doc: any) {
     if(!mimeType || (!mimeType.includes('image') && !mimeType.includes('pdf') && !mimeType.includes('video'))){
         dialogOpend.value = true;
     }else{
-        router.push({
-            path: '/browse/watermark',
-            query: {
-                docId: doc.id
-            }
+        const newItem = createBrowseWatermarkPageParams({
+            docId: doc.id,
+            docName: doc.name
         })
+        tabProvider?.openInCurrentTab(newItem)
     }
     // doc from props
 }
