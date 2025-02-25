@@ -6,7 +6,6 @@ import BrowseActionsNewFolder from '../components/browse/Actions/newFolder.vue'
 import BrowseActionsUploadDoc from '../components/browse/Actions/uploadDoc.vue'
 import BrowseActionsRename from '../components/browse/Actions/rename.vue'
 import BrowseActionsNewFileDialog from '../components/browse/Actions/newFile/dialog.vue'
-import BrowseActionsWatermark from '../components/browse/Actions/WatermarkBtn.vue'
 import UploadDrawer from '../components/uploadStructure/index.vue'
 import ShareBtn from "../components/browse/share/publicButton.vue";
 import InternalShareDialog from '../components/browse/info/Acl/EditDialog.vue'
@@ -45,11 +44,6 @@ export default defineNuxtPlugin(() => {
         name: 'newFileDialog',
         component: BrowseActionsNewFileDialog,
         show: false,
-        order: 100,
-    },{
-        name: 'watermark',
-        component: BrowseActionsWatermark,
-        show: true,
         order: 100,
     },{
         name:"uploadDrawer",

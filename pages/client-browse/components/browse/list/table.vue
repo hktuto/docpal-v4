@@ -52,7 +52,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 if(row.isFolder){
                     icon = '/icons/doc/folder.svg';
                 }
-                return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span>`
+                return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile'? '(temp)' : ''}</span> `
             }
         },
         {
@@ -104,7 +104,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code: 'docActionNewFile',
                 name: 'filePopover_newFile',
                 action: ({row}) => {
-                    const ev = new CustomEvent('docActionNewFile', {detail: row})
+                    const doc = row || listProvider.docDetail.value
+                    const ev = new CustomEvent('docActionNewFile', {detail: doc})
                     document.dispatchEvent(ev)
                 }
             },
@@ -112,7 +113,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code: 'docActionUploadFile',
                 name: 'filePopover_uploadFile',
                 action:({row}) => {
-                    const ev = new CustomEvent('docActionUploadFile', {detail: row})
+                    const doc = row || listProvider.docDetail.value
+                    const ev = new CustomEvent('docActionUploadFile', {detail: doc})
                     document.dispatchEvent(ev)
                 }
             },
@@ -120,7 +122,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code: 'docActionUploadFolder',
                 name : 'filePopover_uploadFolder',
                 action:({row}) => {
-                    const ev = new CustomEvent('docActionUploadFolder', {detail: row})
+                    const doc = row || listProvider.docDetail.value
+                    const ev = new CustomEvent('docActionUploadFolder', {detail: doc})
                     document.dispatchEvent(ev)
                 }
             },
@@ -128,6 +131,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code:'docActionRename',
                 name:'filePopover_rename',
                 action:({row}) => {
+                    
                     const ev = new CustomEvent('docActionRename', {detail: row})
                     document.dispatchEvent(ev)
                 }
@@ -193,8 +197,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code:'docActionRefresh',
                 name: 'common_refresh',
                 action:({row}) => {
-                    const ev = new CustomEvent('docActionRefresh', {detail: row})
-                    document.dispatchEvent(ev)
+                    const doc = row || listProvider.docDetail.value
+                    reload()
                 }
             },
             {
@@ -244,6 +248,12 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     permissionMethod: ({options, code, column, row, rowIndex, additionalData}:any) => {
         // if click on empty row, return empty
         if(!row){
+            if(code ==='docActionRefresh'){
+                return {
+                    visible: true,
+                    disabled: false
+                }
+            }
             if(code === 'docActionPaste'){
                 return {
                     visible: AllowTo({feature:'ReadWrite', permission:additionalData}) && copyDocumentList.value.length > 0,
@@ -348,8 +358,15 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
 
 
 function dblClickHandler(row:any) {
+    if(row.source === 'tempFile') {
+        const newItem = createAiUploadDetail({
+            id: row.uploadId
+        })
+        routerProvider?.navigateTo(newItem, true)
+        return;
+    }
     if(row.isFolder) {
-        listProvider.changeRoute(row.path)
+        listProvider?.changeRoute(row.path)
     }else{
         const params = createDetailPageParams({
             idOrPath: row.id,
