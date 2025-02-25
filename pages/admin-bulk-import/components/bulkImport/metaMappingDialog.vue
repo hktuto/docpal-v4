@@ -48,6 +48,7 @@ async function handleSubmit () {
 }
 function handleOpen(exitList: any, formData: any) {
     state.visible = true
+    console.log("exitList", exitList)
     setTimeout(() => {
         FormRendererRef.value.vFormRenderRef.resetForm()
         handleOptions(exitList)
@@ -76,7 +77,7 @@ async function handleOptions (exitList: any) {
     }
 }
 onMounted(async() => {
-    const {data} = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile') as any
+    const data = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile').then(res => res.data?.keywords) as any
     state.globalSchemaList = data
 })
 defineExpose({ handleOpen })

@@ -44,7 +44,15 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      platform:'admin'
+      platform:'admin',
+      defaultTab: {
+          id:"admin-user",
+          name: 'admin-user-list',
+          label: "adminMenu.User",
+          icon: "lucide:user",
+          component: "LazyAdminUserList",
+          props:{},
+      }
     }
   },  
 })

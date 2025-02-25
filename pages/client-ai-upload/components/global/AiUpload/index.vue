@@ -141,7 +141,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
 function dblclickHandler(row:any) {
     if(row.uploadStatus === 'Ready') {
         const item = createAiUploadDetail({
-            id: row.id,
+            id: row.uploadId,
             status: row.uploadStatus
         })
         routerProvider?.navigateTo(item)

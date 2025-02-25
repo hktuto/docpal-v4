@@ -9,6 +9,8 @@ import BrowseActionsNewFileDialog from '../components/browse/Actions/newFile/dia
 import BrowseActionsWatermark from '../components/browse/Actions/WatermarkBtn.vue'
 import UploadDrawer from '../components/uploadStructure/index.vue'
 import ShareBtn from "../components/browse/share/publicButton.vue";
+import InternalShareDialog from '../components/browse/info/Acl/EditDialog.vue'
+import ChangeDocTypeDialog from '../components/browse/Actions/changeDocType/dialog.vue'
 // import SharePublicButton from '../components/global/sharePublicButton.vue'
 
 export default defineNuxtPlugin(() => {
@@ -57,6 +59,16 @@ export default defineNuxtPlugin(() => {
     },{
         name: 'share',
         component: ShareBtn,
+        show: true,
+        order: 1,
+    },{
+        name: 'internalShareDialog',
+        component: InternalShareDialog,
+        show: true,
+        order: 1,
+    },{
+        name: 'changeDocTypeDialog',
+        component: ChangeDocTypeDialog,
         show: true,
         order: 1,
     })

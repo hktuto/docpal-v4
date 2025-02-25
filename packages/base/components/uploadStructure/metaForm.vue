@@ -26,8 +26,7 @@
 
 
 <script lang="ts" setup>
-import { ElMessage, ElNotification } from 'element-plus'
-import { metaValidationRuleGetApi, getDocTypeListApi, deepCopy } from 'dp-api'
+import { clientApi} from 'api'
 const props = withDefaults(defineProps<{
     checkList: any,
 }>(), {
@@ -58,7 +57,9 @@ async function handleDocTypeChange (doc) {
         getMetaAndSetMeta()
     }
     async function getDocType(isFolder) {
-        const res = await getDocTypeListApi()
+        const res = await clientApi.api.getTypesActive()
+                                .then(res => res.data)
+                                .then(data => data.sort((a,b)=> (a.name.localeCompare(b.name) ))) as any
         state.fileTypes = res.filter((item) => item.isFolder === isFolder)
     }
     function getMetaAndSetMeta() {

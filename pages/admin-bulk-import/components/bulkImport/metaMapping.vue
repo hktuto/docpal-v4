@@ -39,10 +39,8 @@ const { t} = useI18n()
 const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     id: 'admin-bulk-import-meta',
     api: async(params:any) => {
-        const {data} = await adminApi.api.getWorkflowQuerymetadatamapping({ name }) as any
-        if(data.length === 0){
-            return []
-        }
+        const data = await adminApi.api.getWorkflowQuerymetadatamapping({ name }).then( res => res.data || []).catch((err) => ([])) as any
+    
         state.metaMapping = { ...data[0] }
         state.metaMapping.metaDataMapper = data[0].metaDataMapper ? JSON.parse(data[0].metaDataMapper) : {}
         state.list = data.reduce((prev:any, item:any) => {

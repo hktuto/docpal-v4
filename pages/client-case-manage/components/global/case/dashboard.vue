@@ -36,7 +36,8 @@ async function getDashboardList() {
   }
 }
 function goBack() {
-  // router.push(`/case/${id}`)
+  // TODO: add fallback to case list
+  routerProvider.back()
 }
 async function getLayout(layoutId: string, row: any) {
   try {

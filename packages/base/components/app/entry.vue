@@ -22,6 +22,16 @@ async function getTabsFromServer() {
     }else{
         // init a basic layout
         tabAppRef.value?.setHightLightPanel("dummy-tab-container")
+        const config = useRuntimeConfig() as any
+        const defaultTab = config.public.defaultTab || {
+            id: 'new-tab-001',
+            label: "New Tab",
+            name: "new-tab-001",
+            parent: "dummy-tab-container",
+            component: 'LazyTabEmpty', 
+        }
+        defaultTab.parent = "dummy-tab-container"
+
         tabAppRef.value?.setLayout([
                 {
                     id:"dummy-tab-container",
@@ -29,13 +39,7 @@ async function getTabsFromServer() {
                     showingTabIndex: 0,
                     size:100,
                     tabs: [
-                        {
-                            id: 'new-tab-001',
-                            label: "New Tab",
-                            name: "new-tab-001",
-                            parent: "dummy-tab-container",
-                            component: 'LazyTabEmpty',
-                        }
+                        defaultTab
                     ]
                 }
             ])
