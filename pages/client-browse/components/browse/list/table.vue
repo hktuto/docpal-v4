@@ -21,9 +21,20 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
     }
 }
 
+function sortEntry(a, b) {
+    if(a.isFolder === b.isFolder){
+        return a.name.localeCompare(b.name)
+    }
+    return b.isFolder ? 1 : -1
+}
+
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
     id: 'browseTableSetting',
-    api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
+    api: async(pageParams:any) => {
+        const data = await loadData([], listProvider.idOrPath.value || '/')
+        data.sort(sortEntry)
+        return data
+    },
     columns:  [
         {
             type: 'checkbox',
@@ -35,7 +46,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
             title: 'Name',
             minWidth: 60,
             treeNode: true,
-            sortable: true,
             type:'html',
             formatter: ({ cellValue, row }:any) => {
                 let icon = '/icons/doc/file.svg';
@@ -312,7 +322,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
             hasChildField:'isFolder',
             loadMethod: async(params) => {
                 const entry = await loadAllChildren([], params.row.path)
-                return entry
+                return entry.sort(sortEntry)
             }
         },
         checkboxConfig: {
