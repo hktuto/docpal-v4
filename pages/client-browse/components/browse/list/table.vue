@@ -1,6 +1,7 @@
 <script lang="tsx" setup>
 const listProvider = inject(BrowseListProviderKey);
 const routerProvider = inject(MenuRouterKey)
+import { clientApi } from 'api'
 if(!listProvider || !routerProvider) {
     throw new Error('BrowseListProviderKey not found')
 }
@@ -132,8 +133,9 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
             {
                 code:'docWatermark',
                 name:'filePopover_watermark',
-                action:({row}) => {
-                    const ev = new CustomEvent('docWatermark', {detail: row})
+                action: async({row}) => {
+                    const detail = await clientApi.api.postNuxeoDocument({ idOrPath:row.id }).then(res => res.data)
+                    const ev = new CustomEvent('docWatermark', {detail: detail})
                     document.dispatchEvent(ev)
                 }
             },
@@ -141,10 +143,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
                 code:'docActionCopy',
                 name:'filePopover_copy',
                 action:({row}) => {
-                    copyDocumentList.value = [{
-                        type: 'copy',
-                        doc: row
-                    }]
+                    const ev = new CustomEvent('docActionCopy', {detail: row})
+                    document.dispatchEvent(ev)
                 }
             },
             {
@@ -223,15 +223,30 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         ]
     ],
     additionalPermission: async({row}) => {
-        if(!row) return null
         const userId = useUserId()
+        if(!row) {
+            return getPermission(listProvider.docDetail.value.id, userId.value)
+        }
+        
         const permission = await getPermission(row.id, userId.value)
         return permission
     },
     permissionMethod: ({options, code, column, row, rowIndex, additionalData}:any) => {
         // if click on empty row, return empty
         if(!row){
-
+            if(code === 'docActionPaste'){
+                return {
+                    visible: AllowTo({feature:'ReadWrite', permission:additionalData}) && copyDocumentList.value.length > 0,
+                    disabled: false
+                }
+            }
+            const otherPublicAction = ['docActionAddFolder','docActionNewFile','docActionUploadFile','docActionUploadFolder']
+            if(otherPublicAction.includes(code)) {
+                return {
+                    visible: AllowTo({feature:'ReadWrite', permission:additionalData}), 
+                    disabled: false
+                }
+            }
             return {
                 visible: false,
                 disabled: false

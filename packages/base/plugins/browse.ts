@@ -11,8 +11,8 @@ import UploadDrawer from '../components/uploadStructure/index.vue'
 import ShareBtn from "../components/browse/share/publicButton.vue";
 import InternalShareDialog from '../components/browse/info/Acl/EditDialog.vue'
 import ChangeDocTypeDialog from '../components/browse/Actions/changeDocType/dialog.vue'
+import watermarkDialog from '../components/browse/Actions/watermark.vue'
 // import SharePublicButton from '../components/global/sharePublicButton.vue'
-
 export default defineNuxtPlugin(() => {
     const { globalSlots } = useGlobalSetting()
     globalSlots.value.push(
@@ -69,6 +69,11 @@ export default defineNuxtPlugin(() => {
     },{
         name: 'changeDocTypeDialog',
         component: ChangeDocTypeDialog,
+        show: true,
+        order: 1,
+    },{
+        name: 'watermarkDialog',
+        component: watermarkDialog,
         show: true,
         order: 1,
     })
