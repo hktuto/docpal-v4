@@ -9,7 +9,7 @@ import Activity from  '../components/dashboard/activity.vue'
 import Process from  '../components/dashboard/process.vue'
 import TaskPage from  '../components/dashboard/taskPage.vue'
 import WorkflowPage from  '../components/dashboard/workflowPage.vue'
-import DocumentRoot  from  '../components/dashboard/DocumentRoot.vue'
+import DocumentRoot  from  '../components/dashboard/documentRoot.vue'
 export type CmmnDashboardWidget = 'Action' | 
 'BasicInfo' | 
 'Process'  | 
