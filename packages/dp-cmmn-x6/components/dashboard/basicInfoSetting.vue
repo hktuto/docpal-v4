@@ -3,7 +3,6 @@
     class="scroll-dialog processSetting-dialog"
     append-to-body 
     :close-on-click-modal="false"
-    @close="handleClose"
     >
     <div>
         <h3>{{ $t('caseManage.fieldsLayout') }}</h3>
@@ -17,7 +16,7 @@
             <div :style="`--field-width: ${element.width}`" class="list-group-item">
                 <SvgIcon class="handle-icon" src="/icons/drag.svg" />
                 {{ element.name }}
-                <el-dropdown @command="(command) => handleCommand(command, element)">
+                <el-dropdown @command="(command: string) => handleCommand(command, element)">
                     <SvgIcon class="zoom-icon" src="/icons/tools/zoom.svg" />
                     <template #dropdown>
                         <el-dropdown-menu>
@@ -61,13 +60,14 @@ import draggable from "vuedraggable";
 const emits = defineEmits([
     'refresh', 'delete'
 ])
+const {t} = useI18n()
 const widthList = [
     { width: '25%', label: '25%' },
     { width: '33%', label: '33%' },
     { width: '50%', label: '50%' },
     { width: '100%', label: '100%' },
 ]
-const state = reactive({
+const state = reactive<any>({
     loading: false,
     visible: false,
     setting: {},
@@ -86,13 +86,13 @@ async function handleSubmit () {
     state.visible = false
     state.loading = false
 }
-function handleOpen(setting, allList) {
+function handleOpen(setting: any, allList: any) {
     if(!allList) allList = []
     state.visible = true
     setTimeout(async () => {
         if(!setting.layout) setting.layout = []
         state.setting = deepCopy(setting)
-        state.allList = allList.filter(item => !state.setting.layout.find(l => item.id === l.id))
+        state.allList = allList.filter((item: any) => !state.setting.layout.find((l: any) => item.id === l.id))
         state.loading = false
     })
 }
@@ -100,7 +100,7 @@ function handleCommand(command: string, row: any) {
     row.width = command
 }
 async function handleDelete() {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return
     emits('delete')
     state.visible = false

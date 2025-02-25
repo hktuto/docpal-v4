@@ -105,10 +105,10 @@ const CMDProvider = inject(CaseManagementDashboardKey)
 async function getCDProcess() {
   try {
     if (state.data.length > 0) return state.data;
-    const id = CMDProvider.instanceId?.value || null;
-    const caseVersionId = CMDProvider.caseVersionId?.value || null;
+    const id = CMDProvider?.instanceId?.value || null;
+    const caseVersionId = CMDProvider?.caseVersionId?.value || null;
     if (id) {
-      const { data } = await adminApi.api.getCaseDashboardVersionVersionidStages(id);
+      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id);
       state.data = data;
     } else if (caseVersionId) {
       const {
