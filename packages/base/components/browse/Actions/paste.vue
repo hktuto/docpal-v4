@@ -1,5 +1,6 @@
 
 <script lang="ts" setup>
+import { emitBus, EventType } from 'eventbus'
 import { ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { Loading } from '@element-plus/icons-vue';
@@ -8,34 +9,42 @@ import { ElNotification, ElMessageBox } from 'element-plus'
 import { clientApi} from 'api'
 const { t } = useI18n()
 const emits = defineEmits(['success'])
-const state = reactive({
-    copyItem: {} as any,
-    action: ''
-})
+const copyDocumentList = useCopyDocumnetList()
+
 function copyItem(doc){
     console.log("copyItem", doc)
-    state.copyItem = { idOrPath: doc.path, name: doc.name }
-    state.action = 'copy'
+    copyDocumentList.value = [
+        {
+            type: 'copy',
+            doc: doc
+        }
+    ]
     ElMessage({
             message: doc.name + " " + t('tip_copy') as string,
             type: 'success'
         })
 }
 function cutItem(doc){
-    state.copyItem = { idOrPath: doc.path, name: doc.name }
-    state.action = 'cut'
+    copyDocumentList.value = [
+        {
+            type: 'cut',
+            doc: doc
+        }
+    ]
     ElMessage({
             message: doc.name + " " + t('filePopover_cut') as string,
             type: 'success'
         })
 }
 async function pasteItem(doc){
-    console.log("pasteItem", state)
+    const item = copyDocumentList.value[0]
+    if(!item) return
+    const copyItem = item.doc
     const param = [ 
-        { idOrPath: state.copyItem.idOrPath }, 
+        { idOrPath: copyItem.id }, 
         {idOrPath: doc.path}
     ]
-    const { isDuplicate } = await duplicateNameFilter(doc.path, [state.copyItem]);
+    const { isDuplicate } = await duplicateNameFilter(doc.path, [{idOrPath: copyItem.id, name:copyItem.name }]);
     if (isDuplicate) {
         ElMessage({
             message: t('dpTip_duplicateFileName') as string,
@@ -47,18 +56,20 @@ async function pasteItem(doc){
         title: t('paste'),
         icon: Loading,
         dangerouslyUseHTMLString: true,
-        message: `<div title="${state.copyItem.name}">${state.copyItem.name}</div>`,
+        message: `<div title="${copyItem.name}">${copyItem.name}</div>`,
         showClose: true,
         customClass: 'loading-notification',
         duration: 0,
         position: 'bottom-right'
     });
     try {
-        if (state.action === 'copy')  await clientApi.api.postNuxeoDocumentCopy(param)
+        if (item.type === 'copy')  await clientApi.api.postNuxeoDocumentCopy(param)
         else await clientApi.api.postNuxeoDocumentMove(param)
     } catch (error) {}
     noti.close()
-    emits('success', doc, state.action)
+    emitBus(EventType.FILE_NEED_REFRESH, {
+        relatedIdOrPath: doc.id,
+    })
 }
 onMounted(() => {
     useEventListener(document, 'docActionCopy', (event:any) => copyItem(event.detail))  
