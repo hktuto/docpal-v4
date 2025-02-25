@@ -99,13 +99,11 @@ async function handleSubmit() {
 function getParams() {
   const result: any = {};
   state.tableData.forEach((item: any) => {
-    if (!item.approved) return;
     result[item.id] = {
       approved: item.approved,
       documentType: item.documentType,
       properties: { ...item.properties, "dc:title": getFileName(item.name) },
     };
-    console.log("getParams", "???");
   });
   return JSON.stringify(result);
 }
