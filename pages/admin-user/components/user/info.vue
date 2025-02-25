@@ -2,11 +2,14 @@
     <el-card v-if="user">
         <template #header>
             <div class="flex-x-between">
-                {{ $t('user_info') }}
+                <h3>{{ $t('user_info') }}</h3>
                 <div class="flex-x-end" v-if="!isLdapMode">
-                    <Icon name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
-                    <Icon name="mynaui:lock-password-solid" class="normal cursor-pointer" @click="openDialog"></Icon>
-                    <Icon name="material-symbols:delete-rounded" class="normal cursor-pointer"
+                    <Icon name="material-symbols:edit-square" class="normal cursor-pointer"
+                          style="width: 20px; height: 20px;" @click="handleEdit"></Icon>
+                    <Icon name="mynaui:lock-password-solid" class="normal cursor-pointer"
+                          style="width: 20px; height: 20px;" @click="openDialog"></Icon>
+                    <Icon name="material-symbols:delete-rounded" style="width: 20px; height: 20px;"
+                          class="normal cursor-pointer"
                           @click="handleDelete"></Icon>
                 </div>
             </div>
@@ -28,9 +31,11 @@
             <div class="rowValue" :title="user.company">{{ user.company }}</div>
         </div>
         <div class="row">
-            <div class="rowTitle">{{ $t('user_active') }}</div>
+            <div class="rowTitle">{{ $t('user_status') }}</div>
             <div class="rowValue">
                 <el-switch v-model="user.status"
+                           :inactive-text="t('actions.inactived')"
+                           :active-text="t('user_active')"
                            active-value="A" inactive-value="D"
                            :loading="user.loading" :disabled="user.loading"
                            @change="(value) => handleSetStatus(value, user)"/>
