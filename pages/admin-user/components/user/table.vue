@@ -4,7 +4,7 @@
             <header v-show="state.selectList?.length > 0" class="header-flex">
                 <div class="title-select color__primary">
                     <b class="el-icon--left ">
-                        {{ $t("notifications.userSelected") }} <{{ state.selectList.length }}>
+                        {{ $t("notifications.userSelected") }}: {{ state.selectList.length }}
                     </b>
                     <Icon name="ic:baseline-clear" class="normal cursor-pointer" @click="cleanSelectedRows"></Icon>
                 </div>
@@ -113,8 +113,9 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         return await userProvider?.getAllUsersApi(pageParams)
     },
     columns: [
-        {field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox'},
-        {field: 'email', title: 'user_email',},
+        {type: "checkbox", fixed: 'left', width: "60px"},
+        {field: 'username', title: 'user_username', fixed: 'left', sortable: true},
+        {field: 'email', title: 'user_email', sortable: true},
         {
             field: 'groupDTOList', title: 'user_groups',
             slots: {
@@ -122,7 +123,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             }
         },
         {
-            field: 'status', title: 'user_active',
+            field: 'status', title: 'user_status',
             slots: {
                 default: 'status',
             }
@@ -312,6 +313,11 @@ function handleGroupSelected() {
 const ResponsiveFilterRef = ref()
 
 async function getFilter(conditions) {
+    conditions.forEach(condition => {
+        if (condition.options) {
+            condition.options.sort((a, b) => a.value.localeCompare(b.value));
+        }
+    });
     ResponsiveFilterRef.value.init(conditions);
 }
 
@@ -341,7 +347,8 @@ defineExpose({reload})
 :deep(.headerLeftExpand .el-form-item--default) {
     margin-bottom: 0;
 }
-:deep(.responsive-container .el-input){
+
+:deep(.responsive-container .el-input) {
     width: 250px;
 }
 
