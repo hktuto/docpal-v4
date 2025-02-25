@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
-import { saveWatermarkAsNewVersionApi } from 'dp-api';
 import {ElNotification} from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()

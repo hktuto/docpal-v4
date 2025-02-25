@@ -119,7 +119,7 @@ provide(BrowseListProviderKey,{
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
-    console.log("relatedIdOrPath", relatedIdOrPath)
+    console.log("relatedIdOrPath", relatedIdOrPath, docDetail.value.id)
     if(relatedIdOrPath === docDetail.value.id) {
         handleRefresh()
         
@@ -144,7 +144,10 @@ useEventListener(document, 'closeFilePreview', closePreview)
     <splitpanes>
 
     <Pane>
-    <BrowseListTable ref="tableRef" :class="{'selected': selectedList.length > 0}" @selectedChange="selectedChangeHandler">
+    <BrowseListTable ref="tableRef" 
+        :class="{'selected': selectedList.length > 0}" 
+        :selectedRows="selectedItem"
+        @selectedChange="selectedChangeHandler">
         <template #toolbar_buttons> 
             <slot name="toolbar_buttons">
                 <div class="toolsBarContainer">

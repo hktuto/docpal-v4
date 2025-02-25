@@ -28,14 +28,14 @@
       <div class="listSection">
         <div class="listTitle">{{ $t('permission.manage') }}</div>
         <div class="listContent">
-          <BrowseInfoAclItem v-for="(ace, i) in EverythingList" :key="i" :ace="ace" :permission="permission" @handleEdit="handleEdit" @handleRemove="handleRemove"></BrowseInfoAclItem>
+          <BrowseInfoAclItem v-for="(ace, i) in EverythingList" :key="i" :ace="ace" :permission="permission"  @handleRemove="handleRemove"></BrowseInfoAclItem>
           <!-- <SvgIcon :src="'/icons/add.svg'" v-show="AllowTo({feature:'ManageRecord', userPermission: permission.permission})" @click="handleAdd('Everything')"/> -->
         </div>
       </div>
       
       
     </div>
-    <BrowseInfoAclEditDialog ref="dialogEl" @handleSubmit="handleAddLocalAclSubmit" @handleUpdate="handleUpdateLocalAclSubmit"/>
+    
   </div> 
 </template>
 
@@ -86,11 +86,7 @@ const EverythingList = computed(() => {
       await clientApi.api.deleteNuxeoDocumentAclRemove({ idOrPath: props.doc.id, userId: ace.userId })
       handleDataGet()
     }
-    function handleEdit (ace) {
-      
-      if (ace.type !== 'local' ||!AllowTo({feature:'ManageRecord', permission })) return
-      dialogEl.value.handleOpen(deepCopy(ace), true)
-    }
+   
     function handleAdd (type?:string) {
       const data = {
         permission: type,

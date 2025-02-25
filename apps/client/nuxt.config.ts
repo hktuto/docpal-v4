@@ -26,7 +26,15 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            platform: 'client'
+            platform: 'client',
+            defaultTab: {
+                id:'client-work-panel',
+                name : 'client-work-panel',
+                label: "adminMenu.workPanel",
+                hoverIcon : 'material-symbols:dashboard-customize-outline-rounded',
+                component: "LazyHomePage",
+                props:{}
+            }
         }
     },
     nitro: {

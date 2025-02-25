@@ -30,6 +30,7 @@
     "@vueuse/nuxt": "^11.3.0",
     "@vxe-ui/plugin-render-element": "4.0.7",
     "animejs": "^3.2.2",
+    "bmp-js": "^0.1.0",
     "didyoumean2": "^6.0.1",
     "docx-preview": "^0.3.4",
     "element-plus": "^2.9.4",

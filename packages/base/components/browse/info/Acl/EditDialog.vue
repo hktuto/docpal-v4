@@ -6,7 +6,7 @@
         <template #header>
             {{$t(state.title)}}
         </template>
-        <FromRenderer ref="FromRendererRef" :form-json="formJson"/>
+        <FormRenderer ref="FromRendererRef" :form-json="formJson"/>
         <template #footer>
             <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
         </template>
