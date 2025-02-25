@@ -131,4 +131,6 @@ const config = {
 } as any
 
 
+console.log("config env", config.runtimeConfig.public)
+
 export default defineNuxtConfig(config)
