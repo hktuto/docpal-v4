@@ -1,3 +1,5 @@
+import { version } from "vue";
+
 export const caseManageDetailPage  = function(params: any){
   return {
     id: "client-case-manage-detail" + new Date().getTime(),
@@ -15,10 +17,12 @@ export const caseManageDashboardPage  = function(params: any){
     id: "client-case-manage-dashboard" + new Date().getTime(),
     name: "client-case-manage-dashboard-" + params.id,
     icon: 'dp-icon:case-outline',
-    label: params.name,
+    label: params.case_id,
     component: 'LazyCaseDashboard',
     props: {
       id: params.id,
+      instanceId: params.case_id,
+      versionId: params.versionId
     }
   } as TabItem
 }
