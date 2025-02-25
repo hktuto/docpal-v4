@@ -177,7 +177,7 @@ function closeTab(){
             <div class="label">
             </div>
             <Icon class="closeIcon" name="lucide:share-2" @click="copyToClipboard(tab)" />
-            <Icon class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" />
+            <!-- <Icon class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" /> -->
             <Icon class="closeIcon" name="lucide:screen-share" @click="openInNewTab" />
             <Icon class="closeIcon alwaysShow" name="ic:round-close" @click.stop="closeTab" />
         </div>

@@ -50,9 +50,10 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExi
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
-function back(fallback:any){
+function back(fallback?:any){
     if(history.value.length === 0) {
         if(fallback){
+            console.log("fallback", fallback)
             navigateTo(fallback)
         }    
         return
@@ -204,8 +205,8 @@ defineExpose({
 <div :class="['routerContainer', [tab.name]]">
     <Teleport :to="historyClass" defer>
         <div class="historyContainer">
-            <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="back"/>
-            <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="forward"/>
+            <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="() => back()"/>
+            <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="() => forward()"/>
         </div>
     </Teleport>
     <Teleport  v-if="tab.icon" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .icon`">
