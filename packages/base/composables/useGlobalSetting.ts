@@ -56,7 +56,6 @@ export const useGlobalSetting = () => {
         const actions = newUrl.searchParams.get('actions')
         if(!actions) return
         const clipboardData = JSON.parse(atob(actions))
-        console.log("actionsObj", clipboardData)
         // check clipboardData.type is include in GlobalPasteEvent
         if(Object.values(GlobalPasteEvent).includes(clipboardData.type)){
             console.log(clipboardData.type)

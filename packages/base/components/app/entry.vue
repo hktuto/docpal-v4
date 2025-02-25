@@ -7,6 +7,7 @@ const emits = defineEmits(['ready'])
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import enUS from 'vxe-table/lib/locale/lang/en-US'
 import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
+import Router from '../tab/router.vue';
 
 
 async function getTabsFromServer() {
@@ -44,11 +45,27 @@ async function getTabsFromServer() {
                 }
             ])
     }
+    const router = useRouter()
     
+    if(route.query.navigateTab){
+        try{
+            const item = JSON.parse(atob(route.query.navigateTab as string))
+            tabAppRef.value?.openTab(item)
+            console.log("navigateTab", item)
+            router.push({
+                query:{},
+            })
+        }catch(error){
+            // do nothing
+        }
+    }
+    router.push({
+        hash:""
+    })
 } 
 
 
-function saveHIghlightPanel(panelID:string){
+function saveHighlightPanel(panelID:string){
     localStorage.setItem('app-tab-hightLightPanel', panelID);
 }
 
@@ -109,7 +126,7 @@ onMounted(async() => {
 <template>
     <template v-if="languageReady">
 
-        <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHIghlightPanel">
+        <TabApp ref="tabAppRef" @ready="getTabsFromServer" @layoutChanged="saveTabsToLocalStorage" @highlightPanelChanged="saveHighlightPanel">
             <template #sidebar>
                 <slot name="sidebar" />
                 <component v-for="s in globalSlots" v-show=s.show :key="s.name" :is="s.component" v-bind="$props" />
