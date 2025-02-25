@@ -11,7 +11,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage} from 'element-plus'
-import { adminApi } from 'api'
+import { clientApi } from 'api'
 
 const props = defineProps(['actionList'])
 const emits = defineEmits(['refresh'])
@@ -29,7 +29,7 @@ async function handleTask(actionItem) {
   if (actionItem.planItemDefinitionType === 'humantask') {
     dialogRef.value.handleOpen(actionItem.referenceId, actionItem)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
-    await adminApi.api.postCaseInstanceCaseinstanceidEventsEventidTrigger(actionItem.id, actionItem.planItemDefinitionId)
+    await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.id, planItemDefinitionId: actionItem.planItemDefinitionId})
     // await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)
     ElMessage.success(t('dpMsg_success'))
     emits('refresh')

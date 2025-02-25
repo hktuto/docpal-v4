@@ -37,13 +37,13 @@ const props = defineProps<{
     caseTypeId: string,
     name: string,
     currentVersion: string,
+    caseDetailId: string
 }>()
 const pageParams = {
   pageNum: 0,
   pageSize: 20,
   orderBy: 'createdDate',
   isDesc: true,
-  caseTypeId: props.caseTypeId
 }
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'case-dashboard-table',
@@ -53,6 +53,8 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
           params.orderBy = 'createdDate';
           params.isDesc = false
       }
+      if(props.currentVersion) params.versionNumber = props.currentVersion
+      if(props.caseDetailId) params.caseTypeId = props.caseDetailId
       return await adminApi.api.postCaseDashboardPage({...params, ...state.extraParams})
     },
     remoteSort: true,

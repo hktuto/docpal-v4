@@ -14,10 +14,6 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
         }
         return clientApi.api.postCaseTypesPage(pageParams)
     },
-    defaultSort: {
-        field: "createdDate",
-        order: 'desc'
-    },
     columns: [
         {field: 'name', title: 'search.name'},
         {

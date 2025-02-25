@@ -40,7 +40,7 @@ const {
     { field: "assignee", title: "workflow_assignee" }, 
     { field: "taskInstance.startUserId", title: "role.creator" }, 
     {
-      field: "createdDate",
+      field: "createDate",
       title: "dpTable_createdDate",
       formatter({ cellValue }: any) {
         const format = userDisplayTimeSetting();
