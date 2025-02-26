@@ -332,7 +332,7 @@ onMounted(async() => {
   display: grid;
   grid-template-columns: 300px 1fr 1fr;
   grid-template-rows: min-content 1fr;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   .left-top {
     grid-area: 1 / 1 / 2 / 2;
   }
@@ -369,7 +369,7 @@ onMounted(async() => {
 .right :deep(.el-card__body) {
   display: grid;
   grid-template-rows: min-content 1fr;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   height: 100%;
 }
 :deep(.el-row) { margin: unset !important; }

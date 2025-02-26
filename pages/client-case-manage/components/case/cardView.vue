@@ -59,7 +59,7 @@ defineExpose({ initFields })
     content: ' '
   }
   .row {
-    margin-bottom: var(--app-padding);
+    margin-bottom: var(--app-space-xs);
     .title {
       color: #687a8f;
     }
@@ -69,7 +69,7 @@ defineExpose({ initFields })
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   flex-wrap: wrap;
-  gap: var(--app-padding);
+  gap: var(--app-space-xs);
   overflow: auto;
   // height: 100%;
 }

@@ -62,6 +62,7 @@ async function blockInherited () {
 .card {
     width: 100%;
     margin: 0 0 var(--app-space-xs) 0;
+    padding: var(--app-space-xs);
     box-shadow: var(--el-box-shadow-light);
     .tableTopContainer {
         display: flex;
