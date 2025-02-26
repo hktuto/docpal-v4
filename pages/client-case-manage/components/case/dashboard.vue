@@ -110,7 +110,7 @@ onMounted(async () => {
     overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr;
-    gap: var(--app-padding);
+    gap: var(--app-space-xs);
     h3 {
       margin: unset;
     }
@@ -119,8 +119,8 @@ onMounted(async () => {
     --icon-size: 1.14rem; 
     --icon-color: #8796A4;
     position: absolute;
-    top: var(--app-padding);
-    right: var(--app-padding);
+    top: var(--app-space-xs);
+    right: var(--app-space-xs);
   }
 }
 :deep .responsive-container {

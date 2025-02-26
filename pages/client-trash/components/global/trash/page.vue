@@ -1,5 +1,5 @@
 <template>
-    <div class="pageContainer">
+    <div class="pageContainer--padding">
         <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
             <template #toolbar_buttons>
                 <header v-show="state.selectList.length === 0" class="header-flex">
@@ -245,46 +245,4 @@ onActivated(() => {
 </script>
 
 <style lang="scss" scoped>
-.pageContainer {
-    width: 100%;
-    height: 100%;
-    padding: var(--app-space-xs);
-}
-
-:deep(.headerLeftExpand .el-form-item--default) {
-    margin-bottom: 0;
-}
-
-.table-tag {
-    margin-bottom: 5px;
-}
-
-.header-flex {
-    //width: 100%;
-    //overflow: hidden;
-    //display: grid;
-    //grid-template-columns: 1fr min-content;
-    //gap: var(--app-space-xs);
-    //padding: var(--app-space-xs);
-    //background: var(--el-color-primary-light-9);
-}
-
-.title-select {
-    display: flex;
-    align-items: center;
-    --icon-size: 1.2rem;
-}
-
-:deep .tableHeader {
-    gap: unset;
-}
-
-.el-divider--vertical {
-    height: 1.5rem;
-}
-
-.flex-x-end {
-    display: flex;
-    justify-content: end;
-}
 </style>

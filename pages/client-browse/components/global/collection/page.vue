@@ -1,5 +1,5 @@
 <template>
-    <div class="collection-container withPadding">
+    <div class="pageContainer--padding collection-container">
         <div :class="['collection-container--left', { collapse: style.collapse }]">
             <div class="flex-x-end">
                 <el-button @click="openAddCollectionDialog">
@@ -288,9 +288,6 @@ onMounted(() => {
     display: grid;
     grid-template-columns: min-content 1fr;
     gap: var(--app-space-xs);
-    height: 100%;
-    overflow: hidden;
-
     &--left {
         width: 200px;
         display: grid;

@@ -120,7 +120,7 @@ provide(CaseManagementListProviderKey,{
 
 
 <template>
-    <div class="pageContainer">
+    <div class="pageContainer--padding">
         <CaseManagementListTable ref="tableRef" v-bind="props" >
             <template #toolbar_buttons>
                 <div class="actionsContainer">
@@ -136,12 +136,6 @@ provide(CaseManagementListProviderKey,{
 </template>
 
 <style lang="scss" scoped>
-.pageContainer{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    padding: var(--app-space-xs);
-}
 .actionsContainer{
     display: flex;
     flex-flow: row nowrap;
