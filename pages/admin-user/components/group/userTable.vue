@@ -4,7 +4,7 @@
             <div v-show="state.selectedRows.length > 0" class="flex-x-between">
                 <div class="title-select color__primary flex-x-start">
                     <b class="el-icon--left ">
-                        {{ $t("notifications.userSelectedByUserGroup") }}: <{{ state.selectedRows.length }}>
+                        {{ $t("notifications.userSelectedByUserGroup") }}: {{ state.selectedRows.length }}
                     </b>
                     <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
                              @click="cleanSelectedRows"/>

@@ -13,7 +13,8 @@
         "vueuse"
     ],
     "i18n-ally.localesPaths": [
-
+        "./packages/base/public/defaultLang"
     ],
+    "i18n-ally.keystyle": "nested",
     
 }

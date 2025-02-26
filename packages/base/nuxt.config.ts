@@ -26,6 +26,7 @@ const config = {
   
   runtimeConfig:{
     public:{
+      isProduction: process.env.NODE_ENV === 'production',
       pdfReaderUrl: process.env.pdfReaderUrl,
       NODE_ENV: process.env.NODE_ENV,
       CLIENT_PROXY: process.env.CLIENT_PROXY,
@@ -130,7 +131,5 @@ const config = {
   },
 } as any
 
-
-console.log("config env", config.runtimeConfig.public)
 
 export default defineNuxtConfig(config)

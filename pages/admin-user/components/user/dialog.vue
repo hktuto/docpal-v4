@@ -24,7 +24,8 @@ const state = reactive({
     visible: false,
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
@@ -34,7 +35,7 @@ async function handleSubmit () {
             userId: data.userId,
             groupIds: data.groupList
         })
-        routerProvider?.message.success(t('user_createdSuccessMsg'));
+        routerProvider?.message.success(t('user_createdSuccessMsg', {username: data.name}));
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
     } catch (error) {

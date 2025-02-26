@@ -4,7 +4,7 @@ export type BrowseListPageParams = {
 }
 export function createBrowseListPageParams(params:BrowseListPageParams){
     return {
-        id: 'client-browse',
+        id: 'client-browse' + new Date().getTime(),
         name: 'client-browse-' + params.idOrPath,
         icon: 'dp-icon:browse-outline',
         hoverIcon: 'dp-icon:browse-fill',
