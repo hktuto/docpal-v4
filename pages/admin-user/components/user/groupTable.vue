@@ -14,7 +14,7 @@
                 </el-button>
             </div>
             <div v-show="state.selectedRows.length === 0" class="flex-x-between">
-                <span>{{ $t('user_userGroupAssignment') }}</span>
+                <span><h3>{{ $t('user_userGroupAssignment') }}</h3></span>
                 <el-button class="button" type="primary" @click="handleGroupAddMemberFormShow()">
                     {{ $t('user_addGroups') }}
                 </el-button>
@@ -23,6 +23,12 @@
         <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
             <template #toolbar_buttons>
                 <slot name="toolbar_buttons"/>
+                <ResponsiveFilter
+                    ref="ResponsiveFilterRef"
+                    inputPlaceHolder="placeHolder.userGroupName"
+                    @form-change="handleFilterFormChange"
+                    inputKey="metaData"
+                />
             </template>
             <template #more="{row}">
                 <Icon v-if="!noDeleteList.includes(row.id)" name="material-symbols:delete-rounded"
@@ -47,12 +53,14 @@ const props = defineProps<{
     user: any
 }>()
 const state = reactive<any>({
-    selectedRows: []
+    selectedRows: [],
+    groupList: []
 })
 const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
     id: 'azureLogTableSetting',
     columns: [
-        {field: 'name', title: 'user_userGroupName', fixed: 'left', type: 'checkbox'},
+        {type: "checkbox", fixed: 'left', width: "60px"},
+        {field: 'name', title: 'user_userGroupName', fixed: 'left', sortable: true},
         {field: 'id', title: 'user_userGroupIdentifer',},
     ],
     selectChangeHander: (selectedRows: any[]) => {
@@ -73,6 +81,7 @@ async function getMemberGroupList() {
         userId: props.user.userId
     })
     tableRef.value?.loadData(res.data)
+    state.groupList = res.data
 }
 
 async function handleDelete(row: any) {
@@ -91,7 +100,12 @@ async function handleDelete(row: any) {
 }
 
 async function handleDeleteSelected() {
-    const action = await ElMessageBox.confirm(t("groupTip.confirmWhetherToDeleteItems"));
+    const action = await ElMessageBox.confirm(
+        t('groupTip.confirmWhetherToDeleteItems', {username: props.user.firstName}),
+        {
+            confirmButtonText: t("common_confirmRemove"),
+        }
+    );
     if (action !== "confirm") return;
     const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
     if (ids.length === 0) {
@@ -103,7 +117,20 @@ async function handleDeleteSelected() {
         userId: props.user.userId
     })
     state.selectedRows = [];
+    ElMessage({
+        type: 'success',
+        message: t('user_removeGroupsSuccessMsg', {username: props.user.firstName}),
+    })
     getMemberGroupList()
+}
+
+function handleFilterFormChange(formModel: any) {
+    let data = state.groupList;
+    if (formModel.metaData) {
+        const searchString = formModel.metaData.toLowerCase();
+        data = state.groupList.filter((item: any) => item.name.toLowerCase().includes(searchString));
+    }
+    tableRef.value?.loadData(data);
 }
 
 onActivated(() => {
@@ -123,6 +150,10 @@ watch(() => props.user, async (newValue: any) => {
 .el-card {
     display: grid;
     grid-template-rows: min-content 1fr;
+}
+
+:deep(.el-input) {
+    width: 200px;
 }
 
 .flex-x-between {
