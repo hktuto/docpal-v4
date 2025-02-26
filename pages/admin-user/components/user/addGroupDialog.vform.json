@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "id",
-        "label": "user_groupName",
+        "label": "user_groupNameMulti",
         "labelAlign": "",
         "defaultValue": [],
         "placeholder": "Please select one or more user groups.",
