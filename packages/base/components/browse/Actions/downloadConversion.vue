@@ -65,7 +65,7 @@ const supportedFormatObject = ref<any>({})
         }
     const handleGetSupportedFormat = async() => {
         if (supportedFormatObject.value instanceof Object && Object.keys(supportedFormatObject.value).length !== 0) return
-        const {data} = await clientaApi.api.getNuxeoConversionGetsupportedformat()
+        const {data} = await clientApi.api.getNuxeoConversionGetsupportedformat()
         supportedFormatObject.value = data
     }
     const filterArrObj = (arr,filterField) =>{
