@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ElColorPicker, ElDialog } from 'element-plus';
 import { adminApi } from 'api';
-
-const { setting, categoriesColumn } = useCalendarStore();
+const categoriesColumn = useCategoriesColumn()
+const { setting } = useCalendarStore();
 const opened = ref(false);
 
 
