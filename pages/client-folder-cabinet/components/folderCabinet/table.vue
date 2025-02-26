@@ -27,6 +27,8 @@ import type { VxeGridPropTypes  } from 'vxe-table'
 
 import { ElMessageBox } from "element-plus";
 import { clientApi } from "api";
+import { MenuRouterKey } from "#imports";
+const routerProvider = inject(MenuRouterKey);
 const props = defineProps(["id", "detail"]);
 const emits = defineEmits(['row-click'])
 const { t } = useI18n();
@@ -93,6 +95,22 @@ const {
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row);
   },
+  bodyActions: [
+    [
+      {
+        code: "toFolder",
+        name: "common_viewFolder",
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          routerProvider?.navigateTo(
+            createBrowseListPageParams({ idOrPath: row.documentId }),
+            false
+          )
+        },
+      }
+    ],
+  ]
 });
 
 function handleDblclick(row: any) {
@@ -153,6 +171,8 @@ async function initFilter(id: string) {
   }, []);
   const newColumns = [...basicColumns];
   newColumns.splice(2, 0, ...columns);
+  const actionColumn = tableConfig.columns.find(item => item.title === 'dpTable_actions')
+  if(!!actionColumn) newColumns.push(actionColumn)
   tableConfig.columns = newColumns;
   function getColumn(row: any) {
     if (row.type === "date")
