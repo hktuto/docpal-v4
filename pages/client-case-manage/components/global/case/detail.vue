@@ -102,9 +102,11 @@ async function reorderColumn() {
                 }
             },
         ]
-        fields.slice().reverse().forEach(row => {
-            columns.splice(1, 0, {field: row.id, title: row.name});
+        fields.forEach(row => {
+            columns.splice(1, 0, {field: row.id, title: row.name, width: 200});
         })
+        const actionColumn = tableConfig.columns.find(item => item.title === 'dpTable_actions')
+        if(!!actionColumn) columns.push(actionColumn)
         tableConfig.columns = columns;
     } catch (e) {
 
