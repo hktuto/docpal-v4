@@ -215,7 +215,8 @@ async function DownloadDocApi(idOrPath: string, cb?: Function) {
 
 export async function downloadFileHandler(doc: any) {
 
-  const { t } = useI18n()
+
+  const {$i18n} = useNuxtApp()
   // exportFolderStructureApi
   const id = new Date().valueOf() + doc.name
   const notification = ElNotification({
@@ -237,7 +238,7 @@ export async function downloadFileHandler(doc: any) {
     await downloadBlob(blob, doc.name)
     // await DownloadDocApi(props.doc.id)
   } catch (error: any) {
-    ElMessage.error(t('download_noFile') as string)
+    ElMessage.error($i18n.t('download_noFile') as string)
   }
   setTimeout(() => {
     notification.close()
