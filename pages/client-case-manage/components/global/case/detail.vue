@@ -1,168 +1,181 @@
 <script lang="ts" setup>
-import {clientApi} from 'api'
+import { clientApi } from "api";
 import dayjs from "dayjs";
 
-const {id, name} = defineProps<{
-    id: string;
-    name: string;
+const { id, name } = defineProps<{
+  id: string;
+  name: string;
 }>();
 
-const {t} = useI18n()
-const emits = defineEmits(['filter-change', 'refresh'])
-const routerProvider = inject(MenuRouterKey)
+const { t } = useI18n();
+const emits = defineEmits(["filter-change", "refresh"]);
+const routerProvider = inject(MenuRouterKey);
 type TableState = {
-    columns: any,
-    where: any[],
-}
+  columns: any;
+  where: any[];
+};
 const state = reactive<TableState>({
-    columns: [],
-    where: {},
+  columns: [],
+  where: {},
 });
 const tableReady = ref(false);
-const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = useVxeTable({
-    id: "clientCaseTableList",
-    api: async (pageParams: any) => {
-        pageParams.isDesc = true;
-        pageParams.orderBy = "created_date";
+const {
+  tableConfig,
+  tableEvent,
+  tableRef,
+  query,
+  reload,
+  cleanSelectedRows,
+} = useVxeTable({
+  id: "clientCaseTableList",
+  api: async (pageParams: any) => {
+    pageParams.isDesc = true;
+    pageParams.orderBy = "created_date";
 
-        if (Object.entries(state.where).length !== 0) {
-            if (state.where.q) {
-                pageParams.q = state.where.q
-            }
-            delete state.where.q
-            pageParams.where = state.where
-        }
-        return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams)
-    },
-    defaultSort: {},
-    optionalConfig: {
-        tooltipConfig: {
-            // contentMethod: ({
-            //                     items,
-            //                     row,
-            //                     rowIndex,
-            //                     $rowIndex,
-            //                     column,
-            //                     columnIndex,
-            //                     $columnIndex,
-            //                     type,
-            //                     cell,
-            //                     $event
-            //                 }: any) => {
-            //     const key = column.property
-            //     const value = row[key]
-            //     if (typeof value === 'string') {
-            //         return value
-            //     }
-            //     if (Array.isArray(value)) {
-            //         return value.join(',')
-            //     }
-            // }
-        }
-    },
-    dblClickAction: ({row}) => {
-        routerProvider?.navigateTo(caseManageDashboardPage({...row, id, versionId: row.caseDefinitionVersionId}))
+    if (Object.entries(state.where).length !== 0) {
+      if (state.where.q) {
+        pageParams.q = state.where.q;
+      }
+      delete state.where.q;
+      pageParams.where = state.where;
     }
+    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams);
+  },
+  defaultSort: {},
+  optionalConfig: {
+    tooltipConfig: {
+      // contentMethod: ({
+      //                     items,
+      //                     row,
+      //                     rowIndex,
+      //                     $rowIndex,
+      //                     column,
+      //                     columnIndex,
+      //                     $columnIndex,
+      //                     type,
+      //                     cell,
+      //                     $event
+      //                 }: any) => {
+      //     const key = column.property
+      //     const value = row[key]
+      //     if (typeof value === 'string') {
+      //         return value
+      //     }
+      //     if (Array.isArray(value)) {
+      //         return value.join(',')
+      //     }
+      // }
+    },
+  },
+  dblClickAction: ({ row }) => {
+    routerProvider?.navigateTo(
+      caseManageDashboardPage({ ...row, id, versionId: row.caseDefinitionVersionId })
+    );
+  },
 });
 
-const responsiveFilter = ref()
+const responsiveFilter = ref();
 
 async function initCondition() {
-    try {
-        const {data} = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id)
-        responsiveFilter.value.init(data)
-    } catch (error) {
-    }
+  try {
+    const { data } = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id);
+    responsiveFilter.value.init(data);
+  } catch (error) {}
 }
 
 function handleFilterFormChange(formModel) {
-    state.where = formModel
-    reload();
+  state.where = formModel;
+  reload();
 }
 
 async function reorderColumn() {
-    try {
-        const {data: {fields}} = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id)
-        const columns = [
-            {field: 'case_id', title: 'caseManagement.name'},
-            {
-                field: 'created_date',
-                title: 'workflow_createDate',
-                formatter({cellValue}: any) {
-                    const format = userDisplayTimeSetting()
-                    return dayjs(cellValue).format(format)
-                }
-            },
-            {
-                field: 'modified_date',
-                title: 'table_modifiedDate',
-                formatter({cellValue}: any) {
-                    const format = userDisplayTimeSetting()
-                    return dayjs(cellValue).format(format)
-                }
-            },
-        ]
-        fields.slice().reverse().forEach(row => {
-            columns.splice(1, 0, {field: row.id, title: row.name});
-        })
-        tableConfig.columns = columns;
-    } catch (e) {
-
-    }
-    tableReady.value = true;
+  try {
+    const {
+      data: { fields },
+    } = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id);
+    const columns = [
+      { field: "case_id", title: "caseManagement.name", width:200 },
+      {
+        field: "created_date",
+        title: "workflow_createDate", width:200,
+        formatter({ cellValue }: any) {
+          const format = userDisplayTimeSetting();
+          return dayjs(cellValue).format(format);
+        },
+      },
+      {
+        field: "modified_date",
+        title: "table_modifiedDate", width:200,
+        formatter({ cellValue }: any) {
+          const format = userDisplayTimeSetting();
+          return dayjs(cellValue).format(format);
+        },
+      },
+    ];
+    fields.forEach((row) => {
+      columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
+    });
+    const actionColumn = tableConfig.columns.find(
+      (item) => item.title === "dpTable_actions"
+    );
+    if (!!actionColumn) columns.push(actionColumn);
+    tableConfig.columns = columns;
+  } catch (e) {}
+  tableReady.value = true;
 }
 
-const addCaseDialog = ref()
+const addCaseDialog = ref();
 
 function handleAddCaseDialog() {
-    addCaseDialog.value.handleOpen(id)
+  addCaseDialog.value.handleOpen(id);
 }
 
 onActivated(() => {
-    reorderColumn()
-    initCondition()
+  reorderColumn();
+  initCondition();
 });
-
 </script>
 
 <template>
+  <div class="pageContainer--padding">
     <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-        <template #toolbar_buttons>
-            <header class="header-flex">
-                <ResponsiveFilter
-                    ref="responsiveFilter"
-                    @form-change="handleFilterFormChange"
-                    inputKey="q"
-                    :inputPlaceHolder="t('tip.filterByName')"
-                />
-                <div class="flex-x-end">
-                    <el-button type="primary" @click="handleAddCaseDialog">
-                        {{ $t("common_add") }}
-                    </el-button>
-                </div>
-            </header>
-        </template>
+      <template #toolbar_buttons>
+        <header class="header-flex">
+          <ResponsiveFilter
+            ref="responsiveFilter"
+            @form-change="handleFilterFormChange"
+            inputKey="q"
+            :inputPlaceHolder="t('tip.filterByName')"
+          />
+          <div class="flex-x-end">
+            <el-button type="primary" @click="handleAddCaseDialog">
+              {{ $t("common_add") }}
+            </el-button>
+          </div>
+        </header>
+      </template>
     </VxeGrid>
-    <LazyCaseAddCaseDialog ref="addCaseDialog" @refresh="reload"></LazyCaseAddCaseDialog>
+  </div>
+  <LazyCaseAddCaseDialog ref="addCaseDialog" @refresh="reload"></LazyCaseAddCaseDialog>
 </template>
 
 <style lang="scss" scoped>
 .header-flex {
-    width: 100%;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 1fr min-content;
-    gap: var(--app-space-xs);
-    padding: var(--app-space-xs);
-    background: var(--el-color-primary-light-9);
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  gap: var(--app-space-xs);
+  padding: var(--app-space-xs);
+  background: var(--el-color-primary-light-9);
 }
 
 .flex-x-end {
-    display: flex;
-    justify-content: end;
+  display: flex;
+  justify-content: end;
 }
 
-:deep(.el-input)  {
-    width: 200px;
+:deep(.el-input) {
+  width: 200px;
 }
 </style>

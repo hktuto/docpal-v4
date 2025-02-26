@@ -179,6 +179,7 @@ async function initFilter(id: string) {
       return {
         field: row.key,
         title: row.label,
+        width: 200,
         formatter({ cellValue }: any) {
           return t(cellValue);
         },
