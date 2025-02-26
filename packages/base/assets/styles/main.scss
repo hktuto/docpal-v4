@@ -371,6 +371,6 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   }
 }
 // 隐藏vxe-table右击事件底边框
-.vxe-context-menu--option-wrapper, .vxe-table--context-menu-clild-wrapper {
-  border: unset;
+.contextMenuContainer .vxe-context-menu--option-wrapper {
+  border: 0;
 }
