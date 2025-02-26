@@ -97,8 +97,8 @@ function createJson(variables: variableItem[]) {
             _item.options.showWordLimit = true
         }else if(item.type === 'number') {
             _item.options.defaultValue = 0
-            _item.options.min = -999999999999999
-            _item.options.max = 999999999999999
+            _item.options.min = -999999999999998
+            _item.options.max = 999999999999998
             _item.options.controlsPosition = 'right'
         } else if(item.type === 'switch') {
             _item.options.defaultValue = false
