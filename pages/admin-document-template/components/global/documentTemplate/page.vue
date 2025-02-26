@@ -147,7 +147,7 @@ provide(DocumentTemplateProviderKey, {
 </script>
 
 <template>
-    <div class="pageContainer">
+    <div class="pageContainer--padding">
         <DocumentTemplateListTable ref="tableRef" v-bind="props">
             <template #toolbar_buttons>
                 <div class="actionsContainer">
@@ -172,12 +172,5 @@ provide(DocumentTemplateProviderKey, {
     gap: var(--app-space-s);
     justify-content: flex-start;
     align-items: center;
-}
-.pageContainer{
-    width:100%;
-    height:100%;
-    position: relative;
-    padding: var(--app-space-xs);
-
 }
 </style>

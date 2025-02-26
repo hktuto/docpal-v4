@@ -96,7 +96,7 @@ function addSuccess(){
 
 
 <template>
-     <div class="pageContainer">
+     <div class="pageContainer--padding">
         <BulkImportListTable ref="tableRef">
             <template #toolbar_buttons>
                 <KeywordFilter attr="documentType"
@@ -110,11 +110,4 @@ function addSuccess(){
 </template>
 
 <style lang="scss" scoped>
-.pageContainer{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    padding: var(--app-space-xs);
-    overflow: hidden;
-}
 </style>
