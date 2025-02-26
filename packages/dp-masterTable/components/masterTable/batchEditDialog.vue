@@ -22,6 +22,7 @@ import { adminApi } from "api";
 const props = withDefaults(
   defineProps<{
     ignoreList: any;
+    tableId: string
   }>(),
   {
     ignoreList: [],
@@ -52,9 +53,7 @@ async function handleSubmit() {
       params.relationRecords = data.relationRecords
       delete params.data[0].relationRecords
     }
-    const tableId = route.params.id || route.query.id
-
-    await adminApi.api.putMasterTablesIdBatchRecord(tableId, params)
+    await adminApi.api.putMasterTablesIdBatchRecord(props.tableId, params)
     // console.log(params);
     emits("refresh");
     state.visible = false;
