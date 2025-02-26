@@ -38,7 +38,7 @@ async function handleSubmit() {
             userId: props.user.userId,
         }
         await userProviderDetail?.PatchUserPasswordApi(param)
-        routerProvider?.message.success(t('user_userPasswordUpdateSuccessMsg',{username: data.name}));
+        routerProvider?.message.success(t('user_userPasswordUpdateSuccessMsg',{username: props.user.name}));
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
