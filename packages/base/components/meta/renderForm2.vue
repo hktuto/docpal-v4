@@ -360,9 +360,9 @@ function handleApply(formModel: any) {
         
     }
 // #endregion
-function GetActiveDocpalTypeWithIsFolderApi(isFolder: boolean) {
+async function GetActiveDocpalTypeWithIsFolderApi(isFolder: boolean) {
     try {
-        const docList: any = clientApi.api.getTypesActive().then(res => res.data)
+        const docList: any = await clientApi.api.getTypesActive().then(res => res.data)
         return docList?.filter(item => item.isFolder === isFolder).map((item) => ({
             ...item,
             value: item.name,
