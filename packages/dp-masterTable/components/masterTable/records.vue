@@ -366,7 +366,10 @@ async function initTableColumns(fields: any) {
   if (selectItemIndex < 0) selectItemIndex = 0;
   else selectItemIndex++;
   newColumns.splice(selectItemIndex, 0, ...columns);
-  console.log("newColumns", newColumns);
+  const actions = tableConfig.columns.find((item: any) => item.title === "dpTable_actions")
+  if (actions) {
+    newColumns.push(actions)
+  }
   tableConfig.columns = newColumns;
 }
 async function handleDeleteSelected() {
