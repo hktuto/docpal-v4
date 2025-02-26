@@ -57,7 +57,7 @@ provide(DamProviderKey, {
 
 
 <template>
-     <div class="pageContainer">
+     <div class="pageContainer--padding">
         <DamListTable ref="tableRef">
             <template #toolbar_buttons>
                 <div class="filter-container">
@@ -74,11 +74,4 @@ provide(DamProviderKey, {
 </template>
 
 <style lang="scss" scoped>
-.pageContainer{
-    width:100%;
-    height:100%;
-    position: relative;
-    padding: var(--app-space-xs);
-
-}
 </style>

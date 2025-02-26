@@ -126,7 +126,7 @@ onActivated(async () => {
 </script>
 
 <template>
-    <div class="pageContainer">
+    <div class="pageContainer--padding">
         <div class="template-container">
             <div class="template-left-container">
                 <div class="flex-x-between">
@@ -158,12 +158,6 @@ onActivated(async () => {
 </template>
 
 <style lang="scss" scoped>
-.pageContainer{
-    width:100%;
-    height:100%;
-    position: relative;
-    padding: var(--app-space-xs);
-}
 .template-container {
     display: grid;
     height: 100%;
