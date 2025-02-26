@@ -212,10 +212,9 @@ async function DownloadDocApi(idOrPath: string, cb?: Function) {
     }
   })
 }
-
 export async function downloadFileHandler(doc: any) {
 
-  const { t } = useI18n()
+  // const { t } = useI18n() // 会报错SyntaxError: Must be called at the top of a `setup` function
   // exportFolderStructureApi
   const id = new Date().valueOf() + doc.name
   const notification = ElNotification({
@@ -237,12 +236,14 @@ export async function downloadFileHandler(doc: any) {
     await downloadBlob(blob, doc.name)
     // await DownloadDocApi(props.doc.id)
   } catch (error: any) {
-    ElMessage.error(t('download_noFile') as string)
+    // @ts-ignore
+    ElMessage.error($i18n.t('download_noFile') as string)
   }
   setTimeout(() => {
     notification.close()
   }, 3000)
 }
+
 
 export function allowFeature(f: string) {
   const features = useFeature().value
