@@ -339,7 +339,8 @@ async function initTableColumns(fields: any) {
       const _item: any = {
         title: item.columnName,
         field: item.columnName,
-        slots: { header: 'defaultHeader' }
+        slots: { header: 'defaultHeader' },
+        width: 200
       };
       if (item.dataType === "timestamp") {
         item.formatter = ({ cellValue }: any) => {
