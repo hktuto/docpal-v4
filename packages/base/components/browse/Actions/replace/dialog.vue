@@ -19,8 +19,6 @@ import { clientApi } from 'api'
 const emits = defineEmits([
     'update'
 ])
-
-
 const state = reactive({
     loading: false,
     visible: false,
@@ -48,7 +46,7 @@ async function handleConfirm () {
     formData.append('openAiAnalyzeMetadata', form.value.openAiAnalyzeMetadata)
     state.loading = true
     try {
-        await clientApi.api.patchNuxeoDocumentReplacefileV2Deprecated(formData)
+        await clientApi.api.patchNuxeoDocumentReplacefileV2({},formData)
         state.visible = false
         form.value = {
             fileList: [],
