@@ -1934,6 +1934,7 @@
   "share_DeleteMsg": "",
   "share_FilterByDocumentName": "",
   "share_deleteSuccessMsg": "",
+  "share_editExternalShare": "",
   "share_expireDate": "到期日",
   "share_failedToShare": "分享失败",
   "share_linkCopied": "链接已復制",

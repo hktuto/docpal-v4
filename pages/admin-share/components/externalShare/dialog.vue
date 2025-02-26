@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" :title="$t('menus_setting')">
+  <el-dialog v-model="dialogVisible" :title="$t('share_editExternalShare')">
     <el-form
       ref="formRef"
       :model="form"
@@ -71,7 +71,7 @@
       </el-row>
     </el-form>
     <template #footer>
-      <el-button @click="dialogVisible = false">{{ $t("cancel") }}</el-button>
+      <el-button @click="dialogVisible = false">{{ $t("common_reset") }}</el-button>
       <el-button @click="handleSubmit">{{ $t("submit") }}</el-button>
     </template>
   </el-dialog>
@@ -144,6 +144,7 @@ async function handleSubmit() {
     tokenLiveInMinutes: dayjs(form.dueDate).diff(date, 'minute'),
     shareId: state.shareId,
   };
+
   emit("submit", param);
   dialogVisible.value = false;
 }
