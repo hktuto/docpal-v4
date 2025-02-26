@@ -21,6 +21,33 @@ async function handleInit() {
       state.setting.json = JSON.parse(state.setting.json_value);
       tableRef.value.initBar(state.setting.json);
       filterRef.value.initForm(state.setting.json);
+    } else {
+      state.setting.json = {
+        condition: "and",
+        docId: "",
+        query: [
+          {
+            id: getUniqueId("query"),
+            condition: "and",
+            matchs: [
+              {
+                id: getUniqueId("matchs"),
+                queryType: "keyword",
+                value: "",
+                type: "string",
+                option: {
+                  matchCase: false,
+                  fullMatch: false,
+                  synonyms: false,
+                  includeLanguages: [],
+                },
+              },
+            ],
+          },
+        ],
+      };
+      tableRef.value.initBar(state.setting.json);
+      filterRef.value.initForm(state.setting.json);
     }
   } catch (error) {
   } finally {
@@ -59,9 +86,9 @@ async function handleSave() {
   }
 }
 onActivated(() => {
-  state.loading = false
-  handleInit()
-})
+  state.loading = false;
+  handleInit();
+});
 </script>
 <template>
   <div class="pageContainer--padding smartFolder">
