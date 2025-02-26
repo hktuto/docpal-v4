@@ -76,7 +76,6 @@ async function handleDelete() {
     const res = await userProviderDetail?.BatchDeleteUserApi({userIds: [props.user.userId]})
     routerProvider?.message.success(t('user_userInfoDeletedSuccessMsg', {username: props.user.firstName}));
     if (!!res) userProviderDetail?.openUserList()
-
 }
 
 const UserEditDialogRef = ref()
