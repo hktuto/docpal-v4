@@ -53,6 +53,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     }
     function handleFilterFormChange(formModel: any) {
         filtersParams = formModel
+        reload()
     }
 // #endregion
 

@@ -51,14 +51,15 @@
             </header>
         </template>
         <template #group="{ row, index }">
-            <el-tag class="el-icon--left table-tag" v-for="item in row.groupDTOList">{{
-                    item.name
-                }}
+            <el-tag class="el-icon--left table-tag" v-for="item in row.groupDTOList">
+                {{ item.name }}
             </el-tag>
         </template>
         <template #status="{ row, index }">
             <el-switch
                 v-model="row.status"
+                :inactive-text="t('actions.inactived')"
+                :active-text="t('user_active')"
                 active-value="A"
                 inactive-value="D"
                 :loading="row.loading"
@@ -70,10 +71,7 @@
     </VxeGrid>
 
     <UserDialog ref="UserDialogRef" @refresh="reload"></UserDialog>
-    <UserAddGroupsDialog
-        ref="UserAddGroupDialogRef"
-        @refresh="reload()"
-    ></UserAddGroupsDialog>
+    <UserAddGroupsDialog ref="UserAddGroupDialogRef" @refresh="reload()"></UserAddGroupsDialog>
 </template>
 
 <script lang="ts" setup>
@@ -222,7 +220,6 @@ async function handleDeleteSelected() {
 async function handleDelete(row: any) {
     const action = await ElMessageBox.confirm(
         t("userTip.confirmWhetherToDeleteItems"),
-        "",
         {
             confirmButtonText: `${t("common_confirmDelete")}`,
             dangerouslyUseHTMLString: true,
