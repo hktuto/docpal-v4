@@ -2,6 +2,10 @@
 const fs = require('fs');
 const path = require('path');
 const argv = require('minimist')(process.argv.slice(2));
+const enJson = require('./src/en-US.json')
+const zhJson = require('./src/zh-CN.json')
+const zhHKJson = require('./src/zh-HK.json')
+
 
 const { SUPERADMIN, PASSWORD, ADMINURL } = argv;
 
@@ -33,10 +37,10 @@ async function updateLanguage(code, token){
     .catch(error => {
         console.log("error", error)
     })
-    const newJson = await fs.readFileSync(path.join(__dirname, `./lang/${code}.json`), {
-        encoding: 'utf-8'
-    })
-    // const newJson = code === 'en-Us' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
+    // const newJson = await fs.readFileSync(path.join(__dirname, `./lang/${code}.json`), {
+    //     encoding: 'utf-8'
+    // })
+    const newJson = code === 'en-Us' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
     const newData = {
         ...data[0],
         languageContent: newJson
