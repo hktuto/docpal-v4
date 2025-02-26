@@ -135,7 +135,9 @@ copyTabBus.on((data:any) => {
 
 defineExpose({
     setLayout,
-    setHightLightPanel
+    setHightLightPanel,
+    openInCurrentTab,
+    openTab
 })
 </script>
 

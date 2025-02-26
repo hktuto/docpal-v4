@@ -9,7 +9,6 @@
 <script lang="ts" setup>
 import {adminApi} from 'api'
 import formJson from './editDialog.vform.json'
-import {ElNotification} from 'element-plus'
 
 const routerProvider = inject(MenuRouterKey)
 const {t} = useI18n()
@@ -24,12 +23,13 @@ const state = reactive({
     visible: false,
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
         await adminApi.api.patchNuxeoIdentityUser({...props.user, properties: null, ...data})
-        routerProvider?.message.success(t('user_userInfoUpdatedSuccessMsg'));
+        routerProvider?.message.success(t('user_userInfoUpdatedSuccessMsg', {username: data.name}));
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
