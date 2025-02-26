@@ -1,23 +1,3 @@
-
-
-<template>
-    <BrowseActionsButton id="downloadActionButton" :label="$t('dpTool_download')" @click="popupOpened = true">
-        <SvgIcon src="/icons/file/download.svg" round :content="$t('dpTool_download')"
-                ></SvgIcon>
-    </BrowseActionsButton>
-    <ElDialog v-model="popupOpened" width="280" append-to-body>
-        <div class="popoverContent">
-            <!-- download button -->
-            <el-button type="text" @click="downloadFileHandler(doc)">Download original</el-button>
-            <!-- download as pdf button -->
-            <el-button v-if="isPdf" type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
-            <!-- download pdf and annotation -->
-            <el-button v-if="isPdf" type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation</el-button>
-            <BrowseActionsDownloadConversion v-if="checkLicenseFeatures('DOCUMENT_CONVERSION')" :doc="doc"></BrowseActionsDownloadConversion>
-        </div>
-    </ElDialog>
-</template>
-
 <script lang="ts" setup>
 import { Download } from '@element-plus/icons-vue';
 import { ElNotification, ElMessage} from 'element-plus'
@@ -50,6 +30,7 @@ const popupOpened = ref(false)
             const ev = new CustomEvent('downloadPdf')
             document.dispatchEvent(ev);
             // await downloadDocRecord({ idOrPath: props.doc.id, type: 'PDF'})
+            popupOpened.value = false
         } catch(error:any) {
             ElMessage.error($i18n.t('download_noFile') as string)
         }
@@ -63,6 +44,10 @@ const popupOpened = ref(false)
         const ev = new CustomEvent('downloadPdfAndAnnotation', { detail: props.doc })
         window.dispatchEvent(ev);
     }
+    async function handleDownload (doc) {
+        downloadFileHandler(doc)
+        popupOpened.value = false
+    }
 // #endregion
 
 // useEventListener(document, 'isDocPdf', () => {
@@ -75,6 +60,24 @@ const popupOpened = ref(false)
 // })
 
 </script>
+<template>
+    <BrowseActionsButton id="downloadActionButton" :label="$t('dpTool_download')" @click="popupOpened = true">
+        <SvgIcon src="/icons/file/download.svg" round :content="$t('dpTool_download')"
+                ></SvgIcon>
+    </BrowseActionsButton>
+    <ElDialog v-model="popupOpened" width="280" append-to-body>
+        <div class="popoverContent">
+            <!-- download button -->
+            <el-button type="text" @click="handleDownload(doc)">Download original</el-button>
+            <!-- download as pdf button -->
+            <el-button v-if="isPdf" type="text" @click="downloadAsPdfHandler">Download as PDF</el-button>
+            <!-- download pdf and annotation -->
+            <el-button v-if="isPdf" type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation</el-button>
+            <BrowseActionsDownloadConversion v-if="checkLicenseFeatures('DOCUMENT_CONVERSION')" :doc="doc"></BrowseActionsDownloadConversion>
+        </div>
+    </ElDialog>
+</template>
+
 
 <style lang="scss" scoped>
 .popoverContent{

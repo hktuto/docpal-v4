@@ -5,7 +5,7 @@ export default defineAppConfig({
             name: 'client-ai-upload',
             icon: 'lucide:cloud-upload',
             hoverIcon: 'lucide:cloud-upload',
-            label: "AIUpload",
+            label: "clientAIUpload",
             component: "LazyAiUpload",
             props:{
                 
