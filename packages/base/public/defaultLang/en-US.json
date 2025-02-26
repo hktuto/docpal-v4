@@ -1931,6 +1931,9 @@
   "shareQueue": {
     "recipientEmail": "Recipient Email"
   },
+  "share_DeleteMsg": "Are you sure you want to delete the selected internal share link?",
+  "share_FilterByDocumentName": "Filter by File / Folder Name",
+  "share_deleteSuccessMsg": "The selected internal share link has been successfully deleted",
   "share_expireDate": "Expiry Date",
   "share_failedToShare": "Failed To Share",
   "share_linkCopied": "Link Copied",
@@ -2020,9 +2023,9 @@
   "tableHeader_policyName": "Policy Name",
   "tableHeader_reorderColumn": "Reorder Table Column",
   "tableHeader_right": "Right",
-  "tableHeader_shareBy": "Share By",
+  "tableHeader_shareBy": "Shared By",
   "tableHeader_shareDate": "Share Date",
-  "tableHeader_shareTo": "Share To",
+  "tableHeader_shareTo": "Shared To",
   "tableHeader_status": "Status",
   "tableHeader_subject": "Subject",
   "tableHeader_time": "Time",

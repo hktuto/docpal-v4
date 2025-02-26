@@ -220,7 +220,6 @@ async function handleDeleteSelected() {
 async function handleDelete(row: any) {
     const action = await ElMessageBox.confirm(
         t("userTip.confirmWhetherToDeleteItems"),
-        "",
         {
             confirmButtonText: `${t("common_confirmDelete")}`,
             dangerouslyUseHTMLString: true,
