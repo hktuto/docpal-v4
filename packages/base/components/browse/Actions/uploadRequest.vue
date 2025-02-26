@@ -54,8 +54,7 @@ function uploadDialog(){
       if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
       data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
       data.idOrPath = props.doc.path
-      console.log(data);
-      
+      data.fileType = data.fileType.join(',')
       const res: any = await clientApi.api.postNuxeoFilerequest(data).then(res => res.data)
       state.loading = false
       if (res?.errorCode) throw new Error(res.message || 'error');
