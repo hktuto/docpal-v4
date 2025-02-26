@@ -2,9 +2,6 @@
 const fs = require('fs');
 const path = require('path');
 const argv = require('minimist')(process.argv.slice(2));
-const enJson = require('../../packages/base/public/defaultLang/en-Us.json')
-const zhJson = require('../../packages/base/public/defaultLang/zh-CN.json')
-const zhHKJson = require('../../packages/base/public/defaultLang/zh-HK.json')
 
 const { SUPERADMIN, PASSWORD, ADMINURL } = argv;
 
@@ -13,7 +10,7 @@ async function loginAdmin(){
         method:'POST',
         body: JSON.stringify({
             username: SUPERADMIN,
-            password: "2'KMzF}zK2ZmwQe"
+            password: PASSWORD
         }),
         headers: {
             'Content-Type': 'application/json'
@@ -36,10 +33,13 @@ async function updateLanguage(code, token){
     .catch(error => {
         console.log("error", error)
     })
-    const newJson = code === 'en-Us' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
+    const newJson = await fs.readFileSync(path.join(__dirname, `../../packages/base/public/defaultLang/${code}.json`), {
+        encoding: 'utf-8'
+    })
+    // const newJson = code === 'en-Us' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
     const newData = {
         ...data[0],
-        languageContent: JSON.stringify(newJson)
+        languageContent: newJson
     }
     const res = await fetch(`${ADMINURL}/docpal/relation/updateLanguage`,{
         method: 'POST',
@@ -52,7 +52,7 @@ async function updateLanguage(code, token){
     .catch(error => {
         console.log("error", error)
     })
-    console.log(res.data)
+    console.log('finish update language', code)
 }
 
 async function deployLanguage(){

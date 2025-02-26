@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "language": "node deploy-language.js",
-    "lang:setup": "pnpm -F deployment language --ADMINURL https://admin.app4.wclsolution.com/api --SUPERADMIN Administrator --PASSWORD 2KMzF}zK2ZmwQe",
+    "lang:setup": "pnpm -F deployment language --ADMINURL https://admin.app2.wclsolution.com/api --SUPERADMIN sean-admin --PASSWORD aaAA1234",
     "test": "echo \"Error: no test specified\" && exit 1",
     "env:setup": "pnpm -F deployment start --CLIENT_URL https://app4.wclsolution.com --ADMIN_URL https://admin.app4.wclsolution.com --PUBLIC_URL https://app4.wclsolution.com/public-api/report/v1",
     "api:setup": "pnpm -F api start"
