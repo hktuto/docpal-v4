@@ -15,8 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "minimist": "^1.2.8",
-    "api": "workspace:*"
+    "minimist": "^1.2.8"
   },
   "devDependencies": {
     "ts-node": "^10.9.2"
