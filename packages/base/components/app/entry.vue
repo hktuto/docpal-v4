@@ -7,7 +7,6 @@ const emits = defineEmits(['ready'])
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import enUS from 'vxe-table/lib/locale/lang/en-US'
 import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
-import Router from '../tab/router.vue';
 
 
 async function getTabsFromServer() {
@@ -45,22 +44,21 @@ async function getTabsFromServer() {
                 }
             ])
     }
-    const router = useRouter()
-    
-    if(route.query.navigateTab){
+    const router = useRouter();
+    const additionalPath = localStorage.getItem('additionalPath')
+    if(additionalPath){
         try{
-            const item = JSON.parse(atob(route.query.navigateTab as string))
+            const item = JSON.parse(additionalPath)
             tabAppRef.value?.openTab(item)
-            console.log("navigateTab", item)
-            router.push({
-                query:{},
-            })
+            // remove localStorage
+            localStorage.removeItem('additionalPath')
         }catch(error){
             // do nothing
         }
     }
     router.push({
-        hash:""
+        hash:"",
+        query:{},
     })
 } 
 
@@ -79,6 +77,7 @@ async function saveTabsToLocalStorage(layout:TabPanel[]) {
     })
     localStorage.setItem('app-tab', JSON.stringify(saveData))
 }
+const { t } = useI18n()
 const languageReady = ref(false)
 async function getLocale(){
     const { locale, availableLocales, setLocaleMessage } = useI18n()

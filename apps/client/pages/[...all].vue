@@ -18,13 +18,8 @@ onMounted(() => {
             const newTab = createBrowseListPageParams({
                 idOrPath: decodeURI(path)
             })
-            console.log("newTab", newTab)
-            router.push({
-                path: '/',
-                query: {
-                    navigateTab: btoa(JSON.stringify(newTab))
-                }
-            })
+            localStorage.setItem('additionalPath', JSON.stringify(newTab))
+            router.push('/')
             break;
         case '/workflow':
             // TODO: add workflow page

@@ -9,6 +9,8 @@ const ready = ref(false)
 function layoutReadyHandler(){
     ready.value = true
 }
+
+const mainPanel = ref();
 const userDefineSize = useStorage('app-tab-size', 200) // user define sie in pexel
 const haveInteractDrawer = ref(false)
 
@@ -36,9 +38,16 @@ const isMenuStick = computed(() => {
     return tabProvider.menuStick.value
 })
 
+function initPanelSize() {
+    console.log("init panel size")
+    const size = userDefineSize.value
+    console.log("init panel size", size, mainPanel.value)
+}
+
 
 onMounted(() => {
     calMinWidth()
+    initPanelSize()
 })
 
 const interactDrawerAction = ref('')
@@ -54,7 +63,7 @@ const InteractDrawerRef = ref()
     interactDrawerAction.value = ''
   }
 
-const minSize = ref(20)
+const minSize = ref(0)
 function calMinWidth(){
     // panel size is 280px, check the percentage of window width
     const windowWidth = window.innerWidth
@@ -80,11 +89,11 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
             <slot name="sidebar" />
         </div>
         <splitpanes vertical @resized="paneResized" :push-other-panes="true" @ready="layoutReadyHandler">
-            <Pane v-if="isMenuStick" :min-size="minSize" :size="minSize" >
+            <Pane v-if="isMenuStick"  :size="minSize" >
                 <div id="appSidebar">
                 </div>
             </Pane>
-            <Pane >
+            <Pane ref="mainPanel" >
                 <div class="appMainContainer">
                     <div class="appContent">
                         <slot />
