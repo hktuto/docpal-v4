@@ -43,8 +43,8 @@
     <div class="flex-x-center" v-else>
         {{ $t('tip.cabinetNotFound') }}
     </div>
-    <!-- <BrowseActionsReplaceDialog ref="BrowseActionsReplaceDialogRef" 
-        @update="refresh" /> -->
+    <BrowseActionsReplaceDialog ref="BrowseActionsReplaceDialogRef" 
+        @update="refresh" />
     <FolderCabinetCreateUploadFileDialog ref="UploadFileDialogRef" 
         @success="refresh" />
     <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="refresh"/>
@@ -54,6 +54,8 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { MenuRouterKey } from "#imports";
+const routerProvider = inject(MenuRouterKey);
 const { t } = useI18n()
 const state = reactive<any>({
     treeData: [],
@@ -166,10 +168,11 @@ const refreshContent = computed(() => {
         refresh()
     }
     function handlePreview(row: any) {
-        // openFileDetail(row.path, {
-        //     showInfo:true,
-        //     showHeaderAction: true
-        // })
+        routerProvider?.navigateTo(createDetailPageParams({
+            docName: row.name,
+            idOrPath: row.id,
+            showHeaderAction: true
+        }), false);
     }
     const BrowseActionsReplaceDialogRef = ref()
     function handleOpenReplaceDialog(doc: any) {
