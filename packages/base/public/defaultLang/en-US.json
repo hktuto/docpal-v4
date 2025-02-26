@@ -1699,7 +1699,7 @@
     "write": "Write"
   },
   "placeHolder": {
-    "userGroupName": "Search by User Group Name",
+    "userGroupName": "Filter by User Group Name",
     "userNameOrEmail": "Filter by Username / Email Address"
   },
   "placeholder_datePicker": "Select Date",
@@ -2252,7 +2252,7 @@
   "user_userIdentiferCanNotBeNull": "User Identifer Can Not Be Null",
   "user_userInfoDeletedSuccessMsg": "The user {username} has been deleted successfully",
   "user_userInfoUpdatedSuccessMsg": "The user info of {username} has been updated successfully",
-  "user_userPasswordUpdateSuccessMsg": "The password of this user {username} has been updated successfully",
+  "user_userPasswordUpdateSuccessMsg": "The password of the user {username} has been updated successfully",
   "user_username": "Username",
   "user_usernameCanNotBeNull": "Username Can Not Be Null",
   "user_usernameIsRequired": "Username is required",

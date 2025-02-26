@@ -1,7 +1,5 @@
 <template>
-    <el-dialog v-model="state.visible" :title="$t('user_editPassword')"
-               :close-on-click-modal="false"
-    >
+    <el-dialog v-model="state.visible" :title="$t('user_editPassword')" :close-on-click-modal="false">
         <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
         <template #footer>
             <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
@@ -11,6 +9,7 @@
 <script lang="ts" setup>
 import {userProviderDetailKey} from '~/util/userProvider';
 import formJson from './passwordDialog.vform.json'
+import {ElMessage} from "element-plus";
 
 const routerProvider = inject(MenuRouterKey)
 
@@ -38,7 +37,7 @@ async function handleSubmit() {
             userId: props.user.userId,
         }
         await userProviderDetail?.PatchUserPasswordApi(param)
-        routerProvider?.message.success(t('user_userPasswordUpdateSuccessMsg',{username: props.user.name}));
+        routerProvider?.message.success(t('user_userPasswordUpdateSuccessMsg', {username: props.user.firstName}));
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
