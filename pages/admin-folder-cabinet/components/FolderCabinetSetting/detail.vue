@@ -53,14 +53,13 @@
 
         <el-divider />
         <template v-if="state.setting.folder">
-          <h3>{{ $t("allow") }}</h3>
+          <h3>{{ $t("folderCabinet.allowFilesTip") }}</h3>
           <el-switch
             v-model="form.allow"
             class="mb-2"
             active-text="Yes"
             inactive-text="No"
           />
-          <div>{{ $t("folderCabinet.allowFilesTip") }}</div>
         </template>
         <template v-else>
           <el-row :gutter="20">
@@ -284,13 +283,20 @@ async function handleSave() {
   } finally {
     setTimeout(() => (state.loading = false), 300);
   }
+  routerProvider?.message.success(t('folder_cabinetDetailUpdatedSuccessMsg'));
 }
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(t("folderCabinet.deleteTip"));
+  const action = await ElMessageBox.confirm(
+      t("folderCabinet.deleteTip"),
+      {
+          confirmButtonText: t('common_confirmDelete'),
+      }
+  );
   if (action !== "confirm") throw new Error("cancel");
   await adminApi.api.deleteCabinetId(state.setting.id);
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false);
+    routerProvider?.message.success(t('folder_cabinetDeletedSuccessMsg'));
   } else {
     emits("update");
   }
