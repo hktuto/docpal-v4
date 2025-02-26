@@ -28,7 +28,6 @@ export const requestSuccessHelper = (config:any, axiosInstance:AxiosInstance) =>
       config.headers['Access-Control-Allow-Credentials'] = true
       config.headers['Access-Control-Allow-Origin'] = config.baseURL
     }
-    console.log("config", config.baseURL)
     // 
     return config
 }
