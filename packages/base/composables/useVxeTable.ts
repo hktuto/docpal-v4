@@ -85,9 +85,8 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         pageSize: 20,
         total:0,
     })
-    
     const init = ref(false);
-
+    
     
     const tableConfig = reactive<any>({...{
         id: params.id,
