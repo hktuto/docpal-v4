@@ -44,6 +44,7 @@ onMounted(() => {
     box-shadow: var(--app-shadow-s);
     position: relative;
     overflow: auto;
+
     :deep(.splitpanes){
         min-width: var(--panel-min-size);
     }
@@ -72,7 +73,7 @@ onMounted(() => {
         overflow: hidden;
         &:has(.activePanel) {
             box-shadow: var(--app-shadow-l)!important;
-            z-index: 4;
+            z-index: 20;
         }
     }
     
