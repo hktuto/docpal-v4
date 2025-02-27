@@ -90,7 +90,7 @@ defineExpose({
   justify-content: space-between;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
   :deep .el-input {
     width: 200px;
   }

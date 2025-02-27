@@ -68,6 +68,6 @@ defineExpose({ reload })
 
 <style lang="scss" scoped>
 .responsive-container {
-    width: fit-content;
+  width: 70%;
 }
 </style>
