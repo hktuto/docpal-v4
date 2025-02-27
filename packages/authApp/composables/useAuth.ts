@@ -10,7 +10,7 @@ import type { UserDTO } from 'api/src/generate/client'
 export const useAuthReadyState = () => useState('auth-ready', () => false)
 export const useUserState = () => useState<UserDTO | null>('auth-user');
 export const useKeyCloakState = () => useState<Keycloak |null>('keycloak-state')
-export const usePublicPageState = () => useState<string[]>('auth-public-page', () => (['/forgetPassword']))
+export const usePublicPageState = () => useState<string[]>('auth-public-page', () => (['/forgetPassword','/login']))
 export const useLoginHook = () => useState<any>(() => shallowRef([]));
 export const useIsSSO = () => useState<boolean>(() => false);
 export const useIsLDAP = () => useState<boolean>(() => false);
@@ -39,6 +39,16 @@ export const userDisplayTimeSetting = () => {
     const userPreference = useUserPreference()
     return userPreference.value?.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD'
 }
+export async function verifly(){
+    await Promise.all([
+        getUser(),        
+        getFeature(),
+        getUserPreference(),
+        getOCRSetting()
+    ])
+    emitBus(EventType.USER_LOGIN__SUCCESS, "")
+}
+
 /**
  *  從 keycloak 拿回用戶 token, 放到 localStorage, 
  *  登陸後先  {@link useFeature} 
@@ -47,6 +57,12 @@ export const userDisplayTimeSetting = () => {
 export async function login() {
     const keyCloakState = useKeyCloakState()
     const token = useToken()
+    // check route is superAdmin
+    const rotue = useRoute()
+    if(rotue.query.superAdmin) {
+        const router = useRouter()
+        router.push('/login');
+    }
     try {
 
         if(!keyCloakState.value) {
@@ -64,13 +80,7 @@ export async function login() {
         localStorage.setItem('access_token', data.access_token)
         localStorage.setItem('refresh_token', data.refresh_token)
         token.value = data.access_token
-        await Promise.all([
-            getUser(),        
-            getFeature(),
-            getUserPreference(),
-            getOCRSetting()
-        ])
-        emitBus(EventType.USER_LOGIN__SUCCESS, "")
+        await verifly()
     }catch(error) {
         console.log("login error", error)
         logout()
