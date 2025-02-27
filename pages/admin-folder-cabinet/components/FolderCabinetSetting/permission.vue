@@ -2,11 +2,11 @@
   <div class="permission-container">
     <div class="tableTopContainer">
       <h3>{{ $t("folderCabinet.localPermission") }}</h3>
-      <el-button size="small" type="primary" round @click="handleAclLocalDialogShow">{{ $t("Add") }}</el-button>
+      <el-button size="small" type="primary" round @click="handleAclLocalDialogShow">{{ $t("folder_cabinetDetailLocalPermissionAdd") }}</el-button>
     </div>
     <div>
       <el-table  v-if="!!localList" :data="localList" style="width: 100%">
-        <el-table-column prop="userId" :label="$t('dpTable_name')"> </el-table-column>
+        <el-table-column prop="userId" :label="$t('user_UserAndUserGroup')"> </el-table-column>
         <el-table-column :label="$t('dpTable_validityPeriod')">
           <template #default="{ row }">
             <div @dblclick="timeDialogOpen(row)">
