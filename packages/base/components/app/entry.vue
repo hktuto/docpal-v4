@@ -92,8 +92,10 @@ async function getLocale(){
                     }) as any
                 clientJson = JSON.parse(clientData[0].languageContent)
             }else{
-                const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
-                clientJson = jsonFile
+                const config = useRuntimeConfig() as any
+                clientJson = code === 'en-Us' ? config.public.enJson : code === 'zh-CN' ? config.public.zhJson : config.public.zhHKJson
+                // const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
+                // clientJson = jsonFile
             }
             const { data:adminData } = await clientApi.api.getRelationQuerylanguage({
                     locale:code, 
