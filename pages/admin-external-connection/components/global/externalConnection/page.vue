@@ -2,8 +2,8 @@
 </script>
 <template>
 <div class="pageContainer--padding">
-  <Oauth />
-  <WhatappsCard />
+  <Oauth v-if="allowFeature('MAIL_CONFIG')"  />
+  <WhatappsCard  />
 </div>
 </template>
 <style lang="scss" scoped>
