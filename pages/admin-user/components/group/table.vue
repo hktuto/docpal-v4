@@ -119,6 +119,6 @@ defineExpose({ reload })
 :deep .vxe-buttons--wrapper {
   justify-content: space-between;
   .responsive-container {
-  width: fit-content;
+  width: 70%;
 }}
 </style>

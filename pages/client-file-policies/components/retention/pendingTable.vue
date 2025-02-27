@@ -170,7 +170,7 @@ onMounted(() => {
   width: 200px;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
 }
 :deep(.row-actions){ 
   .vxe-cell{
