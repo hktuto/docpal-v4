@@ -7,7 +7,9 @@ const emits = defineEmits(['ready'])
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import enUS from 'vxe-table/lib/locale/lang/en-US'
 import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
-
+import enJson from 'deployment/src/en-US.json'
+import zhJson from 'deployment/src/zh-CN.json'
+import zhHKJson from 'deployment/src/zh-HK.json'
 
 async function getTabsFromServer() {
     // check if new tab
@@ -82,41 +84,38 @@ const languageReady = ref(false)
 async function getLocale(){
     const { locale, availableLocales, setLocaleMessage } = useI18n()
     const config = useRuntimeConfig()
-    await Promise.all( availableLocales.map( async(code) => {
-            const vxeLang = code === 'zh-CN' ? zhCN : code === 'en-US' ? enUS : zhHK
-            let clientJson;
-            if(config.public.isProduction){
-                const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
-                        locale:code, 
-                        languageKey: 'client'
-                    }) as any
-                clientJson = JSON.parse(clientData[0].languageContent)
-            }else{
-                const config = useRuntimeConfig() as any
-                clientJson = code === 'en-Us' ? config.public.enJson : code === 'zh-CN' ? config.public.zhJson : config.public.zhHKJson
-                // const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
-                // clientJson = jsonFile
-            }
-            const { data:adminData } = await clientApi.api.getRelationQuerylanguage({
-                    locale:code, 
-                    languageKey: 'admin'
-                }) as any
-            const adminJson = JSON.parse(adminData[0].languageContent)
+    console.log(locale)
 
-            const { data:metaData } = await clientApi.api.getRelationQuerylanguage({
-                    locale:code, 
-                    languageKey: 'meta'
-                }) as any
-            const metaJson = JSON.parse(metaData[0].languageContent)
-            setLocaleMessage(code, {
-                ...clientJson,
-                ...adminJson,
-                ...metaJson,
-                ...vxeLang
-            })
-            
-        })
-    )
+    const vxeLang = locale.value === 'zh-CN' ? zhCN : locale.value === 'en-US' ? enUS : zhHK
+    let clientJson;
+    if(config.public.isProduction){
+        const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
+                locale:locale.value, 
+                languageKey: 'client'
+            }) as any
+        clientJson = JSON.parse(clientData[0].languageContent)
+    }else{
+        clientJson = locale.value === 'en-US' ? enJson : locale.value === 'zh-CN' ? zhJson : zhHKJson
+        // const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
+        // clientJson = jsonFile
+    }
+    const { data:adminData } = await clientApi.api.getRelationQuerylanguage({
+            locale:locale.value, 
+            languageKey: 'admin'
+        }) as any
+    const adminJson = JSON.parse(adminData[0].languageContent)
+
+    const { data:metaData } = await clientApi.api.getRelationQuerylanguage({
+            locale:locale.value, 
+            languageKey: 'meta'
+        }) as any
+    const metaJson = JSON.parse(metaData[0].languageContent)
+    setLocaleMessage(locale.value, {
+        ...clientJson,
+        ...adminJson,
+        ...metaJson,
+        ...vxeLang
+    })
     languageReady.value = true
     emits('ready')
 }
