@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "ic:outline-lock-clock",
       hoverIcon: "ic:outline-lock-clock",
       component: "LazyHoldPage",
+      feature: "HOLD_POLICIES",
       props:{},
     },
     "admin-retention-policies":{
@@ -20,6 +21,7 @@ export default defineAppConfig({
       icon: "iconoir:privacy-policy",
       hoverIcon: "iconoir:privacy-policy",
       component: "LazyRetentionPage",
+      feature: "RETENTION_POLICIES",
       props:{},
     }
   }

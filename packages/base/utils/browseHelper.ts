@@ -246,6 +246,10 @@ export async function downloadFileHandler(doc: any) {
 
 
 export function allowFeature(f: string) {
+  // if(f == 'WORKFLOW') return false 
+  // if(f == 'DAM_FILE_CONVERTION') return false 
+  // if(f=== 'AUDIT')return false
+  // if(f==='BULK_IMPORT') return false
   const features = useFeature().value
   if(features[f]) return features[f]
   return false

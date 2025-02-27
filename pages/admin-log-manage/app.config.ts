@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "lucide:file-symlink",
       hoverIcon: "lucide:file-symlink",
       component: "LazyLogManage",
+      feature: "LOG_MANAGE",
       props:{
       },
     }

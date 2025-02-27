@@ -9,6 +9,7 @@ export default defineAppConfig({
             hoverIcon: 'dp-icon:browse-fill',
             label: "file_browse",
             component: "LazyBrowsePage",
+            feature: "BROWSE", 
             props: {
                 idOrPath: "/",
                 filter: {}
@@ -21,6 +22,7 @@ export default defineAppConfig({
             hoverIcon: 'icon-park-twotone:layers',
             label: "file_collections",
             component: "LazyCollectionPage",
+            feature: "COLLECTION",
             props: {
                 idOrPath: "/",
                 filter: {}
@@ -33,6 +35,7 @@ export default defineAppConfig({
             hoverIcon: 'uil:upload',
             label: "file_uploads",
             component: "LazyUploadRequestPage",
+            feature: "UPLOAD_REQUEST",
             props: {
                 idOrPath: "/",
                 filter: {}

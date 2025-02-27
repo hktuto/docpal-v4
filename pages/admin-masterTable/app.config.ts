@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "uil:database-alt",
       hoverIcon: "uil:database-alt",
       component: "LazyMasterTablePage",
+      feature: "MASTER_TABLE",
       props:{},
     }
   }

@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "dp-icon:flow-outline",
       hoverIcon: "dp-icon:flow-fill",
       component: "LazyWorkflowEditorList",
+      feature: "WORKFLOW",
       props:{},
     }
       

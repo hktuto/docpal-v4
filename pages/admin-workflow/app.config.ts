@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "icon-park-outline:writing-fluently",
       hoverIcon: "icon-park-outline:writing-fluently",
       component: "LazyWorkflowManagePage",
+      feature: "WORKFLOW",
       props:{},
     },
     "admin-workflow-retry":{
@@ -20,6 +21,7 @@ export default defineAppConfig({
       icon: "fluent:tray-item-add-24-regular",
       hoverIcon: "fluent:tray-item-add-24-regular",
       component: "LazyWorkflowRetryPage",
+      feature: "WORKFLOW",
       props:{},
     }
   }

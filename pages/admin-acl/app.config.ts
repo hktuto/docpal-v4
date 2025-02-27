@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "lucide:file-cog",
       hoverIcon: "lucide:file-cog",
       component: "LazyAclPage",
+      feature: "CORE",
       props:{},
     }
   },

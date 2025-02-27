@@ -8,6 +8,7 @@ export default defineAppConfig({
             icon: 'lucide:trash-2',
             hoverIcon : 'lucide:trash-2',
             component: "LazyTrashPage",
+            feature: "TRASH",
             props:{}
         }
     }

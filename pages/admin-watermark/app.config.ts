@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "lucide:user",
       hoverIcon: "lucide:user",
       component: "LazyWatermark",
+      feature: "WATERMARK",
       props:{
         id:""
       },

@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "tabler:align-box-right-bottom",
       hoverIcon: "tabler:align-box-right-bottom-filled",
       component: "LazyAuditPage",
+      feature: "AUDIT",
       props:{},
     }
   } ,
