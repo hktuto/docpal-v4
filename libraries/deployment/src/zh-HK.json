@@ -70,7 +70,7 @@
   },
   "admin": {
     "setting": {
-      "title": " "
+      "title": "設定"
     }
   },
   "adminMenu": {
@@ -133,8 +133,7 @@
     "workflowRetry": "工作流程重試"
   },
   "adminSetting": {
-    "globalGeneralConfiguration": "全域通用配置",
-    "metaDateFormat": "日期格式"
+    "globalGeneralConfiguration": "全域通用配置"
   },
   "admin_admin": "管理",
   "admin_watermark_color": "顏色",
@@ -541,6 +540,7 @@
     "valueKey": "选中值字段"
   },
   "dataVerificationResult": "數據驗證結果",
+  "date_format": "日期格式",
   "deleteDocument_cancelText": "取消",
   "deleteDocument_confirmText": "確定",
   "deleteDocument_content": "這是一段消息確認",
@@ -1341,6 +1341,27 @@
     "onlyAccept": "只接受"
   },
   "fileModifiedDate_label": "檔案修改日期",
+  "filePolicies_PolicyStatus": "",
+  "filePolicies_RetentionPolicyActivate": "",
+  "filePolicies_RetentionPolicyApproved": "",
+  "filePolicies_RetentionPolicyCreate": "",
+  "filePolicies_RetentionPolicyCreateDocumentType": "",
+  "filePolicies_RetentionPolicyCreateEvent": "",
+  "filePolicies_RetentionPolicyCreateSuccessMsg": "",
+  "filePolicies_RetentionPolicyDaysDelayedRequiredMsg": "",
+  "filePolicies_RetentionPolicyDelayDaysOnlyRequiredMsg": "",
+  "filePolicies_RetentionPolicyDelete": "",
+  "filePolicies_RetentionPolicyEdit": "",
+  "filePolicies_RetentionPolicyEventRequiredMsg": "",
+  "filePolicies_RetentionPolicyExtendRetentionOnlyRequiredMsg": "",
+  "filePolicies_RetentionPolicyExtendRetentionRequiredMsg": "",
+  "filePolicies_RetentionPolicyInactivate": "",
+  "filePolicies_RetentionPolicyLabelRequiredMsg": "",
+  "filePolicies_RetentionPolicyPeriodOnlyRequiredMsg": "",
+  "filePolicies_RetentionPolicyPeriodRequiredMsg": "",
+  "filePolicies_RetentionPolicyRequiredMsg": "",
+  "filePolicies_RetentionPolicyTriggeringRequiredMsg": "",
+  "filePolicies_tableFilterMsg": "",
   "filePopover_OCRLanguages": "OCR 語言",
   "filePopover_batchTip": "批量更新選定項目",
   "filePopover_changeDocType": "更改文檔類型",
@@ -2235,7 +2256,7 @@
   "userSetting_uiSize": "用戶界面尺寸",
   "userTip": {
     "confirmWhetherToDelete": "您確定要刪除此使用者 {username}嗎？<br>此操作無法撤銷",
-    "confirmWhetherToDeleteItems": "您確定要刪除選取的使用者嗎？\r\n此動作無法撤銷",
+    "confirmWhetherToDeleteItems": "您確定要刪除選取的使用者嗎？<br>此動作無法撤銷",
     "noValidGroups": "[{groupIds}]：無法刪除",
     "operationFailed": "[{users}]: 操作失敗",
     "userSelectedDeleteMsg": "選取的使用者已被永久刪除"
