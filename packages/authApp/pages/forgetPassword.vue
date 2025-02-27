@@ -91,6 +91,10 @@
         })
     }
 
+    onMounted(async() => {
+        await await getLocale();
+    })
+
     
 </script> 
     

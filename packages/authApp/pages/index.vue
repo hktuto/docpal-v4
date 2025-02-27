@@ -2,12 +2,12 @@
 
 const { loggedIn } = useAuth()
 const authReadyState = useAuthReadyState()
-const { locale, loadLocaleMessages} = useI18n()
+
 const localeReady = ref(false)
 
 watch(loggedIn, (bool) => {
   if(bool) {
-    loadLocaleMessages(locale.value)
+    // loadLocaleMessages(locale.value)
     authReadyState.value = true;
   }
 })

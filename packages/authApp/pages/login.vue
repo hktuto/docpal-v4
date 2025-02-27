@@ -1,0 +1,129 @@
+<script lang="ts" setup>
+import { clientApi } from 'api'
+
+const isLDAP = useIsLDAP()
+const isSSO = useIsSSO()
+const showForgetPassword = computed(() => !isLDAP.value && !isSSO.value)
+const loading = ref(false);
+const form = reactive({
+      username: '',
+      password: '',
+    })
+const usernameEl = ref();
+const rules = {
+    username: [
+        { required: true, message: 'Please input Username', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: 'Please input Password', trigger: 'blur' },
+    ],
+}
+async function submit() {
+    const router = useRouter()
+    try {
+        loading.value = true;
+        const {data} = await clientApi.instance.post('/auth/nuxeo/login', {
+            username: form.username,
+            password: form.password,
+        }).then(res => res.data);
+        localStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('refresh_token', data.refresh_token)
+        // console.log(data)
+    //    const {isRequired2FA} = await userStore.login(form.username, form.password);
+        form.username = "";
+        form.password = "";
+        verifly();
+        router.push('/')
+    } catch (error) {
+        // form.username = "";
+        // form.password = "";
+    }finally{
+        loading.value = false;
+    }
+}
+
+function forgetPassword(){
+    const router = useRouter()
+    router.push('/forgetPassword')
+}
+const languageReady = ref(false)
+onMounted(async() => {
+    await getLocale()
+    languageReady.value = true
+    usernameEl.value.focus()
+});
+</script>
+
+
+<template>
+    <div class="login-page">
+        <Transition name="fade">
+            <div v-if=languageReady class="fromContainer card glass">
+                <AppBigLogo class="logo" mode="withName"/>
+                <ElForm
+                    :model="form"
+                    :rules="rules"
+                    label-position="top">
+                    <ElFormItem label="username" :rules="rules.username">
+                        <ElInput
+                            ref="usernameEl"
+                            v-model="form.username"
+                            type="text" />
+                    </ElFormItem>
+                    <ElFormItem label="password" :rules="rules.password">
+                        <ElInput
+                            v-model="form.password"
+                            type="password"
+                            @keyup.enter.native="submit"
+                            show-password/>
+                    </ElFormItem>
+                    <ElFormItem >
+                        <ElButton class="fullSize"  size="large"  type="primary" @click="submit" :loading="loading">Submit</ElButton>
+                    </ElFormItem>
+                </ElForm>
+                <el-button v-if="showForgetPassword" @click="forgetPassword" link>
+                    {{ $t('login_forgetPassword') }}
+                </el-button>
+            </div>
+        </Transition>
+    <LoadingBg />
+    </div>
+</template>
+
+
+<style lang="scss" scoped>
+.login-page{
+    width:100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+.fromContainer{
+    min-width: 300px;
+    max-width: 600px;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+.logo{
+    width: 80%;
+    max-width: 200px;
+    margin: 0 auto var(--app-space-s) auto;
+}
+.glass{
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6.3px);
+    -webkit-backdrop-filter: blur(6.3px);
+    border: 1px solid rgba(255, 255, 255, 0.31);
+}
+
+.card{
+    padding: var(--el-component-size-small);
+    border-radius: var(--el-border-radius-round);
+}
+</style>
