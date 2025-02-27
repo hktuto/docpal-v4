@@ -46,7 +46,7 @@ onMounted(() => {
     overflow: auto;
 
     :deep(.splitpanes){
-        min-width: var(--panel-min-size);
+        // min-width: var(--panel-min-size);
     }
     // :deep(.splitpanes){
     //     height:100%;

@@ -226,7 +226,7 @@ async function getFormByNode(node: Node){
 }
 
 async function saveFormByNode(node: Node, json:any){
-    const id = node.data ? node.data.id : node.id === 'end' ? 'end' : node.id
+    const id = node.data.type === 'endEvent' ? 'end' : node.id
     return await adminApi.api.postRelationSave({
         processKey: props.processKey,
         userTaskId: id,
@@ -238,7 +238,8 @@ async function saveFormByNode(node: Node, json:any){
 const formRenderVisible = ref(false);
 const fromRenderRef = ref();
 async function previewForm(node:Node) {
-    const id = node.data ? node.data.id : node.id === 'end' ? 'complete' : node.id
+    console.log()
+    const id = node.data.type === 'endEvent' ? 'end' : node.id
     const response = await adminApi.api.getRelationQuery({
         processKey: props.processKey,
         userTaskId: id,
@@ -313,7 +314,7 @@ async function copyForm(node:Node, obj:any) {
 async function pasteForm(node:Node){
     const {form, fields} = copyObj.value
     await saveFormByNode(node, form);
-    if(node.id !== 'end') {
+    if(node.data.type !== 'endEvent') {
         graph.value?.startBatch('update-from-data')
    
         const newData = {

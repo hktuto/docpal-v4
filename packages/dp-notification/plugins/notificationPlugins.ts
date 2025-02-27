@@ -1,5 +1,6 @@
 import { useEventBus, EventType } from 'eventbus'
 
+let interval:any;
 export default defineNuxtPlugin(nuxtApp => {
     const { connect, disconnect, messageHandlers, notiData, notiError} = useNotification()
     const loginBus = useEventBus(EventType.USER_LOGIN__SUCCESS)
