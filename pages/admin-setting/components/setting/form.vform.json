@@ -19,7 +19,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "metaDateFormat",
-                "label": "Date Format",
+                "label": "date_format",
                 "labelAlign": "",
                 "defaultValue": "YYYY-MM-DD",
                 "placeholder": "",
@@ -38,11 +38,26 @@
                 "multiple": false,
                 "multipleLimit": 0,
                 "optionItems": [
-                  { "label": "YYYY-MM-DD", "value": "YYYY-MM-DD" },
-                  { "label": "YYYY/MM/DD", "value": "YYYY/MM/DD" },
-                  { "label": "MM/DD/YYYY", "value": "MM/DD/YYYY" },
-                  { "value": "DD/MM/YYYY", "label": "DD/MM/YYYY" },
-                  { "value": "YYYY-MM-DD HH:mm", "label": "YYYY-MM-DD HH:mm" }
+                  {
+                    "label": "YYYY-MM-DD",
+                    "value": "YYYY-MM-DD"
+                  },
+                  {
+                    "label": "YYYY/MM/DD",
+                    "value": "YYYY/MM/DD"
+                  },
+                  {
+                    "label": "MM/DD/YYYY",
+                    "value": "MM/DD/YYYY"
+                  },
+                  {
+                    "value": "DD/MM/YYYY",
+                    "label": "DD/MM/YYYY"
+                  },
+                  {
+                    "value": "YYYY-MM-DD HH:mm",
+                    "label": "YYYY-MM-DD HH:mm"
+                  }
                 ],
                 "required": false,
                 "requiredHint": "",
@@ -127,9 +142,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

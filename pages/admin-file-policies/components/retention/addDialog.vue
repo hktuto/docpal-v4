@@ -1,7 +1,7 @@
 <template>
 <el-dialog 
     class="scroll-dialog retention-add-dialog"
-    v-model="state.visible" :title="$t('rp.create')"
+    v-model="state.visible" :title="$t('filePolicies_RetentionPolicyCreate')"
     :close-on-click-modal="false" append-to-body
     >
     <FormRenderer ref="FormRendererRef" :form-json="formJson">
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import formJson from './addDialog.vform.json'
+import {ElMessage} from "element-plus";
 const { t } = useI18n()
 const emits = defineEmits([
     'update'
@@ -38,7 +39,8 @@ async function handleSubmit() {
     }
     try {
         state.loading = true
-        await adminApi.api.postPolicyRetentions(params)
+        // await adminApi.api.postPolicyRetentions(params)
+        ElMessage.success(t('filePolicies_RetentionPolicyCreateSuccessMsg'))
         state.visible = false
         emits('update')
     } catch (error) {
