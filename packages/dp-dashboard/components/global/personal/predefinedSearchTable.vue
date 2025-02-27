@@ -20,7 +20,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-smartFolder",
+  zoom: false,
   api: (pageParams: any) =>
   clientApi.api.getNuxeoSfolder({ ...pageParams, ...extraParams }),
   columns: [

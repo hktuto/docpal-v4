@@ -20,7 +20,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "c-share",
   api: async(pageParams: any) => {
     const params = {
       ...pageParams, 

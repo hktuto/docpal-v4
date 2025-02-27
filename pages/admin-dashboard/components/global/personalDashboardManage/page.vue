@@ -33,7 +33,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "personalDashboardManage",
   api: (pageParams: any) =>
   adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
   columns: [

@@ -20,7 +20,7 @@ const routerProvider = inject(MenuRouterKey)
 let extraParams = {};
 const { t } = useI18n();
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
-  id: "clientTrashList",
+  id: "c-hold",
   api: async (pageParams: any) => {
     return clientApi.api.postPolicyDocumentsPage({ ...pageParams, ...extraParams });
   },

@@ -24,7 +24,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "c-dashboard",
   api: (pageParams: any) => publicApi.api.postUserDashboardPage({  ...pageParams, ...extraParams }),
   columns: [
     { field: "name", title: "tableHeader_name", fixed: "left" },

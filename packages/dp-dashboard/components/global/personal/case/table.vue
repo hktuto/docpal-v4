@@ -23,7 +23,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-case",
+  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "case_id", title: "caseManagement.name", fixed: "left" },

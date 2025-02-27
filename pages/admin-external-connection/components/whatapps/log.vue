@@ -18,7 +18,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "whapps-log",
   api: async(pageParams: any) => {
     return await adminApi.api.postWhatsappFindWhatsappLog({ ...pageParams }, extraParams)
   },

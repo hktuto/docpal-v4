@@ -36,7 +36,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-email-layout-template",
   api: (pageParams: any) =>
     adminApi.api.postTemplateEmailLayoutPage({ ...pageParams, ...extraParams }),
   columns: [

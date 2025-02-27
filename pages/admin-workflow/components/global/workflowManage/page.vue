@@ -29,7 +29,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-workflow-manage",
   api: async (pageParams: any) => {
     return await adminApi.api.postWorkflowTasksUser({ ...pageParams }, extraParams);
   },
