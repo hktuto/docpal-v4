@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('caseManagement.addOrEditDashboard')"
-  :close-on-click-modal="false"
+  :close-on-click-modal="false" destroy-on-close	
   >
   <FormRenderer ref="FormRendererRef" :form-json="formJson" >
   </FormRenderer>
