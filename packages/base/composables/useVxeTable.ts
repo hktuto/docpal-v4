@@ -1,5 +1,5 @@
 import { en } from 'element-plus/es/locales.mjs';
-import { useEventBus, EventType } from 'eventbus'
+import { useEventBus, EventType, emitBus } from 'eventbus'
 
 import { clientApi } from "api"
 import { useViewport } from '#imports';
@@ -97,6 +97,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         height: params.height || 'auto',
         toolbarConfig:{
             custom: saveColumnOrder ,
+            zoom: true,
             slots: {
                 buttons: 'toolbar_buttons'
             }
@@ -219,7 +220,13 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     if(params.dblClickAction){
         tableEvent.cellDblclick = params.dblClickAction
     }
-    
+    tableEvent.zoom = ({type}) => {
+        if(type === 'max') {
+            emitBus(EventType.TABLE_ZOOM_MAX)
+        }else if(type === 'revert') {
+            emitBus(EventType.TABLE_ZOOM_REVERT)
+        }
+    }
     // Step 2: handle body actions
     if(actions && actions.length > 0){
         tableEvent.menuClick = ({menu, row, column}:any) => {
