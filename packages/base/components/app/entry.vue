@@ -81,6 +81,7 @@ const { globalSlots } = useGlobalSetting()
 onMounted(async() => {
     await getLocale();
     languageReady.value = true
+    emits('ready')
     getTabsFromServer()
 })
 
