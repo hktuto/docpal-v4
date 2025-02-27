@@ -7,6 +7,7 @@ export default defineAppConfig({
             hoverIcon: 'lucide:cloud-upload',
             label: "clientAIUpload",
             component: "LazyAiUpload",
+            feature: "BROWSE",
             props:{
                 
             }

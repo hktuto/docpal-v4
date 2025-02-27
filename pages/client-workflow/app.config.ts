@@ -9,6 +9,7 @@ export default defineAppConfig({
             hoverIcon: 'dp-icon:flow-outline',
             label: "menus_workflow",
             component: "LazyWorkflowPage",
+            feature: "WORKFLOW",
             props:{
                 pageSize:20,
                 pageNum: 0,

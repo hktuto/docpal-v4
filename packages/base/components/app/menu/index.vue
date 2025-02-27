@@ -28,7 +28,6 @@ function createSearchItem(item:MenuItem, parentKey?:string) {
             }
         }
     })
-    // console.log(messages)
     return {
         keyword:[...new Set(keyword)],
         label: t(item.label),
@@ -42,9 +41,10 @@ const searchList = useGlobalSearchList()
 function generateMenu(){
     let result = []
     
-    const _appMenu = deepCopy(appMenu)
-    const _menu = deepCopy(menu)
+    const _appMenu = deepCopy(appMenu) // menu list
+    const _menu = deepCopy(menu) // menu对象映射
     const menuSearchList:GlobalSearchItem[] = [];
+    
     for(let i = 0; i < _appMenu.length; i++) {
         let item = _appMenu[i];
         let menuItem = item;
@@ -53,14 +53,16 @@ function generateMenu(){
         if((item.name && _menu[item.name])) {
             // TODO : check if menu[item.name] has license
             menuItem = _menu[item.name];
-            result.push(menuItem)
-            menuSearchList.push( createSearchItem(_menu[item.name]) )
+            if(checkVisible(menuItem)) {
+                result.push(menuItem)
+                menuSearchList.push( createSearchItem(_menu[item.name]) )
+            }
             continue;
         }
         let hasVisibleChildren = false;
         if(item.children) {
             for(let j = 0; j < item.children.length; j++) {
-                if(item.children[j].name && _menu[item.children[j].name]) {
+                if(item.children[j].name && _menu[item.children[j].name] && checkVisible(_menu[item.children[j].name])) {
                     item.children[j] = _menu[item.children[j].name];
                     menuSearchList.push(createSearchItem(item.children[j], item.label  || "" ))
                     hasVisibleChildren = true
@@ -73,7 +75,7 @@ function generateMenu(){
                 item.children = undefined
             }
         }
-        if(hasVisibleChildren) {
+        if(hasVisibleChildren && checkVisible(menuItem)) {
             result.push(menuItem)
         }
     }
@@ -83,7 +85,12 @@ function generateMenu(){
     })
     displayMenu.value = result;
 }
-
+function checkVisible(row: any) {
+    if(row.feature && row.feature !== 'CORE') {
+        return allowFeature(row.feature)
+    }
+    return true
+}
 const selectedMenuItem = ref<TabItem>()
 
 function setSelectedMenuItem() {
@@ -95,6 +102,7 @@ function setSelectedMenuItem() {
         }
     }
 }
+
 
 watch(() => [layout, hightLightPanel], () => {
     // get hightLightPanel
@@ -123,6 +131,7 @@ onMounted(() => {
             </div>
             <div class="menuBody">
                 <AppMenuSearch />
+    
                 <AppMenuItemExpane 
                     v-for="(item, index) in displayMenu" 
                     :key="index" 

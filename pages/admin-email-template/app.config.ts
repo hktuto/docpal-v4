@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "fluent:mail-template-16-regular",
       hoverIcon: "fluent:mail-template-16-regular",
       component: "LazyEmailTemplatePage",
+      feature: "EMAIL_TEMPLATE",
       props:{},
     }
   }

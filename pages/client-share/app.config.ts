@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "lucide:file-output",
       hoverIcon: "lucide:file-output",
       component: "LazySharePage",
+      feature: "SHARE_EXTERNAL",
       props:{},
     },
     "client-share-me": {
@@ -19,6 +20,7 @@ export default defineAppConfig({
       icon: "meteor-icons:share",
       hoverIcon: "meteor-icons:share",
       component: "LazyInternalShareMePage",
+      feature: "SHARE_INTERNAL",
       props:{},
     },
     "client-share-other": {
@@ -28,6 +30,7 @@ export default defineAppConfig({
       icon: "lucide:file-symlink",
       hoverIcon: "lucide:file-symlink",
       component: "LazyInternalShareOtherPage",
+      feature: "SHARE_INTERNAL",
       props:{},
     }
   }

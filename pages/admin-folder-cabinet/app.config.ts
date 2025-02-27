@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "icon-park-outline:document-folder",
       hoverIcon: "icon-park-outline:document-folder",
       component: "LazyFolderCabinetPage",
+      feature: "FOLDER_CABINET",
       props:{},
     }
   }
