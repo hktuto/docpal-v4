@@ -19,8 +19,8 @@
       <el-icon><Plus /></el-icon>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item @click="handleAdd(data, false)">{{$t('common_file')}}</el-dropdown-item>
-          <el-dropdown-item @click="handleAdd(data, true)">{{$t('common_folder')}}</el-dropdown-item>
+          <el-dropdown-item @click="handleAdd(data, false)">{{$t('folder_cabinetDetailNewFile')}}</el-dropdown-item>
+          <el-dropdown-item @click="handleAdd(data, true)">{{$t('folderCabinet.addFolder')}}</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -38,8 +38,6 @@ const defaultProps = {
   label: 'label',
 }
 function handleCurrentChange(row, node) {
-  console.log('tree handleCurrentChange', row);
-  
   // router.push({
   //   query: {
   //     id
