@@ -3,7 +3,7 @@ import { useGlobalSetting } from '#imports'
 import { TabApp } from '#components'
 const tabAppRef = ref<InstanceType<typeof TabApp>>()
 const emits = defineEmits(['ready'])
-
+import {getLocale} from '../../utils/languageHelper'
 async function getTabsFromServer() {
     // check if new tab
     const route = useRoute()
@@ -80,7 +80,7 @@ const { globalSlots } = useGlobalSetting()
 
 onMounted(async() => {
     await getLocale();
-    languageReady.value
+    languageReady.value = true
     getTabsFromServer()
 })
 
