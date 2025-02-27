@@ -10,7 +10,7 @@ const { id } = defineProps<{
 const state = reactive({
   loading: false,
   setting: {},
-  currentRow: []
+  currentRow: {}
 });
 async function getData() {
   state.loading = true;
@@ -79,7 +79,7 @@ onActivated(() => {
   <div class="pageContainer--padding main">
     <FolderCabinetSettingTree
       v-if="state.setting"
-      :data="state.setting"
+      :data="state.setting" :id="state.currentRow.id"
       @current-change="handleCurrentChange"
     />
     <FolderCabinetSettingDetail ref="detailRef" :data="state.currentRow" :isRoot="state.currentRow.id === id"

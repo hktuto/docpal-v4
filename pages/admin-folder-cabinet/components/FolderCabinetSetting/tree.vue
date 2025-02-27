@@ -38,6 +38,8 @@ const defaultProps = {
   label: 'label',
 }
 function handleCurrentChange(row, node) {
+  console.log('tree handleCurrentChange', row);
+  
   // router.push({
   //   query: {
   //     id
@@ -50,7 +52,10 @@ const treeRef = ref()
 watch(() =>props.data, (newValue) => {
   if(!!newValue) {
     setTimeout(() => {
-      if (props.id) treeRef.value.setCurrentKey(props.id)
+      if (props.id) {
+        treeRef.value.setCurrentKey(props.id)
+        emits('current-change', treeRef.value.getCurrentNode())
+      }
       else treeRef.value.setCurrentKey(newValue.id)
     }, 300)
   }
