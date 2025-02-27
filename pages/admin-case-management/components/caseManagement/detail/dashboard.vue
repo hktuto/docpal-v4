@@ -187,8 +187,9 @@ async function handleDelete(row) {
 }
 const dialogRef = ref();
 function handleAdd(setting: any = null) {
-  console.log(dialogRef.value);
-  dialogRef.value.handleOpen(setting);
+    console.log(dialogRef.value);
+    dialogRef.value.handleOpen(setting);
+    reload();
 }
 function handleFilterFormChange(formModel) {
   state.extraParams = formModel;

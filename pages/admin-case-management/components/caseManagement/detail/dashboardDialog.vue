@@ -1,6 +1,6 @@
 <template>
 <el-dialog v-model="state.visible" :title="$t('caseManagement.addOrEditDashboard')"
-  :close-on-click-modal="false" destroy-on-close	
+  :close-on-click-modal="false" destroy-on-close
   >
   <FormRenderer ref="FormRendererRef" :form-json="formJson" >
   </FormRenderer>
@@ -44,6 +44,7 @@ async function handleSubmit () {
     console.log("params", params)
     state.visible = false
     if(!state.isEdit) {
+      params.cmmnVersionId = props.caseTypeId
       await adminApi.api.postCaseDashboard(params as any)
     } else {
       await adminApi.api.putCaseDashboard({
@@ -59,7 +60,7 @@ async function handleSubmit () {
 }
 function handleOpen(setting: any) {
   console.log(setting);
-  
+
   state.visible = true
   if(!!setting) {
     state.isEdit = true
