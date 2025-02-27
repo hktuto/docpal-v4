@@ -3,9 +3,7 @@ import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 
 const currentDir = dirname(fileURLToPath(import.meta.url))
-import enJson from 'deployment/src/en-US.json'
-import zhJson from 'deployment/src/zh-CN.json'
-import zhHKJson from 'deployment/src/zh-HK.json'
+
 
 
 const config = {
@@ -28,9 +26,7 @@ const config = {
   
   runtimeConfig:{
     public:{
-      enJson : process.env.NODE_ENV !== 'production' ? enJson : "",
-      zhJson : process.env.NODE_ENV !== 'production' ? zhJson : "",
-      zhHKJson : process.env.NODE_ENV !== 'production' ? zhHKJson : "",
+
       isProduction: process.env.NODE_ENV === 'production',
       pdfReaderUrl: process.env.pdfReaderUrl,
       NODE_ENV: process.env.NODE_ENV,
