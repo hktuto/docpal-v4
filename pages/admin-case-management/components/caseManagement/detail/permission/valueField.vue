@@ -121,11 +121,16 @@ async function getMasterTableOptions(masterTableId: string, displayField: string
     id: masterTableId,
   }
   // displayField: displayField
-  const record = await clientApi.api.postMasterTablesRecordPageNonpermission(params)
-  state.recordOptions = record.map((item: any) => ({
-    label: item[displayField],
-    value: item[displayField]
-  }))
+  try {
+    const record: any = await clientApi.api.postMasterTablesRecordPageNonpermission(params).then(res=> res.data)
+    state.recordOptions = record.map((item: any) => ({
+      label: item[displayField],
+      value: item[displayField]
+    }))
+    
+  } catch (error) {
+    state.recordOptions = []
+  }
 }
 async function getUserGroupOptions() {
   if(state.userOptions.length > 0) return
