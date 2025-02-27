@@ -1,5 +1,5 @@
 <template>
-    <div class="pageContainer">
+    <div class="pageContainer--padding">
         <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
             <template #toolbar_buttons>
                 <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
@@ -183,12 +183,4 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-
-.pageContainer{
-    height: 100%;
-    width: 100%;
-    padding: var(--app-space-xs);
-    position: relative;
-    overflow: hidden;
-}
 </style>
