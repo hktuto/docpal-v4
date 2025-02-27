@@ -48,7 +48,8 @@
     "vue-virt-list": "^1.5.9",
     "vuedraggable": "^4.1.0",
     "vxe-pc-ui": "4.3.2",
-    "vxe-table": "4.9.4"
+    "vxe-table": "4.9.4",
+    "deployment":"workspace:*"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.26",
