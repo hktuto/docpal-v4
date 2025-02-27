@@ -20,7 +20,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-dashboard",
+  zoom: false,
   api: (pageParams: any) =>
   publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
   columns: [

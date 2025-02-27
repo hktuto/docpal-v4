@@ -24,7 +24,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-workflowMy",
+  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "taskInstance.businessKey", title: "table_name", fixed: "left" },

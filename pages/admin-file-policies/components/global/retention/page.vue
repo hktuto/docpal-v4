@@ -54,7 +54,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-retention",
   api: (pageParams: any) =>
     adminApi.api.postPolicyRetentionsPage({ ...pageParams, ...extraParams }),
   columns: [

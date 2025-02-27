@@ -25,7 +25,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-externalShare",
+  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "emailList", title: "tableHeader_emailList", fixed: "left" },

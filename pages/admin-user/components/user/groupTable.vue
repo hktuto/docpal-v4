@@ -57,7 +57,7 @@ const state = reactive<any>({
     groupList: []
 })
 const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
-    id: 'azureLogTableSetting',
+    id: 'a-user-group',
     columns: [
         {type: "checkbox", fixed: 'left', width: "60px"},
         {field: 'name', title: 'user_userGroupName', fixed: 'left', sortable: true},

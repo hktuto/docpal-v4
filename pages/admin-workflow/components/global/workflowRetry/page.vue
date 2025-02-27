@@ -30,7 +30,7 @@ const {
   query,
   reload,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-workflow-retry",
   api: async (pageParams: any) => {
     return await adminApi.api.postWorkflowQueryWorkflowRetryPage({ ...pageParams, ...extraParams });
   },

@@ -23,7 +23,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-internalShare",
+  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },

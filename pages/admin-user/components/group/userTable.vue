@@ -49,7 +49,7 @@ const state = reactive<any>({
     selectedRows: []
 })
 const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
-    id: 'userTableSetting',
+    id: 'a-userTableSetting',
     columns: [
         {field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox'},
         {field: 'userId', title: 'user_groupIdentifer',},

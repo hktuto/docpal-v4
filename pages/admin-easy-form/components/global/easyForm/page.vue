@@ -36,7 +36,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-easyForm",
   api: (pageParams: any) =>
     adminApi.api.postFormDesignPage({ ...pageParams, ...extraParams }),
   columns: [

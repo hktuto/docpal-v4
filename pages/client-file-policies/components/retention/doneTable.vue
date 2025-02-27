@@ -20,9 +20,10 @@ let doneParams = {
   isDesc: true,
   states: ["A"],
 };
+
 const { t } = useI18n();
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
-  id: "clientRetentionDoneList",
+  id: "c-retention-done",
   api: async (pageParams: any) => {
     return clientApi.api.postPolicyRetentionsDocumentPage({
       ...doneParams,
