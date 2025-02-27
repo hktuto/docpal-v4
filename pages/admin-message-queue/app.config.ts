@@ -8,7 +8,8 @@ export default defineAppConfig({
         label: "adminMenu.message_queue",
         icon: "material-symbols-light:display-settings-rounded",
         hoverIcon: "material-symbols-light:display-settings-rounded",
-        component: "LazyMessageQueuePage",        
+        component: "LazyMessageQueuePage",     
+        feature: "JOB_STATUS",   
         props:{},
     }
   }

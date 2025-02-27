@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "typcn:document",
       hoverIcon: "typcn:document",
       component: "LazyDocTypePage",
+      feature: "CORE",
       props:{},
     },
     "admin-smart-folder":{
@@ -20,6 +21,7 @@ export default defineAppConfig({
       icon: "material-symbols:map-search-outline-rounded",
       hoverIcon: "material-symbols:map-search-outline-rounded",
       component: "LazySmartFolderPage",
+      feature: "SMART_FOLDER",
       props:{},
     }
   }

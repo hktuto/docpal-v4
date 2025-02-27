@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "teenyicons:azure-solid",
       hoverIcon: "teenyicons:azure-solid",
       component: "LazyAzurePage",
+      feature: "AZURE_OCR",
       props:{},
     }
   }

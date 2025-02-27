@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "dp-icon:case-outline",
       hoverIcon: "dp-icon:case-fill",
       component: "LazyCaseManagementList",
+      feature: "WORKFLOW",
       props:{
           pageNum: 0,
           pageSize: 20,

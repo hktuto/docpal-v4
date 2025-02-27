@@ -8,6 +8,7 @@ export default defineAppConfig({
             icon: 'carbon:dashboard',
             hoverIcon : 'carbon:dashboard',
             component: "LazyDashboardPage",
+            feature: "DASHBOARD",
             props:{}
         },
         'client-work-panel': {
@@ -17,6 +18,7 @@ export default defineAppConfig({
             icon: 'material-symbols:dashboard-customize-outline-rounded',
             hoverIcon : 'material-symbols:dashboard-customize-outline-rounded',
             component: "LazyHomePage",
+            feature: "DASHBOARD",
             props:{}
         }
     }

@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "flowbite:file-import-outline",
       hoverIcon: "flowbite:file-import-solid",
       component: "LazyBulkImportPage",
+      feature: "BULK_IMPORT",
       props:{
         pageNum:0,
         pageSize:20,

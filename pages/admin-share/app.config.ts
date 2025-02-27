@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "lucide:file-symlink",
       hoverIcon: "lucide:file-symlink",
       component: "LazyInternalShareList",
+      feature: "SHARE_INTERNAL",
       props:{
         pageNum:0,
         pageSize:20,
@@ -23,6 +24,7 @@ export default defineAppConfig({
       icon: "lucide:file-output",
       hoverIcon: "lucide:file-output",
       component: "LazyExternalSharePage",
+      feature: "SHARE_EXTERNAL",
       props:{},
     },
   },

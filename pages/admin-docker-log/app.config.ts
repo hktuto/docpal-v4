@@ -9,6 +9,7 @@ export default defineAppConfig({
       icon: "mdi:docker",
       hoverIcon: "mdi:docker",
       component: "LazyDockerLog",
+      feature: "DOCKER_LOG",
       props:{},
     }
   },
