@@ -20,7 +20,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-smartFolder",
+  zoom: false,
   api: (pageParams: any) =>
   clientApi.api.getNuxeoSfolder({ ...pageParams, ...extraParams }),
   columns: [
@@ -50,7 +51,7 @@ onMounted(() => {
   justify-content: space-between;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
   :deep .el-input {
     width: 200px;
   }

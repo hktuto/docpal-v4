@@ -29,7 +29,7 @@ if( !routerProvider) {
 let extraParams: any = {};
 const state = reactive<any>({});
 const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-smartFolder",
   api: async (pageParams: any) => {
     return await adminApi.api.postNuxeoSfolderPage({
       ...pageParams,

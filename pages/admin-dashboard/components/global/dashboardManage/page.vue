@@ -33,7 +33,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "dashboardManage",
   api: (pageParams: any) =>
   publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
   columns: [
@@ -144,7 +144,7 @@ onMounted(() => {
   justify-content: space-between;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
   :deep .el-input {
     width: 200px;
   }
