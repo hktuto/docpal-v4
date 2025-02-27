@@ -9,6 +9,7 @@ export default defineAppConfig({
             hoverIcon: 'lucide:search',
             label: "file_search",
             component: "LazySearchPage",
+            feature: "SEARCH",
             props:{
                 pageSize:20,
                 pageNum: 0,
@@ -22,6 +23,7 @@ export default defineAppConfig({
             hoverIcon: 'material-symbols:map-search-outline-rounded',
             label: "file_smartFolder",
             component: "LazySmartFolderPage",
+            feature: "SMART_FOLDER",
             props:{
             }
         }

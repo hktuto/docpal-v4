@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "material-symbols-light:table-edit-rounded",
       hoverIcon: "material-symbols-light:table-edit-rounded",
       component: "LazyEasyFormPage",
+      feature: "WORKFLOW",
       props:{},
     }
   } ,

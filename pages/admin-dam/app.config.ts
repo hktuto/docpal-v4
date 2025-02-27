@@ -11,6 +11,7 @@ export default defineAppConfig({
       icon: "lucide:file-scan",
       hoverIcon: "lucide:file-scan",
       component: "LazyDamPage",
+      feature: "DAM_FILE_CONVERTION",
       props:{},
     }
   },

@@ -10,6 +10,7 @@ export default defineAppConfig({
       icon: "lucide:file-sliders",
       hoverIcon: "lucide:file-sliders",
       component: "LazyDocumentTemplatePage",
+      feature: "GENERATE_TEMPLATE",
       props:{
         pageNum: 0,
         pageSize: 20,
