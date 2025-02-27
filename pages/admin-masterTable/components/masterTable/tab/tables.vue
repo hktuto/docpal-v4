@@ -32,7 +32,7 @@ const state = reactive<any>({
 });
 
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
-  id: "masterTableTableSetting",
+  id: "masterTable-tab",
   api: (pageParams: any) => masterTableProvider?.GetMasterTablesPageApi(pageParams),
   columns: [
     { field: "name", title: "tableHeader_name", fixed: "left" },

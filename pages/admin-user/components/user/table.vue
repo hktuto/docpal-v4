@@ -105,7 +105,7 @@ const state = reactive<TableState>({
 });
 
 const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
-    id: 'userTableSetting',
+    id: 'a-user-table',
     api: async (pageParams: any) => {
         cleanSelectedRows()
         return await userProvider?.getAllUsersApi(pageParams)

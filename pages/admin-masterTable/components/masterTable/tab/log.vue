@@ -24,7 +24,7 @@ let extraParams:any = {
 let filtersParams:any = {
 }
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
-    id: 'masterTableTableSetting',
+    id: 'masterTable-log',
     api: (pageParams:any) => adminApi.api.postMasterTablesLogs({...pageParams, ...extraParams, ...filtersParams}),
     columns:  [
         { id: "10",  field: 'docPath', title: 'masterTable.table', fixed: 'left'},
@@ -68,6 +68,6 @@ defineExpose({ reload })
 
 <style lang="scss" scoped>
 .responsive-container {
-    width: fit-content;
+  width: 70%;
 }
 </style>

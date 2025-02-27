@@ -52,7 +52,7 @@ const {
     reload,
     cleanSelectedRows,
 } = useVxeTable({
-    id: "userTableSetting",
+    id: "a-folder-cabinet",
     api: (pageParams: any) =>
         adminApi.api.postCabinetTemplatePage({...pageParams, ...extraParams}),
     columns: [

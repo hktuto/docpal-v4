@@ -23,7 +23,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-internalShare",
+  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },
@@ -57,7 +58,7 @@ onMounted(() => {
   justify-content: space-between;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
   :deep .el-input {
     width: 200px;
   }

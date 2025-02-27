@@ -30,7 +30,7 @@ if( !routerProvider) {
 let extraParams: any = {};
 const state = reactive<any>({});
 const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
-  id: "userTableSetting",
+  id: "docTypeManage",
   api: async (pageParams: any) => {
     return await adminApi.api.postDocpaltypeSettingsPage({
       ...pageParams,

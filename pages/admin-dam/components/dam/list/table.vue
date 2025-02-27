@@ -69,3 +69,8 @@ defineExpose({
     </VxeGrid>
 
 </template>
+<style lang="scss" scoped>
+.el-tag {
+    margin: var(--app-space-xs);
+}
+</style>

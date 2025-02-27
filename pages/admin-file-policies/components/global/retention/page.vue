@@ -54,7 +54,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "a-retention",
   api: (pageParams: any) =>
     adminApi.api.postPolicyRetentionsPage({ ...pageParams, ...extraParams }),
   columns: [
@@ -223,7 +223,7 @@ onActivated(async() => {
   justify-content: space-between;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
   :deep .el-input {
     width: 200px;
   }

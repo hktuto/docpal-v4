@@ -30,7 +30,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "message-queue",
   api: async(pageParams: any) => {
     const data = await adminApi.api.postMessageQueuePage({ ...pageParams }, extraParams)
     return { 

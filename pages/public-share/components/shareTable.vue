@@ -44,7 +44,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "public-share",
   columns: [
     { field: "title", title: "tableHeader_name", fixed: "left" },
     { field: "fileExtension", title: "docInfo.fileExtension" },

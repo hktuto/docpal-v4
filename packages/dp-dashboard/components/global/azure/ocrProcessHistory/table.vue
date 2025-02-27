@@ -28,7 +28,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-azure",
+  zoom: false,
   api: (pageParams: any) =>
   publicApi.api.postOcrQueryOcrTransactionLogs({ ...pageParams, ...extraParams }),
   columns: [

@@ -35,7 +35,7 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "internal-other",
   api: (pageParams: any) =>
     clientApi.api.postInternalshareOthers({ ...pageParams, ...extraParams }),
   columns: [

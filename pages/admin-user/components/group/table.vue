@@ -32,7 +32,7 @@ const state = reactive<State>({
 });
 const { t } = useI18n()
 const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
-    id: 'groupTable',
+    id: 'a-groupTable',
     columns:  [
         { field: 'name', title: 'user_userGroupName', fixed: 'left' },
         { field: 'id', title: 'user_userGroupIdentifer',},
@@ -119,6 +119,6 @@ defineExpose({ reload })
 :deep .vxe-buttons--wrapper {
   justify-content: space-between;
   .responsive-container {
-  width: fit-content;
+  width: 70%;
 }}
 </style>

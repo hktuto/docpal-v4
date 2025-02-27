@@ -23,7 +23,8 @@ const {
   reload,
   cleanSelectedRows,
 } = useVxeTable({
-  id: "userTableSetting",
+  id: "d-case",
+  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "case_id", title: "caseManagement.name", fixed: "left" },
@@ -89,7 +90,7 @@ defineExpose({
   justify-content: space-between;
 }
 .responsive-container {
-  width: fit-content;
+  width: 70%;
   :deep .el-input {
     width: 200px;
   }
