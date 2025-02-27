@@ -38,7 +38,7 @@
       "formItemFlag": true,
       "options": {
         "name": "label",
-        "label": "label",
+        "label": "folder_cabinetDetailNewFolderName",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -53,7 +53,7 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "folder_cabinetDetailNewFolderRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -89,7 +89,7 @@
         "label": "docType_documentType",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "",
+        "placeholder": "common_selectOccupancyContent",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -103,9 +103,62 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "value": "Prospect Profile",
+            "label": "Prospect Profile"
+          },
+          {
+            "value": "Contract",
+            "label": "Contract"
+          },
+          {
+            "value": "Folder",
+            "label": "文件夹"
+          },
+          {
+            "value": "ContractFolder",
+            "label": "ContractFolder"
+          },
+          {
+            "value": "Prospects",
+            "label": "Prospects"
+          },
+          {
+            "value": "Pre-Sales",
+            "label": "Pre-Sales"
+          },
+          {
+            "value": "testfor64charartertestfor64charartertestfor64charartertestfor64",
+            "label": "testfor64charartertestfor64charartertestfor64charartertestfor64"
+          },
+          {
+            "value": "Case",
+            "label": "Case"
+          },
+          {
+            "value": "CountryAndRegion",
+            "label": "CountryAndRegion"
+          },
+          {
+            "value": "in_name",
+            "label": "in_name"
+          },
+          {
+            "value": "Customer",
+            "label": "Customer"
+          },
+          {
+            "value": "UiPath",
+            "label": "UiPath"
+          },
+          {
+            "value": "Prospect",
+            "label": "Prospect"
+          }
+        ],
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "folder_cabinetDocumentTypeRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -160,7 +213,7 @@
       "formItemFlag": true,
       "options": {
         "name": "allow",
-        "label": "allow",
+        "label": "folder_cabinetDetailNewFolderAllow",
         "labelAlign": "",
         "defaultValue": true,
         "columnWidth": "200px",
@@ -232,9 +285,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
