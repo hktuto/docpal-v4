@@ -4,7 +4,6 @@ const { loggedIn } = useAuth()
 const authReadyState = useAuthReadyState()
 
 const localeReady = ref(false)
-
 watch(loggedIn, (bool) => {
   if(bool) {
     // loadLocaleMessages(locale.value)

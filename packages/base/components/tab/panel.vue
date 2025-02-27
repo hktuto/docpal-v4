@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useEventBus, EventType } from 'eventbus'
 import type { TabPanel, TabItem } from '#imports';
 import {TabManagerKey, useDropable, menuKey} from '#imports'
 const hightLightPanel = useCurrentTargetPanel()
@@ -80,6 +81,17 @@ function backdropClick(index:number){
     panelTabFocus(panel.id, index);
 }
 
+const isTabNormal = ref(true)
+
+const zoomBus = useEventBus(EventType.TABLE_ZOOM_MAX)
+zoomBus.on((type) => {
+    isTabNormal.value = false
+})
+const zoomRevertBus = useEventBus(EventType.TABLE_ZOOM_REVERT)
+zoomRevertBus.on((type) => {
+    isTabNormal.value = true
+})
+
 const prefixClass = computed(() => {
     return `tabPanelActionsContainer panel-prefix-${panel-0-header-prefix}`
 })
@@ -103,7 +115,7 @@ const prefixClass = computed(() => {
         </TabHeaderList>
         
         <div ref="elRef" :data-tab-id="panel.id"  :class="{
-                tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true
+                tabBody:true, [dragState.type]:true, [(dragState as any).closestEdge as string]:true, isTabNormal
             }">
             <div v-for="(tab,index) in panel.tabs" :key="tab.id" :id="panel.id + '_' + tab.id" class="tabContent" :hidden="index !== panel.showingTabIndex" @click="backdropClick(index)">
 
@@ -127,6 +139,7 @@ const prefixClass = computed(() => {
     opacity: 1;
     --tab-item-border-color: rgba(255,255,255,0);
     background: var(--app-grey-1000);
+    
     &.activePanel{
         :deep(.tabItem.showing) {
             --tab-item-border-color: var(--app-success-4)
@@ -139,7 +152,10 @@ const prefixClass = computed(() => {
     height:100%;
     overflow: hidden;
     position: relative;
-    transform: scale(1);
+    
+    &.normal{
+        transform: scale(1);
+    }
 }
 .tabContent {
     container-type: inline-size;
