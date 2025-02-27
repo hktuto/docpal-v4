@@ -7,7 +7,9 @@ const emits = defineEmits(['ready'])
 import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
 import enUS from 'vxe-table/lib/locale/lang/en-US'
 import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
-
+import enJson from 'deployment/src/en-US.json'
+import zhJson from 'deployment/src/zh-CN.json'
+import zhHKJson from 'deployment/src/zh-HK.json'
 
 async function getTabsFromServer() {
     // check if new tab
@@ -93,7 +95,7 @@ async function getLocale(){
             }) as any
         clientJson = JSON.parse(clientData[0].languageContent)
     }else{
-        clientJson = locale.value === 'en-US' ? config.public.enJson : locale.value === 'zh-CN' ? config.public.zhJson : config.public.zhHKJson
+        clientJson = locale.value === 'en-US' ? enJson : locale.value === 'zh-CN' ? zhJson : zhHKJson
         // const jsonFile = await fetch(`/defaultLang/${code}.json`).then(res => res.json())
         // clientJson = jsonFile
     }
