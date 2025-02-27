@@ -27,6 +27,7 @@ const config = {
   ],
   
   runtimeConfig:{
+    
     public:{
       enJson : process.env.NODE_ENV !== 'production' ? enJson : "",
       zhJson : process.env.NODE_ENV !== 'production' ? zhJson : "",
