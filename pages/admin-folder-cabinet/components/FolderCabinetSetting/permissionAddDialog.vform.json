@@ -7,10 +7,10 @@
       "formItemFlag": true,
       "options": {
         "name": "userId",
-        "label": "rightDetail_userGroup",
+        "label": "user_UserAndUserGroupMultiSelect",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "",
+        "placeholder": "common_selectOccupancyContent",
         "prefixIcon": "",
         "columnWidth": "200px",
         "size": "",
@@ -27,7 +27,7 @@
         "multipleLimit": 0,
         "optionItems": [],
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "user_UserAndUserGroupRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -54,7 +54,7 @@
         "label": "dpTable_right",
         "labelAlign": "",
         "defaultValue": "Everything",
-        "placeholder": "",
+        "placeholder": "common_selectOccupancyContent",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -83,7 +83,7 @@
           }
         ],
         "required": true,
-        "requiredHint": "",
+        "requiredHint": "folder_cabinetDetailRightRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -121,11 +121,11 @@
         "hidden": false,
         "optionItems": [
           {
-            "label": "Permanent",
+            "label": "永久",
             "value": "permanent"
           },
           {
-            "label": "Limited",
+            "label": "有限",
             "value": "dateBase"
           }
         ],
@@ -164,7 +164,7 @@
         "labelHidden": false,
         "readonly": false,
         "disabled": false,
-        "hidden": true,
+        "hidden": false,
         "clearable": true,
         "editable": true,
         "format": "YYYY-MM-DD HH:mm",
@@ -173,8 +173,8 @@
           "2000-01-01 00:00:00",
           "2000-01-01 23:59:00"
         ],
-        "required": false,
-        "requiredHint": "",
+        "required": true,
+        "requiredHint": "folder_cabinetDetailDateRangeRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -207,9 +207,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
