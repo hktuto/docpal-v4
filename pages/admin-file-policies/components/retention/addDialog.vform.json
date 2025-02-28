@@ -34,7 +34,7 @@
                 "clearable": true,
                 "showPassword": false,
                 "required": true,
-                "requiredHint": "",
+                "requiredHint": "filePolicies_RetentionPolicyRequiredMsg",
                 "validation": "",
                 "validationHint": "",
                 "customClass": [],
@@ -104,9 +104,9 @@
                 "clearable": true,
                 "showPassword": false,
                 "required": true,
-                "requiredHint": "",
+                "requiredHint": "filePolicies_RetentionPolicyPeriodRequiredMsg",
                 "validation": "number",
-                "validationHint": "",
+                "validationHint": "filePolicies_RetentionPolicyPeriodOnlyRequiredMsg",
                 "customClass": [],
                 "labelIconClass": null,
                 "labelIconPosition": "rear",
@@ -339,9 +339,9 @@
                 "clearable": true,
                 "showPassword": false,
                 "required": true,
-                "requiredHint": "",
+                "requiredHint": "filePolicies_RetentionPolicyDaysDelayedRequiredMsg",
                 "validation": "number",
-                "validationHint": "",
+                "validationHint": "filePolicies_RetentionPolicyDelayDaysOnlyRequiredMsg",
                 "customClass": [
                   "opacityLabel"
                 ],
@@ -375,10 +375,10 @@
               "formItemFlag": true,
               "options": {
                 "name": "approvalId",
-                "label": "approvedBy",
+                "label": "filePolicies_RetentionPolicyApproved",
                 "labelAlign": "",
                 "defaultValue": "",
-                "placeholder": "",
+                "placeholder": "common_selectOccupancyContent",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -392,7 +392,140 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [],
+                "optionItems": [
+                  {
+                    "label": "Administrator",
+                    "value": "Administrator"
+                  },
+                  {
+                    "label": "create_test",
+                    "value": "create_test"
+                  },
+                  {
+                    "label": "demo_account",
+                    "value": "demo_account"
+                  },
+                  {
+                    "label": "demo_director",
+                    "value": "demo_director"
+                  },
+                  {
+                    "label": "demo_head",
+                    "value": "demo_head"
+                  },
+                  {
+                    "label": "demo_user",
+                    "value": "demo_user"
+                  },
+                  {
+                    "label": "docpaladmin",
+                    "value": "docpaladmin"
+                  },
+                  {
+                    "label": "entityType",
+                    "value": "entityType"
+                  },
+                  {
+                    "label": "everything",
+                    "value": "everything"
+                  },
+                  {
+                    "label": "frank_yang",
+                    "value": "frank_yang"
+                  },
+                  {
+                    "label": "ikki_cheng",
+                    "value": "ikki_cheng"
+                  },
+                  {
+                    "label": "jack_li",
+                    "value": "jack_li"
+                  },
+                  {
+                    "label": "jack_li2",
+                    "value": "jack_li2"
+                  },
+                  {
+                    "label": "Jay_Cai",
+                    "value": "Jay_Cai"
+                  },
+                  {
+                    "label": "Jay.Cai",
+                    "value": "Jay.Cai"
+                  },
+                  {
+                    "label": "Joshua",
+                    "value": "Joshua"
+                  },
+                  {
+                    "label": "Lyle",
+                    "value": "Lyle"
+                  },
+                  {
+                    "label": "nine",
+                    "value": "nine"
+                  },
+                  {
+                    "label": "ninerabbit",
+                    "value": "ninerabbit"
+                  },
+                  {
+                    "label": "nissin",
+                    "value": "nissin"
+                  },
+                  {
+                    "label": "ooyy",
+                    "value": "ooyy"
+                  },
+                  {
+                    "label": "ooyy1",
+                    "value": "ooyy1"
+                  },
+                  {
+                    "label": "readonly",
+                    "value": "readonly"
+                  },
+                  {
+                    "label": "readwrite",
+                    "value": "readwrite"
+                  },
+                  {
+                    "label": "rh",
+                    "value": "rh"
+                  },
+                  {
+                    "label": "Rh_Admin",
+                    "value": "Rh_Admin"
+                  },
+                  {
+                    "label": "royhoo",
+                    "value": "royhoo"
+                  },
+                  {
+                    "label": "sales_manager",
+                    "value": "sales_manager"
+                  },
+                  {
+                    "label": "sean-admin",
+                    "value": "sean-admin"
+                  },
+                  {
+                    "label": "sean-client",
+                    "value": "sean-client"
+                  },
+                  {
+                    "label": "Shawn_Fang",
+                    "value": "Shawn_Fang"
+                  },
+                  {
+                    "label": "will_du",
+                    "value": "will_du"
+                  },
+                  {
+                    "label": "willl",
+                    "value": "willl"
+                  }
+                ],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -440,7 +573,7 @@
               "formItemFlag": false,
               "options": {
                 "name": "documentTypeText",
-                "label": "dpTable_documentType",
+                "label": "filePolicies_RetentionPolicyCreateDocumentType",
                 "columnWidth": "200px",
                 "direction": "horizontal",
                 "contentPosition": "left",
@@ -467,7 +600,7 @@
                     "label": "dpTable_triggleMeta",
                     "labelAlign": "label-left-align",
                     "defaultValue": "",
-                    "placeholder": "",
+                    "placeholder": "common_selectOccupancyContent",
                     "columnWidth": "200px",
                     "size": "",
                     "labelWidth": null,
@@ -483,7 +616,7 @@
                     "multipleLimit": 0,
                     "optionItems": [],
                     "required": true,
-                    "requiredHint": "",
+                    "requiredHint": "filePolicies_RetentionPolicyTriggeringRequiredMsg",
                     "validation": "",
                     "validationHint": "",
                     "customClass": [],
@@ -510,7 +643,7 @@
                     "label": "dpTable_documentType",
                     "labelAlign": "label-left-align",
                     "defaultValue": "",
-                    "placeholder": "",
+                    "placeholder": "common_selectOccupancyContent",
                     "columnWidth": "200px",
                     "size": "",
                     "labelWidth": null,
@@ -526,7 +659,7 @@
                     "multipleLimit": 0,
                     "optionItems": [],
                     "required": true,
-                    "requiredHint": "",
+                    "requiredHint": "folder_cabinetDocumentTypeRequiredMsg",
                     "validation": "",
                     "validationHint": "",
                     "customClass": [],
@@ -567,7 +700,7 @@
               "formItemFlag": false,
               "options": {
                 "name": "divider94244",
-                "label": "event",
+                "label": "filePolicies_RetentionPolicyCreateEvent",
                 "columnWidth": "200px",
                 "direction": "horizontal",
                 "contentPosition": "left",
@@ -608,9 +741,9 @@
                     "clearable": true,
                     "showPassword": false,
                     "required": true,
-                    "requiredHint": "",
+                    "requiredHint": "filePolicies_RetentionPolicyExtendRetentionRequiredMsg",
                     "validation": "number",
-                    "validationHint": "",
+                    "validationHint": "filePolicies_RetentionPolicyExtendRetentionOnlyRequiredMsg",
                     "customClass": [],
                     "labelIconClass": null,
                     "labelIconPosition": "rear",
@@ -657,7 +790,7 @@
                     "clearable": true,
                     "showPassword": false,
                     "required": true,
-                    "requiredHint": "",
+                    "requiredHint": "filePolicies_RetentionPolicyLabelRequiredMsg",
                     "validation": "",
                     "validationHint": "",
                     "customClass": [],
@@ -693,8 +826,8 @@
                     "name": "eventType",
                     "label": "rp.eventType",
                     "labelAlign": "label-left-align",
-                    "defaultValue": "",
-                    "placeholder": "",
+                    "defaultValue": "now",
+                    "placeholder": "common_selectOccupancyContent",
                     "columnWidth": "200px",
                     "size": "",
                     "labelWidth": null,
@@ -719,7 +852,7 @@
                       }
                     ],
                     "required": true,
-                    "requiredHint": "",
+                    "requiredHint": "filePolicies_RetentionPolicyEventRequiredMsg",
                     "validation": "",
                     "validationHint": "",
                     "customClass": [],

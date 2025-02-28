@@ -30,7 +30,7 @@
   "PENDING": "待辦",
   "PENDING_FOR_SENDING_MESSAGE": "等待發送消息",
   "Simple Vocabulary": "簡單型",
-  "User": "用戶",
+  "User": "使用者",
   "VirtualFolder_Customer": "Customer",
   "VirtualFolder_VirtualFolder": "虛擬文件夾",
   "VirtualFolder_VirtualFolderSetting": "虛擬文件夾設置",
@@ -70,7 +70,7 @@
   },
   "admin": {
     "setting": {
-      "title": " "
+      "title": "設定"
     }
   },
   "adminMenu": {
@@ -133,8 +133,7 @@
     "workflowRetry": "工作流程重試"
   },
   "adminSetting": {
-    "globalGeneralConfiguration": "全域通用配置",
-    "metaDateFormat": "日期格式"
+    "globalGeneralConfiguration": "全域通用配置"
   },
   "admin_admin": "管理",
   "admin_watermark_color": "顏色",
@@ -541,6 +540,7 @@
     "valueKey": "选中值字段"
   },
   "dataVerificationResult": "數據驗證結果",
+  "date_format": "日期格式",
   "deleteDocument_cancelText": "取消",
   "deleteDocument_confirmText": "確定",
   "deleteDocument_content": "這是一段消息確認",
@@ -1341,6 +1341,27 @@
     "onlyAccept": "只接受"
   },
   "fileModifiedDate_label": "檔案修改日期",
+  "filePolicies_PolicyStatus": "",
+  "filePolicies_RetentionPolicyActivate": "",
+  "filePolicies_RetentionPolicyApproved": "",
+  "filePolicies_RetentionPolicyCreate": "",
+  "filePolicies_RetentionPolicyCreateDocumentType": "",
+  "filePolicies_RetentionPolicyCreateEvent": "",
+  "filePolicies_RetentionPolicyCreateSuccessMsg": "",
+  "filePolicies_RetentionPolicyDaysDelayedRequiredMsg": "",
+  "filePolicies_RetentionPolicyDelayDaysOnlyRequiredMsg": "",
+  "filePolicies_RetentionPolicyDelete": "",
+  "filePolicies_RetentionPolicyEdit": "",
+  "filePolicies_RetentionPolicyEventRequiredMsg": "",
+  "filePolicies_RetentionPolicyExtendRetentionOnlyRequiredMsg": "",
+  "filePolicies_RetentionPolicyExtendRetentionRequiredMsg": "",
+  "filePolicies_RetentionPolicyInactivate": "",
+  "filePolicies_RetentionPolicyLabelRequiredMsg": "",
+  "filePolicies_RetentionPolicyPeriodOnlyRequiredMsg": "",
+  "filePolicies_RetentionPolicyPeriodRequiredMsg": "",
+  "filePolicies_RetentionPolicyRequiredMsg": "",
+  "filePolicies_RetentionPolicyTriggeringRequiredMsg": "",
+  "filePolicies_tableFilterMsg": "",
   "filePopover_OCRLanguages": "OCR 語言",
   "filePopover_batchTip": "批量更新選定項目",
   "filePopover_changeDocType": "更改文檔類型",
@@ -1755,6 +1776,7 @@
       "confirm": "确定",
       "datePlaceholder": "选择日期",
       "deleteSubFormRow": "删除行",
+      "deleteSubFormRowLabel": "是否刪除選取行： {label}?",
       "downloadFile": "下载",
       "endDatePlaceholder": "結束日期",
       "endTimePlaceholder": "截止时间",
@@ -2235,7 +2257,7 @@
   "userSetting_uiSize": "用戶界面尺寸",
   "userTip": {
     "confirmWhetherToDelete": "您確定要刪除此使用者 {username}嗎？<br>此操作無法撤銷",
-    "confirmWhetherToDeleteItems": "您確定要刪除選取的使用者嗎？\r\n此動作無法撤銷",
+    "confirmWhetherToDeleteItems": "您確定要刪除選取的使用者嗎？<br>此動作無法撤銷",
     "noValidGroups": "[{groupIds}]：無法刪除",
     "operationFailed": "[{users}]: 操作失敗",
     "userSelectedDeleteMsg": "選取的使用者已被永久刪除"
@@ -2255,7 +2277,7 @@
   "user_company": "公司",
   "user_confirmPasswordIsRequired": "必須輸入確認密碼",
   "user_createdSuccessMsg": "新使用者 {username} 已成功建立",
-  "user_editGroup": "編輯組",
+  "user_editGroup": "編輯使用者群組",
   "user_editPassword": "修改密碼",
   "user_editUser": "編輯使用者資訊",
   "user_email": "電子郵件",
@@ -2280,11 +2302,11 @@
   "user_passwordIsRequired": "密碼為必填項目",
   "user_pleaseInputTheCorrectEmail": "請輸入正確的郵箱地址",
   "user_removeGroupsSuccessMsg": "",
-  "user_status": " ",
+  "user_status": "使用者狀態",
   "user_updateGroupSuccessMsg": " ",
   "user_updatePassword": "修改密碼",
   "user_userGroupAssignment": "使用者群組指派",
-  "user_userGroupAssignmentMsg": "使用者群組為必填項目\r\n必須選擇一個或多個使用者群組",
+  "user_userGroupAssignmentMsg": "使用者群組為必填項目. 必須選擇一個或多個使用者群組",
   "user_userGroupDeletedSuccessMsg": " ",
   "user_userGroupIdentifer": "使用者群組标识符",
   "user_userGroupName": "使用者群組名稱",
@@ -2314,6 +2336,681 @@
   "vocabulary_create": "創建詞彙",
   "vocabulary_obsolete": " 過時",
   "vocabulary_tableCreationPolicy": "表創建策略",
+  "vxe": {
+    "alert": {
+      "title": "系統提示"
+    },
+    "base": {
+      "comma": "，",
+      "fullStop": "。",
+      "pleaseInput": "請輸入",
+      "pleaseSelect": "請選擇"
+    },
+    "button": {
+      "cancel": "取消",
+      "confirm": "確認"
+    },
+    "countdown": {
+      "formats": {
+        "HH": "時",
+        "MM": "月",
+        "dd": "天",
+        "mm": "分",
+        "ss": "秒",
+        "yyyy": "年"
+      }
+    },
+    "custom": {
+      "cstmCancel": "取消",
+      "cstmConfirm": "確定",
+      "cstmConfirmRestore": "請確認是否恢復成預設列配置？",
+      "cstmDragTarget": "移動：{0}",
+      "cstmRestore": "恢復預設",
+      "cstmTitle": "列設定",
+      "setting": {
+        "colFixed": "凍結列",
+        "colFixedMax": "凍結列（最多 {0} 列）",
+        "colResizable": "列寬（像素）",
+        "colSort": "排序",
+        "colTitle": "標題",
+        "colVisible": "是否顯示",
+        "fixedLeft": "左側",
+        "fixedRight": "右側",
+        "fixedUnset": "不設定",
+        "sortHelpTip": "點擊並拖曳圖示可以調整列的排序"
+      }
+    },
+    "drawer": {
+      "close": "關閉"
+    },
+    "empty": {
+      "defText": "暂无数据"
+    },
+    "error": {
+      "barUnableLink": "工具列無法關聯表格",
+      "checkProp": "當資料量過大時可能會導致複選框卡頓，建議設定參數 \"{0}\" 提升渲染速度",
+      "colRepet": "column.{0}=\"{1}\" 重複了，這可能會導致某些功能無法使用",
+      "coverProp": "\"{0}\" 的參數 \"{1}\" 重複定義，這可能會出現錯誤",
+      "delEvent": "事件 \"{0}\" 已廢棄，請使用 \"{1}\"",
+      "delFunc": "方法 \"{0}\" 已廢棄，請使用 \"{1}\"",
+      "delProp": "參數 \"{0}\" 已廢棄，請使用 \"{1}\"",
+      "downErr": "下載失敗",
+      "emptyProp": "參數 \"{0}\" 不允許為空",
+      "errConflicts": "參數 \"{0}\" 與 \"{1}\" 有衝突",
+      "errFormat": "全域的格式化內容應該使用 \"VXETable.formats\" 定義，掛載 \"formatter={0}\" 的方式已不建議使用",
+      "errFunc": "參數 \"{0}\" 不是一個方法",
+      "errProp": "不支援的參數 \"{0}\"，可能為 \"{1}\"",
+      "expandContent": "展開行的插槽應該是 \"content\"，請檢查是否正確",
+      "groupFixed": "如果使用分組表頭，凍結列必須按組設置",
+      "groupMouseRange": "分組表頭與 \"{0}\" 不能同時使用，這可能會出現錯誤",
+      "groupTag": "分組列頭應該使用 \"{0}\" 而不是 \"{1}\"，這可能會出現錯誤",
+      "impFields": "匯入失敗，請檢查欄位名稱和資料格式是否正確",
+      "noTree": "樹結構不支援 \"{0}\"",
+      "notCommands": "全域指令 \"{0}\" 不存在",
+      "notExp": "該瀏覽器不支援匯入/匯出功能",
+      "notFormats": "全域格式化 \"{0}\" 不存在",
+      "notFunc": "方法 \"{0}\" 不存在",
+      "notProp": "不支援的參數 \"{0}\"",
+      "notSlot": "插槽 \"{0}\" 不存在",
+      "notType": "不支援的文件類型 \"{0}\"",
+      "notValidators": "全域校驗 \"{0}\" 不存在",
+      "removeProp": "參數 \"{0}\" 已廢棄，不建議使用，這可能會導致錯誤",
+      "repeatKey": "主键重复 {0}=\"{1}\"，这可能会出现错误",
+      "reqComp": "缺少 \"{0}\" 元件，請檢查是否已正確安裝。 https://vxeui.com/#/start/useGlobal",
+      "reqModule": "缺少 \"{0}\" 模組",
+      "reqProp": "缺少必要的 \"{0}\" 參數，這可能會導致錯誤",
+      "scrollErrProp": "啟用虛擬滾動後不支援此參數 \"{0}\"",
+      "treeNotImp": "樹表格不支援導入",
+      "unableInsert": "無法插入指定位置，請檢查參數是否正確",
+      "uniField": "欄位名稱 \"{0}\" 重複定義，這可能會出現錯誤",
+      "useErr": "安裝 \"{0}\" 模組時發生錯誤，可能順序不正確，依賴的模組需要在 Table 之前安裝"
+    },
+    "export": {
+      "expAllExpandTitle": "如果存在，則支援將帶有層級結構的資料全部展開",
+      "expCancel": "取消",
+      "expColgroupTitle": "如果存在，則支援帶有分組結構的表頭",
+      "expColumn": "選擇字段",
+      "expConfirm": "匯出",
+      "expCurrentColumn": "全部字段",
+      "expFooterTitle": "是否需要表尾",
+      "expHeaderTitle": "是否需要表頭",
+      "expMergeTitle": "如果存在，則支援帶有合併結構的儲存格",
+      "expMode": "選擇數據",
+      "expName": "檔案名稱",
+      "expNamePlaceholder": "請輸入檔案名稱",
+      "expOptAllExpand": "展開層級",
+      "expOptColgroup": "分組表頭",
+      "expOptFooter": "表尾",
+      "expOptHeader": "表頭",
+      "expOptMerge": "合併",
+      "expOptOriginal": "來源資料",
+      "expOptUseStyle": "樣式",
+      "expOpts": "參數設定",
+      "expOriginalTitle": "如果為來源數據，則支援匯入到表格中",
+      "expPrint": "列印",
+      "expSheetName": "標題",
+      "expSheetNamePlaceholder": "請輸入標題",
+      "expTitle": "匯出數據",
+      "expType": "保存類型",
+      "expUseStyleTitle": "如果存在，則支援帶有樣式的儲存格",
+      "modes": {
+        "all": "全量資料（包括所有分頁的資料）",
+        "current": "目前數據（當前頁的數據）",
+        "selected": "選取資料（目前頁選取的資料）"
+      },
+      "printTitle": "列印數據",
+      "types": {
+        "csv": "CSV (逗號分隔)(*.csv)",
+        "html": "網頁(*.html)",
+        "pdf": "PDF (*.pdf)",
+        "txt": "文字檔案(製表符分隔)(*.txt)",
+        "xls": "Excel 97-2003 工作簿(*.xls)",
+        "xlsx": "Excel 工作簿(*.xlsx)",
+        "xml": "XML 資料(*.xml)"
+      }
+    },
+    "filter": {
+      "search": "搜尋"
+    },
+    "form": {
+      "folding": "收起",
+      "unfolding": "展開"
+    },
+    "formDesign": {
+      "defFormTitle": "未命名的表單",
+      "error": {
+        "wdFormUni": "此類型的控制項在表單中只允許新增一個",
+        "wdSubUni": "此類型的控制項在子表中只允許新增一個"
+      },
+      "formName": "表單名稱",
+      "styleSetting": {
+        "alignLeft": "居左",
+        "alignRight": "居右",
+        "alignTitle": "對齊方式",
+        "boldTitle": "標題加粗",
+        "btn": "樣式設定",
+        "colonHidden": "隱藏",
+        "colonTitle": "顯示冒號",
+        "colonVisible": "顯示",
+        "fontBold": "加粗",
+        "fontNormal": "常規",
+        "horizontalLayout": "橫向佈局",
+        "layoutTitle": "控制佈局",
+        "styleTitle": "標題樣式",
+        "title": "表單的樣式設定",
+        "unitPct": "百分比",
+        "unitPx": "像素",
+        "verticalLayout": "上下佈局",
+        "widthTitle": "標題寬度"
+      },
+      "widget": {
+        "component": {
+          "VxeCheckboxGroup": "複選框",
+          "VxeDatePicker": "日期",
+          "VxeInput": "輸入框",
+          "VxeNumberInput": "數位",
+          "VxeRadioGroup": "單選框",
+          "VxeRate": "评分",
+          "VxeSelect": "下拉選擇",
+          "VxeSlider": "滑块",
+          "VxeSwitch": "是/否",
+          "VxeTextarea": "文字域",
+          "VxeTreeSelect": "樹形選擇",
+          "VxeUploadFile": "文件",
+          "VxeUploadImage": "圖片",
+          "input": "輸入框",
+          "row": "一行多列",
+          "select": "下拉選擇",
+          "subtable": "子表",
+          "text": "文字",
+          "textarea": "文字域",
+          "title": "標題"
+        },
+        "copyTitle": "副本_{0}",
+        "group": {
+          "advanced": "進階控制",
+          "base": "基礎控件",
+          "chart": "圖表控件",
+          "layout": "佈局控制項",
+          "module": "模組控件",
+          "system": "系統控制項"
+        }
+      },
+      "widgetFormTab": "表單屬性",
+      "widgetProp": {
+        "dataSource": {
+          "addOption": "新增選項",
+          "batchEditOption": "批次編輯",
+          "batchEditSubTip": "每行對應一個選項，如果是分組，子項可以是空格或製表鍵開頭，支援從表格、Excel、WPS 直接複製貼上。",
+          "batchEditTip": "每行對應一個選項，支援從表格、Excel、WPS 直接複製貼上。",
+          "buildOption": "生成選項",
+          "defValue": "選項{0}",
+          "name": "資料來源"
+        },
+        "displaySetting": {
+          "hidden": "隱藏",
+          "mobile": "手機端",
+          "name": "顯示設定",
+          "pc": "電腦端",
+          "visible": "顯示"
+        },
+        "multiple": "允許多選",
+        "name": "控制項名稱",
+        "placeholder": "提示語",
+        "required": "必填校驗",
+        "rowProp": {
+          "col2": "兩列",
+          "col3": "三列",
+          "col4": "四列",
+          "col6": "六列",
+          "colSize": "列數",
+          "layout": "佈局"
+        },
+        "subtableProp": {
+          "colPlace": "將控件拖曳進來",
+          "errSubDrag": "子表不支援該控件，請使用其他控件",
+          "seqTitle": "序號",
+          "showCheckbox": "允許多選",
+          "showSeq": "顯示序號"
+        },
+        "textProp": {
+          "alignCenter": "居中",
+          "alignLeft": "居左",
+          "alignRight": "居右",
+          "alignTitle": "對齊方式",
+          "boldTitle": "字體加粗",
+          "colorTitle": "字體顏色",
+          "fontBold": "加粗",
+          "fontNormal": "常規",
+          "name": "內容",
+          "sizeTitle": "字體大小"
+        },
+        "uploadProp": {
+          "limitFileCount": "文件數量限制",
+          "limitFileSize": "檔案大小限制",
+          "limitImgCount": "圖片數量限制",
+          "limitImgSize": "圖片大小限制",
+          "multiFile": "允許上傳多個文件",
+          "multiImg": "允許上傳多張圖片"
+        }
+      },
+      "widgetPropTab": "控制項屬性"
+    },
+    "grid": {
+      "dataUnchanged": "數據未改動！",
+      "delSuccess": "成功刪除所選記錄！",
+      "deleteSelectRecord": "您確定要刪除所選記錄嗎？",
+      "operError": "發生錯誤，操作失敗！",
+      "removeSelectRecord": "您確定要移除所選記錄嗎？",
+      "saveSuccess": "保存成功！",
+      "selectOneRecord": "請至少選擇一筆記錄！"
+    },
+    "imagePreview": {
+      "operBtn": {
+        "download": "點擊下載圖片",
+        "pct11": "顯示原始尺寸",
+        "pctFull": "等比例縮放",
+        "print": "點擊列印圖片",
+        "rotateLeft": "向左旋轉",
+        "rotateRight": "向右旋轉",
+        "zoomIn": "放大",
+        "zoomOut": "縮小"
+      },
+      "popupTitle": "預覽"
+    },
+    "import": {
+      "impCancel": "取消",
+      "impConfirm": "導入",
+      "impFile": "檔案名稱",
+      "impMode": "導入模式",
+      "impOpts": "參數設定",
+      "impSelect": "選擇文件",
+      "impTitle": "導入數據",
+      "impType": "文件類型",
+      "modes": {
+        "covering": "覆蓋方式（直接覆蓋表格資料）",
+        "insert": "底部追加（在表格的底部追加新資料）",
+        "insertBottom": "底部追加（在表格的底部追加新資料）",
+        "insertTop": "頂部追加（在表格的頂部追加新資料）"
+      }
+    },
+    "input": {
+      "date": {
+        "dayLabel": "{0} 年 {1}",
+        "labelFormat": {
+          "date": "yyyy-MM-dd",
+          "datetime": "yyyy-MM-dd HH:mm:ss",
+          "month": "yyyy-MM",
+          "quarter": "yyyy 年第 q 季度",
+          "time": "HH:mm:ss",
+          "week": "yyyy 年 WW 週",
+          "year": "yyyy"
+        },
+        "m1": "01 月",
+        "m10": "10 月",
+        "m11": "11 月",
+        "m12": "12 月",
+        "m2": "02 月",
+        "m3": "03 月",
+        "m4": "04 月",
+        "m5": "05 月",
+        "m6": "06 月",
+        "m7": "07 月",
+        "m8": "08 月",
+        "m9": "09 月",
+        "monthLabel": "{0} 年",
+        "months": {
+          "m0": "一月",
+          "m1": "二月",
+          "m10": "十一月",
+          "m11": "十二月",
+          "m2": "三月",
+          "m3": "四月",
+          "m4": "五月",
+          "m5": "六月",
+          "m6": "七月",
+          "m7": "八月",
+          "m8": "九月",
+          "m9": "十月"
+        },
+        "quarterLabel": "{0} 年",
+        "quarters": {
+          "q1": "第一季",
+          "q2": "第二季",
+          "q3": "第三季",
+          "q4": "第四季"
+        },
+        "weeks": {
+          "w": "週",
+          "w0": "週日",
+          "w1": "週一",
+          "w2": "週二",
+          "w3": "週三",
+          "w4": "週四",
+          "w5": "週五",
+          "w6": "週六"
+        }
+      }
+    },
+    "listDesign": {
+      "activeBtn": {
+        "ActionButtonDelete": "刪除",
+        "ActionButtonUpdate": "編輯"
+      },
+      "fieldSettingTab": "字段設定",
+      "listField": "列表字段",
+      "listSettingTab": "參數設定",
+      "listTitle": "列表字段",
+      "search": {
+        "addBtn": "編輯",
+        "editPopupTitle": "編輯查詢字段",
+        "emptyText": "未配置查詢條件"
+      },
+      "searchField": "查詢字段",
+      "searchPopup": {
+        "colTitle": "標題",
+        "saveBtn": "儲存"
+      },
+      "searchTitle": "查詢條件"
+    },
+    "loading": {
+      "text": "載入中..."
+    },
+    "modal": {
+      "close": "關閉",
+      "errTitle": "錯誤提示",
+      "footPropErr": "show-footer 仅用于启用表尾，需配合 show-confirm-button | show-cancel-button | 插槽使用",
+      "miniMaxSize": "最小化視窗的數量不能超過 {0} 個",
+      "zoomIn": "最大化",
+      "zoomMin": "最小化",
+      "zoomOut": "還原"
+    },
+    "pager": {
+      "endPage": "末頁",
+      "endPageTitle": "末頁",
+      "goto": "前往",
+      "gotoTitle": "頁數",
+      "homePage": "首頁",
+      "homePageTitle": "首頁",
+      "nextJump": "向下跳頁",
+      "nextJumpTitle": "向下跳頁",
+      "nextPage": "下一頁",
+      "nextPageTitle": "下一頁",
+      "pageClassifier": "頁",
+      "pagesize": "{0}條/頁",
+      "prevJump": "向上跳頁",
+      "prevJumpTitle": "向上跳頁",
+      "prevPage": "上一頁",
+      "prevPageTitle": "上一頁",
+      "total": "共 {0} 筆記錄"
+    },
+    "plugins": {
+      "extendCellArea": {
+        "area": {
+          "cpInvalidErr": "此操作無法進行，您選擇的區域中存在被禁止的列（{0}）",
+          "extendErr": "若延伸的區域包含被合併的儲存格，所有合併的儲存格需大小相同",
+          "mergeErr": "無法對合併儲存格進行該操作",
+          "multiErr": "無法對多重選擇區域進行此操作",
+          "pasteMultiErr": "無法貼上，需要相同大小的複製的區域和貼上的區域才能執行此操作",
+          "selectErr": "无法操作指定区域的单元格"
+        },
+        "fnr": {
+          "btns": {
+            "cancel": "取消",
+            "findAll": "找全部",
+            "findNext": "尋找下一個",
+            "replace": "替換",
+            "replaceAll": "替換全部"
+          },
+          "empty": "(空值)",
+          "filter": {
+            "re": "正規表示式",
+            "sensitive": "區分大小寫",
+            "whole": "全詞匹配"
+          },
+          "findLabel": "尋找",
+          "findTitle": "尋找內容：",
+          "header": {
+            "cell": "單元格",
+            "seq": "#",
+            "value": "值"
+          },
+          "notCell": "找不到匹配的單元格",
+          "reError": "無效的正規表示式",
+          "recordCount": "已找到 {0} 個單元格",
+          "replaceLabel": "替換",
+          "replaceSuccess": "成功替換 {0} 個單元格",
+          "replaceTitle": "替換為：",
+          "tabs": {
+            "find": "尋找",
+            "replace": "替換"
+          },
+          "title": "尋找和替換"
+        }
+      },
+      "filterCombination": {
+        "cases": {
+          "begin": "開頭是",
+          "between": "介於",
+          "custom": "自訂篩選",
+          "endin": "結尾是",
+          "equal": "等於",
+          "exclude": "不包含",
+          "ge": "大於或等於",
+          "gt": "大於",
+          "include": "包含",
+          "insensitive": "不區分大小寫",
+          "isSensitive": "區分大小寫",
+          "le": "小於或等於",
+          "lt": "小於",
+          "notbegin": "開頭不是",
+          "notendin": "結尾不是",
+          "unequal": "不等於"
+        },
+        "empty": "(空白)",
+        "menus": {
+          "cancelFixed": "取消凍結",
+          "clearFilter": "清除篩選",
+          "clearSort": "清除排序",
+          "fixedColumn": "凍結列",
+          "fixedGroup": "凍結分組",
+          "fixedLeft": "凍結左側",
+          "fixedRight": "凍結右側",
+          "numberOption": "數值篩選",
+          "sortAsc": "升序",
+          "sortDesc": "降序",
+          "textOption": "文字篩選"
+        },
+        "notData": "無匹配項",
+        "popup": {
+          "and": "與",
+          "currColumnTitle": "目前列：",
+          "describeHtml": "可用 ? 代表單一字元<br/>用 * 代表任意多個字符",
+          "or": "或",
+          "title": "自訂篩選的方式"
+        }
+      },
+      "filterComplexInput": {
+        "cases": {
+          "begin": "開頭是",
+          "endin": "結尾是",
+          "equal": "等於",
+          "gt": "大於",
+          "include": "包含",
+          "isSensitive": "區分大小寫",
+          "lt": "小於"
+        },
+        "menus": {
+          "cancelFixed": "取消凍結",
+          "fixedColumn": "凍結列",
+          "fixedGroup": "凍結分組",
+          "fixedLeft": "凍結左側",
+          "fixedRight": "凍結右側"
+        }
+      }
+    },
+    "pro": {
+      "area": {
+        "extendErr": "若延伸的區域包含被合併的儲存格，所有合併的儲存格需大小相同",
+        "mergeErr": "無法對合併儲存格進行該操作",
+        "multiErr": "無法對多重選擇區域進行此操作",
+        "pasteMultiErr": "無法貼上，需要相同大小的複製的區域和貼上的區域才能執行此操作"
+      },
+      "fnr": {
+        "btns": {
+          "cancel": "取消",
+          "findAll": "找全部",
+          "findNext": "尋找下一個",
+          "replace": "替換",
+          "replaceAll": "替換全部"
+        },
+        "empty": "(空值)",
+        "filter": {
+          "re": "正規表示式",
+          "sensitive": "區分大小寫",
+          "whole": "全詞匹配"
+        },
+        "findLabel": "尋找",
+        "findTitle": "尋找內容：",
+        "header": {
+          "cell": "單元格",
+          "seq": "#",
+          "value": "值"
+        },
+        "notCell": "找不到匹配的單元格",
+        "reError": "無效的正規表示式",
+        "recordCount": "已找到 {0} 個單元格",
+        "replaceLabel": "替換",
+        "replaceSuccess": "成功替換 {0} 個單元格",
+        "replaceTitle": "替換為：",
+        "tabs": {
+          "find": "尋找",
+          "replace": "替換"
+        },
+        "title": "尋找和替換"
+      }
+    },
+    "renderer": {
+      "cases": {
+        "begin": "開頭是",
+        "between": "介於",
+        "custom": "自訂篩選",
+        "endin": "結尾是",
+        "equal": "等於",
+        "exclude": "不包含",
+        "ge": "大於或等於",
+        "gt": "大於",
+        "include": "包含",
+        "insensitive": "不區分大小寫",
+        "isSensitive": "區分大小寫",
+        "le": "小於或等於",
+        "lt": "小於",
+        "notbegin": "開頭不是",
+        "notendin": "結尾不是",
+        "unequal": "不等於"
+      },
+      "combination": {
+        "empty": "(空白)",
+        "menus": {
+          "cancelFixed": "取消冻结",
+          "clearFilter": "清除篩選",
+          "clearSort": "清除排序",
+          "fixedColumn": "冻结列",
+          "fixedGroup": "冻结分组",
+          "fixedLeft": "冻结到左侧",
+          "fixedRight": "冻结到右侧",
+          "numberOption": "數值篩選",
+          "sortAsc": "升序",
+          "sortDesc": "降序",
+          "textOption": "文字篩選"
+        },
+        "notData": "無匹配項",
+        "popup": {
+          "and": "與",
+          "currColumnTitle": "目前列：",
+          "describeHtml": "可用 ? 代表單一字元<br/>用 * 代表任意多個字符",
+          "or": "或",
+          "title": "自訂篩選的方式"
+        }
+      },
+      "search": "搜尋"
+    },
+    "select": {
+      "emptyText": "暫無數據",
+      "loadingText": "載入中",
+      "search": "搜尋"
+    },
+    "table": {
+      "actionTitle": "操作",
+      "allFilter": "全部",
+      "allTitle": "全選/取消",
+      "confirmFilter": "篩選",
+      "customAll": "全部",
+      "customCancel": "取消",
+      "customClose": "關閉",
+      "customConfirm": "確認",
+      "customRestore": "恢復預設",
+      "customTitle": "列設定",
+      "dragTip": "移动：{0}",
+      "emptyText": "暫無數據",
+      "expError": "导出失败",
+      "expFilename": "導出_{0}",
+      "expLoading": "正在匯出中",
+      "expOriginFilename": "匯出_來源_{0}",
+      "expSuccess": "匯出成功",
+      "filter": "對所選的列啟用篩選",
+      "impSuccess": "成功導入 {0} 筆記錄",
+      "maxFixedCol": "最大凍結列的數量不能超過 {0} 個",
+      "resetFilter": "重置",
+      "seqTitle": "序號",
+      "sortAsc": "升序：最低到最高",
+      "sortDesc": "降序：最高到最低"
+    },
+    "text": {
+      "copyError": "當前環境不支援該操作",
+      "copySuccess": "已複製到剪貼簿"
+    },
+    "toolbar": {
+      "cancelFixed": "取消凍結列",
+      "custom": "列設定",
+      "customAll": "全部",
+      "customConfirm": "確認",
+      "customRestore": "重置",
+      "export": "匯出",
+      "fixedLeft": "凍結在左側",
+      "fixedRight": "凍結在右側",
+      "import": "導入",
+      "print": "列印",
+      "refresh": "重新整理",
+      "zoomIn": "全螢幕",
+      "zoomOut": "還原"
+    },
+    "upload": {
+      "dragPlaceholder": "請把檔案拖放到這個區域即可上傳",
+      "fileBtnText": "點擊或拖曳上傳",
+      "fileCountHint": "最多可上傳{0}個文件",
+      "fileSizeHint": "單一檔案大小不超過{0}",
+      "fileTypeHint": "支援 {0} 文件類型",
+      "imgBtnText": "點擊或拖曳上傳",
+      "imgCountHint": "最多{0}張",
+      "imgSizeHint": "單張{0}",
+      "moreBtnText": "更多（{0}）",
+      "morePopup": {
+        "fileTitle": "上傳文件",
+        "imageTitle": "上傳圖片",
+        "readTitle": "查看列表"
+      },
+      "overCountErr": "最多只能選擇{0}個檔案！",
+      "overCountExtraErr": "已超出最大數量{0}個，超出的{1}個檔案將被忽略！",
+      "overSizeErr": "檔案大小最大不能超過{0}！",
+      "reUpload": "重新上傳",
+      "uploadErr": "上傳失敗",
+      "uploadProgress": "上傳中 {0}%",
+      "uploadSuccess": "上傳成功",
+      "uploadTypeErr": "文件类型不匹配！",
+      "viewItemTitle": "點擊查看"
+    }
+  },
   "watermark": {
     "watermark": "水印"
   },
