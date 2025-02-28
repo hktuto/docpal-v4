@@ -61,6 +61,9 @@ const {
             field: "documentPath", title: "folderCabinet.location",
         },
         {
+            field: "UserOrGroup", title: "folder_cabinetUserOrGroup",
+        },
+        {
             field: "documentType",
             title: "docType_documentType",
             formatter({cellValue}: any) {
