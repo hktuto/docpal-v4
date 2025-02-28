@@ -245,7 +245,8 @@
   "browse": {
     "selectedItem": "Selected {count} File/Folder",
     "uploadPosition": "Upload Position",
-    "uploadText": "Browse-Upload"
+    "uploadText": "Browse-Upload",
+    "confirmMoveFile": "Confirm to move {source} to {target} ?"
   },
   "browseFile": {
     "tempFile": "Temp"
