@@ -243,9 +243,9 @@
     "scanType": "扫描类型"
   },
   "browse": {
+    "selectedItem": "{count} 个文件/文件夹",
     "uploadPosition": "上传位置",
-    "uploadText": "浏览-上传",
-    "selectedItem": "{count} 个文件/文件夹"
+    "uploadText": "浏览-上传"
   },
   "browseFile": {
     "tempFile": "Temp"
@@ -936,6 +936,10 @@
   "docType_searchMeta": "虚拟文件资料",
   "docType_type": "类型",
   "docType_valueStored": "存储值",
+  "doc_typeSmartFolderCreateFolder": "",
+  "doc_typeSmartFolderFilter": "",
+  "doc_typeSmartFolderName": "",
+  "doc_typeSmartFolderUserOrGroup": "",
   "docpal_sharedocument_user": "内部分享",
   "download": "下載",
   "download_download": "下载",

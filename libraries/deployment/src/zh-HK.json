@@ -243,9 +243,9 @@
     "scanType": "掃描類型"
   },
   "browse": {
+    "selectedItem": "{count} 個檔案/資料夾",
     "uploadPosition": "上傳位置",
-    "uploadText": "瀏覽-上傳",
-    "selectedItem": "{count} 個檔案/資料夾"
+    "uploadText": "瀏覽-上傳"
   },
   "browseFile": {
     "tempFile": "Temp"
@@ -936,6 +936,10 @@
   "docType_searchMeta": "虛擬文件資料",
   "docType_type": "類型",
   "docType_valueStored": "存儲值",
+  "doc_typeSmartFolderCreateFolder": "",
+  "doc_typeSmartFolderFilter": "",
+  "doc_typeSmartFolderName": "",
+  "doc_typeSmartFolderUserOrGroup": "",
   "docpal_sharedocument_user": "内部分享",
   "download": "下載",
   "download_download": "下載",

@@ -180,6 +180,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
     }
 }
 
+// TODO
 async function deleteItem(id: string) {
     const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`,
         {
@@ -187,7 +188,7 @@ async function deleteItem(id: string) {
             confirmButtonText: t('common_confirmDelete')
         })
     if (action !== 'confirm') return
-    // await adminApi.api.deletePolicyRetentionsId(id)
+    await adminApi.api.deletePolicyRetentionsId(id)
     // query()
     routerProvider?.message.success(t('filePolicies_RetentionPolicyDeletedSuccessfullyMsg'));
 }
