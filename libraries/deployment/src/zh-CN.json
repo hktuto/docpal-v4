@@ -245,7 +245,8 @@
   "browse": {
     "selectedItem": "{count} 个文件/文件夹",
     "uploadPosition": "上传位置",
-    "uploadText": "浏览-上传"
+    "uploadText": "浏览-上传",
+    "confirmMoveFile": "确认将 {source} 移动到 {target} 吗？"
   },
   "browseFile": {
     "tempFile": "Temp"
