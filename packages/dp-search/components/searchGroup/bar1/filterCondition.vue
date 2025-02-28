@@ -5,7 +5,7 @@
   </div>
   <div v-show="mode === 'edit'">
     <div v-for="(item, index) in qItem.matchs" :key="item.id">
-      <FormRenderer :ref="el => FormRendererRef[item.id] = el" :form-json="formJson" 
+      <FormRenderer :ref="el => FormRendererRef[item.id] = el" :form-json="formJson"
         @selectClear="(fieldName) => handleDelete(item, fieldName)"
         @formChange="(data) => handleFormChange(data, item)">
           <template v-slot:metadataSlot>
@@ -29,7 +29,7 @@
     </div>
   </div>
   <div v-show="mode === 'view'">
-    <el-tag v-for="(item, index) in qItem.matchs" :key="item.id" class="el-tag--ellipsis" closable 
+    <el-tag v-for="(item, index) in qItem.matchs" :key="item.id" class="el-tag--ellipsis" closable
       @close="handleDelete(item)">
       <template v-if="item.queryType !== 'metadata'">
         {{ item.queryType }}: {{ item.value }}
@@ -47,8 +47,8 @@ import { Delete, ArrowUp } from '@element-plus/icons-vue'
 const props = defineProps(['qItem'])
 const emits = defineEmits(['delete', 'deleteChild', 'add', 'command', 'update', 'formChange'])
 const FormRendererRef = ref({})
-const FormVariablesRendererRef = ref({}) 
-import formJson from './searchGroupForm.vform.json' 
+const FormVariablesRendererRef = ref({})
+import formJson from './searchGroupForm.vform.json'
 const mode = ref('edit')
 function handleAddFilter() {
   emits('add')
@@ -83,13 +83,13 @@ function handleFormChange({fieldName, newValue, oldValue, formModel}, item: sear
           size: "small"
         }
       }
-      item.metadataType = metadata.type 
+      item.metadataType = metadata.type
       FormVariablesRendererRef.value[id].createJson([valueItem])
     } else {
       FormVariablesRendererRef.value[id].createJson([])
     }
   } catch (error) {
-    
+
   } finally {
     if(!['queryType', 'metadataKey'].includes(fieldName)) emits('formChange')
   }
@@ -177,7 +177,7 @@ async function setFormData(qItem: searchGroupQQ) {
         resolve()
     })
   }, 500))
-  
+
 }
 
 let metadataList:any[] = []

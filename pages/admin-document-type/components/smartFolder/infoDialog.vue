@@ -1,34 +1,38 @@
 <template>
-<el-dialog v-model="state.visible" :title="state.title"
-    class="scroll-dialog"
-    append-to-body 
-    :close-on-click-modal="false"
-    @close="handleClose"
+    <el-dialog v-model="state.visible" :title="state.title"
+               class="scroll-dialog"
+               append-to-body
+               :close-on-click-modal="false"
+               @close="handleClose"
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <div class="footer-grid">
-            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-        </div>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <div class="footer-grid">
+                <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api';
+import {adminApi} from 'api';
 import formJson from './infoDialog.vform.json'
+import {ElMessage} from "element-plus";
+
 const emits = defineEmits([
     'refresh'
 ])
-const { t } = useI18n()
+const {t} = useI18n()
 const state = reactive({
     loading: false,
     visible: false,
     setting: {},
     edit: false,
-    title: t('common_add')
+    title: t('doc_typeSmartFolderCreateFolder')
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     const _data = {
@@ -40,6 +44,12 @@ async function handleSubmit () {
             ...state.setting,
             ..._data
         })
+        if(Object.keys(state.setting).length === 0){
+            ElMessage.success(t('doc_typeSmartFolderCreateFolderSuccessMsg'))
+        }else{
+            ElMessage.success(t('doc_typeSmartFolderUpdatedFolderSuccessMsg'))
+        }
+
         emits('refresh')
         state.visible = false
     } catch (error) {
@@ -47,30 +57,33 @@ async function handleSubmit () {
     }
     state.loading = false
 }
+
 function handleOpen(setting?) {
     state.visible = true
     state.edit = false
     state.loading = false
-    if(!setting) {
+    if (!setting) {
         setTimeout(async () => {
             state.setting = {}
-            state.title = t('common_add')
+            state.title = t('doc_typeSmartFolderCreateFolder')
             FormRendererRef.value.vFormRenderRef.resetForm()
         })
         return
     }
     setTimeout(async () => {
         const _setting = deepCopy(setting)
-        state.title = _setting.name
+        // state.title = _setting.name
+        state.title = t('doc_typeSmartFolderInfo')
         state.setting = _setting
-        if(_setting.bind) _setting.access = _setting.bind.split(',')
+        if (_setting.bind) _setting.access = _setting.bind.split(',')
         else _setting.access = []
         await FormRendererRef.value.vFormRenderRef.setFormData({
             ..._setting
         })
     })
 }
-defineExpose({ handleOpen })
+
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 
