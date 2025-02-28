@@ -1,4 +1,5 @@
 FROM electronuserland/builder:20-wine AS base
 RUN apt-get update
 RUN apt-get install 
+RUN apt-get install -y ca-certificates curl
 RUN npm i -g pnpm
