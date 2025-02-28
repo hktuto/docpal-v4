@@ -689,7 +689,8 @@
                 "onSubFormRowAdd": "",
                 "onSubFormRowInsert": "",
                 "onSubFormRowDelete": "",
-                "onSubFormRowChange": ""
+                "onSubFormRowChange": "",
+                "label": "filePolicies_RetentionPolicyCreateDocumentType"
               },
               "id": "subform78294"
             },
@@ -1028,9 +1029,9 @@
     "onFormMounted": "const _this = this\nif(!this.globalOptionData) this.globalOptionData = {}\nthis.globalOptionData.fileList = []\nthis.globalOptionData.ready = false\nconst defaultKeywords = [\n  {\n    \"name\": \"dc:created\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n  },\n  {\n    \"name\": \"dc:modified\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n}\n]\ngetDocTypeList()\nasync function getDocTypeList() {\n  const typeList = await $api.get('/docpal/types/active', {}).then(res => res.data.data)\n  typeList.forEach((item) => {\n    const _item = {\n      keywords: [...defaultKeywords, ...item.keywords],\n      value: item.name,\n      label: $t(item.name)\n    }\n    if(!item.isFolder) {\n      _this.globalOptionData.fileList.push(_item)\n    }\n  })\n  setTimeout(() => {\n    _this.globalOptionData.ready = true\n  }, 1000);\n}\n",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }

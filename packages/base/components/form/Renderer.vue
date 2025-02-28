@@ -140,7 +140,7 @@ import { clientApi } from 'api';
             flex-wrap: nowrap;
             min-width: 480px;
             .el-form-item__error {
-                opacity: 0;
+                //opacity: 0;
             }
         }
     }
