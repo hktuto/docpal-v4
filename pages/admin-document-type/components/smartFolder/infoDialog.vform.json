@@ -1,1 +1,421 @@
-{"widgetList":[{"key":29314,"type":"input","icon":"text-field","formItemFlag":true,"options":{"name":"name","label":"tableHeader_name","labelAlign":"","type":"text","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"readonly":false,"disabled":false,"hidden":false,"clearable":true,"showPassword":false,"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"minLength":2,"maxLength":64,"showWordLimit":false,"prefixIcon":"","suffixIcon":"","appendButton":false,"appendButtonDisabled":false,"buttonIcon":"custom-search","onCreated":"","onMounted":"","onInput":"","onChange":"","onFocus":"","onBlur":"","onValidate":"","onAppendButtonClick":""},"id":"input91235"},{"key":37627,"type":"select-group","icon":"select-group-field","formItemFlag":true,"options":{"name":"access","label":"rightDetail_userGroup","labelAlign":"","defaultValue":[],"placeholder":"","prefixIcon":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"clearable":true,"filterable":true,"allowCreate":false,"remote":false,"automaticDropdown":false,"multiple":true,"multipleLimit":0,"optionItems":[],"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"const _this = this\ngetData()\n\nasync function getData() {\n  const userData = await $api.post('/nuxeo/identity/users', {}).then(res => res.data.data)\n  const _userData = userData.reduce((prev,item) => {\n    if(item.userId) prev.push({\n      value: item.userId,\n      label: item.username\n    })\n    return prev\n  }, [])\n  \n  const groupData = await $api.post('/nuxeo/identity/groups', {}).then(res => res.data.data)\n  const _groupData = groupData.reduce((prev,item) => {\n    if(item.id) prev.push({\n      value: item.id,\n      label: item.name\n    })\n    return prev\n  }, [])\n  \n  _this.loadOptions([\n    { label: $t('user_groups'), options: _groupData },  \n    { label: $t('user_users'), options: _userData }  \n  ])\n}","onRemoteQuery":"","onChange":"if(value.length === 0) this.setValue(['members'])","onFocus":"","onBlur":"","onValidate":""},"id":"selectgroup52585"}],"formConfig":{"modelName":"formData","refName":"vForm","rulesName":"rules","labelWidth":80,"labelPosition":"top","size":"","labelAlign":"label-left-align","cssCode":"","customClass":[],"functions":"","layoutType":"PC","jsonVersion":3,"onFormCreated":"","onFormMounted":"","onFormDataChange":"","onFormValidate":"","saveRemoteOptions":"never","labelFormUniqueName":true,"dataSources":[]}}
+{
+  "widgetList": [
+    {
+      "key": 29314,
+      "type": "input",
+      "icon": "text-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "name",
+        "label": "doc_typeSmartFolderName",
+        "labelAlign": "",
+        "type": "text",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "readonly": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "showPassword": false,
+        "required": true,
+        "requiredHint": "doc_typeSmartFolderFolderNameRequiredMsg",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "minLength": 2,
+        "maxLength": 64,
+        "showWordLimit": false,
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "appendButton": false,
+        "appendButtonDisabled": false,
+        "buttonIcon": "custom-search",
+        "onCreated": "",
+        "onMounted": "",
+        "onInput": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": "",
+        "onAppendButtonClick": ""
+      },
+      "id": "input91235"
+    },
+    {
+      "key": 37627,
+      "type": "select-group",
+      "icon": "select-group-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "access",
+        "label": "doc_typeSmartFolderUserOrGroupSelect",
+        "labelAlign": "",
+        "defaultValue": [],
+        "placeholder": "common_selectOccupancyContent",
+        "prefixIcon": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": true,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "label": "分组",
+            "options": [
+              {
+                "value": "administrators",
+                "label": "Administrators group"
+              },
+              {
+                "value": "Contract_Approval_Approvers",
+                "label": "Contract_Approval_Approvers"
+              },
+              {
+                "value": "Cost_Model_Approval_Approvers",
+                "label": "Cost_Model_Approval_Approvers"
+              },
+              {
+                "value": "Customer_Approval_Approvers",
+                "label": "Customer_Approval_Approvers"
+              },
+              {
+                "value": "edit",
+                "label": "Edit Group"
+              },
+              {
+                "value": "edit_enable",
+                "label": "edit_enable"
+              },
+              {
+                "value": "enable",
+                "label": "enable"
+              },
+              {
+                "value": "every",
+                "label": "Everything Group"
+              },
+              {
+                "value": "Finance_Dept",
+                "label": "Finance Dept"
+              },
+              {
+                "value": "HRDept",
+                "label": "HR Dept"
+              },
+              {
+                "value": "ITDept",
+                "label": "IT Dept"
+              },
+              {
+                "value": "members",
+                "label": "Members group"
+              },
+              {
+                "value": "powerusers",
+                "label": "Power users group"
+              },
+              {
+                "value": "Pre-Sales_Doc_Approval_Approvers",
+                "label": "Pre-Sales_Doc_Approval_Approvers"
+              },
+              {
+                "value": "Pre-Sales_Support_Request_Approvers",
+                "label": "Pre-Sales_Support_Request_Approvers"
+              },
+              {
+                "value": "presales_dept",
+                "label": "Pre-Sales Dept"
+              },
+              {
+                "value": "Proposal_Approval_Approvers",
+                "label": "Proposal_Approval_Approvers"
+              },
+              {
+                "value": "read",
+                "label": "Readonly Group"
+              },
+              {
+                "value": "read_create",
+                "label": "read_create"
+              },
+              {
+                "value": "read_create_enable",
+                "label": "read_create_enable"
+              },
+              {
+                "value": "read_edit",
+                "label": "read_edit"
+              },
+              {
+                "value": "read_edit_create",
+                "label": "read_edit_create"
+              },
+              {
+                "value": "read_edit_create_enable",
+                "label": "read_edit_create_enable"
+              },
+              {
+                "value": "read_edit_enable",
+                "label": "read_edit_enable"
+              },
+              {
+                "value": "read_enable",
+                "label": "read_enable"
+              },
+              {
+                "value": "Readonly",
+                "label": "Readonly"
+              },
+              {
+                "value": "RecordManager",
+                "label": "RecordManager"
+              },
+              {
+                "value": "Run_Test_Group",
+                "label": "Run Test Group"
+              },
+              {
+                "value": "sales_dept",
+                "label": "Sales Dept"
+              },
+              {
+                "value": "sales_manager",
+                "label": "sales_manager"
+              },
+              {
+                "value": "SAM_User_Group",
+                "label": "SAM_User_Group1"
+              },
+              {
+                "value": "SKH_Demo_Group",
+                "label": "SKH_Demo_Group"
+              },
+              {
+                "value": "UiPath_Default",
+                "label": "Readonly"
+              },
+              {
+                "value": "UiPath_Group",
+                "label": "UiPath_Group_Edited"
+              },
+              {
+                "value": "UiPath_Group_Delete",
+                "label": "UiPath_Group_Delete"
+              },
+              {
+                "value": "UiPath_Group_Delete_N",
+                "label": "UiPath_Group_Delete_N"
+              },
+              {
+                "value": "UiPath_Manage_Group",
+                "label": "UiPath_Manage_Group"
+              },
+              {
+                "value": "UiPath_Read_Group",
+                "label": "UiPath_Read_Group"
+              },
+              {
+                "value": "UiPath_Write_Group",
+                "label": "UiPath_Write_Group"
+              },
+              {
+                "value": "UiPathGroup64UiPathGroup64UiPathGroup64UiPathGroup64UiPathGroup6",
+                "label": "UiPathGroup64UiPathGroup64UiPathGroup64UiPathGroup64UiPathGroup6"
+              }
+            ]
+          },
+          {
+            "label": "用户",
+            "options": [
+              {
+                "value": "Administrator",
+                "label": "Administrator"
+              },
+              {
+                "value": "create_test",
+                "label": "create_test"
+              },
+              {
+                "value": "demo_account",
+                "label": "demo_account"
+              },
+              {
+                "value": "demo_director",
+                "label": "demo_director"
+              },
+              {
+                "value": "demo_head",
+                "label": "demo_head"
+              },
+              {
+                "value": "demo_user",
+                "label": "demo_user"
+              },
+              {
+                "value": "docpaladmin",
+                "label": "docpaladmin"
+              },
+              {
+                "value": "entityType",
+                "label": "entityType"
+              },
+              {
+                "value": "everything",
+                "label": "everything"
+              },
+              {
+                "value": "frank_yang",
+                "label": "frank_yang"
+              },
+              {
+                "value": "ikki_cheng",
+                "label": "ikki_cheng"
+              },
+              {
+                "value": "jack_li",
+                "label": "jack_li"
+              },
+              {
+                "value": "jack_li2",
+                "label": "jack_li2"
+              },
+              {
+                "value": "Jay.Cai",
+                "label": "Jay.Cai"
+              },
+              {
+                "value": "Jay_Cai",
+                "label": "Jay_Cai"
+              },
+              {
+                "value": "Joshua",
+                "label": "Joshua"
+              },
+              {
+                "value": "Lyle",
+                "label": "Lyle"
+              },
+              {
+                "value": "nine",
+                "label": "nine"
+              },
+              {
+                "value": "ninerabbit",
+                "label": "ninerabbit"
+              },
+              {
+                "value": "nissin",
+                "label": "nissin"
+              },
+              {
+                "value": "ooyy",
+                "label": "ooyy"
+              },
+              {
+                "value": "ooyy1",
+                "label": "ooyy1"
+              },
+              {
+                "value": "readonly",
+                "label": "readonly"
+              },
+              {
+                "value": "readwrite",
+                "label": "readwrite"
+              },
+              {
+                "value": "rh",
+                "label": "rh"
+              },
+              {
+                "value": "Rh_Admin",
+                "label": "Rh_Admin"
+              },
+              {
+                "value": "royhoo",
+                "label": "royhoo"
+              },
+              {
+                "value": "sales_manager",
+                "label": "sales_manager"
+              },
+              {
+                "value": "sean-admin",
+                "label": "sean-admin"
+              },
+              {
+                "value": "sean-client",
+                "label": "sean-client"
+              },
+              {
+                "value": "Shawn_Fang",
+                "label": "Shawn_Fang"
+              },
+              {
+                "value": "will_du",
+                "label": "will_du"
+              },
+              {
+                "value": "willl",
+                "label": "willl"
+              }
+            ]
+          }
+        ],
+        "required": true,
+        "requiredHint": "doc_typeSmartFolderUserOrGroupRequiredMsg",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "const _this = this\ngetData()\n\nasync function getData() {\n  const userData = await $api.post('/nuxeo/identity/users', {}).then(res => res.data.data)\n  const _userData = userData.reduce((prev,item) => {\n    if(item.userId) prev.push({\n      value: item.userId,\n      label: item.username\n    })\n    return prev\n  }, [])\n  \n  const groupData = await $api.post('/nuxeo/identity/groups', {}).then(res => res.data.data)\n  const _groupData = groupData.reduce((prev,item) => {\n    if(item.id) prev.push({\n      value: item.id,\n      label: item.name\n    })\n    return prev\n  }, [])\n  \n  _this.loadOptions([\n    { label: $t('user_groups'), options: _groupData },  \n    { label: $t('user_users'), options: _userData }  \n  ])\n}",
+        "onRemoteQuery": "",
+        "onChange": "if(value.length === 0) this.setValue(['members'])",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "selectgroup52585"
+    }
+  ],
+  "formConfig": {
+    "modelName": "formData",
+    "refName": "vForm",
+    "rulesName": "rules",
+    "labelWidth": 80,
+    "labelPosition": "top",
+    "size": "",
+    "labelAlign": "label-left-align",
+    "cssCode": "",
+    "customClass": [],
+    "functions": "",
+    "layoutType": "PC",
+    "jsonVersion": 3,
+    "onFormCreated": "",
+    "onFormMounted": "",
+    "onFormDataChange": "",
+    "dhList": [],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
+  }
+}

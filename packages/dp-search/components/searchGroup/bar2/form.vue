@@ -4,7 +4,7 @@
     <el-select-v2
       v-model="state.form.queryType"
       :options="conditionType"
-      :placeholder="$t('dpTip.choose')"
+      :placeholder="$t('common_selectOccupancyContent')"
       size="small" clearable filterable
       @clear="emits('selectClear')"
       @change="handleChangeQueryType"
@@ -17,7 +17,7 @@
     <el-input
       v-model="state.form.keyword"
       :placeholder="$t('tip.input')"
-      clearable size="small" 
+      clearable size="small"
       @change="handleChange"
     />
   </el-form-item>
@@ -25,7 +25,7 @@
     <el-select-v2
       v-model="state.form.metadataKey"
       :options="options.metadata"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       @change="handleMetaChange"
       size="small"
     >
@@ -38,8 +38,8 @@
   </el-form-item>
   <el-form-item v-if="isQuertType('keyword')" :label="$t('search.synonyms')">
     <el-switch
-      v-model="state.form.synonyms" 
-      size="small" 
+      v-model="state.form.synonyms"
+      size="small"
       @change="handleChange"
     />
   </el-form-item>
@@ -47,7 +47,7 @@
     <el-select-v2
       v-model="state.form.includeLanguages"
       :options="languages"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       size="small" multiple
       @change="handleChange"
     >
@@ -56,30 +56,30 @@
     </el-select-v2>
   </el-form-item>
 
-  <el-form-item v-if="isQuertType('documentTypes')" :label="$t('searchGroup.documentTypes')">
+  <el-form-item v-if="isQuertType('documentTypes')" :label="$t('searchGroup.documentTypesSelect')">
     <el-select-v2
       v-model="state.form.documentTypes"
       :options="options.docType"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       size="small" multiple
       @change="handleChange"
     >
     </el-select-v2>
   </el-form-item>
-  <el-form-item v-if="isQuertType('mimeTypes')" :label="$t('searchGroup.mimeTypes')">
+  <el-form-item v-if="isQuertType('mimeTypes')" :label="$t('doc_SearchLanguagesMimeTypeSelect')">
     <el-select-v2
       v-model="state.form.mimeTypes"
       :options="mimeTypes"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       size="small" multiple
       @change="handleChange"
     />
   </el-form-item>
-  <el-form-item v-if="isQuertType('creators')" :label="$t('searchGroup.creators')">
+  <el-form-item v-if="isQuertType('creators')" :label="$t('doc_SearchCreatorsSelect')">
     <el-select-v2
       v-model="state.form.creators"
       :options="options.users"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       size="small" multiple
       @change="handleChange"
     />
@@ -88,26 +88,26 @@
     <el-select-v2
       v-model="state.form.authors"
       :options="options.users"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       size="small" multiple
       @change="handleChange"
     />
   </el-form-item>
-  <el-form-item v-if="isQuertType('collections')" :label="$t('searchGroup.collections')">
+  <el-form-item v-if="isQuertType('collections')" :label="$t('searchGroup.collectionsSelect')">
     <el-select-v2
       v-model="state.form.collections"
       :options="options.collections"
-      :placeholder="$t('dpTip.choose')" clearable filterable
+      :placeholder="$t('common_selectOccupancyContent')" clearable filterable
       size="small" multiple
       @change="handleChange"
     />
   </el-form-item>
-  <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tags')">
+  <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tagsSelect')">
     {{ options.tags }}
     <el-select-v2
       v-model="state.form.tags"
       :options="options.tags"
-      :placeholder="$t('dpTip.choose')"
+      :placeholder="$t('common_selectOccupancyContent')"
       size="small" multiple clearable filterable
       @change="handleChange"
     />
@@ -116,7 +116,7 @@
     <el-select-v2
       v-model="state.form.creatorGroups"
       :options="options.groupList"
-      :placeholder="$t('dpTip.choose')"
+      :placeholder="$t('common_selectOccupancyContent')"
       size="small" multiple clearable filterable
       @change="handleChange"
     />
@@ -125,7 +125,7 @@
     <el-select-v2
       v-model="state.form.authorGroups"
       :options="options.groupList"
-      :placeholder="$t('dpTip.choose')"
+      :placeholder="$t('common_selectOccupancyContent')"
       size="small" multiple clearable filterable
       @change="handleChange"
     />
@@ -134,12 +134,11 @@
     <el-select-v2
       v-model="state.form.size"
       :options="sizes"
-      :placeholder="$t('dpTip.choose')"
+      :placeholder="$t('common_selectOccupancyContent')"
       size="small"
       @change="handleChange"
     >
       <template #default="{item}">{{$t(item.label)}}</template>
-      <!-- <template #label="{item}">{{item}}111</template> -->
       <template #label="row">{{$t(row.label)}}</template>
     </el-select-v2>
   </el-form-item>
@@ -237,7 +236,7 @@ onMounted(async() => {
   ])
   options.docType = docType.data?.map((item:any) => ({label:item.name, value:item.name}))
   options.users = users.data?.map((item:any) => ({label:item.username, value:item.userId}))
-  options.collections = collections?.data?.entryList?.map((item:any) => ({label: item.createdBy + ' - ' + item.name, value:item.id}))
+  options.collections = collections?.data?.map((item:any) => ({label: item.createdBy + ' - ' + item.name, value:item.id}))
   options.tags = tags.data?.map((item:any) => ({label:item, value:item}))
   options.groupList = groupList
   options.metadata = metadata
@@ -258,7 +257,7 @@ watch(() => props.form, (newValue) => {
 })
 
 defineExpose({
-  getFormData 
+  getFormData
 })
 </script>
 <style lang="scss" scoped>

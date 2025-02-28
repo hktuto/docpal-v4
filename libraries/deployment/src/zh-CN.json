@@ -243,10 +243,10 @@
     "scanType": "扫描类型"
   },
   "browse": {
+    "confirmMoveFile": "确认将 {source} 移动到 {target} 吗？",
     "selectedItem": "{count} 个文件/文件夹",
     "uploadPosition": "上传位置",
-    "uploadText": "浏览-上传",
-    "confirmMoveFile": "确认将 {source} 移动到 {target} 吗？"
+    "uploadText": "浏览-上传"
   },
   "browseFile": {
     "tempFile": "Temp"
@@ -937,10 +937,23 @@
   "docType_searchMeta": "虚拟文件资料",
   "docType_type": "类型",
   "docType_valueStored": "存储值",
+  "doc_SearchCreatorsSelect": "",
+  "doc_SearchLanguagesMimeTypeSelect": "",
   "doc_typeSmartFolderCreateFolder": "",
+  "doc_typeSmartFolderCreateFolderSuccessMsg": "",
+  "doc_typeSmartFolderDelete": "",
+  "doc_typeSmartFolderDeletedMsg": "",
+  "doc_typeSmartFolderDeletedSuccessMsg": "",
+  "doc_typeSmartFolderEdit": "",
   "doc_typeSmartFolderFilter": "",
+  "doc_typeSmartFolderFolderNameRequiredMsg": "",
+  "doc_typeSmartFolderInfo": "",
   "doc_typeSmartFolderName": "",
+  "doc_typeSmartFolderSearchName": "文件 / 文件夹名称",
+  "doc_typeSmartFolderUpdatedFolderSuccessMsg": "",
   "doc_typeSmartFolderUserOrGroup": "",
+  "doc_typeSmartFolderUserOrGroupRequiredMsg": "",
+  "doc_typeSmartFolderUserOrGroupSelect": "",
   "docpal_sharedocument_user": "内部分享",
   "download": "下載",
   "download_download": "下载",
@@ -1908,17 +1921,21 @@
   "searchGroup": {
     "authorGroups": "修改者群组",
     "authors": "修改者",
+    "authorsSelect": "",
     "collections": "收藏夹",
+    "collectionsSelect": "",
     "createdDate": "创建日期",
     "creatorGroups": "创作者群组",
     "creators": "创建者",
     "documentTypes": "文档类型",
+    "documentTypesSelect": "",
     "keyword": "关键词",
     "metadata": "Metadata",
     "mimeTypes": "文件扩展名",
     "modified": "修改日期",
     "size": "文件大小",
-    "tags": "标签"
+    "tags": "标签",
+    "tagsSelect": ""
   },
   "searchType": {
     "100": "少于 100KB",
@@ -2087,7 +2104,7 @@
   "tableHeader_labelRule": "文件柜命名规则",
   "tableHeader_lastModified": "最后修改",
   "tableHeader_lessThan": "少于",
-  "tableHeader_modifiedDate": "修改日期",
+  "tableHeader_modifiedDate": "最后修改日期",
   "tableHeader_moreThan": "多于",
   "tableHeader_name": "名称",
   "tableHeader_numberOfFiles": "档案数",
