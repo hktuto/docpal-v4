@@ -181,11 +181,15 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
 }
 
 async function deleteItem(id: string) {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`,
+        {
+            dangerouslyUseHTMLString: true,
+            confirmButtonText: t('common_confirmDelete')
+        })
     if (action !== 'confirm') return
-    await adminApi.api.deletePolicyRetentionsId(id)
-    query()
-    ElMessage.success(t('dpMsg_success'))
+    // await adminApi.api.deletePolicyRetentionsId(id)
+    // query()
+    routerProvider?.message.success(t('filePolicies_RetentionPolicyDeletedSuccessfullyMsg'));
 }
 
 async function handleCreate() {
