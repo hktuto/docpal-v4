@@ -2272,7 +2272,7 @@
   "user_addUser": "Add Users",
   "user_addUserGroupName": "User Groups Assigned (Multi-select allowed)",
   "user_addUserGroupSuccessMsg": "The users have been added to this user group successfully",
-  "user_addUserToGroupChecking": "Username is required.One or more users must be selected",
+  "user_addUserToGroupChecking": "Username is required. One or more users must be selected",
   "user_addUsersToUserGroup": "Add Users to User Group",
   "user_company": "Company",
   "user_confirmPasswordIsRequired": "Confirm Password is required",
@@ -2306,7 +2306,7 @@
   "user_updateGroupSuccessMsg": "The user group has been updated successfully",
   "user_updatePassword": "Update Password",
   "user_userGroupAssignment": "User Group Assignment",
-  "user_userGroupAssignmentMsg": "User Group is required.\r\nOne or more user groups must be selected.",
+  "user_userGroupAssignmentMsg": "User Group is required. One or more user groups must be selected",
   "user_userGroupDeletedSuccessMsg": "Are you sure you want to remove the selected user(s) from this user group?",
   "user_userGroupIdentifer": "User Group Identifier",
   "user_userGroupName": "User Group Name",
@@ -2336,6 +2336,681 @@
   "vocabulary_create": "Create Vocabulary",
   "vocabulary_obsolete": "Obsolete",
   "vocabulary_tableCreationPolicy": "Table Creation Policy",
+  "vxe": {
+    "alert": {
+      "title": "System messages"
+    },
+    "base": {
+      "comma": ",",
+      "fullStop": ".",
+      "pleaseInput": "Please input",
+      "pleaseSelect": "Select"
+    },
+    "button": {
+      "cancel": "Cancel",
+      "confirm": "Confirm"
+    },
+    "countdown": {
+      "formats": {
+        "HH": "Hour",
+        "MM": "Moon",
+        "dd": "Day",
+        "mm": "Minute",
+        "ss": "Second",
+        "yyyy": "Year"
+      }
+    },
+    "custom": {
+      "cstmCancel": "Cancelar",
+      "cstmConfirm": "Confirm",
+      "cstmConfirmRestore": "Please confirm whether to restore the default column configuration?",
+      "cstmDragTarget": "Moving: {0}",
+      "cstmRestore": "Restore default",
+      "cstmTitle": "Column Settings",
+      "setting": {
+        "colFixed": "Freeze columns",
+        "colFixedMax": "Freeze columns (Max. {0})",
+        "colResizable": "Column width (px)",
+        "colSort": "Sort",
+        "colTitle": "Title",
+        "colVisible": "Display",
+        "fixedLeft": "Left",
+        "fixedRight": "Right",
+        "fixedUnset": "Unset",
+        "sortHelpTip": "Click and drag the icon to adjust the order of the columns."
+      }
+    },
+    "drawer": {
+      "close": "Close"
+    },
+    "empty": {
+      "defText": "No Data"
+    },
+    "error": {
+      "barUnableLink": "Toolbar cannot associate table.",
+      "checkProp": "The checkbox may stall when the amount of data is too large, it is recommended to set the parameter \"{0}\" to increase the rendering speed ",
+      "colRepet": "column.{0}=\"{0}\" is duplicated, which may make some features unusable",
+      "coverProp": "The parameter \"{1}\" to \"{0}\" is repeatedly defined. This may cause an error.",
+      "delEvent": "The event \"{0}\" is deprecated, please use \"{1}\"",
+      "delFunc": "The function \"{0}\" is deprecated, please use \"{1}\".",
+      "delProp": "The property \"{0}\" is deprecated, please use \"{1}\".",
+      "downErr": "Download failed.",
+      "emptyProp": "The property \"{0}\" is not allowed to be empty.",
+      "errConflicts": "Argument \"{0}\" conflicts with \"{1}\"",
+      "errFormat": "The global formatted content should be defined with \"VXETable.formats\". Mounting \"formatter={0}\" is not recommended.",
+      "errFunc": "The argument \"{0}\" is not a method",
+      "errProp": "Unsupported parameter \"{0}\", possibly \"{1}\".",
+      "expandContent": "Expand row slot should be \"content\", please check if it is correct.",
+      "groupFixed": "If you use group headers, the freeze columns must be set by group.",
+      "groupMouseRange": "Grouping headers and \"{0}\" cannot be used at the same time, which may cause errors.",
+      "groupTag": "Grouping column header should use \"{0}\" instead of \"{1}\", which may cause errors.",
+      "impFields": "Import failed, please check that the field name and data format are correct.",
+      "noTree": "The tree structure does not support \"{0}\".",
+      "notCommands": "Global commands \"{0}\" no existe.",
+      "notExp": "The browser does not support import / export.",
+      "notFormats": "Global formats \"{0}\" no existe.",
+      "notFunc": "method \"{0}\" not exist.",
+      "notProp": "Unsupported parameters \"{0}\"",
+      "notSlot": "slot \"{0}\" does not exist",
+      "notType": "Unsupported file types \"{0}\"",
+      "notValidators": "Global validators \"{0}\" no existe.",
+      "removeProp": "The property \"{0}\" is deprecated and is not recommended, which may cause error.",
+      "repeatKey": "The primary key repeats {0}=\"{1}\", which may cause an error",
+      "reqComp": "Require \"{0}\" component, check whether the install is correct. https://vxeui.com/#/start/useGlobal",
+      "reqModule": "require \"{0}\" module.",
+      "reqProp": "Missing the necessary \"{0}\" parameter, which can cause error.",
+      "scrollErrProp": "The parameter \"{0}\" is not supported when virtual scrolling is enabled.",
+      "treeNotImp": "Tree table does not support import.",
+      "unableInsert": "Unable to insert to the specified location.",
+      "uniField": "The field \"{0}\" is repeatedly defined, which may cause an error.",
+      "useErr": "Error installing \"{0}\" module, possibly in the wrong order, dependent modules need to be installed before Table."
+    },
+    "export": {
+      "expAllExpandTitle": "If it exists, all data with tree structure can be expanded",
+      "expCancel": "Cancel",
+      "expColgroupTitle": "If it exists, headers with grouping structure are supported",
+      "expColumn": "Select field",
+      "expConfirm": "Export",
+      "expCurrentColumn": "All the field",
+      "expFooterTitle": "Do you need the footer table",
+      "expHeaderTitle": "Do I need a header",
+      "expMergeTitle": "If it exists, cells with merged structures are supported",
+      "expMode": "Select data",
+      "expName": "Filename",
+      "expNamePlaceholder": "Please enter filename",
+      "expOptAllExpand": "Expand nodes",
+      "expOptColgroup": "Group header",
+      "expOptFooter": "Footer",
+      "expOptHeader": "Header",
+      "expOptMerge": "Merge",
+      "expOptOriginal": "Source data",
+      "expOptUseStyle": "Styles",
+      "expOpts": "Settings",
+      "expOriginalTitle": "If it is source data, import into the table is supported",
+      "expPrint": "Print",
+      "expSheetName": "Title",
+      "expSheetNamePlaceholder": "Please enter a title",
+      "expTitle": "Export data",
+      "expType": "Save the type",
+      "expUseStyleTitle": "If it exists, cells with styles are supported",
+      "modes": {
+        "all": "Full data (including all paging data)",
+        "current": "Current data (data of current page)",
+        "selected": "Selected data (data selected on the current page)"
+      },
+      "printTitle": "Print data",
+      "types": {
+        "csv": "CSV (Comma separated) (*.csv)",
+        "html": "Web Page (*.html)",
+        "pdf": "PDF (*.pdf)",
+        "txt": "Text (Tab delimited) (*.txt)",
+        "xls": "Excel 97-2003 Workbook(*.xls)",
+        "xlsx": "Excel Workbook (*.xlsx)",
+        "xml": "XML Data(*.xml)"
+      }
+    },
+    "filter": {
+      "search": "搜索"
+    },
+    "form": {
+      "folding": "Folding",
+      "unfolding": "Unfolding"
+    },
+    "formDesign": {
+      "defFormTitle": "Unnamed form",
+      "error": {
+        "wdFormUni": "Only one control of this type is allowed to be added to the form.",
+        "wdSubUni": "Only one control of this type is allowed to be added to a sub table."
+      },
+      "formName": "Form name",
+      "styleSetting": {
+        "alignLeft": "Left",
+        "alignRight": "Right",
+        "alignTitle": "Title align",
+        "boldTitle": "Bold title",
+        "btn": "Style setting",
+        "colonHidden": "Hidden",
+        "colonTitle": "Display colon",
+        "colonVisible": "Visible",
+        "fontBold": "Bold",
+        "fontNormal": "Normal",
+        "horizontalLayout": "Horizontal layout",
+        "layoutTitle": "Field layout",
+        "styleTitle": "Title style",
+        "title": "Form style setting",
+        "unitPct": "Pct",
+        "unitPx": "Px",
+        "verticalLayout": "Vertical layout",
+        "widthTitle": "Title width"
+      },
+      "widget": {
+        "component": {
+          "VxeCheckboxGroup": "Checkbox",
+          "VxeDatePicker": "Date",
+          "VxeInput": "Input",
+          "VxeNumberInput": "Number",
+          "VxeRadioGroup": "Radio",
+          "VxeRate": "Rate",
+          "VxeSelect": "Select",
+          "VxeSlider": "Slider",
+          "VxeSwitch": "Yes/no",
+          "VxeTextarea": "Textarea",
+          "VxeTreeSelect": "Tree select",
+          "VxeUploadFile": "File",
+          "VxeUploadImage": "Image",
+          "input": "Input",
+          "row": "Row/column",
+          "select": "Select",
+          "subtable": "Subtable",
+          "text": "Text",
+          "textarea": "Textarea",
+          "title": "Title"
+        },
+        "copyTitle": "Copy_{0}",
+        "group": {
+          "advanced": "Advanced control",
+          "base": "Base control",
+          "chart": "Chart control",
+          "layout": "Layout control",
+          "module": "Module control",
+          "system": "System control"
+        }
+      },
+      "widgetFormTab": "Form property",
+      "widgetProp": {
+        "dataSource": {
+          "addOption": "Add option",
+          "batchEditOption": "Batch edit",
+          "batchEditSubTip": "Each row corresponds to an option. If grouped, the sub items can start with spaces or tab keys, and can be directly copied and pasted from tables, Excel, or WPS.",
+          "batchEditTip": "Each row corresponds to an option, supporting direct copying and pasting from tables, Excel, and WPS.",
+          "buildOption": "Build option",
+          "defValue": "Option {0}",
+          "name": "Data source"
+        },
+        "displaySetting": {
+          "hidden": "Hidden",
+          "mobile": "Mobile",
+          "name": "Display setting",
+          "pc": "PC",
+          "visible": "Visible"
+        },
+        "multiple": "Allow to select multiple",
+        "name": "Field name",
+        "placeholder": "Field placeholder",
+        "required": "Required",
+        "rowProp": {
+          "col2": "Two columns",
+          "col3": "Three columns",
+          "col4": "Four columns",
+          "col6": "Six columns",
+          "colSize": "Number of columns",
+          "layout": "Layout"
+        },
+        "subtableProp": {
+          "colPlace": "Drag the control in.",
+          "errSubDrag": "The sub table does not support this control. Please use another control.",
+          "seqTitle": "S/N",
+          "showCheckbox": "Allow multiple selections",
+          "showSeq": "Display serial number"
+        },
+        "textProp": {
+          "alignCenter": "Center",
+          "alignLeft": "Left",
+          "alignRight": "Right",
+          "alignTitle": "Align",
+          "boldTitle": "Font bold",
+          "colorTitle": "Color",
+          "fontBold": "Bold",
+          "fontNormal": "Normal",
+          "name": "Content",
+          "sizeTitle": "Font size"
+        },
+        "uploadProp": {
+          "limitFileCount": "File quantity limitation",
+          "limitFileSize": "File size limitation",
+          "limitImgCount": "Image quantity limitation",
+          "limitImgSize": "Image size limitation",
+          "multiFile": "Allows multiple files",
+          "multiImg": "Allows multiple images"
+        }
+      },
+      "widgetPropTab": "Field property"
+    },
+    "grid": {
+      "dataUnchanged": "Data unchanged! ",
+      "delSuccess": "Successfully deleted the selected record!",
+      "deleteSelectRecord": "Are you sure you want to delete the selected record?",
+      "operError": "Error occurred, operation failed!",
+      "removeSelectRecord": "Are you sure you want to remove the selected record?",
+      "saveSuccess": "Saved successfully!",
+      "selectOneRecord": "Please choose at least one piece of record!"
+    },
+    "imagePreview": {
+      "operBtn": {
+        "download": "Click to download",
+        "pct11": "Show original size",
+        "pctFull": "Proportional scaling",
+        "print": "Click to print",
+        "rotateLeft": "Rotate left",
+        "rotateRight": "Rotate right",
+        "zoomIn": "Enlarge",
+        "zoomOut": "Reduce"
+      },
+      "popupTitle": "Preview"
+    },
+    "import": {
+      "impCancel": "Cancel",
+      "impConfirm": "Import",
+      "impFile": "Filename",
+      "impMode": "Import mode",
+      "impOpts": "Settings",
+      "impSelect": "Select file",
+      "impTitle": "Import data",
+      "impType": "File type",
+      "modes": {
+        "covering": "Overwrite mode (directly overwrite table data)",
+        "insert": "Bottom append (appends new data to the bottom of the table)",
+        "insertBottom": "Bottom append (appends new data to the bottom of the table)",
+        "insertTop": "Top append (appends new data to the top of the table)"
+      }
+    },
+    "input": {
+      "date": {
+        "dayLabel": "{1} {0}",
+        "labelFormat": {
+          "date": "dd/MM/yyyy",
+          "datetime": "yyyy-MM-dd HH:mm:ss",
+          "month": "MM/yyyy",
+          "quarter": "[Quarter] q, yyyy",
+          "time": "HH:mm:ss",
+          "week": "[Week] WW, yyyy",
+          "year": "yyyy"
+        },
+        "m1": "January",
+        "m10": "October",
+        "m11": "November",
+        "m12": "December",
+        "m2": "February",
+        "m3": "March",
+        "m4": "April",
+        "m5": "May",
+        "m6": "June",
+        "m7": "July",
+        "m8": "August",
+        "m9": "September",
+        "monthLabel": "{0}",
+        "months": {
+          "m0": "Jan",
+          "m1": "Feb",
+          "m10": "Nov",
+          "m11": "Dec",
+          "m2": "Mar",
+          "m3": "Apr",
+          "m4": "May",
+          "m5": "Jun",
+          "m6": "Jul",
+          "m7": "Aug",
+          "m8": "Sep",
+          "m9": "Oct"
+        },
+        "quarterLabel": "{0}",
+        "quarters": {
+          "q1": "First quarter",
+          "q2": "Second quarter",
+          "q3": "Third quarter",
+          "q4": "Fourth quarter"
+        },
+        "weeks": {
+          "w": "Week",
+          "w0": "Sun",
+          "w1": "Mon",
+          "w2": "Tue",
+          "w3": "Wed",
+          "w4": "Thu",
+          "w5": "Fri",
+          "w6": "Sat"
+        }
+      }
+    },
+    "listDesign": {
+      "activeBtn": {
+        "ActionButtonDelete": "Delete",
+        "ActionButtonUpdate": "Edit"
+      },
+      "fieldSettingTab": "Field",
+      "listField": "List field",
+      "listSettingTab": "Parameter",
+      "listTitle": "List",
+      "search": {
+        "addBtn": "Edit",
+        "editPopupTitle": "Edit search fields",
+        "emptyText": "No filter condition is configured."
+      },
+      "searchField": "Search field",
+      "searchPopup": {
+        "colTitle": "Title",
+        "saveBtn": "Save"
+      },
+      "searchTitle": "Search"
+    },
+    "loading": {
+      "text": "Loading..."
+    },
+    "modal": {
+      "close": "Close",
+      "errTitle": "Error",
+      "footPropErr": "\"show-footer\" is only used to enable table tails and needs to be used in conjunction with \"show-confirm-button\" | \"show-cancel-button\" | slots",
+      "miniMaxSize": "The number of minimized Windows cannot exceed {0}.",
+      "zoomIn": "Maximize",
+      "zoomMin": "Minimize",
+      "zoomOut": "Reduction"
+    },
+    "pager": {
+      "endPage": "End page",
+      "endPageTitle": "End",
+      "goto": "Go to",
+      "gotoTitle": "Number",
+      "homePage": "Home",
+      "homePageTitle": "Home page",
+      "nextJump": "Jump next page",
+      "nextJumpTitle": "Jump next page",
+      "nextPage": "next page",
+      "nextPageTitle": "next page",
+      "pageClassifier": "",
+      "pagesize": "{0}/page",
+      "prevJump": "Jump previous page",
+      "prevJumpTitle": "Jump previous page",
+      "prevPage": "Previous page",
+      "prevPageTitle": "Previous page",
+      "total": "Total {0} records"
+    },
+    "plugins": {
+      "extendCellArea": {
+        "area": {
+          "cpInvalidErr": "This operation cannot be performed because there are prohibited columns in the area you selected ({0})",
+          "extendErr": "If the extended area contains merged cells, all merged cells need to be the same size",
+          "mergeErr": "The operation cannot be performed on merged cells",
+          "multiErr": "The operation cannot be performed on multiple selection areas",
+          "pasteMultiErr": "Cannot paste, copied area and pasted area of the same size are required to perform this operation",
+          "selectErr": "Unable to operate the cells in the designated area."
+        },
+        "fnr": {
+          "btns": {
+            "cancel": "Cancel",
+            "findAll": "Find all",
+            "findNext": "Find next",
+            "replace": "Replace",
+            "replaceAll": "Replace all"
+          },
+          "empty": "(Empty)",
+          "filter": {
+            "re": "Regular Expression",
+            "sensitive": "Case sensitive",
+            "whole": "Whole word"
+          },
+          "findLabel": "Find",
+          "findTitle": "What to find:",
+          "header": {
+            "cell": "Cell",
+            "seq": "#",
+            "value": "Value"
+          },
+          "notCell": "No matching cells were found",
+          "reError": "Invalid regular expression",
+          "recordCount": "Found {0} cells",
+          "replaceLabel": "Replace",
+          "replaceSuccess": "Successfully replaced {0} cells",
+          "replaceTitle": "Replace with:",
+          "tabs": {
+            "find": "Find",
+            "replace": "Replace"
+          },
+          "title": "Find and replace"
+        }
+      },
+      "filterCombination": {
+        "cases": {
+          "begin": "Beginning is",
+          "between": "Betweenness",
+          "custom": "Custom filter",
+          "endin": "End is",
+          "equal": "Equal",
+          "exclude": "Exclusive",
+          "ge": "Greater than or equal",
+          "gt": "Greater than",
+          "include": "Include",
+          "insensitive": "Case insensitive",
+          "isSensitive": "Case sensitive",
+          "le": "Less than or equal",
+          "lt": "Less than",
+          "notbegin": "Beginning is not",
+          "notendin": "End is not",
+          "unequal": "Not equal"
+        },
+        "empty": "(Empty)",
+        "menus": {
+          "cancelFixed": "Clear freeze",
+          "clearFilter": "Clear filter",
+          "clearSort": "Clear sort",
+          "fixedColumn": "Freeze column",
+          "fixedGroup": "Freeze group",
+          "fixedLeft": "Freeze the left",
+          "fixedRight": "Freeze the right",
+          "numberOption": "Number filter",
+          "sortAsc": "Ascending order",
+          "sortDesc": "Descending order",
+          "textOption": "Text filter"
+        },
+        "notData": "No data",
+        "popup": {
+          "and": "And",
+          "currColumnTitle": "Current column:",
+          "describeHtml": "Use ? To represent a single character <br/> use * to represent any number of characters",
+          "or": "Or",
+          "title": "Custom filtering"
+        }
+      },
+      "filterComplexInput": {
+        "cases": {
+          "begin": "Beginning is",
+          "endin": "End is",
+          "equal": "Equal",
+          "gt": "Greater than",
+          "include": "Include",
+          "isSensitive": "Case sensitive",
+          "lt": "Less than"
+        },
+        "menus": {
+          "cancelFixed": "Clear freeze",
+          "fixedColumn": "Freeze column",
+          "fixedGroup": "Freeze group",
+          "fixedLeft": "Freeze the left",
+          "fixedRight": "Freeze the right"
+        }
+      }
+    },
+    "pro": {
+      "area": {
+        "extendErr": "If the extended area contains merged cells, all merged cells need to be the same size",
+        "mergeErr": "The operation cannot be performed on merged cells",
+        "multiErr": "The operation cannot be performed on multiple selection areas",
+        "pasteMultiErr": "Cannot paste, copied area and pasted area of the same size are required to perform this operation"
+      },
+      "fnr": {
+        "btns": {
+          "cancel": "Cancel",
+          "findAll": "Find all",
+          "findNext": "Find next",
+          "replace": "Replace",
+          "replaceAll": "Replace all"
+        },
+        "empty": "(Empty)",
+        "filter": {
+          "re": "Regular Expression",
+          "sensitive": "Case sensitive",
+          "whole": "Whole word"
+        },
+        "findLabel": "Find",
+        "findTitle": "What to find:",
+        "header": {
+          "cell": "Cell",
+          "seq": "#",
+          "value": "Value"
+        },
+        "notCell": "No matching cells were found",
+        "reError": "Invalid regular expression",
+        "recordCount": "Found {0} cells",
+        "replaceLabel": "Replace",
+        "replaceSuccess": "Successfully replaced {0} cells",
+        "replaceTitle": "Replace with:",
+        "tabs": {
+          "find": "Find",
+          "replace": "Replace"
+        },
+        "title": "Find and replace"
+      }
+    },
+    "renderer": {
+      "cases": {
+        "begin": "Beginning is",
+        "between": "Betweenness",
+        "custom": "Custom filter",
+        "endin": "End is",
+        "equal": "Equal",
+        "exclude": "Exclusive",
+        "ge": "Greater than or equal",
+        "gt": "Greater than",
+        "include": "Include",
+        "insensitive": "Case insensitive",
+        "isSensitive": "Case sensitive",
+        "le": "Less than or equal",
+        "lt": "Less than",
+        "notbegin": "Beginning is not",
+        "notendin": "End is not",
+        "unequal": "Not equal"
+      },
+      "combination": {
+        "empty": "(Empty)",
+        "menus": {
+          "cancelFixed": "Clear fixed",
+          "clearFilter": "Clear filter",
+          "clearSort": "Clear sort",
+          "fixedColumn": "Fixed column",
+          "fixedGroup": "Fixed group",
+          "fixedLeft": "Fixed the left",
+          "fixedRight": "Fixed the right",
+          "numberOption": "Number filter",
+          "sortAsc": "Ascending order",
+          "sortDesc": "Descending order",
+          "textOption": "Text filter"
+        },
+        "notData": "No data",
+        "popup": {
+          "and": "And",
+          "currColumnTitle": "Current column:",
+          "describeHtml": "Use ? To represent a single character <br/> use * to represent any number of characters",
+          "or": "Or",
+          "title": "Custom filtering"
+        }
+      },
+      "search": "Search"
+    },
+    "select": {
+      "emptyText": "No Data",
+      "loadingText": "Loading",
+      "search": "Search"
+    },
+    "table": {
+      "actionTitle": "Action",
+      "allFilter": "All",
+      "allTitle": "Select All / Unselect All",
+      "confirmFilter": "Confirm",
+      "customAll": "All",
+      "customCancel": "Cancel",
+      "customClose": "Close",
+      "customConfirm": "Confirm",
+      "customRestore": "Restore",
+      "customTitle": "Column settings",
+      "dragTip": "Moving: {0}",
+      "emptyText": "No Data",
+      "expError": "Export failure",
+      "expFilename": "Export_{0}",
+      "expLoading": "Exporting",
+      "expOriginFilename": "Export_original_{0}",
+      "expSuccess": "Export success",
+      "filter": "Enable filtering on selected columns",
+      "impSuccess": "Successfully imported {0} records",
+      "maxFixedCol": "The maximum number of Freeze columns cannot exceed {0}",
+      "resetFilter": "Reset",
+      "seqTitle": "N/S",
+      "sortAsc": "Ascending: lowest to highest",
+      "sortDesc": "Descending: highest to lowest"
+    },
+    "text": {
+      "copyError": "The current environment does not support this operation.",
+      "copySuccess": "Successfully copied to clipboard."
+    },
+    "toolbar": {
+      "cancelFixed": "Unfreeze column",
+      "custom": "Column settings",
+      "customAll": "All",
+      "customConfirm": "Confirm",
+      "customRestore": "Reset",
+      "export": "Export",
+      "fixedLeft": "Freeze on the left",
+      "fixedRight": "Freeze on the right",
+      "import": "Import",
+      "print": "Printing",
+      "refresh": "Refresh",
+      "zoomIn": "Full screen",
+      "zoomOut": "Reduction"
+    },
+    "upload": {
+      "dragPlaceholder": "Please drag and drop the file into this area to upload it.",
+      "fileBtnText": "Click or drag",
+      "fileCountHint": "Up to {0} file can be uploaded",
+      "fileSizeHint": "Single file size does not exceed {0}",
+      "fileTypeHint": "Support {0} file types",
+      "imgBtnText": "Click or drag",
+      "imgCountHint": "Up to {0}",
+      "imgSizeHint": "Single {0}",
+      "moreBtnText": "More ({0})",
+      "morePopup": {
+        "fileTitle": "Upload file",
+        "imageTitle": "Upload image",
+        "readTitle": "List"
+      },
+      "overCountErr": "You can only choose {0} file!",
+      "overCountExtraErr": "It has exceeded the maximum number {0}, and more than {0} file will be ignored!超出最大数量 1 个，超出的 1 个文件将被忽略！",
+      "overSizeErr": "The size of the file is not more than {0}}!",
+      "reUpload": "Re upload",
+      "uploadErr": "Fail to upload",
+      "uploadProgress": "Uploading {0}%",
+      "uploadSuccess": "Successfully upload",
+      "uploadTypeErr": "File type does not match!",
+      "viewItemTitle": "click to view"
+    }
+  },
   "watermark": {
     "watermark": "Watermark"
   },
