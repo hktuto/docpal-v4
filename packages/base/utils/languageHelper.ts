@@ -1,6 +1,3 @@
-import zhCN from 'vxe-table/lib/locale/lang/zh-CN'
-import enUS from 'vxe-table/lib/locale/lang/en-US'
-import zhHK from 'vxe-table/lib/locale/lang/zh-HK'
 import enJson from 'deployment/src/en-US.json'
 import zhJson from 'deployment/src/zh-CN.json'
 import zhHKJson from 'deployment/src/zh-HK.json'
@@ -9,8 +6,6 @@ import { clientApi } from 'api'
 export async function getLocale(){
     const { locale, availableLocales, setLocaleMessage } = useI18n()
     const config = useRuntimeConfig()
-
-    const vxeLang = locale.value === 'zh-CN' ? zhCN : locale.value === 'en-US' ? enUS : zhHK
     let clientJson;
     if(config.public.isProduction){
         const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
@@ -37,7 +32,6 @@ export async function getLocale(){
     setLocaleMessage(locale.value, {
         ...clientJson,
         ...adminJson,
-        ...metaJson,
-        ...vxeLang
+        ...metaJson
     })
 }

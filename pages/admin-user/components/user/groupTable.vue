@@ -59,8 +59,7 @@ const state = reactive<any>({
 const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
     id: 'a-user-group',
     columns: [
-        {type: "checkbox", fixed: 'left', width: "60px"},
-        {field: 'name', title: 'user_userGroupName', fixed: 'left', sortable: true},
+        {field: 'name', title: 'user_userGroupName', fixed: 'left', type: "checkbox",},
         {field: 'id', title: 'user_userGroupIdentifer',},
     ],
     selectChangeHander: (selectedRows: any[]) => {
