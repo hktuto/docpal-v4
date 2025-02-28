@@ -1777,6 +1777,7 @@
       "confirm": "OK",
       "datePlaceholder": "Select date",
       "deleteSubFormRow": "Confirm to delete the item?",
+      "deleteSubFormRowLabel": "Are you sure you want to delete the selected {label}?",
       "downloadFile": "Download",
       "endDatePlaceholder": "End date",
       "endTimePlaceholder": "End time",

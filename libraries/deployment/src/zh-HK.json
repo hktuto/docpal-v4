@@ -1776,6 +1776,7 @@
       "confirm": "确定",
       "datePlaceholder": "选择日期",
       "deleteSubFormRow": "删除行",
+      "deleteSubFormRowLabel": "是否刪除選取行： {label}?",
       "downloadFile": "下载",
       "endDatePlaceholder": "結束日期",
       "endTimePlaceholder": "截止时间",

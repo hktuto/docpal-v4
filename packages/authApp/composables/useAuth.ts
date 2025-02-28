@@ -127,6 +127,7 @@ async function getFeature() {
  */
 export function checkLicenseFeatures(requireFeatures: string[] | string) {
     const features = useFeature()
+    if(!features.value) return true
     if (typeof requireFeatures === 'string') return features.value[requireFeatures]
     let result = false
     if (Array.isArray(requireFeatures)) {
