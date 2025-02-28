@@ -240,7 +240,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         const actionsColumn:any = {
             title: 'dpTable_actions',
             fixed:'right',
-            width: 60,
+            width: 80,
             type: 'html',
             formatter: ({ row }:any) => {
                 return `<img src="/icons/dots.svg" style="width: 1.2rem; height: 1.2rem; cursor: pointer;" />`
