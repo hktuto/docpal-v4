@@ -6,8 +6,9 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
           inputKey="name"
+          inputPlaceHolder="doc_typeSmartFolderFilter"
         />
-        <el-button type="primary" @click="handleCreate()">{{ $t('docType.new') }}</el-button>
+        <el-button type="primary" @click="handleCreate()">{{ $t('doc_typeSmartFolderCreateFolder') }}</el-button>
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
@@ -37,8 +38,8 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     });
   },
   columns: [
-    { field: "name", title: "tableHeader_name", fixed: "left" },
-    { field: "userGroups", title: "tableHeader_access" }
+    { field: "name", title: "doc_typeSmartFolderName", fixed: "left" },
+    { field: "userGroups", title: "doc_typeSmartFolderUserOrGroup" }
   ],
   bodyActions: [
     [

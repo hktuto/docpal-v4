@@ -243,9 +243,9 @@
     "scanType": "Scan Type"
   },
   "browse": {
+    "selectedItem": "Selected {count} File/Folder",
     "uploadPosition": "Upload Position",
-    "uploadText": "Browse-Upload",
-    "selectedItem": "Selected {count} File/Folder"
+    "uploadText": "Browse-Upload"
   },
   "browseFile": {
     "tempFile": "Temp"
@@ -936,6 +936,10 @@
   "docType_searchMeta": "Search Meta",
   "docType_type": "Type",
   "docType_valueStored": "Value Stored",
+  "doc_typeSmartFolderCreateFolder": "Create New Smart Folder",
+  "doc_typeSmartFolderFilter": "Filter by Smart Folder Name",
+  "doc_typeSmartFolderName": "Smart Folder Name",
+  "doc_typeSmartFolderUserOrGroup": "Access by User / User Group",
   "docpal_sharedocument_user": "Internal Sharing",
   "download": "Download",
   "download_download": "Download",
