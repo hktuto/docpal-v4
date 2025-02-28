@@ -119,7 +119,11 @@ provide(BrowseListProviderKey,{
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
-    console.log("relatedIdOrPath", relatedIdOrPath, docDetail.value.id)
+    console.log("relatedIdOrPath", {
+        editedid: relatedIdOrPath,
+        pageId: docDetail.value.id,
+        pageName: docDetail.value.name
+    } )
     if(relatedIdOrPath === docDetail.value.id) {
         handleRefresh()
         

@@ -5,6 +5,7 @@ export enum EventType {
     USER_PREFERENCE_CHANGE__TIME = 'user-preference-change--time', // user preference changed
     USER_LOGIN__SUCCESS = 'user-login--success',
     USER_LOGIN__EXPIRE = 'user-login--expire',
+    FILE_NEED_REFRESH = "FILE_NEED_REFRESH",
     
 }
 

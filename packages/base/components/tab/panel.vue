@@ -23,10 +23,13 @@ const elRef = ref()
 const { dragState, setupDropable, extractClosestEdge } = useDropable({
     key: (tabManager as any).tabDataKey,
     canMonitor: () => {return true},
+    canDrop: ({source}) => {
+        return source.data.type === 'menu'
+    },
     onDropHandler :({ location, source, target}:any) => {
         const isTab = isTabData(source.data)
         // 如果不是本 panel 下 drop 的，不用做什麼
-        if(!target || !target.data || target.data.data.id !== panel.id) return;
+        if(!target || !target.data || !target.data.data || target.data.data.id !== panel.id) return;
         if(isTab){
             const sourceData = source.data as any
             const targetData = target.data as any
@@ -142,7 +145,11 @@ const prefixClass = computed(() => {
     
     &.activePanel{
         :deep(.tabItem.showing) {
-            --tab-item-border-color: var(--app-success-4)
+            --tab-item-border-color: var(--app-accent-color);
+            // color: var(--app-primary-color);
+            font-size: calc(var(--app-font-size-l) * 0.9);
+            font-weight: bold;
+            line-height: 1;
         }
         
     }
