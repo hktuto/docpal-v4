@@ -47,7 +47,8 @@ export interface UseVxeTableParams<R = any> {
     permissionMethod?: (params:PermissionMethodParams) => {visible:boolean, disabled:boolean},
     optionalConfig?: VxeGridProps<R>,
     selectChangeHander?:(selectedRows:any[]) => void,
-    optionalEvent?: VxeGridListeners<R>
+    optionalEvent?: VxeGridListeners<R>,
+    childChangeHander?: (childRows: any[]) => void,
     additionalPermission?: (params:any) => Promise<any>
 }
 
@@ -474,11 +475,27 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     function query(params:any){
         tableRef.value?.commitProxy('query', params)
     }
-
+    let observer:any ;
     onActivated(() => {
         console.log("table onActivated")
         if(init.value) {
             reload()
+        }
+        if(params.childChangeHander) {
+            if(observer && observer.disconnect){
+                observer.disconnect()
+            }
+            observer = new MutationObserver(params.childChangeHander)
+            observer.observe(tableRef.value.$el, {
+                childList: true,
+                subtree: true
+            })
+        }
+    })
+
+    onDeactivated(() => {
+        if(observer && observer.disconnect){
+            observer.disconnect()
         }
     })
     

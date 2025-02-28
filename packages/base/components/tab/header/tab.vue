@@ -215,7 +215,7 @@ function closeTab(){
     cursor: pointer;
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    // align-items: center;
     flex-flow: row nowrap;
     gap: var(--app-space-xxs);
     position: relative;

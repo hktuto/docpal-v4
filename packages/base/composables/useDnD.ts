@@ -205,6 +205,7 @@ export const useDropable = ({
             },
             onDrop({ location, source }){
                 const target:any = location.current.dropTargets[0]
+                console.log("drop", target)
                 return onDropHandler({ location, source, target })
             }
         })
@@ -319,6 +320,7 @@ function createDropTargetForElements({
             if (source.element === element) {
                 return false
             }
+            console.log("canDrop", source.data)
             return true
         },
         getData({input}) {
@@ -335,7 +337,7 @@ function createDropTargetForElements({
         },
         onDragEnter({self, location,source}) {
             if(onDragEnter) onDragEnter()
-            console.log("drag enter")
+            console.log("drag enter", source)
                 // get mouse location in "location.current"
             
                 // if mouse is near the top of the target, then we're dragging over the target

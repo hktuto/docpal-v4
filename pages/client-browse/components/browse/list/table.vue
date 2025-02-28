@@ -1,4 +1,5 @@
 <script lang="tsx" setup>
+import { createDropableFolder, createDropableFile } from '#imports'
 import dayjs from "dayjs";
 
 const listProvider = inject(BrowseListProviderKey);
@@ -32,6 +33,38 @@ function sortEntry(a, b) {
     return b.isFolder ? 1 : -1
 }
 
+let tableDropZone;
+let dragableItemList = [];
+function tableChildChangeHandler(args) {
+    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
+    if(allBodyRow.length === 0) return;
+    // unregister all dragableItemList
+    dragableItemList.forEach(item => {
+        // check if item is a function, if so, call it
+        if (typeof item === 'function') {
+            item();
+        }
+    })
+    dragableItemList = [];
+    // register all dragableItemList
+    allBodyRow.forEach(item => {
+        const rowid = item.getAttribute('rowid');
+        if(!rowid) return;
+        const rowData = tableRef.value.getRowById(rowid);
+
+        if(!rowData) return;
+        if(rowData.isFolder){
+            dragableItemList.push(createDropableFolder(item,rowData, tableRef))
+        }else{
+            dragableItemList.push(createDropableFile(item, rowData, tableRef))
+        }
+    })
+    if(!tableDropZone){
+        tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
+    }
+    // console.log('tableChildChangeHandler', allBodyRow)
+}
+
 const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
     id: 'browseTableSetting',
     api: async (pageParams: any) => {
@@ -39,6 +72,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         data.sort(sortEntry)
         return data
     },
+    childChangeHander: tableChildChangeHandler,
     columns: [
         {
             type: 'checkbox',
@@ -213,7 +247,8 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                 code: 'docActionPaste',
                 name: 'filePopover_paste',
                 action: ({row}) => {
-                    const ev = new CustomEvent('docActionPaste', {detail: row})
+                    const doc = row || listProvider.docDetail.value
+                    const ev = new CustomEvent('docActionPaste', {detail: doc})
                     document.dispatchEvent(ev)
                 }
             },
@@ -456,6 +491,24 @@ function cleanSelected() {
     }
 }
 
+onActivated(() => {
+    
+})
+
+onDeactivated(() => {
+    if(tableDropZone) {
+        tableDropZone()
+    }
+    if(dragableItemList){
+        dragableItemList.forEach(item => {
+            // check if item is a function, if so, call it
+            if (typeof item === 'function') {
+                item();
+            }
+        })
+    }
+})
+
 
 watch(() => listProvider.idOrPath, () => {
     if (listProvider.idOrPath.value) {
@@ -499,7 +552,11 @@ defineExpose({
     width: 100%;
     height: 100%;
     position: relative;
-
+    :deep(.dropOver) {
+        // overflow: hidden;
+        background: var(--app-grey-900);
+        --vxe-ui-layout-background-color: var(--app-grey-900);
+    }
     &.selected {
         :deep(.vxe-buttons--wrapper) {
             border-radius: var(--app-border-radius-m);
