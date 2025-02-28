@@ -40,7 +40,7 @@
     "nuxt": "3.15.4",
     "nuxt-viewport": "^2.2.0",
     "splitpanes": "^3.1.8",
-    "v-form": "file:../dp-form/dist/v-form-designer-3.1.4.tar.gz",
+    "v-form": "file:../dp-form/dist/v-form-designer-3.1.5.tar.gz",
     "v-viewer": "^3.0.21",
     "viewerjs": "^1.11.7",
     "vue": "3.5.6",
