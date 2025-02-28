@@ -245,7 +245,7 @@
   "browse": {
     "uploadPosition": "上传位置",
     "uploadText": "浏览-上传",
-    "selectedItem": "${count} 个文件/文件夹"
+    "selectedItem": "{count} 个文件/文件夹"
   },
   "browseFile": {
     "tempFile": "Temp"
