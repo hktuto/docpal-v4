@@ -40,8 +40,32 @@ function handleOpenUploadDrawer(){
     const ev = new CustomEvent('openUploadDrawer', { detail: true })
     document.dispatchEvent(ev)
 }
+function handleComputerDropFile({files, doc}) {
+    console.log("handleComputerDropFile", files)
+    const uploadFiles = files.reduce((prev: any, file, index) => {
+        if (!!userPreference.value.uploadFileMaxSize) {
+            const fileSizeCheckResult = file.size / 1024 / 1024 <= userPreference.value.uploadFileMaxSize
+            if (!fileSizeCheckResult) {
+                ElMessage.error('[' + file.name + ']' + $i18n.t('render.hint.fileSizeExceed') + userPreference.value.uploadFileMaxSize + 'MB')
+                return prev;
+            }
+        }
+        prev.push({
+            id: new Date().valueOf().toString() + index,
+            size: file.size,
+            name: file.name,
+            fileType: file.type,
+            file,
+            path: getPath(file.webkitRelativePath)
+        })
+        return prev
+    }, [])
+    const treeData = createUploadRequest(doc, uploadFiles)
+    handleOpenUploadDrawer(true)
+}
 function uploadHandler (e: any) {
     const files: File[] = Array.from(e.target?.files) 
+    console.log("uploadHandler", files)
     const uploadFiles = files.reduce((prev: any, file, index) => {
         if (!!userPreference.value.uploadFileMaxSize) {
             const fileSizeCheckResult = file.size / 1024 / 1024 <= userPreference.value.uploadFileMaxSize
@@ -82,6 +106,7 @@ function clickUploadFolder(doc:any) {
 onMounted(() => {
     useEventListener(document, 'docActionUploadFile', (event: any) => clickUploadFile(event.detail))  
     useEventListener(document, 'docActionUploadFolder', (event: any) => clickUploadFolder(event.detail))  
+    useEventListener(document, 'docActionDropFileFormComputer', (event: any) => handleComputerDropFile(event.detail))
 })
 </script>
 <style lang="scss" scoped>

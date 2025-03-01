@@ -36,6 +36,10 @@ function sortEntry(a, b) {
 let tableDropZone;
 let dragableItemList = [];
 function tableChildChangeHandler(args) {
+    // body row may be empty when table is loading, create root drop zone first
+    if(!tableDropZone){
+        tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
+    }
     const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
     if(allBodyRow.length === 0) return;
     // unregister all dragableItemList
@@ -59,9 +63,7 @@ function tableChildChangeHandler(args) {
             dragableItemList.push(createDropableFile(item, rowData, tableRef))
         }
     })
-    if(!tableDropZone){
-        tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
-    }
+    
     // console.log('tableChildChangeHandler', allBodyRow)
 }
 
@@ -486,7 +488,7 @@ function selectAll() {
 
 function cleanSelected() {
     if (tableRef.value) {
-        tableRef.value.setAllCheckboxRow(false);
+        cleanSelectedRows();
         emits('selectedChange', [])
     }
 }
@@ -552,6 +554,10 @@ defineExpose({
     width: 100%;
     height: 100%;
     position: relative;
+    :deep(.is-dragging){
+        background: var(--app-grey-900);
+        opacity: 0.5;
+    }
     :deep(.dropOver) {
         // overflow: hidden;
         background: var(--app-grey-900);
