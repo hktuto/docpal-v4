@@ -14,6 +14,7 @@ if(!listProvider) {
 }
 const breadcrumbList = ref<any[]>([])
 const loading = ref(false)
+const dropItems = []
 
 async function getBreadcrumb() {
     loading.value = true
@@ -29,6 +30,20 @@ async function getBreadcrumb() {
     }catch(e){
     }
     loading.value = false
+    // remove old dropItem
+    nextTick(()=>{
+        dropItems.forEach(item => {
+            if(typeof item === 'function'){
+                item()
+            }
+        })
+        breadcrumbList.value.forEach((item:any) => {
+            const element = document.getElementById('breadcrumb-'+item.id)
+            if(element) {
+                dropItems.push(createDropableBreadcrumb(element, item, listProvider.tableRef))
+            }
+        })
+    })
 }
 
 function navigate(idOrPath?:string) {
@@ -67,7 +82,8 @@ watch(idOrPath, ()=> {
             <ElIcon><ArrowRight/></ElIcon>
         </div>
         <template v-for="(item,index) in breadcrumbList" :key="item.id">
-            <div  :class="{breadItem:true, pointer: index < breadcrumbList.length - 1 }" 
+            <div :class="{breadItem:true, pointer: index < breadcrumbList.length - 1 }" 
+            :id="'breadcrumb-'+item.id"
                     @click="() => {if(index === breadcrumbList.length - 1 )return; navigate(item.id)}">
                     {{item.name}}
                 </div>
