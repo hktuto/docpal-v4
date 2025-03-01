@@ -3,6 +3,7 @@ import {draggable, dropTargetForElements, monitorForElements} from '@atlaskit/pr
 import { setCustomNativeDragPreview } from '@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview'
 import { pointerOutsideOfPreview } from '@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview'
 import { combine } from '@atlaskit/pragmatic-drag-and-drop/combine'
+import { containsFiles, getFiles } from '@atlaskit/pragmatic-drag-and-drop/external/file';
 
 import { dropTargetForExternal } from '@atlaskit/pragmatic-drag-and-drop/external/adapter';
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
@@ -11,8 +12,48 @@ import { clientApi } from 'api'
 import { emitBus, EventType } from 'eventbus';
 import { Loading } from 'element-plus/es/components/loading/src/service.mjs';
 import { AppWrapper } from '#components';
+
+const { createUploadRequest } = useUploadAIStore()
  
 export const useDropFile = () => useState('browseDropFile', () => ([]));
+
+const dragRowClassChange = (source:any, selected:boolean) => {
+    const rows = Array.isArray(source.data.data) ? source.data.data : [source.data.data]
+    rows.forEach((item:any) => {
+        const rowId = item._X_ROW_KEY;
+        const allRow = document.querySelectorAll(`tr[rowid="${rowId}"]`)
+        allRow.forEach(item => {
+            if(selected) {
+                item.classList.add('is-dragging')
+            }else{
+                item.classList.remove('is-dragging')
+            }
+        })
+    })
+}
+const resetAllClass = (tableRef:Ref<any>) => {
+    const el = tableRef.value.$el as HTMLElement
+    const dropOverElements = el.querySelectorAll('.dropOver')
+    const isDragging = el.querySelectorAll('.is-dragging')
+    dropOverElements.forEach(item => {
+        item.classList.remove('dropOver')
+    })
+    isDragging.forEach(item => {
+        item.classList.remove('is-dragging')
+    })
+}
+const tableSelectedMethod = (element:HTMLElement, selected = true) => {
+    const rowid = element.getAttribute('rowid')
+    // get all tr with that rowid
+    const allRow = document.querySelectorAll(`tr[rowid="${rowid}"]`)
+    allRow.forEach(item => {
+        if(selected) {
+            item.classList.add('dropOver')
+        }else{
+            item.classList.remove('dropOver')
+        }
+    })
+}
 
 export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<any>){
     const dragData = {
@@ -28,6 +69,7 @@ export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<a
             // check if draging item is in selected rows
             const isCurrentItemInSelectedRows = selectedRows.some((item:any) => item.id === dragData.data.id)
             if(selectedRows.length > 0 && isCurrentItemInSelectedRows) {
+                console.log("selectedRows", selectedRows)
                 dragData.data = selectedRows
             }
             return dragData
@@ -64,6 +106,13 @@ export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<a
                 },
             })
         },
+        onDragStart({source}){
+            dragRowClassChange(source, true)
+            // console.log('item drag start', args)
+        },
+        onDrop(){
+            resetAllClass(tableRef)
+        },
         
      }),
     )
@@ -78,7 +127,6 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                 return source.data.type === 'browseFolder' || source.data.type === 'browseFile'
             },
             onDragEnter({self, location,source}) {
-                console.log("drag enter", source)
                 element.classList.add('dropOver')
             },
             getIsSticky() {
@@ -86,7 +134,6 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
             },
             onDragLeave(args){
                 element.classList.remove('dropOver')
-                console.log("drag leave", args)
             },
             onDrop: async(args) => {
                 // error handle
@@ -99,7 +146,6 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                 element.classList.remove('dropOver')
                 const { $i18n } = useNuxtApp()
                 const dropItemDetail = await clientApi.api.postNuxeoDocument({idOrPath: row.id})
-                console.log("drop on target", dropItemDetail.data)
                 if(!dropItemDetail.data || !dropItemDetail.data.parentRef) return
                 ElMessageBox.confirm(
                     $i18n.t('browse.confirmMoveFile',{
@@ -126,7 +172,6 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                     }
                     
                     for(const item of copyItems) {
-                        console.log(item)
                         const param = [ 
                             { idOrPath: item.path }, 
                             { idOrPath: row.path}
@@ -146,7 +191,6 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                             await clientApi.api.postNuxeoDocumentMove(param)
                             const copyItemDetail = await clientApi.api.postNuxeoDocument({idOrPath: item.id})
                             if(copyItemDetail.data) {
-                                console.log("copyItemDetail", copyItemDetail.data)
                                 emitBus(EventType.FILE_NEED_REFRESH, {
                                     relatedIdOrPath: copyItemDetail.data.parentRef,
                                 })
@@ -162,18 +206,6 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                 })
             },
         }),
-        // monitorForElements({
-        //     canMonitor(arg:any) {
-        //         console.log("can monitor", arg)
-        //         return arg.source.data.type === 'browseFile'
-        //     },
-        //     onDragEnter({self, location,source}) {
-
-        //     }
-        //     onDrop({ location, source }){
-        //         console.log("drop", location, source)
-        //     }
-        // }),
         dropTargetForExternal({
             element,
             canDrop({ source }) {
@@ -184,28 +216,25 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                 return !!JSON.parse(data)
             },
             getData(data){
+                console.log("getData from external", data)
                 return {
                     data,
                 }
             },
             onDragEnter({self, location,source}) {
                 element.classList.add('dropOver')
-                console.log("external drag enter", source)
-            },
-            onDrag({self, location,source}) {
-                console.log("external draging over", location, source)
             },
             onDragLeave() {
                 element.classList.remove('dropOver')
-                console.log("external onDragLeave")
             },
-            onDrop() {
-                console.log('external onDrop')
+            onDrop(args) {
+                console.log('external onDrop', args)
             },
         }),
         
 )
 }
+
 
 export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<any>){
     const dragData = {
@@ -257,14 +286,14 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
             },
             onDragEnter({self, location,source}) {
                 console.log("drag enter", source)
-                element.classList.add('dropOver')
+                tableSelectedMethod(element, true)
             },
             getIsSticky() {
                 return true
             },
             onDragLeave(args){
-                element.classList.remove('dropOver')
-                console.log("drag leave", args)
+                tableSelectedMethod(element, false)
+
             },
             onDrop: async(args) => {
                 // error handle
@@ -341,45 +370,33 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                 })
             },
         }),
-        // monitorForElements({
-        //     canMonitor(arg:any) {
-        //         console.log("can monitor", arg)
-        //         return arg.source.data.type === 'browseFile'
-        //     },
-        //     onDragEnter({self, location,source}) {
-
-        //     }
-        //     onDrop({ location, source }){
-        //         console.log("drop", location, source)
-        //     }
-        // }),
         dropTargetForExternal({
             element,
-            canDrop({ source }) {
-                const data = source.getStringData('text/plain');
-                console.log("canDrop", source.data)
-                if(!data) return false
-                // TODO: check if data follow the format
-                return !!JSON.parse(data)
-            },
+            canDrop: containsFiles,
             getData(data){
                 return {
                     data,
                 }
             },
             onDragEnter({self, location,source}) {
-                element.classList.add('dropOver')
-                console.log("external drag enter", source)
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
+                tableSelectedMethod(element, true)
+
             },
             onDrag({self, location,source}) {
-                console.log("external draging over", location, source)
+                // console.log("external draging over", location, source)
             },
             onDragLeave() {
-                element.classList.remove('dropOver')
-                console.log("external onDragLeave")
+                
+                tableSelectedMethod(element, false)
+
             },
-            onDrop() {
-                console.log('external onDrop')
+            onDrop: async({ source, location }) => {
+                const files = await getFiles({ source });
+                const ev = new CustomEvent('docActionDropFileFormComputer', { detail: files })
+                document.dispatchEvent(ev)
             },
         }),
         
@@ -387,18 +404,28 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
 }
 
 export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
+
     const root = tableRef.value.$el as HTMLElement
     const element = root.querySelector('.vxe-table--main-wrapper')
-    console.log(docDetail.value, root, element)
     if(!element) return
     return combine(
         dropTargetForElements({
             element,
             canDrop({ source }) {
+                // if drop item is in current table, then return false
+                const rowId = source.element.getAttribute('rowid')
+                if(rowId){
+                    const isCurrentTableData = tableRef.value.getRowById(rowId)
+                    if(isCurrentTableData){
+                        return false
+                    }
+                }
                 return source.data.type === 'browseFolder' || source.data.type === 'browseFile'
             },
             onDragEnter({self, location,source}) {
-                console.log("drag enter", source)
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
                 element.classList.add('dropOver')
             },
             getIsSticky() {
@@ -406,7 +433,6 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
             },
             onDragLeave(args){
                 element.classList.remove('dropOver')
-                console.log("drag leave", args)
             },
             onDrop: async(args) => {
                 // error handle
@@ -483,33 +509,47 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
         }),
         dropTargetForExternal({
             element,
-            canDrop({ source }) {
-                const data = source.getStringData('text/plain');
-                console.log("canDrop", source.data)
-                if(!data) return false
-                // TODO: check if data follow the format
-                return !!JSON.parse(data)
-            },
+            canDrop: containsFiles,
             getData(data){
                 return {
                     data,
                 }
             },
             onDragEnter({self, location,source}) {
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
                 element.classList.add('dropOver')
-                console.log("external drag enter", source)
             },
             onDrag({self, location,source}) {
-                console.log("external draging over", location, source)
             },
             onDragLeave() {
                 element.classList.remove('dropOver')
                 console.log("external onDragLeave")
             },
-            onDrop() {
-                console.log('external onDrop')
+            onDrop: async({ source, location }) => {
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
+                const { $i18n } = useNuxtApp()
+                // const files = await getFiles({ source });
+                // console.log("external onDrop", files)
+                const files = await addDataTransfer(source)
+                console.log("external onDrop", files)
+                if(files.length === 0) {
+                    ElMessage.error($i18n.t('dpTip.uploadEmptyFile'))
+                    return
+                }
+                createUploadRequest(docDetail.value, files)
+                const ev = new CustomEvent('openUploadDrawer', { detail: true })
+                document.dispatchEvent(ev)
+                // const ev = new CustomEvent('docActionDropFileFormComputer', { detail: {files, doc: docDetail.value} })
+                // document.dispatchEvent(ev)
             },
         }),
         
 )
 }
+
+
+

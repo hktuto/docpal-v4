@@ -490,6 +490,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 childList: true,
                 subtree: true
             })
+            nextTick(() => {
+                params.childChangeHander()
+            })
         }
     })
 
