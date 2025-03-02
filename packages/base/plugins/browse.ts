@@ -11,6 +11,7 @@ import ShareBtn from "../components/browse/share/publicButton.vue";
 import InternalShareDialog from '../components/browse/info/Acl/EditDialog.vue'
 import ChangeDocTypeDialog from '../components/browse/Actions/changeDocType/dialog.vue'
 import watermarkDialog from '../components/browse/Actions/watermark.vue'
+import popPreview from '../components/browse/Actions/popPreview.vue'
 // import SharePublicButton from '../components/global/sharePublicButton.vue'
 export default defineNuxtPlugin(() => {
     const { globalSlots } = useGlobalSetting()
@@ -68,6 +69,11 @@ export default defineNuxtPlugin(() => {
     },{
         name: 'watermarkDialog',
         component: watermarkDialog,
+        show: true,
+        order: 1,
+    },{
+        name: 'popPreview',
+        component: popPreview,
         show: true,
         order: 1,
     })

@@ -196,7 +196,16 @@ function calMinWidth(){
                     </div>
                 </div>
                 <div class="content">
-                    <div v-if="loading || !docDetail || !docDetail.properties" class="noSupportContainer" >
+                    <BrowsePreview
+                        :docDetail="docDetail"
+                        :docPermission="docPermission"
+                        :editMode="editMode"
+                        :editable="AllowTo({feature:'ReadWrite', permission:docPermission })"
+                        :loadAnnotations="true && allowFeature('DOC_ANNOTATION')"
+                        :print="docPermission.print && allowFeature('DOC_PRINT')"
+                        :readOnly="!AllowTo({feature:'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')"
+                    />
+                    <!-- <div v-if="loading || !docDetail || !docDetail.properties" class="noSupportContainer" >
                         {{ $t('common_loading') }}
                     </div>
                 <template v-else>
@@ -211,13 +220,13 @@ function calMinWidth(){
                             :editable="AllowTo({feature:'ReadWrite', permission:docPermission })"
                             :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: docPermission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')}"
                             @saved="() => handleRefresh(false)"
-                        />
-                        <!-- <BrowseAiPopover v-if="appStore.licenseFeatures.ASK_AI"  :doc="docDetail"></BrowseAiPopover> -->
-                    </div>
+                        /> 
+                        <BrowseAiPopover v-if="appStore.licenseFeatures.ASK_AI"  :doc="docDetail"></BrowseAiPopover>
+                    </div> 
                     <h2 v-else class="noSupportContainer" >
                         {{ $t('msg_thisFormatFileIsNotSupported') }}
-                    </h2>
-                </template>
+                    </h2> 
+                </template> -->
                     <div class="info">
                         <BrowseInfo v-if="showInfo" :doc="docDetail" :commentId="commentId" :permission="docPermission" :infoOpened="infoOpened" :hidePreview="true" @close="infoOpened = false"
                             @refresh="handleRefresh"  />

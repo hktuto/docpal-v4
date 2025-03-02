@@ -32,9 +32,8 @@ const dragRowClassChange = (source:any, selected:boolean) => {
     })
 }
 const resetAllClass = (tableRef:Ref<any>) => {
-    const el = tableRef.value.$el as HTMLElement
-    const dropOverElements = el.querySelectorAll('.dropOver')
-    const isDragging = el.querySelectorAll('.is-dragging')
+    const dropOverElements = document.querySelectorAll('.dropOver')
+    const isDragging = document.querySelectorAll('.is-dragging')
     dropOverElements.forEach(item => {
         item.classList.remove('dropOver')
     })
@@ -127,6 +126,7 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                 return source.data.type === 'browseFolder' || source.data.type === 'browseFile'
             },
             onDragEnter({self, location,source}) {
+                resetAllClass(tableRef)
                 element.classList.add('dropOver')
             },
             getIsSticky() {
@@ -208,27 +208,34 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
         }),
         dropTargetForExternal({
             element,
-            canDrop({ source }) {
-                const data = source.getStringData('text/plain');
-                console.log("canDrop", source.data)
-                if(!data) return false
-                // TODO: check if data follow the format
-                return !!JSON.parse(data)
-            },
-            getData(data){
-                console.log("getData from external", data)
-                return {
-                    data,
-                }
-            },
+            canDrop: containsFiles,
             onDragEnter({self, location,source}) {
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
+                resetAllClass(tableRef)
                 element.classList.add('dropOver')
             },
             onDragLeave() {
                 element.classList.remove('dropOver')
             },
-            onDrop(args) {
-                console.log('external onDrop', args)
+            onDrop: async({source, location}) => {
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
+                const { $i18n } = useNuxtApp()
+                // const files = await getFiles({ source });
+                // console.log("external onDrop", files)
+                const files = await addDataTransfer(source)
+                console.log("external onDrop", files)
+                if(files.length === 0) {
+                    ElMessage.error($i18n.t('dpTip.uploadEmptyFile'))
+                    return
+                }
+                createUploadRequest(row, files)
+                const ev = new CustomEvent('openUploadDrawer', { detail: true })
+                document.dispatchEvent(ev)
+                resetAllClass(tableRef)
             },
         }),
         
@@ -285,7 +292,7 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                 return source.data.type === 'browseFolder' || source.data.type === 'browseFile'
             },
             onDragEnter({self, location,source}) {
-                console.log("drag enter", source)
+                resetAllClass(tableRef)
                 tableSelectedMethod(element, true)
             },
             getIsSticky() {
@@ -373,30 +380,33 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
         dropTargetForExternal({
             element,
             canDrop: containsFiles,
-            getData(data){
-                return {
-                    data,
-                }
-            },
             onDragEnter({self, location,source}) {
                 if(location.current.dropTargets[0].element !== element) {
                     return
                 }
-                tableSelectedMethod(element, true)
-
-            },
-            onDrag({self, location,source}) {
-                // console.log("external draging over", location, source)
+                resetAllClass(tableRef)
+                element.classList.add('dropOver')
             },
             onDragLeave() {
-                
-                tableSelectedMethod(element, false)
-
+                element.classList.remove('dropOver')
             },
             onDrop: async({ source, location }) => {
-                const files = await getFiles({ source });
-                const ev = new CustomEvent('docActionDropFileFormComputer', { detail: files })
+                if(location.current.dropTargets[0].element !== element) {
+                    return
+                }
+                const { $i18n } = useNuxtApp()
+                // const files = await getFiles({ source });
+                // console.log("external onDrop", files)
+                const files = await addDataTransfer(source)
+                console.log("external onDrop", files)
+                if(files.length === 0) {
+                    ElMessage.error($i18n.t('dpTip.uploadEmptyFile'))
+                    return
+                }
+                createUploadRequest(row, files)
+                const ev = new CustomEvent('openUploadDrawer', { detail: true })
                 document.dispatchEvent(ev)
+                resetAllClass(tableRef)
             },
         }),
         
@@ -426,6 +436,7 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
                 if(location.current.dropTargets[0].element !== element) {
                     return
                 }
+                resetAllClass(tableRef)
                 element.classList.add('dropOver')
             },
             getIsSticky() {
@@ -510,22 +521,14 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
         dropTargetForExternal({
             element,
             canDrop: containsFiles,
-            getData(data){
-                return {
-                    data,
-                }
-            },
             onDragEnter({self, location,source}) {
                 if(location.current.dropTargets[0].element !== element) {
                     return
                 }
                 element.classList.add('dropOver')
             },
-            onDrag({self, location,source}) {
-            },
             onDragLeave() {
                 element.classList.remove('dropOver')
-                console.log("external onDragLeave")
             },
             onDrop: async({ source, location }) => {
                 if(location.current.dropTargets[0].element !== element) {
@@ -543,6 +546,7 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
                 createUploadRequest(docDetail.value, files)
                 const ev = new CustomEvent('openUploadDrawer', { detail: true })
                 document.dispatchEvent(ev)
+                resetAllClass(tableRef)
                 // const ev = new CustomEvent('docActionDropFileFormComputer', { detail: {files, doc: docDetail.value} })
                 // document.dispatchEvent(ev)
             },
