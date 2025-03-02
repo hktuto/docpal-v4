@@ -16,7 +16,7 @@ const previewImgUrl = ref('')
 const { x, y } = useMouse()
 let openTimeoutFn:any;
 let closeTimeoutFn:any;
-const openDelay = 300;
+const openDelay = 1000;
 const closeDelay = 500;
 const previewSize = ref(500);
 const position = ref({
@@ -125,13 +125,11 @@ function close(){
             openTimeoutFn = null
         }
         if(!closeTimeoutFn){
-            console.log("closeTimeoutFn", closeTimeoutFn)
             closeTimeoutFn = setTimeout(() => {
                 opened.value = false
                 docDetail.value = null
                 previewImgUrl.value = ""
                 closeTimeoutFn = null
-                console.log("closeTimeoutFn", closeTimeoutFn)
             }, closeDelay)
         }
     })

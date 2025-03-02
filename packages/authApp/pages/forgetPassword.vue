@@ -22,7 +22,7 @@
                 </template>
                 </el-form>
             </template>
-            <el-button class="intro" @click="login" link>
+            <el-button class="intro" @click="login" text>
                 {{ $t('login') }}
             </el-button>
             <div v-if="state.time > 0">
@@ -101,8 +101,8 @@
     
 <style scoped lang="scss">
     .LoginContainer{
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       display: grid;
       place-items: center;
       padding: var(--el-component-size-small);

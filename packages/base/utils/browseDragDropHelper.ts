@@ -12,7 +12,6 @@ import { clientApi } from 'api'
 import { emitBus, EventType } from 'eventbus';
 import { Loading } from 'element-plus/es/components/loading/src/service.mjs';
 import { AppWrapper } from '#components';
-
 const { createUploadRequest } = useUploadAIStore()
  
 export const useDropFile = () => useState('browseDropFile', () => ([]));
@@ -55,6 +54,7 @@ const tableSelectedMethod = (element:HTMLElement, selected = true) => {
 }
 
 export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<any>){
+    console.log("createDropableFile", row, element)
     const dragData = {
         key: 'any',
         type: 'browseFile',
@@ -68,7 +68,6 @@ export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<a
             // check if draging item is in selected rows
             const isCurrentItemInSelectedRows = selectedRows.some((item:any) => item.id === dragData.data.id)
             if(selectedRows.length > 0 && isCurrentItemInSelectedRows) {
-                console.log("selectedRows", selectedRows)
                 dragData.data = selectedRows
             }
             return dragData
@@ -106,6 +105,8 @@ export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<a
             })
         },
         onDragStart({source}){
+            console.log("onDragStart", source)
+            emitBus(EventType.FILE_PREVIEW_CLOSE)
             dragRowClassChange(source, true)
             // console.log('item drag start', args)
         },
@@ -285,6 +286,9 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                     },
                 })
             },
+            onDragStart({source}){
+                emitBus(EventType.FILE_PREVIEW_CLOSE)
+            }
         }),
         dropTargetForElements({
             element,

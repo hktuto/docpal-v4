@@ -416,11 +416,14 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
 let tableDropZone:any;
 let dragableItemList:any[] = [];
 function tableChildChangeHandler(args:any) {
+    if(!listProvider?.docDetail.value) {
+        return
+    };
     // body row may be empty when table is loading, create root drop zone first
     if(!tableDropZone){
         tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
     }
-    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
+    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-body--row')
     if(allBodyRow.length === 0) return;
     // unregister all dragableItemList
     dragableItemList.forEach(item => {
@@ -443,8 +446,6 @@ function tableChildChangeHandler(args:any) {
             dragableItemList.push(createDropableFile(item, rowData, tableRef))
         }
     })
-    
-    // console.log('tableChildChangeHandler', allBodyRow)
 }
 
 function dblClickHandler(row: any) {

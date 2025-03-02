@@ -44,6 +44,7 @@ const docPermission = ref()
 const selectedList = ref<any[]>([])
 
 async function getDoc(){
+    console.log("getDoc", idOrPath.value)
     docDetail.value = null
     docPermission.value = null
     selectedList.value = []
