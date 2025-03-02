@@ -24,7 +24,8 @@ const { dragState, setupDropable, extractClosestEdge } = useDropable({
     key: (tabManager as any).tabDataKey,
     canMonitor: () => {return true},
     canDrop: ({source}) => {
-        return source.data.type === 'menu'
+        const acceptTypes = ['menu', 'tab']
+        return acceptTypes.includes(source.data.type)
     },
     onDropHandler :({ location, source, target}:any) => {
         const isTab = isTabData(source.data)

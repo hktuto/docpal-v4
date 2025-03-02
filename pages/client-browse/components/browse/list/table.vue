@@ -1,4 +1,5 @@
 <script lang="tsx" setup>
+import { emitBus, EventType } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
 import dayjs from "dayjs";
 
@@ -33,39 +34,6 @@ function sortEntry(a, b) {
     return b.isFolder ? 1 : -1
 }
 
-let tableDropZone;
-let dragableItemList = [];
-function tableChildChangeHandler(args) {
-    // body row may be empty when table is loading, create root drop zone first
-    if(!tableDropZone){
-        tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
-    }
-    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
-    if(allBodyRow.length === 0) return;
-    // unregister all dragableItemList
-    dragableItemList.forEach(item => {
-        // check if item is a function, if so, call it
-        if (typeof item === 'function') {
-            item();
-        }
-    })
-    dragableItemList = [];
-    // register all dragableItemList
-    allBodyRow.forEach(item => {
-        const rowid = item.getAttribute('rowid');
-        if(!rowid) return;
-        const rowData = tableRef.value.getRowById(rowid);
-
-        if(!rowData) return;
-        if(rowData.isFolder){
-            dragableItemList.push(createDropableFolder(item,rowData, tableRef))
-        }else{
-            dragableItemList.push(createDropableFile(item, rowData, tableRef))
-        }
-    })
-    
-    // console.log('tableChildChangeHandler', allBodyRow)
-}
 
 const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
     id: 'browseTableSetting',
@@ -265,8 +233,9 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             {
                 code: 'docActionDelete',
                 name: 'filePopover_delete',
-                action: ({row}) => {
-                    const ev = new CustomEvent('docActionDelete', {detail: row})
+                action: async({row}) => {
+                    const detail = await clientApi.api.postNuxeoDocument({idOrPath: row.id}).then(res => res.data)
+                    const ev = new CustomEvent('docActionDelete', {detail: detail})
                     document.dispatchEvent(ev)
                 }
             },
@@ -322,7 +291,10 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         const permission = await getPermission(row.id, userId.value)
         return permission
     },
-    permissionMethod: ({options, code, column, row, rowIndex, additionalData}: any) => {
+    permissionMethod: ({options, code, column, row, rowIndex, additionalData}: any):{
+        visible: boolean,
+        disabled: boolean
+    } => {
         // if click on empty row, return empty
         if (!row) {
             if (code === 'docActionRefresh') {
@@ -375,11 +347,13 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             const ManageCode = ['docActionInternalShare']
             if (ManageCode.includes(code)) {
                 return {
-                    visible: AllowTo({feature: 'ManageRecord', permission: additionalData})
+                    visible: AllowTo({feature: 'ManageRecord', permission: additionalData}),
+                    disabled: false
                 }
             }
             return {
                 visible: AllowTo({feature: 'ReadWrite', permission: additionalData}),
+                disabled: false
             }
         }
         // get permission 
@@ -395,10 +369,6 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                 visible: !row.isFolder && AllowTo({feature: 'ReadWrite', permission: additionalData}),
                 disabled: false
             }
-        }
-        return {
-            visible: false,
-            disabled: false
         }
     },
     selectChangeHander: (selectedRows: any[]) => {
@@ -433,12 +403,49 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         }
     },
     optionalEvent: {
-        checkboxChange: ({row, column, rowIndex}) => {
-            console.log("check box change", row, column, rowIndex)
+        cellMouseenter: ({row, column, rowIndex}) => {
+            emitBus(EventType.FILE_PREVIEW_OPEN, row)
+        },
+        cellMouseleave: ({row, column, rowIndex}) => {
+            emitBus(EventType.FILE_PREVIEW_CLOSE, row)
         },
     }
 })
 
+
+let tableDropZone:any;
+let dragableItemList:any[] = [];
+function tableChildChangeHandler(args:any) {
+    // body row may be empty when table is loading, create root drop zone first
+    if(!tableDropZone){
+        tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
+    }
+    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
+    if(allBodyRow.length === 0) return;
+    // unregister all dragableItemList
+    dragableItemList.forEach(item => {
+        // check if item is a function, if so, call it
+        if (typeof item === 'function') {
+            item();
+        }
+    })
+    dragableItemList = [];
+    // register all dragableItemList
+    allBodyRow.forEach(item => {
+        const rowid = item.getAttribute('rowid');
+        if(!rowid) return;
+        const rowData = tableRef.value.getRowById(rowid);
+
+        if(!rowData) return;
+        if(rowData.isFolder){
+            dragableItemList.push(createDropableFolder(item,rowData, tableRef))
+        }else{
+            dragableItemList.push(createDropableFile(item, rowData, tableRef))
+        }
+    })
+    
+    // console.log('tableChildChangeHandler', allBodyRow)
+}
 
 function dblClickHandler(row: any) {
     if (row.source === 'tempFile') {
@@ -509,6 +516,7 @@ onDeactivated(() => {
             }
         })
     }
+    emitBus(EventType.FILE_PREVIEW_CLOSE)
 })
 
 

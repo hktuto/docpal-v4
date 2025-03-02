@@ -5,6 +5,8 @@
 </template>
 
 <script lang="ts" setup>
+import { emitBus, EventType } from 'eventbus'
+
 import { useEventListener } from '@vueuse/core'
 import { Loading } from '@element-plus/icons-vue';
 import { ElNotification, ElMessageBox } from 'element-plus'
@@ -58,6 +60,9 @@ async function deleteItem(doc:any, deleteType?: 'folder' | 'file'){
             type: 'success',
             duration: 2000
         });
+        emitBus(EventType.FILE_NEED_REFRESH, {
+            relatedIdOrPath: doc.parentRef
+        })
     })
 }
 useEventListener(document, 'docActionDelete', (event: any) => deleteItem(event.detail, event.detail.deleteType)) 

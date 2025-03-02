@@ -205,7 +205,6 @@ export const useDropable = ({
             },
             onDrop({ location, source }){
                 const target:any = location.current.dropTargets[0]
-                console.log("drop", target)
                 return onDropHandler({ location, source, target })
             }
         })
@@ -315,12 +314,11 @@ function createDropTargetForElements({
 }:DropTargtParams):CleanupFn{
     return dropTargetForElements({
         element,
-        canDrop({ source }) {
-            if(canDrop) return canDrop({ source })
-            if (source.element === element) {
+        canDrop(args) {
+            if (args.source.element === element) {
                 return false
             }
-            console.log("canDrop", source.data)
+            if(canDrop) return canDrop(args)
             return true
         },
         getData({input}) {
@@ -364,8 +362,8 @@ function createDropTargetForElements({
             if(onDragLeave) onDragLeave()
             dragState.value = { type: "idle" }
         },
-        onDrop() {
-            if(onDropToOther) onDropToOther()
+        onDrop(args) {
+            if(onDropToOther) onDropToOther(args)
             dragState.value = { type: "idle" }
         },
     })

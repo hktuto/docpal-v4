@@ -13,6 +13,8 @@ export enum EventType {
     CLOSE_SETTINGS = 'close-settings',
     FILE_NEED_REFRESH = 'file-need-refresh',
     FILE_DELETED = 'FILE_DELETED',
+    FILE_PREVIEW_OPEN = 'file-preview-open',
+    FILE_PREVIEW_CLOSE = 'file-preview-close',
 }
 
 export enum GlobalPasteEvent {
