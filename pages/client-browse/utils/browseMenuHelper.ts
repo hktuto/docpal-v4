@@ -12,6 +12,7 @@ export function createBrowseListPageParams(params:BrowseListPageParams){
         component: "LazyBrowsePage",
         props:{
             idOrPath: params.idOrPath,
+            ...params,
             filter:{}
         }
     }

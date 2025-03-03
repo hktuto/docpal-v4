@@ -131,7 +131,7 @@ watch(() => props.commentId, async() => {
     <el-tab-pane v-if="ocrPermission(detail)" :label="$t('rightDetail_ocr')" name="ocr">
         <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
-    <el-tab-pane v-if="allowFeature('DOC_COMMENT')" :label="$t('rightDetail_comments')" name="comments">
+    <el-tab-pane v-if="allowFeature('DOC_COMMENT')" class="pane--comment" :label="$t('rightDetail_comments')" name="comments">
         <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :commentId="commentId" :disabled="checkPermission(permission)"/>
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder && allowFeature('DOCUMENT_CONVERSION')" :label="$t('convert_convert')" name="convert">
@@ -231,5 +231,11 @@ watch(() => props.commentId, async() => {
   user-select: none;
   -ms-touch-action: none;
   touch-action: none;
+}
+.dp-tabs--auto {
+    overflow: hidden;
+    .pane--comment {
+        overflow: hidden
+    }
 }
 </style>

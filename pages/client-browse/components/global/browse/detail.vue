@@ -18,7 +18,7 @@ const props = withDefaults(
     commentId: '',
     home: ""
     })
-const { idOrPath } = toRefs(props)
+const { idOrPath, commentId } = toRefs(props)
 const itemRefs = ref({});
 defineOptions({
     name: 'LazyBrowseDetailDead'
@@ -134,8 +134,13 @@ function goParent(){
 
 useEventListener(document, 'closeFilePreview', closePreview)
 
-watch(idOrPath, () => {
+watch([idOrPath, commentId], (newVal, oldVal) => {
     getDetail()
+    if(newVal && newVal[1]) {
+        infoOpened.value = true
+    } else if(oldVal && oldVal[1]) {
+        infoOpened.value = false
+    }
 },{
     immediate:true,
 })

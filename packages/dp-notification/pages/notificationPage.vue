@@ -50,9 +50,11 @@
 <script lang="ts" setup>
 
 import { clientApi } from 'api'
+import { TabManagerKey } from '#imports'
+
 import { notiShowView, notiHandleView } from '../utils/notificationHelper.ts'
 const route = useRoute()
-
+const tabProvider = inject(TabManagerKey)
 function datesFormat(prop: string = 'modifiedDate') {
     return {
         "joiner": "",
@@ -71,6 +73,7 @@ const state = reactive<any>({
   selectList: [],
   extraParams: {}
 })
+
 // #region module: table setting
   const tableRef = ref()
   const pageParams = {
@@ -158,7 +161,7 @@ function handleAction (command:string, row: any, rowIndex: number) {
       handleDeleteSelected(row)
       break
     case 'view':
-      notiHandleView(row)
+      notiHandleView(row, tabProvider)
     case 'dismiss':
       handleDismissSelected(row)
       break
