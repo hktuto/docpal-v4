@@ -21,8 +21,6 @@ import { Finished, Select } from '@element-plus/icons-vue'
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 const props = withDefaults( defineProps<{
-    instanceId?: string,
-    caseId?: string,
     dates?: any;
     setting?: any;
     hideSetting?: boolean,
@@ -63,16 +61,16 @@ function getSize(state: string) {
   }
   return map[state]
 }
-const route = useRoute()
+const CMDProvider = inject(CaseManagementDashboardKey)
 async function init() {
-  const id = props.instanceId
-  const caseTypeId = props.caseId
+  const id = CMDProvider.instanceId?.value || null
+  const _caseTypeId = CMDProvider.caseTypeId?.value || null
   if(id){
-    const { data } = await adminApi.api.getCaseDashboardInstanceCaseidActivity(props.instanceId) as any
+    const { data } = await adminApi.api.getCaseDashboardInstanceCaseidActivity(id) as any
     state.activityList = data
   } 
-  else if(caseTypeId){
-    const { data } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActivity(caseTypeId) as any
+  else if(_caseTypeId){
+    const { data } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActivity(_caseTypeId) as any
     state.activityList = data
   } 
 }
