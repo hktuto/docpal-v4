@@ -160,7 +160,7 @@ async function getEvents() {
 onMounted(() => {
   getFilter();
   getEvents();
-  clientApi.api.getPolicyRetentionsPolicyidScanDocument(414105); // 手动扫描
+  // clientApi.api.getPolicyRetentionsPolicyidScanDocument(414105); // 手动扫描
   // clientApi.api.getPolicyRetentionsPolicyidScanExpired(414105); // 手动完成
 });
 </script>
