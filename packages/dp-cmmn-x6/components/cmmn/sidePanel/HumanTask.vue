@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { updateExtentionProperties, getExtentionProperties } from '../../../utils/cmmnConfig'
 const props = defineProps(['graph', 'node'])
+import {adminApi} from 'api'
 const {node} = toRefs(props)
 const { caseId } = useCmmnGraph();
+const caseProvider = inject(CaseManagementEditorKey)
 const state = reactive<any>({
     data: [],
     activeName: 'field',
@@ -31,6 +33,52 @@ function init(nodeData: any) {
     state.isStartTask = isStartingTask && isStartingTask[0] && isStartingTask[0].value
 }
 
+const formDialogVisible = ref(false);
+const fromDesignRef = ref();
+const fieldListApi  = computed(() => {
+    let data = {
+        labelKey: 'attr_name',
+        nameKey: 'attr_id',
+        data: caseProvider.allInfo.value
+    }
+    return data
+})
+
+async function formSubmit(){
+    
+    const json = fromDesignRef.value.getFormJson()
+    await adminApi.api.postRelationSave({
+        processKey: caseId.value,
+        userTaskId: node.value.data.data.attr_id,
+        jsonValue: JSON.stringify(json),
+        versionId: caseProvider.versionId.value
+    })
+    formDialogVisible.value = false;
+}
+async function editForm(){
+
+    // formDialog.value.handleOpen(state.data)
+    // console.log("editForm", caseId.value, node.value.data.data.attr_id, caseProvider.versionId.value)
+    const response = await adminApi.api.getRelationQuery({
+        processKey: caseId.value,
+        userTaskId: node.value.data.data.attr_id,
+        versionId: caseProvider.versionId.value
+    });
+    if(!response || !response.data){
+        throw createError('Server Error');
+    }
+    formDialogVisible.value = true;
+    setTimeout(() => {
+        if(!response || !response.data) return;
+        if(response?.data.length > 0) {
+            const json = JSON.parse(response.data[0].jsonValue || "{}")
+            fromDesignRef.value.setFormJson(json)
+        }else{
+            fromDesignRef.value.setFormJson({})
+        }
+    })
+}
+
 watch(node, ()=> {
     if(node.value) {
         init(node.value.data)
@@ -47,7 +95,8 @@ watch(node, ()=> {
         <CmmnSidePanelUiLabel :node="node"/>
         <CmmnSidePanelUiItemControl :node="node"/>
         <CmmnSidePanelUiIsStartTask v-model="state.isStartTask" @change="handleSaveStartTask" />
-<!--        <CmmnSidePanelUiAssignee :node="node" :graph="graph" />-->
+        <ElButton type="primary" @click="editForm">Edit Form</ElButton>
+       <CmmnSidePanelUiAssignee :node="node" :graph="graph" />
         <el-tabs v-model="state.activeName" @tab-click="handleClick">
             <el-tab-pane :label="$t('workflowEdior.formField')" name="field">
                 <CmmnSidePanelDraggable :list="state.data" :graph="graph"
@@ -57,6 +106,15 @@ watch(node, ()=> {
                 </CmmnSidePanelDraggable>
             </el-tab-pane>
         </el-tabs>
+
+        
+        <ElDialog v-model="formDialogVisible" width="100%" top="0" append-to-body destroy-on-close>
+            <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi"  >
+                <template #submit>
+                    <ElButton type="primary" @click="formSubmit">{{ $t('submit')}}</ElButton>
+                </template>
+            </FormDesigner>
+        </ElDialog>
     </div>
 </template>
 

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 
 import { clientApi } from 'api'
-const home = ref({secondId:'8fbbac85-5998-429f-ab00-a0e67f3f5ff8'})
-const idOrPath = ref('8fbbac85-5998-429f-ab00-a0e67f3f5ff8')
+const home = ref({secondId:''})
+const idOrPath = ref('/')
 
 const tableRef = ref()
 function handleRefresh(){
@@ -31,7 +31,9 @@ function getInfo(){
     // get options
     if(options.data.folderCabinetId && formData[options.data.folderCabinetId]) {
         // console.log({formData});
-        home.value = formData[options.data.folderCabinetId]
+        home.value = {
+            secondId: formData[options.data.folderCabinetId]
+        }
     }
 }
 
@@ -52,11 +54,14 @@ onMounted(() => {
 
 <template>
     <div class="browse-cabinet-container">
-     <BrowseMiniTable ref="tableRef" :home="home" >
+     <BrowseMiniTable v-if="home.secondId" ref="tableRef" :home="home" >
         <template #toolbar_buttons> 
             <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
         </template>
     </BrowseMiniTable>
+    <template v-else>
+        No data
+    </template>
     </div>
 </template>
 

@@ -41,10 +41,12 @@ const {
     },
   ],
   dblClickAction: ({ row }) => {
+    console.log("dblClickAction", row)
     routerProvider?.navigateTo(
       caseManageDetailPage({
         name: row.name,
         id: row.id,
+        data: row
       })
     );
   },

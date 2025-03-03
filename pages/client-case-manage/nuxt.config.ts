@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module'
   ],
   extends:[
+    "../../packages/workflow",
     "../../packages/dp-watermark",
     "../../packages/base",
     "../../packages/dp-notification",
