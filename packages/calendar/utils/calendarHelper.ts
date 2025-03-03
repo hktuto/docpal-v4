@@ -5,9 +5,13 @@ export const viewName = [
 export type CalendarOptions = {
     allowCreate: boolean,
     editable: boolean,
+    showWorkflowFilter: boolean,
     showLocationFilter: boolean,
     showUserFilter: boolean,
     showCategoryFilter: boolean,
+    defaultUserFilter:string[],
+    defaultLocationFilter:string[],
+    defaultCategoryFilter:string[],
     view: "day" | "week" | "month-grid" ,
 }
 /**
