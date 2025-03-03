@@ -194,6 +194,15 @@ onDeactivated(() => {
 })
 
 
+const filtetColumnWidth = computed(() => {
+    let count = 0;
+    if(options.showLocationFilter) count ++;
+    if(options.showWorkflowFilter) count ++;
+    if(options.showUserFilter) count ++;
+    if(options.showCategoryFilter) count ++;
+    return 24 / count
+})
+
 watch(() => [setting, options],() =>{
     if(setting.value){
         setupCalendat()
@@ -213,24 +222,32 @@ defineExpose({
 
 <template>
     <div class="calendarViewerContainer">
-        <template v-if="options.showLocationFilter || options.showUserFilter || options.showCategoryFilter">
+        <template v-if="options.showLocationFilter ||options.showWorkflowFilter || options.showUserFilter || options.showCategoryFilter">
             <div class="filterContainer">
+                <ElForm label-position="top">
                 <ElRow :gutter="20">
-                    <ElCol :span="8">
+                    <ElCol v-if="options.showWorkflowFilter" :span="filtetColumnWidth">
+                        <ElFormItem label="Workflow">
+                            <ElSelect v-model="locationFiterOptions" multiple placeholder="Select">
+                                <ElOption v-for="item in locationFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            </ElSelect>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol v-if="options.showLocationFilter" :span="filtetColumnWidth">
                         <ElFormItem label="Location">
                             <ElSelect v-model="locationFiterOptions" multiple placeholder="Select">
                                 <ElOption v-for="item in locationFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
-                    <ElCol :span="8">
+                    <ElCol v-if="options.showUserFilter" :span="filtetColumnWidth">
                         <ElFormItem label="User">
                             <ElSelect v-model="userFiterOptions" multiple placeholder="Select">
                                 <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
-                    <ElCol :span="8">
+                    <ElCol v-if="options.showCategoryFilter" :span="filtetColumnWidth">
                         <ElFormItem label="Category">
                             <ElSelect v-model="categoryFiterOptions" multiple placeholder="Select">
                                 <ElOption v-for="item in categoryFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
@@ -238,7 +255,7 @@ defineExpose({
                         </ElFormItem>   
                         </ElCol>
                 </ElRow>
-                
+                </ElForm>
                
             </div>
         </template>

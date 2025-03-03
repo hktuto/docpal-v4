@@ -251,7 +251,7 @@ export function allowFeature(f: string) {
   // if(f=== 'AUDIT')return false
   // if(f==='BULK_IMPORT') return false
   const features = useFeature().value
-  if(features[f]) return features[f]
+  if(features && features[f]) return features[f]
   return false
 }
 
