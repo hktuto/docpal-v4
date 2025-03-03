@@ -50,7 +50,9 @@ const languageReady = ref(false)
 onMounted(async() => {
     await getLocale()
     languageReady.value = true
-    usernameEl.value.focus()
+    nextTick(()=>{
+        if(usernameEl.value) usernameEl.value.focus()
+    })
 });
 </script>
 
