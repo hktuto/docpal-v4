@@ -53,7 +53,7 @@ async function loadJsonAndXml () {
     format:'blob'
   }) as any
   const cmmnString = await blob.text()
-  editorEl.value.init(cmmnString, styleJson, readOnly.value)
+  editorEl.value.init(cmmnString, styleJson, readOnly.value, props.versionId)
   
 }
 async function init(){

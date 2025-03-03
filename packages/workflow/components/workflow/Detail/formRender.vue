@@ -6,7 +6,6 @@
             <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef"
                 ></WorkflowDetailReader>
         </template>
- 
         <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]="{data}">
             <component :is="item.component" :ref="(el: any) => formRenderSlotsRef[item.name] = el" 
                 :disabled="state.readonly"

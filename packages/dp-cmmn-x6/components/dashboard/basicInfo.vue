@@ -24,7 +24,66 @@ const props = withDefaults( defineProps<{
     setting?: any;
     hideSetting?: boolean,
 }>() , {
-    setting: {},
+    setting: {
+    "layout": [
+        {
+            "id": "Patient_Name",
+            "name": "Patient Name",
+            "type": "short_text",
+            "width": "100%"
+        },
+        {
+            "id": "phone",
+            "name": "phone",
+            "type": "short_text",
+            "width": "100%"
+        },
+        {
+            "id": "Date_of_Birth",
+            "name": "Date of Birth",
+            "type": "date",
+            "width": "50%"
+        },
+        {
+            "id": "Age",
+            "name": "Age",
+            "type": "short_text"
+        },
+        {
+            "id": "Gender",
+            "name": "Gender",
+            "type": "short_text"
+        },
+        {
+            "id": "Weight",
+            "name": "Weight",
+            "type": "short_text"
+        },
+        {
+            "id": "Refer_By",
+            "name": "Refer By",
+            "type": "short_text",
+            "width": "100%"
+        },
+        {
+            "id": "Medical_History",
+            "name": "Medical History",
+            "type": "string",
+            "width": "100%"
+        },
+        {
+            "id": "Pacemaker",
+            "name": "Pacemaker",
+            "type": "boolean"
+        },
+        {
+            "id": "Pregnamcy",
+            "name": "Pregnamcy",
+            "type": "boolean"
+        }
+    ],
+    "defaultValue": {}
+},
     hideSetting: false
 })
 
@@ -94,19 +153,77 @@ async function getCDBasciInfo() {
 async function initLayout() {
  
   const data = await getCDBasciInfo()
-  state.layout = props.setting.layout.reduce((prev: any, item: any) => {
-    const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
+  state.layout = [
+        {
+            "id": "Patient_Name",
+            "name": "Patient Name",
+            "type": "short_text",
+            "width": "100%"
+        },
+        {
+            "id": "phone",
+            "name": "phone",
+            "type": "short_text",
+            "width": "100%"
+        },
+        {
+            "id": "Date_of_Birth",
+            "name": "Date of Birth",
+            "type": "date",
+            "width": "50%"
+        },
+        {
+            "id": "Age",
+            "name": "Age",
+            "type": "short_text"
+        },
+        {
+            "id": "Gender",
+            "name": "Gender",
+            "type": "short_text"
+        },
+        {
+            "id": "Weight",
+            "name": "Weight",
+            "type": "short_text"
+        },
+        {
+            "id": "Refer_By",
+            "name": "Refer By",
+            "type": "short_text",
+            "width": "100%"
+        },
+        {
+            "id": "Medical_History",
+            "name": "Medical History",
+            "type": "string",
+            "width": "100%"
+        },
+        {
+            "id": "Pacemaker",
+            "name": "Pacemaker",
+            "type": "boolean"
+        },
+        {
+            "id": "Pregnamcy",
+            "name": "Pregnamcy",
+            "type": "boolean"
+        }
+    ]
+    state.defaultValue = {}
+  // state.layout = props.setting.layout.reduce((prev: any, item: any) => {
+  //   const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
     
-    if(_item) {
-      if(!item.width) item.width = '50%'
-      prev.push({...item, ..._item })
-    }else{
-      prev.push({...item})
-    }
-    return prev
-  }, [])
-  if(!props.setting.defaultValue) props.setting.defaultValue = {}
-  state.defaultValue = props.setting.defaultValue
+  //   if(_item) {
+  //     if(!item.width) item.width = '50%'
+  //     prev.push({...item, ..._item })
+  //   }else{
+  //     prev.push({...item})
+  //   }
+  //   return prev
+  // }, [])
+  // if(!props.setting.defaultValue) props.setting.defaultValue = {}
+  // state.defaultValue = props.setting.defaultValue
 }
 
 watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
