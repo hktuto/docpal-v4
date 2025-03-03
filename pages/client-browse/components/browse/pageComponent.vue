@@ -12,7 +12,7 @@ const props = defineProps<{
     commentId?: string
 }>();
 
-const { idOrPath } = toRefs(props)
+const { idOrPath, commentId } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 const selectedItem = ref<any[]>([])
@@ -44,14 +44,23 @@ const docPermission = ref()
 const selectedList = ref<any[]>([])
 
 async function getDoc(){
-    console.log("getDoc", idOrPath.value)
+    console.log("getDoc", idOrPath.value, commentId.value)
     docDetail.value = null
     docPermission.value = null
     selectedList.value = []
     const userId = useUserId()
     const { doc, permission } = await getDocDetail(idOrPath.value, userId.value);
-    docDetail.value = doc
-    docPermission.value = permission
+    if(!doc.isFolder) {
+        tabProvider?.openInCurrentTab(createDetailPageParams({
+        docName: doc.name,
+        idOrPath: doc.id,
+        commentId: commentId,
+        showHeaderAction: true
+      }))
+    } else {
+        docDetail.value = doc
+        docPermission.value = permission
+    }
 }
 function selectedChangeHandler(selectedRows:any[]) {
     console.log("selected change", selectedRows)
@@ -93,9 +102,13 @@ function itemDeleted(){
 
 }
 
-watch(idOrPath, () => {
+watch([idOrPath, commentId], (newVal, oldVal) => {
     getDoc()
-
+    if(newVal && newVal[1]) {
+        infoOpened.value = true
+    } else if(oldVal && oldVal[1]) {
+        infoOpened.value = false
+    }
 },{
     immediate:true,
 })

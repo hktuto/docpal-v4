@@ -115,26 +115,31 @@ async function getCommentList(params) {
 }
 function handleScroll (commentId?: string) {
     nextTick(() => {
-        let scrollHeight = 100
-        if(!commentId) commentId = props.commentId
-        if(!state.commentScroll && commentId) {
-            const commentBox = document.getElementById(`comment_${commentId}`)
-            scrollHeight = commentBox.offsetTop - 80
-
-            commentBox.classList.add('highlight-comments');
-            commentBox.addEventListener('click', () => commentBox.classList.remove('highlight-comments'))
-            setTimeout(() => state.commentScroll = true)
-        } else {
-            const viewBox = document.getElementsByClassName('commentViewBox')[0]
-            scrollHeight = viewBox.scrollHeight
+        try {
+            let scrollHeight = 100
+            if(!commentId) commentId = props.commentId
+            if(!state.commentScroll && commentId) {
+                const commentBox = document.getElementById(`comment_${commentId}`)
+                scrollHeight = commentBox.offsetTop - 80
+                
+                commentBox.classList.add('highlight-comments');
+                commentBox.addEventListener('click', () => commentBox.classList.remove('highlight-comments'))
+                setTimeout(() => state.commentScroll = true)
+            } else {
+                const viewBox = document.getElementsByClassName('commentViewBox')[0]
+                scrollHeight = viewBox.scrollHeight
+            }
+            
+            anime({
+                targets: '.commentViewBox',
+                duration: 200,
+                scrollTop: scrollHeight,
+                easing:'easeInSine',
+            })
+            
+        } catch (error) {
+            
         }
-        
-        anime({
-            targets: '.commentViewBox',
-            duration: 200,
-            scrollTop: scrollHeight,
-            easing:'easeInSine',
-        })
     })
 }
 
@@ -143,12 +148,11 @@ watch(() => props.doc, (val) => {
     if (val) handleCommentsGet()
 }, { immediate: true, deep: true })
 
-// 处理已打开文档评论的情况
-watch(() => route.query, (newVal, oldVal) => {
-    if(!oldVal || !newVal.commentId) return
-    if(newVal.commentId !== oldVal.commentId) {
+watch(() => props.commentId, (newVal, oldVal) => {
+    // if(!oldVal || !newVal.commentId) return
+    if(newVal) {
         state.commentScroll = false
-        handleScroll(newVal.commentId)
+        handleScroll(newVal)
     }
 }, {
     immediate: true,

@@ -186,7 +186,7 @@ function replyBoxShow () {
     color: var(--app-grey-050);
 }
 .highlight-comments {
-    background: var(--header-bg);
+    background: var(--app-grey-725);
     color: #fff;
     border-radius: 8px;
 }
