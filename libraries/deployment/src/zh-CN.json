@@ -70,7 +70,7 @@
   },
   "admin": {
     "setting": {
-      "title": " "
+      "title": "设置"
     }
   },
   "adminMenu": {
@@ -872,9 +872,9 @@
     }
   },
   "dfc": {
-    "summary_report": " ",
+    "summary_report": "dfc.summary_report",
     "uncomplete": {
-      "notification": " "
+      "notification": "dfc.uncomplete.notification"
     }
   },
   "dhList": {
@@ -1228,7 +1228,7 @@
       "startDate": "开始日期",
       "startTime": "开始时间",
       "today": "今天",
-      "week": " ",
+      "week": "周",
       "weeks": {
         "fri": "五",
         "mon": "一",
@@ -1712,8 +1712,8 @@
     },
     "document": {
       "acl": {
-        "add": " ",
-        "remove": " "
+        "add": "notification.document.acl.add",
+        "remove": "notification.document.acl.remove"
       },
       "comment": {
         "add": "{documentName} 有新评论",
@@ -1721,13 +1721,13 @@
       },
       "create": "{path} 有新文件上传",
       "delete": "{userId} 删除了 {documentName}",
-      "download": " ",
+      "download": "notification.document.download",
       "format_convert": "{userId} 将{fileName} 转档",
       "modify": "{documentName} 已被 {userId} 修改",
-      "print": " ",
+      "print": "notification.document.print",
       "replace": "{userId} 更新了 {documentName}",
       "trash": "{userId} 删除了 {documentName}",
-      "upload": " "
+      "upload": "notification.document.upload"
     },
     "filterByDescription": "按描述过滤",
     "operator": "操作员",
@@ -1746,10 +1746,10 @@
       }
     },
     "workflow": {
-      "apply": " ",
+      "apply": "notification.workflow.apply",
       "comment": "工作流 : {businessName} 有一则新评论",
-      "rejected": " ",
-      "success": " "
+      "rejected": "notification.workflow.rejected",
+      "success": "notification.workflow.success "
     }
   },
   "notificationReminder": "通知提醒",
@@ -1761,8 +1761,8 @@
     "dismissSelected": "读选定项",
     "fileSelected": "选定项",
     "text": "通知",
-    "userSelected": " ",
-    "userSelectedByUserGroup": " "
+    "userSelected": "notifications.userSelected",
+    "userSelectedByUserGroup": " notifications.userSelectedByUserGroup"
   },
   "obsolete": "禁用",
   "onlyAccept": "仅接收",
@@ -2278,12 +2278,12 @@
   "user": {
     "activate": {
       "successfully": {
-        "msg": " "
+        "msg": "user.activate.successfully.msg"
       }
     },
     "inactivate": {
       "successfully": {
-        "msg": " "
+        "msg": "user.inactivate.successfully.msg"
       }
     }
   },
@@ -2302,7 +2302,7 @@
     "operationFailed": "[{users}]: 操作失败",
     "userSelectedDeleteMsg": "所选用户已被永久删除"
   },
-  "user_SecurityProperty": " ",
+  "user_SecurityProperty": "user_SecurityProperty",
   "user_UserAndUserGroup": "用户 / 用户组",
   "user_UserAndUserGroupMultiSelect": "user_UserAndUserGroupMultiSelect",
   "user_UserAndUserGroupRequiredMsg": "user_UserAndUserGroupRequiredMsg",
@@ -2311,9 +2311,9 @@
   "user_addGroups": "分配用户组",
   "user_addUser": "添加用户",
   "user_addUserGroupName": "用户分组",
-  "user_addUserGroupSuccessMsg": " ",
+  "user_addUserGroupSuccessMsg": "user_addUserGroupSuccessMsg",
   "user_addUserToGroupChecking": "user_addUserToGroupChecking",
-  "user_addUsersToUserGroup": " ",
+  "user_addUsersToUserGroup": " user_addUsersToUserGroup",
   "user_company": "公司",
   "user_confirmPasswordIsRequired": "确认密码是必需的",
   "user_createdSuccessMsg": "新用户 {username} 已成功创建",
@@ -2353,16 +2353,16 @@
   "user_userGroupNameIsRequired": "用户组名称为必填项",
   "user_userGroupRemovedSuccessMsg": "user_userGroupRemovedSuccessMsg",
   "user_userGroupSelectDeletedSuccessMsg": "user_userGroupSelectDeletedSuccessMsg",
-  "user_userGroupSelectRemovedSuccessMsg": " ",
+  "user_userGroupSelectRemovedSuccessMsg": "user_userGroupSelectRemovedSuccessMsg",
   "user_userGroup_selectedMsg": "已选定的用户组",
-  "user_userGroupsAssignedSuccessMsg": " ",
-  "user_userGroupsCreatedSuccessMsg": " ",
-  "user_userGroupsIsExistsMsg": " ",
+  "user_userGroupsAssignedSuccessMsg": "user_userGroupsAssignedSuccessMsg",
+  "user_userGroupsCreatedSuccessMsg": "user_userGroupsCreatedSuccessMsg",
+  "user_userGroupsIsExistsMsg": "user_userGroupsIsExistsMsg",
   "user_userIdentifer": "用户标识符",
   "user_userIdentiferCanNotBeNull": "用户标识符不能为空",
-  "user_userInfoDeletedSuccessMsg": " ",
-  "user_userInfoUpdatedSuccessMsg": " ",
-  "user_userPasswordUpdateSuccessMsg": " ",
+  "user_userInfoDeletedSuccessMsg": "user_userInfoDeletedSuccessMsg",
+  "user_userInfoUpdatedSuccessMsg": "user_userInfoUpdatedSuccessMsg",
+  "user_userPasswordUpdateSuccessMsg": "user_userPasswordUpdateSuccessMsg",
   "user_username": "用户名",
   "user_usernameCanNotBeNull": "用户名不能为空",
   "user_usernameIsRequired": "用户名是必填项",
@@ -3106,6 +3106,21 @@
   "workflow_createdAt": "创建日期",
   "workflow_creator": "创建者",
   "workflow_dueDate": "到期日",
+  "workflow_editorCreate": "创建新工作流程",
+  "workflow_editorCreatedBy": "workflow_editorCreatedBy",
+  "workflow_editorEditLatestVersion": "workflow_editorEditLatestVersion",
+  "workflow_editorInactive": "workflow_editorInactive",
+  "workflow_editorLastDate": "workflow_editorLastDate",
+  "workflow_editorLastModified": "最后修改人",
+  "workflow_editorNewWorkflow": "workflow_editorNewWorkflow",
+  "workflow_editorProduction": "workflow_editorProduction",
+  "workflow_editorStatus": "workflow_editorStatus",
+  "workflow_editorVersion": "workflow_editorVersion",
+  "workflow_editorVersionHistory": "历史版本",
+  "workflow_editorViewProductionVersion": "workflow_editorViewProductionVersion",
+  "workflow_editorViewVersionHistory": "workflow_editorViewVersionHistory",
+  "workflow_editorWorkflowCreatedSuccessMsg": "workflow_editorWorkflowCreatedSuccessMsg",
+  "workflow_editorWorkflowNameRequiredMsg": "workflow_editorWorkflowNameRequiredMsg",
   "workflow_form": "表单",
   "workflow_graph": "流程",
   "workflow_info": "信息",

@@ -1033,8 +1033,8 @@
     "stopSharing": "Stop sharing"
   },
   "dpTable": {
-    "latestVersion": "Latest Ver.",
-    "productionVersion": "Production Ver."
+    "latestVersion": "Latest Version",
+    "productionVersion": "Production Version"
   },
   "dpTableHeader": {
     "businessName": "Business Name",
@@ -3106,6 +3106,21 @@
   "workflow_createdAt": "Created At",
   "workflow_creator": "Creator",
   "workflow_dueDate": "Task Due Date",
+  "workflow_editorCreate": "Create New Workflow",
+  "workflow_editorCreatedBy": "Created By",
+  "workflow_editorEditLatestVersion": "Edit Latest Version",
+  "workflow_editorInactive": "Inactive",
+  "workflow_editorLastDate": "Last Modified Date",
+  "workflow_editorLastModified": "Last Modified By",
+  "workflow_editorNewWorkflow": "Save as new workflow",
+  "workflow_editorProduction": "Production",
+  "workflow_editorStatus": "Workflow Status",
+  "workflow_editorVersion": "Version",
+  "workflow_editorVersionHistory": "Version History",
+  "workflow_editorViewProductionVersion": "View Production Version",
+  "workflow_editorViewVersionHistory": "View Version History",
+  "workflow_editorWorkflowCreatedSuccessMsg": "The new workflow has been created successfully.",
+  "workflow_editorWorkflowNameRequiredMsg": "Workflow Name is required.",
   "workflow_form": "Form",
   "workflow_graph": "Graph",
   "workflow_info": "Job Info",

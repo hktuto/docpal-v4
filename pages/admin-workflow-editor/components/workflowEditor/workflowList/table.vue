@@ -1,35 +1,35 @@
 <script lang="ts" setup>
-import { WorkflowEditorListProviderKey } from '~/utils/workflowEditorProvider';
+import {WorkflowEditorListProviderKey} from '~/utils/workflowEditorProvider';
 import dayjs from 'dayjs'
 
 const listProvider = inject(WorkflowEditorListProviderKey)
-if(!listProvider) {
+if (!listProvider) {
     throw new Error('WorkflowEditorListProviderKey not found')
 }
-
-const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
+const {t} = useI18n()
+const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     id: 'workflowEditorListTableSetting',
-    api: (pageParams:any) => {
-        if(!pageParams.orderBy){
+    api: (pageParams: any) => {
+        if (!pageParams.orderBy) {
             pageParams.orderBy = 'modifiedDate'
             pageParams.isDesc = true
         }
         return listProvider.getListApi(pageParams)
     },
-    dblClickAction: ({ row, column, event }:any) => {
+    dblClickAction: ({row, column, event}: any) => {
         listProvider.openLastestVersion(row)
     },
-    remoteSort:true,
-    defaultSort:[
+    remoteSort: true,
+    defaultSort: [
         {
-            field:"modifiedDate",
+            field: "modifiedDate",
             order: "desc"
         }
     ],
-    columns:  [
+    columns: [
         {
             field: 'name',
-            title: 'Name',
+            title: 'workflowEditor.name',
             fixed: 'left',
             sortable: true,
         },
@@ -37,7 +37,7 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             field: 'productionVersion',
             title: 'dpTable.productionVersion',
             minWidth: 120,
-            
+
         },
         {
             field: 'latestVersion',
@@ -45,38 +45,38 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             minWidth: 120,
         },
         {
-            field:'modifiedBy',
-            title: 'modified_by',
+            field: 'modifiedBy',
+            title: 'workflow_editorLastModified',
             minWidth: 120,
             sortable: true,
         },
         {
             field: 'modifiedDate',
-            title: 'search.modifiedDate',
+            title: 'workflow_editorLastDate',
             minWidth: 120,
             sortable: true,
-            formatter ({ cellValue }:any) {
+            formatter({cellValue}: any) {
                 return dayjs(cellValue).format('YYYY-MM-DD HH:mm')
             }
         },
         {
             field: 'status',
-            title: 'status',
+            title: 'workflow_editorStatus',
             sortable: true,
-            width: 120,
-            formatter ({ cellValue }:any) {
+            width: 200,
+            formatter({cellValue}: any) {
                 return cellValue === 'P' ? "Inactive" : 'Active'
             }
         },
-    ], 
+    ],
     bodyActions: [
         [
-            { 
-                code: 'edit_latest_version', 
-                name: 'Edit Latest Version', 
-                visible: true, 
+            {
+                code: 'edit_latest_version',
+                name: 'workflow_editorEditLatestVersion',
+                visible: true,
                 disabled: false,
-                action: ({row}:any) => {
+                action: ({row}: any) => {
                     listProvider.openLastestVersion(row)
                 }
             },
@@ -89,12 +89,12 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             //         listProvider.openLastestVersion(row, true)
             //     }
             // },
-            { 
-                code : 'view_production', 
-                name: 'View Production', 
-                visible: true, 
+            {
+                code: 'view_production',
+                name: 'workflow_editorViewProductionVersion',
+                visible: true,
                 disabled: false,
-                action: ({row}:any) => {
+                action: ({row}: any) => {
                     listProvider.openProductionVersion(row)
                 }
             },
@@ -107,30 +107,31 @@ const { tableConfig , tableEvent, tableRef, reload } = useVxeTable({
             //         listProvider.openProductionVersion(row, true)
             //     }
             // },
-            { 
-                code : 'save_as_new_workflow', 
-                name: 'Save as new workflow', 
-                visible: true, 
+            {
+                code: 'save_as_new_workflow',
+                name: 'workflow_editorNewWorkflow',
+                visible: true,
                 disabled: false,
-                action: ({row}:any) => {
+                action: ({row}: any) => {
                     listProvider.saveAsNewWorkflow(row)
                 }
             },
-            { 
-                code : 'view_versions', 
-                name: 'View Versions', 
-                visible: true, 
+            {
+                code: 'view_versions',
+                name: 'workflow_editorViewVersionHistory',
+                visible: true,
                 disabled: false,
-                action: ({row}:any) => {
+                action: ({row}: any) => {
+                    row.name = row.name + " - " + t('workflow_editorVersionHistory')
                     listProvider.openVersions(row)
                 }
             },
             {
                 code: "delete",
-                name: "Inactive",
+                name: "workflow_editorInactive",
                 visible: true,
                 disabled: false,
-                action:({row}) => {
+                action: ({row}) => {
                     listProvider.deleteWorkflow(row)
                 }
             },
@@ -149,13 +150,13 @@ defineExpose({
 
 <template>
     <vxe-grid
-            ref="tableRef"
-            v-bind="tableConfig"
-            v-on="tableEvent"
-        >
+        ref="tableRef"
+        v-bind="tableConfig"
+        v-on="tableEvent"
+    >
         <template #toolbar_buttons>
-            <slot name="toolbar_buttons" />
-            
+            <slot name="toolbar_buttons"/>
+
         </template>
-        </vxe-grid>
+    </vxe-grid>
 </template>

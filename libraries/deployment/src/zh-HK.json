@@ -872,9 +872,9 @@
     }
   },
   "dfc": {
-    "summary_report": " ",
+    "summary_report": "dfc.summary_report",
     "uncomplete": {
-      "notification": " "
+      "notification": "dfc.uncomplete.notification"
     }
   },
   "dhList": {
@@ -1228,7 +1228,7 @@
       "startDate": "開始日期",
       "startTime": "開始時間",
       "today": "今天",
-      "week": " ",
+      "week": "週",
       "weeks": {
         "fri": "五",
         "mon": "一",
@@ -1710,8 +1710,8 @@
     },
     "document": {
       "acl": {
-        "add": " ",
-        "remove": " "
+        "add": "notification.document.acl.add",
+        "remove": "notification.document.acl.remove"
       },
       "comment": {
         "add": "{documentName} 有新評論",
@@ -1719,13 +1719,13 @@
       },
       "create": "{path} 有新上傳文件",
       "delete": "{userId} 刪除了 {documentName}",
-      "download": " ",
+      "download": "notification.document.download",
       "format_convert": "{userId} 將{fileName} 轉檔",
       "modify": "{documentName} 已被 {userId} 修改",
-      "print": " ",
+      "print": "notification.document.print",
       "replace": "{userId} 更新了 {documentName}",
       "trash": "{userId} 刪除了 {documentName}",
-      "upload": " "
+      "upload": "notification.document.upload"
     },
     "filterByDescription": "按描述過濾",
     "operator": "操作員",
@@ -1744,10 +1744,10 @@
       }
     },
     "workflow": {
-      "apply": " ",
+      "apply": "notification.workflow.apply",
       "comment": "工作流 : {businessName} 有一則新評論",
-      "rejected": " ",
-      "success": " "
+      "rejected": "notification.workflow.rejected",
+      "success": "notification.workflow.success"
     }
   },
   "notificationReminder": "通知提醒",
@@ -1759,8 +1759,8 @@
     "dismissSelected": "讀選定項",
     "fileSelected": "選定項",
     "text": "通知",
-    "userSelected": " ",
-    "userSelectedByUserGroup": " "
+    "userSelected": "notifications.userSelected",
+    "userSelectedByUserGroup": " notifications.userSelectedByUserGroup"
   },
   "obsolete": "禁用",
   "onlyAccept": "僅接收",
@@ -2276,12 +2276,12 @@
   "user": {
     "activate": {
       "successfully": {
-        "msg": " "
+        "msg": "user.activate.successfully.msg"
       }
     },
     "inactivate": {
       "successfully": {
-        "msg": " "
+        "msg": "user.inactivate.successfully.msg"
       }
     }
   },
@@ -2300,7 +2300,7 @@
     "operationFailed": "[{users}]: 操作失敗",
     "userSelectedDeleteMsg": "選取的使用者已被永久刪除"
   },
-  "user_SecurityProperty": " ",
+  "user_SecurityProperty": "user_SecurityProperty",
   "user_UserAndUserGroup": "使用者 / 使用者群組",
   "user_UserAndUserGroupMultiSelect": "user_UserAndUserGroupMultiSelect",
   "user_UserAndUserGroupRequiredMsg": "user_UserAndUserGroupRequiredMsg",
@@ -2309,9 +2309,9 @@
   "user_addGroups": "分配使用者群組",
   "user_addUser": "添加用戶",
   "user_addUserGroupName": "使用者群組",
-  "user_addUserGroupSuccessMsg": " ",
+  "user_addUserGroupSuccessMsg": "user_addUserGroupSuccessMsg",
   "user_addUserToGroupChecking": "user_addUserToGroupChecking",
-  "user_addUsersToUserGroup": " ",
+  "user_addUsersToUserGroup": "user_addUsersToUserGroup ",
   "user_company": "公司",
   "user_confirmPasswordIsRequired": "必須輸入確認密碼",
   "user_createdSuccessMsg": "新使用者 {username} 已成功建立",
@@ -2351,16 +2351,16 @@
   "user_userGroupNameIsRequired": "使用者群組名稱為必填項目",
   "user_userGroupRemovedSuccessMsg": " user_userGroupRemovedSuccessMsg",
   "user_userGroupSelectDeletedSuccessMsg": " user_userGroupSelectDeletedSuccessMsg",
-  "user_userGroupSelectRemovedSuccessMsg": " ",
+  "user_userGroupSelectRemovedSuccessMsg": "user_userGroupSelectRemovedSuccessMsg",
   "user_userGroup_selectedMsg": "已選取的使用者群組",
-  "user_userGroupsAssignedSuccessMsg": " ",
-  "user_userGroupsCreatedSuccessMsg": " ",
-  "user_userGroupsIsExistsMsg": " ",
+  "user_userGroupsAssignedSuccessMsg": "user_userGroupsAssignedSuccessMsg",
+  "user_userGroupsCreatedSuccessMsg": "user_userGroupsCreatedSuccessMsg",
+  "user_userGroupsIsExistsMsg": "user_userGroupsIsExistsMsg",
   "user_userIdentifer": "用戶標識符",
   "user_userIdentiferCanNotBeNull": "用戶標識符不能為空",
-  "user_userInfoDeletedSuccessMsg": " ",
-  "user_userInfoUpdatedSuccessMsg": " ",
-  "user_userPasswordUpdateSuccessMsg": " ",
+  "user_userInfoDeletedSuccessMsg": "user_userInfoDeletedSuccessMsg",
+  "user_userInfoUpdatedSuccessMsg": "user_userInfoUpdatedSuccessMsg",
+  "user_userPasswordUpdateSuccessMsg": "user_userPasswordUpdateSuccessMsg",
   "user_username": "用戶名",
   "user_usernameCanNotBeNull": "用戶名不能為空",
   "user_usernameIsRequired": "使用者名稱為必填項目",
@@ -3104,6 +3104,21 @@
   "workflow_createdAt": "創建日期",
   "workflow_creator": "創建者",
   "workflow_dueDate": "到期日",
+  "workflow_editorCreate": "建立新工作流程",
+  "workflow_editorCreatedBy": "workflow_editorCreatedBy",
+  "workflow_editorEditLatestVersion": "workflow_editorEditLatestVersion",
+  "workflow_editorInactive": "workflow_editorInactive",
+  "workflow_editorLastDate": "workflow_editorLastDate",
+  "workflow_editorLastModified": "最後修改者",
+  "workflow_editorNewWorkflow": "workflow_editorNewWorkflow",
+  "workflow_editorProduction": "workflow_editorProduction",
+  "workflow_editorStatus": "workflow_editorStatus",
+  "workflow_editorVersion": "workflow_editorVersion",
+  "workflow_editorVersionHistory": "歷史版本",
+  "workflow_editorViewProductionVersion": "workflow_editorViewProductionVersion",
+  "workflow_editorViewVersionHistory": "workflow_editorViewVersionHistory",
+  "workflow_editorWorkflowCreatedSuccessMsg": "workflow_editorWorkflowCreatedSuccessMsg",
+  "workflow_editorWorkflowNameRequiredMsg": "workflow_editorWorkflowNameRequiredMsg",
   "workflow_form": "表單",
   "workflow_graph": "流程",
   "workflow_info": "信息",
