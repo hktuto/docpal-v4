@@ -19,17 +19,21 @@ export const useNotification = () => {
     const notiClose = useState<() => void>('notiClose')
     let interval: any = null
     function connect() {
+        try {
+            const userId = useUserId()
+            const token = useToken()
+            Cookies.value = token.value || ''
+            const { status, data, error, close } = useEventSource('/notification/api/v1/receive/messages?username='+userId.value, [], {
+                withCredentials:true
+            })
+            notiClose.value = close
+            notiStatus.value = status
+            notiData.value = data
+            notiError.value = error
+        } catch (error) {
+            
+        }
         // const { getUserId, token } = useUser()
-        const userId = useUserId()
-        const token = useToken()
-        Cookies.value = token.value || ''
-        const { status, data, error, close } = useEventSource('/notification/api/v1/receive/messages?username='+userId.value, [], {
-            withCredentials:true
-        })
-        notiClose.value = close
-        notiStatus.value = status
-        notiData.value = data
-        notiError.value = error
     }
     function disconnect(){
         console.log('disconnect event')
