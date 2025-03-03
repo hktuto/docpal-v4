@@ -475,6 +475,7 @@
     "WorkflowNewCount": "New Workflow",
     "WorkflowTimeSpendPerTask": "Time spend per Task",
     "WorkflowTimeSpendPerWorkflow": "Time spend per Workflow",
+    "CalendarWidget":"Calendar",
     "allUser": "All users",
     "azure": {
       "dataType": "Data Type",

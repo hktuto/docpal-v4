@@ -475,6 +475,7 @@
     "WorkflowNewCount": "新的工作流程",
     "WorkflowTimeSpendPerTask": "每個任務所花費的時間",
     "WorkflowTimeSpendPerWorkflow": "每個工作流程所花費的時間",
+    "CalendarWidget":"日歷",
     "allUser": "所有用戶",
     "azure": {
       "dataType": "資料類型",
