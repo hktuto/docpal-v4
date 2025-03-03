@@ -431,12 +431,12 @@ defineExpose({
           </div>
             <div class="detail__tools">
                 <div class="actions">
-                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('Click to switch vertical screen')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
-                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('Click to switch to landscape')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('admin_watermarkVerticalScreenMsg')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('admin_watermarkToLandscapeScreenMsg')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
                 </div>
                 <div class="actions">
-                  <SvgIcon class="icon tools text" :content="$t('Click to add Text')" src="/icons/newText.svg" @click="newWatermark('text')"/>
-                  <SvgIcon class="icon tools image" :content="$t('Click to add Image')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
+                  <SvgIcon class="icon tools text" :content="$t('admin_watermarkAddTextScreenMsg')" src="/icons/newText.svg" @click="newWatermark('text')"/>
+                  <SvgIcon class="icon tools image" :content="$t('admin_watermarkAddImageScreenMsg')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
                 </div>
             </div>
             <div ref="scaleContainerRef" class="detail__canvas__container" :style="{transform: `scale(${canvasScale})`}">
