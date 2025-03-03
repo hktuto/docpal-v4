@@ -136,8 +136,10 @@
     "globalGeneralConfiguration": "全域通用配置"
   },
   "admin_admin": "管理",
+  "admin_watermarkName": "",
   "admin_watermark_color": "顏色",
   "admin_watermark_content_type": "內容類型",
+  "admin_watermark_create": "",
   "admin_watermark_font_size": "字體大小",
   "admin_watermark_name_already_exist": "同名水印模板已存在",
   "admin_watermark_opacity": "不透明度",

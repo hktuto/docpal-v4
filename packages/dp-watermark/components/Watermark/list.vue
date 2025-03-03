@@ -1,21 +1,21 @@
 <template>
     <div class="watermarkListContainer">
         <div class="listActionContainer">
-            <SvgIcon src="/icons/add.svg" class="addButton" @click="createItem"/>
+            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>
         </div>
         <div class="listItemsContainer" style="--icon-size: 12px;">
             <div v-for="item in list" :key="item.id" :class="{listItem:true, selected: item.id === selectedId}">
                 <div class="listItemLabel ellipsis" :title="item.name" @click="switchDetail(item.id)">
-                    {{item.name}}
+                    {{ item.name }}
                 </div>
                 <!-- TODO : icon size and style -->
                 <div class="listAction listItemEdit" @click="editItem(item.id)">
-                    <SvgIcon src="/icons/edit_1.svg" />
+                    <SvgIcon src="/icons/edit_1.svg"/>
                 </div>
                 <ElPopconfirm @confirm="deleteItem(item.id)">
                     <template #reference>
-                        <div class="listAction listItemDelete" >
-                            <SvgIcon src="/icons/menu/trash.svg" />
+                        <div class="listAction listItemDelete">
+                            <SvgIcon src="/icons/menu/trash.svg"/>
                         </div>
                     </template>
                 </ElPopconfirm>
@@ -23,19 +23,20 @@
         </div>
         <!-- Edit dialog -->
         <el-dialog v-model="editDialog" destroy-on-close>
-            <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler" />
+            <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler"/>
         </el-dialog>
         <!-- New dialog -->
-        <el-dialog v-model="newDialog" destroy-on-close>
-            <WatermarkCreate :list="list"  @submit="itemChangeHandler" />
+        <el-dialog v-model="newDialog" :title="$t('admin_watermark_create')" destroy-on-close>
+            <WatermarkCreate :list="list" @submit="itemChangeHandler"/>
         </el-dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import type { WatermarkTemplate } from "../../composables/Watermark";
+import type {WatermarkTemplate} from "../../composables/Watermark";
 
 import InlineSvg from 'vue-inline-svg';
+
 const props = defineProps<{
     list: WatermarkTemplate[],
     selectedId: string
@@ -48,29 +49,32 @@ const editDialog = ref(false);
 const newDialog = ref(false);
 
 
-
 const selectedItem = computed(() => {
-    return props.list.find((item:WatermarkTemplate) => item.id === props.selectedId)
+    return props.list.find((item: WatermarkTemplate) => item.id === props.selectedId)
 })
 
-function deleteItem(id:string) {
+function deleteItem(id: string) {
     emit('remove', id);
 }
+
 function createItem() {
     newDialog.value = true;
     editDialog.value = false;
 }
+
 function itemChangeHandler() {
     newDialog.value = false;
     editDialog.value = false;
-    emit('update',null);
+    emit('update', null);
 }
+
 function editItem(id: string) {
     newDialog.value = false;
     editDialog.value = true;
     switchDetail(id);
 }
-function switchDetail(id:string) {
+
+function switchDetail(id: string) {
     routerProvider?.updateProps({
         id
     })
@@ -79,7 +83,7 @@ function switchDetail(id:string) {
 </script>
 
 <style lang="scss" scoped>
-.watermarkListContainer{
+.watermarkListContainer {
     width: 200px;
     background: var(--color-p3);
     height: 100%;
@@ -90,25 +94,28 @@ function switchDetail(id:string) {
     border-radius: 8px;
 }
 
-.listItemsContainer{
+.listItemsContainer {
     display: flex;
     flex-flow: column nowrap;
     overflow-y: auto;
     gap: 8px;
 }
-.listItem{
+
+.listItem {
     --color: #8796A4;
     --bg: transparent;
     display: grid;
     grid-template-columns: 1fr min-content min-content;
     gap: 0;
-    padding: calc( var(--app-space-s) / 2);
+    padding: calc(var(--app-space-s) / 2);
     color: var(--color);
     background: var(--bg);
     border-radius: 4px;
     cursor: pointer;
-    .listItemLabel{
+
+    .listItemLabel {
     }
+
     &.selected, &:hover {
         --color: #fff;
         --bg: #8796A4;
@@ -116,21 +123,22 @@ function switchDetail(id:string) {
     }
 }
 
-.listActionContainer{
+.listActionContainer {
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-end;
     align-items: center;
     border-bottom: 1px solid var(--app-grey-400);
     flex: 0 0 auto;
-    padding: calc( var(--app-space-xs) / 2);
+    padding: calc(var(--app-space-xs) / 2);
 }
-.addButton{
+
+.addButton {
     cursor: pointer;
 }
 
-.listAction{
-  width: 12px;
-  height: 12px;
+.listAction {
+    width: 12px;
+    height: 12px;
 }
 </style>

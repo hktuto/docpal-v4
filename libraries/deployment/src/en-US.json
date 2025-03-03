@@ -136,8 +136,10 @@
     "globalGeneralConfiguration": "Global General Configuration"
   },
   "admin_admin": "Admin",
+  "admin_watermarkName": "Watermark Name",
   "admin_watermark_color": "Color",
   "admin_watermark_content_type": "Content Type",
+  "admin_watermark_create": "Create New Watermark",
   "admin_watermark_font_size": "Font Size",
   "admin_watermark_name_already_exist": "Watermark Template with this name already exists",
   "admin_watermark_opacity": "Opacity",
