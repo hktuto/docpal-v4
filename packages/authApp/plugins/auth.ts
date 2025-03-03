@@ -8,6 +8,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const isSSO = useIsSSO()
     const isLDAP = useIsLDAP()
     nuxtApp.hook('app:created', async() => {
+        
         const {data} = await clientApi.api.getRelationGetkeycloakproperty()
         keyCloakState.value = new Keycloak({
             "url": data?.keyCloakProperty?.url,
@@ -28,7 +29,12 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         if(publicPage.value.includes(window.location.pathname)){ 
             return
         }
-        await useAuth().login()
+        const isSuperAdmin = sessionStorage.getItem('superAdmin')
+        if(isSuperAdmin){
+            await useAuth().verifly()
+        }else{
+            await useAuth().login()
+        }
     })
 
     // set refresh token to clientApi and adminApi

@@ -30,6 +30,7 @@ export const useAuth = () => {
         loggedIn :computed(() => Boolean(userState.value)),
         logout,
         login,
+        verifly,
         ready : computed(() => authReadyState.value)
     }
 }
