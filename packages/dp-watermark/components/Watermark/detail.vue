@@ -1,24 +1,30 @@
-
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
-import { fabric } from "fabric";
-import { useEventListener } from '@vueuse/core'
+import {ElMessage} from 'element-plus'
+import {fabric} from "fabric";
+import {useEventListener} from '@vueuse/core'
 import {useWatermark, WatermarkTemplateDetail, Watermark} from '../../composables/Watermark'
 
-const emits = defineEmits(['update','change', 'delete', 'anchorChange'])
+const emits = defineEmits(['update', 'change', 'delete', 'anchorChange'])
 
 const props = defineProps<{
     detail: any
 }>();
 const state = reactive({
-  watermarkEditShow: true,
-  loading: false
+    watermarkEditShow: true,
+    loading: false
 })
 const {detail} = toRefs(props)
-const i18n = useI18n()
+const {t} = useI18n()
 const orientation = ref<'ver' | 'hoz'>('ver');
 const bgImg = computed(() => orientation.value === 'ver' ? '/images/watermark/ver.png' : '/images/watermark/hoz.png')
-const {updateWatermarkTemplateDetail, isTextWatermark, fontSizeConverter, newTextWatermark, newImageWatermark, watermarkToFabricObject} = useWatermark()
+const {
+    updateWatermarkTemplateDetail,
+    isTextWatermark,
+    fontSizeConverter,
+    newTextWatermark,
+    newImageWatermark,
+    watermarkToFabricObject
+} = useWatermark()
 // store watermark fabric object
 const fabricStore = ref<any[]>([]);
 let fabricCanvas;
@@ -30,437 +36,448 @@ const selectedObject = ref<any>(null);
 const canvasScale = ref(1);
 
 
-
 function newWatermark(type: 'text' | 'image') {
-  switch (type) {
-    case 'text':
-      const text = newTextWatermark(fabricCanvas);
-      fabricCanvas.add(text);
-      // fabricCanvas.setActiveObject(text);
-      // fabricStore.value.push(text);
-      break;
-    case 'image':
-      const url = '/images/copy-stamp.png';
-      // create new image and set onload event
-      const imgEL = new Image();
-      imgEL.id = 'object_' + Date.now();
-      imgEL.onload = (img) => {
-        // calculate the scale of the image
-        const fabricImage = new fabric.Image(imgEL, {
-          // @ts-ignore
-          id: imgEL.id,
-          width: imgEL.width,
-          height: imgEL.height,
-          opacity: 1,
-          position: 'tLeft',
-          scaleX: imgEL.width > 300 ? 300 / imgEL.width : 1,
-          scaleY: imgEL.width > 300 ? 300 / imgEL.width : 1,
-          angle: 0,
-          offset:{
-            x:0,
-            y:0,
-          }
-        })
-        fabricCanvas.add(fabricImage);
-        fabricCanvas.setActiveObject(fabricImage);
-        fabricStore.value.push(fabricImage);
-      }
-      imgEL.src = url;
-      break;
-    default:
-      break;
-  }
+    switch (type) {
+        case 'text':
+            const text = newTextWatermark(fabricCanvas);
+            fabricCanvas.add(text);
+            // fabricCanvas.setActiveObject(text);
+            // fabricStore.value.push(text);
+            break;
+        case 'image':
+            const url = '/images/copy-stamp.png';
+            // create new image and set onload event
+            const imgEL = new Image();
+            imgEL.id = 'object_' + Date.now();
+            imgEL.onload = (img) => {
+                // calculate the scale of the image
+                const fabricImage = new fabric.Image(imgEL, {
+                    // @ts-ignore
+                    id: imgEL.id,
+                    width: imgEL.width,
+                    height: imgEL.height,
+                    opacity: 1,
+                    position: 'tLeft',
+                    scaleX: imgEL.width > 300 ? 300 / imgEL.width : 1,
+                    scaleY: imgEL.width > 300 ? 300 / imgEL.width : 1,
+                    angle: 0,
+                    offset: {
+                        x: 0,
+                        y: 0,
+                    }
+                })
+                fabricCanvas.add(fabricImage);
+                fabricCanvas.setActiveObject(fabricImage);
+                fabricStore.value.push(fabricImage);
+            }
+            imgEL.src = url;
+            break;
+        default:
+            break;
+    }
 
 }
 
 function changeOrientation(newOrientation: "ver" | "hoz") {
-  orientation.value = newOrientation
-  // initFabric();
+    orientation.value = newOrientation
+    // initFabric();
 }
 
 function setCanvasScale() {
-  // get canvas container size 
-  const containerSize = containerEl.value.getBoundingClientRect();
-  const containerOrientation = orientation.value
-  let width = 0;
-  let height = 0;
-  // default proposion is 1500 * 1000
-  if (containerOrientation === 'ver') {
-    width = containerSize.width - 120;
-    height = width * (orientation.value === 'ver' ? 1.5 : 0.6666)
-    if (height > containerSize.height - 40) {
-      height = containerSize.height - 40;
-      width = height * (orientation.value === 'ver' ? 0.6666 : 1.5);
+    // get canvas container size
+    const containerSize = containerEl.value.getBoundingClientRect();
+    const containerOrientation = orientation.value
+    let width = 0;
+    let height = 0;
+    // default proposion is 1500 * 1000
+    if (containerOrientation === 'ver') {
+        width = containerSize.width - 120;
+        height = width * (orientation.value === 'ver' ? 1.5 : 0.6666)
+        if (height > containerSize.height - 40) {
+            height = containerSize.height - 40;
+            width = height * (orientation.value === 'ver' ? 0.6666 : 1.5);
+        }
+        canvasScale.value = width / 1000
+    } else {
+        height = containerSize.height - 40;
+        width = height * (orientation.value === 'ver' ? 0.6666 : 1.5);
+        if (width > containerSize.width - 120) {
+            width = containerSize.width - 120;
+            height = width * (orientation.value === 'ver' ? 1.5 : 0.6666);
+        }
+        canvasScale.value = width / 1500
     }
-    canvasScale.value = width / 1000 
-  } else {
-    height = containerSize.height - 40;
-    width = height * (orientation.value === 'ver' ? 0.6666 : 1.5);
-    if (width > containerSize.width - 120) {
-      width = containerSize.width - 120;
-      height = width * (orientation.value === 'ver' ? 1.5 : 0.6666);
-    }
-    canvasScale.value = width / 1500 
-  }
-  
-  
+
+
 }
 
 function setUpFabric() {
-  if (fabricCanvas) {
-    fabricCanvas.dispose();
-  }
-  const containerSize = containerEl.value.getBoundingClientRect();
-  const containerOrientation = orientation.value
-  
-  let width = 0;
-  let height = 0;
+    if (fabricCanvas) {
+        fabricCanvas.dispose();
+    }
+    const containerSize = containerEl.value.getBoundingClientRect();
+    const containerOrientation = orientation.value
 
-  canvasEl.value.width = containerOrientation === 'ver' ? 1000 : 1500;
-  canvasEl.value.height = containerOrientation === 'ver' ? 1500 : 1000;
-  // canvasScale is the ratio of canvas size to the original size
-  // use height to calculate because font resize is based on height
-  // init fabric canvas
-  fabricCanvas = new fabric.Canvas('canvas');
+    let width = 0;
+    let height = 0;
 
-  fabric.Image.fromURL(bgImg.value, (img) => {
-    img.set({
-      selectable: false,
-      width: img.width,
-      height: img.height,
-      scaleX: fabricCanvas.getWidth() / img.width,
-      scaleY: fabricCanvas.getHeight() / img.height,
+    canvasEl.value.width = containerOrientation === 'ver' ? 1000 : 1500;
+    canvasEl.value.height = containerOrientation === 'ver' ? 1500 : 1000;
+    // canvasScale is the ratio of canvas size to the original size
+    // use height to calculate because font resize is based on height
+    // init fabric canvas
+    fabricCanvas = new fabric.Canvas('canvas');
+
+    fabric.Image.fromURL(bgImg.value, (img) => {
+        img.set({
+            selectable: false,
+            width: img.width,
+            height: img.height,
+            scaleX: fabricCanvas.getWidth() / img.width,
+            scaleY: fabricCanvas.getHeight() / img.height,
+        });
+        fabricCanvas.add(img);
+        img.sendToBack();
     });
-    fabricCanvas.add(img);
-    img.sendToBack();
-  });
-  // draw watermark
+    // draw watermark
 
-  // setup event select listener
-  fabricCanvas.on('selection:created', (e) => {
-    objectSelected(e);
-  })
+    // setup event select listener
+    fabricCanvas.on('selection:created', (e) => {
+        objectSelected(e);
+    })
 
-  // listen to select change event
-  fabricCanvas.on('selection:updated', (e) => {
-    objectSelected(e);
-  })
+    // listen to select change event
+    fabricCanvas.on('selection:updated', (e) => {
+        objectSelected(e);
+    })
 
-  // fabric deselected event
-  fabricCanvas.on('selection:cleared', (e) => {
-    selectedObject.value = null;
-  })
-  // fabric object modified event
-  fabricCanvas.on('object:modified', (e) => {
-    objectModified(e);
-  })
-  setCanvasScale()
+    // fabric deselected event
+    fabricCanvas.on('selection:cleared', (e) => {
+        selectedObject.value = null;
+    })
+    // fabric object modified event
+    fabricCanvas.on('object:modified', (e) => {
+        objectModified(e);
+    })
+    setCanvasScale()
 }
-function initFabric() {
-  selectedObject.value = null;
-  fabricStore.value = [];
-  itemToDelete.value = [];
-  // set canvas size
-  setUpFabric();
 
-  //  loop props.detail and convert to watermark
-  renderWatermark();
+function initFabric() {
+    selectedObject.value = null;
+    fabricStore.value = [];
+    itemToDelete.value = [];
+    // set canvas size
+    setUpFabric();
+
+    //  loop props.detail and convert to watermark
+    renderWatermark();
 
 }
 
 function resizeFabric() {
 
-  setCanvasScale()
+    setCanvasScale()
 }
-function renderWatermark() {
-  props.detail.watermarkSettings.forEach( (item:any) => {
-    console.log(item)
-    if(isTextWatermark(item.type)){
 
-      const obj = watermarkToFabricObject(item, fabricCanvas);
-      fabricStore.value.push(obj);
-      fabricCanvas.add(obj);
-    } else {
-      // set img
-      const url = item.content;
-      // create new image and set onload event
-      const imgEL = new Image();
-      imgEL.id = 'object_' + Date.now();
-      imgEL.onload = (img) => {
-        const fabricImage = new fabric.Image(imgEL, {
-          // @ts-ignore
-          id: item.id,
-          width: imgEL.width,
-          height: imgEL.height,
-          opacity: item.opacity || 1,
-          scaleX: Number(item.scale),
-          scaleY: Number(item.scale),
-          angle: item.rotate || 0,
-          left: item.offset.x * fabricCanvas.getWidth() ,
-          top: item.offset.y * fabricCanvas.getHeight() ,
-          offset:item.offset,
-          data: item.content,
-          position: item.position,
-          centerOffset: item.centerOffset,
-          snapAngle: 1,
-        })
-        fabricCanvas.add(fabricImage);
-        fabricStore.value.push(fabricImage);
-      }
-      imgEL.src = url;
-    }
-    
-  })
-  
+function renderWatermark() {
+    props.detail.watermarkSettings.forEach((item: any) => {
+        console.log(item)
+        if (isTextWatermark(item.type)) {
+
+            const obj = watermarkToFabricObject(item, fabricCanvas);
+            fabricStore.value.push(obj);
+            fabricCanvas.add(obj);
+        } else {
+            // set img
+            const url = item.content;
+            // create new image and set onload event
+            const imgEL = new Image();
+            imgEL.id = 'object_' + Date.now();
+            imgEL.onload = (img) => {
+                const fabricImage = new fabric.Image(imgEL, {
+                    // @ts-ignore
+                    id: item.id,
+                    width: imgEL.width,
+                    height: imgEL.height,
+                    opacity: item.opacity || 1,
+                    scaleX: Number(item.scale),
+                    scaleY: Number(item.scale),
+                    angle: item.rotate || 0,
+                    left: item.offset.x * fabricCanvas.getWidth(),
+                    top: item.offset.y * fabricCanvas.getHeight(),
+                    offset: item.offset,
+                    data: item.content,
+                    position: item.position,
+                    centerOffset: item.centerOffset,
+                    snapAngle: 1,
+                })
+                fabricCanvas.add(fabricImage);
+                fabricStore.value.push(fabricImage);
+            }
+            imgEL.src = url;
+        }
+
+    })
+
 }
 
 function changeFillColor(color: string) {
-  if (selectedObject.value) {
-    selectedObject.value.set('fill', color);
-    selectedObject.value.font.color = color;
-    fabricCanvas.renderAll();
-  }
+    if (selectedObject.value) {
+        selectedObject.value.set('fill', color);
+        selectedObject.value.font.color = color;
+        fabricCanvas.renderAll();
+    }
 }
 
 function anchorChangeHandler(newAnchor: string) {
-  switch (newAnchor) {
-    case 'tLeft':
-      selectedObject.value.set({
-        left: 0,
-        top: 0,
-      });
-      break;
-    case 'tRight':
-      selectedObject.value.set({
-        left: fabricCanvas.getWidth() - selectedObject.value.width,
-        top: 0,
-      });
-      break;
-    case 'bLeft' :
-      selectedObject.value.set({
-        left: 0,
-        top: fabricCanvas.getHeight() - selectedObject.value.height
-      });
-      break;
-    case 'bRight':
-      selectedObject.value.set({
-        left: fabricCanvas.getWidth() - selectedObject.value.width,
-        top: fabricCanvas.getHeight() - selectedObject.value.height,
-      });
-      break;
-    case 'center':
-      selectedObject.value.set({
-        left: fabricCanvas.getWidth() / 2 - selectedObject.value.width / 2,
-        top: fabricCanvas.getHeight() / 2 - selectedObject.value.height / 2,
-      });
-      break;
-  }
-  selectedObject.value.position = newAnchor;
-  selectedObject.value.offset = {
-    x : selectedObject.value.left / fabricCanvas.getWidth(),
-    y : selectedObject.value.top / fabricCanvas.getHeight()
-  }
-  fabricCanvas.renderAll()
+    switch (newAnchor) {
+        case 'tLeft':
+            selectedObject.value.set({
+                left: 0,
+                top: 0,
+            });
+            break;
+        case 'tRight':
+            selectedObject.value.set({
+                left: fabricCanvas.getWidth() - selectedObject.value.width,
+                top: 0,
+            });
+            break;
+        case 'bLeft' :
+            selectedObject.value.set({
+                left: 0,
+                top: fabricCanvas.getHeight() - selectedObject.value.height
+            });
+            break;
+        case 'bRight':
+            selectedObject.value.set({
+                left: fabricCanvas.getWidth() - selectedObject.value.width,
+                top: fabricCanvas.getHeight() - selectedObject.value.height,
+            });
+            break;
+        case 'center':
+            selectedObject.value.set({
+                left: fabricCanvas.getWidth() / 2 - selectedObject.value.width / 2,
+                top: fabricCanvas.getHeight() / 2 - selectedObject.value.height / 2,
+            });
+            break;
+    }
+    selectedObject.value.position = newAnchor;
+    selectedObject.value.offset = {
+        x: selectedObject.value.left / fabricCanvas.getWidth(),
+        y: selectedObject.value.top / fabricCanvas.getHeight()
+    }
+    fabricCanvas.renderAll()
 
 }
+
 function objectUpdated() {
-  fabricCanvas.renderAll()
+    fabricCanvas.renderAll()
 }
 
 function fontUpdate(size) {
-  if (selectedObject.value) {
-    selectedObject.value.fontSize = fontSizeConverter(size, fabricCanvas.getHeight())
-    selectedObject.value.font.size = size;
-    fabricCanvas.renderAll()
-  }
+    if (selectedObject.value) {
+        selectedObject.value.fontSize = fontSizeConverter(size, fabricCanvas.getHeight())
+        selectedObject.value.font.size = size;
+        fabricCanvas.renderAll()
+    }
 }
 
 function objectModified({target}) {
-  target.offset = {
-    x : target.left / fabricCanvas.getWidth(),
-    y : target.top / fabricCanvas.getHeight()
-  }
-  target.centerOffset = {
-    x : target.getCenterPoint().x / fabricCanvas.getWidth(),
-    y : target.getCenterPoint().y / fabricCanvas.getHeight()
-  };
-  switch (target.type){
-    case 'text':
-      target.relativeSize = {
-
-      }
-  }
-  console.log('target', target)
+    target.offset = {
+        x: target.left / fabricCanvas.getWidth(),
+        y: target.top / fabricCanvas.getHeight()
+    }
+    target.centerOffset = {
+        x: target.getCenterPoint().x / fabricCanvas.getWidth(),
+        y: target.getCenterPoint().y / fabricCanvas.getHeight()
+    };
+    switch (target.type) {
+        case 'text':
+            target.relativeSize = {}
+    }
+    console.log('target', target)
     updateData()
 }
-function updateData () {
-  state.watermarkEditShow = false
-  setTimeout(() => {
-    state.watermarkEditShow = true
-  })
-}
-function objectSelected({selected}) {
-  if (selected.length === 1) {
-    selectedObject.value = selected[0];
-  }else{
-    selectedObject.value = null;
-  }
+
+function updateData() {
+    state.watermarkEditShow = false
+    setTimeout(() => {
+        state.watermarkEditShow = true
+    })
 }
 
-function removeWatermark(){
-  if(selectedObject.value){
-    // check selected object is in props.detail
-    const index = props.detail.watermarkSettings.findIndex( (item:any) => item.id === selectedObject.value.id);
-    
-    if(index > -1){
-      // if in props.detail, push to itemToDelete
-      itemToDelete.value.push(selectedObject.value.id)
+function objectSelected({selected}) {
+    if (selected.length === 1) {
+        selectedObject.value = selected[0];
+    } else {
+        selectedObject.value = null;
     }
-    let objects = fabricCanvas.getObjects();
-    
-    fabricCanvas.remove(toRaw(selectedObject.value));
-    
-    selectedObject.value = null;
-    fabricCanvas.renderAll();
-  }
+}
+
+function removeWatermark() {
+    if (selectedObject.value) {
+        // check selected object is in props.detail
+        const index = props.detail.watermarkSettings.findIndex((item: any) => item.id === selectedObject.value.id);
+
+        if (index > -1) {
+            // if in props.detail, push to itemToDelete
+            itemToDelete.value.push(selectedObject.value.id)
+        }
+        let objects = fabricCanvas.getObjects();
+
+        fabricCanvas.remove(toRaw(selectedObject.value));
+        ElMessage.success(t('admin_watermarkDeletedSuccessMsg'));
+
+        selectedObject.value = null;
+        fabricCanvas.renderAll();
+    }
 }
 
 async function save() {
-  // convert all fabric object to watermark
-  state.loading = true
+    // convert all fabric object to watermark
+    state.loading = true
 
-  const watermarks:Watermark[] = []
-  fabricCanvas.getObjects().forEach((obj,index) => {
-    const { id, type , position ,  text} = obj;
-    // if no id skip
-    if (!id) return;
-    const _centerOffset = {
-      x : obj.getCenterPoint().x / fabricCanvas.getWidth(),
-      y : obj.getCenterPoint().y / fabricCanvas.getHeight()
-    }
-    if(isTextWatermark(type)) {
-      // convert text and dynamic fabric to watermark
-      const textObj:any = {
-        order: index - 1, // bgimg is the first one
-        id,
-        type,
-        position,
-        offset: obj.offset,
-        rotate: obj.angle,
-        content: text,
-        contentType: obj.contentType,
-        opacity: obj.opacity,
-        font: obj.font,
-        centerOffset: obj.centerOffset || _centerOffset,
-      }
-      watermarks.push(textObj)
-    }else {
-      // load src to new canvas and export as base64
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      canvas.width = obj.width;
-      canvas.height = obj.height;
-      ctx.drawImage(obj._originalElement, 0, 0);
-      const base64 = canvas.toDataURL();
-      const imgObj = {
-        order: index - 1, // bgimg is the first one
-        id,
-        type,
-        position,
-        offset: obj.offset,
-        rotate: obj.angle,
-        opacity: obj.opacity,
-        scale: obj.scaleX,
-        data: base64,
-        centerOffset: obj.centerOffset || _centerOffset,
-        contentType: obj.contentType,
-      }
-      watermarks.push(imgObj);
-    }
+    const watermarks: Watermark[] = []
+    fabricCanvas.getObjects().forEach((obj, index) => {
+        const {id, type, position, text} = obj;
+        // if no id skip
+        if (!id) return;
+        const _centerOffset = {
+            x: obj.getCenterPoint().x / fabricCanvas.getWidth(),
+            y: obj.getCenterPoint().y / fabricCanvas.getHeight()
+        }
+        if (isTextWatermark(type)) {
+            // convert text and dynamic fabric to watermark
+            const textObj: any = {
+                order: index - 1, // bgimg is the first one
+                id,
+                type,
+                position,
+                offset: obj.offset,
+                rotate: obj.angle,
+                content: text,
+                contentType: obj.contentType,
+                opacity: obj.opacity,
+                font: obj.font,
+                centerOffset: obj.centerOffset || _centerOffset,
+            }
+            watermarks.push(textObj)
+        } else {
+            // load src to new canvas and export as base64
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = obj.width;
+            canvas.height = obj.height;
+            ctx.drawImage(obj._originalElement, 0, 0);
+            const base64 = canvas.toDataURL();
+            const imgObj = {
+                order: index - 1, // bgimg is the first one
+                id,
+                type,
+                position,
+                offset: obj.offset,
+                rotate: obj.angle,
+                opacity: obj.opacity,
+                scale: obj.scaleX,
+                data: base64,
+                centerOffset: obj.centerOffset || _centerOffset,
+                contentType: obj.contentType,
+            }
+            watermarks.push(imgObj);
+        }
 
-  })
-  const updateData = {
-    update: {
-      ...props.detail,
-      watermarkSettings: watermarks
-    },
-    remove: itemToDelete.value.map(id => id),
-  }
-  state.loading = false
-  console.log(updateData)
-  return updateData
-  // try {
-  //   await Promise.all(promise);
-  //   emits('update');
-  //   ElMessage.success(i18n.t('msg_successfullyModified') as string);
-  // } catch (error) {
-  //   emits('update');
-  // }
-  
+    })
+    const updateData = {
+        update: {
+            ...props.detail,
+            watermarkSettings: watermarks
+        },
+        remove: itemToDelete.value.map(id => id),
+    }
+    state.loading = false
+    console.log(updateData)
+    return updateData
+    // try {
+    //   await Promise.all(promise);
+    //   emits('update');
+    //   ElMessage.success(i18n.t('msg_successfullyModified') as string);
+    // } catch (error) {
+    //   emits('update');
+    // }
+
 }
 
 watch(detail, (newVal) => {
-  if (newVal) {
-    initFabric();
-  }
-},{
+    if (newVal) {
+        initFabric();
+    }
+}, {
     deep: true,
 })
 
 onMounted(() => {
-  initFabric();
+    initFabric();
 })
 
 useEventListener(window, 'resize', () => {
-  resizeFabric();
+    resizeFabric();
 })
 
 defineExpose({
-  save
+    save
 })
 
 </script>
-
-
 
 <template>
     <div class="detail">
 
         <div ref="containerEl" class="detail__container">
-          <div class="detail__bg">
-          </div>
+            <div class="detail__bg">
+            </div>
             <div class="detail__tools">
                 <div class="actions">
-                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}" :content="$t('admin_watermarkVerticalScreenMsg')" src="/icons/ver.svg" @click="changeOrientation('ver')" />
-                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}" :content="$t('admin_watermarkToLandscapeScreenMsg')" src="/icons/hoz.svg" @click="changeOrientation('hoz')" />
+                    <SvgIcon :class="{icon:true, selected: orientation === 'ver'}"
+                             :content="$t('admin_watermarkVerticalScreenMsg')" src="/icons/ver.svg"
+                             @click="changeOrientation('ver')"/>
+                    <SvgIcon :class="{icon:true, selected: orientation === 'hoz'}"
+                             :content="$t('admin_watermarkToLandscapeScreenMsg')" src="/icons/hoz.svg"
+                             @click="changeOrientation('hoz')"/>
                 </div>
                 <div class="actions">
-                  <SvgIcon class="icon tools text" :content="$t('admin_watermarkAddTextScreenMsg')" src="/icons/newText.svg" @click="newWatermark('text')"/>
-                  <SvgIcon class="icon tools image" :content="$t('admin_watermarkAddImageScreenMsg')" src="/icons/newImage.svg" @click="newWatermark('image')"/>
+                    <SvgIcon class="icon tools text" :content="$t('admin_watermarkAddTextScreenMsg')"
+                             src="/icons/newText.svg" @click="newWatermark('text')"/>
+                    <SvgIcon class="icon tools image" :content="$t('admin_watermarkAddImageScreenMsg')"
+                             src="/icons/newImage.svg" @click="newWatermark('image')"/>
                 </div>
             </div>
-            <div ref="scaleContainerRef" class="detail__canvas__container" :style="{transform: `scale(${canvasScale})`}">
+            <div ref="scaleContainerRef" class="detail__canvas__container"
+                 :style="{transform: `scale(${canvasScale})`}">
                 <canvas id="canvas" ref="canvasEl" :class="{'detail__canvas':true, orientation:true}"></canvas>
             </div>
             <div v-if="selectedObject && state.watermarkEditShow" class="detail__property">
-                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model:modelValue="selectedObject" @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor" @anchorChange="anchorChangeHandler" @delete="removeWatermark" />
-                <WatermarkEditImage v-else v-model:modelValue="selectedObject" @change="objectUpdated" @delete="removeWatermark" @anchorChange="anchorChangeHandler" />
-                <WatermarkPreset v-model="selectedObject" @change="objectUpdated" />
+                <WatermarkEditText v-if="isTextWatermark(selectedObject.type)" v-model:modelValue="selectedObject"
+                                   @change="objectUpdated" @fontUpdate="fontUpdate" @fillChange="changeFillColor"
+                                   @anchorChange="anchorChangeHandler" @delete="removeWatermark"/>
+                <WatermarkEditImage v-else v-model:modelValue="selectedObject" @change="objectUpdated"
+                                    @delete="removeWatermark" @anchorChange="anchorChangeHandler"/>
+                <WatermarkPreset v-model="selectedObject" @change="objectUpdated"/>
             </div>
         </div>
 
         <div class="detail__footer">
-          <slot name="footer">
+            <slot name="footer">
 
-          </slot>
-          <!-- <ElButton type="primary" :loading="state.loading" @click="save">{{ $t('button.save') }}</ElButton> -->
+            </slot>
+            <!-- <ElButton type="primary" :loading="state.loading" @click="save">{{ $t('button.save') }}</ElButton> -->
         </div>
     </div>
 </template>
 
 
 <style lang="scss" scoped>
-.detail{
+.detail {
     width: 100%;
     height: 100%;
     position: relative;
@@ -468,43 +485,46 @@ defineExpose({
     display: grid;
     grid-template-rows: 1fr min-content;
     gap: 0;
-  &__footer{
-    display: flex;
-    justify-content: flex-end;
-    padding-block: 12px;
-  }
-    &__bg{
+
+    &__footer {
+        display: flex;
+        justify-content: flex-end;
+        padding-block: 12px;
+    }
+
+    &__bg {
         width: 100%;
         height: 100%;
         position: absolute;
         top: 0;
         left: 0;
         z-index: 0;
-        background:
-            conic-gradient(from 90deg at 1px 1px,#C9DDF4 90deg,#DEE7EE 0)
-            0 0/10px 10px;
+        background: conic-gradient(from 90deg at 1px 1px, #C9DDF4 90deg, #DEE7EE 0) 0 0/10px 10px;
     }
-    &__container{
+
+    &__container {
         width: 100%;
         height: 100%;
         position: relative;
         overflow: hidden;
     }
-    &__canvas__container{
+
+    &__canvas__container {
         width: 100%;
         height: 100%;
         padding: 20px;
-        display: flex
-;
-    justify-content: center;
-    align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
-    &__property{
-      position: absolute;
-      right : 12px;
-      top: 12px;
-      z-index: 2;
+
+    &__property {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        z-index: 2;
     }
+
     &__tools {
         position: absolute;
         left: 12px;
@@ -513,7 +533,8 @@ defineExpose({
         display: grid;
         grid-template-columns: 1fr;
         gap: 12px;
-        .actions{
+
+        .actions {
             display: flex;
             flex-flow: column nowrap;
             gap: 12px;
@@ -522,26 +543,29 @@ defineExpose({
             background: #fff;
             border-radius: 4px;
             padding: 8px;
-            box-shadow: 0 0 4px rgba(0,0,0,0.1);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
             background: var(--app-grey-1000);
         }
     }
 }
+
 #canvas {
     width: 100%;
     background: #fff;
 }
 
-.icon{
+.icon {
     color: var(--app-grey-400);
     cursor: pointer;
+
     &.selected {
         color: var(--app-primary-color);
     }
+
     &.tools {
-      :hover {
-        color: var(--app-primary-color);
-      }
+        :hover {
+            color: var(--app-primary-color);
+        }
     }
 }
 </style>

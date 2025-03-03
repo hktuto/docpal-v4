@@ -1,7 +1,8 @@
 <template>
     <div class="watermarkListContainer">
         <div class="listActionContainer">
-            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>
+            <el-button type="primary" @click="createItem">{{ $t('admin_watermark_create') }}</el-button>
+<!--            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>-->
         </div>
         <div class="listItemsContainer" style="--icon-size: 12px;">
             <div v-for="item in list" :key="item.id" :class="{listItem:true, selected: item.id === selectedId}">
@@ -28,7 +29,7 @@
             </div>
         </div>
         <!-- Edit dialog -->
-        <el-dialog v-model="editDialog" :title="$t('admin_watermark_create')" destroy-on-close>
+        <el-dialog v-model="editDialog" :title="$t('admin_watermark_edit')" destroy-on-close>
             <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler"/>
         </el-dialog>
         <!-- New dialog -->
