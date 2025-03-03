@@ -4,12 +4,12 @@ import { ElMessage } from "element-plus";
 import type {
   DashboardWidgetSetting,
   DashboardWidget,
-} from "dp-dashboard/utils/dashboardWidgetHelper";
+} from "#imports";
 import {
   dashboardWidgetSetting,
   getNormalizeSetting,
   getWidgetSetting,
-} from "dp-dashboard/utils/dashboardWidgetHelper";
+} from "#imports";
 import { publicApi } from "api";
 import { onActivated } from "vue";
 const { id } = defineProps<{
