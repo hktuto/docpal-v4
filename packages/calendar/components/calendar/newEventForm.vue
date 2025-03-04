@@ -5,10 +5,17 @@ const { setting } = useCalendarStore();
 const {options} = defineProps<{
     options: CalendarOptions,
 }>()
+const emits = defineEmits(['submit'])
 const startTime = ref<any>()
-function open(selectedDateTime: string) {
+const form = ref({
+})
+function open(selectedDateTime: string, filter:any) {
     opened.value = true;
     startTime.value = dayjs(selectedDateTime)
+}
+
+function submit(){
+    emits('submit', form.value)
 }
 
 defineExpose({
