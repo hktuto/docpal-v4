@@ -41,7 +41,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         cleanSelectedRows()
         const data = await loadData([], listProvider.idOrPath.value || '/')
         data.sort(sortEntry)
-        emit('selectedChange', [])
+        emits('selectedChange', [])
         return data
     },
     childChangeHander: tableChildChangeHandler,

@@ -85,7 +85,6 @@ async function getList() {
   try {
     const res = await clientApi.api.postCaseTypesPage({}).then(res => res.data)
     state.list = res?.entryList
-    console.loog(state.list)
   } catch (error) {
   }
 }

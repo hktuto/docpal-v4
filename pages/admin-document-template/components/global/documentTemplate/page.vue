@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import { provide, toRefs, ref } from 'vue';
-import { DocumentTemplateListTable } from '#components'
-import { adminApi, clientApi } from 'api'
-import { DocumentTemplateProviderKey } from '~/utils/documentTemplateHelper';
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-import { Download } from '@element-plus/icons-vue';
+import {provide, ref, toRefs} from 'vue';
+import {DocumentTemplateListTable} from '#components'
+import {adminApi, clientApi} from 'api'
+import {DocumentTemplateProviderKey} from '~/utils/documentTemplateHelper';
+import {ElMessage, ElMessageBox, ElNotification} from 'element-plus';
+import {Download} from '@element-plus/icons-vue';
 
-const { t } = useI18n()
+const {t} = useI18n()
 
 const routerProvider = inject(MenuRouterKey)
-if(!routerProvider) {
+if (!routerProvider) {
     throw createError('MenuRouterKey is not provided')
 }
 
@@ -20,18 +20,19 @@ const props = defineProps<{
     isDesc: boolean
     filters?: any
 }>();
-const { pageNum, pageSize, isDesc, orderBy, filters } = toRefs(props)
+const {pageNum, pageSize, isDesc, orderBy, filters} = toRefs(props)
 
 const tableRef = ref<InstanceType<typeof DocumentTemplateListTable>>();
 const filterFormdata = ref();
 const ResponsiveFilterRef = ref();
-function handleFilterFormChange(formData:any) {
+
+function handleFilterFormChange(formData: any) {
     filterFormdata.value = formData
     tableRef.value?.reload()
 }
 
 onMounted(() => {
-    if(filters.value){
+    if (filters.value) {
         filterFormdata.value = filters.value
         ResponsiveFilterRef.value?.setValue('name', filters.value.name)
     }
@@ -48,37 +49,45 @@ async function handleActive(row: any, enable: boolean) {
 }
 
 const TemplateReplaceDialogRef = ref()
+
 async function handleReplace(row: any) {
     TemplateReplaceDialogRef.value.handleOpen(row)
 }
 
 
-function officeUrl(docId:string, token:string) {
+function officeUrl(docId: string, token: string) {
     let host = window.location.host.replace('admin.', '');
-    if(!host.includes('localhost')){
+    if (!host.includes('localhost')) {
         return `https://office.${host}/browser/85ac843/cool.html?WOPISrc=https://office.${host}/wopi/files/${docId}?access_token=${token}`
-    }else{
+    } else {
         return `https://office.app4.wclsolution.com/browser/85ac843/cool.html?WOPISrc=https://office.app4.wclsolution.com/wopi/files/${docId}?access_token=${token}`
     }
 }
+
 async function handleEdit(row: any) {
-    const { data: token}:any = await clientApi.api.getNuxeoGetofficetokenId(row.documentId, {fileType:'NUXEO'})
+    const {data: token}: any = await clientApi.api.getNuxeoGetofficetokenId(row.documentId, {fileType: 'NUXEO'})
     const baseUrl = officeUrl(row.documentId, token)
     window.open(baseUrl, '_blank')
 }
+
 const TemplateAddStep1DialogRef = ref()
-function handleEditInfo(row:any) {
-    TemplateAddStep1DialogRef.value.handleOpen({ ...row, isEdit: true })
+
+function handleEditInfo(row: any) {
+    TemplateAddStep1DialogRef.value.handleOpen({...row, isEdit: true})
 }
 
-async function handleDelete(row:any) {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
+async function handleDelete(row: any) {
+    const action = await ElMessageBox.confirm(`${t('documentTemplate_deleteMsg')}`, {
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: t('common_confirmDelete'),
+    })
+    if (action !== 'confirm') return
     await adminApi.api.deleteTemplateDocumentId(row.id)
+    routerProvider?.message.success(t('documentTemplate_deleteSuccessMsg'));
     tableRef.value?.reload()
 }
 
-async function handleDownload(row:any) {
+async function handleDownload(row: any) {
     const id = new Date().valueOf() + row.name
     const notification = ElNotification({
         title: '',
@@ -93,9 +102,9 @@ async function handleDownload(row:any) {
     try {
         const blob = await adminApi.api.postNuxeoDocumentDownload(row.id, {
             format: 'blob',
-            onDownloadProgress: (e:any) => {
+            onDownloadProgress: (e: any) => {
                 const el = document.getElementById(id)
-                if(el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+                if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
             }
         })
         await downloadBlob(blob, row.name)
@@ -105,14 +114,13 @@ async function handleDownload(row:any) {
         notification.close()
     }
 }
-    
 
 provide(DocumentTemplateProviderKey, {
-    getListApi: async(params:any) =>{
-        let filters:any = undefined;
-        if(filterFormdata.value){
+    getListApi: async (params: any) => {
+        let filters: any = undefined;
+        if (filterFormdata.value) {
             Object.keys(filterFormdata.value).forEach(key => {
-                if(filterFormdata.value[key]) params[key] = filterFormdata.value[key]
+                if (filterFormdata.value[key]) params[key] = filterFormdata.value[key]
             })
             filters = {...filterFormdata.value}
         }
@@ -125,7 +133,7 @@ provide(DocumentTemplateProviderKey, {
         })
         return adminApi.api.postTemplateDocumentPage(params)
     },
-    dblClickHandle: (row:any) => {
+    dblClickHandle: (row: any) => {
         const item = createNewDocumentTemplateDetail(row)
         routerProvider?.navigateTo(item)
     },
@@ -135,8 +143,8 @@ provide(DocumentTemplateProviderKey, {
     handleEditInfo,
     handleDelete,
     handleDownload,
-    actionPermission: (args:PermissionMethodParams) => {
-        if(args.code === 'edit') {
+    actionPermission: (args: PermissionMethodParams) => {
+        if (args.code === 'edit') {
             return {visible: true, disabled: args.row.fileType === 'PDF'}
         }
         return {visible: true, disabled: false}
@@ -151,13 +159,16 @@ provide(DocumentTemplateProviderKey, {
         <DocumentTemplateListTable ref="tableRef" v-bind="props">
             <template #toolbar_buttons>
                 <div class="actionsContainer">
-
-                <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                inputKey="name"/>
-                <el-button @click="handleAdd">{{$t('button.add')}}</el-button>
+                    <ResponsiveFilter ref="ResponsiveFilterRef"
+                                      @form-change="handleFilterFormChange"
+                                      inputKey="name"
+                                      inputPlaceHolder="documentTemplate_Filter"/>
+                    <div class="button-add">
+                        <el-button @click="handleAdd">{{ $t('documentTemplate_Create') }}</el-button>
+                    </div>
                 </div>
             </template>
-            
+
         </DocumentTemplateListTable>
         <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="tableRef?.reload"></TemplateAddStep1Dialog>
         <TemplateReplaceDialog ref="TemplateReplaceDialogRef" @refresh="tableRef?.reload"/>
@@ -166,11 +177,13 @@ provide(DocumentTemplateProviderKey, {
 </template>
 
 <style lang="scss" scoped>
-.actionsContainer{
+.actionsContainer {
+    width: 100%;
     display: flex;
-    flex-flow: row nowrap;
-    gap: var(--app-space-s);
-    justify-content: flex-start;
-    align-items: center;
 }
+
+:deep(.el-input) {
+    width: 250px;
+}
+
 </style>
