@@ -1,1 +1,651 @@
-{"widgetList":[{"key":52906,"type":"grid","category":"container","icon":"grid","cols":[{"type":"grid-col","category":"container","icon":"grid-col","internal":true,"widgetList":[{"key":109482,"type":"cascader","icon":"cascader-field","formItemFlag":true,"options":{"name":"path","label":"Filter by Path","labelAlign":"","defaultValue":"","placeholder":"All","size":"","lazy":true,"labelWidth":null,"labelHidden":false,"columnWidth":"200px","disabled":false,"hidden":false,"clearable":true,"filterable":true,"multiple":false,"checkStrictly":true,"showAllLevels":true,"optionItems":[],"required":false,"requiredHint":"","customRule":"","customRuleHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onChange":"","onFocus":"","onBlur":"","onValidate":"","onLazyLoad":"const { level, value, childrenData } = node\nif(!!childrenData) {\n  resolve(childrenData)\n  return\n}\nconst idOrPath = level == 0 ? \"/\" : value\n$api.post('/nuxeo/document/children/thumbnail', {idOrPath, pageSize: 100000}).then(res => {\n  const nodes = res.data.data.entryList.reduce((prev, item) => { \n    if(item.isFolder) prev.push({\n      value: item.id,\n      label: item.name\n    })\n    return prev\n  },[])\n  // 通过调用resolve将子节点数据返回，通知组件数据加载完成\n  resolve(nodes)\n}).catch(err => {\n  resolve([])\n})"},"id":"cascader76990"}],"options":{"name":"gridCol49794","hidden":false,"span":6,"offset":0,"push":0,"pull":0,"responsive":false,"md":12,"sm":12,"xs":12,"customClass":[]},"id":"grid-col-49794"},{"type":"grid-col","category":"container","icon":"grid-col","internal":true,"widgetList":[{"key":97657,"type":"cascader","icon":"cascader-field","formItemFlag":true,"options":{"name":"auditTemplate","label":"AuditTemplate","labelAlign":"","defaultValue":"","placeholder":"All","size":"","lazy":false,"labelWidth":null,"labelHidden":false,"columnWidth":"200px","disabled":false,"hidden":false,"clearable":true,"filterable":true,"multiple":false,"checkStrictly":true,"showAllLevels":true,"optionItems":[],"required":false,"requiredHint":"","customRule":"","customRuleHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"const _this = this\n$api.get('/nuxeo/document/queryAuditTemplate').then(res => {\n  const options = []\n  res.data.data.forEach((item) => { \n    let _item = options.find(o => o.value === item.eventCategory)\n    if(!_item){\n      options.push({\n        value: item.eventCategory,\n        label: item.eventCategory,\n        children: []\n      })\n      _item = options[options.length - 1]\n    }\n    _item.children.push({\n      value: item.eventId,\n      label: $i18n.t(item.eventId),\n    })\n  })\n  _this.loadOptions(options)\n}).catch(err => {\n})","onChange":"","onFocus":"","onBlur":"","onValidate":"","onLazyLoad":""},"id":"cascader35833"}],"options":{"name":"gridCol43633","hidden":false,"span":6,"offset":0,"push":0,"pull":0,"responsive":false,"md":12,"sm":12,"xs":12,"customClass":[]},"id":"grid-col-43633"},{"type":"grid-col","category":"container","icon":"grid-col","internal":true,"widgetList":[{"key":72099,"type":"date-range","icon":"date-range-field","formItemFlag":true,"options":{"name":"dates","label":"Date","labelAlign":"","type":"daterange","defaultValue":null,"startPlaceholder":"","endPlaceholder":"","columnWidth":"200px","size":"","autoFullWidth":true,"labelWidth":null,"labelHidden":false,"readonly":false,"disabled":false,"hidden":false,"clearable":true,"editable":true,"format":"YYYY-MM-DD","valueFormat":"YYYY-MM-DDTHH:mm:ss.000Z","defaultTime":["2000-01-01 00:00:00","2000-01-01 23:59:00"],"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"daterange91340"}],"options":{"name":"grid1","hidden":false,"span":6,"offset":0,"push":0,"pull":0,"responsive":false,"md":12,"sm":12,"xs":12,"customClass":[]},"id":"grid-col-56592"},{"type":"grid-col","category":"container","icon":"grid-col","internal":true,"widgetList":[{"key":77531,"type":"select","icon":"select-field","formItemFlag":true,"options":{"name":"principalName","label":"User","labelAlign":"","defaultValue":"","placeholder":"All","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"clearable":true,"filterable":true,"allowCreate":false,"remote":false,"automaticDropdown":false,"multiple":false,"multipleLimit":0,"optionItems":[],"required":false,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"const _this = this\n$api.post('/nuxeo/identity/users', {}).then(res => {\n  const reponse = res.data.data.reduce((prev, item) => {\n    if(item.userId) {\n      prev.push({\n        value: item.userId,\n        label: `${item.username}<${item.email}>`\n      })\n    }\n   return prev\n  }, [])\n  _this.loadOptions(reponse)\n}).catch(err => {\n})","onRemoteQuery":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"select73422"}],"options":{"name":"gridCol73292","hidden":false,"span":6,"offset":0,"push":0,"pull":0,"responsive":false,"md":12,"sm":12,"xs":12,"customClass":[]},"id":"grid-col-73292"}],"options":{"name":"grid60600","hidden":false,"gutter":12,"colHeight":null,"customClass":[]},"id":"grid60600"}],"formConfig":{"modelName":"formData","refName":"vForm","rulesName":"rules","labelWidth":80,"labelPosition":"top","size":"","labelAlign":"label-left-align","cssCode":"","customClass":[],"functions":"","layoutType":"PC","jsonVersion":3,"onFormCreated":"","onFormMounted":"","onFormDataChange":"","onFormValidate":"","saveRemoteOptions":"never","labelFormUniqueName":true,"dataSources":[]}}
+{
+  "widgetList": [
+    {
+      "key": 52906,
+      "type": "grid",
+      "category": "container",
+      "icon": "grid",
+      "cols": [
+        {
+          "type": "grid-col",
+          "category": "container",
+          "icon": "grid-col",
+          "internal": true,
+          "widgetList": [
+            {
+              "key": 109482,
+              "type": "cascader",
+              "icon": "cascader-field",
+              "formItemFlag": true,
+              "options": {
+                "name": "path",
+                "label": "log_auditFilterByPath",
+                "labelAlign": "",
+                "defaultValue": "",
+                "placeholder": "All",
+                "size": "",
+                "lazy": true,
+                "labelWidth": null,
+                "labelHidden": false,
+                "columnWidth": "200px",
+                "disabled": false,
+                "hidden": false,
+                "clearable": true,
+                "filterable": true,
+                "multiple": false,
+                "checkStrictly": true,
+                "showAllLevels": true,
+                "optionItems": [],
+                "required": false,
+                "requiredHint": "",
+                "customRule": "",
+                "customRuleHint": "",
+                "customClass": [],
+                "labelIconClass": null,
+                "labelIconPosition": "rear",
+                "labelTooltip": null,
+                "onCreated": "",
+                "onMounted": "",
+                "onChange": "",
+                "onFocus": "",
+                "onBlur": "",
+                "onValidate": "",
+                "onLazyLoad": "const { level, value, childrenData } = node\nif(!!childrenData) {\n  resolve(childrenData)\n  return\n}\nconst idOrPath = level == 0 ? \"/\" : value\n$api.post('/nuxeo/document/children/thumbnail', {idOrPath, pageSize: 100000}).then(res => {\n  const nodes = res.data.data.entryList.reduce((prev, item) => { \n    if(item.isFolder) prev.push({\n      value: item.id,\n      label: item.name\n    })\n    return prev\n  },[])\n  // 通过调用resolve将子节点数据返回，通知组件数据加载完成\n  resolve(nodes)\n}).catch(err => {\n  resolve([])\n})"
+              },
+              "id": "cascader76990"
+            }
+          ],
+          "options": {
+            "name": "gridCol49794",
+            "hidden": false,
+            "span": 6,
+            "offset": 0,
+            "push": 0,
+            "pull": 0,
+            "responsive": false,
+            "md": 12,
+            "sm": 12,
+            "xs": 12,
+            "customClass": []
+          },
+          "id": "grid-col-49794"
+        },
+        {
+          "type": "grid-col",
+          "category": "container",
+          "icon": "grid-col",
+          "internal": true,
+          "widgetList": [
+            {
+              "key": 97657,
+              "type": "cascader",
+              "icon": "cascader-field",
+              "formItemFlag": true,
+              "options": {
+                "name": "auditTemplate",
+                "label": "log_auditFilterCategoryAndEvent",
+                "labelAlign": "",
+                "defaultValue": "",
+                "placeholder": "All",
+                "size": "",
+                "lazy": false,
+                "labelWidth": null,
+                "labelHidden": false,
+                "columnWidth": "200px",
+                "disabled": false,
+                "hidden": false,
+                "clearable": true,
+                "filterable": true,
+                "multiple": false,
+                "checkStrictly": true,
+                "showAllLevels": true,
+                "optionItems": [
+                  {
+                    "value": "File Management",
+                    "label": "File Management",
+                    "children": [
+                      {
+                        "value": "docpal_versiondocument",
+                        "label": "版本文档"
+                      },
+                      {
+                        "value": "docpal_uploaddocument",
+                        "label": "上传文档"
+                      },
+                      {
+                        "value": "docpal_downloadoriginal",
+                        "label": "下载原始"
+                      },
+                      {
+                        "value": "docpal_modifydocument",
+                        "label": "修改文档"
+                      },
+                      {
+                        "value": "docpal_deletedocument",
+                        "label": "删除文档"
+                      },
+                      {
+                        "value": "docpal_movedocument",
+                        "label": "移动文件"
+                      },
+                      {
+                        "value": "docpal_downloadpdf",
+                        "label": "下载"
+                      },
+                      {
+                        "value": "docpal_downloadpdfannotation",
+                        "label": "下载pdf注释"
+                      },
+                      {
+                        "value": "docpal_print",
+                        "label": "打印"
+                      },
+                      {
+                        "value": "docpal_restoredocument",
+                        "label": "恢复文件"
+                      },
+                      {
+                        "value": "docpal_removedocument",
+                        "label": "删除文档"
+                      },
+                      {
+                        "value": "docpal_applyannotation",
+                        "label": "应用注释"
+                      },
+                      {
+                        "value": "docpal_externalshare",
+                        "label": "外部分享"
+                      },
+                      {
+                        "value": "docpal_editupdatedocument",
+                        "label": "编辑更新文档"
+                      },
+                      {
+                        "value": "docpal_replacedocument",
+                        "label": "替换文件"
+                      }
+                    ]
+                  },
+                  {
+                    "value": "ACL",
+                    "label": "ACL",
+                    "children": [
+                      {
+                        "value": "docpal_aclremovelocal",
+                        "label": "Acl移除本地"
+                      },
+                      {
+                        "value": "docpal_acleditlocal",
+                        "label": "Acl编辑local"
+                      },
+                      {
+                        "value": "docpal_acladdsecuritykeywords",
+                        "label": "Acl添加安全关键字"
+                      },
+                      {
+                        "value": "docpal_acladdlocal",
+                        "label": "Acl添加local"
+                      }
+                    ]
+                  },
+                  {
+                    "value": "Virtual Folder",
+                    "label": "Virtual Folder",
+                    "children": [
+                      {
+                        "value": "docpal_createvirtualfolder",
+                        "label": "创建虚拟文件夹"
+                      },
+                      {
+                        "value": "docpal_editvirtualfolder",
+                        "label": "编辑虚拟文件夹"
+                      },
+                      {
+                        "value": "docpal_deletevirtualfolder",
+                        "label": "删除虚拟文件夹"
+                      },
+                      {
+                        "value": "docpal_savesearchmeta",
+                        "label": "保存搜索元数据"
+                      }
+                    ]
+                  },
+                  {
+                    "value": "User",
+                    "label": "User",
+                    "children": [
+                      {
+                        "value": "docpal_login",
+                        "label": "登录"
+                      },
+                      {
+                        "value": "docpal_updatepassword",
+                        "label": "更新密码"
+                      },
+                      {
+                        "value": "docpal_forgetpassword",
+                        "label": "Docpal forgetpassword"
+                      },
+                      {
+                        "value": "docpal_createuser",
+                        "label": "创建用户"
+                      },
+                      {
+                        "value": "docpal_deleteuser",
+                        "label": "删除用户"
+                      },
+                      {
+                        "value": "docpal_updateuserinfo",
+                        "label": "更新用户信息"
+                      },
+                      {
+                        "value": "docpal_applysecuritykeyword",
+                        "label": "应用security关键字"
+                      },
+                      {
+                        "value": "docpal_assigngroup",
+                        "label": "分配组"
+                      },
+                      {
+                        "value": "docpal_unassigngroup",
+                        "label": "Unassign集团"
+                      },
+                      {
+                        "value": "docpal_applyvirtualfoldertouser",
+                        "label": "将虚拟文件夹应用于用户"
+                      },
+                      {
+                        "value": "docpal_deletevirtualfoldertouser",
+                        "label": "删除用户虚拟文件夹"
+                      },
+                      {
+                        "value": "docpal_removesecuritykeyword",
+                        "label": "删除security关键字"
+                      },
+                      {
+                        "value": "docpal_creategroup",
+                        "label": "创建组"
+                      },
+                      {
+                        "value": "docpal_deletegroup",
+                        "label": "删除组"
+                      },
+                      {
+                        "value": "docpal_updateusergroup",
+                        "label": "更新用户组"
+                      },
+                      {
+                        "value": "docpal_aclunblockinherited",
+                        "label": "Acl解除阻塞继承"
+                      },
+                      {
+                        "value": "docpal_aclblockinherited",
+                        "label": "Acl块是继承"
+                      }
+                    ]
+                  },
+                  {
+                    "value": "Master Table",
+                    "label": "Master Table",
+                    "children": [
+                      {
+                        "value": "mastertable_create",
+                        "label": "mastertable_create"
+                      },
+                      {
+                        "value": "mastertable_insert",
+                        "label": "mastertable_insert"
+                      },
+                      {
+                        "value": "mastertable_delete",
+                        "label": "mastertable_delete"
+                      },
+                      {
+                        "value": "mastertable_update",
+                        "label": "mastertable_update"
+                      },
+                      {
+                        "value": "mastertable_batch",
+                        "label": "mastertable_batch"
+                      }
+                    ]
+                  }
+                ],
+                "required": false,
+                "requiredHint": "",
+                "customRule": "",
+                "customRuleHint": "",
+                "customClass": [],
+                "labelIconClass": null,
+                "labelIconPosition": "rear",
+                "labelTooltip": null,
+                "onCreated": "",
+                "onMounted": "const _this = this\n$api.get('/nuxeo/document/queryAuditTemplate').then(res => {\n  const options = []\n  res.data.data.forEach((item) => { \n    let _item = options.find(o => o.value === item.eventCategory)\n    if(!_item){\n      options.push({\n        value: item.eventCategory,\n        label: item.eventCategory,\n        children: []\n      })\n      _item = options[options.length - 1]\n    }\n    _item.children.push({\n      value: item.eventId,\n      label: $i18n.t(item.eventId),\n    })\n  })\n  _this.loadOptions(options)\n}).catch(err => {\n})",
+                "onChange": "",
+                "onFocus": "",
+                "onBlur": "",
+                "onValidate": "",
+                "onLazyLoad": ""
+              },
+              "id": "cascader35833"
+            }
+          ],
+          "options": {
+            "name": "gridCol43633",
+            "hidden": false,
+            "span": 6,
+            "offset": 0,
+            "push": 0,
+            "pull": 0,
+            "responsive": false,
+            "md": 12,
+            "sm": 12,
+            "xs": 12,
+            "customClass": []
+          },
+          "id": "grid-col-43633"
+        },
+        {
+          "type": "grid-col",
+          "category": "container",
+          "icon": "grid-col",
+          "internal": true,
+          "widgetList": [
+            {
+              "key": 72099,
+              "type": "date-range",
+              "icon": "date-range-field",
+              "formItemFlag": true,
+              "options": {
+                "name": "dates",
+                "label": "log_auditFilterDate",
+                "labelAlign": "",
+                "type": "daterange",
+                "defaultValue": null,
+                "startPlaceholder": "",
+                "endPlaceholder": "",
+                "columnWidth": "200px",
+                "size": "",
+                "autoFullWidth": true,
+                "labelWidth": null,
+                "labelHidden": false,
+                "readonly": false,
+                "disabled": false,
+                "hidden": false,
+                "clearable": true,
+                "editable": true,
+                "format": "YYYY-MM-DD",
+                "valueFormat": "YYYY-MM-DDTHH:mm:ss.000Z",
+                "defaultTime": [
+                  "2000-01-01 00:00:00",
+                  "2000-01-01 23:59:00"
+                ],
+                "required": false,
+                "requiredHint": "",
+                "validation": "",
+                "validationHint": "",
+                "customClass": [],
+                "labelIconClass": null,
+                "labelIconPosition": "rear",
+                "labelTooltip": null,
+                "onCreated": "",
+                "onMounted": "",
+                "onChange": "",
+                "onFocus": "",
+                "onBlur": "",
+                "onValidate": ""
+              },
+              "id": "daterange91340"
+            }
+          ],
+          "options": {
+            "name": "grid1",
+            "hidden": false,
+            "span": 6,
+            "offset": 0,
+            "push": 0,
+            "pull": 0,
+            "responsive": false,
+            "md": 12,
+            "sm": 12,
+            "xs": 12,
+            "customClass": []
+          },
+          "id": "grid-col-56592"
+        },
+        {
+          "type": "grid-col",
+          "category": "container",
+          "icon": "grid-col",
+          "internal": true,
+          "widgetList": [
+            {
+              "key": 77531,
+              "type": "select",
+              "icon": "select-field",
+              "formItemFlag": true,
+              "options": {
+                "name": "principalName",
+                "label": "User",
+                "labelAlign": "",
+                "defaultValue": "",
+                "placeholder": "All",
+                "columnWidth": "200px",
+                "size": "",
+                "labelWidth": null,
+                "labelHidden": false,
+                "disabled": false,
+                "hidden": false,
+                "clearable": true,
+                "filterable": true,
+                "allowCreate": false,
+                "remote": false,
+                "automaticDropdown": false,
+                "multiple": false,
+                "multipleLimit": 0,
+                "optionItems": [
+                  {
+                    "value": "Administrator",
+                    "label": "Administrator<lyle.zheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "create_test",
+                    "label": "create_test<ikki.cheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "demo_account",
+                    "label": "demo_account<walter.mak@wclsolution.com>"
+                  },
+                  {
+                    "value": "demo_director",
+                    "label": "demo_director<walter.mak@wclsolution.com>"
+                  },
+                  {
+                    "value": "demo_head",
+                    "label": "demo_head<walter.mak@wclsolution.com>"
+                  },
+                  {
+                    "value": "demo_user",
+                    "label": "demo_user<walter.mark@wclsolution.com>"
+                  },
+                  {
+                    "value": "docpaladmin",
+                    "label": "docpaladmin<ninerabbit9299@gmail.com>"
+                  },
+                  {
+                    "value": "entityType",
+                    "label": "entityType<entitytype@163.com>"
+                  },
+                  {
+                    "value": "everything",
+                    "label": "everything<ikki.cheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "frank_yang",
+                    "label": "frank_yang<frank.yang@wclsolution.com>"
+                  },
+                  {
+                    "value": "ikki_cheng",
+                    "label": "ikki_cheng<ikki.cheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "jack_li",
+                    "label": "jack_li<352775063@qq.com>"
+                  },
+                  {
+                    "value": "jack_li2",
+                    "label": "jack_li2<352775063@qq.com>"
+                  },
+                  {
+                    "value": "Jay.Cai",
+                    "label": "Jay.Cai<jay.cai@wclsolution.com>"
+                  },
+                  {
+                    "value": "Jay_Cai",
+                    "label": "Jay_Cai<jay.cai@wclsolution.com>"
+                  },
+                  {
+                    "value": "Joshua",
+                    "label": "Joshua<joshua@wcl.com>"
+                  },
+                  {
+                    "value": "Lyle",
+                    "label": "Lyle<lyle.zheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "nine",
+                    "label": "nine<ninerabbit9299@gmail.com>"
+                  },
+                  {
+                    "value": "ninerabbit",
+                    "label": "ninerabbit<ninerabbit9299@163.com>"
+                  },
+                  {
+                    "value": "nissin",
+                    "label": "nissin<alison.yuen@wclsolution.cm>"
+                  },
+                  {
+                    "value": "ooo",
+                    "label": "ooo<ooo@qq.bb>"
+                  },
+                  {
+                    "value": "ooyy",
+                    "label": "ooyy<123@qq.com>"
+                  },
+                  {
+                    "value": "ooyy1",
+                    "label": "ooyy1<ooyy1@qq.com>"
+                  },
+                  {
+                    "value": "readonly",
+                    "label": "readonly<ikki.cheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "readwrite",
+                    "label": "readwrite<ikki.cheng@wclsolution.com>"
+                  },
+                  {
+                    "value": "rh",
+                    "label": "rh<royhoo_cc@163.com>"
+                  },
+                  {
+                    "value": "Rh_Admin",
+                    "label": "Rh_Admin<royhoo.zhang@wclsolution.com>"
+                  },
+                  {
+                    "value": "royhoo",
+                    "label": "royhoo<royhoo.zhang@wclsolution.com>"
+                  },
+                  {
+                    "value": "sales_manager",
+                    "label": "sales_manager<jay.cai@wclsolution.com>"
+                  },
+                  {
+                    "value": "sean-admin",
+                    "label": "sean-admin<example@example.com>"
+                  },
+                  {
+                    "value": "sean-client",
+                    "label": "sean-client<9394wing@gmail.com>"
+                  },
+                  {
+                    "value": "Shawn_Fang",
+                    "label": "Shawn_Fang<shawn.fang@wclsolution.com>"
+                  },
+                  {
+                    "value": "will_du",
+                    "label": "will_du<will.du@wclsolution.com>"
+                  },
+                  {
+                    "value": "willl",
+                    "label": "willl<willdu@wclsolution.com>"
+                  }
+                ],
+                "required": false,
+                "requiredHint": "",
+                "validation": "",
+                "validationHint": "",
+                "customClass": [],
+                "labelIconClass": null,
+                "labelIconPosition": "rear",
+                "labelTooltip": null,
+                "onCreated": "",
+                "onMounted": "const _this = this\n$api.post('/nuxeo/identity/users', {}).then(res => {\n  const reponse = res.data.data.reduce((prev, item) => {\n    if(item.userId) {\n      prev.push({\n        value: item.userId,\n        label: `${item.username}<${item.email}>`\n      })\n    }\n   return prev\n  }, [])\n  _this.loadOptions(reponse)\n}).catch(err => {\n})",
+                "onRemoteQuery": "",
+                "onChange": "",
+                "onFocus": "",
+                "onBlur": "",
+                "onValidate": ""
+              },
+              "id": "select73422"
+            }
+          ],
+          "options": {
+            "name": "gridCol73292",
+            "hidden": false,
+            "span": 6,
+            "offset": 0,
+            "push": 0,
+            "pull": 0,
+            "responsive": false,
+            "md": 12,
+            "sm": 12,
+            "xs": 12,
+            "customClass": []
+          },
+          "id": "grid-col-73292"
+        }
+      ],
+      "options": {
+        "name": "grid60600",
+        "hidden": false,
+        "gutter": 12,
+        "colHeight": null,
+        "customClass": []
+      },
+      "id": "grid60600"
+    }
+  ],
+  "formConfig": {
+    "modelName": "formData",
+    "refName": "vForm",
+    "rulesName": "rules",
+    "labelWidth": 80,
+    "labelPosition": "top",
+    "size": "",
+    "labelAlign": "label-left-align",
+    "cssCode": "",
+    "customClass": [],
+    "functions": "",
+    "layoutType": "PC",
+    "jsonVersion": 3,
+    "onFormCreated": "",
+    "onFormMounted": "",
+    "onFormDataChange": "",
+    "dhList": [],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
+  }
+}
