@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ElTabs, ElTabPane, ElButton, ElDialog, ElBadge } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
-
+import { TabManagerKey } from '#imports'
 import { clientApi } from 'api'
 const props = defineProps<{
   unreadCount?: number;
@@ -17,6 +17,7 @@ type Notification = {
   status: string;
 };
 
+const tabProvider = inject(TabManagerKey)
 const router = useRouter()
 
 const state = reactive<any>({
@@ -39,7 +40,7 @@ function handleClick() {
 async function getTypeList() {
   const { data} = await clientApi.api.getNotificationQueryNotificationUnreadCountList()
   state.list = data
-  const unreadCount = state.list.reduce((prev, item) => {
+  const unreadCount = state.list.reduce((prev: any, item: any) => {
     prev += item.unreadCount
     return prev 
   }, 0);
@@ -49,25 +50,25 @@ async function getTypeList() {
   })
   state.activeName = state.list[0].type
 }
-function handleUnreadCountChange(row) {
+function handleUnreadCountChange(row: any) {
   if (row.type !== 'Unread') state.list[0].unreadCount --
-  const activeItem = state.list.find(item => item.type === row.type)
+  const activeItem = state.list.find((item: any) => item.type === row.type)
   activeItem.unreadCount --
 }
 
-const detailRef = ref({})
+const detailRef = ref<any>({})
 async function handleDismissAll() {
   try {
     state.dismissLoading = true
     if(state.activeName === 'Unread') {
       await clientApi.api.postNotificationReadAll()
-      state.list.forEach(item => {
+      state.list.forEach((item: any) => {
         item.unreadCount = 0
       });
     }
     else {
-      await clientApi.api.putNotificationDissmissByType(state.activeName)
-      const activeItem = state.list.find(item => item.type === (state.activeName))
+      await clientApi.api.putNotificationDissmissByType({type: state.activeName})
+      const activeItem = state.list.find((item: any) => item.type === (state.activeName))
       state.list[0].unreadCount -= activeItem.unreadCount
       activeItem.unreadCount = 0
     }
@@ -80,7 +81,7 @@ async function handleDismissAll() {
 
 }
 function handleViewMore() {
-  router.push('/notificationPage')
+  tabProvider.openTab(routeNotificationPage({}))
   state.visible = false
 }
 function initData() {
@@ -123,7 +124,7 @@ defineExpose({ handleOpen, initData });
     </el-tabs>
     <template #footer>
       <div class="flex-x-between">
-        <el-button test-id="notification-dismiss-button" :loading="dismissLoading" type="info" text @click="handleDismissAll">{{$t('button.dismissAll')}}</el-button>
+        <el-button test-id="notification-dismiss-button" :loading="state.dismissLoading" type="info" text @click="handleDismissAll">{{$t('button.dismissAll')}}</el-button>
         <el-button test-id="notification-view-more-button" type="primary" @click="handleViewMore">{{ $t('button.viewMore') }}</el-button>
       </div>
     </template>

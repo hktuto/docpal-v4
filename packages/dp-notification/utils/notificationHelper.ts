@@ -1,4 +1,5 @@
-export function notiShowView(row) {
+import { clientApi } from "api";
+export function notiShowView(row: any) {
   const isCancel = row.operate === 'TRASH' ||
     row.operate === 'DELETE' ||
     row.operate === 'CANCELD' ||
@@ -9,21 +10,20 @@ export function notiShowView(row) {
   return !isCancel && showView
 }
 export async function notiHandleView(row: any, tabProvider: any) {
-  
   // const router = useRouter()
   if (row.content.processInstanceId) {
-    if(row.type === 'Upload-Request') {
+    if (row.type === 'Upload-Request') {
       // router.push(`/fileRequest/${row.content.processInstanceId}`)
       const newItem = createUploadRequestDetailParams({
         taskId: row.content.processInstanceId,
       })
       tabProvider?.openTab(newItem, true)
     } else {
-      const router = useRouter()
-      router.push(`/workflow/link?processInstanceId=${row.content.processInstanceId}`) 
+      const newItem = await getWorkflowRoute(row.content.processInstanceId)
+      if (!!newItem) tabProvider?.openTab(newItem, true)
     }
-  } 
-  else if(row.content.documentId) {
+  }
+  else if (row.content.documentId) {
     const newItem = createBrowseListPageParams({
       idOrPath: row.content.documentId,
       commentId: row.content.commentId
@@ -38,7 +38,19 @@ export async function notiHandleView(row: any, tabProvider: any) {
       status
     })
     tabProvider?.openTab(newItem, true)
-    
+
   }
 }
 
+const getWorkflowRoute = async (processInstanceId: string) => {
+  try {
+    const taskList: any = await clientApi.api.getWorkflowTasks({ processInstanceId }).then(res => res.data)
+    const newTab = routeWorkflowDetail({
+      id: taskList[0].id,
+      name: taskList[0].name
+    })
+    return newTab
+  } catch (error) {
+    return null
+  }
+}
