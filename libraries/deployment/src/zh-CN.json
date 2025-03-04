@@ -1559,6 +1559,10 @@
   "layoutContent": "layoutContent",
   "loadMore": "加载更多",
   "loading": "載入中",
+  "log_auditEvent": "事件",
+  "log_auditFilterByPath": "路径搜索",
+  "log_auditFilterCategoryAndEvent": "log_auditFilterCategoryAndEvent",
+  "log_auditFilterDate": "时间",
   "logic": {
     "and": "并",
     "or": "或"

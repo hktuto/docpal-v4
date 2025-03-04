@@ -103,7 +103,7 @@
     "help": "Help",
     "holdPoliciesManage": "Hold Policy Setting",
     "log": "Log Manage",
-    "logManage": "Log Manage",
+    "logManage": "Log Output Configuration",
     "mailConfig": "Notification Configuration",
     "masterTable": "Master Table",
     "messageTemplate": "Message Template",
@@ -1559,6 +1559,10 @@
   "layoutContent": "Layout Content",
   "loadMore": "loadMore",
   "loading": "Loading",
+  "log_auditEvent": "Event",
+  "log_auditFilterByPath": "Filter by Path",
+  "log_auditFilterCategoryAndEvent": "Category & Event",
+  "log_auditFilterDate": "Date",
   "logic": {
     "and": "And",
     "or": "Or"
