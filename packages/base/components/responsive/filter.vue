@@ -37,7 +37,7 @@ import { vElementSize } from '@vueuse/components'
 import { deepCopy } from "#imports"
 
 const props = withDefaults(defineProps<{
-    inputKey: string,
+    inputKey?: string,
     inputPlaceHolder?: string
 }>(), {
   inputPlaceHolder: 'tip.filterByName'
