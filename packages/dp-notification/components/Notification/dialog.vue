@@ -281,7 +281,7 @@ async function handleDelete(item, index) {
 
 // #region module: read
 async function handleRead(item) {
-  const { data: res } = await clientApi.api.putNotificationIdStatusStatus(item.id);
+  const { data: res } = await clientApi.api.putNotificationIdStatusStatus(item.id, 'READED');
   if (res && item.status !== "READED") {
     item.status = "READED";
     emit("unreadCountChange", props.unreadCount - 1);
