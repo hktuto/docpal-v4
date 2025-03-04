@@ -214,6 +214,7 @@ async function getUser(){
     const userId = useUserId()
     const {data} = await clientApi.api.getNuxeoUserGetapplication() as any
     userId.value = data.userId
+    localStorage.setItem('docpal-user', JSON.stringify(data))
     if(!data) throw new Error('Get user info fail');
     user.value = data
 }
