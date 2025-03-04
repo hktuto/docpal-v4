@@ -498,7 +498,7 @@
     "cmmnAction": "My Action",
     "cmmnActivity": "Activity",
     "cmmnBasicInfo": "Info",
-    "cmmnDocumentRoot": "Document Root",
+    "cmmnDocumentRoot": "File",
     "cmmnProcess": "Process",
     "cmmnTaskPage": "My Task",
     "cmmnWorkflowPage": "All Workflow",
@@ -1378,7 +1378,7 @@
   "filePolicies_RetentionPolicyActivate": "Activate Policy",
   "filePolicies_RetentionPolicyApproved": "Approved",
   "filePolicies_RetentionPolicyCreate": "Create New Retention Policy",
-  "filePolicies_RetentionPolicyCreateDocumentType": "Document Type Involved in Retention Policy",
+  "filePolicies_RetentionPolicyCreateDocumentType": "Document Type",
   "filePolicies_RetentionPolicyCreateEvent": "Retention Event",
   "filePolicies_RetentionPolicyCreateSuccessMsg": "The new retention policy has been created successfully.",
   "filePolicies_RetentionPolicyDaysDelayedRequiredMsg": "No. of Days Delayed for Archiving is required.",
@@ -1563,6 +1563,7 @@
   "log_auditFilterByPath": "Filter by Path",
   "log_auditFilterCategoryAndEvent": "Category & Event",
   "log_auditFilterDate": "Date",
+  "log_jobsStatus_date": "Transaction Date",
   "logic": {
     "and": "And",
     "or": "Or"

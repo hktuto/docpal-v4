@@ -498,7 +498,7 @@
     "cmmnAction": "我的行动",
     "cmmnActivity": "活动",
     "cmmnBasicInfo": "基础信息",
-    "cmmnDocumentRoot": "文档根目录",
+    "cmmnDocumentRoot": "档案",
     "cmmnProcess": "流程",
     "cmmnTaskPage": "我的任务",
     "cmmnWorkflowPage": "所有工作流程",
@@ -1563,6 +1563,7 @@
   "log_auditFilterByPath": "路径搜索",
   "log_auditFilterCategoryAndEvent": "log_auditFilterCategoryAndEvent",
   "log_auditFilterDate": "时间",
+  "log_jobsStatus_date": "log_jobsStatus_date",
   "logic": {
     "and": "并",
     "or": "或"
