@@ -13,7 +13,7 @@
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactived") }}</el-tag>
+        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
       </template>
     </VxeGrid>
   </div>

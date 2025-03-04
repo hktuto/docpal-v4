@@ -15,7 +15,7 @@
             </template>
             <template #status="{ row }">
                 <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-                <el-tag v-else type="info">{{ $t("actions.inactived") }}</el-tag>
+                <el-tag v-else type="info">{{ $t("actions.inactive") }}</el-tag>
             </template>
         </VxeGrid>
         <SmartFolderInfoDialog ref="SmartFolderInfoDialogRef" @refresh="query()"/>
