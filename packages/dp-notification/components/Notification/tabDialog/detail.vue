@@ -17,7 +17,6 @@
             fileName: item.content.fileName
           }) }}</div>
           {{item.content.comment}}
-            <!-- emailList: item.content.emailList ? item.content.emailList.join(',') : '' -->
           <div>{{ item.creator }}</div>
           <div>
             <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info"  @click="handleDismiss(item)">{{ $t('button.dismiss') }}</el-button>
@@ -30,6 +29,7 @@
       <p v-if="state.loading" class="center">{{ $t('dpTip.loading') }}</p>
       <p v-if="!state.loading && state.scrollNoMore" class="center">{{ $t('dpTip.noMore') }}</p>
     </div>
+
   <!-- </div> -->
 </template>
 <script lang="ts" setup>
@@ -77,8 +77,7 @@ async function getList () {
   } catch (error) {
     
   } finally {
-    
-    setTimeout(() => state.loading = false, 200)
+    state.loading = false
     state.scrollNoMore = state.list.length >= state.totalSize
   }
 }
@@ -97,10 +96,9 @@ async function handleDismiss(item: any) {
 
 async function handleView(item: any) {
   notiHandleView(item, tabProvider)
-  // handleDismiss(item)
+  handleDismiss(item)
   emits('close')
 }
-function handleDismissAll() {}
 function initData (noGetData:boolean = false) {
   state.list = []
   pageParams.value.pageNum = 0
