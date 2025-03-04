@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dpDocument_acl_addLocal')"
+<el-dialog v-model="state.visible" :title="$t('accessControl_add')"
     :close-on-click-modal="false"
     >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
@@ -11,6 +11,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import  formJson from './acl.vform.json'
+import {ElMessage} from "element-plus";
 const props = defineProps<{
     doc: any,
     exitList: any[],
@@ -42,6 +43,7 @@ async function handleSubmit () {
 
     try {
         await adminApi.api.postNuxeoDocumentAclAdd(params)
+        ElMessage.success(t('accessControl_createdSuccessMsg'))
         state.visible = false
         emits('refresh')
     } catch (error) {
