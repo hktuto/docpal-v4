@@ -38,7 +38,7 @@ const {
   adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
   columns: [
     { field: "name", title: "tableHeader_name", fixed: "left" },
-    { field: "access", title: "tableHeader_access" },
+    { field: "groupId", title: "tableHeader_access" },
     {
       field: "createdDate",
       title: "workflow_createDate",
