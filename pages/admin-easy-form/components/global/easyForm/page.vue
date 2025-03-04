@@ -6,13 +6,13 @@
           ref="ResponsiveFilterRef"
           inputKey="name"
           @form-change="handleFilterFormChange"
+          inputPlaceHolder="easyForm_filter"
         />
-
-        <el-button type="primary" @click="handleAdd()">{{ $t("docType.new") }}</el-button>
+        <el-button type="primary" @click="handleAdd()">{{ $t("easyForm_createForm") }}</el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactived") }}</el-tag>
+        <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
+        <el-tag v-else type="danger">{{ $t("Deactivated") }}</el-tag>
       </template>
     </VxeGrid>
     <EasyFormNewDialog ref="DialogRef" @refresh="query({})" />
@@ -43,7 +43,7 @@ const {
     { field: "name", title: "easyForm.name", fixed: "left", type: "checkbox" },
     {
       field: "createDate",
-      title: "workflow_createDate",
+      title: "easyForm_creationDate",
       formatter({ cellValue }: any) {
         const format = userDisplayTimeSetting();
         return dayjs(cellValue).format(format);
@@ -59,7 +59,7 @@ const {
     },
     {
       field: "status",
-      title: "common_status",
+      title: "easyForm_status",
       slots: {
         default: "status",
       },
@@ -70,7 +70,7 @@ const {
     [
       {
         code: "edit_easyForm",
-        name: t("common_edit"),
+        name: t("easyForm_edit"),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -79,7 +79,7 @@ const {
       },
       {
         code: "active",
-        name: t("actions.active"),
+        name: t("easyForm_activate"),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -88,7 +88,7 @@ const {
       },
       {
         code: "inactive",
-        name: t("actions.inactive"),
+        name: t("easyForm_inactivate"),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -147,7 +147,7 @@ async function handleAdd() {
   display: flex;
   justify-content: space-between;
   .responsive-container {
-    width: 70%;
+    width: 15%;
     :deep .el-input {
       width: 200px;
     }
