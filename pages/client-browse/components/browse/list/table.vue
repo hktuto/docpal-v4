@@ -40,6 +40,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     api: async (pageParams: any) => {
         const data = await loadData([], listProvider.idOrPath.value || '/')
         data.sort(sortEntry)
+        emit('selectedChange', [])
         return data
     },
     childChangeHander: tableChildChangeHandler,
