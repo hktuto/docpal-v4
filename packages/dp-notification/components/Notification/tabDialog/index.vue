@@ -138,6 +138,18 @@ defineExpose({ handleOpen, initData });
   height: 70vh;
   .el-dialog__body {
     padding: 0 var(--el-dialog-padding-primary);
+    overflow: hidden;
+    .el-tabs {
+      height: 100%;
+      overflow: hidden;
+    }
+    .el-tabs__content {
+      overflow: hidden;
+    }
+    .el-tab-pane {
+      overflow: hidden;
+      height: 100%;
+    }
   }
 
 }
