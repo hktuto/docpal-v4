@@ -9,6 +9,8 @@ export const caseManageDetailPage  = function(params: any){
     component: 'LazyCaseDetail',
     props: {
       id: params.id,
+      name: params.name,
+      data : params.data
     }
   } as TabItem
 }

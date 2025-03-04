@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="action-list">
   <div :style="`--b-color: ${getBColor(item.planItemDefinitionType)}`" class="action-item" 
     v-for="item in actionList"
     @click="handleTask(item)">
@@ -27,6 +27,7 @@ function getBColor(type, state) {
 const dialogRef = ref()
 async function handleTask(actionItem) {
   if (actionItem.planItemDefinitionType === 'humantask') {
+    console.log('handleTask', actionItem)
     dialogRef.value.handleOpen(actionItem.referenceId, actionItem)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
     await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.id, planItemDefinitionId: actionItem.planItemDefinitionId})
@@ -37,7 +38,15 @@ async function handleTask(actionItem) {
 } 
 </script>
 <style lang="scss" scoped>
+.action-list{
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--app-space-xs);
+}
 .action-item {
+  width:100%;
   display: flex;
   align-items: center;
   gap: var(--app-space-xs);

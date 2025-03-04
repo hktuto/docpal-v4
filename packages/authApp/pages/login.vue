@@ -32,6 +32,7 @@ async function submit() {
     //    const {isRequired2FA} = await userStore.login(form.username, form.password);
         form.username = "";
         form.password = "";
+        sessionStorage.setItem('superAdmin', "true");
         verifly();
         router.push('/')
     } catch (error) {

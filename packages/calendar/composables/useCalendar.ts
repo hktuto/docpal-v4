@@ -31,22 +31,27 @@ export const useCalendarStore = () => {
         return data
     }
 
-    const categoriesOption = ref<any>([])
+    const categoriesOption = useState<any>('categoriesOption', () => ([]))
     async function getCategories(){
         const { data } = await adminApi.api.postMasterTablesRecords({
             id: setting.value.category.master_table
         });
+        console.log("getCategories", data)
         categoriesOption.value = data || []
     }
 
-    const locationsOption = ref<any>([])
+    const locationsOption = useState<any>('locationsOption', () => ([]))
     async function getLocations(){
-        const { data } = await adminApi.api.postMasterTablesRecords({
+        
+        const data = await adminApi.api.postMasterTablesRecords({
             id: setting.value.location.master_table
-        });
+        }).then(res => res.data);
+        console.log("getLocations", data)
+        locationsOption.value = data || []
     }
 
     async function getCalendarsSetting(){
+        console.log("getCalendarsSetting")
         const masterTable = await getCalendarMasterTable()
         const { data } = await adminApi.api.getCalendarsSetting() as any;
         const { public: { platform } } = useRuntimeConfig();

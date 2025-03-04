@@ -474,6 +474,10 @@
                     "value": "nissin"
                   },
                   {
+                    "label": "ooo",
+                    "value": "ooo"
+                  },
+                  {
                     "label": "ooyy",
                     "value": "ooyy"
                   },
@@ -883,7 +887,8 @@
                 "onSubFormRowAdd": "",
                 "onSubFormRowInsert": "",
                 "onSubFormRowDelete": "",
-                "onSubFormRowChange": ""
+                "onSubFormRowChange": "",
+                "label": " filePolicies_RetentionPolicyCreateEvent"
               },
               "id": "subform28175"
             }
@@ -1020,7 +1025,7 @@
     "labelPosition": "top",
     "size": "",
     "labelAlign": "label-left-align",
-    "cssCode": ".rp-sub-form .sub-form-container .el-row {\n  flex-direction: row-reverse;\n}\n\n.rp-sub-form  .sub-form-table-column, \n.rp-sub-form  .field-header-column {\n  flex: 1;\n}\n.hiddenLabel .el-form-item__label {\n  display: none!important;\n}\n.opacityLabel .el-form-item__label {\n  opacity: 0;\n}\n.mg-t-30{\n  margin-top: 30px;\n}",
+    "cssCode": ".rp-sub-form .sub-form-container .el-row {\n  flex-direction: row-reverse;\n}\n\n.rp-sub-form  .sub-form-table-column, \n.rp-sub-form  .field-header-column {\n  flex: 1;\n}\n\n.hiddenLabel .el-form-item__label {\n  display: none!important;\n}\n\n.mg-t-30{\n  margin-top: 30px;\n}\n\n\n",
     "customClass": [],
     "functions": "",
     "layoutType": "PC",
@@ -1029,9 +1034,9 @@
     "onFormMounted": "const _this = this\nif(!this.globalOptionData) this.globalOptionData = {}\nthis.globalOptionData.fileList = []\nthis.globalOptionData.ready = false\nconst defaultKeywords = [\n  {\n    \"name\": \"dc:created\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n  },\n  {\n    \"name\": \"dc:modified\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n}\n]\ngetDocTypeList()\nasync function getDocTypeList() {\n  const typeList = await $api.get('/docpal/types/active', {}).then(res => res.data.data)\n  typeList.forEach((item) => {\n    const _item = {\n      keywords: [...defaultKeywords, ...item.keywords],\n      value: item.name,\n      label: $t(item.name)\n    }\n    if(!item.isFolder) {\n      _this.globalOptionData.fileList.push(_item)\n    }\n  })\n  setTimeout(() => {\n    _this.globalOptionData.ready = true\n  }, 1000);\n}\n",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

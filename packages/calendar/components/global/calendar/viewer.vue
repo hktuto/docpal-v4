@@ -14,16 +14,25 @@ import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
 import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop'
 import { createResizePlugin } from '@schedule-x/resize'
-import { createEventModalPlugin } from '@schedule-x/event-modal'
+// import { createEventModalPlugin } from '@schedule-x/event-modal'
 import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import {type CalendarOptions} from '../../../utils/calendarHelper'
 import { clientApi } from 'api'
 import { ElRow } from 'element-plus'
-const { setting } = useCalendarStore();
+
+const { setting, categoriesOption, locationsOption } = useCalendarStore();
 const {options = {
     editable: false,
     allowCreate: false,
+    showCategoryFilter: false,
+    showLocationFilter: false,
+    showUserFilter: false,
+    showWorkflowFilter: false,
+    defaultUser: "",
+    defaultLocation: "",
+    defaultCategory: "",
+    view: "week",
     
 }} = defineProps<{
     options?: CalendarOptions;
@@ -38,9 +47,37 @@ const viewName = [
 
 const calendarControls = createCalendarControlsPlugin()
 const eventsServicePlugin = createEventsServicePlugin();
+// set up filter options
 const userFiterOptions = ref<any>([])
-const locationFiterOptions = ref<any>([])
-const categoryFiterOptions = ref<any>([])
+const workflowFilterOptions = ref<any>([])
+
+async function getFilterOptions(){
+    const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
+    userFiterOptions.value = user.map(item => {
+        return {
+            label: item.username,
+            value: item.userId
+        }
+    })
+}
+
+async function setDefaultFilter(){
+    if(options.showCategoryFilter || options.showLocationFilter || options.showUserFilter){
+        await getFilterOptions()
+    }
+    console.log("setDefaultFilter", options)
+    if(options.defaultUser){
+        filter.value.user = options.defaultUser
+    }
+    if(options.defaultLocation){
+        filter.value.location = options.defaultLocation
+    }
+    if(options.defaultCategory){
+        filter.value.category = options.defaultCategory
+    }
+    console.log("setDefaultFilter", filter.value)
+}
+
 // dialog ref
 const newFormRef = ref()
 
@@ -85,15 +122,46 @@ function convertSiteEventToCalendarEvent(event:SiteEvent):CalendarEvent {
         detail: event
     }
 }
-
+const filter = ref({
+    category:"",
+    user:"",
+    location:"",
+    workflow:""
+})
 async function getCurrentRangeEvent(){
     const range = calendarControls.getRange()
-    const { data } = await clientApi.api.postCalendarsList({
+    const params:any = {
         startTime: dayjs(range.start).toISOString(),
         endTime: dayjs(range.end).toISOString(),
-    }) as any
-    const events = data.map(convertSiteEventToCalendarEvent)
-    console.log('onRangeUpdate', events)
+    }
+    // TODO : backend is missing filter
+    // if(filter.value.category){
+    //     params.category = filter.value.category
+    // }
+    // if(filter.value.location){
+    //     params.location = filter.value.location
+    // }
+    // if(filter.value.user){
+    //     params.user = [filter.value.user]
+    // }
+    const { data } = await clientApi.api.postCalendarsList(params) as any
+    const events = data.filter( (event:any) => {
+        if(filter.value.category) {
+            const matCat = event.category === filter.value.category
+            if(!matCat) return false
+        }
+        if(filter.value.location) {
+            const matLoc = event.location === filter.value.location
+            if(!matLoc) return false
+        }
+        if(filter.value.user) {
+            const matUser = event.assignee === filter.value.user || event.modifiedBy === filter.value.user || event.relatedUsers.includes(filter.value.user)
+            if(!matUser) return false
+        }
+        return true
+    }).map(convertSiteEventToCalendarEvent)
+    // filter events
+    console.log('onRangeUpdate', events, filter.value)
     calendarApp.eventsService.set(events);
 }
 
@@ -185,9 +253,6 @@ function getFormData(){
 }
 
 
-onMounted( () => {
-
-})
 
 onDeactivated(() => {
     showCalendar.value = false
@@ -203,8 +268,9 @@ const filtetColumnWidth = computed(() => {
     return 24 / count
 })
 
-watch(() => [setting, options],() =>{
+watch(() => [setting, options],async() =>{
     if(setting.value){
+        await setDefaultFilter()
         setupCalendat()
     }
 },{
@@ -228,29 +294,29 @@ defineExpose({
                 <ElRow :gutter="20">
                     <ElCol v-if="options.showWorkflowFilter" :span="filtetColumnWidth">
                         <ElFormItem label="Workflow">
-                            <ElSelect v-model="locationFiterOptions" multiple placeholder="Select">
-                                <ElOption v-for="item in locationFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            <ElSelect v-model="filter.workflow" multiple placeholder="Select">
+                                <ElOption v-for="item in workflowFilterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol v-if="options.showLocationFilter" :span="filtetColumnWidth">
                         <ElFormItem label="Location">
-                            <ElSelect v-model="locationFiterOptions" multiple placeholder="Select">
-                                <ElOption v-for="item in locationFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            <ElSelect v-model="filter.location" clearable placeholder="Select" @change="getCurrentRangeEvent">
+                                <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol v-if="options.showUserFilter" :span="filtetColumnWidth">
                         <ElFormItem label="User">
-                            <ElSelect v-model="userFiterOptions" multiple placeholder="Select">
+                            <ElSelect v-model="filter.user" clearable placeholder="Select" @change="getCurrentRangeEvent">
                                 <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol v-if="options.showCategoryFilter" :span="filtetColumnWidth">
                         <ElFormItem label="Category">
-                            <ElSelect v-model="categoryFiterOptions" multiple placeholder="Select">
-                                <ElOption v-for="item in categoryFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
+                            <ElSelect v-model="filter.category" clearable placeholder="Select" @change="getCurrentRangeEvent">
+                                <ElOption v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
                             </ElSelect>
                         </ElFormItem>   
                         </ElCol>
@@ -260,7 +326,7 @@ defineExpose({
             </div>
         </template>
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" />
-        <CalendarNewEventForm ref="newFormRef" @reload="reloadCalendar" />
+        <!-- <CalendarNewEventForm ref="newFormRef" @reload="reloadCalendar" /> -->
     </div>
 </template>
 

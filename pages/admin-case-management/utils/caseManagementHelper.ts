@@ -36,6 +36,7 @@ export interface CaseManagementEditorProvider {
     readOnly: Ref<boolean>,
     graph: Ref<Graph | null>,
     allInfo: Ref<any[]>
+    versionId: Ref<string>
 }
 export const CaseManagementEditorKey: InjectionKey<CaseManagementEditorProvider> = Symbol('caseManagementEditorKey')
 

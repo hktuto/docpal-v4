@@ -99,8 +99,8 @@ export const CmmnDashboardWidgetSetting: { [key in CmmnDashboardWidget] : Dashbo
   },
   DocumentRoot: {
     label: 'cmmnDocumentRoot',
-    minW: 6,
-    minH: 6,
+    minW: 2,
+    minH: 4,
     maxW: 12,
     maxH: 12,
     w: 8,

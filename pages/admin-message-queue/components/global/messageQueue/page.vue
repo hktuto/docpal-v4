@@ -6,7 +6,6 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
         />
-        <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
       </template>
       <template #status="{row, rowIndex}">
         <el-tag v-if="row.status === 'ERROR'" type="danger">{{ row.status }}</el-tag>
@@ -42,36 +41,22 @@ const {
   },
   columns: [
     { field: "fileName", title: "table_fileName", fixed: "left" },
-    { field: "table_path", title: "logicalPath" },
+    { field: "table_path", title: "search.logicalPath" },
     { field: "category", title: "category" },
-    { field: "status", title: "dpTable_status", 
+    { field: "status", title: "log_auditEvent",
       slots: {
         default: 'status'
       } 
     },
     {
       field: "lastUpdateDate",
-      title: "table_last_update",
+      title: "log_jobsStatus_date",
       formatter({ cellValue }: any) {
         const format = userDisplayTimeSetting();
         return dayjs(cellValue).format(format);
       },
     },
   ],
-  bodyActions: [
-    [
-      {
-        code: "re-try",
-        name: t('moreAction.re-try'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleReSubmit(row)
-        },
-      }
-    ],
-  ],
-
   permissionMethod: (args:PermissionMethodParams) => {
     switch (args.code) {
       case 're-try':
