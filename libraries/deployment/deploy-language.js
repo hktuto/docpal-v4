@@ -40,7 +40,7 @@ async function updateLanguage(code, token){
     // const newJson = await fs.readFileSync(path.join(__dirname, `./lang/${code}.json`), {
     //     encoding: 'utf-8'
     // })
-    const newJson = code === 'en-Us' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
+    const newJson = code === 'en-US' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
     const newData = {
         ...data[0],
         languageContent: newJson
@@ -61,7 +61,7 @@ async function updateLanguage(code, token){
 
 async function deployLanguage(){
     // const { superAdmin, password, adminUrl } = argv;
-    const avalibleLang = ['en-Us', 'zh-CN', 'zh-HK'];
+    const avalibleLang = ['en-US', 'zh-CN', 'zh-HK'];
     const token = await loginAdmin()
     console.log(token)
     for(let i=0; i<avalibleLang.length; i++){
