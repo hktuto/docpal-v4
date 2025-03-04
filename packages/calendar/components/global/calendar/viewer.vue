@@ -112,13 +112,18 @@ type CalendarEvent = {
 }
 function convertSiteEventToCalendarEvent(event:SiteEvent):CalendarEvent {
     return {
-        id: event.eventId,
+        id: event.eventId || new Date().valueOf().toString(),
         start: dayjs(event.startTime).format('YYYY-MM-DD HH:mm'),
         end: dayjs(event.endTime).format('YYYY-MM-DD HH:mm'),
-        title: event.title,
+        title: event.title || event.eventName,
         description: event.eventName,
         detail: event
     }
+}
+function addEvent(newForm){
+    const ev= convertSiteEventToCalendarEvent(newForm)
+    console.log("addEvent", ev)
+    calendarApp.eventsService.add(ev)
 }
 const filter = ref({
     category:"",
@@ -279,7 +284,8 @@ watch(() => [setting, options],async() =>{
 
 
 defineExpose({
-    getFormData
+    getFormData,
+    addEvent
 })
 
 </script>

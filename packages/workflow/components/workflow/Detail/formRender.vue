@@ -136,6 +136,7 @@ const FormRendererRef = ref()
     }
     function handleTypeIds(properties: any) {
       state.writableIds = []
+      console.log("properties", properties)
       properties.forEach((item: any) => {
         if (item.writable) state.writableIds.push(item.id)
       })

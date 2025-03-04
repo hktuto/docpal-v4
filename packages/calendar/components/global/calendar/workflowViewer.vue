@@ -9,7 +9,7 @@ const {disabled, formData, options, taskDetail} = defineProps<{
 }>();
 
 const filter = ref()
-
+const newEvent = ref()
 function filterChange(newFilter: any) {
     console.log("filterChange", newFilter)
     filter.value = newFilter
@@ -17,10 +17,13 @@ function filterChange(newFilter: any) {
 
 function getFormData(){
     // console.log("getFormData", formData)
+    console.log("getFormData", newEvent.value)
+    return newEvent.value
 }
-
-function createEvent(){
-
+const calendarViewerRef = ref()
+function createEvent(newForm){
+    newEvent.value = newForm;
+    calendarViewerRef.value.addEvent(newForm)
 }
 const newEventFromRef = ref();
 function popNewEvent(dateTime: string) {
@@ -32,9 +35,9 @@ defineExpose({ getFormData })
 </script>
 
 <template>
-    {{options}}
+    {{ options }}
     {{ taskDetail }}
-    {{formData}}
-    <CalendarViewer :options="options" @newEvent="popNewEvent" @filter-change="filterChange"/>
+    {{ formData }}
+    <CalendarViewer ref="calendarViewerRef" :options="options" @newEvent="popNewEvent" @filter-change="filterChange"/>
     <CalendarNewEventForm ref="newEventFromRef" @submit="createEvent"/>
 </template>

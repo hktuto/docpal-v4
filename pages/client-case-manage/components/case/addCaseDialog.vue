@@ -32,7 +32,7 @@ async function handleOpen(id: string, caseDetail: any) {
             
             nextTick(() => {
                 console.log("form", json, FromVariablesRendererRef.value)
-                FromVariablesRendererRef.value.setForm(json,{},{})
+                FromVariablesRendererRef.value.setForm(json,[])
                 
             })
             return;

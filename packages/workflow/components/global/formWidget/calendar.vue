@@ -28,13 +28,12 @@ function getInfo(){
     
 
 }
+const calendarViewerRef = ref()
 function getFormData(){
-    console.log("getFormData", formData)
-    return {
-        ...formData,
-        starttime: dayjs().toISOString(),
-        endtime: dayjs().add(8, 'hour').toISOString(),
-    }
+    // console.log("getFormData", formData)
+    const data = calendarViewerRef.value.getFormData(false)
+    console.log("getFormData", data)
+    return data
 }
 
 
@@ -46,7 +45,7 @@ defineExpose({ getFormData })
 
 <template>
     <div class="calendar_widget_container">
-        <CalendarWorkflowViewer  :options="calendarOptions" />
+        <CalendarWorkflowViewer ref="calendarViewerRef"  :options="calendarOptions" />
     </div>
 </template>
 
