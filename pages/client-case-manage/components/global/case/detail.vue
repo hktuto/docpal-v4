@@ -2,9 +2,10 @@
 import { clientApi } from "api";
 import dayjs from "dayjs";
 
-const { id, name } = defineProps<{
+const { id, name, data} = defineProps<{
   id: string;
   name: string;
+  data: any
 }>();
 
 const { t } = useI18n();
@@ -44,27 +45,6 @@ const {
   defaultSort: {},
   optionalConfig: {
     tooltipConfig: {
-      // contentMethod: ({
-      //                     items,
-      //                     row,
-      //                     rowIndex,
-      //                     $rowIndex,
-      //                     column,
-      //                     columnIndex,
-      //                     $columnIndex,
-      //                     type,
-      //                     cell,
-      //                     $event
-      //                 }: any) => {
-      //     const key = column.property
-      //     const value = row[key]
-      //     if (typeof value === 'string') {
-      //         return value
-      //     }
-      //     if (Array.isArray(value)) {
-      //         return value.join(',')
-      //     }
-      // }
     },
   },
   dblClickAction: ({ row }) => {
@@ -127,7 +107,7 @@ async function reorderColumn() {
 const addCaseDialog = ref();
 
 function handleAddCaseDialog() {
-  addCaseDialog.value.handleOpen(id);
+  addCaseDialog.value.handleOpen(id, data);
 }
 
 onActivated(() => {

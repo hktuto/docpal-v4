@@ -25,12 +25,9 @@ export const useGlobalSetting = () => {
     async function checkClicpBoard(){
         // check document is focused
         if(!document.hasFocus()) return
-        console.log("check document is focused")
         const clipboardText = await navigator.clipboard.readText()
-        console.log("clipboardText", clipboardText)
         // make sure clipboard function only run once on each clipboard text
         if(clipboardText === lastClipboard.value) {
-            console.log("old clipboard is same as new clipboard")
             return
         }
         lastClipboard.value = clipboardText
@@ -51,7 +48,6 @@ export const useGlobalSetting = () => {
         if(newUrl.origin !== location.origin) {
             throw new Error('Invalid URL')
         }
-        console.log("url is valid")
         // get actions from query string
         const actions = newUrl.searchParams.get('actions')
         if(!actions) return

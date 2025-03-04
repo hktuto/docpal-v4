@@ -10,7 +10,7 @@ import {
 } from "../../utils/cmmnLogic";
 import {convertX6JsonToCmmnJson} from "../../utils/cmmnSaveHelper";
 import { History } from '@antv/x6-plugin-history'
-import {CaseManagementEditorKey} from "admin-case-management/utils/caseManagementHelper";
+// import {CaseManagementEditorKey} from "#imports";
 
 const { graph, setupCanvas ,getGraphJson, centerGraph, caseNode, caseId, caseInformation } = useCmmnGraph();
 const containerEl = ref()
@@ -38,7 +38,11 @@ const undoState = ref({
 })
 
 const readOnly = ref(false)
-function init(cmmnString:string,x6Json?: any, isReadOnly = false) {
+const versionId = ref()
+function init(cmmnString:string,x6Json?: any, isReadOnly = false, version?: string) {
+    if(version) {
+        versionId.value = version
+    }
     if(graph.value) {
         graph.value.dispose()
     }
@@ -197,7 +201,8 @@ function save() {
 provide(CaseManagementEditorKey, {
     readOnly,
     graph,
-    allInfo
+    allInfo,
+    versionId
 })
 
 

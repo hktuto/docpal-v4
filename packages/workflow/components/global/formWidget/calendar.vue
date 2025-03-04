@@ -7,10 +7,10 @@ const {disabled, formData, options,taskDetail} = defineProps<{
     taskDetail?:any
 }>();
 const calendarOptions = ref<CalendarOptions>({
-    allowCreate: false,
+    allowCreate: true,
     editable: false,
-    showLocationFilter: false,
-    showUserFilter: false,
+    showLocationFilter: true,
+    showUserFilter: true,
     view: "week"
 })
 
@@ -18,8 +18,10 @@ function getInfo(){
     console.log("taskDetail", taskDetail)
     // get options
     if(options.data) {
-        calendarOptions.value = options.data
-        console.log("getInfo", options.data)
+        calendarOptions.value = {
+            ...calendarOptions.value,
+            ...options.data
+        }
         if(options.data.fieldMapping) {
         }
     }

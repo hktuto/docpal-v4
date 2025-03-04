@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import dayjs from 'dayjs'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { adminApi } from 'api';
+import {adminApi} from 'api';
 
+const {t} = useI18n()
 const routerProvider = inject(MenuRouterKey)
-if(!routerProvider) {
+if (!routerProvider) {
     throw createError('menu manger not found')
 }
 
 const tableRef = ref()
 
-async function openLastestVersion(data:any, openInNewTab = false){   
+async function openLastestVersion(data: any, openInNewTab = false) {
 
     // REMARK: 在列表頁面是拿不到 version 的 draftId 的，所以需要先取得 version 再打开
     // const {data:{ entryList}} = await adminApi.api.postWorkflowVersionPage({draftId:data.id, orderBy:'versionNumber', isDesc:true, pageSize:1})
@@ -27,11 +26,11 @@ async function openLastestVersion(data:any, openInNewTab = false){
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
-function openProductionVersion(data:any, openInNewTab = false){
+function openProductionVersion(data: any, openInNewTab = false) {
     // TODO: open detail page
     const praams = {
         ...data,
-        versionNumber:data.productionVersion,
+        versionNumber: data.productionVersion,
         versionId: data.productionVersionId,
         draftId: data.id,
     }
@@ -42,29 +41,31 @@ function openProductionVersion(data:any, openInNewTab = false){
 
 const saveAsDialogRef = ref()
 const newWorkflowDialogData = ref({
-    latestVersion:"V1"
+    latestVersion: "V1"
 })
-function saveAsNewWorkflow(data:any){
+
+function saveAsNewWorkflow(data: any) {
     newWorkflowDialogData.value = data
     nextTick(() => {
         saveAsDialogRef.value.open()
     })
 }
 
-function openVersions(data:any , openInNewTab = false){
-    
+function openVersions(data: any, openInNewTab = false) {
+
     const newItem = newWorkflowEditorVerionList(data);
-    
+
     routerProvider?.navigateTo({...newItem}, openInNewTab)
 }
 
 const newDialogRef = ref()
-function createNewWorkflow(){
+
+function createNewWorkflow() {
     newDialogRef.value.handleOpen()
 }
 
-function actionPermission({row, rowIndex, code}:any){
-    if(code === 'delete') {
+function actionPermission({row, rowIndex, code}: any) {
+    if (code === 'delete') {
         return {
             visible: row.status === 'A',
             disabled: false
@@ -77,21 +78,21 @@ function actionPermission({row, rowIndex, code}:any){
     }
 }
 
-async function deleteWorkflow(row:any){
+async function deleteWorkflow(row: any) {
     const {data} = await adminApi.api.deleteWorkflowProcessDefinitionRemoveDraftid(row.id)
-    if(data ){
+    if (data) {
         routerProvider?.message?.success(t('dpMsg_success'))
         reload()
     }
 }
 
-async function activeWorkflow(row:any){
+async function activeWorkflow(row: any) {
     await adminApi.api.postWorkflowProcessDefinitionActiveDraftid(row.id)
     routerProvider?.message?.success(t('dpMsg_success'))
     reload()
 }
 
-provide(WorkflowEditorListProviderKey,{
+provide(WorkflowEditorListProviderKey, {
     saveAsNewWorkflow,
     openProductionVersion,
     openLastestVersion,
@@ -107,16 +108,17 @@ provide(WorkflowEditorListProviderKey,{
         //     }
         // })
         return adminApi.api.postWorkflowProcessDefinitionDraftPage(params)
-    } 
+    }
 })
 
 const ResponsiveFilterRef = ref()
-const filter = ref<any>({
-});
-function handleFilterFormChange(formModel:any) {
+const filter = ref<any>({});
+
+function handleFilterFormChange(formModel: any) {
     filter.value = formModel;
     reload()
 }
+
 // async function getFilter() {
 //   const data = [
 //     {
@@ -135,9 +137,9 @@ onMounted(() => {
     // getFilter()
 })
 
-function reload(){
+function reload() {
     console.log("reload")
-    if(tableRef.value && tableRef.value.reload) {
+    if (tableRef.value && tableRef.value.reload) {
         tableRef.value.reload()
     }
 }
@@ -147,33 +149,45 @@ function reload(){
 <template>
     <div class="pageContainer">
         <!-- <TablePage :config="tableConfig" /> -->
-        <LazyWorkflowEditorWorkflowListTable ref="tableRef" >
+        <LazyWorkflowEditorWorkflowListTable ref="tableRef">
             <template #toolbar_buttons>
-                <ElButton type="primary" @click="createNewWorkflow">Add New Workflow</ElButton>
+                <div class="flex-x-end">
+                    <ElButton type="primary" @click="createNewWorkflow">
+                        {{ t('workflow_editorCreate') }}
+                    </ElButton>
+                </div>
+
                 <div class="actions">
                     <!-- <div class="filter">
 
                         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"  />
                     </div> -->
-                
                 </div>
             </template>
         </LazyWorkflowEditorWorkflowListTable>
-        <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="reload" />
-        <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion" :data="newWorkflowDialogData" @close="reload" />
+        <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="reload"/>
+        <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion"
+                                        :data="newWorkflowDialogData" @close="reload"/>
     </div>
 </template>
 
 <style lang="scss" scoped>
-.pageContainer{
+.pageContainer {
     padding: var(--app-space-s);
     height: 100%;
     overflow: hidden;
     position: relative;
 }
-.actions{
-    width:100%;
+
+.actions {
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr min-content;
+}
+
+.flex-x-end {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
 }
 </style>
