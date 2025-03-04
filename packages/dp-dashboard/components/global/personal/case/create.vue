@@ -30,7 +30,6 @@
 </template>
 <script lang="ts" setup>
 import { clientApi } from "api";
-import { onActivated } from "vue";
 const emits = defineEmits(["delete", "refreshSetting"]);
 
 const props = withDefaults(

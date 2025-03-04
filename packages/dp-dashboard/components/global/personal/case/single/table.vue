@@ -1,0 +1,134 @@
+<script lang="ts" setup>
+import { clientApi } from "api";
+import dayjs from "dayjs";
+import { MoreFilled } from "@element-plus/icons-vue";
+import { ElMessage} from 'element-plus'
+const { id, name } = defineProps<{
+  id: string;
+  name: string;
+}>();
+
+const { t } = useI18n();
+const emits = defineEmits(["filter-change", "refresh"]);
+const routerProvider = inject(MenuRouterKey);
+type TableState = {
+  columns: any;
+  where: any[];
+};
+const caseEvents = ref([])
+const tableReady = ref(false);
+const {
+  tableConfig,
+  tableEvent,
+  tableRef,
+  query,
+  reload,
+  cleanSelectedRows,
+} = useVxeTable({
+  id: "clientCaseTableList",
+  api: async (pageParams: any) => {
+    pageParams.isDesc = true;
+    pageParams.orderBy = "created_date";
+    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams);
+  },
+  dblClickAction: ({ row }) => {
+    routerProvider?.navigateTo(
+      caseManageDashboardPage({ ...row, id, versionId: row.caseDefinitionVersionId })
+    );
+  },
+  zoom: false,
+  saveColumnOrder: false,
+});
+// getCaseDashboardInstanceCaseidActions
+
+async function getActions(row: any) {
+  try {
+    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data)
+  } catch (error) {
+    caseEvents.value = []
+  }
+}
+const dialogRef = ref()
+async function handleTask(actionItem: any, row?: any) {
+  if (actionItem.planItemDefinitionType === 'humantask') {
+    dialogRef.value.handleOpen(actionItem.referenceId, actionItem)
+  } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
+    await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.caseInstanceId, planItemDefinitionId: actionItem.planItemDefinitionId})
+    // await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)
+    ElMessage.success(t('dpMsg_success'))
+    emits('refresh')
+  }
+}
+async function reorderColumn(fields) {
+  try {
+    const columns = [
+      { field: "case_id", title: "caseManagement.name", width: 200 },
+      {
+        field: "created_date",
+        title: "workflow_createDate",
+        width: 200,
+        formatter({ cellValue }: any) {
+          const format = userDisplayTimeSetting();
+          return dayjs(cellValue).format(format);
+        },
+      },
+      {
+        field: "modified_date",
+        title: "table_modifiedDate",
+        width: 200,
+        formatter({ cellValue }: any) {
+          const format = userDisplayTimeSetting();
+          return dayjs(cellValue).format(format);
+        },
+      },
+      {
+        title: "dpTable_actions",
+        width: 120,
+        slots: {
+          default: "dpActions",
+        },
+      },
+    ];
+    fields.forEach((row) => {
+      columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
+    });
+    const actionColumn = tableConfig.columns.find(
+      (item) => item.title === "dpTable_actions"
+    );
+    if (!!actionColumn) columns.push(actionColumn);
+    tableConfig.columns = columns;
+  } catch (e) {}
+  tableReady.value = true;
+}
+
+defineExpose({ reorderColumn, reload });
+</script>
+
+<template>
+  <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+  <template #dpActions="{row}" >
+    <el-dropdown trigger="click">
+          <span class="el-dropdown-link">
+            <el-button text @click="getActions(row)">
+              <el-icon><MoreFilled /></el-icon>
+            </el-button>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu v-if="caseEvents.length > 0">
+              <el-dropdown-item
+                v-for="item in caseEvents"
+                :key="item.id"
+                @click.stop="handleTask(item, row)"
+              >
+                {{ item.name }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+            <div v-else>no data</div>
+          </template>
+        </el-dropdown>
+  </template>
+  </VxeGrid>
+  <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()"/>
+</template>
+
+<style lang="scss" scoped></style>

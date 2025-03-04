@@ -26,7 +26,6 @@ const {
   cleanSelectedRows,
 } = useVxeTable({
   id: "d-externalShare",
-  zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "emailList", title: "tableHeader_emailList", fixed: "left" },
@@ -50,6 +49,7 @@ const {
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row);
   },
+  zoom: false,
   saveColumnOrder: false,
 });
 async function getData(params: any = {}) {

@@ -49,6 +49,7 @@ import PersonalSearchHistory from '../components/global/personal/search/history.
 import PersonalSearchRecentDoc from '../components/global/personal/search/recentDoc.vue'
 import PersonalCaseCreate from '../components/global/personal/case/create.vue'
 import PersonalCase from '../components/global/personal/case/index.vue'
+import PersonalCaseSingle from '../components/global/personal/case/single/index.vue'
 import CalendarWidget from '../components/global/calendar/widget/index.vue'
 
 import  '../assets/dashboard.scss'
@@ -374,6 +375,23 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
             caseKeys: []
         }
     },
+    PersonalCaseSingle: {
+        type: 'personal',
+        label: 'PersonalCaseSingle',
+        minW: 2,
+        minH: 2,
+        maxW: 12,
+        maxH: 6,
+        w: 6,
+        h: 6,
+        component : 'PersonalCaseSingle',
+        setting : {
+            caseId: '',
+            caseLabel: '',
+            newButtonLabel: 'common_add',
+            displayColumns: []
+        }
+    },
     CalendarWidget: {
         divided: true,
         type: 'personal',
@@ -438,5 +456,6 @@ export const widgetComponent = {
     "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
     "PersonalCaseCreate": PersonalCaseCreate,
     "PersonalCase": PersonalCase,
+    "PersonalCaseSingle": PersonalCaseSingle,
     "CalendarWidget": CalendarWidget
 }
