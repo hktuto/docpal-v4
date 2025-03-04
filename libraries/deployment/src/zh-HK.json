@@ -19,7 +19,7 @@
   "DAM_operation": "操作",
   "DAM_setupFileExtension": "設定檔案後綴",
   "DAM_targetFormat": "目標格式",
-  "Deactivated": "未啟用",
+  "Deactivated": "停用",
   "ERROR": "錯誤",
   "Email": {
     "fields": "電子郵件模板"
@@ -1164,13 +1164,21 @@
     "formPreview": "表格預覽",
     "formResult": "表格結果",
     "formSetting": "表格設定",
-    "name": "名稱",
+    "name": "表單名稱",
     "permission": "權限",
     "startWorkflow": "啟動工作流程",
     "submitWorkflow": "提交工作流程",
     "type": "條件類型",
     "workflowInfomation": "工作流程訊息"
   },
+  "easyForm_activate": "啟用表單",
+  "easyForm_createForm": "創建新表單",
+  "easyForm_createdSuccessMsg": "easyForm_createdSuccessMsg",
+  "easyForm_creationDate": "表單創建日期",
+  "easyForm_edit": "編輯表單",
+  "easyForm_filter": "依表格名稱篩選",
+  "easyForm_inactivate": "停用表單",
+  "easyForm_status": "表單狀態",
   "easyform": {
     "actionFieldSelect": "請選擇對應的表單字段"
   },
@@ -1819,7 +1827,7 @@
       "downloadFile": "下载",
       "endDatePlaceholder": "結束日期",
       "endTimePlaceholder": "截止时间",
-      "fieldRequired": "字段值不可为空",
+      "fieldRequired": "為必填項目",
       "fileSizeExceed": "文件大小已超出: ",
       "insertSubFormRow": "插入行",
       "invalidNumber": "数据格式错误",
