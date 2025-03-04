@@ -8,12 +8,6 @@
   "CaseType": {
     "fields": "案例資訊"
   },
-  "singleCase": {
-    "caseId": "案例編號",
-    "caseLabel": "案例標籤",
-    "newButtonLabel": "新建按鈕標籤",
-    "displayColumns": "顯示列"
-  },
   "Child Vocabulary": "子类型",
   "Click document to setting": "點擊文檔進行設置",
   "DAM_DAM": "DAM",
@@ -1349,6 +1343,15 @@
     "cc": "CC",
     "to": "To"
   },
+  "emailContentTemplate_Delete": "emailContentTemplate_Delete",
+  "emailContentTemplate_Edit": "emailContentTemplate_Edit",
+  "emailContentTemplate_create": "建立新的電子郵件範本",
+  "emailContentTemplate_createdSuccessMsg": "emailContentTemplate_createdSuccessMsg",
+  "emailContentTemplate_creator": "emailContentTemplate_creator",
+  "emailContentTemplate_filter": "emailContentTemplate_filter",
+  "emailContentTemplate_id": "emailContentTemplate_id",
+  "emailContentTemplate_layoutUsed": "emailContentTemplate_layoutUsed",
+  "emailContentTemplate_name": "emailContentTemplate_name",
   "emailReminder": "郵件提醒",
   "emailTemplate": {
     "add": "添加電子郵件佈局",
@@ -2102,6 +2105,12 @@
   "showFolderTabs_info": "資訊",
   "showFolderTabs_preview": "預覽",
   "showFolderTabs_table": "表格",
+  "singleCase": {
+    "caseId": "案例編號",
+    "caseLabel": "案例標籤",
+    "displayColumns": "顯示列",
+    "newButtonLabel": "新建按鈕標籤"
+  },
   "singleStepTip": "適用於簡單的文件審核、報價審核...等",
   "smartFolder": {
     "searchQuery": "搜尋查詢",
