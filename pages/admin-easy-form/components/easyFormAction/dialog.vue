@@ -17,19 +17,25 @@
                               :options="typeOptions" filterable @change="handleChange"/>
             </el-form-item>
             <template v-if="form.actionType">
-                <el-divider content-position="left">{{ $t('easyForm_addFormAction' + form.actionType + 'Setting') }}</el-divider>
+                <el-divider content-position="left">
+                    {{ $t('easyForm_addFormAction' + form.actionType + 'Setting') }}
+                </el-divider>
                 <el-form-item :label="$t('easyForm.'+ form.actionType +'TemplateKey')" prop="actionKey"
                               :rules="[{required: true, message: $t('easyForm.'+ form.actionType +'TemplateKey') + ' ' +$t('render.hint.fieldRequired'), trigger: 'change'}]">
                     <el-select-v2 v-model="form.actionKey" :options="state.templateList" filterable clearable
+                                  :placeholder="t('common_selectOccupancyContent')"
                                   @change="handleKeyChange"/>
                 </el-form-item>
             </template>
             <template v-if="form.actionType === 'Email'">
                 <div class="grid-layout_3">
-                    <el-form-item v-for="(item,index) in ['to', 'cc', 'bcc']" :key="index"
-                                  :label="item">
+                    <el-form-item
+                        v-for="(item,index) in [t('easyForm_addFormActionTo'), t('easyForm_addFormActionCc'), t('easyForm_addFormActionBcc')]"
+                        :key="index"
+                        :label="item">
                         <!-- :prop="`dataMapping[${index}].source`" -->
                         <el-select-v2 v-model="form[item]" :options="state.userList" multiple clearable collapse-tags
+                                      :placeholder="t('common_selectOccupancyContent')"
                                       filterable collapse-tags-tooltip/>
                     </el-form-item>
                 </div>
@@ -60,6 +66,7 @@
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
+import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const props = defineProps(["detail"]);
@@ -326,6 +333,10 @@ defineExpose({handleOpen})
 .el-row {
     // margin-bottom: var(--app-space-xs);
     align-items: center;
+}
+
+.el-divider--horizontal {
+    margin: var(--app-space-l) 0 !important;
 }
 
 .svgIcon {
