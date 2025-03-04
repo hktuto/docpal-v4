@@ -104,11 +104,19 @@ export function logout() {
     const keyCloakState = useKeyCloakState()
 
     const userState = useUserState()
-    keyCloakState.value?.logout()
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-    console.log("logout")
-    userState.value = null;
+    const isSuperAdmin = sessionStorage.getItem('superAdmin')
+    if(isSuperAdmin) {
+        sessionStorage.removeItem('superAdmin')
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        window.location.reload()
+    }else{
+        keyCloakState.value?.logout()
+        localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        console.log("logout")
+        userState.value = null;
+    }
 }
 
 /**
