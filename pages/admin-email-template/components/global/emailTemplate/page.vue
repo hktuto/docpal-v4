@@ -6,10 +6,11 @@
           ref="ResponsiveFilterRef"
           inputKey="name"
           @form-change="handleFilterFormChange"
+          inputPlaceHolder="emailContentTemplate_filter"
         />
         <div>
           <el-button type="info" @click="handleEditEmailLayout">{{$t('button.editEmailLayout')}}</el-button>
-          <el-button type="primary" @click="handleAdd">{{$t('button.add')}}</el-button>
+          <el-button type="primary" @click="handleAdd">{{$t('emailContentTemplate_create')}}</el-button>
         </div>
       </template>
       <template #status="{ row }">
@@ -42,11 +43,11 @@ const {
   api: (pageParams: any) =>
     adminApi.api.postTemplateEmailTemplatePage({ ...pageParams, ...extraParams }),
   columns: [
-    { field: "label", title: "tableHeader_name", fixed: "left" },
+    { field: "label", title: "emailContentTemplate_name", fixed: "left" },
     { field: "subject", title: "tableHeader_subject" },
-    { field: "id", title: "ID",  },
-    { field: "emailLayoutName", title: "emailTemplate.layout",  },
-    { field: "createdBy", title: "role.creator",  },
+    { field: "id", title: "emailContentTemplate_id",  },
+    { field: "emailLayoutName", title: "emailContentTemplate_layoutUsed",  },
+    { field: "createdBy", title: "emailContentTemplate_creator",  },
   ],
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row);
@@ -55,7 +56,7 @@ const {
     [
       {
         code: "edit",
-        name: t('common_edit'),
+        name: t('emailContentTemplate_Edit'),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -64,7 +65,7 @@ const {
       },
       {
         code: "delete",
-        name: t('common_delete'),
+        name: t('emailContentTemplate_Delete'),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -98,7 +99,7 @@ const ResponsiveFilterRef = ref()
 async function getFilter() {
   const layouts = await adminApi.api.getTemplateEmailLayoutAll().then(res => res.data)
   const filters = [
-    { key: "emailLayoutIds", label: "emailTemplate.layout", type: "string", 
+    { key: "emailLayoutIds", label: "emailContentTemplate_layoutUsed", type: "string",
         options: layouts?.map(item => ({
           value: item.id,
           label: item.name
