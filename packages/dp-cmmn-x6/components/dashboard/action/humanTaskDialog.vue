@@ -1,7 +1,8 @@
 <template>
   <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" append-to-body
     :close-on-click-modal="false" destroy-on-close @close="handleClose">
-    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" />
+    <WorkflowDetailFormRender v-if="isWorkflowForm" ref="FromVariablesRendererRef" />
+    <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList"/>
     <template #footer>
       <div class="footer-grid">
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
@@ -17,7 +18,7 @@ const props = withDefaults(defineProps<{
   ignoreList: []
 })
 const emits = defineEmits([
-  'refresh', 'delete'
+  'refresh', 'delete', 'submit'
 ])
 const { t } = useI18n()
 const state = reactive({
@@ -33,7 +34,12 @@ const router = useRouter()
 async function handleSubmit() {
   state.loading = true
   try {
-    const data = await FormVariablesRendererRef.value.getData(true)
+    let data:any;
+        if(isWorkflowForm.value) {
+            data = await FromVariablesRendererRef.value.getFormData(true)
+        }else {
+            data = await MasterTableVariableFormRef.value.getData(true)
+        }
     await adminApi.api.postCaseInstanceTasksComplete({
       caseInstanceId: state.setting.caseInstanceId,
       taskId: state.setting.referenceId,
@@ -41,20 +47,24 @@ async function handleSubmit() {
     })
     
     state.visible = false
-    emits('refresh')
+    emits('submit')
   } catch (error) {
     state.loading = false
   }
   state.loading = false
 }
-
-const FormVariablesRendererRef = ref()
-async function handleOpen(taskId, actionItem) {
+const CMDProvider = inject(CaseManagementDashboardKey)
+const FromVariablesRendererRef = ref()
+const MasterTableVariableFormRef = ref()
+const isWorkflowForm = ref(false)
+async function handleOpen(taskId, actionItem, actionList) {
   state.visible = true
   state.loading = true
   state.title = actionItem.name
   state.setting = actionItem
   const { data } = await adminApi.api.getCaseInstanceTasksTaskidForm(taskId) as any
+  // console.log(taskId,actionItem,CMDProvider?.versionId)
+        // get cmmn xml
   const fields = data.fields.reduce((prev,item) => {
     prev.push({
       ...item,
@@ -69,15 +79,32 @@ async function handleOpen(taskId, actionItem) {
     if(item.value) prev[item.id] = item.value
     return prev
   }, {})
-  // fields.push(
-  //   { id: "testVo", name: "testVo", label: "testVo", required: false, dataType: "volcaboury", vocabulary:"country"},
-  //   { id: "testMs", name: "testMs", label: "testMs", required: false, dataType: "master_table", masterTable:"Table Directives", displayField:"department"},
-  //   { id: "testdocument", name: "testdocument", label: "testdocument", required: false, dataType: "document", documentType:"File", displayField:"dc:title" },
-  //   { id: "test_user_group", name: "test_user_group", label: "test_user_group", required: false, dataType: "user_group" }
-  // )
+  const form = await adminApi.api.getRelationQuery({
+      processKey: CMDProvider?.caseDefinitionKey.value,
+      userTaskId: actionItem.planItemDefinitionId,
+      versionId: CMDProvider?.versionId.value
+  })
+  console.log(data.rows)
+  if(form.data[0]) {
+      isWorkflowForm.value = true
+      const json = JSON.parse(form.data[0].jsonValue || "{}")
+      const formData = data.rows.reduce((prev, item) => {
+        if(item.value) prev[item.id] = item.value
+        return prev
+      }, {})
+      state.loading = false
+      nextTick(() => {
+          console.log("form", json, FromVariablesRendererRef.value)
+          FromVariablesRendererRef.value.setForm(json, formData)
+          
+      })
+      return;
+  }
+  isWorkflowForm.value = false
+
   state.loading = false
-  setTimeout(() => {
-    if(!!fields) FormVariablesRendererRef.value.init(fields, initData)
+  nextTick(() => {
+    if(!!fields) MasterTableVariableFormRef.value.init(fields, initData)
   })
 }
 defineExpose({ handleOpen })

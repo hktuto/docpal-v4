@@ -59,6 +59,7 @@ watch(
   () => props.setting.caseId,
   async(newVal, oldVal) => {
     state.detail = await getCaseDetail(newVal);
+    console.log("state.detail", state.detail)
     handleShowColumn()
     handleRefreshTable()
   },
@@ -84,7 +85,7 @@ watch(
       </div>
     </template>
     <div class="workflow-create-content">
-      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" />
+      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" />
     </div>
     <PersonalCaseSingleSetting
       ref="settingRef"

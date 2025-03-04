@@ -22,9 +22,7 @@ export const caseManageDashboardPage  = function(params: any){
     label: params.case_id,
     component: 'LazyCaseDashboard',
     props: {
-      id: params.id,
-      instanceId: params.case_id,
-      versionId: params.versionId
+      ...params
     }
   } as TabItem
 }

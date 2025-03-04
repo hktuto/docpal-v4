@@ -13,8 +13,10 @@ const props = defineProps<{
   id: string;
   instanceId: string;
   versionId: string;
+  data:any
 }>();
 const {id, instanceId, versionId} = toRefs(props)
+const caseDefinitionKey = ref(props.data.caseDefinitionKey)
 const state = reactive<any>({
   loading: false,
   layout: [] as DashboardWidgetSetting[],
@@ -25,6 +27,7 @@ const state = reactive<any>({
 const { t } = useI18n()
 async function getDashboardList() {
   try {
+    console.log("getDashboardList");
     state.dashboardList = await clientApi.api.getCaseDashboardVersionCmmnversionidPermission(versionId.value).then(res => res.data)
     const dashboardId = sessionStorage.getItem('case-dashboard-id')
     let index = state.dashboardList.findIndex(item => item.id === dashboardId )
@@ -66,6 +69,8 @@ async function getLayout(layoutId: string, row: any) {
 provide(CaseManagementDashboardKey, {
   instanceId: instanceId,
   caseTypeId: id,
+  caseDefinitionKey,
+  versionId
 })
 onActivated(() => {
   getDashboardList()
@@ -102,6 +107,7 @@ onActivated(() => {
         :hideSetting="true"
         :resizable="false"
         :draggable="false"
+        @refresh="getDashboardList"
       ></DashboardDetail>
     </div>
   </div>
