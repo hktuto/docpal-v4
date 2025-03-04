@@ -35,8 +35,6 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
 import { TabManagerKey } from '#imports'
-import { notiShowView, notiHandleView } from '../../../utils/notificationHelper.ts'
-
 const tabProvider = inject(TabManagerKey)
 const props = defineProps(['type'])
 const emits = defineEmits(['close', 'unreadCountChange'])
@@ -65,8 +63,8 @@ async function getList () {
   if (props.type !== 'Unread') param.type = props.type
   try {
     state.loading = true
-    const { data:res} = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value})
-    res.entryList.map(item => {
+    const { data:res}: any = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value})
+    res.entryList.map((item: any) => {
       if(typeof item.content === 'string') {
         item.content = JSON.parse(item.content)
         if(typeof item.content.emailList === 'string') item.content.emailList = JSON.parse(item.content.emailList).join(',')
@@ -84,11 +82,11 @@ async function getList () {
     state.scrollNoMore = state.list.length >= state.totalSize
   }
 }
-async function handleDismiss(item) {
+async function handleDismiss(item: any) {
   try {
     item.loading = true
-    await clientApi.api.putNotificationIdStatusStatus(item.id)
-    const index = state.list.findIndex(lItem => lItem.id === item.id)
+    await clientApi.api.putNotificationIdStatusStatus(item.id, '')
+    const index = state.list.findIndex((lItem: any) => lItem.id === item.id)
     state.list.splice(index, 1)
     emits('unreadCountChange', item)
   } catch (error) {

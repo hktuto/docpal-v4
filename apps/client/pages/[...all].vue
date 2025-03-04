@@ -31,6 +31,8 @@ const hanldeWorkflow = async(processInstanceId:string) => {
 onMounted(() => {
     // step1 normalize route path by removing trailing slash
     const path = route.path.replace(/\/$/, '')
+    console.log(path);
+    
     switch(path){
         case '/browse':
             const path = ((route.query.id || route.query.path) || '/') as string
@@ -40,7 +42,7 @@ onMounted(() => {
             localStorage.setItem('additionalPath', JSON.stringify(newTab))
             router.push('/')
             break;
-        case '/workflow':
+        case '/workflow/link':
             // TODO: add workflow page
             hanldeWorkflow(route.query.processInstanceId as string)
             break;
