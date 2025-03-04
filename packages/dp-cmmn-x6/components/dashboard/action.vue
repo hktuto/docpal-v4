@@ -1,7 +1,7 @@
 <template>
 <el-card class="o-auto">
   <h3>{{ $t('dashboard.cmmnAction') }}</h3>
-  <DashboardActionList class="dashboard-auto" :actionList="state.data" @refresh="init()"/>
+  <DashboardActionList class="dashboard-auto" :actionList="state.data" @refresh="init()" @submit="emits('refresh')"/>
   <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg"
     @click="handleDelete"/>
 </el-card>
@@ -19,7 +19,7 @@ const props = withDefaults( defineProps<{
 })
 const { t } = useI18n()
 const CMDProvider = inject(CaseManagementDashboardKey)
-const emits = defineEmits(['delete'])
+const emits = defineEmits(['delete', 'refresh'])
 async function handleDelete() {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if(action !== 'confirm') return

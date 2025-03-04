@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 const { id, name, data} = defineProps<{
   id: string;
   name: string;
-  data: any
+  data: string
 }>();
 
 const { t } = useI18n();
@@ -48,9 +48,9 @@ const {
     },
   },
   dblClickAction: ({ row }) => {
-    routerProvider?.navigateTo(
-      caseManageDashboardPage({ ...row, id, versionId: row.caseDefinitionVersionId })
-    );
+    const item = caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data })
+    console.log('new page', item)
+    routerProvider?.navigateTo(item);
   },
 });
 

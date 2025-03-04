@@ -6,7 +6,7 @@
     <SvgIcon :src="`/icons/cmmn/${item.planItemDefinitionType}.svg`"></SvgIcon>
     <div>{{ item.name }}</div>
   </div>
-  <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="emits('refresh')"/>
+  <DashboardActionHumanTaskDialog ref="dialogRef" @submit="emits('submit')"/>
 </div>
 </template>
 <script lang="ts" setup>
@@ -14,7 +14,7 @@ import { ElMessage} from 'element-plus'
 import { clientApi } from 'api'
 
 const props = defineProps(['actionList'])
-const emits = defineEmits(['refresh'])
+const emits = defineEmits(['refresh','submit'])
 const { t } = useI18n()
 function getBColor(type, state) {
   if(state === 'completed') return '#D9D9D9'
@@ -28,7 +28,7 @@ const dialogRef = ref()
 async function handleTask(actionItem) {
   if (actionItem.planItemDefinitionType === 'humantask') {
     console.log('handleTask', actionItem)
-    dialogRef.value.handleOpen(actionItem.referenceId, actionItem)
+    dialogRef.value.handleOpen(actionItem.referenceId, actionItem, props.actionList)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
     await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.caseInstanceId, planItemDefinitionId: actionItem.planItemDefinitionId})
     // await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)

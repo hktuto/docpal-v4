@@ -3,9 +3,10 @@ import { clientApi } from "api";
 import dayjs from "dayjs";
 import { MoreFilled } from "@element-plus/icons-vue";
 import { ElMessage} from 'element-plus'
-const { id, name } = defineProps<{
+const { id, name, detail } = defineProps<{
   id: string;
   name: string;
+  detail: any
 }>();
 
 const { t } = useI18n();
@@ -33,7 +34,7 @@ const {
   },
   dblClickAction: ({ row }) => {
     routerProvider?.navigateTo(
-      caseManageDashboardPage({ ...row, id, versionId: row.caseDefinitionVersionId })
+      caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
     );
   },
   zoom: false,
