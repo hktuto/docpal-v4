@@ -3,9 +3,9 @@
     <h3 class="title">{{ $t("easyForm.formSetting") }}</h3>
     <el-form ref="FormRef" label-position="top" :model="form" @submit.prevent>
       <el-formItem
-        :label="$t('tableHeader_name')"
+        :label="$t('easyForm.name')"
         prop="name"
-        :rules="[{ required: true, message: $t('form_common_requird') }]"
+        :rules="[{ required: true, message: $t('easyForm.name') + ' ' +$t('render.hint.fieldRequired') }]"
       >
         <el-input
           v-model="form.name"

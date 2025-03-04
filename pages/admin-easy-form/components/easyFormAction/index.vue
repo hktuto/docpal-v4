@@ -22,7 +22,7 @@
     </el-dropdown>
   </div>
   <div style="text-align: center">
-    <el-button type="text" @click="handleAdd()">{{ $t('easyForm.actionsAdd') }}</el-button>
+    <el-button type="text" @click="handleAdd()">{{ $t('easyForm_addFormAction') }}</el-button>
   </div>
   <EasyFormActionDialog ref="dialogRef" :detail="detail" @refresh="(action) => emits('refresh', action)" />
 </el-card>
