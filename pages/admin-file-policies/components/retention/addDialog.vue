@@ -61,4 +61,7 @@ defineExpose({ handleOpen })
 .retention-add-dialog {
     min-width: 900px;
 }
+
+
+
 </style>

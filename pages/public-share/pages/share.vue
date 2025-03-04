@@ -96,7 +96,7 @@ main {
   white-space: nowrap;
   color: var(--primary-color);
   padding: 1rem calc(var(--app-space-xs) * 3);
-  background: var(--header-bg);
+  background: var(--app-grey-725);
   margin: unset;
 }
 :deep(.vxe-buttons--wrapper) {

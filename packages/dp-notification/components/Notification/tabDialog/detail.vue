@@ -16,6 +16,7 @@
             path: item.content.path,
             fileName: item.content.fileName
           }) }}</div>
+          {{item.content.comment}}
             <!-- emailList: item.content.emailList ? item.content.emailList.join(',') : '' -->
           <div>{{ item.creator }}</div>
           <div>
@@ -33,7 +34,10 @@
 </template>
 <script lang="ts" setup>
 import { clientApi } from 'api'
+import { TabManagerKey } from '#imports'
 import { notiShowView, notiHandleView } from '../../../utils/notificationHelper.ts'
+
+const tabProvider = inject(TabManagerKey)
 const props = defineProps(['type'])
 const emits = defineEmits(['close', 'unreadCountChange'])
 
@@ -93,9 +97,9 @@ async function handleDismiss(item) {
   }
 }
 
-async function handleView(item) {
-  notiHandleView(item)
-  handleDismiss(item)
+async function handleView(item: any) {
+  notiHandleView(item, tabProvider)
+  // handleDismiss(item)
   emits('close')
 }
 function handleDismissAll() {}
