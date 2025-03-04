@@ -10,48 +10,57 @@ const state = reactive({
     title: t('masterTable.newRow')
 })
 const FromVariablesRendererRef = ref()
-
+const MasterTableVariableFormRef = ref()
+const isWorkflowForm = ref(false)
 async function handleOpen(id: string, caseDetail: any) {
     try {
         state.id = id;
-        console.log(id, caseDetail)
+        const {data: startForm} = await clientApi.api.getCaseInstanceCasetypeidStarttask(id);
         // get cmmn xml
         const form = await clientApi.api.getRelationQuery({
             processKey: caseDetail.caseDefinitionKey,
-            userTaskId: "humanTask1740986479843",
-            versionId: caseDetail.latestVersion
+            userTaskId: startForm[0].key,
+            versionId: caseDetail.productionVersionId
         })
-        const json = JSON.parse(form.data[0].jsonValue || "{}")
         state.visible = true
-        state.loading = true
-        nextTick(() => {
-            console.log("form", json, FromVariablesRendererRef.value)
-            FromVariablesRendererRef.value.setForm(json,{},{})
+            state.loading = true
+        // if form is not empty 
+        if(form.data[0]) {
+            isWorkflowForm.value = true
+            const json = JSON.parse(form.data[0].jsonValue || "{}")
+            
+            
+            nextTick(() => {
+                console.log("form", json, FromVariablesRendererRef.value)
+                FromVariablesRendererRef.value.setForm(json,{},{})
+                
+            })
+            return;
+        }
+        isWorkflowForm.value = false
+        // other, use old form
+        
+        if (!startForm) throw new Error("no data");
+        const first = startForm[0];
+        state.title = first.name
 
+        const fields = first.fields?.reduce((prev, item) => {
+            prev.push({
+                ...item,
+                name: item.id,
+                label: item.name,
+                required: item.required || false,
+                dataType: item.type
+            })
+            return prev
+        }, [])
+        const initData = first.fields?.reduce((prev, item) => {
+            if (item.value) prev[item.id] = item.value
+            return prev
+        }, {})
+        setTimeout(() => {
+            if (!!fields) MasterTableVariableFormRef.value.init(fields, initData)
         })
-        // const {data} = await clientApi.api.getCaseInstanceCasetypeidStarttask(id);
-        // state.id = id
-        // if (!data) throw new Error("no data");
-        // const first = data[0];
-        // state.title = first.name
-
-        // const fields = first.fields?.reduce((prev, item) => {
-        //     prev.push({
-        //         ...item,
-        //         name: item.id,
-        //         label: item.name,
-        //         required: item.required || false,
-        //         dataType: item.type
-        //     })
-        //     return prev
-        // }, [])
-        // const initData = first.fields?.reduce((prev, item) => {
-        //     if (item.value) prev[item.id] = item.value
-        //     return prev
-        // }, {})
-        // setTimeout(() => {
-        //     if (!!fields) FromVariablesRendererRef.value.init(fields, initData)
-        // })
         
     } catch (error) {
         ElMessage.error('no data')
@@ -68,7 +77,12 @@ const emits = defineEmits([
 async function handleSubmit() {
     state.loading = true
     try {
-        const data = await FromVariablesRendererRef.value.getFormData(true)
+        let data:any;
+        if(isWorkflowForm.value) {
+            data = await FromVariablesRendererRef.value.getFormData(true)
+        }else {
+            data = await MasterTableVariableFormRef.value.getData(true)
+        }
         await clientApi.api.postCaseInstanceStart({
             caseTypeId: state.id,
             parameters: data
@@ -93,8 +107,8 @@ defineExpose({handleOpen})
 <template>
     <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" append-to-body
                :close-on-click-modal="false" destroy-on-close @close="handleClose">
-        <WorkflowDetailFormRender ref="FromVariablesRendererRef" />
-        <!-- <MasterTableVariableForm ref="FromVariablesRendererRef" :ignoreList="ignoreList"/> -->
+        <WorkflowDetailFormRender v-if="isWorkflowForm" ref="FromVariablesRendererRef" />
+         <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList"/>
         <template #footer>
             <div class="footer-grid">
                 <el-button type="primary" :loading="state.loading" @click="handleSubmit">
