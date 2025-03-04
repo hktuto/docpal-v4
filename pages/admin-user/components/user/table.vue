@@ -58,7 +58,7 @@
         <template #status="{ row, index }">
             <el-switch
                 v-model="row.status"
-                :inactive-text="t('actions.inactived')"
+                :inactive-text="t('actions.inactive')"
                 :active-text="t('user_active')"
                 active-value="A"
                 inactive-value="D"

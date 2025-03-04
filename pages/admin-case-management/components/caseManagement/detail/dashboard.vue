@@ -100,7 +100,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     //   field: "status",
     //   title: "dpTable_status",
     //   formatter({ cellValue }: any) {
-    //     return cellValue === "A" ? t("actions.activated") : t("actions.inactived");
+    //     return cellValue === "A" ? t("actions.activated") : t("actions.inactive");
     //   },
     // },
   ],
