@@ -7,7 +7,7 @@ export const routeWorkflowDetail  = function(params: any){
     component: 'LazyWorkflowDetail',
     props: {
       id: params.id,
-      workflowType: params.workflowType,
+      workflowType: params.workflowType || 'myTask',
     }
   } as TabItem
 }

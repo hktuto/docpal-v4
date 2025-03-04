@@ -25,14 +25,14 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     columns:  [
         {
             field: 'versionNumber',
-            title: 'Version',
+            title: 'workflow_editorVersion',
             minWidth: 60,
             fixed: 'left',
             sortable: true,
         },
         {
             field:'isProduction',
-            title: 'Production',
+            title: 'workflow_editorProduction',
             minWidth: 60,
             formatter ({ cellValue }:any) {
                 return cellValue === 'A' ? 'Production' : '--'
@@ -40,7 +40,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         },
         {
             field: 'modifiedDate',
-            title: 'modifiedDate',
+            title: 'workflow_editorLastDate',
             minWidth: 120,
             sortable: true,
             formatter ({ cellValue }:any) {
@@ -49,13 +49,13 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         },
         {
             field: 'createdBy',
-            title: 'createdBy',
+            title: 'workflow_editorCreatedBy',
             minWidth: 120,
             sortable: true,
         },
         {
             field: 'modifiedBy',
-            title: 'modifiedBy',
+            title: 'workflow_editorLastModified',
             minWidth: 120,
             sortable: true,
         },

@@ -2,12 +2,12 @@
     <div class="formContainer">
         <ElForm :model="form" @submit.native.prevent="submit">
             <ElFormItem :label="t('admin_watermarkName')">
-                <ElInput v-model="form.name" placeholder="New Watermark label"/>
+                <ElInput v-model="form.name" :placeholder="t('admin_watermarkName')"/>
             </ElFormItem>
-<!--            <ElFormItem style="display: flex; justify-content: center;">-->
-<!--                <ElButton class="button " type="primary" @click="submit">{{ t('submit') }}</ElButton>-->
-<!--            </ElFormItem>-->
         </ElForm>
+        <div style="text-align: end;">
+            <ElButton class="button " type="primary" @click="submit">{{ t('submit') }}</ElButton>
+        </div>
     </div>
 </template>
 
@@ -39,6 +39,7 @@ async function submit() {
         return;
     }
     const newItem = await createWatermarkTemplate(form.value);
+    ElMessage.success(t('admin_watermarkCreatedSuccessMsg'))
     emits('submit', form.value)
     router.push({
         path: '/watermark',
@@ -47,7 +48,6 @@ async function submit() {
         }
     })
     // const { data } = await this.$axios.post('/api/watermark', this.form)
-
 }
 
 onMounted(() => {
@@ -58,6 +58,15 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="scss">
+.el-form-item__content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    flex: 1;
+    line-height: 32px;
+    position: relative;
+    font-size: var(--font-size);
+    min-width: 0;
+}
 </style>

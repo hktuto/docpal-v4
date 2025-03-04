@@ -4,6 +4,7 @@ const props = defineProps<{
     idOrPath: string ,
     filter: any,
     home: any,
+    commentId: string
 }>();
 
 

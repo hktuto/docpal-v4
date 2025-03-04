@@ -1,7 +1,8 @@
 <template>
     <div class="watermarkListContainer">
         <div class="listActionContainer">
-            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>
+            <el-button type="primary" @click="createItem">{{ $t('admin_watermark_create') }}</el-button>
+<!--            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>-->
         </div>
         <div class="listItemsContainer" style="--icon-size: 12px;">
             <div v-for="item in list" :key="item.id" :class="{listItem:true, selected: item.id === selectedId}">
@@ -12,17 +13,23 @@
                 <div class="listAction listItemEdit" @click="editItem(item.id)">
                     <SvgIcon src="/icons/edit_1.svg"/>
                 </div>
-                <ElPopconfirm @confirm="deleteItem(item.id)">
+                <ElPopconfirm width="200" :title="$t('admin_watermarkDeleteMsg')" @confirm="deleteItem(item.id)">
                     <template #reference>
                         <div class="listAction listItemDelete">
                             <SvgIcon src="/icons/menu/trash.svg"/>
                         </div>
                     </template>
+                    <template #actions="{ confirm, cancel }">
+                        <el-button size="small" @click="cancel">{{ $t('el.datepicker.cancel') }}</el-button>
+                        <el-button type="danger" size="small" @click="confirm">
+                            {{ $t('common_confirmDelete') }}
+                        </el-button>
+                    </template>
                 </ElPopconfirm>
             </div>
         </div>
         <!-- Edit dialog -->
-        <el-dialog v-model="editDialog" destroy-on-close>
+        <el-dialog v-model="editDialog" :title="$t('admin_watermark_edit')" destroy-on-close>
             <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler"/>
         </el-dialog>
         <!-- New dialog -->
@@ -34,9 +41,9 @@
 
 <script lang="ts" setup>
 import type {WatermarkTemplate} from "../../composables/Watermark";
+import {ElMessage} from "element-plus";
 
-import InlineSvg from 'vue-inline-svg';
-
+const {t} = useI18n()
 const props = defineProps<{
     list: WatermarkTemplate[],
     selectedId: string
@@ -54,6 +61,7 @@ const selectedItem = computed(() => {
 })
 
 function deleteItem(id: string) {
+    ElMessage.success(t('admin_watermarkDeletedSuccessMsg'))
     emit('remove', id);
 }
 

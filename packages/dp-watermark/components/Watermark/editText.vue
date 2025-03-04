@@ -1,5 +1,3 @@
-
-
 <template>
   <WatermarkUiProperties @delete="$emit('delete')">
     <ElForm label-position="top">
