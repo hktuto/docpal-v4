@@ -218,6 +218,10 @@ export function setCriterias(nodeDate: any, criterias: criteria[]) {
         }
     })
     const _result: string = result.join('&&')
-    condition.__cdata = `\$\{ ${_result} \}`
+    if(_result){
+        condition.__cdata = `\$\{ ${_result} \}`
+    }else{
+        condition.__cdata = null
+    }
     
 }

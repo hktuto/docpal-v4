@@ -21,6 +21,7 @@ function init(nodeDate: any) {
 function handleSave() {
     const nodeData = node.value.data
     const data = setCriterias(nodeData, criteriaList.value)
+    console.log("dhandleSaveata", data)
     return criteriaList.value
 }
 watch(node, ()=> {

@@ -165,6 +165,8 @@ async function handleSubmit() {
   state.loading = true;
   try {
     const data = await vFormRef.value.getFormData(true, false);
+    console.log(data);
+    // return;
     if (!data) throw new Error(`${t("incompleteData")}`);
     // convert all item in data which is boolean to string
     // Object.keys(data).forEach(key => {
