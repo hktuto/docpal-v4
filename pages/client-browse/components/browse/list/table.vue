@@ -38,6 +38,7 @@ function sortEntry(a, b) {
 const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
     id: 'browseTableSetting',
     api: async (pageParams: any) => {
+        cleanSelectedRows()
         const data = await loadData([], listProvider.idOrPath.value || '/')
         data.sort(sortEntry)
         return data
