@@ -33,6 +33,7 @@ const state = reactive({
 const FormRendererRef = ref();
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData();
+  console.log("handleSubmit", data)
   state.loading = true;
   try {
     emits("refresh", structuredClone(toRaw(data)));
