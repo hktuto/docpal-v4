@@ -28,7 +28,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
             }
         },
         {
-            title:'tableHeader_name',
+            title:'documentTemplate_Name',
             field: 'name',
         },
         {
@@ -36,7 +36,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
             field:'fileType'
         },
         {
-            title:"role.creator",
+            title:"documentTemplate_Creator",
             field:'createdBy'
         },
         {
@@ -52,7 +52,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
         [
             {
                 code:"preview",
-                name:"common_preview",
+                name:"documentTemplate_Preview",
                 action: ({row}) => listProvider.dblClickHandle(row)
             },
             {
@@ -72,12 +72,12 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
             },
             {
                 code:"delete",
-                name:"common_delete",
+                name:"documentTemplate_Delete",
                 action: ({row}) => listProvider.handleDelete(row)
             },
             {
                 code:"download",
-                name:"template.download",
+                name:"documentTemplate_Download",
                 action: ({row}) => listProvider.handleDownload(row)
             }
         ]
