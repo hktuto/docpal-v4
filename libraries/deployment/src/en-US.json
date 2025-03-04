@@ -483,6 +483,7 @@
   "dashboard": {
     "CalendarWidget": "Calendar",
     "PersonalCase": "Case",
+    "PersonalSingleCase": "Single Case",
     "PersonalCaseCreate": "New Case",
     "PersonalDashboard": "Dashboard",
     "PersonalPredefinedSearch": "Smart Folder",
