@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('docType.new')"
+<el-dialog v-model="state.visible" :title="$t('easyForm_createForm')"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"
@@ -33,7 +33,8 @@ async function handleSubmit () {
     state.loading = true
     try {
         data.permission = 'members'
-        const result =await adminApi.api.postFormDesign(data)
+        // const result =await adminApi.api.postFormDesign(data)
+        ElMessage.success(t('easyForm_createdSuccessMsg'))
         emits('refresh')
     } catch (error) {
         state.loading = false
