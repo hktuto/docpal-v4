@@ -27,7 +27,7 @@ async function loginAdmin(){
 }
 
 async function updateLanguage(code, token){
-    const {data} = await fetch(`${ADMINURL}//docpal/relation/queryLanguage?locale=${code}&languageKey=client`,{
+    const {data} = await fetch(`${ADMINURL}/docpal/relation/queryLanguage?locale=${code}&languageKey=client`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
