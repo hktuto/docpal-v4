@@ -52,11 +52,13 @@ async function updateLanguage(code, token){
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }
-    }).then(async(res) => await res.json())
+    }).then(async(res) => {
+        return await res.json()
+    })
     .catch(error => {
         console.log("error", error)
     })
-    console.log('finish update language', code)
+    console.log('finish update language', code, res)
 }
 
 async function deployLanguage(){
