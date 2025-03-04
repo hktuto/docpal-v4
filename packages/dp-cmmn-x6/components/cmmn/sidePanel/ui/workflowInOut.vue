@@ -29,13 +29,15 @@ function makeForm() {
             caseInfoId:"",
         }
         const caseInfoKey = props.type === 'in' ? 'attr_target' : 'attr_source'
+        const formInfoKey = props.type === 'in' ? 'attr_source' : 'attr_target'
         const originalValue = form.value.find((formItem:any) => {
-            console.log("find item in form", formItem[caseInfoKey] === info.id , formItem, info)
+            console.log("find item in form", formItem[caseInfoKey] === info.id )
             return formItem[caseInfoKey] === info.id
         })
+        console.log("originalValue", originalValue)
         newItem.workflowInfoId = info.id;
         newItem.workflowInfoName = info.name;
-        newItem.caseInfoId = originalValue ? originalValue[caseInfoKey] : ""
+        newItem.caseInfoId = originalValue ? originalValue[formInfoKey] : ""
         formData.value.push(newItem)
     })
 }
