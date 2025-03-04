@@ -8,6 +8,12 @@
   "CaseType": {
     "fields": "案例信息"
   },
+  "singleCase": {
+    "caseId": "案例编号",
+    "caseLabel": "案例标签",
+    "newButtonLabel": "新建按鈕标签",
+    "displayColumns": "显示列"
+  },
   "Child Vocabulary": "子類型",
   "Click document to setting": "点击文档进行设置",
   "DAM_DAM": "DAM",

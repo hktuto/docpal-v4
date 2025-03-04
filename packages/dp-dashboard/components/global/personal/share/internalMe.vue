@@ -18,6 +18,7 @@ const props = withDefaults( defineProps<{
     setting: {},
     hideSetting: false
 })
+const {t} = useI18n()
 async function handleDelete() {
   const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
   if (action !== "confirm") return;

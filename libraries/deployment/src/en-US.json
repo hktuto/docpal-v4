@@ -8,6 +8,12 @@
   "CaseType": {
     "fields": "Case Info"
   },
+  "singleCase": {
+    "caseId": "Case Id",
+    "caseLabel": "Case Label",
+    "newButtonLabel": "New Button Label",
+    "displayColumns": "Display Columns"
+  },
   "Child Vocabulary": "Child Type",
   "Click document to setting": "Click document to setting",
   "DAM_DAM": "DAM",
