@@ -483,6 +483,7 @@
   "dashboard": {
     "CalendarWidget": "日歷",
     "PersonalCase": "案例",
+    "PersonalSingleCase": "单一案例",
     "PersonalCaseCreate": "新案例",
     "PersonalDashboard": "仪表板",
     "PersonalPredefinedSearch": "智能文件夹",
