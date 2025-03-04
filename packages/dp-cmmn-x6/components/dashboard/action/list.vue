@@ -30,7 +30,7 @@ async function handleTask(actionItem) {
     console.log('handleTask', actionItem)
     dialogRef.value.handleOpen(actionItem.referenceId, actionItem)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
-    await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.id, planItemDefinitionId: actionItem.planItemDefinitionId})
+    await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.caseInstanceId, planItemDefinitionId: actionItem.planItemDefinitionId})
     // await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)
     ElMessage.success(t('dpMsg_success'))
     emits('refresh')

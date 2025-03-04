@@ -250,7 +250,6 @@ const FormRendererRef = ref()
     }
 // #endregion
 onMounted(() => {
-    console.log("formRenderSlots", formRenderSlots.value)
 })
 const { formData, formJson } = toRefs(state)
 defineExpose({ setForm, getFormData, disableForm, enableForm })
