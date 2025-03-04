@@ -53,6 +53,12 @@
   "Workflow": {
     "fields": "工作流程信息"
   },
+  "accessControl_Local": "accessControl_Local",
+  "accessControl_add": "accessControl_add",
+  "accessControl_createdSuccessMsg": "accessControl_createdSuccessMsg",
+  "accessControl_deleteMsg": "accessControl_deleteMsg",
+  "accessControl_deleteSuccessMsg": "accessControl_deleteSuccessMsg",
+  "accessControl_edit": "accessControl_edit",
   "acl_addLocal": "添加",
   "acl_editLocal": "编辑",
   "actions": {
@@ -2342,7 +2348,7 @@
   },
   "user_SecurityProperty": "user_SecurityProperty",
   "user_UserAndUserGroup": "用户 / 用户组",
-  "user_UserAndUserGroupMultiSelect": "user_UserAndUserGroupMultiSelect",
+  "user_UserAndUserGroupMultiSelect": "用户 / 用户组 (允许多选)",
   "user_UserAndUserGroupRequiredMsg": "user_UserAndUserGroupRequiredMsg",
   "user_UserGroup": "用户组",
   "user_active": "激活",
