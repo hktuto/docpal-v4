@@ -50,7 +50,7 @@ const eventsServicePlugin = createEventsServicePlugin();
 // set up filter options
 const userFiterOptions = ref<any>([])
 const workflowFilterOptions = ref<any>([])
-
+const emits = defineEmits(['filter-change', 'newEvent'])
 async function getFilterOptions(){
     const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
     userFiterOptions.value = user.map(item => {
@@ -75,11 +75,9 @@ async function setDefaultFilter(){
     if(options.defaultCategory){
         filter.value.category = options.defaultCategory
     }
-    console.log("setDefaultFilter", filter.value)
 }
 
 // dialog ref
-const newFormRef = ref()
 
 type SiteEvent = {
     actionType : string
@@ -161,7 +159,7 @@ async function getCurrentRangeEvent(){
         return true
     }).map(convertSiteEventToCalendarEvent)
     // filter events
-    console.log('onRangeUpdate', events, filter.value)
+    emits('filter-change', filter.value)
     calendarApp.eventsService.set(events);
 }
 
@@ -176,7 +174,8 @@ function onClickDate(date) {
 }
 function onClickDateTime(dateTime) {
     if(options.allowCreate){
-        newFormRef.value.open(dateTime)
+        // newFormRef.value.open(dateTime)
+        emits('newEvent', dateTime)
     }
     console.log('onClickDateTime', dateTime, options) // e.g. 2024-01-01 12:37
 }
@@ -326,7 +325,6 @@ defineExpose({
             </div>
         </template>
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" />
-        <!-- <CalendarNewEventForm ref="newFormRef" @reload="reloadCalendar" /> -->
     </div>
 </template>
 

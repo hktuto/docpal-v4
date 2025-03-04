@@ -46,7 +46,7 @@ defineExpose({ getFormData })
 
 <template>
     <div class="calendar_widget_container">
-        <CalendarViewer  :options="calendarOptions" />
+        <CalendarWorkflowViewer  :options="calendarOptions" />
     </div>
 </template>
 

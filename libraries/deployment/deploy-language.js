@@ -43,7 +43,7 @@ async function updateLanguage(code, token){
     const newJson = code === 'en-US' ? enJson : code === 'zh-CN' ? zhJson : zhHKJson
     const newData = {
         ...data[0],
-        languageContent: newJson
+        languageContent: JSON.stringify(newJson)
     }
     const res = await fetch(`${ADMINURL}/docpal/relation/updateLanguage`,{
         method: 'POST',
@@ -53,12 +53,15 @@ async function updateLanguage(code, token){
             'Authorization': `Bearer ${token}`
         }
     }).then(async(res) => {
-        return await res.json()
+        const data =  await res.json()
+        if(data.code !== 200) {
+            throw new Error(data.message)
+        }
     })
     .catch(error => {
         console.log("error", error)
     })
-    console.log('finish update language', code, res)
+    console.log('finish update language', code)
 }
 
 async function deployLanguage(){

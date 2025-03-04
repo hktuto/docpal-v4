@@ -65,7 +65,7 @@ const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
             sortable: true,
             width: 200,
             formatter({cellValue}: any) {
-                return cellValue === 'P' ? "Inactive" : 'Active'
+                return cellValue === 'A' ? t('actions.activate') :  t('actions.inactive')
             }
         },
     ],
