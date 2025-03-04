@@ -84,7 +84,7 @@ async function getList () {
 async function handleDismiss(item: any) {
   try {
     item.loading = true
-    await clientApi.api.putNotificationIdStatusStatus(item.id, '')
+    await clientApi.api.putNotificationIdStatusStatus(item.id, 'READED')
     const index = state.list.findIndex((lItem: any) => lItem.id === item.id)
     state.list.splice(index, 1)
     emits('unreadCountChange', item)
