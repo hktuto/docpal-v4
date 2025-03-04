@@ -8,12 +8,6 @@
   "CaseType": {
     "fields": "Case Info"
   },
-  "singleCase": {
-    "caseId": "Case Id",
-    "caseLabel": "Case Label",
-    "newButtonLabel": "New Button Label",
-    "displayColumns": "Display Columns"
-  },
   "Child Vocabulary": "Child Type",
   "Click document to setting": "Click document to setting",
   "DAM_DAM": "DAM",
@@ -1349,6 +1343,15 @@
     "cc": "CC",
     "to": "To"
   },
+  "emailContentTemplate_Delete": "Delete Email Template",
+  "emailContentTemplate_Edit": "Edit Email Template",
+  "emailContentTemplate_create": "Create New Email Template",
+  "emailContentTemplate_createdSuccessMsg": "The new email template {name} has been created successfully.",
+  "emailContentTemplate_creator": "Email Template Creator",
+  "emailContentTemplate_filter": "Filter by Email Template Name",
+  "emailContentTemplate_id": "Email Template ID",
+  "emailContentTemplate_layoutUsed": "Email Layout Used",
+  "emailContentTemplate_name": "Email Template Name",
   "emailReminder": "Email Reminder",
   "emailTemplate": {
     "add": "Add Email Layout",
@@ -2104,6 +2107,12 @@
   "showFolderTabs_info": "Info",
   "showFolderTabs_preview": "Preview",
   "showFolderTabs_table": "Table",
+  "singleCase": {
+    "caseId": "Case Id",
+    "caseLabel": "Case Label",
+    "displayColumns": "Display Columns",
+    "newButtonLabel": "New Button Label"
+  },
   "singleStepTip": "Suitable for simple document approval, quotation approval...etc",
   "smartFolder": {
     "searchQuery": "Search Query",
