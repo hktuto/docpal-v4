@@ -34,7 +34,7 @@
             <div class="rowTitle">{{ $t('user_status') }}</div>
             <div class="rowValue">
                 <el-switch v-model="user.status"
-                           :inactive-text="t('actions.inactived')"
+                           :inactive-text="t('actions.inactive')"
                            :active-text="t('user_active')"
                            active-value="A" inactive-value="D"
                            :loading="user.loading" :disabled="user.loading"
