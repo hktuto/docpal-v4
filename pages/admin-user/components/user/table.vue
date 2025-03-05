@@ -365,7 +365,7 @@ defineExpose({reload})
     grid-template-columns: 1fr min-content;
     gap: var(--app-space-xs);
     padding: var(--app-space-xs);
-    background: var(--el-color-primary-light-9);
+    // background: var(--el-color-primary-light-9);
 }
 
 .title-select {
