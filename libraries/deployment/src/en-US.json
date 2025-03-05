@@ -541,6 +541,12 @@
     "caseListPlaceHolder": "Please add the case to be displayed",
     "workflowListPlaceHolder": "Please add the workflow to be displayed"
   },
+  "dashboard_accessUserGroup": "Access by User Group",
+  "dashboard_create": "Create New Dashboard",
+  "dashboard_createAccessUserGroup": "Access by User Group (Multi-select is allowed)",
+  "dashboard_createSuccessMsg": "The new dashboard {name} has been created successfully.",
+  "dashboard_filter": "Filter by Dashboard Name",
+  "dashboard_name": "Dashboard Name",
   "dataField": {
     "api": "Data source",
     "apiField": "Field name",

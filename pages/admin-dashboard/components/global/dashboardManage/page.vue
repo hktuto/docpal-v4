@@ -6,8 +6,9 @@
           ref="ResponsiveFilterRef"
           inputKey="name"
           @form-change="handleFilterFormChange"
+          inputPlaceHolder="dashboard_filter"
         />
-        <el-button type="primary" @click="handleCreate">{{$t('button.add')}}</el-button>
+        <el-button type="primary" @click="handleCreate">{{$t('dashboard_create')}}</el-button>
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.status === 'A'" type="success">{{ $t("actions.activated") }}</el-tag>
@@ -36,8 +37,8 @@ const {
   api: (pageParams: any) =>
   publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
   columns: [
-    { field: "name", title: "tableHeader_name", fixed: "left" },
-    { field: "access", title: "tableHeader_access" },
+    { field: "name", title: "dashboard_name", fixed: "left" },
+    { field: "access", title: "dashboard_accessUserGroup" },
     {
       field: "createdDate",
       title: "workflow_createDate",
@@ -98,7 +99,6 @@ async function deleteItem(id: any) {
   query({})
 }
 async function handleCreate() {
-
   DashboardDialogRef.value.handleOpen();
 }
 function handleFilterFormChange(formModel: any) {

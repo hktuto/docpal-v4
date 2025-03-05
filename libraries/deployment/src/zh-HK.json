@@ -541,6 +541,12 @@
     "caseListPlaceHolder": "請新增需要顯示的案例",
     "workflowListPlaceHolder": "請新增需要顯示的工作流程"
   },
+  "dashboard_accessUserGroup": "dashboard_accessUserGroup",
+  "dashboard_create": "dashboard_create",
+  "dashboard_createAccessUserGroup": "dashboard_createAccessUserGroup",
+  "dashboard_createSuccessMsg": "dashboard_createSuccessMsg",
+  "dashboard_filter": "dashboard_filter",
+  "dashboard_name": "儀表板名稱",
   "dataField": {
     "api": "數據來源",
     "apiField": "字段名稱",
