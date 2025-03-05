@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "name",
-        "label": "tableHeader_name",
+        "label": "emailContentTemplate_layoutName",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -21,7 +21,7 @@
         "hidden": false,
         "clearable": true,
         "showPassword": false,
-        "required": false,
+        "required": true,
         "requiredHint": "",
         "validation": "",
         "validationHint": "",
@@ -57,7 +57,7 @@
       "formItemFlag": true,
       "options": {
         "name": "layoutContent",
-        "label": "emailTemplate.layout",
+        "label": "emailContentTemplate_layoutContent",
         "labelAlign": "",
         "rows": 15,
         "defaultValue": "",
@@ -69,7 +69,7 @@
         "readonly": false,
         "disabled": false,
         "hidden": false,
-        "required": false,
+        "required": true,
         "requiredHint": "",
         "validation": "",
         "validationHint": "",
@@ -157,9 +157,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

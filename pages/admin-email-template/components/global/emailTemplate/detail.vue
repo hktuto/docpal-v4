@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import {ElMessage} from "element-plus";
 import {adminApi} from "api";
 
 const routerProvider = inject(MenuRouterKey)
@@ -100,7 +99,7 @@ async function save() {
             })
         }
         // router.push(`/emailTemplate/${result.id}`);
-        routerProvider?.message.success(t('emailContentTemplate_createdSuccessMsg', {name: "aa"}));
+        routerProvider?.message.success(t('emailContentTemplate_createdSuccessMsg', {name: data.value.label}));
         editInfoOpened.value = false;
         showClose.value = true;
         // TODO : add notification
@@ -118,12 +117,15 @@ async function save() {
         emailTemplateJson: JSON.stringify(json),
         emailTemplateVariable: JSON.stringify(variable),
     });
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('emailContentTemplate_updatedSuccessMsg', {name: data.value.label}));
     editInfoOpened.value = false;
     // TODO : add notification
 }
 
+let title = t('emailContentTemplate_create')
+
 function handleEdit() {
+    title = t('emailContentTemplate_edit')
     editInfoOpened.value = true;
     showClose.value = true;
 }
@@ -150,20 +152,13 @@ onActivated(async () => {
             </template>
             <template #action>
                 <ElSelect type="primary" v-model="selectedLayout">
-                    <ElOption
-                        v-for="item in layouts"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id"
-                    ></ElOption>
+                    <ElOption v-for="item in layouts" :key="item.id" :label="item.name" :value="item.id"></ElOption>
                 </ElSelect>
-                <ElButton type="primary" size="small" @click="testEmailOpened = true">{{
-                        $t("email_send_test")
-                    }}
+                <ElButton type="primary" size="small" @click="testEmailOpened = true">
+                    {{ $t("email_send_test") }}
                 </ElButton>
-                <ElButton type="primary" size="small" @click="save">{{
-                        $t("common_save")
-                    }}
+                <ElButton type="primary" size="small" @click="save">
+                    {{ $t("common_save") }}
                 </ElButton>
             </template>
         </Editorjs>
@@ -177,7 +172,7 @@ onActivated(async () => {
             :close-on-click-modal="showClose"
             :show-close="showClose"
             @closed="handleClose"
-            :title="t('emailContentTemplate_create')"
+            :title="title"
         >
             <EditorjsInfoForm v-if="data" ref="infoFormEl" :data="data"/>
             <template #footer>
@@ -188,24 +183,11 @@ onActivated(async () => {
             </template>
         </ElDialog>
         <ElDialog v-model="testEmailOpened" append-to-body destroy-on-close>
-            <EditorjsTestDialog
-                ref="testEmailDialog"
-                v-if="data"
-                :data="data"
-                :variables="variables"
-            />
+            <EditorjsTestDialog ref="testEmailDialog" v-if="data" :data="data" :variables="variables"/>
             <template #footer>
-                <ElButton
-                    type="primary"
-                    @click="
-            () => {
-              sendTest();
-              testEmailOpened = false;
-            }
-          "
-                >{{ $t("email_send_test") }}
-                </ElButton
-                >
+                <ElButton type="primary" @click="() => {sendTest();testEmailOpened = false;}">
+                    {{ $t("email_send_test") }}
+                </ElButton>
             </template>
         </ElDialog>
     </div>
@@ -264,7 +246,7 @@ onActivated(async () => {
 }
 
 .emailTemplateContainer {
-    height: 100%;
+    height: 100%
 }
 
 .responsiveSizeEditorContainer {
