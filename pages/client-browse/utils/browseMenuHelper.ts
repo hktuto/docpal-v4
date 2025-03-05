@@ -94,3 +94,24 @@ export const createUploadRequestPageParams = (params:any) => {
         }
     }
 }
+
+type VersionComparisonPageParams = {
+    name: string,
+    id: string,
+    oldVersionNum: string,
+}
+export const createVersionComparisonPageParams = ({id, name, oldVersionNum}:VersionComparisonPageParams) => {
+    return {
+        id: 'client-versionComparison',
+        name: 'client-versionComparison',
+        icon: 'lucide:file-diff',
+        hoverIcon: 'lucide:file-diff',
+        label: name,
+        component: "LazyBrowseVersionComparison",
+        props: {
+            id,
+            name,
+            oldVersionNum
+        }
+    }
+}
