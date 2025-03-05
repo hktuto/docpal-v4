@@ -1,25 +1,28 @@
 <template>
-<el-dialog v-model="state.visible" :title="state.edit ? $t('emailTemplate.editLayout') : $t('emailTemplate.addLayout')"
-    :close-on-click-modal="false"
-    @close="handleClose"
-    class="scroll-dialog"
+    <el-dialog v-model="state.visible"
+               :title="state.edit ? $t('emailContentTemplate_layoutEdit') : $t('emailContentTemplate_layoutCreate')"
+               :close-on-click-modal="false"
+               @close="handleClose"
+               class="scroll-dialog"
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <div class="footer-grid">
-            <!-- Please use [[emailContent]] as content container. -->
-            <div>{{$t('tip.emailLayout')}}</div>
-            <el-button type="info" @click="handleInit">{{$t('emailTemplate.initLayout')}}</el-button>
-            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-        </div>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <div class="footer-grid">
+                <!-- Please use [[emailContent]] as content container. -->
+                <div>{{ $t('tip.emailLayout') }}</div>
+                <el-button type="info" @click="handleInit">{{ $t('emailTemplate.initLayout') }}</el-button>
+                <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
-import { ElMessageBox } from 'element-plus'
+import {adminApi} from 'api'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import formJson from './dialog.vform.json'
-const { t } = useI18n()
+
+const {t} = useI18n()
 const emits = defineEmits([
     'refresh'
 ])
@@ -31,15 +34,18 @@ const state = reactive({
     initLayout: '<!DOCTYPEhtml>\n<html>\n<title>WCLEmailTemplate</title>\n<head></head>\n<style>\nbody \n{\n  width: 100%;\n  font-size: 11px;\n}\nh1,h2,h3,h4,h5 {\n   font-size: 1.2rem;\n}\n.copy-right {\n  font-size: 8px;\n}\n</style>\n<body>\n<h1>WCLEmailTemplateLogo.</h1>\n<center>[[emailContent]]</center>\n<center class="copy-right">Copyright © 2008 - 2024 DocPal All Rights Reserved.</center>\n</body>\n</html>'
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        if(state.edit) {
+        if (state.edit) {
             data.id = state.setting.id
             await adminApi.api.putTemplateEmailLayout(data)
+            ElMessage.success(t('emailContentTemplate_layoutEditSuccessMsg', {name: data.name}))
         } else {
             await adminApi.api.postTemplateEmailLayout(data)
+            ElMessage.success(t('emailContentTemplate_layoutCreatedSuccessMsg', {name: data.name}))
         }
         emits('refresh')
         state.visible = false
@@ -48,11 +54,13 @@ async function handleSubmit () {
     }
     state.loading = false
 }
+
 function handleClose() {
     FormRendererRef.value.vFormRenderRef.resetForm()
     const layoutRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('layoutContent')
     layoutRef.setValue(state.initLayout)
 }
+
 function handleOpen(setting) {
     state.visible = true
     state.edit = !!setting
@@ -62,7 +70,8 @@ function handleOpen(setting) {
         state.loading = false
     })
 }
-async function handleInit () {
+
+async function handleInit() {
     const layoutRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('layoutContent')
     const layoutContent = layoutRef.getValue()
     let action = 'confirm'
@@ -70,9 +79,10 @@ async function handleInit () {
     if (action !== 'confirm') return
     layoutRef.setValue(state.initLayout)
 }
-onMounted(async() => {
+
+onMounted(async () => {
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 .footer-grid {

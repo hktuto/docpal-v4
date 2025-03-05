@@ -6,10 +6,18 @@ const props = defineProps<{
 const {t} = useI18n()
 const rules = {
     label: [
-        {required: true, message: 'Please input label', trigger: 'blur'},
+        {
+            required: true,
+            message: t('easyForm.EmailTemplateKey') + ' ' + t('render.hint.fieldRequired'),
+            trigger: 'blur'
+        },
     ],
     subject: [
-        {required: true, message: 'Please input subject', trigger: 'blur'},
+        {
+            required: true,
+            message: t('tableHeader_subject') + ' ' + t('render.hint.fieldRequired'),
+            trigger: 'blur'
+        },
     ],
 };
 
@@ -32,12 +40,12 @@ defineExpose({
 
 <template>
     <div class="infoFormContainer">
-        <ElForm ref="formEl" :model="data" class="form" label-position="top">
+        <ElForm ref="formEl" :model="data" class="form" label-position="top" :rules="rules">
             <ElFormItem :label="t('easyForm.EmailTemplateKey')" required prop="label">
-                <ElInput v-model="data.label"></ElInput>
+                <ElInput v-model="data.label" clearable></ElInput>
             </ElFormItem>
-            <ElFormItem label="Subject" required prop="subject">
-                <ElInput v-model="data.subject"></ElInput>
+            <ElFormItem :label="t('tableHeader_subject')" required prop="subject">
+                <ElInput v-model="data.subject" clearable></ElInput>
             </ElFormItem>
         </ElForm>
 

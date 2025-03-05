@@ -119,6 +119,7 @@ const AclAddDialogRef = ref();
 
 function handleAclLocalDialogShow() {
     AclAddDialogRef.value.handleOpen();
+    emits("refresh");
 }
 
 const AclEditTimeDialogRef = ref();
@@ -141,7 +142,6 @@ function permissionRevert(open: boolean, permission) {
 async function removeLocalAcl(row: any) {
     try {
         row.loading = true;
-        console.log(1,props.tableData)
         let msg = t('folder_cabinetDetailLocalPermissionRemoveMsg')
         const action = await ElMessageBox.confirm(
             msg,
@@ -150,9 +150,9 @@ async function removeLocalAcl(row: any) {
                 confirmButtonText: t('common_confirmRemove'),
             });
         if (action !== "confirm") throw new Error("cancel");
-        // await adminApi.api.deleteCabinetTemplatePermission({id: props.id, userId: row.userId}, {});
+        await adminApi.api.deleteCabinetTemplatePermission({id: props.id, userId: row.userId}, {});
         ElMessage.success(t('folder_cabinetDetailLocalPermissionRemoveSuccessMsg'));
-        // emits("refresh");
+        emits("refresh");
     } catch (error) {
         row.loading = false;
         return "cancel";

@@ -25,7 +25,7 @@
       <CreateVersionButtom v-show="doc.isCheckedOut" :doc="doc" />
     </div>
     <template #reference>
-      <div id="popover__reference" :class="['cursorPointer', { 'active': popoverShow }]" @click.stop="handlePopoverShow">
+        <div id="popover__reference" :class="['cursorPointer', { 'active': popoverShow }]" @click.stop="handlePopoverShow">
           {{ version }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </div>
@@ -40,7 +40,7 @@ const props = defineProps<{
     doc: any
 }>()
 const { doc } = toRefs(props)
-const router = useRouter();
+const routerProvider = inject(MenuRouterKey)
 const PopoverRef = ref()
 const popoverShow = ref(false)
 const { displayTime } = useTime()
@@ -66,17 +66,15 @@ function handlerRowClick (_row:any, _column:any, _event:any) {
     }
 function toVersionComparison (row:any) {
     // close detail
-    const ev = new CustomEvent('closeFilePreview', { detail: props.doc });
-    document.dispatchEvent(ev);
-    setTimeout(() => {
-        const path = `/versionComparison/${props.doc.id}`
-        router.push({
-            path,
-            query:{
-                oldVersion: row.version
-            }
-        })
-    }, 300)
+    // const ev = new CustomEvent('closeFilePreview', { detail: props.doc });
+    // document.dispatchEvent(ev);
+    const newItem = createVersionComparisonPageParams({
+        id: props.doc.id,
+        name: props.doc.name,
+        oldVersionNum: row.version
+    })
+    console.log("toVersionComparison", newItem)
+    routerProvider?.navigateTo(newItem)
     
 
 }
