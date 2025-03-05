@@ -84,7 +84,6 @@ function handleAdd() {
 }
 
 async function handleDeleteTemplate(row) {
-    console.log(1, row)
     const action = await ElMessageBox.confirm(
         `${t('emailContentTemplate_layoutDeleteMsg', {name: row.name})}`,
         {

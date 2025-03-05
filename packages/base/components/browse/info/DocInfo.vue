@@ -22,7 +22,7 @@
         <div class="infoSection">
             <div class="infoTitle">{{ $t('info_modified') }}</div>
             <div class="infoContent">{{
-                formatDate(info.modifiedDate) === 'Invalid Date'
+                formatDate(info.modifiedDate) === '-'
                 ? formatDate(info.createdDate)
                 : formatDate(info.modifiedDate)
             }}</div>
@@ -30,9 +30,7 @@
         <div class="infoSection">
             <div class="infoTitle">{{ $t('fileModifiedDate_label') }}</div>
             <div class="infoContent">{{
-                formatDate(info.properties['dpc:fileModifiedDate']) === 'Invalid Date'
-                ? ""
-                : formatDate(info.properties['dpc:fileModifiedDate'])
+                formatDate(info.properties['dpc:fileModifiedDate'])
             }}</div>
         </div>
         <div class="infoSection">

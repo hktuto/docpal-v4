@@ -33,7 +33,7 @@ provide(groupProviderKey, {
     return adminApi.api.deleteNuxeoIdentityGroup(params);
   },
   CreateGroupApi: (params: any) => {
-    return adminApi.api.postNuxeoIdentityGroupDeprecate(params);
+    return adminApi.api.postNuxeoIdentityGroup(params);
   },
 });
 </script>

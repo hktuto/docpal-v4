@@ -23,7 +23,7 @@ import { clientApi } from 'api';
         options?: Object,
         attachmentDownloadApi?: Function,
     }>(), {
-        attachmentDownloadApi: (id: string) => clientApi.api.getWorkflowTaskAttachmentInfoDeprecate(
+        attachmentDownloadApi: (id: string) => clientApi.api.getWorkflowTaskAttachmentInfo(
             {attachmentId:id},
             {
                 format: 'blob'
@@ -88,7 +88,7 @@ import { clientApi } from 'api';
                 }) as any
             } else {
                 fileId = file.response?.data && file.response.data.length > 0 ? file.response.data[0].contentId : file.id
-                previewFile.blob = await clientApi.api.getWorkflowTaskAttachmentInfoDeprecate({attachmentId:fileId},{
+                previewFile.blob = await clientApi.api.getWorkflowTaskAttachmentInfo({attachmentId:fileId},{
                     format: 'blob'
                 })
                 
