@@ -60,7 +60,6 @@
 <script lang="ts" setup>
 import { MoreFilled } from "@element-plus/icons-vue";
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { MenuRouterKey } from "#imports";
 const routerProvider = inject(MenuRouterKey);
 let extraParams = {};
@@ -98,8 +97,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: "expireDate",
       title: "tableHeader_dueDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
 
@@ -188,5 +186,9 @@ onMounted(() => {
       }
     }
   }
+}
+:deep(.vxe-buttons--wrapper) {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

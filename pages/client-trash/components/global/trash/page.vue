@@ -27,8 +27,6 @@
 <script lang="ts" setup>
 import {ElMessageBox, ElNotification} from "element-plus";
 import {clientApi} from 'api'
-import dayjs from "dayjs";
-
 type TableState = {
     ready: boolean,
     loading: boolean,
@@ -72,8 +70,7 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
             field: 'properties.trashed_date',
             title: 'trash_date',
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         }
     ],

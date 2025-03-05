@@ -26,8 +26,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         { field:'processStatus', title: 'tableHeader_status', },
         { field: 'createdDate', title: 'dpTable_createdDate', sortable: true,
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
     ],

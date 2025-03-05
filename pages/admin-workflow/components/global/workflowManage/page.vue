@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {adminApi} from "api";
-import dayjs from "dayjs";
 
 const {t} = useI18n()
 let extraParams: any = {};
@@ -43,16 +42,14 @@ const {
             field: "createDate",
             title: "workflow_ManageStartDate",
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             }
         },
         {
             field: "dueDate",
             title: "workflow_dueDate",
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             }
         }
     ],

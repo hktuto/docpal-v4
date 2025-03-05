@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { routeSmartFolderDetail } from "~/utils/routerHelper";
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {

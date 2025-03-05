@@ -8,7 +8,6 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { clientApi } from "api";
-import dayjs from "dayjs";
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {};

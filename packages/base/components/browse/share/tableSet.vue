@@ -22,8 +22,7 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
         { slots: {default:'readOnly'}, title: 'button.readOnly' },
         { title: 'table_modifiedDate', field: 'modifiedDate',
             formatter: ({ cellValue }:any) => { 
-                const format = useDisplayTimeFormat()
-                return dayjs(cellValue).format(format.value)
+                return formatDate(cellValue)
             },
             
         },

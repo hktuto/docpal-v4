@@ -6,7 +6,6 @@
 <script lang="ts" setup>
 import { ElMessage } from "element-plus";
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { watch } from "vue";
 const routerProvider = inject(MenuRouterKey);
 const { t } = useI18n();
@@ -32,8 +31,7 @@ const {
       field: "modified_date",
       title: "table_modifiedDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
   ],
