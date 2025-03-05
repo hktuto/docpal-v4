@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "name",
-        "label": "tableHeader_name",
+        "label": "dashboard_name",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -55,10 +55,10 @@
       "formItemFlag": true,
       "options": {
         "name": "access",
-        "label": "user_groupName",
+        "label": "dashboard_createAccessUserGroup",
         "labelAlign": "",
         "defaultValue": [],
-        "placeholder": "",
+        "placeholder": "common_selectOccupancyContent",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -108,9 +108,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
