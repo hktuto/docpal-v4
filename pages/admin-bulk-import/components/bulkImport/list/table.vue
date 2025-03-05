@@ -42,11 +42,11 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     bodyActions:[
        [ 
         {
-            name: 'common_edit',
+            name: 'bulkImport_edit',
             action: ({row}:any) => listProvider.handelDblclick(row)    
         },
         {
-            name: 'common_delete',
+            name: 'bulkImport_delete',
             action: ({row}:any) => listProvider.handelDelete(row)    
         },
         ]

@@ -10,12 +10,12 @@
         "label": "docType_property",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "",
+        "placeholder": "common_selectOccupancyContent",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
         "labelHidden": false,
-        "disabled": true,
+        "disabled": false,
         "hidden": false,
         "clearable": true,
         "filterable": true,
@@ -139,9 +139,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
