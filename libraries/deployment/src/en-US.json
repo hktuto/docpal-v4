@@ -542,11 +542,17 @@
     "workflowListPlaceHolder": "Please add the workflow to be displayed"
   },
   "dashboard_accessUserGroup": "Access by User Group",
+  "dashboard_content": "Edit Dashboard Content",
   "dashboard_create": "Create New Dashboard",
   "dashboard_createAccessUserGroup": "Access by User Group (Multi-select is allowed)",
   "dashboard_createSuccessMsg": "The new dashboard {name} has been created successfully.",
+  "dashboard_delete": "Delete Dashboard",
+  "dashboard_deleteMsg": "Are you sure you want to delete the dashboard {name}?<br>This action cannot be undone.",
+  "dashboard_deleteSuccessMsg": "The dashboard {name} has been deleted successfully.",
+  "dashboard_edit": "Edit Dashboard Info",
   "dashboard_filter": "Filter by Dashboard Name",
   "dashboard_name": "Dashboard Name",
+  "dashboard_updatedSuccessMsg": "The dashboard {name} has been updated successfully.",
   "dataField": {
     "api": "Data source",
     "apiField": "Field name",
