@@ -9,6 +9,9 @@
 </template>
 
 <script lang="ts" setup>
+const props = defineProps<{
+    doc: any
+}>()
 
 const emits = defineEmits(['success'])
 
