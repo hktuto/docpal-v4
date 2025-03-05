@@ -42,7 +42,7 @@ const form = reactive({
 // @ts-ignore
 const imgBlob = ref();
 async function getImgPreviewBlob() {
-  const blob: any = await clientApi.api.postNuxeoDocumentThumbnail(form.templatePath, {
+  const blob: any = await clientApi.api.postNuxeoDocumentThumbnail({idOrPath: form.templatePath}, {
     format: 'blob',
     timeout: 0,
     headers: {

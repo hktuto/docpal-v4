@@ -446,7 +446,7 @@ function resize() {
         if(!displayList || displayList.length === 0) return {}
         try {
             if(!state.initTrendData || state.initTrendData.length === 0) {
-                const res: any = await publicApi.api.postDashboardDocumenttypeofsizebymonthlyrangecumulationDeprecate({}).then(res => res.data)
+                const res: any = await publicApi.api.postDashboardDocumenttypeofsizebymonthlyrangecumulation({}).then(res => res.data)
                 state.initTrendData = res?.group_document_type?.buckets || []
             }
             let trendData

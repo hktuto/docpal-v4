@@ -29,7 +29,7 @@ const InteractDrawerRef = ref()
 async function getPreviewFile () {
     state.previewFile.loading = true
     try {
-        const blob = await adminApi.api.postNuxeoDocumentPreviewDeprecate({idOrPath: state.info.documentId},{
+        const blob = await adminApi.api.postNuxeoDocumentPreview({idOrPath: state.info.documentId},{
             format: 'blob',
             timeout: 0,
             headers: {

@@ -26,7 +26,7 @@ function reload() {
         state.ocrState = ocrStatus
         if(ocrStatus === 'FINISH') {
             
-          const response = await clientApi.api.postNuxeoDocumentAttachmentHocrDownloadDeprecate({
+          const response = await clientApi.api.postNuxeoDocumentAttachmentHocrDownload({
             idOrPath: doc.id
           },{
             format: 'blob',

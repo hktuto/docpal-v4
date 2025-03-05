@@ -304,7 +304,7 @@ async function deleteAiSuggestion(deleteName: string) {
         aiId:  state.aiDocId
     }
     try {
-        const res = await clientApi.api.patchNuxeoDocumentUpdateaidocumentDeprecate(params)
+        const res = await clientApi.api.patchNuxeoDocumentUpdateaidocument(params)
         delete state.aiAnalysis[deleteName]
     } catch (error) {
         

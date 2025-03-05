@@ -40,7 +40,7 @@ async function handleSubmit() {
         bind: data.access.join(',')
     }
     try {
-        const res = await adminApi.api.patchNuxeoSfolderDeprecate({
+        const res = await adminApi.api.patchNuxeoSfolder({
             ...state.setting,
             ..._data
         })
