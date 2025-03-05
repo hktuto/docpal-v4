@@ -20,7 +20,6 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from "api";
-import dayjs from "dayjs";
 import { routeEasyFormDetail } from "~/util/easyFormRouterHelper";
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
@@ -45,16 +44,14 @@ const {
       field: "createDate",
       title: "easyForm_creationDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
       field: "modifiedDate",
       title: "table_modifiedDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {

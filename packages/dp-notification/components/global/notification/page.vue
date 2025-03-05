@@ -31,7 +31,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from "element-plus";
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { TabManagerKey } from '#imports'
 const tabProvider = inject(TabManagerKey)
 const { t } = useI18n();
@@ -61,8 +60,7 @@ const {
       field: "createdDateTimestamp",
       title: "workflowEditor.date",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     { field: "type", title: "notification.type" },

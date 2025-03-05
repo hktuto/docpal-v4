@@ -134,8 +134,7 @@ const routerProvider = inject(MenuRouterKey)
             field:"modifiedDate",
             width: 200,
             formatter:({ cellValue }: any) => {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             }
         },
         {

@@ -17,7 +17,6 @@
 <script lang="ts" setup>
 import {ElMessageBox} from "element-plus";
 import {adminApi} from "api";
-import dayjs from "dayjs";
 
 const {t} = useI18n();
 let extraParams: any = {};
@@ -40,8 +39,7 @@ const {
             field: "startTime",
             title: "workflow_retryStartDate",
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             },
         },
         {field: "creator", title: "workflow_retryInitiator"},

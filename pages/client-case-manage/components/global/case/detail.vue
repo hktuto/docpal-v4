@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
-import dayjs from "dayjs";
-
 const { id, name, data} = defineProps<{
   id: string;
   name: string;
@@ -79,16 +77,14 @@ async function reorderColumn() {
         field: "created_date",
         title: "workflow_createDate", width:200,
         formatter({ cellValue }: any) {
-          const format = userDisplayTimeSetting();
-          return dayjs(cellValue).format(format);
+          return formatDate(cellValue)
         },
       },
       {
         field: "modified_date",
         title: "table_modifiedDate", width:200,
         formatter({ cellValue }: any) {
-          const format = userDisplayTimeSetting();
-          return dayjs(cellValue).format(format);
+          return formatDate(cellValue)
         },
       },
     ];

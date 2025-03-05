@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { MoreFilled } from "@element-plus/icons-vue";
 import { ElMessage} from 'element-plus'
 const { id, name, detail } = defineProps<{
@@ -74,8 +73,7 @@ async function reorderColumn(fields: any) {
         title: "workflow_createDate",
         width: 200,
         formatter({ cellValue }: any) {
-          const format = userDisplayTimeSetting();
-          return dayjs(cellValue).format(format);
+          return formatDate(cellValue)
         },
       },
       {
@@ -83,8 +81,7 @@ async function reorderColumn(fields: any) {
         title: "table_modifiedDate",
         width: 200,
         formatter({ cellValue }: any) {
-          const format = userDisplayTimeSetting();
-          return dayjs(cellValue).format(format);
+          return formatDate(cellValue)
         },
       },
       {

@@ -20,7 +20,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { adminApi } from "api";
-import dayjs from "dayjs";
 import { routePersonalDashboardDetail } from '~/utils/routerHelper';
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -43,8 +42,7 @@ const {
       field: "createdDate",
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
   ],

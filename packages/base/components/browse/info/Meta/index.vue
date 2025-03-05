@@ -3,7 +3,7 @@
     <div v-for="(item, index) in displayMeta" :key="item.metaData"  class="infoSection">
         <div class="infoTitle">{{ $t(item.metaData) }}</div>
         <div class="infoContent">
-            <span v-if="item.dataType === 'date'">{{ formatDate(item.value, dateFormat || 'YYYY-MM-DD') }}</span>
+            <span v-if="item.dataType === 'date'">{{ formatDate(item.value) }}</span>
             <BrowseInfoMetaDocumentType v-else-if="item.dataType === 'select' && item.options?.dropdownType === 'documentType'"
                 :data="item.value" />
             <span v-else-if="item.metaDataType ==='array' && item.value">{{ item.value.join(',') || '-'}}</span>
@@ -23,7 +23,6 @@ const props = defineProps<{doc:any, permission:any}>();
 const { doc } = toRefs(props)
 const emit = defineEmits(['update'])
 const displayMeta = ref<any[]>([])
-const dateFormat = useDisplayTimeFormat()
 const metaStructureByProperties = (metaList: any[], properties: string) => {
     if(!properties || !metaList) return []
     return  metaList.reduce((p, item) => {
