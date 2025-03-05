@@ -18,6 +18,10 @@ type TableState = {
 };
 const caseEvents = ref([])
 const tableReady = ref(false);
+const instanceId = ref('')
+const caseDefinitionKey = ref('')
+const productionVersionId = ref('')
+const caseTypeId = ref('')
 const {
   tableConfig,
   tableEvent,
@@ -93,15 +97,26 @@ async function reorderColumn(fields) {
     fields.forEach((row) => {
       columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
     });
-    const actionColumn = tableConfig.columns.find(
-      (item) => item.title === "dpTable_actions"
-    );
-    if (!!actionColumn) columns.push(actionColumn);
+    // const actionColumn = tableConfig.columns.find(
+    //   (item) => item.title === "dpTable_actions"
+    // );
+    // if (!!actionColumn) columns.push(actionColumn);
     tableConfig.columns = columns;
   } catch (e) {}
   tableReady.value = true;
 }
 
+provide(CaseManagementDashboardKey, {
+  instanceId,
+  caseTypeId,
+  caseDefinitionKey,
+  versionId: productionVersionId
+})
+watch(() => detail, (newVal) => {
+  caseTypeId.value = newVal?.id ? newVal.id : ''
+  caseDefinitionKey.value = newVal?.caseDefinitionKey ? newVal.caseDefinitionKey : ''
+  productionVersionId.value = newVal?.productionVersionId ? newVal.productionVersionId : ''
+})
 defineExpose({ reorderColumn, reload });
 </script>
 
@@ -132,4 +147,5 @@ defineExpose({ reorderColumn, reload });
   <DashboardActionHumanTaskDialog ref="dialogRef" @refresh="reload()"/>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>
