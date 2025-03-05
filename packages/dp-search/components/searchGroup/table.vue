@@ -25,8 +25,8 @@
                   </el-icon>
               </div>
               <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
-                  <div v-for="item in row.properties.summarys" class="summaryItem" :title="`${item.summaryKey}:${item.summaryValue}`">
-                      [{{item.summaryKey}}]: <b>{{item.summaryValue}}</b>
+                  <div v-for="item in row.properties.summarys" class="summaryItem" :title="`${$t(item.summaryKey)}:${item.summaryValue}`">
+                      [{{$t(item.summaryKey)}}]: <b>{{item.summaryValue}}</b>
                   </div>
               </template>
           </div>
