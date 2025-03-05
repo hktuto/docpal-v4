@@ -3142,6 +3142,17 @@
     "watermark": "Watermark"
   },
   "watermark_template_warning": "Change Template will override all current setting",
+  "workPanel_accessUserGroup": "Access by User Group",
+  "workPanel_content": "Edit Work Panel Content",
+  "workPanel_create": "Create New Work Panel",
+  "workPanel_createdSuccessMsg": "The new work panel {name} has been created successfully.",
+  "workPanel_delete": "Delete Work Panel",
+  "workPanel_deleteMsg": "Are you sure you want to delete the work panel {name}?<br>This action cannot be undone.",
+  "workPanel_deleteSuccessMsg": "The work panel {name} has been deleted successfully.",
+  "workPanel_edit": "Edit Work Panel Info",
+  "workPanel_filter": "Filter by Work Panel Name",
+  "workPanel_name": "Work Panel Name",
+  "workPanel_updateSuccessMsg": "The work panel {name} has been updated successfully.",
   "workflow": {
     "adHocApproval": "Adhoc Approval"
   },
