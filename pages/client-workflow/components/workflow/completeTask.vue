@@ -55,8 +55,7 @@ const {
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
         // @ts-ignore
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
@@ -64,8 +63,7 @@ const {
       title: "table_completeDate",
       formatter({ cellValue }: any) {
         // @ts-ignore
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     { field: "duration", title: "table_duration" ,

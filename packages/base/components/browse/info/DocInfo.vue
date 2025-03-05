@@ -22,22 +22,22 @@
         <div class="infoSection">
             <div class="infoTitle">{{ $t('info_modified') }}</div>
             <div class="infoContent">{{
-                displayTime(info.modifiedDate) === 'Invalid Date'
-                ? displayTime(info.createdDate)
-                : displayTime(info.modifiedDate)
+                formatDate(info.modifiedDate) === 'Invalid Date'
+                ? formatDate(info.createdDate)
+                : formatDate(info.modifiedDate)
             }}</div>
         </div>
         <div class="infoSection">
             <div class="infoTitle">{{ $t('fileModifiedDate_label') }}</div>
             <div class="infoContent">{{
-                displayTime(info.properties['dpc:fileModifiedDate']) === 'Invalid Date'
+                formatDate(info.properties['dpc:fileModifiedDate']) === 'Invalid Date'
                 ? ""
-                : displayTime(info.properties['dpc:fileModifiedDate'])
+                : formatDate(info.properties['dpc:fileModifiedDate'])
             }}</div>
         </div>
         <div class="infoSection">
             <div class="infoTitle">{{ $t('info_created') }}</div>
-            <div class="infoContent">{{ displayTime(info.createdDate) }}</div>
+            <div class="infoContent">{{ formatDate(info.createdDate) }}</div>
         </div>
         <div class="infoSection">
             <div class="infoTitle">{{ $t('info_by') }}</div>
@@ -68,17 +68,12 @@
 </template>
 
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import * as mime from 'mime-types'
 const props = defineProps<{
     doc: any,
     permission: any
 }>()
 
-function displayTime(time:string) {
-    const timeFormat = useDisplayTimeFormat()
-    return dayjs(time).format(timeFormat.value)
-}
 const info = computed(() => {
     return (
     props.doc || {

@@ -20,7 +20,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from "element-plus";
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { routeShareOtherPageFolder } from "~/utils/routerHelper";
 import { MenuRouterKey } from "#imports";
 
@@ -66,24 +65,21 @@ const {
       field: "createdDate",
       title: "tableHeader_shareDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
       field: "startDate",
       title: "el.datepicker.startDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
       field: "expiredDate",
       title: "el.datepicker.endDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {

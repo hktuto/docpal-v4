@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { caseManageDetailPage } from "~/utils/routerHelper";
 
 const { t } = useI18n();
@@ -24,19 +23,17 @@ const {
   columns: [
     { field: "name", title: "search.name" },
     {
-      field: "created_date",
+      field: "createdDate",
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
-      field: "modified_date",
+      field: "modifiedDate",
       title: "table_modifiedDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
   ],

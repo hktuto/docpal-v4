@@ -21,7 +21,6 @@
 </template> 
 <script lang="ts" setup>
 import { adminApi } from "api";
-import dayjs from "dayjs";
 import { routeDocDetail } from '~/utils/routerHelper';
 const routerProvider = inject(MenuRouterKey)
 if( !routerProvider) {
@@ -53,8 +52,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     },
     { field: "modifiedDate", title: "table_last_update",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       } 
     },
 

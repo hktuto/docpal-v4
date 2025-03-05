@@ -92,8 +92,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             field:'createdDate',
             title:"dpTable_createdDate",
             formatter: ({ cellValue }:any) => {
-                const format = useDisplayTimeFormat()
-                return dayjs(cellValue).format(format.value)
+                return formatDate(cellValue)
             }
         },
         {

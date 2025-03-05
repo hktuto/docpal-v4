@@ -21,7 +21,6 @@
 <script lang="ts" setup>
 import formJson from './uncomplete.vform.json'
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { routeWorkflowDetail } from "~/utils/routerHelper";
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
@@ -66,8 +65,7 @@ const {
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
         // @ts-ignore
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
@@ -75,8 +73,7 @@ const {
       title: "workflow_dueDate",
       formatter({ cellValue }: any) {
         // @ts-ignore
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
   ],

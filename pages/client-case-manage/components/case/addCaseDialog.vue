@@ -13,6 +13,8 @@ const FromVariablesRendererRef = ref()
 const MasterTableVariableFormRef = ref()
 const isWorkflowForm = ref(false)
 async function handleOpen(id: string, caseDetail: any) {
+    console.log(caseDetail);
+    
     try {
         state.id = id;
         const {data: startForm} = await clientApi.api.getCaseInstanceCasetypeidStarttask(id);

@@ -24,8 +24,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
          { field:'label', title: 'log_auditEvent',},
          { field: 'eventDate', title: 'log_auditFilterDate', sortable: true,
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
     ],    

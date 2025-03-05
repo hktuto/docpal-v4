@@ -43,8 +43,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
             title:'workflow_createDate',
             field: 'createdDate',
             formatter ({ cellValue }) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             },
         }
     ],

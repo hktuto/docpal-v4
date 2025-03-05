@@ -16,7 +16,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { adminApi } from "api";
-import dayjs from "dayjs";
 const props = defineProps<{
   docTypeDetail: any;
   name: string

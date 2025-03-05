@@ -1,130 +1,150 @@
 <template>
-  <div class="pageContainer--padding">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-      <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputKey="name"
-          @form-change="handleFilterFormChange"
-          inputPlaceHolder="emailContentTemplate_filter"
-        />
-        <div>
-          <el-button type="info" @click="handleEditEmailLayout">{{$t('button.editEmailLayout')}}</el-button>
-          <el-button type="primary" @click="handleAdd">{{$t('emailContentTemplate_create')}}</el-button>
-        </div>
-      </template>
-      <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
-      </template>
-    </VxeGrid>
-  </div>
+    <div class="pageContainer--padding">
+        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+            <template #toolbar_buttons>
+                <ResponsiveFilter
+                    ref="ResponsiveFilterRef"
+                    inputKey="name"
+                    @form-change="handleFilterFormChange"
+                    inputPlaceHolder="emailContentTemplate_filter"
+                />
+                <div>
+                    <el-button type="info" @click="handleEditEmailLayout">{{ $t('button.editEmailLayout') }}</el-button>
+                    <el-button type="primary" @click="handleAdd">{{ $t('emailContentTemplate_create') }}</el-button>
+                </div>
+            </template>
+            <template #status="{ row }">
+                <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
+                <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+            </template>
+        </VxeGrid>
+    </div>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { adminApi } from "api";
-import dayjs from "dayjs";
 import { routeEmailTemplateDetail, routeLayoutTemplatePage } from '~/utils/routerHelper';
 const routerProvider = inject(MenuRouterKey)
-if( !routerProvider) {
+if (!routerProvider) {
     throw new Error('MenuRouterKey is not provided')
 }
-const { t } = useI18n()
+const {t} = useI18n()
 let extraParams: any = {};
 const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows,
+    tableConfig,
+    tableEvent,
+    tableRef,
+    query,
+    reload,
+    cleanSelectedRows,
 } = useVxeTable({
-  id: "a-emailTemplate",
-  api: (pageParams: any) =>
-    adminApi.api.postTemplateEmailTemplatePage({ ...pageParams, ...extraParams }),
-  columns: [
-    { field: "label", title: "emailContentTemplate_name", fixed: "left" },
-    { field: "subject", title: "tableHeader_subject" },
-    { field: "id", title: "emailContentTemplate_id",  },
-    { field: "emailLayoutName", title: "emailContentTemplate_layoutUsed",  },
-    { field: "createdBy", title: "emailContentTemplate_creator",  },
-  ],
-  dblClickAction: ({ row, column, event }: any) => {
-    handleDblclick(row);
-  },
-  bodyActions: [
-    [
-      {
-        code: "edit",
-        name: t('emailContentTemplate_Edit'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleDblclick(row)
-        },
-      },
-      {
-        code: "delete",
-        name: t('emailContentTemplate_Delete'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleDeleteTemplate(row.id);
-        },
-      }
+    id: "a-emailTemplate",
+    api: (pageParams: any) =>
+        adminApi.api.postTemplateEmailTemplatePage({...pageParams, ...extraParams}),
+    columns: [
+        {field: "label", title: "emailContentTemplate_name", fixed: "left"},
+        {field: "subject", title: "tableHeader_subject"},
+        {field: "id", title: "emailContentTemplate_id",},
+        {field: "emailLayoutName", title: "emailContentTemplate_layoutUsed",},
+        {field: "createdBy", title: "emailContentTemplate_creator",},
     ],
-  ],
+    dblClickAction: ({row, column, event}: any) => {
+        handleDblclick(row);
+    },
+    bodyActions: [
+        [
+            {
+                code: "edit",
+                name: t('emailContentTemplate_edit'),
+                visible: true,
+                disabled: false,
+                action: ({row}: any) => {
+                    handleDblclick(row)
+                },
+            },
+            {
+                code: "delete",
+                name: t('emailContentTemplate_delete'),
+                visible: true,
+                disabled: false,
+                action: ({row}: any) => {
+                    handleDeleteTemplate(row);
+                },
+            }
+        ],
+    ],
 });
+
 function handleDblclick(row) {
-  // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeEmailTemplateDetail(row), false)
+    // router.push(`/easyFormManage/${row.id}`);
+    routerProvider?.navigateTo(routeEmailTemplateDetail(row), false)
 }
-function handleAdd () {
-  routerProvider?.navigateTo(routeEmailTemplateDetail({
-    label: 'new',
-    id: 'new'
-  }), false)
+
+function handleAdd() {
+    routerProvider?.navigateTo(routeEmailTemplateDetail({
+        label: 'new',
+        id: 'new'
+    }), false)
 }
-async function handleDeleteTemplate(id: string) {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
-    await adminApi.api.deleteTemplateEmailTemplateId(id)
+
+interface Template {
+    id: string;
+    name: string;
+}
+
+async function handleDeleteTemplate(row: Template[]) {
+    const action = await ElMessageBox.confirm(
+        `${t('emailContentTemplate_deleteMsg',  {name: row.label})}`,
+        {
+            confirmButtonText: t('common_confirmDelete'),
+        })
+    if (action !== 'confirm') return
+    await adminApi.api.deleteTemplateEmailTemplateId(row.id)
+    routerProvider?.message.success(t('emailContentTemplate_deleteSuccessMsg', {name: row.label}));
     query({})
 }
+
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+    extraParams = formModel;
+    reload();
 }
+
 const ResponsiveFilterRef = ref()
+
 async function getFilter() {
-  const layouts = await adminApi.api.getTemplateEmailLayoutAll().then(res => res.data)
-  const filters = [
-    { key: "emailLayoutIds", label: "emailContentTemplate_layoutUsed", type: "string",
-        options: layouts?.map(item => ({
-          value: item.id,
-          label: item.name
-        })) }
-  ]
-  ResponsiveFilterRef.value.init(filters)
+    const layouts = await adminApi.api.getTemplateEmailLayoutAll().then(res => res.data)
+    const filters = [
+        {
+            key: "emailLayoutIds", label: "emailContentTemplate_layoutUsed", type: "string",
+            options: layouts?.map(item => ({
+                value: item.id,
+                label: item.name
+            }))
+        }
+    ]
+    ResponsiveFilterRef.value.init(filters)
 }
 
 function handleEditEmailLayout() {
-  routerProvider?.navigateTo(routeLayoutTemplatePage(), false)
+    routerProvider?.navigateTo(routeLayoutTemplatePage(), false)
 }
+
 onMounted(() => {
-  getFilter()
+    getFilter()
 })
 </script>
 <style lang="scss" scoped>
 :deep .el-input {
-  width: 200px;
+    width: 200px;
 }
+
 .responsive-container {
-  overflow: hidden;
-  width: 70%;
+    overflow: hidden;
+    width: 70%;
 }
+
 :deep .vxe-buttons--wrapper {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 </style>

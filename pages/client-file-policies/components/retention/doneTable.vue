@@ -11,7 +11,6 @@
 </template>
 <script lang="ts" setup>
 import { clientApi } from "api";
-import dayjs from "dayjs";
 import { MenuRouterKey } from "#imports";
 const routerProvider = inject(MenuRouterKey);
 let extraParams = {};
@@ -53,9 +52,8 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: "confirmAt",
       title: "tableHeader_confirmAt",
       formatter({ cellValue, row }: any) {
-        const format = userDisplayTimeSetting();
         const date = row.applyApprovedDate ? row.applyApprovedDate : row.modifiedDate
-        return dayjs(date).format(format);
+        return formatDate(date)
       },
     },
   ],
