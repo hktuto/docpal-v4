@@ -1,24 +1,28 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dashboard.setting')"
-    class="scroll-dialog"
-    append-to-body 
-    :close-on-click-modal="false"
-    @close="handleClose"
+    <el-dialog v-model="state.visible" :title="$t('dashboard_create')"
+               class="scroll-dialog"
+               append-to-body
+               :close-on-click-modal="false"
+               @close="handleClose"
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <div class="footer-grid">
-            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-        </div>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <div class="footer-grid">
+                <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { publicApi } from 'api'
+import {publicApi} from 'api'
 import formJson from './dialog.vform.json'
+import {ElMessage} from "element-plus";
+
 const emits = defineEmits([
     'refresh', 'add'
 ])
+const {t} = useI18n()
 const state = reactive({
     loading: false,
     visible: false,
@@ -26,7 +30,8 @@ const state = reactive({
     edit: false
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     const _data = {
@@ -34,15 +39,16 @@ async function handleSubmit () {
         access: data.access.join(',')
     }
     try {
-        if(state.edit) {
+        if (state.edit) {
             const res = await publicApi.api.putUserDashboard({
                 ...state.setting,
                 ..._data
             })
+            ElMessage.success(t('dashboard_createSuccessMsg', {name: _data.name}))
             emits('refresh')
-        }
-        else {
+        } else {
             const res = await publicApi.api.postUserDashboard(_data)
+            ElMessage.success(t('dashboard_createSuccessMsg', {name: _data.name}))
             // router.push(`/data-dashboard/${res.id}`)
             emits('add', res.data)
         }
@@ -53,10 +59,11 @@ async function handleSubmit () {
         state.loading = false
     }
 }
-function handleOpen(setting?:any) {
+
+function handleOpen(setting?: any) {
     state.visible = true
     state.edit = false
-    if(!setting) {
+    if (!setting) {
         setTimeout(async () => {
             FormRendererRef.value.vFormRenderRef.resetForm()
         })
@@ -66,7 +73,7 @@ function handleOpen(setting?:any) {
         const _setting = deepCopy(setting)
         state.edit = _setting.edit = true
         state.setting = _setting
-        if(_setting.access) _setting.access = _setting.access.split(',')
+        if (_setting.access) _setting.access = _setting.access.split(',')
         else _setting.access = []
         await FormRendererRef.value.vFormRenderRef.setFormData({
             ..._setting
@@ -74,7 +81,8 @@ function handleOpen(setting?:any) {
         state.loading = false
     })
 }
-defineExpose({ handleOpen })
+
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 
