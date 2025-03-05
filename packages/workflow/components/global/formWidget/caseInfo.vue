@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 
-const {disabled, formData, options} = defineProps<{
+const {disabled, formData, options = {
+    data:{
+        caseIdField:'caseId',
+    }
+}} = defineProps<{
     disabled: boolean,
     formData: any
     options?: Object,

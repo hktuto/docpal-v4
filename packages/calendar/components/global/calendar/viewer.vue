@@ -33,7 +33,6 @@ const {options = {
     defaultLocation: "",
     defaultCategory: "",
     view: "week",
-    
 }} = defineProps<{
     options?: CalendarOptions;
 }>();
@@ -75,6 +74,7 @@ async function setDefaultFilter(){
     if(options.defaultCategory){
         filter.value.category = options.defaultCategory
     }
+
 }
 
 // dialog ref
@@ -117,13 +117,22 @@ function convertSiteEventToCalendarEvent(event:SiteEvent):CalendarEvent {
         end: dayjs(event.endTime).format('YYYY-MM-DD HH:mm'),
         title: event.title || event.eventName,
         description: event.eventName,
-        detail: event
+        detail: event,
+        _options:{
+            disableResize: true,
+            disableDND: true,
+        }
     }
 }
 function addEvent(newForm){
     const ev= convertSiteEventToCalendarEvent(newForm)
     console.log("addEvent", ev)
+    ev._options = {
+        disableResize: true,
+        disableDND: false,
+    }
     calendarApp.eventsService.add(ev)
+    
 }
 const filter = ref({
     category:"",
@@ -165,6 +174,41 @@ async function getCurrentRangeEvent(){
     }).map(convertSiteEventToCalendarEvent)
     // filter events
     emits('filter-change', filter.value)
+    events.push({
+        id: new Date().valueOf().toString(),
+        start: dayjs().format('YYYY-MM-DD'),
+        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
+        title: 'New Event',
+        description: 'New Event',
+    })
+    events.push({
+        id: new Date().valueOf().toString(),
+        start: dayjs().format('YYYY-MM-DD'),
+        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
+        title: 'New Event',
+        description: 'New Event',
+    })
+    events.push({
+        id: new Date().valueOf().toString(),
+        start: dayjs().format('YYYY-MM-DD'),
+        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
+        title: 'New Event',
+        description: 'New Event',
+    })
+    events.push({
+        id: new Date().valueOf().toString(),
+        start: dayjs().format('YYYY-MM-DD'),
+        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
+        title: 'New Event',
+        description: 'New Event',
+    })
+    events.push({
+        id: new Date().valueOf().toString(),
+        start: dayjs().format('YYYY-MM-DD'),
+        end: dayjs().add(1, 'hour').add(1, 'day').format('YYYY-MM-DD'),
+        title: 'David Annual Leave',
+        description: 'New Event',
+    })
     calendarApp.eventsService.set(events);
 }
 
@@ -200,9 +244,9 @@ function setupCalendat() {
         calendarControls,
         eventsServicePlugin
     ]
+    const slot = setting.value.basic.allow_custom_slot ? null : setting.value.basic.slot
+    plugins.push(createDragAndDropPlugin(slot))
     if(options.editable){
-        const slot = setting.value.basic.allow_custom_slot ? null : setting.value.basic.slot
-        plugins.push(createDragAndDropPlugin(slot))
         if(setting.value.basic.allow_custom_slot){
             plugins.push(createResizePlugin())
         }

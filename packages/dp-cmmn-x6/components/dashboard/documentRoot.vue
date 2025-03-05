@@ -7,7 +7,9 @@ const props = withDefaults(
     hideSetting?: boolean;
   }>(),
   {
-    setting: {},
+    setting: {
+      home:'rootId'
+    },
     hideSetting: false,
   }
 );
