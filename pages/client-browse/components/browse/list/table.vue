@@ -406,14 +406,12 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     },
     optionalEvent: {
         cellMouseenter: ({row, column, rowIndex}) => {
-            if(column.name === 'name') {
+            if(column.field === 'name') {
                 emitBus(EventType.FILE_PREVIEW_OPEN, row)
             }
         },
         cellMouseleave: ({row, column, rowIndex}) => {
-            if(column.name === 'name') {
-                emitBus(EventType.FILE_PREVIEW_CLOSE, row)
-            }
+            emitBus(EventType.FILE_PREVIEW_CLOSE, row)
         },
     }
 })
