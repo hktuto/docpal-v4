@@ -70,7 +70,7 @@ onMounted(() => {
   getFormJson()
 })
 const browseTitle = computed(() => {
-  return state.detail?.name || ''
+  return state.detail?.name || 'Docpal'
 })
 useHead({
   title: browseTitle,
