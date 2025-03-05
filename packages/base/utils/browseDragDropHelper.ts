@@ -54,7 +54,7 @@ const tableSelectedMethod = (element:HTMLElement, selected = true) => {
 }
 
 export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<any>){
-    console.log("createDropableFile", row, element)
+
     const dragData = {
         key: 'any',
         type: 'browseFile',
@@ -100,15 +100,12 @@ export function createDropableFile(element:HTMLElement, row:any, tableRef: Ref<a
                                 count : dragData.data.length
                             }) : dragData.data.name}
                         </div>`;
-                    console.log("render", container, dragData)
                 },
             })
         },
         onDragStart({source}){
-            console.log("onDragStart", source)
             emitBus(EventType.FILE_PREVIEW_CLOSE)
             dragRowClassChange(source, true)
-            // console.log('item drag start', args)
         },
         onDrop(){
             resetAllClass(tableRef)
@@ -225,10 +222,7 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                     return
                 }
                 const { $i18n } = useNuxtApp()
-                // const files = await getFiles({ source });
-                // console.log("external onDrop", files)
                 const files = await addDataTransfer(source)
-                console.log("external onDrop", files)
                 if(files.length === 0) {
                     ElMessage.error($i18n.t('dpTip.uploadEmptyFile'))
                     return
@@ -282,7 +276,6 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                             <i class="lucide:folder-open" class="normal" />
                                 ${dragData.data.name}
                             </div>`;
-                        console.log("render", container, dragData)
                     },
                 })
             },
@@ -317,7 +310,6 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                 element.classList.remove('dropOver')
                 const { $i18n } = useNuxtApp()
                 const dropItemDetail = await clientApi.api.postNuxeoDocument({idOrPath: row.id})
-                console.log("drop on target", dropItemDetail.data)
                 if(!dropItemDetail.data || !dropItemDetail.data.parentRef) return
                 ElMessageBox.confirm(
                     $i18n.t('browse.confirmMoveFile',{
@@ -335,7 +327,6 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                         path: row.path,
                         titles: copyItems.map(item => item.name)
                       }) as any
-                    console.log("hasDuplicateTitle", hasDuplicateTitle)
                     if (hasDuplicateTitle) {
                         ElMessage({
                             message: $i18n.t('dpTip_duplicateFileName') as string,
@@ -345,7 +336,6 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                     }
                     
                     for(const item of copyItems) {
-                        console.log(item)
                         const param = [ 
                             { idOrPath: item.path }, 
                             { idOrPath: row.path}
@@ -365,7 +355,6 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                             await clientApi.api.postNuxeoDocumentMove(param)
                             const copyItemDetail = await clientApi.api.postNuxeoDocument({idOrPath: item.id})
                             if(copyItemDetail.data) {
-                                console.log("copyItemDetail", copyItemDetail.data)
                                 emitBus(EventType.FILE_NEED_REFRESH, {
                                     relatedIdOrPath: copyItemDetail.data.parentRef,
                                 })
@@ -399,10 +388,7 @@ export function createDropableFolder(element:HTMLElement,row:any, tableRef: Ref<
                     return
                 }
                 const { $i18n } = useNuxtApp()
-                // const files = await getFiles({ source });
-                // console.log("external onDrop", files)
                 const files = await addDataTransfer(source)
-                console.log("external onDrop", files)
                 if(files.length === 0) {
                     ElMessage.error($i18n.t('dpTip.uploadEmptyFile'))
                     return
@@ -451,7 +437,6 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
             },
             onDrop: async(args) => {
                 // error handle
-                console.log("drop on main frame", args)
                 if(args.location.current.dropTargets[0].element !== element) {
                     return
                 }
@@ -476,7 +461,6 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
                         path: docDetail.value.path,
                         titles: copyItems.map(item => item.name)
                       }) as any
-                    console.log("hasDuplicateTitle", hasDuplicateTitle)
                     if (hasDuplicateTitle) {
                         ElMessage({
                             message: $i18n.t('dpTip_duplicateFileName') as string,
@@ -486,7 +470,6 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
                     }
                     
                     for(const item of copyItems) {
-                        console.log(item)
                         const param = [ 
                             { idOrPath: item.path }, 
                             { idOrPath: docDetail.value.path}
@@ -506,7 +489,6 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
                             await clientApi.api.postNuxeoDocumentMove(param)
                             const copyItemDetail = await clientApi.api.postNuxeoDocument({idOrPath: item.id})
                             if(copyItemDetail.data) {
-                                console.log("copyItemDetail", copyItemDetail.data)
                                 emitBus(EventType.FILE_NEED_REFRESH, {
                                     relatedIdOrPath: copyItemDetail.data.parentRef,
                                 })
@@ -539,10 +521,7 @@ export function createRootDropZone(tableRef:Ref<any>, docDetail:Ref<any>){
                     return
                 }
                 const { $i18n } = useNuxtApp()
-                // const files = await getFiles({ source });
-                // console.log("external onDrop", files)
                 const files = await addDataTransfer(source)
-                console.log("external onDrop", files)
                 if(files.length === 0) {
                     ElMessage.error($i18n.t('dpTip.uploadEmptyFile'))
                     return
