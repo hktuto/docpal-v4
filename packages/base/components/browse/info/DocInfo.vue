@@ -4,7 +4,7 @@
         <div class="infoSection">
             <div class="infoTitle">{{$t('info_type')}}</div>
             <div class="infoContent " v-if="info.type" >{{ $t(info.type) }}
-                <BrowseActionsChangeDocType v-if="AllowTo({feature:'ReadWrite', permission })" class="el-icon--right" :doc="info" @success="$emit('refresh')"/>
+                <BrowseActionsChangeDocType v-if="AllowTo({feature:'ReadWrite', permission })" class="el-icon--right" :doc="doc" @success="$emit('refresh')"/>
             </div>
         </div>
         <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
