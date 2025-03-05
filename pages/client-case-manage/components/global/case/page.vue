@@ -23,14 +23,14 @@ const {
   columns: [
     { field: "name", title: "search.name" },
     {
-      field: "created_date",
+      field: "createdDate",
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       },
     },
     {
-      field: "modified_date",
+      field: "modifiedDate",
       title: "table_modifiedDate",
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
