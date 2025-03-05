@@ -69,6 +69,13 @@ async function handleSubmit() {
 onMounted(() => {
   getFormJson()
 })
+const browseTitle = computed(() => {
+  return state.detail?.name || 'Docpal'
+})
+useHead({
+  title: browseTitle,
+  // titleTemplate: '%s ❤️ 我的网站' // 覆盖全局模板
+})
 </script>
 <style lang="scss" scoped>
 .public-form {

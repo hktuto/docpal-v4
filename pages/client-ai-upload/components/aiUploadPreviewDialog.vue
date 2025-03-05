@@ -34,7 +34,7 @@ function handleOpen(row) {
     init(row.uploadId)
 }
 async function init(id) {
-    let docList = await clientApi.api.postNuxeoDocumentQueryuploadfiledetaildtolistDeprecate({userId: userId.value, uploadId:id}).then(res => res.data)
+    let docList = await clientApi.api.postNuxeoDocumentQueryuploadfiledetaildtolist({userId: userId.value, uploadId:id}).then(res => res.data)
     docList = docList.map(item => ({
         ...item,
         isFolder: item.fileType === 'Folder'

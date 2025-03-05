@@ -1,16 +1,17 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('docType_createDocumentType')"
-    :close-on-click-modal="false"
+    <el-dialog v-model="state.visible" :title="$t('bulkImport_create')"
+               :close-on-click-modal="false"
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit()">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api';
-import formJson from './addDocTypeForm.vfom.json' 
+import {adminApi} from 'api';
+import formJson from './addDocTypeForm.vfom.json'
+import {ElMessage} from "element-plus";
 
 const {metaSettingData} = defineProps<{
     metaSettingData: any
@@ -19,10 +20,10 @@ const exitList = ref()
 const emits = defineEmits([
     'refresh'
 ])
-const { t } = useI18n()
+const {t} = useI18n()
 const state = reactive<{
     loading: boolean,
-    visible: boolean,  
+    visible: boolean,
     allDocTypeList: any[]
 }>({
     loading: false,
@@ -30,7 +31,8 @@ const state = reactive<{
     allDocTypeList: [],
 })
 const FormRendererRef = ref()
-async function handleSubmit () {
+
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
@@ -42,7 +44,8 @@ async function handleSubmit () {
             isFolder: getIsFolder(data.type),
             related: []
         }
-        await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
+        // await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
+        ElMessage.success(t('bulkImport_createdSuccess', {name: data.type}))
         // await AddMetaSettingApi(param)
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
@@ -51,7 +54,8 @@ async function handleSubmit () {
     }
     state.loading = false
 }
-function getIsFolder (type: string) {
+
+function getIsFolder(type: string) {
     try {
         const data = state.allDocTypeList.find(item => item.name === type)
         return data.isFolder
@@ -59,7 +63,8 @@ function getIsFolder (type: string) {
         return false
     }
 }
-function handleOpen(exitList:any) {
+
+function handleOpen(exitList: any) {
     state.visible = true
 
     nextTick(() => {
@@ -67,13 +72,15 @@ function handleOpen(exitList:any) {
         handleOptions(exitList)
     })
 }
-async function handleOptions (exitList:any) {
+
+async function handleOptions(exitList: any) {
     const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('type')
     const options = listFilter()
     idRef.loadOptions(options)
+
     function listFilter() {
         return state.allDocTypeList.reduce((prev, item) => {
-            const index = exitList.findIndex((exitItem:any) => exitItem.documentType === item.name)
+            const index = exitList.findIndex((exitItem: any) => exitItem.documentType === item.name)
             if (index === -1) {
                 item.value = item.name
                 item.label = t(item.name)
@@ -83,11 +90,12 @@ async function handleOptions (exitList:any) {
         }, []);
     }
 }
-onMounted(async() => {
-    const { data }:any = await adminApi.api.getTypesActive()
-    state.allDocTypeList = data?.sort((a:any,b:any)=> (a.name.localeCompare(b.name) ))
+
+onMounted(async () => {
+    const {data}: any = await adminApi.api.getTypesActive()
+    state.allDocTypeList = data?.sort((a: any, b: any) => (a.name.localeCompare(b.name)))
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

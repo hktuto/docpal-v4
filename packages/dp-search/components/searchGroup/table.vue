@@ -25,8 +25,8 @@
                   </el-icon>
               </div>
               <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
-                  <div v-for="item in row.properties.summarys" class="summaryItem">
-                      [{{item.summaryKey}}]: <b>{{item.summaryValue}}</b>
+                  <div v-for="item in row.properties.summarys" class="summaryItem" :title="`${$t(item.summaryKey)}:${item.summaryValue}`">
+                      [{{$t(item.summaryKey)}}]: <b>{{item.summaryValue}}</b>
                   </div>
               </template>
           </div>
@@ -294,6 +294,8 @@ defineExpose({ initBar, initAgg, initSearch })
   margin-bottom: var(--app-space-xs);
   color: var(--app-grey-000);
   border-radius: 4px;
+  overflow: hidden;
+    text-overflow: ellipsis;
   b {
 
   }
