@@ -85,7 +85,6 @@ function openEditor(){
   routerProvider?.navigateTo(newItm)
 }
 const production = ref(false);
-
 async function init(){
   loading.value = true
     const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.caseTypeId) as any
@@ -99,10 +98,14 @@ async function init(){
     routerProvider?.updateTabName(props.name + ` - (${props.currentVersion})`)
 }
 onActivated(async()=> {
-  init()
+  await init()
 })
 
-
+onDeactivated(() => {
+  caseTypeInfo.value = {}
+  caseInfo.value = {}
+  production.value = false
+})
 
 
 provide(CaseManagementDetailProviderKey, {

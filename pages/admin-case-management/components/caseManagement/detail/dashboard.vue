@@ -57,6 +57,12 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     }
     if (props.currentVersion) params.versionNumber = props.currentVersion;
     if (props.caseDetailId) params.caseTypeId = props.caseDetailId;
+    if (!params.caseTypeId) return {
+      data: {
+        entryList: [],
+        totalSize: 0
+      }
+    }
     return await adminApi.api.postCaseDashboardPage({ ...params, ...state.extraParams });
   },
   remoteSort: true,
@@ -190,9 +196,6 @@ function handleFilterFormChange(formModel) {
   state.extraParams = formModel;
   reload();
 }
-onMounted(() => {
-  reload();
-});
 </script>
 <style lang="scss" scoped>
 :deep .el-card__body {
