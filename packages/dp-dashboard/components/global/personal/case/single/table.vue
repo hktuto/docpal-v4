@@ -16,7 +16,7 @@ type TableState = {
   columns: any;
   where: any[];
 };
-const caseEvents = ref([])
+const caseEvents = ref<any>([])
 const tableReady = ref(false);
 const instanceId = ref('')
 const caseDefinitionKey = ref('')
@@ -36,6 +36,7 @@ const {
     pageParams.orderBy = "created_date";
     return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams);
   },
+  columns: [],
   dblClickAction: ({ row }) => {
     routerProvider?.navigateTo(
       caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
@@ -64,7 +65,7 @@ async function handleTask(actionItem: any, row?: any) {
     emits('refresh')
   }
 }
-async function reorderColumn(fields) {
+async function reorderColumn(fields: any) {
   try {
     const columns = [
       { field: "case_id", title: "caseManagement.name", width: 200 },
@@ -94,7 +95,7 @@ async function reorderColumn(fields) {
         },
       },
     ];
-    fields.forEach((row) => {
+    fields.forEach((row: any) => {
       columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
     });
     // const actionColumn = tableConfig.columns.find(

@@ -6,7 +6,7 @@
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
-    "dev": "nuxt dev --dotenv ../../env/.env.dev.client",
+    "dev": "nuxt dev --dotenv ../../env/.env.app2.client",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare"
