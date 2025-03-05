@@ -408,6 +408,8 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         cellMouseenter: ({row, column, rowIndex}) => {
             if(column.field === 'name') {
                 emitBus(EventType.FILE_PREVIEW_OPEN, row)
+            }else{
+                emitBus(EventType.FILE_PREVIEW_CLOSE, row)
             }
         },
         cellMouseleave: ({row, column, rowIndex}) => {
