@@ -8,7 +8,6 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from "api";
-import dayjs from "dayjs";
 let extraParams: any = {};
 const {
   tableConfig,
@@ -28,8 +27,7 @@ const {
       title: "dpTable_createdDate", 
       fixed: "left",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     { field: "responseMessage", title: "dpTable_message" },

@@ -7,7 +7,7 @@
 </template>
 <script lang="ts" setup>
 import { clientApi } from "api";
-import dayjs from "dayjs";
+
 import { createUploadRequestDetailParams, createBrowseListPageParams } from "../../../utils/browseMenuHelper";
 import { MenuRouterKey } from "#imports";
 const routerProvider = inject(MenuRouterKey);
@@ -49,8 +49,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: "createdDate",
       title: "dpTable_createdDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
   ],

@@ -51,7 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import dayjs from "dayjs";
 import {clientApi} from 'api'
 import {ElMessageBox} from "element-plus";
 import {createBrowseListPageParams, createDetailPageParams} from "~/utils/browseMenuHelper";
@@ -224,8 +223,7 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
             field: 'modifiedDate',
             title: 'table_modifiedDate',
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
         {field: 'type', title: 'table_type',},

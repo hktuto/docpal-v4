@@ -41,7 +41,6 @@
 import {Select, CloseBold} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {adminApi} from "api";
-import dayjs from "dayjs";
 import {routeRetentionDetail} from '~/utils/routerHelper';
 
 const routerProvider = inject(MenuRouterKey)
@@ -79,8 +78,7 @@ const {
             field: "createdDate",
             title: "filePolicies_CreationDate",
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             },
         },
         {

@@ -1,7 +1,6 @@
 <script lang="tsx" setup>
 import { emitBus, EventType } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
-import dayjs from "dayjs";
 
 const listProvider = inject(BrowseListProviderKey);
 const routerProvider = inject(MenuRouterKey)
@@ -89,24 +88,21 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             field: 'modifiedDate',
             title: 'table_modifiedDate',
             formatter: ({ cellValue }:any) => {
-                const format = useDisplayTimeFormat()
-                return dayjs(cellValue).format(format.value)
+                return formatDate(cellValue)
             },
         },
         {
             field: 'createdDate',
             title: 'dpTable_createdDate',
             formatter: ({ cellValue }:any) => {
-                const format = useDisplayTimeFormat()
-                return dayjs(cellValue).format(format.value)
+                return formatDate(cellValue)
             },
         },
         {
             field: 'fileModifiedDate',
             title: 'fileModifiedDate_label',
             formatter: ({ cellValue }:any) => {
-                const format = useDisplayTimeFormat()
-                return dayjs(cellValue).format(format.value)
+                return formatDate(cellValue)
             },
         },
         {

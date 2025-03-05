@@ -96,7 +96,6 @@
 
 <script lang="ts" setup>
 import { adminApi } from "api";
-import dayjs from "dayjs";
 import type { MTColumnInfo } from "api/src/generate/admin";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { onActivated } from "vue";
@@ -132,16 +131,14 @@ const baseTableColumns: any = [
       field: "created_date",
       title: "workflow_createDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     {
       field: "modified_date",
       title: "tableHeader_modifiedDate",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
     { field: "created_by", title: "role.creator" },
@@ -344,8 +341,7 @@ async function initTableColumns(fields: any) {
       };
       if (item.dataType === "timestamp") {
         item.formatter = ({ cellValue }: any) => {
-          const format = userDisplayTimeSetting();
-          return dayjs(cellValue).format(format);
+          return formatDate(cellValue)
         };
       }
       if (item.relationTable) {

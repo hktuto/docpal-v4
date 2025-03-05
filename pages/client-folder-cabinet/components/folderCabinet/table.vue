@@ -22,7 +22,6 @@
     <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="query({})"/>
 </template>
 <script lang="ts" setup>
-import dayjs from "dayjs";
 import type { VxeGridPropTypes  } from 'vxe-table'
 
 import { ElMessageBox } from "element-plus";
@@ -47,16 +46,14 @@ const basicColumns:VxeGridPropTypes.Columns = [
     field: "modifiedDate",
     title: "tableHeader_modifiedDate",
     formatter({ cellValue }: any) {
-      const format = userDisplayTimeSetting();
-      return dayjs(cellValue).format(format);
+      return formatDate(cellValue)
     },
   },
   {
     field: "deadline",
     title: "tableHeader.deadline",
     formatter({ cellValue }: any) {
-      const format = userDisplayTimeSetting();
-      return dayjs(cellValue).format(format);
+      return formatDate(cellValue)
     },
   },
   {

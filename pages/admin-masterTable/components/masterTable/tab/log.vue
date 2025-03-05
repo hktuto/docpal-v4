@@ -36,8 +36,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         },
         { field: 'eventDate', title: 'asterTable.eventDate',
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
         { field: 'comment', title: 'docType_description',  }

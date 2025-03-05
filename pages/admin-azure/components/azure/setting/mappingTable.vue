@@ -44,14 +44,12 @@ const { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
         { field:'scanType', title: 'azureSettingMapping.scanType', },
         { field: 'createdDate', title: 'dpTable_createdDate', sortable: true,
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
         { field: 'modifiedDate', title: 'table_modifiedDate', sortable: true,
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
         { field:'createdBy', title: 'role.creator', },

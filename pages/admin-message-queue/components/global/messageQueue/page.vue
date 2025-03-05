@@ -18,7 +18,6 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { adminApi } from "api";
-import dayjs from "dayjs";
 const { t } = useI18n()
 let extraParams: any = {};
 const {
@@ -52,8 +51,7 @@ const {
       field: "lastUpdateDate",
       title: "log_jobsStatus_date",
       formatter({ cellValue }: any) {
-        const format = userDisplayTimeSetting();
-        return dayjs(cellValue).format(format);
+        return formatDate(cellValue)
       },
     },
   ],

@@ -8,7 +8,6 @@
 <script lang="ts" setup>
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {adminApi} from "api";
-import dayjs from "dayjs";
 
 const {t} = useI18n();
 let extraParams: any = {};
@@ -44,16 +43,14 @@ const {
             field: "created",
             title: "tableHeader_creationDate",
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             },
         },
         {
             field: "expiredDate",
             title: "tableHeader_dueDate",
             formatter({cellValue}: any) {
-                const format = userDisplayTimeSetting();
-                return dayjs(cellValue).format(format);
+                return formatDate(cellValue)
             },
         },
     ],

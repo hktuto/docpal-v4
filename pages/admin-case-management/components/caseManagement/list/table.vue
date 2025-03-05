@@ -41,8 +41,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
             title: 'workflow_createDate',
             sortable: true,
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
         {
@@ -50,8 +49,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
             title: 'table_modifiedDate',
             sortable: true,
             formatter ({ cellValue }:any) {
-                const format = userDisplayTimeSetting()
-                return dayjs(cellValue).format(format)
+                return formatDate(cellValue)
             }
         },
         {
