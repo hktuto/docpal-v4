@@ -386,6 +386,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             showLine: true,
             hasChildField: 'isFolder',
             loadMethod: async (params) => {
+                console.log("loadMethod", params)
                 const entry = await loadAllChildren([], params.row.path)
                 return entry.sort(sortEntry)
             }

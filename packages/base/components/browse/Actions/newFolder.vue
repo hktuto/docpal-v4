@@ -34,7 +34,7 @@ const props = defineProps<{
     selected?: any[]
 }>()
 const emits = defineEmits(['success'])
-const state = reactive({
+const state = reactive<any>({
     loading: false,
     docPath: '',
     doc: {},
@@ -82,6 +82,20 @@ async function handleSubmit () {
             relatedIdOrPath: newDoc.parentRef,
             highlightIdOrPath:  newDoc.id
         })
+        // check if state.doc id Folder , if so , need to refresh folder and folder parent.
+        if(state.doc.isFolder) {
+            let parentRef = state.doc.parentRef
+            if(!parentRef){
+                // get document detail
+                const {data:parentDoc} = await clientApi.api.postNuxeoDocument({idOrPath: state.doc.id}) as any
+                parentRef = parentDoc.parentRef
+            }
+            emitBus(EventType.FILE_NEED_REFRESH, {
+                relatedIdOrPath: parentRef,
+                highlightIdOrPath:  newDoc.id
+            })
+        }
+        
         // emits('success', state.doc)
         state.loading = false
     } catch (error) {
