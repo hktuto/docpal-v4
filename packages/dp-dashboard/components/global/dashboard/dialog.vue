@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="state.visible" :title="$t('dashboard_create')"
+    <el-dialog v-model="state.visible" :title="title"
                class="scroll-dialog"
                append-to-body
                :close-on-click-modal="false"
@@ -44,7 +44,7 @@ async function handleSubmit() {
                 ...state.setting,
                 ..._data
             })
-            ElMessage.success(t('dashboard_createSuccessMsg', {name: _data.name}))
+            ElMessage.success(t('dashboard_updatedSuccessMsg', {name: _data.name}))
             emits('refresh')
         } else {
             const res = await publicApi.api.postUserDashboard(_data)
@@ -60,15 +60,19 @@ async function handleSubmit() {
     }
 }
 
+let title = t('dashboard_create');
+
 function handleOpen(setting?: any) {
     state.visible = true
     state.edit = false
     if (!setting) {
+        title = t('dashboard_create');
         setTimeout(async () => {
             FormRendererRef.value.vFormRenderRef.resetForm()
         })
         return
     }
+    title = t('dashboard_edit');
     setTimeout(async () => {
         const _setting = deepCopy(setting)
         state.edit = _setting.edit = true
