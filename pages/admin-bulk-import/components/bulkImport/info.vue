@@ -2,7 +2,7 @@
 <el-card>
     <template #header><div>{{$t('common_info')}}</div></template>
     <div class="flexContent" v-if="docType">
-        <div>{{$t('tableHeader_name')}}</div>
+        <div>{{$t('bulkImport_infoName')}}</div>
         <div class="ellipsis" :title="docType.name">{{docType.name}}</div>
     </div>
     <div class="flexContent">
@@ -23,7 +23,7 @@ const {docType} = defineProps<{
 <style lang="scss" scoped>
 .flexContent {
   display: grid;
-  grid-template-columns: 5rem 1fr;
+  grid-template-columns: 10rem 1fr;
   column-gap: 0.5rem;
   line-height: 2rem;
   div:first-of-type {
