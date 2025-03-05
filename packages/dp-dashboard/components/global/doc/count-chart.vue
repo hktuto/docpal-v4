@@ -151,7 +151,7 @@ function resize() {
     async function getData(documentType: string) {
         try {
             if(!state.initData || state.initData.length === 0) {
-                const res = await publicApi.api.postDashboardDocumenttypeofcountbyrangeDeprecate({})
+                const res = await publicApi.api.postDashboardDocumenttypeofcountbyrange({})
                 state.initData = res
             }
             let others = 0
