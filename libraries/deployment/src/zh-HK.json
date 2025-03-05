@@ -542,11 +542,17 @@
     "workflowListPlaceHolder": "請新增需要顯示的工作流程"
   },
   "dashboard_accessUserGroup": "dashboard_accessUserGroup",
+  "dashboard_content": "dashboard_info",
   "dashboard_create": "dashboard_create",
   "dashboard_createAccessUserGroup": "dashboard_createAccessUserGroup",
   "dashboard_createSuccessMsg": "dashboard_createSuccessMsg",
+  "dashboard_delete": "dashboard_delete",
+  "dashboard_deleteMsg": "dashboard_deleteMsg",
+  "dashboard_deleteSuccessMsg": "dashboard_deleteSuccessMsg",
+  "dashboard_edit": "dashboard_edit",
   "dashboard_filter": "dashboard_filter",
   "dashboard_name": "儀表板名稱",
+  "dashboard_updatedSuccessMsg": "dashboard_updatedSuccessMsg",
   "dataField": {
     "api": "數據來源",
     "apiField": "字段名稱",
