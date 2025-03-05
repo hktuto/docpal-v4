@@ -378,8 +378,8 @@ importers:
         specifier: ^3.1.8
         version: 3.1.8(vue@3.5.6(typescript@5.8.2))
       v-form:
-        specifier: file:../dp-form/dist/v-form-designer-3.1.7.tar.gz
-        version: file:packages/dp-form/dist/v-form-designer-3.1.7.tar.gz(ace-builds@1.39.0)(typescript@5.8.2)
+        specifier: file:../dp-form/dist/v-form-designer-3.2.2.tar.gz
+        version: file:packages/dp-form/dist/v-form-designer-3.2.2.tar.gz(ace-builds@1.39.0)(typescript@5.8.2)
       v-viewer:
         specifier: ^3.0.21
         version: 3.0.21(viewerjs@1.11.7)(vue@3.5.6(typescript@5.8.2))
@@ -9580,8 +9580,8 @@ packages:
     resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
     engines: {node: '>= 4'}
 
-  v-form@file:packages/dp-form/dist/v-form-designer-3.1.7.tar.gz:
-    resolution: {integrity: sha512-UgkJRUiulb8M/6tdmnu++vYZdCikxLEhV00q5855xkl1V+izbK42oLQA5VzsmmTIyOmZr+gi2Yt5esaUXaJ32w==, tarball: file:packages/dp-form/dist/v-form-designer-3.1.7.tar.gz}
+  v-form@file:packages/dp-form/dist/v-form-designer-3.2.2.tar.gz:
+    resolution: {integrity: sha512-UgkJRUiulb8M/6tdmnu++vYZdCikxLEhV00q5855xkl1V+izbK42oLQA5VzsmmTIyOmZr+gi2Yt5esaUXaJ32w==, tarball: file:packages/dp-form/dist/v-form-designer-3.2.2.tar.gz}
     version: 3.1.7
 
   v-viewer@3.0.21:
@@ -19034,7 +19034,7 @@ snapshots:
 
   utility-types@3.11.0: {}
 
-  v-form@file:packages/dp-form/dist/v-form-designer-3.1.7.tar.gz(ace-builds@1.39.0)(typescript@5.8.2):
+  v-form@file:packages/dp-form/dist/v-form-designer-3.2.2.tar.gz(ace-builds@1.39.0)(typescript@5.8.2):
     dependencies:
       '@element-plus/icons-vue': 0.2.7(vue@3.5.13(typescript@5.8.2))
       '@wangeditor/editor': 5.1.23
