@@ -20,7 +20,7 @@ export function createBrowseListPageParams(params:BrowseListPageParams){
 export type BrowseDetailPageParams = {
     idOrPath: string,
     docName: string,
-    showHeaderAction: boolean,
+    showHeaderAction?: boolean,
     [key:string]: any
 }
 export function createDetailPageParams(params:BrowseDetailPageParams){
