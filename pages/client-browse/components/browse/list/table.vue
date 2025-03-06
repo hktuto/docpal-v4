@@ -138,7 +138,8 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                 code: 'docActionAddFolder',
                 name: 'filePopover_newFolder',
                 action: ({row}) => {
-                    const ev = new CustomEvent('docActionAddFolder', {detail: row})
+                    const doc = row || listProvider.docDetail.value
+                    const ev = new CustomEvent('docActionAddFolder', {detail: doc})
                     document.dispatchEvent(ev)
                 }
             },
@@ -537,7 +538,9 @@ watch(() => listProvider.idOrPath, () => {
 defineExpose({
     selectAll,
     cleanSelected,
-    reload
+    reload,
+    tableRef,
+    loadAllChildren
 })
 
 </script>
