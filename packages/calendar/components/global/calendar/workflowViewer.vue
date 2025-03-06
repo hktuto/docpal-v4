@@ -1,7 +1,7 @@
 
 <script lang="ts" setup>
 
-const {disabled, formData, options, taskDetail} = defineProps<{
+const {disabled, formData, options={editable:true,allowCreate:true}, taskDetail} = defineProps<{
     disabled: boolean,
     formData: any
     options?: Object,
@@ -35,9 +35,7 @@ defineExpose({ getFormData })
 </script>
 
 <template>
-    {{ options }}
-    {{ taskDetail }}
-    {{ formData }}
+    {{options}}
     <CalendarViewer ref="calendarViewerRef" :options="options" @newEvent="popNewEvent" @filter-change="filterChange"/>
     <CalendarNewEventForm ref="newEventFromRef" @submit="createEvent"/>
 </template>

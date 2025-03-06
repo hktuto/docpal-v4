@@ -138,6 +138,8 @@ bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
         pageId: docDetail.value.id,
         pageName: docDetail.value.name
     } )
+    // check id relatedIdOrPath is chidlren of current page
+    // TODO: check if highlightIdOrPath is chidlren of current page
     if(relatedIdOrPath === docDetail.value.id) {
         handleRefresh()
         

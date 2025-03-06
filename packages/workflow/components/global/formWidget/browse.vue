@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 
 import { clientApi } from 'api'
-const home = ref({secondId:''})
-const idOrPath = ref('/')
+const home = ref({secondId:'/default-domain/sean test'})
+const idOrPath = ref('/default-domain/sean test')
 
 const tableRef = ref()
 function handleRefresh(){
