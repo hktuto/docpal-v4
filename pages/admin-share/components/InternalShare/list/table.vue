@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import dayjs from 'dayjs';
 const listProvider = inject(InternalShareProviderKey)
 if(!listProvider) {
     throw new Error('InternalShareListProviderKey not found')

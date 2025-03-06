@@ -12,7 +12,6 @@
 
 <script lang="ts" setup>
 import { adminApi } from 'api'
-import dayjs from 'dayjs'
 import {useI18n} from '#imports'
 
 const props = defineProps(['tableName'])

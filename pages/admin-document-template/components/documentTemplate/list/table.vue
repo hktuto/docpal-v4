@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { DocumentTemplateProviderKey } from '#imports';
-import dayjs from 'dayjs'
 
 const listProvider = inject(DocumentTemplateProviderKey)
 if(!listProvider) {

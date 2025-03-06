@@ -1,6 +1,5 @@
 
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import { clientApi } from 'api'
 
 const tableData = defineModel<any>('tableData', { required: true })

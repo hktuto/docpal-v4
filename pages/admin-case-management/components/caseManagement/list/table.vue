@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-
-import dayjs from 'dayjs'
 import type {VxeGridInstance, VxeGridListeners} from 'vxe-table'
 const listProvider = inject(CaseManagementListProviderKey)
 if(!listProvider) {

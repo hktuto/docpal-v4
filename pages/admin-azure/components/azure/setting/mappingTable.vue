@@ -20,7 +20,6 @@
 </template>
 
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 const azureProvider = inject(AzureProviderKey)
 import { ElMessage, ElMessageBox } from 'element-plus'
 const props = defineProps(['tableData'])
