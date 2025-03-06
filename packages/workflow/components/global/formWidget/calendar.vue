@@ -14,7 +14,6 @@ const calendarOptions = ref<CalendarOptions>({
 })
 
 function getInfo(){
-    console.log("taskDetail", taskDetail)
     // get options
     if(options.data) {
         calendarOptions.value = {
