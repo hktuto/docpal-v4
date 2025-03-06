@@ -22,7 +22,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     columns:  [
         {
             field:'name',
-            title: 'table_name',
+            title: 'caseManagement_name',
             sortable: true,
             fixed:'left',
         },
@@ -63,7 +63,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
             title: 'dpTable_status',
             sortable: true,
             formatter: ({ cellValue }:any) => {
-                return cellValue ? t('Enabled') : t('Disabled')
+                return cellValue ? t('actions.active') : t('actions.inactive')
             },
         },
     ],
@@ -71,21 +71,21 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
         [ 
             {
                 code:'edit_latest_version', 
-                name:"editLatest",
+                name:"caseManagement_editLatest",
                 action: ({row}) => listProvider.openLatestVersion(row),
             },
             {
                 code:'edit_production_version', 
-                name:"editProduction",
+                name:"caseManagement_editProduction",
                 action: ({row}) =>  listProvider.openProductionVersion(row)
             },{
                 code:'list_version', 
-                name:"listVersion",
+                name:"caseManagement_viewVersionHistory",
                 action:({row}) => listProvider.openVersion(row)
             },
             {
                 code:'save_as',
-                name:"Save As New Case",
+                name:"caseManagement_saveCaseTemplate",
                 action: ({row}) => listProvider.saveAsNewCase(row)
             }
             
