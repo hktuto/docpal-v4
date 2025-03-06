@@ -191,13 +191,12 @@ async function confimSaveNewFile(){
 
 
 }
-
-onDeactivated(() => {
-    watermarkDetail.value = null
-})
-
-onUnmounted(() => {
-    watermarkDetail.value = null
+onActivated(() => {
+    watermarkDetail.value = {
+        name: "tem_"+ new Date().getTime(),
+        type: "dynamic",
+        watermarkSettings:[]
+    }
 })
 
 onMounted(() => {
