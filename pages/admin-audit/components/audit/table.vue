@@ -39,7 +39,7 @@ defineExpose({ reload, query })
         <template #toolbar_buttons>
             <slot name="toolbar_buttons" />
         </template>
-        <template #currentPath="{row}">222
+        <template #currentPath="{row}">
             <span v-if="row.currentPath" class="pathButton"  @click="auditProvider.goClientPath(row.currentPath)">{{ row.logicalPath }}</span>
         </template>
     </VxeGrid>
