@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import { adminApi } from 'api'
 import { ElMessage, ElMessageBox } from "element-plus";
 import { groupProviderKey } from '~/util/userProvider';

@@ -21,7 +21,6 @@
 <script lang="ts" setup>
 import {useVxeTable} from '#imports'
 import { ElMessageBox } from 'element-plus'
-import dayjs from 'dayjs'
 import {clientApi, publicApi} from 'api'
 import { createAiUploadDetail } from '../../../utils/aiUpoloadHelper'
 
