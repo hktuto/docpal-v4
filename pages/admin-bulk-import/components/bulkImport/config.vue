@@ -86,7 +86,7 @@ onActivated(() => {
 
             <span>{{$t('docType_captureProfile')}}</span>
             <el-button class="button" type="primary"
-                @click="handleDialogShow()">{{$t('common_add')}}</el-button>
+                @click="handleDialogShow()">{{$t('bulkImport_detailAddCaptureProfile')}}</el-button>
             </div>
             </template>
     </VxeGrid>

@@ -3,10 +3,9 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
             <div class="tableHeaderRow">
-
             <span>{{$t('docType_metaMapping')}}</span>
             <el-button class="button" type="primary"
-                @click="handleDialogShow()">{{$t('common_add')}}</el-button>
+                @click="handleDialogShow()">{{$t('docType_addDisplayMeta')}}</el-button>
             </div>
         </template>
     </VxeGrid>
@@ -104,14 +103,8 @@ function handleDialogShow(data?:any) {
 }
 
 function updateSuccess(){
-    ElMessage.success(
-            t('dpMsg_success')
-        )
     reload()
 }
-
-
-
 
 </script>
 

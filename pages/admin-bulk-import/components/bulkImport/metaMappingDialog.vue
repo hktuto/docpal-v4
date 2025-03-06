@@ -1,16 +1,18 @@
 <template>
-<el-dialog v-model="state.visible" :title="state.isEdit ? $t('docType_editDisplayMeta') : $t('docType_addDisplayMeta')"
-    :close-on-click-modal="false"
-    >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit()">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+    <el-dialog v-model="state.visible"
+               :title="state.isEdit ? $t('docType_editDisplayMeta') : $t('docType_addDisplayMeta')"
+               :close-on-click-modal="false">
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit()">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
 import formJson from './adminMetaMapping.vform.json'
-import { adminApi } from 'api';
+import {adminApi} from 'api';
+import {ElMessage} from "element-plus";
+
 const props = defineProps<{
     metaMapping: any,
     docType: any
@@ -18,7 +20,7 @@ const props = defineProps<{
 const emits = defineEmits([
     'refresh'
 ])
-const { t } = useI18n()
+const {t} = useI18n()
 const state = reactive({
     loading: false,
     visible: false,
@@ -27,7 +29,7 @@ const state = reactive({
 })
 const FormRendererRef = ref()
 
-async function handleSubmit () {
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
@@ -39,6 +41,7 @@ async function handleSubmit () {
             }
         }
         await adminApi.api.postWorkflowSavemetadatamapping({documentType: [param]})
+        ElMessage.success(t('bulkImport_displayMetaSuccessMsg', {name: data.metaData}))
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh')
@@ -46,6 +49,7 @@ async function handleSubmit () {
     }
     state.loading = false
 }
+
 function handleOpen(exitList: any, formData: any) {
     state.visible = true
     console.log("exitList", exitList)
@@ -61,10 +65,12 @@ function handleOpen(exitList: any, formData: any) {
         }
     })
 }
-async function handleOptions (exitList: any) {
+
+async function handleOptions(exitList: any) {
     const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metaData')
     const options = listFilter()
     idRef.loadOptions(options)
+
     function listFilter() {
         return state.globalSchemaList.reduce((prev: any, item: any) => {
             const index = exitList.findIndex((exitItem: any) => exitItem.metaData === item.name)
@@ -76,11 +82,12 @@ async function handleOptions (exitList: any) {
         }, []);
     }
 }
-onMounted(async() => {
+
+onMounted(async () => {
     const data = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile').then(res => res.data?.keywords) as any
     state.globalSchemaList = data
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 
