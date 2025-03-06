@@ -78,11 +78,10 @@ const routerProvider = inject(MenuRouterKey)
     columns:[
         {
             title:"tableHeader_name",
-            fixed: 'left',
             width: 250,
             slots:{
                 default: "docIcon"
-            }
+            },
         },
         {
             title:"docInfo.fileExtension",
