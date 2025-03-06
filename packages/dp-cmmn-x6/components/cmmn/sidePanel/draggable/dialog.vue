@@ -1,15 +1,17 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('Add / Edit Properties')"
-    :close-on-click-modal="false" destroy-on-close
+    <el-dialog v-model="state.visible"
+               :title="state.isEdit ? $t('caseManagement_detailPropertiesEdit') : $t('caseManagement_detailPropertiesAdd')"
+               :close-on-click-modal="false"
+               destroy-on-close
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import {adminApi} from 'api'
 import fieldForm from './form/field.vform.json'
 import humanTaskFieldsForm from './form/humanTaskFields.vform.json'
 import flowableInForm from './form/flowableIn.vform.json'
@@ -41,30 +43,33 @@ const formJson = computed(() => {
             return {}
     }
 })
-const { caseId } = useCmmnGraph();
+const {caseId} = useCmmnGraph();
 const state = reactive({
     visible: false,
     isEdit: false,
     workflowProperties: []
 })
 const FormRendererRef = ref()
+
 // const formJson = getJsonApi('admin/adminAclForm.json')
-async function handleSubmit () {
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    if(state.isEdit) emits('edit', {...data})
+    if (state.isEdit) emits('edit', {...data})
     else emits('create', {...data})
     state.visible = false
 }
+
 function handleOpen(row: any) {
     state.isEdit = !!row ? true : false
     state.visible = true
-    setTimeout(async() => {
+    setTimeout(async () => {
         // FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
         FormRendererRef.value.vFormRenderRef.resetForm()
-        if(state.isEdit && !!row) await FormRendererRef.value.vFormRenderRef.setFormData({...row})
+        if (state.isEdit && !!row) await FormRendererRef.value.vFormRenderRef.setFormData({...row})
         setFormOptions(row)
     })
 }
+
 async function setFormOptions(row: any) {
     let workflowProperties: any = []
     let filterList
@@ -98,46 +103,51 @@ async function setFormOptions(row: any) {
             break;
     }
 }
+
 function getFilterList(row: any = {}, uniqueName: string = 'name') {
-    let list 
+    let list
     try {
-        if(!!row) list = props.filterList.filter(item => item[uniqueName] !== row[uniqueName])
+        if (!!row) list = props.filterList.filter(item => item[uniqueName] !== row[uniqueName])
         else list = [...props.filterList]
         console.log(list);
-        
+
     } catch (error) {
         list = []
     }
     return list
 }
+
 function setFileterList(row: any, uniqueName: string = 'filterList') {
     const filterList = getFilterList(row)
     const filterListRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
     filterListRef.loadOptions(filterList)
     return filterList
 }
+
 async function loadCaseInfomationOptions(uniqueName: string, filterList: any = null, prop: string = 'id') {
     const widgetRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
     let caseProperties = await getCaseInformation(props.graph)
-    if(!!filterList) {
+    if (!!filterList) {
         caseProperties = caseProperties.filter(item => !filterList.find(f => f[prop] === item.value))
     }
     widgetRef.loadOptions(caseProperties)
 }
+
 async function getWorkflowProperties() {
     try {
         const workflow = props.node.data.data.processRefExpression.__cdata
-        
-        const options = await adminApi.api.postWorkflowProperties({processKey:workflow})
+
+        const options = await adminApi.api.postWorkflowProperties({processKey: workflow})
         return options.map(item => ({
-                label: item.name,
-                value: item.id
-            }))
+            label: item.name,
+            value: item.id
+        }))
     } catch (error) {
-        
+
         return []
     }
 }
+
 function getCaseInformation(graph) {
     try {
         const caseNode = graph.getCellById(caseId.value)
@@ -153,7 +163,7 @@ function getCaseInformation(graph) {
     }
 }
 
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 
