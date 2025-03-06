@@ -117,7 +117,7 @@ function convertSiteEventToCalendarEvent(event:SiteEvent):CalendarEvent {
         end: dayjs(event.endTime).format('YYYY-MM-DD HH:mm'),
         title: event.title || event.eventName,
         description: event.eventName,
-        detail: event,
+        detail: {...event},
         _options:{
             disableResize: true,
             disableDND: true,
@@ -140,6 +140,7 @@ const filter = ref({
     location:"",
     workflow:""
 })
+const currentEvent = ref<any>([])
 async function getCurrentRangeEvent(){
     const range = calendarControls.getRange()
     const params:any = {
@@ -147,15 +148,6 @@ async function getCurrentRangeEvent(){
         endTime: dayjs(range.end).toISOString(),
     }
     // TODO : backend is missing filter
-    // if(filter.value.category){
-    //     params.category = filter.value.category
-    // }
-    // if(filter.value.location){
-    //     params.location = filter.value.location
-    // }
-    // if(filter.value.user){
-    //     params.user = [filter.value.user]
-    // }
     const { data } = await clientApi.api.postCalendarsList(params) as any
     const events = data.filter( (event:any) => {
         if(filter.value.category) {
@@ -174,34 +166,7 @@ async function getCurrentRangeEvent(){
     }).map(convertSiteEventToCalendarEvent)
     // filter events
     emits('filter-change', filter.value)
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
+    
     events.push({
         id: new Date().valueOf().toString(),
         start: dayjs().format('YYYY-MM-DD'),
@@ -209,6 +174,8 @@ async function getCurrentRangeEvent(){
         title: 'David Annual Leave',
         description: 'New Event',
     })
+    console.log(events)
+    currentEvent.value = events
     calendarApp.eventsService.set(events);
 }
 
@@ -236,6 +203,28 @@ function onClickPlusEvents(date) {
 }
 function onSelectedDateUpdate(date) {
 }
+
+function onBeforeEventUpdate(editedEvent:any){
+
+    const starDay = dayjs(editedEvent.startTime)
+    const endDay = dayjs(editedEvent.endTime)
+
+    if(starDay.isBefore(dayjs())) {
+        return false
+    }
+    // filter user
+    const people = editedEvent.people as string[] || []
+    // loop current event, check if user has event overlap
+    currentEvent.value.forEach((item:any) => {
+        const totalSet = new Set(...item.people,...people)
+        if(totalSet.size === item.people.length + people.length){
+            return false
+        }
+    })
+    return true;
+// check if user 
+}
+
 function setupCalendat() {
     showCalendar.value = false
 
@@ -279,6 +268,8 @@ function setupCalendat() {
             onClickDateTime: onClickDateTime,
             onClickAgendaDate: onClickAgendaDate,
             onClickPlusEvents: onClickPlusEvents,
+            onBeforeEventUpdate: onBeforeEventUpdate,
+
         }
     },
     plugins

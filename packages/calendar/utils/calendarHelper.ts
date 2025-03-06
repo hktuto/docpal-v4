@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+
 export const viewName = [
     'day','week','month-grid','month-agenda'
 ]
