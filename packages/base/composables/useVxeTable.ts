@@ -211,7 +211,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         },
         data:[],
     }, ...optionalConfig} as Config)
-    const tableEvent = reactive<VxeGridListeners>(optionalEvent)
+    const tableEvent = reactive<VxeGridListeners>({...optionalEvent})
 
     if(params.customeToolBar){
         tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
@@ -253,7 +253,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             tableConfig.columns.push(actionsColumn)
         }
         // add click event to action column
-        tableEvent.cellClick = async({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event}:any) => {
+        tableEvent.cellClick = async({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event, $grid, $table, cell}:any) => {
             if(column.type === actionsColumn.type && column.title === actionsColumn.title){
                 if(!actions){
                     throw new Error('bodyActions is required')
@@ -298,6 +298,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 }
                 bus.emit(evtParams)
                 
+            }
+            if(optionalEvent?.cellClick && typeof optionalEvent.cellClick === 'function'){
+                optionalEvent.cellClick({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event ,$grid, $table, cell}) as any
             }
         }
         tableEvent.scroll = (scrollParams:VxeGridDefines.ScrollEventParams) => {

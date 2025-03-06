@@ -403,15 +403,18 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         }
     },
     optionalEvent: {
-        cellMouseenter: ({row, column, rowIndex}) => {
+        // cellMouseenter: ({row, column, rowIndex}) => {
+        // },
+        cellMouseleave: ({row, column, rowIndex}) => {
+            emitBus(EventType.FILE_PREVIEW_CLOSE, row)
+        },
+        cellClick: ({row, column, rowIndex}) => {
+            console.log(column.field)
             if(column.field === 'name') {
                 emitBus(EventType.FILE_PREVIEW_OPEN, row)
             }else{
                 emitBus(EventType.FILE_PREVIEW_CLOSE, row)
             }
-        },
-        cellMouseleave: ({row, column, rowIndex}) => {
-            emitBus(EventType.FILE_PREVIEW_CLOSE, row)
         },
     }
 })
