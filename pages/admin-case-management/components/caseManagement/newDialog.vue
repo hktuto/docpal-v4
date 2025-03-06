@@ -1,7 +1,6 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('caseManagement.add')"
-  :close-on-click-modal="false"
-  >
+<el-dialog v-model="state.visible" :title="$t('caseManagement_create')"
+  :close-on-click-modal="false" destroy-on-close>
   <FormRenderer ref="FormRendererRef" :form-json="formJson" />
   <template #footer>
     <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>

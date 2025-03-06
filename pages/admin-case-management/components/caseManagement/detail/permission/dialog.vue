@@ -3,9 +3,9 @@
   :close-on-click-modal="false" class="scroll-dialog" append-to-body
   >
   <el-form ref="FormRef" style="--icon-size: 1.2rem;" label-position="top" :model="form">
-    <el-form-item prop="name" :label="$t('case.groupName')"
+    <el-form-item prop="name" :label="$t('user_groupNameMulti')"
       :rules="[inputRule]">
-      <el-select-v2 v-model="form.name" :options="state.groupList" @change="handleRecordChange" />
+      <el-select-v2 v-model="form.name" :options="state.groupList" @change="handleRecordChange" :placeholder="$t('common_selectOccupancyContent')" />
     </el-form-item>
     <el-form-item prop="record" :label="$t('record')"
       :rules="[inputRule]">

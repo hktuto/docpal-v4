@@ -2,12 +2,12 @@
   <el-card>
     <template #header>
       <div class="card-header">
-        <span>Basic Info</span>
+        <span style="font-size: 18px;">{{t('caseManagement_detailBasicInfo')}}</span>
       </div>
     </template>
     <el-row v-if="!!detail" :gutter="10">
       <el-col :xs="12" :sm="6">
-        <div class="title">{{t('table_name')}}</div>
+        <div class="title">{{t('caseManagement_name')}}</div>
         <el-input v-model="detail.name" @blur="handleBlur" @focus="handleFocus"/>
       </el-col>
       <el-col :xs="12" :sm="6">
@@ -15,7 +15,7 @@
         <el-input v-model="detail.caseIdPrefix" disabled />
       </el-col>
       <el-col :xs="12" :sm="6">
-        <div class="title">{{t('caseManagement.count')}}</div>
+        <div class="title">{{t('caseManagement.digit')}}</div>
         <el-input v-model="detail.caseIdDigit" disabled />
       </el-col>
       <el-col :xs="12" :sm="6">
