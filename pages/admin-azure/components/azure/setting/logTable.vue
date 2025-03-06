@@ -11,7 +11,6 @@
     </el-card>
 </template>
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 const azureProvider = inject(AzureProviderKey)
 
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({

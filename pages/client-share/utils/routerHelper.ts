@@ -2,7 +2,7 @@ export const routeShareMePage = function(params: any){
   return {
     id: "internal-share-me-page-versions-" + new Date().getTime(),
     name: "internal-share-me-page-",
-    icon: 'icon-park-outline:document-folder',
+    icon: 'meteor-icons:share',
     label: 'file_share_me',
     component: 'LazyInternalShareMePage',
     props: {
@@ -13,7 +13,7 @@ export const routeShareMePageFolder = function(params: any){
   return {
     id: "internal-share-me-page-folder-versions-" + new Date().getTime(),
     name: "internal-share-me-page-folder-" + params.documentIds,
-    icon: 'icon-park-outline:document-folder',
+    icon: 'meteor-icons:share',
     label: params.documentNames,
     component: 'LazyInternalShareMePageFolder',
     props: {
@@ -27,7 +27,7 @@ export const routeShareOtherPage = function(params: any){
   return {
     id: "internal-share-other-page-versions-" + new Date().getTime(),
     name: "internal-share-other-page-",
-    icon: 'icon-park-outline:document-folder',
+    icon: 'lucide:file-symlink',
     label: 'file_share_other',
     component: 'LazyInternalShareOtherPage',
     props: {
@@ -38,7 +38,7 @@ export const routeShareOtherPageFolder = function(params: any){
   return {
     id: "internal-share-other-page-folder-versions-" + new Date().getTime(),
     name: "internal-share-other-page-folder-" + params.documentIds,
-    icon: 'icon-park-outline:document-folder',
+    icon: 'lucide:file-symlink',
     label: params.name,
     component: 'LazyInternalShareOtherPageFolder',
     props: {
