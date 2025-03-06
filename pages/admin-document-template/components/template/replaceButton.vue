@@ -1,5 +1,5 @@
 <template>
-<BrowseActionsButton id="officeActionButton" :label="$t('tip.templateReplace')" >
+<BrowseActionsButton id="officeActionReplaceButton" :label="$t('tip.templateReplace')" >
     <SvgIcon src="/icons/replace.svg" round :content="$t('tip.templateReplace')"
             @click="handleOpen"
                 ></SvgIcon>
