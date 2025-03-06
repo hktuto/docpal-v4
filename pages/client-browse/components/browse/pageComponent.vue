@@ -97,7 +97,24 @@ function handleRefresh(){
         tableRef.value.reload()
     }
 }
-
+async function handleRefreshChild(childId: string){
+    if(tableRef.value) {
+        const tableData: any = tableRef.value?.tableRef?.getData()
+        const cItem = getTableItem(tableData)
+        tableRef.value?.tableRef?.reloadTreeExpand(cItem)
+    }
+    function getTableItem(tree: any): any {
+        for(let i = 0; i < tree.length - 1; i++) {
+            const treeItem = tree[i]
+            if (treeItem.id === childId) return treeItem
+            if (treeItem.children) {
+                const treeC = getTableItem(treeItem.children)
+                if(!!treeC) return treeC
+            }
+        }
+        return null
+    }
+}
 function itemDeleted(){
 
 }
@@ -138,9 +155,12 @@ bus.on(({relatedIdOrPath, highlightIdOrPath}:any) => {
         pageId: docDetail.value.id,
         pageName: docDetail.value.name
     } )
+    if(relatedIdOrPath !== docDetail.value.id) {
+        handleRefreshChild(relatedIdOrPath)
+    }
     // check id relatedIdOrPath is chidlren of current page
     // TODO: check if highlightIdOrPath is chidlren of current page
-    if(relatedIdOrPath === docDetail.value.id) {
+    else if(relatedIdOrPath === docDetail.value.id) {
         handleRefresh()
         
     }
