@@ -38,7 +38,6 @@ import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue';
 import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
 import { clientApi } from 'api'
-import dayjs from 'dayjs'
 
 const {tableId} = defineProps<{
   tableId: string

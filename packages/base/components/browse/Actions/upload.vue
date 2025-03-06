@@ -89,7 +89,6 @@
 </template>
 
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 

@@ -69,8 +69,7 @@ export const createUploadRequestDetailParams = (params:any) => {
     return {
         id: 'client-fileRequest-' + params.id,
         name: 'client-fileRequest' + params.id,
-        icon: 'lucide:file-share',
-        hoverIcon: 'lucide:file-share',
+        icon: 'uil:upload',
         label: "file_uploads",
         component: "LazyUploadRequestDetail",
         props: {
