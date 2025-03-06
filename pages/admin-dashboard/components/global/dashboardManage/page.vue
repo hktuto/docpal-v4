@@ -97,7 +97,6 @@ function handleConfig(row: any) {
 }
 
 async function deleteItem(row) {
-    console.log(1, row)
     const action = await ElMessageBox.confirm(
         `${t('dashboard_deleteMsg', {name: row.name})}`,
         {
