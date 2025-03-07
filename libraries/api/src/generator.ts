@@ -112,9 +112,9 @@ async function generate(){
                         
                     }
                     ).then(() => {
-                        fs.writeFile( path.join(__dirname,`/generate/${point.name}.json`), JSON.stringify(finalRoute),{}, () => {
-                            // console.log('complete')
-                        })
+                        // fs.writeFile( path.join(__dirname,`/generate/${point.name}.json`), JSON.stringify(finalRoute),{}, () => {
+                        //     // console.log('complete')
+                        // })
                     })
                 }
             )
