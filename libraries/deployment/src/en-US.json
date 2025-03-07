@@ -1014,7 +1014,6 @@
   "doc_typeSmartFolderSearchName": "File / Folder Name",
   "doc_typeSmartFolderUpdatedFolderSuccessMsg": "The smart folder has been updated successfully.",
   "doc_typeSmartFolderUserOrGroup": "Access by User / User Group",
-  "doc_typeSmartFolderUserOrGroupRequiredMsg": "User / User Group is required.",
   "doc_typeSmartFolderUserOrGroupSelect": "User / User Group (Multi-select allowed)",
   "docpal_sharedocument_user": "Internal Sharing",
   "documentTemplate_Create": "Create New Document Template",
@@ -1606,7 +1605,6 @@
   "folder_cabinetNameRequiredMsg": "Name is required.",
   "folder_cabinetSelectUserOrGroup": "Access by User / User Group (Multi-select allowed)",
   "folder_cabinetUserOrGroup": "Access by User / User Group",
-  "folder_cabinetUserOrGroupRequiredMsg": "Access by User / User Group is required.",
   "form_common_requird": "Required",
   "form_costModelFill_caseId": "Case ID",
   "form_display": "Display",
@@ -1712,7 +1710,6 @@
     "unique": "Unique"
   },
   "master": {
-    "addPermissions": "Add Permission",
     "setting": {
       "active": "Active",
       "activeDescription": "Active or in-active table, in-active table data will not remove , but no new item can be add.",
@@ -1732,7 +1729,7 @@
     "editRow": "Edit Row",
     "editRows": "Edit Rows",
     "emptyName": "Empty master table name",
-    "eventDate": "Date",
+    "eventDate": "Event Date",
     "eventType": "Event Type",
     "extraParams": "Default Attributes",
     "flexibleList": "Please select the fields that need to be modified in batches",
@@ -1749,6 +1746,23 @@
     "showSchema": "Show schema",
     "table": "Table"
   },
+  "masterTable_active": "Active Master Table",
+  "masterTable_create": "Create New Master Table",
+  "masterTable_createAddColumn": "Add New Column",
+  "masterTable_createAddColumnSuccessMsg": "The new column {columnName} has been added to {masterName} successfully.",
+  "masterTable_createdBy": "Table Created By",
+  "masterTable_delete": "Delete Master Table",
+  "masterTable_deleteMsg": "Are you sure you want to delete the master table {name}?<br>This action cannot be undone.",
+  "masterTable_deleteSuccessMsg": "The master table {name} has been deleted successfully.",
+  "masterTable_filter": "Filter by Table Name",
+  "masterTable_id": "Master Table ID",
+  "masterTable_inactivate": "Inactivate Master Table",
+  "masterTable_masterName": "Master Table Name",
+  "masterTable_name": "Table Name",
+  "masterTable_settingAddPermission": "Add Permission",
+  "masterTable_settingCreatedSuccessMsg": "The new permission for the master table {name} has been created successfully.",
+  "masterTable_settingRemoveMsg": "Are you sure you want to remove the selected permission from the master table {name}?",
+  "masterTable_settingRemoveSuccessMsg": "The selected permission has been removed from the master table {name} successfully.",
   "menu_master-table": "Master Table",
   "menus_Virtual Folder": "Virtual Folder",
   "menus_VirtualFolder": "Virtual Folder",
@@ -1775,7 +1789,7 @@
   "metadata": {
     "dataType": "Data Type"
   },
-  "modified_by": "Modified By",
+  "modified_by": "Last Modified By",
   "moreAction": {
     "re-try": "Re-try"
   },
@@ -1976,7 +1990,7 @@
     "approver": "Approver",
     "approvers": "Approvers",
     "auditor": "Approver",
-    "creator": "Creator",
+    "creator": "Created By",
     "reviewer": "Reviewer",
     "terminator": "Terminator"
   },
@@ -2421,7 +2435,6 @@
   "user_SecurityProperty": "Security Property",
   "user_UserAndUserGroup": "User / User Group",
   "user_UserAndUserGroupMultiSelect": "User / User Group (Multi-select allowed)",
-  "user_UserAndUserGroupRequiredMsg": "User / User Group is required.",
   "user_UserGroup": "User Group",
   "user_active": "Active",
   "user_activeUserOverLimit": "You already have the maximum number of accounts active",

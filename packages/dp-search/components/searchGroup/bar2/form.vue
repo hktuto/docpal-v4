@@ -236,7 +236,7 @@ onMounted(async() => {
   ])
   options.docType = docType.data?.map((item:any) => ({label:item.name, value:item.name}))
   options.users = users.data?.map((item:any) => ({label:item.username, value:item.userId}))
-  options.collections = collections?.data?.map((item:any) => ({label: item.createdBy + ' - ' + item.name, value:item.id}))
+  options.collections = collections?.data?.entryList?.map((item:any) => ({label: item.createdBy + ' - ' + item.name, value:item.id}))
   options.tags = tags.data?.map((item:any) => ({label:item, value:item}))
   options.groupList = groupList
   options.metadata = metadata
