@@ -7,7 +7,7 @@
       "formItemFlag": true,
       "options": {
         "name": "fieldName",
-        "label": "dpTable_label",
+        "label": "masterTable.columnName",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -58,10 +58,10 @@
       "formItemFlag": true,
       "options": {
         "name": "dataType",
-        "label": "docType_type",
+        "label": "masterTable.dataType",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "",
+        "placeholder": "common_selectOccupancyContent",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -75,7 +75,60 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "value": "varchar:4000",
+            "label": "字符串",
+            "key": "string",
+            "unique": false
+          },
+          {
+            "value": "varchar:255",
+            "label": "短文本",
+            "key": "short_text",
+            "unique": true
+          },
+          {
+            "value": "bigint",
+            "label": "整数",
+            "key": "number",
+            "unique": true
+          },
+          {
+            "value": "clob",
+            "label": "长文本",
+            "key": "longText",
+            "unique": false
+          },
+          {
+            "value": "json",
+            "label": "Json",
+            "key": "json",
+            "unique": false
+          },
+          {
+            "value": "decimal",
+            "label": "浮点数",
+            "key": "float",
+            "unique": false
+          },
+          {
+            "value": "timestamp",
+            "label": "日期",
+            "key": "date",
+            "unique": false
+          },
+          {
+            "value": "boolean",
+            "label": "是否",
+            "key": "boolean",
+            "unique": false
+          },
+          {
+            "value": "relation",
+            "label": "关系数据"
+          }
+        ],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -289,7 +342,178 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "label": "Test_Allergen",
+            "id": "03b7b45a-cd14-4335-a46b-9ce90e334326",
+            "value": "Test_Allergen"
+          },
+          {
+            "label": "table_add_data",
+            "id": "04617e0b-d36c-472b-99ea-140581f10e04",
+            "value": "table_add_data"
+          },
+          {
+            "label": "FOR_READ_CREATE_GROUP",
+            "id": "0ac3353a-5067-4a10-925f-2325acd4c24a",
+            "value": "FOR_READ_CREATE_GROUP"
+          },
+          {
+            "label": "Region",
+            "id": "12680d28-df8b-452f-854e-af70b1749eb2",
+            "value": "Region"
+          },
+          {
+            "label": "table_test222",
+            "id": "192a9686-4b08-49d3-9bb9-07be96da8110",
+            "value": "table_test222"
+          },
+          {
+            "label": "Area",
+            "id": "33759630-b2be-4636-86cb-8bf126be2c44",
+            "value": "Area"
+          },
+          {
+            "label": "Product_Category1",
+            "id": "3876b3f7-deab-4ee5-bec7-fa31937f0eee",
+            "value": "Product_Category1"
+          },
+          {
+            "label": "table_add_relation",
+            "id": "46e078a8-6f6b-45c4-84e5-1487f37d5f83",
+            "value": "table_add_relation"
+          },
+          {
+            "label": "TestMore",
+            "id": "55eec91f-3559-47a8-bd88-c9050f20c573",
+            "value": "TestMore"
+          },
+          {
+            "label": "Test_Band",
+            "id": "5b345bc9-3678-43cf-a9de-48fee7ee5a0a",
+            "value": "Test_Band"
+          },
+          {
+            "label": "test_company",
+            "id": "6deb9b6c-e26f-44e9-9790-70b9e028012e",
+            "value": "test_company"
+          },
+          {
+            "label": "FOR_READ_ENABLE_GROUP",
+            "id": "77c61663-beec-4e71-8c07-690024c0adb5",
+            "value": "FOR_READ_ENABLE_GROUP"
+          },
+          {
+            "label": "Test_Product",
+            "id": "77fd380b-e364-42b9-97ce-5786d01109a7",
+            "value": "Test_Product"
+          },
+          {
+            "label": "table_relation",
+            "id": "7c601adc-0127-4e6f-a29d-cc29ea40d2a4",
+            "value": "table_relation"
+          },
+          {
+            "label": "test_for_option",
+            "id": "84386793-7b41-47ba-85b9-816b9a2fac38",
+            "value": "test_for_option"
+          },
+          {
+            "label": "interface",
+            "id": "941cd129-8c0d-4c8d-832c-88f3d74ec4d3",
+            "value": "interface"
+          },
+          {
+            "label": "Occupation",
+            "id": "94bfd06f-3587-4236-b196-a275a9ec34f4",
+            "value": "Occupation"
+          },
+          {
+            "label": "atdadasd",
+            "id": "94d6e2e9-708e-4dcf-93e9-b4ce6feec3a3",
+            "value": "atdadasd"
+          },
+          {
+            "label": "District",
+            "id": "957223fa-10ba-42aa-9749-0934aaafe292",
+            "value": "District"
+          },
+          {
+            "label": "FOR_READ_EDIT_GROUP",
+            "id": "9587f670-d25d-4a73-93ab-62ff0e2e887e",
+            "value": "FOR_READ_EDIT_GROUP"
+          },
+          {
+            "label": "FOR_READ_CREATE_ENABLE_GROUP",
+            "id": "9cb43ac4-9e11-4cc6-96a7-bf0a8175bb3d",
+            "value": "FOR_READ_CREATE_ENABLE_GROUP"
+          },
+          {
+            "label": "FOR_READ_EDIT_CREATE_GROUP",
+            "id": "aa63635a-b52d-4d6a-91ef-1b27a34c5729",
+            "value": "FOR_READ_EDIT_CREATE_GROUP"
+          },
+          {
+            "label": "Refer",
+            "id": "acace7e0-395c-4ea5-a5b8-d3194349f60b",
+            "value": "Refer"
+          },
+          {
+            "label": "FOR_READ_EDIT_CREATE_ENABLE_GROUP",
+            "id": "b005f202-7c1c-4820-a2c7-a63db20a47eb",
+            "value": "FOR_READ_EDIT_CREATE_ENABLE_GROUP"
+          },
+          {
+            "label": "table_data_constraints",
+            "id": "b21db4b0-18fb-4fc9-934a-13c61177d4b5",
+            "value": "table_data_constraints"
+          },
+          {
+            "label": "table_edit_data",
+            "id": "b93b7296-e249-47e7-80b0-5187e58f4813",
+            "value": "table_edit_data"
+          },
+          {
+            "label": "test_1_rename",
+            "id": "c06fe3e6-d213-4bec-b071-18f854e8938c",
+            "value": "test_1_rename"
+          },
+          {
+            "label": "table_audit_logs",
+            "id": "c47e3deb-272d-43ed-b66f-99b1efa1b755",
+            "value": "table_audit_logs"
+          },
+          {
+            "label": "adddaddd",
+            "id": "dd2523da-db96-442e-ad81-391a47589fbf",
+            "value": "adddaddd"
+          },
+          {
+            "label": "constraint_1",
+            "id": "ee7fb8db-57f7-42b1-a1cc-9c84489e7817",
+            "value": "constraint_1"
+          },
+          {
+            "label": "Event Categories",
+            "id": "event_categories",
+            "value": "Event Categories"
+          },
+          {
+            "label": "Event Location",
+            "id": "event_location",
+            "value": "Event Location"
+          },
+          {
+            "label": "Product_Category2",
+            "id": "f60156f8-c267-4448-b18d-38452f7f525e",
+            "value": "Product_Category2"
+          },
+          {
+            "label": "RegionCodeTable",
+            "id": "fe3cd3aa-54fb-4cc5-b2f3-28a4f0627894",
+            "value": "RegionCodeTable"
+          }
+        ],
         "required": true,
         "requiredHint": "",
         "validation": "",
@@ -423,9 +647,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
