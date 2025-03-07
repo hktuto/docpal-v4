@@ -32,8 +32,8 @@ function openContextMenu({detail}){
     const event = detail.e as MouseEvent
     console.log("openContextMenu", detail)
     state.position = {
-        x: event.offsetX,
-        y: event.offsetY
+        x: event.clientX,
+        y: event.clientY
     }
     state.node = detail.cell
     state.view = detail.view

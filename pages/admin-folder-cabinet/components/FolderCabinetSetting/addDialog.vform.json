@@ -420,7 +420,7 @@
           }
         ],
         "required": true,
-        "requiredHint": "folder_cabinetUserOrGroupRequiredMsg",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],

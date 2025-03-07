@@ -27,7 +27,7 @@
         "multipleLimit": 0,
         "optionItems": [],
         "required": true,
-        "requiredHint": "user_UserAndUserGroupRequiredMsg",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],

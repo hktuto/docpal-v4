@@ -1,20 +1,23 @@
 <template>
-<el-dialog 
-    class="scroll-dialog"
-    v-model="state.visible" :title="state.isEdit ? $t('holdPolicies.edit') : $t('holdPolicies.create')"
-    :close-on-click-modal="false" append-to-body
+    <el-dialog
+        class="scroll-dialog"
+        v-model="state.visible" :title="state.isEdit ? $t('holdPolicies.edit') : $t('holdPolicies.create')"
+        :close-on-click-modal="false" append-to-body
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson">
-    </FormRenderer>
-    <template #footer>
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson">
+        </FormRenderer>
+        <template #footer>
+            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
+            </el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import {adminApi} from 'api'
 import formJson from './dialog.vform.json'
-const { t } = useI18n()
+import {ElMessage} from "element-plus";
+
+const {t} = useI18n()
 const emits = defineEmits([
     'update'
 ])
@@ -29,29 +32,38 @@ const form = reactive({
     labelRule: []
 })
 const FormRendererRef = ref()
+
 async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    if(!data) return
+    if (!data) return
     const params = {
         ...state.setting,
         ...data
     }
     try {
         state.loading = true
-        if(state.isEdit) await adminApi.api.putPolicyHolds(params)
-        else await adminApi.api.postPolicyHolds(params)
-        
+        let msg
+        if (state.isEdit) {
+            await adminApi.api.putPolicyHolds(params)
+            msg = t('holdPolicy_updateSuccessMsg')
+        } else {
+            await adminApi.api.postPolicyHolds(params)
+            msg = t('holdPolicy_createSuccessMsg')
+        }
+        ElMessage.success(msg)
         state.visible = false
         emits('update')
     } catch (error) {
+        console.log(error)
     }
     state.loading = false
 }
+
 async function handleOpen(setting) {
     state.visible = true
-    setTimeout(async() => {
+    setTimeout(async () => {
         await FormRendererRef.value.vFormRenderRef.resetForm()
-        if(setting && setting.isEdit) {
+        if (setting && setting.isEdit) {
             state.isEdit = true
             state.setting = setting
             await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
@@ -63,7 +75,7 @@ async function handleOpen(setting) {
     })
 }
 
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

@@ -17,9 +17,8 @@ import { createResizePlugin } from '@schedule-x/resize'
 // import { createEventModalPlugin } from '@schedule-x/event-modal'
 import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
-import {type CalendarOptions} from '../../../utils/calendarHelper'
-import { clientApi } from 'api'
-import { ElRow } from 'element-plus'
+import {getEventFromApi, type CalendarOptions, type DocPalEventType} from '../../../utils/calendarHelper'
+
 
 const { setting, categoriesOption, locationsOption } = useCalendarStore();
 const {options = {
@@ -33,8 +32,9 @@ const {options = {
     defaultLocation: "",
     defaultCategory: "",
     view: "week",
-}} = defineProps<{
+}, filter} = defineProps<{
     options?: CalendarOptions;
+    filter: any;
 }>();
 
 let calendarApp:any ;
@@ -50,167 +50,11 @@ const eventsServicePlugin = createEventsServicePlugin();
 const userFiterOptions = ref<any>([])
 const workflowFilterOptions = ref<any>([])
 const emits = defineEmits(['filter-change', 'newEvent'])
-async function getFilterOptions(){
-    const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-    userFiterOptions.value = user.map(item => {
-        return {
-            label: item.username,
-            value: item.userId
-        }
-    })
-}
 
-async function setDefaultFilter(){
-    if(options.showCategoryFilter || options.showLocationFilter || options.showUserFilter){
-        await getFilterOptions()
-    }
-    console.log("setDefaultFilter", options)
-    if(options.defaultUser){
-        filter.value.user = options.defaultUser
-    }
-    if(options.defaultLocation){
-        filter.value.location = options.defaultLocation
-    }
-    if(options.defaultCategory){
-        filter.value.category = options.defaultCategory
-    }
 
-}
+
 
 // dialog ref
-
-type SiteEvent = {
-    actionType : string
-    assignee : string
-    bizId : string
-    category : string
-    createdBy : string
-    createdDate : string
-    endTime : string
-    eventId : string
-    eventName :  "username"
-    id : string
-    isAllDay : true
-    level :  0
-    location : string
-    modifiedBy : string
-    modifiedDate : string
-    relatedCases : any
-    relatedUsers : any
-    relatedWorkflows : any
-    reminders: any[]
-    startTime: string
-    status : string
-    taskId : string
-    title :  String
-}
-type CalendarEvent = {
-    id: string
-    start: string,
-    end: string,
-    [key: string]: any
-}
-function convertSiteEventToCalendarEvent(event:SiteEvent):CalendarEvent {
-    return {
-        id: event.eventId || new Date().valueOf().toString(),
-        start: dayjs(event.startTime).format('YYYY-MM-DD HH:mm'),
-        end: dayjs(event.endTime).format('YYYY-MM-DD HH:mm'),
-        title: event.title || event.eventName,
-        description: event.eventName,
-        detail: event,
-        _options:{
-            disableResize: true,
-            disableDND: true,
-        }
-    }
-}
-function addEvent(newForm){
-    const ev= convertSiteEventToCalendarEvent(newForm)
-    console.log("addEvent", ev)
-    ev._options = {
-        disableResize: true,
-        disableDND: false,
-    }
-    calendarApp.eventsService.add(ev)
-    
-}
-const filter = ref({
-    category:"",
-    user:"",
-    location:"",
-    workflow:""
-})
-async function getCurrentRangeEvent(){
-    const range = calendarControls.getRange()
-    const params:any = {
-        startTime: dayjs(range.start).toISOString(),
-        endTime: dayjs(range.end).toISOString(),
-    }
-    // TODO : backend is missing filter
-    // if(filter.value.category){
-    //     params.category = filter.value.category
-    // }
-    // if(filter.value.location){
-    //     params.location = filter.value.location
-    // }
-    // if(filter.value.user){
-    //     params.user = [filter.value.user]
-    // }
-    const { data } = await clientApi.api.postCalendarsList(params) as any
-    const events = data.filter( (event:any) => {
-        if(filter.value.category) {
-            const matCat = event.category === filter.value.category
-            if(!matCat) return false
-        }
-        if(filter.value.location) {
-            const matLoc = event.location === filter.value.location
-            if(!matLoc) return false
-        }
-        if(filter.value.user) {
-            const matUser = event.assignee === filter.value.user || event.modifiedBy === filter.value.user || event.relatedUsers.includes(filter.value.user)
-            if(!matUser) return false
-        }
-        return true
-    }).map(convertSiteEventToCalendarEvent)
-    // filter events
-    emits('filter-change', filter.value)
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').format('YYYY-MM-DD'),
-        title: 'New Event',
-        description: 'New Event',
-    })
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').add(1, 'day').format('YYYY-MM-DD'),
-        title: 'David Annual Leave',
-        description: 'New Event',
-    })
-    calendarApp.eventsService.set(events);
-}
 
 function onEventUpdate(event) {
     console.log('onEventUpdate', event)
@@ -236,7 +80,29 @@ function onClickPlusEvents(date) {
 }
 function onSelectedDateUpdate(date) {
 }
-function setupCalendat() {
+
+function onBeforeEventUpdate(editedEvent:any){
+
+    const starDay = dayjs(editedEvent.startTime)
+    const endDay = dayjs(editedEvent.endTime)
+
+    if(starDay.isBefore(dayjs())) {
+        return false
+    }
+    // filter user
+    const people = editedEvent.people as string[] || []
+    // loop current event, check if user has event overlap
+    currentEvent.value.forEach((item:any) => {
+        const totalSet = new Set(...item.people,...people)
+        if(totalSet.size === item.people.length + people.length){
+            return false
+        }
+    })
+    return true;
+// check if user 
+}
+
+function setupCalendar() {
     showCalendar.value = false
 
     const plugins = [
@@ -271,14 +137,16 @@ function setupCalendat() {
         events: [
         ],
         callbacks:{
+            onRangeUpdate: () => getEventFromApi(calendarApp, calendarControls, filter),
             onSelectedDateUpdate: onSelectedDateUpdate,
-            onRangeUpdate: getCurrentRangeEvent,
             onEventUpdate: onEventUpdate,
             onEventClick: onEventClick,
             onClickDate: onClickDate,
             onClickDateTime: onClickDateTime,
             onClickAgendaDate: onClickAgendaDate,
             onClickPlusEvents: onClickPlusEvents,
+            onBeforeEventUpdate: onBeforeEventUpdate,
+
         }
     },
     plugins
@@ -292,14 +160,6 @@ function setupCalendat() {
     getCurrentRangeEvent()
 }
 
-function reloadCalendar(){
-    calendarApp.reload()
-}
-
-function getFormData(){
-    return "calendar"
-}
-
 
 
 onDeactivated(() => {
@@ -307,19 +167,11 @@ onDeactivated(() => {
 })
 
 
-const filtetColumnWidth = computed(() => {
-    let count = 0;
-    if(options.showLocationFilter) count ++;
-    if(options.showWorkflowFilter) count ++;
-    if(options.showUserFilter) count ++;
-    if(options.showCategoryFilter) count ++;
-    return 24 / count
-})
+
 
 watch(() => [setting, options],async() =>{
     if(setting.value){
-        await setDefaultFilter()
-        setupCalendat()
+        setupCalendar()
     }
 },{
     deep: true,
@@ -328,8 +180,8 @@ watch(() => [setting, options],async() =>{
 
 
 defineExpose({
-    getFormData,
-    addEvent
+    calendarControls,
+    calendarApp
 })
 
 </script>
@@ -338,51 +190,9 @@ defineExpose({
 <template>
     <div class="calendarViewerContainer">
         <template v-if="options.showLocationFilter ||options.showWorkflowFilter || options.showUserFilter || options.showCategoryFilter">
-            <div class="filterContainer">
-                <ElForm label-position="top">
-                <ElRow :gutter="20">
-                    <ElCol v-if="options.showWorkflowFilter" :span="filtetColumnWidth">
-                        <ElFormItem label="Workflow">
-                            <ElSelect v-model="filter.workflow" multiple placeholder="Select">
-                                <ElOption v-for="item in workflowFilterOptions" :key="item.value" :label="item.label" :value="item.value" />
-                            </ElSelect>
-                        </ElFormItem>
-                    </ElCol>
-                    <ElCol v-if="options.showLocationFilter" :span="filtetColumnWidth">
-                        <ElFormItem label="Location">
-                            <ElSelect v-model="filter.location" clearable placeholder="Select" @change="getCurrentRangeEvent">
-                                <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
-                            </ElSelect>
-                        </ElFormItem>
-                    </ElCol>
-                    <ElCol v-if="options.showUserFilter" :span="filtetColumnWidth">
-                        <ElFormItem label="User">
-                            <ElSelect v-model="filter.user" clearable placeholder="Select" @change="getCurrentRangeEvent">
-                                <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
-                            </ElSelect>
-                        </ElFormItem>
-                    </ElCol>
-                    <ElCol v-if="options.showCategoryFilter" :span="filtetColumnWidth">
-                        <ElFormItem label="Category">
-                            <ElSelect v-model="filter.category" clearable placeholder="Select" @change="getCurrentRangeEvent">
-                                <ElOption v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
-                            </ElSelect>
-                        </ElFormItem>   
-                        </ElCol>
-                </ElRow>
-                </ElForm>
-               
-            </div>
+            
         </template>
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" />
     </div>
 </template>
 
-<style lang="scss" scoped>
-.calendarViewerContainer{
-    width: 100%;
-    height: 100%;
-    min-height: 500px;
-    position: relative;
-}
-</style>

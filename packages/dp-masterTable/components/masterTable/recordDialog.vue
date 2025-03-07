@@ -1,23 +1,25 @@
 <template>
-<el-dialog  v-model="state.visible" :title="state.title"
-    class="scroll-dialog"
-    :close-on-click-modal="false"
+    <el-dialog v-model="state.visible" :title="state.title"
+               class="scroll-dialog"
+               :close-on-click-modal="false"
     >
-    <FormVariablesRenderer ref="FormVariablesRendererRef"/>
-    <template #footer>
-        <div class="footer-grid">
-            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-        </div>
-    </template>
-</el-dialog>
+        <FormVariablesRenderer ref="FormVariablesRendererRef"/>
+        <template #footer>
+            <div class="footer-grid">
+                <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import {adminApi} from 'api'
+
 const props = withDefaults(defineProps<{
     tableId: string,
     ignoreList: string[],
 }>(), {
-  ignoreList: [],
+    ignoreList: [],
 })
 const emits = defineEmits([
     'refresh', 'delete'
@@ -30,22 +32,20 @@ const state = reactive({
     edit: false,
     title: $i18n.t('masterTable.newRow')
 })
-const route = useRoute()
-const router = useRouter()
-async function handleSubmit () {
-   
+
+async function handleSubmit() {
     try {
         state.loading = true
         const data = await FormVariablesRendererRef.value.getData(true)
-        if(state.edit) {
+        if (state.edit) {
             await adminApi.api.putMasterTablesIdRecord(props.tableId, {
                 data: [data],
                 where: {
-                id: state.setting.id
+                    id: state.setting.id
                 }
             })
-        }
-        else {
+
+        } else {
             await adminApi.api.postMasterTablesRecord({
                 id: props.tableId,
                 data: [data]
@@ -60,6 +60,7 @@ async function handleSubmit () {
         state.loading = false
     }
 }
+
 async function turnFields(fields) {
     const typeMap: any = {
         'varchar': 'input',
@@ -77,8 +78,8 @@ async function turnFields(fields) {
     }
     const resultFields: any = []
     const pList: any = []
-    fields.forEach(async(item: any) => {
-        if(!props.ignoreList.find(iItem => iItem === item.columnName)) {
+    fields.forEach(async (item: any) => {
+        if (!props.ignoreList.find(iItem => iItem === item.columnName)) {
             const type = typeMap[item.dataType] || 'input'
             const _item: any = {
                 name: item.columnName,
@@ -87,34 +88,32 @@ async function turnFields(fields) {
                 required: item.required,
                 options: {}
             }
-            
-            if(item.relationTable) {
+
+            if (item.relationTable) {
                 pList.push(getRelationOptions({
                     relationTable: item.relationTable,
                     relationField: item.relationField,
                     displayField: item.displayField
                 }, _item))
                 return
-            }
-            else if(item.dataType === 'varchar') {
+            } else if (item.dataType === 'varchar') {
                 _item.maxLength = item.length
-                if(item.length > 255) _item.type = 'textarea'
-            }
-            else if(item.dataType === 'bigint') {
+                if (item.length > 255) _item.type = 'textarea'
+            } else if (item.dataType === 'bigint') {
                 _item.type = 'number'
                 _item.options.stepStrictly = true
                 _item.options.customClass = ['align-left']
                 _item.options.precision = 0
-            }
-            else if(item.dataType === 'json') {
+            } else if (item.dataType === 'json') {
                 // _item.type = 'textarea'
                 // _item.options.maxLength = ''
             }
             resultFields.push(_item)
-        } 
+        }
     })
     await Promise.all(pList)
     return resultFields
+
     async function getRelationOptions(params, field) {
         const data = await adminApi.api.getMasterTablesRecords(params).then(res => res.data)
         field.type = 'select'
@@ -124,31 +123,33 @@ async function turnFields(fields) {
         }))
         field.options.filterable = true
         const index = resultFields.findIndex(item => item.name === field.name)
-        if(index !== -1) resultFields.splice(index, 1, field)
+        if (index !== -1) resultFields.splice(index, 1, field)
         else resultFields.push(field)
     }
 }
+
 const FormVariablesRendererRef = ref()
+
 async function handleOpen(fields: any, row?: any) {
     state.visible = true
     state.loading = false
     state.fields = await turnFields(fields)
     setTimeout(async () => {
         FormVariablesRendererRef.value.createJson(state.fields)
-        if(row) {
+        if (row) {
             state.edit = true
             state.setting = row
             FormVariablesRendererRef.value.setData(row)
             state.title = $i18n.t('masterTable.editRow')
-        }
-        else {
+        } else {
             state.edit = false
             state.title = $i18n.t('masterTable.newRow')
             FormVariablesRendererRef.value.setData({})
         }
     })
 }
-defineExpose({ handleOpen })
+
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

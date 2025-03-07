@@ -378,7 +378,7 @@
           }
         ],
         "required": true,
-        "requiredHint": "doc_typeSmartFolderUserOrGroupRequiredMsg",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],
