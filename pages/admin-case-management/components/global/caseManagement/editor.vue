@@ -67,6 +67,7 @@ async function handleSave() {
     const data = editorEl.value.save()
     console.log("save data", data);
     const blob = xmlStringToFile(data.xml, 'file.cmmn.xml')
+    
     const formData = new FormData()
     formData.append('file', blob)
     // TODO : method are not correct in swagger, tem use instance.

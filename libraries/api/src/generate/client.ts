@@ -2617,25 +2617,12 @@ export interface InstanceDTO {
     isSuspended?: boolean;
 }
 
-export interface PaginableEntityDTOTaskDTO {
-    entryList?: TaskDTO[];
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginableEntityDTOTaskDTO {
+export interface ResultListTaskDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginableEntityDTOTaskDTO;
+    data?: TaskDTO[];
 }
 
 /** Task */
@@ -2685,12 +2672,25 @@ export interface TaskDTO {
     variables?: Record<string, object>;
 }
 
-export interface ResultListTaskDTO {
+export interface PaginationDTOTaskDTO {
+    entryList?: TaskDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOTaskDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: TaskDTO[];
+    data?: PaginationDTOTaskDTO;
 }
 
 export interface ResultTaskDTO {
@@ -2865,15 +2865,6 @@ export interface ResultListFormPropertyDTO {
     data?: FormPropertyDTO[];
 }
 
-export interface ResultInstanceDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Process Instance */
-    data?: InstanceDTO;
-}
-
 /** Process Definition */
 export interface ProcessDTO {
     /** Process ID */
@@ -2899,6 +2890,24 @@ export interface ProcessDTO {
     versionId?: string;
     /** Production Draft ID */
     draftId?: string;
+}
+
+export interface ResultProcessDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Process Definition */
+    data?: ProcessDTO;
+}
+
+export interface ResultInstanceDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Process Instance */
+    data?: InstanceDTO;
 }
 
 export interface ResultListProcessDTO {
@@ -2984,15 +2993,6 @@ export interface ResultPaginableEntityDTOInstanceDTO {
     data?: PaginableEntityDTOInstanceDTO;
 }
 
-export interface ResultProcessDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Process Definition */
-    data?: ProcessDTO;
-}
-
 export interface ResultListObject {
     result?: boolean;
     /** @format int32 */
@@ -3050,6 +3050,7 @@ export interface HistoricProcessInstanceEntityImpl {
     durationInMillisStr?: string;
     startTimeStr?: string;
     endTimeStr?: string;
+    taskDefinitionKey?: string;
 }
 
 export interface PaginationDTOHistoricProcessInstanceEntityImpl {
@@ -4211,8 +4212,10 @@ export interface CaseTypeResponseDTO {
     caseIdDigit?: number;
     /** @format int32 */
     startNumber?: number;
-    productionVersion?: string;
     latestVersion?: string;
+    latestVersionId?: string;
+    productionVersion?: string;
+    productionVersionId?: string;
     enable?: boolean;
     publishStatus?: string;
     createdBy?: string;
@@ -4251,12 +4254,17 @@ export interface PlanItemDefinitionDTO {
     parent?: string;
     /** PlanItem Definition criterion */
     criterion?: Record<string, string>;
-    form?: Record<string, string>;
+    /** PlanItem Definition Rules or Behavior */
+    rules?: Record<string, object>;
     /** PlanItem Definition Sub-List */
     subItems?: PlanItemDefinitionDTO[];
     /** Case Model Plan Form DTO */
     planForm?: CmmnPlanFormDTO;
     fields?: PlanTableFieldDTO[];
+    assigneeField?: PlanTableFieldDTO;
+    isStartTask?: boolean;
+    upProcessTaskKey?: string;
+    upFormProperties?: FormPropertyDTO[];
 }
 
 export interface PlanTableFieldDTO {
@@ -4348,6 +4356,10 @@ export interface CmmnTaskDTO {
     endTime?: string;
     /** @format int64 */
     durationInMillis?: number;
+    caseDefinitionId?: string;
+    caseInstanceId?: string;
+    assignees?: string[];
+    candidateGroups?: string[];
 }
 
 export interface ResultListCmmnTaskDTO {
@@ -4459,6 +4471,10 @@ export interface PlanItemInstanceDTO {
     businessKey?: string;
     operator?: string;
     variables?: Record<string, object>;
+    /** Case Model Plan Form DTO */
+    planForm?: CmmnPlanFormDTO;
+    processInstanceId?: string;
+    humanTaskId?: string;
 }
 
 export interface ResultCaseInstanceDTO {
@@ -4468,14 +4484,6 @@ export interface ResultCaseInstanceDTO {
     message?: string;
     /** Case Instance */
     data?: CaseInstanceDTO;
-}
-
-export interface ResultListPlanItemInstanceDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PlanItemInstanceDTO[];
 }
 
 /** PlanItem Instance (Request) */
@@ -4519,6 +4527,14 @@ export interface PlanItemInstanceRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+}
+
+export interface ResultListPlanItemInstanceDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PlanItemInstanceDTO[];
 }
 
 export interface CmmnDashboard {
@@ -13992,12 +14008,50 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
+         * @name GetWorkflowTasks
+         * @request GET:/api/docpal/workflow/tasks
+         */
+        getWorkflowTasks: (
+            query?: {
+                processInstanceId?: string;
+                userId?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/tasks`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowTasks
+         * @summary Retrieve tasks for a process instance
+         * @request POST:/api/docpal/workflow/tasks
+         */
+        postWorkflowTasks: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/tasks`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
          * @name PostWorkflowTasksUser
          * @summary Retrieve tasks for the candidate users
          * @request POST:/api/docpal/workflow/tasks/user
          */
         postWorkflowTasksUser: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOTaskDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/tasks/user`,
                 method: "POST",
                 body: data,
@@ -14044,25 +14098,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/tasks/personal
          */
         postWorkflowTasksPersonal: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOTaskDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/tasks/personal`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTasksPersonalDeprecate
-         * @summary Retrieve tasks for a user
-         * @request POST:/api/docpal/workflow/tasks/personal/
-         */
-        postWorkflowTasksPersonalDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks/personal/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14139,18 +14176,19 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTasksDeprecate
-         * @request GET:/api/docpal/workflow/tasks/
+         * @name GetWorkflowTask
+         * @request GET:/api/docpal/workflow/task
          */
-        getWorkflowTasksDeprecate: (
+        getWorkflowTask: (
             query?: {
                 processInstanceId?: string;
+                taskId?: string;
                 userId?: string;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks/`,
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
                 method: "GET",
                 query: query,
                 ...params,
@@ -14160,13 +14198,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowTasksDeprecate
-         * @summary Retrieve tasks for a process instance
-         * @request POST:/api/docpal/workflow/tasks/
+         * @name PostWorkflowTask
+         * @summary Retrieve a task
+         * @request POST:/api/docpal/workflow/task
          */
-        postWorkflowTasksDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks/`,
+        postWorkflowTask: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14177,37 +14215,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTasks
-         * @request GET:/api/docpal/workflow/tasks
+         * @name DeleteWorkflowTask
+         * @summary Delete a task
+         * @request DELETE:/api/docpal/workflow/task
          */
-        getWorkflowTasks: (
-            query?: {
-                processInstanceId?: string;
-                userId?: string;
+        deleteWorkflowTask: (
+            query: {
+                taskId: string;
+                deleteReason?: string;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks`,
-                method: "GET",
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
+                method: "DELETE",
                 query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTasks
-         * @summary Retrieve tasks for a process instance
-         * @request POST:/api/docpal/workflow/tasks
-         */
-        postWorkflowTasks: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -14427,128 +14449,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTaskDeprecate
-         * @request GET:/api/docpal/workflow/task/
-         */
-        getWorkflowTaskDeprecate: (
-            query?: {
-                processInstanceId?: string;
-                taskId?: string;
-                userId?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskDeprecate
-         * @summary Retrieve a task
-         * @request POST:/api/docpal/workflow/task/
-         */
-        postWorkflowTaskDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowTaskDeprecate
-         * @summary Delete a task
-         * @request DELETE:/api/docpal/workflow/task/
-         */
-        deleteWorkflowTaskDeprecate: (
-            query: {
-                taskId: string;
-                deleteReason?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowTask
-         * @request GET:/api/docpal/workflow/task
-         */
-        getWorkflowTask: (
-            query?: {
-                processInstanceId?: string;
-                taskId?: string;
-                userId?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTask
-         * @summary Retrieve a task
-         * @request POST:/api/docpal/workflow/task
-         */
-        postWorkflowTask: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowTask
-         * @summary Delete a task
-         * @request DELETE:/api/docpal/workflow/task
-         */
-        deleteWorkflowTask: (
-            query: {
-                taskId: string;
-                deleteReason?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowSubmitadhocapproval
          * @request POST:/api/docpal/workflow/submitAdhocApproval
          */
@@ -14674,6 +14574,48 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowProcess
+         * @summary Retrieve process definition
+         * @request POST:/api/docpal/workflow/process
+         */
+        postWorkflowProcess: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name DeleteWorkflowProcess
+         * @request DELETE:/api/docpal/workflow/process
+         */
+        deleteWorkflowProcess: (
+            query?: {
+                processInstanceId?: string;
+                /** @format date-time */
+                createdDate?: string;
+                /** @format date-time */
+                endedDate?: string;
+                completed?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process`,
+                method: "DELETE",
+                query: query,
                 ...params,
             }),
 
@@ -14990,106 +14932,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowProcessActiveDeprecate
-         * @request POST:/api/docpal/workflow/process/active/
-         */
-        postWorkflowProcessActiveDeprecate: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOInstanceDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/active/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowProcess
-         * @summary Retrieve process definition
-         * @request POST:/api/docpal/workflow/process
-         */
-        postWorkflowProcess: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowProcess
-         * @request DELETE:/api/docpal/workflow/process
-         */
-        deleteWorkflowProcess: (
-            query?: {
-                processInstanceId?: string;
-                /** @format date-time */
-                createdDate?: string;
-                /** @format date-time */
-                endedDate?: string;
-                completed?: boolean;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowProcessDeprecate
-         * @summary Retrieve process definition
-         * @request POST:/api/docpal/workflow/process/
-         */
-        postWorkflowProcessDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowProcessDeprecate
-         * @request DELETE:/api/docpal/workflow/process/
-         */
-        deleteWorkflowProcessDeprecate: (
-            query?: {
-                processInstanceId?: string;
-                /** @format date-time */
-                createdDate?: string;
-                /** @format date-time */
-                endedDate?: string;
-                completed?: boolean;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowHistoryVariableDeprecate
          * @summary Retrieve task variable history
          * @request POST:/api/docpal/workflow/history/variable/
@@ -15365,23 +15207,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postWorkflowHistoryActivity: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
             this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/history/activity`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowHistoryActivityDeprecate
-         * @summary Retrieve process definition model
-         * @request POST:/api/docpal/workflow/history/activity/
-         */
-        postWorkflowHistoryActivityDeprecate: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/history/activity/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -17232,6 +17057,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags CaseInstanceController
+         * @name PostCaseInstanceProcessStart
+         * @summary Starting a sub-process of case instance
+         * @request POST:/api/docpal/case/instance/process/start
+         */
+        postCaseInstanceProcessStart: (data: PlanItemInstanceRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/process/start`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
          * @name PostCaseInstancePlanitems
          * @summary Retrieve all or activated planItem instances of this case instance
          * @request POST:/api/docpal/case/instance/planItems
@@ -17303,7 +17145,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/case/instance/auditLog
          */
         postCaseInstanceAuditlog: (data: CaseInstanceRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOAuditTemplateDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/instance/auditLog`,
                 method: "POST",
                 body: data,
@@ -17343,6 +17185,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<ResultPaginationDTOCmmnTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/instance/${caseId}/process/instance/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CmmnDashboardController
+         * @name PostCaseDashboardInstanceActionPreRequisite
+         * @summary Obtain Pre-requisite of planItem instance
+         * @request POST:/api/docpal/case/dashboard/instance/action/pre-requisite
+         */
+        postCaseDashboardInstanceActionPreRequisite: (data: PlanItemInstanceDTO, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/dashboard/instance/action/pre-requisite`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -23006,6 +22865,31 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<ResultListHistoricProcessInstanceEntityImpl, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/process/deleteProcessInstanceByApprover`,
+                method: "DELETE",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name DeleteWorkflowProcessDeprecate
+         * @request DELETE:/api/docpal/workflow/process/
+         */
+        deleteWorkflowProcessDeprecate: (
+            query?: {
+                processInstanceId?: string;
+                /** @format date-time */
+                createdDate?: string;
+                /** @format date-time */
+                endedDate?: string;
+                completed?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process/`,
                 method: "DELETE",
                 query: query,
                 ...params,

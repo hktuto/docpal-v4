@@ -4488,7 +4488,9 @@ export interface CaseTypeResponseDTO {
     /** @format int32 */
     startNumber?: number;
     latestVersion?: string;
+    latestVersionId?: string;
     productionVersion?: string;
+    productionVersionId?: string;
     enable?: boolean;
     publishStatus?: string;
     createdBy?: string;
@@ -4540,10 +4542,16 @@ export interface PlanItemDefinitionDTO {
     parent?: string;
     /** PlanItem Definition criterion */
     criterion?: Record<string, string>;
-    form?: Record<string, string>;
+    /** PlanItem Definition Rules or Behavior */
+    rules?: Record<string, object>;
     /** PlanItem Definition Sub-List */
     subItems?: PlanItemDefinitionDTO[];
     fields?: PlanTableFieldDTO[];
+    /** Form Design Information List */
+    assigneeField?: PlanTableFieldDTO;
+    isStartTask?: boolean;
+    upProcessTaskKey?: string;
+    upFormProperties?: FormPropertyDTO[];
 }
 
 export interface ResultCaseTypeResponseDTO {
@@ -4858,6 +4866,10 @@ export interface CmmnTaskDTO {
     endTime?: string;
     /** @format int64 */
     durationInMillis?: number;
+    caseDefinitionId?: string;
+    caseInstanceId?: string;
+    assignees?: string[];
+    candidateGroups?: string[];
 }
 
 export interface ResultListCmmnTaskDTO {
@@ -4949,6 +4961,15 @@ export interface ResultCaseInstanceDTO {
     data?: CaseInstanceDTO;
 }
 
+/** Case Model Plan Form DTO */
+export interface CmmnPlanFormDTO {
+    id?: string;
+    name?: string;
+    type?: string;
+    casetable?: string;
+    fields?: PlanTableFieldDTO[];
+}
+
 /** PlanItemInstanceDTO */
 export interface PlanItemInstanceDTO {
     caseDefinitionId?: string;
@@ -4975,6 +4996,8 @@ export interface PlanItemInstanceDTO {
     active?: boolean;
     variables?: Record<string, object>;
     subItems?: PlanItemInstanceDTO[];
+    /** Case Model Plan Form DTO */
+    planForm?: CmmnPlanFormDTO;
 }
 
 export interface ResultListPlanItemInstanceDTO {
@@ -6351,15 +6374,6 @@ export interface CmmnDeploymentDTO {
     primaryForm?: string;
     caseTables?: CmmnPlanFormDTO[];
     permissions?: CmmnPlanPermissionDTO[];
-}
-
-/** Case Model Plan Form DTO */
-export interface CmmnPlanFormDTO {
-    id?: string;
-    name?: string;
-    type?: string;
-    casetable?: string;
-    fields?: PlanTableFieldDTO[];
 }
 
 export interface ResultCmmnDeploymentDTO {
@@ -8095,6 +8109,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags CmmnDashboardController
          * @name PutCaseDashboardStatus
+         * @summary Update status of case dashboard
          * @request PUT:/api/docpal/case/dashboard/status
          */
         putCaseDashboardStatus: (data: CmmnDashboardRequestDTO, params: RequestParams = {}) =>
@@ -10480,7 +10495,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 path: `/nuxeo/document/createDocument/`,
                 method: "POST",
                 body: data,
-                type: ContentType.Json,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -10502,7 +10517,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 path: `/nuxeo/document/createDocument`,
                 method: "POST",
                 body: data,
-                type: ContentType.Json,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -13579,11 +13594,15 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @name PostCaseTypesIdPublish
          * @summary Publish CMMN file to workflow application
          * @request POST:/api/docpal/case/types/{id}/publish
+         * @deprecated
          */
         postCaseTypesIdPublish: (
             id: string,
             data: {
-                /** @format binary */
+                /**
+                 * CMMN XML file
+                 * @format binary
+                 */
                 file?: File;
             },
             params: RequestParams = {},
@@ -13639,6 +13658,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postCaseTypesIdDraftDownload: (id: string, params: RequestParams = {}) =>
             this.request<string[], Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${id}/draft/download`,
+                method: "POST",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name PostCaseTypesIdDownloadDraft
+         * @summary Download draft cmmn xml (case model definition)
+         * @request POST:/api/docpal/case/types/{id}/download/draft
+         */
+        postCaseTypesIdDownloadDraft: (id: string, params: RequestParams = {}) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/${id}/download/draft`,
                 method: "POST",
                 ...params,
             }),
@@ -14904,7 +14938,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags CaseTypeController
          * @name PatchCaseTypesVersionVersionidSave
-         * @summary Query cmmn version information of the last successfully deployed version
+         * @summary Edit XML file [cmmn.xml] of version
          * @request PATCH:/api/docpal/case/types/version/{versionId}/save
          */
         patchCaseTypesVersionVersionidSave: (
@@ -14913,12 +14947,18 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 /** @format binary */
                 file: File;
             },
+            data: {
+                /** @format binary */
+                file?: File;
+            },
             params: RequestParams = {},
         ) =>
             this.request<ResultCmmnVersion, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/version/${versionId}/save`,
                 method: "PATCH",
                 query: query,
+                body: data,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -14927,8 +14967,9 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags CaseTypeController
          * @name PatchCaseTypesVersionVersionidSaveall
-         * @summary Query cmmn version information of the last successfully deployed version
+         * @summary [Test API] Save XML file for all version of case definition
          * @request PATCH:/api/docpal/case/types/version/{versionId}/saveAll
+         * @deprecated
          */
         patchCaseTypesVersionVersionidSaveall: (
             versionId: string,
@@ -14936,12 +14977,18 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 /** @format binary */
                 file: File;
             },
+            data: {
+                /** @format binary */
+                file?: File;
+            },
             params: RequestParams = {},
         ) =>
-            this.request<ResultCmmnVersion, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/version/${versionId}/saveAll`,
                 method: "PATCH",
                 query: query,
+                body: data,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -18763,7 +18810,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags CaseTypeController
          * @name GetCaseTypesIdStarttask
-         * @summary Retrieve start humanTask of a case model definition
+         * @summary Retrieve startup task for the case definition of the latest version
          * @request GET:/api/docpal/case/types/{id}/startTask
          */
         getCaseTypesIdStarttask: (
@@ -18813,21 +18860,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseTypesIdDownloadDeployVersion: (id: string, params: RequestParams = {}) =>
             this.request<string[], Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${id}/download/deploy/version`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CaseTypeController
-         * @name GetCaseTypesIdDeployVersion
-         * @summary Query cmmn version information of the last successfully deployed version
-         * @request GET:/api/docpal/case/types/{id}/deploy/version
-         */
-        getCaseTypesIdDeployVersion: (id: string, params: RequestParams = {}) =>
-            this.request<ResultCaseModelDraft, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/case/types/${id}/deploy/version`,
                 method: "GET",
                 ...params,
             }),
@@ -18886,6 +18918,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseTypesVersionVersionid: (versionId: string, params: RequestParams = {}) =>
             this.request<ResultCmmnVersion, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/version/${versionId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name GetCaseTypesVersionVersionidStarttask
+         * @summary Retrieve startup task for the case definition of the specified version
+         * @request GET:/api/docpal/case/types/version/{versionId}/startTask
+         */
+        getCaseTypesVersionVersionidStarttask: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultListPlanItemDefinitionDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/version/${versionId}/startTask`,
                 method: "GET",
                 ...params,
             }),
