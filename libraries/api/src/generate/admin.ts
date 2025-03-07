@@ -4968,6 +4968,9 @@ export interface CmmnPlanFormDTO {
     type?: string;
     casetable?: string;
     fields?: PlanTableFieldDTO[];
+    /** Form Design Information List */
+    assigneeField?: PlanTableFieldDTO;
+    isStartTask?: boolean;
 }
 
 /** PlanItemInstanceDTO */
@@ -6748,7 +6751,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "http://admin.app2.wclsolution.com",
+            baseURL: axiosConfig.baseURL || "http://admin.app4.wclsolution.com",
         });
         this.secure = secure;
         this.format = format;
@@ -6843,7 +6846,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title OpenAPI definition
  * @version v0
- * @baseUrl http://admin.app2.wclsolution.com
+ * @baseUrl http://admin.app4.wclsolution.com
  */
 export class Admin<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
     api = {
@@ -13651,6 +13654,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags CaseTypeController
+         * @name PostCaseTypesIdDownloadDraft
+         * @summary Download draft cmmn xml (case model definition)
+         * @request POST:/api/docpal/case/types/{id}/download/draft
+         */
+        postCaseTypesIdDownloadDraft: (id: string, params: RequestParams = {}) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/${id}/download/draft`,
+                method: "POST",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
          * @name PostCaseTypesIdDraftDownload
          * @summary Download draft cmmn xml (case model definition)
          * @request POST:/api/docpal/case/types/{id}/draft/download
@@ -18889,6 +18907,21 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseTypesCasetypeidInstances: (caseTypeId: string, params: RequestParams = {}) =>
             this.request<ResultListCmmnInstance, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${caseTypeId}/instances`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseTypeController
+         * @name GetCaseTypesVersionVersionidStarttask
+         * @summary Retrieve startup task for the case definition of the specified version
+         * @request GET:/api/docpal/case/types/version/{versionId}/startTask
+         */
+        getCaseTypesVersionVersionidStarttask: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultListPlanItemDefinitionDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/case/types/version/${versionId}/startTask`,
                 method: "GET",
                 ...params,
             }),

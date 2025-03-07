@@ -4240,6 +4240,8 @@ export interface CmmnPlanFormDTO {
     type?: string;
     casetable?: string;
     fields?: PlanTableFieldDTO[];
+    assigneeField?: PlanTableFieldDTO;
+    isStartTask?: boolean;
 }
 
 /** Case Model PlanItem Information DTO */
@@ -6829,7 +6831,10 @@ export class HttpClient<SecurityDataType = unknown> {
     private format?: ResponseType;
 
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-        this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://app2.wclsolution.com" });
+        this.instance = axios.create({
+            ...axiosConfig,
+            baseURL: axiosConfig.baseURL || "https://app4.wclsolution.com",
+        });
         this.secure = secure;
         this.format = format;
         this.securityWorker = securityWorker;
@@ -6923,7 +6928,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title DocPal REST API
  * @version 0.0.1
- * @baseUrl http://app2.wclsolution.com
+ * @baseUrl https://app4.wclsolution.com
  *
  * DocPal REST API Documentation
  */
@@ -14046,6 +14051,46 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
+         * @name DeleteWorkflowTask
+         * @summary Delete a task
+         * @request DELETE:/api/docpal/workflow/task
+         */
+        getWorkflowTasks: (
+            query?: {
+                processInstanceId?: string;
+                taskId?: string;
+                userId?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
+                method: "DELETE",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowTasks
+         * @summary Retrieve tasks for a process instance
+         * @request POST:/api/docpal/workflow/tasks
+         */
+        postWorkflowTasks: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/tasks`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
          * @name PostWorkflowTasksUser
          * @summary Retrieve tasks for the candidate users
          * @request POST:/api/docpal/workflow/tasks/user
@@ -14677,6 +14722,48 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowProcess
+         * @summary Retrieve process definition
+         * @request POST:/api/docpal/workflow/process
+         */
+        postWorkflowProcess: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name DeleteWorkflowProcess
+         * @request DELETE:/api/docpal/workflow/process
+         */
+        deleteWorkflowProcess: (
+            query?: {
+                processInstanceId?: string;
+                /** @format date-time */
+                createdDate?: string;
+                /** @format date-time */
+                endedDate?: string;
+                completed?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process`,
+                method: "DELETE",
+                query: query,
                 ...params,
             }),
 
@@ -23018,6 +23105,31 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/identity/isCanModified`,
+                method: "DELETE",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name DeleteWorkflowProcessDeprecate
+         * @request DELETE:/api/docpal/workflow/process/
+         */
+        deleteWorkflowProcessDeprecate: (
+            query?: {
+                processInstanceId?: string;
+                /** @format date-time */
+                createdDate?: string;
+                /** @format date-time */
+                endedDate?: string;
+                completed?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process/`,
                 method: "DELETE",
                 query: query,
                 ...params,

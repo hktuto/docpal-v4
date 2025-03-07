@@ -1027,6 +1027,9 @@
   "documentTemplate_deleteMsg": "Are you sure you want to delete this document template?<br> This action cannot be undone.",
   "documentTemplate_deleteSuccessMsg": "The document template has been deleted successfully.",
   "documentTemplate_updateSuccessMsg": "The document template has been update successfully.",
+  "documentType_Status": "Document Type Status",
+  "documentType_Type": "File / Folder Type",
+  "documentType_filter": "Filter by Document Type Name",
   "download": "Download",
   "download_download": "Download",
   "download_downloadSearchablePdf": "Download Searchable pdf",
@@ -2063,7 +2066,7 @@
     "tags": "Tags",
     "text": "Search",
     "textSearchType": "Full Text",
-    "type": "Document Type ",
+    "type": "Document Type Name",
     "width": "Width"
   },
   "searchBar": {
@@ -2298,7 +2301,7 @@
   "table_hideColumn": "Hide Column",
   "table_label": "Label",
   "table_lastModified": "Last Modified",
-  "table_last_update": "Last Update Date",
+  "table_last_update": "Last Modified Date ",
   "table_modifiedDate": "Last Modified Date",
   "table_name": "Name",
   "table_numberOfFiles": "Number of Files",

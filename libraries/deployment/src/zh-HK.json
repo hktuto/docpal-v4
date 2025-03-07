@@ -1027,6 +1027,9 @@
   "documentTemplate_deleteMsg": "documentTemplate_deleteMsg",
   "documentTemplate_deleteSuccessMsg": "documentTemplate_deleteSuccessMsg",
   "documentTemplate_updateSuccessMsg": "documentTemplate_updateSuccessMsg",
+  "documentType_Status": "文件類型狀態",
+  "documentType_Type": "檔案 / 資料夾類型",
+  "documentType_filter": "依文件類型名稱篩選",
   "download": "下載",
   "download_download": "下載",
   "download_downloadSearchablePdf": "下載 PDF",
@@ -2061,7 +2064,7 @@
     "tags": "標簽",
     "text": "搜索",
     "textSearchType": "全文搜尋",
-    "type": "文件類型",
+    "type": "文件類型名稱",
     "width": "寬度"
   },
   "searchBar": {
@@ -3271,7 +3274,7 @@
   "workflow_creator": "創建者",
   "workflow_dueDate": "到期日",
   "workflow_editorCreate": "建立新工作流程",
-  "workflow_editorCreatedBy": "workflow_editorCreatedBy",
+  "workflow_editorCreatedBy": "創建者",
   "workflow_editorEditLatestVersion": "workflow_editorEditLatestVersion",
   "workflow_editorInactive": "workflow_editorInactive",
   "workflow_editorLastDate": "workflow_editorLastDate",
