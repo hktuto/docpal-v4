@@ -1,0 +1,22 @@
+{
+  "i18n-ally.enabledFrameworks": ["vue"],
+  "i18n-ally.localesPaths": "libraries/deployment/src",
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.displayLanguage": "en-US",
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.enabledParsers": ["json"],
+  "cSpell.words": [
+      "Dagre",
+      "docpal",
+      "hitbox",
+      "iconify",
+      "Keycloak",
+      "lucide",
+      "nuxi",
+      "predev",
+      "splitpanes",
+      "typecheck",
+      "vueuse"
+  ],
+}
