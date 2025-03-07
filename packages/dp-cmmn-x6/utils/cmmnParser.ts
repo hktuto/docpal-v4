@@ -123,6 +123,14 @@ function loopAndReorderXmlDom(doc:Element){
     for(let i = 0; i < allChildren.length; i++) {
         let child = allChildren[i]
         if(child.tagName === 'planItem') {
+            const itemControl = child.getElementsByTagName('itemControl')
+            itemControl.forEach((item:any) => {
+                const hasRepetition = item.getElementsByTagName('repetitionRule')
+                const hasManualActivation = item.getElementsByTagName('manualActivationRule')
+                if(hasRepetition && hasManualActivation) {
+                    item.insertBefore(hasManualActivation[0], item.children[0])
+                }
+            })
             doc.insertBefore(child, doc.children[0])
         }
     }
