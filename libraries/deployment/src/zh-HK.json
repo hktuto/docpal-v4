@@ -327,9 +327,10 @@
     "location_masterTable": "主表",
     "view": "預設日曆視圖",
     "viewOption": {
-      "DAY": "天",
-      "MONTH": "月",
-      "WEEK": "星期"
+      "day": "天",
+      "month-grid": "月 網格",
+      "month-agenda": "月 列表",
+      "week": "星期"
     },
     "weekOption": {
       "MONDAY": "週一",
