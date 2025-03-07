@@ -26,14 +26,14 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     id: 'masterTable-log',
     api: (pageParams:any) => adminApi.api.postMasterTablesLogs({...pageParams, ...extraParams, ...filtersParams}),
     columns:  [
-        { id: "10",  field: 'docPath', title: 'masterTable.table', fixed: 'left'},
+        { id: "10",  field: 'docPath', title: 'masterTable_masterName', fixed: 'left'},
         { field: 'principalName', title: 'user_username',},
         { field: 'eventId', title: 'masterTable.eventType',  
             formatter ({ cellValue }:any) {
                 return t('eventId.'+cellValue)
             }
         },
-        { field: 'eventDate', title: 'asterTable.eventDate',
+        { field: 'eventDate', title: 'masterTable.eventDate',
             formatter ({ cellValue }:any) {
                 return formatDate(cellValue)
             }

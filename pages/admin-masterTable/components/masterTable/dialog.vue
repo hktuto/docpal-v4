@@ -1,5 +1,5 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('tableHeader_name')"
+<el-dialog v-model="state.visible" :title="$t('masterTable_masterName')"
     class="scroll-dialog"
     append-to-body 
     :close-on-click-modal="false"

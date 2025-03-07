@@ -1,22 +1,24 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('dpDocument_acl_addLocal')"
-    :close-on-click-modal="false"
+    <el-dialog v-model="state.visible" :title="$t('masterTable_settingAddPermission')"
+               :close-on-click-modal="false"
     >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-    </template>
-</el-dialog>
+        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+        <template #footer>
+            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+        </template>
+    </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
-import type { UserDTO, GroupDTO } from 'api/src/generate/admin'
-import formJson from './addPermissionDialog.vform.json' 
+import {adminApi} from 'api'
+import type {GroupDTO, UserDTO} from 'api/src/generate/admin'
+import formJson from './addPermissionDialog.vform.json'
+import {ElMessage} from "element-plus";
+
 const props = defineProps<{
     exitList: any[],
     tableId: string,
 }>()
-const { t } = useI18n()
+const {t} = useI18n()
 const emits = defineEmits([
     'refresh'
 ])
@@ -26,11 +28,11 @@ const state = reactive({
     visible: false,
 
 })
-let userList: never[] | UserDTO[] | undefined | any[] = [] 
+let userList: never[] | UserDTO[] | undefined | any[] = []
 let groupList: never[] | GroupDTO[] | undefined | any[] = []
 const FormRendererRef = ref()
 
-async function handleSubmit () {
+async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     const params = {
         masterTableId: props.tableId,
@@ -40,12 +42,14 @@ async function handleSubmit () {
     state.loading = true
     try {
         await adminApi.api.postMasterTablesAclsAdd(params)
+        ElMessage.success(t('masterTable_settingCreatedSuccessMsg', {name: props.exitList[0]?.masterTableName}))
         state.visible = false
         emits('refresh')
     } catch (error) {
     }
     state.loading = false
 }
+
 function handleOpen() {
     state.visible = true
     setTimeout(() => {
@@ -53,23 +57,27 @@ function handleOpen() {
         handleOptions()
     }, 100)
 }
-function handleOptions () {
+
+function handleOptions() {
     const userIdRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('userId')
     const options = [
-        { value: 'user_groups', label: t('user_groups'), options: groupListFilter() },
-        { value: 'user_users', label: t('user_users'), options: userListFilter() }
+        {value: 'user_groups', label: t('user_groups'), options: groupListFilter()},
+        {value: 'user_users', label: t('user_users'), options: userListFilter()}
     ]
     userIdRef.loadOptions(options)
+
     function userListFilter() {
-        return userList?.filter((allItem:any) => 
-                !props.exitList.some((exitItem:any) => exitItem.userId === allItem.userId))
+        return userList?.filter((allItem: any) =>
+            !props.exitList.some((exitItem: any) => exitItem.userId === allItem.userId))
     }
+
     function groupListFilter() {
-        return groupList?.filter((allItem:any) => 
-                !props.exitList.some((exitItem:any) => exitItem.userId === allItem.id))
+        return groupList?.filter((allItem: any) =>
+            !props.exitList.some((exitItem: any) => exitItem.userId === allItem.id))
     }
 }
-onMounted(async() => {
+
+onMounted(async () => {
     userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
     userList?.forEach(item => {
         item.value = item.userId
@@ -81,7 +89,7 @@ onMounted(async() => {
         item.label = item.name
     });
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

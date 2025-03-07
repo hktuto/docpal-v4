@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
+import {ElMessage} from 'element-plus'
 import { clientApi } from 'api'
 const opened = ref(false);
 const {options} = defineProps<{
     options: CalendarOptions,
 }>()
+const { t} = useI18n()
+const formRef = ref()
 const { categoriesOption, locationsOption } = useCalendarStore();
 const userFiterOptions = ref<any>([])
 const emits = defineEmits(['submit'])
@@ -42,24 +45,74 @@ function open(selectedDateTime: string, filter:any, data:any) {
     form.value.user = filter.user
     // form.value.workflow = filter.workflow
 }
+
+function startTimeChange(val){
+    const startDay = dayjs(val)
+    if(startDay.isBefore(dayjs())) {
+        ElMessage.error("Start time cannot be earlier than today");
+    }
+    form.value.startTime = snapDownTo15Minutes(startDay).toISOString()
+    form.value.endTime= snapDownTo15Minutes(startDay.add(15, 'minutes')).toISOString()
+}
+function endTimeChange(val){
+    console.log("endTimeChange", val)
+    const endTime = dayjs(val)
+    if(endTime.isBefore(dayjs())) {
+        ElMessage.error("End time cannot be earlier than today");
+    }
+    form.value.endTime = snapDownTo15Minutes(endTime).toISOString()
+    form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).toISOString()
+}
 function snapDownTo15Minutes(time) {
   const minutes = time.minute();
   const snappedMinutes = Math.floor(minutes / 15) * 15;
   return time.minute(snappedMinutes).second(0);
 }
-function submit(){
-    const form = {
-        eventId:"",
-        startTime: snapDownTo15Minutes(dayjs(startTime.value)).to,
-        endTime: dayjs(startTime.value).add(15, 'minutes').toISOString(),
-        eventName: 'test event',
-        description: 'test event description',
-        category: "9949630c-b07e-4b83-87c0-b6f522f6207e",
-        location:"2e5705eb-f36e-4569-8a4b-3822e9f9d809",
-        edited:false,
+const rules = reactive({
+    startTime: [{
+        required: true,
+        message: t('msg_pleaseSelectStartTime'),
+        trigger: 'blur'
+    }],
+    endTime:[ {
+        required: true,
+        message: t('msg_pleaseSelectEndTime'),
+        trigger: 'blur'
+    }],
+    location: [{
+        required: true,
+        message: t('msg_pleaseSelectLocation'),
+        trigger: 'blur'
+    }],
+    user: [{
+        required: true,
+        message: t('msg_pleaseSelectUser'),
+        trigger: 'blur'
+    }],
+})
+async function submit(){
+    // check location and user
+    try{
+        const valid = await formRef.value.validate()
+        console.log("valid", valid)
+        if(!valid) return
+        const data = {
+            eventId:"",
+            startTime: snapDownTo15Minutes(dayjs(startTime.value)).toISOString(),
+            endTime: dayjs(startTime.value).add(15, 'minutes').toISOString(),
+            title: 'test event',
+            description: 'test event description',
+            category: form.value.category,
+            location: form.value.location,
+            user: form.value.user,
+            edited:false,
+        }
+        console.log("form", form)
+        emits('submit', form.value)
+        opened.value = false
+    }catch(err){
+        console.log(err)
     }
-    emits('submit', form)
-    opened.value = false
 }
 
 defineExpose({
@@ -69,30 +122,30 @@ defineExpose({
 
 <template>
     <ElDialog v-model="opened" append-to-body>
-        <ElForm label-position="top">
+        <ElForm ref="formRef" label-position="top" :model="form" :rules="rules">
                 <ElRow :gutter="20">
                     <ElCol  :span="12">
-                        <ElFormItem label="Location">
-                            <ElSelect v-model="form.location" clearable placeholder="Select" @change="getCurrentRangeEvent">
+                        <ElFormItem label="Location" prop="location" required>
+                            <ElSelect v-model="form.location" clearable placeholder="Select" >
                                 <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol  :span="12">
-                        <ElFormItem label="User">
-                            <ElSelect v-model="form.user" clearable placeholder="Select" @change="getCurrentRangeEvent">
+                        <ElFormItem label="User" prop="user" required>
+                            <ElSelect v-model="form.user" clearable placeholder="Select" >
                                 <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol :span='12'>
-                        <ElFormItem label="Start Time">
-                            <ElDatePicker v-model="form.startTime" type="datetime" placeholder="Select date and time" format="YYYY-MM-DD HH:mm"  />
+                        <ElFormItem label="Start Time" prop="startTime" required>
+                            <ElDatePicker v-model="form.startTime" type="datetime" placeholder="Select date and time" format="YYYY-MM-DD HH:mm" @change="startTimeChange" />
                         </ElFormItem>
                     </ElCol>
                     <ElCol :span='12'>
-                        <ElFormItem label="End Time">
-                            <ElDatePicker v-model="form.endTime" type="datetime" placeholder="Select date and time" format="YYYY-MM-DD HH:mm"  />
+                        <ElFormItem label="End Time" prop="endTime" required>
+                            <ElDatePicker v-model="form.endTime" type="datetime" placeholder="Select date and time" format="YYYY-MM-DD HH:mm" @change="endTimeChange" />
                         </ElFormItem>
                     </ElCol>
                     <!-- <ElCol :span="12">

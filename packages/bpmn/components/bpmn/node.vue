@@ -67,10 +67,9 @@ function contextMenuHandler({e,view,node}:any) {
     }
     console.log("contextMenuHandler", node)
     contextSelectedNode.value = node
-    const routerContainer = routerProvider?.routerContainer.value
     // clientX and ClientY should relative to the routerContainer
-    const x = e.clientX - routerContainer.getBoundingClientRect().left
-    const y = e.clientY - routerContainer.getBoundingClientRect().top
+    const x = e.clientX 
+    const y = e.clientY 
     position.value = {
         x,
         y

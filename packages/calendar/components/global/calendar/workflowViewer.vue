@@ -1,6 +1,6 @@
 
 <script lang="ts" setup>
-
+import dayjs from 'dayjs'
 const {disabled, formData, options={editable:true,allowCreate:true}, taskDetail} = defineProps<{
     disabled: boolean,
     formData: any
@@ -28,6 +28,8 @@ function createEvent(newForm){
 const newEventFromRef = ref();
 function popNewEvent(dateTime: string) {
     console.log("popNewEvent", dateTime)
+    const selectedDate = dayjs(dateTime)
+    if(selectedDate.isBefore(dayjs())) return
     newEventFromRef.value.open(dateTime, filter.value)
 }
 
@@ -35,7 +37,6 @@ defineExpose({ getFormData })
 </script>
 
 <template>
-    {{options}}
     <CalendarViewer ref="calendarViewerRef" :options="options" @newEvent="popNewEvent" @filter-change="filterChange"/>
     <CalendarNewEventForm ref="newEventFromRef" @submit="createEvent"/>
 </template>
