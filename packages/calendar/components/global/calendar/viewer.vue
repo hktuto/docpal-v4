@@ -40,20 +40,8 @@ const {options = {
 let calendarApp:any ;
 const showCalendar = ref(false)
 
-const viewName = [
-    'day','week','month-grid','month-agenda'
-]
-
 const calendarControls = createCalendarControlsPlugin()
 const eventsServicePlugin = createEventsServicePlugin();
-// set up filter options
-const userFiterOptions = ref<any>([])
-const workflowFilterOptions = ref<any>([])
-const emits = defineEmits(['filter-change', 'newEvent'])
-
-
-
-
 // dialog ref
 
 function onEventUpdate(event) {
@@ -92,12 +80,7 @@ function onBeforeEventUpdate(editedEvent:any){
     // filter user
     const people = editedEvent.people as string[] || []
     // loop current event, check if user has event overlap
-    currentEvent.value.forEach((item:any) => {
-        const totalSet = new Set(...item.people,...people)
-        if(totalSet.size === item.people.length + people.length){
-            return false
-        }
-    })
+    
     return true;
 // check if user 
 }
@@ -155,6 +138,19 @@ function setupCalendar() {
         showCalendar.value = true
         if(options.view) {
             calendarControls.setView(options.view)
+        }else{
+            const view = setting.value?.basic.default_view
+            if(view) {
+                calendarControls.setView(view)
+            }
+        }
+        if(options.firstDayOfWeek) {
+            calendarControls.setFirstDayOfWeek(options.firstDayOfWeek === 'MONDAY' ? 1 : 0)
+        }else{
+            const firstDayOfWeek = setting.value?.basic.default_first_week
+            if(firstDayOfWeek) {
+                calendarControls.setFirstDayOfWeek(firstDayOfWeek === 'MONDAY' ? 1 : 0)
+            }
         }
     })
     getCurrentRangeEvent()

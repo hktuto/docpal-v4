@@ -25,8 +25,33 @@ function getBColor(type, state) {
   return map[type] || '#D9D9D9'
 }
 const dialogRef = ref()
+const caseProvider: any = inject(CaseManagementDashboardKey)
+
+async function handleProcessTask(actionItem) {
+  // get action item detail for process task
+  const caseInstanceId = caseProvider.instanceId?.value ;
+  const res = await clientApi.api.postCaseDashboardInstanceActionPreRequisite({
+    id: actionItem.id
+  }).then(res => res.data)
+  // get case data
+  const caseData =  await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseInstanceId).then(res => res.data)
+  // generate form data
+  const inParameters = res.inParameters
+  const defaultFormData = Object.keys(inParameters).reduce((prev, key) => {
+    const valueItem = caseData.rows.find( c => c.id === key)
+    if(valueItem) {
+      prev[inParameters[key]] = valueItem.value
+    }
+    return prev
+  }, {})
+  // TODO : get form json and xml
+  
+  // console.log('res', res, defaultFormData)
+}
 async function handleTask(actionItem) {
-  if (actionItem.planItemDefinitionType === 'humantask') {
+  if(actionItem.planItemDefinitionType === 'processtask') {
+    handleProcessTask(actionItem)
+  } else if (actionItem.planItemDefinitionType === 'humantask') {
     console.log('handleTask', actionItem)
     dialogRef.value.handleOpen(actionItem.referenceId, actionItem, props.actionList)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {

@@ -57,8 +57,8 @@ defineExpose({
 
         <el-skeleton  v-if="!hideSetting && !showPreview" :rows="5" >
         </el-skeleton>
-        <div v-else class="main no-drag" @dragstart="stopEvent" @dragover="stopEvent" @drop="stopEvent">
-            <CalendarViewer :options="setting" />
+        <div v-else class="main no-drag" >
+            <Calendar :options="setting" />
         </div>
     </ElCard>
         <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />

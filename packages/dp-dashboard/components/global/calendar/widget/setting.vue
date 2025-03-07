@@ -7,7 +7,7 @@ const emits = defineEmits(['submit','delete'])
 const {setting} = defineProps<{
     setting?: any,
 }>()
-const {  categoriesOption, locationsOption } = useCalendarStore();
+const { setting: calendarSetting, categoriesOption, locationsOption, calendarViewOptions, weekDayOptions } = useCalendarStore();
 const userFiterOptions = ref([])
 async function getOptions() {
     const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
@@ -27,10 +27,14 @@ const form = ref<CalendarOptions>({
     defaultUser: "",
     defaultLocation: "",
     defaultCategory: "",
+    locationLabel:"",
+    categoryLabel: "",
+    categoryLabel: "",
+    userFilterGroup: "",
+    view: "",
+    firstDayOfWeek: "",
 })
-const viewName = [
-    'day','week','month-grid','month-agenda'
-]
+
 function open() {
     opened.value = true;
     getOptions()
@@ -41,6 +45,13 @@ function open() {
             form.value[key] = setting[key]
         }
     })
+    console.log("form", form.value, calendarSetting.value.basic.default_view)
+    if(!form.value.view) {
+        form.value.view = calendarSetting.value?.basic.default_view
+    }
+    if(!form.value.firstDayOfWeek) {
+        form.value.firstDayOfWeek = calendarSetting.value?.basic.default_first_week
+    }
 
     // form.value = setting
 }
@@ -59,7 +70,7 @@ defineExpose({
 <template>
  <ElDialog v-model="opened" append-to-body>
     <ElForm :model="form" label-position="top" @submit.stop="" show-close>
-    <ElRow>
+    <ElRow :gutter="12">
         <ElCol :span="12">
             <ElFormItem label="Editable">
                 <ElSwitch v-model="form.editable"></ElSwitch>
@@ -91,10 +102,17 @@ defineExpose({
             </ElFormItem>
         </ElCol>
         <ElDivider />
-        <ElCol :span="24">
+        <ElCol :span="12">
             <ElFormItem label="view">
-                <ElSelect v-model="form.view" placeholder="Default View">
-                    <ElOption v-for="item in viewName" :key="item" :label="item" :value="item"></ElOption>
+                <ElSelect v-model="form.view" placeholder="Default View" clearable>
+                    <ElOption v-for="item in calendarViewOptions" :key="item" :label="item" :value="item"></ElOption>
+                </ElSelect>
+            </ElFormItem>
+        </ElCol>
+        <ElCol :span="12">
+            <ElFormItem label="view">
+                <ElSelect v-model="form.firstDayOfWeek" placeholder="First Day of Week" clearable>
+                    <ElOption v-for="item in weekDayOptions" :key="item" :label="item" :value="item"></ElOption>
                 </ElSelect>
             </ElFormItem>
         </ElCol>

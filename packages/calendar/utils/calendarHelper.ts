@@ -22,7 +22,8 @@ export type CalendarOptions = {
     categoryLabel:string,
     userLabel:string,
     userFilterGroup?:string,
-    view: "day" | "week" | "month-grid" ,
+    view:  'day' | 'week' |'month-grid' |'month-agenda'
+    firstDayOfWeek:  "MONDAY" | "SUNDAY"
 }
 
 export function convertSiteEventToCalendarEvent(event:DocPalEventType):CalendarEvent {
@@ -57,11 +58,11 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter){
                 const matCat = event.category === filter.category
                 if(!matCat) return false
             }
-            if(filter.value.location) {
+            if(filter.location) {
                 const matLoc = event.location === filter.location
                 if(!matLoc) return false
             }
-            if(filter.value.user) {
+            if(filter.user) {
                 const matUser = event.assignee === filter.user || event.modifiedBy === filter.user || event.relatedUsers.includes(filter.user)
                 if(!matUser) return false
             }
