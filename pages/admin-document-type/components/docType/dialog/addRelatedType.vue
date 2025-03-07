@@ -11,6 +11,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import formJson from './addRelatedType.vform.json'
+import {ElMessage} from "element-plus";
 const { t } = useI18n()
 const props = defineProps<{
     docType: any,
@@ -31,25 +32,27 @@ async function handleSubmit () {
     state.loading = true
     delete data.isEdit
     try {
+        let msg ;
         if(state.isEdit) {
             await adminApi.api.patchDocpaltypeSettingsNameNameRelated(props.docType.name, {
                 metaData: data?.metadata,
-                rootDocPalType: data?.documentType, 
+                rootDocPalType: data?.documentType,
                 id: state.setting.id
             })
+            msg = t('documentType_relatedUpdateSuccessMsg')
         } else {
-            console.log(data);
-            // return 
+            // return
             // props.docType.name
             await adminApi.api.postDocpaltypeSettingsNameNameRelated(props.docType.name, { 
                 metaData: data?.metadata,
                 rootDocPalType: data?.documentType, 
             })
+            msg = t('documentType_relatedAddSuccessMsg')
         }
         state.visible = false
+        ElMessage.success(msg)
         FormRendererRef.value.vFormRenderRef.resetForm()
-        emits('refresh')
-    } catch (error) {
+        emits('refresh')    } catch (error) {
     }
     state.loading = false
 }
