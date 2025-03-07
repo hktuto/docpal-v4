@@ -101,7 +101,7 @@ async function handleRefreshChild(childId: string){
     if(tableRef.value) {
         const tableData: any = tableRef.value?.tableRef?.getData()
         const cItem = getTableItem(tableData)
-        tableRef.value?.tableRef?.reloadTreeExpand(cItem)
+        if(!!cItem) tableRef.value?.tableRef?.reloadTreeExpand(cItem)
     }
     function getTableItem(tree: any): any {
         for(let i = 0; i < tree.length - 1; i++) {
