@@ -1,1 +1,3768 @@
-{"widgetList":[{"key":101693,"type":"select","icon":"select-field","formItemFlag":true,"options":{"name":"documentType","label":"tableHeader_type","labelAlign":"","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"clearable":true,"filterable":true,"allowCreate":false,"remote":false,"automaticDropdown":false,"multiple":false,"multipleLimit":0,"optionItems":[],"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"","onRemoteQuery":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"select16012"},{"key":101693,"type":"select","icon":"select-field","formItemFlag":true,"options":{"name":"metadata","label":"rightDetail_meta","labelAlign":"","defaultValue":"","placeholder":"","columnWidth":"200px","size":"","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":false,"clearable":true,"filterable":true,"allowCreate":false,"remote":false,"automaticDropdown":false,"multiple":false,"multipleLimit":0,"optionItems":[],"required":true,"requiredHint":"","validation":"","validationHint":"","customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"onCreated":"","onMounted":"const _this = this\nasync function getOptions () {\n  const data = await $api.get('/docpalType/settings/metadata/GlobalFile').then(res => res.data.data)\n  const options = data.keywords.reduce((prev,item) => {\n    if (item.name) prev.push({\n      label: item.name,\n      value: item.name\n    })\n    return prev\n  }, [])\n  _this.loadOptions(options)\n}\ngetOptions()","onRemoteQuery":"","onChange":"","onFocus":"","onBlur":"","onValidate":""},"id":"select28007"},{"key":87354,"type":"switch","icon":"switch-field","formItemFlag":true,"options":{"name":"isEdit","label":"isEdit","labelAlign":"","defaultValue":false,"columnWidth":"200px","labelWidth":null,"labelHidden":false,"disabled":false,"hidden":true,"customClass":[],"labelIconClass":null,"labelIconPosition":"rear","labelTooltip":null,"switchWidth":40,"activeText":"","inactiveText":"","activeColor":null,"inactiveColor":null,"onCreated":"","onMounted":"","onChange":"const type = this.getWidgetRef('documentType')\nif(!!value) {\n  type.setDisabled(true)\n} else {\n  type.setDisabled(false)\n}","onValidate":""},"id":"switch104533"}],"formConfig":{"modelName":"formData","refName":"vForm","rulesName":"rules","labelWidth":80,"labelPosition":"top","size":"","labelAlign":"label-left-align","cssCode":"","customClass":[],"functions":"","layoutType":"PC","jsonVersion":3,"onFormCreated":"","onFormMounted":"this.optionData.allTypeList = []","onFormDataChange":"","onFormValidate":"","saveRemoteOptions":"never","labelFormUniqueName":true,"dataSources":[]}}
+{
+  "widgetList": [
+    {
+      "key": 101693,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "documentType",
+        "label": "tableHeader_type",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "common_selectOccupancyContent",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select16012"
+    },
+    {
+      "key": 101693,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "metadata",
+        "label": "rightDetail_meta",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "common_selectOccupancyContent",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "label": "dc:coverage",
+            "value": "dc:coverage"
+          },
+          {
+            "label": "dc:creator",
+            "value": "dc:creator"
+          },
+          {
+            "label": "dc:lastContributor",
+            "value": "dc:lastContributor"
+          },
+          {
+            "label": "dc:nature",
+            "value": "dc:nature"
+          },
+          {
+            "label": "dc:created",
+            "value": "dc:created"
+          },
+          {
+            "label": "dc:subjects",
+            "value": "dc:subjects"
+          },
+          {
+            "label": "dc:format",
+            "value": "dc:format"
+          },
+          {
+            "label": "dc:description",
+            "value": "dc:description"
+          },
+          {
+            "label": "dc:language",
+            "value": "dc:language"
+          },
+          {
+            "label": "dc:source",
+            "value": "dc:source"
+          },
+          {
+            "label": "dc:title",
+            "value": "dc:title"
+          },
+          {
+            "label": "dc:valid",
+            "value": "dc:valid"
+          },
+          {
+            "label": "dc:expired",
+            "value": "dc:expired"
+          },
+          {
+            "label": "dc:rights",
+            "value": "dc:rights"
+          },
+          {
+            "label": "dc:modified",
+            "value": "dc:modified"
+          },
+          {
+            "label": "dc:publisher",
+            "value": "dc:publisher"
+          },
+          {
+            "label": "dc:contributors",
+            "value": "dc:contributors"
+          },
+          {
+            "label": "dc:issued",
+            "value": "dc:issued"
+          },
+          {
+            "label": "common:icon-expanded",
+            "value": "common:icon-expanded"
+          },
+          {
+            "label": "common:icon",
+            "value": "common:icon"
+          },
+          {
+            "label": "dpa:date",
+            "value": "dpa:date"
+          },
+          {
+            "label": "dpa:country",
+            "value": "dpa:country"
+          },
+          {
+            "label": "dpa:workExperience",
+            "value": "dpa:workExperience"
+          },
+          {
+            "label": "dpa:warrantyInformation",
+            "value": "dpa:warrantyInformation"
+          },
+          {
+            "label": "dpa:quotationNo",
+            "value": "dpa:quotationNo"
+          },
+          {
+            "label": "dpa:workforceandRoles",
+            "value": "dpa:workforceandRoles"
+          },
+          {
+            "label": "dpa:poDate",
+            "value": "dpa:poDate"
+          },
+          {
+            "label": "dpa:caseId",
+            "value": "dpa:caseId"
+          },
+          {
+            "label": "dpa:invoiceType",
+            "value": "dpa:invoiceType"
+          },
+          {
+            "label": "dpa:invoiceNo",
+            "value": "dpa:invoiceNo"
+          },
+          {
+            "label": "dpa:votingResults",
+            "value": "dpa:votingResults"
+          },
+          {
+            "label": "dpa:contractStartDate",
+            "value": "dpa:contractStartDate"
+          },
+          {
+            "label": "dpa:workInstructionType",
+            "value": "dpa:workInstructionType"
+          },
+          {
+            "label": "dpa:creation_date",
+            "value": "dpa:creation_date"
+          },
+          {
+            "label": "dpa:solutionOffering",
+            "value": "dpa:solutionOffering"
+          },
+          {
+            "label": "dpa:vendorName",
+            "value": "dpa:vendorName"
+          },
+          {
+            "label": "dpa:contractEmail",
+            "value": "dpa:contractEmail"
+          },
+          {
+            "label": "dpa:customerName",
+            "value": "dpa:customerName"
+          },
+          {
+            "label": "dpa:warehouseReceiptNumber",
+            "value": "dpa:warehouseReceiptNumber"
+          },
+          {
+            "label": "dpa:receiptNo",
+            "value": "dpa:receiptNo"
+          },
+          {
+            "label": "dpa:poNumber",
+            "value": "dpa:poNumber"
+          },
+          {
+            "label": "dpa:startDate",
+            "value": "dpa:startDate"
+          },
+          {
+            "label": "dpa:status",
+            "value": "dpa:status"
+          },
+          {
+            "label": "dpa:visualAssets",
+            "value": "dpa:visualAssets"
+          },
+          {
+            "label": "dpa:crNumber",
+            "value": "dpa:crNumber"
+          },
+          {
+            "label": "dpa:prospectId",
+            "value": "dpa:prospectId"
+          },
+          {
+            "label": "dpa:prospectName",
+            "value": "dpa:prospectName"
+          },
+          {
+            "label": "dpa:approveDate",
+            "value": "dpa:approveDate"
+          },
+          {
+            "label": "dpa:contractNo",
+            "value": "dpa:contractNo"
+          },
+          {
+            "label": "dpa:customerCode",
+            "value": "dpa:customerCode"
+          },
+          {
+            "label": "dpa:workBreakdownStructure",
+            "value": "dpa:workBreakdownStructure"
+          },
+          {
+            "label": "dpa:remark",
+            "value": "dpa:remark"
+          },
+          {
+            "label": "dpa:wBSDescription",
+            "value": "dpa:wBSDescription"
+          },
+          {
+            "label": "dpa:warehouseName",
+            "value": "dpa:warehouseName"
+          },
+          {
+            "label": "dpa:expiryDate",
+            "value": "dpa:expiryDate"
+          },
+          {
+            "label": "dpa:invoiceNumber",
+            "value": "dpa:invoiceNumber"
+          },
+          {
+            "label": "dpa:approver",
+            "value": "dpa:approver"
+          },
+          {
+            "label": "dpa:contractPhone",
+            "value": "dpa:contractPhone"
+          },
+          {
+            "label": "dpa:website",
+            "value": "dpa:website"
+          },
+          {
+            "label": "dpa:contractNature",
+            "value": "dpa:contractNature"
+          },
+          {
+            "label": "dpa:contractStatus",
+            "value": "dpa:contractStatus"
+          },
+          {
+            "label": "dpa:contractEndDate",
+            "value": "dpa:contractEndDate"
+          },
+          {
+            "label": "dpa:woDate",
+            "value": "dpa:woDate"
+          },
+          {
+            "label": "dpa:invoiceDate",
+            "value": "dpa:invoiceDate"
+          },
+          {
+            "label": "dpa:quotationNature",
+            "value": "dpa:quotationNature"
+          },
+          {
+            "label": "dpa:witness",
+            "value": "dpa:witness"
+          },
+          {
+            "label": "dpa:parentContractId",
+            "value": "dpa:parentContractId"
+          },
+          {
+            "label": "dpa:docpalType",
+            "value": "dpa:docpalType"
+          },
+          {
+            "label": "dpa:poNature",
+            "value": "dpa:poNature"
+          },
+          {
+            "label": "dpa:contractId",
+            "value": "dpa:contractId"
+          },
+          {
+            "label": "dpa:woNumber",
+            "value": "dpa:woNumber"
+          },
+          {
+            "label": "dpa:paymentDate",
+            "value": "dpa:paymentDate"
+          },
+          {
+            "label": "dpb:salesChannels",
+            "value": "dpb:salesChannels"
+          },
+          {
+            "label": "dpb:marketingChannels",
+            "value": "dpb:marketingChannels"
+          },
+          {
+            "label": "dpb:suppliers",
+            "value": "dpb:suppliers"
+          },
+          {
+            "label": "dpb:incomeSources",
+            "value": "dpb:incomeSources"
+          },
+          {
+            "label": "dpb:taxCredits",
+            "value": "dpb:taxCredits"
+          },
+          {
+            "label": "dpb:serviceTimeline",
+            "value": "dpb:serviceTimeline"
+          },
+          {
+            "label": "dpb:expenseCategories",
+            "value": "dpb:expenseCategories"
+          },
+          {
+            "label": "dpb:responseStatus",
+            "value": "dpb:responseStatus"
+          },
+          {
+            "label": "dpb:relatedContracts",
+            "value": "dpb:relatedContracts"
+          },
+          {
+            "label": "dpb:proposalStatus",
+            "value": "dpb:proposalStatus"
+          },
+          {
+            "label": "dpb:tenderStatus",
+            "value": "dpb:tenderStatus"
+          },
+          {
+            "label": "dpb:relatedArticles",
+            "value": "dpb:relatedArticles"
+          },
+          {
+            "label": "dpb:marketingSupplierServices",
+            "value": "dpb:marketingSupplierServices"
+          },
+          {
+            "label": "dpb:currency",
+            "value": "dpb:currency"
+          },
+          {
+            "label": "dpb:relatedPriceBooks",
+            "value": "dpb:relatedPriceBooks"
+          },
+          {
+            "label": "dpb:riskStatus",
+            "value": "dpb:riskStatus"
+          },
+          {
+            "label": "dpb:revenueCategories",
+            "value": "dpb:revenueCategories"
+          },
+          {
+            "label": "dpb:contractAttachments",
+            "value": "dpb:contractAttachments"
+          },
+          {
+            "label": "dpc:date",
+            "value": "dpc:date"
+          },
+          {
+            "label": "dpc:conveyanceDate",
+            "value": "dpc:conveyanceDate"
+          },
+          {
+            "label": "dpc:acquisitionDate",
+            "value": "dpc:acquisitionDate"
+          },
+          {
+            "label": "dpc:wBSDate",
+            "value": "dpc:wBSDate"
+          },
+          {
+            "label": "dpc:dateofBirth",
+            "value": "dpc:dateofBirth"
+          },
+          {
+            "label": "dpc:productionEndDate",
+            "value": "dpc:productionEndDate"
+          },
+          {
+            "label": "dpc:endDate",
+            "value": "dpc:endDate"
+          },
+          {
+            "label": "dpc:preservationEndDate",
+            "value": "dpc:preservationEndDate"
+          },
+          {
+            "label": "dpc:agreementDate",
+            "value": "dpc:agreementDate"
+          },
+          {
+            "label": "dpc:assessmentDate",
+            "value": "dpc:assessmentDate"
+          },
+          {
+            "label": "dpc:dueDate",
+            "value": "dpc:dueDate"
+          },
+          {
+            "label": "dpc:maintenanceDate",
+            "value": "dpc:maintenanceDate"
+          },
+          {
+            "label": "dpc:dateofOnboarding",
+            "value": "dpc:dateofOnboarding"
+          },
+          {
+            "label": "dpc:statementDate",
+            "value": "dpc:statementDate"
+          },
+          {
+            "label": "dpc:terminationDate",
+            "value": "dpc:terminationDate"
+          },
+          {
+            "label": "dpc:documentReviewDate",
+            "value": "dpc:documentReviewDate"
+          },
+          {
+            "label": "dpc:contractEffectiveDate",
+            "value": "dpc:contractEffectiveDate"
+          },
+          {
+            "label": "dpc:reportDate",
+            "value": "dpc:reportDate"
+          },
+          {
+            "label": "dpc:reconciliationReviewDate",
+            "value": "dpc:reconciliationReviewDate"
+          },
+          {
+            "label": "dpc:visitDate",
+            "value": "dpc:visitDate"
+          },
+          {
+            "label": "dpc:responseDeadline",
+            "value": "dpc:responseDeadline"
+          },
+          {
+            "label": "dpc:statementStartDate",
+            "value": "dpc:statementStartDate"
+          },
+          {
+            "label": "dpc:certificationDate",
+            "value": "dpc:certificationDate"
+          },
+          {
+            "label": "dpc:dateofNotice",
+            "value": "dpc:dateofNotice"
+          },
+          {
+            "label": "dpc:formSubmissionDate",
+            "value": "dpc:formSubmissionDate"
+          },
+          {
+            "label": "dpc:offerExpirationDate",
+            "value": "dpc:offerExpirationDate"
+          },
+          {
+            "label": "dpc:timesheetSubmissionDate",
+            "value": "dpc:timesheetSubmissionDate"
+          },
+          {
+            "label": "dpc:statementEndDate",
+            "value": "dpc:statementEndDate"
+          },
+          {
+            "label": "dpc:projectEndDate",
+            "value": "dpc:projectEndDate"
+          },
+          {
+            "label": "dpc:receiptDate",
+            "value": "dpc:receiptDate"
+          },
+          {
+            "label": "dpc:interviewDate",
+            "value": "dpc:interviewDate"
+          },
+          {
+            "label": "dpc:closingDate",
+            "value": "dpc:closingDate"
+          },
+          {
+            "label": "dpc:dateofLetter",
+            "value": "dpc:dateofLetter"
+          },
+          {
+            "label": "dpc:resignationDate",
+            "value": "dpc:resignationDate"
+          },
+          {
+            "label": "dpc:planDate",
+            "value": "dpc:planDate"
+          },
+          {
+            "label": "dpc:inquiryDate",
+            "value": "dpc:inquiryDate"
+          },
+          {
+            "label": "dpc:proposalDeadline",
+            "value": "dpc:proposalDeadline"
+          },
+          {
+            "label": "dpc:requestedDeliveryDate",
+            "value": "dpc:requestedDeliveryDate"
+          },
+          {
+            "label": "dpc:loanDate",
+            "value": "dpc:loanDate"
+          },
+          {
+            "label": "dpc:reimbursementDate",
+            "value": "dpc:reimbursementDate"
+          },
+          {
+            "label": "dpc:incidentDate",
+            "value": "dpc:incidentDate"
+          },
+          {
+            "label": "dpc:orderDate",
+            "value": "dpc:orderDate"
+          },
+          {
+            "label": "dpc:dateSubmitted",
+            "value": "dpc:dateSubmitted"
+          },
+          {
+            "label": "dpc:startDate",
+            "value": "dpc:startDate"
+          },
+          {
+            "label": "dpc:applicationDate",
+            "value": "dpc:applicationDate"
+          },
+          {
+            "label": "dpc:eventDate",
+            "value": "dpc:eventDate"
+          },
+          {
+            "label": "dpc:proposalDate",
+            "value": "dpc:proposalDate"
+          },
+          {
+            "label": "dpc:purchaseDate",
+            "value": "dpc:purchaseDate"
+          },
+          {
+            "label": "dpc:contractDuration",
+            "value": "dpc:contractDuration"
+          },
+          {
+            "label": "dpc:trainingDate",
+            "value": "dpc:trainingDate"
+          },
+          {
+            "label": "dpc:filingDate",
+            "value": "dpc:filingDate"
+          },
+          {
+            "label": "dpc:resolutionDate",
+            "value": "dpc:resolutionDate"
+          },
+          {
+            "label": "dpc:budgetApprovalDate",
+            "value": "dpc:budgetApprovalDate"
+          },
+          {
+            "label": "dpc:dateofMemorandum",
+            "value": "dpc:dateofMemorandum"
+          },
+          {
+            "label": "dpc:expectedCloseDate",
+            "value": "dpc:expectedCloseDate"
+          },
+          {
+            "label": "dpc:documentExpirationDate",
+            "value": "dpc:documentExpirationDate"
+          },
+          {
+            "label": "dpc:productionStartDate",
+            "value": "dpc:productionStartDate"
+          },
+          {
+            "label": "dpc:reviewDate",
+            "value": "dpc:reviewDate"
+          },
+          {
+            "label": "dpc:dateofComplaint",
+            "value": "dpc:dateofComplaint"
+          },
+          {
+            "label": "dpc:projectStartDate",
+            "value": "dpc:projectStartDate"
+          },
+          {
+            "label": "dpc:requestDate",
+            "value": "dpc:requestDate"
+          },
+          {
+            "label": "dpc:meetingDate",
+            "value": "dpc:meetingDate"
+          },
+          {
+            "label": "dpc:targetCompletionDate",
+            "value": "dpc:targetCompletionDate"
+          },
+          {
+            "label": "dpc:applicationDeadline",
+            "value": "dpc:applicationDeadline"
+          },
+          {
+            "label": "dpc:shipmentDate",
+            "value": "dpc:shipmentDate"
+          },
+          {
+            "label": "dpc:deliveryDate",
+            "value": "dpc:deliveryDate"
+          },
+          {
+            "label": "dpc:issueDate",
+            "value": "dpc:issueDate"
+          },
+          {
+            "label": "dpc:publicationDate",
+            "value": "dpc:publicationDate"
+          },
+          {
+            "label": "dpc:appraisalDate",
+            "value": "dpc:appraisalDate"
+          },
+          {
+            "label": "dpc:expirationDate",
+            "value": "dpc:expirationDate"
+          },
+          {
+            "label": "dpc:registerDate",
+            "value": "dpc:registerDate"
+          },
+          {
+            "label": "dpc:amendmentDate",
+            "value": "dpc:amendmentDate"
+          },
+          {
+            "label": "dpc:preservationStartDate",
+            "value": "dpc:preservationStartDate"
+          },
+          {
+            "label": "dpc:nextCalibrationDueDate",
+            "value": "dpc:nextCalibrationDueDate"
+          },
+          {
+            "label": "dpc:changeImplementationDate",
+            "value": "dpc:changeImplementationDate"
+          },
+          {
+            "label": "dpc:surveyDate",
+            "value": "dpc:surveyDate"
+          },
+          {
+            "label": "dpc:expectedDeliveryDate",
+            "value": "dpc:expectedDeliveryDate"
+          },
+          {
+            "label": "dpc:documentIssueDate",
+            "value": "dpc:documentIssueDate"
+          },
+          {
+            "label": "dpc:fileModifiedDate",
+            "value": "dpc:fileModifiedDate"
+          },
+          {
+            "label": "dpc:submissionDate",
+            "value": "dpc:submissionDate"
+          },
+          {
+            "label": "dpc:renewalDate",
+            "value": "dpc:renewalDate"
+          },
+          {
+            "label": "dpc:invoiceDate",
+            "value": "dpc:invoiceDate"
+          },
+          {
+            "label": "dpc:contractRenewalDate",
+            "value": "dpc:contractRenewalDate"
+          },
+          {
+            "label": "dpc:workCompleted",
+            "value": "dpc:workCompleted"
+          },
+          {
+            "label": "dpc:licenseExpiryDate",
+            "value": "dpc:licenseExpiryDate"
+          },
+          {
+            "label": "dpc:contractExpirationDate",
+            "value": "dpc:contractExpirationDate"
+          },
+          {
+            "label": "dpc:offerDate",
+            "value": "dpc:offerDate"
+          },
+          {
+            "label": "dpc:stocktakeDate",
+            "value": "dpc:stocktakeDate"
+          },
+          {
+            "label": "dpc:qualityControlDate",
+            "value": "dpc:qualityControlDate"
+          },
+          {
+            "label": "dpc:paymentDate",
+            "value": "dpc:paymentDate"
+          },
+          {
+            "label": "dpc:calibrationDate",
+            "value": "dpc:calibrationDate"
+          },
+          {
+            "label": "dpc:effectiveDate",
+            "value": "dpc:effectiveDate"
+          },
+          {
+            "label": "dpc:testDate",
+            "value": "dpc:testDate"
+          },
+          {
+            "label": "dpd:numberofDays",
+            "value": "dpd:numberofDays"
+          },
+          {
+            "label": "dpd:premiumAmount",
+            "value": "dpd:premiumAmount"
+          },
+          {
+            "label": "dpd:currentSalary",
+            "value": "dpd:currentSalary"
+          },
+          {
+            "label": "dpd:taxableIncome",
+            "value": "dpd:taxableIncome"
+          },
+          {
+            "label": "dpd:closingBalance",
+            "value": "dpd:closingBalance"
+          },
+          {
+            "label": "dpd:budgetAllocations",
+            "value": "dpd:budgetAllocations"
+          },
+          {
+            "label": "dpd:invoiceAmount",
+            "value": "dpd:invoiceAmount"
+          },
+          {
+            "label": "dpd:formVersion",
+            "value": "dpd:formVersion"
+          },
+          {
+            "label": "dpd:contentCalendarYear",
+            "value": "dpd:contentCalendarYear"
+          },
+          {
+            "label": "dpd:purchasePrice",
+            "value": "dpd:purchasePrice"
+          },
+          {
+            "label": "dpd:chequeNumber",
+            "value": "dpd:chequeNumber"
+          },
+          {
+            "label": "dpd:contractValue",
+            "value": "dpd:contractValue"
+          },
+          {
+            "label": "dpd:netIncomeLoss",
+            "value": "dpd:netIncomeLoss"
+          },
+          {
+            "label": "dpd:taxYear",
+            "value": "dpd:taxYear"
+          },
+          {
+            "label": "dpd:price",
+            "value": "dpd:price"
+          },
+          {
+            "label": "dpd:eventBudget",
+            "value": "dpd:eventBudget"
+          },
+          {
+            "label": "dpd:creditLimit",
+            "value": "dpd:creditLimit"
+          },
+          {
+            "label": "dpd:openingBalance",
+            "value": "dpd:openingBalance"
+          },
+          {
+            "label": "dpd:scriptVersion",
+            "value": "dpd:scriptVersion"
+          },
+          {
+            "label": "dpd:surveyRating",
+            "value": "dpd:surveyRating"
+          },
+          {
+            "label": "dpd:productionQuantity",
+            "value": "dpd:productionQuantity"
+          },
+          {
+            "label": "dpd:tax",
+            "value": "dpd:tax"
+          },
+          {
+            "label": "dpd:proposedSalary",
+            "value": "dpd:proposedSalary"
+          },
+          {
+            "label": "dpd:totalAmount",
+            "value": "dpd:totalAmount"
+          },
+          {
+            "label": "dpd:reportYear",
+            "value": "dpd:reportYear"
+          },
+          {
+            "label": "dpd:taxAmount",
+            "value": "dpd:taxAmount"
+          },
+          {
+            "label": "dpd:closingCashBalance",
+            "value": "dpd:closingCashBalance"
+          },
+          {
+            "label": "dpd:openingCashBalance",
+            "value": "dpd:openingCashBalance"
+          },
+          {
+            "label": "dpd:fiscalYear",
+            "value": "dpd:fiscalYear"
+          },
+          {
+            "label": "dpd:freightCharges",
+            "value": "dpd:freightCharges"
+          },
+          {
+            "label": "dpd:policyVersion",
+            "value": "dpd:policyVersion"
+          },
+          {
+            "label": "dpd:leaveTaken",
+            "value": "dpd:leaveTaken"
+          },
+          {
+            "label": "dpd:reportID",
+            "value": "dpd:reportID"
+          },
+          {
+            "label": "dpd:totalPrice",
+            "value": "dpd:totalPrice"
+          },
+          {
+            "label": "dpd:surveyVersion",
+            "value": "dpd:surveyVersion"
+          },
+          {
+            "label": "dpd:totalExpenses",
+            "value": "dpd:totalExpenses"
+          },
+          {
+            "label": "dpd:paymentAmount",
+            "value": "dpd:paymentAmount"
+          },
+          {
+            "label": "dpd:taxpayerIdentificationNumber",
+            "value": "dpd:taxpayerIdentificationNumber"
+          },
+          {
+            "label": "dpd:closingQuantity",
+            "value": "dpd:closingQuantity"
+          },
+          {
+            "label": "dpd:marketingBudget",
+            "value": "dpd:marketingBudget"
+          },
+          {
+            "label": "dpd:financialYear",
+            "value": "dpd:financialYear"
+          },
+          {
+            "label": "dpd:procedureVersion",
+            "value": "dpd:procedureVersion"
+          },
+          {
+            "label": "dpd:customerAcquisition",
+            "value": "dpd:customerAcquisition"
+          },
+          {
+            "label": "dpd:profitMargin",
+            "value": "dpd:profitMargin"
+          },
+          {
+            "label": "dpd:reimbursementAmount",
+            "value": "dpd:reimbursementAmount"
+          },
+          {
+            "label": "dpd:openingQuantity",
+            "value": "dpd:openingQuantity"
+          },
+          {
+            "label": "dpd:refundAmount",
+            "value": "dpd:refundAmount"
+          },
+          {
+            "label": "dpd:purchaseCost",
+            "value": "dpd:purchaseCost"
+          },
+          {
+            "label": "dpd:amount",
+            "value": "dpd:amount"
+          },
+          {
+            "label": "dpd:cost",
+            "value": "dpd:cost"
+          },
+          {
+            "label": "dpd:quantity",
+            "value": "dpd:quantity"
+          },
+          {
+            "label": "dpd:overtimeHours",
+            "value": "dpd:overtimeHours"
+          },
+          {
+            "label": "dpd:claimAmount",
+            "value": "dpd:claimAmount"
+          },
+          {
+            "label": "dpd:maintenanceCost",
+            "value": "dpd:maintenanceCost"
+          },
+          {
+            "label": "dpd:costComponents",
+            "value": "dpd:costComponents"
+          },
+          {
+            "label": "dpd:storageFees",
+            "value": "dpd:storageFees"
+          },
+          {
+            "label": "dpd:loanAmount",
+            "value": "dpd:loanAmount"
+          },
+          {
+            "label": "dpd:creditLimitRequested",
+            "value": "dpd:creditLimitRequested"
+          },
+          {
+            "label": "dpd:salesTargets",
+            "value": "dpd:salesTargets"
+          },
+          {
+            "label": "dpd:articleVersion",
+            "value": "dpd:articleVersion"
+          },
+          {
+            "label": "dpd:accountBalance",
+            "value": "dpd:accountBalance"
+          },
+          {
+            "label": "dpd:currentValue",
+            "value": "dpd:currentValue"
+          },
+          {
+            "label": "dpd:pricing",
+            "value": "dpd:pricing"
+          },
+          {
+            "label": "dpd:financialData",
+            "value": "dpd:financialData"
+          },
+          {
+            "label": "dpd:renewalAmount",
+            "value": "dpd:renewalAmount"
+          },
+          {
+            "label": "dpe:assessorName",
+            "value": "dpe:assessorName"
+          },
+          {
+            "label": "dpe:assignedAgent",
+            "value": "dpe:assignedAgent"
+          },
+          {
+            "label": "dpe:addressedTo",
+            "value": "dpe:addressedTo"
+          },
+          {
+            "label": "dpe:auditedUnaudited",
+            "value": "dpe:auditedUnaudited"
+          },
+          {
+            "label": "dpe:agent",
+            "value": "dpe:agent"
+          },
+          {
+            "label": "dpe:attendanceExceptions",
+            "value": "dpe:attendanceExceptions"
+          },
+          {
+            "label": "dpe:actionItems",
+            "value": "dpe:actionItems"
+          },
+          {
+            "label": "dpe:appraiserName",
+            "value": "dpe:appraiserName"
+          },
+          {
+            "label": "dpe:auditScope",
+            "value": "dpe:auditScope"
+          },
+          {
+            "label": "dpe:auditObjectives",
+            "value": "dpe:auditObjectives"
+          },
+          {
+            "label": "dpe:attendeeList",
+            "value": "dpe:attendeeList"
+          },
+          {
+            "label": "dpe:approverName",
+            "value": "dpe:approverName"
+          },
+          {
+            "label": "dpe:assetLocation",
+            "value": "dpe:assetLocation"
+          },
+          {
+            "label": "dpe:accountHolder",
+            "value": "dpe:accountHolder"
+          },
+          {
+            "label": "dpe:beneficiaryName",
+            "value": "dpe:beneficiaryName"
+          },
+          {
+            "label": "dpe:auditPeriod",
+            "value": "dpe:auditPeriod"
+          },
+          {
+            "label": "dpe:awardsandHonors",
+            "value": "dpe:awardsandHonors"
+          },
+          {
+            "label": "dpe:articleSummary",
+            "value": "dpe:articleSummary"
+          },
+          {
+            "label": "dpe:areasforImprovement",
+            "value": "dpe:areasforImprovement"
+          },
+          {
+            "label": "dpe:audience",
+            "value": "dpe:audience"
+          },
+          {
+            "label": "dpe:assignedTechnician",
+            "value": "dpe:assignedTechnician"
+          },
+          {
+            "label": "dpe:applicableJurisdiction",
+            "value": "dpe:applicableJurisdiction"
+          },
+          {
+            "label": "dpe:attendees",
+            "value": "dpe:attendees"
+          },
+          {
+            "label": "dpe:advisingBank",
+            "value": "dpe:advisingBank"
+          },
+          {
+            "label": "dpe:adPlacement",
+            "value": "dpe:adPlacement"
+          },
+          {
+            "label": "dpe:applicantName",
+            "value": "dpe:applicantName"
+          },
+          {
+            "label": "dpe:assetType",
+            "value": "dpe:assetType"
+          },
+          {
+            "label": "dpe:auditFindings",
+            "value": "dpe:auditFindings"
+          },
+          {
+            "label": "dpe:amendedPersonalDetails",
+            "value": "dpe:amendedPersonalDetails"
+          },
+          {
+            "label": "dpe:agendaItems",
+            "value": "dpe:agendaItems"
+          },
+          {
+            "label": "dpe:assetOwner",
+            "value": "dpe:assetOwner"
+          },
+          {
+            "label": "dpe:applicableDepartments",
+            "value": "dpe:applicableDepartments"
+          },
+          {
+            "label": "dpe:assessmentID",
+            "value": "dpe:assessmentID"
+          },
+          {
+            "label": "dpe:brandAssets",
+            "value": "dpe:brandAssets"
+          },
+          {
+            "label": "dpe:architecturalOverview",
+            "value": "dpe:architecturalOverview"
+          },
+          {
+            "label": "dpe:attachmentType",
+            "value": "dpe:attachmentType"
+          },
+          {
+            "label": "dpe:borrowerName",
+            "value": "dpe:borrowerName"
+          },
+          {
+            "label": "dpe:bankStatementType",
+            "value": "dpe:bankStatementType"
+          },
+          {
+            "label": "dpe:bankName",
+            "value": "dpe:bankName"
+          },
+          {
+            "label": "dpe:assignedTo",
+            "value": "dpe:assignedTo"
+          },
+          {
+            "label": "dpe:articleLanguage",
+            "value": "dpe:articleLanguage"
+          },
+          {
+            "label": "dpe:applicableRegulations",
+            "value": "dpe:applicableRegulations"
+          },
+          {
+            "label": "dpe:appraisalPeriod",
+            "value": "dpe:appraisalPeriod"
+          },
+          {
+            "label": "dpe:applicationID",
+            "value": "dpe:applicationID"
+          },
+          {
+            "label": "dpe:approvalStatus",
+            "value": "dpe:approvalStatus"
+          },
+          {
+            "label": "dpe:approver",
+            "value": "dpe:approver"
+          },
+          {
+            "label": "dpe:address",
+            "value": "dpe:address"
+          },
+          {
+            "label": "dpe:assignedChangeOwner",
+            "value": "dpe:assignedChangeOwner"
+          },
+          {
+            "label": "dpe:approvalManager",
+            "value": "dpe:approvalManager"
+          },
+          {
+            "label": "dpe:assignedInvestigator",
+            "value": "dpe:assignedInvestigator"
+          },
+          {
+            "label": "dpe:accountNumber",
+            "value": "dpe:accountNumber"
+          },
+          {
+            "label": "dpe:batchorLotNumber",
+            "value": "dpe:batchorLotNumber"
+          },
+          {
+            "label": "dpe:attachmentFormat",
+            "value": "dpe:attachmentFormat"
+          },
+          {
+            "label": "dpe:articleStatus",
+            "value": "dpe:articleStatus"
+          },
+          {
+            "label": "dpe:articleCategory",
+            "value": "dpe:articleCategory"
+          },
+          {
+            "label": "dpe:assetName",
+            "value": "dpe:assetName"
+          },
+          {
+            "label": "dpe:billingAddress",
+            "value": "dpe:billingAddress"
+          },
+          {
+            "label": "dpe:adFormat",
+            "value": "dpe:adFormat"
+          },
+          {
+            "label": "dpf:brandVoice",
+            "value": "dpf:brandVoice"
+          },
+          {
+            "label": "dpf:budgetApprover",
+            "value": "dpf:budgetApprover"
+          },
+          {
+            "label": "dpf:companyName",
+            "value": "dpf:companyName"
+          },
+          {
+            "label": "dpf:budgetCategories",
+            "value": "dpf:budgetCategories"
+          },
+          {
+            "label": "dpf:configurationChanges",
+            "value": "dpf:configurationChanges"
+          },
+          {
+            "label": "dpf:calibratedBy",
+            "value": "dpf:calibratedBy"
+          },
+          {
+            "label": "dpf:comparativePeriods",
+            "value": "dpf:comparativePeriods"
+          },
+          {
+            "label": "dpf:claimType",
+            "value": "dpf:claimType"
+          },
+          {
+            "label": "dpf:complaintID",
+            "value": "dpf:complaintID"
+          },
+          {
+            "label": "dpf:carrierName",
+            "value": "dpf:carrierName"
+          },
+          {
+            "label": "dpf:brandGuidelines",
+            "value": "dpf:brandGuidelines"
+          },
+          {
+            "label": "dpf:caseNumber",
+            "value": "dpf:caseNumber"
+          },
+          {
+            "label": "dpf:complaintType",
+            "value": "dpf:complaintType"
+          },
+          {
+            "label": "dpf:caseName",
+            "value": "dpf:caseName"
+          },
+          {
+            "label": "dpf:complianceObligations",
+            "value": "dpf:complianceObligations"
+          },
+          {
+            "label": "dpf:changeRequestID",
+            "value": "dpf:changeRequestID"
+          },
+          {
+            "label": "dpf:calibrationResult",
+            "value": "dpf:calibrationResult"
+          },
+          {
+            "label": "dpf:brandName",
+            "value": "dpf:brandName"
+          },
+          {
+            "label": "dpf:communicationPlan",
+            "value": "dpf:communicationPlan"
+          },
+          {
+            "label": "dpf:communicationProtocols",
+            "value": "dpf:communicationProtocols"
+          },
+          {
+            "label": "dpf:configurationItemID",
+            "value": "dpf:configurationItemID"
+          },
+          {
+            "label": "dpf:businessNeeds",
+            "value": "dpf:businessNeeds"
+          },
+          {
+            "label": "dpf:changeCategory",
+            "value": "dpf:changeCategory"
+          },
+          {
+            "label": "dpf:brandPerformanceMetrics",
+            "value": "dpf:brandPerformanceMetrics"
+          },
+          {
+            "label": "dpf:consideration",
+            "value": "dpf:consideration"
+          },
+          {
+            "label": "dpf:claimantName",
+            "value": "dpf:claimantName"
+          },
+          {
+            "label": "dpf:complianceRequirements",
+            "value": "dpf:complianceRequirements"
+          },
+          {
+            "label": "dpf:configurationItemStatus",
+            "value": "dpf:configurationItemStatus"
+          },
+          {
+            "label": "dpf:certificationAuthority",
+            "value": "dpf:certificationAuthority"
+          },
+          {
+            "label": "dpf:clientName",
+            "value": "dpf:clientName"
+          },
+          {
+            "label": "dpf:cashLocation",
+            "value": "dpf:cashLocation"
+          },
+          {
+            "label": "dpf:chequeStatus",
+            "value": "dpf:chequeStatus"
+          },
+          {
+            "label": "dpf:calltoAction",
+            "value": "dpf:calltoAction"
+          },
+          {
+            "label": "dpf:budgetPeriods",
+            "value": "dpf:budgetPeriods"
+          },
+          {
+            "label": "dpf:configurationBaseline",
+            "value": "dpf:configurationBaseline"
+          },
+          {
+            "label": "dpf:calculationMethod",
+            "value": "dpf:calculationMethod"
+          },
+          {
+            "label": "dpf:consigneeName",
+            "value": "dpf:consigneeName"
+          },
+          {
+            "label": "dpf:complaintStatus",
+            "value": "dpf:complaintStatus"
+          },
+          {
+            "label": "dpf:companyInformation",
+            "value": "dpf:companyInformation"
+          },
+          {
+            "label": "dpf:cashOutflows",
+            "value": "dpf:cashOutflows"
+          },
+          {
+            "label": "dpf:caseReferenceNumber",
+            "value": "dpf:caseReferenceNumber"
+          },
+          {
+            "label": "dpf:cashierName",
+            "value": "dpf:cashierName"
+          },
+          {
+            "label": "dpf:configurationDependencies",
+            "value": "dpf:configurationDependencies"
+          },
+          {
+            "label": "dpf:claimReferenceNumber",
+            "value": "dpf:claimReferenceNumber"
+          },
+          {
+            "label": "dpf:buyerImporterName",
+            "value": "dpf:buyerImporterName"
+          },
+          {
+            "label": "dpf:cashInflows",
+            "value": "dpf:cashInflows"
+          },
+          {
+            "label": "dpf:brochureCategory",
+            "value": "dpf:brochureCategory"
+          },
+          {
+            "label": "dpf:complaintSeverityLevel",
+            "value": "dpf:complaintSeverityLevel"
+          },
+          {
+            "label": "dpf:certifications",
+            "value": "dpf:certifications"
+          },
+          {
+            "label": "dpf:buyerName",
+            "value": "dpf:buyerName"
+          },
+          {
+            "label": "dpf:clientBrand",
+            "value": "dpf:clientBrand"
+          },
+          {
+            "label": "dpf:configurationItemVersion",
+            "value": "dpf:configurationItemVersion"
+          },
+          {
+            "label": "dpf:contactInformation",
+            "value": "dpf:contactInformation"
+          },
+          {
+            "label": "dpf:candidateName",
+            "value": "dpf:candidateName"
+          },
+          {
+            "label": "dpf:complianceControls",
+            "value": "dpf:complianceControls"
+          },
+          {
+            "label": "dpf:certificateNumber",
+            "value": "dpf:certificateNumber"
+          },
+          {
+            "label": "dpf:changePriority",
+            "value": "dpf:changePriority"
+          },
+          {
+            "label": "dpf:complianceArea",
+            "value": "dpf:complianceArea"
+          },
+          {
+            "label": "dpf:campaignName",
+            "value": "dpf:campaignName"
+          },
+          {
+            "label": "dpf:configurationItemOwner",
+            "value": "dpf:configurationItemOwner"
+          },
+          {
+            "label": "dpg:departmentsorDivisions",
+            "value": "dpg:departmentsorDivisions"
+          },
+          {
+            "label": "dpg:customerCompanyName",
+            "value": "dpg:customerCompanyName"
+          },
+          {
+            "label": "dpg:depreciationMethod",
+            "value": "dpg:depreciationMethod"
+          },
+          {
+            "label": "dpg:documentNumber",
+            "value": "dpg:documentNumber"
+          },
+          {
+            "label": "dpg:contractType",
+            "value": "dpg:contractType"
+          },
+          {
+            "label": "dpg:correctiveActions",
+            "value": "dpg:correctiveActions"
+          },
+          {
+            "label": "dpg:deductionsandCredits",
+            "value": "dpg:deductionsandCredits"
+          },
+          {
+            "label": "dpg:discount",
+            "value": "dpg:discount"
+          },
+          {
+            "label": "dpg:documentAudience",
+            "value": "dpg:documentAudience"
+          },
+          {
+            "label": "dpg:documentIssuingAuthority",
+            "value": "dpg:documentIssuingAuthority"
+          },
+          {
+            "label": "dpg:criticalSystemsandApplications",
+            "value": "dpg:criticalSystemsandApplications"
+          },
+          {
+            "label": "dpg:deliveryCondition",
+            "value": "dpg:deliveryCondition"
+          },
+          {
+            "label": "dpg:departmentorTeam",
+            "value": "dpg:departmentorTeam"
+          },
+          {
+            "label": "dpg:creditAssessmentResult",
+            "value": "dpg:creditAssessmentResult"
+          },
+          {
+            "label": "dpg:contentOwners",
+            "value": "dpg:contentOwners"
+          },
+          {
+            "label": "dpg:contractID",
+            "value": "dpg:contractID"
+          },
+          {
+            "label": "dpg:coverLetter",
+            "value": "dpg:coverLetter"
+          },
+          {
+            "label": "dpg:conveyanceType",
+            "value": "dpg:conveyanceType"
+          },
+          {
+            "label": "dpg:dataSources",
+            "value": "dpg:dataSources"
+          },
+          {
+            "label": "dpg:creditHistory",
+            "value": "dpg:creditHistory"
+          },
+          {
+            "label": "dpg:creativeFormat",
+            "value": "dpg:creativeFormat"
+          },
+          {
+            "label": "dpg:contactPersonPhoneNumber",
+            "value": "dpg:contactPersonPhoneNumber"
+          },
+          {
+            "label": "dpg:customerContactName",
+            "value": "dpg:customerContactName"
+          },
+          {
+            "label": "dpg:designObjectives",
+            "value": "dpg:designObjectives"
+          },
+          {
+            "label": "dpg:corporateGovernanceDocumentType",
+            "value": "dpg:corporateGovernanceDocumentType"
+          },
+          {
+            "label": "dpg:contractScope",
+            "value": "dpg:contractScope"
+          },
+          {
+            "label": "dpg:customerAccountType",
+            "value": "dpg:customerAccountType"
+          },
+          {
+            "label": "dpg:diagnosis",
+            "value": "dpg:diagnosis"
+          },
+          {
+            "label": "dpg:decisionSummary",
+            "value": "dpg:decisionSummary"
+          },
+          {
+            "label": "dpg:destinationCountry",
+            "value": "dpg:destinationCountry"
+          },
+          {
+            "label": "dpg:customerName",
+            "value": "dpg:customerName"
+          },
+          {
+            "label": "dpg:dependencies",
+            "value": "dpg:dependencies"
+          },
+          {
+            "label": "dpg:customerDetailAmendmentType",
+            "value": "dpg:customerDetailAmendmentType"
+          },
+          {
+            "label": "dpg:documentFormat",
+            "value": "dpg:documentFormat"
+          },
+          {
+            "label": "dpg:contentTopic",
+            "value": "dpg:contentTopic"
+          },
+          {
+            "label": "dpg:contractTerms",
+            "value": "dpg:contractTerms"
+          },
+          {
+            "label": "dpg:coveragePeriod",
+            "value": "dpg:coveragePeriod"
+          },
+          {
+            "label": "dpg:destination",
+            "value": "dpg:destination"
+          },
+          {
+            "label": "dpg:designScope",
+            "value": "dpg:designScope"
+          },
+          {
+            "label": "dpg:description",
+            "value": "dpg:description"
+          },
+          {
+            "label": "dpg:contactPerson",
+            "value": "dpg:contactPerson"
+          },
+          {
+            "label": "dpg:daysOff",
+            "value": "dpg:daysOff"
+          },
+          {
+            "label": "dpg:deductions",
+            "value": "dpg:deductions"
+          },
+          {
+            "label": "dpg:distributionChannels",
+            "value": "dpg:distributionChannels"
+          },
+          {
+            "label": "dpg:designRationale",
+            "value": "dpg:designRationale"
+          },
+          {
+            "label": "dpg:copyrightInformation",
+            "value": "dpg:copyrightInformation"
+          },
+          {
+            "label": "dpg:documentHolderFullName",
+            "value": "dpg:documentHolderFullName"
+          },
+          {
+            "label": "dpg:department",
+            "value": "dpg:department"
+          },
+          {
+            "label": "dpg:contractParties",
+            "value": "dpg:contractParties"
+          },
+          {
+            "label": "dpg:diagramCreator",
+            "value": "dpg:diagramCreator"
+          },
+          {
+            "label": "dpg:customerProfile",
+            "value": "dpg:customerProfile"
+          },
+          {
+            "label": "dpg:customerAccountStatus",
+            "value": "dpg:customerAccountStatus"
+          },
+          {
+            "label": "dpg:disasterRecoveryTeam",
+            "value": "dpg:disasterRecoveryTeam"
+          },
+          {
+            "label": "dpg:customsDeclarationNumber",
+            "value": "dpg:customsDeclarationNumber"
+          },
+          {
+            "label": "dpg:documentOwner",
+            "value": "dpg:documentOwner"
+          },
+          {
+            "label": "dpg:contentThemesCampaigns",
+            "value": "dpg:contentThemesCampaigns"
+          },
+          {
+            "label": "dpg:contentTypes",
+            "value": "dpg:contentTypes"
+          },
+          {
+            "label": "dpg:countryofOrigin",
+            "value": "dpg:countryofOrigin"
+          },
+          {
+            "label": "dpg:diagramFormat",
+            "value": "dpg:diagramFormat"
+          },
+          {
+            "label": "dpg:contactPersonEmail",
+            "value": "dpg:contactPersonEmail"
+          },
+          {
+            "label": "dph:facilityManager",
+            "value": "dph:facilityManager"
+          },
+          {
+            "label": "dph:education",
+            "value": "dph:education"
+          },
+          {
+            "label": "dph:escalationActions",
+            "value": "dph:escalationActions"
+          },
+          {
+            "label": "dph:fileHeight",
+            "value": "dph:fileHeight"
+          },
+          {
+            "label": "dph:forecastPeriod",
+            "value": "dph:forecastPeriod"
+          },
+          {
+            "label": "dph:equipmentorAssetName",
+            "value": "dph:equipmentorAssetName"
+          },
+          {
+            "label": "dph:employeeCount",
+            "value": "dph:employeeCount"
+          },
+          {
+            "label": "dph:documentVersion",
+            "value": "dph:documentVersion"
+          },
+          {
+            "label": "dph:followupActions",
+            "value": "dph:followupActions"
+          },
+          {
+            "label": "dph:guideScope",
+            "value": "dph:guideScope"
+          },
+          {
+            "label": "dph:followupRequired",
+            "value": "dph:followupRequired"
+          },
+          {
+            "label": "dph:eventGoalsObjectives",
+            "value": "dph:eventGoalsObjectives"
+          },
+          {
+            "label": "dph:emailAddress",
+            "value": "dph:emailAddress"
+          },
+          {
+            "label": "dph:eventName",
+            "value": "dph:eventName"
+          },
+          {
+            "label": "dph:documentPurpose",
+            "value": "dph:documentPurpose"
+          },
+          {
+            "label": "dph:equipmentName",
+            "value": "dph:equipmentName"
+          },
+          {
+            "label": "dph:employeeName",
+            "value": "dph:employeeName"
+          },
+          {
+            "label": "dph:floorLevel",
+            "value": "dph:floorLevel"
+          },
+          {
+            "label": "dph:governingLaw",
+            "value": "dph:governingLaw"
+          },
+          {
+            "label": "dph:documentScope",
+            "value": "dph:documentScope"
+          },
+          {
+            "label": "dph:eventType",
+            "value": "dph:eventType"
+          },
+          {
+            "label": "dph:employeeAddress",
+            "value": "dph:employeeAddress"
+          },
+          {
+            "label": "dph:fixedAssetCondition",
+            "value": "dph:fixedAssetCondition"
+          },
+          {
+            "label": "dph:entryTime",
+            "value": "dph:entryTime"
+          },
+          {
+            "label": "dph:emailStatus",
+            "value": "dph:emailStatus"
+          },
+          {
+            "label": "dph:facilityLocation",
+            "value": "dph:facilityLocation"
+          },
+          {
+            "label": "dph:equipmentandResources",
+            "value": "dph:equipmentandResources"
+          },
+          {
+            "label": "dph:escalationContacts",
+            "value": "dph:escalationContacts"
+          },
+          {
+            "label": "dph:frontorBackImage",
+            "value": "dph:frontorBackImage"
+          },
+          {
+            "label": "dph:estimatedEffort",
+            "value": "dph:estimatedEffort"
+          },
+          {
+            "label": "dph:fileWidth",
+            "value": "dph:fileWidth"
+          },
+          {
+            "label": "dph:gender",
+            "value": "dph:gender"
+          },
+          {
+            "label": "dph:documentType",
+            "value": "dph:documentType"
+          },
+          {
+            "label": "dph:employmentPeriod",
+            "value": "dph:employmentPeriod"
+          },
+          {
+            "label": "dph:guidePurpose",
+            "value": "dph:guidePurpose"
+          },
+          {
+            "label": "dph:evaluationCriteria",
+            "value": "dph:evaluationCriteria"
+          },
+          {
+            "label": "dph:employerName",
+            "value": "dph:employerName"
+          },
+          {
+            "label": "dph:grantor",
+            "value": "dph:grantor"
+          },
+          {
+            "label": "dph:expenseReportNumber",
+            "value": "dph:expenseReportNumber"
+          },
+          {
+            "label": "dph:expensesIncurred",
+            "value": "dph:expensesIncurred"
+          },
+          {
+            "label": "dph:documentStatus",
+            "value": "dph:documentStatus"
+          },
+          {
+            "label": "dph:facilityName",
+            "value": "dph:facilityName"
+          },
+          {
+            "label": "dph:goodsDescription",
+            "value": "dph:goodsDescription"
+          },
+          {
+            "label": "dph:guideOutline",
+            "value": "dph:guideOutline"
+          },
+          {
+            "label": "dph:floorArea",
+            "value": "dph:floorArea"
+          },
+          {
+            "label": "dph:finalPayandBenefits",
+            "value": "dph:finalPayandBenefits"
+          },
+          {
+            "label": "dph:feedbackComments",
+            "value": "dph:feedbackComments"
+          },
+          {
+            "label": "dph:floororLocation",
+            "value": "dph:floororLocation"
+          },
+          {
+            "label": "dph:equipmentSerialNumber",
+            "value": "dph:equipmentSerialNumber"
+          },
+          {
+            "label": "dph:escalationLevels",
+            "value": "dph:escalationLevels"
+          },
+          {
+            "label": "dph:facilityType",
+            "value": "dph:facilityType"
+          },
+          {
+            "label": "dph:employmentType",
+            "value": "dph:employmentType"
+          },
+          {
+            "label": "dph:eventLocation",
+            "value": "dph:eventLocation"
+          },
+          {
+            "label": "dph:escalationTriggers",
+            "value": "dph:escalationTriggers"
+          },
+          {
+            "label": "dph:expenseReportPeriod",
+            "value": "dph:expenseReportPeriod"
+          },
+          {
+            "label": "dph:exitTime",
+            "value": "dph:exitTime"
+          },
+          {
+            "label": "dph:exporterDeclaration",
+            "value": "dph:exporterDeclaration"
+          },
+          {
+            "label": "dph:exporterName",
+            "value": "dph:exporterName"
+          },
+          {
+            "label": "dph:eventOrganizers",
+            "value": "dph:eventOrganizers"
+          },
+          {
+            "label": "dph:fileFormat",
+            "value": "dph:fileFormat"
+          },
+          {
+            "label": "dpi:inventoryItem",
+            "value": "dpi:inventoryItem"
+          },
+          {
+            "label": "dpi:inquiryPriority",
+            "value": "dpi:inquiryPriority"
+          },
+          {
+            "label": "dpi:issueNumber",
+            "value": "dpi:issueNumber"
+          },
+          {
+            "label": "dpi:jobTitle",
+            "value": "dpi:jobTitle"
+          },
+          {
+            "label": "dpi:incidentType",
+            "value": "dpi:incidentType"
+          },
+          {
+            "label": "dpi:keyTopics",
+            "value": "dpi:keyTopics"
+          },
+          {
+            "label": "dpi:incidentReportCreator",
+            "value": "dpi:incidentReportCreator"
+          },
+          {
+            "label": "dpi:interviewerComments",
+            "value": "dpi:interviewerComments"
+          },
+          {
+            "label": "dpi:itemCodeSKU",
+            "value": "dpi:itemCodeSKU"
+          },
+          {
+            "label": "dpi:intellectualPropertyStatus",
+            "value": "dpi:intellectualPropertyStatus"
+          },
+          {
+            "label": "dpi:leaveType",
+            "value": "dpi:leaveType"
+          },
+          {
+            "label": "dpi:hiringDepartment",
+            "value": "dpi:hiringDepartment"
+          },
+          {
+            "label": "dpi:interviewTestType",
+            "value": "dpi:interviewTestType"
+          },
+          {
+            "label": "dpi:healthcareProvider",
+            "value": "dpi:healthcareProvider"
+          },
+          {
+            "label": "dpi:leadFollowup",
+            "value": "dpi:leadFollowup"
+          },
+          {
+            "label": "dpi:incidentID",
+            "value": "dpi:incidentID"
+          },
+          {
+            "label": "dpi:incidentCategorization",
+            "value": "dpi:incidentCategorization"
+          },
+          {
+            "label": "dpi:importanceLevel",
+            "value": "dpi:importanceLevel"
+          },
+          {
+            "label": "dpi:impact",
+            "value": "dpi:impact"
+          },
+          {
+            "label": "dpi:insuredParty",
+            "value": "dpi:insuredParty"
+          },
+          {
+            "label": "dpi:incidentSeverity",
+            "value": "dpi:incidentSeverity"
+          },
+          {
+            "label": "dpi:hiringManager",
+            "value": "dpi:hiringManager"
+          },
+          {
+            "label": "dpi:keyMetrics",
+            "value": "dpi:keyMetrics"
+          },
+          {
+            "label": "dpi:keyStakeholders",
+            "value": "dpi:keyStakeholders"
+          },
+          {
+            "label": "dpi:incomeInformation",
+            "value": "dpi:incomeInformation"
+          },
+          {
+            "label": "dpi:interviewerName",
+            "value": "dpi:interviewerName"
+          },
+          {
+            "label": "dpi:hostName",
+            "value": "dpi:hostName"
+          },
+          {
+            "label": "dpi:issuingInstitution",
+            "value": "dpi:issuingInstitution"
+          },
+          {
+            "label": "dpi:jurisdiction",
+            "value": "dpi:jurisdiction"
+          },
+          {
+            "label": "dpi:handoverDetails",
+            "value": "dpi:handoverDetails"
+          },
+          {
+            "label": "dpi:incidentResponseTeam",
+            "value": "dpi:incidentResponseTeam"
+          },
+          {
+            "label": "dpi:intellectualPropertyNumber",
+            "value": "dpi:intellectualPropertyNumber"
+          },
+          {
+            "label": "dpi:inspectionResults",
+            "value": "dpi:inspectionResults"
+          },
+          {
+            "label": "dpi:industry",
+            "value": "dpi:industry"
+          },
+          {
+            "label": "dpi:issuingBank",
+            "value": "dpi:issuingBank"
+          },
+          {
+            "label": "dpi:importerName",
+            "value": "dpi:importerName"
+          },
+          {
+            "label": "dpi:interviewDecision",
+            "value": "dpi:interviewDecision"
+          },
+          {
+            "label": "dpi:invoiceNumber",
+            "value": "dpi:invoiceNumber"
+          },
+          {
+            "label": "dpi:keyFindings",
+            "value": "dpi:keyFindings"
+          },
+          {
+            "label": "dpi:insuranceCompany",
+            "value": "dpi:insuranceCompany"
+          },
+          {
+            "label": "dpi:importerExporterName",
+            "value": "dpi:importerExporterName"
+          },
+          {
+            "label": "dpi:incidentLocation",
+            "value": "dpi:incidentLocation"
+          },
+          {
+            "label": "dpi:incidentStatus",
+            "value": "dpi:incidentStatus"
+          },
+          {
+            "label": "dpi:interestRate",
+            "value": "dpi:interestRate"
+          },
+          {
+            "label": "dpi:legalArguments",
+            "value": "dpi:legalArguments"
+          },
+          {
+            "label": "dpi:hiringCompany",
+            "value": "dpi:hiringCompany"
+          },
+          {
+            "label": "dpi:inquiryType",
+            "value": "dpi:inquiryType"
+          },
+          {
+            "label": "dpi:issuerName",
+            "value": "dpi:issuerName"
+          },
+          {
+            "label": "dpi:legalBasis",
+            "value": "dpi:legalBasis"
+          },
+          {
+            "label": "dpi:keyMessage",
+            "value": "dpi:keyMessage"
+          },
+          {
+            "label": "dpi:legalAnalysis",
+            "value": "dpi:legalAnalysis"
+          },
+          {
+            "label": "dpi:inquiryStatus",
+            "value": "dpi:inquiryStatus"
+          },
+          {
+            "label": "dpi:keyPerformanceIndicators",
+            "value": "dpi:keyPerformanceIndicators"
+          },
+          {
+            "label": "dpi:harmonizedSystemCode",
+            "value": "dpi:harmonizedSystemCode"
+          },
+          {
+            "label": "dpi:issuingAuthority",
+            "value": "dpi:issuingAuthority"
+          },
+          {
+            "label": "dpi:jobLocation",
+            "value": "dpi:jobLocation"
+          },
+          {
+            "label": "dpi:importRestrictions",
+            "value": "dpi:importRestrictions"
+          },
+          {
+            "label": "dpi:itemCodeorSKU",
+            "value": "dpi:itemCodeorSKU"
+          },
+          {
+            "label": "dpi:invoiceStatus",
+            "value": "dpi:invoiceStatus"
+          },
+          {
+            "label": "dpi:keyObjectives",
+            "value": "dpi:keyObjectives"
+          },
+          {
+            "label": "dpj:legalHoldIssuer",
+            "value": "dpj:legalHoldIssuer"
+          },
+          {
+            "label": "dpj:orderNumber",
+            "value": "dpj:orderNumber"
+          },
+          {
+            "label": "dpj:opportunityValue",
+            "value": "dpj:opportunityValue"
+          },
+          {
+            "label": "dpj:orderPriority",
+            "value": "dpj:orderPriority"
+          },
+          {
+            "label": "dpj:magazineFormat",
+            "value": "dpj:magazineFormat"
+          },
+          {
+            "label": "dpj:orientationTopics",
+            "value": "dpj:orientationTopics"
+          },
+          {
+            "label": "dpj:legalProtection",
+            "value": "dpj:legalProtection"
+          },
+          {
+            "label": "dpj:managerName",
+            "value": "dpj:managerName"
+          },
+          {
+            "label": "dpj:letterofCreditNumber",
+            "value": "dpj:letterofCreditNumber"
+          },
+          {
+            "label": "dpj:medications",
+            "value": "dpj:medications"
+          },
+          {
+            "label": "dpj:loanPurpose",
+            "value": "dpj:loanPurpose"
+          },
+          {
+            "label": "dpj:maintenanceHistory",
+            "value": "dpj:maintenanceHistory"
+          },
+          {
+            "label": "dpj:natureoftheDemand",
+            "value": "dpj:natureoftheDemand"
+          },
+          {
+            "label": "dpj:maintenanceType",
+            "value": "dpj:maintenanceType"
+          },
+          {
+            "label": "dpj:mediaMetrics",
+            "value": "dpj:mediaMetrics"
+          },
+          {
+            "label": "dpj:milestonesandTimeline",
+            "value": "dpj:milestonesandTimeline"
+          },
+          {
+            "label": "dpj:mediaSchedule",
+            "value": "dpj:mediaSchedule"
+          },
+          {
+            "label": "dpj:maintenanceTechnician",
+            "value": "dpj:maintenanceTechnician"
+          },
+          {
+            "label": "dpj:organizationName",
+            "value": "dpj:organizationName"
+          },
+          {
+            "label": "dpj:opportunityName",
+            "value": "dpj:opportunityName"
+          },
+          {
+            "label": "dpj:mediaBudget",
+            "value": "dpj:mediaBudget"
+          },
+          {
+            "label": "dpj:magazineTitle",
+            "value": "dpj:magazineTitle"
+          },
+          {
+            "label": "dpj:marketingObjectives",
+            "value": "dpj:marketingObjectives"
+          },
+          {
+            "label": "dpj:licenseHolderFullName",
+            "value": "dpj:licenseHolderFullName"
+          },
+          {
+            "label": "dpj:noticePeriod",
+            "value": "dpj:noticePeriod"
+          },
+          {
+            "label": "dpj:medicalRecordNumber",
+            "value": "dpj:medicalRecordNumber"
+          },
+          {
+            "label": "dpj:meetingOrganizer",
+            "value": "dpj:meetingOrganizer"
+          },
+          {
+            "label": "dpj:magazineCategory",
+            "value": "dpj:magazineCategory"
+          },
+          {
+            "label": "dpj:nationality",
+            "value": "dpj:nationality"
+          },
+          {
+            "label": "dpj:officeorFacilityName",
+            "value": "dpj:officeorFacilityName"
+          },
+          {
+            "label": "dpj:networkDiagramType",
+            "value": "dpj:networkDiagramType"
+          },
+          {
+            "label": "dpj:licenseClass",
+            "value": "dpj:licenseClass"
+          },
+          {
+            "label": "dpj:maintenanceDuration",
+            "value": "dpj:maintenanceDuration"
+          },
+          {
+            "label": "dpj:meetingLocation",
+            "value": "dpj:meetingLocation"
+          },
+          {
+            "label": "dpj:maintenanceCompletionStatus",
+            "value": "dpj:maintenanceCompletionStatus"
+          },
+          {
+            "label": "dpj:nonDisclosureObligations",
+            "value": "dpj:nonDisclosureObligations"
+          },
+          {
+            "label": "dpj:logisticInsurancePolicyType",
+            "value": "dpj:logisticInsurancePolicyType"
+          },
+          {
+            "label": "dpj:marketTrends",
+            "value": "dpj:marketTrends"
+          },
+          {
+            "label": "dpj:loanType",
+            "value": "dpj:loanType"
+          },
+          {
+            "label": "dpj:marketingEvent",
+            "value": "dpj:marketingEvent"
+          },
+          {
+            "label": "dpj:orderStatus",
+            "value": "dpj:orderStatus"
+          },
+          {
+            "label": "dpj:opportunityDescription",
+            "value": "dpj:opportunityDescription"
+          },
+          {
+            "label": "dpj:networkDiagramOwner",
+            "value": "dpj:networkDiagramOwner"
+          },
+          {
+            "label": "dpj:orderItems",
+            "value": "dpj:orderItems"
+          },
+          {
+            "label": "dpj:meetingType",
+            "value": "dpj:meetingType"
+          },
+          {
+            "label": "dpj:opportunityStage",
+            "value": "dpj:opportunityStage"
+          },
+          {
+            "label": "dpj:litigationType",
+            "value": "dpj:litigationType"
+          },
+          {
+            "label": "dpj:licenseNumber",
+            "value": "dpj:licenseNumber"
+          },
+          {
+            "label": "dpj:licensingInformation",
+            "value": "dpj:licensingInformation"
+          },
+          {
+            "label": "dpj:networkDiagramScope",
+            "value": "dpj:networkDiagramScope"
+          },
+          {
+            "label": "dpj:networkTopology",
+            "value": "dpj:networkTopology"
+          },
+          {
+            "label": "dpj:maintenanceSchedule",
+            "value": "dpj:maintenanceSchedule"
+          },
+          {
+            "label": "dpj:meetingPurpose",
+            "value": "dpj:meetingPurpose"
+          },
+          {
+            "label": "dpj:meetingTime",
+            "value": "dpj:meetingTime"
+          },
+          {
+            "label": "dpj:legalIssue",
+            "value": "dpj:legalIssue"
+          },
+          {
+            "label": "dpj:lenderName",
+            "value": "dpj:lenderName"
+          },
+          {
+            "label": "dpj:objectives",
+            "value": "dpj:objectives"
+          },
+          {
+            "label": "dpj:orderDetail",
+            "value": "dpj:orderDetail"
+          },
+          {
+            "label": "dpj:location",
+            "value": "dpj:location"
+          },
+          {
+            "label": "dpj:milestones",
+            "value": "dpj:milestones"
+          },
+          {
+            "label": "dpk:overallAssessment",
+            "value": "dpk:overallAssessment"
+          },
+          {
+            "label": "dpk:permittedDisclosures",
+            "value": "dpk:permittedDisclosures"
+          },
+          {
+            "label": "dpk:presentationFormat",
+            "value": "dpk:presentationFormat"
+          },
+          {
+            "label": "dpk:policyNumber",
+            "value": "dpk:policyNumber"
+          },
+          {
+            "label": "dpk:planScope",
+            "value": "dpk:planScope"
+          },
+          {
+            "label": "dpk:productName",
+            "value": "dpk:productName"
+          },
+          {
+            "label": "dpk:physicalWidth",
+            "value": "dpk:physicalWidth"
+          },
+          {
+            "label": "dpk:policyOwner",
+            "value": "dpk:policyOwner"
+          },
+          {
+            "label": "dpk:previousMeetingNotice",
+            "value": "dpk:previousMeetingNotice"
+          },
+          {
+            "label": "dpk:paymentTerms",
+            "value": "dpk:paymentTerms"
+          },
+          {
+            "label": "dpk:presenter",
+            "value": "dpk:presenter"
+          },
+          {
+            "label": "dpk:policyScope",
+            "value": "dpk:policyScope"
+          },
+          {
+            "label": "dpk:professionalSummary",
+            "value": "dpk:professionalSummary"
+          },
+          {
+            "label": "dpk:personalDetailAmendmentType",
+            "value": "dpk:personalDetailAmendmentType"
+          },
+          {
+            "label": "dpk:priceLevels",
+            "value": "dpk:priceLevels"
+          },
+          {
+            "label": "dpk:policyObjectives",
+            "value": "dpk:policyObjectives"
+          },
+          {
+            "label": "dpk:priority",
+            "value": "dpk:priority"
+          },
+          {
+            "label": "dpk:productionSchedule",
+            "value": "dpk:productionSchedule"
+          },
+          {
+            "label": "dpk:phoneNumber",
+            "value": "dpk:phoneNumber"
+          },
+          {
+            "label": "dpk:productionOrderNumber",
+            "value": "dpk:productionOrderNumber"
+          },
+          {
+            "label": "dpk:planObjectives",
+            "value": "dpk:planObjectives"
+          },
+          {
+            "label": "dpk:positionAppliedFor",
+            "value": "dpk:positionAppliedFor"
+          },
+          {
+            "label": "dpk:paymentMethod",
+            "value": "dpk:paymentMethod"
+          },
+          {
+            "label": "dpk:planDescription",
+            "value": "dpk:planDescription"
+          },
+          {
+            "label": "dpk:performanceComments",
+            "value": "dpk:performanceComments"
+          },
+          {
+            "label": "dpk:policyStatement",
+            "value": "dpk:policyStatement"
+          },
+          {
+            "label": "dpk:procedureType",
+            "value": "dpk:procedureType"
+          },
+          {
+            "label": "dpk:planPeriod",
+            "value": "dpk:planPeriod"
+          },
+          {
+            "label": "dpk:policyholder",
+            "value": "dpk:policyholder"
+          },
+          {
+            "label": "dpk:physicalHeight",
+            "value": "dpk:physicalHeight"
+          },
+          {
+            "label": "dpk:performanceIssue",
+            "value": "dpk:performanceIssue"
+          },
+          {
+            "label": "dpk:pONumber",
+            "value": "dpk:pONumber"
+          },
+          {
+            "label": "dpk:origin",
+            "value": "dpk:origin"
+          },
+          {
+            "label": "dpk:procedureOwner",
+            "value": "dpk:procedureOwner"
+          },
+          {
+            "label": "dpk:policySummary",
+            "value": "dpk:policySummary"
+          },
+          {
+            "label": "dpk:payeeName",
+            "value": "dpk:payeeName"
+          },
+          {
+            "label": "dpk:printingSpecifications",
+            "value": "dpk:printingSpecifications"
+          },
+          {
+            "label": "dpk:priorityLevel",
+            "value": "dpk:priorityLevel"
+          },
+          {
+            "label": "dpk:payPeriod",
+            "value": "dpk:payPeriod"
+          },
+          {
+            "label": "dpk:procedureScope",
+            "value": "dpk:procedureScope"
+          },
+          {
+            "label": "dpk:physicalAddress",
+            "value": "dpk:physicalAddress"
+          },
+          {
+            "label": "dpk:pricingStrategy",
+            "value": "dpk:pricingStrategy"
+          },
+          {
+            "label": "dpk:partiesInvolved",
+            "value": "dpk:partiesInvolved"
+          },
+          {
+            "label": "dpk:payerName",
+            "value": "dpk:payerName"
+          },
+          {
+            "label": "dpk:productServiceCategory",
+            "value": "dpk:productServiceCategory"
+          },
+          {
+            "label": "dpk:performanceGoals",
+            "value": "dpk:performanceGoals"
+          },
+          {
+            "label": "dpk:paymentStatus",
+            "value": "dpk:paymentStatus"
+          },
+          {
+            "label": "dpk:patientName",
+            "value": "dpk:patientName"
+          },
+          {
+            "label": "dpk:productionProcess",
+            "value": "dpk:productionProcess"
+          },
+          {
+            "label": "dpk:performanceMetrics",
+            "value": "dpk:performanceMetrics"
+          },
+          {
+            "label": "dpk:paymentReference",
+            "value": "dpk:paymentReference"
+          },
+          {
+            "label": "dpk:probabilityofSuccess",
+            "value": "dpk:probabilityofSuccess"
+          },
+          {
+            "label": "dpk:productCode",
+            "value": "dpk:productCode"
+          },
+          {
+            "label": "dpk:productorService",
+            "value": "dpk:productorService"
+          },
+          {
+            "label": "dpk:policyType",
+            "value": "dpk:policyType"
+          },
+          {
+            "label": "dpk:planOwner",
+            "value": "dpk:planOwner"
+          },
+          {
+            "label": "dpk:originCountry",
+            "value": "dpk:originCountry"
+          },
+          {
+            "label": "dpk:procedureSummary",
+            "value": "dpk:procedureSummary"
+          },
+          {
+            "label": "dpk:powersGranted",
+            "value": "dpk:powersGranted"
+          },
+          {
+            "label": "dpk:presentationPurpose",
+            "value": "dpk:presentationPurpose"
+          },
+          {
+            "label": "dpl:renewalContract",
+            "value": "dpl:renewalContract"
+          },
+          {
+            "label": "dpl:reasonforTermination",
+            "value": "dpl:reasonforTermination"
+          },
+          {
+            "label": "dpl:reasonforLeave",
+            "value": "dpl:reasonforLeave"
+          },
+          {
+            "label": "dpl:reliefSought",
+            "value": "dpl:reliefSought"
+          },
+          {
+            "label": "dpl:reconciliationApprover",
+            "value": "dpl:reconciliationApprover"
+          },
+          {
+            "label": "dpl:purchaseProductorService",
+            "value": "dpl:purchaseProductorService"
+          },
+          {
+            "label": "dpl:reportingDepartment",
+            "value": "dpl:reportingDepartment"
+          },
+          {
+            "label": "dpl:proposalSummary",
+            "value": "dpl:proposalSummary"
+          },
+          {
+            "label": "dpl:recommendations",
+            "value": "dpl:recommendations"
+          },
+          {
+            "label": "dpl:quoteID",
+            "value": "dpl:quoteID"
+          },
+          {
+            "label": "dpl:qualityMetrics",
+            "value": "dpl:qualityMetrics"
+          },
+          {
+            "label": "dpl:projectSuccessCriteria",
+            "value": "dpl:projectSuccessCriteria"
+          },
+          {
+            "label": "dpl:recipientName",
+            "value": "dpl:recipientName"
+          },
+          {
+            "label": "dpl:relatedParties",
+            "value": "dpl:relatedParties"
+          },
+          {
+            "label": "dpl:purposeoftheDocument",
+            "value": "dpl:purposeoftheDocument"
+          },
+          {
+            "label": "dpl:reconciliationMethod",
+            "value": "dpl:reconciliationMethod"
+          },
+          {
+            "label": "dpl:propertyAddress",
+            "value": "dpl:propertyAddress"
+          },
+          {
+            "label": "dpl:reasonforResignation",
+            "value": "dpl:reasonforResignation"
+          },
+          {
+            "label": "dpl:reconciledEntities",
+            "value": "dpl:reconciledEntities"
+          },
+          {
+            "label": "dpl:projectDuration",
+            "value": "dpl:projectDuration"
+          },
+          {
+            "label": "dpl:renewalOwner",
+            "value": "dpl:renewalOwner"
+          },
+          {
+            "label": "dpl:recipients",
+            "value": "dpl:recipients"
+          },
+          {
+            "label": "dpl:reasonforReturnorRefund",
+            "value": "dpl:reasonforReturnorRefund"
+          },
+          {
+            "label": "dpl:recipientID",
+            "value": "dpl:recipientID"
+          },
+          {
+            "label": "dpl:projectClosureReportID",
+            "value": "dpl:projectClosureReportID"
+          },
+          {
+            "label": "dpl:projectName",
+            "value": "dpl:projectName"
+          },
+          {
+            "label": "dpl:reasonforReview",
+            "value": "dpl:reasonforReview"
+          },
+          {
+            "label": "dpl:reconciliationDiscrepancies",
+            "value": "dpl:reconciliationDiscrepancies"
+          },
+          {
+            "label": "dpl:projectManager",
+            "value": "dpl:projectManager"
+          },
+          {
+            "label": "dpl:reasonforChangeorTermination",
+            "value": "dpl:reasonforChangeorTermination"
+          },
+          {
+            "label": "dpl:refundMethod",
+            "value": "dpl:refundMethod"
+          },
+          {
+            "label": "dpl:purpose",
+            "value": "dpl:purpose"
+          },
+          {
+            "label": "dpl:projectPhase",
+            "value": "dpl:projectPhase"
+          },
+          {
+            "label": "dpl:projectObjective",
+            "value": "dpl:projectObjective"
+          },
+          {
+            "label": "dpl:reportFormat",
+            "value": "dpl:reportFormat"
+          },
+          {
+            "label": "dpl:proposalType",
+            "value": "dpl:proposalType"
+          },
+          {
+            "label": "dpl:reimbursementMethod",
+            "value": "dpl:reimbursementMethod"
+          },
+          {
+            "label": "dpl:reimbursementType",
+            "value": "dpl:reimbursementType"
+          },
+          {
+            "label": "dpl:purposeofTravel",
+            "value": "dpl:purposeofTravel"
+          },
+          {
+            "label": "dpl:reconciliationPeriod",
+            "value": "dpl:reconciliationPeriod"
+          },
+          {
+            "label": "dpl:proposedChanges",
+            "value": "dpl:proposedChanges"
+          },
+          {
+            "label": "dpl:proposalScope",
+            "value": "dpl:proposalScope"
+          },
+          {
+            "label": "dpl:reportAudience",
+            "value": "dpl:reportAudience"
+          },
+          {
+            "label": "dpl:receiptNumber",
+            "value": "dpl:receiptNumber"
+          },
+          {
+            "label": "dpl:repaymentTerm",
+            "value": "dpl:repaymentTerm"
+          },
+          {
+            "label": "dpl:projectObjectives",
+            "value": "dpl:projectObjectives"
+          },
+          {
+            "label": "dpl:projectDeliverables",
+            "value": "dpl:projectDeliverables"
+          },
+          {
+            "label": "dpl:reasonforAmendment",
+            "value": "dpl:reasonforAmendment"
+          },
+          {
+            "label": "dpl:projectSponsor",
+            "value": "dpl:projectSponsor"
+          },
+          {
+            "label": "dpl:projectScope",
+            "value": "dpl:projectScope"
+          },
+          {
+            "label": "dpl:projectTeam",
+            "value": "dpl:projectTeam"
+          },
+          {
+            "label": "dpl:publicationDatesandTimes",
+            "value": "dpl:publicationDatesandTimes"
+          },
+          {
+            "label": "dpl:regulatoryAuthority",
+            "value": "dpl:regulatoryAuthority"
+          },
+          {
+            "label": "dpl:recordID",
+            "value": "dpl:recordID"
+          },
+          {
+            "label": "dpl:reconciliationStatus",
+            "value": "dpl:reconciliationStatus"
+          },
+          {
+            "label": "dpl:qualityControlInspector",
+            "value": "dpl:qualityControlInspector"
+          },
+          {
+            "label": "dpl:purchaseOrderNumber",
+            "value": "dpl:purchaseOrderNumber"
+          },
+          {
+            "label": "dpl:recipient",
+            "value": "dpl:recipient"
+          },
+          {
+            "label": "dpl:projectDescription",
+            "value": "dpl:projectDescription"
+          },
+          {
+            "label": "dpl:receiptID",
+            "value": "dpl:receiptID"
+          },
+          {
+            "label": "dpm:rolesandResponsibilities",
+            "value": "dpm:rolesandResponsibilities"
+          },
+          {
+            "label": "dpm:resolutionNumber",
+            "value": "dpm:resolutionNumber"
+          },
+          {
+            "label": "dpm:requesterEmail",
+            "value": "dpm:requesterEmail"
+          },
+          {
+            "label": "dpm:riskMitigationMeasures",
+            "value": "dpm:riskMitigationMeasures"
+          },
+          {
+            "label": "dpm:reportSummary",
+            "value": "dpm:reportSummary"
+          },
+          {
+            "label": "dpm:requestHandlingStatus",
+            "value": "dpm:requestHandlingStatus"
+          },
+          {
+            "label": "dpm:riskAssessmentType",
+            "value": "dpm:riskAssessmentType"
+          },
+          {
+            "label": "dpm:requestPriority",
+            "value": "dpm:requestPriority"
+          },
+          {
+            "label": "dpm:returnCondition",
+            "value": "dpm:returnCondition"
+          },
+          {
+            "label": "dpm:reportReviewer",
+            "value": "dpm:reportReviewer"
+          },
+          {
+            "label": "dpm:reportPeriod",
+            "value": "dpm:reportPeriod"
+          },
+          {
+            "label": "dpm:requestedItemCode",
+            "value": "dpm:requestedItemCode"
+          },
+          {
+            "label": "dpm:resourceAllocation",
+            "value": "dpm:resourceAllocation"
+          },
+          {
+            "label": "dpm:resolutionSubject",
+            "value": "dpm:resolutionSubject"
+          },
+          {
+            "label": "dpm:rootCauses",
+            "value": "dpm:rootCauses"
+          },
+          {
+            "label": "dpm:requesterName",
+            "value": "dpm:requesterName"
+          },
+          {
+            "label": "dpm:riskImpact",
+            "value": "dpm:riskImpact"
+          },
+          {
+            "label": "dpm:resumeorCV",
+            "value": "dpm:resumeorCV"
+          },
+          {
+            "label": "dpm:requestorName",
+            "value": "dpm:requestorName"
+          },
+          {
+            "label": "dpm:reportScope",
+            "value": "dpm:reportScope"
+          },
+          {
+            "label": "dpm:requiredItems",
+            "value": "dpm:requiredItems"
+          },
+          {
+            "label": "dpm:riskManagement",
+            "value": "dpm:riskManagement"
+          },
+          {
+            "label": "dpm:requester",
+            "value": "dpm:requester"
+          },
+          {
+            "label": "dpm:reportPurpose",
+            "value": "dpm:reportPurpose"
+          },
+          {
+            "label": "dpm:reportingManager",
+            "value": "dpm:reportingManager"
+          },
+          {
+            "label": "dpm:returnofCompanyProperty",
+            "value": "dpm:returnofCompanyProperty"
+          },
+          {
+            "label": "dpm:reportStatus",
+            "value": "dpm:reportStatus"
+          },
+          {
+            "label": "dpm:requestedMaintenanceService",
+            "value": "dpm:requestedMaintenanceService"
+          },
+          {
+            "label": "dpm:requestedItemDescription",
+            "value": "dpm:requestedItemDescription"
+          },
+          {
+            "label": "dpm:safetyTopic",
+            "value": "dpm:safetyTopic"
+          },
+          {
+            "label": "dpm:requesterPhoneNumber",
+            "value": "dpm:requesterPhoneNumber"
+          },
+          {
+            "label": "dpm:riskCategory",
+            "value": "dpm:riskCategory"
+          },
+          {
+            "label": "dpm:responseSummary",
+            "value": "dpm:responseSummary"
+          },
+          {
+            "label": "dpm:salesOpportunity",
+            "value": "dpm:salesOpportunity"
+          },
+          {
+            "label": "dpm:resolutionType",
+            "value": "dpm:resolutionType"
+          },
+          {
+            "label": "dpm:riskDescription",
+            "value": "dpm:riskDescription"
+          },
+          {
+            "label": "dpm:rosterPeriod",
+            "value": "dpm:rosterPeriod"
+          },
+          {
+            "label": "dpm:reportingSupervisor",
+            "value": "dpm:reportingSupervisor"
+          },
+          {
+            "label": "dpm:requestorDepartment",
+            "value": "dpm:requestorDepartment"
+          },
+          {
+            "label": "dpm:roomAreaUsage",
+            "value": "dpm:roomAreaUsage"
+          },
+          {
+            "label": "dpm:requesterEmailAddress",
+            "value": "dpm:requesterEmailAddress"
+          },
+          {
+            "label": "dpm:riskOwner",
+            "value": "dpm:riskOwner"
+          },
+          {
+            "label": "dpm:reviewerName",
+            "value": "dpm:reviewerName"
+          },
+          {
+            "label": "dpm:researchObjectives",
+            "value": "dpm:researchObjectives"
+          },
+          {
+            "label": "dpm:requirements",
+            "value": "dpm:requirements"
+          },
+          {
+            "label": "dpm:reportingMethod",
+            "value": "dpm:reportingMethod"
+          },
+          {
+            "label": "dpm:requisitionNumber",
+            "value": "dpm:requisitionNumber"
+          },
+          {
+            "label": "dpm:reportingHierarchy",
+            "value": "dpm:reportingHierarchy"
+          },
+          {
+            "label": "dpm:riskLikelihood",
+            "value": "dpm:riskLikelihood"
+          },
+          {
+            "label": "dpm:reportingPeriod",
+            "value": "dpm:reportingPeriod"
+          },
+          {
+            "label": "dpm:reviewer",
+            "value": "dpm:reviewer"
+          },
+          {
+            "label": "dpm:riskRating",
+            "value": "dpm:riskRating"
+          },
+          {
+            "label": "dpm:salaryandBenefits",
+            "value": "dpm:salaryandBenefits"
+          },
+          {
+            "label": "dpm:requestedBy",
+            "value": "dpm:requestedBy"
+          },
+          {
+            "label": "dpm:returnMethod",
+            "value": "dpm:returnMethod"
+          },
+          {
+            "label": "dpm:responsibleParties",
+            "value": "dpm:responsibleParties"
+          },
+          {
+            "label": "dpm:riskAssessment",
+            "value": "dpm:riskAssessment"
+          },
+          {
+            "label": "dpm:salaryReviewType",
+            "value": "dpm:salaryReviewType"
+          },
+          {
+            "label": "dpm:resolutionNotes",
+            "value": "dpm:resolutionNotes"
+          },
+          {
+            "label": "dpm:reviewerRole",
+            "value": "dpm:reviewerRole"
+          },
+          {
+            "label": "dpn:statementPeriod",
+            "value": "dpn:statementPeriod"
+          },
+          {
+            "label": "dpn:shipmentReference",
+            "value": "dpn:shipmentReference"
+          },
+          {
+            "label": "dpn:scopeofWork",
+            "value": "dpn:scopeofWork"
+          },
+          {
+            "label": "dpn:subject",
+            "value": "dpn:subject"
+          },
+          {
+            "label": "dpn:storageLocation",
+            "value": "dpn:storageLocation"
+          },
+          {
+            "label": "dpn:scopeofConfidentialInformation",
+            "value": "dpn:scopeofConfidentialInformation"
+          },
+          {
+            "label": "dpn:stockInflows",
+            "value": "dpn:stockInflows"
+          },
+          {
+            "label": "dpn:solutionOverview",
+            "value": "dpn:solutionOverview"
+          },
+          {
+            "label": "dpn:skills",
+            "value": "dpn:skills"
+          },
+          {
+            "label": "dpn:serviceLevels",
+            "value": "dpn:serviceLevels"
+          },
+          {
+            "label": "dpn:scopeofPreservation",
+            "value": "dpn:scopeofPreservation"
+          },
+          {
+            "label": "dpn:systemName",
+            "value": "dpn:systemName"
+          },
+          {
+            "label": "dpn:salesRepresentative",
+            "value": "dpn:salesRepresentative"
+          },
+          {
+            "label": "dpn:supplier",
+            "value": "dpn:supplier"
+          },
+          {
+            "label": "dpn:scriptOwner",
+            "value": "dpn:scriptOwner"
+          },
+          {
+            "label": "dpn:supportTeamContacts",
+            "value": "dpn:supportTeamContacts"
+          },
+          {
+            "label": "dpn:scopeofRequest",
+            "value": "dpn:scopeofRequest"
+          },
+          {
+            "label": "dpn:serialNumber",
+            "value": "dpn:serialNumber"
+          },
+          {
+            "label": "dpn:sOPType",
+            "value": "dpn:sOPType"
+          },
+          {
+            "label": "dpn:shippingMethod",
+            "value": "dpn:shippingMethod"
+          },
+          {
+            "label": "dpn:supportChannels",
+            "value": "dpn:supportChannels"
+          },
+          {
+            "label": "dpn:shipperName",
+            "value": "dpn:shipperName"
+          },
+          {
+            "label": "dpn:supportHours",
+            "value": "dpn:supportHours"
+          },
+          {
+            "label": "dpn:shiftRotation",
+            "value": "dpn:shiftRotation"
+          },
+          {
+            "label": "dpn:selectedMPFFunds",
+            "value": "dpn:selectedMPFFunds"
+          },
+          {
+            "label": "dpn:scriptAudience",
+            "value": "dpn:scriptAudience"
+          },
+          {
+            "label": "dpn:sender",
+            "value": "dpn:sender"
+          },
+          {
+            "label": "dpn:strengths",
+            "value": "dpn:strengths"
+          },
+          {
+            "label": "dpn:serviceProvider",
+            "value": "dpn:serviceProvider"
+          },
+          {
+            "label": "dpn:serviceMetrics",
+            "value": "dpn:serviceMetrics"
+          },
+          {
+            "label": "dpn:scopeandLimitations",
+            "value": "dpn:scopeandLimitations"
+          },
+          {
+            "label": "dpn:surveyMethod",
+            "value": "dpn:surveyMethod"
+          },
+          {
+            "label": "dpn:serviceRecipient",
+            "value": "dpn:serviceRecipient"
+          },
+          {
+            "label": "dpn:status",
+            "value": "dpn:status"
+          },
+          {
+            "label": "dpn:scriptPurpose",
+            "value": "dpn:scriptPurpose"
+          },
+          {
+            "label": "dpn:storagePeriod",
+            "value": "dpn:storagePeriod"
+          },
+          {
+            "label": "dpn:serviceStandards",
+            "value": "dpn:serviceStandards"
+          },
+          {
+            "label": "dpn:scriptLanguage",
+            "value": "dpn:scriptLanguage"
+          },
+          {
+            "label": "dpn:sittingPlanPeriod",
+            "value": "dpn:sittingPlanPeriod"
+          },
+          {
+            "label": "dpn:statementFormat",
+            "value": "dpn:statementFormat"
+          },
+          {
+            "label": "dpn:stakeholders",
+            "value": "dpn:stakeholders"
+          },
+          {
+            "label": "dpn:stockOutflows",
+            "value": "dpn:stockOutflows"
+          },
+          {
+            "label": "dpn:shipmentMethod",
+            "value": "dpn:shipmentMethod"
+          },
+          {
+            "label": "dpn:statementID",
+            "value": "dpn:statementID"
+          },
+          {
+            "label": "dpn:shippingInformation",
+            "value": "dpn:shippingInformation"
+          },
+          {
+            "label": "dpn:systemOwner",
+            "value": "dpn:systemOwner"
+          },
+          {
+            "label": "dpn:salesTrends",
+            "value": "dpn:salesTrends"
+          },
+          {
+            "label": "dpn:supplierName",
+            "value": "dpn:supplierName"
+          },
+          {
+            "label": "dpn:surveyType",
+            "value": "dpn:surveyType"
+          },
+          {
+            "label": "dpn:sellerExporterName",
+            "value": "dpn:sellerExporterName"
+          },
+          {
+            "label": "dpn:serviceLevelAgreement",
+            "value": "dpn:serviceLevelAgreement"
+          },
+          {
+            "label": "dpn:shiftorWorkSchedule",
+            "value": "dpn:shiftorWorkSchedule"
+          },
+          {
+            "label": "dpn:surveyResponseTime",
+            "value": "dpn:surveyResponseTime"
+          },
+          {
+            "label": "dpn:securityandPrivacy",
+            "value": "dpn:securityandPrivacy"
+          },
+          {
+            "label": "dpn:surveyDuration",
+            "value": "dpn:surveyDuration"
+          },
+          {
+            "label": "dpn:targetAudience",
+            "value": "dpn:targetAudience"
+          },
+          {
+            "label": "dpn:scriptKeywords",
+            "value": "dpn:scriptKeywords"
+          },
+          {
+            "label": "dpn:serviceAvailability",
+            "value": "dpn:serviceAvailability"
+          },
+          {
+            "label": "dpn:shippingAddress",
+            "value": "dpn:shippingAddress"
+          },
+          {
+            "label": "dpn:serviceDescription",
+            "value": "dpn:serviceDescription"
+          },
+          {
+            "label": "dpo:termsandConditions",
+            "value": "dpo:termsandConditions"
+          },
+          {
+            "label": "dpo:testResults",
+            "value": "dpo:testResults"
+          },
+          {
+            "label": "dpo:territoryName",
+            "value": "dpo:territoryName"
+          },
+          {
+            "label": "dpo:taxReturnID",
+            "value": "dpo:taxReturnID"
+          },
+          {
+            "label": "dpo:territoryDescription",
+            "value": "dpo:territoryDescription"
+          },
+          {
+            "label": "dpo:visitorCompany",
+            "value": "dpo:visitorCompany"
+          },
+          {
+            "label": "dpo:trademarkApplicationStatus",
+            "value": "dpo:trademarkApplicationStatus"
+          },
+          {
+            "label": "dpo:testCoverage",
+            "value": "dpo:testCoverage"
+          },
+          {
+            "label": "dpo:toneandVoice",
+            "value": "dpo:toneandVoice"
+          },
+          {
+            "label": "dpo:visitPurpose",
+            "value": "dpo:visitPurpose"
+          },
+          {
+            "label": "dpo:trainingObjectives",
+            "value": "dpo:trainingObjectives"
+          },
+          {
+            "label": "dpo:timesheetID",
+            "value": "dpo:timesheetID"
+          },
+          {
+            "label": "dpo:validityPeriod",
+            "value": "dpo:validityPeriod"
+          },
+          {
+            "label": "dpo:travelDates",
+            "value": "dpo:travelDates"
+          },
+          {
+            "label": "dpo:testScope",
+            "value": "dpo:testScope"
+          },
+          {
+            "label": "dpo:usageRights",
+            "value": "dpo:usageRights"
+          },
+          {
+            "label": "dpo:testObjectives",
+            "value": "dpo:testObjectives"
+          },
+          {
+            "label": "dpo:visitorPhoneNumber",
+            "value": "dpo:visitorPhoneNumber"
+          },
+          {
+            "label": "dpo:visitorEmailAddress",
+            "value": "dpo:visitorEmailAddress"
+          },
+          {
+            "label": "dpo:trainingProvider",
+            "value": "dpo:trainingProvider"
+          },
+          {
+            "label": "dpo:timelineandMilestones",
+            "value": "dpo:timelineandMilestones"
+          },
+          {
+            "label": "dpo:trainingResources",
+            "value": "dpo:trainingResources"
+          },
+          {
+            "label": "dpo:vendorInformation",
+            "value": "dpo:vendorInformation"
+          },
+          {
+            "label": "dpo:usageHistory",
+            "value": "dpo:usageHistory"
+          },
+          {
+            "label": "dpo:trademarkClass",
+            "value": "dpo:trademarkClass"
+          },
+          {
+            "label": "dpo:taxInformation",
+            "value": "dpo:taxInformation"
+          },
+          {
+            "label": "dpo:vendorName",
+            "value": "dpo:vendorName"
+          },
+          {
+            "label": "dpo:testEnvironment",
+            "value": "dpo:testEnvironment"
+          },
+          {
+            "label": "dpo:usageMetrics",
+            "value": "dpo:usageMetrics"
+          },
+          {
+            "label": "dpo:testSchedule",
+            "value": "dpo:testSchedule"
+          },
+          {
+            "label": "dpo:targetCustomer",
+            "value": "dpo:targetCustomer"
+          },
+          {
+            "label": "dpo:trainingModules",
+            "value": "dpo:trainingModules"
+          },
+          {
+            "label": "dpo:testResult",
+            "value": "dpo:testResult"
+          },
+          {
+            "label": "dpo:trainingMethods",
+            "value": "dpo:trainingMethods"
+          },
+          {
+            "label": "dpo:trainingTopics",
+            "value": "dpo:trainingTopics"
+          },
+          {
+            "label": "dpo:treatment",
+            "value": "dpo:treatment"
+          },
+          {
+            "label": "dpo:territoryGoals",
+            "value": "dpo:territoryGoals"
+          },
+          {
+            "label": "dpo:teamorDepartment",
+            "value": "dpo:teamorDepartment"
+          },
+          {
+            "label": "dpo:testDeliverables",
+            "value": "dpo:testDeliverables"
+          },
+          {
+            "label": "dpo:testPlanReference",
+            "value": "dpo:testPlanReference"
+          },
+          {
+            "label": "dpo:testExecutionandReporting",
+            "value": "dpo:testExecutionandReporting"
+          },
+          {
+            "label": "dpo:testExecutionDates",
+            "value": "dpo:testExecutionDates"
+          },
+          {
+            "label": "dpo:visitorName",
+            "value": "dpo:visitorName"
+          },
+          {
+            "label": "dpo:targetMarket",
+            "value": "dpo:targetMarket"
+          },
+          {
+            "label": "dpo:tenderDescription",
+            "value": "dpo:tenderDescription"
+          },
+          {
+            "label": "dpo:taxReturnFilingStatus",
+            "value": "dpo:taxReturnFilingStatus"
+          },
+          {
+            "label": "dpo:timesheetPeriod",
+            "value": "dpo:timesheetPeriod"
+          },
+          {
+            "label": "dpo:unitofMeasure",
+            "value": "dpo:unitofMeasure"
+          },
+          {
+            "label": "dpo:trainingLocation",
+            "value": "dpo:trainingLocation"
+          },
+          {
+            "label": "dpo:taxpayerName",
+            "value": "dpo:taxpayerName"
+          },
+          {
+            "label": "dpo:trainingTimeline",
+            "value": "dpo:trainingTimeline"
+          },
+          {
+            "label": "dpo:testApproach",
+            "value": "dpo:testApproach"
+          },
+          {
+            "label": "dpo:trainingDuration",
+            "value": "dpo:trainingDuration"
+          },
+          {
+            "label": "dpo:taskDuration",
+            "value": "dpo:taskDuration"
+          },
+          {
+            "label": "dpo:trainingCompletionStatus",
+            "value": "dpo:trainingCompletionStatus"
+          },
+          {
+            "label": "dpo:vendorContact",
+            "value": "dpo:vendorContact"
+          },
+          {
+            "label": "dpo:trademarkRegistrationNumber",
+            "value": "dpo:trademarkRegistrationNumber"
+          },
+          {
+            "label": "dpo:timeline",
+            "value": "dpo:timeline"
+          },
+          {
+            "label": "dpo:trainingTopic",
+            "value": "dpo:trainingTopic"
+          },
+          {
+            "label": "dpo:trainingMaterials",
+            "value": "dpo:trainingMaterials"
+          }
+        ],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "const _this = this\nasync function getOptions () {\n  const data = await $api.get('/docpalType/settings/metadata/GlobalFile').then(res => res.data.data)\n  const options = data.keywords.reduce((prev,item) => {\n    if (item.name) prev.push({\n      label: item.name,\n      value: item.name\n    })\n    return prev\n  }, [])\n  _this.loadOptions(options)\n}\ngetOptions()",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select28007"
+    },
+    {
+      "key": 87354,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "isEdit",
+        "label": "isEdit",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": true,
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "const type = this.getWidgetRef('documentType')\nif(!!value) {\n  type.setDisabled(true)\n} else {\n  type.setDisabled(false)\n}",
+        "onValidate": ""
+      },
+      "id": "switch104533"
+    }
+  ],
+  "formConfig": {
+    "modelName": "formData",
+    "refName": "vForm",
+    "rulesName": "rules",
+    "labelWidth": 80,
+    "labelPosition": "top",
+    "size": "",
+    "labelAlign": "label-left-align",
+    "cssCode": "",
+    "customClass": [],
+    "functions": "",
+    "layoutType": "PC",
+    "jsonVersion": 3,
+    "onFormCreated": "",
+    "onFormMounted": "this.optionData.allTypeList = []",
+    "onFormDataChange": "",
+    "dhList": [],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
+  }
+}

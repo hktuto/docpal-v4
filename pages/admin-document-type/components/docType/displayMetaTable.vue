@@ -30,7 +30,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {adminApi} from "api";
 import {Select, CloseBold} from '@element-plus/icons-vue'
 
@@ -51,13 +51,13 @@ const {tableConfig, tableEvent, tableRef} = useVxeTable({
                 return t(cellValue);
             },
         },
-/*        {
-            field: "metaDataType",
-            title: "metadata.dataType",
-            formatter({cellValue}: any) {
-                return t(`meta.dataType.${cellValue}`);
-            },
-        },*/
+        /*        {
+                    field: "metaDataType",
+                    title: "metadata.dataType",
+                    formatter({cellValue}: any) {
+                        return t(`meta.dataType.${cellValue}`);
+                    },
+                },*/
         {field: "dataType", title: "docTypeDetail.type"},
         {
             field: "isRequire",
@@ -78,7 +78,7 @@ const {tableConfig, tableEvent, tableRef} = useVxeTable({
         [
             {
                 code: "edit",
-                name: "common_edit",
+                name: "documentType_edit",
                 visible: true,
                 disabled: false,
                 action: ({row}: any) => {
@@ -87,7 +87,7 @@ const {tableConfig, tableEvent, tableRef} = useVxeTable({
             },
             {
                 code: "delete",
-                name: "common_delete",
+                name: "documentType_delete",
                 visible: true,
                 disabled: false,
                 action: ({row}: any) => {
@@ -108,11 +108,17 @@ function handleRefresh(addMore: boolean = false) {
 }
 
 async function handleDelete(row) {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(
+        `${t('documentType_displayDeleteMsg')}`,
+        {
+            confirmButtonText: t('common_confirmDelete'),
+        }
+    )
     if (action !== 'confirm') return
-    const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
-        metadata: row.metadata
-    })
+    // const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
+    //     metadata: row.metadata
+    // })
+    ElMessage.success(t('documentType_displayDeleteSuccessMsg'))
     emits('refresh')
 }
 

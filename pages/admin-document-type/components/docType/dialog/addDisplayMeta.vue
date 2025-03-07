@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 import formJson from './addDisplayMeta.vform.json'
 import { adminApi } from '../../../../../libraries/api/src';
+import {ElMessage} from "element-plus";
 const props = defineProps<{
     docTypeDetail: any,
 }>()
@@ -49,7 +50,13 @@ async function handleSubmit (addMore: boolean = false) {
         if(state.isEdit) {
             param.id = state.setting.id
         }
-        await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
+        // await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
+
+        if (state.isEdit){
+            ElMessage.success(t('documentType_duplicateUpdateSuccessMsg'))
+        }else{
+            ElMessage.success(t('documentType_duplicateAddSuccessMsg'))
+        }
         state.visible = false
         FormRendererRef.value.vFormRenderRef.resetForm()
         emits('refresh', addMore)
