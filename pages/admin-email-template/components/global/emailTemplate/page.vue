@@ -21,9 +21,10 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
-import { adminApi } from "api";
-import { routeEmailTemplateDetail, routeLayoutTemplatePage } from '~/utils/routerHelper';
+import {ElMessageBox} from 'element-plus'
+import {adminApi} from "api";
+import {routeEmailTemplateDetail, routeLayoutTemplatePage} from '~/utils/routerHelper';
+
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
     throw new Error('MenuRouterKey is not provided')
@@ -39,8 +40,7 @@ const {
     cleanSelectedRows,
 } = useVxeTable({
     id: "a-emailTemplate",
-    api: (pageParams: any) =>
-        adminApi.api.postTemplateEmailTemplatePage({...pageParams, ...extraParams}),
+    api: (pageParams: any) => adminApi.api.postTemplateEmailTemplatePage({...pageParams, ...extraParams}),
     columns: [
         {field: "label", title: "emailContentTemplate_name", fixed: "left"},
         {field: "subject", title: "tableHeader_subject"},
@@ -94,7 +94,7 @@ interface Template {
 
 async function handleDeleteTemplate(row: Template[]) {
     const action = await ElMessageBox.confirm(
-        `${t('emailContentTemplate_deleteMsg',  {name: row.label})}`,
+        `${t('emailContentTemplate_deleteMsg', {name: row.label})}`,
         {
             confirmButtonText: t('common_confirmDelete'),
         })

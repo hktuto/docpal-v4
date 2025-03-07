@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {adminApi} from "api";
+import {routeEmailTemplate} from "~/utils/routerHelper";
 
 const routerProvider = inject(MenuRouterKey)
 const {t} = useI18n()
@@ -66,7 +67,15 @@ async function getTemplateLayout(templateId?: any) {
 
 function handleClose() {
     if (id === 'new') {
-        routerProvider?.navigateTo(routeLayoutTemplatePage())
+        const newItem :any={
+            id: "admin-email-template",
+            name: 'admin-email-template',
+            icon: "fluent:mail-template-16-regular",
+            label: "adminMenu.emailTemplate",
+            component: "LazyEmailTemplatePage",
+            props: {},
+        }
+        routerProvider?.navigateTo(newItem)
     }
 }
 
@@ -98,7 +107,6 @@ async function save() {
                 id: result.id
             })
         }
-        // router.push(`/emailTemplate/${result.id}`);
         routerProvider?.message.success(t('emailContentTemplate_createdSuccessMsg', {name: data.value.label}));
         editInfoOpened.value = false;
         showClose.value = true;
