@@ -65,7 +65,7 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
         [
             {
                 code: "edit",
-                name: "common_edit",
+                name: "documentType_edit",
                 visible: true,
                 disabled: false,
                 action: ({row}: any) => {
@@ -74,7 +74,7 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
             },
             {
                 code: "duplicate",
-                name: "actions.duplicate",
+                name: "documentType_duplicate",
                 visible: true,
                 disabled: false,
                 action: ({row}: any) => {
@@ -83,7 +83,7 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
             },
             {
                 code: "active",
-                name: "actions.active",
+                name: "documentType_activate",
                 visible: true,
                 disabled: false,
                 action: ({row}: any) => {
@@ -92,7 +92,7 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
             },
             {
                 code: "inactive",
-                name: "actions.inactive",
+                name: "documentType_inactivate",
                 visible: true,
                 disabled: false,
                 action: ({row}: any) => {

@@ -328,8 +328,8 @@
     "view": "Default Calendar view",
     "viewOption": {
       "day": "DAY",
-      "month-grid": "MONTH Grid",
       "month-agenda": "MONTH List",
+      "month-grid": "MONTH Grid",
       "week": "WEEK"
     },
     "weekOption": {
@@ -474,6 +474,8 @@
   "common_reset": "Reset",
   "common_save": "Save",
   "common_selectOccupancyContent": "Select an option",
+  "common_selectecIsMultiSelectRequiredMsg": "At least one of the options must be selected.",
+  "common_selectecIsRequiredMsg": "One of the options must be selected.",
   "common_send": "Send",
   "common_status": "Status",
   "common_submit": "Submit",
@@ -952,8 +954,11 @@
     "category": "Category",
     "duplicate": "Duplicate Document Type",
     "duplicateFrom": "Duplicate From",
-    "new": "Create New",
+    "new": "Create New Document Type",
     "type": "Type"
+  },
+  "docTypeDetail": {
+    "type": "Data Type"
   },
   "docType_addCaptureProfile": "Add Capture Profile",
   "docType_addDisplayMeta": "Add New Display Meta",
@@ -1030,7 +1035,17 @@
   "documentTemplate_updateSuccessMsg": "The document template has been update successfully.",
   "documentType_Status": "Document Type Status",
   "documentType_Type": "File / Folder Type",
+  "documentType_activate": "Activate Document Type",
+  "documentType_createdDifferentNameMsg": "Same Document Type Name already exists. Please choose a different name.",
+  "documentType_createdLetterOrUnderscoreNameMsg": "Document Type Name must start with a letter or underscore.",
+  "documentType_createdSuccessMsg": "The new document type {name} has been created successfully.",
+  "documentType_duplicate": "Duplicate Document Type",
+  "documentType_duplicateSuccessMsg": "The selected document type has been duplicated successfully.",
+  "documentType_edit": "Edit Document Type",
   "documentType_filter": "Filter by Document Type Name",
+  "documentType_metaAdd": "Add New Display Meta",
+  "documentType_metaFilter": "Filter by Meta",
+  "documentType_newDocument": "New Document Type Name",
   "download": "Download",
   "download_download": "Download",
   "download_downloadSearchablePdf": "Download Searchable pdf",

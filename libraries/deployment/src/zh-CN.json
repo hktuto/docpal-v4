@@ -328,8 +328,8 @@
     "view": "默认日历视图",
     "viewOption": {
       "day": "天",
-      "month-grid": "月 網格",
       "month-agenda": "月 列表",
+      "month-grid": "月 網格",
       "week": "星期"
     },
     "weekOption": {
@@ -474,6 +474,8 @@
   "common_reset": "重置",
   "common_save": "保存",
   "common_selectOccupancyContent": "选择一个选项",
+  "common_selectecIsMultiSelectRequiredMsg": "必须至少选择其中一个选项",
+  "common_selectecIsRequiredMsg": "必须选择其中一个选项",
   "common_send": "发送",
   "common_status": "状态",
   "common_submit": "提交",
@@ -955,6 +957,9 @@
     "new": "创建",
     "type": "类型"
   },
+  "docTypeDetail": {
+    "type": "数据类型"
+  },
   "docType_addCaptureProfile": "添加捕获配置文件",
   "docType_addDisplayMeta": "添加新属性显示",
   "docType_addMetaMapping": "添加 后设资料 对照",
@@ -1030,7 +1035,17 @@
   "documentTemplate_updateSuccessMsg": "documentTemplate_updateSuccessMsg",
   "documentType_Status": "文件类型状态",
   "documentType_Type": "文件 / 文件夹类型",
+  "documentType_activate": "Activate Document Type",
+  "documentType_createdDifferentNameMsg": "Same Document Type Name already exists. Please choose a different name.",
+  "documentType_createdLetterOrUnderscoreNameMsg": "Document Type Name must start with a letter or underscore.",
+  "documentType_createdSuccessMsg": "The new document type {name} has been created successfully.",
+  "documentType_duplicate": "Duplicate Document Type",
+  "documentType_duplicateSuccessMsg": "The selected document type has been duplicated successfully.",
+  "documentType_edit": "Edit Document Type",
   "documentType_filter": "按文件类型名称筛选",
+  "documentType_metaAdd": "Add New Display Meta",
+  "documentType_metaFilter": "Filter by Meta",
+  "documentType_newDocument": "新文件类型名称",
   "download": "下載",
   "download_download": "下载",
   "download_downloadSearchablePdf": "下载 PDF",
