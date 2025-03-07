@@ -327,9 +327,10 @@
     "location_masterTable": "Master Table",
     "view": "Default Calendar view",
     "viewOption": {
-      "DAY": "DAY",
-      "MONTH": "MONTH",
-      "WEEK": "WEEK"
+      "day": "DAY",
+      "month-grid": "MONTH Grid",
+      "month-agenda": "MONTH List",
+      "week": "WEEK"
     },
     "weekOption": {
       "MONDAY": "MONDAY",
