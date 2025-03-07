@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 import {clientApi} from 'api'
-const { categoriesOption, locationsOption } = useCalendarStore();
+const { setting: calendarSettiing, categoriesOption, locationsOption } = useCalendarStore();
 import {type CalendarOptions, type DocPalEventType,  convertSiteEventToCalendarEvent} from '../../../utils/calendarHelper'
 import CalendarViewer from './viewer.vue'
 
@@ -19,6 +19,11 @@ const {options = {
 }} = defineProps<{
     options?: CalendarOptions;
 }>();
+
+const displayOption = ref<CalendarOptions>({
+    ...options,
+})
+
 
 // #region filter logic
 const filter = ref({
@@ -56,6 +61,12 @@ async function setDefaultFilter(){
     if(options.defaultCategory){
         filter.value.category = options.defaultCategory
     }
+    if(!options.view){
+        displayOption.value.view = calendarSettiing.value?.basic.default_view
+    }
+    if(!options.firstDayOfWeek){
+        displayOption.value.firstDayOfWeek = calendarSettiing.value?.basic.default_first_week
+    }
 }
 // #endregion
 
@@ -68,6 +79,20 @@ function addEvent(newForm:DocPalEventType){
     viewerRef.value?.calendarApp.eventsService.add(ev)
     
 }
+
+const filtetColumnWidth = computed(() => {
+    let item = 0;
+    if(options.showCategoryFilter) {
+        item++
+    }
+    if(options.showUserFilter) {
+        item++
+    }
+    if(options.showLocationFilter) {
+        item++
+    }
+    return 24 / item
+})
 
 onActivated(async () => {
     await setDefaultFilter()
@@ -108,7 +133,7 @@ defineExpose({
         </ElForm>
         
     </div>
-    <CalendarViewer ref="viewerRef" :options="options" :filter="filters" />
+    <CalendarViewer ref="viewerRef" :options="options" :filter="filter" />
 </div>
 
 </template>

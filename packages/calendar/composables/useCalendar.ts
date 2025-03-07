@@ -1,7 +1,7 @@
-import { get } from '@vueuse/core';
+
 import { adminApi } from '../../../libraries/api/src/index';
 import { onMounted } from "vue";
-
+import { viewName } from '../utils/calendarHelper';
 export const useCalendarSetting = () => useState<any>('calendarSetting');
 export const useCategoriesColumn = () => useState<any[]>('categoriesColumn');
 export const useCalenarCategories = () => useState<any[]>('calendarCategories', () =>([]));
@@ -9,11 +9,7 @@ export const useCalenarCategories = () => useState<any[]>('calendarCategories', 
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
 
-    const calendarViewOptions = [
-        "MONTH",
-        "WEEK",
-        "DAY"
-    ]
+    const calendarViewOptions = viewName
     
     const weekDayOptions = [
         "MONDAY",
@@ -36,7 +32,6 @@ export const useCalendarStore = () => {
         const { data } = await adminApi.api.postMasterTablesRecords({
             id: setting.value.category.master_table
         });
-        console.log("getCategories", data)
         categoriesOption.value = data || []
     }
 
@@ -46,12 +41,10 @@ export const useCalendarStore = () => {
         const data = await adminApi.api.postMasterTablesRecords({
             id: setting.value.location.master_table
         }).then(res => res.data);
-        console.log("getLocations", data)
         locationsOption.value = data || []
     }
 
     async function getCalendarsSetting(){
-        console.log("getCalendarsSetting")
         const masterTable = await getCalendarMasterTable()
         const { data } = await adminApi.api.getCalendarsSetting() as any;
         const { public: { platform } } = useRuntimeConfig();

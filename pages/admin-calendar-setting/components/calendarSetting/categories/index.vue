@@ -17,7 +17,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             }),
     pageSize: 5,
     columns: categoriesColumn.value.map((item: any) => {
-        if(item.columnName === 'color'){
+        if(['color','Container_Color', 'onContainer'].includes(item.columnName)){
             return {
                 field: item.columnName,
                 title: item.columnName,

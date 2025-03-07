@@ -31,7 +31,7 @@ function createFormFromColumn() {
             label: item.columnName,
             field: item.columnName,
             value: "",
-            type: item.columnName === 'color' ? 'color' : 'string',
+            type: ['color','Container_Color', 'onContainer'].includes(item.columnName)? 'color' : 'string',
             required: item.required,
         }
     })
@@ -102,7 +102,7 @@ defineExpose({
             </ElFormItem>
         </ElForm>
         <template #footer>
-            <ElButton type="primary" @click="submit">{{ currentData ? $t("common_edit") : $t("Add") }}</ElButton>
+            <ElButton type="primary" @click="submit">{{ currentData ? $t("confirm") : $t("Add") }}</ElButton>
         </template>
     </ElDialog>
 </template>
