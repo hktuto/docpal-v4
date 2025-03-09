@@ -17,7 +17,13 @@ const form = ref<any>({});
 function refreshData(){
     const data = node.getData()
     if(data.data.extensionElements['flowable:calendarEvent']) {
+        if(!data.data.extensionElements['flowable:calendarEvent'].related || Array.isArray(data.data.extensionElements['flowable:calendarEvent'].related)) {
+            data.data.extensionElements['flowable:calendarEvent'].related = {
+                attr_user : ""
+            }
+        }
         form.value = data.data.extensionElements['flowable:calendarEvent']
+        console.log("form", form.value)
     }else{
         // data error reset data
 
@@ -129,6 +135,11 @@ onMounted(async() => {
                 </ElFormItem>
                 <ElFormItem label="End Time">
                     <ElSelect v-model="form.attr_endTime" >
+                        <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+                    </ElSelect>
+                </ElFormItem>
+                <ElFormItem v-if="form.related" label="User">
+                    <ElSelect v-model="form.related.attr_user" >
                         <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
                     </ElSelect>
                 </ElFormItem>

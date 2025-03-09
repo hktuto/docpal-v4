@@ -5,7 +5,6 @@
         class="scroll-dialog"
         append-to-body
         :close-on-click-modal="false"
-        @close="handleClose"
     >
         <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
         <template #footer>
@@ -37,7 +36,7 @@ async function handleSubmit() {
     state.loading = true;
     const _data = {
         name: data.name,
-        groupId: data.access.join(","),
+        groupId: data.groupId.join(","),
     };
     try {
         if (state.edit) {
@@ -64,23 +63,24 @@ async function handleSubmit() {
 
 let title = t('workPanel_create')
 
-function handleOpen(setting?) {
+function handleOpen(setting?:any) {
     state.visible = true;
     state.edit = false;
     if (!setting) {
         title = t('workPanel_create')
-        setTimeout(async () => {
+        nextTick(async () => {
             FormRendererRef.value.vFormRenderRef.resetForm();
         });
         return;
     }
     title = t('workPanel_edit')
-    setTimeout(async () => {
+    nextTick(async () => {
         const _setting = deepCopy(setting);
+        console.log("_setting", setting)
         state.edit = _setting.edit = true;
         state.setting = _setting;
-        if (_setting.access) _setting.access = _setting.access.split(",");
-        else _setting.access = [];
+        if (_setting.groupId) _setting.groupId = _setting.groupId.split(",");
+        else _setting.groupId = [];
         await FormRendererRef.value.vFormRenderRef.setFormData({
             ..._setting,
         });

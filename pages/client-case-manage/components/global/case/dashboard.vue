@@ -27,7 +27,6 @@ const state = reactive<any>({
 const { t } = useI18n()
 async function getDashboardList() {
   try {
-    console.log("getDashboardList");
     state.dashboardList = await clientApi.api.getCaseDashboardVersionCmmnversionidPermission(versionId.value).then(res => res.data)
     const dashboardId = sessionStorage.getItem('case-dashboard-id')
     let index = state.dashboardList.findIndex(item => item.id === dashboardId )

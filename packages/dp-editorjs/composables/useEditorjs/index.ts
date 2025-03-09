@@ -15,7 +15,6 @@ export const useEditor = () => {
     
     async function createEditor(id:string, formData:any) {
         if(!document.getElementById(id)) return;
-        // console.trace('createEditor');
         // throw error if no containerId or formData
         if(!id || !formData) {
             throw new Error('containerId or formData is required');

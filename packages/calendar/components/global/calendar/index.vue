@@ -32,17 +32,17 @@
     })
 
     const emits = defineEmits(['createEvent','filterChange'])
-
+    const newEventFromRef = ref();
     function addEvent(newEvent:CalendarEventExternal){
-        viewerRef.value?.calendarApp.eventsService.add(newEvent)
+        viewerRef.value?.addEvent(newEvent)
     }
 
     function getEvent(id:string){
-        return viewerRef.value?.calendarApp.eventsService.get(id)
+        return viewerRef.value?.getEvent(id)
     }
 
     function updateEvent(newEvent:CalendarEventExternal){
-        viewerRef.value?.calendarApp.eventsService.update(newEvent)
+        viewerRef.value?.updateEvent(newEvent)
     }
         
     // #region filter logic
@@ -63,12 +63,17 @@
                     value: item.userId
                 }
             })
+            userFiterOptions.value.unshift({
+                label: "Current User",
+                value: "currentUser"
+            })
         }catch(err){
             console.log("no user", err)
         }
     }
 
     async function setDefaultFilter(){
+        console.log("setDefaultFilter", options)
         if(options.showCategoryFilter || options.showLocationFilter || options.showUserFilter){
             await getFilterOptions()
         }
@@ -112,7 +117,7 @@
     }
     function filterChange(){
         emits('filterChange', filter.value)
-        getEventFromApi(viewerRef.value?.calendarApp, viewerRef.value?.calendarControls, filter.value)
+        viewerRef.value?.getList()
     }
 
     const filtetColumnWidth = computed(() => {
@@ -136,7 +141,8 @@
     defineExpose({
         addEvent,
         getEvent,
-        updateEvent
+        updateEvent,
+        filter
     })
 </script>
 

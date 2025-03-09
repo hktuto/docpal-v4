@@ -54,7 +54,7 @@
       "icon": "select-field",
       "formItemFlag": true,
       "options": {
-        "name": "access",
+        "name": "groupId",
         "label": "dashboard_createAccessUserGroup",
         "labelAlign": "",
         "defaultValue": [],

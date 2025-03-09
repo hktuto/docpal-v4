@@ -20,7 +20,7 @@ import { createResizePlugin } from '@schedule-x/resize'
 import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import {getEventFromApi, type CalendarOptions, type DocPalEventType} from '../../../utils/calendarHelper'
-
+import {useCalendarStore} from '../../../composables/useCalendar'
 
 const { setting, calendarViewerCategories } = useCalendarStore();
 const {options = {
@@ -63,6 +63,26 @@ function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:Calenda
         return options.addtionalCheckBeforeEventUpdate(oldEvent, editedEvent)
     }
     return true
+}
+
+function addEvent(newEvent:CalendarEventExternal){
+    calendarApp.eventsService.add(newEvent)
+}
+
+function updateEvent(newEvent:CalendarEventExternal){
+    calendarApp.eventsService.update(newEvent)
+}
+
+function deleteEvent(id:string){
+    calendarApp.eventsService.delete(id)
+}
+
+function getEvent(id:string){
+    return calendarApp.eventsService.get(id)
+}
+
+function getList(){
+    getEventFromApi(calendarApp, calendarControls, filter)
 }
 
 function setupCalendar() {
@@ -135,7 +155,7 @@ function setupCalendar() {
             }
         }
     })
-    getEventFromApi(calendarApp, calendarControls, filter)
+   getList()
 }
 
 
@@ -160,7 +180,12 @@ watch(() => [setting, options],async() =>{
 defineExpose({
     calendarControls,
     calendarApp,
-    eventsServicePlugin
+    eventsServicePlugin,
+    addEvent,
+    updateEvent,
+    deleteEvent,
+    getEvent,
+    getList
 })
 
 </script>

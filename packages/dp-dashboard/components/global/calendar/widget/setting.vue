@@ -17,6 +17,10 @@ async function getOptions() {
             value: item.userId
         }
     })
+    userFiterOptions.value.unshift({
+                label: "Current User",
+                value: "currentUser"
+            })
 }
 const form = ref<CalendarOptions>({
     editable: false,
@@ -38,14 +42,11 @@ const form = ref<CalendarOptions>({
 function open() {
     opened.value = true;
     getOptions()
-    console.log("open", setting)
     Object.keys(setting).forEach(key => {
-        console.log("open", key, setting[key])
         if(setting[key]) {
             form.value[key] = setting[key]
         }
     })
-    console.log("form", form.value, calendarSetting.value.basic.default_view)
     if(!form.value.view) {
         form.value.view = calendarSetting.value?.basic.default_view
     }
@@ -56,7 +57,6 @@ function open() {
     // form.value = setting
 }
 function submit(){
-    console.log("submit", form.value)
     emits('submit', form.value)
     opened.value = false
 }

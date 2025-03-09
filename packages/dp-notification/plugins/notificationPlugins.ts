@@ -5,12 +5,10 @@ export default defineNuxtPlugin(nuxtApp => {
     const { connect, disconnect, messageHandlers, notiData, notiError} = useNotification()
     const loginBus = useEventBus(EventType.USER_LOGIN__SUCCESS)
     loginBus.on((data) => {
-        console.log('loginBus', data)
         connect()
     })
     const logoutBus = useEventBus(EventType.USER_LOGIN__EXPIRE)
     logoutBus.on((data) => {
-        console.log('logoutBus', data)
         disconnect()
     })
 

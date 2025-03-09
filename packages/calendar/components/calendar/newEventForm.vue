@@ -24,6 +24,7 @@ const form = ref({
     isAllDay: false,
     detail: {}
 })
+const userId = useUserId();
 async function getFilterOptions(){
     const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
     userFiterOptions.value = user.map(item => {
@@ -33,17 +34,17 @@ async function getFilterOptions(){
         }
     })
 }
-function open(selectedDateTime: string, filter:any, data:any) {
-    getFilterOptions()
+async function open(selectedDateTime: string, filter:any, data:any) {
+    await getFilterOptions()
     const startDay = dayjs(selectedDateTime)
     opened.value = true;
     startTime.value = dayjs(selectedDateTime)
-    form.value.data = data
+    form.value.detail = data
     form.value.startTime = snapDownTo15Minutes(startDay).toISOString(),
-    form.value.endTime= snapDownTo15Minutes(startDay.add(15, 'minutes')).toISOString()
+    form.value.endTime = snapDownTo15Minutes(startDay.add(15, 'minutes')).toISOString()
     form.value.location = filter.location
-    form.value.category = filter.category
-    form.value.user = filter.user
+    form.value.category = filter.category || options.defaultCategory
+    form.value.user = filter.user === 'currentUser' ? userId.value : filter.user
     // form.value.workflow = filter.workflow
 }
 
@@ -56,7 +57,6 @@ function startTimeChange(val){
     form.value.endTime= snapDownTo15Minutes(startDay.add(15, 'minutes')).toISOString()
 }
 function endTimeChange(val){
-    console.log("endTimeChange", val)
     const endTime = dayjs(val)
     if(endTime.isBefore(dayjs())) {
         ElMessage.error("End time cannot be earlier than today");
@@ -95,7 +95,6 @@ async function submit(){
     // check location and user
     try{
         const valid = await formRef.value.validate()
-        console.log("valid", valid)
         if(!valid) return
         const data:DocPalEventType = {
             id: newEventId,
@@ -103,14 +102,13 @@ async function submit(){
             startTime: snapDownTo15Minutes(dayjs(startTime.value)).toISOString(),
             endTime: dayjs(startTime.value).add(15, 'minutes').toISOString(),
             eventName: form.value.user,
-            title: form.value.description,
-            category: form.value.category,
+            title: form.value.user,
+            category: form.value.category || options.defaultCategory,
             location: form.value.location,
-            relatedUsers: {[form.value.user]:{}},
             isAllDay: form.value.isAllDay,
+            user: form.value.user,
         }
-        console.log("form", form)
-        emits('submit', form.value)
+        emits('submit', data)
         opened.value = false
     }catch(err){
         console.log(err)

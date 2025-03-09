@@ -2,12 +2,15 @@ import type { CalendarEventExternal } from '@schedule-x/calendar'
 import { clientApi } from 'api'
 import type { CalendarTaskRespDTO } from 'api/src/generate/client'
 import dayjs from 'dayjs'
+import {useCalenarLocation} from '../composables/useCalendar'
 
 export const viewName = [
     'day','week','month-grid','month-agenda'
 ]
 
-export type DocPalEventType = CalendarTaskRespDTO 
+export type DocPalEventType = CalendarTaskRespDTO & {
+    user: string
+}
 
 export type CalendarOptions = {
     allowCreate: boolean,
@@ -32,15 +35,18 @@ export type CalendarOptions = {
 }
 
 export function convertSiteEventToCalendarEvent(event:DocPalEventType, defaultCalendarId:string):CalendarEventExternal {
+    const calendarLocation = useCalenarLocation()
     const format = event.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
-    return {
+    const locationName = event.location ? calendarLocation.value.find(item => item.id === event.location)?.name : undefined
+   
+    const newEvent= {
         id: event.id || new Date().valueOf().toString(),
         start: dayjs(event.startTime).format(format),
         end: dayjs(event.endTime).format(format),
         title: event.eventName,
         description: event.title,
-        location: event.location,
-        people: event.relatedUsers?.userId ? Object.keys(event.relatedUsers) : [],
+        location: locationName,
+        people: event.relatedUsers ? Object.keys(event.relatedUsers) : [],
         detail: {...event},
         calendarId: event.category || undefined,
         _options:{
@@ -48,15 +54,18 @@ export function convertSiteEventToCalendarEvent(event:DocPalEventType, defaultCa
             disableDND: true,
         }
     }
+    return newEvent
 }
 
-export function getEventFromApi(calendarApp:any, calendarControls:any, filter){
+export function getEventFromApi(calendarApp:any, calendarControls:any, filter:any){
     const range = calendarControls.getRange()
     const params:any = {
         startTime: dayjs(range.start).toISOString(),
         endTime: dayjs(range.end).toISOString(),
     }
     const defaultCalendarId = Object.keys(calendarControls.getCalendars())[0]
+    const user = localStorage.getItem('docpal-user')
+    const userId = user ? JSON.parse(user).userId : undefined
     // TODO : backend is missing filter
     clientApi.api.postCalendarsList(params).then( res => {
         const data = res.data
@@ -71,15 +80,16 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter){
                 if(!matLoc) return false
             }
             if(filter.user) {
-                const matUser = event.assignee === filter.user || event.modifiedBy === filter.user || event.relatedUsers.includes(filter.user)
-                if(!matUser) return false
+                console.log("filter.user", filter.user)
+                const userFilter = filter.user === 'currentUser' ? userId : filter.user
+                const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter|| Object.keys(event.relatedUsers).includes(userFilter)
+                if(!mapUser) return false
             }
             return true
         }).map((ev) => convertSiteEventToCalendarEvent(ev, defaultCalendarId))
         // filter events
     
         // dummy full date event
-        console.log(calendarControls.getCalendars())
         //TODO： remove later
         events.push({
             id: new Date().valueOf().toString(),

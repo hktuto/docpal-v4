@@ -13,7 +13,19 @@ const calendarOptions = ref<CalendarOptions>({
     view: "week",
     userLabel: "Consultant",
     categoryLabel: "Category",
-    locationLabel: "Office"
+    locationLabel: "Office",
+    defaultCategory: "7f785254-8a13-4f98-b6a1-4c52e17f7d06"
+})
+
+const displayOptions = computed(() => {
+    if(options.data) {
+        return {
+            ...calendarOptions.value,
+            ...options.data
+        }
+    }else{
+        return calendarOptions.value
+    }
 })
 
 function getInfo(){
@@ -23,22 +35,17 @@ function getInfo(){
             ...calendarOptions.value,
             ...options.data
         }
-        if(options.data.fieldMapping) {
-        }
     }
-    
-
+    console.log("getInfo", options, calendarOptions.value)
 }
 const calendarViewerRef = ref()
 function getFormData(){
     // console.log("getFormData", formData)
-    const data = calendarViewerRef.value.getFormData(false)
-    console.log("getFormData", data)
-    return data
+    return calendarViewerRef.value.getFormData(false)
 }
 
 
-onMounted(() => {
+onActivated(() => {
     getInfo()
 })
 defineExpose({ getFormData })
@@ -46,7 +53,7 @@ defineExpose({ getFormData })
 
 <template>
     <div class="calendar_widget_container">
-        <CalendarWorkflowViewer ref="calendarViewerRef"  :options="calendarOptions" />
+        <CalendarWorkflowViewer ref="calendarViewerRef" :formData="formData" :taskDetail="taskDetail"  :options="displayOptions" />
     </div>
 </template>
 
