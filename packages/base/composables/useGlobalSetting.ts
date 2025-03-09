@@ -19,7 +19,6 @@ export const useGlobalSetting = () => {
     const fontSizeBus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME)
 
     function handleDocumentFocus() {
-        console.log('Document is focused');
         checkClicpBoard()
     }
     async function checkClicpBoard(){
