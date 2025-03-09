@@ -11,5 +11,6 @@ export default defineNuxtConfig({
     "../../packages/base",
     "../../packages/dp-notification",
     "../../packages/dp-cmmn-x6",
+    "../../packages/bpmn"
   ]
 })

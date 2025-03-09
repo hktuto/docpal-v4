@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import {ElMessage} from 'element-plus'
 import { clientApi } from 'api'
 const opened = ref(false);
-const {options} = defineProps<{
+const {options, newEventId} = defineProps<{
     options: CalendarOptions,
 }>()
 const { t} = useI18n()
@@ -21,7 +21,8 @@ const form = ref({
     user:"",
     location: "",
     edited:false,
-    data: {}
+    isAllDay: false,
+    detail: {}
 })
 async function getFilterOptions(){
     const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
@@ -96,16 +97,17 @@ async function submit(){
         const valid = await formRef.value.validate()
         console.log("valid", valid)
         if(!valid) return
-        const data = {
+        const data:DocPalEventType = {
+            id: newEventId,
             eventId:"",
             startTime: snapDownTo15Minutes(dayjs(startTime.value)).toISOString(),
             endTime: dayjs(startTime.value).add(15, 'minutes').toISOString(),
-            title: 'test event',
-            description: 'test event description',
+            eventName: form.value.user,
+            title: form.value.description,
             category: form.value.category,
             location: form.value.location,
-            user: form.value.user,
-            edited:false,
+            relatedUsers: {[form.value.user]:{}},
+            isAllDay: form.value.isAllDay,
         }
         console.log("form", form)
         emits('submit', form.value)
@@ -125,14 +127,14 @@ defineExpose({
         <ElForm ref="formRef" label-position="top" :model="form" :rules="rules">
                 <ElRow :gutter="20">
                     <ElCol  :span="12">
-                        <ElFormItem label="Location" prop="location" required>
+                        <ElFormItem :label="options.locationLabel || 'Location'" prop="location" required>
                             <ElSelect v-model="form.location" clearable placeholder="Select" >
                                 <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol  :span="12">
-                        <ElFormItem label="User" prop="user" required>
+                        <ElFormItem :label="options.userLabel || 'User'" prop="user" required>
                             <ElSelect v-model="form.user" clearable placeholder="Select" >
                                 <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>

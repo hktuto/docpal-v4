@@ -382,6 +382,7 @@ export interface EmailTemplate {
     status?: string;
     createdBy?: string;
     modifiedBy?: string;
+    display?: string;
     /** @format date-time */
     createdDate?: string;
     /** @format date-time */
@@ -4201,6 +4202,12 @@ export interface FormDesignRequestDTO {
     previewStyle?: string;
     /** Form Design Form Result List */
     formResult?: EasyFormResult[];
+    /** Form Design Creator */
+    createdBy?: string;
+    /** Form Design Modifier */
+    modifiedBy?: string;
+    /** current user permissions, only for client site */
+    userPermissions?: string[];
     /** New Data List */
     data?: Record<string, object>[];
     /** Where Condition */
@@ -4255,6 +4262,8 @@ export interface FormDesignResponseDTO {
     /** @format date-time */
     modifiedDate?: string;
     formInfo?: FormInfoDTO;
+    createdBy?: string;
+    modifiedBy?: string;
 }
 
 export interface FormFieldMapping {
@@ -4306,6 +4315,19 @@ export interface FormDesignDataDTO {
     bizType?: string;
 }
 
+export interface EasyFormEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+    easyFormId?: string;
+    formLink?: string;
+}
+
+export interface UserEmailDTO {
+    username?: string;
+    email?: string;
+}
+
 /** Easy Form Result (RequestDTO) */
 export interface EasyFormResultRequestDTO {
     /**
@@ -4345,6 +4367,91 @@ export interface ResultListLinkedHashMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>[];
+}
+
+/** Easy Form Email RequestDTO */
+export interface EasyFormEmailQueryRequestDTO {
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    email?: string;
+    subject?: string;
+    easyFormId?: string;
+    status?: string;
+    sort?: SortObject;
+    descSort?: SortObject;
+}
+
+export interface EasyFormActionDTO {
+    actionType?: string;
+    actionId?: string;
+    actionName?: string;
+}
+
+export interface EasyFormEmailLogDTO {
+    /** @format int64 */
+    id?: number;
+    email?: string;
+    subject?: string;
+    createdBy?: string;
+    status?: string;
+    /** @format date-time */
+    sentDate?: string;
+    relatedWorkflows?: EasyFormActionDTO[];
+    relateCases?: EasyFormActionDTO[];
+}
+
+export interface PaginationDTOEasyFormEmailLogDTO {
+    entryList?: EasyFormEmailLogDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOEasyFormEmailLogDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOEasyFormEmailLogDTO;
+}
+
+export interface PaginationDTOFormDesignResponseDTO {
+    entryList?: FormDesignResponseDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOFormDesignResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOFormDesignResponseDTO;
 }
 
 /** Dict RequestDTO */
@@ -4968,9 +5075,6 @@ export interface CmmnPlanFormDTO {
     type?: string;
     casetable?: string;
     fields?: PlanTableFieldDTO[];
-    /** Form Design Information List */
-    assigneeField?: PlanTableFieldDTO;
-    isStartTask?: boolean;
 }
 
 /** PlanItemInstanceDTO */
@@ -6286,6 +6390,20 @@ export interface ResultListPDResponseDTO {
     data?: PDResponseDTO[];
 }
 
+export interface EasyFormBaseEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+}
+
+export interface ResultEasyFormBaseEmailDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EasyFormBaseEmailDTO;
+}
+
 export interface ResultListDictResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -6751,7 +6869,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "http://admin.app4.wclsolution.com",
+            baseURL: axiosConfig.baseURL || "http://admin.app2.wclsolution.com",
         });
         this.secure = secure;
         this.format = format;
@@ -6846,7 +6964,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title OpenAPI definition
  * @version v0
- * @baseUrl http://admin.app4.wclsolution.com
+ * @baseUrl http://admin.app2.wclsolution.com
  */
 export class Admin<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
     api = {
@@ -13149,6 +13267,22 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags FormDesignController
+         * @name PostFormDesignSendEmail
+         * @request POST:/api/docpal/form/design/send_email
+         */
+        postFormDesignSendEmail: (data: EasyFormEmailDTO, params: RequestParams = {}) =>
+            this.request<ResultVoid, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/form/design/send_email`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
          * @name PostFormDesignSavePreview
          * @summary Save preview style
          * @request POST:/api/docpal/form/design/save/preview
@@ -13283,12 +13417,28 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags FormDesignController
+         * @name PostFormDesignPageEmailLog
+         * @request POST:/api/docpal/form/design/page_email_log
+         */
+        postFormDesignPageEmailLog: (data: EasyFormEmailQueryRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOEasyFormEmailLogDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/form/design/page_email_log`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
          * @name PostFormDesignPage
          * @summary Paging Query (form design)
          * @request POST:/api/docpal/form/design/page
          */
         postFormDesignPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultObject, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTOFormDesignResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/form/design/page`,
                 method: "POST",
                 body: data,
@@ -13647,21 +13797,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 query: query,
                 body: data,
                 type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CaseTypeController
-         * @name PostCaseTypesIdDownloadDraft
-         * @summary Download draft cmmn xml (case model definition)
-         * @request POST:/api/docpal/case/types/{id}/download/draft
-         */
-        postCaseTypesIdDownloadDraft: (id: string, params: RequestParams = {}) =>
-            this.request<string[], Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/case/types/${id}/download/draft`,
-                method: "POST",
                 ...params,
             }),
 
@@ -18617,6 +18752,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags FormDesignController
+         * @name GetFormDesignEmailId
+         * @request GET:/api/docpal/form/design/email/{id}
+         */
+        getFormDesignEmailId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/form/design/email/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
          * @name GetFormDesignDraftId
          * @summary Retrieve form design draft
          * @request GET:/api/docpal/form/design/draft/{id}
@@ -18907,21 +19056,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getCaseTypesCasetypeidInstances: (caseTypeId: string, params: RequestParams = {}) =>
             this.request<ResultListCmmnInstance, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${caseTypeId}/instances`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CaseTypeController
-         * @name GetCaseTypesVersionVersionidStarttask
-         * @summary Retrieve startup task for the case definition of the specified version
-         * @request GET:/api/docpal/case/types/version/{versionId}/startTask
-         */
-        getCaseTypesVersionVersionidStarttask: (versionId: string, params: RequestParams = {}) =>
-            this.request<ResultListPlanItemDefinitionDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/case/types/version/${versionId}/startTask`,
                 method: "GET",
                 ...params,
             }),

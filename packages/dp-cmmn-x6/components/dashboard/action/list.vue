@@ -16,6 +16,10 @@ import { clientApi } from 'api'
 const props = defineProps(['actionList'])
 const emits = defineEmits(['refresh','submit'])
 const { t } = useI18n()
+
+const routerProvider = inject(MenuRouterKey)
+
+
 function getBColor(type, state) {
   if(state === 'completed') return '#D9D9D9'
   const map = {
@@ -33,20 +37,25 @@ async function handleProcessTask(actionItem) {
   const res = await clientApi.api.postCaseDashboardInstanceActionPreRequisite({
     id: actionItem.id
   }).then(res => res.data)
-  // get case data
-  const caseData =  await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseInstanceId).then(res => res.data)
-  // generate form data
-  const inParameters = res.inParameters
-  const defaultFormData = Object.keys(inParameters).reduce((prev, key) => {
-    const valueItem = caseData.rows.find( c => c.id === key)
-    if(valueItem) {
-      prev[inParameters[key]] = valueItem.value
-    }
-    return prev
-  }, {})
-  // TODO : get form json and xml
-  
-  // console.log('res', res, defaultFormData)
+  console.log("res", res)
+  // Get Form Json and XML
+  const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(res.processDefinitionVersionId)
+  const {flatObj} = bpmnStringToJson(xml)
+  const startEvent = flatObj.Start;
+  console.log("Start", startEvent)
+  // check start event additional setting
+  if(startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']){
+      const openInNewPage = startEvent.extensionElements['docpal:additionaSetting'].attr_openInNewPage
+      if(openInNewPage){
+          console.log("openInNewPage", openInNewPage)
+          const routerItem = caseProcessTaskFormPage({
+            caseInstanceId,
+            actionStepId: actionItem.id,
+          })
+          routerProvider?.navigateTo(routerItem)
+      }
+  }
+
 }
 async function handleTask(actionItem) {
   if(actionItem.planItemDefinitionType === 'processtask') {

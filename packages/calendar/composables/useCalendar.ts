@@ -2,10 +2,29 @@
 import { adminApi } from '../../../libraries/api/src/index';
 import { onMounted } from "vue";
 import { viewName } from '../utils/calendarHelper';
+
+type CalendarVieweCalendar = {
+    colorName: string,
+      lightColors: {
+        main: string,
+        container: string,
+        onContainer: string,
+      },
+      darkColors: {
+        main: string,
+        onContainer: string,
+        container: string,
+      },
+}
+type CalendarVieweCalendarSetting = {
+    [key: string]: CalendarVieweCalendar
+    
+}
+
 export const useCalendarSetting = () => useState<any>('calendarSetting');
 export const useCategoriesColumn = () => useState<any[]>('categoriesColumn');
 export const useCalenarCategories = () => useState<any[]>('calendarCategories', () =>([]));
-
+export const useCalendarViewerCategories = () => useState<CalendarVieweCalendarSetting>('calendarViewerCategories');
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
 
@@ -15,6 +34,8 @@ export const useCalendarStore = () => {
         "MONDAY",
         "SUNDAY",
     ]
+
+    
 
     const categoriesColumn = useCategoriesColumn()
     async function getCatergoriesColumn(){
@@ -27,12 +48,31 @@ export const useCalendarStore = () => {
         return data
     }
 
-    const categoriesOption = useState<any>('categoriesOption', () => ([]))
+    const categoriesOption = useCalenarCategories()
+    const calendarViewerCategories = useCalendarViewerCategories()
     async function getCategories(){
         const { data } = await adminApi.api.postMasterTablesRecords({
             id: setting.value.category.master_table
-        });
+        }) as any
         categoriesOption.value = data || []
+        // create calendar viewer calendar
+        calendarViewerCategories.value = data.reduce((result:CalendarVieweCalendarSetting, item:any) => {
+            const calendar: CalendarVieweCalendar = {
+                colorName: item.name,
+                lightColors: {
+                    main: item.color || '#409EFF',
+                    container: item.Container_Color || '#409EFF',
+                    onContainer: item.onContainer || '#fff',
+                },
+                darkColors: {
+                    main: item.color || '#409EFF',
+                    container: item.Container_Color || '#409EFF',
+                    onContainer: item.onContainer || '#fff',
+                },
+            }
+            result[item.id] = calendar
+            return result
+        },{})
     }
 
     const locationsOption = useState<any>('locationsOption', () => ([]))
@@ -54,7 +94,9 @@ export const useCalendarStore = () => {
                 default_view : calendarViewOptions.includes(data.basic.default_view) ? data.basic.default_view : "MONTH",
                 default_first_week : weekDayOptions.includes(data.basic.default_first_week) ? data.basic.default_first_week : "MONDAY",
                 default_slot : typeof data.basic.default_slot === 'number' ? data.basic.default_slot : 15,
-                allow_custom_slot : data.basic.allow_custom_slot !== undefined ? data.basic.allow_custom_slot : false
+                allow_custom_slot : data.basic.allow_custom_slot !== undefined ? data.basic.allow_custom_slot : false,
+                office_start_time: data.basic.office_start_time || '08:00',
+                office_end_time: data.basic.office_end_time || '20:00',
             },
             location: {
                 master_table : masterTable['Event Location'],
@@ -93,7 +135,8 @@ export const useCalendarStore = () => {
         calendarViewOptions,
         weekDayOptions,
         categoriesOption,
-        locationsOption
+        locationsOption,
+        calendarViewerCategories
     }
 
 }

@@ -1,0 +1,105 @@
+<script lang="ts" setup>
+import {clientApi} from 'api'
+const {caseInstanceId,actionStepId} = defineProps<{
+    caseInstanceId: string,
+    actionStepId: string,
+}>();
+const routerProvider = inject(MenuRouterKey);
+if (!routerProvider) {
+  throw new Error("MenuRouterKey is not provided");
+}
+const userId: string = useUserId().value;
+const { t } = useI18n();
+const formJson = ref()
+const formData = ref()
+const additionalButton = ref<any[]>([])
+const vFormRef = ref()
+async function setUpForm() {
+    try{
+        loading.value = true
+        // get action item detail from case instance
+        const stepDetail = await clientApi.api.postCaseDashboardInstanceActionPreRequisite({
+            id: actionStepId
+        }).then(res => res.data) as any
+
+        // get latest case detail
+        const caseData =  await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseInstanceId)
+                                .then(res => res.data) as any
+
+        const inParameters = stepDetail.inParameters as {[key: string]: string}
+        // get form xml 
+        const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(stepDetail.processDefinitionVersionId)
+        // get form data
+        formData.value = Object.keys(inParameters).reduce((prev:any, key) => {
+            const valueItem = caseData.rows.find( c => c.id === key)
+            if(valueItem) {
+                prev[inParameters[key]] = valueItem.value
+            }
+            return prev
+        }, {})
+
+        // get form json with lateset versiion
+        formJson.value = await clientApi.api.getRelationQuery({
+            userTaskId: 'start',
+            processKey: stepDetail.processDefinitionKey,
+            versionId: stepDetail.processDefinitionVersionId
+        }).then((res:any) => {
+            return res.data.length > 0 ? res.data[0].jsonValue ? JSON.parse(res.data[0].jsonValue) : {} : {}
+        })
+        // get additional element
+        const {buttons,components} = getBpmnAddtionalElement(xml, 'start', stepDetail, formJson.value)
+        additionalButton.value = buttons
+        nextTick(() => {
+            vFormRef.value.setForm(formJson.value, formData.value, [], xml)
+        })
+    }catch(error){
+        console.log(error)
+    }finally{
+        loading.value = false
+    }
+}
+
+function handelCancel(){
+    routerProvider?.back()
+}
+
+async function handleSubmit() {
+    console.log('handleSubmit')
+    const data = await vFormRef.value.getFormData(false, false);
+    console.log("data", data)
+}
+
+onActivated(() => {
+    setUpForm()
+})
+
+const loading = ref(false);
+</script>
+
+<template>
+  <div v-loading="loading" class="pageContianer">
+    <WorkflowDetailFormRender ref="vFormRef" >
+        <template #action>
+            <div class="workflow-detail-pane--btns">
+                <template v-for="(item,index) in additionalButton" :key="index">
+                    <component :is="item.component" v-bind="{...item.props, formData}"  />
+                </template>
+                <el-button @click="handelCancel">{{ $t("cancelText") }}</el-button>
+                <el-button type="primary" @click="handleSubmit">{{
+                  $t("common_submit")
+                }}</el-button>
+            </div>
+            </template>
+    </WorkflowDetailFormRender>
+  </div>
+</template>
+
+
+<style lang="scss" scoped>
+.pageContianer {
+  width: 100%;
+  height: 100%;
+  padding: var(--app-space-s);
+  position: relative;
+}
+</style>
