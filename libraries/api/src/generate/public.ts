@@ -1256,7 +1256,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "https://app4.wclsolution.com",
+            baseURL: axiosConfig.baseURL || "http://app2.wclsolution.com:9080",
         });
         this.secure = secure;
         this.format = format;
@@ -1351,7 +1351,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title DocPal REST API
  * @version 0.0.1
- * @baseUrl https://app4.wclsolution.com
+ * @baseUrl http://app2.wclsolution.com:9080
  *
  * DocPal REST API Documentation
  */

@@ -38,44 +38,75 @@ onActivated(() => {
             <div class="section basic">
                 <div class="title">{{  $t('calendarSetting.basic') }}</div>
                 <ElForm label-position="top" @submit.stop="">
-                    <ElFormItem :label="$t('calendarSetting.view')">
-                        <ElSelect v-model="setting.basic.default_view" @change="saveSetting">
-                            <ElOption v-for="option in calendarViewOptions" :key="option" :label="$t(`calendarSetting.viewOption.${option}`)" :value="option" />
-                        </ElSelect>
-                    </ElFormItem>
-                    <ElFormItem :label="$t('calendarSetting.firstOfWeek')">
-                        <ElSelect v-model="setting.basic.default_first_week" @change="saveSetting">
-                            <ElOption v-for="option in weekDayOptions" :key="option" :label="$t(`calendarSetting.weekOption.${option}`)" :value="option" />
-                        </ElSelect>
-                    </ElFormItem>
-                    <ElFormItem :label="$t('calendarSetting.defaultSolt')">
-                        <ElInput v-model="setting.basic.default_slot" type="number" min="0" :step="1" @change="saveSetting" >
-                            <template #suffix>
-                                {{  $t('time.minutes') }}
-                            </template>
-                        </ElInput>
-                    </ElFormItem>
-                    <ElFormItem 
-                        :label="$t('calendarSetting.allowCustomSlot')"
-                    >
-                        <ElSwitch v-model="setting.basic.allow_custom_slot" @change="saveSetting"/>
-                    </ElFormItem>
+                <ElRow :gutter="12">
+                    <ElCol :span="12">
+                        <ElFormItem :label="$t('calendarSetting.view')">
+                            <ElSelect v-model="setting.basic.default_view" @change="saveSetting">
+                                <ElOption v-for="option in calendarViewOptions" :key="option" :label="$t(`calendarSetting.viewOption.${option}`)" :value="option" />
+                            </ElSelect>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="12">
+                        <ElFormItem :label="$t('calendarSetting.firstOfWeek')">
+                            <ElSelect v-model="setting.basic.default_first_week" @change="saveSetting">
+                                <ElOption v-for="option in weekDayOptions" :key="option" :label="$t(`calendarSetting.weekOption.${option}`)" :value="option" />
+                            </ElSelect>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="6">
+                        <ElFormItem :label="$t('calendarSetting.defaultSolt')">
+                            <ElInput v-model="setting.basic.default_slot" type="number" min="0" :step="1" @change="saveSetting" >
+                                <template #suffix>
+                                    {{  $t('time.minutes') }}
+                                </template>
+                            </ElInput>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="6">
+                        <ElFormItem 
+                            :label="$t('calendarSetting.allowCustomSlot')"
+                        >
+                            <ElSwitch v-model="setting.basic.allow_custom_slot" active-text="Allow" inactive-text="Disallow" @change="saveSetting"/>
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="6">
+                        <ElFormItem :label="$t('calendarSetting.officeStartTime')">
+                            <ElTimePicker v-model="setting.basic.office_start_time"  placeholder="Select date and time" format="HH:mm" value-format="HH:mm" @change="saveSetting" />
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span="6">
+
+                        <ElFormItem :label="$t('calendarSetting.officeEndTime')">
+                            <ElTimePicker v-model="setting.basic.office_end_time"  placeholder="Select date and time" format="HH:mm" value-format="HH:mm" @change="saveSetting" />
+                        </ElFormItem>
+                    </ElCol>
+                </ElRow>
                 </ElForm>
             </div>
             <div class="section location">
                 <div class="title">{{  $t('calendarSetting.location') }}</div>
                 <ElForm label-position="top" @submit.stop="">
-                    <ElFormItem :label="$t('calendarSetting.location_masterTable')">
-                        <ElSelect v-model="setting.location.master_table" @change="saveSetting" disabled>
+                    <ElRow :gutter="12">
+                        <ElCol :span="8">
+                            <ElFormItem :label="$t('calendarSetting.location_masterTable')">
+                                <ElSelect v-model="setting.location.master_table" @change="saveSetting" disabled>
 
-                        </ElSelect>
-                    </ElFormItem>
-                    <ElFormItem :label="$t('calendarSetting.allowCustom')">
-                        <ElSwitch v-model="setting.location.allow_custom" @change="saveSetting"/>
-                    </ElFormItem>
-                    <ElFormItem :label="$t('calendarSetting.allowEmpty')">
-                        <ElSwitch v-model="setting.location.allow_empty" @change="saveSetting"/>
-                    </ElFormItem>
+                                </ElSelect>
+                            </ElFormItem>
+                        </ElCol>
+                        <ElCol :span="8">
+
+                            <ElFormItem :label="$t('calendarSetting.allowCustom')">
+                                <ElSwitch v-model="setting.location.allow_custom" active-text="Allow" inactive-text="Disallow" @change="saveSetting"/>
+                            </ElFormItem>
+                        </ElCol>
+                        <ElCol :span="8">
+
+                            <ElFormItem :label="$t('calendarSetting.allowEmpty')">
+                                <ElSwitch v-model="setting.location.allow_empty" active-text="Allow" inactive-text="Disallow" @change="saveSetting"/>
+                            </ElFormItem>
+                        </ElCol>
+                    </ElRow>
                 </ElForm>
             </div>
             <CalendarSettingCategories v-if="categoriesColumn" />

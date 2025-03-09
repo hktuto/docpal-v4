@@ -203,35 +203,8 @@ type AdditionalButton = {
 }
 const additionalButton = ref<AdditionalButton[]>([])
 function handleAdditionalSetting(xml:any, taskDetail: any, formData:any) {
-    const xmlJson = bpmnStringToJson(xml)
-    const currentTask = xmlJson.flatObj[state.taskDetail.taskDefinitionKey]
-    // check generate document button 
-    const generateDocumentComponent = "LazyBpmnButtonGenerateDocument"
-    if(currentTask.extensionElements && currentTask.extensionElements['docpal:previewDocumentButton']){
-        if(Array.isArray(currentTask.extensionElements['docpal:previewDocumentButton'])){
-            currentTask.extensionElements['docpal:previewDocumentButton'].forEach((item:any) => {
-                additionalButton.value.push({
-                    props: {
-                        ...item,
-                        xml,
-                        formData,
-                        taskDetail
-                    },
-                    component: generateDocumentComponent
-                })
-            })
-        }else{
-            additionalButton.value.push({
-                props: {
-                   ...currentTask.extensionElements['docpal:previewDocumentButton'],
-                   xml,
-                   formData,
-                   taskDetail
-                },
-                component: generateDocumentComponent
-            })
-        }
-    }
+    const {buttons,components} = getBpmnAddtionalElement(xml,state.taskDetail.taskDefinitionKey, taskDetail, formData)
+    additionalButton.value = buttons
 }
 
 

@@ -1,3 +1,4 @@
+import type { CalendarEventExternal } from '@schedule-x/calendar'
 import { clientApi } from 'api'
 import type { CalendarTaskRespDTO } from 'api/src/generate/client'
 import dayjs from 'dayjs'
@@ -10,6 +11,7 @@ export type DocPalEventType = CalendarTaskRespDTO
 
 export type CalendarOptions = {
     allowCreate: boolean,
+    standalone?: boolean
     editable: boolean,
     showWorkflowFilter: boolean,
     showLocationFilter: boolean,
@@ -18,24 +20,29 @@ export type CalendarOptions = {
     defaultCategory:string,
     defaultLocation:string,
     defaultUser:string,
-    locationLabel:string,
-    categoryLabel:string,
-    userLabel:string,
+    locationLabel?:string,
+    categoryLabel?:string,
+    userLabel?:string,
     userFilterGroup?:string,
-    view:  'day' | 'week' |'month-grid' |'month-agenda'
-    firstDayOfWeek:  "MONDAY" | "SUNDAY"
+    officeStartTime?:string, // office start time default to 08:00
+    officeEndTime?:string, // office end time default to 20:00
+    view?:  'day' | 'week' |'month-grid' |'month-agenda'
+    firstDayOfWeek?:  "MONDAY" | "SUNDAY",
+    addtionalCheckBeforeEventUpdate?:(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal) => boolean
 }
 
-export function convertSiteEventToCalendarEvent(event:DocPalEventType):CalendarEvent {
+export function convertSiteEventToCalendarEvent(event:DocPalEventType, defaultCalendarId:string):CalendarEventExternal {
     const format = event.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
     return {
-        id: event.eventId || new Date().valueOf().toString(),
+        id: event.id || new Date().valueOf().toString(),
         start: dayjs(event.startTime).format(format),
         end: dayjs(event.endTime).format(format),
         title: event.eventName,
-        description: event.eventName,
+        description: event.title,
         location: event.location,
+        people: event.relatedUsers?.userId ? Object.keys(event.relatedUsers) : [],
         detail: {...event},
+        calendarId: event.category || undefined,
         _options:{
             disableResize: true,
             disableDND: true,
@@ -49,6 +56,7 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter){
         startTime: dayjs(range.start).toISOString(),
         endTime: dayjs(range.end).toISOString(),
     }
+    const defaultCalendarId = Object.keys(calendarControls.getCalendars())[0]
     // TODO : backend is missing filter
     clientApi.api.postCalendarsList(params).then( res => {
         const data = res.data
@@ -67,10 +75,11 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter){
                 if(!matUser) return false
             }
             return true
-        }).map(convertSiteEventToCalendarEvent)
+        }).map((ev) => convertSiteEventToCalendarEvent(ev, defaultCalendarId))
         // filter events
     
         // dummy full date event
+        console.log(calendarControls.getCalendars())
         //TODO： remove later
         events.push({
             id: new Date().valueOf().toString(),
@@ -79,6 +88,7 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter){
             title: 'David Annual Leave',
             people:['sean-admin'],
             description: 'New Event',
+            calendarId: defaultCalendarId,
         })
         calendarApp.eventsService.set(events);
     })

@@ -10,7 +10,10 @@ const calendarOptions = ref<CalendarOptions>({
     editable: false,
     showLocationFilter: true,
     showUserFilter: true,
-    view: "week"
+    view: "week",
+    userLabel: "Consultant",
+    categoryLabel: "Category",
+    locationLabel: "Office"
 })
 
 function getInfo(){

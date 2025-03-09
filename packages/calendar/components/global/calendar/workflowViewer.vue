@@ -1,29 +1,41 @@
 
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-const {disabled, formData, options={editable:true,allowCreate:true}, taskDetail} = defineProps<{
+const {disabled, formData, options, taskDetail} = defineProps<{
     disabled: boolean,
     formData: any
-    options?: Object,
+    options: CalendarOptions,
     taskDetail:any
 }>();
 
 const filter = ref()
 const newEvent = ref()
+const newEventId = new Date().valueOf().toString()
 function filterChange(newFilter: any) {
-    console.log("filterChange", newFilter)
     filter.value = newFilter
 }
 
 function getFormData(){
     // console.log("getFormData", formData)
     console.log("getFormData", newEvent.value)
+    // TODO : handle data mapping , workflow data may not be same as calendar
     return newEvent.value
 }
 const calendarViewerRef = ref()
-function createEvent(newForm){
-    newEvent.value = newForm;
-    calendarViewerRef.value.addEvent(newForm)
+
+function createEditEvent(newForm:DocPalEventType){
+    let event = convertSiteEventToCalendarEvent(newForm)
+    if(!newEvent.value) {
+        newEvent.value = newForm;
+        event._options = {
+            disableResize: true,
+            disableDND: false,
+        }
+        calendarViewerRef.value.addEvent(event)
+    }else{
+        newEvent.value = newForm;
+        calendarViewerRef.value.updateEvent(event)
+    }
 }
 const newEventFromRef = ref();
 function popNewEvent(dateTime: string) {
@@ -37,6 +49,7 @@ defineExpose({ getFormData })
 </script>
 
 <template>
-    <CalendarViewer ref="calendarViewerRef" :options="options" @newEvent="popNewEvent" @filter-change="filterChange"/>
-    <CalendarNewEventForm ref="newEventFromRef" @submit="createEvent"/>
+    {{formData}}
+    <Calendar ref="calendarViewerRef" :options="options" @createEvent="popNewEvent" @filterChange="filterChange"/>
+    <CalendarNewEventForm ref="newEventFromRef" :options="options" :newEventId="newEventId" @submit="createEditEvent"/>
 </template>

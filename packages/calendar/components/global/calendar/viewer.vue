@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {ElMessage} from 'element-plus'
 import dayjs from 'dayjs'
 import { ScheduleXCalendar } from '@schedule-x/vue'
 import {
@@ -7,7 +8,8 @@ import {
   createViewMonthAgenda,
   createViewMonthGrid,
   createViewWeek,
-  viewMonthGrid
+  viewMonthGrid,
+  type CalendarEventExternal
 } from '@schedule-x/calendar'
 
 import '@schedule-x/theme-default/dist/index.css'
@@ -20,7 +22,7 @@ import { createEventsServicePlugin } from '@schedule-x/events-service'
 import {getEventFromApi, type CalendarOptions, type DocPalEventType} from '../../../utils/calendarHelper'
 
 
-const { setting, categoriesOption, locationsOption } = useCalendarStore();
+const { setting, calendarViewerCategories } = useCalendarStore();
 const {options = {
     editable: false,
     allowCreate: false,
@@ -44,45 +46,23 @@ const calendarControls = createCalendarControlsPlugin()
 const eventsServicePlugin = createEventsServicePlugin();
 // dialog ref
 
-function onEventUpdate(event) {
-    console.log('onEventUpdate', event)
-}
-function onEventClick(event) {
-    console.log('onEventClick', event)
-}
-function onClickDate(date) {
-    console.log('onClickDate', date)
-}
-function onClickDateTime(dateTime) {
-    if(options.allowCreate){
-        // newFormRef.value.open(dateTime)
-        emits('newEvent', dateTime)
-    }
-    console.log('onClickDateTime', dateTime, options) // e.g. 2024-01-01 12:37
-}
-function onClickAgendaDate(date) {
-    console.log('onClickAgendaDate', date)
-}
-function onClickPlusEvents(date) {
+const emits = defineEmits(['onSelectedDateUpdate','onEventUpdate','onEventClick','onClickDate','onClickDateTime','onClickAgendaDate','onClickPlusEvents','onBeforeEventUpdate'])
 
-}
-function onSelectedDateUpdate(date) {
-}
 
-function onBeforeEventUpdate(editedEvent:any){
-
-    const starDay = dayjs(editedEvent.startTime)
+function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal){
+    const startDay = dayjs(editedEvent.startTime)
     const endDay = dayjs(editedEvent.endTime)
 
-    if(starDay.isBefore(dayjs())) {
+    if(startDay.isBefore(dayjs())) {
+        ElMessage.error("Start time cannot be earlier than today");
         return false
     }
     // filter user
     const people = editedEvent.people as string[] || []
-    // loop current event, check if user has event overlap
-    
-    return true;
-// check if user 
+    if(options.addtionalCheckBeforeEventUpdate) {
+        return options.addtionalCheckBeforeEventUpdate(oldEvent, editedEvent)
+    }
+    return true
 }
 
 function setupCalendar() {
@@ -100,13 +80,15 @@ function setupCalendar() {
             plugins.push(createResizePlugin())
         }
     }
+    
     calendarApp = createCalendar({
         selectedDate: dayjs().format('YYYY-MM-DD'),
         firstDayOfWeek: setting.value.basic.first_day_of_week === 'MONDAY' ? 1 : 0,
         dayBoundaries: {
-            start: '06:00',
-            end: '20:00',
+            start: setting.value.basic.office_start_time || '08:00',
+            end: setting.value.basic.office_end_time || '20:00',
         },
+        calendars: {...calendarViewerCategories.value},
         monthGridOptions:{
             nEventsPerDay: 10,
         },
@@ -121,13 +103,13 @@ function setupCalendar() {
         ],
         callbacks:{
             onRangeUpdate: () => getEventFromApi(calendarApp, calendarControls, filter),
-            onSelectedDateUpdate: onSelectedDateUpdate,
-            onEventUpdate: onEventUpdate,
-            onEventClick: onEventClick,
-            onClickDate: onClickDate,
-            onClickDateTime: onClickDateTime,
-            onClickAgendaDate: onClickAgendaDate,
-            onClickPlusEvents: onClickPlusEvents,
+            onSelectedDateUpdate: (args) => emits('onSelectedDateUpdate', args),
+            onEventUpdate: (args) => emits('onEventUpdate', args),
+            onEventClick: (args) => emits('onEventClick', args),
+            onClickDate: (args) => emits('onClickDate', args),
+            onClickDateTime: (args) => emits('onClickDateTime', args),
+            onClickAgendaDate: (args) => emits('onClickAgendaDate', args),
+            onClickPlusEvents: (args) => emits('onClickPlusEvents', args),
             onBeforeEventUpdate: onBeforeEventUpdate,
 
         }
@@ -153,7 +135,7 @@ function setupCalendar() {
             }
         }
     })
-    getCurrentRangeEvent()
+    getEventFromApi(calendarApp, calendarControls, filter)
 }
 
 
@@ -177,7 +159,8 @@ watch(() => [setting, options],async() =>{
 
 defineExpose({
     calendarControls,
-    calendarApp
+    calendarApp,
+    eventsServicePlugin
 })
 
 </script>
@@ -185,9 +168,7 @@ defineExpose({
 
 <template>
     <div class="calendarViewerContainer">
-        <template v-if="options.showLocationFilter ||options.showWorkflowFilter || options.showUserFilter || options.showCategoryFilter">
-            
-        </template>
+
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" />
     </div>
 </template>
