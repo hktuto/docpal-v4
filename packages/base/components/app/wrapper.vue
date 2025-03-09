@@ -39,9 +39,7 @@ const isMenuStick = computed(() => {
 })
 
 function initPanelSize() {
-    console.log("init panel size")
     const size = userDefineSize.value
-    console.log("init panel size", size, mainPanel.value)
 }
 
 

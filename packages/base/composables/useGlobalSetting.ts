@@ -64,7 +64,6 @@ export const useGlobalSetting = () => {
     }
 
     function handleTimeSettingChange(newValue:string) {
-        console.log("time setting change", newValue)
         if(!newValue) {
             newValue = 'YYYY-MM-DD'
         }
