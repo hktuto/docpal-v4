@@ -634,7 +634,9 @@ export const bpmnElement:BpmnElement = {
                                 attr_startTime:"",
                                 attr_endTime:"",
                                 attr_isAllDay:"",
-                                related:[],
+                                related:{
+                                    attr_user:""
+                                },
                                 reminder:[]
                             }
                         }
@@ -655,7 +657,9 @@ export const bpmnElement:BpmnElement = {
                                 attr_startTime:"",
                                 attr_endTime:"",
                                 attr_isAllDay:"",
-                                related:[],
+                                related:{
+                                    attr_user:""
+                                },
                                 reminder:[]
                             }
                         }

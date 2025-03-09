@@ -23,3 +23,18 @@ export const routeWorkflowPage  = function(params: any){
     }
   } as TabItem
 }
+
+export function newWorkflowStartPage(label: string, userTaskId:string, processKey:string, versionId:string) {
+  return {
+    id: "workflow-detail-versions-" + new Date().getTime(),
+    name: "workflow-start-versions-" + userTaskId,
+    icon: 'dp-icon:flow-outline',
+    label: label,
+    component: 'LazyWorkflowStartFullPageDead',
+    props: {
+      userTaskId,
+      processKey,
+      versionId,
+    }
+  }
+}

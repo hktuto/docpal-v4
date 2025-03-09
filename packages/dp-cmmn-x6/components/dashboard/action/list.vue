@@ -42,7 +42,6 @@ async function handleProcessTask(actionItem) {
   const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(res.processDefinitionVersionId)
   const {flatObj} = bpmnStringToJson(xml)
   const startEvent = flatObj.Start;
-  console.log("Start", startEvent)
   // check start event additional setting
   if(startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']){
       const openInNewPage = startEvent.extensionElements['docpal:additionaSetting'].attr_openInNewPage
@@ -51,6 +50,7 @@ async function handleProcessTask(actionItem) {
           const routerItem = caseProcessTaskFormPage({
             caseInstanceId,
             actionStepId: actionItem.id,
+            backItem: routerProvider?.tabData.value
           })
           routerProvider?.navigateTo(routerItem)
       }

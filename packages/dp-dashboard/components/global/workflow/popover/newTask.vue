@@ -52,6 +52,8 @@ const state = reactive({
     loading: false
 })
 
+const routerProvider = inject(MenuRouterKey)
+
 function tabChangeHandler(){
     console.log(activeName.value)
     if(activeName.value === 'Graph'){
@@ -78,7 +80,9 @@ async function workflowClickHandler (item: any) {
     if(startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']){
         const openInNewPage = startEvent.extensionElements['docpal:additionaSetting'].attr_openInNewPage
         if(openInNewPage){
-            console.log("openInNewPage", openInNewPage)
+            const link = newWorkflowStartPage(item.name, step, item.key, item.versionId)
+            routerProvider?.navigateTo(link)
+            return;
         }
     }
     // get bpmn 

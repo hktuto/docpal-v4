@@ -24,7 +24,9 @@ type CalendarVieweCalendarSetting = {
 export const useCalendarSetting = () => useState<any>('calendarSetting');
 export const useCategoriesColumn = () => useState<any[]>('categoriesColumn');
 export const useCalenarCategories = () => useState<any[]>('calendarCategories', () =>([]));
+export const useCalenarLocation = () => useState<any[]>('calendarLocations', () =>([]));
 export const useCalendarViewerCategories = () => useState<CalendarVieweCalendarSetting>('calendarViewerCategories');
+
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
 
@@ -75,12 +77,12 @@ export const useCalendarStore = () => {
         },{})
     }
 
-    const locationsOption = useState<any>('locationsOption', () => ([]))
+    const locationsOption = useCalenarLocation()
     async function getLocations(){
         
         const data = await adminApi.api.postMasterTablesRecords({
             id: setting.value.location.master_table
-        }).then(res => res.data);
+        }).then(res => res.data) as any;
         locationsOption.value = data || []
     }
 

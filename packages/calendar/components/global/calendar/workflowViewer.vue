@@ -8,18 +8,14 @@ const {disabled, formData, options, taskDetail} = defineProps<{
     taskDetail:any
 }>();
 
-const filter = ref()
 const newEvent = ref()
 const newEventId = new Date().valueOf().toString()
-function filterChange(newFilter: any) {
-    filter.value = newFilter
-}
+
 
 function getFormData(){
     // console.log("getFormData", formData)
-    console.log("getFormData", newEvent.value)
     // TODO : handle data mapping , workflow data may not be same as calendar
-    return newEvent.value
+    return JSON.parse(JSON.stringify(newEvent.value))
 }
 const calendarViewerRef = ref()
 
@@ -39,17 +35,15 @@ function createEditEvent(newForm:DocPalEventType){
 }
 const newEventFromRef = ref();
 function popNewEvent(dateTime: string) {
-    console.log("popNewEvent", dateTime)
     const selectedDate = dayjs(dateTime)
     if(selectedDate.isBefore(dayjs())) return
-    newEventFromRef.value.open(dateTime, filter.value)
+    newEventFromRef.value.open(dateTime, calendarViewerRef.value.filter)
 }
 
 defineExpose({ getFormData })
 </script>
 
 <template>
-    {{formData}}
-    <Calendar ref="calendarViewerRef" :options="options" @createEvent="popNewEvent" @filterChange="filterChange"/>
+    <Calendar ref="calendarViewerRef" :options="options" @createEvent="popNewEvent"  />
     <CalendarNewEventForm ref="newEventFromRef" :options="options" :newEventId="newEventId" @submit="createEditEvent"/>
 </template>

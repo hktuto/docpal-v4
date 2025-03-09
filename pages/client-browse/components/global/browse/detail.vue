@@ -21,7 +21,7 @@ const props = withDefaults(
 const { idOrPath, commentId } = toRefs(props)
 const itemRefs = ref({});
 defineOptions({
-    name: 'LazyBrowseDetailDead'
+    name: 'BrowseDetailDead'
 })
 
 const tabProvider = inject(TabManagerKey)

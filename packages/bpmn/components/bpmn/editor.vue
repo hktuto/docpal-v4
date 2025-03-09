@@ -254,13 +254,12 @@ async function previewForm(node:Node) {
     }
     selectedStep.value = node.getData()
     formRenderVisible.value = true;
-    setTimeout(() => {
+    nextTick(() => {
         if(!response || !response.data) return;
         if(response?.data.length > 0) {
             const json = JSON.parse(response.data[0].jsonValue || "{}")
             fromRenderRef.value.setForm(json)
         }else{
-            console.log("preview json : empty")
             fromRenderRef.value.setForm({})
         }
     })
@@ -286,9 +285,10 @@ async function openForm(node: Node){
     }
     selectedStep.value = node.getData()
     formDialogVisible.value = true;
-    setTimeout(() => {
+    nextTick(() => {
         if(!response || !response.data) return;
         if(response?.data.length > 0) {
+            fromDesignRef.value.setFormJson({})
             const json = JSON.parse(response.data[0].jsonValue || "{}")
             fromDesignRef.value.setFormJson(json)
         }else{
@@ -412,7 +412,7 @@ defineExpose({
             </template>
         </FormDesigner>
     </ElDialog>
-    <ElDialog v-model="formRenderVisible" width="90%"   draggable>
+    <ElDialog v-model="formRenderVisible" width="90%" distory-on-close  draggable>
         <WorkflowDetailFormRender ref="fromRenderRef" />
     </ElDialog>
     <div class="actions">

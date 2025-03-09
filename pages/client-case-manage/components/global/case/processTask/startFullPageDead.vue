@@ -1,14 +1,17 @@
 <script lang="ts" setup>
 import {clientApi} from 'api'
-const {caseInstanceId,actionStepId} = defineProps<{
+const {caseInstanceId,actionStepId, backItem} = defineProps<{
     caseInstanceId: string,
     actionStepId: string,
+    backItem?:any
 }>();
 const routerProvider = inject(MenuRouterKey);
+defineOptions({
+    name: 'CaseProcessTaskStartFullPageDead'
+})
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
-const userId: string = useUserId().value;
 const { t } = useI18n();
 const formJson = ref()
 const formData = ref()
@@ -50,6 +53,7 @@ async function setUpForm() {
         const {buttons,components} = getBpmnAddtionalElement(xml, 'start', stepDetail, formJson.value)
         additionalButton.value = buttons
         nextTick(() => {
+            console.log("set form data")
             vFormRef.value.setForm(formJson.value, formData.value, [], xml)
         })
     }catch(error){
@@ -60,16 +64,19 @@ async function setUpForm() {
 }
 
 function handelCancel(){
-    routerProvider?.back()
+    routerProvider?.back(backItem)
 }
 
 async function handleSubmit() {
-    console.log('handleSubmit')
     const data = await vFormRef.value.getFormData(false, false);
-    console.log("data", data)
+    const res = await clientApi.api.postCaseInstanceProcessStart({
+        id: actionStepId,
+        variables: data
+    })
+    console.log(res);
 }
 
-onActivated(() => {
+onMounted(() => {
     setUpForm()
 })
 
