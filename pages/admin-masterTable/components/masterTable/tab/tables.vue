@@ -111,11 +111,11 @@ async function handleDelete(row: any) {
         }
     );
     if (action !== "confirm") return;
-    // const result = await masterTableProvider?.DeleteMasterTablesApi(row.id);
-    // if (!result) {
-    //     ElMessage.error(t("dpTip.deleteFailed"));
-    //     return;
-    // }
+    const result = await masterTableProvider?.DeleteMasterTablesApi(row.id);
+    if (!result) {
+        ElMessage.error(t("dpTip.deleteFailed"));
+        return;
+    }
     ElMessage.success(t('masterTable_deleteSuccessMsg', {name: row.name}));
     query();
 }
