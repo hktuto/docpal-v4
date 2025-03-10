@@ -1,33 +1,35 @@
 <template>
-   <div>
-     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog">
-        <el-tooltip :content="$t('tip.editDocDetail')">
-            <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"
-                ></SvgIcon> 
-        </el-tooltip>
-     </BrowseActionsButton>
+    <div>
+        <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog">
+            <el-tooltip :content="$t('tip.editDocDetail')">
+                <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"
+                ></SvgIcon>
+            </el-tooltip>
+        </BrowseActionsButton>
         <el-dialog v-model="dialogOpened" append-to-body :title="$t('tip.editDocDetail')" class="scroll-dialog">
             <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
-                <el-form-item :label="$t('name')" prop="name"
-                    :rules="[ { required: true, message: $t('form_common_requird'), trigger: 'change'}]">
-                    <el-input v-model="form.name" clearable />
+                <el-form-item :label="$t('dpDocument_fileName')" prop="name"
+                              :rules="[ { required: true, message: $t('dpDocument_fileName') +' '+ $t('render.hint.fieldRequired'), trigger: 'change'}]">
+                    <el-input v-model="form.name" clearable/>
                 </el-form-item>
             </el-form>
-            
+
             <MetaRenderForm2 ref="MetaFormRef" :mode="state.MetaRenderMode"></MetaRenderForm2>
             <template #footer>
-                <el-button :loading="state.loading"  @click="handleSave"
-                    @keyup.enter="handleSave">{{$t('common_save')}}</el-button>
+                <el-button :loading="state.loading" @click="handleSave" @keyup.enter="handleSave">
+                    {{ $t('common_save') }}
+                </el-button>
             </template>
         </el-dialog>
         <!-- -->
-  </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { useEventListener } from '@vueuse/core'
-import { clientApi } from 'api'
+import {emitBus, EventType} from 'eventbus'
+import {clientApi} from 'api'
 import {ElMessage} from 'element-plus'
+
 const props = defineProps<{
     doc?: any,
     parentPath?: string
@@ -47,16 +49,17 @@ const state = reactive({
     MetaRenderMode: 'ai-edit'
 })
 const MetaFormRef = ref()
-async function openDialog(){
+const {t} = useI18n()
+
+async function openDialog() {
     state.doc = props.doc
     form.value.name = props.doc.name
     form.value.id = props.doc.id
     form.value.path = props.doc.path
     dialogOpened.value = true
-    nextTick(async() => {
+    nextTick(async () => {
         const analysis = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
         state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
-        console.log(MetaFormRef.value)
         await MetaFormRef.value.init(props.doc.type, {
             aiAnalysis: analysis.metaDatas,
             aiDocId: analysis.aiId
@@ -64,20 +67,26 @@ async function openDialog(){
         MetaFormRef.value.setData(props.doc.properties)
     })
 }
-async function handleSave(){
+
+const getParentPath = (path: string): string => {
+    const arr = path.split("/");
+    arr.pop();
+    return arr.join("/");
+};
+
+async function handleSave() {
     state.loading = true
     try {
         const metaFormData = await MetaFormRef.value.getData()
-        if(!metaFormData) {
+        if (!metaFormData) {
             state.loading = false
             return
         }
         // check if the name is exist in the folder
-        const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
-
-        if(isDuplicate && form.value.name !== props.doc.name){
+        const {isDuplicate} = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
+        if (isDuplicate && form.value.name !== props.doc.name) {
             ElMessage({
-                message: $i18n.t('dpTip_duplicateFileName') as string,
+                message: t('dpTip_duplicateFileName') as string,
                 type: 'error'
             })
             state.loading = false
@@ -88,15 +97,20 @@ async function handleSave(){
             name: form.value.name,
             properties: metaFormData,
         })
+        ElMessage.success(t('document_updateSuccessMsg', {name: form.value.name}))
+
+        emitBus(EventType.FILE_NEED_REFRESH, {
+            relatedIdOrPath: state.doc.id,
+        })
         dialogOpened.value = false
-        emits('success', state.doc)
     } catch (error) {
-        
+        console.log("edit fail", error)
     }
     state.loading = false
 }
-onMounted(async() => {
+
+onMounted(async () => {
     // useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))  
 })
-defineExpose({ openDialog })
+defineExpose({openDialog})
 </script>

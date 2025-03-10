@@ -52,8 +52,8 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         },
         {
             field: 'name',
-            title: 'Name',
-            minWidth: 250,
+            title: 'document_name',
+            minWidth: 200,
             treeNode: true,
             type: 'html',
             formatter: ({cellValue, row}: any) => {
@@ -67,7 +67,6 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         {
             field: 'mimeType',
             title: 'search.mimeTypes',
-            minWidth: 60,
             formatter: ({cellValue}: any) => {
                 return mimeTypeToExtension(cellValue)
             },
@@ -75,7 +74,6 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         {
             field: 'documentType',
             title: 'docType_documentType',
-            minWidth: 120,
         },
         {
             field: 'fileSize',
