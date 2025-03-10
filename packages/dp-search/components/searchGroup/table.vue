@@ -203,7 +203,9 @@ const routerProvider = inject(MenuRouterKey)
     } catch (error) {
         state.tableData = []
         state.aggregation = {}
-        state.options.paginationConfig.total = 0
+        tableConfig.pagerConfig.total = 0
+        tableConfig.pagerConfig.pageSize = 1
+        tableConfig.pagerConfig.currentPage = 1
     } finally {
       tableConfig.loading = false
       tableRef.value?.loadData(state.tableData)
