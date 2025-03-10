@@ -7,7 +7,6 @@
       "options": {
         "name": "email",
         "label": "dpEmail.recipient",
-        "labelZh": "電子郵件",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -54,7 +53,6 @@
       "options": {
         "name": "message",
         "label": "dpTable_message",
-        "labelZh": "訊息",
         "labelAlign": "",
         "rows": 3,
         "defaultValue": "",
@@ -94,7 +92,6 @@
       "options": {
         "name": "password",
         "label": "share_password",
-        "labelZh": "密碼",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -140,8 +137,7 @@
       "formItemFlag": true,
       "options": {
         "name": "minimum",
-        "label": "minimum",
-        "labelZh": "最小上傳檔案數",
+        "label": "document_minimumNumberOfUploadFiles",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "1",
@@ -187,8 +183,7 @@
       "formItemFlag": true,
       "options": {
         "name": "maximum",
-        "label": "maximum",
-        "labelZh": "最大上傳檔案數",
+        "label": "document_maximumNumberOfUploadFiles",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "100",
@@ -235,7 +230,6 @@
       "options": {
         "name": "fileType",
         "label": "docInfo.fileExtension",
-        "labelZh": "文件類型",
         "labelAlign": "",
         "placeholder": "dpTip_all",
         "prefixIcon": "",
