@@ -17,6 +17,7 @@ const formJson = ref()
 const formData = ref()
 const additionalButton = ref<any[]>([])
 const vFormRef = ref()
+const inParameters = ref<any>({})
 async function setUpForm() {
     try{
         loading.value = true
@@ -29,7 +30,7 @@ async function setUpForm() {
         const caseData =  await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseInstanceId)
                                 .then(res => res.data) as any
 
-        const inParameters = stepDetail.inParameters as {[key: string]: string}
+        inParameters.value = stepDetail.inParameters as {[key: string]: string}
         // get form xml 
         const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(stepDetail.processDefinitionVersionId)
         // get form data
@@ -40,7 +41,7 @@ async function setUpForm() {
             }
             return prev
         }, {})
-
+        console.log("formData", formData)
         // get form json with lateset versiion
         formJson.value = await clientApi.api.getRelationQuery({
             userTaskId: 'start',
@@ -69,11 +70,17 @@ function handelCancel(){
 
 async function handleSubmit() {
     const data = await vFormRef.value.getFormData(false, false);
+    const variables = Object.keys(inParameters.value).reduce((prev:any, item:any) => {
+        const otherKeys = inParameters.value[item]
+        prev[item] = data[otherKeys]
+        return prev
+    }, {}) as any
     const res = await clientApi.api.postCaseInstanceProcessStart({
         id: actionStepId,
-        variables: data
+        variables
     })
-    console.log(res);
+    handelCancel()
+    // console.log(res);
 }
 
 onMounted(() => {
