@@ -115,9 +115,9 @@ async function handleDelete(row) {
         }
     )
     if (action !== 'confirm') return
-    // const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
-    //     metadata: row.metadata
-    // })
+    const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
+        metadata: row.metadata
+    })
     ElMessage.success(t('documentType_displayDeleteSuccessMsg'))
     emits('refresh')
 }
