@@ -18,6 +18,11 @@ defineExpose({
 <template>
 
     <ElDialog v-model="opened" draggable >
-        {{eventDetail}}
+        <pre class="content">
+            {{eventDetail.start}}
+            {{eventDetail.end}}
+            {{eventDetail.people}}
+        </pre>
+        <!-- {{eventDetail}} -->
     </ElDialog>
 </template>

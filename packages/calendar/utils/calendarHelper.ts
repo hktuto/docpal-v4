@@ -46,7 +46,7 @@ export function convertSiteEventToCalendarEvent(event:DocPalEventType, defaultCa
         title: event.eventName,
         description: event.title,
         location: locationName,
-        people: event.relatedUsers ? Object.keys(event.relatedUsers) : [],
+        people: event.relatedUsers ? [event.relatedUsers.user] : [],
         detail: {...event},
         calendarId: event.category || undefined,
         _options:{
@@ -82,8 +82,9 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter:an
             if(filter.user) {
                 console.log("filter.user", filter.user)
                 const userFilter = filter.user === 'currentUser' ? userId : filter.user
-                const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter|| Object.keys(event.relatedUsers).includes(userFilter)
-                if(!mapUser) return false
+                const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
+                const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
+                if(!mapUser && !userInRelated) return false
             }
             return true
         }).map((ev) => convertSiteEventToCalendarEvent(ev, defaultCalendarId))
