@@ -1076,6 +1076,7 @@
   "document_uploadFilesRequestCreatedSuccessMsg": "The new file upload request has been created successfully.",
   "document_uploadRequest": "上传要求",
   "document_uploadStatus": "上传状态",
+  "document_view": "查看文件/文件夹路径",
   "download": "下載",
   "download_download": "下载",
   "download_downloadSearchablePdf": "下载 PDF",
