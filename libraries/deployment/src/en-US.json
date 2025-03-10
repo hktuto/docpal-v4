@@ -325,6 +325,8 @@
     "firstOfWeek": "First of week",
     "location": "Event Locations",
     "location_masterTable": "Master Table",
+    "officeEndTime": "Office Hour- End",
+    "officeStartTime": "Office Hour- Start",
     "view": "Default Calendar view",
     "viewOption": {
       "day": "DAY",

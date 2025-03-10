@@ -325,6 +325,8 @@
     "firstOfWeek": "一周的第一周",
     "location": "活動地點",
     "location_masterTable": "主表",
+    "officeEndTime": "辦公時間-結束",
+    "officeStartTime": "辦公時間-開始",
     "view": "預設日曆視圖",
     "viewOption": {
       "day": "天",
