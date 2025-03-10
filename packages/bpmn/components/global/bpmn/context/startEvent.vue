@@ -12,6 +12,8 @@ const emits = defineEmits(['openForm'])
     <BpmnSidebarEditStartCandidate :node="node" />
     <BpmnSidebarStarterAdditionLogic :node="node" />
     <BpmnSidebarEditForm :node="node" />
+    <BpmnSidebarPreviewDocument :node="node" />
+
 </div>
 </template>
 

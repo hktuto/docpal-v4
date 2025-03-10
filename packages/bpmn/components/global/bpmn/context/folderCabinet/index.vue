@@ -30,7 +30,7 @@ async function loopChildren(all:any, item: any, level = 0) {
 
     const response = await adminApi.api.getDocpaltypeSettingsNameName(item.documentType);
     const meta = response.data
-    all.push({...item, level, displayMeta : meta && meta.metadata ? ['folderCabinetId', ...meta.metadata.map((item:any) => item.metadata) ]: ['folderCabinetId'] })
+    all.push({...item, level, displayMeta : meta && meta.metadata ? ['folderCabinetId', 'title', ...meta.metadata.map((item:any) => item.metadata) ]: ['folderCabinetId', 'title'] })
 
     if(item.children){
         level ++ ;
@@ -71,7 +71,6 @@ async function getCabinetDetail(id:string) {
     }
     const processData = processNode.getData().data;
     const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping'];
-    console.log("cabinetMapping", cabinetMapping)
     if(cabinetMapping){
 
         form.value = arr.map(item => {

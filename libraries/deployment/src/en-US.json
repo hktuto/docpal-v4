@@ -325,6 +325,8 @@
     "firstOfWeek": "First of week",
     "location": "Event Locations",
     "location_masterTable": "Master Table",
+    "officeEndTime": "Office Hour- End",
+    "officeStartTime": "Office Hour- Start",
     "view": "Default Calendar view",
     "viewOption": {
       "day": "DAY",
@@ -1063,6 +1065,8 @@
   "documentType_relatedEdit": "Edit Related Document",
   "documentType_relatedFilter": "Filter by Document Type",
   "documentType_relatedUpdateSuccessMsg": "The related document of this document type has been updated successfully.",
+  "document_deleteMsg": "Are you sure you want to delete this item? This action cannot be undone.",
+  "document_deleteSuccessMsg": "The item has been deleted successfully.",
   "document_name": "File / Folder Name",
   "document_updateSuccessMsg": "The item {name} has been updated successfully.",
   "download": "Download",
@@ -1091,7 +1095,7 @@
   "dpDocument_fileSelected": "File Selected",
   "dpDocument_fileType": "Document Type",
   "dpEmail": {
-    "recipient": "Recipient Email"
+    "recipient": "Recipient Email Address"
   },
   "dpForm_confrimPassword": "Confrim Password",
   "dpForm_datePicker": "Select Date",
@@ -1643,7 +1647,7 @@
   "folder_cabinetNameRequiredMsg": "Name is required.",
   "folder_cabinetSelectUserOrGroup": "Access by User / User Group (Multi-select allowed)",
   "folder_cabinetUserOrGroup": "Access by User / User Group",
-  "form_common_requird": "Required",
+  "form_common_requird": "is required.",
   "form_costModelFill_caseId": "Case ID",
   "form_display": "Display",
   "form_isRequire": "Required",

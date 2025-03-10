@@ -26,7 +26,6 @@ const form = ref<CalendarOptions>({
     editable: false,
     showLocationFilter: false,
     showUserFilter: false,
-    showWorkflowFilter: false,
     showCategoryFilter: false,
     defaultUser: "",
     defaultLocation: "",
@@ -84,11 +83,6 @@ defineExpose({
         <ElCol :span="12">
             <ElFormItem label="Show Location Filter">
                 <ElSwitch v-model="form.showLocationFilter"></ElSwitch>
-            </ElFormItem>
-        </ElCol>
-        <ElCol :span="12">
-            <ElFormItem label="Show Workflow Filter">
-                <ElSwitch v-model="form.showWorkflowFilter"></ElSwitch>
             </ElFormItem>
         </ElCol>
         <ElCol :span="12">
