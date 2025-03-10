@@ -1070,6 +1070,7 @@
   "document_maximumNumberOfUploadFiles": "最大上传文件数 ",
   "document_minimumNumberOfUploadFiles": "最小上传文件数",
   "document_name": "文件 / 文件夹名称",
+  "document_path": "文件 / 文件夹路径",
   "document_updateSuccessMsg": "The item {name} has been updated successfully.",
   "document_uploadFilesRequestCreatedSuccessMsg": "The new file upload request has been created successfully.",
   "document_uploadRequest": "上传要求",
