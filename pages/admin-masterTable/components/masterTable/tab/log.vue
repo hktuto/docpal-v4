@@ -55,7 +55,7 @@ const { tableConfig, tableEvent , tableRef, reload, query } = useVxeTable({
     }
 // #endregion
 
-onMounted(() => {
+onActivated(() => {
     if(!!props.tableName) extraParams.name = props.tableName
     else delete extraParams.name
     getFilter()
@@ -67,5 +67,8 @@ defineExpose({ reload })
 <style lang="scss" scoped>
 .responsive-container {
   width: 70%;
+}
+:deep(.el-input) {
+    width: 200px;
 }
 </style>

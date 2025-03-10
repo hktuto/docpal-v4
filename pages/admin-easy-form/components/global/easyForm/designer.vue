@@ -70,7 +70,7 @@ async function getDetail() {
   });
 }
 
-onMounted(() => {
+onActivated(() => {
   getDetail();
 });
 </script>
