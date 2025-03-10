@@ -4,7 +4,6 @@
     append-to-body 
     :close-on-click-modal="false"
     destroy-on-close
-    @close="handleClose"
     >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" >
     </FormRenderer>
@@ -18,6 +17,9 @@
 <script lang="ts" setup>
 import formJson from './newDialog.vform.json'
 import { adminApi } from 'api';
+import { ElMessage } from 'element-plus'
+
+const { t } = useI18n()
 const emits = defineEmits([
     'refresh'
 ])
@@ -33,7 +35,7 @@ async function handleSubmit () {
     state.loading = true
     try {
         data.permission = 'members'
-        // const result =await adminApi.api.postFormDesign(data)
+        const result =await adminApi.api.postFormDesign(data)
         ElMessage.success(t('easyForm_createdSuccessMsg'))
         emits('refresh')
     } catch (error) {
