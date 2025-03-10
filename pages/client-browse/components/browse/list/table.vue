@@ -53,7 +53,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         {
             field: 'name',
             title: 'Name',
-            minWidth: 60,
+            minWidth: 250,
             treeNode: true,
             type: 'html',
             formatter: ({cellValue, row}: any) => {
