@@ -93,12 +93,12 @@ export const useCalendarStore = () => {
 
         setting.value = {
             basic: {
-                default_view : calendarViewOptions.includes(data.basic.default_view) ? data.basic.default_view : "MONTH",
-                default_first_week : weekDayOptions.includes(data.basic.default_first_week) ? data.basic.default_first_week : "MONDAY",
-                default_slot : typeof data.basic.default_slot === 'number' ? data.basic.default_slot : 15,
-                allow_custom_slot : data.basic.allow_custom_slot !== undefined ? data.basic.allow_custom_slot : false,
-                office_start_time: data.basic.office_start_time || '08:00',
-                office_end_time: data.basic.office_end_time || '20:00',
+                default_view : !data.basic?.default_view ? "MONTH" : calendarViewOptions.includes(data.basic.default_view) ? data.basic.default_view : "MONTH",
+                default_first_week : !data.basic?.default_first_week ? "MONDAY" : weekDayOptions.includes(data.basic.default_first_week) ? data.basic.default_first_week : "MONDAY",
+                default_slot : !data.basic?.default_slot ? 15 : typeof data.basic.default_slot === 'number' ? data.basic.default_slot : 15,
+                allow_custom_slot : !data.basic?.allow_custom_slot ? false : data.basic.allow_custom_slot !== undefined ? data.basic.allow_custom_slot : false,
+                office_start_time: data.basic?.office_start_time || '08:00',
+                office_end_time: data.basic?.office_end_time || '20:00',
             },
             location: {
                 master_table : masterTable['Event Location'],

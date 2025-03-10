@@ -52,7 +52,7 @@ async function handleSubmit() {
                 styleJson: "{}",
             }).then(res => res.data)
             ElMessage.success(t('workPanel_createdSuccessMsg', {name: _data.name}))
-            // emits('add', res)
+            emits('add', res)
         }
         state.visible = false;
     } catch (error) {

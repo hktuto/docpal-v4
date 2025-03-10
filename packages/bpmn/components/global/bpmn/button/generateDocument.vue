@@ -14,7 +14,17 @@ const props = defineProps<{
 
 const loading = ref(false)
 const opened = ref()
-
+const userId = useUserId()
+const workflowFormDetail = inject('workflowFormDetail')
+const previewFile =reactive<{
+    name:string,
+    blob:Blob | null
+}>({
+    name:"",
+    blob:null
+})
+const dialogOpened = ref(false)
+const iframeUrl = ref('')
 async function openPreivew(){
     try{
 
@@ -23,10 +33,11 @@ async function openPreivew(){
         console.log("openPreivew")
         const xmlJson = bpmnStringToJson(props.xml)
         const targetTask = xmlJson.flatObj[props.attr_documentStepId]
+        const formData = await workflowFormDetail?.getFormData(false)
         // get template id
         const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
-        console.log("varible", varible, targetTask)
+
         if(!templateId || !varible) return;
         const templateIdValue = templateId['flowable:expression']['__cdata']
         // get template path from template id
@@ -37,9 +48,11 @@ async function openPreivew(){
         Object.keys(varibleList).forEach((key:string) => {
             if(varibleList[key] ) {
                 const vari = varibleList[key].replace('${variables:get(','').replace(')}', '')
-                const value = props.formData[vari]
+                const value = formData[vari]
                 if(value) {
                     map[key] = value
+                }else{
+                    map[key] = ""
                 }
             }
         })
@@ -49,7 +62,27 @@ async function openPreivew(){
             }, {
                 format: 'blob'
         })
-        downloadBlob(res, 'abc.pdf')
+        const submitFormData = new FormData()
+        const fileName = 'preview'
+        submitFormData.append('file', res, fileName)
+        const templaRequest = JSON.stringify({
+            fileName: res.name,
+            fileType: 'File',
+            userId: userId.value,
+            fileRelativePath: '/' + fileName,
+        })
+        submitFormData.append('uploadTempFileRequestStr', templaRequest)
+        console.log(res)
+        previewFile.name = fileName
+        previewFile.blob = res
+        dialogOpened.value = true
+        // const temDocId = await clientApi.api.postNuxeoDocumentSaveuploadfileoverview(submitFormData as any).then(res => res.data)
+        // if(!temDocId){
+        //     throw new Error('temDocId is empty')
+        // }
+
+
+        // downloadBlob(res, 'abc.pdf')
     }catch(err){
         // check if error is come from server
         if(err.name !== "AxiosError"){
@@ -73,5 +106,18 @@ onMounted(() => {
 
 <template>
    <ElButton type="primary" :loading="loading" @click="openPreivew">{{  props.attr_previewButtonText }}</ElButton>
-
+    <ElDialog v-model="dialogOpened" apped-to-body>
+        <div class="readerContainer">
+            <Reader v-if="previewFile.blob" v-bind="previewFile" />
+        </div>
+    </ElDialog>
 </template>
+
+<style lang="scss" scoped>
+.readerContainer{
+    width: 100%;
+    height: 100%;
+    max-height: 600px;
+    overflow: auto;
+}
+</style>

@@ -44,7 +44,7 @@ async function handleSubmit() {
             isFolder: getIsFolder(data.type),
             related: []
         }
-        // await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
+        await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
         ElMessage.success(t('bulkImport_createdSuccess', {name: data.type}))
         // await AddMetaSettingApi(param)
         FormRendererRef.value.vFormRenderRef.resetForm()

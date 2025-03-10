@@ -325,6 +325,8 @@
     "firstOfWeek": "一周的第一周",
     "location": "活動地點",
     "location_masterTable": "主表",
+    "officeEndTime": "辦公時間-結束",
+    "officeStartTime": "辦公時間-開始",
     "view": "預設日曆視圖",
     "viewOption": {
       "day": "天",
@@ -1063,6 +1065,8 @@
   "documentType_relatedEdit": "Edit Related Document",
   "documentType_relatedFilter": "Filter by Document Type",
   "documentType_relatedUpdateSuccessMsg": "The related document of this document type has been updated successfully.",
+  "document_deleteMsg": "Are you sure you want to delete this item? This action cannot be undone.",
+  "document_deleteSuccessMsg": "The item has been deleted successfully.",
   "document_name": "檔案 / 資料夾名稱",
   "document_updateSuccessMsg": "The item {name} has been updated successfully.",
   "download": "下載",
@@ -1091,7 +1095,7 @@
   "dpDocument_fileSelected": "已選擇文件",
   "dpDocument_fileType": "文件類型",
   "dpEmail": {
-    "recipient": "收件者電子郵件"
+    "recipient": "收件者電子郵件地址"
   },
   "dpForm_confrimPassword": "確認密碼",
   "dpForm_datePicker": "選擇日期",
