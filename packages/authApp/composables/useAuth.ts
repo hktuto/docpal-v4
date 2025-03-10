@@ -79,6 +79,7 @@ export async function login() {
             throw new Error('token not valid')
         }
         localStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('token', data.access_token)
         localStorage.setItem('refresh_token', data.refresh_token)
         token.value = data.access_token
         await verifly()

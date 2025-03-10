@@ -27,6 +27,7 @@ async function submit() {
             password: form.password,
         }).then(res => res.data);
         localStorage.setItem('access_token', data.access_token)
+        localStorage.setItem('token', data.access_token)
         localStorage.setItem('refresh_token', data.refresh_token)
         // console.log(data)
     //    const {isRequired2FA} = await userStore.login(form.username, form.password);

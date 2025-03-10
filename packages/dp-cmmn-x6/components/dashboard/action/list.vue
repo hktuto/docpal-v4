@@ -1,6 +1,6 @@
 <template>
 <div class="action-list">
-  <div :style="`--b-color: ${getBColor(item.planItemDefinitionType)}`" class="action-item" 
+  <div :style="`--b-color: ${getBColor(item.planItemDefinitionType)}`" :class="{'action-item':true, [item.state]:true}" 
     v-for="item in actionList"
     @click="handleTask(item)">
     <SvgIcon :src="`/icons/cmmn/${item.planItemDefinitionType}.svg`"></SvgIcon>
@@ -50,6 +50,7 @@ async function handleProcessTask(actionItem) {
 
 }
 async function handleTask(actionItem) {
+  if(actionItem.state === 'completed') return
   if(actionItem.planItemDefinitionType === 'processtask') {
     handleProcessTask(actionItem)
   } else if (actionItem.planItemDefinitionType === 'humantask') {
@@ -82,5 +83,9 @@ async function handleTask(actionItem) {
   color: #fff;
   margin-bottom: var(--app-input-padding);
   cursor: pointer;
+  &.completed{
+    background-color: var(--app-grey-700);
+    cursor: not-allowed;
+  }
 }
 </style>
