@@ -1076,6 +1076,7 @@
   "document_uploadFilesRequestCreatedSuccessMsg": "The new file upload request has been created successfully.",
   "document_uploadRequest": "upload request",
   "document_uploadStatus": "Upload Status",
+  "document_view": "View File / Folder Path",
   "download": "Download",
   "download_download": "Download",
   "download_downloadSearchablePdf": "Download Searchable pdf",
