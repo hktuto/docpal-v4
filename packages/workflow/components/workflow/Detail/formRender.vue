@@ -188,6 +188,7 @@ const FormRendererRef = ref()
             return prev
         }, {})
         // const data = deepCopy(formDatas)
+        console.log(data)
         Object.keys(data).forEach((key, _index) => {
             const _data = toRaw(data[key])
             if (_data instanceof Array) {
@@ -197,8 +198,15 @@ const FormRendererRef = ref()
                     const values = _data.reduce((prev, item) => {
                         if(item.response) {
                             item.response = item.response.data ? item.response.data : item.response
-                            prev.push(item.response[0].contentId)
+                            console.log(item ,item.response)
+                            if(Array.isArray(item.response)){
+                                prev.push(item.response[0].contentId)
+                            }else{
+                                prev.push(item.response.id)
+                            }
+                            // prev.push(item.response[0].contentId)
                         } else {
+                            console.log("other way", item)
                             prev.push(item.id)
                         }
                         return prev
@@ -254,6 +262,12 @@ onMounted(() => {
 })
 const { formData, formJson } = toRefs(state)
 defineExpose({ setForm, getFormData, disableForm, enableForm })
+
+provide('workflowFormDetail', {
+    getFormData,
+    setForm,
+})
+
 </script>
 
 <style lang="scss" scoped>

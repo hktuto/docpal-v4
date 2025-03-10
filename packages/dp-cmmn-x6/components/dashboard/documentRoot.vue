@@ -63,6 +63,7 @@ async function getHomeId() {
       home.value.secondId = _item.value
     }
   }
+  console.log("homeId", caseDetail.value)
 }
 // #region module: setting
 const settingRef = ref();

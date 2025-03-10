@@ -89,7 +89,7 @@ export default defineAppConfig({
         },
         {
             label:"adminMenu.templateManagement",
-            icon: "dp-icon:flow-outline",
+            icon: "lucide:layout-template",
             children:[
                 {
                     name: "admin-document-template"
@@ -104,7 +104,7 @@ export default defineAppConfig({
         },
         {
             label:"adminMenu.policy",
-            icon: "dp-icon:flow-outline",
+            icon: "lucide:book-lock",
             children:[
                 {
                     name: "admin-hold-policies"
