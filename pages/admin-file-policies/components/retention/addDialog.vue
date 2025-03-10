@@ -39,7 +39,7 @@ async function handleSubmit() {
     }
     try {
         state.loading = true
-        // await adminApi.api.postPolicyRetentions(params)
+        await adminApi.api.postPolicyRetentions(params)
         ElMessage.success(t('filePolicies_RetentionPolicyCreateSuccessMsg'))
         state.visible = false
         emits('update')

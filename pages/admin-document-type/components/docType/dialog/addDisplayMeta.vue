@@ -50,7 +50,7 @@ async function handleSubmit (addMore: boolean = false) {
         if(state.isEdit) {
             param.id = state.setting.id
         }
-        // await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
+        await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
 
         if (state.isEdit){
             ElMessage.success(t('documentType_duplicateUpdateSuccessMsg'))

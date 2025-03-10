@@ -147,7 +147,7 @@ async function deleteItem(id: string) {
         }
     )
     if (action !== 'confirm') return
-    // await adminApi.api.deletePolicyHoldsId(id)
+    await adminApi.api.deletePolicyHoldsId(id)
     ElMessage.success(t('holdPolicy_deleteSuccessMsg'));
     query()
 }
