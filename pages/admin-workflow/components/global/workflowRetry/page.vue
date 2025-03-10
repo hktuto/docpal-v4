@@ -34,7 +34,7 @@ const {
         return await adminApi.api.postWorkflowQueryWorkflowRetryPage({...pageParams, ...extraParams});
     },
     columns: [
-        {field: "businessKey", title: "workflowEditor.name", fixed: "left", type: "checkbox"},
+        {field: "businessKey", title: "workflowEditor.name", fixed: "left" },
         {
             field: "startTime",
             title: "workflow_retryStartDate",
@@ -73,10 +73,10 @@ const {
     }
 });
 
-async function handleRetry(id: string) {
+async function handleRetry(id: number) {
     try {
         await adminApi.api.postWorkflowRetryFailWorkflow({id})
-        query()
+        query({})
     } catch (error: any) {
     }
 }
