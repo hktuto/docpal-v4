@@ -1063,6 +1063,8 @@
   "documentType_relatedEdit": "Edit Related Document",
   "documentType_relatedFilter": "Filter by Document Type",
   "documentType_relatedUpdateSuccessMsg": "The related document of this document type has been updated successfully.",
+  "document_name": "檔案 / 資料夾名稱",
+  "document_updateSuccessMsg": "The item {name} has been updated successfully.",
   "download": "下載",
   "download_download": "下載",
   "download_downloadSearchablePdf": "下載 PDF",
@@ -1548,7 +1550,7 @@
   "filePopover_expiredDate": "過期日",
   "filePopover_fileCreatedDate": "創建日期",
   "filePopover_fileName": "文件名",
-  "filePopover_internalShare": "內部分享",
+  "filePopover_internalShare": "創建內部分享",
   "filePopover_newFile": "新建文件",
   "filePopover_newFiles": "新建文件",
   "filePopover_newFolder": "新建資料夾",
@@ -1557,7 +1559,7 @@
   "filePopover_rename": "重命名",
   "filePopover_uploadFile": "上傳文件",
   "filePopover_uploadFolder": "上傳文件夾",
-  "filePopover_watermark": "水印",
+  "filePopover_watermark": "添加水印",
   "file_Customer": "客戶",
   "file_browse": "瀏覽",
   "file_cart": "購物車",
@@ -2022,7 +2024,7 @@
   "revert": "還原",
   "rightClick": {
     "download": "下載",
-    "newTab": "新頁簽"
+    "newTab": "在新標籤中預覽"
   },
   "rightDetail_activities": "活動",
   "rightDetail_collection": "收藏",

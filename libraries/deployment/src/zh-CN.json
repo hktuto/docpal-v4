@@ -1063,6 +1063,8 @@
   "documentType_relatedEdit": "Edit Related Document",
   "documentType_relatedFilter": "Filter by Document Type",
   "documentType_relatedUpdateSuccessMsg": "The related document of this document type has been updated successfully.",
+  "document_name": "文件 / 文件夹名称",
+  "document_updateSuccessMsg": "The item {name} has been updated successfully.",
   "download": "下載",
   "download_download": "下载",
   "download_downloadSearchablePdf": "下载 PDF",
@@ -1549,7 +1551,7 @@
   "filePopover_expiredDate": "过期日",
   "filePopover_fileCreatedDate": "创建日期",
   "filePopover_fileName": "文件名",
-  "filePopover_internalShare": "内部分享",
+  "filePopover_internalShare": "创建内部共享",
   "filePopover_newFile": "新建文件",
   "filePopover_newFiles": "新建文件",
   "filePopover_newFolder": "新建文件夹",
@@ -1558,7 +1560,7 @@
   "filePopover_rename": "重命名",
   "filePopover_uploadFile": "上传文件",
   "filePopover_uploadFolder": "上传文件夹",
-  "filePopover_watermark": "水印",
+  "filePopover_watermark": "添加水印",
   "file_Customer": "客户",
   "file_browse": "浏览",
   "file_cart": "购物车",
@@ -2024,7 +2026,7 @@
   "revert": "还原",
   "rightClick": {
     "download": "下载",
-    "newTab": "新页签"
+    "newTab": "在新标签页中预览"
   },
   "rightDetail_activities": "活动",
   "rightDetail_collection": "收藏",
