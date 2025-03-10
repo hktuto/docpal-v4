@@ -1,9 +1,10 @@
 <template>
     <!-- <div class="actionIconContainer" @click="uploadDialog"> -->
-      <div>
-        <BrowseActionsButton id="uploadRequestActionButton" :label="$t('publicUpload_requestFileUpload')" @click="uploadDialog">
-        
-        <SvgIcon src="/icons/file/uploadRequest.svg" round content="upload request"
+    <div>
+        <BrowseActionsButton id="uploadRequestActionButton" :label="$t('publicUpload_requestFileUpload')"
+                             @click="uploadDialog">
+
+            <SvgIcon src="/icons/file/uploadRequest.svg" round :content="t('document_uploadRequest')"
             ></SvgIcon>
         </BrowseActionsButton>
         <!-- <el-tooltip content="upload request">
@@ -12,59 +13,67 @@
             </el-icon>
         </el-tooltip> -->
         <el-dialog v-model="state.dialogOpened" class="scroll-dialog" append-to-body
-            :close-on-click-modal="false"
-            :title="`${$t('publicUpload_requestFileUpload')}`"
-            >
+                   :close-on-click-modal="false"
+                   :title="`${$t('publicUpload_requestFileUpload')}`"
+        >
             <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
             <template #footer>
-              <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('dpButtom_confirm') }}</el-button>
+                <el-button :loading="state.loading" type="primary" @click="handleSubmit">
+                    {{ $t('dpButtom_confirm') }}
+                </el-button>
             </template>
         </el-dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
-import { clientApi } from 'api'
+import {ElMessage} from 'element-plus'
+import {clientApi} from 'api'
 import formJson from './form/clientFileRequest.vform.json'
+
 const emits = defineEmits(['success'])
 const props = defineProps<{
-  doc?: any
+    doc?: any
 }>()
 const state = reactive({
-  loading: false,
-  dialogOpened: false
+    loading: false,
+    dialogOpened: false
 })
 const {t} = useI18n()
-function uploadDialog(){
-  state.dialogOpened = true
-  setTimeout(() => {
 
-    FormRendererRef.value.vFormRenderRef.resetForm()
-  })
-  // open upload dialog
+function uploadDialog() {
+    state.dialogOpened = true
+    setTimeout(() => {
+
+        FormRendererRef.value.vFormRenderRef.resetForm()
+    })
+    // open upload dialog
 }
+
 // #region module:
-  const FormRendererRef = ref()
-  async function handleSubmit () {
+const FormRendererRef = ref()
+
+async function handleSubmit() {
     state.loading = true
     try {
-      const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-      if (!data) throw new Error(`${t('incompleteData')}`);
-      if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
-      data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
-      data.idOrPath = props.doc.path
-      if(data.fileType) data.fileType = data.fileType.join(',')
-      const res: any = await clientApi.api.postNuxeoFilerequest(data).then(res => res.data)
-      state.loading = false
-      if (res?.errorCode) throw new Error(res.message || 'error');
-      state.dialogOpened = false
-      ElMessage.success(t('publicUpload_success'))
-      emits('success')
+        const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+        if (!data) throw new Error(`${t('incompleteData')}`);
+        if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
+        data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
+        data.idOrPath = props.doc.path
+        if (data.fileType) data.fileType = data.fileType.join(',')
+        const res: any = await clientApi.api.postNuxeoFilerequest(data).then(res => res.data)
+        state.loading = false
+        if (res?.errorCode) throw new Error(res.message || 'error');
+        state.dialogOpened = false
+        ElMessage.success(t('document_uploadFilesRequestCreatedSuccessMsg'))
+        ElMessage.success(t('publicUpload_success'))
+        emits('success')
     } catch (error) {
-      // ElMessage.error(error.message)
+        // ElMessage.error(error.message)
     }
     state.loading = false
-  }
+}
+
 // #endregion
 </script>
