@@ -16,7 +16,7 @@
               <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
               <div class="label">{{row.name}}</div>
           </div>
-      </template> 
+      </template>
       <template #summary="{ row }">
           <div v-if="row.properties && row.properties.summarys">
               <div v-if=" row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary" >
@@ -44,7 +44,7 @@ const {tableId} = defineProps<{
 }>(
 
 );
- 
+
 const routerProvider = inject(MenuRouterKey)
   const emits = defineEmits(['updateAgg'])
 // #region module: page
@@ -77,7 +77,7 @@ const routerProvider = inject(MenuRouterKey)
     virtualScroll: false,
     columns:[
         {
-            title:"tableHeader_name",
+            title:"document_name",
             width: 250,
             slots:{
                 default: "docIcon"
@@ -86,7 +86,6 @@ const routerProvider = inject(MenuRouterKey)
         {
             title:"docInfo.fileExtension",
             field:"mimeType2",
-            width: 80
         },
         {
             title:"search.size",
@@ -98,7 +97,7 @@ const routerProvider = inject(MenuRouterKey)
             }
         },
         {
-            title:"tableHeader_path",
+            title:"document_path",
             field:"logicalPath",
             width: 200,
             slots:{
@@ -165,7 +164,7 @@ const routerProvider = inject(MenuRouterKey)
       }
     }
 })
-  
+
 
   async function getList (param:any) {
     try {
@@ -196,7 +195,7 @@ const routerProvider = inject(MenuRouterKey)
         tableConfig.pagerConfig.total = state.options.paginationConfig.total
         tableConfig.pagerConfig.pageSize = param.pageSize
         tableConfig.pagerConfig.currentPage = param.pageNum + 1
-        
+
         // tableRef.value?.loadData(list)
         state.tableData = list
         // tableRef.value?.loadData(state.tableData)
@@ -218,7 +217,7 @@ const routerProvider = inject(MenuRouterKey)
       routerProvider?.updateProps({
         query:{
           ...routerProvider?.tabData.value.props?.query,
-          ...pageParams, pageNum:page, pageSize, time 
+          ...pageParams, pageNum:page, pageSize, time
         }
       })
       // router.push({
@@ -260,7 +259,7 @@ async function handleDblclick (row:any) {
 
 }
 // function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
-  
+
 //   router.push({
 //       path,
 //       query: {
@@ -269,7 +268,7 @@ async function handleDblclick (row:any) {
 //   })
 // }
 function initBar(searchParams: any, ) {
-  
+
     state.barParams = searchParams
     state.aggParams = {}
     handlePaginationChange(1)
