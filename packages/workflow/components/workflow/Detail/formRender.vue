@@ -180,6 +180,8 @@ const FormRendererRef = ref()
         return dataDeArray(data)
     }
     function dataDeArray (formDatas: any) {
+        console.log(formDatas);
+        
         const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
         const data = Object.keys(formDatas).reduce((prev: any,key: string) => {
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
@@ -197,7 +199,8 @@ const FormRendererRef = ref()
                     const values = _data.reduce((prev, item) => {
                         if(item.response) {
                             item.response = item.response.data ? item.response.data : item.response
-                            prev.push(item.response[0].contentId)
+                            const responseData = item.response instanceof Array ? item.response[0] : item.response
+                            prev.push(responseData.contentId || responseData.id)
                         } else {
                             prev.push(item.id)
                         }
