@@ -133,8 +133,9 @@ async function handleSubmit () {
         state.visible = false
     } catch (error) {
 
+    } finally {
+        state.loading = false
     }
-    state.loading = false
 }
 async function getFormData () {
     const valid = await FormRef.value.validate((valid:any, fields:any) => {
@@ -234,7 +235,7 @@ defineExpose({ handleOpen })
     width: 100%
 }
 .title {
-    color: var(--app-grey-950);
+    color: var(--app-grey-050);
     font-weight: bold;
 }
 </style>
