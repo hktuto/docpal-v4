@@ -6,7 +6,7 @@ const opened = ref(false);
 const {options, newEventId, checkValid} = defineProps<{
     options: CalendarOptions,
     newEventId:string,
-    checkValid
+    checkValid?:Function
 }>()
 const { t} = useI18n()
 const formRef = ref()
@@ -103,14 +103,18 @@ async function submit(){
         const data = {
             id: newEventId,
             eventId:"",
-            startTime: snapDownTo15Minutes(dayjs(startTime.value)).toISOString(),
-            endTime: dayjs(startTime.value).add(15, 'minutes').toISOString(),
+            startTime: dayjs(form.value.startTime).toISOString(),
+            endTime: dayjs(form.value.endTime).toISOString(),
             eventName: form.value.user,
             title: form.value.user,
             category: form.value.category || options.defaultCategory,
             location: form.value.location,
             isAllDay: form.value.isAllDay,
             user: form.value.user,
+        }
+        if(checkValid) {
+            const valid = await checkValid(data)
+           console.log(valid)
         }
         emits('submit', data)
         opened.value = false

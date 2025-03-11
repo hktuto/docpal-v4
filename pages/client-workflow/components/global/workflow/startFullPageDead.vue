@@ -14,7 +14,7 @@ defineOptions({
 const loading = ref(false)
 const vFormRef = ref()
 const routerProvider = inject(MenuRouterKey)
-function formDataGet (propList:any) {
+function formDataGet (propList:any = []) {
     return propList.reduce((prev:any, item:any) => {
         prev[item.id] = item.value
         return prev

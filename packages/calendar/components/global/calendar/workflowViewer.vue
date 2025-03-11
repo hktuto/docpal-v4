@@ -42,7 +42,8 @@ function createEditEvent(newForm:DocPalEventType){
 
 
 function checkValid(event:any){
-    return isEventValid(calendarViewerRef.value.calendarApp, event)
+    console.log(calendarViewerRef.value.eventList)
+    return isEventValid(calendarViewerRef.value.eventList, event)
 }
 
 
@@ -71,5 +72,5 @@ defineExpose({ getFormData })
 <template>
     <Calendar ref="calendarViewerRef" :options="options" @openDetail="editEvent" @createEvent="popNewEvent"  >
     </Calendar>
-        <CalendarNewEventForm ref="newEventFromRef" :options="options" :checkValid="checkValid" :newEventId="newEventId" @submit="createEditEvent"/>
+    <CalendarNewEventForm ref="newEventFromRef" :options="options" :checkValid="checkValid" :newEventId="newEventId" @submit="createEditEvent"/>
 </template>

@@ -329,7 +329,12 @@ export const nodeSetting:NodeSetting = {
                     attr_name: label,
                     extensionElements:{
                         "flowable:in": [],
-                        "flowable:out": []
+                        "flowable:out": [],
+                        'flowable:planItemLifecycleListener':{
+                            attr_sourceState:'active',
+                            attr_targetState: 'completed',
+                            attr_delegateExpression: '"${cmmnProcessTaskLifecycleListener}'
+                        }
                     },
                     processRefExpression:{
                         "__cdata":""
