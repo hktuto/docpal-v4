@@ -107,38 +107,40 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
     return events;
 }
 
-export function isEventValid(calendarApp:any, event:any){
-    // const startDay = dayjs(event.start)
-    // const endDay = dayjs(event.end)
-    // if(startDay.isBefore(dayjs())) {
-    //     ElMessage.error("Start time cannot be earlier than today");
-    //     return false
-    // }
-    // const people = event.people as string[] || []
+export function isEventValid(allEvents:any[], event:any){
+    const startDay = dayjs(event.start)
+    const endDay = dayjs(event.end)
+    if(startDay.isBefore(dayjs())) {
+        ElMessage.error("Start time cannot be earlier than today");
+        return false
+    }
+    const people = event.people as string[] || []
 
-    // const otherEvs = calendarApp.eventsService.getAll().filter((ev:any) => {
-    //     const evStart = dayjs(ev.start)
-    //     const evEnd = dayjs(ev.end)
-    //     console.log("overlap", startDay.isBetween(evStart, evEnd, 'day', '[]'))
-    //     const isOverlap = startDay.isBetween(evStart, evEnd, 'day', '[]') || endDay.isBetween(evStart, evEnd, 'day', '[]')
-       
-    //     return isOverlap && ev.id !== event.id && ev.people.find((item:any) => people.includes(item))
-    // })
-    // console.log("otherEvs", otherEvs)
-    // // check if user has all day event in that day
-    // const hasAllDayEvent = otherEvs.find((e) => e.start.length === 10 && e.end.length === 10)
-    // if(hasAllDayEvent) {
-    //     ElMessage.error(`${people} has all day event in that day`);
-    //     return false
-    // }
-    // // check if user has other location event in that day
-    // const hasLocationEvent = otherEvs.find((e) => e.location && e.location !== event.location)
+    const otherEvs = allEvents.filter((ev:any) => {
+        const evStart = dayjs(ev.start)
+        const evEnd = dayjs(ev.end)
+        const isOverlap = startDay.isBetween(evStart, evEnd, 'day', '[]') || endDay.isBetween(evStart, evEnd, 'day', '[]')
+        if(isOverlap) {
 
-    // if(hasLocationEvent) {
-    //     ElMessage.error(`${people} has other location event in that day`);
-    //     return false
-    // }
-    // return true
+            console.log("isOverlap", event, ev)
+        }
+        return isOverlap && ev.id !== event.id && ev.people.find((item:any) => people.includes(item))
+    })
+    
+    // check if user has all day event in that day
+    const hasAllDayEvent = otherEvs.find((e) => e.start.length === 10 && e.end.length === 10)
+    if(hasAllDayEvent) {
+        ElMessage.error(`${people} has all day event in that day`);
+        return false
+    }
+    // check if user has other location event in that day
+    const hasLocationEvent = otherEvs.find((e) => e.location && e.location !== event.location)
+
+    if(hasLocationEvent) {
+        ElMessage.error(`${people} has other location event in that day`);
+        return false
+    }
+    return true
 }
 
 

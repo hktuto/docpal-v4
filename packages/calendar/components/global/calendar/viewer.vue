@@ -13,6 +13,8 @@ import {
   type CalendarEventExternal
 } from '@schedule-x/calendar'
 
+import {isEventValid } from '../../../utils/calendarHelper'
+
 import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
 import { createDragAndDropPlugin } from '@schedule-x/drag-and-drop'
@@ -54,7 +56,7 @@ const emits = defineEmits(['onSelectedDateUpdate','onEventUpdate','onEventClick'
 const eventList = ref<CalendarEventExternal[]>([])
 
 function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal){
-    return isEventValid(calendarApp, editedEvent)
+    return isEventValid(eventList.value, editedEvent)
 }
 
 function addEvent(newEvent:CalendarEventExternal){
@@ -178,7 +180,8 @@ defineExpose({
     updateEvent,
     deleteEvent,
     getEvent,
-    getList
+    getList,
+    eventList
 })
 
 </script>

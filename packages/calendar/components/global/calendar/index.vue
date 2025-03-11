@@ -151,12 +151,15 @@
         await setDefaultFilter()
     })
 
+    const eventList = computed( () => viewerRef.value?.eventList || [])
+
     defineExpose({
         addEvent,
         getEvent,
         updateEvent,
         filter,
-        openDetail
+        openDetail,
+        eventList
     })
 </script>
 
