@@ -240,6 +240,9 @@ const {
     ],
   ],
   additionalPermission: async ({row}: any) => {
+    if (!row) {
+      return {}
+    }
     const userId = useUserId();
     const permission = await getPermission(row.documentIds, userId.value);
     return permission;

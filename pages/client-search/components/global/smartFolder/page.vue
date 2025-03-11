@@ -31,7 +31,7 @@ const {
     }
   },
   columns: [
-    { field: "name", title: "table_name", fixed: "left" },
+    { field: "name", title: "smartFolder_name", fixed: "left" },
     { title: "dpDocument_fileType",
       formatter ({ cellValue }:any) {
         return 'Smart Folder'
@@ -41,7 +41,7 @@ const {
   bodyActions: [
     [{
         code: "preview",
-        name: "browse_list_preview",
+        name: "smartFolder_preview",
         action: ({ row }: any) => {
           handleDblclick(row);
         },
