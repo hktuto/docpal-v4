@@ -247,32 +247,6 @@ const {
   permissionMethod: ({ options, code, column, row, rowIndex, additionalData }: any) => {
     // if click on empty row, return empty
     if (!row) {
-      if (code === "docActionRefresh") {
-        return {
-          visible: true,
-          disabled: false,
-        };
-      }
-      if (code === "docActionPaste") {
-        return {
-          visible:
-            AllowTo({ feature: "ReadWrite", permission: additionalData }) &&
-            copyDocumentList.value.length > 0,
-          disabled: false,
-        };
-      }
-      const otherPublicAction = [
-        "docActionAddFolder",
-        "docActionNewFile",
-        "docActionUploadFile",
-        "docActionUploadFolder",
-      ];
-      if (otherPublicAction.includes(code)) {
-        return {
-          visible: AllowTo({ feature: "ReadWrite", permission: additionalData }),
-          disabled: false,
-        };
-      }
       return {
         visible: false,
         disabled: false,
@@ -337,8 +311,8 @@ const {
       };
     }
     return {
-      visible: true,
-      disabled: true,
+      visible: false,
+      disabled: false,
     };
   },
   dblClickAction: ({ row, column, event }: any) => {
