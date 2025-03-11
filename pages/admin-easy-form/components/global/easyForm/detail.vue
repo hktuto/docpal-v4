@@ -5,6 +5,7 @@
   <EasyFormDetailPreview :detail="state.detail" />
   <EasyFormDetailPermission :detail="state.detail" />
   <EasyFormAction :detail="state.detail" @refresh="handleUpdateAction" @delete="handleDeleteAction" />
+  <EasyFormDetailEmailLog :detail="state.detail" />
 </div>
 </template>
 <script lang="ts" setup>
@@ -29,6 +30,9 @@ function handleDeleteAction(id: string) {
 }
 onActivated(() => {
   getDetail()
+})
+onDeactivated(() => {
+  state.detail = {}
 })
 </script>
 <style lang="scss" scoped>
