@@ -87,6 +87,7 @@ onActivated(async() => {
             display: flex;
             line-height: 34px;
             align-items: center;
+            text-wrap: nowrap;
         }
     }
 }
