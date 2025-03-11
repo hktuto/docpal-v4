@@ -2012,7 +2012,7 @@
       "downloadFile": "下载",
       "endDatePlaceholder": "結束日期",
       "endTimePlaceholder": "截止时间",
-      "fieldRequired": "為必填項目",
+      "fieldRequired": "不能為空",
       "fileSizeExceed": "文件大小已超出: ",
       "insertSubFormRow": "插入行",
       "invalidNumber": "数据格式错误",
@@ -2224,6 +2224,9 @@
   "shareQueue": {
     "recipientEmail": "收件者電子郵件"
   },
+  "shareWithMe_endDate": "分享結束日期",
+  "shareWithMe_startDate": "分享開始日期",
+  "shareWithMe_status": "分享狀態",
   "share_DeleteMsg": "Are you sure you want to delete the selected internal share link?",
   "share_FilterByDocumentName": "share_FilterByDocumentName",
   "share_deleteSuccessMsg": "The selected internal share link has been successfully deleted.",
