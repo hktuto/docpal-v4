@@ -2,10 +2,13 @@ import { adminApi } from 'api'
 export const localeKeys = ['en-US', 'zh-CN', 'zh-HK']
 export async function getMetaI18n(lKey: string) {
     const languages = await getMetaLanguageList()
+    console.log(languages);
+
     const result = {}
     localeKeys.forEach(async (locale) => {
         try {
             result[locale] = languages[locale].languages[lKey]
+            if(!result[locale]) throw new Error("no key");
         } catch (error) {
             result[locale] = lKey
         }
