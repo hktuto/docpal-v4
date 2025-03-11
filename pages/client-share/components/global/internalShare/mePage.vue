@@ -266,8 +266,8 @@ const {
         };
       }
       return {
-        visible: false,
-        disabled: false,
+        visible: true,
+        disabled: true,
       };
     }
     const publicActionsCode = ["docActionRefresh", "docActionNewTab", "docOpen"];
