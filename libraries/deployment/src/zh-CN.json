@@ -2272,7 +2272,8 @@
     "searchResult": "搜索结果"
   },
   "smartFolder_create": "创建",
-  "smartFolder_name": "名称",
+  "smartFolder_name": "智能文件夹名称",
+  "smartFolder_preview": "Preview Smart Folder Content",
   "smartFolder_title": "智能文件夹",
   "status": {
     "approve": "批准",

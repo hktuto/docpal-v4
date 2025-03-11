@@ -2272,7 +2272,8 @@
     "searchResult": "Search Result"
   },
   "smartFolder_create": "Create",
-  "smartFolder_name": "Name",
+  "smartFolder_name": "Smart Folder Name",
+  "smartFolder_preview": "Preview Smart Folder Content",
   "smartFolder_title": "Smart Folder",
   "status": {
     "approve": "Approve",

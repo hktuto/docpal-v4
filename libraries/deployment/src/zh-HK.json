@@ -2272,7 +2272,8 @@
     "searchResult": "搜尋結果"
   },
   "smartFolder_create": "創建",
-  "smartFolder_name": "名稱",
+  "smartFolder_name": "智慧型資料夾名稱",
+  "smartFolder_preview": "Preview Smart Folder Content",
   "smartFolder_title": "智能文件夾",
   "status": {
     "approve": "批准",
