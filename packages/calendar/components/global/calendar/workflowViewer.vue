@@ -9,7 +9,7 @@ const {disabled, formData, options, taskDetail} = defineProps<{
 }>();
 
 const newEvent = ref()
-const newEventId = new Date().valueOf().toString()
+const newEventId = ref(new Date().valueOf().toString())
 
 
 function getFormData(){
@@ -20,7 +20,13 @@ function getFormData(){
 const calendarViewerRef = ref()
 
 function createEditEvent(newForm:DocPalEventType){
-    let event = convertSiteEventToCalendarEvent(newForm)
+    const evParams = {
+        ...newForm,
+        rrelatedUsers:{
+                user: newForm.user
+        }
+    }
+    let event = convertSiteEventToCalendarEvent(evParams)
     if(!newEvent.value) {
         newEvent.value = newForm;
         event._options = {
@@ -33,17 +39,37 @@ function createEditEvent(newForm:DocPalEventType){
         calendarViewerRef.value.updateEvent(event)
     }
 }
+
+
+function checkValid(event:any){
+    return isEventValid(calendarViewerRef.value.calendarApp, event)
+}
+
+
 const newEventFromRef = ref();
+function editEvent(event:CalendarEventExternal){
+    console.log("formData", formData)
+    if(options.editable){
+    }else{
+        calendarViewerRef.value.openDetail(event);
+    }
+}
 function popNewEvent(dateTime: string) {
-    const selectedDate = dayjs(dateTime)
-    if(selectedDate.isBefore(dayjs())) return
-    newEventFromRef.value.open(dateTime, calendarViewerRef.value.filter)
+    if(formData.eventId){
+        newEventId.value = formData.eventId
+    }
+    if(options.allowCreate){
+        const selectedDate = dayjs(dateTime)
+        if(selectedDate.isBefore(dayjs())) return
+        newEventFromRef.value.open(dateTime, calendarViewerRef.value.filter)
+    }
 }
 
 defineExpose({ getFormData })
 </script>
 
 <template>
-    <Calendar ref="calendarViewerRef" :options="options" @createEvent="popNewEvent"  />
-    <CalendarNewEventForm ref="newEventFromRef" :options="options" :newEventId="newEventId" @submit="createEditEvent"/>
+    <Calendar ref="calendarViewerRef" :options="options" @openDetail="editEvent" @createEvent="popNewEvent"  >
+    </Calendar>
+        <CalendarNewEventForm ref="newEventFromRef" :options="options" :checkValid="checkValid" :newEventId="newEventId" @submit="createEditEvent"/>
 </template>

@@ -75,6 +75,7 @@ async function handleSubmit() {
         prev[item] = data[otherKeys]
         return prev
     }, {}) as any
+    console.log("variables", variables)
     const res = await clientApi.api.postCaseInstanceProcessStart({
         id: actionStepId,
         variables

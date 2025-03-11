@@ -86,7 +86,7 @@ const CMDProvider = inject(CaseManagementDashboardKey)
         state.options.paginationConfig.currentPage = 1
         return
       }
-      const { data:res }: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(instanceId, { ...param, ...state.extraParams })
+      const { data:res }: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams })
       state.tableData = res.entryList
       state.options.paginationConfig.total = res.totalSize
       state.options.paginationConfig.pageSize = param.pageSize

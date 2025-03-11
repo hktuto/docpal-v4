@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ElMessage} from 'element-plus'
 import dayjs from 'dayjs'
+
 import { ScheduleXCalendar } from '@schedule-x/vue'
 import {
   createCalendar,
@@ -34,9 +35,10 @@ const {options = {
     defaultLocation: "",
     defaultCategory: "",
     view: "week",
-}, filter} = defineProps<{
+}, filter, addtionalCheckBeforeEventUpdate} = defineProps<{
     options?: CalendarOptions;
     filter: any;
+    addtionalCheckBeforeEventUpdate?: (oldEvent:any, editedEvent:any) => boolean
 }>();
 
 let calendarApp:any ;
@@ -49,20 +51,10 @@ const eventsServicePlugin = createEventsServicePlugin();
 const emits = defineEmits(['onSelectedDateUpdate','onEventUpdate','onEventClick','onClickDate','onClickDateTime','onClickAgendaDate','onClickPlusEvents','onBeforeEventUpdate'])
 
 
-function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal){
-    const startDay = dayjs(editedEvent.startTime)
-    const endDay = dayjs(editedEvent.endTime)
+const eventList = ref<CalendarEventExternal[]>([])
 
-    if(startDay.isBefore(dayjs())) {
-        ElMessage.error("Start time cannot be earlier than today");
-        return false
-    }
-    // filter user
-    const people = editedEvent.people as string[] || []
-    if(options.addtionalCheckBeforeEventUpdate) {
-        return options.addtionalCheckBeforeEventUpdate(oldEvent, editedEvent)
-    }
-    return true
+function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal){
+    return isEventValid(calendarApp, editedEvent)
 }
 
 function addEvent(newEvent:CalendarEventExternal){
@@ -81,8 +73,9 @@ function getEvent(id:string){
     return calendarApp.eventsService.get(id)
 }
 
-function getList(){
-    getEventFromApi(calendarApp, calendarControls, filter)
+async function getList(){
+    eventList.value = await getEventFromApi(calendarApp, calendarControls, filter)
+
 }
 
 function setupCalendar() {
