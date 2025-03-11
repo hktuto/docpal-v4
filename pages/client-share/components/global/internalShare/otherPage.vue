@@ -337,8 +337,8 @@ const {
       };
     }
     return {
-      visible: false,
-      disabled: false,
+      visible: true,
+      disabled: true,
     };
   },
   dblClickAction: ({ row, column, event }: any) => {
