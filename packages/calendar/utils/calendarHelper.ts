@@ -3,7 +3,9 @@ import { clientApi } from 'api'
 import type { CalendarTaskRespDTO } from 'api/src/generate/client'
 import dayjs from 'dayjs'
 import {useCalenarLocation} from '../composables/useCalendar'
-
+import { ElMessage } from 'element-plus'
+import isBetween from 'dayjs/plugin/isBetween'
+dayjs.extend(isBetween);
 export const viewName = [
     'day','week','month-grid','month-agenda'
 ]
@@ -34,7 +36,7 @@ export type CalendarOptions = {
     addtionalCheckBeforeEventUpdate?:(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal) => boolean
 }
 
-export function convertSiteEventToCalendarEvent(event:DocPalEventType, defaultCalendarId:string):CalendarEventExternal {
+export function convertSiteEventToCalendarEvent(event:DocPalEventType):CalendarEventExternal {
     const calendarLocation = useCalenarLocation()
     const format = event.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
     const locationName = event.location ? calendarLocation.value.find(item => item.id === event.location)?.name : undefined
@@ -57,7 +59,7 @@ export function convertSiteEventToCalendarEvent(event:DocPalEventType, defaultCa
     return newEvent
 }
 
-export function getEventFromApi(calendarApp:any, calendarControls:any, filter:any){
+export async function getEventFromApi(calendarApp:any, calendarControls:any, filter:any){
     const range = calendarControls.getRange()
     const params:any = {
         startTime: dayjs(range.start).toISOString(),
@@ -67,42 +69,76 @@ export function getEventFromApi(calendarApp:any, calendarControls:any, filter:an
     const user = localStorage.getItem('docpal-user')
     const userId = user ? JSON.parse(user).userId : undefined
     // TODO : backend is missing filter
-    clientApi.api.postCalendarsList(params).then( res => {
-        const data = res.data
-        if(!data) return
-        const events = data.filter( (event:any) => {
-            if(filter.category) {
-                const matCat = event.category === filter.category
-                if(!matCat) return false
-            }
-            if(filter.location) {
-                const matLoc = event.location === filter.location
-                if(!matLoc) return false
-            }
-            if(filter.user) {
-                console.log("filter.user", filter.user)
-                const userFilter = filter.user === 'currentUser' ? userId : filter.user
-                const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
-                const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
-                if(!mapUser && !userInRelated) return false
-            }
-            return true
-        }).map((ev) => convertSiteEventToCalendarEvent(ev, defaultCalendarId))
-        // filter events
-    
-        // dummy full date event
-        //TODO： remove later
-        events.push({
-            id: new Date().valueOf().toString(),
-            start: dayjs().format('YYYY-MM-DD'),
-            end: dayjs().add(1, 'hour').add(1, 'day').format('YYYY-MM-DD'),
-            title: 'David Annual Leave',
-            people:['sean-admin'],
-            description: 'New Event',
-            calendarId: defaultCalendarId,
-        })
-        calendarApp.eventsService.set(events);
+    const data = await clientApi.api.postCalendarsList(params).then( res => res.data)
+
+    const events = data.filter( (event:any) => {
+        if(filter.category) {
+            const matCat = event.category === filter.category
+            if(!matCat) return false
+        }
+        if(filter.location) {
+            const matLoc = event.location === filter.location
+            if(!matLoc) return false
+        }
+        if(filter.user) {
+            console.log("filter.user", filter.user)
+            const userFilter = filter.user === 'currentUser' ? userId : filter.user
+            const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
+            const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
+            if(!mapUser && !userInRelated) return false
+        }
+        return true
+    }).map((ev) => convertSiteEventToCalendarEvent(ev, defaultCalendarId))
+    // filter events
+
+    // dummy full date event
+    //TODO： remove later
+    events.push({
+        id: new Date().valueOf().toString(),
+        start: dayjs().format('YYYY-MM-DD'),
+        end: dayjs().add(1, 'hour').add(1, 'day').format('YYYY-MM-DD'),
+        title: 'David Annual Leave',
+        people:['administrators'],
+        description: 'New Event',
+        calendarId: defaultCalendarId,
     })
+    console.log("events", events)
+    calendarApp.eventsService.set(events);
+    return events;
+}
+
+export function isEventValid(calendarApp:any, event:any){
+    // const startDay = dayjs(event.start)
+    // const endDay = dayjs(event.end)
+    // if(startDay.isBefore(dayjs())) {
+    //     ElMessage.error("Start time cannot be earlier than today");
+    //     return false
+    // }
+    // const people = event.people as string[] || []
+
+    // const otherEvs = calendarApp.eventsService.getAll().filter((ev:any) => {
+    //     const evStart = dayjs(ev.start)
+    //     const evEnd = dayjs(ev.end)
+    //     console.log("overlap", startDay.isBetween(evStart, evEnd, 'day', '[]'))
+    //     const isOverlap = startDay.isBetween(evStart, evEnd, 'day', '[]') || endDay.isBetween(evStart, evEnd, 'day', '[]')
+       
+    //     return isOverlap && ev.id !== event.id && ev.people.find((item:any) => people.includes(item))
+    // })
+    // console.log("otherEvs", otherEvs)
+    // // check if user has all day event in that day
+    // const hasAllDayEvent = otherEvs.find((e) => e.start.length === 10 && e.end.length === 10)
+    // if(hasAllDayEvent) {
+    //     ElMessage.error(`${people} has all day event in that day`);
+    //     return false
+    // }
+    // // check if user has other location event in that day
+    // const hasLocationEvent = otherEvs.find((e) => e.location && e.location !== event.location)
+
+    // if(hasLocationEvent) {
+    //     ElMessage.error(`${people} has other location event in that day`);
+    //     return false
+    // }
+    // return true
 }
 
 

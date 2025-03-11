@@ -23,15 +23,17 @@
         locationLabel:"",
         categoryLabel:"",
         userLabel:"",
-    }} = defineProps<{
+        
+    },addtionalCheckBeforeEventUpdate} = defineProps<{
         options?: CalendarOptions;
+        addtionalCheckBeforeEventUpdate: (oldEvent:any, editedEvent:any) => boolean
     }>();
 
     const displayOption = ref<CalendarOptions>({
         ...options,
     })
 
-    const emits = defineEmits(['createEvent','filterChange'])
+    const emits = defineEmits(['createEvent','filterChange','openDetail','onEventUpdate'])
     const newEventFromRef = ref();
     function addEvent(newEvent:CalendarEventExternal){
         viewerRef.value?.addEvent(newEvent)
@@ -95,11 +97,19 @@
     }
     // #endregion
 
+    function openDetail(event:CalendarEventExternal){
+        detailDialogRef.value?.open(event)
+    }
+
     // calendar Event
     const calendarEvents = {
         onEventClick: (args:any) => {
-            console.log("onEventClick", args)
-            detailDialogRef.value?.open(args)
+            console.log("onEventClick", args, options)
+            if(options.editable) {
+                emits('openDetail', args)
+            }else {
+                detailDialogRef.value?.open(args)
+            }
         },
         onClickDate: (args:string) => {
             console.log('onClickDate', args)
@@ -113,6 +123,9 @@
         },
         onClickPlusEvents: (args) => {
             console.log('onClickPlusEvents', args)
+        },
+        onEventUpdate: (args:any) => {
+            console.log("onEventUpdate", args)
         }
     }
     function filterChange(){
@@ -142,7 +155,8 @@
         addEvent,
         getEvent,
         updateEvent,
-        filter
+        filter,
+        openDetail
     })
 </script>
 
@@ -176,7 +190,7 @@
         </ElForm>
         
     </div>
-    <CalendarDetailDialog ref="detailDialogRef" :options="options" />
+    <CalendarDetailDialog ref="detailDialogRef" :options="options" :addtionalCheckBeforeEventUpdate="addtionalCheckBeforeEventUpdate"/>
     <CalendarViewer ref="viewerRef" :options="options" :filter="filter" v-on="calendarEvents" />
 </div>
 
