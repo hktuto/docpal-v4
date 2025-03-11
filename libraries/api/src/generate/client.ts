@@ -3943,6 +3943,19 @@ export interface ResultInternalShareAudit {
     data?: InternalShareAudit;
 }
 
+export interface EasyFormEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+    easyFormId?: string;
+    formLink?: string;
+}
+
+export interface UserEmailDTO {
+    username?: string;
+    email?: string;
+}
+
 /** form design request */
 export interface FormDesignRequestDTO {
     /**
@@ -3960,10 +3973,18 @@ export interface FormDesignRequestDTO {
     /** The sort ASC or DESC */
     isDesc?: boolean;
     id?: string;
+    /** Form Design Name */
+    name?: string;
     /** Table Name */
     tableName?: string;
     /** Status is Active or Disable (A or D) */
     status?: string;
+    /** Form Design Creator */
+    createdBy?: string;
+    /** Form Design Modifier */
+    modifiedBy?: string;
+    /** current user permissions, only for client site */
+    userPermissions?: string[];
     /** New Data List */
     data?: Record<string, object>[];
     /** Where Condition */
@@ -3985,6 +4006,198 @@ export interface ResultListLinkedHashMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>[];
+}
+
+/** Easy Form Email RequestDTO */
+export interface EasyFormEmailQueryRequestDTO {
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    email?: string;
+    subject?: string;
+    easyFormId?: string;
+    status?: string;
+    sort?: SortObject;
+    sortOrder?: string;
+    descSort?: SortObject;
+}
+
+export interface EasyFormActionDTO {
+    actionType?: string;
+    actionId?: string;
+    actionName?: string;
+}
+
+export interface EasyFormEmailLogDTO {
+    /** @format int64 */
+    id?: number;
+    email?: string;
+    subject?: string;
+    createdBy?: string;
+    status?: string;
+    /** @format date-time */
+    sentDate?: string;
+    relatedWorkflows?: EasyFormActionDTO[];
+    relateCases?: EasyFormActionDTO[];
+}
+
+export interface PaginationDTOEasyFormEmailLogDTO {
+    entryList?: EasyFormEmailLogDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOEasyFormEmailLogDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOEasyFormEmailLogDTO;
+}
+
+/** Form Design Form Result List */
+export interface EasyFormResult {
+    /** Action Item Id */
+    id?: string;
+    /** Action Type, Example value： Email、Workflow、CaseType  */
+    actionType?: string;
+    /** Bound business Key, Example value：customApproval */
+    actionKey?: string;
+    /** DeploymentId of Bound business, Example value：customApproval:1:7212b388-36f3-4aff-9b03-bc500537dd23 */
+    actionId?: string;
+    /** Name of Bound business */
+    actionName?: string;
+    /** Mapping data structure between form columns and bound business fields */
+    dataMapping?: ParamMappingDTO[];
+    /** Status, Active or Deactivated */
+    status?: string;
+    /** Email Subject */
+    subject?: string;
+    /** Email Body Text */
+    text?: string;
+    /** Email TO */
+    to?: string;
+    /** Email CC */
+    cc?: string;
+    /** Email BCC */
+    bcc?: string;
+}
+
+/** Form Designer (Response) */
+export interface FormDesignResponseDTO {
+    /** Form Design ID */
+    id?: string;
+    /** Form Design Name */
+    name?: string;
+    /** Form Design Publish Status */
+    publishStatus?: string;
+    /** Form Designer Process Definition Key */
+    processDefinitionKey?: string;
+    /** Form Design Permission */
+    permission?: string;
+    /** Disable or Enable form design */
+    enable?: boolean;
+    /** Form Design Information List */
+    information?: PlanTableFieldDTO[];
+    /** Form Design Preview */
+    previewStyle?: string;
+    /** Form Design Form Result List */
+    formResult?: EasyFormResult[];
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    formInfo?: FormInfoDTO;
+    createdBy?: string;
+    modifiedBy?: string;
+}
+
+export interface FormFieldMapping {
+    id?: string;
+    formInfoId?: string;
+    columnName?: string;
+    fieldName?: string;
+    dataType?: string;
+    status?: string;
+    required?: boolean;
+    unique?: boolean;
+    primaryKey?: boolean;
+}
+
+export interface FormInfoDTO {
+    id?: string;
+    bizId?: string;
+    label?: string;
+    tableName?: string;
+    tableNamePrefix?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    fieldMappings?: FormFieldMapping[];
+}
+
+export interface PaginationDTOFormDesignResponseDTO {
+    entryList?: FormDesignResponseDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+/** Mapping data structure between form columns and bound business fields */
+export interface ParamMappingDTO {
+    source?: string;
+    target?: string;
+}
+
+/** Form Design Information List */
+export interface PlanTableFieldDTO {
+    id?: string;
+    name?: string;
+    type?: string;
+    accesstype?: string;
+    fieldMappingId?: string;
+    masterTable?: string;
+    documentType?: string;
+    displayField?: string;
+    vocabulary?: string;
+    require?: string;
+    readOnly?: string;
+}
+
+export interface ResultPaginationDTOFormDesignResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOFormDesignResponseDTO;
 }
 
 /** Case model dashboard (RequestDTO) */
@@ -4261,24 +4474,11 @@ export interface PlanItemDefinitionDTO {
     /** Case Model Plan Form DTO */
     planForm?: CmmnPlanFormDTO;
     fields?: PlanTableFieldDTO[];
+    /** Form Design Information List */
     assigneeField?: PlanTableFieldDTO;
     isStartTask?: boolean;
     upProcessTaskKey?: string;
     upFormProperties?: FormPropertyDTO[];
-}
-
-export interface PlanTableFieldDTO {
-    id?: string;
-    name?: string;
-    type?: string;
-    accesstype?: string;
-    fieldMappingId?: string;
-    masterTable?: string;
-    documentType?: string;
-    displayField?: string;
-    vocabulary?: string;
-    require?: string;
-    readOnly?: string;
 }
 
 export interface ResultListCaseTypeResponseDTO {
@@ -6194,93 +6394,6 @@ export interface ResultListMTRelationResponseDTO {
     data?: MTRelationResponseDTO[];
 }
 
-/** Form Design Form Result List */
-export interface EasyFormResult {
-    /** Action Type, Example value： Email、Workflow、CaseType  */
-    actionType?: string;
-    /** Bound business Key, Example value：customApproval */
-    actionKey?: string;
-    /** DeploymentId of Bound business, Example value：customApproval:1:7212b388-36f3-4aff-9b03-bc500537dd23 */
-    actionId?: string;
-    /** Name of Bound business */
-    actionName?: string;
-    /** Mapping data structure between form columns and bound business fields */
-    dataMapping?: ParamMappingDTO[];
-    /** Status, Active or Deactivated */
-    status?: string;
-    /** Email Subject */
-    subject?: string;
-    /** Email Body Text */
-    text?: string;
-    /** Email TO */
-    to?: string;
-    /** Email CC */
-    cc?: string;
-    /** Email BCC */
-    bcc?: string;
-}
-
-/** Form Designer (Response) */
-export interface FormDesignResponseDTO {
-    /** Form Design ID */
-    id?: string;
-    /** Form Design Name */
-    name?: string;
-    /** Form Design Publish Status */
-    publishStatus?: string;
-    /** Form Designer Process Definition Key */
-    processDefinitionKey?: string;
-    /** Form Design Permission */
-    permission?: string;
-    /** Disable or Enable form design */
-    enable?: boolean;
-    /** Form Design Information List */
-    information?: PlanTableFieldDTO[];
-    /** Form Design Preview */
-    previewStyle?: string;
-    /** Form Design Form Result List */
-    formResult?: EasyFormResult[];
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    formInfo?: FormInfoDTO;
-}
-
-export interface FormFieldMapping {
-    id?: string;
-    formInfoId?: string;
-    columnName?: string;
-    fieldName?: string;
-    dataType?: string;
-    status?: string;
-    required?: boolean;
-    unique?: boolean;
-    primaryKey?: boolean;
-}
-
-export interface FormInfoDTO {
-    id?: string;
-    bizId?: string;
-    label?: string;
-    tableName?: string;
-    tableNamePrefix?: string;
-    status?: string;
-    createdBy?: string;
-    modifiedBy?: string;
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    fieldMappings?: FormFieldMapping[];
-}
-
-/** Mapping data structure between form columns and bound business fields */
-export interface ParamMappingDTO {
-    source?: string;
-    target?: string;
-}
-
 export interface ResultListFormDesignResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -6296,6 +6409,20 @@ export interface ResultFormDesignResponseDTO {
     message?: string;
     /** Form Designer (Response) */
     data?: FormDesignResponseDTO;
+}
+
+export interface EasyFormBaseEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+}
+
+export interface ResultEasyFormBaseEmailDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EasyFormBaseEmailDTO;
 }
 
 export interface DAMConversionSetting {
@@ -16780,6 +16907,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags FormDesignController
+         * @name PostFormDesignSendEmail
+         * @request POST:/api/docpal/form/design/send_email
+         */
+        postFormDesignSendEmail: (data: EasyFormEmailDTO, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/send_email`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
          * @name PostFormDesignRecords
          * @request POST:/api/docpal/form/design/records
          */
@@ -16803,6 +16946,38 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postFormDesignRecordPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
             this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/record/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignPageEmailLog
+         * @request POST:/api/docpal/form/design/page_email_log
+         */
+        postFormDesignPageEmailLog: (data: EasyFormEmailQueryRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOEasyFormEmailLogDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/page_email_log`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignPage
+         * @request POST:/api/docpal/form/design/page
+         */
+        postFormDesignPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOFormDesignResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -21245,6 +21420,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getFormDesignIdDetail: (id: string, params: RequestParams = {}) =>
             this.request<ResultFormDesignResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/${id}/detail`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name GetFormDesignEmailId
+         * @request GET:/api/docpal/form/design/email/{id}
+         */
+        getFormDesignEmailId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/email/${id}`,
                 method: "GET",
                 ...params,
             }),
