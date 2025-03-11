@@ -59,7 +59,7 @@
     const FormRef = ref()
     // #region module: before submit form
     async function handleSubmit () {
-        const valid = FormRef.value.validate()
+        const valid = await FormRef.value.validate()
         if(!valid) return
     
         loading.value = true
