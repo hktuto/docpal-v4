@@ -60,7 +60,7 @@
       "formItemFlag": true,
       "options": {
         "name": "name",
-        "label": "tableHeader_name",
+        "label": "collection_name",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",

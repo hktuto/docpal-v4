@@ -1,21 +1,21 @@
 <template>
-    <el-dialog v-model="state.visible" :title="t('collections_edit')" :close-on-click-modal="false" destroy-on-close>
-        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
-        <template #footer>
-            <el-button :loading="state.loading" @click="handleSubmit">{{ t('common_save') }}</el-button>
-        </template>
-    </el-dialog>
+  <el-dialog v-model="state.visible" :title="t('collections_edit')" :close-on-click-modal="false" destroy-on-close>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <template #footer>
+      <el-button :loading="state.loading" @click="handleSubmit">{{ t('common_submit') }}</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import formJson from './addCollectionDialog.vform.json'
+import formJson from './editCollectionDialog.vform.json'
 import {ElMessage} from "element-plus";
 import {clientApi} from "api";
 
 const {t} = useI18n()
 const state = reactive({
-    loading: false,
-    visible: false
+  loading: false,
+  visible: false
 })
 
 /**
@@ -23,37 +23,37 @@ const state = reactive({
  * @param collection 收藏夾對象
  */
 function handleOpen(collection: object) {
-    setTimeout(() => {
-        FormRendererRef.value.vFormRenderRef.setFormData(collection)
-    })
-    state.visible = true
+  setTimeout(() => {
+    FormRendererRef.value.vFormRenderRef.setFormData(collection)
+  })
+  state.visible = true
 }
 
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    state.loading = true
-    let params = {
-        idOrPath: data.id,
-        name: data.name,
-        description: null
-    }
-    try {
-        await clientApi.api.patchNuxeoCollection(params)
-        ElMessage.success(t('dpMsg_success'))
-        state.visible = false
-        FormRendererRef.value.vFormRenderRef.resetForm()
-        emits('refresh')
-    } catch
-        (error) {
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  state.loading = true
+  let params = {
+    idOrPath: data.id,
+    name: data.name,
+    description: null
+  }
+  try {
+    await clientApi.api.patchNuxeoCollection(params)
+    ElMessage.success(t('collection_editSuccessMsg', {name: data.name}))
+    state.visible = false
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    emits('refresh')
+  } catch
+    (error) {
 
-    }
-    state.loading = false
+  }
+  state.loading = false
 }
 
 defineExpose({handleOpen})
