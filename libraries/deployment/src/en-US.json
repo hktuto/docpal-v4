@@ -1106,7 +1106,7 @@
   "dpDocument_acl_addLocal": "Add Local",
   "dpDocument_acl_editLocal": "Edit",
   "dpDocument_fileName": "Name",
-  "dpDocument_fileSelected": "File Selected",
+  "dpDocument_fileSelected": "No. of Files Selected",
   "dpDocument_fileType": "Document Type",
   "dpEmail": {
     "recipient": "Recipient Email Address"
@@ -1675,6 +1675,7 @@
     "edit": "Edit Hold Policy"
   },
   "holdPolicy_activate": "Activate Policy",
+  "holdPolicy_clientFilter": "Filter by Folder Name",
   "holdPolicy_create": "Create New Hold Policy",
   "holdPolicy_createApprovalSetting": "Approval Setting",
   "holdPolicy_createSuccessMsg": "The new hold policy has been created successfully.",
@@ -1707,8 +1708,8 @@
     "tag&collection": "Tags & Collection"
   },
   "info_by": "Created By",
-  "info_contributors": "Modified By",
-  "info_created": "Created Date",
+  "info_contributors": "Last Modified By",
+  "info_created": "Creation Date",
   "info_modified": "Last Modified Date",
   "info_size": "File Size",
   "info_type": "Document Type ",
@@ -2053,7 +2054,7 @@
   "rightDetail_pictureViews": "Additional Formats",
   "rightDetail_related": "Related",
   "rightDetail_tags": "Tags",
-  "rightDetail_userGroup": "User / Group",
+  "rightDetail_userGroup": "User / User Group",
   "role": {
     "approver": "Approver",
     "approvers": "Approvers",
@@ -2289,7 +2290,7 @@
   },
   "tableHeader_access": "Access",
   "tableHeader_actions": "Actions",
-  "tableHeader_applyBy": "Apply By",
+  "tableHeader_applyBy": "Applied By",
   "tableHeader_applyDate": "Apply Date",
   "tableHeader_applyReason": "Apply Reason",
   "tableHeader_approver": "Approver",
