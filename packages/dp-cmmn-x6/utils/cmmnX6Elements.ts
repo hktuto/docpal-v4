@@ -333,7 +333,7 @@ export const nodeSetting:NodeSetting = {
                         'flowable:planItemLifecycleListener':{
                             attr_sourceState:'active',
                             attr_targetState: 'completed',
-                            attr_delegateExpression: '"${cmmnProcessTaskLifecycleListener}'
+                            attr_delegateExpression: '${cmmnProcessTaskLifecycleListener}'
                         }
                     },
                     processRefExpression:{
