@@ -22,7 +22,7 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "doc_typeSmartFolderFolderNameRequiredMsg",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],
