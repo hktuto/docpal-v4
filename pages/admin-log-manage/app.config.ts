@@ -7,8 +7,8 @@ export default defineAppConfig({
       id:"admin-log-manage",
       name: 'log-manage',
       label: "adminMenu.logManage",
-      icon: "lucide:file-symlink",
-      hoverIcon: "lucide:file-symlink",
+      icon: "lucide:logs",
+      hoverIcon: "lucide:logs",
       component: "LazyLogManage",
       feature: "LOG_MANAGE",
       props:{
