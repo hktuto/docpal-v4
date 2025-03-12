@@ -78,6 +78,7 @@ const routerProvider = inject(MenuRouterKey)
     columns:[
         {
             title:"document_name",
+            field:'name',
             width: 250,
             slots:{
                 default: "docIcon"
@@ -154,6 +155,18 @@ const routerProvider = inject(MenuRouterKey)
         enabled:true,
         pageSize: state.options.paginationConfig.pageSize,
         currentPage: state.options.paginationConfig.currentPage + 1 || 1
+      },
+      tooltipConfig:{
+        contentMethod: ({items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event}:any) => {
+          const key = column.property
+          const value = row[key]
+          if (typeof value === 'string') {
+            return value
+          }
+          if (Array.isArray(value)) {
+            return value.join(',')
+          }
+        }
       }
     },
     optionalEvent:{
