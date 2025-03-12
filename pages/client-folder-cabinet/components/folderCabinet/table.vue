@@ -172,7 +172,7 @@ async function initFilter(id: string) {
   const foundItem = data.find(item => item.key === "createdBy");
   if (foundItem) {
     if (foundItem.options.length > 0) {
-      foundItem.options.sort((a, b) => a.value.localeCompare(b.value));
+      foundItem.options.sort((a, b) => a.label.localeCompare(b.label));
     }
     data[data.indexOf(foundItem)].options = foundItem.options;
   }
