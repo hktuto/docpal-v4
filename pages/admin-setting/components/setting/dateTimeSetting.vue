@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import formJson from './form.vform.json'
-import { ElMessage } from 'element-plus'
-const { t } = useI18n()
+import {ElMessage} from 'element-plus'
+
+const {t} = useI18n()
 const FormRendererRef = ref()
-function  handleSuccess(metaDateFormat:string) {
-  console.log("metaDateFormat", metaDateFormat)
+
+function handleSuccess(metaDateFormat: string) {
   ElMessage.success(t('dpMsg_success'))
   const bus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME)
   bus.emit(metaDateFormat)
@@ -12,9 +13,8 @@ function  handleSuccess(metaDateFormat:string) {
 </script>
 
 <template>
-<div class="cardCaontainer">
-<h2>{{ t('admin.setting.title')}}</h2>
+  <div class="cardCaontainer">
+    <h2>{{ t('admin.setting.title') }}</h2>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" @success="handleSuccess"/>
-</div>
-
+  </div>
 </template>

@@ -22,7 +22,7 @@
         "clearable": true,
         "showPassword": false,
         "required": true,
-        "requiredHint": "user_userGroupNameIsRequired",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],
