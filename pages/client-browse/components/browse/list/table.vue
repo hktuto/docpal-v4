@@ -369,6 +369,11 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         }
     },
     selectChangeHander: (selectedRows: any[]) => {
+        // check if selectedRows is not Folder
+        if(selectedRows.length === 0) {
+            emits('selectedChange', [])
+            return;
+        }
         emits('selectedChange', selectedRows)
     },
     optionalConfig: {
@@ -390,7 +395,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             checkStrictly: true,
             showHeader: false,
             highlight: true,
-            range: true,
+            range: false,
             visibleMethod: ({row}: any) => !row.isFolder
         },
         rowConfig: {
@@ -410,7 +415,6 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             emitBus(EventType.FILE_PREVIEW_CLOSE, row)
         },
         cellClick: ({row, column, rowIndex}) => {
-            console.log(column.field)
             if(column.field === 'name') {
                 emitBus(EventType.FILE_PREVIEW_OPEN, row)
             }else{
