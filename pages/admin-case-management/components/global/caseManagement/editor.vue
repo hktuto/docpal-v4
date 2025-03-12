@@ -126,17 +126,16 @@ function openVersionList(){
 }
 
 async function saveAsNewVersion(){
-  console.log("saveAsNewVersion", props)
   const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.versionId)
   // console.log("data", data)
   routerProvider?.updateProps({
     versionId: data.id,
     currentVersion: data.versionNumber,
   })
-  console.log("new props", props)
   nextTick(() => {
     init();
   })
+  // TODO : save as form to new version
 }
 
 async function promoteToProduction(){
