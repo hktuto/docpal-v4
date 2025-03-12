@@ -10,8 +10,9 @@
   </VxeGrid>
 </template>
 <script lang="ts" setup>
-import { clientApi } from "api";
-import { MenuRouterKey } from "#imports";
+import {clientApi} from "api";
+import {MenuRouterKey} from "#imports";
+
 const routerProvider = inject(MenuRouterKey);
 let extraParams = {};
 let doneParams = {
@@ -20,8 +21,8 @@ let doneParams = {
   states: ["A"],
 };
 
-const { t } = useI18n();
-const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
+const {t} = useI18n();
+const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
   id: "c-retention-done",
   api: async (pageParams: any) => {
     return clientApi.api.postPolicyRetentionsDocumentPage({
@@ -35,23 +36,24 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: "documentName",
       title: "tableHeader_name",
       type: "html",
-      formatter: ({ cellValue, row }: any) => {
+      formatter: ({cellValue, row}: any) => {
         let icon = "/icons/doc/file.svg";
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
       },
     },
-    { field: "documentPath", title: "tableHeader_path" },
-    { field: "policyName", title: "tableHeader_policyName" },
-    { field: "approver", title: "tableHeader_approver", 
-      formatter({ cellValue }: any) {
-        if(!cellValue) return t('System')
-        else return  cellValue
-      }  
+    {field: "documentPath", title: "document_path"},
+    {field: "policyName", title: "tableHeader_policyName"},
+    {
+      field: "approver", title: "tableHeader_approver",
+      formatter({cellValue}: any) {
+        if (!cellValue) return t('System')
+        else return cellValue
+      }
     },
     {
       field: "confirmAt",
       title: "tableHeader_confirmAt",
-      formatter({ cellValue, row }: any) {
+      formatter({cellValue, row}: any) {
         const date = row.applyApprovedDate ? row.applyApprovedDate : row.modifiedDate
         return formatDate(date)
       },
@@ -61,32 +63,40 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     [
       {
         code: "preview",
-        name: "common_preview",
+        name: "retention_donePreview",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDblclick(row);
         },
       },
     ],
   ],
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row);
   },
 });
 
 // #region module: ResponsiveFilterRef
 const ResponsiveFilterRef = ref();
+
 async function getFilter() {
   const data = await clientApi.api
     .getPolicyRetentionsDocumentPageConditions()
     .then((res) => res.data);
+  const foundItem = data.find(item => item.key === "retentionPolicyIds");
+  if (foundItem.options.length > 0) {
+    foundItem.options.sort((a, b) => a.label.localeCompare(b.label));
+    data[data.indexOf(foundItem)].options = foundItem.options;
+  }
   ResponsiveFilterRef.value.init(data);
 }
+
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
+
 // #endregion
 function handleDblclick(row: any) {
   routerProvider?.navigateTo(createDetailPageParams({
@@ -95,6 +105,7 @@ function handleDblclick(row: any) {
     showHeaderAction: false
   }), false);
 }
+
 onMounted(() => {
   getFilter();
   // clientApi.api.getPolicyRetentionsPolicyidScanDocument(414105)

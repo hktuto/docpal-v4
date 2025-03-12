@@ -2035,6 +2035,7 @@
   "reset": "重置",
   "responseMsg_errorCode_2": "服务器异常，请稍后再试",
   "retention_done": "保留完成清单",
+  "retention_donePreview": "预览文件",
   "retention_pending": "保留待决清单",
   "retention_policies": "政策管理",
   "revert": "还原",
