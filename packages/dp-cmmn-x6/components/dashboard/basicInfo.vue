@@ -4,8 +4,10 @@
   <div class="flex-zoom">
     <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
       <div class="header">{{ item.name }}</div>
-      <div class="content">{{ 
-        state.mode === 'normal' ? item.value : state.defaultValue[item.id] }} 
+      <div class="content">
+        {{ 
+          displayValue(item)
+        }} 
       </div>
     </div>
   </div>
@@ -92,6 +94,16 @@ const emits = defineEmits([
   'refreshSetting', 'delete'
 ])
 const { t } = useI18n()
+
+function displayValue(item) {
+  if(!state.mode === 'normal') {
+    return state.defaultValue[item.id] 
+  }
+  if(item.type === 'date') {
+    return formatDate(item.value)
+  }
+  return item.value
+}
 const state = reactive<any>({
   data: {},
   layout: [],

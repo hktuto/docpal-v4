@@ -111,8 +111,6 @@ export const newCaseManagementVersionList = function(data:any, version:string) {
     } as TabItem
 }
 
-
-
 export function newCaseManagementEditor(caseTypeId:string, name:string, version:string, versionId:string) {
     return {
         id: 'case-management-editor-' + new Date().getTime(),
@@ -127,4 +125,10 @@ export function newCaseManagementEditor(caseTypeId:string, name:string, version:
             versionId
         }
     }
+}
+
+
+export function saveAllCaseFromToNewVersion(oldCaseVersionId:string, newCaseVersionId:string, cmmnJson:any) {
+    // TODO : get all human task from cmmn and try to get form from api. if form exist, then save it to new version
+    
 }
