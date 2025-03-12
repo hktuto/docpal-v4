@@ -176,6 +176,7 @@ function onRedo(){
 }
 
 function save() {
+    // todo : add all information to start human task
     const {xml, json} = convertX6JsonToCmmnJson(graph.value,caseId.value)
     return { xml, json }
 }

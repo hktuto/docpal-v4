@@ -1,7 +1,7 @@
 <template>
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-      <template #toolbar_buttons> </template>
+      <template #toolbar_buttons></template>
       <template #status="{ row }">
         <el-tag v-if="row.status === 0" type="info">{{ $t("dpStatus.pending") }}</el-tag>
         <el-tag v-else-if="row.status === 1" type="primary">
@@ -18,13 +18,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from "element-plus";
-import { clientApi } from "api";
-import { routeShareMePageFolder } from "~/utils/routerHelper";
-import { MenuRouterKey } from "#imports";
+import {ElMessageBox} from "element-plus";
+import {clientApi} from "api";
+import {routeShareMePageFolder} from "~/utils/routerHelper";
+import {MenuRouterKey} from "#imports";
 
 const routerProvider = inject(MenuRouterKey);
-const { t } = useI18n();
+const {t} = useI18n();
 let extraParams: any = {};
 const {
   tableConfig,
@@ -36,13 +36,13 @@ const {
 } = useVxeTable({
   id: "internal-me",
   api: (pageParams: any) =>
-    clientApi.api.postInternalshareMe({ ...pageParams, ...extraParams }),
+    clientApi.api.postInternalshareMe({...pageParams, ...extraParams}),
   columns: [
     {
       field: "documentNames",
       title: "tableHeader.fileOrFolderName",
       type: "html",
-      formatter: ({ cellValue, row }: any) => {
+      formatter: ({cellValue, row}: any) => {
         let icon = "/icons/doc/file.svg";
         if (row.isFolder) {
           icon = "/icons/doc/folder.svg";
@@ -50,40 +50,40 @@ const {
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
       },
     },
-    { field: "path", title: "search.logicalPath" },
+    {field: "path", title: "document_path"},
 
-    { field: "createdUserId", title: "tableHeader_shareBy" },
+    {field: "createdUserId", title: "tableHeader_shareBy"},
     {
       field: "createdDate",
       title: "tableHeader_shareDate",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
     {
       field: "startDate",
-      title: "el.datepicker.startDate",
-      formatter({ cellValue }: any) {
+      title: "shareWithMe_startDate",
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
     {
       field: "expiredDate",
-      title: "el.datepicker.endDate",
-      formatter({ cellValue }: any) {
+      title: "shareWithMe_endDate",
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
     {
       field: "permission",
       title: "dpTable_permission",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return t(`permission.${cellValue}`);
       },
     },
     {
       field: "status",
-      title: "common_status",
+      title: "shareWithMe_status",
       slots: {
         default: "status",
       },
@@ -107,14 +107,14 @@ const {
       {
         code: "docOpen",
         name: "common_open",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDblclick(row);
         },
       },
       {
         code: "docActionAddFolder",
         name: "filePopover_newFolder",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           const ev = new CustomEvent("docActionAddFolder", {
             detail: initToDocument(row),
           });
@@ -124,15 +124,15 @@ const {
       {
         code: "docActionNewFile",
         name: "filePopover_newFile",
-        action: ({ row }: any) => {
-          const ev = new CustomEvent("docActionNewFile", { detail: initToDocument(row) });
+        action: ({row}: any) => {
+          const ev = new CustomEvent("docActionNewFile", {detail: initToDocument(row)});
           document.dispatchEvent(ev);
         },
       },
       {
         code: "docActionUploadFile",
         name: "filePopover_uploadFile",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           const ev = new CustomEvent("docActionUploadFile", {
             detail: initToDocument(row),
           });
@@ -142,7 +142,7 @@ const {
       {
         code: "docActionUploadFolder",
         name: "filePopover_uploadFolder",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           const ev = new CustomEvent("docActionUploadFolder", {
             detail: initToDocument(row),
           });
@@ -152,15 +152,15 @@ const {
       {
         code: "docActionRename",
         name: "filePopover_rename",
-        action: ({ row }: any) => {
-          const ev = new CustomEvent("docActionRename", { detail: initToDocument(row) });
+        action: ({row}: any) => {
+          const ev = new CustomEvent("docActionRename", {detail: initToDocument(row)});
           document.dispatchEvent(ev);
         },
       },
       {
         code: "docActionChangeDocType",
         name: "filePopover_changeDocType",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           const ev = new CustomEvent("docActionChangeDocType", {
             detail: initToDocument(row),
           });
@@ -170,18 +170,18 @@ const {
       {
         code: "docWatermark",
         name: "filePopover_watermark",
-        action: async ({ row }: any) => {
+        action: async ({row}: any) => {
           const detail = await clientApi.api
-            .postNuxeoDocument({ idOrPath: row.documentIds })
+            .postNuxeoDocument({idOrPath: row.documentIds})
             .then((res) => res.data);
-          const ev = new CustomEvent("docWatermark", { detail: detail });
+          const ev = new CustomEvent("docWatermark", {detail: detail});
           document.dispatchEvent(ev);
         },
       },
       {
         code: "docActionInternalShare",
         name: "filePopover_internalShare",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           const ev = new CustomEvent("docActionInternalShare", {
             detail: initToDocument(row),
           });
@@ -191,22 +191,22 @@ const {
       {
         code: "docActionDelete",
         name: "filePopover_delete",
-        action: ({ row }: any) => {
-          const ev = new CustomEvent("docActionDelete", { detail: initToDocument(row) });
+        action: ({row}: any) => {
+          const ev = new CustomEvent("docActionDelete", {detail: initToDocument(row)});
           document.dispatchEvent(ev);
         },
       },
       {
         code: "docActionRefresh",
         name: "common_refresh",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           reload();
         },
       },
       {
         code: "docActionNewTab",
         name: "rightClick.newTab",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           if (row.isFolder) {
             const link = createBrowseListPageParams({
               idOrPath: row.documentIds,
@@ -225,18 +225,21 @@ const {
       {
         code: "docActionDownload",
         name: "rightClick.download",
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           downloadHandler(initToDocument(row));
         },
       },
     ],
   ],
-  additionalPermission: async ({ row }: any) => {
+  additionalPermission: async ({row}: any) => {
+    if (!row) {
+      return {};
+    }
     const userId = useUserId();
     const permission = await getPermission(row.documentIds, userId.value);
     return permission;
   },
-  permissionMethod: ({ options, code, column, row, rowIndex, additionalData }: any) => {
+  permissionMethod: ({options, code, column, row, rowIndex, additionalData}: any) => {
     // if click on empty row, return empty
     if (!row) {
       return {
@@ -246,17 +249,17 @@ const {
     }
     const publicActionsCode = ["docActionRefresh", "docActionNewTab", "docOpen"];
     if (publicActionsCode.includes(code)) {
-      return { visible: true, disabled: false };
+      return {visible: true, disabled: false};
     }
     // hide all action when click on temp file
     if (row.source === "tempFile") {
-      return { visible: false, disabled: false };
+      return {visible: false, disabled: false};
     }
     // need other permissiion check list
     if (code === "docActionPaste") {
       return {
         visible:
-          AllowTo({ feature: "ReadWrite", permission: additionalData }) &&
+          AllowTo({feature: "ReadWrite", permission: additionalData}) &&
           copyDocumentList.value.length > 0,
         disabled: false,
       };
@@ -274,11 +277,11 @@ const {
       const ManageCode = ["docActionInternalShare"];
       if (ManageCode.includes(code)) {
         return {
-          visible: AllowTo({ feature: "ManageRecord", permission: additionalData }),
+          visible: AllowTo({feature: "ManageRecord", permission: additionalData}),
         };
       }
       return {
-        visible: AllowTo({ feature: "ReadWrite", permission: additionalData }),
+        visible: AllowTo({feature: "ReadWrite", permission: additionalData}),
       };
     }
     // get permission
@@ -292,13 +295,13 @@ const {
     if (folderActionsCode.includes(code)) {
       return {
         visible:
-          row.isFolder && AllowTo({ feature: "ReadWrite", permission: additionalData }),
+          row.isFolder && AllowTo({feature: "ReadWrite", permission: additionalData}),
         disabled: false,
       };
     } else {
       return {
         visible:
-          !row.isFolder && AllowTo({ feature: "ReadWrite", permission: additionalData }),
+          !row.isFolder && AllowTo({feature: "ReadWrite", permission: additionalData}),
         disabled: false,
       };
     }
@@ -307,16 +310,18 @@ const {
       disabled: false,
     };
   },
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row);
   },
 });
+
 function initToDocument(row: any) {
   return {
     id: row.documentIds,
     name: row.documentNames
   }
 }
+
 function handleDblclick(row: any) {
   if (row.isFolder) {
     routerProvider?.navigateTo(routeShareMePageFolder(row), false);

@@ -19,7 +19,7 @@
 <script lang="ts" setup>
 import formJson from './new.vform.json'
 import {ElMessage} from "element-plus";
-
+import {adminApi} from 'api'
 const emits = defineEmits([
     'refresh'
 ])
@@ -42,7 +42,7 @@ async function handleSubmit() {
         state.visible = false
         emits('refresh')
     } catch (error) {
-        console.log(error)
+        console.log("error", error)
     } finally {
         state.loading = false
     }

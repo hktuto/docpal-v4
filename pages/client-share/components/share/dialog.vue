@@ -1,38 +1,55 @@
 <template>
-    <el-dialog v-model="dialogVisible" :title="$t('menus_setting')" append-to-body>
+    <el-dialog v-model="dialogVisible" :title="$t('externalSharing_edit')" append-to-body>
         <el-form ref="formRef"
-                :model="form"
-                label-width="120px"
-                label-position="top"
-                @submit.native.prevent
+                 :model="form"
+                 label-width="120px"
+                 label-position="top"
+                 @submit.native.prevent
         >
             <el-form-item :label="$t('tableHeader_emailList')" prop="emailList"
-                :rules="[ { required: true, message: $t('form_common_requird'), trigger: 'change'}]">
-                <el-select v-model="form.emailList"
-                    filterable multiple clearable allow-create
-                    style="width: 100%">
-                    <el-option v-for="item in userList" :key="item.email" :label="`${item.username} <${item.email}>`" :value="item.email + '&&&&' + item.username"></el-option>
-                </el-select>
+                          :rules="[
+                              {
+                                  required: true,
+                                  message: $t('tableHeader_emailList') +' '+ $t('render.hint.fieldRequired'),
+                                  trigger: 'change'
+                              },
+                              {
+                                  validator: emailValidate,
+                                  trigger: 'change'
+                              }
+                          ]">
+                <el-input-tag
+                    v-model="form.emailList"
+                    clearable
+                    draggable
+                    :placeholder="$t('vxe.base.pleaseInput')"
+                    :aria-label="$t('tip_enterAfterInput')"
+                >
+                </el-input-tag>
             </el-form-item>
             <el-form-item :label="$t('share_shareLink')">
                 <el-input v-model="shareLink" readonly type="text"
-                    class="cursorPointer"
-                    @click="handleCopy(shareLink)">
+                          class="cursorPointer"
+                          @click="handleCopy(shareLink)">
                     <template #suffix>
-                        <el-icon @click="handleCopy(shareLink)"><CopyDocument /></el-icon>
+                        <el-icon @click="handleCopy(shareLink)">
+                            <CopyDocument/>
+                        </el-icon>
                     </template>
                 </el-input>
             </el-form-item>
             <el-row :gutter="20">
                 <el-col :span="12">
                     <el-form-item :label="$t('share_password')" prop="password"
-                        :rules="[{ required: true, message: $t('form_common_requird')}]">
-                        <el-input v-model="form.password" type="text" />
+                                  :rules="[{ required: true,
+                                  message: $t('share_password') +' '+ $t('render.hint.fieldRequired')}]">
+                        <el-input v-model="form.password" clearable type="text"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
                     <el-form-item :label="$t('tableHeader_dueDate')" prop="dueDate"
-                        :rules="[{ required: true, message: $t('form_common_requird')}]">
+                                  :rules="[{ required: true,
+                                  message: $t('tableHeader_dueDate') +' '+ $t('render.hint.fieldRequired')}]">
                         <el-date-picker v-model="form.dueDate"
                                         type="datetime"
                                         :default-time="defaultTime"
@@ -43,24 +60,23 @@
             </el-row>
         </el-form>
         <template #footer>
-            <el-button @click="dialogVisible = false">{{$t('cancel')}}</el-button>
-            <el-button @click="handleSubmit">{{$t('submit')}}</el-button>
+            <el-button @click="dialogVisible = false">{{ $t('cancel') }}</el-button>
+            <el-button @click="handleSubmit">{{ $t('submit') }}</el-button>
         </template>
     </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { CopyDocument } from '@element-plus/icons-vue'
-import { clientApi } from 'api'
-import type { FormInstance } from 'element-plus'
+import {CopyDocument} from '@element-plus/icons-vue'
+import type {FormInstance} from 'element-plus'
 import {Base64} from 'js-base64'
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 
-const { diffMinute } = useTime()
+const {diffMinute} = useTime()
 const {
-  public: { endPoint },
+    public: {endPoint},
 } = useRuntimeConfig();
-const { t } = useI18n();
+const {t} = useI18n();
 const route = useRoute()
 const state = reactive<any>({
     userList: [],
@@ -97,35 +113,53 @@ const state = reactive<any>({
 const value1 = ref()
 const emit = defineEmits(['submit'])
 // #region module: dialog
-    const dialogVisible = ref(false)
-    function handleOpen(shareInfo) {
-        let decodePwd = Base64.decode(shareInfo.password);//解密
-        state.shareId = shareInfo.shareID
-        initFormatItem({ ...shareInfo, password: decodePwd })
-        dialogVisible.value = true
-    }
+const dialogVisible = ref(false)
+
+const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+const emailValidate = (rule: any, value: any, callback: any) => {
+    value.forEach((item) => {
+        if (!emailPattern.test(item)) {
+            if (form.emailList.length > 0) {
+                form.emailList.pop();
+            }
+            callback(new Error($t('tip.enterValidEmail')));
+        }
+    })
+    callback()
+}
+
+function handleOpen(shareInfo) {
+    let decodePwd = Base64.decode(shareInfo.password);//解密
+    state.shareId = shareInfo.shareID
+    initFormatItem({...shareInfo, password: decodePwd})
+    dialogVisible.value = true
+}
+
 // #endregion
 // #region module: form
-    const formRef = ref<FormInstance>()
-    const form = reactive<any>({
-        emailList: [],
-        password: '',
-        dueDate: ''
-    })
-    async function handleSubmit() {
-        const valid = await formRef.value.validate((valid, fields) => valid)
-        if (!valid) return
-        const param = {
-            emailList: form.emailList.map((item:any) => item.split('&&&&')[0]),
-            password: form.password,
-            tokenLiveInMinutes: diffMinute(form.dueDate),
-            shareId: state.shareId
-        }
-        emit('submit', param)
-        dialogVisible.value = false
+const formRef = ref<FormInstance>()
+const form = reactive<any>({
+    emailList: [],
+    password: '',
+    dueDate: ''
+})
+
+async function handleSubmit() {
+    const valid = await formRef.value.validate((valid, fields) => valid)
+    if (!valid) return
+    const param = {
+        emailList: form.emailList.map((item: any) => item.split('&&&&')[0]),
+        password: form.password,
+        tokenLiveInMinutes: diffMinute(form.dueDate),
+        shareId: state.shareId
     }
+    emit('submit', param)
+    dialogVisible.value = false
+}
+
 // #endregion
-function initFormatItem (shareInfo) {
+function initFormatItem(shareInfo) {
     form.emailList = shareInfo.emailList
     echoEamilList()
     form.password = shareInfo.password || ''
@@ -136,22 +170,24 @@ function initFormatItem (shareInfo) {
         formRef.value.clearValidate()
     })
 }
-function handleCopy (copyContent: string) {
+
+function handleCopy(copyContent: string) {
     copy(copyContent, t('common_copySuccess'))
 }
-function echoEamilList () {
-    form.emailList = form.emailList.map((item:any) => {
+
+function echoEamilList() {
+    form.emailList = form.emailList.map((item: any) => {
         const user: any = state.userList.find((user: any) => user.email === item)
-        if(user) return user.email + '&&&&' + user.username
+        if (user) return user.email + '&&&&' + user.username
         else return item
     })
 }
-onMounted(async() => {
-    // state.userList = await getUserListApi()
+
+onMounted(async () => {
     echoEamilList()
 })
-const { defaultTime, shortcuts, shareLink, userList } = toRefs(state)
-defineExpose({ handleOpen })
+const {defaultTime, shortcuts, shareLink, userList} = toRefs(state)
+defineExpose({handleOpen})
 </script>
 
 <style scoped lang="scss">

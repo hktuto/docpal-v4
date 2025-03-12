@@ -36,6 +36,25 @@ async function init() {
         }else{
             workflowVariable.value = null
         }
+        // nomalize processTask 
+        if(!nodeData.data.extensionElements['flowable:planItemLifecycleListener']) {
+            node.value.setData({
+                ...nodeData,
+                data:{
+                    ...nodeData.data,
+                    extensionElements:{
+                        ...nodeData.data.extensionElements,
+                        'flowable:planItemLifecycleListener':{
+                            attr_sourceState:'active',
+                            attr_targetState: 'completed',
+                            attr_delegateExpression: '${cmmnProcessTaskLifecycleListener}'
+                        }
+                    }
+                }
+            },{
+                overwrite:true, deep:true
+            })
+        }
        
         // state.outData = getExtentionProperties(nodeData.data, 'flowable:out')
     } catch (error) {

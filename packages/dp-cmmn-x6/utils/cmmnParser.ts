@@ -127,8 +127,9 @@ function loopAndReorderXmlDom(doc:Element){
             itemControl.forEach((item:any) => {
                 const hasRepetition = item.getElementsByTagName('repetitionRule')
                 const hasManualActivation = item.getElementsByTagName('manualActivationRule')
+                console.log(hasRepetition, hasManualActivation)
                 if(hasRepetition.length > 0 && hasManualActivation.length > 0) {
-                    item.insertBefore(hasManualActivation[0], item.children[0])
+                    item.insertBefore(hasRepetition[0], item.children[0])
                 }
             })
             doc.insertBefore(child, doc.children[0])

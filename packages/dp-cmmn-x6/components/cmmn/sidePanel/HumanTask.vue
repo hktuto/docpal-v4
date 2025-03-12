@@ -91,13 +91,15 @@ watch(node, ()=> {
 
 <template>
     <div class="cmmnSidebarItemContainer">
-        <CmmnSidePanelUiHeader title="Human Task" />
+        <CmmnSidePanelUiHeader title="Human Task"/>
         <CmmnSidePanelUiLabel :node="node"/>
         <CmmnSidePanelUiItemControl :node="node"/>
         <CmmnSidePanelUiIsStartTask v-model="state.isStartTask" @change="handleSaveStartTask" />
+        <CmmnSidePanelUiAssignee :node="node" :graph="graph" />
+        <ElDivider />
         <ElButton type="primary" @click="editForm">Edit Form</ElButton>
-       <CmmnSidePanelUiAssignee :node="node" :graph="graph" />
-        <el-tabs v-model="state.activeName" @tab-click="handleClick">
+       <!-- TODO : human task form is remove from this panel -->
+        <!-- <el-tabs v-model="state.activeName" @tab-click="handleClick">
             <el-tab-pane :label="$t('workflowEdior.formField')" name="field">
                 <CmmnSidePanelDraggable :list="state.data" :graph="graph"
                     :dragHeader="dragHeader" 
@@ -105,7 +107,7 @@ watch(node, ()=> {
                     @change="handleSave">
                 </CmmnSidePanelDraggable>
             </el-tab-pane>
-        </el-tabs>
+        </el-tabs> -->
 
         
         <ElDialog v-model="formDialogVisible" width="100%" top="0" append-to-body destroy-on-close>

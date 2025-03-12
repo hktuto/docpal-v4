@@ -119,4 +119,10 @@ onActivated(() => {
     overflow: auto;
   }
 }
+.case-dashboard-main{
+  :deep(.el-card) {
+    height: 100%;
+    overflow: auto;
+  }
+}
 </style>

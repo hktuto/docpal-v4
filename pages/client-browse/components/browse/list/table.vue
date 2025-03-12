@@ -369,6 +369,11 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         }
     },
     selectChangeHander: (selectedRows: any[]) => {
+        // check if selectedRows is not Folder
+        if(selectedRows.length === 0) {
+            emits('selectedChange', [])
+            return;
+        }
         emits('selectedChange', selectedRows)
     },
     optionalConfig: {
@@ -388,7 +393,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         },
         checkboxConfig: {
             checkStrictly: true,
-            showHeader: true,
+            showHeader: false,
             highlight: true,
             range: false,
             visibleMethod: ({row}: any) => !row.isFolder
@@ -401,13 +406,15 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         }
     },
     optionalEvent: {
+        checkboxAll: ({checked}) => {
+            console.log("checkbox-all", checked)
+        },
         // cellMouseenter: ({row, column, rowIndex}) => {
         // },
         cellMouseleave: ({row, column, rowIndex}) => {
             emitBus(EventType.FILE_PREVIEW_CLOSE, row)
         },
         cellClick: ({row, column, rowIndex}) => {
-            console.log(column.field)
             if(column.field === 'name') {
                 emitBus(EventType.FILE_PREVIEW_OPEN, row)
             }else{
@@ -428,7 +435,7 @@ function tableChildChangeHandler(args:any) {
     if(!tableDropZone){
         tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
     }
-    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-body--row')
+    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
     if(allBodyRow.length === 0) return;
     // unregister all dragableItemList
     dragableItemList.forEach(item => {
@@ -495,7 +502,8 @@ function changeRoute() {
 
 function selectAll() {
     if (tableRef.value) {
-        tableRef.value.toggleAllCheckboxRow();
+        console.log("selectAll")
+        tableRef.value.setAllCheckboxRow(true);
     }
 }
 
@@ -590,7 +598,8 @@ defineExpose({
     }
 
     :deep(.browseFileIcon) {
-        width: var(--app-space-m)
+        width: var(--app-space-m);
+        height: var(--app-space-m);
     }
 
     :deep(.browseNameCell) {

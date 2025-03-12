@@ -3,8 +3,10 @@ import dayjs from 'dayjs'
 import {ElMessage} from 'element-plus'
 import { clientApi } from 'api'
 const opened = ref(false);
-const {options, newEventId} = defineProps<{
+const {options, newEventId, checkValid} = defineProps<{
     options: CalendarOptions,
+    newEventId:string,
+    checkValid?:Function
 }>()
 const { t} = useI18n()
 const formRef = ref()
@@ -92,21 +94,27 @@ const rules = reactive({
     }],
 })
 async function submit(){
+    
     // check location and user
     try{
         const valid = await formRef.value.validate()
+        // const okToSubmit = checkValid(form.value)
         if(!valid) return
-        const data:DocPalEventType = {
+        const data = {
             id: newEventId,
             eventId:"",
-            startTime: snapDownTo15Minutes(dayjs(startTime.value)).toISOString(),
-            endTime: dayjs(startTime.value).add(15, 'minutes').toISOString(),
+            startTime: dayjs(form.value.startTime).toISOString(),
+            endTime: dayjs(form.value.endTime).toISOString(),
             eventName: form.value.user,
             title: form.value.user,
             category: form.value.category || options.defaultCategory,
             location: form.value.location,
             isAllDay: form.value.isAllDay,
             user: form.value.user,
+        }
+        if(checkValid) {
+            const valid = await checkValid(data)
+           console.log(valid)
         }
         emits('submit', data)
         opened.value = false

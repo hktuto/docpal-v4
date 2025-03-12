@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-watermark",
       name: 'admin-watermark',
       label: "adminMenu.watermark",
-      icon: "lucide:user",
-      hoverIcon: "lucide:user",
+      icon: "lucide:file-image",
+      hoverIcon: "lucide:file-image",
       component: "LazyWatermark",
       feature: "WATERMARK",
       props:{

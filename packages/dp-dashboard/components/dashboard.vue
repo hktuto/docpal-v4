@@ -151,6 +151,10 @@ onMounted(async () => {
   .vue-grid-layout {
     min-height: 80vh;
   }
+  :deep(.el-card) {
+    height: 100%;
+    overflow: auto;
+  }
 }
 :deep .tableHeader {
   margin-bottom: unset;

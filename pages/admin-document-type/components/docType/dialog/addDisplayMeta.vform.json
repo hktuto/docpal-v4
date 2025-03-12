@@ -81,7 +81,7 @@
                 "multipleLimit": 0,
                 "optionItems": [],
                 "required": true,
-                "requiredHint": "documentType_newDuplicateMetaIsRequiredMsg",
+                "requiredHint": "",
                 "validation": "",
                 "validationHint": "",
                 "customClass": [],

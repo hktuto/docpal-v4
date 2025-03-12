@@ -49,11 +49,11 @@ onUnmounted(() => {
 
 function newTab() {
     const config = useRuntimeConfig()
+    const newDate = new Date().getTime()
     if(config.public.defaultTab){
-        const newItem:any = config.public.defaultTab
+        const newItem:any = {...config.public.defaultTab}
         newItem.parent = panel.id
-        newItem.id += '-' + new Date().valueOf()
-        newItem.name += '-' + new Date().valueOf()
+        newItem.id = 'tabpanel-' + newDate
         addTabToPanel(panel.id, newItem)
     }
    
@@ -67,7 +67,7 @@ function newTab() {
         <slot name="prefix" />
         <TabHeaderTab v-for="(tab,index) in panel.tabs" :key="tab.id" :tab="tab" :panel="panel" :index="index" :selected="index === panel.showingTabIndex" />
         <div class="newTabButtonContainer">
-            <Icon name="lucide:plus" @click.stop="newTab" />
+            <Icon name="lucide:plus" @click="newTab" />
         </div>
     </div>
 </template>
