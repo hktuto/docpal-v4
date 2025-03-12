@@ -1675,6 +1675,7 @@
     "edit": "Edit Hold Policy"
   },
   "holdPolicy_activate": "激活政策",
+  "holdPolicy_clientFilter": "Filter by Folder Name",
   "holdPolicy_create": "创建新的保留政策",
   "holdPolicy_createApprovalSetting": "Approval Setting",
   "holdPolicy_createSuccessMsg": "The new hold policy has been created successfully.",
@@ -2053,7 +2054,7 @@
   "rightDetail_pictureViews": "其他格式",
   "rightDetail_related": "相关",
   "rightDetail_tags": "标籤",
-  "rightDetail_userGroup": "用户/组",
+  "rightDetail_userGroup": "用户 / 组",
   "role": {
     "approver": "审批人",
     "approvers": "审批人",
