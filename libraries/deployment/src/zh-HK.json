@@ -262,7 +262,7 @@
   },
   "browse": {
     "confirmMoveFile": "確認將 {source} 移到 {target} 嗎？",
-    "selectedItem": "{count} 個檔案/資料夾",
+    "selectedItem": "{count} 個檔案",
     "uploadPosition": "上傳位置",
     "uploadText": "瀏覽-上傳"
   },
