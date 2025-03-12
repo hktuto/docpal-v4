@@ -41,7 +41,7 @@ const {
   columns: [
     { field: "name", title: "easyForm.name", fixed: "left", type: "checkbox" },
     {
-      field: "createDate",
+      field: "createdDate",
       title: "easyForm_creationDate",
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
