@@ -152,7 +152,7 @@ async function workflowClickHandler (item: any) {
     function graphReady(){
         graphEl.value.autoLayout(state.bpmnXml)
     }
-    function formDataGet (propList) {
+    function formDataGet (propList = []) {
         return propList.reduce((prev, item) => {
                     prev[item.id] = item.value
                     return prev

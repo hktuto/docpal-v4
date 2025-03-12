@@ -6,6 +6,7 @@ const {t} = useI18n()
 const props = defineProps<{
     options: any,
     data: any,
+    id:string,
 }>();
 const {variables} = useEditor()
 
@@ -37,7 +38,8 @@ const testForm = ref({
 async function send() {
     const body = testForm.value;
     // templateId may be null in init state, so set it later
-    body.templateId = props.data.id;
+    body.templateId = props.id;
+    console.log("body", body)
     // loop variables in body , and replace /n with <br>
     Object.keys(body.variables).forEach((key) => {
         // remove line break to <br/>

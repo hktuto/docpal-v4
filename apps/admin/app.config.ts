@@ -37,7 +37,7 @@ export default defineAppConfig({
         },
         {
             label: "adminMenu.browse",
-            icon: "lucide:file-symlink",
+            icon: "lucide:file-pen",
             hoverIcon: "lucide:file-symlink",
             children:[
                 {
@@ -119,7 +119,7 @@ export default defineAppConfig({
         },
         {
             label:"adminMenu.log",
-            icon: "dp-icon:flow-outline",
+            icon: "lucide:logs",
             children:[
                 {
                     name: "admin-log-manage"

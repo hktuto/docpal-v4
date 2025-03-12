@@ -26,7 +26,7 @@
         "multipleLimit": 0,
         "optionItems": [],
         "required": true,
-        "requiredHint": "user_addUserToGroupChecking",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],

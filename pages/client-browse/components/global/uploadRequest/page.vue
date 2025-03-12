@@ -34,12 +34,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     };
   },
   columns: [
-    { field: "email", title: "dpTable_email" },
-    { field: "logicalPath", title: "dpTable_location" },
+    { field: "email", title: "user_email" },
+    { field: "logicalPath", title: "document_path" },
     { field: "message", title: "dpTable_message" },
     {
       field: "status",
-      title: "dpTable_status",
+      title: "document_uploadStatus",
       formatter({ cellValue }: any) {
         if(cellValue === 'completed') return t(`pending_${cellValue}`);
         return t(cellValue);
@@ -47,7 +47,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       field: "createdDate",
-      title: "dpTable_createdDate",
+      title: "document_uploadDate",
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       },
@@ -66,7 +66,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       },
       {
         code: "toFolder",
-        name: "common_viewFolder",
+        name: "document_view",
         visible: true,
         disabled: false,
         action: ({ row }: any) => {

@@ -7,28 +7,26 @@
             label-position="top"
             @submit.native.prevent
         >
-            <el-form-item
-                :label="$t('tableHeader_emailList')"
-                prop="emailList"
-                :rules="[
-          { required: true, message: $t('share_externalEmailRequiredMsg'), trigger: 'change' },
-        ]"
-            >
-                <el-select
+            <el-form-item :label="$t('tableHeader_emailList')" prop="emailList"
+                          :rules="[
+                              {
+                                  required: true,
+                                  message: $t('tableHeader_emailList') +' '+ $t('render.hint.fieldRequired'),
+                                  trigger: 'change'
+                              },
+                              {
+                                  validator: emailValidate,
+                                  trigger: 'change'
+                              }
+                          ]">
+                <el-input-tag
                     v-model="form.emailList"
-                    filterable
-                    multiple
                     clearable
-                    allow-create
-                    style="width: 100%"
+                    draggable
+                    :placeholder="$t('vxe.base.pleaseInput')"
+                    :aria-label="$t('tip_enterAfterInput')"
                 >
-                    <el-option
-                        v-for="item in state.userList"
-                        :key="item.email"
-                        :label="`${item.username} <${item.email}>`"
-                        :value="item.email"
-                    ></el-option>
-                </el-select>
+                </el-input-tag>
             </el-form-item>
             <el-form-item :label="$t('share_shareLink')">
                 <el-input
@@ -50,16 +48,16 @@
                     <el-form-item
                         :label="$t('share_password')"
                         prop="password"
-                        :rules="[{ required: true, message: $t('share_externalPasswordRequiredMsg') }]"
+                        :rules="[{ required: true, message: $t('share_password') +' '+ $t('render.hint.fieldRequired')}]"
                     >
-                        <el-input v-model="form.password" type="text"/>
+                        <el-input v-model="form.password" clearable type="text"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
                     <el-form-item
                         :label="$t('tableHeader_dueDate')"
                         prop="dueDate"
-                        :rules="[{ required: true, message: $t('share_externalDueDateRequiredMsg') }]"
+                        :rules="[{ required: true, message: $t('tableHeader_dueDate') +' '+ $t('render.hint.fieldRequired')}]"
                     >
                         <el-date-picker
                             v-model="form.dueDate"
@@ -83,7 +81,6 @@
 import {ElMessage, type FormInstance} from "element-plus";
 import {CopyDocument} from "@element-plus/icons-vue";
 import dayjs from 'dayjs'
-import {adminApi} from "../../../../libraries/api/src";
 
 const {t} = useI18n()
 const {
@@ -95,6 +92,21 @@ const state = reactive({
     shareLink: "",
     shareId: "",
 });
+
+const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+const emailValidate = (rule: any, value: any, callback: any) => {
+    value.forEach((item) => {
+        if (!emailPattern.test(item)) {
+            if (form.emailList.length > 0) {
+                form.emailList.pop();
+            }
+            callback(new Error($t('tip.enterValidEmail')));
+        }
+    })
+    callback()
+}
+
 const defaultTime = new Date(2000, 1, 1, 23, 59, 59)
 const shortcuts = [
     {
@@ -172,7 +184,6 @@ function handleCopy(copyContent: string) {
 }
 
 onActivated(async () => {
-    state.userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data);
 });
 defineExpose({handleOpen});
 </script>

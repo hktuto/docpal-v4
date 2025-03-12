@@ -2,7 +2,7 @@ import {Cell, Graph} from "@antv/x6";
 import {Case, CaseTask, CMMN_JSON, HumanTask, Milestone, ProcessTask, Stage, UserEventListener} from "./cmmn";
 import {jsonToCmmn} from "./cmmnParser";
 import {Cmmn} from "../.playground/.nuxt/components";
-
+import {getExtentionProperties} from "./cmmnConfig";
 
 export const convertX6JsonToCmmnJson = (graph:Graph ,caseId:string):{xml:string,json:any} => {
     // get all nodes and edge
@@ -45,7 +45,47 @@ export const convertX6JsonToCmmnJson = (graph:Graph ,caseId:string):{xml:string,
     
     // get children of case
     cmmnJson.definitions.case.casePlanModel = loopNodeChild(cmmnJson.definitions.case.casePlanModel, caseNode);
-    
+    // add all form info to start human task
+    // const allFormField = 
+    const caseInformation = getExtentionProperties(caseNode.data.data.casePlanModel, 'docpal:form')
+    // find human task with 'start'
+    graph.getNodes().forEach((node) => {
+        
+        if(node.data.type === 'humanTask' ) {
+            // add caseInformation to human task
+            const time = new Date().getTime();
+            node.setData({
+                ...node.data,
+                data:{
+                    ...node.data.data,
+                    extensionElements: {
+                        ...node.data.data.extensionElements,
+                        'docpal:form': [
+                            {
+                                attr_casetable: caseId,
+                                attr_id : 'docpal_form_' + time,
+                                attr_name : 'docpal_form_' + time,
+                                field: [...caseInformation.map(c => ({
+                                    attr_displayField: c.displayField,
+                                    attr_documentType: c.documentType,
+                                    attr_filterList: c.filterList,
+                                    attr_id: c.id,
+                                    attr_masterTable: c.masterTable,
+                                    attr_name: c.name,
+                                    attr_type: c.type,
+                                    attr_vocabulary: c.vocabulary
+                                }))]
+                            }
+                        ]
+                    }
+                }
+            },{
+                overwrite:true,
+                deep:true
+            })
+
+        }
+    })
     // 
     const children = caseNode?.getChildren();
     if(!children) return {

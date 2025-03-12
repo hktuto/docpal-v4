@@ -91,7 +91,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
       },
     },
-    { field: "documentPath", title: "tableHeader_path" },
+    { field: "documentPath", title: "document_path" },
     { field: "policyName", title: "tableHeader_policyName" },
     {
       field: "expireDate",
@@ -128,6 +128,11 @@ async function getFilter() {
   const data = await clientApi.api
     .getPolicyRetentionsDocumentPageConditions()
     .then((res) => res.data);
+  const foundItem = data.find(item => item.key === "retentionPolicyIds");
+  if (foundItem.options.length > 0) {
+    foundItem.options.sort((a, b) => a.label.localeCompare(b.label));
+    data[data.indexOf(foundItem)].options = foundItem.options;
+  }
   ResponsiveFilterRef.value.init(data);
 }
 function handleFilterFormChange(formModel: any) {

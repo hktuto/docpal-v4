@@ -14,7 +14,7 @@ export const conditionType = [
   { label: 'authorGroups', value: 'authorGroups' },
   { label: 'size', value: 'size' },
   { label: 'createdDate', value: 'createdDate' },
-  { label: 'modified', value: 'modified' },    
+  { label: 'modified', value: 'modified' },
 ]
 export const languages = [
   { label: 'chi_sim', value: 'chi_sim' },
