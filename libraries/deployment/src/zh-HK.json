@@ -2035,6 +2035,7 @@
   "reset": "重置",
   "responseMsg_errorCode_2": "服務器異常，請稍後再試",
   "retention_done": "保留完成清單",
+  "retention_donePreview": "預覽檔案",
   "retention_pending": "保留待決清單",
   "retention_policies": "政策管理",
   "revert": "還原",
