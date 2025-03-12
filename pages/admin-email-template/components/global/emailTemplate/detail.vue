@@ -191,7 +191,7 @@ onActivated(async () => {
             </template>
         </ElDialog>
         <ElDialog v-model="testEmailOpened" append-to-body destroy-on-close>
-            <EditorjsTestDialog ref="testEmailDialog" v-if="data" :data="data" :variables="variables"/>
+            <EditorjsTestDialog ref="testEmailDialog" v-if="data" :data="data" :id="id" :variables="variables"/>
             <template #footer>
                 <ElButton type="primary" @click="() => {sendTest();testEmailOpened = false;}">
                     {{ $t("email_send_test") }}
