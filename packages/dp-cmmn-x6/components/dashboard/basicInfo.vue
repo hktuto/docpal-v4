@@ -261,7 +261,7 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
   align-content: flex-start;
   row-gap: var(--app-space-xs);
   column-gap: var(--app-space-xs);
-  overflow: auto;
+  // overflow: auto;
   .list-group-item {
     min-width: 100px;
     height: fit-content;
