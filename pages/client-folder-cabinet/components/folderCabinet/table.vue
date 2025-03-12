@@ -1,67 +1,72 @@
 <template>
   <div style="height: 100%;overflow: hidden">
-  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    <template #toolbar_buttons>
-      <ResponsiveFilter
-        ref="ResponsiveFilterRef"
-        inputKey="label"
-        @form-change="handleFilterFormChange"
-      />
-      <el-button
-        data-testid="folderCabinetConfig-new-button"
-        type="primary"
-        @click="handleAdd()"
-        >{{ $t("folderCabinet.newItem") }}</el-button
-      >
-    </template>
-    <template #status="{ row, index }">
-      <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
-    </template>
-  </VxeGrid>
-</div>
-    <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="query({})"/>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          inputKey="label"
+          @form-change="handleFilterFormChange"
+          inputPlaceHolder="folder_cabinetFilterItemName"
+        />
+        <el-button
+          data-testid="folderCabinetConfig-new-button"
+          type="primary"
+          @click="handleAdd()"
+        >{{ $t("folderCabinet.newItem") }}
+        </el-button
+        >
+      </template>
+      <template #status="{ row, index }">
+        <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
+      </template>
+    </VxeGrid>
+  </div>
+  <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="query({})"/>
 </template>
 <script lang="ts" setup>
-import type { VxeGridPropTypes  } from 'vxe-table'
+import type {VxeGridPropTypes} from 'vxe-table'
 
-import { ElMessageBox } from "element-plus";
-import { clientApi } from "api";
-import { MenuRouterKey } from "#imports";
+import {clientApi} from "api";
+import {MenuRouterKey} from "#imports";
+
 const routerProvider = inject(MenuRouterKey);
 const props = defineProps(["id", "detail"]);
 const emits = defineEmits(['row-click'])
-const { t } = useI18n();
+const {t} = useI18n();
 let extraParams: any = {};
-const basicColumns:VxeGridPropTypes.Columns = [
+const basicColumns: VxeGridPropTypes.Columns = [
   {
     field: "status",
-    title: "tableHeader_status",
+    title: "folder_cabinetStatus",
     fixed: "left",
-    slots: { default: "status" },
-    width: 65,
+    slots: {default: "status"},
+    width: 120,
   },
-  { field: "label", title: "tableHeader_name" },
-  { field: "createdBy", title: "role.creator" },
+  {field: "label", title: "folder_cabinetItemName"},
+  {field: "createdBy", title: "role.creator", width: 220,},
   {
     field: "modifiedDate",
     title: "tableHeader_modifiedDate",
-    formatter({ cellValue }: any) {
+    formatter({cellValue}: any) {
       return formatDate(cellValue)
     },
+    width: 220
   },
   {
     field: "deadline",
-    title: "tableHeader.deadline",
-    formatter({ cellValue }: any) {
+    title: "tableHeader_dueDate",
+    formatter({cellValue}: any) {
       return formatDate(cellValue)
     },
+    width: 220
   },
   {
     field: "documentType",
     title: "tableHeader_type",
-    formatter({ cellValue }: any) {
+    formatter({cellValue}: any) {
       return t(cellValue);
     },
+    width: 220
   },
 ];
 const {
@@ -89,7 +94,7 @@ const {
     });
   },
   columns: [...basicColumns],
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row);
   },
   bodyActions: [
@@ -99,9 +104,9 @@ const {
         name: "common_viewFolder",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           routerProvider?.navigateTo(
-            createBrowseListPageParams({ idOrPath: row.documentId }),
+            createBrowseListPageParams({idOrPath: row.documentId}),
             false
           )
         },
@@ -114,10 +119,13 @@ function handleDblclick(row: any) {
   emits("row-click", row)
   // routerProvider?.navigateTo(routeFolderCabinetDetail(row), false);
 }
+
 const CreateDialogRef = ref();
+
 function handleAdd() {
   CreateDialogRef.value.handleOpen(props.id);
 }
+
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true;
   if (!formModel.orderBy) formModel.orderBy = "modified_date_";
@@ -125,7 +133,9 @@ function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
+
 const ResponsiveFilterRef = ref();
+
 async function initFilter(id: string) {
   tableConfig.id = "fc-" + id;
   let data: any = await clientApi.api
@@ -139,12 +149,12 @@ async function initFilter(id: string) {
       type: "string",
       isMultiple: false,
       options: [
-        { label: "tableHeader_status", value: "state" },
-        { label: "tableHeader_name", value: "label" },
-        { label: "tableHeader_modifiedDate", value: "modified_date_" },
-        { label: "role.creator", value: "created_by_" },
-        { label: "info_contributors", value: "modified_by_" },
-        { label: "tableHeader.deadline", value: "deadline" },
+        {label: "folder_cabinetStatus", value: "state"},
+        {label: "folder_cabinetItemName", value: "label"},
+        {label: "tableHeader_modifiedDate", value: "modified_date_"},
+        {label: "role.creator", value: "created_by_"},
+        {label: "search.contributors", value: "modified_by_"},
+        {label: "tableHeader_dueDate", value: "deadline"},
       ],
     },
     {
@@ -153,11 +163,20 @@ async function initFilter(id: string) {
       type: "string",
       isMultiple: false,
       options: [
-        { label: "tableHeader.desc", value: true },
-        { label: "tableHeader.asc", value: false },
+        {label: "tableHeader.desc", value: true},
+        {label: "tableHeader.asc", value: false},
       ],
     }
   );
+
+  const foundItem = data.find(item => item.key === "createdBy");
+  if (foundItem) {
+    if (foundItem.options.length > 0) {
+      foundItem.options.sort((a, b) => a.value.localeCompare(b.value));
+    }
+    data[data.indexOf(foundItem)].options = foundItem.options;
+  }
+
   ResponsiveFilterRef.value.init(data);
   const ignoreList = ["createdBy", "complete", "isDesc", "orderBy", "state"];
   const columns = data.reduce((prev: any, item: any) => {
@@ -169,15 +188,16 @@ async function initFilter(id: string) {
   const newColumns = [...basicColumns];
   newColumns.splice(2, 0, ...columns);
   const actionColumn = tableConfig.columns.find(item => item.title === 'dpTable_actions')
-  if(!!actionColumn) newColumns.push(actionColumn)
+  if (!!actionColumn) newColumns.push(actionColumn)
   tableConfig.columns = newColumns;
+
   function getColumn(row: any) {
     if (row.type === "date")
       return {
         field: row.key,
         title: row.label,
         width: 200,
-        formatter({ cellValue }: any) {
+        formatter({cellValue}: any) {
           return t(cellValue);
         },
       };
@@ -190,16 +210,18 @@ async function initFilter(id: string) {
   }
 }
 
-defineExpose({ reload });
+defineExpose({reload});
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {
   width: 100%;
   justify-content: space-between;
+
   .responsive-container {
     width: 70%;
   }
 }
+
 :deep .el-input {
   width: 200px;
 }

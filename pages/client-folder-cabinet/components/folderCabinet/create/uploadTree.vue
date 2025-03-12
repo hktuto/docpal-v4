@@ -1,308 +1,322 @@
 <template>
-<div class="new-item-child">
+  <div class="new-item-child">
     <el-tree ref="treeRef" :data="treeData" :props="state.defaultProps"
-        nodeKey="id" default-expand-all :expand-on-click-node="false"
-        :highlight-current="true"
-        @node-click="handleNodeClick" >
-        <template #default="{ node, data }">
-            <div class="tree-item">
-                <div >
-                    <el-button v-if="data.loading" size="small" text circle :loading="data.loading"></el-button>
-                    <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
-                    <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
-                    <span :class="getCss(data)">
-                        {{data.docName || data.label}}
+             nodeKey="id" default-expand-all :expand-on-click-node="false"
+             :highlight-current="true"
+             @node-click="handleNodeClick">
+      <template #default="{ node, data }">
+        <div class="tree-item">
+          <div>
+            <el-button v-if="data.loading" size="small" text circle :loading="data.loading"></el-button>
+            <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
+            <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
+            <span :class="getCss(data)">
+                        {{ data.docName || data.label }}
                     </span>
-                </div>
-                <div style="--icon-size: 18px">
-                    <SvgIcon v-if="showAddButton(data)" src="/icons/add.svg"
-                        @click="handleAddFile(data)"></SvgIcon>
-                    <SvgIcon v-if="data.raw" src="/icons/menu/trash.svg"
-                        @click="handleDeleteFile(data)"></SvgIcon>
-                </div>
-            </div>
-        </template>
+          </div>
+          <div style="--icon-size: 18px">
+            <SvgIcon v-if="showAddButton(data)" src="/icons/add.svg"
+                     @click="handleAddFile(data)"></SvgIcon>
+            <SvgIcon v-if="data.raw" src="/icons/menu/trash.svg"
+                     @click="handleDeleteFile(data)"></SvgIcon>
+          </div>
+        </div>
+      </template>
     </el-tree>
     <div>
-        <template v-if="state.selectedRow && state.selectedRow.folder !== false ">
-            <div class="flex-x-start">
-                <SvgIcon v-if="state.selectedRow.folder" class="el-icon--left" src="/icons/folder-general.svg"></SvgIcon>
-                <SvgIcon v-else class="el-icon--left"  src="/icons/file-general.svg"></SvgIcon>
-                {{ state.selectedRow.docName || state.selectedRow.label}}
-            </div>
-            <div>{{$t('tableHeader_labelRule')}}：
-                <template v-for="(item, index) in getLabelList()" :key="index">
-                    <el-tag >{{$t(item.metadata || item.metaData)}}</el-tag>
-                    <template v-if="index !== getLabelList().length - 1"> - </template>
-                </template>
-            </div>
-            <div style="margin-bottom: 15px">{{$t('folderCabinet.previewName')}}：{{state.selectedRow.previewName}}</div>
-            <MetaRenderForm ref="MetaFormRef"  mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
-        </template>
-        <template v-else>
-            {{$t('tip.clickFolderOrFileToSetMeta')}}
-        </template>
+      <template v-if="state.selectedRow && state.selectedRow.folder !== false ">
+        <div class="flex-x-start">
+          <SvgIcon v-if="state.selectedRow.folder" class="el-icon--left" src="/icons/folder-general.svg"></SvgIcon>
+          <SvgIcon v-else class="el-icon--left" src="/icons/file-general.svg"></SvgIcon>
+          {{ state.selectedRow.docName || state.selectedRow.label }}
+        </div>
+        <div>{{ $t('tableHeader_labelRule') }}：
+          <template v-for="(item, index) in getLabelList()" :key="index">
+            <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
+            <template v-if="index !== getLabelList().length - 1"> -</template>
+          </template>
+        </div>
+        <div style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}</div>
+        <MetaRenderForm ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
+      </template>
+      <template v-else>
+        {{ $t('tip.clickFolderOrFileToSetMeta') }}
+      </template>
     </div>
     <MetaRenderForm ref="MetaFormRef2" @formChange="handleMetaChange"></MetaRenderForm>
-    <input  v-show="false" ref="fileUploaderRef"
-                multiple
-                type="file"
-                @change="uploadHandler($event)"/>
-</div>
+    <input v-show="false" ref="fileUploaderRef"
+           multiple
+           type="file"
+           @change="uploadHandler($event)"/>
+  </div>
 </template>
 
 
 <script lang="ts" setup>
-import { ElMessageBox, ElMessage } from 'element-plus'
+import {ElMessageBox, ElMessage} from 'element-plus'
+
 const props = defineProps<{
-    treeData: Object
+  treeData: Object
 }>();
 const state = reactive<any>({
-    defaultProps: {
-        children: 'children',
-        label: 'label',
-    },
-    treeItem: {},
-    isCheck: true,
-    selectedRow: {}
+  defaultProps: {
+    children: 'children',
+    label: 'label',
+  },
+  treeItem: {},
+  isCheck: true,
+  selectedRow: {}
 })
-const userId:string = useUserId().value
-const { t } = useI18n()
+const userId: string = useUserId().value
+const {t} = useI18n()
 const treeRef = ref()
 const MetaFormRef = ref()
 const MetaFormRef2 = ref()
-async function getData (isValidate: boolean = false) {
-    state.isCheck = true
-    try {
-        const pList: any  = []
-        const nodeMap: any = Object.values(treeRef.value.store.nodesMap).reduce((prev: any, item: any) => {
-            if (item.data.folder || 
-                (!item.data.folder && item.data.raw)) {
-                prev[item.data.id] = {
-                    ...item.data,
-                }
-                const pItem: any = getErrorMessage(prev[item.data.id])
-                pList.push(pItem)
-                delete prev[item.data.id].children
-            }
-            return prev
-        }, {})
-        if (isValidate) {
-            let errorMessage = await Promise.all(pList)
-            errorMessage = errorMessage.filter(item => !!item)
-            if(errorMessage.length > 0) {
-                ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
-                    dangerouslyUseHTMLString: true,
-                    confirmButtonText: t('dpButtom_confirm'),
-                })
-                throw new Error("error");
-            } 
+
+async function getData(isValidate: boolean = false) {
+  state.isCheck = true
+  try {
+    const pList: any = []
+    const nodeMap: any = Object.values(treeRef.value.store.nodesMap).reduce((prev: any, item: any) => {
+      if (item.data.folder ||
+        (!item.data.folder && item.data.raw)) {
+        prev[item.data.id] = {
+          ...item.data,
         }
-        const result: any = []
-        Object.values(nodeMap).forEach((item: any) => {
-            if(item.folder !== false) {
-                const parent = nodeMap[item.parentId]
-                if(!!parent) {
-                    if(!parent.children) parent.children = []
-                    parent.children.push(item)
-                } else {
-                    result.push(item)
-                }
-            }
+        const pItem: any = getErrorMessage(prev[item.data.id])
+        pList.push(pItem)
+        delete prev[item.data.id].children
+      }
+      return prev
+    }, {})
+    if (isValidate) {
+      let errorMessage = await Promise.all(pList)
+      errorMessage = errorMessage.filter(item => !!item)
+      if (errorMessage.length > 0) {
+        ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
+          dangerouslyUseHTMLString: true,
+          confirmButtonText: t('dpButtom_confirm'),
         })
-        return result
-    } catch (error) {
-        
+        throw new Error("error");
+      }
     }
-    async function getErrorMessage (doc: any) {
-        const _msg = await MetaFormRef2.value.getValidateMsg(doc.documentType , deepCopy(doc.properties) )
-        if (_msg) return `<h4 class="msg-h4">${doc.label}:</h4>${_msg}`
-        return ''
-    }
+    const result: any = []
+    Object.values(nodeMap).forEach((item: any) => {
+      if (item.folder !== false) {
+        const parent = nodeMap[item.parentId]
+        if (!!parent) {
+          if (!parent.children) parent.children = []
+          parent.children.push(item)
+        } else {
+          result.push(item)
+        }
+      }
+    })
+    return result
+  } catch (error) {
+
+  }
+
+  async function getErrorMessage(doc: any) {
+    const _msg = await MetaFormRef2.value.getValidateMsg(doc.documentType, deepCopy(doc.properties))
+    if (_msg) return `<h4 class="msg-h4">${doc.label}:</h4>${_msg}`
+    return ''
+  }
 }
 
 function getLabelList() {
-    const labelRule = state.selectedRow.labelRule ? JSON.parse(state.selectedRow.labelRule) : [
-        { dataType: "string", metadata: "fc:docTitle", noDelete: true }
-    ]
-    return labelRule
+  const labelRule = state.selectedRow.labelRule ? JSON.parse(state.selectedRow.labelRule) : [
+    {dataType: "string", metadata: "fc:docTitle", noDelete: true}
+  ]
+  return labelRule
 }
+
 function getMetaName(formData: any = {}) {
-    const date = new Date()
+  const date = new Date()
+  try {
     try {
-        try {
-            const data = state.selectedRow.properties
-            if(data) formData = { ...formData, ...data }
-        } catch (error) {
-        }
-        formData.label = state.selectedRow.label
-        const labelRule = getLabelList()
-        if (!labelRule || labelRule.length === 0) throw new Error("no labelRule");
-        else {
-            return labelRule.reduce((prev: any, rule: any, index: number) => {
-                const joiner = index === 0 ? '' : '-'
-                if(!rule.metadata) rule.metadata = rule.metaData
-                if(rule.metadata === 'fc:createDate') {
-                    prev += joiner + formatDate(date)
-                }
-                else if(rule.metadata === 'fc:label'){
-                    prev += joiner + formData.label
-                }
-                else if(rule.metadata === 'fc:creator'){
-                    prev += joiner + userId
-                }
-                else if(rule.metadata === 'fc:docTitle'){
-                    if(!formData.docName) prev += joiner + ''
-                    else prev += joiner + formData.docName
-                }
-                else if(rule.dataType === 'date') {
-                    if(!formData[rule.metadata]) prev += joiner + ''
-                    else prev += joiner + formatDate(formData[rule.metadata])
-                } 
-                else {
-                    if(!formData[rule.metadata]) prev += joiner + ''
-                    else prev += joiner + formData[rule.metadata]
-                }
-                return prev
-            }, '')
-        } 
-    } catch (error: any) {
-        ElMessage.error(error)
+      const data = state.selectedRow.properties
+      if (data) formData = {...formData, ...data}
+    } catch (error) {
     }
-    return formData.label + '-' + formatDate(date)
+    formData.label = state.selectedRow.label
+    const labelRule = getLabelList()
+    if (!labelRule || labelRule.length === 0) throw new Error("no labelRule");
+    else {
+      return labelRule.reduce((prev: any, rule: any, index: number) => {
+        const joiner = index === 0 ? '' : '-'
+        if (!rule.metadata) rule.metadata = rule.metaData
+        if (rule.metadata === 'fc:createDate') {
+          prev += joiner + formatDate(date)
+        } else if (rule.metadata === 'fc:label') {
+          prev += joiner + formData.label
+        } else if (rule.metadata === 'fc:creator') {
+          prev += joiner + userId
+        } else if (rule.metadata === 'fc:docTitle') {
+          if (!formData.docName) prev += joiner + ''
+          else prev += joiner + formData.docName
+        } else if (rule.dataType === 'date') {
+          if (!formData[rule.metadata]) prev += joiner + ''
+          else prev += joiner + formatDate(formData[rule.metadata])
+        } else {
+          if (!formData[rule.metadata]) prev += joiner + ''
+          else prev += joiner + formData[rule.metadata]
+        }
+        return prev
+      }, '')
+    }
+  } catch (error: any) {
+    ElMessage.error(error)
+  }
+  return formData.label + '-' + formatDate(date)
 }
-function handleNodeClick (row: any) {
-    state.selectedRow = row
-    let defaultValue = {}
-    if (state.selectedRow.metadataValue) defaultValue = JSON.parse(state.selectedRow.metadataValue)
-    if (state.selectedRow.folder === false) return
-    if (!state.selectedRow.properties) state.selectedRow.properties = {}
-    // 用了 v-if，如果不用 nextTick 会报错
-    nextTick(async() => {
-        await MetaFormRef.value.init(state.selectedRow.documentType)
-        MetaFormRef.value.setData({ 
-            docName: state.selectedRow.docName ? state.selectedRow.docName : row.label, 
-            ...state.selectedRow.properties
-            , ...defaultValue })
+
+function handleNodeClick(row: any) {
+  state.selectedRow = row
+  let defaultValue = {}
+  if (state.selectedRow.metadataValue) defaultValue = JSON.parse(state.selectedRow.metadataValue)
+  if (state.selectedRow.folder === false) return
+  if (!state.selectedRow.properties) state.selectedRow.properties = {}
+  // 用了 v-if，如果不用 nextTick 会报错
+  nextTick(async () => {
+    await MetaFormRef.value.init(state.selectedRow.documentType)
+    MetaFormRef.value.setData({
+      docName: state.selectedRow.docName ? state.selectedRow.docName : row.label,
+      ...state.selectedRow.properties
+      , ...defaultValue
     })
+  })
 }
+
 async function handleMetaChange(data: any) {
-    // if(state.ready) state.selectedRow.properties = deepCopy(data.formModel)
-    state.selectedRow.properties = deepCopy(data.formModel)
-    state.selectedRow.previewName = getMetaName()
+  // if(state.ready) state.selectedRow.properties = deepCopy(data.formModel)
+  state.selectedRow.properties = deepCopy(data.formModel)
+  state.selectedRow.previewName = getMetaName()
 }
+
 // #region module: style
-    function getCss(data: any) {
-        if(!state.isCheck) return ''
-        if(data.folder === false && data.children && data.children.length === 0) {
-            return 'lack-item'
-        }
-    }
-    function showAddButton(data: any) {
-        return data.folder === false &&
-                !(!data.multiple && data.children && data.children.length > 0)
-    }
+function getCss(data: any) {
+  if (!state.isCheck) return ''
+  if (data.folder === false && data.children && data.children.length === 0) {
+    return 'lack-item'
+  }
+}
+
+function showAddButton(data: any) {
+  return data.folder === false &&
+    !(!data.multiple && data.children && data.children.length > 0)
+}
 
 // #endregion
 
 // #region module: tree actions
-    const fileUploaderRef = ref()
-    function handleAddFile (treeItem: any) {
-        state.treeItem = treeItem
-        fileUploaderRef.value.click()
-    }
+const fileUploaderRef = ref()
 
-    let num = 1
-    async function uploadHandler (e: any) {
-        const files: any = Array.from(e.target.files)
-        state.treeItem.loading = true
-        const pList: any = []
-        const childData: any = getParentChildren(state.treeItem)
-        files.forEach(async(file: any) => {
-            pList.push(append(file))
-        })
-        e.target.value = '' // 解决不能上传相同文件问题
-        const res = await Promise.all(pList)
-        state.treeItem.loading = false
-        
-        async function append(file: File) {
-            const index = childData.findIndex((item: any) => item.label === file.name)
-            if(index > -1) {
-                ElMessage.warning('tip.fileExists')
-                return
-            }
-            const param = {
-                labelRule: state.treeItem.labelRule,
-                metadataValue: state.treeItem.metadataValue,
-                id: new Date().valueOf() + num++,
-                raw: file,
-                label: state.treeItem.label,
-                docName: file.name.split('.').shift(),
-                parentId: state.treeItem.parentId,
-                documentType: state.treeItem.documentType,
-                properties: {},
-            }
-            treeRef.value.append(param, state.treeItem)
-        }
-        function getParentChildren (curTreeItem: any) {
-            if(!curTreeItem.parentId) return
-            const pNode = treeRef.value.getNode(curTreeItem.parentId)
-            const children: any = []
-            getChild([pNode])
-            return children
-            function getChild(nodes: any) {
-                nodes.forEach((node: any) => {
-                    if(!!node && !node.isLeaf) {
-                        if(node.data && node.data.folder === false && node.data.children){
-                            children.push(...node.data.children)
-                        } 
-                        if(node.childNodes) getChild(node.childNodes)
-                    }
-                })
-            }
-        }
+function handleAddFile(treeItem: any) {
+  state.treeItem = treeItem
+  fileUploaderRef.value.click()
+}
+
+let num = 1
+
+async function uploadHandler(e: any) {
+  const files: any = Array.from(e.target.files)
+  state.treeItem.loading = true
+  const pList: any = []
+  const childData: any = getParentChildren(state.treeItem)
+  files.forEach(async (file: any) => {
+    pList.push(append(file))
+  })
+  e.target.value = '' // 解决不能上传相同文件问题
+  const res = await Promise.all(pList)
+  state.treeItem.loading = false
+
+  async function append(file: File) {
+    const index = childData.findIndex((item: any) => item.label === file.name)
+    if (index > -1) {
+      ElMessage.warning('tip.fileExists')
+      return
     }
-    function handleDeleteFile (treeItem: any) {
-        treeRef.value.remove(treeItem)
+    const param = {
+      labelRule: state.treeItem.labelRule,
+      metadataValue: state.treeItem.metadataValue,
+      id: new Date().valueOf() + num++,
+      raw: file,
+      label: state.treeItem.label,
+      docName: file.name.split('.').shift(),
+      parentId: state.treeItem.parentId,
+      documentType: state.treeItem.documentType,
+      properties: {},
     }
+    treeRef.value.append(param, state.treeItem)
+  }
+
+  function getParentChildren(curTreeItem: any) {
+    if (!curTreeItem.parentId) return
+    const pNode = treeRef.value.getNode(curTreeItem.parentId)
+    const children: any = []
+    getChild([pNode])
+    return children
+
+    function getChild(nodes: any) {
+      nodes.forEach((node: any) => {
+        if (!!node && !node.isLeaf) {
+          if (node.data && node.data.folder === false && node.data.children) {
+            children.push(...node.data.children)
+          }
+          if (node.childNodes) getChild(node.childNodes)
+        }
+      })
+    }
+  }
+}
+
+function handleDeleteFile(treeItem: any) {
+  treeRef.value.remove(treeItem)
+}
+
 // #endregion
 defineExpose({
-    getData, treeRef, getLabelList, getMetaName, handleNodeClick
+  getData, treeRef, getLabelList, getMetaName, handleNodeClick
 })
 </script>
 
 <style lang="scss" scoped>
 .new-item-child {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--app-space-xs);
-  @media( max-width: 640px) {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--app-space-xs);
+  @media(max-width: 640px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
 }
+
 .tree-item {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  & > div {
     display: flex;
-    justify-content: space-between;
-    & > div {
-        display: flex;
-        align-items: center;
-        gap: calc(var(--app-space-xs) / 3);
-    }
+    align-items: center;
+    gap: calc(var(--app-space-xs) / 3);
+  }
 }
+
 .lack-item {
-    color: red;
+  color: red;
 }
+
 .scroll-dialog {
-    height: 50vh;
+  height: 50vh;
 }
 
 </style>
 <style lang="scss">
 .msg-h4 {
-    margin: unset;
-    padding: unset;
+  margin: unset;
+  padding: unset;
 }
 </style>

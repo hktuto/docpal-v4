@@ -83,7 +83,7 @@
           }
         ],
         "required": true,
-        "requiredHint": "folder_cabinetDetailRightRequiredMsg",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -174,7 +174,7 @@
           "2000-01-01 23:59:00"
         ],
         "required": true,
-        "requiredHint": "folder_cabinetDetailDateRangeRequiredMsg",
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],
