@@ -142,7 +142,6 @@ async function initFilter(id: string) {
     .getCabinetTemplateidPageConditions(id)
     .then((res) => res.data);
   if (!data) return;
-  console.log(1, data)
   data.unshift(
     {
       key: "orderBy",
