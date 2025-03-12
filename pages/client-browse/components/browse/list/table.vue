@@ -388,9 +388,9 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         },
         checkboxConfig: {
             checkStrictly: true,
-            showHeader: true,
+            showHeader: false,
             highlight: true,
-            range: false,
+            range: true,
             visibleMethod: ({row}: any) => !row.isFolder
         },
         rowConfig: {
@@ -401,6 +401,9 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         }
     },
     optionalEvent: {
+        checkboxAll: ({checked}) => {
+            console.log("checkbox-all", checked)
+        },
         // cellMouseenter: ({row, column, rowIndex}) => {
         // },
         cellMouseleave: ({row, column, rowIndex}) => {
@@ -428,7 +431,7 @@ function tableChildChangeHandler(args:any) {
     if(!tableDropZone){
         tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
     }
-    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-body--row')
+    const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
     if(allBodyRow.length === 0) return;
     // unregister all dragableItemList
     dragableItemList.forEach(item => {
@@ -495,7 +498,8 @@ function changeRoute() {
 
 function selectAll() {
     if (tableRef.value) {
-        tableRef.value.toggleAllCheckboxRow();
+        console.log("selectAll")
+        tableRef.value.setAllCheckboxRow(true);
     }
 }
 
@@ -590,7 +594,8 @@ defineExpose({
     }
 
     :deep(.browseFileIcon) {
-        width: var(--app-space-m)
+        width: var(--app-space-m);
+        height: var(--app-space-m);
     }
 
     :deep(.browseNameCell) {

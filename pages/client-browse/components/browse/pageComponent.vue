@@ -87,6 +87,12 @@ const docActions = computed(() => {
 });
 
 
+function handleSelectAll(){
+    if (tableRef.value) {
+        tableRef.value.selectAll()
+    }
+}
+
 function handleClearSelected() {
     if (tableRef.value) {
         tableRef.value.cleanSelected()
