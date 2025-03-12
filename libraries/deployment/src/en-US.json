@@ -261,7 +261,7 @@
     "scanType": "Scan Type"
   },
   "browse": {
-    "confirmMoveFile": "Confirm to move {source} to {target} ?",
+    "confirmMoveFile": "Confirm to move <b>{source}</b> to <b>{target}</b> ?",
     "selectedItem": "Selected {count} File(s)",
     "uploadPosition": "Upload Position",
     "uploadText": "Browse-Upload"

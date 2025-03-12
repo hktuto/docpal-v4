@@ -261,7 +261,7 @@
     "scanType": "掃描類型"
   },
   "browse": {
-    "confirmMoveFile": "確認將 {source} 移到 {target} 嗎？",
+    "confirmMoveFile": "確認將 <b>{source}</b> 移到 <b>{target}</b> 嗎？",
     "selectedItem": "{count} 個檔案",
     "uploadPosition": "上傳位置",
     "uploadText": "瀏覽-上傳"
