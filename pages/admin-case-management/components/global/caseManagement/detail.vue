@@ -142,7 +142,7 @@ provide(CaseManagementDetailProviderKey, {
     width: 100%;
     height: 100%;
     position: relative;
-    padding: var(--app-space-xs);
+    padding: var(--app-space-s);
     display: flex;
     flex-flow: column nowrap;
     gap: var(--app-space-xs);
