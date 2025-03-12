@@ -130,10 +130,11 @@ provide(CaseManagementDetailProviderKey, {
             <ElButton @click="openEditor" type="primary">Open Editor</ElButton>
       </CaseManagementDetailInfo>
       <CaseManagementDetailCaseInfomation :caseInformation="caseData.caseInformation" :node="caseData.caseNode" @save="handleSave" />
-     <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
-     <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
+      <CaseManagementDetailPermission ref="permissionRef" :node="caseData.caseNode" @save="handleSave" />
+      <!-- <CmmnDetailPermission :node="caseData.caseNode"/>  -->
       <CaseManagementDetailXml ref="xmlRef" v-bind="props" @getCase="getCase" @update="handleUpdate"/>
       <CaseManagementDetailDashboard :caseDetail="caseTypeInfo" :caseDetailId="caseInfo.caseTypeId" v-bind="props"/>
+      
     </div>
 </template>
 
