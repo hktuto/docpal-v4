@@ -2,18 +2,22 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-          inputKey="name"/>
+        <ResponsiveFilter ref="ResponsiveFilterRef"
+                          @form-change="handleFilterFormChange"
+                          inputKey="name"
+                          inputPlaceHolder="dashboard_filter"
+        />
       </template>
     </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
-import { publicApi } from "api";
+import {ElMessageBox} from 'element-plus'
+import {publicApi} from "api";
+
 const routerProvider = inject(MenuRouterKey);
 
-const { t } = useI18n();
+const {t} = useI18n();
 let extraParams: any = {};
 const {
   tableConfig,
@@ -24,13 +28,13 @@ const {
   cleanSelectedRows,
 } = useVxeTable({
   id: "c-dashboard",
-  api: (pageParams: any) => publicApi.api.postUserDashboardPage({  ...pageParams, ...extraParams }),
+  api: (pageParams: any) => publicApi.api.postUserDashboardPage({...pageParams, ...extraParams}),
   columns: [
-    { field: "name", title: "tableHeader_name", fixed: "left" },
+    {field: "name", title: "dashboard_name", fixed: "left"},
     {
       field: "createdDate",
       title: "workflow_createDate",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
@@ -39,21 +43,21 @@ const {
     [
       {
         code: "preview",
-        name: t("common_preview"),
+        name: t("dashboard_preview"),
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDblclick(row);
         },
       },
     ],
   ],
-  dblClickAction: ({ row, column, event }:any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row)
   },
 });
 
-function handleDblclick (row: any) {
+function handleDblclick(row: any) {
   routerProvider?.navigateTo(routeDashboardDetailPage(row));
 }
 
