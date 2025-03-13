@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { clientApi } from "api";
-const { id, name, data} = defineProps<{
+import {clientApi} from "api";
+
+const {id, name, data} = defineProps<{
   id: string;
   name: string;
   data: string
 }>();
 
-const { t } = useI18n();
+const {t} = useI18n();
 const emits = defineEmits(["filter-change", "refresh"]);
 const routerProvider = inject(MenuRouterKey);
 type TableState = {
@@ -42,11 +43,16 @@ const {
   },
   defaultSort: {},
   optionalConfig: {
-    tooltipConfig: {
-    },
+    tooltipConfig: {},
   },
-  dblClickAction: ({ row }) => {
-    const item = caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data })
+  dblClickAction: ({row}) => {
+    const item = caseManageDashboardPage({
+      ...row,
+      id,
+      instanceId: row.case_id,
+      versionId: row.caseDefinitionVersionId,
+      data
+    })
     console.log('new page', item)
     routerProvider?.navigateTo(item);
   },
@@ -56,9 +62,10 @@ const responsiveFilter = ref();
 
 async function initCondition() {
   try {
-    const { data } = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id);
+    const {data} = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id);
     responsiveFilter.value.init(data);
-  } catch (error) {}
+  } catch (error) {
+  }
 }
 
 function handleFilterFormChange(formModel) {
@@ -69,34 +76,35 @@ function handleFilterFormChange(formModel) {
 async function reorderColumn() {
   try {
     const {
-      data: { fields },
+      data: {fields},
     } = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id);
     const columns = [
-      { field: "case_id", title: "caseManagement.name", width:200 },
+      {field: "case_id", title: "caseManagement.name",},
       {
         field: "created_date",
-        title: "workflow_createDate", width:200,
-        formatter({ cellValue }: any) {
+        title: "workflow_createDate",
+        formatter({cellValue}: any) {
           return formatDate(cellValue)
         },
       },
       {
         field: "modified_date",
-        title: "table_modifiedDate", width:200,
-        formatter({ cellValue }: any) {
+        title: "table_modifiedDate",
+        formatter({cellValue}: any) {
           return formatDate(cellValue)
         },
       },
     ];
     fields.forEach((row) => {
-      columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
+      columns.splice(1, 0, {field: row.id, title: row.name, width: 200});
     });
     const actionColumn = tableConfig.columns.find(
       (item) => item.title === "dpTable_actions"
     );
     if (!!actionColumn) columns.push(actionColumn);
     tableConfig.columns = columns;
-  } catch (e) {}
+  } catch (e) {
+  }
   tableReady.value = true;
 }
 
@@ -121,11 +129,11 @@ onActivated(() => {
             ref="responsiveFilter"
             @form-change="handleFilterFormChange"
             inputKey="q"
-            :inputPlaceHolder="t('tip.filterByName')"
+            inputPlaceHolder="caseManagement_filter"
           />
           <div class="flex-x-end">
             <el-button type="primary" @click="handleAddCaseDialog">
-              {{ $t("common_add") }}
+              {{ $t("render.hint.subFormAddActionHint") }}
             </el-button>
           </div>
         </header>
