@@ -7,7 +7,7 @@
       style="--icon-size: 1.14rem; --icon-color: #8796a4"
       @click="openSetting"
     />
-    <PersonalWorkflowContent :isTabView="setting.isTabView" />
+    <PersonalWorkflowContent :isTabView="setting.isTabView" :processKeys="setting.processKeys" />
 
     <PersonalWorkflowSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh"/>
   </el-card>

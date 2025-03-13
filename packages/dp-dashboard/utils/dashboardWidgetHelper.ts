@@ -317,7 +317,8 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         h: 3,
         component : 'PersonalWorkflow',
         setting : {
-            isTabView: false
+            isTabView: false,
+            processKeys: []
         }
     },
     PersonalSearchHistory: {
