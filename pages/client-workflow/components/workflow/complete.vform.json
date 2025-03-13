@@ -17,7 +17,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "processKeys",
-                "label": "workflow_taskName",
+                "label": "workflowEditor.name",
                 "labelZh": "工作流程",
                 "labelAlign": "",
                 "defaultValue": [],
@@ -149,7 +149,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "endDate",
-                "label": "tableHeader_completeDate",
+                "label": "workflow_completeDate",
                 "labelZh": "完成日期",
                 "labelAlign": "",
                 "type": "daterange",
@@ -231,9 +231,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

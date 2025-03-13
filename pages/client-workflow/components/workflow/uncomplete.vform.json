@@ -17,7 +17,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "processKeys",
-                "label": "workflow_taskName",
+                "label": "workflowEditor.name",
                 "labelZh": "工作流程",
                 "labelAlign": "",
                 "defaultValue": [],
@@ -82,7 +82,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "createdDate",
-                "label": "tableHeader_creationDate",
+                "label": "workflow_createDate",
                 "labelZh": "創建日期",
                 "labelAlign": "",
                 "type": "daterange",
@@ -149,7 +149,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "dueDates",
-                "label": "tableHeader_dueDate",
+                "label": "workflow_dueDate",
                 "labelZh": "到期日",
                 "labelAlign": "",
                 "type": "daterange",
@@ -231,9 +231,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
