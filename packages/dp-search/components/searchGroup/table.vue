@@ -259,17 +259,12 @@ const routerProvider = inject(MenuRouterKey)
 // #endregion
 async function handleDblclick (row:any) {
   // TODO : update dblclick method
-  // if(row.isFolder) {
-  //     goRoute(row.path)
-  // } else if(row.type === 'Collection') {
-  //     goRoute(row.id, '/collection', 'tab')
-  // } else{
-  //   openFileDetail(row.path, {
-  //     showInfo:true,
-  //     showHeaderAction:true
-  //   })
-  // }
-
+  const item = createDetailPageParams({
+    idOrPath: row.id,
+    docName: row.name,
+    showHeaderAction: true
+  })
+  routerProvider?.navigateTo(item)
 }
 // function goRoute (qPath, path: string = '/browse', qPathKey: string='path') {
 

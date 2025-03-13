@@ -41,6 +41,14 @@ async function getDetail() {
     docPermission.value = null
     const userId = useUserId()
     const { doc, permission } = await getDocDetail(idOrPath.value, userId.value);
+    // if doc is Folder, redirect to browse page
+    if(doc.isFolder) {
+        const newItem = createBrowseListPageParams({
+            idOrPath: doc.id
+        })
+        routerProvider?.navigateTo(newItem)
+        return
+    }
     docDetail.value = doc
     docPermission.value = permission
     loading.value = false
