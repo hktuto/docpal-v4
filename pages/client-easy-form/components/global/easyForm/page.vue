@@ -15,7 +15,8 @@
       </template>
     </VxeGrid>
     
-    <EasyFormEmailDialog ref="DialogRef" :detail="detail"/>  </div>
+    <EasyFormEmailDialog ref="DialogRef" :detail="detail"/>  
+  </div>
 </template>
 <script lang="ts" setup>
 import { clientApi } from "api";
@@ -25,6 +26,7 @@ if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
 const { t } = useI18n();
+const detail = ref({})
 let extraParams: any = {};
 const {
   tableConfig,
@@ -38,7 +40,7 @@ const {
   api: (pageParams: any) =>
     clientApi.api.postFormDesignPage({ ...pageParams, ...extraParams }),
   columns: [
-    { field: "name", title: "easyForm.name", fixed: "left", type: "checkbox" },
+    { field: "name", title: "easyForm.name", fixed: "left" },
     {
       field: "createdDate",
       title: "easyForm_creationDate",
@@ -79,7 +81,7 @@ const {
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
-          handleSend(row, false);
+          handleSend(row);
         },
       },
     ],
@@ -98,8 +100,11 @@ function handleFilterFormChange(formModel: any) {
   reload();
 }
 const DialogRef = ref();
-async function handleSend() {
-  DialogRef.value.handleOpen();
+async function handleSend(row) {
+  detail.value = row
+  setTimeout(() => {
+    DialogRef.value.handleOpen();
+  })
 }
 </script>
 <style lang="scss" scoped>
