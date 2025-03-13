@@ -49,7 +49,7 @@
         :variables="subjectFieldList"
         @change="(value) => (form.subject = value)"
       />
-      <el-form-item :label="$t('body')" prop="body">
+      <el-form-item :label="$t('dpEmail.content')" prop="body">
         <el-input
           type="textarea"
           ref="bodyRef"
@@ -108,11 +108,20 @@ const form = ref({
   subject: "subject",
   body: "Dear ",
 });
-async function handleOpen() {
+async function handleOpen(userEmail: string = '') {
   state.visible = true;
   const email = await adminApi.api.getFormDesignEmailId(props.detail.id).then(res => res.data)
+  if(!email.body) email.body = ''
+  if(!email.subject) email.subject = ''
+  if(!email.userEmails) email.userEmails = []
   form.value.body = getBody(email.body)
   form.value.subject = email.subject
+  form.value.emails = []
+  if(userEmail) form.value.emails.push(userEmail)
+  setTimeout(() => {
+    formRef.value.clearValidate()
+  })
+  // form.value.emails = email.userEmails.map(item => (item.email))
   function getBody(str) {
     const list = [
       ...bodyFieldList.value,
@@ -127,14 +136,6 @@ async function handleOpen() {
     const match = body.match(regex);
     return body.replace('<html><body><p>', '').replace('</p></body></html>', '')
   }
-  // clientApi.api.postFormDesignPage({
-  //   "name":"easy",
-  //   "createdBy":"jack_li",
-  //   "modifiedBy":"jack_li",
-  //   "pageSize": 20,
-  //   "pageNum": 0
-  // })
-  // clientApi.api.getFormDesignEmailId(props.detail.id)
 }
 const formRef = ref<FormInstance>();
 async function handleSubmit() {

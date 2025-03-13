@@ -15,6 +15,9 @@
       <el-tag v-for="(item, index) in row.relateCases" :key="item.actionId + index">{{item.actionName}}</el-tag>
     </template>
   </VxeGrid>
+  
+  <EasyFormEmailDialog ref="DialogRef" :detail="detail" />  
+  <EasyFormEmailDialogReadonly ref="DialogReadonlyRef" />  
 </div>
 </template>
 <script lang="ts" setup>
@@ -84,6 +87,31 @@ const {
       },
     },
   ],
+  bodyActions: [
+    [
+      {
+        code: "viewDetails",
+        name: t("actions.viewDetails"),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleViewEmail(row);
+        },
+      },
+      {
+        code: "sendEmail",
+        name: t("actions.sendEmail"),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleSend(row);
+        },
+      },
+    ],
+  ],
+  dblClickAction: ({ row, column, event }: any) => {
+    handleViewEmail(row);
+  },
 });
 
 const ResponsiveFilterRef = ref();
@@ -132,6 +160,22 @@ function handleFilterFormChange(formModel) {
   filterParams = formModel;
   reload();
 }
+// #region module: 
+const detail = ref({
+  id: props.easyFormId
+})
+const DialogReadonlyRef = ref()
+const DialogRef = ref()
+function handleSend(row) {
+  detail.id = props.easyFormId
+  setTimeout(() => {
+    DialogRef.value.handleOpen(row.email)
+  });
+}
+function handleViewEmail(row) {
+  DialogReadonlyRef.value.handleOpen(row)
+}
+// #endregion
 onMounted(() => {
   initCondition();
 });

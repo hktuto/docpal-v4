@@ -1111,6 +1111,7 @@
   "dpDocument_fileSelected": "File Selected",
   "dpDocument_fileType": "Document Type",
   "dpEmail": {
+    "content": "Content",
     "recipient": "Recipient Email Address"
   },
   "dpForm_confrimPassword": "Confrim Password",
@@ -2275,6 +2276,7 @@
   },
   "submit": "Submit",
   "tableHeader": {
+    
     "asc": "Z-A",
     "cc": "CC (Multi-select allowed)",
     "days": "Day(s)",
@@ -2284,7 +2286,11 @@
     "folderName": "Folder Name",
     "formatDate": "Format",
     "isMultiple": "Is Multiple",
+    "relatedWorkflow": "Related Workflow",
+    "relatedCase": "Related Case",
+    "sentBy": "Sent By",
     "sortBy": "Sort By",
+    "sentDate": "Sent Date",
     "sortOrder": "Sort Order",
     "summary": "Summary",
     "summaryKey": "Summary Key",

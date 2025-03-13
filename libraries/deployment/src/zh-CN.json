@@ -1111,6 +1111,7 @@
   "dpDocument_fileSelected": "已选择文件",
   "dpDocument_fileType": "文件类型",
   "dpEmail": {
+    "content": "内容",
     "recipient": "收件人电子邮件地址"
   },
   "dpForm_confrimPassword": "确认密码",
@@ -2284,7 +2285,11 @@
     "folderName": "文件夹名称",
     "formatDate": "格式",
     "isMultiple": "是否多选",
+    "relatedWorkflow": "相关工作流程",
+    "relatedCase": "相关案例",
     "sortBy": "排序方式",
+    "sentBy": "发送者",
+    "sentDate": "发送日期",
     "sortOrder": "排序顺序",
     "summary": "概括",
     "summaryKey": "总结要点",

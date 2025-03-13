@@ -57,6 +57,10 @@ async function handleSubmit() {
       }
       return prev
     }, {})
+
+    // easy form email 日志追踪
+    const logId = route.query.logId
+    if(!!logId) params.logId = logId
     await clientApi.api.postFormDesignSubmitData({
       id: route.query.id as string,
       params
