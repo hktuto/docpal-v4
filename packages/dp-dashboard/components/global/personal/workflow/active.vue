@@ -5,6 +5,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { watchDebounced } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { clientApi } from "api";
 const props = defineProps(['processKeys'])
@@ -54,8 +55,16 @@ function handleDblclick(row: any) {
   ElMessage.info('Need to add routing jump event')
   // routerProvider?.navigateTo(routeDashboardDetail(row), false)
 }
-onMounted(() => {
-})
+watchDebounced(
+  () => props.processKeys,
+  (newValue, oldValue) => {
+    if (!oldValue) return;
+    if(JSON.stringify(oldValue) === JSON.stringify(newValue)) return;
+    reload()
+  },
+  { debounce: 200, maxWait: 500, immediate: true }
+);
+
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {
