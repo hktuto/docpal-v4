@@ -1,5 +1,5 @@
 <template>
-<ElDrawer v-model="drawerOpen" :title="$t('upload.upload')" :with-header="true" :size="300" :modal=false :show-close="true">
+<ElDrawer v-model="drawerOpen" :title="$t('upload.upload')" :with-header="true" :size="300" :modal="false" :show-close="true">
     
     <el-collapse v-model="activeNames" >
         <el-collapse-item v-for="(item, index) in uploadState.uploadRequestList" :key="item.id" :name="index.toString()">
@@ -50,6 +50,9 @@ const { uploadState }  = useUploadAIStore()
 
 function handleOpen(){
     drawerOpen.value = true
+}
+function handleClose() {
+    drawerOpen.value = false
 }
 function fileSizeFilter (bytes) {
     if (!bytes) return ''
@@ -118,6 +121,7 @@ watch(uploadState, () => {
 })
 
 useEventListener(document, 'openUploadDrawer', (event: any) => handleOpen(event.detail))
+useEventListener(document, 'closeUploadDrawer', (event: any) => handleClose())
 </script>
 
 <style lang="scss" scoped>
