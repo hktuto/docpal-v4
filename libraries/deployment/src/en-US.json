@@ -72,7 +72,9 @@
     "inactivated": "Inactivated",
     "inactive": "Inactive",
     "inactived": "Inactived",
-    "unpublished": "Unpublished"
+    "sendEmail": "Send Email",
+    "unpublished": "Unpublished",
+    "viewDetails": "View Details"
   },
   "admin": {
     "setting": {
