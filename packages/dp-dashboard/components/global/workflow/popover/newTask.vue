@@ -23,8 +23,6 @@
       <BpmnViewer v-if="activeName === 'Graph'" ref="graphEl" class="graphContent"  step="start" @graphReady="graphReady"/>
     </ElTabPane>
   </ElTabs>
-
-
     <template #footer>
         <el-button v-if="activeName === 'Form'" :loading="state.loading" @click="checkAndSubmit">{{$t('workflow_startWorkflow')}}</el-button>
     </template>
