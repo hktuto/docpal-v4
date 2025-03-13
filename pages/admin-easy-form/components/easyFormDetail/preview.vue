@@ -27,16 +27,20 @@
         />
       </div>
     </div>
-    <EasyFormEmailDialog ref="dialogRef" :detail="detail" />
+    <EasyFormEmailDialog ref="dialogRef" :detail="detail" @email-update="update"/>
   </el-card>
 </template>
 <script lang="ts" setup>
 import { MenuRouterKey } from "#imports";
 import { ElMessage } from "element-plus";
 import { routeEasyFormDesigner } from "~/util/easyFormRouterHelper";
+const emits = defineEmits(["email-update"])
 const props = defineProps(["detail"]);
 const routerProvider = inject(MenuRouterKey);
-
+function update() {
+  console.log('ssss')
+  emits('email-update')
+}
 const dialogRef = ref()
 const {
   public: { endPoint },
@@ -80,8 +84,7 @@ watch(
   () => props.detail,
   (newValue, oldValue) => {
     console.log("watch", newValue, oldValue);
-    // if(!!oldValue && newValue.previewStyle === oldValue.previewStyle) return
-    if (newValue.previewStyle) {
+    if (newValue.previewStyle ) {
       state.formJsonLoad = false;
       nextTick(() => {
         state.formJson = JSON.parse(newValue.previewStyle);
@@ -91,13 +94,14 @@ watch(
       state.formJsonLoad = false;
       // empty form
       nextTick(() => {
-        state.formJson = JSON.parse(newValue.previewStyle);
+        state.formJson = {}
         state.formJsonLoad = true;
       });
     }
   },
   {
     deep: true,
+    immediate: true
   }
 );
 </script>

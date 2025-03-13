@@ -8,13 +8,22 @@
       @submit.native.prevent
     >
       <el-form-item
-        :label="$t('login_username')"
+        :label="$t('user_email')"
         prop="emails"
         :rules="[
           { required: true, message: $t('login_username') + $t('form_common_requird') },
         ]"
       >
-        <el-select ref="selectRef" v-model="form.emails" multiple allow-create clearable filterable default-first-option @change="handleSelectChange">
+        <el-select
+          ref="selectRef"
+          v-model="form.emails"
+          multiple
+          allow-create
+          clearable
+          filterable
+          default-first-option
+          @change="handleSelectChange"
+        >
           <el-option
             v-for="item in state.userList"
             :key="item.userId"
@@ -27,12 +36,34 @@
         :label="$t('tableHeader_subject')"
         prop="subject"
         :rules="[
-          { required: true, message: $t('tableHeader_subject') + $t('form_common_requird') },
+          {
+            required: true,
+            message: $t('tableHeader_subject') + $t('form_common_requird'),
+          },
         ]"
       >
-        <el-input ref="subjectRef" v-model="form.subject"/>
+        <el-input ref="subjectRef" v-model="form.subject" />
       </el-form-item>
-      <InsertVariables ref="InsertVariablesRef" :inputRef="subjectRef" :variables="subjectFieldList"/>
+      <InsertVariables
+        :inputRef="subjectRef?.input"
+        :variables="subjectFieldList"
+        @change="(value) => (form.subject = value)"
+      />
+      <el-form-item :label="$t('body')" prop="body">
+        <el-input
+          type="textarea"
+          ref="bodyRef"
+          v-model="form.body"
+          show-word-limit
+          maxlength="1024"
+          :autosize="{ minRows: 18, maxRows: 20 }"
+        />
+      </el-form-item>
+      <InsertVariables
+        :inputRef="bodyRef?.textarea"
+        :variables="bodyFieldList"
+        @change="(value) => (form.body = value)"
+      />
     </el-form>
     <template #footer>
       <el-button :loading="state.loading" @click="handleSubmit()">{{
@@ -44,42 +75,58 @@
 <script lang="ts" setup>
 import { adminApi, clientApi } from "api";
 
-import type { FormInstance } from 'element-plus'
-const emits = defineEmits(["refresh"]);
+import {ElMessage} from 'element-plus'
+import type { FormInstance } from "element-plus";
+const emits = defineEmits(["email-update"]);
 const props = defineProps(["detail"]);
 const { t } = useI18n();
+const {
+  public: { endPoint },
+} = useRuntimeConfig();
 const state = reactive<any>({
   visible: false,
-  userList: []
+  userList: [],
 });
-const subjectRef = ref()
-const subjectFieldList = [
-  {label: 'Email', value: '<span>${email}</span>'},
-  {label: 'Name', value: '<span>${name}</span>'}
-]
-const form = ref({
-  emails: ["1299962367@qq.com"]
-});
-function handleOpen() {
-  state.visible = true;
+const subjectRef = ref();
+const bodyRef = ref();
 
-  adminApi.api.getFormDesignEmailId(props.detail.id);
-  // adminApi.api.postFormDesignSendEmail({
-  //   "easyFormId": props.detail.id,
-  //   "formLink": "www.baidu.com",
-  //   "subject": "abc ${email}, cdf  ${name}  ccc.",
-  //   "body": "<html><body><p>body 111, <span th:text=\"${email}\"></span> name: <span th:text=\"${name}\"></span> formLink:<span th:text=\"${formLink}\"></span></p></body></html>",
-  //   "userEmails": [
-  //     {
-  //       "username": "oo",
-  //       "email": "1299962367@qq.com"
-  //     },
-  //     {
-  //       "username": "ooyy",
-  //       "email": "1299962367@qq.com"
-  //     }
-  //   ]
-  // })
+const subjectFieldList = [
+  { label: "Email", value: "${email}" },
+  { label: "Name", value: "${name}" },
+];
+const bodyFieldList = ref([
+  { label: "Email", value: "${email}", templateValue: '<span th:text="${email}"></span>' },
+  { label: "Name", value: "${name}", templateValue: '<span th:text="${name}"></span>' },
+  { label: "Form Link", value: "${formLink}", templateValue: '<a th:href="${formLink}">Form Link</a>' },
+]);
+const bodyFieldExtraList = [
+  { value: "\n", templateValue: '<br />' },
+]
+
+const form = ref({
+  emails: ["1299962367@qq.com"],
+  subject: "subject",
+  body: "Dear ",
+});
+async function handleOpen() {
+  state.visible = true;
+  const email = await adminApi.api.getFormDesignEmailId(props.detail.id).then(res => res.data)
+  form.value.body = getBody(email.body)
+  form.value.subject = email.subject
+  function getBody(str) {
+    const list = [
+      ...bodyFieldList.value,
+      ...bodyFieldExtraList
+    ]
+    const body = list.reduce((prev: string, item: any) => {
+      const regex = new RegExp(item.templateValue.replace(/[${}/?\\<>]/g, '\\$&'), 'g');
+      prev = prev.replace(regex, item.value);
+      return prev
+    }, str)
+    const regex = /<p>(.*?)<\/p>/;
+    const match = body.match(regex);
+    return body.replace('<html><body><p>', '').replace('</p></body></html>', '')
+  }
   // clientApi.api.postFormDesignPage({
   //   "name":"easy",
   //   "createdBy":"jack_li",
@@ -89,26 +136,71 @@ function handleOpen() {
   // })
   // clientApi.api.getFormDesignEmailId(props.detail.id)
 }
-const formRef = ref<FormInstance>()
+const formRef = ref<FormInstance>();
 async function handleSubmit() {
-  const valid = await formRef.value.validate()
-  // if(!valid) return
-  console.log(valid);
-  
-  // state.visible = false;
+  const valid = await formRef.value.validate();
+  if(!valid) return
+  const params = {
+    easyFormId: props.detail.id,
+    formLink: getFormLink(false),
+    subject: form.value.subject,
+    userEmails: getEmail(),
+    body: getBody(form.value.body),
+  }
+  await adminApi.api.postFormDesignSendEmail(params)
+  emits("email-update");
+  ElMessage.success(t('dpMsg_success'))
+  state.visible = false;
+  function getBody(str) {
+    const list = [
+      ...bodyFieldList.value,
+      ...bodyFieldExtraList
+    ]
+    const body = list.reduce((prev: string, item: any) => {
+      const regexStr = item.value.replace(/[${}/?\\<>]/g, '\\$&')
+      
+      const regex = new RegExp(item.value.replace(/[${}/?\\<>]/g, '\\$&'), 'g');
+      prev = prev.replace(regex, item.templateValue);
+      return prev
+    }, str)
+    return `<html><body><p>${body}</p></body></html>`
+  }
+  function getEmail(){
+    return form.value.emails.reduce((prev, email:string) => {
+      const user = state.userList.find(item => item.userId === email)
+      prev.push({
+        username: user ? user.firstName + user.lastName : '',
+        email: user ? user.email : email
+      })
+      return prev
+    }, [])
+  }
+  function getFormLink(initBodyField = true) {
+    const fItem = bodyFieldList.value.find(item => item.label === "Form Link")
+    const origin = endPoint?.upload;
+    const href = `https://${origin}/public-form?id=${props.detail.id}`
+    // if(initBodyField) {
+    //   fItem.value = href
+    //   fItem.templateValue = `<a href="${href}">${href}</a>`;
+    // }
+    return href
+  }
 }
-const selectRef = ref()
+// #region module: selectRef
+const selectRef = ref();
 function handleSelectChange() {
-  selectRef.value.blur()
+  selectRef.value.blur();
   setTimeout(() => {
-    selectRef.value.focus()
-  })
+    selectRef.value.focus();
+  });
 }
+// #endregion
 // #endregion
 onMounted(async () => {
   const { data } = await adminApi.api.postNuxeoIdentityUsers({});
   state.userList = data || ([] as any);
 });
+
 defineExpose({ handleOpen });
 </script>
 <style lang="scss" scoped></style>

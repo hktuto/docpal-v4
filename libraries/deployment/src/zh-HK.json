@@ -72,7 +72,9 @@
     "inactivated": "未啟用",
     "inactive": "停用",
     "inactived": "已停用",
-    "unpublished": "未發布"
+    "sendEmail": "傳送電子郵件",
+    "unpublished": "未發布",
+    "viewDetails": "查看詳細信息"
   },
   "admin": {
     "setting": {
