@@ -8,6 +8,7 @@
         v-model="_text"
         :placeholder="$t('comments_placeholder')"
         resize="none"
+        :check-is-whole="checkIsWhole"
         @keydown.enter.native="keyDown"
         @select="handleAddMention"
         ></el-mention>
@@ -43,6 +44,11 @@ const mentionRef = ref()
 const isMention = computed(() => {
     return !!props.mentionData && props.mentionData.length > 0
 })
+function checkIsWhole(pattern: string, prefix: string) {
+    const user = props.mentionData.find(item => item.value === pattern)
+    if(!!user) state.mentionData.push(user)
+    return !!user
+}
 function keyDown (e) {
     e.stopPropagation()
     if(isMention.value) {
