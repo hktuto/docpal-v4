@@ -5,6 +5,7 @@
         {{ formatDate(row.created) }} ~ {{ formatDate(row.expiredDate) }}
       </template>
     </VxeGrid>
+    <ShareDialog ref="shareInfoDialogRef" @submit="handleSubmit"></ShareDialog>
   </div>
 </template>
 <script lang="ts" setup>
@@ -40,7 +41,7 @@ const {
       field: "expiredDate",
       title: "tableHeader_dueDate",
       formatter({ cellValue }: any) {
-        return formatDate(cellValue)
+        return formatDate(cellValue);
       },
     },
   ],
@@ -62,9 +63,14 @@ async function getData(params: any = {}) {
     },
   };
 }
+const shareInfoDialogRef = ref();
+
 function handleDblclick(row: any) {
-  ElMessage.info("Need to add routing jump event");
-  // routerProvider?.navigateTo(routeDashboardDetail(row), false)
+  shareInfoDialogRef.value.handleOpen(row);
+}
+async function handleSubmit(shareInfo: any) {
+  await clientApi.api.patchNuxeoShare(shareInfo);
+  query();
 }
 onMounted(() => {});
 </script>

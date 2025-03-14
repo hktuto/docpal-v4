@@ -17,9 +17,9 @@ export const caseManageDetailPage  = function(params: any){
 export const caseManageDashboardPage  = function(params: any){
   return {
     id: "client-case-manage-dashboard" + new Date().getTime(),
-    name: "client-case-manage-dashboard-" + params.id,
+    name: "client-case-manage-dashboard-" + params.instanceId,
     icon: 'dp-icon:case-outline',
-    label: params.case_id,
+    label: params.instanceId,
     component: 'LazyCaseDashboard',
     props: {
       ...params
