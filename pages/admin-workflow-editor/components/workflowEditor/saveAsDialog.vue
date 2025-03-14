@@ -38,10 +38,11 @@ function close(){
 
 async function save(){
     loading.value = true
-    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:data.id, versionNumber:form.copyVersion}, {
+    const selectedItem = versionList.find(item => item.id === form.copyVersion)
+    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId:data.id, versionNumber:selectedItem.versionNumber}, {
         format: 'blob'
     }) 
-    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:data.id, versionNumber:form.copyVersion}, {})
+    let {data:json} = await adminApi.api.getWorkflowVersionJson({draftId:data.id, versionNumber:selectedItem.versionNumber}, {})
     const timestamp = new Date().getTime();
 
     const newForm:any = new FormData();
@@ -61,7 +62,7 @@ async function save(){
     if(!newVersionData){
         throw new Error('newVersionData not found')
     }
-    const forms = await getAllFormFromXML(bpmnFile, data.key, form.copyVersion)
+    const forms = await getAllFormFromXML(bpmnFile, data.key, selectedItem.id)
     await batchSaveForm(forms, nameToId, newVersionData.latestVersionId);
     
     setTimeout(() => {
@@ -107,7 +108,7 @@ defineExpose({ open })
             </el-form-item>
             <el-form-item :label="$t('workflowEditor.copyVersion')" prop="copyVersion">
                 <el-select v-model="form.copyVersion" placeholder="Select">
-                    <el-option v-for="item in versionList" :key="item.versionNumber" :label="item.versionNumber" :value="item.versionNumber" />
+                    <el-option v-for="item in versionList" :key="item.versionNumber" :label="item.versionNumber" :value="item.id" />
                 </el-select>
             </el-form-item>
         </el-form>
