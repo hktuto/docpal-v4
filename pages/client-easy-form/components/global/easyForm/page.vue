@@ -15,7 +15,7 @@
       </template>
     </VxeGrid>
     
-    <EasyFormEmailDialog ref="DialogRef" :detail="detail"/>  
+    <EasyFormEmailDialog ref="DialogRef" />  
   </div>
 </template>
 <script lang="ts" setup>
@@ -26,7 +26,6 @@ if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
 const { t } = useI18n();
-const detail = ref({})
 let extraParams: any = {};
 const {
   tableConfig,
@@ -101,10 +100,7 @@ function handleFilterFormChange(formModel: any) {
 }
 const DialogRef = ref();
 async function handleSend(row) {
-  detail.value = row
-  setTimeout(() => {
-    DialogRef.value.handleOpen();
-  })
+  DialogRef.value.handleOpen(row.id);
 }
 </script>
 <style lang="scss" scoped>

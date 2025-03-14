@@ -1,28 +1,44 @@
 <template>
-  <div >
-  <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    <template #toolbar_buttons>
-      <ResponsiveFilter
-        ref="ResponsiveFilterRef"
-        @form-change="handleFilterFormChange"
-        inputKey="q"
-      />
-    </template>
-    <template #relatedWorkflow="{row}">
-      <el-tag v-for="(item, index) in row.relatedWorkflows" :key="item.actionId + index">{{item.actionName}}</el-tag>
-    </template>
-    <template #relatedCase="{row}">
-      <el-tag v-for="(item, index) in row.relateCases" :key="item.actionId + index">{{item.actionName}}</el-tag>
-    </template>
-  </VxeGrid>
-  
-  <EasyFormEmailDialog ref="DialogRef" :detail="detail" />  
-  <EasyFormEmailDialogReadonly ref="DialogReadonlyRef" />  
-</div>
+  <div>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          @form-change="handleFilterFormChange"
+          inputKey="q"
+        />
+      </template>
+      <template #relatedWorkflow="{ row }">
+        <el-tag
+          v-for="(item, index) in row.relatedWorkflows"
+          :key="item.actionId + index"
+          @click="handleOpenWorkflow(item)"
+          >{{ item.actionName }}</el-tag
+        >
+        <!-- <el-tag @click="handleOpenWorkflow()">bjnh</el-tag
+        > -->
+      </template>
+      <template #relatedCase="{ row }">
+        <el-tag
+          v-for="(item, index) in row.relateCases"
+          :key="item.actionId + index"
+          @click="handleOpenCase(item)"
+          >{{ item.actionName }}</el-tag
+        >
+      </template>
+    </VxeGrid>
+
+    <EasyFormEmailDialog ref="DialogRef" />
+    <EasyFormEmailDialogReadonly ref="DialogReadonlyRef" />
+  </div>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox, ElNotification } from "element-plus";
 import { clientApi } from "api";
+const routerProvider = inject(MenuRouterKey);
+if (!routerProvider) {
+  throw new Error("MenuRouterKey is not provided");
+}
 const props = defineProps(["easyFormId"]);
 const extraParams = {
   orderBy: "email",
@@ -160,20 +176,30 @@ function handleFilterFormChange(formModel) {
   filterParams = formModel;
   reload();
 }
-// #region module: 
-const detail = ref({
-  id: props.easyFormId
-})
-const DialogReadonlyRef = ref()
-const DialogRef = ref()
+// #region module:
+const DialogReadonlyRef = ref();
+const DialogRef = ref();
 function handleSend(row) {
-  detail.id = props.easyFormId
-  setTimeout(() => {
-    DialogRef.value.handleOpen(row.email)
-  });
+  DialogRef.value.handleOpen(props.easyFormId, row.email);
 }
 function handleViewEmail(row) {
-  DialogReadonlyRef.value.handleOpen(row)
+  DialogReadonlyRef.value.handleOpen(row);
+}
+async function handleOpenWorkflow(row: any = {}) {
+  // row.processInstanceId = "b2ae2c95-0078-11f0-a987-56bed584d4f1"
+  if (!row.processInstanceId) return;
+  const newItem = await getWorkflowRoute(row.processInstanceId);
+  if (!!newItem) routerProvider?.navigateTo(newItem);
+}
+function handleOpenCase(row: any = {}) {
+  if (!row.case_id && !row.caseDefinitionVersionId) return;
+  // row.case_id = "single-case-000017";
+  // row.caseDefinitionVersionId = "23:73a7cf5a-643f-4adf-bc3e-1c638b501589";
+  row.instanceId = row.case_id
+  row.versionId = row.caseDefinitionVersionId
+  row.id = row.instanceId;
+  row.case_id = row.instanceId
+  routerProvider?.navigateTo(caseManageDashboardPage(row));
 }
 // #endregion
 onMounted(() => {
