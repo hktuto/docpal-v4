@@ -1,16 +1,23 @@
 <template>
 <el-card class="o-auto">
   <h3>{{ $t('dashboard.cmmnWorkflowPage') }}</h3>
-  <div>
+  <div style="width:100%;height:100%;overflow:hidden;position:relative;">
+    <VxeGrid v-if="CMDProvider.instanceId" ref="tableRef" v-bind="tableConfig" v-on="tableEvent" >
+      <template #toolbar_buttons>
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
+          inputKey="q"/>
+      </template>
+    </VxeGrid>
+
+<!-- 
     <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
       @command="handleAction"
       @row-dblclick="handleDblclick"
       @pagination-change="handlePaginationChange">
       <template #preSortButton>
-          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-              inputKey="q"/>
+         
       </template> 
-    </Table>
+    </Table> -->
   </div>
   <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg"
     @click="handleDelete"/>
@@ -27,6 +34,7 @@ const props = withDefaults( defineProps<{
     setting: {},
     hideSetting: false
 })
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['delete'])
 async function handleDelete() {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
@@ -55,65 +63,65 @@ const state = reactive<any>({
 })
 const { t } = useI18n();
 
-const CMDProvider = inject(CaseManagementDashboardKey)
+const CMDProvider = inject(CaseManagementDashboardKey);
+
+const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
+  id:'case-management-dashboard-table',
+  api: (params:any ) => {
+    params = {
+      ...params,
+      ...state.extraParams
+    }
+    const _instanceId = CMDProvider.instanceId?.value || null
+    return adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, params)
+  },
+  saveColumnOrder:false,
+  zoom:false,
+  columns: [
+    {
+      title: 'table_name',
+      field: 'name',
+    },
+    {
+      title: 'workflow_workflow',
+      field: 'taskInstance.processDefinitionName',
+    },
+    {
+      title: 'common_status',
+      field: 'name',
+    },{
+      title: 'workflow_assignee',
+      field: 'assignee',
+    },
+    {
+      title: 'workflow_createDate',
+      field: 'createDate',
+      formatter:({cellValue}) => {
+        return formatDate(cellValue)
+      }
+    }
+  ],
+  dblClickAction: ({ row, column, event }) => {
+    console.log("row", row)
+    handleDblclick(row)
+  }
+})
 // #region module: 
-  const tableSetting = {
-    columns: [
-      { id:1, label: 'table_name', prop: 'name', defaultColumn: true },
-      { id:2, label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName', class: 'tag' },
-      { id:3, label: 'common_status', prop: 'name', class: 'danger-tag round', showOverflowTooltip: true },
-      { id:4, label: 'workflow_assignee', prop: 'assignee' },
-      { id:5, label: 'workflow_createDate', prop: 'createDate', 
-          // formatList: [ datesFormat('createDate') ]  
-      },
-      { id:6, label: 'workflow_dueDate', prop: 'dueDate', 
-          // formatList: [ datesFormat('dueDate') ]  
-      }
-    ],
-    events: ['delete'],
-    slots: [
-    ],
-    options: { pageSize: 20 }
-  }
-  function handlePaginationChange (page: number, pageSize?: number) {
-    pageParams.pageNum = (Number(page) - 1) || 0
-    pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-    getList(pageParams)
-  }
-  async function getList (param) {
-    try {
-      state.loading = true
-      const _instanceId = CMDProvider.instanceId?.value || null
-      if(!_instanceId) {
-        state.tableData = []
-        state.options.paginationConfig.total = 0
-        state.options.paginationConfig.pageSize = 20
-        state.options.paginationConfig.currentPage = 1
-        return
-      }
-      const res: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams }).then(res => res.data)
-      state.tableData = res.entryList
-      state.options.paginationConfig.total = res.totalSize
-      state.options.paginationConfig.pageSize = param.pageSize
-      state.options.paginationConfig.currentPage = param.pageNum + 1
-    } catch (error) {
 
-    }
-    finally {
-      state.loading = false
-    }
-  }
-
-  function handleAction (command:string, row: any, rowIndex: number) {
-    switch (command) {
-        case 'edit':
-            handleDblclick(row)
-            break
-    }
-  }
+function handleFilterFormChange(formModel) {
+  state.extraParams = formModel
+  reload()
+}
+ 
   async function handleDblclick(row) {
     try {
       state.loading = true
+      console.log("row", row)
+      const newItem = routeWorkflowDetail({
+        id: row.id,
+        name: row.name
+      })
+      routerProvider?.navigateTo(newItem)
       // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
     } catch (error) {
     } finally {
@@ -122,10 +130,7 @@ const CMDProvider = inject(CaseManagementDashboardKey)
       }, 300)
     }
   }
-  function handleFilterFormChange(formModel) {
-    state.extraParams = formModel
-    handlePaginationChange(1)
-  }
+  
 // #endregion
 // #region module:  
   const ResponsiveFilterRef = ref()
@@ -141,9 +146,22 @@ const CMDProvider = inject(CaseManagementDashboardKey)
 // #endregion
 
 onMounted(() => {
-  handlePaginationChange(1)
   initCondition()
 })
 </script>
 <style lang="scss" scoped>
+.el-card{
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  :deep(.el-card__body){
+    height:100%;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+}
+
 </style>

@@ -501,7 +501,11 @@ export const bpmnElement:BpmnElement = {
                                     orConditionElements:{
                                         element:[]
                                     }
-                                }
+                                },
+                                "docpal:graphLabel":{
+                                    attr_successLable:"success",
+                                    attr_failureLable:"failure",
+                                },
                             }
                         }),
                     label: 'New Condition',
@@ -514,7 +518,11 @@ export const bpmnElement:BpmnElement = {
                                 orConditionElements:{
                                     element:[]
                                 }
-                            }
+                            },
+                            "docpal:graphLabel":{
+                                attr_successLable:"success",
+                                attr_failureLable:"failure",
+                            },
                         }
                     })
                 })

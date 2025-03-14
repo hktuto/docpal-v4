@@ -125,7 +125,6 @@ async function caseTableChange(caseTableId:string) {
 watch(() => element, () => {
     if(JSON.stringify(form.value) !== JSON.stringify(element)) {
         form.value =  JSON.parse(JSON.stringify(element))
-        console.log(element)
         if(element.attr_type === 'Match_Case_Info' && element.attr_target) {
             caseTableChange(element.attr_target)
         }
