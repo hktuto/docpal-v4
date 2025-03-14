@@ -1188,6 +1188,7 @@
     "choose": "請選擇",
     "configurePermission": "權限校驗失敗，請聯絡管理員配置",
     "copyPathSuccess": "路徑已複製到剪貼簿",
+    "exit": "{name} 已存在",
     "deleteFailed": "刪除失敗",
     "dragOrClickToUpload": "點擊此處或拖曳文件上傳",
     "duplicateFileName1": "您想新增檔案 {fileName} 嗎？",
