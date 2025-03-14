@@ -31,7 +31,6 @@ const form = ref({
 });
 const FormRef = ref();
 async function handleChange(value) {
-  console.log(value)
   try {
     if (value === props.detail.name) return
     await adminApi.api.patchFormDesignName({

@@ -210,7 +210,7 @@
                         "label": "tableHeader_approver",
                         "labelAlign": "",
                         "defaultValue": "",
-                        "placeholder": "common_selectOccupancyContent",
+                        "placeholder": "",
                         "columnWidth": "200px",
                         "size": "",
                         "labelWidth": null,
@@ -224,144 +224,7 @@
                         "automaticDropdown": false,
                         "multiple": false,
                         "multipleLimit": 0,
-                        "optionItems": [
-                          {
-                            "label": "Administrator",
-                            "value": "Administrator"
-                          },
-                          {
-                            "label": "create_test",
-                            "value": "create_test"
-                          },
-                          {
-                            "label": "demo_account",
-                            "value": "demo_account"
-                          },
-                          {
-                            "label": "demo_director",
-                            "value": "demo_director"
-                          },
-                          {
-                            "label": "demo_head",
-                            "value": "demo_head"
-                          },
-                          {
-                            "label": "demo_user",
-                            "value": "demo_user"
-                          },
-                          {
-                            "label": "docpaladmin",
-                            "value": "docpaladmin"
-                          },
-                          {
-                            "label": "entityType",
-                            "value": "entityType"
-                          },
-                          {
-                            "label": "everything",
-                            "value": "everything"
-                          },
-                          {
-                            "label": "frank_yang",
-                            "value": "frank_yang"
-                          },
-                          {
-                            "label": "ikki_cheng",
-                            "value": "ikki_cheng"
-                          },
-                          {
-                            "label": "jack_li",
-                            "value": "jack_li"
-                          },
-                          {
-                            "label": "jack_li2",
-                            "value": "jack_li2"
-                          },
-                          {
-                            "label": "Jay_Cai",
-                            "value": "Jay_Cai"
-                          },
-                          {
-                            "label": "Jay.Cai",
-                            "value": "Jay.Cai"
-                          },
-                          {
-                            "label": "Joshua",
-                            "value": "Joshua"
-                          },
-                          {
-                            "label": "Lyle",
-                            "value": "Lyle"
-                          },
-                          {
-                            "label": "nine",
-                            "value": "nine"
-                          },
-                          {
-                            "label": "ninerabbit",
-                            "value": "ninerabbit"
-                          },
-                          {
-                            "label": "nissin",
-                            "value": "nissin"
-                          },
-                          {
-                            "label": "ooo",
-                            "value": "ooo"
-                          },
-                          {
-                            "label": "ooyy",
-                            "value": "ooyy"
-                          },
-                          {
-                            "label": "ooyy1",
-                            "value": "ooyy1"
-                          },
-                          {
-                            "label": "readonly",
-                            "value": "readonly"
-                          },
-                          {
-                            "label": "readwrite",
-                            "value": "readwrite"
-                          },
-                          {
-                            "label": "rh",
-                            "value": "rh"
-                          },
-                          {
-                            "label": "Rh_Admin",
-                            "value": "Rh_Admin"
-                          },
-                          {
-                            "label": "royhoo",
-                            "value": "royhoo"
-                          },
-                          {
-                            "label": "sales_manager",
-                            "value": "sales_manager"
-                          },
-                          {
-                            "label": "sean-admin",
-                            "value": "sean-admin"
-                          },
-                          {
-                            "label": "sean-client",
-                            "value": "sean-client"
-                          },
-                          {
-                            "label": "Shawn_Fang",
-                            "value": "Shawn_Fang"
-                          },
-                          {
-                            "label": "will_du",
-                            "value": "will_du"
-                          },
-                          {
-                            "label": "willl",
-                            "value": "willl"
-                          }
-                        ],
+                        "optionItems": [],
                         "required": true,
                         "requiredHint": "",
                         "validation": "",
@@ -539,7 +402,7 @@
                         "label": "tableHeader_approver",
                         "labelAlign": "",
                         "defaultValue": "",
-                        "placeholder": "common_selectOccupancyContent",
+                        "placeholder": "",
                         "columnWidth": "200px",
                         "size": "",
                         "labelWidth": null,
