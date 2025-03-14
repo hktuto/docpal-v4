@@ -103,7 +103,6 @@
       />
     </el-form-item>
     <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tagsSelect')">
-      {{ options.tags }}
       <el-select-v2
         v-model="state.form.tags"
         :options="options.tags"
@@ -246,7 +245,7 @@ onMounted(async () => {
   options.docType = docType.data?.map((item: any) => ({label: item.name, value: item.name}))
   options.users = users.data?.map((item: any) => ({label: item.username, value: item.userId}))
   options.collections = collections?.data?.entryList?.map((item: any) => ({
-    label: item.createdBy + ' - ' + item.name,
+    label: item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
     value: item.id
   }))
   options.tags = tags.data?.map((item: any) => ({label: item, value: item}))
