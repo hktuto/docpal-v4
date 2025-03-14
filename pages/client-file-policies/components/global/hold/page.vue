@@ -6,41 +6,43 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
           inputKey="documentName"
+          inputPlaceHolder="holdPolicy_clientFilter"
         />
       </template>
     </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
-import { clientApi } from "api";
-import { routeHoldPageFolder } from '../../../utils/routerHelper.ts'
-import { MenuRouterKey } from '#imports';
+import {clientApi} from "api";
+import {routeHoldPageFolder} from '../../../utils/routerHelper.ts'
+import {MenuRouterKey} from '#imports';
+
 const routerProvider = inject(MenuRouterKey)
 let extraParams = {};
-const { t } = useI18n();
-const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
+const {t} = useI18n();
+const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
   id: "c-hold",
   api: async (pageParams: any) => {
-    return clientApi.api.postPolicyDocumentsPage({ ...pageParams, ...extraParams });
+    return clientApi.api.postPolicyDocumentsPage({...pageParams, ...extraParams});
   },
   columns: [
     {
       field: "documentName",
       title: "tableHeader.folderName",
       type: "html",
-      formatter: ({ cellValue, row }: any) => {
+      formatter: ({cellValue, row}: any) => {
         let icon = "/icons/doc/folder.svg";
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
       },
     },
-    { field: "documentPath", title: "tableHeader_path" },
-    { field: "policyHoldName", title: "tableHeader_policyName" },
-    { field: "applyBy", title: "tableHeader_applyBy" },
-    { field: "applyApprovedBy", title: "tableHeader_approver" },
+    {field: "documentPath", title: "tableHeader_path"},
+    {field: "policyHoldName", title: "tableHeader_policyName"},
+    {field: "applyBy", title: "tableHeader_applyBy"},
+    {field: "applyApprovedBy", title: "tableHeader_approver"},
     {
       field: "applyApprovedDate",
       title: "tableHeader_confirmAt",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
@@ -49,36 +51,45 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     [
       {
         code: "preview",
-        name: "common_preview",
+        name: "retention_donePreview",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDblclick(row)
         },
       },
     ],
   ],
-  dblClickAction: ({ row, column, event }:any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row)
   },
 });
 
 // #region module: ResponsiveFilterRef
 const ResponsiveFilterRef = ref();
+
 async function getFilter() {
   const data = await clientApi.api
     .getPolicyDocumentsPageConditions()
     .then((res) => res.data);
+  data.forEach(item => {
+    if (item.options && item.options.length > 0) {
+      item.options.sort((a, b) => a.value.toString().localeCompare(b.value.toString()));
+    }
+  });
   ResponsiveFilterRef.value.init(data);
 }
+
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
+
 // #endregion
 function handleDblclick(row: any) {
   routerProvider?.navigateTo(routeHoldPageFolder(row), false)
 }
+
 onMounted(() => {
   getFilter();
 });

@@ -118,7 +118,7 @@ onActivated(() => {
       >
     </div>
 
-    <div class="smartFolder-right-main">
+    <div class="smartFolder-right-main" style="height: 100%; overflow: hidden;">
       <SearchGroupTable ref="tableRef" :tableId="id">
         <template #toolbar_buttons>
           {{ $t("smartFolder.searchResult") }}
@@ -149,6 +149,7 @@ onActivated(() => {
   }
   .smartFolder-right-main {
     grid-area: 1 / 2 / 4 / 3;
+    position: relative;
   }
 }
 </style>

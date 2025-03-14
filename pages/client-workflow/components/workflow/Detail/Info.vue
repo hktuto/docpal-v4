@@ -1,164 +1,165 @@
 <template>
-<div class="info" v-if="taskDetail && taskDetail.taskInstance">
-<!--  <h4>{{ $t('workflow_info') }}</h4>-->
-  <div class="infoContainer">
-    <div class="label">{{ $t('workflow_jobName') }}</div>
-    <div class="value">
-      {{
-        taskDetail.taskInstance.businessKey ||
-        taskDetail.taskInstance.processDefinitionName
-      }}
+  <div class="info" v-if="taskDetail && taskDetail.taskInstance">
+    <!--  <h4>{{ $t('workflow_info') }}</h4>-->
+    <div class="infoContainer">
+      <div class="label">{{ $t('workflow_jobName') }}</div>
+      <div class="value">
+        {{ taskDetail.taskInstance.businessKey || taskDetail.taskInstance.processDefinitionName }}
+      </div>
     </div>
-  </div>
-<!--  <h4 class="mg-t">{{ $t('workflow_taskInfo') }}</h4>-->
-  <div class="infoContainer">
-    <div class="label">{{ $t('workflow_taskName') }}</div>
-    <div class="value">
-      {{ taskDetail.name }}
+    <!--  <h4 class="mg-t">{{ $t('workflow_taskInfo') }}</h4>-->
+    <div class="infoContainer">
+      <div class="label">{{ $t('workflow_taskName') }}</div>
+      <div class="value">
+        {{ taskDetail.name }}
+      </div>
     </div>
-  </div>
-  <div class="infoContainer">
-    <div class="label">{{ $t('workflow_assignee') }}</div>
-    <div class="value">
-      {{ taskDetail.assignee }}
+    <div class="infoContainer">
+      <div class="label">{{ $t('workflow_assignee') }}</div>
+      <div class="value">
+        {{ taskDetail.assignee }}
+      </div>
     </div>
-  </div>
-  <div class="infoContainer">
-    <div class="label">{{ $t('workflow_createDate') }}</div>
-    <div class="value">
-      {{
-        formatDate(taskDetail.createDate)
-      }}
+    <div class="infoContainer">
+      <div class="label">{{ $t('workflow_createDate') }}</div>
+      <div class="value">
+        {{ formatDate(taskDetail.createDate) }}
+      </div>
     </div>
-  </div>
-  <div class="infoContainer">
-    <div class="label">{{ $t('workflow_dueDate') }}</div>
-    <div class="value">
-      {{
-        formatDate(taskDetail.dueDate)
-      }}
+    <div class="infoContainer">
+      <div class="label">{{ $t('workflow_dueDate') }}</div>
+      <div class="value">
+        {{ formatDate(taskDetail.dueDate) }}
+      </div>
     </div>
-  </div>
-  <div class="flex-x-start">
-    <el-button class="f-g" v-if="isAssigneeUser" type="primary" :loading="state.loading"
-              @click="handleUnclaim">
-      {{ $t('workflow_Unclaim') }}
-    </el-button>
-    <el-button class="f-g" v-else-if="!props.taskDetail.assignee" type="primary" :loading="state.loading"
-              @click="handleClaim">
-      {{$t('workflow_claim')}}
-    </el-button>
-  <el-popover :visible="state.deletePopoverShow" placement="top" :width="160">
-    <p>{{$t('msg_confirmWhetherToDelete')}}</p>
-    <div class="flex-x-end" style="text-align: right; margin: 0">
-      <el-button size="small" text @click="state.deletePopoverShow = false">{{$t('cancelText')}}</el-button>
-      <el-button size="small" type="primary" @click="handelDelete">
-        {{$t('dpButtom_confirm')}}
+    <div class="flex-x-start">
+      <el-button class="f-g" v-if="isAssigneeUser" type="primary" :loading="state.loading" @click="handleUnclaim">
+        {{ $t('workflow_Unclaim') }}
       </el-button>
+      <el-button class="f-g" v-else-if="!props.taskDetail.assignee" type="primary" :loading="state.loading"
+                 @click="handleClaim">
+        {{ $t('workflow_claim') }}
+      </el-button>
+      <el-popover :visible="state.deletePopoverShow" placement="top" :width="160">
+        <p>{{ $t('workflow_delete') }}</p>
+        <div class="flex-x-end" style="text-align: right; margin: 0">
+          <el-button size="small" text @click="state.deletePopoverShow = false">{{ $t('cancelText') }}</el-button>
+          <el-button size="small" type="primary" @click="handelDelete">
+            {{ $t('common_confirmDelete') }}
+          </el-button>
+        </div>
+        <template #reference>
+          <el-button v-if="isStartedUser" @click="state.deletePopoverShow = true">{{ $t('common_delete') }}</el-button>
+        </template>
+      </el-popover>
     </div>
-    <template #reference>
-      <el-button v-if="isStartedUser" @click="state.deletePopoverShow = true">{{$t('common_delete')}}</el-button>
-    </template>
-  </el-popover>
-  </div>
 
-</div>
+  </div>
 </template>
 <script lang="ts" setup>
-import { clientApi } from 'api'
-import { ElMessage } from 'element-plus'
+import {clientApi} from 'api'
+import {ElMessage} from 'element-plus'
+
 const emits = defineEmits(['change'])
 const props = defineProps<{
-    taskDetail: any,
-    id: string
+  taskDetail: any,
+  id: string
 }>()
 
-const userId:string = useUserId().value
+const userId: string = useUserId().value
 const state = reactive({
-    deletePopoverShow: false,
-    loading: false
+  deletePopoverShow: false,
+  loading: false
 })
 const isStartedUser = computed(() => {
-    const id = props.taskDetail.taskInstance.startUserId
-    return id === userId
+  const id = props.taskDetail.taskInstance.startUserId
+  return id === userId
 })
 const isAssigneeUser = computed(() => {
-    const id = props.taskDetail.assignee
-    return id === userId
+  const id = props.taskDetail.assignee
+  return id === userId
 })
-async function handleUnclaim () {
-    try{
-        state.loading = true
-        const response = await clientApi.api.postWorkflowTaskUnclaim({ taskId: props.id })
-        // emits('change', response, false)
-        props.taskDetail.assignee = ''
-    } catch (error) {
-        // ElMessage.error(error.response.data.message)
-    }
-    setTimeout(() => {
-        state.loading = false
-    }, 200)
+
+async function handleUnclaim() {
+  try {
+    state.loading = true
+    const response = await clientApi.api.postWorkflowTaskUnclaim({taskId: props.id})
+    // emits('change', response, false)
+    props.taskDetail.assignee = ''
+  } catch (error) {
+    // ElMessage.error(error.response.data.message)
+  }
+  setTimeout(() => {
+    state.loading = false
+  }, 200)
 }
-async function handleClaim () {
-    try{
-        state.loading = true
-        const response: any = await clientApi.api.postWorkflowTaskClaim({ taskId: props.id, userId }).then(res => res.data)
-        if (!response.errorCode) {
-            emits('change', response, true)
-        }
-    } catch (error) {
-        // ElMessage.error(error.response.data.message)
+
+async function handleClaim() {
+  try {
+    state.loading = true
+    const response: any = await clientApi.api.postWorkflowTaskClaim({taskId: props.id, userId}).then(res => res.data)
+    if (!response.errorCode) {
+      emits('change', response, true)
     }
-    setTimeout(() => {
-        state.loading = false
-    }, 200)
+  } catch (error) {
+    // ElMessage.error(error.response.data.message)
+  }
+  setTimeout(() => {
+    state.loading = false
+  }, 200)
 }
+
 async function handelDelete() {
-    const processInstanceId = props.taskDetail.taskInstance.processInstanceId
-    const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({processInstanceId,  userId})
-    if(!!response) {
-    } else {
-    }
+  const processInstanceId = props.taskDetail.taskInstance.processInstanceId
+  const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({processInstanceId, userId})
+  if (!!response) {
+  } else {
+    ElMessage.success(t('workflow_deleteSuccessMsg'))
+  }
 }
 </script>
 <style lang="scss" scoped>
 .info {
-    display: flex;
-    flex-flow: column nowrap;
-    min-width: 180px;
-    height: 100%;
-    justify-content: flex-start;
-    align-items: flex-start;
-    align-content: flex-start;
-    h4{
-      margin:0;
-    }
+  display: flex;
+  flex-flow: column nowrap;
+  min-width: 180px;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
 
-    //h4 {
-    //    padding: unset;
-    //    margin: unset;
-    //    margin-bottom: calc(var(--app-space-xs) / 3);
-    //}
-    //.mg-t {
-    //    margin-top: calc(var(--app-space-xs) * 3);
-    //}
-    @media (max-width : 640px) {
-      flex-flow: row wrap;
-      gap: calc(var(--app-space-xs) * 2 );
-      .f-g {
-        flex: 1 0 100%;
-      }
+  h4 {
+    margin: 0;
+  }
+
+  //h4 {
+  //    padding: unset;
+  //    margin: unset;
+  //    margin-bottom: calc(var(--app-space-xs) / 3);
+  //}
+  //.mg-t {
+  //    margin-top: calc(var(--app-space-xs) * 3);
+  //}
+  @media (max-width: 640px) {
+    flex-flow: row wrap;
+    gap: calc(var(--app-space-xs) * 2);
+    .f-g {
+      flex: 1 0 100%;
     }
+  }
 }
-.infoContainer{
-    margin-bottom: var(--app-space-xs);
+
+.infoContainer {
+  margin-bottom: var(--app-space-xs);
 }
-.label{
-    line-height: 1.5rem;
-    font-size: 0.7rem;
-    color: var(--app-grey-400);
+
+.label {
+  line-height: 1.5rem;
+  font-size: 0.7rem;
+  color: var(--app-grey-400);
 }
-.value{
+
+.value {
   font-size: 1rem;
 }
 </style>

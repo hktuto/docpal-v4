@@ -60,15 +60,15 @@ const {
     },
     {
       field: "completeDate",
-      title: "table_completeDate",
+      title: "workflow_completeDate",
       formatter({ cellValue }: any) {
         // @ts-ignore
         return formatDate(cellValue)
       },
     },
-    { field: "duration", title: "table_duration" ,
+    { field: "duration", title: "workflow_duration" ,
       formatter({ cellValue, row }: any) {
-        return dayjs(row.completeDate).diff(row.startTime, 'day') + t('common_days')
+        return dayjs(row.completeDate).diff(row.startTime, 'day')  +' '+ t('common_days')
       }
     }
   ],

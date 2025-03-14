@@ -45,12 +45,12 @@ const {
       interrelatedUserId: userId,
     }),
   columns: [
-    { field: "taskInstance.businessKey", title: "table_name", fixed: "left" },
+    { field: "taskInstance.businessKey", title: "workflow_jobName", fixed: "left" },
     { field: "taskInstance.processDefinitionName", title: "workflow_workflow" },
 
     {
       field: "name",
-      title: "common_status",
+      title: "workflow_taskName",
       //   slots: {
       //     default: "status",
       //   },
