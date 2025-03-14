@@ -14,20 +14,20 @@
     <el-tabs v-else v-model="state.activeTab" class="demo-tabs" @tab-change="handleCommand">
       <el-tab-pane v-for="item in list" :key="item.key" :label="$t(item.name)" :name="item.key"></el-tab-pane>
     </el-tabs>
-    <div v-show="state.activeTab === 'myTask'"  class="dashboard-item-tab--content--table" >
-      <PersonalWorkflowMy  />
+    <div v-if="state.activeTab === 'myTask'"  class="dashboard-item-tab--content--table" >
+      <PersonalWorkflowMy :processKeys="processKeys" />
     </div>
-    <div v-show="state.activeTab === 'activeTask'" class="dashboard-item-tab--content--table" >
-      <PersonalWorkflowActive />
+    <div v-else-if="state.activeTab === 'activeTask'" class="dashboard-item-tab--content--table" >
+      <PersonalWorkflowActive :processKeys="processKeys" />
     </div>
-    <div v-show="state.activeTab === 'allTask'" class="dashboard-item-tab--content--table" >
-      <PersonalWorkflowAvalible  />
+    <div v-else="state.activeTab === 'allTask'" class="dashboard-item-tab--content--table" >
+      <PersonalWorkflowAvalible :processKeys="processKeys"  />
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-const props = defineProps(['isTabView'])
+const props = defineProps(['isTabView', 'processKeys'])
 const emits = defineEmits(['tab-change'])
 const state = reactive<any>({
   activeTab: 'myTask',

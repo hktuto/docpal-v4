@@ -41,6 +41,14 @@ async function getDetail() {
     docPermission.value = null
     const userId = useUserId()
     const { doc, permission } = await getDocDetail(idOrPath.value, userId.value);
+    // if doc is Folder, redirect to browse page
+    if(doc.isFolder) {
+        const newItem = createBrowseListPageParams({
+            idOrPath: doc.id
+        })
+        routerProvider?.navigateTo(newItem)
+        return
+    }
     docDetail.value = doc
     docPermission.value = permission
     loading.value = false
@@ -134,6 +142,11 @@ function goParent(){
 
 useEventListener(document, 'closeFilePreview', closePreview)
 
+function switchFile(newFileId:string){
+    routerProvider?.updateProps({idOrPath: newFileId})
+}
+
+
 watch([idOrPath, commentId], (newVal, oldVal) => {
     getDetail()
     if(newVal && newVal[1]) {
@@ -168,7 +181,7 @@ function calMinWidth(){
 
                                 <Icon name="tabler:arrow-back" @click="goParent" />
                             </ElTooltip>
-                            {{ docDetail.name }}
+                            <BrowseDetailFileNamePicker :docId="docDetail.id" :title="docDetail.name" :parentRef="docDetail.parentRef" @itemClick="switchFile"/>
                             <el-tag v-if="docDetail.properties && docDetail.properties['file:content'] && docDetail.properties['file:content']['mime-type']" class="doc-extension" effect="dark">{{ mime.extension(docDetail.properties['file:content']['mime-type']) }}</el-tag>
                         </div>
                     </div>

@@ -60,8 +60,54 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                 let icon = '/icons/doc/file.svg';
                 if (row.isFolder) {
                     icon = '/icons/doc/folder.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                // get differnent icon base on row.mimeType
+                if(!row.mimeType) {
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                const mimeType = row.mimeType
+                if(mimeType?.startsWith('image')){
+                    icon = '/icons/doc/image.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('video')){
+                    icon = '/icons/doc/video.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('audio')){
+                    icon = '/icons/doc/audio.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/pdf')){
+                    icon = '/icons/doc/pdf.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('text')){
+                    icon = '/icons/doc/text.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/zip')){    
+                    icon = '/icons/doc/zip.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/vnd.ms-excel') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+                    icon = '/icons/doc/excel.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+                    icon = `/icons/doc/word.svg`
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
+                }
+                // if mimetype is ppt, return ppt src
+                if(mimeType?.startsWith('application/vnd.ms-powerpoint') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+                    icon = `/icons/doc/ppt.svg`
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
                 }
                 return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
             }
         },
         {
@@ -598,8 +644,8 @@ defineExpose({
     }
 
     :deep(.browseFileIcon) {
-        width: var(--app-space-m);
-        height: var(--app-space-m);
+        width: calc(var(--app-space-m) * 1.5);
+        height: calc(var(--app-space-m) * 1.5);
     }
 
     :deep(.browseNameCell) {

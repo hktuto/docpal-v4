@@ -5,8 +5,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { watchDebounced } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { clientApi } from "api";
+const props = defineProps(['processKeys'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const {
@@ -37,7 +39,11 @@ const {
 });
 async function getData(params: any = {}) {
   if(endPoint === 'admin') return
-  const res = await clientApi.api.postWorkflowTasksUser({ ...params, ...extraParams.value }).then(res => res.data)
+  const settingParams = {}
+  if(props.processKeys && props.processKeys.length > 0) {
+    settingParams.processKeys = props.processKeys
+  }
+  const res = await clientApi.api.postWorkflowTasksUser({ ...params, ...extraParams.value, ...settingParams }).then(res => res.data)
   return {
     data: {
       entryList: res?.entryList,
@@ -49,8 +55,16 @@ function handleDblclick(row: any) {
   ElMessage.info('Need to add routing jump event')
   // routerProvider?.navigateTo(routeDashboardDetail(row), false)
 }
-onMounted(() => {
-})
+watchDebounced(
+  () => props.processKeys,
+  (newValue, oldValue) => {
+    if (!oldValue) return;
+    if(JSON.stringify(oldValue) === JSON.stringify(newValue)) return;
+    reload()
+  },
+  { debounce: 200, maxWait: 500, immediate: true }
+);
+
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

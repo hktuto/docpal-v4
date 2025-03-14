@@ -203,7 +203,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
                                 </template>
                                 <template v-else>
                                     <div class="selectedNoteContainer">
-                                        {{ $t("dpDocument_fileSelected") }}({{ selectedList.length }})
+                                        {{ $t("dpDocument_fileSelected") }}: {{ selectedList.length }}
                                         <Icon name="mdi:close" @click="handleClearSelected"/>
                                     </div>
                                 </template>
