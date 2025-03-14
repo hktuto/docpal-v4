@@ -78,7 +78,6 @@ import { adminApi, clientApi } from "api";
 import {ElMessage} from 'element-plus'
 import type { FormInstance } from "element-plus";
 const emits = defineEmits(["email-update"]);
-const props = defineProps(["detail"]);
 const { t } = useI18n();
 const {
   public: { endPoint },
@@ -86,6 +85,7 @@ const {
 const state = reactive<any>({
   visible: false,
   userList: [],
+  easyFormId: ''
 });
 const subjectRef = ref();
 const bodyRef = ref();
@@ -108,9 +108,10 @@ const form = ref({
   subject: "subject",
   body: "Dear ",
 });
-async function handleOpen(userEmail: string = '') {
+async function handleOpen(easyFormId: string = '', userEmail: string = '') {
   state.visible = true;
-  const email = await adminApi.api.getFormDesignEmailId(props.detail.id).then(res => res.data)
+  state.easyFormId = easyFormId
+  const email = await adminApi.api.getFormDesignEmailId(easyFormId).then(res => res.data)
   if(!email.body) email.body = ''
   if(!email.subject) email.subject = ''
   if(!email.userEmails) email.userEmails = []
@@ -142,7 +143,7 @@ async function handleSubmit() {
   const valid = await formRef.value.validate();
   if(!valid) return
   const params = {
-    easyFormId: props.detail.id,
+    easyFormId: state.easyFormId,
     formLink: getFormLink(false),
     subject: form.value.subject,
     userEmails: getEmail(),
@@ -179,7 +180,7 @@ async function handleSubmit() {
   function getFormLink(initBodyField = true) {
     const fItem = bodyFieldList.value.find(item => item.label === "Form Link")
     const origin = endPoint?.upload;
-    const href = `https://${origin}/public-form?id=${props.detail.id}`
+    const href = `https://${origin}/public-form?id=${state.easyFormId}`
     // if(initBodyField) {
     //   fItem.value = href
     //   fItem.templateValue = `<a href="${href}">${href}</a>`;

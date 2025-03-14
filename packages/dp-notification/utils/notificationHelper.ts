@@ -42,7 +42,7 @@ export async function notiHandleView(row: any, tabProvider: any) {
   }
 }
 
-const getWorkflowRoute = async (processInstanceId: string) => {
+export const getWorkflowRoute = async (processInstanceId: string) => {
   try {
     const taskList: any = await clientApi.api.getWorkflowTasks({ processInstanceId }).then(res => res.data)
     const newTab = routeWorkflowDetail({

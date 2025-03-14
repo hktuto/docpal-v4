@@ -27,7 +27,7 @@
         />
       </div>
     </div>
-    <EasyFormEmailDialog ref="dialogRef" :detail="detail" @email-update="update"/>
+    <EasyFormEmailDialog ref="dialogRef" @email-update="update"/>
   </el-card>
 </template>
 <script lang="ts" setup>
@@ -78,7 +78,7 @@ function handleCopyIframe() {
   copy(iframe, t("dpTip.embedCodeCopied"));
 }
 function handleSendEmail() {
-  dialogRef.value.handleOpen()
+  dialogRef.value.handleOpen(props.detail.id)
 }
 watch(
   () => props.detail,
