@@ -58,7 +58,6 @@ async function save(){
     newForm.append('file', newBlob, 'workflow.bpmn.xml')
     newForm.append('isDraft', true)
     const {data:newVersionData} =await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO:{}},newForm) as any
-    console.log("newVersionData", newVersionData)
     if(!newVersionData){
         throw new Error('newVersionData not found')
     }
