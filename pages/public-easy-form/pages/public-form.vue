@@ -59,10 +59,11 @@ async function handleSubmit() {
     }, {})
 
     // easy form email 日志追踪
-    const logId = route.query.emailBusinessLogId
-    if(!!logId) params.emailBusinessLogId = logId
+    // const logId = route.query.emailBusinessLogId
+    // if(!!logId) params.emailBusinessLogId = logId
     await clientApi.api.postFormDesignSubmitData({
       id: route.query.id as string,
+      emailBusinessLogId: route.query.emailBusinessLogId,
       params
     })
     router.push('/public/uploadTip?tip=easyFormSubmitSuccessfully')
