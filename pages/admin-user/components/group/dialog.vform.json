@@ -43,7 +43,7 @@
         "onChange": "const groupIdRef = this.getWidgetRef('groupId')\nconst groupId = value.trim().replaceAll(\" \", \"_\")\ngroupIdRef.setValue(groupId)",
         "onFocus": "",
         "onBlur": "",
-        "onValidate": "",
+        "onValidate": "let exitList = []\ntry {\n exitList  = this.getOptionData().exitGroups\n} catch (e) {}\n\nconst trimValue = value.trim()\nconst _trimValue = value.trim().replaceAll(\" \", \"_\")\nif (exitList.includes(value) || exitList.includes(trimValue) || exitList.includes(_trimValue)) {\n  callback(new Error($i18n.t('dpTip.exit', {name: $i18n.t('user_userGroupName')})))  //fail\n} else {\n  callback();  //pass\n}\n",
         "onAppendButtonClick": ""
       },
       "id": "input91235"
@@ -113,9 +113,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
