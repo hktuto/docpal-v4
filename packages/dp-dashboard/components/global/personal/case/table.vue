@@ -70,8 +70,12 @@ async function getData(
   }
 }
 function handleDblclick(row: any) {
-  ElMessage.info("Need to add routing jump event");
-  // routerProvider?.navigateTo(routeDashboardDetail(row), false)
+  const item = caseManageDashboardPage({
+    instanceId: row.case_id,
+    case_id: row.instanceId,
+    versionId: row.caseDefinitionVersionId,
+  })
+  routerProvider?.navigateTo(item);
 }
 async function setCaseId(id: string) {
   caseId = id;
