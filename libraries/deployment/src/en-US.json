@@ -1188,6 +1188,7 @@
     "choose": "Please choose",
     "configurePermission": "Permission verification failed, please contact the administrator to configure",
     "copyPathSuccess": "Path copied to clipboard",
+    "exit": "{name} already exists",
     "deleteFailed": "Delete Failed",
     "dragOrClickToUpload": "Click here or drag file to upload",
     "duplicateFileName1": "Do you want to add a new file {fileName}?",
