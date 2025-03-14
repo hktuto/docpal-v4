@@ -203,6 +203,23 @@ function handleAdditionalSetting(xml:any, taskDetail: any, formData:any) {
 }
 
 
+async function addtionalSubmit(formData:any) {
+  const param = {
+      taskId: id,
+      properties: { ...formData },
+    };
+    const res: any = await clientApi.api
+      .postWorkflowFormSubmit(param)
+      .then((res) => res.data);
+    ElMessage.success(`${t("msg_successfulOperation")}`);
+    routerProvider?.navigateTo(
+      routeWorkflowPage({
+        workflowType: workflowType,
+      }),
+      false
+    );
+}
+
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   try {
     state.taskDetail = { ...taskDetailRes };
@@ -263,7 +280,7 @@ onActivated(() => {
             <template #action>
               <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
                 <template v-for="(item,index) in additionalButton" :key="index">
-                    <component :is="item.component" v-bind="item.props" />
+                    <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
                 </template>
                 <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
                 <el-button type="primary" @click="handleSubmit">{{
