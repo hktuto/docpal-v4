@@ -48,6 +48,7 @@ export const useGlobalSearch = ( tabProvide : any) => {
 
     async function calculateDisplayList(){        // reset display list
         displayList.value = []
+        
         // calcuate menu list
         list.value.forEach( (listItem:GlobalSearchList) => {
             let listItemMatchList:GlobalSearchItem[] = [];
@@ -91,6 +92,7 @@ export const useGlobalSearch = ( tabProvide : any) => {
             })
             
         }
+        console.log("actionList", actionList.value)
     }
 
     function itemClick(item:GlobalSearchItem) {
