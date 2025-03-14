@@ -70,7 +70,7 @@ const formData = reactive<any>({
 })
 async function handleCheckNameOrTitle (rule:any, value:any, callback:any) {
     if (value === '') {
-        callback(new Error(t('form_common_requird') as string))
+        callback(new Error(t('render.hint.fieldRequired') as string))
     } else {
         const res = await adminApi.api.postWorkflowChecknameortitle({ nameOrTitle: value})
         if (Number(res.code) === 500) {
@@ -179,13 +179,13 @@ defineExpose({ handleOpen })
     <el-form v-loading="state.pathLoading" :model="formData" ref="FormRef" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('docType_profileName')"
                 prop="profileName"
-                :rules="[{ required: true, message: $t('form_common_requird')}]"
+                :rules="[{ required: true, message: $t('docType_profileName') + ' '+ $t('render.hint.fieldRequired')}]"
         >
             <el-input type="text" v-model="formData.profileName" />
         </el-form-item>
         <el-form-item :label="$t('dpTable_rootPath')"
                 prop="rootPath"
-                :rules="[{ required: true, message: $t('form_common_requird')}]"
+                :rules="[{ required: true, message: $t('dpTable_rootPath') + ' '+ $t('render.hint.fieldRequired')}]"
         >
             <el-cascader v-model="formData.rootPath" :props="state.cascaderProps" filterable clearable></el-cascader>
         </el-form-item>
