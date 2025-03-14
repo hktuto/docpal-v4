@@ -107,7 +107,7 @@ defineExpose({ open })
             </el-form-item>
             <el-form-item :label="$t('workflowEditor.copyVersion')" prop="copyVersion">
                 <el-select v-model="form.copyVersion" placeholder="Select">
-                    <el-option v-for="item in versionList" :key="item.versionNumber" :label="item.versionNumber" :value="item.id" />
+                    <el-option v-for="item in versionList" :key="item.versionNumber" :label="item.versionNumber" :value="item.versionNumber" />
                 </el-select>
             </el-form-item>
         </el-form>
