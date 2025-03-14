@@ -13,7 +13,7 @@
             </el-form-item>
             <el-form-item :label="$t('easyForm.type')" prop="actionType"
                           :rules="[{required: true, message: $t('easyForm.type') + ' ' +$t('render.hint.fieldRequired'), trigger: 'change'}]">
-                <el-select-v2 v-model="form.actionType" :placeholder="t('common_selectOccupancyContent')" clearable
+                <el-select-v2 v-model="form.actionType" :placeholder="t('common_selectedIsRequiredMsg')" clearable
                               :options="typeOptions" filterable @change="handleChange"/>
             </el-form-item>
             <template v-if="form.actionType">
@@ -23,7 +23,7 @@
                 <el-form-item :label="$t('easyForm.'+ form.actionType +'TemplateKey')" prop="actionKey"
                               :rules="[{required: true, message: $t('easyForm.'+ form.actionType +'TemplateKey') + ' ' +$t('render.hint.fieldRequired'), trigger: 'change'}]">
                     <el-select-v2 v-model="form.actionKey" :options="state.templateList" filterable clearable
-                                  :placeholder="t('common_selectOccupancyContent')"
+                                  :placeholder="t('common_selectedIsRequiredMsg')"
                                   @change="handleKeyChange"/>
                 </el-form-item>
             </template>

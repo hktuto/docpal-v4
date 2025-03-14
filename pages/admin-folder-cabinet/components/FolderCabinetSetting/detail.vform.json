@@ -84,60 +84,7 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [
-                  {
-                    "value": "Prospect Profile",
-                    "label": "Prospect Profile"
-                  },
-                  {
-                    "value": "Contract",
-                    "label": "Contract"
-                  },
-                  {
-                    "value": "Folder",
-                    "label": "文件夹"
-                  },
-                  {
-                    "value": "ContractFolder",
-                    "label": "ContractFolder"
-                  },
-                  {
-                    "value": "Prospects",
-                    "label": "Prospects"
-                  },
-                  {
-                    "value": "Pre-Sales",
-                    "label": "Pre-Sales"
-                  },
-                  {
-                    "value": "testfor64charartertestfor64charartertestfor64charartertestfor64",
-                    "label": "testfor64charartertestfor64charartertestfor64charartertestfor64"
-                  },
-                  {
-                    "value": "Case",
-                    "label": "Case"
-                  },
-                  {
-                    "value": "CountryAndRegion",
-                    "label": "CountryAndRegion"
-                  },
-                  {
-                    "value": "in_name",
-                    "label": "in_name"
-                  },
-                  {
-                    "value": "Customer",
-                    "label": "Customer"
-                  },
-                  {
-                    "value": "UiPath",
-                    "label": "UiPath"
-                  },
-                  {
-                    "value": "Prospect",
-                    "label": "Prospect"
-                  }
-                ],
+                "optionItems": [],
                 "required": true,
                 "requiredHint": "",
                 "validation": "",
@@ -166,7 +113,7 @@
                 "label": "folder_cabinetDetailFilter",
                 "labelAlign": "",
                 "defaultValue": [],
-                "placeholder": "common_selectOccupancyContent",
+                "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -314,7 +261,7 @@
                 "label": "tableHeader.to",
                 "labelAlign": "",
                 "defaultValue": [],
-                "placeholder": "common_selectOccupancyContent",
+                "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -328,146 +275,9 @@
                 "automaticDropdown": false,
                 "multiple": true,
                 "multipleLimit": 20,
-                "optionItems": [
-                  {
-                    "value": "createBy",
-                    "label": "创建者"
-                  },
-                  {
-                    "label": "Administrator<lyle.zheng@wclsolution.com>",
-                    "value": "Administrator"
-                  },
-                  {
-                    "label": "create_test<ikki.cheng@wclsolution.com>",
-                    "value": "create_test"
-                  },
-                  {
-                    "label": "demo_account<walter.mak@wclsolution.com>",
-                    "value": "demo_account"
-                  },
-                  {
-                    "label": "demo_director<walter.mak@wclsolution.com>",
-                    "value": "demo_director"
-                  },
-                  {
-                    "label": "demo_head<walter.mak@wclsolution.com>",
-                    "value": "demo_head"
-                  },
-                  {
-                    "label": "demo_user<walter.mark@wclsolution.com>",
-                    "value": "demo_user"
-                  },
-                  {
-                    "label": "docpaladmin<ninerabbit9299@gmail.com>",
-                    "value": "docpaladmin"
-                  },
-                  {
-                    "label": "entityType<entitytype@163.com>",
-                    "value": "entityType"
-                  },
-                  {
-                    "label": "everything<ikki.cheng@wclsolution.com>",
-                    "value": "everything"
-                  },
-                  {
-                    "label": "frank_yang<frank.yang@wclsolution.com>",
-                    "value": "frank_yang"
-                  },
-                  {
-                    "label": "ikki_cheng<ikki.cheng@wclsolution.com>",
-                    "value": "ikki_cheng"
-                  },
-                  {
-                    "label": "jack_li<352775063@qq.com>",
-                    "value": "jack_li"
-                  },
-                  {
-                    "label": "jack_li2<352775063@qq.com>",
-                    "value": "jack_li2"
-                  },
-                  {
-                    "label": "Jay_Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay_Cai"
-                  },
-                  {
-                    "label": "Jay.Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay.Cai"
-                  },
-                  {
-                    "label": "Joshua<joshua@wcl.com>",
-                    "value": "Joshua"
-                  },
-                  {
-                    "label": "Lyle<lyle.zheng@wclsolution.com>",
-                    "value": "Lyle"
-                  },
-                  {
-                    "label": "nine<ninerabbit9299@gmail.com>",
-                    "value": "nine"
-                  },
-                  {
-                    "label": "ninerabbit<ninerabbit9299@163.com>",
-                    "value": "ninerabbit"
-                  },
-                  {
-                    "label": "nissin<alison.yuen@wclsolution.cm>",
-                    "value": "nissin"
-                  },
-                  {
-                    "label": "ooyy<123@qq.com>",
-                    "value": "ooyy"
-                  },
-                  {
-                    "label": "ooyy1<ooyy1@qq.com>",
-                    "value": "ooyy1"
-                  },
-                  {
-                    "label": "readonly<ikki.cheng@wclsolution.com>",
-                    "value": "readonly"
-                  },
-                  {
-                    "label": "readwrite<ikki.cheng@wclsolution.com>",
-                    "value": "readwrite"
-                  },
-                  {
-                    "label": "Rh_Admin<royhoo.zhang@wclsolution.com>",
-                    "value": "Rh_Admin"
-                  },
-                  {
-                    "label": "rh<royhoo_cc@163.com>",
-                    "value": "rh"
-                  },
-                  {
-                    "label": "royhoo<royhoo.zhang@wclsolution.com>",
-                    "value": "royhoo"
-                  },
-                  {
-                    "label": "sales_manager<jay.cai@wclsolution.com>",
-                    "value": "sales_manager"
-                  },
-                  {
-                    "label": "sean-admin<example@example.com>",
-                    "value": "sean-admin"
-                  },
-                  {
-                    "label": "sean-client<9394wing@gmail.com>",
-                    "value": "sean-client"
-                  },
-                  {
-                    "label": "Shawn_Fang<shawn.fang@wclsolution.com>",
-                    "value": "Shawn_Fang"
-                  },
-                  {
-                    "label": "will_du<will.du@wclsolution.com>",
-                    "value": "will_du"
-                  },
-                  {
-                    "label": "willl<willdu@wclsolution.com>",
-                    "value": "willl"
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
-                "requiredHint": "",
+                "requiredHint": "folder_cabinetSystemReminderToNotBeEmpty",
                 "validation": "",
                 "validationHint": "",
                 "customClass": [],
@@ -565,7 +375,7 @@
                 "label": "tableHeader.to",
                 "labelAlign": "",
                 "defaultValue": [],
-                "placeholder": "common_selectOccupancyContent",
+                "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -665,7 +475,11 @@
                     "value": "nissin"
                   },
                   {
-                    "label": "ooyy<123@qq.com>",
+                    "label": "ooo<ooo@qq.bb>",
+                    "value": "ooo"
+                  },
+                  {
+                    "label": "ooyy<oy.ou@wclsolution.com>",
                     "value": "ooyy"
                   },
                   {
@@ -718,7 +532,7 @@
                   }
                 ],
                 "required": false,
-                "requiredHint": "Email Reminder – To is required",
+                "requiredHint": "folder_cabinetEmailReminderToNotBeEmpty",
                 "validation": "",
                 "validationHint": "",
                 "customClass": [],
@@ -745,7 +559,7 @@
                 "label": "tableHeader.cc",
                 "labelAlign": "",
                 "defaultValue": [],
-                "placeholder": "common_selectOccupancyContent",
+                "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -845,7 +659,11 @@
                     "value": "nissin"
                   },
                   {
-                    "label": "ooyy<123@qq.com>",
+                    "label": "ooo<ooo@qq.bb>",
+                    "value": "ooo"
+                  },
+                  {
+                    "label": "ooyy<oy.ou@wclsolution.com>",
                     "value": "ooyy"
                   },
                   {
@@ -996,7 +814,7 @@
                 "label": "tableHeader.to",
                 "labelAlign": "",
                 "defaultValue": [],
-                "placeholder": "common_selectOccupancyContent",
+                "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -1096,7 +914,11 @@
                     "value": "nissin"
                   },
                   {
-                    "label": "ooyy<123@qq.com>",
+                    "label": "ooo<ooo@qq.bb>",
+                    "value": "ooo"
+                  },
+                  {
+                    "label": "ooyy<oy.ou@wclsolution.com>",
                     "value": "ooyy"
                   },
                   {
@@ -1149,7 +971,7 @@
                   }
                 ],
                 "required": false,
-                "requiredHint": "",
+                "requiredHint": "folder_cabinetReportNotificationToNotBeEmpty",
                 "validation": "",
                 "validationHint": "",
                 "customClass": "",
@@ -1176,7 +998,7 @@
                 "label": "tableHeader.cc",
                 "labelAlign": "",
                 "defaultValue": [],
-                "placeholder": "common_selectOccupancyContent",
+                "placeholder": "",
                 "columnWidth": "200px",
                 "size": "",
                 "labelWidth": null,
@@ -1276,7 +1098,11 @@
                     "value": "nissin"
                   },
                   {
-                    "label": "ooyy<123@qq.com>",
+                    "label": "ooo<ooo@qq.bb>",
+                    "value": "ooo"
+                  },
+                  {
+                    "label": "ooyy<oy.ou@wclsolution.com>",
                     "value": "ooyy"
                   },
                   {

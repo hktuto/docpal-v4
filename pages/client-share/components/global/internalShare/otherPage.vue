@@ -325,7 +325,7 @@ const {
 
 function handleDblclick(row: any) {
   if (row.isFolder) {
-    routerProvider?.navigateTo(routeShareMePageFolder(row), false);
+    routerProvider?.navigateTo(routeShareOtherPageFolder(row), false);
   } else {
     routerProvider?.navigateTo(
       createDetailPageParams({

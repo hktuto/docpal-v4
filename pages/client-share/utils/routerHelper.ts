@@ -39,7 +39,7 @@ export const routeShareOtherPageFolder = function(params: any){
     id: "internal-share-other-page-folder-versions-" + new Date().getTime(),
     name: "internal-share-other-page-folder-" + params.documentIds,
     icon: 'lucide:file-symlink',
-    label: params.name,
+    label: params.documentNames,
     component: 'LazyInternalShareOtherPageFolder',
     props: {
       idOrPath: params.documentIds,
