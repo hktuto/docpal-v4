@@ -7,10 +7,10 @@
       "formItemFlag": true,
       "options": {
         "name": "id",
-        "label": "user_groupNameMulti",
+        "label": "user_UserGroup",
         "labelAlign": "",
         "defaultValue": [],
-        "placeholder": "Please select one or more user groups.",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -60,9 +60,10 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "onFormValidate": "",
+    "dhList": [],
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

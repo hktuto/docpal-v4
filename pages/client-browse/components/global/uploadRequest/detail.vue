@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { CircleCheckFilled, WarningFilled, Download } from "@element-plus/icons-vue";
-import { createUploadRequestPageParams } from "../../../utils/browseMenuHelper";
-import { clientApi } from "api";
-import { MenuRouterKey } from "#imports";
+import {CircleCheckFilled, WarningFilled, Download} from "@element-plus/icons-vue";
+import {createUploadRequestPageParams} from "../../../utils/browseMenuHelper";
+import {clientApi} from "api";
+import {MenuRouterKey} from "#imports";
+
 const routerProvider = inject(MenuRouterKey);
 const props = defineProps([
   'paramKey', 'id'
@@ -28,11 +29,12 @@ const MetaFormRef = ref();
 const paramKey = (props.paramKey
   ? props.paramKey
   : "processInstanceId") as string;
+
 // #region module: 1. table and init
 async function getData() {
   state.loading = true;
   try {
-    const response: any = await clientApi.api.postWorkflowProperties({ [paramKey]: props.id }).then(res => res.data);
+    const response: any = await clientApi.api.postWorkflowProperties({[paramKey]: props.id}).then(res => res.data);
     const index = response.findIndex((item: any) => item.id === "files");
     if (index !== -1) state.tableData = await revertUploadFile(response[index].value);
     if (state.tableData.length > 0) handleDblclick(state.tableData[0]);
@@ -41,16 +43,17 @@ async function getData() {
   } catch (error) {
     state.tableData = []
     state.selectedRow = []
-  } 
-  finally{
+  } finally {
     state.loading = false;
   }
+
   function getRQDetail(keys: any[], propsArr: any[]) {
     keys.forEach((key) => {
       const index = propsArr.findIndex((item) => item.id === key);
       state.detail[key] = propsArr[index].value;
     });
   }
+
   async function revertUploadFile(fileIds: string) {
     const pList: any = [];
     const result: any = [];
@@ -76,9 +79,11 @@ async function getData() {
     return result;
   }
 }
+
 // #endregion
 // #region module: 4. handleSubmit
 const formRef = ref();
+
 async function handleSubmit() {
   const valid = await formRef.value.validate();
   const metaValid = await MetaFormRef.value.checkMetaValidate(state.tableData);
@@ -93,20 +98,23 @@ async function handleSubmit() {
     };
     const res = await clientApi.api.postWorkflowFormSubmit(param).then((res: any) => res.result);
     if (!!res) routerProvider?.navigateTo(createUploadRequestPageParams({}));
-  } catch (error) {}
+  } catch (error) {
+  }
   state.submitLoading = false;
 }
+
 function getParams() {
   const result: any = {};
   state.tableData.forEach((item: any) => {
     result[item.id] = {
       approved: item.approved,
       documentType: item.documentType,
-      properties: { ...item.properties, "dc:title": getFileName(item.name) },
+      properties: {...item.properties, "dc:title": getFileName(item.name)},
     };
   });
   return JSON.stringify(result);
 }
+
 function getFileName(name: any) {
   const result =
     "[" +
@@ -117,16 +125,20 @@ function getFileName(name: any) {
     name;
   return result;
 }
+
 // #endregion
 
 // #region module: 3.1 applyToSelect change
 async function handleDocTypeChange(row: any) {
   if (MetaFormRef) await MetaFormRef.value.init(row.documentType);
 }
+
 function handleMetaChange(data: any) {
   if (!state.loading) state.selectedRow.properties = deepCopy(data.formModel);
 }
+
 const treeRef = ref();
+
 function applyToSelect(key: string, value: string, docType?: string) {
   state.selectedRows = treeRef.value.getCheckedNodes();
   state.loading = true;
@@ -142,6 +154,7 @@ function applyToSelect(key: string, value: string, docType?: string) {
     state.loading = false;
   }, 500);
 }
+
 function handleApply(formModel: any) {
   state.tableData.forEach((item: any) => {
     if (item.documentType === state.selectedRow.documentType) {
@@ -151,6 +164,7 @@ function handleApply(formModel: any) {
     }
   });
 }
+
 // #endregion
 // #region module: 2. previewFile
 const previewFile = reactive<any>({
@@ -163,6 +177,7 @@ const previewFile = reactive<any>({
     readOnly: true,
   },
 });
+
 async function handleDblclick(row: any) {
   getPreview();
   state.loading = true;
@@ -181,11 +196,13 @@ async function handleDblclick(row: any) {
       previewFile.blob = await clientApi.api.getWorkflowTaskAttachmentPreview({attachmentId: row.id}, {
         format: 'blob'
       });
-    } catch (error) {}
+    } catch (error) {
+    }
     previewFile.loading = false;
     previewFile.id = row.id;
   }
 }
+
 async function handleDownload(file: any) {
   try {
     file.downloadLoading = true;
@@ -193,28 +210,31 @@ async function handleDownload(file: any) {
       format: 'blob'
     });
     downloadBlob(blob, file.name || file.title, blob.type);
-    
+
   } catch (error) {
   } finally {
     file.downloadLoading = false;
   }
 }
+
 // #endregion
 // #region module: 3.2 handleCheckChange
 function handleCheckAll(value: boolean) {
   if (value) treeRef.value.setCheckedKeys(state.tableData.map((item: any) => item.id));
   else treeRef.value.setCheckedKeys([]);
 }
+
 function handleCheckChange() {
   state.selectedRows = treeRef.value.getCheckedNodes();
   if (state.selectedRows.length === state.tableData.length) state.checkAll = true;
   else state.checkAll = false;
 }
+
 // #endregion
-onActivated( () => {
+onActivated(() => {
   getData();
 });
-onMounted(async() => {
+onMounted(async () => {
   const res: any = await clientApi.api.getTypesActive().then(res => res.data);
   state.fileTypes = res.filter((item: any) => !item.isFolder);
 })
@@ -234,14 +254,16 @@ onMounted(async() => {
         <el-button
           class="el-icon--right"
           @click="applyToSelect('documentType', state.applyDocumentType)"
-          >{{ $t("dpButtom_apply") }}</el-button
+        >{{ $t("dpButtom_apply") }}
+        </el-button
         >
       </div>
     </div>
     <div class="left-bottom">
       <el-checkbox v-model="state.checkAll" @change="handleCheckAll">{{
-        $t("button.selectAll")
-      }}</el-checkbox>
+          $t("button.selectAll")
+        }}
+      </el-checkbox>
       <el-tree
         ref="treeRef"
         :data="state.tableData"
@@ -264,9 +286,13 @@ onMounted(async() => {
                 {{ data.documentType }}
               </div>
               <el-icon v-if="data.approved" color="#529b2e"
-                ><CircleCheckFilled
-              /></el-icon>
-              <el-icon v-else color="#c45656"><WarningFilled /></el-icon>
+              >
+                <CircleCheckFilled
+                />
+              </el-icon>
+              <el-icon v-else color="#c45656">
+                <WarningFilled/>
+              </el-icon>
             </div>
           </div>
         </template>
@@ -278,23 +304,24 @@ onMounted(async() => {
         :icon="Download"
         :loading="previewFile.downloadLoading"
         @click="handleDownload(previewFile)"
-        >{{ $t("download") }}</el-button
       >
-      <el-button type="primary" :loading="state.submitLoading" @click="handleSubmit">{{
-        $t("submit")
-      }}</el-button>
+        {{ $t("download") }}
+      </el-button>
+      <el-button type="primary" :loading="state.submitLoading" @click="handleSubmit">
+        {{ $t("submit") }}
+      </el-button>
     </div>
     <div class="middle-bottom">
       <el-form ref="formRef" :model="state.selectedRow" label-position="top">
         <el-form-item
           :label="$t('dpDocument_fileName')"
           prop="name"
-          :rules="[{ required: true, message: $t('form_common_requird') }]"
+          :rules="[{ required: true, message: $t('dpDocument_fileName') + ' '+ $t('render.hint.fieldRequired') }]"
         >
-          <el-input v-model="state.selectedRow.name" />
+          <el-input v-model="state.selectedRow.name"/>
         </el-form-item>
         <el-form-item :label="$t('dpTool_approve')" prop="approved">
-          <el-switch v-model="state.selectedRow.approved" />
+          <el-switch v-model="state.selectedRow.approved"/>
         </el-form-item>
         <el-form-item :label="$t('dpDocument_fileType')" prop="documentType">
           <el-select
@@ -333,45 +360,61 @@ onMounted(async() => {
   grid-template-columns: 300px 1fr 1fr;
   grid-template-rows: min-content 1fr;
   gap: var(--app-space-xs);
+
   .left-top {
     grid-area: 1 / 1 / 2 / 2;
   }
+
   .left-bottom {
     grid-area: 2 / 1 / 3 / 2;
     overflow: auto;
   }
+
   .middle-top {
     grid-area: 1 / 2 / 2 / 3;
     padding: 0 12px;
   }
+
   .middle-bottom {
     grid-area: 2 / 2 / 3 / 3;
     overflow: auto;
   }
+
   .right {
     grid-area: 1 / 3 / 3 / 4;
   }
 }
+
 .tree-item {
   width: 100%;
+
   &--title {
     max-width: 120px;
   }
+
   &--right {
     display: flex;
     align-items: center;
     gap: var(--app-input-padding);
   }
+
   &--documentType {
     max-width: 100px;
   }
 }
+
 .right :deep(.el-card__body) {
   display: grid;
   grid-template-rows: min-content 1fr;
   gap: var(--app-space-xs);
   height: 100%;
 }
-:deep(.el-row) { margin: unset !important; }
-.el-form { padding: 0 12px; }
+
+:deep(.el-row) {
+  margin: unset !important;
+}
+
+.el-form {
+  padding: 0 12px;
+}
 </style>
