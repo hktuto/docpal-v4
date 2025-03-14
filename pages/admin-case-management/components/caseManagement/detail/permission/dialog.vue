@@ -190,7 +190,7 @@ function handleOpen(setting: any) {
                 return _item
             })
         } else {
-            state.permissionField.hidden = props.caseInformation
+            state.permissionField.show = props.caseInformation
         }
     })
 }
@@ -204,6 +204,11 @@ function initOptions() {
         label: item.name,
         type: item.type
     })))
+    state.caseInformation.unshift({
+        value: 'createdBy',
+        label: 'createdBy',
+        type: 'string'
+    })
 }
 
 function handleRecordChange(value) {
