@@ -84,6 +84,10 @@ async function handleSubmit() {
     // console.log(res);
 }
 
+function additionSubmit(args){
+    
+}
+
 onMounted(() => {
     setUpForm()
 })
@@ -97,7 +101,7 @@ const loading = ref(false);
         <template #action>
             <div class="workflow-detail-pane--btns">
                 <template v-for="(item,index) in additionalButton" :key="index">
-                    <component :is="item.component" v-bind="{...item.props, formData}"  />
+                    <component :is="item.component" v-bind="{...item.props, formData}" @submit="additionSubmit" />
                 </template>
                 <el-button @click="handelCancel">{{ $t("cancelText") }}</el-button>
                 <el-button type="primary" @click="handleSubmit">{{

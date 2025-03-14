@@ -11,15 +11,23 @@ if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')
 }
 const form = ref();
-
+const conditionLabel = ref({
+    attr_successLable: "",
+    attr_failureLable: "",
+})
 function refreshData() {
-    if(!node.data || !node.data.data || !node.data.data.extensionElements || !node.data.data.extensionElements['"docpal:decisionTable']){
+    if(!node.data || !node.data.data || !node.data.data.extensionElements || !node.data.data.extensionElements['docpal:decisionTable']){
+
         node.setData({
             ...node.data,
             data:{
                 ...node.data.data,
                 extensionElements:{
                     ...node.data.data.extensionElements,
+                    "docpal:graphLabel":{
+                        attr_successLable:"true",
+                        attr_failureLable:"false",
+                    },
                     "docpal:decisionTable":{
                         orConditionElements:[]
                     }
@@ -27,8 +35,13 @@ function refreshData() {
             }
         })
     }
-    console.log("refreshData", node.data.data.extensionElements['docpal:decisionTable'].orConditionElements)
     form.value = JSON.parse(JSON.stringify(node.data.data.extensionElements['docpal:decisionTable'].orConditionElements))
+    conditionLabel.value = {
+        attr_successLable: node.data.data.extensionElements['docpal:graphLabel']?.attr_successLable || "true",
+        attr_failureLable: node.data.data.extensionElements['docpal:graphLabel']?.attr_failureLable || "false",
+    }
+
+
 }
 
 function updateNode(){
@@ -42,12 +55,34 @@ function updateNode(){
                 ...JSON.parse(JSON.stringify(node.data.data.extensionElements)),
                 "docpal:decisionTable":{
                     orConditionElements: [...JSON.parse(JSON.stringify(form.value))]
+                },
+                "docpal:graphLabel":{
+                    attr_successLable: conditionLabel.value.attr_successLable,
+                    attr_failureLable: conditionLabel.value.attr_failureLable,
                 }
             }
         }
     }
     node.setData(newData,{ overwrite: true, deep: true, silent:false })
     graphProvider?.graph.value?.stopBatch('update-node-data')
+    // TODO : update linked label
+    // get linked edge 
+    const linkedEdges = graphProvider?.graph.value?.getConnectedEdges(node)
+    linkedEdges?.forEach((edge:any) => {
+        if(!edge.data.data || !edge.data.data.conditionExpression) {
+            edge.setLabels('')
+            return;
+        }
+        const condition = edge.data.data.conditionExpression.__cdata
+        if(condition === '${conditionResult}'){
+            edge.setLabels(conditionLabel.value.attr_successLable)
+            return;
+        }
+        if(condition === '${!conditionResult}'){
+            edge.setLabels(conditionLabel.value.attr_failureLable)
+            return;
+        }
+    })
 
 }
 
@@ -94,7 +129,6 @@ async function getMasterTable() {
     }else{
         masterTableOption.value = []
     }
-    console.log("getMasterTable", masterTableOption.value)
 }
 
 const caseTableOption = ref<any[]>([]);
@@ -106,7 +140,6 @@ async function getCaseTable() {
     }else{
         caseTableOption.value = []
     }
-    console.log("getCaseTable", caseTableOption.value)
 }
 
 
@@ -144,7 +177,21 @@ provide(CONDITION_PROVIDER,{
 
 <template>
     <div class="formContainer">
+        <div class="top">
+
         <BpmnSidebarEditLabel :node="node" />
+        <div class="labelContainer">
+            <div class="title">Graph Label</div>
+            <div class="label">
+                <div class="labelTitle">Success</div>
+                <ElInput v-model="conditionLabel.attr_successLable" placeholder="Success" @change="updateNode" />
+            </div>
+            <div class="label">
+                <div class="labelTitle">Failure</div>
+                <ElInput v-model="conditionLabel.attr_failureLable" placeholder="Failure" @change="updateNode" />
+            </div>
+        </div>
+        </div>
         <div class="listContainer">
             <div class="title">Conditions</div>
             <div class="conditions">

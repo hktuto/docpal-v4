@@ -1,4 +1,5 @@
 const generateDocumentComponent = "LazyBpmnButtonGenerateDocument"
+const booleanButtonComponent = 'LazyBpmnButtonBoolean'
 
 export function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDetail: any, formData:any) {
     const xmlJson = bpmnStringToJson(xml)
@@ -30,6 +31,31 @@ export function getBpmnAddtionalElement(xml:any,taskDefinitionKey:string, taskDe
                    taskDetail
                 },
                 component: generateDocumentComponent
+            })
+        }
+    }
+    if(currentTask.extensionElements && currentTask.extensionElements['docpal:booleanButton']){
+        if(Array.isArray(currentTask.extensionElements['docpal:booleanButton'])){
+            currentTask.extensionElements['docpal:booleanButton'].forEach((item:any) => {
+                buttons.push({
+                    props: {
+                        ...item,
+                        xml,
+                        formData,
+                        taskDetail
+                    },
+                    component: booleanButtonComponent
+                })
+            })
+        }else{
+            buttons.push({
+                props: {
+                   ...currentTask.extensionElements['docpal:booleanButton'],
+                   xml,
+                   formData,
+                   taskDetail
+                },
+                component: booleanButtonComponent
             })
         }
     }

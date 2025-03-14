@@ -205,8 +205,8 @@ function initOptions() {
         type: item.type
     })))
     state.caseInformation.unshift({
-        value: 'createdBy',
-        label: 'createdBy',
+        value: 'created_by',
+        label: 'Created by',
         type: 'string'
     })
 }
