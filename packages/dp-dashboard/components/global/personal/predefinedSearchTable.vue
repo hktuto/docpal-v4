@@ -38,8 +38,8 @@ const {
   saveColumnOrder: false
 });
 function handleDblclick(row: any) {
-  ElMessage.info('Need to add routing jump event')
-  // routerProvider?.navigateTo(routeDashboardDetail(row), false)
+  
+  routerProvider?.navigateTo(routeSmartFolderDetail(row), false)
 }
 onMounted(() => {
 })
