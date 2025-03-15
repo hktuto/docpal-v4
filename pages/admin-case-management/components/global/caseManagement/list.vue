@@ -95,6 +95,12 @@ function actionPermission({row, code}: PermissionMethodParams) {
     }
 }
 
+async function handleAfterNewOrSaveAs(data: any) {
+    const newItem = newCaseManagementDetail(data.latestVersionId, data.name, data.latestVersion)
+    routerProvider?.navigateTo(newItem, false)
+    // reload();
+}
+
 provide(CaseManagementListProviderKey, {
     getListApi: (params: any) => {
         let filters: any = undefined;

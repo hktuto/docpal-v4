@@ -13,7 +13,11 @@ const allFieldOptions = computed(() => {
 })
 
 const emits = defineEmits(['created'])
-function open(){
+function open(defaultValue?:string){
+    if(defaultValue) {
+        newFieldForm.value.attr_id = defaultValue
+        newFieldForm.value.attr_name = defaultValue
+    }
     opened.value = true
 }
 

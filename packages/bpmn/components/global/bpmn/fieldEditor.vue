@@ -33,11 +33,18 @@ function openNewFieldDialog(){
 }
 
 const selectedField = computed(() => {
-    console.log(fields.map((item) => item.attr_id))
     return fields.map((item) => item.attr_id)
 })
 
 function fieldUpdate(value:string[]) {
+    console.log("fieldUpdate", value)
+    // check if last item is new item
+    const lastItem = value[value.length - 1]
+    const notNewITem = filteredFieldOptions.value.find(item => item.attr_id === lastItem)
+    if(!notNewITem) {
+        newFieldRef.value?.open(lastItem)
+        return;
+    }
     emits('change', filteredFieldOptions.value.filter((item:any) => value.includes(item.attr_id)))
 }
 
@@ -91,7 +98,7 @@ defineExpose({
         
         <template #default>
             <div class="selecteAndCreateContainer">
-                <ElSelect v-model="selectedField" multiple filterable @change="fieldUpdate">
+                <ElSelect v-model="selectedField" multiple allow-create filterable default-first-option @change="fieldUpdate">
                     <ElOption v-for="item in allFieldOptions" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
                 </ElSelect>
                 <ElButton type="primary" @click="openNewFieldDialog">Add Field</ElButton>
