@@ -37,11 +37,10 @@ const selectedField = computed(() => {
 })
 
 function fieldUpdate(value:string[]) {
-    console.log("fieldUpdate", value)
     // check if last item is new item
     const lastItem = value[value.length - 1]
     const notNewITem = filteredFieldOptions.value.find(item => item.attr_id === lastItem)
-    if(!notNewITem) {
+    if(!notNewITem && value.length > 0) {
         newFieldRef.value?.open(lastItem)
         return;
     }
