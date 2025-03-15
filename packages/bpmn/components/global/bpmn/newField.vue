@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { set } from '@vueuse/core';
 import {formTypeOptions} from '../../../utils/bpmnType';
 const opened = ref(false);
 
@@ -12,6 +13,7 @@ const allFieldOptions = computed(() => {
     return Object.keys(graphProvider.allFormField.value).map((key) => graphProvider.allFormField.value[key]) 
 })
 
+const idFieldEl = ref();
 const emits = defineEmits(['created'])
 function open(defaultValue?:string){
     if(defaultValue) {
@@ -19,6 +21,11 @@ function open(defaultValue?:string){
         newFieldForm.value.attr_name = defaultValue
     }
     opened.value = true
+    setTimeout(() => {
+        if(idFieldEl.value) {
+            idFieldEl.value?.focus()
+        }
+    }, 100)
 }
 
 const newFieldFormEl = ref()
@@ -89,7 +96,7 @@ defineExpose({
     <ElDialog v-model="opened" width="75%" append-to-body>
         <ElForm ref="newFieldFormEl" :model="newFieldForm" :rules="newFieldRules" label-position="top" status-icon @submit.stop>
             <ElFormItem  label="Id" prop="attr_id">
-                <ElInput v-model="newFieldForm.attr_id" placeholder="id" />
+                <ElInput ref="idFieldEl" v-model="newFieldForm.attr_id" placeholder="id" />
             </ElFormItem>
             <ElFormItem  label="Name" prop="attr_name">
                 <ElInput v-model="newFieldForm.attr_name" placeholder="Name" />
