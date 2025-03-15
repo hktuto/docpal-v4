@@ -138,7 +138,7 @@ async function formJsonGet(userTaskId: string, processKey: string, versionId: st
 }
 
 function handleDisabledForm() {
-  if (isAssigneeUser.value) {
+  if (!isAssigneeUser.value) {
     vFormRef.value.disableForm();
   }
 }
@@ -224,7 +224,8 @@ const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   try {
     state.taskDetail = { ...taskDetailRes };
     handleGetActivity();
-    if (isAssigneeUser.value) {
+    if (!isAssigneeUser.value) {
+      
       state.loading = true;
       await handleFormDataGet();
     } else {
