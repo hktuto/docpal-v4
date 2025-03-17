@@ -1,11 +1,11 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <ResponsiveFilter
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
-          inputKey="q"
+          inputKey="email"
         />
       </template>
       <template #relatedWorkflow="{ row }">
@@ -13,7 +13,7 @@
           v-for="(item, index) in row.relatedWorkflows"
           :key="item.actionId + index"
         >
-          <el-tag v-if="item.workflowInstanceId" @click="handleOpenWorkflow(item)">
+          <el-tag v-if="item.workflowInstanceId" class="cursorPointer" @click="(e) => handleOpenWorkflow(item, e)">
             {{ item.actionName }}
           </el-tag>
         </template>
@@ -25,14 +25,14 @@
           v-for="(item, index) in row.relateCases"
           :key="item.actionId + index"
         >
-          <el-tag v-if="item.caseId" @click="handleOpenCase(item)">
+          <el-tag v-if="item.caseId" class="cursorPointer" @click="(e) => handleOpenCase(item, e)">
             {{ item.actionName }}
           </el-tag>
         </template>
       </template>
     </VxeGrid>
 
-    <EasyFormEmailDialog ref="DialogRef" @email-update="emits('email-update')" />
+    <EasyFormEmailDialog ref="DialogRef" @email-update="update" />
     <EasyFormEmailDialogReadonly ref="DialogReadonlyRef" />
   </div>
 </template>
@@ -51,6 +51,7 @@ const extraParams = {
 };
 let filterParams = {};
 const { t } = useI18n();
+const loading = ref(false)
 const {
   tableConfig,
   tableEvent,
@@ -144,7 +145,7 @@ async function initCondition() {
       type: "String",
       isMultiple: false,
       options: [
-        { label: "Send", value: "Send" },
+        { label: "Sent", value: "Sent" },
         { label: "Fail", value: "Fail" },
         { label: "Pending", value: "Pending" },
       ],
@@ -187,24 +188,39 @@ const DialogRef = ref();
 function handleSend(row) {
   DialogRef.value.handleOpen(props.easyFormId, row.email);
 }
+function update() {
+  setTimeout(() => {
+    query()
+  },1000)
+}
 function handleViewEmail(row) {
   DialogReadonlyRef.value.handleOpen(row);
 }
-async function handleOpenWorkflow(row: any = {}) {
+async function handleOpenWorkflow(row: any = {}, event) {
   // row.processInstanceId = "b2ae2c95-0078-11f0-a987-56bed584d4f1"
-  if (!row.processInstanceId) return;
-  const newItem = await getWorkflowRoute(row.processInstanceId);
+  event.preventDefault();
+  event.stopPropagation();
+  if (!row.workflowInstanceId) return;
+
+  loading.value = true
+  const newItem = await getWorkflowRoute(row.workflowInstanceId);
   if (!!newItem) routerProvider?.navigateTo(newItem);
+  loading.value = false
 }
-function handleOpenCase(row: any = {}) {
-  if (!row.case_id && !row.caseDefinitionVersionId) return;
+function handleOpenCase(row: any = {}, event) {
+  event.preventDefault();
+  event.stopPropagation();
+  if (!row.caseId && !row.caseDefinitionVersionId) return;
+  loading.value = true
   // row.case_id = "single-case-000017";
   // row.caseDefinitionVersionId = "23:73a7cf5a-643f-4adf-bc3e-1c638b501589";
-  row.instanceId = row.case_id;
-  row.versionId = row.caseDefinitionVersionId;
-  row.id = row.instanceId;
-  row.case_id = row.instanceId;
-  routerProvider?.navigateTo(caseManageDashboardPage(row));
+  const param = {
+    instanceId: row.caseId,
+    versionId:  row.caseDefinitionVersionId,
+    case_id: row.caseId
+  }
+  routerProvider?.navigateTo(caseManageDashboardPage(param));
+  loading.value = false
 }
 // #endregion
 onMounted(() => {
@@ -233,6 +249,9 @@ defineExpose({ reload });
       background: var(--app-info-color);
       color: #fff;
     }
+  }
+  .el-tag {
+    margin: 1px var(--app-space-xs) 1px 0;
   }
 }
 </style>
