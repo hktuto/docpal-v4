@@ -1,14 +1,16 @@
 <template>
-    <div class="formContainer">
-        <ElForm :model="form" @submit.native.prevent="submit">
-            <ElFormItem :label="t('admin_watermarkName')">
-                <ElInput v-model="form.name" :placeholder="t('admin_watermarkName')"/>
-            </ElFormItem>
-        </ElForm>
-        <div style="text-align: end;">
-            <ElButton class="button " type="primary" @click="submit">{{ t('submit') }}</ElButton>
-        </div>
+  <div class="formContainer">
+    <ElForm :model="form" @submit.native.prevent="submit">
+      <ElFormItem :label="t('admin_watermarkName')">
+        <ElInput v-model="form.name" :placeholder="t('admin_watermarkName')"/>
+      </ElFormItem>
+    </ElForm>
+    <div style="text-align: end;">
+      <ElButton id="adminWatermarkSettingCreateNewWatermarkSubmit" class="button " type="primary" @click="submit">
+        {{ t('submit') }}
+      </ElButton>
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -18,55 +20,55 @@ import {useWatermark, WatermarkTemplate} from '../../composables/Watermark'
 
 const emits = defineEmits(['submit'])
 const props = defineProps<{
-    list: WatermarkTemplate[]
+  list: WatermarkTemplate[]
 }>()
 const {t} = useI18n()
 
 const form = ref({
-    name: ''
+  name: ''
 })
 const {createWatermarkTemplate, list} = useWatermark()
 const router = useRouter();
 
 async function submit() {
-    if (!form.value.name) {
-        // TODO : show error
-        return;
+  if (!form.value.name) {
+    // TODO : show error
+    return;
+  }
+  // if form.name is in list return
+  if (props.list.findIndex(item => item.name === form.value.name) !== -1) {
+    ElMessage.error(t('admin_watermark_name_already_exist') as string);
+    return;
+  }
+  const newItem = await createWatermarkTemplate(form.value);
+  ElMessage.success(t('admin_watermarkCreatedSuccessMsg'))
+  emits('submit', form.value)
+  router.push({
+    path: '/watermark',
+    query: {
+      id: newItem.id
     }
-    // if form.name is in list return
-    if (props.list.findIndex(item => item.name === form.value.name) !== -1) {
-        ElMessage.error(t('admin_watermark_name_already_exist') as string);
-        return;
-    }
-    const newItem = await createWatermarkTemplate(form.value);
-    ElMessage.success(t('admin_watermarkCreatedSuccessMsg'))
-    emits('submit', form.value)
-    router.push({
-        path: '/watermark',
-        query: {
-            id: newItem.id
-        }
-    })
-    // const { data } = await this.$axios.post('/api/watermark', this.form)
+  })
+  // const { data } = await this.$axios.post('/api/watermark', this.form)
 }
 
 onMounted(() => {
-    form.value = {
-        name: ''
-    }
+  form.value = {
+    name: ''
+  }
 });
 
 </script>
 
 <style lang="scss">
 .el-form-item__content {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    flex: 1;
-    line-height: 32px;
-    position: relative;
-    font-size: var(--font-size);
-    min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 1;
+  line-height: 32px;
+  position: relative;
+  font-size: var(--font-size);
+  min-width: 0;
 }
 </style>

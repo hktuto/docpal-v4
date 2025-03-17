@@ -1,49 +1,70 @@
 <template>
-    <el-card v-if="user">
-        <template #header>
-            <div class="flex-x-between">
-                <h3>{{ $t('user_info') }}</h3>
-                <div class="flex-x-end" v-if="!isLdapMode">
-                    <Icon name="material-symbols:edit-square" class="normal cursor-pointer"
-                          style="width: 20px; height: 20px;" @click="handleEdit"></Icon>
-                    <Icon name="mynaui:lock-password-solid" class="normal cursor-pointer"
-                          style="width: 20px; height: 20px;" @click="openDialog"></Icon>
-                    <Icon name="material-symbols:delete-rounded" style="width: 20px; height: 20px;"
-                          class="normal cursor-pointer"
-                          @click="handleDelete"></Icon>
-                </div>
-            </div>
-        </template>
-        <div class="row">
-            <div class="rowTitle">{{ $t('user_firstName') }}</div>
-            <div class="rowValue" :title="user.firstName">{{ user.firstName }}</div>
+  <el-card v-if="user">
+    <template #header>
+      <div class="flex-x-between">
+        <h3>{{ $t('user_info') }}</h3>
+        <div class="flex-x-end" v-if="!isLdapMode">
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="$t('user_editUser')"
+            placement="top"
+          >
+            <Icon id="adminUserInfoEdit" name="material-symbols:edit-square" class="normal cursor-pointer" style="width: 20px; height: 20px;"
+                  @click="handleEdit"></Icon>
+          </el-tooltip>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="$t('user_editPassword')"
+            placement="top"
+          >
+            <Icon id="adminUserInfoChangePassword" name="mynaui:lock-password-solid" class="normal cursor-pointer"
+                  style="width: 20px; height: 20px;" @click="openDialog"></Icon>
+          </el-tooltip>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="$t('user_deleteUser')"
+            placement="top"
+          >
+            <Icon id="adminUserInfoDeleteUser" name="material-symbols:delete-rounded" style="width: 20px; height: 20px;"
+                  class="normal cursor-pointer"
+                  @click="handleDelete"></Icon>
+          </el-tooltip>
         </div>
-        <div class="row">
-            <div class="rowTitle">{{ $t('user_lastName') }}</div>
-            <div class="rowValue" :title="user.lastName">{{ user.lastName }}</div>
-        </div>
-        <div class="row">
-            <div class="rowTitle">{{ $t('user_email') }}</div>
-            <div class="rowValue" :title="user.email">{{ user.email }}</div>
-        </div>
-        <div class="row">
-            <div class="rowTitle">{{ $t('user_company') }}</div>
-            <div class="rowValue" :title="user.company">{{ user.company }}</div>
-        </div>
-        <div class="row">
-            <div class="rowTitle">{{ $t('user_status') }}</div>
-            <div class="rowValue">
-                <el-switch v-model="user.status"
-                           :inactive-text="t('actions.inactive')"
-                           :active-text="t('user_active')"
-                           active-value="A" inactive-value="D"
-                           :loading="user.loading" :disabled="user.loading"
-                           @change="(value) => handleSetStatus(value, user)"/>
-            </div>
-        </div>
-        <UserEditDialog ref="UserEditDialogRef" :user="user" @refresh="emits('refresh')"></UserEditDialog>
-        <UserPasswordDialog ref="UserPasswordDialogRef" :user="user"></UserPasswordDialog>
-    </el-card>
+      </div>
+    </template>
+    <div class="row">
+      <div class="rowTitle">{{ $t('user_firstName') }}</div>
+      <div class="rowValue" :title="user.firstName">{{ user.firstName }}</div>
+    </div>
+    <div class="row">
+      <div class="rowTitle">{{ $t('user_lastName') }}</div>
+      <div class="rowValue" :title="user.lastName">{{ user.lastName }}</div>
+    </div>
+    <div class="row">
+      <div class="rowTitle">{{ $t('user_email') }}</div>
+      <div class="rowValue" :title="user.email">{{ user.email }}</div>
+    </div>
+    <div class="row">
+      <div class="rowTitle">{{ $t('user_company') }}</div>
+      <div class="rowValue" :title="user.company">{{ user.company }}</div>
+    </div>
+    <div class="row">
+      <div class="rowTitle">{{ $t('user_status') }}</div>
+      <div class="rowValue">
+        <el-switch v-model="user.status"
+                   :inactive-text="t('actions.inactive')"
+                   :active-text="t('user_active')"
+                   active-value="A" inactive-value="D"
+                   :loading="user.loading" :disabled="user.loading"
+                   @change="(value) => handleSetStatus(value, user)"/>
+      </div>
+    </div>
+    <UserEditDialog ref="UserEditDialogRef" :user="user" @refresh="emits('refresh')"></UserEditDialog>
+    <UserPasswordDialog ref="UserPasswordDialogRef" :user="user"></UserPasswordDialog>
+  </el-card>
 </template>
 
 
@@ -56,83 +77,83 @@ const {t} = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-    user: UserDTO,
-    isLdapMode: boolean,
+  user: UserDTO,
+  isLdapMode: boolean,
 }>()
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 
 async function handleDelete() {
-    const action = await ElMessageBox.confirm(
-        t('userTip.confirmWhetherToDelete', {username: props.user.firstName}),
-        {
-            confirmButtonText: t("common_confirmDelete"),
-            dangerouslyUseHTMLString: true,
-        }
-    );
+  const action = await ElMessageBox.confirm(
+    t('userTip.confirmWhetherToDelete', {username: props.user.firstName}),
+    {
+      confirmButtonText: t("common_confirmDelete"),
+      dangerouslyUseHTMLString: true,
+    }
+  );
 
-    if (action !== 'confirm') return
-    const res = await userProviderDetail?.BatchDeleteUserApi({userIds: [props.user.userId]})
-    routerProvider?.message.success(t('user_userInfoDeletedSuccessMsg', {username: props.user.firstName}));
-    if (!!res) userProviderDetail?.openUserList()
+  if (action !== 'confirm') return
+  const res = await userProviderDetail?.BatchDeleteUserApi({userIds: [props.user.userId]})
+  routerProvider?.message.success(t('user_userInfoDeletedSuccessMsg', {username: props.user.firstName}));
+  if (!!res) userProviderDetail?.openUserList()
 }
 
 const UserEditDialogRef = ref()
 
 function handleEdit() {
-    UserEditDialogRef.value.handleOpen()
+  UserEditDialogRef.value.handleOpen()
 }
 
 const UserPasswordDialogRef = ref()
 
 function openDialog() {
-    UserPasswordDialogRef.value.handleOpen()
+  UserPasswordDialogRef.value.handleOpen()
 }
 
 async function handleSetStatus(status, row) {
-    row.loading = true
-    row.properties = null
-    const res = await userProviderDetail?.SetUserStatusApi(row)
-    if (!res) {
-        row.status = row.status = 'A' ? 'D' : 'A'
-    } else {
-        // await getAllUserAndActiveCount()
-    }
-    row.loading = false
+  row.loading = true
+  row.properties = null
+  const res = await userProviderDetail?.SetUserStatusApi(row)
+  if (!res) {
+    row.status = row.status = 'A' ? 'D' : 'A'
+  } else {
+    // await getAllUserAndActiveCount()
+  }
+  row.loading = false
 }
 
 </script>
 
 <style lang="scss" scoped>
 .flex-x-between {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .flex-x-end {
-    display: flex;
-    justify-content: flex-end;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .row {
-    display: grid;
-    grid-template-columns: 8rem 1fr;
-    gap: var(--app-space-xs);
-    align-items: center;
-    padding: 0.25rem 0;
-    color: var(--app-grey-500);
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: var(--app-space-xs);
+  align-items: center;
+  padding: 0.25rem 0;
+  color: var(--app-grey-500);
 
-    .rowTitle {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
+  .rowTitle {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 
-    .rowValue {
-        max-width: 200px;
-        font-weight: bold;
-        @extend .rowTitle;
-    }
+  .rowValue {
+    max-width: 200px;
+    font-weight: bold;
+    @extend .rowTitle;
+  }
 }
 </style>

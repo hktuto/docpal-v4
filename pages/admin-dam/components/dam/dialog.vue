@@ -2,14 +2,16 @@
   <el-dialog v-model="state.visible"
              :close-on-click-modal="false"
              append-to-body
+             :title="$t(`DAM_${state.title}`)"
   >
     <template #header>
-      {{ $t(`DAM_${state.title}`) }}
       <span v-if="state.title !== 'addNewDAM'"> - {{ state.data.sourceType }}</span>
       <span v-if="state.title === 'editNewConvertion'"> - {{ state.data.label }}</span>
     </template>
     <template #footer>
-      <el-button :loading="state.loading" @click="handleSubmit()">{{ $t('common_submit') }}</el-button>
+      <el-button id="adminDAMSettingAddSubmit" type="primary" :loading="state.loading" @click="handleSubmit()">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
     <el-form label-position="top" ref="FormRef" :model="state.data" @submit.native.prevent>
       <template v-if="state.title === 'addNewDAM'">

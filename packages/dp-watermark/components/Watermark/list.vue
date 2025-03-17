@@ -1,42 +1,44 @@
 <template>
-    <div class="watermarkListContainer">
-        <div class="listActionContainer">
-            <el-button type="primary" @click="createItem">{{ $t('admin_watermark_create') }}</el-button>
-<!--            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>-->
-        </div>
-        <div class="listItemsContainer" style="--icon-size: 12px;">
-            <div v-for="item in list" :key="item.id" :class="{listItem:true, selected: item.id === selectedId}">
-                <div class="listItemLabel ellipsis" :title="item.name" @click="switchDetail(item.id)">
-                    {{ item.name }}
-                </div>
-                <!-- TODO : icon size and style -->
-                <div class="listAction listItemEdit" @click="editItem(item.id)">
-                    <SvgIcon src="/icons/edit_1.svg"/>
-                </div>
-                <ElPopconfirm width="200" :title="$t('admin_watermarkDeleteMsg')" @confirm="deleteItem(item.id)">
-                    <template #reference>
-                        <div class="listAction listItemDelete">
-                            <SvgIcon src="/icons/menu/trash.svg"/>
-                        </div>
-                    </template>
-                    <template #actions="{ confirm, cancel }">
-                        <el-button size="small" @click="cancel">{{ $t('el.datepicker.cancel') }}</el-button>
-                        <el-button type="danger" size="small" @click="confirm">
-                            {{ $t('common_confirmDelete') }}
-                        </el-button>
-                    </template>
-                </ElPopconfirm>
-            </div>
-        </div>
-        <!-- Edit dialog -->
-        <el-dialog v-model="editDialog" :title="$t('admin_watermark_edit')" destroy-on-close>
-            <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler"/>
-        </el-dialog>
-        <!-- New dialog -->
-        <el-dialog v-model="newDialog" :title="$t('admin_watermark_create')" destroy-on-close>
-            <WatermarkCreate :list="list" @submit="itemChangeHandler"/>
-        </el-dialog>
+  <div class="watermarkListContainer">
+    <div class="listActionContainer">
+      <el-button id="adminWatermarkSettingCreateNewWatermark" type="primary" @click="createItem">
+        {{ $t('admin_watermark_create') }}
+      </el-button>
+      <!--            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>-->
     </div>
+    <div class="listItemsContainer" style="--icon-size: 12px;">
+      <div v-for="item in list" :key="item.id" :class="{listItem:true, selected: item.id === selectedId}">
+        <div class="listItemLabel ellipsis" :title="item.name" @click="switchDetail(item.id)">
+          {{ item.name }}
+        </div>
+        <!-- TODO : icon size and style -->
+        <div class="listAction listItemEdit" @click="editItem(item.id)">
+          <SvgIcon id="adminWatermarkSettingEdit" src="/icons/edit_1.svg"/>
+        </div>
+        <ElPopconfirm width="200" :title="$t('admin_watermarkDeleteMsg')" @confirm="deleteItem(item.id)">
+          <template #reference>
+            <div class="listAction listItemDelete">
+              <SvgIcon id="adminWatermarkSettingDelete" src="/icons/menu/trash.svg"/>
+            </div>
+          </template>
+          <template #actions="{ confirm, cancel }">
+            <el-button size="small" @click="cancel">{{ $t('el.datepicker.cancel') }}</el-button>
+            <el-button type="danger" size="small" @click="confirm">
+              {{ $t('common_confirmDelete') }}
+            </el-button>
+          </template>
+        </ElPopconfirm>
+      </div>
+    </div>
+    <!-- Edit dialog -->
+    <el-dialog v-model="editDialog" :title="$t('admin_watermark_edit')" destroy-on-close>
+      <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler"/>
+    </el-dialog>
+    <!-- New dialog -->
+    <el-dialog v-model="newDialog" :title="$t('admin_watermark_create')" destroy-on-close>
+      <WatermarkCreate :list="list" @submit="itemChangeHandler"/>
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -45,8 +47,8 @@ import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const props = defineProps<{
-    list: WatermarkTemplate[],
-    selectedId: string
+  list: WatermarkTemplate[],
+  selectedId: string
 }>();
 
 const routerProvider = inject(MenuRouterKey)
@@ -57,96 +59,96 @@ const newDialog = ref(false);
 
 
 const selectedItem = computed(() => {
-    return props.list.find((item: WatermarkTemplate) => item.id === props.selectedId)
+  return props.list.find((item: WatermarkTemplate) => item.id === props.selectedId)
 })
 
 function deleteItem(id: string) {
-    ElMessage.success(t('admin_watermarkDeletedSuccessMsg'))
-    emit('remove', id);
+  ElMessage.success(t('admin_watermarkDeletedSuccessMsg'))
+  emit('remove', id);
 }
 
 function createItem() {
-    newDialog.value = true;
-    editDialog.value = false;
+  newDialog.value = true;
+  editDialog.value = false;
 }
 
 function itemChangeHandler() {
-    newDialog.value = false;
-    editDialog.value = false;
-    emit('update', null);
+  newDialog.value = false;
+  editDialog.value = false;
+  emit('update', null);
 }
 
 function editItem(id: string) {
-    newDialog.value = false;
-    editDialog.value = true;
-    switchDetail(id);
+  newDialog.value = false;
+  editDialog.value = true;
+  switchDetail(id);
 }
 
 function switchDetail(id: string) {
-    routerProvider?.updateProps({
-        id
-    })
+  routerProvider?.updateProps({
+    id
+  })
 }
 
 </script>
 
 <style lang="scss" scoped>
 .watermarkListContainer {
-    width: 200px;
-    background: var(--color-p3);
-    height: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    gap: var(--app-space-xs);
-    padding: var(--app-space-xs);
-    border-radius: 8px;
+  width: 200px;
+  background: var(--color-p3);
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--app-space-xs);
+  padding: var(--app-space-xs);
+  border-radius: 8px;
 }
 
 .listItemsContainer {
-    display: flex;
-    flex-flow: column nowrap;
-    overflow-y: auto;
-    gap: 8px;
+  display: flex;
+  flex-flow: column nowrap;
+  overflow-y: auto;
+  gap: 8px;
 }
 
 .listItem {
-    --color: #8796A4;
-    --bg: transparent;
-    display: grid;
-    grid-template-columns: 1fr min-content min-content;
-    gap: 0;
-    padding: calc(var(--app-space-s) / 2);
-    color: var(--color);
-    background: var(--bg);
-    border-radius: 4px;
-    cursor: pointer;
+  --color: #8796A4;
+  --bg: transparent;
+  display: grid;
+  grid-template-columns: 1fr min-content min-content;
+  gap: 0;
+  padding: calc(var(--app-space-s) / 2);
+  color: var(--color);
+  background: var(--bg);
+  border-radius: 4px;
+  cursor: pointer;
 
-    .listItemLabel {
-    }
+  .listItemLabel {
+  }
 
-    &.selected, &:hover {
-        --color: #fff;
-        --bg: #8796A4;
-        cursor: default;
-    }
+  &.selected, &:hover {
+    --color: #fff;
+    --bg: #8796A4;
+    cursor: default;
+  }
 }
 
 .listActionContainer {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-end;
-    align-items: center;
-    border-bottom: 1px solid var(--app-grey-400);
-    flex: 0 0 auto;
-    padding: calc(var(--app-space-xs) / 2);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  border-bottom: 1px solid var(--app-grey-400);
+  flex: 0 0 auto;
+  padding: calc(var(--app-space-xs) / 2);
 }
 
 .addButton {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .listAction {
-    width: 12px;
-    height: 12px;
+  width: 12px;
+  height: 12px;
 }
 </style>

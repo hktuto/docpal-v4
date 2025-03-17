@@ -2,11 +2,11 @@
 <div class="o-auto">
     <el-timeline>
         <el-timeline-item v-for="(item, index) in activityList" :key="index"
-            :timestamp="formatDate(item.time)" placement="top">
+            :timestamp="formatDate(item.startTime)" placement="top">
             <el-card>
                 <h4>{{item.activityName}}</h4>
                 <p> {{ item.assignee }} @
-                    {{ formatDate(item.time) }}</p>
+                    {{ formatDate(item.startTime) }}</p>
             </el-card>
         </el-timeline-item>
     </el-timeline>
