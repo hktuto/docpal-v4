@@ -6,7 +6,7 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
           inputKey="email"
-          :inputPlaceHolder="$t('dpTip.fiterBy', {
+          :inputPlaceHolder="$t('dpTip.filterBy', {
             name: $t('user_email')
           })"
         />
