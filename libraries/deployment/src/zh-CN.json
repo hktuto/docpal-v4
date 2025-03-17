@@ -72,7 +72,9 @@
     "inactivated": "未激活",
     "inactive": "停用",
     "inactived": "已停用",
-    "unpublished": "未发布"
+    "sendEmail": "发送电子邮件",
+    "unpublished": "未发布",
+    "viewDetails": "查看详细信息"
   },
   "admin": {
     "setting": {
@@ -1109,6 +1111,7 @@
   "dpDocument_fileSelected": "已选择文件",
   "dpDocument_fileType": "文件类型",
   "dpEmail": {
+    "content": "内容",
     "recipient": "收件人电子邮件地址"
   },
   "dpForm_confrimPassword": "确认密码",
@@ -1275,6 +1278,7 @@
     "copyEmbedCode": "复制嵌入代码",
     "copyUrl": "复制网址",
     "editForm": "编辑表单",
+    "emailLog": "电子邮件日志",
     "fields": "表格信息",
     "formInfomation": "表格信息",
     "formPreview": "表单预览",
@@ -1282,6 +1286,7 @@
     "formSetting": "表单设置",
     "name": "表单名称",
     "permission": "权限",
+    "sendEmail": "发送邮件",
     "startWorkflow": "启动工作流程",
     "submitWorkflow": "提交工作流程",
     "type": "条件类型",
@@ -2282,7 +2287,11 @@
     "folderName": "文件夹名称",
     "formatDate": "格式",
     "isMultiple": "是否多选",
+    "relatedWorkflow": "相关工作流程",
+    "relatedCase": "相关案例",
     "sortBy": "排序方式",
+    "sentBy": "发送者",
+    "sentDate": "发送日期",
     "sortOrder": "排序顺序",
     "summary": "概括",
     "summaryKey": "总结要点",

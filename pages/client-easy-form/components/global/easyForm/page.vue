@@ -8,18 +8,18 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="easyForm_filter"
         />
-        <el-button type="primary" @click="handleAdd()">{{ $t("easyForm_createForm") }}</el-button>
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
         <el-tag v-else type="danger">{{ $t("Deactivated") }}</el-tag>
       </template>
     </VxeGrid>
-    <EasyFormNewDialog ref="DialogRef" @refresh="query({})" />
+    
+    <EasyFormEmailDialog ref="DialogRef" />  
   </div>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
+import { clientApi } from "api";
 import { routeEasyFormDetail } from "~/util/easyFormRouterHelper";
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
@@ -37,9 +37,9 @@ const {
 } = useVxeTable({
   id: "a-easyForm",
   api: (pageParams: any) =>
-    adminApi.api.postFormDesignPage({ ...pageParams, ...extraParams }),
+    clientApi.api.postFormDesignPage({ ...pageParams, ...extraParams }),
   columns: [
-    { field: "name", title: "easyForm.name", fixed: "left", type: "checkbox" },
+    { field: "name", title: "easyForm.name", fixed: "left" },
     {
       field: "createdDate",
       title: "easyForm_creationDate",
@@ -66,8 +66,8 @@ const {
   bodyActions: [
     [
       {
-        code: "edit_easyForm",
-        name: t("easyForm_edit"),
+        code: "viewDetails",
+        name: t("actions.viewDetails"),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -75,43 +75,16 @@ const {
         },
       },
       {
-        code: "active",
-        name: t("easyForm_activate"),
+        code: "sendEmail",
+        name: t("actions.sendEmail"),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
-          handleActive(row, true);
-        },
-      },
-      {
-        code: "inactive",
-        name: t("easyForm_inactivate"),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleActive(row, false);
+          handleSend(row);
         },
       },
     ],
   ],
-  permissionMethod: (args: PermissionMethodParams) => {
-    if (args.code === "inactive") {
-      return {
-        visible: args.row.enable,
-        disabled: false,
-      };
-    }
-    if (args.code === "active") {
-      return {
-        visible: !args.row.enable,
-        disabled: false,
-      };
-    }
-    return {
-      visible: true,
-      disabled: false,
-    };
-  },
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row);
   },
@@ -120,23 +93,14 @@ function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
   routerProvider?.navigateTo(routeEasyFormDetail(row), false);
 }
-async function handleActive(row: any, isActive: boolean) {
-  try {
-    const type = isActive ? "patchFormDesignEnableId" : "patchFormDesignDisableId";
-    const result = await adminApi.api[type](row.id).then((res) => res.data);
-    if (!!result) {
-      row.enable = isActive;
-    }
-  } catch (error) {}
-}
 
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
 const DialogRef = ref();
-async function handleAdd() {
-  DialogRef.value.handleOpen();
+async function handleSend(row) {
+  DialogRef.value.handleOpen(row.id);
 }
 </script>
 <style lang="scss" scoped>

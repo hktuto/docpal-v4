@@ -2,9 +2,10 @@
 <div class="pageContainer--padding main">
   <EasyFormDetailName :detail="state.detail" />
   <EasyFormDetailInfomation :detail="state.detail" />
-  <EasyFormDetailPreview :detail="state.detail" />
+  <EasyFormDetailPreview v-if="state.detail.id" :detail="state.detail" @email-update="handleEmailUpdate"/>
   <EasyFormDetailPermission :detail="state.detail" />
   <EasyFormAction :detail="state.detail" @refresh="handleUpdateAction" @delete="handleDeleteAction" />
+  <EasyFormDetailEmailLog ref="logRef" :detail="state.detail" />
 </div>
 </template>
 <script lang="ts" setup>
@@ -17,6 +18,9 @@ const state = reactive<any>({
 })
 async function getDetail() {
   state.detail = await adminApi.api.getFormDesignDraftId(id).then(res => res.data)
+  setTimeout(() => {
+    handleEmailUpdate()
+  })
 }
 function handleUpdateAction(action: any) {
   const index = state.detail.formResult.findIndex((item: any) => item.id === action.id)
@@ -27,8 +31,15 @@ function handleDeleteAction(id: string) {
   const index = state.detail.formResult.findIndex((item: any) => item.id === id)
   if(index !== -1) state.detail.formResult.splice(index, 1)
 }
+const logRef = ref()
+function handleEmailUpdate() {
+  logRef.value.tableRef.reload()
+}
 onActivated(() => {
   getDetail()
+})
+onDeactivated(() => {
+  state.detail = {}
 })
 </script>
 <style lang="scss" scoped>

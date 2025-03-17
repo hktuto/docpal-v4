@@ -3,15 +3,18 @@
     <div class="title-container">
       <h3 class="title">{{ $t("easyForm.formPreview") }}</h3>
       <div class="btns">
-        <el-button type="primary" @click="handleOpenFormDesign">{{
-          $t("easyForm.editForm")
-        }}</el-button>
-        <el-button type="primary" @click="handleCopyUrl">{{
-          $t("easyForm.copyUrl")
-        }}</el-button>
-        <el-button type="primary" @click="handleCopyIframe">{{
-          $t("easyForm.copyEmbedCode")
-        }}</el-button>
+        <el-button type="primary" @click="handleOpenFormDesign">
+          {{ $t("easyForm.editForm") }}
+        </el-button>
+        <el-button type="primary" @click="handleCopyUrl">
+          {{ $t("easyForm.copyUrl") }}
+        </el-button>
+        <el-button type="primary" @click="handleCopyIframe">
+          {{ $t("easyForm.copyEmbedCode") }}
+        </el-button>
+        <el-button type="primary" @click="handleSendEmail">
+          {{ $t("easyForm.sendEmail") }}
+        </el-button>
       </div>
     </div>
     <div class="preview-container">
@@ -24,14 +27,21 @@
         />
       </div>
     </div>
+    <EasyFormEmailDialog ref="dialogRef" @email-update="update"/>
   </el-card>
 </template>
 <script lang="ts" setup>
 import { MenuRouterKey } from "#imports";
 import { ElMessage } from "element-plus";
 import { routeEasyFormDesigner } from "~/util/easyFormRouterHelper";
+const emits = defineEmits(["email-update"])
 const props = defineProps(["detail"]);
 const routerProvider = inject(MenuRouterKey);
+function update() {
+  console.log('ssss')
+  emits('email-update')
+}
+const dialogRef = ref()
 const {
   public: { endPoint },
 } = useRuntimeConfig();
@@ -67,12 +77,14 @@ function handleCopyIframe() {
   const iframe = `<iframe width=800 height=500 frameborder="no" scrolling="no" allowtransparency="no"  src="${url}"></iframe>`;
   copy(iframe, t("dpTip.embedCodeCopied"));
 }
+function handleSendEmail() {
+  dialogRef.value.handleOpen(props.detail.id)
+}
 watch(
   () => props.detail,
   (newValue, oldValue) => {
     console.log("watch", newValue, oldValue);
-    // if(!!oldValue && newValue.previewStyle === oldValue.previewStyle) return
-    if (newValue.previewStyle) {
+    if (newValue.previewStyle ) {
       state.formJsonLoad = false;
       nextTick(() => {
         state.formJson = JSON.parse(newValue.previewStyle);
@@ -82,13 +94,14 @@ watch(
       state.formJsonLoad = false;
       // empty form
       nextTick(() => {
-        state.formJson = JSON.parse(newValue.previewStyle);
+        state.formJson = {}
         state.formJsonLoad = true;
       });
     }
   },
   {
     deep: true,
+    immediate: true
   }
 );
 </script>

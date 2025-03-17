@@ -19,7 +19,8 @@ export default defineNuxtConfig({
         "../../pages/client-dashboard",
         "../../pages/client-file-policies",
         "../../packages/dp-cmmn-x6",
-        "../../pages/client-case-manage"
+        "../../pages/client-case-manage",
+        "../../pages/client-easy-form"
     ],
     features: {
         inlineStyles: true,
