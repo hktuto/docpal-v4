@@ -1,7 +1,7 @@
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 import { clientApi } from 'api'
 import type { CalendarTaskRespDTO } from 'api/src/generate/client'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 import {useCalenarLocation} from '../composables/useCalendar'
 import { ElMessage } from 'element-plus'
 import isBetween from 'dayjs/plugin/isBetween'
@@ -50,7 +50,7 @@ export function convertSiteEventToCalendarEvent(event:DocPalEventType):CalendarE
         location: locationName,
         people: event.relatedUsers ? [event.relatedUsers.user] : [],
         detail: {...event},
-        calendarId: event.category || undefined,
+        calendarId: event.status === 'A' ? (event.category || undefined) : undefined,
         _options:{
             disableResize: true,
             disableDND: true,
@@ -59,7 +59,18 @@ export function convertSiteEventToCalendarEvent(event:DocPalEventType):CalendarE
     return newEvent
 }
 
-export async function getEventFromApi(calendarApp:any, calendarControls:any, filter:any){
+export function convertCalendarEventToSiteEvent(event:CalendarEventExternal):DocPalEventType{
+    return {
+        eventId: event.detail.eventId,
+        startTime: dayjs(event.start).toISOString(),
+        endTime: dayjs(event.end).toISOString(),
+        user: event.people ? event.people[0] : undefined,
+        category: event.calendarId,
+        location: event.location,
+    }
+}
+
+export async function getEventFromApi(calendarApp:any, calendarControls:any, filter:any, editItem?:any){
     const range = calendarControls.getRange()
     const params:any = {
         startTime: dayjs(range.start).toISOString(),
@@ -70,7 +81,9 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
     const userId = user ? JSON.parse(user).userId : undefined
     // TODO : backend is missing filter
     const data = await clientApi.api.postCalendarsList(params).then( res => res.data)
+    const calendarLocation = useCalenarLocation()
 
+    
     const events = data.filter( (event:any) => {
         if(filter.category) {
             const matCat = event.category === filter.category
@@ -88,7 +101,7 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
             if(!mapUser && !userInRelated) return false
         }
         return true
-    }).map((ev) => convertSiteEventToCalendarEvent(ev, defaultCalendarId))
+    }).map((ev) => convertSiteEventToCalendarEvent(ev) )
     // filter events
 
     // dummy full date event
@@ -101,8 +114,21 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
         people:['administrators'],
         description: 'New Event',
         calendarId: defaultCalendarId,
+        style:{
+            opacity: 0.5
+        }
     })
-    console.log("events", events)
+    // check editItem
+    if(editItem){
+        console.log("editItem", editItem)
+    const editItemIndex = events.findIndex(item => editItem && item?.detail?.eventId === editItem.eventId)
+        if(editItemIndex !== -1){
+            events[editItemIndex]._options = {
+                disableResize: false,
+                disableDND: false,
+            }
+        }
+    }
     calendarApp.eventsService.set(events);
     return events;
 }
@@ -143,6 +169,12 @@ export function isEventValid(allEvents:any[], event:any){
     return true
 }
 
+
+export function snapDownTo15Minutes(time:Dayjs) {
+    const minutes = time.minute();
+    const snappedMinutes = Math.floor(minutes / 15) * 15;
+    return time.minute(snappedMinutes).second(0);
+  }
 
 
 /**

@@ -216,7 +216,6 @@ async function getFormByNode(node: Node){
         userTaskId: node.data.id,
         versionId: props.currentVersionId
     });
-    console.log("getFormByNode", response)
     if(!response || !response.data || response.data.length === 0){
         return {};
     }

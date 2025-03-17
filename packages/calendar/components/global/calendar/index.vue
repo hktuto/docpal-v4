@@ -24,16 +24,17 @@
         categoryLabel:"",
         userLabel:"",
         
-    },addtionalCheckBeforeEventUpdate} = defineProps<{
+    },addtionalCheckBeforeEventUpdate, editItem} = defineProps<{
         options?: CalendarOptions;
         addtionalCheckBeforeEventUpdate: (oldEvent:any, editedEvent:any) => boolean
+        editItem?: any
     }>();
 
     const displayOption = ref<CalendarOptions>({
         ...options,
     })
 
-    const emits = defineEmits(['createEvent','filterChange','openDetail','onEventUpdate'])
+    const emits = defineEmits(['createEvent','filterChange','openDetail','onEventUpdate','updateEvent'])
     const newEventFromRef = ref();
     function addEvent(newEvent:CalendarEventExternal){
         viewerRef.value?.addEvent(newEvent)
@@ -126,6 +127,10 @@
         },
         onEventUpdate: (args:any) => {
             console.log("onEventUpdate", args)
+            const newData = convertCalendarEventToSiteEvent(args)
+            emits('updateEvent', newData)
+            // convert scheduls-x event to calendar event
+            // emits('updateEvent', args)
         }
     }
     function filterChange(){
@@ -194,7 +199,7 @@
         
     </div>
     <CalendarDetailDialog ref="detailDialogRef" :options="options" :addtionalCheckBeforeEventUpdate="addtionalCheckBeforeEventUpdate"/>
-    <CalendarViewer ref="viewerRef" :options="options" :filter="filter" v-on="calendarEvents" />
+    <CalendarViewer ref="viewerRef" :options="options" :filter="filter" :editItem="editItem" v-on="calendarEvents" />
 </div>
 
 </template>

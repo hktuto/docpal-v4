@@ -79,7 +79,6 @@ async function saveDraft() {
     const newName = json.definitions.process.attr_name
     const blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
     const form:any = new FormData();
-
     form.append('name', newName)
     form.append('versionId', versionId)
     form.append('draftId', id)

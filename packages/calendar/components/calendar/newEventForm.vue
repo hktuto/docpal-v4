@@ -1,21 +1,24 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import {ElMessage} from 'element-plus'
+import {ElMessage, ElTimeSelect} from 'element-plus'
+import { snapDownTo15Minutes } from '../../utils/calendarHelper'
 import { clientApi } from 'api'
 const opened = ref(false);
-const {options, newEventId, checkValid} = defineProps<{
+const newEventId = defineModel<string>('newEventId')
+const {options, checkValid} = defineProps<{
     options: CalendarOptions,
-    newEventId:string,
     checkValid?:Function
 }>()
 const { t} = useI18n()
 const formRef = ref()
-const { categoriesOption, locationsOption } = useCalendarStore();
+const { categoriesOption, locationsOption, timeSelecteStep, timeSelectLimit } = useCalendarStore();
 const userFiterOptions = ref<any>([])
 const emits = defineEmits(['submit'])
 const startTime = ref<any>()
-const form = ref({
+const form = ref<any>({
+    startDate: "",
     startTime: '',
+    endDate: "",
     endTime: '',
     eventName: '',
     description: '',
@@ -36,41 +39,44 @@ async function getFilterOptions(){
         }
     })
 }
-async function open(selectedDateTime: string, filter:any, data:any) {
+async function open(event) {
     await getFilterOptions()
-    const startDay = dayjs(selectedDateTime)
+    
     opened.value = true;
-    startTime.value = dayjs(selectedDateTime)
-    form.value.detail = data
-    form.value.startTime = snapDownTo15Minutes(startDay).toISOString(),
-    form.value.endTime = snapDownTo15Minutes(startDay.add(15, 'minutes')).toISOString()
-    form.value.location = filter.location
-    form.value.category = filter.category || options.defaultCategory
-    form.value.user = filter.user === 'currentUser' ? userId.value : filter.user
+    form.value.detail = event.detail || {}
+    form.value.startDate = event.startDate,
+    form.value.startTime = event.startTime,
+    form.value.endDate = event.endDate,
+    form.value.endTime = event.endTime
+    form.value.location = event.location
+    form.value.category = event.category || options.defaultCategory
+    form.value.user = event.user === 'currentUser' ? userId.value : event.user
     // form.value.workflow = filter.workflow
+    if(event.id) {
+        newEventId.value = event.id
+    }
+    
 }
 
-function startTimeChange(val){
-    const startDay = dayjs(val)
+function startTimeChange(){
+    const startDay = dayjs(form.value.startDate + ' ' + form.value.startTime)
     if(startDay.isBefore(dayjs())) {
         ElMessage.error("Start time cannot be earlier than today");
     }
-    form.value.startTime = snapDownTo15Minutes(startDay).toISOString()
-    form.value.endTime= snapDownTo15Minutes(startDay.add(15, 'minutes')).toISOString()
+    form.value.endDate = startDay.format('YYYY-MM-DD')
+    form.value.endTime = snapDownTo15Minutes(startDay.add(15, 'minutes')).format('HH:mm')
 }
-function endTimeChange(val){
-    const endTime = dayjs(val)
+function endTimeChange(){
+    const endTime = dayjs(form.value.endDate + ' ' + form.value.endTime)
     if(endTime.isBefore(dayjs())) {
         ElMessage.error("End time cannot be earlier than today");
     }
-    form.value.endTime = snapDownTo15Minutes(endTime).toISOString()
-    form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).toISOString()
+    form.value.endDate = endTime.format('YYYY-MM-DD')
+    form.value.endTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).format('HH:mm')
+    // form.value.endTime = snapDownTo15Minutes(endTime).toISOString()
+    // form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).toISOString()
 }
-function snapDownTo15Minutes(time) {
-  const minutes = time.minute();
-  const snappedMinutes = Math.floor(minutes / 15) * 15;
-  return time.minute(snappedMinutes).second(0);
-}
+
 const rules = reactive({
     startTime: [{
         required: true,
@@ -101,10 +107,10 @@ async function submit(){
         // const okToSubmit = checkValid(form.value)
         if(!valid) return
         const data = {
-            id: newEventId,
-            eventId:"",
-            startTime: dayjs(form.value.startTime).toISOString(),
-            endTime: dayjs(form.value.endTime).toISOString(),
+            id: newEventId.value,
+            eventId: form.value?.detail?.eventId,
+            startTime: dayjs(form.value.startDate + ' ' + form.value.startTime).toISOString(),
+            endTime: dayjs(form.value.endDate + ' ' + form.value.endTime).toISOString(),
             eventName: form.value.user,
             title: form.value.user,
             category: form.value.category || options.defaultCategory,
@@ -146,14 +152,36 @@ defineExpose({
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
-                    <ElCol :span='12'>
-                        <ElFormItem label="Start Time" prop="startTime" required>
-                            <ElDatePicker v-model="form.startTime" type="datetime" placeholder="Select date and time" format="YYYY-MM-DD HH:mm" @change="startTimeChange" />
+                    <ElCol :span='6'>
+                        <ElFormItem label="Start Date" prop="startTime" required>
+                            <ElDatePicker v-model="form.startDate" type="date" placeholder="Select date and time" format="YYYY-MM-DD" value-format="YYYY-MM-DD" @change="startTimeChange" />
                         </ElFormItem>
                     </ElCol>
-                    <ElCol :span='12'>
-                        <ElFormItem label="End Time" prop="endTime" required>
-                            <ElDatePicker v-model="form.endTime" type="datetime" placeholder="Select date and time" format="YYYY-MM-DD HH:mm" @change="endTimeChange" />
+                    <ElCol :span='6'>
+                        <ElFormItem label="Start Time" prop="startTime" required>
+                            <ElTimeSelect 
+                                v-model="form.startTime"
+                                placeholder="Select time"
+                                :start="timeSelectLimit.start"
+                                :step="timeSelecteStep"
+                                :end="timeSelectLimit.end"
+                                format="HH:mm" @change="startTimeChange" />
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span='6'>
+                        <ElFormItem label="End Date" prop="endTime" required>
+                            <ElDatePicker v-model="form.endDate" type="date" placeholder="Select date and time" format="YYYY-MM-DD" value-format="YYYY-MM-DD" @change="endTimeChange" />
+                        </ElFormItem>
+                    </ElCol>
+                    <ElCol :span='6'>
+                        <ElFormItem label="End Date" prop="endTime" required>
+                            <ElTimeSelect 
+                                v-model="form.endTime" 
+                                placeholder="Select time" 
+                                :start="timeSelectLimit.start"
+                                :step="timeSelecteStep" 
+                                :end="timeSelectLimit.end"
+                                format="HH:mm" @change="endTimeChange" />
                         </ElFormItem>
                     </ElCol>
                     <!-- <ElCol :span="12">
@@ -165,7 +193,7 @@ defineExpose({
                         </ElCol> -->
                 </ElRow>
                 </ElForm>
-        <ElButton @click="submit">Submit</ElButton>
+        <ElButton @click="submit">Confirm</ElButton>
     </ElDialog>
 
 </template>

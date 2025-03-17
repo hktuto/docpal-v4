@@ -37,10 +37,11 @@ const {options = {
     defaultLocation: "",
     defaultCategory: "",
     view: "week",
-}, filter, addtionalCheckBeforeEventUpdate} = defineProps<{
+}, filter, addtionalCheckBeforeEventUpdate, editItem} = defineProps<{
     options?: CalendarOptions;
     filter: any;
-    addtionalCheckBeforeEventUpdate?: (oldEvent:any, editedEvent:any) => boolean
+    addtionalCheckBeforeEventUpdate?: (oldEvent:any, editedEvent:any) => boolean,
+    editItem?: any
 }>();
 
 let calendarApp:any ;
@@ -64,11 +65,21 @@ function addEvent(newEvent:CalendarEventExternal){
 }
 
 function updateEvent(newEvent:CalendarEventExternal){
-    calendarApp.eventsService.update(newEvent)
+    console.log("updateEvent on calendar", newEvent);
+    
+    // calendarApp.eventsService.update(newEvent)
+    // remove old event
+    calendarApp.eventsService.remove(newEvent.id)
+    // change calendar selected date
+    const startday = dayjs(newEvent.start)
+    calendarControls.setDate(startday.format('YYYY-MM-DD'))
+    nextTick(() => {
+        calendarApp.eventsService.add(newEvent)
+    })
 }
 
 function deleteEvent(id:string){
-    calendarApp.eventsService.delete(id)
+    calendarApp.eventsService.remove(id)
 }
 
 function getEvent(id:string){
@@ -76,8 +87,10 @@ function getEvent(id:string){
 }
 
 async function getList(){
-    eventList.value = await getEventFromApi(calendarApp, calendarControls, filter)
-
+    eventList.value = await getEventFromApi(calendarApp, calendarControls, filter, editItem)
+    // add custom event
+    console.log("get List", eventList.value);
+    
 }
 
 function setupCalendar() {
@@ -97,7 +110,7 @@ function setupCalendar() {
     }
     
     calendarApp = createCalendar({
-        selectedDate: dayjs().format('YYYY-MM-DD'),
+        selectedDate: editItem ? dayjs(editItem.startTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'),
         firstDayOfWeek: setting.value.basic.first_day_of_week === 'MONDAY' ? 1 : 0,
         dayBoundaries: {
             start: setting.value.basic.office_start_time || '08:00',
@@ -117,7 +130,7 @@ function setupCalendar() {
         events: [
         ],
         callbacks:{
-            onRangeUpdate: () => getEventFromApi(calendarApp, calendarControls, filter),
+            onRangeUpdate: () => getList(),
             onSelectedDateUpdate: (args) => emits('onSelectedDateUpdate', args),
             onEventUpdate: (args) => emits('onEventUpdate', args),
             onEventClick: (args) => emits('onEventClick', args),
@@ -159,7 +172,17 @@ onDeactivated(() => {
     showCalendar.value = false
 })
 
+function getCalendarStyle(event:any){
+    const categories = useCalenarCategories()
+    if(!event.calendarId) return ""
+    const category = categories.value.find(item => item.id === event.calendarId)
+    if(!category) return ""
+    return `background-color: ${category.color}; color: ${category.onContainer}`
+}
 
+function displayTimeFn(event){
+    return dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
+}
 
 
 watch(() => [setting, options],async() =>{
@@ -188,9 +211,43 @@ defineExpose({
 
 
 <template>
-    <div class="calendarViewerContainer">
+    <div :class="{calendarViewerContainer:true, editMode: editItem && editItem.eventId, createMode: options.allowCreate}">
 
-        <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" />
+        <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" >
+            <template #timeGridEvent="{ calendarEvent }">
+                <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
+                    :style="getCalendarStyle(calendarEvent)"
+                >
+                    {{ calendarEvent.location }} - {{ calendarEvent.people.join(", ") }}<br/>
+                    {{ displayTimeFn(calendarEvent) }}
+                </div>
+            </template>
+        </ScheduleXCalendar>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.calendarViewerContainer{
+    &.editMode, &.createMode{
+        .eventContainer{
+            opacity: 0.6;
+            &.isEditItem{
+                opacity: 1;
+            }
+        }
+    }
+}   
+.eventContainer{
+    height:100%;
+    padding:var(--app-space-xs);
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+    &.isEditItem{
+        cursor: pointer;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+        background-color: var(--app-primary-color) !important;
+        border: 1px solid #000 !important;
+    }
+}
+</style>
 
