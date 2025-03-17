@@ -1318,6 +1318,8 @@ export interface WhatsAppUsageDTO {
 export interface FormDesignDataDTO {
     /** Form Design ID */
     id?: string;
+    /** Email Business Log id */
+    emailBusinessLogId?: string;
     /** Form Data */
     data?: Record<string, object>;
     /** Business Number */
@@ -2811,25 +2813,49 @@ export interface AdhocApprovalDTO {
     pageIndex?: number;
 }
 
-export interface PaginableEntityDTOObject {
-    entryList?: object[];
+export interface AdhocApproval {
+    /** @format int64 */
+    id?: number;
+    documentId?: string;
+    documentPath?: string;
+    documentStartVersion?: string;
+    documentApprovalVersion?: string;
+    /** @format int32 */
+    documentStatus?: number;
+    taskId?: string;
+    taskName?: string;
+    processInstanceId?: string;
+    businessKey?: string;
+    /** @format int32 */
+    processInstanceStatus?: number;
+    user_creator_id?: string;
+    /** @format date-time */
+    startTime?: string;
+    approvedBy?: string;
+    user_approver_id?: string;
+    /** @format date-time */
+    approvedDate?: string;
+}
+
+export interface PaginationDTOAdhocApproval {
+    entryList?: AdhocApproval[];
+    /** @format int32 */
+    totalSize?: number;
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
+    pageNum?: number;
     /** @format int32 */
     pageCount?: number;
     isNextPageAvailable?: boolean;
 }
 
-export interface ResultPaginableEntityDTOObject {
+export interface ResultPaginationDTOAdhocApproval {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginableEntityDTOObject;
+    data?: PaginationDTOAdhocApproval;
 }
 
 /** Form Property */
@@ -3035,6 +3061,8 @@ export interface HistoricProcessInstanceEntityImpl {
     originalPersistentState?: object;
     /** @format date-time */
     endTime?: string;
+    /** @format date-time */
+    completeDate?: string;
     /** @format int64 */
     durationInMillis?: number;
     deleteReason?: string;
@@ -3824,6 +3852,27 @@ export interface InternalShareQueryDTO {
     biggerThenId?: number;
 }
 
+export interface PaginableEntityDTOObject {
+    entryList?: object[];
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    currentPageIndex?: number;
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginableEntityDTOObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginableEntityDTOObject;
+}
+
 export interface InternalShareToMePageRequestDTO {
     /** @format int32 */
     pageNum?: number;
@@ -3943,6 +3992,18 @@ export interface ResultInternalShareAudit {
     data?: InternalShareAudit;
 }
 
+export interface EasyFormEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+    easyFormId?: string;
+}
+
+export interface UserEmailDTO {
+    username?: string;
+    email?: string;
+}
+
 /** form design request */
 export interface FormDesignRequestDTO {
     /**
@@ -3960,10 +4021,22 @@ export interface FormDesignRequestDTO {
     /** The sort ASC or DESC */
     isDesc?: boolean;
     id?: string;
+    /** Form Design Name */
+    name?: string;
+    /** Form Design Publish Status (value is A or D) */
+    publishStatus?: string;
+    /** Disable or Enable form design */
+    enable?: boolean;
     /** Table Name */
     tableName?: string;
     /** Status is Active or Disable (A or D) */
     status?: string;
+    /** Form Design Creator */
+    createdBy?: string;
+    /** Form Design Modifier */
+    modifiedBy?: string;
+    /** current user permissions, only for client site */
+    userPermissions?: string[];
     /** New Data List */
     data?: Record<string, object>[];
     /** Where Condition */
@@ -3985,6 +4058,201 @@ export interface ResultListLinkedHashMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>[];
+}
+
+/** Easy Form Email RequestDTO */
+export interface EasyFormEmailQueryRequestDTO {
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    email?: string;
+    subject?: string;
+    easyFormId?: string;
+    status?: string;
+    sort?: SortObject;
+    sortOrder?: string;
+    descSort?: SortObject;
+}
+
+export interface EasyFormActionDTO {
+    actionType?: string;
+    workflowInstanceId?: string;
+    caseId?: string;
+    caseDefinitionVersionId?: string;
+    actionId?: string;
+    actionName?: string;
+}
+
+export interface EasyFormEmailLogDTO {
+    /** @format int64 */
+    id?: number;
+    email?: string;
+    subject?: string;
+    createdBy?: string;
+    status?: string;
+    /** @format date-time */
+    sentDate?: string;
+    relatedWorkflows?: EasyFormActionDTO[];
+    relateCases?: EasyFormActionDTO[];
+}
+
+export interface PaginationDTOEasyFormEmailLogDTO {
+    entryList?: EasyFormEmailLogDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOEasyFormEmailLogDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOEasyFormEmailLogDTO;
+}
+
+/** Form Design Form Result List */
+export interface EasyFormResult {
+    /** Action Item Id */
+    id?: string;
+    /** Action Type, Example value： Email、Workflow、CaseType  */
+    actionType?: string;
+    /** Bound business Key, Example value：customApproval */
+    actionKey?: string;
+    /** DeploymentId of Bound business, Example value：customApproval:1:7212b388-36f3-4aff-9b03-bc500537dd23 */
+    actionId?: string;
+    /** Name of Bound business */
+    actionName?: string;
+    /** Mapping data structure between form columns and bound business fields */
+    dataMapping?: ParamMappingDTO[];
+    /** Status, Active or Deactivated */
+    status?: string;
+    /** Email Subject */
+    subject?: string;
+    /** Email Body Text */
+    text?: string;
+    /** Email TO */
+    to?: string;
+    /** Email CC */
+    cc?: string;
+    /** Email BCC */
+    bcc?: string;
+}
+
+/** Form Designer (Response) */
+export interface FormDesignResponseDTO {
+    /** Form Design ID */
+    id?: string;
+    /** Form Design Name */
+    name?: string;
+    /** Form Design Publish Status */
+    publishStatus?: string;
+    /** Form Designer Process Definition Key */
+    processDefinitionKey?: string;
+    /** Form Design Permission */
+    permission?: string;
+    /** Disable or Enable form design */
+    enable?: boolean;
+    /** Form Design Information List */
+    information?: PlanTableFieldDTO[];
+    /** Form Design Preview */
+    previewStyle?: string;
+    /** Form Design Form Result List */
+    formResult?: EasyFormResult[];
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    formInfo?: FormInfoDTO;
+    createdBy?: string;
+    modifiedBy?: string;
+}
+
+export interface FormFieldMapping {
+    id?: string;
+    formInfoId?: string;
+    columnName?: string;
+    fieldName?: string;
+    dataType?: string;
+    status?: string;
+    required?: boolean;
+    unique?: boolean;
+    primaryKey?: boolean;
+}
+
+export interface FormInfoDTO {
+    id?: string;
+    bizId?: string;
+    label?: string;
+    tableName?: string;
+    tableNamePrefix?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    fieldMappings?: FormFieldMapping[];
+}
+
+export interface PaginationDTOFormDesignResponseDTO {
+    entryList?: FormDesignResponseDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+/** Mapping data structure between form columns and bound business fields */
+export interface ParamMappingDTO {
+    source?: string;
+    target?: string;
+}
+
+/** Form Design Information List */
+export interface PlanTableFieldDTO {
+    id?: string;
+    name?: string;
+    type?: string;
+    accesstype?: string;
+    fieldMappingId?: string;
+    masterTable?: string;
+    documentType?: string;
+    displayField?: string;
+    vocabulary?: string;
+    require?: string;
+    readOnly?: string;
+}
+
+export interface ResultPaginationDTOFormDesignResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOFormDesignResponseDTO;
 }
 
 /** Case model dashboard (RequestDTO) */
@@ -4261,24 +4529,11 @@ export interface PlanItemDefinitionDTO {
     /** Case Model Plan Form DTO */
     planForm?: CmmnPlanFormDTO;
     fields?: PlanTableFieldDTO[];
+    /** Form Design Information List */
     assigneeField?: PlanTableFieldDTO;
     isStartTask?: boolean;
     upProcessTaskKey?: string;
     upFormProperties?: FormPropertyDTO[];
-}
-
-export interface PlanTableFieldDTO {
-    id?: string;
-    name?: string;
-    type?: string;
-    accesstype?: string;
-    fieldMappingId?: string;
-    masterTable?: string;
-    documentType?: string;
-    displayField?: string;
-    vocabulary?: string;
-    require?: string;
-    readOnly?: string;
 }
 
 export interface ResultListCaseTypeResponseDTO {
@@ -5569,6 +5824,34 @@ export interface ResultListMQDayTotalDTO {
     data?: MQDayTotalDTO[];
 }
 
+export interface ProcessDefinitionVersion {
+    id?: string;
+    draftId?: string;
+    versionNumber?: string;
+    productionVersion?: string;
+    source?: string;
+    publishStatus?: string;
+    isProduction?: string;
+    processDefinitionId?: string;
+    processDefinitionKey?: string;
+    bytes?: string[];
+    jsonValue?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface ResultProcessDefinitionVersion {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ProcessDefinitionVersion;
+}
+
 export interface MetadataSetting {
     /** @format int64 */
     id?: number;
@@ -6194,93 +6477,6 @@ export interface ResultListMTRelationResponseDTO {
     data?: MTRelationResponseDTO[];
 }
 
-/** Form Design Form Result List */
-export interface EasyFormResult {
-    /** Action Type, Example value： Email、Workflow、CaseType  */
-    actionType?: string;
-    /** Bound business Key, Example value：customApproval */
-    actionKey?: string;
-    /** DeploymentId of Bound business, Example value：customApproval:1:7212b388-36f3-4aff-9b03-bc500537dd23 */
-    actionId?: string;
-    /** Name of Bound business */
-    actionName?: string;
-    /** Mapping data structure between form columns and bound business fields */
-    dataMapping?: ParamMappingDTO[];
-    /** Status, Active or Deactivated */
-    status?: string;
-    /** Email Subject */
-    subject?: string;
-    /** Email Body Text */
-    text?: string;
-    /** Email TO */
-    to?: string;
-    /** Email CC */
-    cc?: string;
-    /** Email BCC */
-    bcc?: string;
-}
-
-/** Form Designer (Response) */
-export interface FormDesignResponseDTO {
-    /** Form Design ID */
-    id?: string;
-    /** Form Design Name */
-    name?: string;
-    /** Form Design Publish Status */
-    publishStatus?: string;
-    /** Form Designer Process Definition Key */
-    processDefinitionKey?: string;
-    /** Form Design Permission */
-    permission?: string;
-    /** Disable or Enable form design */
-    enable?: boolean;
-    /** Form Design Information List */
-    information?: PlanTableFieldDTO[];
-    /** Form Design Preview */
-    previewStyle?: string;
-    /** Form Design Form Result List */
-    formResult?: EasyFormResult[];
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    formInfo?: FormInfoDTO;
-}
-
-export interface FormFieldMapping {
-    id?: string;
-    formInfoId?: string;
-    columnName?: string;
-    fieldName?: string;
-    dataType?: string;
-    status?: string;
-    required?: boolean;
-    unique?: boolean;
-    primaryKey?: boolean;
-}
-
-export interface FormInfoDTO {
-    id?: string;
-    bizId?: string;
-    label?: string;
-    tableName?: string;
-    tableNamePrefix?: string;
-    status?: string;
-    createdBy?: string;
-    modifiedBy?: string;
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    fieldMappings?: FormFieldMapping[];
-}
-
-/** Mapping data structure between form columns and bound business fields */
-export interface ParamMappingDTO {
-    source?: string;
-    target?: string;
-}
-
 export interface ResultListFormDesignResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -6296,6 +6492,20 @@ export interface ResultFormDesignResponseDTO {
     message?: string;
     /** Form Designer (Response) */
     data?: FormDesignResponseDTO;
+}
+
+export interface EasyFormBaseEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+}
+
+export interface ResultEasyFormBaseEmailDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EasyFormBaseEmailDTO;
 }
 
 export interface DAMConversionSetting {
@@ -6550,12 +6760,30 @@ export interface ResultCmmnDashboard {
     data?: CmmnDashboard;
 }
 
-export interface ResultListCmmnDashboard {
+export interface CmmnDashboardDTO {
+    id?: string;
+    caseTypeId?: string;
+    deploymentId?: string;
+    cmmnVersionId?: string;
+    label?: string;
+    userGroup?: string;
+    status?: string;
+    styleJson?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    caseDefinitionKey?: string;
+}
+
+export interface ResultListCmmnDashboardDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: CmmnDashboard[];
+    data?: CmmnDashboardDTO[];
 }
 
 /** case instance activity item */
@@ -6581,6 +6809,14 @@ export interface ResultListCmmnActivityItem {
     code?: number;
     message?: string;
     data?: CmmnActivityItem[];
+}
+
+export interface ResultListCmmnDashboard {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: CmmnDashboard[];
 }
 
 export interface Document {
@@ -13609,7 +13845,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/conversion/downloadFile
          */
         postNuxeoConversionDownloadfile: (data: string[], params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
+            this.request<void, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/conversion/downloadFile`,
                 method: "POST",
                 body: data,
@@ -13998,6 +14234,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postWorkflowUpdatemetadatamapping: (data: DocumentTypeMetadataMapping, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/updateMetadataMapping`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowTestStart
+         * @request POST:/api/docpal/workflow/test/start
+         */
+        postWorkflowTestStart: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<GenerateDocumentMode, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/test/start`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14453,7 +14705,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/submitAdhocApproval
          */
         postWorkflowSubmitadhocapproval: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/submitAdhocApproval`,
                 method: "POST",
                 body: data,
@@ -14501,8 +14753,25 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/queryAdhocApprovalPage
          */
         postWorkflowQueryadhocapprovalpage: (data: AdhocApprovalDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOObject, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOAdhocApproval, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/queryAdhocApprovalPage`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowProperties
+         * @summary Retrieve task form properties
+         * @request POST:/api/docpal/workflow/properties
+         */
+        postWorkflowProperties: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListFormPropertyDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/properties`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14537,40 +14806,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postWorkflowPropertiesSaveDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
             this.request<Result, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/properties/save/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowPropertiesDeprecate
-         * @summary Retrieve task form properties
-         * @request POST:/api/docpal/workflow/properties/
-         */
-        postWorkflowPropertiesDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFormPropertyDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/properties/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowProperties
-         * @summary Retrieve task form properties
-         * @request POST:/api/docpal/workflow/properties
-         */
-        postWorkflowProperties: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFormPropertyDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/properties`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -16780,6 +17015,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags FormDesignController
+         * @name PostFormDesignSendEmail
+         * @request POST:/api/docpal/form/design/send_email
+         */
+        postFormDesignSendEmail: (data: EasyFormEmailDTO, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/send_email`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
          * @name PostFormDesignRecords
          * @request POST:/api/docpal/form/design/records
          */
@@ -16803,6 +17054,38 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postFormDesignRecordPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
             this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/record/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignPageEmailLog
+         * @request POST:/api/docpal/form/design/page_email_log
+         */
+        postFormDesignPageEmailLog: (data: EasyFormEmailQueryRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOEasyFormEmailLogDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/page_email_log`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignPage
+         * @request POST:/api/docpal/form/design/page
+         */
+        postFormDesignPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOFormDesignResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -19707,7 +19990,58 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Workflow
+         * @tags Workflow Version Controller
+         * @name GetWorkflowVersion
+         * @summary Get Version Data
+         * @request GET:/api/docpal/workflow/version
+         */
+        getWorkflowVersion: (
+            query: {
+                draftId: string;
+                versionNumber: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultProcessDefinitionVersion, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name GetWorkflowVersionVersionid
+         * @summary Get Version Data
+         * @request GET:/api/docpal/workflow/version/{versionId}
+         */
+        getWorkflowVersionVersionid: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultProcessDefinitionVersion, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/${versionId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name DeleteWorkflowVersionVersionid
+         * @request DELETE:/api/docpal/workflow/version/{versionId}
+         */
+        deleteWorkflowVersionVersionid: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/${versionId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
          * @name GetWorkflowVersionVersionidBpmnxml
          * @summary Download BPMN20.xml through version id of a workflow
          * @request GET:/api/docpal/workflow/version/{versionId}/bpmnXml
@@ -19722,7 +20056,29 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Workflow
+         * @tags Workflow Version Controller
+         * @name GetWorkflowVersionJson
+         * @summary Download Json through version number and draft id
+         * @request GET:/api/docpal/workflow/version/json
+         */
+        getWorkflowVersionJson: (
+            query: {
+                draftId: string;
+                versionNumber: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/json`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
          * @name GetWorkflowVersionBpmnxml
          * @summary Download BPMN20.xml through version number and draft id
          * @request GET:/api/docpal/workflow/version/bpmnXml
@@ -19730,7 +20086,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getWorkflowVersionBpmnxml: (
             query: {
                 draftId: string;
-                versionNumber: string;
+                versionNumber?: string;
+                versionId?: string;
             },
             params: RequestParams = {},
         ) =>
@@ -21252,6 +21609,34 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags FormDesignController
+         * @name GetFormDesignEmailId
+         * @request GET:/api/docpal/form/design/email/{id}
+         */
+        getFormDesignEmailId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/email/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name GetFormDesignEmailHistoryLogId
+         * @request GET:/api/docpal/form/design/email/history/log/{id}
+         */
+        getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/email/history/log/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags DAMSettingController
          * @name GetDamSettings
          * @request GET:/api/docpal/dam/settings
@@ -21790,7 +22175,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/case/dashboard/version/{cmmnVersionId}/permission
          */
         getCaseDashboardVersionCmmnversionidPermission: (cmmnVersionId: string, params: RequestParams = {}) =>
-            this.request<ResultListCmmnDashboard, ResultString | (ResultString | Result)>({
+            this.request<ResultListCmmnDashboardDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/version/${cmmnVersionId}/permission`,
                 method: "GET",
                 ...params,
@@ -22060,7 +22445,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/case/dashboard/caseInstance/{caseInstanceId}
          */
         getCaseDashboardCaseinstanceCaseinstanceid: (caseInstanceId: string, params: RequestParams = {}) =>
-            this.request<ResultListCmmnDashboard, ResultString | (ResultString | Result)>({
+            this.request<ResultListCmmnDashboardDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/caseInstance/${caseInstanceId}`,
                 method: "GET",
                 ...params,
@@ -22824,6 +23209,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "DELETE",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name DeleteWorkflowVersionDraftidDraftid
+         * @request DELETE:/api/docpal/workflow/version/draftId/{draftId}
+         */
+        deleteWorkflowVersionDraftidDraftid: (draftId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/draftId/${draftId}`,
+                method: "DELETE",
                 ...params,
             }),
 

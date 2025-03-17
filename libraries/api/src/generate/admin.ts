@@ -247,12 +247,25 @@ export interface DocumentDTO {
     logicalPath?: string;
 }
 
-export interface ResultListDocumentDTO {
+export interface PaginationDTODocumentDTO {
+    entryList?: DocumentDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTODocumentDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: DocumentDTO[];
+    data?: PaginationDTODocumentDTO;
 }
 
 export interface ResultSetUserDTO {
@@ -1924,27 +1937,6 @@ export interface NestedSearchRequestDTO {
     isDesc?: boolean;
 }
 
-export interface PaginationDTODocumentDTO {
-    entryList?: DocumentDTO[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTODocumentDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTODocumentDTO;
-}
-
 /** Versioning (Request) */
 export interface VersioningRequestDTO {
     /** Document ID or Path */
@@ -2142,6 +2134,14 @@ export interface VirtualFolderDocumentDTO {
     /** logicalPath */
     logicalPath?: string;
     vfConfigType?: object;
+}
+
+export interface ResultListDocumentDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: DocumentDTO[];
 }
 
 export interface AuditTemplateResponseExtendDTO {
@@ -4206,8 +4206,6 @@ export interface FormDesignRequestDTO {
     createdBy?: string;
     /** Form Design Modifier */
     modifiedBy?: string;
-    /** current user permissions, only for client site */
-    userPermissions?: string[];
     /** New Data List */
     data?: Record<string, object>[];
     /** Where Condition */
@@ -4320,7 +4318,6 @@ export interface EasyFormEmailDTO {
     body?: string;
     userEmails?: UserEmailDTO[];
     easyFormId?: string;
-    formLink?: string;
 }
 
 export interface UserEmailDTO {
@@ -4395,6 +4392,9 @@ export interface EasyFormEmailQueryRequestDTO {
 
 export interface EasyFormActionDTO {
     actionType?: string;
+    workflowInstanceId?: string;
+    caseId?: string;
+    caseDefinitionVersionId?: string;
     actionId?: string;
     actionName?: string;
 }
@@ -7309,7 +7309,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request GET:/api/nuxeo/collection
          */
         getNuxeoCollection: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTODocumentDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/collection`,
                 method: "GET",
                 ...params,
@@ -7324,7 +7324,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/nuxeo/collection
          */
         postNuxeoCollection: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultPaginationDTODocumentDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/nuxeo/collection`,
                 method: "POST",
                 ...params,
@@ -16971,7 +16971,8 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getWorkflowVersionBpmnxml: (
             query: {
                 draftId: string;
-                versionNumber: string;
+                versionNumber?: string;
+                versionId?: string;
             },
             params: RequestParams = {},
         ) =>
@@ -18758,6 +18759,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getFormDesignEmailId: (id: string, params: RequestParams = {}) =>
             this.request<ResultEasyFormBaseEmailDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/form/design/email/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name GetFormDesignEmailHistoryLogId
+         * @request GET:/api/docpal/form/design/email/history/log/{id}
+         */
+        getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/form/design/email/history/log/${id}`,
                 method: "GET",
                 ...params,
             }),
