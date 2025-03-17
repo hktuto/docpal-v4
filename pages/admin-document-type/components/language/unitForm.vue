@@ -17,6 +17,8 @@ const state: any = reactive({
 })
 async function handleInit () {
     const res = await getMetaI18n(props.lKey)
+    console.log(res, props.lKey);
+    
     state.form = {...res}
 }
 async function handleSubmit () {
