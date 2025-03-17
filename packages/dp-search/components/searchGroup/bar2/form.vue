@@ -56,7 +56,7 @@
       </el-select-v2>
     </el-form-item>
 
-    <el-form-item v-if="isQuertType('documentTypes')" :label="$t('searchGroup.documentTypesSelect')">
+    <el-form-item v-if="isQuertType('documentTypes')" :label="$t('searchGroup.documentTypes')">
       <el-select-v2
         v-model="state.form.documentTypes"
         :options="options.docType"
@@ -66,7 +66,7 @@
       >
       </el-select-v2>
     </el-form-item>
-    <el-form-item v-if="isQuertType('mimeTypes')" :label="$t('doc_SearchLanguagesMimeTypeSelect')">
+    <el-form-item v-if="isQuertType('mimeTypes')" :label="$t('search.mimeTypes')">
       <el-select-v2
         v-model="state.form.mimeTypes"
         :options="mimeTypes"
@@ -75,7 +75,7 @@
         @change="handleChange"
       />
     </el-form-item>
-    <el-form-item v-if="isQuertType('creators')" :label="$t('doc_SearchCreatorsSelect')">
+    <el-form-item v-if="isQuertType('creators')" :label="$t('doc_SearchCreators')">
       <el-select-v2
         v-model="state.form.creators"
         :options="options.users"
@@ -93,7 +93,7 @@
         @change="handleChange"
       />
     </el-form-item>
-    <el-form-item v-if="isQuertType('collections')" :label="$t('searchGroup.collectionsSelect')">
+    <el-form-item v-if="isQuertType('collections')" :label="$t('searchGroup.collections')">
       <el-select-v2
         v-model="state.form.collections"
         :options="options.collections"
@@ -102,7 +102,7 @@
         @change="handleChange"
       />
     </el-form-item>
-    <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tagsSelect')">
+    <el-form-item v-if="isQuertType('tags')" :label="$t('searchGroup.tags')">
       <el-select-v2
         v-model="state.form.tags"
         :options="options.tags"

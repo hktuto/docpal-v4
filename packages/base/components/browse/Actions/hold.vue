@@ -77,7 +77,7 @@ const props = defineProps<{
 const hold = computed(() => {
     return props.permission?.hold ? props.permission.hold : {}
 })
-const state = reactive({
+const state = reactive<any>({
     holdList: [],
     dVisible: false,
     loading: false
@@ -150,7 +150,7 @@ async function refreshHold () {
     props.permission.hold = _permission.hold
 }
 async function getHoldPolicies () {
-    state.holdList = await clientApi.api.getPolicyHolds()
+    state.holdList = await clientApi.api.getPolicyHolds().then(res => res.data)
 }
 
 onMounted(() => {

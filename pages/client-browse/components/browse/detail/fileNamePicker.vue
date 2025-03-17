@@ -39,7 +39,11 @@ onMounted(async () => {
 
 
 <template>
+    <div v-if="fileList.length === 0" class="fileNameTitle">
+      {{ title }}
+    </div>
     <el-select-v2
+        v-else
         v-model="value"
         :options="fileList"
         placeholder="Please select"

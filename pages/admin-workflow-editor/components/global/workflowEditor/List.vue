@@ -137,6 +137,20 @@ onMounted(() => {
     // getFilter()
 })
 
+function handleSaveAsOrCreate(data: any) {
+    const params: NewWorkflowVersionDetailParams = {
+        id: data.draftId,
+        name: data.name,
+        draftId: data.draftId,
+        versionNumber: data.latestVersion,
+        versionId: data.latestVersionId,
+    }
+    let newItem = newWorkflowEditorDetail(params) as any;
+    newItem.props.currentVersion = data.latestVersion
+    routerProvider?.navigateTo({...newItem}, false)
+    reload()
+}
+
 function reload() {
     console.log("reload")
     if (tableRef.value && tableRef.value.reload) {
@@ -165,9 +179,9 @@ function reload() {
                 </div>
             </template>
         </LazyWorkflowEditorWorkflowListTable>
-        <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="reload"/>
+        <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="handleSaveAsOrCreate"/>
         <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion"
-                                        :data="newWorkflowDialogData" @close="reload"/>
+                                        :data="newWorkflowDialogData" @close="reload" @created="handleSaveAsOrCreate"/>
     </div>
 </template>
 

@@ -59,37 +59,37 @@ function setupEdge(){
         // #region exclusiveGateway 
         const allNodeConnected = graphProvider?.graph.value?.getConnectedEdges(source).filter((connectedEdge:any) => {
             // console.log(connectedEdge.source.cell, source.id)
-            return connectedEdge.source.cell === source.id
+            return connectedEdge.id !== edge.id && connectedEdge.source.cell === source.id
         })
-        if(!allNodeConnected || allNodeConnected.length === 0) {
-                return;
-        }
+        
 
         // #endregion
         if(source.data.type === 'serviceTask' && source.data.data['attr_flowable:delegateExpression'] === '${conditionValidateDelegate}')  {
             let newData = {...edge.data};
             let label = "Approved";
-            console.log("source", source)
+            const successLable = source.data.data.extensionElements['docpal:graphLabel']?.attr_successLable || "true"
+            const failureLable = source.data.data.extensionElements['docpal:graphLabel']?.attr_failureLable || "false"
+            
             // 如果是新的連線，先看看 allNodeConnected 有沒有 conditionValidateDelegate
             if(isNew){
                 if(allNodeConnected.length > 2){
-                    console.log("allNodeConnected", allNodeConnected)
                     // remove edge
                     graphProvider.graph.value?.removeEdge(edge.id)
                     return
                 }
                 const hasApprovEdge = allNodeConnected.find((connectedEdge:any) => {
+                    console.log("connectedEdge", connectedEdge.id , edge.id)
                     return connectedEdge.data?.data?.conditionExpression?.__cdata && 
                     connectedEdge.data?.data?.conditionExpression?.__cdata === '${conditionResult}'
                 });
-                
+                    console.log("hasApprovEdge", hasApprovEdge)
                     newData.data = {
                         conditionExpression:{
                             ['attr_xsi:type']:"tFormalExpression",
                             __cdata: hasApprovEdge ? '${!conditionResult}' : '${conditionResult}'
                         }
                     }
-                    label = hasApprovEdge ? "Rejected" : "Approved" ;
+                    label = hasApprovEdge ? failureLable : successLable  ;
             }
             
             

@@ -52,29 +52,13 @@ async function handleSubmit() {
   form.append('file', blob, 'workflow.bpmn.xml')
   form.append('isDraft', true)
   const {data} = await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO: {}}, form)
-  console.log('data', data)
-  // const newItem: any = {
-  //     menuKey: routerProvider?.menuSymbol,
-  //     id: "workflow-editor-detail-" + new Date().getTime(),
-  //     name: "workflow-editor-detail-" + data.id,
-  //     icon: 'dp-icon:flow-outline',
-  //     label: name,
-  //     component: 'LazyWorkflowEditorDetail',
-  //     props: {
-  //         id: data.id,
-  //         currentVersion: data.latestVersion,
-  //         productionVersion: data.productionVersion,
-  //         name: data.name,
-  //         item: data,
-  //     }
-  // }
-  // routerProvider?.navigateTo({...newItem})
-
+  state.form = {
+    template: 'Blank',
+    name: ""
+  }
   ElMessage.success(t('workflow_editorWorkflowCreatedSuccessMsg'));
-  setTimeout(() => {
-    emits('created')
-    state.visible = false
-  }, 300);
+  state.visible = false
+  emits('created', data)
 
 }
 

@@ -90,7 +90,7 @@ async function saveDraft() {
     // await adminApi.workflowProcessDefinitionController.postUpload({requestDTO:{}},form)
     // 如果是修改了名称，则更新 tab 的名称
     routerProvider?.updateTabName(newName + ` - (${currentVersion})`)
-    console.log(xml)
+
 }
 
 provide('workflowDetail',{

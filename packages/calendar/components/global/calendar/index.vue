@@ -170,25 +170,25 @@
         <ElRow :gutter="20">
             <ElCol v-if="options.showLocationFilter" :span="filtetColumnWidth">
                 <ElFormItem :label="options.locationLabel || 'Location'">
-                    <ElSelect v-model="filter.location" clearable placeholder="Select" @change="filterChange">
+                    <ElSelect v-model="filter.location" clearable placeholder="Select" filterable @change="filterChange">
                         <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
                     </ElSelect>
                 </ElFormItem>
             </ElCol>
             <ElCol v-if="options.showUserFilter" :span="filtetColumnWidth">
                 <ElFormItem :label="options.userLabel || 'User'">
-                    <ElSelect v-model="filter.user" clearable placeholder="Select" @change="filterChange">
+                    <ElSelect v-model="filter.user" clearable placeholder="Select" filterable @change="filterChange">
                         <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                     </ElSelect>
                 </ElFormItem>
             </ElCol>
             <ElCol v-if="options.showCategoryFilter" :span="filtetColumnWidth">
                 <ElFormItem :label="options.categoryLabel || 'Category'">
-                    <ElSelect v-model="filter.category" clearable placeholder="Select" @change="filterChange">
+                    <ElSelect v-model="filter.category" clearable placeholder="Select" filterable @change="filterChange">
                         <ElOption v-for="item in categoriesOption" :key="item.id" :label="item.name" :value="item.id" />
                     </ElSelect>
                 </ElFormItem>   
-                </ElCol>
+            </ElCol>
         </ElRow>
         </ElForm>
         

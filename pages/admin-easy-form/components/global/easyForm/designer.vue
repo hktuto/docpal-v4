@@ -71,6 +71,7 @@ async function getDetail() {
 }
 
 onActivated(() => {
+  state.loadField = false;
   getDetail();
 });
 </script>

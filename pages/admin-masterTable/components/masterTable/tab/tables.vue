@@ -73,7 +73,6 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
                 code: "active",
                 name: "masterTable_active",
                 action: ({row}: any) => {
-                    console.log("row", row);
                     handleActive(row, "A");
                 },
             },
