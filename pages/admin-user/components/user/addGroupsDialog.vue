@@ -1,6 +1,6 @@
 <template>
 <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')"
-    :close-on-click-modal="false"
+    :close-on-click-modal="false" destroy-on-close
     >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
@@ -72,12 +72,10 @@ async function handleOptions (exitList) {
     }
 }
 async function getGroupList() {
-    if(state.groupList.length > 0) return 
+    // if(state.groupList.length > 0) return 
     state.groupList = await userProvider?.GetGroupListApi()
 }
-onMounted(async() => {
-    
-})
+
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>

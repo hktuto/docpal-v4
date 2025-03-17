@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-model="state.visible" :title="$t('user_newUser')"
-               :close-on-click-modal="false"
+               :close-on-click-modal="false" destroy-on-close
     >
         <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
         <template #footer>
