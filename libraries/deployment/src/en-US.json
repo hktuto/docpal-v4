@@ -72,7 +72,9 @@
     "inactivated": "Inactivated",
     "inactive": "Inactive",
     "inactived": "Inactived",
-    "unpublished": "Unpublished"
+    "sendEmail": "Send Email",
+    "unpublished": "Unpublished",
+    "viewDetails": "View Details"
   },
   "admin": {
     "setting": {
@@ -1109,6 +1111,7 @@
   "dpDocument_fileSelected": "No. of Files Selected",
   "dpDocument_fileType": "Document Type",
   "dpEmail": {
+    "content": "Content",
     "recipient": "Recipient Email Address"
   },
   "dpForm_confrimPassword": "Confrim Password",
@@ -1275,6 +1278,7 @@
     "copyEmbedCode": "Copy Embed Code",
     "copyUrl": "Copy Url",
     "editForm": "Edit Form",
+    "emailLog": "Email Logs",
     "fields": "Form Infomation",
     "formInfomation": "Form Information",
     "formPreview": "Form Preview",
@@ -1282,6 +1286,7 @@
     "formSetting": "Form Setting",
     "name": "Form Name",
     "permission": "Permission",
+    "sendEmail": "Send Email",
     "startWorkflow": "Start Workflow",
     "submitWorkflow": "Used in Workflow",
     "type": "Condition Type",
@@ -2273,6 +2278,7 @@
   },
   "submit": "Submit",
   "tableHeader": {
+    
     "asc": "Z-A",
     "cc": "CC (Multi-select allowed)",
     "days": "Day(s)",
@@ -2282,7 +2288,11 @@
     "folderName": "Folder Name",
     "formatDate": "Format",
     "isMultiple": "Is Multiple",
+    "relatedWorkflow": "Related Workflow",
+    "relatedCase": "Related Case",
+    "sentBy": "Sent By",
     "sortBy": "Sort By",
+    "sentDate": "Sent Date",
     "sortOrder": "Sort Order",
     "summary": "Summary",
     "summaryKey": "Summary Key",
