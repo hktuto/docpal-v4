@@ -10,13 +10,12 @@ import { clientApi } from 'api';
 import { MenuRouterKey } from '#imports';
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  id: string;
   instanceId: string;
   versionId: string;
-  data:any
 }>();
-const {id, instanceId, versionId} = toRefs(props)
-const caseDefinitionKey = ref(props.data.caseDefinitionKey)
+const {instanceId, versionId} = toRefs(props)
+const caseTypeId = ref('')
+const caseDefinitionKey = ref('')
 const state = reactive<any>({
   loading: false,
   layout: [] as DashboardWidgetSetting[],
@@ -44,6 +43,10 @@ function goBack() {
   routerProvider?.back()
 }
 async function getLayout(layoutId: string, row: any) {
+  caseTypeId.value = row.caseTypeId
+  caseDefinitionKey.value = row.caseDefinitionKey
+  console.log(caseTypeId, caseDefinitionKey, instanceId, versionId);
+  
   try {
     state.loading = true
     state.selectedDashboard = row
@@ -67,7 +70,7 @@ async function getLayout(layoutId: string, row: any) {
 }
 provide(CaseManagementDashboardKey, {
   instanceId: instanceId,
-  caseTypeId: id,
+  caseTypeId,
   caseDefinitionKey,
   versionId
 })

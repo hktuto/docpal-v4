@@ -15,6 +15,8 @@ export const caseManageDetailPage  = function(params: any){
   } as TabItem
 }
 export const caseManageDashboardPage  = function(params: any){
+  console.log(params);
+  
   return {
     id: "client-case-manage-dashboard" + new Date().getTime(),
     name: "client-case-manage-dashboard-" + params.instanceId,

@@ -91,6 +91,9 @@ export default defineAppConfig({
         },
         {
             name: "client-case-manage"
+        },
+        {
+            name: "client-easy-form"
         }
     ]
 })
