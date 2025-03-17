@@ -89,7 +89,7 @@ function setupEdge(){
                             __cdata: hasApprovEdge ? '${!conditionResult}' : '${conditionResult}'
                         }
                     }
-                    label = hasApprovEdge ? successLable : failureLable ;
+                    label = hasApprovEdge ? failureLable : successLable  ;
             }
             
             

@@ -71,6 +71,24 @@ async function handleSubmit() {
         loading.value = false
     }
 }
+
+async function addtionalSubmit(formData:any) {
+
+    const form = {
+            processKey,
+            businessKey: formData.businessKey || "",
+            properties: Object.entries(formData).reduce((newObj, [key, val]) => {
+                if (val || val === false || val == '0') newObj[key]= val
+                return newObj;
+            },{}),
+        }
+    await clientApi.api.postWorkflowProcessStart(form).then(res => res.data)
+
+    ElMessage.success('Workflow created')
+    cancel()
+}
+
+
 function cancel(){
     const fallbackPageItem = {
         id: "client-workflow",
@@ -99,7 +117,7 @@ onMounted(() => {
             <template #action>
                 <div class="workflow-actions" >
                     <template v-for="(item,index) in additionalButton" :key="index">
-                        <component :is="item.component" v-bind="item.props"/>
+                        <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
                     </template>
                     <el-button @click="cancel">{{ $t("cancelText") }}</el-button>
                     <el-button type="primary" @click="handleSubmit">{{

@@ -112,7 +112,7 @@
         "label": "documentType_Type",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -149,7 +149,7 @@
           }
         ],
         "required": true,
-        "requiredHint": "common_selectecIsRequiredMsg",
+        "requiredHint": "common_selectedIsRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],

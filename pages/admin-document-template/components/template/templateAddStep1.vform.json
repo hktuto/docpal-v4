@@ -59,7 +59,7 @@
         "label": "info_type",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -73,20 +73,7 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [
-          {
-            "label": "Word",
-            "value": "Word"
-          },
-          {
-            "label": "Excel",
-            "value": "Excel"
-          },
-          {
-            "label": "PPT",
-            "value": "PPT"
-          }
-        ],
+        "optionItems": [],
         "required": true,
         "requiredHint": "",
         "validation": "",
@@ -194,9 +181,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }

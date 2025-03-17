@@ -17,7 +17,7 @@ const conditionLabel = ref({
 })
 function refreshData() {
     if(!node.data || !node.data.data || !node.data.data.extensionElements || !node.data.data.extensionElements['docpal:decisionTable']){
-
+        
         node.setData({
             ...node.data,
             data:{
@@ -35,7 +35,9 @@ function refreshData() {
             }
         })
     }
+    console.log("form", node.data.data.extensionElements['docpal:decisionTable'].orConditionElements)
     form.value = JSON.parse(JSON.stringify(node.data.data.extensionElements['docpal:decisionTable'].orConditionElements))
+    console.log("form", form.value)
     conditionLabel.value = {
         attr_successLable: node.data.data.extensionElements['docpal:graphLabel']?.attr_successLable || "true",
         attr_failureLable: node.data.data.extensionElements['docpal:graphLabel']?.attr_failureLable || "false",
