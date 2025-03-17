@@ -172,7 +172,7 @@ function highlightCell(cellIds:string[], allNodes:string[]) {
             const edges = graph.value?.getConnectedEdges(node)
             edges?.forEach( (edge: any) => {
                 if(allNodes.includes(edge.source.cell) && allNodes.includes(edge.target.cell) ){
-                    edge.attr('line/stroke', 'var(--primary-color)')
+                    edge.attr('line/stroke', 'var(--app-primary-color)')
                     edge.attr('line/strokeDasharray', 5)
                     edge.attr('line/style/animation', 'running-line 30s infinite linear');
                     return
@@ -188,7 +188,7 @@ function highlightCell(cellIds:string[], allNodes:string[]) {
                     allNodeConnectedToExclusiveGateway?.forEach( (connectedEdge: any) => {
                         if(connectedEdge.target.cell === sourceNode.id) {
                             if( allNodes.includes(connectedEdge.source.cell)){
-                                edge.attr('line/stroke', 'var(--primary-color)')
+                                edge.attr('line/stroke', 'var(--app-primary-color)')
                                 edge.attr('line/strokeDasharray', 5)
                                 edge.attr('line/style/animation', 'running-line 30s infinite linear');
                             }
@@ -202,7 +202,7 @@ function highlightCell(cellIds:string[], allNodes:string[]) {
                     allNodeConnectedToExclusiveGateway.forEach( (connectedEdge: any) => {
                         if(connectedEdge.source.cell === targetNode.id) {
                             if( allNodes.includes(connectedEdge.target.cell)){
-                                edge.attr('line/stroke', 'var(--primary-color)')
+                                edge.attr('line/stroke', 'var(--app-primary-color)')
                                 edge.attr('line/strokeDasharray', 5)
                                 edge.attr('line/style/animation', 'running-line 30s infinite linear');
                             }
