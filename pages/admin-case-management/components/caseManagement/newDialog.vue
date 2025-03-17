@@ -25,10 +25,11 @@ async function handleSubmit () {
   state.loading = true
   try {
     state.visible = false
-    await adminApi.api.postCaseTypes(data)
+    const res = await adminApi.api.postCaseTypes(data).then(res => res.data)
     FormRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
+    emits('refresh', res)
   } catch (error) {
+    console.log("error", error)
   }
   state.loading = false
 }

@@ -19,7 +19,7 @@ const state = reactive<any>({
     completeTask: "completeTask",
   },
   isCompleted: false,
-  activeTab: "info",
+  activeTab: "form",
   taskDetail: {},
   activityList: [],
   loading: false,
@@ -38,7 +38,6 @@ async function getDetail() {
         if (!!historyList && historyList.length > 0) {
           state.taskDetail = historyList[0];
         }
-        console.log(state.taskDetail);
         break;
       default:
         state.taskDetail = await clientApi.api
@@ -60,7 +59,9 @@ async function getDetail() {
     try {
       await handleFormDataGet();
       handleDisabledForm();
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
     state.loading = false;
   }, 100);
 }
@@ -94,15 +95,11 @@ async function handleFormDataGet() {
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break;
     default:
-      console.log(
-        "state.taskDetail.taskDefinitionKey",
-        state.taskDetail.taskDefinitionKey
-      );
+
 
       const properties = await clientApi.api
         .postWorkflowProperties({ taskId: id })
         .then((res) => res.data);
-      console.log("properties", properties);
       
       formData = formDataGetFromProps(properties);
       formJson = await formJsonGet(
@@ -110,7 +107,6 @@ async function handleFormDataGet() {
         state.taskDetail.taskInstance.processDefinitionKey,
         state.taskDetail.processDefinitionVersionId
       );
-      console.log("formData", formData);
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
       vFormRef.value.setForm(formJson, formData, [], xml);
       handleAdditionalSetting(xml, state.taskDetail, formData)
@@ -142,7 +138,7 @@ async function formJsonGet(userTaskId: string, processKey: string, versionId: st
 }
 
 function handleDisabledForm() {
-  if (userId !== state.taskDetail.assignee) {
+  if (!isAssigneeUser.value) {
     vFormRef.value.disableForm();
   }
 }
@@ -165,7 +161,6 @@ async function handleSubmit() {
   state.loading = true;
   try {
     const data = await vFormRef.value.getFormData(true, false);
-    console.log(data);
     // return;
     if (!data) throw new Error(`${t("incompleteData")}`);
     // convert all item in data which is boolean to string
@@ -208,11 +203,29 @@ function handleAdditionalSetting(xml:any, taskDetail: any, formData:any) {
 }
 
 
+async function addtionalSubmit(formData:any) {
+  const param = {
+      taskId: id,
+      properties: { ...formData },
+    };
+    const res: any = await clientApi.api
+      .postWorkflowFormSubmit(param)
+      .then((res) => res.data);
+    ElMessage.success(`${t("msg_successfulOperation")}`);
+    routerProvider?.navigateTo(
+      routeWorkflowPage({
+        workflowType: workflowType,
+      }),
+      false
+    );
+}
+
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   try {
     state.taskDetail = { ...taskDetailRes };
     handleGetActivity();
-    if (isClaim) {
+    if (!isAssigneeUser.value) {
+      
       state.loading = true;
       await handleFormDataGet();
     } else {
@@ -222,8 +235,6 @@ const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   state.loading = false;
 };
 function tabChange(tab: string) {
-  console.log(tab);
-
   // router.push({query: { tab, state: workflowType }})
 }
 function handleBack() {
@@ -232,8 +243,8 @@ function handleBack() {
   }), false);
 }
 const isAssigneeUser = computed(() => {
-  const id = state.taskDetail?.assignee || "";
-  return id === userId;
+
+  return !state.taskDetail?.assignee || state.taskDetail?.assignee === userId;
 });
 onActivated(() => {
   getDetail();
@@ -270,7 +281,7 @@ onActivated(() => {
             <template #action>
               <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
                 <template v-for="(item,index) in additionalButton" :key="index">
-                    <component :is="item.component" v-bind="item.props" />
+                    <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
                 </template>
                 <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
                 <el-button type="primary" @click="handleSubmit">{{

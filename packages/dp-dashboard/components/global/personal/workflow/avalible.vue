@@ -52,8 +52,11 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  ElMessage.info('Need to add routing jump event')
-  // routerProvider?.navigateTo(routeDashboardDetail(row), false)
+  routerProvider?.navigateTo(routeWorkflowDetail({
+    ...row,
+    name: row.taskInstance.businessKey,
+    workflowType: 'allTask'
+  }), false);
 }
 watchDebounced(
   () => props.processKeys,

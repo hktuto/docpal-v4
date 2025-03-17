@@ -498,10 +498,12 @@ export const bpmnElement:BpmnElement = {
                             ['attr_flowable:delegateExpression']:'${conditionValidateDelegate}',
                             extensionElements:{
                                 "docpal:decisionTable": {
-                                    orConditionElements:{
-                                        element:[]
-                                    }
-                                }
+                                    orConditionElements:[]
+                                },
+                                "docpal:graphLabel":{
+                                    attr_successLable:"success",
+                                    attr_failureLable:"failure",
+                                },
                             }
                         }),
                     label: 'New Condition',
@@ -511,10 +513,12 @@ export const bpmnElement:BpmnElement = {
                         ['attr_flowable:delegateExpression']:'${conditionValidateDelegate}',
                         extensionElements:{
                             "docpal:decisionTable": {
-                                orConditionElements:{
-                                    element:[]
-                                }
-                            }
+                                orConditionElements:[]
+                            },
+                            "docpal:graphLabel":{
+                                attr_successLable:"success",
+                                attr_failureLable:"failure",
+                            },
                         }
                     })
                 })

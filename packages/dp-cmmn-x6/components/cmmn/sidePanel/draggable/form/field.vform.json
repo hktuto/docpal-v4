@@ -61,7 +61,7 @@
         "label": "docType_type",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -130,20 +130,7 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [
-                  {
-                    "label": "select 1",
-                    "value": 1
-                  },
-                  {
-                    "label": "select 2",
-                    "value": 2
-                  },
-                  {
-                    "label": "select 3",
-                    "value": 3
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -186,20 +173,7 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [
-                  {
-                    "label": "select 1",
-                    "value": 1
-                  },
-                  {
-                    "label": "select 2",
-                    "value": 2
-                  },
-                  {
-                    "label": "select 3",
-                    "value": 3
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -242,20 +216,7 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [
-                  {
-                    "label": "select 1",
-                    "value": 1
-                  },
-                  {
-                    "label": "select 2",
-                    "value": 2
-                  },
-                  {
-                    "label": "select 3",
-                    "value": 3
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",

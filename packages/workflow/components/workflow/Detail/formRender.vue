@@ -257,6 +257,17 @@ onMounted(() => {
 })
 const { formData, formJson } = toRefs(state)
 defineExpose({ setForm, getFormData, disableForm, enableForm })
+
+async function updateData(newData:any) {
+    const _data = await handleData(newData)
+    state.formData = { ..._data }
+    FormRendererRef.value.vFormRenderRef.setFormData(_data)
+}
+
+provide('workflowFormRender', {
+    updateData,
+    getFormData,
+})
 </script>
 
 <style lang="scss" scoped>

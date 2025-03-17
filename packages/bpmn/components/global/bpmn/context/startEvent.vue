@@ -13,7 +13,7 @@ const emits = defineEmits(['openForm'])
     <BpmnSidebarStarterAdditionLogic :node="node" />
     <BpmnSidebarEditForm :node="node" />
     <BpmnSidebarPreviewDocument :node="node" />
-
+    <BpmnSidebarBooleanButton :node="node" />
 </div>
 </template>
 

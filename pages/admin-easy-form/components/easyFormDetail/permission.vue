@@ -3,12 +3,12 @@
         <h3 class="title">{{ $t("easyForm.permission") }}</h3>
         <el-form ref="FormRef" label-position="top" :model="form">
             <el-formItem
-                :label="$t('user_groupNameMulti')"
+                :label="$t('user_UserGroup')"
                 prop="permission"
                 :rules="[{ required: true, message: $t('user_UserGroup') + ' ' +$t('render.hint.fieldRequired') }]"
             >
                 <el-select v-model="form.permission" multiple filterable clearable
-                           :placeholder = "t('common_selectOccupancyContent')"
+                           :placeholder = "t('common_selectedIsMultiSelectRequiredMsg')"
                            :disabled="state.loading"
                            @change="handleChange">
                     <template v-for="item in state.groups">

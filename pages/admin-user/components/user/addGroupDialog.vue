@@ -45,9 +45,10 @@ async function handleSubmit() {
     state.loading = false
 }
 
-function handleOpen(exitList: any) {
+ function handleOpen(exitList: any) {
     state.visible = true
-    setTimeout(() => {
+    setTimeout(async() => {
+        state.groupList = await userProviderDetail?.GetGroupListApi()
         handleOptions(exitList)
     })
 }
@@ -72,8 +73,7 @@ function handleOptions(exitList: any) {
     }
 }
 
-onMounted(async () => {
-    state.groupList = await userProviderDetail?.GetGroupListApi()
+onActivated(async () => {
 })
 defineExpose({handleOpen})
 </script>

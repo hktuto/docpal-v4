@@ -84,6 +84,19 @@ async function handleSubmit() {
     // console.log(res);
 }
 
+async function additionSubmit(formData:any){
+    const variables = Object.keys(inParameters.value).reduce((prev:any, item:any) => {
+        const otherKeys = inParameters.value[item]
+        prev[item] = formData[otherKeys]
+        return prev
+    }, {}) as any
+    const res = await clientApi.api.postCaseInstanceProcessStart({
+        id: actionStepId,
+        variables
+    })
+    handelCancel()
+}
+
 onMounted(() => {
     setUpForm()
 })
@@ -97,7 +110,7 @@ const loading = ref(false);
         <template #action>
             <div class="workflow-detail-pane--btns">
                 <template v-for="(item,index) in additionalButton" :key="index">
-                    <component :is="item.component" v-bind="{...item.props, formData}"  />
+                    <component :is="item.component" v-bind="{...item.props, formData}" @submit="additionSubmit" />
                 </template>
                 <el-button @click="handelCancel">{{ $t("cancelText") }}</el-button>
                 <el-button type="primary" @click="handleSubmit">{{

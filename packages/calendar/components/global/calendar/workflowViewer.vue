@@ -66,6 +66,19 @@ function popNewEvent(dateTime: string) {
     }
 }
 
+function initForm(){
+    if(options.editable && !options.allowCreate){
+        newEventId.value = formData.eventId
+        newEvent.value = formData;
+        
+
+    }
+}
+
+onMounted(() => {
+    initForm()
+})
+
 defineExpose({ getFormData })
 </script>
 

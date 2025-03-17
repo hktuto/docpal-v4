@@ -61,7 +61,7 @@
         "label": "docType.category",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -75,70 +75,9 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 1,
-        "optionItems": [
-          {
-            "label": "CRM",
-            "value": "CRM"
-          },
-          {
-            "label": "Customer Service",
-            "value": "Customer Service"
-          },
-          {
-            "label": "Finance",
-            "value": "Finance"
-          },
-          {
-            "label": "General",
-            "value": "General"
-          },
-          {
-            "label": "HR / Admin",
-            "value": "HR / Admin"
-          },
-          {
-            "label": "intranet",
-            "value": "intranet"
-          },
-          {
-            "label": "IT",
-            "value": "IT"
-          },
-          {
-            "label": "Legal",
-            "value": "Legal"
-          },
-          {
-            "label": "Logisitic",
-            "value": "Logisitic"
-          },
-          {
-            "label": "Logistic",
-            "value": "Logistic"
-          },
-          {
-            "label": "Marketing",
-            "value": "Marketing"
-          },
-          {
-            "label": "Operation",
-            "value": "Operation"
-          },
-          {
-            "label": "Project",
-            "value": "Project"
-          },
-          {
-            "label": "Sales",
-            "value": "Sales"
-          },
-          {
-            "label": "Workflow",
-            "value": "Workflow"
-          }
-        ],
+        "optionItems": [],
         "required": true,
-        "requiredHint": "common_selectecIsRequiredMsg",
+        "requiredHint": "common_selectedIsRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
@@ -165,7 +104,7 @@
         "label": "documentType_Type",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -202,7 +141,7 @@
           }
         ],
         "required": true,
-        "requiredHint": "common_selectecIsRequiredMsg",
+        "requiredHint": "common_selectedIsRequiredMsg",
         "validation": "",
         "validationHint": "",
         "customClass": [],
