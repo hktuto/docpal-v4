@@ -3,20 +3,22 @@
     v-model="state.visible"
     :title="$t('dpTip_warning')"
     :close-on-click-modal="false"
-  > 
+  >
     <h3>{{ $t('folderCabinet.workflowTip') }}</h3>
     <ul>
       <li v-for="item in state.list">{{ item.name }}</li>
     </ul>
     <template #footer>
-      <el-button :loading="state.loading" @click="state.visible = false">{{
-        $t("confirm")
-      }}</el-button>
+      <el-button id="adminFolderCabinetSettingInfoSaveConfirm" type="primary" :loading="state.loading"
+                 @click="state.visible = false">
+        {{ $t("confirm") }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
+import {adminApi} from "api";
+
 const props = defineProps<{
   id: string;
 }>();
@@ -25,19 +27,22 @@ const state = reactive({
   visible: false,
   list: []
 });
+
 function handleOpen() {
   state.visible = true;
 }
+
 async function handleCheck() {
   try {
     const res = await adminApi.api.getCabinetIdUseWorkflow(props.id).then(res => res.data)
-    if(!!res) state.list = res
+    if (!!res) state.list = res
   } catch (error) {
-    
+
   } finally {
     if (state.list.length > 0) handleOpen()
   }
 }
-defineExpose({ handleOpen, handleCheck });
+
+defineExpose({handleOpen, handleCheck});
 </script>
 <style lang="scss" scoped></style>

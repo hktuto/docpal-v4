@@ -6,7 +6,7 @@
     >
         <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
         <template #footer>
-            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+            <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
         </template>
     </el-dialog>
 </template>

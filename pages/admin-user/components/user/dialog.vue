@@ -1,12 +1,14 @@
 <template>
-    <el-dialog v-model="state.visible" :title="$t('user_newUser')"
-               :close-on-click-modal="false"
-    >
-        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
-        <template #footer>
-            <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
-        </template>
-    </el-dialog>
+  <el-dialog v-model="state.visible" :title="$t('user_newUser')"
+             :close-on-click-modal="false" destroy-on-close
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <template #footer>
+      <el-button id="adminUserListCreateUserSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
@@ -17,34 +19,34 @@ const {t} = useI18n()
 const userProvider = inject(userProviderKey)
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 const state = reactive({
-    loading: false,
-    visible: false,
+  loading: false,
+  visible: false,
 })
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    state.loading = true
-    try {
-        await adminApi.api.postNuxeoIdentityUser(data)
-        state.visible = false
-        await adminApi.api.postNuxeoIdentityUserBatchAddGroups({
-            userId: data.userId,
-            groupIds: data.groupList
-        })
-        routerProvider?.message.success(t('user_createdSuccessMsg', {username: data.name}));
-        FormRendererRef.value.vFormRenderRef.resetForm()
-        emits('refresh')
-    } catch (error) {
-    }
-    state.loading = false
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  state.loading = true
+  try {
+    await adminApi.api.postNuxeoIdentityUser(data)
+    state.visible = false
+    await adminApi.api.postNuxeoIdentityUserBatchAddGroups({
+      userId: data.userId,
+      groupIds: data.groupList
+    })
+    routerProvider?.message.success(t('user_createdSuccessMsg', {username: data.name}));
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    emits('refresh')
+  } catch (error) {
+  }
+  state.loading = false
 }
 
 function handleOpen() {
-    state.visible = true
+  state.visible = true
 }
 
 onMounted(async () => {

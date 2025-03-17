@@ -4,17 +4,19 @@
     :title="`${$t('dpDocument_acl_editLocal')} (${state.aclItem.userId})`"
     :close-on-click-modal="false"
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{
-        $t("common_submit")
-      }}</el-button>
+      <el-button id="adminFolderCabinetSettingInfoLocalPermissionEditTimeSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t("common_submit") }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
+import {adminApi} from "api";
 import formJson from './permissionEditTimeDialog.vform.json'
+
 const props = defineProps<{
   id: string;
 }>();
@@ -25,6 +27,7 @@ const state = reactive({
   aclItem: {},
 });
 const FormRendererRef = ref();
+
 async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData();
@@ -47,6 +50,7 @@ async function handleSubmit() {
     state.loading = false;
   }
 }
+
 function handleOpen(aclItem) {
   state.visible = true;
   state.aclItem = aclItem;
@@ -54,12 +58,13 @@ function handleOpen(aclItem) {
     const params: any = {
       time: !!aclItem.startDate ? 'dateBase' : 'permanent',
     }
-    if(aclItem.startDate) {
+    if (aclItem.startDate) {
       params.dateRange = [aclItem.startDate, aclItem.endDate]
     }
     FormRendererRef.value.vFormRenderRef.setFormData(params)
   })
 }
-defineExpose({ handleOpen });
+
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped></style>

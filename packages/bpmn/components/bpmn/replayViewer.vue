@@ -180,8 +180,7 @@ defineExpose({
             
                 <div v-for="(step,index) in displaySteps" :key="step.id" :class="{steps:true, [step.taskType]:true, 'noAssign':!step.assignee, selected:state.playing && state.currentStep - 1 === index}" @mouseover="stepHoverHandler(step)" @mouseleave="stepBlurHandler(step)"> 
                 <div class="start time">
-                    {{ dayjs(step.startTime).format('YYYY-MM-DD HH:MM') }} 
-                    
+                    {{ formatDate(step.startTime) }} 
                 </div>
                 <template v-if="step.assignee">
                     <div class="stepContent">
@@ -189,7 +188,7 @@ defineExpose({
                             {{ step.taskName }}
                         </div>
                         <div v-if="step.endTime && step.startTime" class="duration">
-                            <ElTooltip :content="$t('time.endtime') + ' : ' + dayjs(step.endTime).format('YYYY-MM-DD HH:MM')">
+                            <ElTooltip :content="$t('time.endtime') + ' : ' + formatDate(step.endTime)">
                                 
                                 {{ countDuration(step.startTime, step.endTime) }} 
                             </ElTooltip>
@@ -215,12 +214,12 @@ defineExpose({
                 >
                     <ElTableColumn prop="startTime" label="Start Time" >
                         <template #default="scope">
-                            {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:MM') }}
+                            {{ dayjs(scope.row.startTime).format('YYYY-MM-DD HH:mm') }}
                         </template>
                     </ElTableColumn>
                     <ElTableColumn prop="endTime" label="Duration" >
                         <template #default="scope">
-                            <ElTooltip :content="$t('time.endtime') + ' : ' + dayjs(scope.row.endTime).format('YYYY-MM-DD HH:MM')">
+                            <ElTooltip :content="$t('time.endtime') + ' : ' + formatDate(scope.row.endTime)">
                                 {{ countDuration(scope.row.startTime, scope.row.endTime) }}
                             </ElTooltip>
                         </template>
