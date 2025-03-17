@@ -60,7 +60,7 @@
     <template #footer>
       <el-button v-if="state.setting?.name" type="danger" @click="handleDelete">{{ $t('common_delete') }}
       </el-button>
-      <el-button :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+      <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
     </template>
   </el-dialog>
 </template>

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { ElMessage } from "element-plus";
-import { adminApi } from "api";
-import { onActivated } from "vue";
-const { id } = defineProps<{
+import {ElMessage} from "element-plus";
+import {adminApi} from "api";
+import {onActivated} from "vue";
+
+const {id} = defineProps<{
   id: string;
 }>();
 const state = reactive({
@@ -10,9 +11,10 @@ const state = reactive({
   loading: false,
   testLoading: false,
 });
-const { t } = useI18n();
+const {t} = useI18n();
 const filterRef = ref();
 const tableRef = ref();
+
 async function handleInit() {
   try {
     state.loading = true;
@@ -54,6 +56,7 @@ async function handleInit() {
     state.loading = false;
   }
 }
+
 async function handleTest() {
   try {
     state.testLoading = true;
@@ -66,9 +69,11 @@ async function handleTest() {
     }, 1000);
   }
 }
+
 function handleClear() {
   filterRef.value.clear();
 }
+
 async function handleSave() {
   try {
     state.loading = true;
@@ -85,6 +90,7 @@ async function handleSave() {
     state.loading = false;
   }
 }
+
 onActivated(() => {
   state.loading = false;
   handleInit();
@@ -98,24 +104,28 @@ onActivated(() => {
     </div>
     <div class="smartFolder-left-bottom">
       <div class="flex-x-center">
-        <el-button type="info" @click="handleClear">{{
-          $t("button.clearFilter")
-        }}</el-button>
+        <el-button id="adminSmartFolderSettingInfoClearFilter" type="info" @click="handleClear">
+          {{ $t("button.clearFilter") }}
+        </el-button>
         <el-button
+          id="adminSmartFolderSettingInfoTest"
           class="test-button"
           type="info"
           :loading="state.testLoading"
           @click="handleTest"
-          >{{ $t("button.test") }}</el-button
         >
+          {{ $t("button.test") }}
+        </el-button>
       </div>
       <el-button
+        id="adminSmartFolderSettingInfoSave"
         style="width: 100%; margin: var(--app-space-xs) 0"
         type="primary"
         :loading="state.loading"
         @click="handleSave"
-        >{{ $t("dpTool_save") }}</el-button
       >
+        {{ $t("dpTool_save") }}
+      </el-button>
     </div>
 
     <div class="smartFolder-right-main" style="height: 100%; overflow: hidden;">
@@ -133,20 +143,25 @@ onActivated(() => {
   grid-template-columns: minmax(min-content, 400px) 1fr;
   grid-template-rows: min-content 1fr min-content;
   gap: var(--app-space-xs);
+
   .smartFolder-left-header {
     grid-area: 1 / 1 / 2 / 2;
   }
+
   .smartFolder-left-main {
     grid-area: 2 / 1 / 3 / 2;
     overflow-y: auto;
     overflow-x: hidden;
   }
+
   .smartFolder-left-bottom {
     grid-area: 3 / 1 / 4 / 2;
+
     .test-button {
       flex: 1;
     }
   }
+
   .smartFolder-right-main {
     grid-area: 1 / 2 / 4 / 3;
     position: relative;

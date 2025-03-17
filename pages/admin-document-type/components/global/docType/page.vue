@@ -1,24 +1,26 @@
 <template>
-    <div class="pageContainer--padding">
-        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-            <template #toolbar_buttons>
-                <ResponsiveFilter
-                    ref="ResponsiveFilterRef"
-                    @form-change="handleFilterFormChange"
-                    inputKey="name"
-                    inputPlaceHolder="documentType_filter"
-                />
-                <el-button type="primary" @click="handleCreate">{{ $t('docType.new') }}</el-button>
-            </template>
-            <template #status="{ row }">
-                <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
-                <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
-            </template>
-        </VxeGrid>
+  <div class="pageContainer--padding">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          @form-change="handleFilterFormChange"
+          inputKey="name"
+          inputPlaceHolder="documentType_filter"
+        />
+        <el-button id="adminDocumentTypeCreateNewDocumentType" type="primary" @click="handleCreate">
+          {{ $t('docType.new') }}
+        </el-button>
+      </template>
+      <template #status="{ row }">
+        <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
+        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+      </template>
+    </VxeGrid>
 
-        <DocTypeDialogNew ref="DocTypeDialogNewRef" @refresh="query({})"/>
-        <DocTypeDialogDuplicate ref="DocTypeDialogDuplicateRef" @refresh="query({})"/>
-    </div>
+    <DocTypeDialogNew ref="DocTypeDialogNewRef" @refresh="query({})"/>
+    <DocTypeDialogDuplicate ref="DocTypeDialogDuplicateRef" @refresh="query({})"/>
+  </div>
 </template>
 <script lang="ts" setup>
 import {adminApi} from "api";
@@ -26,159 +28,159 @@ import {routeDocDetail} from '~/utils/routerHelper';
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
-    throw new Error('MenuRouterKey is not provided')
+  throw new Error('MenuRouterKey is not provided')
 }
 let extraParams: any = {};
 const state = reactive<any>({});
 const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
-    id: "docTypeManage",
-    api: async (pageParams: any) => {
-        return await adminApi.api.postDocpaltypeSettingsPage({
-            ...pageParams,
-            ...extraParams,
-        });
+  id: "docTypeManage",
+  api: async (pageParams: any) => {
+    return await adminApi.api.postDocpaltypeSettingsPage({
+      ...pageParams,
+      ...extraParams,
+    });
+  },
+  columns: [
+    {field: "name", title: "search.type", fixed: "left"},
+    {
+      field: "category",
+      title: "docType.category",
     },
-    columns: [
-        {field: "name", title: "search.type", fixed: "left"},
-        {
-            field: "category",
-            title: "docType.category",
-        },
-        {field: "dataType", title: "documentType_Type"},
-        {
-            field: "status",
-            title: "documentType_Status",
-            slots: {
-                default: "status",
-            },
-        },
-        {field: "createdBy", title: "role.creator"},
-        {
-            field: "modifiedDate", title: "table_last_update",
-            formatter({cellValue}: any) {
-                return formatDate(cellValue)
-            }
-        },
+    {field: "dataType", title: "documentType_Type"},
+    {
+      field: "status",
+      title: "documentType_Status",
+      slots: {
+        default: "status",
+      },
+    },
+    {field: "createdBy", title: "role.creator"},
+    {
+      field: "modifiedDate", title: "table_last_update",
+      formatter({cellValue}: any) {
+        return formatDate(cellValue)
+      }
+    },
 
+  ],
+  bodyActions: [
+    [
+      {
+        code: "edit",
+        name: "documentType_edit",
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleDblclick(row)
+        },
+      },
+      {
+        code: "duplicate",
+        name: "documentType_duplicate",
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleDuplicate(row)
+        },
+      },
+      {
+        code: "active",
+        name: "documentType_activate",
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleActive(row, true)
+        },
+      },
+      {
+        code: "inactive",
+        name: "documentType_inactivate",
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleActive(row, false)
+        },
+      },
     ],
-    bodyActions: [
-        [
-            {
-                code: "edit",
-                name: "documentType_edit",
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleDblclick(row)
-                },
-            },
-            {
-                code: "duplicate",
-                name: "documentType_duplicate",
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleDuplicate(row)
-                },
-            },
-            {
-                code: "active",
-                name: "documentType_activate",
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleActive(row, true)
-                },
-            },
-            {
-                code: "inactive",
-                name: "documentType_inactivate",
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleActive(row, false)
-                },
-            },
-        ],
-    ],
-    permissionMethod: (args: PermissionMethodParams) => {
-        switch (args.code) {
-            case "active":
-                return {
-                    visible: !args.row.enable,
-                    disabled: false,
-                };
-            case "inactive":
-                return {
-                    visible: args.row.enable,
-                    disabled: false,
-                };
-            default:
-                return {
-                    visible: true,
-                    disabled: false,
-                }
+  ],
+  permissionMethod: (args: PermissionMethodParams) => {
+    switch (args.code) {
+      case "active":
+        return {
+          visible: !args.row.enable,
+          disabled: false,
+        };
+      case "inactive":
+        return {
+          visible: args.row.enable,
+          disabled: false,
+        };
+      default:
+        return {
+          visible: true,
+          disabled: false,
         }
-    },
-    dblClickAction: ({row, column, event}: any) => {
-        handleDblclick(row)
-    },
+    }
+  },
+  dblClickAction: ({row, column, event}: any) => {
+    handleDblclick(row)
+  },
 });
 
 function handleDblclick(row) {
-    routerProvider?.navigateTo(routeDocDetail(row), false)
+  routerProvider?.navigateTo(routeDocDetail(row), false)
 }
 
 const DocTypeDialogDuplicateRef = ref()
 const DocTypeDialogNewRef = ref()
 
 function handleDuplicate(row: any) {
-    DocTypeDialogDuplicateRef.value.handleOpen(row)
+  DocTypeDialogDuplicateRef.value.handleOpen(row)
 }
 
 async function handleActive(row: any, isActive: boolean) {
-    const result = await adminApi.api.patchDocpaltypeSettingsActive({
-        name: row.name,
-        enable: isActive
-    }).then(res => res.data)
-    if (!!result) {
-        row.enable = isActive
-    }
+  const result = await adminApi.api.patchDocpaltypeSettingsActive({
+    name: row.name,
+    enable: isActive
+  }).then(res => res.data)
+  if (!!result) {
+    row.enable = isActive
+  }
 }
 
 async function handleCreate() {
-    DocTypeDialogNewRef.value.handleOpen()
+  DocTypeDialogNewRef.value.handleOpen()
 }
 
 function handleFilterFormChange(formModel: any) {
-    extraParams = formModel
-    reload();
+  extraParams = formModel
+  reload();
 }
 
 const ResponsiveFilterRef = ref();
 
 async function getFilter() {
-    const filters = await adminApi.api.getDocpaltypeSettingsPageConditions().then((res) => {
-        return res.data;
-    });
-    ResponsiveFilterRef.value.init(filters)
+  const filters = await adminApi.api.getDocpaltypeSettingsPageConditions().then((res) => {
+    return res.data;
+  });
+  ResponsiveFilterRef.value.init(filters)
 }
 
 onMounted(() => {
-    getFilter();
+  getFilter();
 });
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .responsive-container {
-    width: 70%;
+  width: 70%;
 
-    :deep .el-input {
-        width: 250px;
-    }
+  :deep .el-input {
+    width: 250px;
+  }
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
-  <!-- <FormRenderer ref="FormRendererRef" :form-json="formJson" 
+  <!-- <FormRenderer ref="FormRendererRef" :form-json="formJson"
   @formChange="handleFormChange">
 </FormRenderer> -->
 <div :class="{ 'loading-container': state.loading }" v-for="(item, index) in filters.query" :key="item.id" v-loading="state.loading">
-  <SearchGroupBar2FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item" 
+  <SearchGroupBar2FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item"
     @update="(data: any) =>handleUpdate(data, item)"
-    @add="handleAddQueryFilter(item)" 
+    @add="handleAddQueryFilter(item)"
     @command="(command: 'and' | 'or') => handleCommand(command, item)"
-    @delete="handleDeleteFilter(item.id, filters.query)" 
+    @delete="handleDeleteFilter(item.id, filters.query)"
     @deleteChild="handleDeleteFilter"
     @formChange="emits('search')"></SearchGroupBar2FilterCondition>
   <el-divider v-if="index !== filters.query.length - 1">

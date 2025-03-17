@@ -7,18 +7,19 @@
             {{ $t("notifications.userSelected") }}: {{ state.selectList.length }}
           </b>
           <Icon
+            id="adminUserListClearSelected"
             name="ic:baseline-clear"
             class="normal cursor-pointer"
             @click="cleanSelectedRows"
           ></Icon>
         </div>
         <div class="flex-x-end">
-          <el-button v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
+          <el-button id="adminUserListDeleteUser" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
             {{ $t("common_delete") }}
           </el-button>
-          <el-divider direction="vertical" />
+          <el-divider direction="vertical"/>
           <el-dropdown placement="top-start">
-            <el-button type="primary" class="el-icon--left el-icon--right">
+            <el-button id="adminUserListActiveUser" type="primary" class="el-icon--left el-icon--right">
               {{ $t("actions.active") }}
             </el-button>
             <template #dropdown>
@@ -32,7 +33,7 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button type="primary" @click="handleGroupSelected()">
+          <el-button id="adminUserListAssignUserGroup" type="primary" @click="handleGroupSelected()">
             {{ $t("userManage.group") }}
           </el-button>
         </div>
@@ -45,11 +46,12 @@
           :inputPlaceHolder="$t('placeHolder.userNameOrEmail')"
         />
         <el-button
+          id="adminUserListCreateUser"
           class="el-icon--right"
           type="primary"
           :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
           @click="handleUserDialogShow()"
-          >{{ $t("user_newUser") }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
+        >{{ $t("user_newUser") }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
         </el-button>
       </header>
     </template>
@@ -80,10 +82,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from "element-plus";
-import { userProviderKey } from "~/util/userProvider";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {userProviderKey} from "~/util/userProvider";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const routerProvider = inject(MenuRouterKey);
 const emits = defineEmits(["filter-change", "refresh"]);
 const userProvider = inject(userProviderKey);
@@ -109,15 +111,15 @@ const state = reactive<TableState>({
   selectList: [],
 });
 
-const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
+const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
   id: "a-user-table",
   api: async (pageParams: any) => {
     cleanSelectedRows();
     return await userProvider?.getAllUsersApi(pageParams);
   },
   columns: [
-    { field: "username", title: "user_username", fixed: "left", type: "checkbox" },
-    { field: "email", title: "user_email" },
+    {field: "username", title: "user_username", fixed: "left", type: "checkbox"},
+    {field: "email", title: "user_email"},
     {
       field: "groupDTOList",
       title: "user_groups",
@@ -140,7 +142,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         name: "Edit User",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           userProvider?.openUserDetail(row);
         },
       },
@@ -149,7 +151,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         name: "Delete User",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDelete(row);
         },
       },
@@ -163,17 +165,17 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     },
     tooltipConfig: {
       contentMethod: ({
-        items,
-        row,
-        rowIndex,
-        $rowIndex,
-        column,
-        columnIndex,
-        $columnIndex,
-        type,
-        cell,
-        $event,
-      }: any) => {
+                        items,
+                        row,
+                        rowIndex,
+                        $rowIndex,
+                        column,
+                        columnIndex,
+                        $columnIndex,
+                        type,
+                        cell,
+                        $event,
+                      }: any) => {
         const key = column.property;
         const value = row[key];
         if (key === "groupDTOList") {
@@ -191,7 +193,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   selectChangeHander: (selectedRows: any[]) => {
     state.selectList = [...selectedRows];
   },
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     userProvider?.openUserDetail(row);
   },
 });
@@ -226,7 +228,7 @@ async function handleDelete(row: any) {
     dangerouslyUseHTMLString: true,
   });
   if (action !== "confirm") return;
-  const res = await userProvider?.BatchDeleteUserApi({ userIds: [row.userId] });
+  const res = await userProvider?.BatchDeleteUserApi({userIds: [row.userId]});
   if (!!res) {
     routerProvider?.message.success(t("userTip.userSelectedDeleteMsg"));
     reload();
@@ -345,7 +347,7 @@ watch(
     if (!!newVal) getFilter(newVal);
   }
 );
-defineExpose({ reload });
+defineExpose({reload});
 </script>
 
 <style lang="scss" scoped>

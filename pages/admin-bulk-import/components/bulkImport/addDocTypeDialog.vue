@@ -1,12 +1,14 @@
 <template>
-    <el-dialog v-model="state.visible" :title="$t('bulkImport_create')"
-               :close-on-click-modal="false"
-    >
-        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
-        <template #footer>
-            <el-button :loading="state.loading" @click="handleSubmit()">{{ $t('common_submit') }}</el-button>
-        </template>
-    </el-dialog>
+  <el-dialog v-model="state.visible" :title="$t('bulkImport_create')"
+             :close-on-click-modal="false"
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <template #footer>
+      <el-button id="adminBulkImportCreateNewBulkImportSubmit" type="primary" :loading="state.loading" @click="handleSubmit()">
+        {{ $t('common_submit') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api';
@@ -14,86 +16,86 @@ import formJson from './addDocTypeForm.vfom.json'
 import {ElMessage} from "element-plus";
 
 const {metaSettingData} = defineProps<{
-    metaSettingData: any
+  metaSettingData: any
 }>()
 const exitList = ref()
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 const {t} = useI18n()
 const state = reactive<{
-    loading: boolean,
-    visible: boolean,
-    allDocTypeList: any[]
+  loading: boolean,
+  visible: boolean,
+  allDocTypeList: any[]
 }>({
-    loading: false,
-    visible: false,
-    allDocTypeList: [],
+  loading: false,
+  visible: false,
+  allDocTypeList: [],
 })
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    state.loading = true
-    try {
-        const param = {
-            documentType: data.type,
-            isFolder: getIsFolder(data.type)
-        }
-        metaSettingData[param.documentType] = {
-            isFolder: getIsFolder(data.type),
-            related: []
-        }
-        await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
-        ElMessage.success(t('bulkImport_createdSuccess', {name: data.type}))
-        // await AddMetaSettingApi(param)
-        FormRendererRef.value.vFormRenderRef.resetForm()
-        emits('refresh')
-        state.visible = false
-    } catch (error) {
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  state.loading = true
+  try {
+    const param = {
+      documentType: data.type,
+      isFolder: getIsFolder(data.type)
     }
-    state.loading = false
+    metaSettingData[param.documentType] = {
+      isFolder: getIsFolder(data.type),
+      related: []
+    }
+    await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
+    ElMessage.success(t('bulkImport_createdSuccess', {name: data.type}))
+    // await AddMetaSettingApi(param)
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    emits('refresh')
+    state.visible = false
+  } catch (error) {
+  }
+  state.loading = false
 }
 
 function getIsFolder(type: string) {
-    try {
-        const data = state.allDocTypeList.find(item => item.name === type)
-        return data.isFolder
-    } catch (error) {
-        return false
-    }
+  try {
+    const data = state.allDocTypeList.find(item => item.name === type)
+    return data.isFolder
+  } catch (error) {
+    return false
+  }
 }
 
 function handleOpen(exitList: any) {
-    state.visible = true
+  state.visible = true
 
-    nextTick(() => {
-        FormRendererRef.value.vFormRenderRef.resetForm()
-        handleOptions(exitList)
-    })
+  nextTick(() => {
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    handleOptions(exitList)
+  })
 }
 
 async function handleOptions(exitList: any) {
-    const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('type')
-    const options = listFilter()
-    idRef.loadOptions(options)
+  const idRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('type')
+  const options = listFilter()
+  idRef.loadOptions(options)
 
-    function listFilter() {
-        return state.allDocTypeList.reduce((prev, item) => {
-            const index = exitList.findIndex((exitItem: any) => exitItem.documentType === item.name)
-            if (index === -1) {
-                item.value = item.name
-                item.label = t(item.name)
-                prev.push(item)
-            }
-            return prev
-        }, []);
-    }
+  function listFilter() {
+    return state.allDocTypeList.reduce((prev, item) => {
+      const index = exitList.findIndex((exitItem: any) => exitItem.documentType === item.name)
+      if (index === -1) {
+        item.value = item.name
+        item.label = t(item.name)
+        prev.push(item)
+      }
+      return prev
+    }, []);
+  }
 }
 
 onMounted(async () => {
-    const {data}: any = await adminApi.api.getTypesActive()
-    state.allDocTypeList = data?.sort((a: any, b: any) => (a.name.localeCompare(b.name)))
+  const {data}: any = await adminApi.api.getTypesActive()
+  state.allDocTypeList = data?.sort((a: any, b: any) => (a.name.localeCompare(b.name)))
 })
 defineExpose({handleOpen})
 </script>
