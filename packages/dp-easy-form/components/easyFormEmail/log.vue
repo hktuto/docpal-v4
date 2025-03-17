@@ -9,32 +9,37 @@
         />
       </template>
       <template #relatedWorkflow="{ row }">
-        <el-tag
+        <template
           v-for="(item, index) in row.relatedWorkflows"
           :key="item.actionId + index"
-          @click="handleOpenWorkflow(item)"
-          >{{ item.actionName }}</el-tag
         >
+          <el-tag v-if="item.workflowInstanceId" @click="handleOpenWorkflow(item)">
+            {{ item.actionName }}
+          </el-tag>
+        </template>
         <!-- <el-tag @click="handleOpenWorkflow()">bjnh</el-tag
         > -->
       </template>
       <template #relatedCase="{ row }">
-        <el-tag
+        <template
           v-for="(item, index) in row.relateCases"
           :key="item.actionId + index"
-          @click="handleOpenCase(item)"
-          >{{ item.actionName }}</el-tag
         >
+          <el-tag v-if="item.caseId" @click="handleOpenCase(item)">
+            {{ item.actionName }}
+          </el-tag>
+        </template>
       </template>
     </VxeGrid>
 
-    <EasyFormEmailDialog ref="DialogRef" />
+    <EasyFormEmailDialog ref="DialogRef" @email-update="emits('email-update')" />
     <EasyFormEmailDialogReadonly ref="DialogReadonlyRef" />
   </div>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox, ElNotification } from "element-plus";
 import { clientApi } from "api";
+const emits = defineEmits(["email-update"]);
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
@@ -195,10 +200,10 @@ function handleOpenCase(row: any = {}) {
   if (!row.case_id && !row.caseDefinitionVersionId) return;
   // row.case_id = "single-case-000017";
   // row.caseDefinitionVersionId = "23:73a7cf5a-643f-4adf-bc3e-1c638b501589";
-  row.instanceId = row.case_id
-  row.versionId = row.caseDefinitionVersionId
+  row.instanceId = row.case_id;
+  row.versionId = row.caseDefinitionVersionId;
   row.id = row.instanceId;
-  row.case_id = row.instanceId
+  row.case_id = row.instanceId;
   routerProvider?.navigateTo(caseManageDashboardPage(row));
 }
 // #endregion
