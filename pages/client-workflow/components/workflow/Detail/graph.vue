@@ -34,6 +34,12 @@ const getBpmn = async (processDefinitionId: any, processKey: any) => {
     const blob: any = await clientApi.api.postWorkflowProcessModel(data, {
         format: 'blob',
     })
+    try{
+        // TODO : get x6json from server, api required data , frontend does not have this data
+        // const  jsonResponse = await clientApi.api.getWorkflowVersionJson({draftId:id, versionNumber:currentVersion}, {})
+    }catch(err){
+
+    }
     // const x6JsonResponse = await clientApi.api.
     const text = await blob.text()
     bpmnFile.value = text;
