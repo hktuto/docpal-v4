@@ -6,6 +6,9 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
           inputKey="email"
+          :inputPlaceHolder="$t('dpTip.fiterBy', {
+            name: $t('user_email')
+          })"
         />
       </template>
       <template #relatedWorkflow="{ row }">
