@@ -1200,6 +1200,7 @@
     "filePreviewNotSupport": "Preview of this file format is not supported",
     "fillCollectionName": "Please fill in the collection name",
     "fillValue": "Fill value",
+    "filterBy": "Filter By {name}",
     "filterByBusinessName": "Filter By Bussiness Name",
     "filterByBussinessName": "Filter By Bussiness Name",
     "formatError": "Format Error",
