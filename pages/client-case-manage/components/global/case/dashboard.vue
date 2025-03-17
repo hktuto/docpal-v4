@@ -45,6 +45,8 @@ function goBack() {
 async function getLayout(layoutId: string, row: any) {
   caseTypeId.value = row.caseTypeId
   caseDefinitionKey.value = row.caseDefinitionKey
+  console.log(caseTypeId, caseDefinitionKey, instanceId, versionId);
+  
   try {
     state.loading = true
     state.selectedDashboard = row

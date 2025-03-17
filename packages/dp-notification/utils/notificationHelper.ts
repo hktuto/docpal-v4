@@ -45,10 +45,19 @@ export async function notiHandleView(row: any, tabProvider: any) {
 export const getWorkflowRoute = async (processInstanceId: string) => {
   try {
     const taskList: any = await clientApi.api.getWorkflowTasks({ processInstanceId }).then(res => res.data)
-    const newTab = routeWorkflowDetail({
-      id: taskList[0].id,
-      name: taskList[0].name
-    })
+    let newTab = {}
+    if(taskList && taskList.length > 0) {
+      newTab = routeWorkflowDetail({
+        id: taskList[0].id,
+        name: taskList[0].name
+      })
+    } else {
+      newTab = routeWorkflowDetail({
+        id: processInstanceId,
+        name: 'completeTask',
+        workflowType: 'completeTask'
+      })
+    }
     return newTab
   } catch (error) {
     return null
