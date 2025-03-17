@@ -32,6 +32,10 @@ const FormRendererRef = ref();
 
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData();
+  if(!data.id || !data.name) {
+    ElMessage.error(t("user_userGroupName")+ $t('form_common_requird'));
+    return;
+  }
   // check group name exist
   if (props.groups.some((g: any) => g.name === data.groupName || g.id === data.groupId)) {
     ElMessage.error(t("user_userGroupsIsExistsMsg"));
