@@ -346,7 +346,7 @@ defineExpose({
     
 }
 .stepsContainer{
-    //width: 300px;
+    width: 300px;
     display: grid;
     grid-template-rows: min-content 1fr;
     

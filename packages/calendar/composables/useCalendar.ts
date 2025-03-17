@@ -38,6 +38,16 @@ export const useCalendarStore = () => {
     ]
 
     
+    const timeSelecteStep = computed(() => {
+        return '00:' + setting.value.basic.default_slot
+    })
+
+    const timeSelectLimit = computed(() => {
+        return {
+            start: setting.value.basic.office_start_time || '00:00',
+            end: setting.value.basic.office_end_time || '24:00',
+        }
+    })
 
     const categoriesColumn = useCategoriesColumn()
     async function getCatergoriesColumn(){
@@ -138,7 +148,9 @@ export const useCalendarStore = () => {
         weekDayOptions,
         categoriesOption,
         locationsOption,
-        calendarViewerCategories
+        calendarViewerCategories,
+        timeSelecteStep,
+        timeSelectLimit
     }
 
 }

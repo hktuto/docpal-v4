@@ -34,7 +34,7 @@ const getBpmn = async (processDefinitionId: any, processKey: any) => {
     const blob: any = await clientApi.api.postWorkflowProcessModel(data, {
         format: 'blob',
     })
-    console.log(blob)
+    // const x6JsonResponse = await clientApi.api.
     const text = await blob.text()
     bpmnFile.value = text;
     viewerRef.value.init(text, x6Json.value)
