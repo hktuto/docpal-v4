@@ -25,7 +25,6 @@ const tableRef = ref<InstanceType<typeof InternalShareListTable>>();
 
 function handleFilterFormChange(formData: any) {
     filterData.value = formData
-    console.log("handleFilterFormChange", formData, tableRef.value)
     tableRef.value?.reload()
 }
 

@@ -1,13 +1,15 @@
 <template>
-    <el-dialog v-model="state.visible" :title="state.title"
-               :close-on-click-modal="false" append-to-body
-    >
-        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
-        <template #footer>
-            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
-            </el-button>
-        </template>
-    </el-dialog>
+  <el-dialog v-model="state.visible" :title="state.title"
+             :close-on-click-modal="false" append-to-body
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <template #footer>
+      <el-button id="adminFolderCabinetSettingInfoCreateNewFileOrFolderSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
@@ -16,72 +18,72 @@ import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const emits = defineEmits([
-    'update'
+  'update'
 ])
 const state = reactive({
-    loading: false,
-    visible: false,
-    setting: null,
-    isFolder: false,
-    title: t('folderCabinet.addFolder')
+  loading: false,
+  visible: false,
+  setting: null,
+  isFolder: false,
+  title: t('folderCabinet.addFolder')
 })
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-    try {
-        const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-        const params = {
-            ...data,
-        }
-        if (params.folder) delete params.multiple
-        else delete params.allow
-        state.loading = true
-        if (params.isEdit) {
-            params.id = state.setting.id
-            await adminApi.api.patchCabinetTemplate(params)
-        } else {
-            const labelRule = [
-                {
-                    "dataType": "string",
-                    "metaData": "fc:docTitle",
-                    "noDelete": true
-                }
-            ]
-            params.parentId = state.setting.id
-            await adminApi.api.postCabinetTemplate({...params, labelRule: JSON.stringify(labelRule)})
-            ElMessage.success(t('folder_cabinetDetailNewFolderSuccessMsg', {fileName: state.setting.label}))
-        }
-        FormRendererRef.value.vFormRenderRef.resetForm()
-        state.visible = false
-        emits('update')
-    } catch (error) {
+  try {
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const params = {
+      ...data,
     }
-    state.loading = false
+    if (params.folder) delete params.multiple
+    else delete params.allow
+    state.loading = true
+    if (params.isEdit) {
+      params.id = state.setting.id
+      await adminApi.api.patchCabinetTemplate(params)
+    } else {
+      const labelRule = [
+        {
+          "dataType": "string",
+          "metaData": "fc:docTitle",
+          "noDelete": true
+        }
+      ]
+      params.parentId = state.setting.id
+      await adminApi.api.postCabinetTemplate({...params, labelRule: JSON.stringify(labelRule)})
+      ElMessage.success(t('folder_cabinetDetailNewFolderSuccessMsg', {fileName: state.setting.label}))
+    }
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    state.visible = false
+    emits('update')
+  } catch (error) {
+  }
+  state.loading = false
 }
 
 function handleOpen(setting, children, isFolder) {
-    state.visible = true
-    state.setting = setting
-    state.isFolder = isFolder
-    setTimeout(async () => {
-        if (!children) children = []
-        const interval = setInterval(() => {
-            const documentTypeRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('documentType')
-            const listName = isFolder ? 'folderList' : 'fileList'
-            const options = FormRendererRef.value.vFormRenderRef.optionData[listName]
-            if (options.length !== 0) {
-                clearInterval(interval)
-                options.forEach(oItem => {
-                    const index = children.findIndex(cItem => cItem.documentType === oItem.value)
-                    oItem.disabled = index !== -1
-                });
-                documentTypeRef.loadOptions(options)
-            }
-        }, 1000)
-        await FormRendererRef.value.vFormRenderRef.resetForm()
-        await FormRendererRef.value.vFormRenderRef.setFormData({folder: isFolder})
-        state.title = isFolder ? t('folder_cabinetDetailNewFolderTitle', {fileName: state.setting.label}) : t('folderCabinet.addFile')
-    }, 500)
+  state.visible = true
+  state.setting = setting
+  state.isFolder = isFolder
+  setTimeout(async () => {
+    if (!children) children = []
+    const interval = setInterval(() => {
+      const documentTypeRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('documentType')
+      const listName = isFolder ? 'folderList' : 'fileList'
+      const options = FormRendererRef.value.vFormRenderRef.optionData[listName]
+      if (options.length !== 0) {
+        clearInterval(interval)
+        options.forEach(oItem => {
+          const index = children.findIndex(cItem => cItem.documentType === oItem.value)
+          oItem.disabled = index !== -1
+        });
+        documentTypeRef.loadOptions(options)
+      }
+    }, 1000)
+    await FormRendererRef.value.vFormRenderRef.resetForm()
+    await FormRendererRef.value.vFormRenderRef.setFormData({folder: isFolder})
+    state.title = isFolder ? t('folder_cabinetDetailNewFolderTitle', {fileName: state.setting.label}) : t('folderCabinet.addFile')
+  }, 500)
 }
 
 defineExpose({handleOpen})

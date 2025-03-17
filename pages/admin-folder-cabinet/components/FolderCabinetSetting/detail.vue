@@ -19,7 +19,7 @@
       >
       </FormRenderer>
       <div style="padding: 0 var(--app-space-xs)">
-        <el-divider v-if="isRoot" />
+        <el-divider v-if="isRoot"/>
 
         <el-form label-position="top" ref="FormRef" :model="form">
           <el-form-item
@@ -44,14 +44,14 @@
             />
           </el-form-item>
         </el-form>
-        <el-divider />
+        <el-divider/>
         <h3>{{ $t("folderCabinet.defaultMetadataValue") }}</h3>
         <MasterTableVariableForm
           ref="FormVariablesRendererRef"
           :ignoreList="ignoreList"
         />
 
-        <el-divider />
+        <el-divider/>
         <template v-if="state.setting.folder">
           <h3>{{ $t("folderCabinet.allowFilesTip") }}</h3>
           <el-switch
@@ -64,7 +64,8 @@
         <template v-else>
           <el-row :gutter="20">
             <el-col :span="12"
-              ><div class="grid-content ep-bg-purple" />
+            >
+              <div class="grid-content ep-bg-purple"/>
               <h3>{{ $t("folderCabinet.multiple") }}</h3>
               <el-switch
                 v-model="form.multiple"
@@ -75,7 +76,8 @@
               <div>{{ $t("folderCabinet.multipleTip") }}</div>
             </el-col>
             <el-col :span="12"
-              ><div class="grid-content ep-bg-purple" />
+            >
+              <div class="grid-content ep-bg-purple"/>
               <h3>{{ $t("folderCabinet.repeatName") }}</h3>
               <el-switch
                 v-model="form.repeatName"
@@ -88,7 +90,7 @@
           </el-row>
         </template>
 
-        <el-divider style="margin-bottom: 5px" />
+        <el-divider style="margin-bottom: 5px"/>
         <FolderCabinetSettingPermission
           :id="state.setting.id"
           :tableData="state.acls"
@@ -97,24 +99,29 @@
       </div>
     </div>
     <div style="padding: var(--app-space-xs); text-align: right">
-      <el-button type="info" @click="handleDelete"> {{ $t("common_delete") }} </el-button>
-      <el-button type="primary" @click="handleSave"> {{ $t("button.save") }} </el-button>
+      <el-button id="adminFolderCabinetSettingInfoDelete" type="info" @click="handleDelete">
+        {{ $t("common_delete") }}
+      </el-button>
+      <el-button id="adminFolderCabinetSettingInfoSave" type="primary" @click="handleSave">
+        {{ $t("button.save") }}
+      </el-button>
     </div>
-    <FolderCabinetSettingWorkflowDialog ref="WorkflowDialogRef" :id="state.setting.id" />
+    <FolderCabinetSettingWorkflowDialog ref="WorkflowDialogRef" :id="state.setting.id"/>
   </div>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
-import { ElMessage, ElMessageBox } from "element-plus";
+import {adminApi} from "api";
+import {ElMessage, ElMessageBox} from "element-plus";
 import formJson from "./detail.vform.json";
-import { routeFolderCabinetPage } from "~/utils/routerHelper";
+import {routeFolderCabinetPage} from "~/utils/routerHelper";
+
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
 const props = defineProps(["data", "isRoot", "id"]);
 const emits = defineEmits(["update"]);
-const { t } = useI18n();
+const {t} = useI18n();
 const FormRendererRef = ref();
 const state = reactive<any>({
   loading: false,
@@ -126,13 +133,14 @@ const state = reactive<any>({
 });
 // #region module:
 const form = reactive({
-  labelRule: [{ metadata: "fc:docTitle", dataType: "string", noDelete: true }],
+  labelRule: [{metadata: "fc:docTitle", dataType: "string", noDelete: true}],
   allow: false,
   multiple: false,
   repeatName: false,
 });
 const FormRef = ref();
 const FormVariablesRendererRef = ref();
+
 function handleDocTypeChange(data) {
   // if (state.editReady) form.labelRule = []
   state.curDocType = data.value;
@@ -154,10 +162,10 @@ function handleDocTypeChange(data) {
   }, []);
 
   state.dragList.push(
-    { name: "fc:label", metadata: "fc:label", dataType: "string" },
-    { name: "fc:createDate", metadata: "fc:createDate", dataType: "date" },
-    { name: "fc:creator", metadata: "fc:creator", dataType: "string" },
-    { name: "fc:docTitle", metadata: "fc:docTitle", dataType: "string" }
+    {name: "fc:label", metadata: "fc:label", dataType: "string"},
+    {name: "fc:createDate", metadata: "fc:createDate", dataType: "date"},
+    {name: "fc:creator", metadata: "fc:creator", dataType: "string"},
+    {name: "fc:docTitle", metadata: "fc:docTitle", dataType: "string"}
   );
   if (form.labelRule.length > 0) {
     state.dragList = state.dragList.filter((allItem: any) =>
@@ -183,6 +191,7 @@ function handleDocTypeChange(data) {
     state.defaultValue
   );
 }
+
 function getReminder(data, revertList) {
   return revertList.reduce((prev, item) => {
     if (data[item]?.intervalTime) prev[`${item}.intervalTime`] = data[item].intervalTime;
@@ -191,6 +200,7 @@ function getReminder(data, revertList) {
     return prev;
   }, {});
 }
+
 // #endregion
 function init(row) {
   state.setting = row;
@@ -206,9 +216,9 @@ function init(row) {
     if (row.labelRule) {
       const labelRule = JSON.parse(row.labelRule)
       labelRule.forEach((item: any) => {
-          if(item.metaData) {
-            item.metadata = item.metaData
-          }
+        if (item.metaData) {
+          item.metadata = item.metaData
+        }
       });
       form.labelRule = labelRule
     } else {
@@ -231,6 +241,7 @@ function init(row) {
 }
 
 const WorkflowDialogRef = ref();
+
 async function handleSave() {
   const valid = await FormRef.value.validate();
   const data = await FormRendererRef.value.vFormRenderRef.getFormData();
@@ -285,12 +296,13 @@ async function handleSave() {
   }
   routerProvider?.message.success(t('folder_cabinetDetailUpdatedSuccessMsg'));
 }
+
 async function handleDelete() {
   const action = await ElMessageBox.confirm(
-      t("folderCabinet.deleteTip"),
-      {
-          confirmButtonText: t('common_confirmDelete'),
-      }
+    t("folderCabinet.deleteTip"),
+    {
+      confirmButtonText: t('common_confirmDelete'),
+    }
   );
   if (action !== "confirm") throw new Error("cancel");
   await adminApi.api.deleteCabinetId(state.setting.id);
@@ -301,13 +313,14 @@ async function handleDelete() {
     emits("update");
   }
 }
+
 // function goMetaEdit () {
 //   let r = '/documentType'
 //   if (state.curDocType) r += `/${state.curDocType}`
 //   const url = router.resolve(r)
 //   window.open(url.href, '_blank');
 // }
-defineExpose({ init });
+defineExpose({init});
 </script>
 <style lang="scss" scoped>
 .detail-container {
@@ -315,11 +328,14 @@ defineExpose({ init });
   grid-template-rows: 1fr min-content;
   overflow: hidden;
 }
+
 .formContainer {
   min-height: unset;
 }
+
 :deep .el-form-item__content {
   width: 100%;
+
   & > div {
     width: 100%;
   }
