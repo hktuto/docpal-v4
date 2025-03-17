@@ -72,13 +72,9 @@
       <template v-if="form.actionType === 'Email'">
         <div class="grid-layout_3">
           <el-form-item
-            v-for="(item, index) in [
-              t('easyForm_addFormActionTo'),
-              t('easyForm_addFormActionCc'),
-              t('easyForm_addFormActionBcc'),
-            ]"
+            v-for="(item, index) in ['to', 'cc', 'bcc']"
             :key="index"
-            :label="item"
+            :label="$t(`easyForm_addFormAction_${item}`)"
           >
             <!-- :prop="`dataMapping[${index}].source`" -->
             <el-select-v2
