@@ -1,30 +1,31 @@
 <template>
-   <div>
-        <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
-            <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
-                <el-form-item :label="$t('name')" prop="name"
-                    :rules="[ { required: true, message: $t('form_common_requird'), trigger: 'change'}]">
-                    <el-input v-model="form.name" clearable />
-                </el-form-item>
-            </el-form>
-            
-            <template #footer>
-                <el-button :loading="state.loading"  @click="handleSave"
-                    @keyup.enter="handleSave">{{$t('common_save')}}</el-button>
-            </template>
-        </el-dialog>
-        <!-- -->
+  <div>
+    <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
+      <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
+        <el-form-item :label="$t('name')" prop="name"
+                      :rules="[ { required: true, message: $t('name') +' '+ $t('render.hint.fieldRequired'), trigger: 'change'}]">
+          <el-input v-model="form.name" clearable/>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button :loading="state.loading" @click="handleSave"
+                   @keyup.enter="handleSave">{{ $t('common_save') }}
+        </el-button>
+      </template>
+    </el-dialog>
+    <!-- -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import {emitBus, EventType} from 'eventbus'
-import { useEventListener } from '@vueuse/core'
+import {useEventListener} from '@vueuse/core'
 import {ElMessage} from 'element-plus'
-import { clientApi } from 'api'
+import {clientApi} from 'api'
+
 const props = defineProps<{
-    doc?: any,
-    parentPath?: string
+  doc?: any,
+  parentPath?: string
 }>()
 const emits = defineEmits(['success'])
 
@@ -32,76 +33,79 @@ const emits = defineEmits(['success'])
 const dialogOpened = ref(false)
 const formRef = ref()
 const form = ref({
-    name: '',
-    idOrPath: ''
+  name: '',
+  idOrPath: ''
 })
 const state = reactive({
-    doc: {},
-    loading: false,
-    MetaRenderMode: 'ai-edit'
+  doc: {},
+  loading: false,
+  MetaRenderMode: 'ai-edit'
 })
-async function openDialog(detail:any){
-    state.doc = detail
-    form.value.name = detail.name
-    form.value.id = detail.id
-    form.value.path = detail.path
-    dialogOpened.value = true
-    nextTick(async() => {
-        const { data } = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
-        const metadatas = data.metaDatas.reduce((prev: any, item) => {
-            if(item.label || item.value) {
-                prev[item.name] = {}
-                if(item.label) prev[item.name].label = item.label
-                if(item.value) prev[item.name].value = item.value
-            }
-            return prev
-        }, {})
-        const analysis = {
-            aiId: data.aiId,
-            metaDatas: metadatas
-        }
-        // state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
-        // await MetaFormRef.value.init(props.doc.type, {
-        //     aiAnalysis: analysis.metaDatas,
-        //     aiDocId: analysis.aiId
-        // })
-        // MetaFormRef.value.setData(props.doc.properties)
-    })
-}
-async function handleSave(){
-    state.loading = true
-    const detail = await clientApi.api.postNuxeoDocument({ idOrPath:state.doc.id }).then(res => res.data)
 
-    try {
-        // check if the name is exist in the folder
-        const { isDuplicate } = await duplicateNameFilter(detail.parentRef, [form.value]);
-
-        if(isDuplicate && form.value.name !== props.doc.name){
-            ElMessage({
-                message: $i18n.t('dpTip_duplicateFileName') as string,
-                type: 'error'
-            })
-            state.loading = false
-            return
-        }
-        await clientApi.api.patchNuxeoDocument({
-            idOrPath: form.value.id,
-            name: form.value.name,
-        })
-        dialogOpened.value = false
-        emits('success', state.doc)
-    } catch (error) {
-        console.log(error)
-    } finally {
-        console.log("finally", state.doc)
-        emitBus(EventType.FILE_NEED_REFRESH, {
-            relatedIdOrPath: detail.parentRef,
-            highlightIdOrPath:  state.doc.id
-        })
+async function openDialog(detail: any) {
+  state.doc = detail
+  form.value.name = detail.name
+  form.value.id = detail.id
+  form.value.path = detail.path
+  dialogOpened.value = true
+  nextTick(async () => {
+    const {data} = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
+    const metadatas = data.metaDatas.reduce((prev: any, item) => {
+      if (item.label || item.value) {
+        prev[item.name] = {}
+        if (item.label) prev[item.name].label = item.label
+        if (item.value) prev[item.name].value = item.value
+      }
+      return prev
+    }, {})
+    const analysis = {
+      aiId: data.aiId,
+      metaDatas: metadatas
     }
-    state.loading = false
+    // state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
+    // await MetaFormRef.value.init(props.doc.type, {
+    //     aiAnalysis: analysis.metaDatas,
+    //     aiDocId: analysis.aiId
+    // })
+    // MetaFormRef.value.setData(props.doc.properties)
+  })
 }
-useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))  
 
-defineExpose({ openDialog })
+async function handleSave() {
+  state.loading = true
+  const detail = await clientApi.api.postNuxeoDocument({idOrPath: state.doc.id}).then(res => res.data)
+
+  try {
+    // check if the name is exist in the folder
+    const {isDuplicate} = await duplicateNameFilter(detail.parentRef, [form.value]);
+
+    if (isDuplicate && form.value.name !== props.doc.name) {
+      ElMessage({
+        message: $i18n.t('dpTip_duplicateFileName') as string,
+        type: 'error'
+      })
+      state.loading = false
+      return
+    }
+    await clientApi.api.patchNuxeoDocument({
+      idOrPath: form.value.id,
+      name: form.value.name,
+    })
+    dialogOpened.value = false
+    emits('success', state.doc)
+  } catch (error) {
+    console.log(error)
+  } finally {
+    console.log("finally", state.doc)
+    emitBus(EventType.FILE_NEED_REFRESH, {
+      relatedIdOrPath: detail.parentRef,
+      highlightIdOrPath: state.doc.id
+    })
+  }
+  state.loading = false
+}
+
+useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))
+
+defineExpose({openDialog})
 </script>

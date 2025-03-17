@@ -84,8 +84,17 @@ async function handleSubmit() {
     // console.log(res);
 }
 
-function additionSubmit(args){
-    
+async function additionSubmit(formData:any){
+    const variables = Object.keys(inParameters.value).reduce((prev:any, item:any) => {
+        const otherKeys = inParameters.value[item]
+        prev[item] = formData[otherKeys]
+        return prev
+    }, {}) as any
+    const res = await clientApi.api.postCaseInstanceProcessStart({
+        id: actionStepId,
+        variables
+    })
+    handelCancel()
 }
 
 onMounted(() => {

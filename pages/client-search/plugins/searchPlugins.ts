@@ -19,40 +19,47 @@ export default defineNuxtPlugin((nuxtApp) => {
                 },
                 icon: 'lucide:search',
                 visibleFn: async(keyword:string) => {
-                    return keyword.length > 0
-                },
-                action: ({tabProvider,keyword}) => {
-                    const newItem = {
-                        id: 'client-search',
+                    if(keyword.length === 0) return []
+                    return [{
+                        label: 'Search : ' + keyword,
                         icon: 'lucide:search',
-                        hoverIcon: 'lucide:search',
-                        label: "file_search",
-                        component: "LazySearchPage",
-                        props:{
-                            searchParams:{
-                                "condition": "and",
-                                "docId": "",
-                                "query": [
-                                    {
+                        action: ({tabProvider,keyword}) => {
+                            const newItem = {
+                                id: 'client-search',
+                                icon: 'lucide:search',
+                                hoverIcon: 'lucide:search',
+                                label: "file_search",
+                                component: "LazySearchPage",
+                                props:{
+                                    searchParams:{
                                         "condition": "and",
-                                        "matchs": [
+                                        "docId": "",
+                                        "query": [
                                             {
-                                                "queryType": "keyword",
-                                                "value": keyword,
-                                                "option": {
-                                                    "fullMatch": false,
-                                                    "synonyms": false,
-                                                    "includeLanguages": []
-                                                }
+                                                "condition": "and",
+                                                "matchs": [
+                                                    {
+                                                        "queryType": "keyword",
+                                                        "value": keyword,
+                                                        "option": {
+                                                            "fullMatch": false,
+                                                            "synonyms": false,
+                                                            "includeLanguages": []
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         ]
                                     }
-                                ]
+                                }
                             }
+                            tabProvider.openTab(newItem, true)
                         }
-                    }
-                    tabProvider.openTab(newItem, true)
+                    }] as GlobalSearchItem[]
+                },
+                action: ({tabProvider,keyword}) => {
                 }
+                    
             }
         ]
     }

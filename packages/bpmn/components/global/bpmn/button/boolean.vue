@@ -2,7 +2,12 @@
 import { ElButton } from 'element-plus';
 import { clientApi } from 'api';
 
-const { attr_buttonStyle = "primary", attr_buttonText = "Submit", attr_booleanValue } = defineProps<{
+const { 
+    attr_buttonStyle = "primary",
+     attr_buttonText = "Submit", 
+     attr_booleanValue, 
+     attr_applyState,
+     } = defineProps<{
     xml: string,
     taskDetail: any
     formData:any,
@@ -11,14 +16,20 @@ const { attr_buttonStyle = "primary", attr_buttonText = "Submit", attr_booleanVa
     attr_buttonText: string,
     attr_applyState: boolean,
 }>()
+const workflowProvider = inject("workflowFormRender")
 
 const emits = defineEmits(['submit'])
 
-function submit(){
+async function submit(){
     //
-    emits('submit', {
-        formKey: attr_booleanValue,
-    })
+    // step 1 get latest form data
+    const formData = await workflowProvider?.getFormData(false, false)
+    if(!formData) return
+    // step 2 update form data
+    formData[attr_booleanValue] = attr_applyState
+    console.log("formData", formData)
+    // workflowProvider?.updateData(formData)
+    emits('submit', formData)
 }
 
 

@@ -89,7 +89,7 @@
         "label": "docType_documentType",
         "labelAlign": "",
         "defaultValue": "",
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
@@ -103,60 +103,7 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [
-          {
-            "value": "Prospect Profile",
-            "label": "Prospect Profile"
-          },
-          {
-            "value": "Contract",
-            "label": "Contract"
-          },
-          {
-            "value": "Folder",
-            "label": "文件夹"
-          },
-          {
-            "value": "ContractFolder",
-            "label": "ContractFolder"
-          },
-          {
-            "value": "Prospects",
-            "label": "Prospects"
-          },
-          {
-            "value": "Pre-Sales",
-            "label": "Pre-Sales"
-          },
-          {
-            "value": "testfor64charartertestfor64charartertestfor64charartertestfor64",
-            "label": "testfor64charartertestfor64charartertestfor64charartertestfor64"
-          },
-          {
-            "value": "Case",
-            "label": "Case"
-          },
-          {
-            "value": "CountryAndRegion",
-            "label": "CountryAndRegion"
-          },
-          {
-            "value": "in_name",
-            "label": "in_name"
-          },
-          {
-            "value": "Customer",
-            "label": "Customer"
-          },
-          {
-            "value": "UiPath",
-            "label": "UiPath"
-          },
-          {
-            "value": "Prospect",
-            "label": "Prospect"
-          }
-        ],
+        "optionItems": [],
         "required": true,
         "requiredHint": "",
         "validation": "",

@@ -55,10 +55,10 @@
       "formItemFlag": true,
       "options": {
         "name": "groupId",
-        "label": "dashboard_createAccessUserGroup",
+        "label": "dashboard_accessUserGroup",
         "labelAlign": "",
         "defaultValue": [],
-        "placeholder": "common_selectOccupancyContent",
+        "placeholder": "",
         "columnWidth": "200px",
         "size": "",
         "labelWidth": null,
