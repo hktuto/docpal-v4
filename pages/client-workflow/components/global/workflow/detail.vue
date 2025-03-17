@@ -177,12 +177,10 @@ async function handleSubmit() {
       .postWorkflowFormSubmit(param)
       .then((res) => res.data);
     ElMessage.success(`${t("msg_successfulOperation")}`);
-    routerProvider?.navigateTo(
-      routeWorkflowPage({
-        workflowType: workflowType,
-      }),
-      false
-    );
+    const fallbackRoute = routeWorkflowPage({
+      workflowType: workflowType,
+    });
+    routerProvider?.back(fallbackRoute)
   } catch (error) {
     console.log('error', error)
     // ElMessage.error(error.message)
