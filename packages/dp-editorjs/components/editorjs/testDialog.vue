@@ -75,17 +75,17 @@ defineExpose({
   <div class="dialogContentContainer">
     <div class="form">
       <ElForm :data="testForm" label-position="top">
-        <ElFormItem :label="t('easyForm_addFormActionTo')">
+        <ElFormItem :label="t('easyForm_addFormAction_to')">
           <ElSelect v-model="testForm.tos" multiple filterable allow-create
                     :placeholder="t('common_selectOccupancyContent')">
           </ElSelect>
         </ElFormItem>
-        <ElFormItem :label="t('easyForm_addFormActionCc')">
+        <ElFormItem :label="t('easyForm_addFormAction_cc')">
           <ElSelect v-model="testForm.ccs" multiple filterable allow-create
                     :placeholder="t('common_selectOccupancyContent')">
           </ElSelect>
         </ElFormItem>
-        <ElFormItem :label="t('easyForm_addFormActionBcc')">
+        <ElFormItem :label="t('easyForm_addFormAction_bcc')">
           <ElSelect v-model="testForm.bcc" multiple filterable allow-create
                     :placeholder="t('common_selectOccupancyContent')">
           </ElSelect>
