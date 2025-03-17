@@ -297,7 +297,8 @@ async function getCase() {
       .then((res) => res.data);
     caseList = res.entryList.map((item) => ({
       label: item.name,
-      value: item.productionVersionId,
+      value: item.id,
+      productionVersionId: item.productionVersionId
     }));
   }
 }
@@ -372,10 +373,12 @@ async function getEmailProps(id: string) {
   }
 }
 
-async function getCaseProps(id: string) {
+async function getCaseProps(key: string) {
   try {
+    const caseItem = caseList.find(item => item.value === key)
+    
     const options = await adminApi.api
-      .getCaseDashboardVersionVersionidPrimaryform(id)
+      .getCaseDashboardVersionVersionidPrimaryform(caseItem.productionVersionId)
       .then((res) => res.data);
     return options.fields.map((item) => ({
       label: item.name,
