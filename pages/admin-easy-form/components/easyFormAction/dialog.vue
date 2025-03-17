@@ -1,68 +1,130 @@
 <template>
-    <el-dialog v-model="state.visible"
-               :title="state.editMode ? $t('easyForm.actionsEdit') : $t('easyForm_addFormAction')"
-               class="scroll-dialog"
-               append-to-body
-               :close-on-click-modal="false"
-               @close="handleClose"
-    >
-        <el-form ref="FormRef" style="--icon-size: 1.2rem;" label-position="top" :model="form">
-            <el-form-item :label="$t('docType_label')" prop="actionName"
-                          :rules="[{required: true, message: $t('docType_label') + ' ' +$t('render.hint.fieldRequired'), trigger: 'blur'}]">
-                <el-input v-model="form.actionName"/>
-            </el-form-item>
-            <el-form-item :label="$t('easyForm.type')" prop="actionType"
-                          :rules="[{required: true, message: $t('easyForm.type') + ' ' +$t('render.hint.fieldRequired'), trigger: 'change'}]">
-                <el-select-v2 v-model="form.actionType" :placeholder="t('common_selectedIsRequiredMsg')" clearable
-                              :options="typeOptions" filterable @change="handleChange"/>
-            </el-form-item>
-            <template v-if="form.actionType">
-                <el-divider content-position="left">
-                    {{ $t('easyForm_addFormAction' + form.actionType + 'Setting') }}
-                </el-divider>
-                <el-form-item :label="$t('easyForm.'+ form.actionType +'TemplateKey')" prop="actionKey"
-                              :rules="[{required: true, message: $t('easyForm.'+ form.actionType +'TemplateKey') + ' ' +$t('render.hint.fieldRequired'), trigger: 'change'}]">
-                    <el-select-v2 v-model="form.actionKey" :options="state.templateList" filterable clearable
-                                  :placeholder="t('common_selectedIsRequiredMsg')"
-                                  @change="handleKeyChange"/>
-                </el-form-item>
-            </template>
-            <template v-if="form.actionType === 'Email'">
-                <div class="grid-layout_3">
-                    <el-form-item
-                        v-for="(item,index) in [t('easyForm_addFormActionTo'), t('easyForm_addFormActionCc'), t('easyForm_addFormActionBcc')]"
-                        :key="index"
-                        :label="item">
-                        <!-- :prop="`dataMapping[${index}].source`" -->
-                        <el-select-v2 v-model="form[item]" :options="state.userList" multiple clearable collapse-tags
-                                      :placeholder="t('common_selectOccupancyContent')"
-                                      filterable collapse-tags-tooltip/>
-                    </el-form-item>
-                </div>
-            </template>
-            <template v-if="form.actionKey">
-                <h3>{{ $t(`easyForm.${form.actionType}VariableMapping`) }}</h3>
-                <div class="grid-layout_3">
-                    <el-form-item v-for="(item,index) in form.dataMapping" :key="index"
-                                  :label="getTargetLabel(item.target)">
-                        <!-- :prop="`dataMapping[${index}].source`" -->
-                        <ElSelect v-model="item.source" filterable :placeholder="$t('easyform.actionFieldSelect')"
-                                  clearable>
-                            <ElOption v-for="option in sourceList" :key="option.value" :label="option.label"
-                                      :value="option.value"/>
-                        </ElSelect>
-                        <!-- <el-select-v2 v-model="item.source" filterable :placeholder="$t('easyform.actionFieldSelect')" :options="sourceList" clearable /> -->
-                    </el-form-item>
-                </div>
-            </template>
-        </el-form>
-        <template #footer>
-            <div class="footer-grid">
-                <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
-                </el-button>
-            </div>
-        </template>
-    </el-dialog>
+  <el-dialog
+    v-model="state.visible"
+    :title="state.editMode ? $t('easyForm.actionsEdit') : $t('easyForm_addFormAction')"
+    class="scroll-dialog"
+    append-to-body
+    :close-on-click-modal="false"
+    @close="handleClose"
+  >
+    <el-form ref="FormRef" style="--icon-size: 1.2rem" label-position="top" :model="form">
+      <el-form-item
+        :label="$t('docType_label')"
+        prop="actionName"
+        :rules="[
+          {
+            required: true,
+            message: $t('docType_label') + ' ' + $t('render.hint.fieldRequired'),
+            trigger: 'blur',
+          },
+        ]"
+      >
+        <el-input v-model="form.actionName" />
+      </el-form-item>
+      <el-form-item
+        :label="$t('easyForm.type')"
+        prop="actionType"
+        :rules="[
+          {
+            required: true,
+            message: $t('easyForm.type') + ' ' + $t('render.hint.fieldRequired'),
+            trigger: 'change',
+          },
+        ]"
+      >
+        <el-select-v2
+          v-model="form.actionType"
+          :placeholder="t('common_selectOccupancyContent')"
+          clearable
+          :options="typeOptions"
+          filterable
+          @change="handleChange"
+        />
+      </el-form-item>
+      <template v-if="form.actionType">
+        <el-divider content-position="left">
+          {{ $t("easyForm_addFormAction" + form.actionType + "Setting") }}
+        </el-divider>
+        <el-form-item
+          :label="$t('easyForm.' + form.actionType + 'TemplateKey')"
+          prop="actionKey"
+          :rules="[
+            {
+              required: true,
+              message:
+                $t('easyForm.' + form.actionType + 'TemplateKey') +
+                ' ' +
+                $t('render.hint.fieldRequired'),
+              trigger: 'change',
+            },
+          ]"
+        >
+          <el-select-v2
+            v-model="form.actionKey"
+            :options="state.templateList"
+            filterable
+            clearable
+            :placeholder="t('common_selectOccupancyContent')"
+            @change="handleKeyChange"
+          />
+        </el-form-item>
+      </template>
+      <template v-if="form.actionType === 'Email'">
+        <div class="grid-layout_3">
+          <el-form-item
+            v-for="(item, index) in ['to', 'cc', 'bcc']"
+            :key="index"
+            :label="$t(`easyForm_addFormAction_${item}`)"
+          >
+            <!-- :prop="`dataMapping[${index}].source`" -->
+            <el-select-v2
+              v-model="form[item]"
+              :options="state.userList"
+              multiple
+              clearable
+              collapse-tags
+              :placeholder="t('common_selectOccupancyContent')"
+              filterable
+              collapse-tags-tooltip
+            />
+          </el-form-item>
+        </div>
+      </template>
+      <template v-if="form.actionKey">
+        <h3>{{ $t(`easyForm.${form.actionType}VariableMapping`) }}</h3>
+        <div class="grid-layout_3">
+          <el-form-item
+            v-for="(item, index) in form.dataMapping"
+            :key="index"
+            :label="getTargetLabel(item.target)"
+          >
+            <!-- :prop="`dataMapping[${index}].source`" -->
+            <ElSelect
+              v-model="item.source"
+              filterable
+              :placeholder="$t('easyform.actionFieldSelect')"
+              clearable
+            >
+              <ElOption
+                v-for="option in sourceList"
+                :key="option.value"
+                :label="option.label"
+                :value="option.value"
+              />
+            </ElSelect>
+            <!-- <el-select-v2 v-model="item.source" filterable :placeholder="$t('easyform.actionFieldSelect')" :options="sourceList" clearable /> -->
+          </el-form-item>
+        </div>
+      </template>
+    </el-form>
+    <template #footer>
+      <div class="footer-grid">
+        <el-button type="primary" :loading="state.loading" @click="handleSubmit"
+          >{{ $t("common_submit") }}
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
