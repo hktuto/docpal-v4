@@ -21,7 +21,7 @@
       />
       <template v-else>
         <el-dropdown trigger="click" @command="handleAdd">
-          <el-button type="primary" :icon="Plus" circle />
+          <el-button type="primary" :icon="Plus" circle/>
           <template #dropdown>
             <el-dropdown-menu>
               <template v-for="(item, key) in dashboardWidgetSetting" :key="key">
@@ -39,9 +39,9 @@
           </template>
         </el-dropdown>
         <el-button @click="handleClear">handleClear</el-button>
-        <el-button class="el-icon--right" type="primary" @click="handleFinish">{{
-          $t("dpButtom_finish")
-        }}</el-button>
+        <el-button class="el-icon--right" type="primary" @click="handleFinish">
+          {{ $t("dpButtom_finish") }}
+        </el-button>
       </template>
     </el-affix>
   </div>
@@ -49,11 +49,11 @@
 
 <script lang="ts" setup>
 import dayjs from "dayjs";
-import { Plus, Edit } from "@element-plus/icons-vue";
-import { ElNotification } from "element-plus";
-import { clientApi } from "api";
+import {Plus, Edit} from "@element-plus/icons-vue";
+import {ElNotification} from "element-plus";
+import {clientApi} from "api";
 
-import { allowFeature } from "#imports";
+import {allowFeature} from "#imports";
 import {
   getNormalizeSetting,
   dashboardWidgetSetting,
@@ -63,6 +63,7 @@ import type {
   DashboardWidget,
   DashboardWidgetSetting,
 } from "../utils/dashboardWidgetHelper";
+
 const dateFormat = useDisplayTimeFormat().value;
 const state = reactive({
   editMode: false,
@@ -75,7 +76,8 @@ const state = reactive({
     dayjs().startOf("year").format("YYYY-MM-DD"),
     formatDate(new Date(), "YYYY-MM-DD"),
   ],
-});
+});``
+
 function handleAdd(command: DashboardWidget) {
   state.editMode = false;
   const item = getWidgetSetting(command);
@@ -91,6 +93,7 @@ function handleAdd(command: DashboardWidget) {
     state.editMode = true;
   });
 }
+
 async function getInfo() {
   state.info = await clientApi.api.getPersonalLanding().then((res) => res.data);
   if (!state.info || !state.info.styleJson) return;
@@ -102,18 +105,22 @@ async function getInfo() {
     state.layout = temLayout;
   }
 }
+
 function handleRefresh(layoutSetting: any) {
   const index = state.layout.findIndex((item) => item.i === layoutSetting.i);
   state.layout[index] = deepCopy(layoutSetting);
 }
+
 function handleDelete(i) {
   const index = state.layout.findIndex((item) => item.i === i);
   state.layout.splice(index, 1);
 }
+
 function handleFinish() {
   state.editMode = false;
   handleSave();
 }
+
 async function handleSave() {
   try {
     state.loading = true;
@@ -125,6 +132,7 @@ async function handleSave() {
     state.loading = false;
   }
 }
+
 async function handleClear() {
   try {
     state.loading = true;
@@ -136,6 +144,7 @@ async function handleClear() {
     state.loading = false;
   }
 }
+
 onMounted(async () => {
   getInfo();
 });
@@ -148,14 +157,17 @@ onMounted(async () => {
   gap: var(--app-space-xs);
   overflow-y: auto !important;
   height: 100%;
+
   .vue-grid-layout {
     min-height: 80vh;
   }
+
   :deep(.el-card) {
     height: 100%;
     overflow: auto;
   }
 }
+
 :deep .tableHeader {
   margin-bottom: unset;
 }

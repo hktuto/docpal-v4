@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import dayjs from "dayjs";
-import { ElMessage } from "element-plus";
+import {ElMessage} from "element-plus";
 import type {
   DashboardWidgetSetting,
   DashboardWidget,
@@ -10,12 +10,13 @@ import {
   getNormalizeSetting,
   getWidgetSetting,
 } from "#imports";
-import { adminApi } from "api";
-import { onActivated } from "vue";
-const { id } = defineProps<{
+import {adminApi} from "api";
+import {onActivated} from "vue";
+
+const {id} = defineProps<{
   id: number;
 }>();
-const { t } = useI18n()
+const {t} = useI18n()
 const state = reactive({
   info: {
     name: "",
@@ -28,28 +29,32 @@ const state = reactive({
     dayjs(new Date()).format('YYYY-MM-DD'),
   ],
 });
-function handleRefresh (layoutSetting:any) {
-  const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
+
+function handleRefresh(layoutSetting: any) {
+  const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
-  handleSave() 
+  handleSave()
 }
-function handleAdd(command:DashboardWidget) {
+
+function handleAdd(command: DashboardWidget) {
   const item = getWidgetSetting(command)
   state.layout.push({
     x: (state.layout.length * 2) % 4,
-    y: state.layout.length +  4, // puts it at the bottom
+    y: state.layout.length + 4, // puts it at the bottom
     i: new Date().valueOf().toString(),
     ...item
   })
   handleSave()
 }
-function handleDelete(i:string) {
-  const index = state.layout.findIndex((item) =>  item.i === i)
+
+function handleDelete(i: string) {
+  const index = state.layout.findIndex((item) => item.i === i)
   state.layout.splice(index, 1)
   handleSave()
 }
+
 async function handleSave() {
-  
+
   try {
     state.saveLoading = true
     await adminApi.api.putPersonalDashboardUpdate({
@@ -64,28 +69,29 @@ async function handleSave() {
 }
 
 const DashboardDialogRef = ref()
+
 function handleEdit() {
-    DashboardDialogRef.value.handleOpen(state.info)
+  DashboardDialogRef.value.handleOpen(state.info)
 }
+
 async function getInfo() {
   state.info = await adminApi.api.getPersonalDashboardId(id).then(res => res.data);
   console.log("getInfo", state.info)
   if (!state.info || !state.info.styleJson) {
-    
     return;
-  };
+  }
   const temLayout = JSON.parse(state.info.styleJson);
   if (Array.isArray(temLayout)) {
     state.layout = temLayout.map((item) => {
       return Object.assign(item, getNormalizeSetting(item.component));
     });
-  }else{
+  } else {
     // dashboard is new, set layout to empty array
     state.layout = []
   }
 }
+
 onActivated(() => {
-  console.log("onActivated", id)
   getInfo();
 })
 </script>
@@ -97,7 +103,7 @@ onActivated(() => {
         <Icon name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
       <div>
-        <el-dropdown trigger="click" @command="handleAdd">
+        <el-dropdown id="adminWorkPanelDetailAdd" trigger="click" @command="handleAdd">
           <el-button type="primary">
             {{ $t("common_add") }}
           </el-button>
@@ -141,42 +147,48 @@ onActivated(() => {
         @refreshSetting="handleRefresh"
       ></DashboardDetail>
     </div>
-    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="getInfo()" />
+    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="getInfo()"/>
   </div>
 </template>
 <style lang="scss" scoped>
 .template-container {
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    gap: var(--app-space-xs);
-    overflow: hidden;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: var(--app-space-xs);
+  overflow: hidden;
 }
+
 .template-main-container {
-    overflow: auto;
-  > div{
+  overflow: auto;
+
+  > div {
     min-width: 1280px;
   }
 }
+
 .template-interact-drawer {
-    height: 100%;
-    overflow: hidden;
-    box-shadow: unset;
-    border-left: 1px solid #ddd;
-    display: grid;
-    grid-template-rows: min-content 1fr min-content;
-    gap: var(--app-space-xs);
-    padding-bottom: 0;
-    .formContainer {
-        overflow: auto;
-    }
+  height: 100%;
+  overflow: hidden;
+  box-shadow: unset;
+  border-left: 1px solid #ddd;
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  gap: var(--app-space-xs);
+  padding-bottom: 0;
+
+  .formContainer {
+    overflow: auto;
+  }
 }
+
 .template-title {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 22px;
-    letter-spacing: 0px;
-    color: #606266;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 22px;
+  letter-spacing: 0px;
+  color: #606266;
 }
+
 .flex-x-between {
   display: flex;
   justify-content: space-between;

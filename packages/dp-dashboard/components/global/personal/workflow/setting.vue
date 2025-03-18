@@ -7,24 +7,26 @@
     :close-on-click-modal="false"
     @close="handleClose"
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="danger" @click="handleDelete">{{
-          $t("common_delete")
-        }}</el-button>
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
-          $t("common_submit")
-        }}</el-button>
+        <el-button id="adminWorkPanelDetailTaskDelete" type="danger" @click="handleDelete">
+          {{ $t("common_delete") }}
+        </el-button>
+        <el-button id="adminWorkPanelDetailTaskSubmit" type="primary" :loading="state.loading"
+                   @click="handleSubmit">
+          {{ $t("common_submit") }}
+        </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from "element-plus";
+import {ElMessageBox} from "element-plus";
 import formJson from './setting.vform.json'
+
 const emits = defineEmits(["refresh", "delete"]);
-const { t } = useI18n()
+const {t} = useI18n()
 
 const state = reactive({
   loading: false,
@@ -32,6 +34,7 @@ const state = reactive({
   setting: {},
 });
 const FormRendererRef = ref();
+
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData();
   state.loading = true;
@@ -43,6 +46,7 @@ async function handleSubmit() {
   state.visible = false;
   state.loading = false;
 }
+
 function handleOpen(setting) {
   state.visible = true;
   setTimeout(async () => {
@@ -51,12 +55,14 @@ function handleOpen(setting) {
     state.loading = false;
   });
 }
+
 async function handleDelete() {
   const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
   if (action !== "confirm") return;
   emits("delete");
   state.visible = false;
 }
-defineExpose({ handleOpen });
+
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped></style>

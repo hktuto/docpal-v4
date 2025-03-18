@@ -19,8 +19,9 @@
         class="cursorPointer"
         color="var(--app-primary-color)"
         @click="handleEditMode"
-        ><Setting
-      /></el-icon>
+      >
+        <Setting/>
+      </el-icon>
       <el-collapse v-if="leftSize > 10" v-model="activeNames">
         <el-collapse-item
           v-for="(item, key) in dashboardSettingList"
@@ -96,14 +97,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Setting } from "@element-plus/icons-vue";
-import { Splitpanes, Pane } from "splitpanes";
+import {Setting} from "@element-plus/icons-vue";
+import {Pane, Splitpanes} from "splitpanes";
 import "splitpanes/dist/splitpanes.css";
 // import { GridLayout, GridItem } from "vue3-grid-layout-next";
-import { GridLayout, GridItem } from "grid-layout-plus";
-import type { DashboardWidgetSetting } from "~/utils/dashboardWidgetHelper";
-import { widgetComponent } from "~/utils/dashboardWidgetHelper";
-import { useDebounceFn } from "@vueuse/core";
+import {GridItem, GridLayout} from "grid-layout-plus";
+import type {DashboardWidgetSetting} from "~/utils/dashboardWidgetHelper";
+import {widgetComponent} from "~/utils/dashboardWidgetHelper";
+import {useDebounceFn} from "@vueuse/core";
+
 const props = withDefaults(
   defineProps<{
     // layout: DashboardWidgetSetting[],
@@ -142,17 +144,21 @@ const layout = defineModel<DashboardWidgetSetting>("layout");
 const emits = defineEmits(["refreshSetting", "delete", "update:layout", "save"]);
 
 const sheetRefs = ref<any>({});
+
 function handleEditMode() {
   if (leftSize.value > 10) leftSize.value = 2;
   else leftSize.value = 20;
 }
+
 function handleDelete(row: any) {
   emits("delete", row.i);
 }
+
 function handleRefreshSetting(setting: any, row: any) {
   row.setting = setting;
   emits("refreshSetting", row);
 }
+
 const chartResize = useDebounceFn(
   (row: any) => {
     if (sheetRefs.value[row.i]) {
@@ -161,20 +167,22 @@ const chartResize = useDebounceFn(
     emits("save");
   },
   1000,
-  { maxWait: 5000 }
+  {maxWait: 5000}
 );
 
 const dropId = "drop";
-let dragItem = { x: -1, y: -1, w: 2, h: 2, i: "" };
+let dragItem = {x: -1, y: -1, w: 2, h: 2, i: ""};
 const defaultSize = {
   w: 2,
   h: 2,
 };
-const mouseAt = { x: -1, y: -1 };
+const mouseAt = {x: -1, y: -1};
+
 function syncMousePosition(event: MouseEvent) {
   mouseAt.x = event.clientX;
   mouseAt.y = event.clientY;
 }
+
 onActivated(() => {
   document.addEventListener("dragover", syncMousePosition);
 });
@@ -184,9 +192,11 @@ onDeactivated(() => {
 });
 const wrapper = ref<HTMLElement>();
 const gridLayout = ref();
+
 function dragStart(c) {
   dragItem = JSON.parse(JSON.stringify(c));
 }
+
 const drag = () => {
   // dragItem = JSON.parse(JSON.stringify(item));
   const parentRect = wrapper.value?.getBoundingClientRect();
@@ -217,7 +227,8 @@ const drag = () => {
 
     try {
       item.wrapper.style.display = "none";
-    } catch (e) {}
+    } catch (e) {
+    }
 
     Object.assign(item.state, {
       top: mouseAt.y - parentRect.top,
@@ -293,11 +304,13 @@ function dragEnd() {
   height: 100px;
   background-color: red;
 }
+
 .dashboard-item {
   :deep(.dashboard-item-main) {
     height: 100%;
   }
 }
+
 :deep .setting-man-made {
   --icon-size: 1.14rem;
   --icon-color: #8796a4;
@@ -306,11 +319,14 @@ function dragEnd() {
   right: var(--app-space-xs);
   cursor: pointer;
 }
+
 :deep .dashboard-auto {
   overflow: auto;
 }
+
 .vue-grid-layout--edit {
   position: relative;
+
   &::after {
     --b-gap: 24px;
     content: "";
@@ -320,20 +336,20 @@ function dragEnd() {
     position: absolute;
     z-index: -1;
     background-color: var(--app-grey-200); /* 背景颜色 */
-    background-size: calc((100% - 20px) / 12)
-      calc(var(--grid-row-height) + var(--grid-row-margin)); /* 网格大小 */
+    background-size: calc((100% - 20px) / 12) calc(var(--grid-row-height) + var(--grid-row-margin)); /* 网格大小 */
     background-image: linear-gradient(
         to right,
         var(--app-grey-1000) var(--b-gap),
         transparent var(--b-gap)
-      ),
-      linear-gradient(
+    ),
+    linear-gradient(
         to bottom,
         var(--app-grey-1000) var(--b-gap),
         transparent var(--b-gap)
-      );
+    );
   }
 }
+
 .splitpanes.default-theme .splitpanes__pane {
   background-color: var(--app-grey-1000);
 }
