@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')"
-        destroy-on-close append-to-body :close-on-click-modal="false" width="80%">
+        destroy-on-close append-to-body :close-on-click-modal="false" width="80%" @closed="reset">
         <el-select v-model="form.templatePath" clearable filterable
             @change="templateParamGet">
             <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
@@ -103,6 +103,11 @@ async function templateParamGet (templatePath: string) {
 onMounted(async () => {
     state.templateList = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) || []
 })
+
+const reset = () => {
+    form.templatePath = '';
+    form.paramList = [];
+}
 // @ts-ignore
 watch(form, async() => {
   if(form.templatePath) {
