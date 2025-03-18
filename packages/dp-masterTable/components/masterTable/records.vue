@@ -47,13 +47,11 @@
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="handleBatchActive(true)">{{
-                    $t('actions.active')
-                  }}
+                <el-dropdown-item @click="handleBatchActive(true)">
+                  {{ $t('actions.active') }}
                 </el-dropdown-item>
-                <el-dropdown-item @click="handleBatchActive(false)">{{
-                    $t('actions.inactive')
-                  }}
+                <el-dropdown-item @click="handleBatchActive(false)">
+                  {{ $t('actions.inactive') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -81,9 +79,8 @@
       </template>
     </template>
     <template #status="{ row }">
-      <el-tag v-if="row.status" type="success">{{
-          $t("actions.activated")
-        }}
+      <el-tag v-if="row.status" type="success">
+        {{ $t("actions.activated") }}
       </el-tag>
       <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
     </template>

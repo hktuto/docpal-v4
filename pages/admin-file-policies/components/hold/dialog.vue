@@ -1,16 +1,18 @@
 <template>
-    <el-dialog
-        class="scroll-dialog"
-        v-model="state.visible" :title="state.isEdit ? $t('holdPolicies.edit') : $t('holdPolicies.create')"
-        :close-on-click-modal="false" append-to-body
-    >
-        <FormRenderer ref="FormRendererRef" :form-json="formJson">
-        </FormRenderer>
-        <template #footer>
-            <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
-            </el-button>
-        </template>
-    </el-dialog>
+  <el-dialog
+    class="scroll-dialog"
+    v-model="state.visible" :title="state.isEdit ? $t('holdPolicies.edit') : $t('holdPolicies.create')"
+    :close-on-click-modal="false" append-to-body
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson">
+    </FormRenderer>
+    <template #footer>
+      <el-button id="adminHoldPolicySettingCreateNewHoldPolicySubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
@@ -19,60 +21,60 @@ import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const emits = defineEmits([
-    'update'
+  'update'
 ])
 const state = reactive({
-    loading: false,
-    visible: false,
-    setting: {},
-    isEdit: false
+  loading: false,
+  visible: false,
+  setting: {},
+  isEdit: false
 })
 const router = useRouter()
 const form = reactive({
-    labelRule: []
+  labelRule: []
 })
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    if (!data) return
-    const params = {
-        ...state.setting,
-        ...data
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  if (!data) return
+  const params = {
+    ...state.setting,
+    ...data
+  }
+  try {
+    state.loading = true
+    let msg
+    if (state.isEdit) {
+      await adminApi.api.putPolicyHolds(params)
+      msg = t('holdPolicy_updateSuccessMsg')
+    } else {
+      await adminApi.api.postPolicyHolds(params)
+      msg = t('holdPolicy_createSuccessMsg')
     }
-    try {
-        state.loading = true
-        let msg
-        if (state.isEdit) {
-            await adminApi.api.putPolicyHolds(params)
-            msg = t('holdPolicy_updateSuccessMsg')
-        } else {
-            await adminApi.api.postPolicyHolds(params)
-            msg = t('holdPolicy_createSuccessMsg')
-        }
-        ElMessage.success(msg)
-        state.visible = false
-        emits('update')
-    } catch (error) {
-        console.log(error)
-    }
-    state.loading = false
+    ElMessage.success(msg)
+    state.visible = false
+    emits('update')
+  } catch (error) {
+    console.log(error)
+  }
+  state.loading = false
 }
 
 async function handleOpen(setting) {
-    state.visible = true
-    setTimeout(async () => {
-        await FormRendererRef.value.vFormRenderRef.resetForm()
-        if (setting && setting.isEdit) {
-            state.isEdit = true
-            state.setting = setting
-            await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
-            state.loading = false
-        } else {
-            state.isEdit = false
-            state.setting = {}
-        }
-    })
+  state.visible = true
+  setTimeout(async () => {
+    await FormRendererRef.value.vFormRenderRef.resetForm()
+    if (setting && setting.isEdit) {
+      state.isEdit = true
+      state.setting = setting
+      await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
+      state.loading = false
+    } else {
+      state.isEdit = false
+      state.setting = {}
+    }
+  })
 }
 
 defineExpose({handleOpen})
