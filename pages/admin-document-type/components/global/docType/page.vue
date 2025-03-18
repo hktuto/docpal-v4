@@ -41,7 +41,7 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
     });
   },
   columns: [
-    {field: "name", title: "search.type", fixed: "left"},
+    {field: "name", title: "search.type", fixed: "left", sortable: true},
     {
       field: "category",
       title: "docType.category",
@@ -163,7 +163,32 @@ async function getFilter() {
   const filters = await adminApi.api.getDocpaltypeSettingsPageConditions().then((res) => {
     return res.data;
   });
-  ResponsiveFilterRef.value.init(filters)
+  ResponsiveFilterRef.value.init([...filters,{
+    key: 'orderBy',
+    label: 'tableHeader.sortBy',
+    type: 'select',
+    isMultiple: false,
+    options: [
+      {label: 'search.type', value: 'name'},
+      {label: 'table_last_update', value: 'modifiedDate'},
+    ]
+  },{
+    key: 'isDesc',
+    label: 'tableHeader.sortOrder',
+    type: 'select',
+    isMultiple: false,
+    options: [
+      {label: 'tableHeader.desc', value: false},
+      {label: 'tableHeader.asc', value: true},
+    ]
+  }])
+  nextTick(() => {
+    ResponsiveFilterRef.value.setValue('orderBy', 'name');
+    ResponsiveFilterRef.value.setValue('isDesc', false);
+    extraParams.orderBy = 'name';
+    extraParams.isDesc = false;
+    reload();
+  })
 }
 
 onMounted(() => {
