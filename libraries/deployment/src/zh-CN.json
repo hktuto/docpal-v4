@@ -347,7 +347,8 @@
     "UserId": "用户",
     "condition": "条件",
     "groupName": "组名",
-    "value": "填值"
+    "value": "填值",
+    "value_tip": "使用“currentUser”可當用户 ID 为值"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
@@ -2288,11 +2289,11 @@
     "folderName": "文件夹名称",
     "formatDate": "格式",
     "isMultiple": "是否多选",
-    "relatedWorkflow": "相关工作流程",
     "relatedCase": "相关案例",
-    "sortBy": "排序方式",
+    "relatedWorkflow": "相关工作流程",
     "sentBy": "发送者",
     "sentDate": "发送日期",
+    "sortBy": "排序方式",
     "sortOrder": "排序顺序",
     "summary": "概括",
     "summaryKey": "总结要点",
@@ -3317,6 +3318,9 @@
     "template": "工作流程模板",
     "title": "标题"
   },
+  "workflowEditor_promoteToProduction": "推送至生产：{currentVersion}",
+  "workflowEditor_saveAsNewVersion": "另存为新版本",
+  "workflowEditor_versionList": "版本列表",
   "workflow_ActiveTask": "进行中任务",
   "workflow_GenerateDocument": "生成文档",
   "workflow_ManageDeleteTask": "删除任务",

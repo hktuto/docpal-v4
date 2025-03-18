@@ -120,7 +120,7 @@
     "oauth": "Oauth",
     "policy": "Retention Management",
     "retention": "Retention Policy Setting",
-    "runningWorkflow": "Active Workflow Mangement",
+    "runningWorkflow": "Active Workflow Management",
     "setting": "My Setting",
     "share": "External Share",
     "shareInternal": "Internal Share",
@@ -347,7 +347,8 @@
     "UserId": "User",
     "condition": "Condition",
     "groupName": "Group Name",
-    "value": "Value"
+    "value": "Value",
+    "value_tip": "use \"currentUser\" to use viewer userId as value"
   },
   "caseManage": {
     "avalibleFields": "Avalible Fields",
@@ -2279,7 +2280,6 @@
   },
   "submit": "Submit",
   "tableHeader": {
-    
     "asc": "Z-A",
     "cc": "CC (Multi-select allowed)",
     "days": "Day(s)",
@@ -2289,11 +2289,11 @@
     "folderName": "Folder Name",
     "formatDate": "Format",
     "isMultiple": "Is Multiple",
-    "relatedWorkflow": "Related Workflow",
     "relatedCase": "Related Case",
+    "relatedWorkflow": "Related Workflow",
     "sentBy": "Sent By",
-    "sortBy": "Sort By",
     "sentDate": "Sent Date",
+    "sortBy": "Sort By",
     "sortOrder": "Sort Order",
     "summary": "Summary",
     "summaryKey": "Summary Key",
@@ -3318,6 +3318,9 @@
     "template": "Workflow Template",
     "title": "Title"
   },
+  "workflowEditor_promoteToProduction": "Promote To Production : {currentVersion}",
+  "workflowEditor_saveAsNewVersion": "Save As New Version",
+  "workflowEditor_versionList": "Version List",
   "workflow_ActiveTask": "Active Task",
   "workflow_GenerateDocument": "Generate Document",
   "workflow_ManageDeleteTask": "Delete Task",
