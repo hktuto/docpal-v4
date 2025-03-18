@@ -347,7 +347,8 @@
     "UserId": "User",
     "condition": "Condition",
     "groupName": "Group Name",
-    "value": "Value"
+    "value": "Value",
+    "value_tip": "use \"currentUser\" to use viewer userId as value"
   },
   "caseManage": {
     "avalibleFields": "Avalible Fields",

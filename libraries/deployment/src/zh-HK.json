@@ -347,7 +347,8 @@
     "UserId": "用戶",
     "condition": "條件",
     "groupName": "群組名稱",
-    "value": "填值"
+    "value": "填值",
+    "value_tip": "使用“currentUser”可當用戶ID為值"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
