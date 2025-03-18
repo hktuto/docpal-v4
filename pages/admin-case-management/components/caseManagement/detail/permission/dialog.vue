@@ -27,7 +27,7 @@
         <el-row :gutter="20">
           <el-col :span="5">{{ $t('easyForm.fields') }}</el-col>
           <el-col :span="5">{{ $t('case.condition') }}</el-col>
-          <el-col :span="12">{{ $t('case.value') }}</el-col>
+          <el-col :span="12">{{ $t('case.value') }} <small>({{ $t('case.value_tip') }}</small>)</el-col>
         </el-row>
         <el-row :gutter="20" v-for="(item,index) in form.filed_condition" :key="index">
           <el-col :span="5">
