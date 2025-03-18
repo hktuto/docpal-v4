@@ -3,20 +3,24 @@
 </template>
 
 <script lang="ts" setup>
-import { clientApi } from "../../../libraries/api/src";
-
-import { ElMessage } from "element-plus";
 // TODO : add custom router control
+let index = 0;
 const route = useRoute();
 const router = useRouter();
 function openTab(tabItem: any) {
   let storageTabs = localStorage.getItem("app-tab");
-  let newLayout = [];
+  let newLayout: any = [];
   if (storageTabs) {
+    const id = new Date().valueOf() + index
     newLayout = JSON.parse(storageTabs);
-    tabItem.parent = newLayout[0].id;
-    // TODO : check if storageTabs is array, and handle restore other tabs
-    newLayout[0].tabs = [tabItem];
+    newLayout.push({
+      id: "dummy-tab-container" + id,
+      parent: "root",
+      showingTabIndex: 0,
+      size: 100,
+      tabs: [{ ...tabItem, parent: "dummy-tab-container" + id, initized:true  }],
+    });
+    index++;
   } else {
     newLayout = [
       {
@@ -33,7 +37,7 @@ function openTab(tabItem: any) {
     router.push("/");
   });
 }
-onMounted(async() => {
+onMounted(async () => {
   // step1 normalize route path by removing trailing slash
   const path = route.path.replace(/\/$/, "");
   switch (path) {
@@ -45,7 +49,9 @@ onMounted(async() => {
       openTab(newTab);
       break;
     case "/workflow/link":
-      const workflowItem = await getWorkflowRoute(route.query.processInstanceId as string);
+      const workflowItem = await getWorkflowRoute(
+        route.query.processInstanceId as string
+      );
       openTab(workflowItem);
       break;
     default:
