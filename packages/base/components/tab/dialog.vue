@@ -32,7 +32,6 @@ defineExpose({
         </template>
    
         <div class="dialogContainer">
-            
             <Transition>
                 <Suspense>
                     <component :is="item.previewData.component" :tab="item" v-bind="item.previewData.props"/>
