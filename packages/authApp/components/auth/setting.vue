@@ -11,6 +11,7 @@ function handleOpen() {
 
 
 async function reset(){
+    opened.value = false;
     await getUserPreference()
     updateStyle()
 }
