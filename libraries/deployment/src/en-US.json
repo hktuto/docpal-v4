@@ -954,7 +954,7 @@
     "required": "Required",
     "value": "Value"
   },
-  "discard": "discard",
+  "discard": "Discard",
   "displayColumn": "Display Column",
   "doc": {
     "isFolder": "Is Folder"
@@ -1850,6 +1850,9 @@
   "menus_folderCabinet": "Folder Cabinet",
   "menus_setting": "Setting",
   "menus_workflow": "Workflow",
+  "messageTemplate_Create": "New Template",
+  "messageTemplate_edit": "Edit Template",
+  "messageTemplate_editTemplateVariable": "Variable",
   "meta": {
     "array": "Array",
     "dataType": {
