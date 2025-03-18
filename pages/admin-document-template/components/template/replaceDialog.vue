@@ -1,64 +1,71 @@
 <template>
-<el-dialog 
+  <el-dialog
     class="scroll-dialog"
     v-model="state.visible" :title="$t('template.replace')"
     :close-on-click-modal="false" append-to-body
-    >
+  >
     <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1" :accept="state.accept"></BrowseActionsReplaceUpload>
     <template #footer>
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+      <el-button id="adminDocumentTemplateReplaceDocumentSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
-</el-dialog>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import {adminApi} from 'api'
+
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 const state = reactive({
-    loading: false,
-    visible: false,
-    accept: '',
-    setting: {},
+  loading: false,
+  visible: false,
+  accept: '',
+  setting: {},
 })
 const router = useRouter()
 const form = reactive({
-    fileList: []
+  fileList: []
 })
+
 async function handleSubmit() {
-    if(form.fileList.length === 0) {
-        state.visible = false
-        return
-    }
-    const file = form.fileList[0].raw
-    Object.defineProperty(file,'name',{ writable:true })
-    file.name = getName()
-    try {
-        state.loading = true
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('id', state.setting.id)
-        await adminApi.api.putTemplateDocumentUpload({requestDTO:{}},formData as any)
-        state.visible = false
-        emits('refresh')
-    } catch (error) {
-    }
-    state.loading = false
+  if (form.fileList.length === 0) {
+    state.visible = false
+    return
+  }
+  const file = form.fileList[0].raw
+  Object.defineProperty(file, 'name', {writable: true})
+  file.name = getName()
+  try {
+    state.loading = true
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('id', state.setting.id)
+    await adminApi.api.putTemplateDocumentUpload({requestDTO: {}}, formData as any)
+    state.visible = false
+    emits('refresh')
+  } catch (error) {
+  }
+  state.loading = false
 }
-function getName () {
-    const ext = state.setting.name.split('.').pop()
-    if(['xlsx','pdf','docx','pptx'].includes(ext)) return state.setting.name
-    return state.setting.name + ExtensionMap[state.setting.fileType]
+
+function getName() {
+  const ext = state.setting.name.split('.').pop()
+  if (['xlsx', 'pdf', 'docx', 'pptx'].includes(ext)) return state.setting.name
+  return state.setting.name + ExtensionMap[state.setting.fileType]
 }
+
 async function handleOpen(setting) {
-    state.visible = true
-    state.setting = setting
-    state.accept = ExtensionMap[setting.fileType]
+  state.visible = true
+  state.setting = setting
+  state.accept = ExtensionMap[setting.fileType]
 
-    form.fileList = []
+  form.fileList = []
 }
 
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

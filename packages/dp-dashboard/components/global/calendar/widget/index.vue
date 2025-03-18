@@ -1,35 +1,38 @@
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
+import {ElMessageBox} from 'element-plus'
+
 const emits = defineEmits(["delete", "refreshSetting"]);
 const routerProvider = inject(MenuRouterKey)
-const { t } = useI18n()
+const {t} = useI18n()
 
 const showPreview = ref(false)
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
-    setting: {},
-    hideSetting: false
+const props = withDefaults(defineProps<{
+  dates?: any;
+  setting?: any;
+  hideSetting?: boolean,
+}>(), {
+  setting: {},
+  hideSetting: false
 })
 
 function resize() {
 
 }
+
 const settingRef = ref()
+
 function openSetting() {
-    settingRef.value.open()
+  settingRef.value.open()
 }
 
-function handleSubmit(data){
+function handleSubmit(data) {
 
 }
 
 onDeactivated(() => {
-    if(!props.hideSetting) {
-        showPreview.value = false
-    }
+  if (!props.hideSetting) {
+    showPreview.value = false
+  }
 })
 
 async function handleDelete() {
@@ -46,14 +49,15 @@ defineExpose({
 </script>
 
 <template>
-    <ElCard ref="cardRef" class="dashboard-item dashboard-item-card">
-        <template #header="{ close, titleId, titleClass }">
-            <h4>Calendar</h4>
-            <div v-if="!hideSetting"  class="settingIcons">
-                <Icon :name="showPreview ? 'lucide:eye-closed' : 'lucide:eye'" class="el-icon--right" @click="showPreview = !showPreview" />
-                <Icon name="lucide:settings"  @click="openSetting" />
-            </div>
-        </template>
+  <ElCard ref="cardRef" class="dashboard-item dashboard-item-card">
+    <template #header="{ close, titleId, titleClass }">
+      <h4>Calendar</h4>
+      <div v-if="!hideSetting" class="settingIcons">
+        <Icon id="adminWorkPanelDetailCalendarShowPreview" :name="showPreview ? 'lucide:eye-closed' : 'lucide:eye'"
+              class="el-icon--right" @click="showPreview = !showPreview"/>
+        <Icon id="adminWorkPanelDetailCalendarSettings" name="lucide:settings" @click="openSetting"/>
+      </div>
+    </template>
 
         <el-skeleton  v-if="!hideSetting && !showPreview" :rows="5" >
         </el-skeleton>
@@ -67,10 +71,11 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-.settingIcons{
- font-size: var(--app-font-size-l);
- > * {
+.settingIcons {
+  font-size: var(--app-font-size-l);
+
+  > * {
     cursor: pointer;
- }
+  }
 }
 </style>
