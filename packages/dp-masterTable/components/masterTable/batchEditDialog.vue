@@ -8,17 +8,19 @@
     destroy-on-close
     @close="handleClose"
   >
-    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible />
+    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible/>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit')
-        }}</el-button>
+        <el-button type="primary" :loading="state.loading" @click="handleSubmit">
+          {{ $t('common_submit') }}1111
+        </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
+import {adminApi} from "api";
+
 const props = withDefaults(
   defineProps<{
     ignoreList: any;
@@ -40,16 +42,17 @@ const state = reactive({
 });
 const route = useRoute();
 const router = useRouter();
+
 // #region module: submit
 async function handleSubmit() {
   try {
     state.loading = true;
     const data = await FormVariablesRendererRef.value.getData(true);
     const params: any = {
-      data: [{ ...data }],
-      in: { id: state.rows.map(item => item.id)}
+      data: [{...data}],
+      in: {id: state.rows.map(item => item.id)}
     }
-    if(data.relationRecords) {
+    if (data.relationRecords) {
       params.relationRecords = data.relationRecords
       delete params.data[0].relationRecords
     }
@@ -58,14 +61,16 @@ async function handleSubmit() {
     emits("refresh");
     state.visible = false;
   } catch (error) {
-    
+
   } finally {
     state.loading = false;
   }
 }
+
 // #endregion
 
 const FormVariablesRendererRef = ref();
+
 async function handleOpen(fields, rows) {
   state.visible = true;
   state.loading = false;
@@ -75,10 +80,12 @@ async function handleOpen(fields, rows) {
     initForm(state.rows[0])
   });
 }
+
 function initForm(row: any) {
   console.log(state.fields)
   FormVariablesRendererRef.value.init(state.fields, row);
 }
-defineExpose({ handleOpen });
+
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped></style>

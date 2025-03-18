@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button id="adminFolderCabinetSettingInfoLocalPermissionRemove" size="small" :loading="row.loading"
+            <el-button :id="`adminFolderCabinetSettingInfoLocalPermissionRemove${row.userId}`" size="small" :loading="row.loading"
                        @click="removeLocalAcl(row)">
               {{ $t("dpButtom_remove") }}
             </el-button>

@@ -27,7 +27,7 @@ onMounted(() => {
 <template>
     <div class="layoutContainer" :style="`--panel-min-size: ${minSize}px`">
         <splitpanes vertical ref="splitRef" @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
-            <Pane v-for="(tab, index) in layout" :key="tab.id"  :size="tab.size" >
+            <Pane v-for="(tab, index) in layout" :key="tab.id"   >
                 <TabPanel :panel="tab" :index="index"/>
             </Pane>
         </splitpanes>

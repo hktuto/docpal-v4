@@ -36,7 +36,16 @@
         </li>
       </template>
     </draggable>
-    <el-button type="info" text @click="handleOpenDialog()">{{ $t('workflowEditor.addField') }}</el-button>
+    <div class="actionButtons">
+
+    <el-button type="primary" @click="handleOpenDialog()">{{ $t('workflowEditor.addField') }}</el-button>
+    <ElButton type="info" text @click="importWorkflowField">Import from Workflow</ElButton>
+    </div>
+    <CmmnSidePanelDraggableWorkflowDialog 
+      ref="workflowDialogRef" 
+      :list="list"
+      @create="handleBatchAdd"
+      />
     <CmmnSidePanelDraggableDialog ref="dialogRef" :formJsonUrl="formJsonUrl"
       :node="node" :graph="graph" :filterList="props.list"
       @create="handleAdd"
@@ -88,9 +97,17 @@ function handleAdd(data) {
 function handleDrag(params:any) {
   emits('change')
 }
+function handleBatchAdd(data: any[]) {
+  props.list.push(...data)
+  emits('change')
+}
 function handleEdit(data: any) {
   Object.assign(state.curRow, data)
   emits('change')
+}
+const workflowDialogRef = ref()
+function importWorkflowField(){
+  workflowDialogRef?.value.open()
 }
 </script>
 <style scoped>
@@ -111,7 +128,9 @@ function handleEdit(data: any) {
 }
 .list-group {
   margin: unset;
-  padding: unset
+  padding: unset;
+  max-height: 500px;
+  overflow: auto;
 }
 .list-group-item {
   position: relative;
@@ -134,5 +153,14 @@ function handleEdit(data: any) {
   :deep .svg-icon {
     margin-bottom: 4.8px;
   }
+}
+.actionButtons{
+  width:100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--app-space-xs);
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: var(--app-space-xs);
 }
 </style>
