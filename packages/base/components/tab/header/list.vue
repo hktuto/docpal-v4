@@ -34,6 +34,10 @@ const { setupDropable } = useDropable({
             }
             const closestEdgeOfTarget = extractClosestEdge(targetData)
             if(!closestEdgeOfTarget) return
+            console.log({
+                sourceData,
+                targetData,
+            })
             moveTabBetweenPanel({...sourceData.data}, {...targetData.data}, closestEdgeOfTarget as any )
     },
     detectDrop:false,
