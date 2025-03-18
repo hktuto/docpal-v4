@@ -14,6 +14,13 @@ async function getTabsFromServer() {
   try {
     if (storageTabs) {
       const newLayout = JSON.parse(storageTabs);
+      // check and set layout
+      newLayout.forEach(item => {
+        const tabId = item.id;
+        item.tabs.forEach( child => {
+          child.parent = tabId
+        })
+      })
       // TODO : check if storageTabs is array, and handle restore other tabs
       tabAppRef.value?.setLayout(newLayout);
     } else {
