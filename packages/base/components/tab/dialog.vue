@@ -34,14 +34,12 @@ defineExpose({
         <div class="dialogContainer">
             
             <Transition>
-                <KeepAlive>
-                    <Suspense>
-                        <component :is="item.previewData.component" :tab="item" v-bind="item.previewData.props"/>
-                        <template #fallback>
-                            <LoadingBgInline />
-                        </template>
-                    </Suspense>
-                </KeepAlive>
+                <Suspense>
+                    <component :is="item.previewData.component" :tab="item" v-bind="item.previewData.props"/>
+                    <template #fallback>
+                        <LoadingBgInline />
+                    </template>
+                </Suspense>
             </Transition>
         </div>
 </ElDialog>
