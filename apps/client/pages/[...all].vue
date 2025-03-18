@@ -11,16 +11,17 @@ function openTab(tabItem: any) {
   let storageTabs = localStorage.getItem("app-tab");
   let newLayout: any = [];
   if (storageTabs) {
-    const id = new Date().valueOf() + index
+    // const id = new Date().valueOf() + index
     newLayout = JSON.parse(storageTabs);
-    newLayout.push({
-      id: "dummy-tab-container" + id,
-      parent: "root",
-      showingTabIndex: 0,
-      size: 100,
-      tabs: [{ ...tabItem, parent: "dummy-tab-container" + id, initized:true  }],
+    const lastItem = newLayout[newLayout.length - 1]
+    lastItem.showingTabIndex = lastItem.tabs.length
+    lastItem.tabs.push({
+      ...tabItem,
+      parent: lastItem.id,
+      initized: true,
     });
-    index++;
+    localStorage.setItem("app-tab-hightLightPanel", lastItem.id);
+    // index++;
   } else {
     newLayout = [
       {
@@ -31,11 +32,10 @@ function openTab(tabItem: any) {
         tabs: [{ ...tabItem, parent: "dummy-tab-container" }],
       },
     ];
+    localStorage.setItem("app-tab-hightLightPanel", 'dummy-tab-container');
   }
   localStorage.setItem("app-tab", JSON.stringify(newLayout));
-  setTimeout(() => {
-    router.push("/");
-  });
+  router.push("/");
 }
 onMounted(async () => {
   // step1 normalize route path by removing trailing slash
