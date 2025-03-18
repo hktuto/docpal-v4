@@ -133,7 +133,7 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
 
     const newSourceData = {
         ...sourceData,
-        parent: targetData.parent,
+        parent: targetData.id,
     }
     const targetIndex = layout.value[targetParentId].tabs.findIndex((tabItem) => tabItem.id === targetData.id);
     const newItemIndex = direction === 'left' ? targetIndex  : targetIndex + 1
@@ -149,7 +149,6 @@ export function moveTabBetweenPanel(sourceData:TabItem, targetData:TabItem, dire
 }
 
 export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, direction:  "left" | "right" | 'center') {
-    console.log("splitViewToDirection", sourceData, targetData, direction)
         const layout = useTabLayout()
         const allComponents = useTabComponent()
         const sourceParentId = layout.value.findIndex(tab => tab.id === sourceData.parent)
@@ -167,13 +166,14 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
             layout.value[targetParentId].tabs.push(
                 {
                     ...sourceData,
-                    parent: targetData.parent,
+                    parent: targetData.id,
                 })
                 nextTick(() => {
                     panelTabFocus(layout.value[targetParentId].id, layout.value[targetParentId].tabs.length - 1)
                     const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
+                    console.log('component in all components', component)
                     if(component) {
-                        component.parent = targetData.parent;
+                        component.parent = targetData.id;
                         component.initized = true
                     }
                 })
