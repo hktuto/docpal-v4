@@ -168,6 +168,7 @@ async function getFilter() {
     label: 'tableHeader.sortBy',
     type: 'select',
     isMultiple: false,
+    value: ['name'],
     options: [
       {label: 'search.type', value: 'name'},
       {label: 'table_last_update', value: 'modifiedDate'},
@@ -177,14 +178,13 @@ async function getFilter() {
     label: 'tableHeader.sortOrder',
     type: 'select',
     isMultiple: false,
+    value: [false],
     options: [
       {label: 'tableHeader.desc', value: false},
       {label: 'tableHeader.asc', value: true},
     ]
   }])
   nextTick(() => {
-    ResponsiveFilterRef.value.setValue('orderBy', 'name');
-    ResponsiveFilterRef.value.setValue('isDesc', false);
     extraParams.orderBy = 'name';
     extraParams.isDesc = false;
     reload();
