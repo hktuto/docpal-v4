@@ -12,7 +12,7 @@
   </div>
   <div class="search-group-bar-content" v-show="mode === 'filter'">
     <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
-    <SearchGroupBar2Filter ref="filterRef" @search="handleSearch"></SearchGroupBar2Filter>
+    <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
   </div>
   <div class="search-group-bar-content" v-show="mode === 'search'">
     <SearchGroupBarAggregation ref="aggRef" :aggregation="aggregation" @filters="handleAgg"></SearchGroupBarAggregation>
