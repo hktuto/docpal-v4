@@ -68,7 +68,6 @@ function handleEdit() {
     DashboardDialogRef.value.handleOpen(state.info)
 }
 async function getInfo() {
-  state.info = 
   state.info = await adminApi.api.getPersonalDashboardId(id).then(res => res.data);
   console.log("getInfo", state.info)
   if (!state.info || !state.info.styleJson) {
@@ -86,6 +85,7 @@ async function getInfo() {
   }
 }
 onActivated(() => {
+  console.log("onActivated", id)
   getInfo();
 })
 </script>
