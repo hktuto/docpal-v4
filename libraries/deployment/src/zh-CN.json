@@ -1850,6 +1850,9 @@
   "menus_folderCabinet": "文件柜",
   "menus_setting": "设置",
   "menus_workflow": "工作流",
+  "messageTemplate_Create": "New Template",
+  "messageTemplate_edit": "Edit Template",
+  "messageTemplate_editTemplateVariable": "Variable",
   "meta": {
     "array": "数组",
     "dataType": {

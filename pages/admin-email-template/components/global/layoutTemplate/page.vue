@@ -1,103 +1,106 @@
 <template>
-    <div class="pageContainer--padding">
-        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-            <template #toolbar_buttons>
-                <ResponsiveFilter
-                    ref="ResponsiveFilterRef"
-                    inputKey="name"
-                    @form-change="handleFilterFormChange"
-                    inputPlaceHolder="emailContentTemplate_layoutFilter"
-                />
-                <el-button type="primary" @click="handleAdd">{{ $t('emailContentTemplate_layoutCreate') }}</el-button>
-            </template>
-            <template #status="{ row }">
-                <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-                <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
-            </template>
-        </VxeGrid>
-        <EmailLayoutDialog ref="EmailLayoutDialogRef" @refresh="query({})"></EmailLayoutDialog>
-    </div>
+  <div class="pageContainer--padding">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          inputKey="name"
+          @form-change="handleFilterFormChange"
+          inputPlaceHolder="emailContentTemplate_layoutFilter"
+        />
+        <el-button id="adminEmailContentTemplateCreateNewEmailLayout" type="primary" @click="handleAdd">
+          {{ $t('emailContentTemplate_layoutCreate') }}
+        </el-button>
+      </template>
+      <template #status="{ row }">
+        <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
+        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+      </template>
+    </VxeGrid>
+    <EmailLayoutDialog ref="EmailLayoutDialogRef" @refresh="query({})"></EmailLayoutDialog>
+  </div>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
-import { adminApi } from "api";
+import {ElMessageBox} from 'element-plus'
+import {adminApi} from "api";
+
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
-    throw new Error('MenuRouterKey is not provided')
+  throw new Error('MenuRouterKey is not provided')
 }
 const {t} = useI18n()
 let extraParams: any = {};
 const {
-    tableConfig,
-    tableEvent,
-    tableRef,
-    query,
-    reload,
-    cleanSelectedRows,
+  tableConfig,
+  tableEvent,
+  tableRef,
+  query,
+  reload,
+  cleanSelectedRows,
 } = useVxeTable({
-    id: "a-email-layout-template",
-    api: (pageParams: any) =>
-        adminApi.api.postTemplateEmailLayoutPage({...pageParams, ...extraParams}),
-    columns: [
-        {field: "name", title: "emailContentTemplate_layoutName", fixed: "left"},
-        {field: "createdBy", title: "emailContentTemplate_layoutCreator"},
-        {
-            field: "createDate",
-            title: "workflow_createDate",
-            formatter({cellValue}: any) {
-                return formatDate(cellValue);
-            },
-        }
+  id: "a-email-layout-template",
+  api: (pageParams: any) =>
+    adminApi.api.postTemplateEmailLayoutPage({...pageParams, ...extraParams}),
+  columns: [
+    {field: "name", title: "emailContentTemplate_layoutName", fixed: "left"},
+    {field: "createdBy", title: "emailContentTemplate_layoutCreator"},
+    {
+      field: "createDate",
+      title: "workflow_createDate",
+      formatter({cellValue}: any) {
+        return formatDate(cellValue);
+      },
+    }
+  ],
+  bodyActions: [
+    [
+      {
+        code: "edit",
+        name: t('emailContentTemplate_layoutEdit'),
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleDblclick(row)
+        },
+      },
+      {
+        code: "delete",
+        name: t('emailContentTemplate_layoutDelete'),
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleDeleteTemplate(row);
+        },
+      }
     ],
-    bodyActions: [
-        [
-            {
-                code: "edit",
-                name: t('emailContentTemplate_layoutEdit'),
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleDblclick(row)
-                },
-            },
-            {
-                code: "delete",
-                name: t('emailContentTemplate_layoutDelete'),
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleDeleteTemplate(row);
-                },
-            }
-        ],
-    ],
+  ],
 });
 const EmailLayoutDialogRef = ref()
 
 function handleDblclick(row) {
-    // router.push(`/easyFormManage/${row.id}`);
-    EmailLayoutDialogRef.value.handleOpen(row)
+  // router.push(`/easyFormManage/${row.id}`);
+  EmailLayoutDialogRef.value.handleOpen(row)
 }
 
 function handleAdd() {
-    EmailLayoutDialogRef.value.handleOpen()
+  EmailLayoutDialogRef.value.handleOpen()
 }
 
 async function handleDeleteTemplate(row) {
-    const action = await ElMessageBox.confirm(
-        `${t('emailContentTemplate_layoutDeleteMsg', {name: row.name})}`,
-        {
-            confirmButtonText: t('common_confirmDelete'),
-        })
-    if (action !== 'confirm') return
-    await adminApi.api.deleteTemplateEmailLayoutId(row.id)
-    routerProvider?.message.success(t('emailContentTemplate_layoutDeleteSuccessMsg', {name: row.name}));
-    query({})
+  const action = await ElMessageBox.confirm(
+    `${t('emailContentTemplate_layoutDeleteMsg', {name: row.name})}`,
+    {
+      confirmButtonText: t('common_confirmDelete'),
+    })
+  if (action !== 'confirm') return
+  await adminApi.api.deleteTemplateEmailLayoutId(row.id)
+  routerProvider?.message.success(t('emailContentTemplate_layoutDeleteSuccessMsg', {name: row.name}));
+  query({})
 }
 
 function handleFilterFormChange(formModel: any) {
-    extraParams = formModel;
-    reload();
+  extraParams = formModel;
+  reload();
 }
 
 onMounted(() => {
@@ -105,16 +108,16 @@ onMounted(() => {
 </script>
 <style lang="scss" scoped>
 :deep .el-input {
-    width: 200px;
+  width: 200px;
 }
 
 .responsive-container {
-    overflow: hidden;
-    width: 70%;
+  overflow: hidden;
+  width: 70%;
 }
 
 :deep .vxe-buttons--wrapper {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
