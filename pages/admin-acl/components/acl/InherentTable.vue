@@ -1,73 +1,87 @@
 <template>
-<div class="card">
+  <div class="card">
     <div class="tableTopContainer">
-        <h3>{{$t('Inherent')}}</h3>
-        <el-button v-if="tableData.length > 0" :loading="state.loading" size="small" type="primary" round @click="blockInherited" >{{$t('Remove Inherent')}}</el-button>
-        <el-button v-else size="small" :loading="state.loading" type="primary" round @click="unBlockInherited">{{$t('Inherent')}}</el-button>
+      <h3>{{ $t('Inherent') }}</h3>
+      <el-button id="AccessControlListRemoveInherent" v-if="tableData.length > 0" :loading="state.loading" size="small"
+                 type="primary" round @click="blockInherited">
+        {{ $t('accessControl_removeInherent') }}
+      </el-button>
+      <el-button id="AccessControlListInherent" v-else size="small" :loading="state.loading" type="primary" round
+                 @click="unBlockInherited">
+        {{ $t('accessControl_inherent') }}
+      </el-button>
     </div>
     <div>
-        <el-table :data="tableData" style="width: 100%">
-            <el-table-column prop="userId" :label="$t('dpTable_name')"> </el-table-column>
-            <el-table-column :label="$t('dpTable_validityPeriod')">
-                <template #default="{ row }">
-                    {{!row.startDate && !row.endDate ? 'Permanent' : formatDate(row.startDate) + " ~ " + formatDate(row.endDate) }}
-                </template>
-            </el-table-column>
-            <el-table-column v-for="item in ['read', 'write', 'manage', 'print']" :key="item"
-                :label="$t(`permission.${item}`)" align="center" header-align="center">
-                <template #default="{ row }">
-                    <el-icon v-if="row[item]" style="--color: var(--app-primary-color)"><Select /></el-icon>
-                    <el-icon v-else style="--color: #F56C6C"><CloseBold /></el-icon>
-                </template>
-            </el-table-column>
-        </el-table>
+      <el-table :data="tableData" style="width: 100%">
+        <el-table-column prop="userId" :label="$t('dpTable_name')"></el-table-column>
+        <el-table-column :label="$t('dpTable_validityPeriod')">
+          <template #default="{ row }">
+            {{
+              !row.startDate && !row.endDate ? 'Permanent' : formatDate(row.startDate) + " ~ " + formatDate(row.endDate)
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column v-for="item in ['read', 'write', 'manage', 'print']" :key="item"
+                         :label="$t(`permission.${item}`)" align="center" header-align="center">
+          <template #default="{ row }">
+            <el-icon v-if="row[item]" style="--color: var(--app-primary-color)"><Select/></el-icon>
+            <el-icon v-else style="--color: #F56C6C">
+              <CloseBold/>
+            </el-icon>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
-</div>
+  </div>
 </template>
 <script lang="ts" setup>
-import { Select, CloseBold } from '@element-plus/icons-vue'
+import {CloseBold, Select} from '@element-plus/icons-vue'
 
-import { adminApi } from 'api'
+import {adminApi} from 'api'
+
 const props = defineProps<{
-    tableData: any[],
-    doc: any
+  tableData: any[],
+  doc: any
 }>()
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 const state = reactive({
-    loading: false
+  loading: false
 })
-async function unBlockInherited () {
-    state.loading = true
-    try {
-        await adminApi.api.postNuxeoDocumentAclUnblock([{idOrPath: props.doc.id}])
-        emits('refresh')
-    } catch (error) {
-    }
-    state.loading = false
+
+async function unBlockInherited() {
+  state.loading = true
+  try {
+    await adminApi.api.postNuxeoDocumentAclUnblock([{idOrPath: props.doc.id}])
+    emits('refresh')
+  } catch (error) {
+  }
+  state.loading = false
 }
-async function blockInherited () {
-    state.loading = true
-    try {
-        await adminApi.api.postNuxeoDocumentAclBlock([{idOrPath: props.doc.id}])
-        emits('refresh')
-    } catch (error) {
-        
-    }
-    state.loading = false
+
+async function blockInherited() {
+  state.loading = true
+  try {
+    await adminApi.api.postNuxeoDocumentAclBlock([{idOrPath: props.doc.id}])
+    emits('refresh')
+  } catch (error) {
+
+  }
+  state.loading = false
 }
 </script>
 <style lang="scss" scoped>
 .card {
-    width: 100%;
-    margin: 0 0 var(--app-space-xs) 0;
-    padding: var(--app-space-xs);
-    box-shadow: var(--el-box-shadow-light);
-    .tableTopContainer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+  width: 100%;
+  margin: 0 0 var(--app-space-xs) 0;
+  padding: var(--app-space-xs);
+  box-shadow: var(--el-box-shadow-light);
+
+  .tableTopContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 </style>

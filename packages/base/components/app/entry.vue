@@ -9,6 +9,7 @@ async function getTabsFromServer() {
   const route = useRoute();
 
   let storageTabs = localStorage.getItem("app-tab");
+  sessionStorage.removeItem('temp-path')
   // storageTabs = null
   try {
     if (storageTabs) {

@@ -14,7 +14,7 @@
             </div>
             <div class="flex-x-center">
                 <el-dropdown>
-                    <el-button class="el-icon--left"> {{ $t("masterTable.newSchema") }}</el-button>
+                    <el-button id="" class="el-icon--left"> {{ $t("masterTable.newSchema") }}</el-button>
                     <template #dropdown>
                         <el-dropdown-menu>
                             <el-dropdown-item
@@ -27,9 +27,8 @@
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
-                <el-button type="primary" @click="handleSubmit">{{
-                        $t("common_submit")
-                    }}
+                <el-button type="primary" @click="handleSubmit">
+                  {{ $t("common_submit") }}
                 </el-button>
             </div>
         </template>

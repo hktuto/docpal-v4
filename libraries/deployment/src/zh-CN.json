@@ -59,6 +59,8 @@
   "accessControl_deleteMsg": "Are you sure you want to delete the selected local permission?",
   "accessControl_deleteSuccessMsg": "The selected local permission has been removed successfully.",
   "accessControl_edit": "Edit Local Permission",
+  "accessControl_inherent": "Inherent",
+  "accessControl_removeInherent": "Remove Inherent",
   "acl_addLocal": "添加",
   "acl_editLocal": "编辑",
   "actions": {
@@ -1850,6 +1852,9 @@
   "menus_folderCabinet": "文件柜",
   "menus_setting": "设置",
   "menus_workflow": "工作流",
+  "messageTemplate_Create": "New Template",
+  "messageTemplate_edit": "Edit Template",
+  "messageTemplate_editTemplateVariable": "Variable",
   "meta": {
     "array": "数组",
     "dataType": {
