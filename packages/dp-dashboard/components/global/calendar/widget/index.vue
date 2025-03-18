@@ -59,9 +59,11 @@ defineExpose({
         </el-skeleton>
         <div v-else class="main no-drag" >
             <Calendar :options="setting" />
+            <CalendarWidgetCreateDialog ref="createDialogRef" />
         </div>
     </ElCard>
         <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
+
 </template>
 
 <style lang="scss" scoped>
