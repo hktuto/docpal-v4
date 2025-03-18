@@ -36,7 +36,7 @@ async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     state.loading = true
     try {
-        // await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, {...data})
+        await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, {...data})
         ElMessage.success(t('documentType_duplicateSuccessMsg'))
         emits('refresh')
         state.visible = false
