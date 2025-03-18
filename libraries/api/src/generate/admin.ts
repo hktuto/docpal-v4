@@ -18781,6 +18781,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags FormDesignController
+         * @name GetFormDesignEmailHistoryLogId
+         * @request GET:/api/docpal/form/design/email/history/log/{id}
+         */
+        getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/form/design/email/history/log/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
          * @name GetFormDesignDraftId
          * @summary Retrieve form design draft
          * @request GET:/api/docpal/form/design/draft/{id}
