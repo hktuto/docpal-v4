@@ -1,16 +1,20 @@
 <template>
   <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" append-to-body
-    :close-on-click-modal="false" destroy-on-close @close="handleClose">
-    <MasterTableVariableForm ref="FormVariablesRenderer" :ignoreList="ignoreList" />
+             :close-on-click-modal="false" destroy-on-close @close="handleClose">
+    <MasterTableVariableForm ref="FormVariablesRenderer" :ignoreList="ignoreList"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+        <el-button id="adminMasterTableTableCreatedBySchemaAddSubmit" type="primary" :loading="state.loading"
+                   @click="handleSubmit">
+          {{ $t('common_submit') }}
+        </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import {adminApi} from 'api'
+
 const props = withDefaults(defineProps<{
   tableId: string,
   ignoreList: string[],
@@ -28,6 +32,7 @@ const state = reactive({
   edit: false,
   title: $i18n.t('masterTable.newRow')
 })
+
 async function handleSubmit() {
   try {
     state.loading = true
@@ -39,8 +44,7 @@ async function handleSubmit() {
           id: state.setting.id
         }
       })
-    }
-    else {
+    } else {
       await adminApi.api.postMasterTablesRecord({
         id: props.tableId,
         data: [data]
@@ -49,13 +53,13 @@ async function handleSubmit() {
     state.visible = false
     emits('refresh')
   } catch (error) {
-  }
-  finally {
+  } finally {
     state.loading = false
   }
 }
 
 const FormVariablesRenderer = ref()
+
 async function handleOpen(fields, row?) {
   state.visible = true
   state.loading = false
@@ -63,8 +67,7 @@ async function handleOpen(fields, row?) {
     state.edit = true
     state.setting = row
     state.title = $i18n.t('masterTable.editRow')
-  }
-  else {
+  } else {
     state.edit = false
     state.title = $i18n.t('masterTable.newRow')
   }
@@ -72,6 +75,7 @@ async function handleOpen(fields, row?) {
     FormVariablesRenderer.value.init(fields, row)
   })
 }
-defineExpose({ handleOpen })
+
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped></style>
