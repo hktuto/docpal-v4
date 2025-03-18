@@ -66,8 +66,11 @@ async function handleDownload (row) {
     try {
         const response = await clientApi.api.postNuxeoConversionDownloadfile([ row.documentPath ], {
           format: 'blob',
-        })
-        downloadBlob(response, row.fileName)
+        }) as any
+        console.log("response", response)
+        const blobStream = new Blob([response], { type:"application/octet-stream"})
+        const url = window.URL.createObjectURL(blobStream)
+        downloadUrl(url, row.fileName)
     } catch (error) {
     }
     noti.close()
