@@ -347,7 +347,8 @@
     "UserId": "用户",
     "condition": "条件",
     "groupName": "组名",
-    "value": "填值"
+    "value": "填值",
+    "value_tip": "使用“currentUser”可當用户 ID 为值"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
