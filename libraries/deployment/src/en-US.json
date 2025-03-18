@@ -59,6 +59,8 @@
   "accessControl_deleteMsg": "Are you sure you want to delete the selected local permission?",
   "accessControl_deleteSuccessMsg": "The selected local permission has been removed successfully.",
   "accessControl_edit": "Edit Local Permission",
+  "accessControl_inherent": "Inherent",
+  "accessControl_removeInherent": "Remove Inherent",
   "acl_addLocal": "Add Local",
   "acl_editLocal": "Edit Local",
   "actions": {
