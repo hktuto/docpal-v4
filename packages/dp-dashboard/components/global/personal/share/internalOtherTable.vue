@@ -27,7 +27,12 @@ const {
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },
-    { field: "createdUserId", title: "tableHeader_shareBy" },
+    { field: "shareUserIds", title: "tableHeader_shareTo",
+      formatter({cellValue}: any) {
+        if (!cellValue) return "";
+        const userList = JSON.parse(cellValue);
+        return userList.join(",");
+      } },
   ],
   dblClickAction: ({ row, column, event }:any) => {
     handleDblclick(row)
