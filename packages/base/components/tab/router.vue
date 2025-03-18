@@ -221,7 +221,7 @@ defineExpose({
     
     <template v-if="tab.initized && !showError">
         <Transition >
-            <KeepAlive>
+            <KeepAlive :exclude="/Dead/">
                 <Suspense>
                     <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
                     <template #fallback>

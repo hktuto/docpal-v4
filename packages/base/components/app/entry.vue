@@ -10,34 +10,57 @@ async function getTabsFromServer() {
 
     let storageTabs = localStorage.getItem('app-tab')
     // storageTabs = null
-    if(storageTabs) {
-        const newLayout = JSON.parse(storageTabs);
-         // TODO : check if storageTabs is array, and handle restore other tabs
-        tabAppRef.value?.setLayout(newLayout)
-    }else{
-        // init a basic layout
-        tabAppRef.value?.setHightLightPanel("dummy-tab-container")
-        const config = useRuntimeConfig() as any
-        const defaultTab = config.public.defaultTab || {
-            id: 'new-tab-001',
-            label: "New Tab",
-            name: "new-tab-001",
-            parent: "dummy-tab-container",
-            component: 'LazyTabEmpty', 
-        }
-        defaultTab.parent = "dummy-tab-container"
+    try{
+        if(storageTabs) {
+            const newLayout = JSON.parse(storageTabs);
+            // TODO : check if storageTabs is array, and handle restore other tabs
+            tabAppRef.value?.setLayout(newLayout)
+        }else{
+            // init a basic layout
+            tabAppRef.value?.setHightLightPanel("dummy-tab-container")
+            const config = useRuntimeConfig() as any
+            const defaultTab = config.public.defaultTab || {
+                id: 'new-tab-001',
+                label: "New Tab",
+                name: "new-tab-001",
+                parent: "dummy-tab-container",
+                component: 'LazyTabEmpty', 
+            }
+            defaultTab.parent = "dummy-tab-container"
 
+            tabAppRef.value?.setLayout([
+                    {
+                        id:"dummy-tab-container",
+                        parent: "root",
+                        showingTabIndex: 0,
+                        size:100,
+                        tabs: [
+                            defaultTab
+                        ]
+                    }
+                ])
+        }
+    }catch(error){
+        const config = useRuntimeConfig() as any
+            const defaultTab = config.public.defaultTab || {
+                id: 'new-tab-001',
+                label: "New Tab",
+                name: "new-tab-001",
+                parent: "dummy-tab-container",
+                component: 'LazyTabEmpty', 
+            }
         tabAppRef.value?.setLayout([
-                {
-                    id:"dummy-tab-container",
-                    parent: "root",
-                    showingTabIndex: 0,
-                    size:100,
-                    tabs: [
-                        defaultTab
-                    ]
-                }
-            ])
+                    {
+                        id:"dummy-tab-container",
+                        parent: "root",
+                        showingTabIndex: 0,
+                        size:100,
+                        tabs: [
+                            defaultTab
+                        ]
+                    }
+                ])
+        console.log("getTabsFromServer", error)
     }
     const router = useRouter();
     const additionalPath = localStorage.getItem('additionalPath')
