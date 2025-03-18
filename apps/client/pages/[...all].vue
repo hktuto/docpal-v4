@@ -35,11 +35,18 @@ function openTab(tabItem: any) {
     localStorage.setItem("app-tab-hightLightPanel", 'dummy-tab-container');
   }
   localStorage.setItem("app-tab", JSON.stringify(newLayout));
+
   router.push("/");
 }
 onMounted(async () => {
   // step1 normalize route path by removing trailing slash
+  const temPath = sessionStorage.getItem('temp-path')
+  if(temPath) {
+    router.push("/");
+    return;
+  }
   const path = route.path.replace(/\/$/, "");
+  sessionStorage.setItem('temp-path', path)
   switch (path) {
     case "/browse":
       const idOrPath = (route.query.id || route.query.path || "/") as string;
