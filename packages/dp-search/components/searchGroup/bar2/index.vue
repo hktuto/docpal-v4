@@ -1,15 +1,15 @@
 <template>
-<!-- <FormRenderer ref="FormRendererRef" :form-json="formJson" 
+  <!-- <FormRenderer ref="FormRendererRef" :form-json="formJson"
   @formChange="handleFormChange">
 </FormRenderer> -->
 <div :class="{ 'loading-container': state.loading }" v-for="(item, index) in filters.query" :key="item.id" v-loading="state.loading">
-  <SearchGroupBar1FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item" 
+  <SearchGroupBar2FilterCondition :ref="(el: any) => BarFilterRef[item.id] = el" :qItem="item"
     @update="(data: any) =>handleUpdate(data, item)"
-    @add="handleAddQueryFilter(item)" 
+    @add="handleAddQueryFilter(item)"
     @command="(command: 'and' | 'or') => handleCommand(command, item)"
-    @delete="handleDeleteFilter(item.id, filters.query)" 
+    @delete="handleDeleteFilter(item.id, filters.query)"
     @deleteChild="handleDeleteFilter"
-    @formChange="emits('search')"></SearchGroupBar1FilterCondition>
+    @formChange="emits('search')"></SearchGroupBar2FilterCondition>
   <el-divider v-if="index !== filters.query.length - 1">
     {{ $t(`logic.${filters.condition}`)  }}
   </el-divider>
@@ -19,7 +19,7 @@
     {{ $t(`logic.${filters.condition}`)  }}
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="and">{{ $t('logic.and') }}</el-dropdown-item>
+        <el-dropdown-item command="and">{{ $t('logic.and') }}111</el-dropdown-item>
         <el-dropdown-item command="or">{{ $t('logic.or') }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -29,7 +29,6 @@
 <script lang="ts" setup>
 import type { searchGroup, searchGroupQuery, searchGroupQQ } from '~/typing/search'
 import { getUniqueId } from '../../../utils/searchFormHelper'
-
 const state = reactive<any>({
   loading: false
 })
@@ -82,10 +81,6 @@ function handleAddFilter() {
   }
   if(!filters.value.query) filters.value.query = []
   filters.value.query.push(qItem)
-
-  setTimeout(() => {
-    BarFilterRef.value[qItem.id].setFormData(qItem.matchs[0])
-  })
 }
 function handleAddQueryFilter(qItem: any) {
   if(!qItem.matchs) qItem.matchs = []
@@ -102,21 +97,19 @@ function handleAddQueryFilter(qItem: any) {
     }
   }
   qItem.matchs.push(q)
-  setTimeout(() => {
-    BarFilterRef.value[qItem.id].setFormData(q)
-  })
 }
-function handleFormChange({fieldName, newValue, oldValue, formModel}: any) {
-  if(newValue) filters.value.docId = newValue.pop()
-  else filters.value.docId = ''
-  console.log('handleFormChange', fieldName, newValue, oldValue, formModel)
-}
+// function handleFormChange({fieldName, newValue, oldValue, formModel}: any) {
+//   if(newValue) filters.value.docId = newValue.pop()
+//   else filters.value.docId = ''
+//   console.log('handleFormChange', fieldName, newValue, oldValue, formModel)
+// }
 function handleDeleteFilter(id: string, qItem: searchGroupQuery[] | searchGroupQQ[]) {
   const index = qItem.findIndex(i => i.id === id)
   if(index !== -1 ) qItem.splice(index, 1)
 }
 function handleCommand(command: 'and' | 'or', item: searchGroup | searchGroupQuery) {
   item.condition = command
+  emits('search')
 }
 function handleUpdate(data: searchGroupQQ[], item: searchGroupQuery) {
   data.forEach((dItem:any, dIndex:number) => {
@@ -125,28 +118,27 @@ function handleUpdate(data: searchGroupQQ[], item: searchGroupQuery) {
   item.matchs = data
 }
 async function initForm(query: any) {
-  filters.value = {}
   filters.value = query
-  state.loading = true
-  setTimeout(async () => {
-    filters.value.query.forEach((item: any) => {
-      item.matchs.forEach((match: any) => {
-        BarFilterRef.value[item.id].setFormData(match)
-      })
-    })
-  })
-  await new Promise(resolve => {
-    setTimeout(async () => {
-      state.loading = false
-    }, 500)
-    resolve()
-  })
+}
+function clear() {
+  filters.value.query = []
+  handleAddFilter()
 }
 onActivated(() => {
-  handleAddFilter()
+  const searchParams = sessionStorage.getItem('searchParams')
+  if(!!searchParams) {
+    initForm(JSON.parse(searchParams))
+    setTimeout(() => {
+      emits('search')
+      sessionStorage.setItem('searchParams', '')
+    },100)
+  }
+  else if(filters.value?.query?.length === 0){
+    handleAddFilter()
+  }
 })
 defineExpose({
-  getData, initForm
+  getData, initForm, clear
 })
 </script>
 <style lang="scss" scoped>

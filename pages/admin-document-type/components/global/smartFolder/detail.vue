@@ -100,7 +100,7 @@ onActivated(() => {
   <div class="pageContainer--padding smartFolder">
     <div class="smartFolder-left-header">{{ $t("smartFolder.searchQuery") }}</div>
     <div class="smartFolder-left-main">
-      <SearchGroupBar2Filter ref="filterRef"></SearchGroupBar2Filter>
+      <SearchGroupBar2 ref="filterRef"></SearchGroupBar2>
     </div>
     <div class="smartFolder-left-bottom">
       <div class="flex-x-center">
