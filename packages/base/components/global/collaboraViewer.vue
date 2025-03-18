@@ -13,6 +13,7 @@ const props = defineProps<{
     fileType: string,
     editMode: boolean
 }>()
+const timestamp = ref(Date.now())
 const { docId } = toRefs(props)
 const iframeReady = ref(false)
 const editing = ref(props.readonly);
@@ -124,12 +125,12 @@ defineExpose({
       {{ $t('collabora.'+mode)}} <SvgIcon v-if="editable" class="el-icon--right" :src="mode === 'view' ? '/icons/file/edit.svg' : '/icons/close.svg'"  ></SvgIcon>
     </el-button>
 <div class="xlsContainer">
-    <form ref="formEl" :action="collaboraUrl" enctype="multipart/form-data" method="post" target="collabora-online-viewer" id="collabora-submit-form">
+    <form ref="formEl" :action="collaboraUrl" enctype="multipart/form-data" method="post" :target="'collabora-online-viewer'+ timestamp" id="collabora-submit-form">
         <input name="css_variables" :value="css" type="hidden" id="css-variables"/>
         <input name="ui_defaults" :value="ui" type="hidden" id="ui-defaults"/>
         <input name="access_token" :value="token" type="hidden" id="access-token"/>
     </form>
-    <iframe ref="xlsxIframe" id="xlsxIframe" class="xlsxIframe" frameborder="0" name="collabora-online-viewer" allowfullscreen></iframe>
+    <iframe ref="xlsxIframe" :id="'xlsxIframe' + docId" class="xlsxIframe" frameborder="0" :name="'collabora-online-viewer'+ timestamp" allowfullscreen></iframe>
 </div>
 </template>
 
@@ -139,7 +140,7 @@ defineExpose({
     height:100%;
   position: relative;
 }
-#xlsxIframe{
+.xlsxIframe{
     width: 100%;
     height: 100%;
   border-radius: var(--app-space-s);
