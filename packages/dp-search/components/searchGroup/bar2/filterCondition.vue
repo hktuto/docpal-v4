@@ -19,7 +19,7 @@
           {{ $t(`logic.${qItem.condition}`) }}
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="and">{{ $t('logic.and') }}</el-dropdown-item>
+              <el-dropdown-item command="and">{{ $t('logic.and') }}fsa</el-dropdown-item>
               <el-dropdown-item command="or">{{ $t('logic.or') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -27,15 +27,19 @@
       </div>
     </div>
     <div v-show="mode === 'view'">
-      <el-tag v-for="(item, index) in qItem.matchs" :key="item.id" class="el-tag--ellipsis" closable
-              @close="handleDelete(item)">
-        <template v-if="item.queryType !== 'metadata'">
-          {{ item.queryType }}: {{ item.value }}
-        </template>
-        <template v-else>
-          {{ item.value.key }}: {{ item.value.value }}
-        </template>
-      </el-tag>
+      <template v-for="(item, index) in viewData" :key="item.id">
+        <el-tag class="el-tag--ellipsis" closable 
+          v-if="(item.queryType !== 'metadata' && item.value) || 
+          (item.value.key && item.value.value)"
+                @close="handleDelete(item)">
+          <template v-if="item.queryType !== 'metadata'">
+            {{ item.queryType }}: {{ item.value }}
+          </template>
+          <template v-else>
+            {{ item.value.key }}: {{ item.value.value }}
+          </template>
+        </el-tag>
+      </template>
     </div>
   </div>
 </template>
@@ -47,7 +51,9 @@ const props = defineProps(['qItem'])
 const emits = defineEmits(['delete', 'deleteChild', 'add', 'command', 'update', 'formChange'])
 const formRef = ref({})
 const mode = ref('edit')
+const viewData = ref({
 
+})
 function handleAddFilter() {
   emits('add')
 }
@@ -56,14 +62,12 @@ function handleCommand(command: string) {
   emits('command', command)
 }
 
-function handleMetaChange(data) {
-  emits('formChange')
-}
-
 async function handleUp() {
   if (mode.value === 'edit') {
     const data = await getData()
-    emits('update', data)
+    console.log(data, props.qItem, 'handleUp');
+    viewData.value = data
+    // emits('update', data)
   }
   mode.value = mode.value === 'edit' ? 'view' : 'edit'
 }
@@ -81,7 +85,7 @@ function handleDelete(item: searchGroupQQ, fieldName?: string) {
 
 async function getData() {
   const pList: any = []
-  props.qItem.matchs.forEach(async (item) => {
+  props.qItem.matchs.forEach(async (item: any) => {
     pList.push(getFormData(item))
   })
   const data = await Promise.all(pList)
@@ -107,13 +111,18 @@ async function getData() {
           includeLanguages: item.includeLanguages ? item.includeLanguages : []
         }
       }
-      if (item.queryType === 'metadata') {
-        rItem.value = {
+      
+      pre.push(rItem)
+    }
+    else if (item.queryType === 'metadata') {
+      rItem = {
+        queryType: item.queryType,
+        value: {
           key: item.metadataKey,
           value: item.metadataValue
-        }
-        rItem.option = {
-          // matchCase: item.matchCase,
+        },
+        option: {
+        // matchCase: item.matchCase,
           fullMatch: item.fullMatch
         }
       }
