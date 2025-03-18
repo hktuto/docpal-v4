@@ -20,6 +20,7 @@
           :mimeType="item.mimeType"
           status="general"
         /> -->
+        <BrowseItemIcon type="file" :mimeType="item.mimeType" status="general"></BrowseItemIcon>
         <div>{{ item.name }}</div>
       </div>
       <p v-show="state.loading" class="center">{{ $t('dpTip.loading') }}</p>
@@ -30,6 +31,9 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { clientApi } from "api";
+import {MenuRouterKey} from "#imports";
+
+const routerProvider = inject(MenuRouterKey);
 const { t } = useI18n()
 
 const props = withDefaults( defineProps<{
@@ -75,22 +79,14 @@ async function getRecentDocumentPage() {
   }
 }
 function handlePreview(row: any) {
-  // TODO: open file detail
-  // if (row.isFolder) {
-  //   router.push({
-  //     path: "/browse",
-  //     query: {
-  //       path: row.path,
-  //       docId: row.id,
-  //       isFolder: row.isFolder,
-  //     },
-  //   });
-  // } else {
-  //   openFileDetail(row.id, {
-  //     showInfo: true,
-  //     showHeaderAction: true,
-  //   });
-  // }
+    routerProvider?.navigateTo(
+      createDetailPageParams({
+        docName: row.name,
+        idOrPath: row.id,
+        showHeaderAction: true,
+      }),
+      false
+    );
 }
 async function handleDelete() {
   const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
