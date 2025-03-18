@@ -22,8 +22,9 @@
 <script lang="ts" setup>
 import { ElMessageBox } from "element-plus";
 const emits = defineEmits(["setSearchParams", "delete"]);
+import {MenuRouterKey} from '#imports';
 const { t } = useI18n();
-
+const routerProvider = inject(MenuRouterKey)
 const props = withDefaults(
   defineProps<{
     dates?: any;
@@ -41,7 +42,8 @@ const {
 
 function resize() {}
 function handleSearch(data: any) {
-  sessionStorage.setItem("searchParams", JSON.stringify(data));
+  // sessionStorage.setItem("searchParams", JSON.stringify(data));
+  routerProvider?.navigateTo(routeSearch(data), false)
   // router.push('/searchGroup')
 }
 async function handleDelete() {
