@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { ElNotification } from "element-plus";
-import { adminApi } from "api";
-import type { MasterTableResponseDTO } from "api/src/generate/admin";
-import { getIgnoreSchemas } from "~/utils/masterTableProvider";
-import { onActivated } from "vue";
-const { t } = useI18n();
-const { id } = defineProps<{
+import {ElNotification} from "element-plus";
+import {adminApi} from "api";
+import type {MasterTableResponseDTO} from "api/src/generate/admin";
+import {getIgnoreSchemas} from "~/utils/masterTableProvider";
+import {onActivated} from "vue";
+
+const {t} = useI18n();
+const {id} = defineProps<{
   id: string;
 }>();
 const ignoreList = getIgnoreSchemas();
@@ -26,10 +27,13 @@ const state = reactive<{
   importLoading: false,
   exportLoading: false,
 });
+
 function handleClick(tab: any) {
   state.activeName = tab.name;
 }
+
 const MasterTableTabRecordsRef = ref();
+
 async function init() {
   const res = await adminApi.api.getMasterTablesId(id);
   const detail = res.data;
@@ -37,6 +41,7 @@ async function init() {
 
   MasterTableTabRecordsRef.value.initTableColumns(detail?.fields);
 }
+
 async function handleTemplateDownload() {
   try {
     state.templateLoading = true;
@@ -54,10 +59,13 @@ async function handleTemplateDownload() {
     state.templateLoading = false;
   }
 }
+
 const inputRef = ref();
+
 function handleImport() {
   inputRef.value.click();
 }
+
 // TODO: 导入文件接口改造
 async function handleFile(event: any) {
   // try {
@@ -83,6 +91,7 @@ async function handleFile(event: any) {
   //   state.importLoading = false
   // }
 }
+
 async function downloadFailList() {
   const noti = ElNotification({
     title: t("masterTable.importFailList"),
@@ -91,7 +100,7 @@ async function downloadFailList() {
     type: "warning",
   });
   const res = await adminApi.api.getMasterTablesDownloadFailure(
-    { id },
+    {id},
     {
       format: "blob",
       timeout: 0,
@@ -99,6 +108,7 @@ async function downloadFailList() {
   );
   downloadBlob(res, state.masterTable.name + "-failure");
 }
+
 async function handleExport() {
   try {
     state.exportLoading = true;
@@ -116,13 +126,17 @@ async function handleExport() {
     state.exportLoading = false;
   }
 }
+
 const MasterTableNewRowDialogRef = ref();
+
 function handleAddRow(row: any = null) {
   MasterTableNewRowDialogRef.value.handleOpen(state.masterTable?.fields, row);
 }
+
 function handleRefresh() {
   MasterTableTabRecordsRef.value.query();
 }
+
 onActivated(() => {
   init();
 });
@@ -161,19 +175,21 @@ onActivated(() => {
       </el-tab-pane>
     </el-tabs>
     <div class="absolute-btns">
-      <el-button
-        :loading="state.templateLoading"
-        type="info"
-        @click="handleTemplateDownload()"
-        >{{ $t("button.templateDownload") }}</el-button
-      >
-      <el-button :loading="state.importLoading" type="info" @click="handleImport()">{{
-        $t("button.importXLXS")
-      }}</el-button>
-      <el-button :loading="state.exportLoading" type="info" @click="handleExport()">{{
-        $t("button.export")
-      }}</el-button>
-      <el-button type="primary" @click="handleAddRow()">{{ $t("button.add") }}</el-button>
+      <el-button id="adminMasterTableTableCreatedByDownloadTemplate" :loading="state.templateLoading" type="info"
+                 @click="handleTemplateDownload()">
+        {{ $t("button.templateDownload") }}
+      </el-button>
+      <el-button id="adminMasterTableTableCreatedByImport" :loading="state.importLoading" type="info"
+                 @click="handleImport()">
+        {{ $t("button.importXLXS") }}
+      </el-button>
+      <el-button id="adminMasterTableTableCreatedByExport" :loading="state.exportLoading" type="info"
+                 @click="handleExport()">
+        {{ $t("button.export") }}
+      </el-button>
+      <el-button id="adminMasterTableTableCreatedByAdd" type="primary" @click="handleAddRow()">
+        {{ $t("button.add") }}
+      </el-button>
     </div>
     <MasterTableRecordAddDialog
       ref="MasterTableNewRowDialogRef"
@@ -194,12 +210,15 @@ onActivated(() => {
 .pageContainer--padding {
   position: relative;
 }
+
 .dp-tabs--auto {
   height: 100%;
+
   .el-tab-pane {
     height: 100%;
   }
 }
+
 .absolute-btns {
   position: absolute;
   right: calc(var(--app-space-xs) * 2);

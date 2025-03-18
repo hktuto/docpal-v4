@@ -2,20 +2,22 @@
   <el-card>
     <h3 class="title">{{ $t("master.setting.name") }}</h3>
     <div class="description">{{ $t("master.setting.nameDescription") }}</div>
-    <el-input v-model="state.name" :maxlength="61" />
-    <el-button :loading="state.loading" type="primary" @click="handleSave">{{
-      $t("common_save")
-    }}</el-button>
+    <el-input v-model="state.name" clearable :maxlength="61"/>
+    <el-button id="adminMasterTableTableCreatedBySettingNameSave" :loading="state.loading" type="primary"
+               @click="handleSave">
+      {{ $t("common_save") }}
+    </el-button>
   </el-card>
 </template>
 <script setup lang="ts">
-import { ElMessage } from "element-plus";
-import { adminApi } from "api";
+import {adminApi} from "api";
+
 const props = defineProps(["table", "tableId"]);
 const state = reactive<any>({
   name: "",
   loading: false,
 });
+
 async function handleSave() {
   state.loading = true;
   try {
@@ -28,6 +30,7 @@ async function handleSave() {
   }
   setTimeout(() => (state.loading = false), 500);
 }
+
 watch(
   () => props.table,
   () => {

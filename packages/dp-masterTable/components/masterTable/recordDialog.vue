@@ -6,7 +6,9 @@
     <FormVariablesRenderer ref="FormVariablesRendererRef"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}
+        <el-button id="adminMasterTableTableCreatedByRecordsEditSubmit" type="primary" :loading="state.loading"
+                   @click="handleSubmit">
+          {{ $t('common_submit') }}
         </el-button>
       </div>
     </template>
