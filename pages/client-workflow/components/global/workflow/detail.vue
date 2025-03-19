@@ -298,6 +298,7 @@ onActivated(() => {
             state.taskDetail?.processDefinitionId ||
             state.taskDetail?.taskInstance?.processDefinitionId
           "
+          :processDefinitionVersionId="state.taskDetail?.processDefinitionVersionId"
           :deploymentId="
             state.taskDetail?.deploymentId || state.taskDetail?.taskInstance?.deploymentId
           "
