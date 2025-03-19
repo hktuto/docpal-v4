@@ -8,10 +8,10 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="" type="danger" @click="handleDelete">
+        <el-button id="11" type="danger" @click="handleDelete">
           {{ $t('common_delete') }}
         </el-button>
-        <el-button id="" type="primary" :loading="state.loading" @click="handleSubmit">
+        <el-button id="22" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>

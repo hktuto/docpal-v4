@@ -1,12 +1,12 @@
 <template>
     <el-dialog v-model="state.visible"
-               :title="state.isEdit ? $t('caseManagement_detailPropertiesEdit') : $t('caseManagement_detailPropertiesAdd')"
+               :title="state.isEdit ? $t('caseManagement_editField') : $t('workflowEditor.addField')"
                :close-on-click-modal="false"
                destroy-on-close
     >
         <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
         <template #footer>
-            <el-button :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+            <el-button id="adminCaseManagementDetailAddFieldSubmit" :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
         </template>
     </el-dialog>
 </template>

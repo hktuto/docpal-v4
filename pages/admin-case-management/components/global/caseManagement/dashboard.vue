@@ -3,20 +3,22 @@
     <div class="dashboard-page">
       <div class="dashboard-page--header">
         <el-dropdown trigger="click" @command="createDashboard">
-          <el-button type="primary">
-              {{$t('common_add')}}
+          <el-button id="adminCaseManagementDetailCaseDashboardViewLayoutAdd" type="primary">
+            {{ $t('common_add') }}
           </el-button>
           <template #dropdown>
-              <el-dropdown-menu>
-                  <el-dropdown-item v-for="(item, key) in CmmnDashboardWidgetSetting" :key="key" :command="key" :divided="item.divided">
-                      {{$t(`dashboard.${item.label}`)}}
-                  </el-dropdown-item>
-              </el-dropdown-menu>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="(item, key) in CmmnDashboardWidgetSetting" :key="key" :command="key"
+                                :divided="item.divided">
+                {{ $t(`dashboard.${item.label}`) }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button class="el-icon--right" type="primary"
-          :loading="state.saveLoading"
-          @click="handleSave">{{$t('common_save')}}</el-button>
+        <el-button id="adminCaseManagementDetailCaseDashboardViewLayoutSave" class="el-icon--right" type="primary"
+                   :loading="state.saveLoading" @click="handleSave">
+          {{ $t('common_save') }}
+        </el-button>
       </div>
       <div class="dashboard-page--main">
         <!-- {{ CmmnDashboardWidgetSetting }} -->
@@ -34,11 +36,12 @@
 </template>
 <script lang="ts" setup>
 
-import { adminApi } from 'api'
+import {adminApi} from 'api'
+
 const props = defineProps<{
-    id: string,
-    caseTypeId: string,
-    name: string,
+  id: string,
+  caseTypeId: string,
+  name: string,
 }>()
 const {caseTypeId, name} = toRefs(props)
 const routerProvider = inject(MenuRouterKey)
@@ -56,19 +59,22 @@ function createDashboard(command: CmmnDashboardWidget) {
   const item = getCmmnWidgetSetting(command)
   state.layout.push({
     x: (state.layout.length * 2) % 4,
-    y: state.layout.length +  4, // puts it at the bottom
+    y: state.layout.length + 4, // puts it at the bottom
     i: new Date().valueOf().toString(),
     ...item
   })
 }
-function handleRefresh (layoutSetting:any) {
-  const index = state.layout.findIndex((item) =>  item.i === layoutSetting.i)
+
+function handleRefresh(layoutSetting: any) {
+  const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
 }
+
 function handleDelete(i) {
-  const index = state.layout.findIndex((item) =>  item.i === i)
+  const index = state.layout.findIndex((item) => item.i === i)
   state.layout.splice(index, 1)
 }
+
 async function handleSave() {
   try {
     state.saveLoading = true
@@ -81,18 +87,16 @@ async function handleSave() {
     state.saveLoading = false
   }
 }
+
 const caseVersionId = ref()
 
-
-
-
 onActivated(async () => {
-  const { data } = await adminApi.api.getCaseDashboardId(props.id)
+  const {data} = await adminApi.api.getCaseDashboardId(props.id)
   caseVersionId.value = data.cmmnVersionId;
   state.detail = data
   const temLayout = JSON.parse(data.styleJson)
-  if(Array.isArray(temLayout)){
-    state.layout = temLayout.map( item => {
+  if (Array.isArray(temLayout)) {
+    state.layout = temLayout.map(item => {
       return Object.assign(item, getCmmnNormalizeSetting(item.component))
     })
   }
@@ -107,11 +111,12 @@ provide(CaseManagementDashboardKey, {
 })
 </script>
 <style lang="scss" scoped>
-.pageContainer{
+.pageContainer {
   width: 100%;
   height: 100%;
   overflow: hidden;
 }
+
 .dashboard-page {
   height: 100%;
   overflow: hidden;
@@ -119,25 +124,31 @@ provide(CaseManagementDashboardKey, {
   grid-template-rows: min-content 1fr;
   padding: var(--app-space-xs);
   gap: var(--app-space-xs);
+
   &--header {
     text-align: right;
   }
+
   &--main {
     overflow: auto;
   }
 }
-:deep .o-auto  {
+
+:deep .o-auto {
   height: 100%;
-   & > .el-card__body {
+
+  & > .el-card__body {
     height: 100%;
     overflow: hidden;
     display: grid;
     grid-template-rows: min-content 1fr;
     gap: var(--app-space-xs);
+
     h3 {
       margin: unset;
     }
   }
+
   .setting--icon {
     --icon-size: 1.14rem;
     --icon-color: #8796A4;
@@ -146,6 +157,7 @@ provide(CaseManagementDashboardKey, {
     right: var(--app-space-xs);
   }
 }
+
 :deep .responsive-container {
   margin-bottom: 10px;
 }

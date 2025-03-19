@@ -379,6 +379,8 @@
     "title": "Case management",
     "userGroup": "User Group"
   },
+  "caseManagement_ImportFromWorkflow": "Import from Workflow",
+  "caseManagement_basicInfoOpenEditor": "Open Editor",
   "caseManagement_create": "Create New Case Template",
   "caseManagement_created": "The new case template {name} has been created successfully.",
   "caseManagement_createdCaseDigitsCheck": "Case ID – No. of Digits should be between 1 to 15",
@@ -389,6 +391,8 @@
   "caseManagement_detailPermission": "Permission",
   "caseManagement_detailPropertiesAdd": "Add Properties",
   "caseManagement_detailPropertiesEdit": "Edit Properties",
+  "caseManagement_editField": "Edit Field",
+  "caseManagement_editFieldcaseManagement_editFieldcaseManagement_editField": "Edit Field",
   "caseManagement_editLatest": "Edit Latest Version of Case Template",
   "caseManagement_editProduction": "Edit Production Version of Case Template",
   "caseManagement_filter": "Filter by Case Name",
