@@ -9,16 +9,20 @@
     <main>
       <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef"
                                      :treeData="state.treeData"
-                                     v-loading="state.treeLoading"></FolderCabinetCreateUploadTree>
+                                     v-loading="state.treeLoading">
+      </FolderCabinetCreateUploadTree>
     </main>
     <template #footer>
-      <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+      <el-button id="clientFolderCabinetAllowOtherFilesCabinetNewItemSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
 import {clientApi} from 'api'
-import {ElMessage, ElMessageBox} from 'element-plus'
+import {ElMessage} from 'element-plus'
 
 const props = defineProps(['id'])
 const emits = defineEmits([
@@ -60,7 +64,6 @@ async function handleSubmit() {
   }
 
   async function uploadHandler(children: any, parentPath: string = '', parentStatus?: 'skip' | 'fail') {
-
     children.forEach(async (item: any) => {
       item.path = parentPath + '/' + item.label
       try {
@@ -75,7 +78,6 @@ async function handleSubmit() {
               type: item.documentType,
               idOrPath: item.path,
               properties: item.properties,
-
             })
           )
         } else {

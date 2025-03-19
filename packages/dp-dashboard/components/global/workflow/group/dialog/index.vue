@@ -10,7 +10,7 @@
   >
     <div>
       <h3>{{ $t('dashboard.workflowStartTask') }}</h3>
-      <WorkflowGroupDialogTags 
+      <WorkflowGroupDialogTags
         :allTags="state.workflowAList"
         :tags="form.workflowList"
         @change="handleWorkflowListChange"
@@ -29,7 +29,7 @@
     </div>
     <div>
       <h3>{{ $t('dashboard.workflowStatusHeaderDesign') }}</h3>
-      <WorkflowGroupDialogCard 
+      <WorkflowGroupDialogCard
         :isAuto="true"
         :pLayout="state.cardHeaderPLayout"
         :layout="form.cardHeaderLayout"
@@ -37,28 +37,29 @@
     </div>
     <div>
       <h3>{{ $t('dashboard.workflowStatusCardDesign') }}</h3>
-      <WorkflowGroupDialogCard 
+      <WorkflowGroupDialogCard
         :pLayout="state.cardPLayout"
         :layout="form.cardLayout"
       />
     </div>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="danger" @click="handleDelete">{{
-          $t("common_delete")
-        }}</el-button>
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
-          $t("common_submit")
-        }}</el-button>
+        <el-button type="danger" @click="handleDelete">
+          {{ $t("common_delete") }}
+        </el-button>
+        <el-button type="primary" :loading="state.loading" @click="handleSubmit">
+          {{ $t("common_submit") }}
+        </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from "element-plus";
-import { publicApi } from 'api';
+import {ElMessageBox} from "element-plus";
+import {publicApi} from 'api';
+
 const props = defineProps(["setting"]);
-const { t } = useI18n()
+const {t} = useI18n()
 
 const emits = defineEmits(["refresh", "delete"]);
 const state = reactive({
@@ -77,27 +78,29 @@ const form = ref({
   cardHeaderLayout: [],
   cardLayout: []
 });
+
 async function handleSubmit() {
   try {
     state.loading = true;
-    emits("refresh", { ...form.value });
+    emits("refresh", {...form.value});
   } catch (error) {
   } finally {
     state.visible = false;
     state.loading = false;
   }
 }
+
 function handleOpen(setting) {
   state.visible = true;
   // state.loading = true
   setTimeout(async () => {
     state.setting = setting;
-    if(!setting.filterHeaderList) setting.filterHeaderList = []
+    if (!setting.filterHeaderList) setting.filterHeaderList = []
     form.value.filterHeaderList = [...setting.filterHeaderList];
-    
+
     if (!setting.workflowList) setting.workflowList = []
     form.value.workflowList = [...setting.workflowList]
-    
+
     if (!setting.cardLayout) setting.cardLayout = []
     form.value.cardLayout = [...setting.cardLayout]
 
@@ -107,45 +110,48 @@ function handleOpen(setting) {
     // state.loading = false;
   });
 }
+
 async function handleDelete() {
   const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
   if (action !== "confirm") return;
   emits("delete");
   state.visible = false;
 }
+
 function handleWorkflowListChange(list) {
   getWorkflowProps(list)
 }
+
 async function getWorkflowProps(list) {
-  const pList:any = []
+  const pList: any = []
   list.forEach(item => {
-    pList.push( publicApi.api.postWorkflowJobFilterData({
+    pList.push(publicApi.api.postWorkflowJobFilterData({
       processDefinitionName: item.name
     }).then(res => res.data))
   })
   const res = await Promise.all(pList)
   state.filterHeaderPList = res.reduce((prev, item) => {
     item.forEach(p => {
-      if(!form.value.filterHeaderList.find(f=> f.name === p.name) &&
-        !prev.find(f=> f.name === p.name)) {
+      if (!form.value.filterHeaderList.find(f => f.name === p.name) &&
+        !prev.find(f => f.name === p.name)) {
         prev.push(p)
       }
     })
     return prev
-  }, [] )
+  }, [])
   const workflowProps = [
-    { source: 'workflow', variables: 'workflowName', name: 'Workflow Name', width: '50%' },
-    { source: 'workflow', variables: 'startDate', name: 'Start Date', width: '25%' },
-    { source: 'workflow', variables: 'endDate', name: 'End Date', width: '25%' },
-    { source: 'workflow', variables: 'startDate~endDate', name: 'Startdate-Enddate', width: '50%' },
-    { source: 'workflow', variables: 'duration startDate~endDate', name: 'Duration-Startdate-Enddate', width: '50%' },
-    { source: 'workflow',  variables: 'duration', name: 'Duration', width: '25%' },
-    { source: 'workflow',  variables: 'approver', label: t('role.approver'), name: 'Approval', width: '25%' },
-    { source: 'workflow',  variables: 'creator', label: t('role.creator'), name: 'Create By', width: '25%' },
-    { source: 'workflow',  variables: 'terminator', label: t('role.terminator'), name: 'Terminate User', width: '25%' },
-    { source: 'workflow',  variables: 'state', name: 'State', width: '25%' },
+    {source: 'workflow', variables: 'workflowName', name: 'Workflow Name', width: '50%'},
+    {source: 'workflow', variables: 'startDate', name: 'Start Date', width: '25%'},
+    {source: 'workflow', variables: 'endDate', name: 'End Date', width: '25%'},
+    {source: 'workflow', variables: 'startDate~endDate', name: 'Startdate-Enddate', width: '50%'},
+    {source: 'workflow', variables: 'duration startDate~endDate', name: 'Duration-Startdate-Enddate', width: '50%'},
+    {source: 'workflow', variables: 'duration', name: 'Duration', width: '25%'},
+    {source: 'workflow', variables: 'approver', label: t('role.approver'), name: 'Approval', width: '25%'},
+    {source: 'workflow', variables: 'creator', label: t('role.creator'), name: 'Create By', width: '25%'},
+    {source: 'workflow', variables: 'terminator', label: t('role.terminator'), name: 'Terminate User', width: '25%'},
+    {source: 'workflow', variables: 'state', name: 'State', width: '25%'},
   ]
-  const layouts = [ workflowProps, ...res ]
+  const layouts = [workflowProps, ...res]
   const defaultStyle = {
     width: '50%',
     align: 'left',
@@ -153,37 +159,39 @@ async function getWorkflowProps(list) {
   }
   state.cardPLayout = layouts.reduce((prev, item) => {
     item.forEach(p => {
-      if(!form.value.cardLayout.find(f=> f.name === p.name) && 
-        !prev.find(f=> f.name === p.name)) {
-        prev.push({ ...defaultStyle, ...p})
+      if (!form.value.cardLayout.find(f => f.name === p.name) &&
+        !prev.find(f => f.name === p.name)) {
+        prev.push({...defaultStyle, ...p})
       }
     })
     return prev
-  }, [] )
+  }, [])
 
   state.cardHeaderPLayout = layouts.reduce((prev, item) => {
     item.forEach(p => {
-      if(!form.value.cardHeaderLayout.find(f=> f.name === p.name) &&
-        !prev.find(f=> f.name === p.name)) {
-        prev.push({ ...defaultStyle, ...p})
+      if (!form.value.cardHeaderLayout.find(f => f.name === p.name) &&
+        !prev.find(f => f.name === p.name)) {
+        prev.push({...defaultStyle, ...p})
       }
     })
     return prev
-  }, [] )
+  }, [])
 
-  if(!form.value.cardHeaderLayout.find(f=> f.source === 'workflowIndex')) {
-    state.cardHeaderPLayout.unshift({ source: 'workflowIndex', name: 'Workflow Index' })
+  if (!form.value.cardHeaderLayout.find(f => f.source === 'workflowIndex')) {
+    state.cardHeaderPLayout.unshift({source: 'workflowIndex', name: 'Workflow Index'})
   }
 
 }
+
 async function getWorkflowList() {
   state.workflowAList = await publicApi.api.postWorkflowProcessList({}).then(res => res.data);
 }
+
 onMounted(() => {
   getWorkflowList();
 });
 
-defineExpose({ handleOpen });
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped>
 </style>

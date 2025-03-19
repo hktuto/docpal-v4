@@ -80,7 +80,6 @@ watch(idOrPath, () => {
 })
 
 onActivated(() => {
-    console.log(111)
     bus.on(fileRefreshHandler)
 })
 

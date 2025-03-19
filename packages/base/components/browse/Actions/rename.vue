@@ -8,8 +8,9 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button :loading="state.loading" @click="handleSave"
-                   @keyup.enter="handleSave">{{ $t('common_save') }}
+        <el-button id="clientBrowseRenameSave" type="primary" :loading="state.loading" @click="handleSave"
+                   @keyup.enter="handleSave">
+          {{ $t('common_save') }}
         </el-button>
       </template>
     </el-dialog>

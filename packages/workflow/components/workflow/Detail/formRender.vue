@@ -3,8 +3,8 @@
     <FormRenderer :class="{vformReadonly: state.readonly, workflowForm: true}" ref="FormRendererRef" :formJson="formJson" :data="formData"
         @previewFileInit="handlePreviewFileInit">
         <template v-slot:previewFile="{data}">
-            <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef"
-                ></WorkflowDetailReader>
+            <WorkflowDetailReader class="WorkflowDetailReader" ref="WorkflowReaderRef">
+            </WorkflowDetailReader>
         </template>
         <template v-for="item in formRenderSlots" :keys="item.name" v-slot:[item.name]="{data}">
             <component :is="item.component" :ref="(el: any) => formRenderSlotsRef[item.name] = el" 

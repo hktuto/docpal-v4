@@ -2,7 +2,7 @@
   <div class="pageContainer--padding collection-container">
     <div :class="['collection-container--left', { collapse: style.collapse }]">
       <div class="flex-x-end">
-        <el-button @click="openAddCollectionDialog">
+        <el-button id="clientCollectionCreateNewCollection" type="primary" @click="openAddCollectionDialog">
           {{ t('collections_new') }}
         </el-button>
         <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']"
@@ -15,7 +15,7 @@
              :class="['collection-item','cursorPointer', {'current': state.curCollection.id === item.id}]"
              @click="handleTabClick(item)">
           <span class="ellipsis" :title="item.name">{{ item.name }}</span>
-          <el-icon class="color__danger__hover cursorPointer"
+          <el-icon :id="`clientCollectionDelete${item.id}`" class="color__danger__hover cursorPointer"
                    @click.stop="handleDelete(item)">
             <Delete/>
           </el-icon>
@@ -26,7 +26,7 @@
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
           <div class="flex-x-between">{{ state.curCollection.name }}
-            <SvgIcon src="/icons/edit.svg" class="el-icon--right"
+            <SvgIcon id="clientCollectionEditCollectionInfo" src="/icons/edit.svg" class="el-icon--right"
                      @click="openEditCollectionDialog"/>
           </div>
           <div class="flex-x-end">

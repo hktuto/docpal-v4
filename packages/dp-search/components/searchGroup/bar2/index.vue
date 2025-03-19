@@ -19,7 +19,7 @@
     {{ $t(`logic.${filters.condition}`)  }}
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item command="and">{{ $t('logic.and') }}111</el-dropdown-item>
+        <el-dropdown-item command="and">{{ $t('logic.and') }}</el-dropdown-item>
         <el-dropdown-item command="or">{{ $t('logic.or') }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
