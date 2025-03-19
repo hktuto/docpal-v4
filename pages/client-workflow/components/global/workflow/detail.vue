@@ -160,15 +160,16 @@ async function handleSave() {
 async function handleSubmit() {
   state.loading = true;
   try {
+    // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
+    if(state.taskDetail?.assignee !== userId){
+      const response: any = await clientApi.api.postWorkflowTaskClaim({taskId:id, userId}).then(res => res.data)
+
+    }
+    // get form data
     const data = await vFormRef.value.getFormData(true, false);
     // return;
     if (!data) throw new Error(`${t("incompleteData")}`);
-    // convert all item in data which is boolean to string
-    // Object.keys(data).forEach(key => {
-    //     if (typeof data[key] === 'boolean') {
-    //         data[key] = String(data[key])
-    //     }
-    // })
+    
     const param = {
       taskId: id,
       properties: { ...data },
