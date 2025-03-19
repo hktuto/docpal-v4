@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 
 import { adminApi } from 'api'
-import formJson from './acl.vform.json'
+import formJson from './editTimeDialog.vform.json'
 const props = defineProps<{
     doc: any,
 }>()

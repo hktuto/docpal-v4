@@ -1,13 +1,113 @@
 {
   "widgetList": [
     {
+      "key": 60885,
+      "type": "select-group",
+      "icon": "select-group-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "userId",
+        "label": "user_UserAndUserGroupMultiSelect",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "common_selectOccupancyContent",
+        "prefixIcon": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "selectgroup90601"
+    },
+    {
+      "key": 30924,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "permission",
+        "label": "dpTable_right",
+        "labelAlign": "",
+        "defaultValue": "Everything",
+        "placeholder": "common_selectOccupancyContent",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "label": "Read",
+            "value": "Read"
+          },
+          {
+            "label": "Write",
+            "value": "ReadWrite"
+          },
+          {
+            "label": "Manage",
+            "value": "Everything"
+          }
+        ],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select77632"
+    },
+    {
       "key": 51263,
       "type": "radio",
       "icon": "radio-field",
       "formItemFlag": true,
       "options": {
         "name": "time",
-        "label": "dpTable_time",
+        "label": "dpTable_validityPeriod",
         "labelAlign": "",
         "defaultValue": "permanent",
         "columnWidth": "200px",
@@ -21,11 +121,11 @@
         "hidden": false,
         "optionItems": [
           {
-            "label": "Permanent",
+            "label": "永久",
             "value": "permanent"
           },
           {
-            "label": "Date Base",
+            "label": "有限",
             "value": "dateBase"
           }
         ],
@@ -37,7 +137,7 @@
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
-        "onCreated": "",
+        "onCreated": "this.loadOptions([\n  { label: $t('dpTable_permanent'), value: 'permanent'},\n  { label: $t('dpTable_dateBase'), value: 'dateBase'},\n])",
         "onMounted": "",
         "onChange": "const dateRangeRef = this.getWidgetRef('dateRange')\nconsole.log({dateRangeRef})\nif(value === 'permanent') {\n  dateRangeRef.setHidden(true)\n  dateRangeRef.setRequired(false)\n} else {\n  dateRangeRef.setHidden(false)\n  dateRangeRef.setRequired(true)\n}",
         "onValidate": ""
@@ -107,6 +207,7 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
+    "dhList": [],
     "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
