@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="state.visible" :close-on-click-modal="false" append-to-body>
+  <el-dialog :title="$t('easyForm.sendEmail')" v-model="state.visible" :close-on-click-modal="false" append-to-body>
     <el-form
       label-position="top"
       ref="formRef"
@@ -10,9 +10,7 @@
       <el-form-item
         :label="$t('user_email')"
         prop="emails"
-        :rules="[
-          { required: true, message: $t('login_username') + $t('form_common_requird') },
-        ]"
+        :rules="[{ required: true, message: $t('login_username') + $t('form_common_requird') },]"
       >
         <el-select
           ref="selectRef"
@@ -42,7 +40,7 @@
           },
         ]"
       >
-        <el-input ref="subjectRef" v-model="form.subject" />
+        <el-input ref="subjectRef" v-model="form.subject"/>
       </el-form-item>
       <InsertVariables
         :inputRef="subjectRef?.input"
@@ -66,21 +64,23 @@
       />
     </el-form>
     <template #footer>
-      <el-button :loading="state.loading" @click="handleSubmit()">{{
-        $t("common_submit")
-      }}</el-button>
+      <el-button id="adminEasyFormDetailFormPreviewSendEmailSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit()">
+        {{ $t("common_submit") }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi, clientApi } from "api";
+import {adminApi} from "api";
 
+import type {FormInstance} from "element-plus";
 import {ElMessage} from 'element-plus'
-import type { FormInstance } from "element-plus";
+
 const emits = defineEmits(["email-update"]);
-const { t } = useI18n();
+const {t} = useI18n();
 const {
-  public: { endPoint },
+  public: {endPoint},
 } = useRuntimeConfig();
 const state = reactive<any>({
   visible: false,
@@ -91,16 +91,16 @@ const subjectRef = ref();
 const bodyRef = ref();
 
 const subjectFieldList = [
-  { label: "Email", value: "${email}" },
-  { label: "Name", value: "${name}" },
+  {label: "Email", value: "${email}"},
+  {label: "Name", value: "${name}"},
 ];
 const bodyFieldList = ref([
-  { label: "Email", value: "${email}", templateValue: '<span th:text="${email}"></span>' },
-  { label: "Name", value: "${name}", templateValue: '<span th:text="${name}"></span>' },
-  { label: "Form Link", value: "${formLink}", templateValue: '<a th:href="${formLink}">Form Link</a>' },
+  {label: "Email", value: "${email}", templateValue: '<span th:text="${email}"></span>'},
+  {label: "Name", value: "${name}", templateValue: '<span th:text="${name}"></span>'},
+  {label: "Form Link", value: "${formLink}", templateValue: '<a th:href="${formLink}">Form Link</a>'},
 ]);
 const bodyFieldExtraList = [
-  { value: "\n", templateValue: '<br />' },
+  {value: "\n", templateValue: '<br />'},
 ]
 
 const form = ref({
@@ -108,20 +108,22 @@ const form = ref({
   subject: "subject",
   body: "Dear ",
 });
+
 async function handleOpen(easyFormId: string = '', userEmail: string = '') {
   state.visible = true;
   state.easyFormId = easyFormId
   const email = await adminApi.api.getFormDesignEmailId(easyFormId).then(res => res.data)
-  if(!email.body) email.body = ''
-  if(!email.subject) email.subject = ''
-  if(!email.userEmails) email.userEmails = []
+  if (!email.body) email.body = ''
+  if (!email.subject) email.subject = ''
+  if (!email.userEmails) email.userEmails = []
   form.value.body = getBody(email.body)
   form.value.subject = email.subject
   form.value.emails = []
-  if(userEmail) form.value.emails.push(userEmail)
+  if (userEmail) form.value.emails.push(userEmail)
   setTimeout(() => {
     formRef.value.clearValidate()
   })
+
   // form.value.emails = email.userEmails.map(item => (item.email))
   function getBody(str) {
     const list = [
@@ -138,10 +140,12 @@ async function handleOpen(easyFormId: string = '', userEmail: string = '') {
     return body.replace('<html><body><p>', '').replace('</p></body></html>', '')
   }
 }
+
 const formRef = ref<FormInstance>();
+
 async function handleSubmit() {
   const valid = await formRef.value.validate();
-  if(!valid) return
+  if (!valid) return
   const params = {
     easyFormId: state.easyFormId,
     formLink: getFormLink(false),
@@ -153,6 +157,7 @@ async function handleSubmit() {
   emits("email-update");
   ElMessage.success(t('dpMsg_success'))
   state.visible = false;
+
   function getBody(str) {
     const list = [
       ...bodyFieldList.value,
@@ -160,15 +165,16 @@ async function handleSubmit() {
     ]
     const body = list.reduce((prev: string, item: any) => {
       const regexStr = item.value.replace(/[${}/?\\<>]/g, '\\$&')
-      
+
       const regex = new RegExp(item.value.replace(/[${}/?\\<>]/g, '\\$&'), 'g');
       prev = prev.replace(regex, item.templateValue);
       return prev
     }, str)
     return `<html><body><p>${body}</p></body></html>`
   }
-  function getEmail(){
-    return form.value.emails.reduce((prev, email:string) => {
+
+  function getEmail() {
+    return form.value.emails.reduce((prev, email: string) => {
       const user = state.userList.find(item => item.userId === email)
       prev.push({
         username: user ? user.firstName + user.lastName : '',
@@ -177,6 +183,7 @@ async function handleSubmit() {
       return prev
     }, [])
   }
+
   function getFormLink(initBodyField = true) {
     const fItem = bodyFieldList.value.find(item => item.label === "Form Link")
     const origin = endPoint?.upload;
@@ -188,21 +195,24 @@ async function handleSubmit() {
     return href
   }
 }
+
 // #region module: selectRef
 const selectRef = ref();
+
 function handleSelectChange() {
   selectRef.value.blur();
   setTimeout(() => {
     selectRef.value.focus();
   });
 }
+
 // #endregion
 // #endregion
 onMounted(async () => {
-  const { data } = await adminApi.api.postNuxeoIdentityUsers({});
+  const {data} = await adminApi.api.postNuxeoIdentityUsers({});
   state.userList = data || ([] as any);
 });
 
-defineExpose({ handleOpen });
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped></style>

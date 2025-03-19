@@ -8,24 +8,27 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="easyForm_filter"
         />
-        <el-button type="primary" @click="handleAdd()">{{ $t("easyForm_createForm") }}</el-button>
+        <el-button id="adminEasyFormCreateNewForm" type="primary" @click="handleAdd()">
+          {{ $t("easyForm_createForm") }}
+        </el-button>
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
         <el-tag v-else type="danger">{{ $t("Deactivated") }}</el-tag>
       </template>
     </VxeGrid>
-    <EasyFormNewDialog ref="DialogRef" @refresh="query({})" />
+    <EasyFormNewDialog ref="DialogRef" @refresh="query({})"/>
   </div>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
-import { routeEasyFormDetail } from "~/util/easyFormRouterHelper";
+import {adminApi} from "api";
+import {routeEasyFormDetail} from "~/util/easyFormRouterHelper";
+
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
-const { t } = useI18n();
+const {t} = useI18n();
 let extraParams: any = {};
 const {
   tableConfig,
@@ -37,20 +40,20 @@ const {
 } = useVxeTable({
   id: "a-easyForm",
   api: (pageParams: any) =>
-    adminApi.api.postFormDesignPage({ ...pageParams, ...extraParams }),
+    adminApi.api.postFormDesignPage({...pageParams, ...extraParams}),
   columns: [
-    { field: "name", title: "easyForm.name", fixed: "left", type: "checkbox" },
+    {field: "name", title: "easyForm.name", fixed: "left", type: "checkbox"},
     {
       field: "createdDate",
       title: "easyForm_creationDate",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
     {
       field: "modifiedDate",
       title: "table_modifiedDate",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
@@ -61,7 +64,7 @@ const {
         default: "status",
       },
     },
-    { field: "processDefinitionKey", title: "easyForm.submitWorkflow" },
+    {field: "processDefinitionKey", title: "easyForm.submitWorkflow"},
   ],
   bodyActions: [
     [
@@ -70,7 +73,7 @@ const {
         name: t("easyForm_edit"),
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDblclick(row);
         },
       },
@@ -79,7 +82,7 @@ const {
         name: t("easyForm_activate"),
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleActive(row, true);
         },
       },
@@ -88,7 +91,7 @@ const {
         name: t("easyForm_inactivate"),
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleActive(row, false);
         },
       },
@@ -112,14 +115,16 @@ const {
       disabled: false,
     };
   },
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row);
   },
 });
+
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
   routerProvider?.navigateTo(routeEasyFormDetail(row), false);
 }
+
 async function handleActive(row: any, isActive: boolean) {
   try {
     const type = isActive ? "patchFormDesignEnableId" : "patchFormDesignDisableId";
@@ -127,14 +132,17 @@ async function handleActive(row: any, isActive: boolean) {
     if (!!result) {
       row.enable = isActive;
     }
-  } catch (error) {}
+  } catch (error) {
+  }
 }
 
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
+
 const DialogRef = ref();
+
 async function handleAdd() {
   DialogRef.value.handleOpen();
 }
@@ -143,8 +151,10 @@ async function handleAdd() {
 :deep .vxe-buttons--wrapper {
   display: flex;
   justify-content: space-between;
+
   .responsive-container {
     width: 15%;
+
     :deep .el-input {
       width: 200px;
     }
