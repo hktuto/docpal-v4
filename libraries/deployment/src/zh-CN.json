@@ -379,6 +379,8 @@
     "title": "案例管理",
     "userGroup": "用户组"
   },
+  "caseManagement_ImportFromWorkflow": "从工作流程导入",
+  "caseManagement_basicInfoOpenEditor": "打开编辑器",
   "caseManagement_create": "创建新案例模板",
   "caseManagement_created": "The new case template {name} has been created successfully.",
   "caseManagement_createdCaseDigitsCheck": "Case ID – No. of Digits should be between 1 to 15",
@@ -389,6 +391,8 @@
   "caseManagement_detailPermission": "许可",
   "caseManagement_detailPropertiesAdd": "添加属性",
   "caseManagement_detailPropertiesEdit": "编辑属性",
+  "caseManagement_editField": "Edit Field",
+  "caseManagement_editFieldcaseManagement_editFieldcaseManagement_editField": "Edit Field",
   "caseManagement_editLatest": "编辑最新版本的案例模板",
   "caseManagement_editProduction": "编辑案例模板的制作版本",
   "caseManagement_filter": "按案例模板名称筛选",

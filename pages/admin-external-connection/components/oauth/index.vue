@@ -68,8 +68,8 @@ onMounted(() => {
     <div class="flex-x-between">
       <h3>{{ $t("adminMenu.oauth") }}</h3>
       <div class="flex-x-end">
-        <el-button id="ExternalConnectionOauthImport" @click="uploadXlsx">{{ $t("import") }}</el-button>
-        <el-button id="ExternalConnectionOauthSave" type="primary" @click="handleSubmit">
+        <el-button id="adminExternalConnectionOauthImport" @click="uploadXlsx">{{ $t("import") }}</el-button>
+        <el-button id="adminExternalConnectionOauthSave" type="primary" @click="handleSubmit">
           {{ $t("dpTool_save") }}
         </el-button>
       </div>
