@@ -1,52 +1,61 @@
 <template>
-<el-card>
-  <div class="flex-x-start">
-    <h3 class="el-icon--left">{{ $t("adminMenu.whatsApps") }}</h3>
-    <el-switch v-model="state.setting.whatsAppSetting.whatsAppSwitch" :loading="state.switchLoading" @change="handleSwitchChange"></el-switch>
-  </div>
-  <el-form ref="formRef" label-position="top" :model="form">
-    <el-form-item :label="$t('config.accessToken')">
-      <el-input v-model="form.accessToken" :placeholder="$t('config.accessTokenTip')"></el-input>
-    </el-form-item>
-    <el-form-item :label="$t('config.phoneNum')">
-      <el-input v-model="form.phoneNum" :placeholder="$t('config.phoneNumbTip')"></el-input>
-    </el-form-item>
-    <el-form-item :label="$t('config.accountNum')">
-      <el-input v-model="form.accountNum" :placeholder="$t('config.ccountNumberTip')"></el-input>
-    </el-form-item>
-  </el-form>
-  <div>
-    <el-button :loading="state.testLoading" type="info" @click="handleTestConnection">{{$t('config.testConnnection')}}</el-button>
-    <el-button :loading="state.saveLoading" type="primary" @click="handleSave">{{$t('common_save')}}</el-button>
-  </div>
-  <h3>{{ $t('config.statusMonitor') }}</h3>
-  <div class="config-status-monitor">
-    <div class="config-status-monitor-item">
-      <div class="config-status-monitor-item-title">{{ $t('config.responseTime') }}</div>
-      <el-text size="large">{{ state.setting.responseTime }}</el-text>
+  <el-card>
+    <div class="flex-x-start">
+      <h3 class="el-icon--left">{{ $t("adminMenu.whatsApps") }}</h3>
+      <el-switch v-model="state.setting.whatsAppSetting.whatsAppSwitch" :loading="state.switchLoading"
+                 @change="handleSwitchChange"></el-switch>
     </div>
-    <div class="config-status-monitor-item">
-      <div class="config-status-monitor-item-title">{{ $t('config.uptime') }}</div>
-      <el-text size="large">{{ state.setting.successPercent }}</el-text>
+    <el-form ref="formRef" label-position="top" :model="form">
+      <el-form-item :label="$t('config.accessToken')">
+        <el-input clearable v-model="form.accessToken" :placeholder="$t('config.accessTokenTip')"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('config.phoneNum')">
+        <el-input clearable v-model="form.phoneNum" :placeholder="$t('config.phoneNumbTip')"></el-input>
+      </el-form-item>
+      <el-form-item :label="$t('config.accountNum')">
+        <el-input clearable v-model="form.accountNum" :placeholder="$t('config.accountNumberTip')"></el-input>
+      </el-form-item>
+    </el-form>
+    <div>
+      <el-button id="ExternalConnectionWhatsAppsTestConnection" :loading="state.testLoading" type="info"
+                 @click="handleTestConnection">
+        {{ $t('config.testConnection') }}
+      </el-button>
+      <el-button id="ExternalConnectionWhatsAppsSave" :loading="state.saveLoading" type="primary" @click="handleSave">
+        {{ $t('common_save') }}
+      </el-button>
     </div>
-    <div class="config-status-monitor-item">
-      <div class="config-status-monitor-item-title">{{ $t('config.status') }}</div>
-      <el-text type="success" size="large" v-if="state.setting.status === 'Online'">
-        {{ state.setting.status }}</el-text>
-      <el-text type="danger" size="large" v-else>
-        {{ state.setting.status }}</el-text>
+    <h3>{{ $t('config.statusMonitor') }}</h3>
+    <div class="config-status-monitor">
+      <div class="config-status-monitor-item">
+        <div class="config-status-monitor-item-title">{{ $t('config.responseTime') }}</div>
+        <el-text size="large">{{ state.setting.responseTime }}</el-text>
+      </div>
+      <div class="config-status-monitor-item">
+        <div class="config-status-monitor-item-title">{{ $t('config.uptime') }}</div>
+        <el-text size="large">{{ state.setting.successPercent }}</el-text>
+      </div>
+      <div class="config-status-monitor-item">
+        <div class="config-status-monitor-item-title">{{ $t('config.status') }}</div>
+        <el-text type="success" size="large" v-if="state.setting.status === 'Online'">
+          {{ state.setting.status }}
+        </el-text>
+        <el-text type="danger" size="large" v-else>
+          {{ state.setting.status }}
+        </el-text>
+      </div>
     </div>
-  </div>
-  <h3>{{ $t('config.errorLog') }}</h3>
-  <div style="height: 50vh;overflow: hidden;">
-    <WhatappsLog />
-  </div>
-</el-card>
+    <h3>{{ $t('config.errorLog') }}</h3>
+    <div style="height: 50vh;overflow: hidden;">
+      <WhatappsLog/>
+    </div>
+  </el-card>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
-import { ElMessage } from 'element-plus'
-const { t } = useI18n()
+import {adminApi} from 'api'
+import {ElMessage} from 'element-plus'
+
+const {t} = useI18n()
 const state = reactive<any>({
   setting: {
     whatsAppSetting: {
@@ -55,15 +64,16 @@ const state = reactive<any>({
   },
   testLoading: false,
   saveLoading: false,
-  switchLoading: false  
+  switchLoading: false
 })
 const form = ref({
   accessToken: '',
   accountNum: "",
-  phoneNum:""
+  phoneNum: ""
 
 })
 const formRef = ref()
+
 async function handleSwitchChange(val) {
   // state.setting.whatsAppSetting.whatsAppSwitch = val
   try {
@@ -74,43 +84,43 @@ async function handleSwitchChange(val) {
       phoneNum: form.value.phoneNum,
       accountNum: form.value.accountNum
     }).then(res => res.data)
-    if(!!res) {
+    if (!!res) {
       ElMessage.success(t('dpMsg_success'))
     }
   } catch (error) {
-  }
-  finally {
+  } finally {
     setTimeout(() => state.switchLoading = false, 500)
   }
 }
+
 async function handleSave(val) {
   // state.setting.whatsAppSetting.whatsAppSwitch = val
   try {
     state.saveLoading = true
     const valid = formRef.value.validate()
-    if(!valid) return
+    if (!valid) return
     const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({
       whatsAppSwitch: state.setting.whatsAppSetting.whatsAppSwitch,
       accessToken: form.value.accessToken,
       phoneNum: form.value.phoneNum,
       accountNum: form.value.accountNum
     }).then(res => res.data)
-    if(!!res) {
+    if (!!res) {
       ElMessage.success(t('dpMsg_success'))
     }
   } catch (error) {
-  } finally { 
+  } finally {
     setTimeout(() => state.saveLoading = false, 500)
   }
 }
-async function handleTestConnection() { 
+
+async function handleTestConnection() {
   try {
     state.testLoading = true
     const res = await adminApi.api.getWhatsappTestConnection().then(res => res.data)
-    if(res === 'Online') {
+    if (res === 'Online') {
       ElMessage.success(res)
-    }
-    else {
+    } else {
       ElMessage.error(res)
     }
   } catch (error) {
@@ -119,7 +129,8 @@ async function handleTestConnection() {
     setTimeout(() => state.testLoading = false, 500)
   }
 }
-onMounted(async() => {
+
+onMounted(async () => {
   state.setting = await adminApi.api.postWhatsappOverview({}).then(res => res.data)
   form.value.accessToken = state.setting.whatsAppSetting.accessToken
   form.value.phoneNum = state.setting.whatsAppSetting.phoneNum || ""
@@ -134,14 +145,17 @@ onMounted(async() => {
   border-radius: var(--el-border-radius-base);
   padding: var(--app-space-xs);
   gap: var(--app-space-xs);
+
   &-item {
     background-color: var(--app-grey-850);
     padding: var(--app-space-xs);
     border-radius: var(--el-border-radius-base);
+
     &-title {
       font-size: var(--el-font-size-base);
       color: var(--el-text-color-secondary);
     }
+
     .el-text {
       font-weight: bold;
       padding: var(--app-space-xs) 0;

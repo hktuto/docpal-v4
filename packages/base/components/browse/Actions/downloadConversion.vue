@@ -55,7 +55,7 @@ const handleConfirm = async () => {
   if (response.result) {
     ElMessage.success(`${$i18n.t('convert_transferring')}`)
     formRef.value.resetFields()
-    // popupOpened.value = false
+    popupOpened.value = false
     // 刷新转档列表
     const ev = new CustomEvent('refresh-conversion-history')
     window.dispatchEvent(ev)
