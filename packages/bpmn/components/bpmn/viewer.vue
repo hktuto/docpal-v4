@@ -17,6 +17,7 @@ const flatGraphObject = ref<any>({})
 const bpmnJson = ref<any>({})
 
 function init(bpmnXml :string, x6Json?:any){
+
     if(!containerEl.value) {
         throw new Error('Container is not found')
     }
@@ -72,7 +73,6 @@ function init(bpmnXml :string, x6Json?:any){
         const {json} = bpmnStringToJson(bpmnXml)
         bpmnJson.value = json;
         x6Json = checkX6Json(x6Json, json)
-        console.log("bpmnStringToJson", x6Json)
 
         graph.value.fromJSON(x6Json)
         // remove all tools
@@ -98,6 +98,7 @@ function init(bpmnXml :string, x6Json?:any){
     graph.value.on('history:change', () => {
         allFormField.value = getAllFormFieldFromGraph(graph.value as any)
     })
+    
     emits('graphReady', x6Json)
 }
 function dim(cellIds:string[]){

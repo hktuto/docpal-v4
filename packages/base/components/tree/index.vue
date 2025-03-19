@@ -5,7 +5,7 @@
       <slot v-if="!data.isGetMore" :node="node" :data="data">
         {{ data.name }}
       </slot>
-      <el-button id="AccessControlListLoadMore" v-else :loading="data.loading" size="small">{{ $t('loadMore') }}
+      <el-button id="adminAccessControlListLoadMore" v-else :loading="data.loading" size="small">{{ $t('loadMore') }}
       </el-button>
     </template>
   </el-tree>

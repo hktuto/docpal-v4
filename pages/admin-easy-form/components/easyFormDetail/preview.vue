@@ -3,16 +3,16 @@
     <div class="title-container">
       <h3 class="title">{{ $t("easyForm.formPreview") }}</h3>
       <div class="btns">
-        <el-button type="primary" @click="handleOpenFormDesign">
+        <el-button id="adminEasyFormDetailFormPreviewEditForm" type="primary" @click="handleOpenFormDesign">
           {{ $t("easyForm.editForm") }}
         </el-button>
-        <el-button type="primary" @click="handleCopyUrl">
+        <el-button id="adminEasyFormDetailFormPreviewCopyUrl" type="primary" @click="handleCopyUrl">
           {{ $t("easyForm.copyUrl") }}
         </el-button>
-        <el-button type="primary" @click="handleCopyIframe">
+        <el-button id="adminEasyFormDetailFormPreviewCopyEmbedCode" type="primary" @click="handleCopyIframe">
           {{ $t("easyForm.copyEmbedCode") }}
         </el-button>
-        <el-button type="primary" @click="handleSendEmail">
+        <el-button id="adminEasyFormDetailFormPreviewSendEmail" type="primary" @click="handleSendEmail">
           {{ $t("easyForm.sendEmail") }}
         </el-button>
       </div>
@@ -31,25 +31,29 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-import { MenuRouterKey } from "#imports";
-import { ElMessage } from "element-plus";
-import { routeEasyFormDesigner } from "~/util/easyFormRouterHelper";
+import {MenuRouterKey} from "#imports";
+import {ElMessage} from "element-plus";
+import {routeEasyFormDesigner} from "~/util/easyFormRouterHelper";
+
 const emits = defineEmits(["email-update"])
 const props = defineProps(["detail"]);
 const routerProvider = inject(MenuRouterKey);
+
 function update() {
   console.log('ssss')
   emits('email-update')
 }
+
 const dialogRef = ref()
 const {
-  public: { endPoint },
+  public: {endPoint},
 } = useRuntimeConfig();
-const { t } = useI18n();
+const {t} = useI18n();
 const state = reactive<any>({
   formJsonLoad: false,
   formJson: {},
 });
+
 function handleOpenFormDesign() {
   // router.push(`/easyFormManage/formDesign?id=${props.detail.id}`)
   const newItem = routeEasyFormDesigner(props.detail);
@@ -66,25 +70,29 @@ const copy = (data: any, msg = "common_copySuccess") => {
   document.body.removeChild(input);
   ElMessage.success(msg as string);
 };
+
 function handleCopyUrl() {
   const origin = endPoint?.upload;
   const url = `${origin}/public-form?id=${props.detail.id}`;
   copy(url, t("dpTip.urlCopied"));
 }
+
 function handleCopyIframe() {
   const origin = endPoint?.upload;
   const url = `${origin}/public-form?id=${props.detail.id}`;
   const iframe = `<iframe width=800 height=500 frameborder="no" scrolling="no" allowtransparency="no"  src="${url}"></iframe>`;
   copy(iframe, t("dpTip.embedCodeCopied"));
 }
+
 function handleSendEmail() {
   dialogRef.value.handleOpen(props.detail.id)
 }
+
 watch(
   () => props.detail,
   (newValue, oldValue) => {
     console.log("watch", newValue, oldValue);
-    if (newValue.previewStyle ) {
+    if (newValue.previewStyle) {
       state.formJsonLoad = false;
       nextTick(() => {
         state.formJson = JSON.parse(newValue.previewStyle);
@@ -111,12 +119,14 @@ watch(
   justify-content: space-between;
   align-items: center;
 }
+
 .preview-container {
   height: 380px;
   overflow: hidden;
   width: 100%;
   background-color: #d1d8de;
   padding: calc(var(--app-space-xs) * 3);
+
   .formContainer {
     background-color: #fff;
     padding: var(--app-space-xs);

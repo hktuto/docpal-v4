@@ -140,14 +140,14 @@ defineExpose({
                 <ElRow :gutter="20">
                     <ElCol  :span="12">
                         <ElFormItem :label="options.locationLabel || 'Location'" prop="location" required>
-                            <ElSelect v-model="form.location" clearable placeholder="Select" >
+                            <ElSelect v-model="form.location" clearable placeholder="Select" filterable>
                                 <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
                     <ElCol  :span="12">
                         <ElFormItem :label="options.userLabel || 'User'" prop="user" required>
-                            <ElSelect v-model="form.user" clearable placeholder="Select" >
+                            <ElSelect v-model="form.user" clearable placeholder="Select" filterable>
                                 <ElOption v-for="item in userFiterOptions" :key="item.value" :label="item.label" :value="item.value" />
                             </ElSelect>
                         </ElFormItem>

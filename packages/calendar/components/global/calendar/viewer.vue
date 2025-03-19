@@ -184,6 +184,9 @@ function displayTimeFn(event){
     return dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
 }
 
+function makeDescription(event:CalendarEventExternal){
+    return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
+}
 
 watch(() => [setting, options],async() =>{
     if(setting.value){
@@ -212,14 +215,20 @@ defineExpose({
 
 <template>
     <div :class="{calendarViewerContainer:true, editMode: editItem && editItem.eventId, createMode: options.allowCreate}">
-
+        <!-- TODO : add tool tip -->
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" >
             <template #timeGridEvent="{ calendarEvent }">
                 <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
                     :style="getCalendarStyle(calendarEvent)"
                 >
-                    {{ calendarEvent.location }} - {{ calendarEvent.people.join(", ") }}<br/>
+                <ElTooltip  placement="top">
+                    {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(", ") }} <br/>
                     {{ displayTimeFn(calendarEvent) }}
+                    <template #content>
+                        {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(", ") }} <br/>
+                    {{ displayTimeFn(calendarEvent) }}
+                    </template>
+                </ElTooltip>
                 </div>
             </template>
         </ScheduleXCalendar>
@@ -230,9 +239,9 @@ defineExpose({
 .calendarViewerContainer{
     &.editMode, &.createMode{
         .eventContainer{
-            opacity: 0.6;
+            filter: grayscale(1);
             &.isEditItem{
-                opacity: 1;
+                filter: grayscale(0);
             }
         }
     }
@@ -241,7 +250,9 @@ defineExpose({
     height:100%;
     padding:var(--app-space-xs);
     border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.1);
+    // background-color: rgba(0, 0, 0, 0.1);
+    font-size: var(--app-font-size-m);
+    line-height: 1.1rem;
     &.isEditItem{
         cursor: pointer;
         box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);

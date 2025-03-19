@@ -3,7 +3,7 @@
              :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="AccessControlListAddLocalPermissionSubmit" type="primary" :loading="state.loading"
+      <el-button id="adminAccessControlListAddLocalPermissionSubmit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

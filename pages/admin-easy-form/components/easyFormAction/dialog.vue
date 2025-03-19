@@ -19,7 +19,7 @@
           },
         ]"
       >
-        <el-input v-model="form.actionName" />
+        <el-input v-model="form.actionName"/>
       </el-form-item>
       <el-form-item
         :label="$t('easyForm.type')"
@@ -119,18 +119,19 @@
     </el-form>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit"
-          >{{ $t("common_submit") }}
+        <el-button id="adminEasyFormDetailFormActionsAddNewFormActionSubmit" type="primary" :loading="state.loading"
+                   @click="handleSubmit">
+          {{ $t("common_submit") }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
-import { ElMessage } from "element-plus";
+import {adminApi} from "api";
+import {ElMessage} from "element-plus";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const props = defineProps(["detail"]);
 const emits = defineEmits(["refresh", "delete"]);
 const state = reactive({
@@ -162,9 +163,9 @@ const sourceList = computed(() => {
   }
 });
 const typeOptions = [
-  { label: "Workflow", value: "Workflow" },
-  { label: "CaseType", value: "CaseType" },
-  { label: "Email", value: "Email" },
+  {label: "Workflow", value: "Workflow"},
+  {label: "CaseType", value: "CaseType"},
+  {label: "Email", value: "Email"},
 ];
 
 function getTargetLabel(value) {
@@ -343,7 +344,7 @@ async function handleKeyChange(value: string, isInit = false) {
 
 async function getWorkflowProps(processKey: string) {
   const options = await adminApi.api
-    .postWorkflowProperties({ processKey })
+    .postWorkflowProperties({processKey})
     .then((res) => res.data);
   console.log("getWorkflowProps", options);
   return options.map((item) => ({
@@ -372,7 +373,7 @@ async function getEmailProps(id: string) {
 async function getCaseProps(key: string) {
   try {
     const caseItem = caseList.find(item => item.value === key)
-    
+
     const options = await adminApi.api
       .getCaseDashboardVersionVersionidPrimaryform(caseItem.productionVersionId)
       .then((res) => res.data);
@@ -407,15 +408,15 @@ async function getUserList() {
     .filter((item) => item.value !== userId);
   // state.userList.unshift(...sourceList.value)
   state.userList = [
-    { label: t("easyForm.formInfomation"), value: "", options: sourceList.value },
-    { label: t("dataField.type.user"), value: "", options: _userList },
+    {label: t("easyForm.formInfomation"), value: "", options: sourceList.value},
+    {label: t("dataField.type.user"), value: "", options: _userList},
   ];
   userListStore = state.userList;
 }
 
 // #endregion
 
-defineExpose({ handleOpen });
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped>
 .el-row {
