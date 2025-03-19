@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
-import { adminApi } from 'api'
+import {adminApi} from 'api'
+
 const dialogVisible = ref(false);
 
 const workflowList = ref<any>([]);
@@ -11,25 +12,30 @@ const {list} = defineProps<{
 }>()
 
 const emits = defineEmits(['create'])
-async function getAllWorkflows(){
+
+async function getAllWorkflows() {
   workflowList.value = await adminApi.api.postWorkflowProcessList({}).then(res => res.data || [])
   console.log("workflowList", workflowList.value)
 }
+
 const form = reactive<any>({
-  workflowName:"",
+  workflowName: "",
   infoToImport: [],
 })
 
-async function open(){
+async function open() {
   await getAllWorkflows();
   dialogVisible.value = true
 }
 
-async function resetInfo(){
+async function resetInfo() {
   form.infoToImport = [];
-  if(form.workflowName){
+  if (form.workflowName) {
     const workflow = workflowList.value.find(item => item.id === form.workflowName)
-    const blob = await adminApi.api.getWorkflowVersionBpmnxml({draftId: workflow.draftId, versionNumber: workflow.versionNumber}, {
+    const blob = await adminApi.api.getWorkflowVersionBpmnxml({
+      draftId: workflow.draftId,
+      versionNumber: workflow.versionNumber
+    }, {
       format: 'blob'
     })
     const xml = await blob.text()
@@ -43,11 +49,11 @@ async function resetInfo(){
     ]
     allFormStep.forEach(item => {
       const formInfo = item.extensionElements['flowable:formProperty']
-      if(formInfo) {
+      if (formInfo) {
         formInfo.forEach(formItem => {
           allFormInfo.set(formItem.attr_id, formItem)
         })
-        
+
       }
     })
     workflowInfoOptions.value = Array.from(allFormInfo.values())
@@ -55,42 +61,42 @@ async function resetInfo(){
   }
 }
 
-function close(){
+function close() {
   form.workflowName = "";
   form.infoToImport = [];
   dialogVisible.value = false
 }
 
-function submit(){
+function submit() {
   // check if workflowName is null or infoToImport is empty;
   // if workflowName is null, show error message
   // if infoToImport is empty, show error message
   // if both are not empty, submit.
-  
+
   // deduplicate of form.infoToImport and list
   const addList = form.infoToImport.filter(item => !list.find(l => l.name.toLowerCase() === item.toLowerCase()))
-  
-  const result  = addList.map(addItem => {
+
+  const result = addList.map(addItem => {
     const item = workflowInfoOptions.value.find(t => t.attr_id === addItem)
     const type = makeType(item.attr_type)
-    return  {
+    return {
       name: item.attr_name,
-      displayField:"",
-      documentType:"",
-      filterList:"",
-      masterTable:"",
+      displayField: "",
+      documentType: "",
+      filterList: "",
+      masterTable: "",
       id: item.attr_id,
       type: type,
-      vocabulary:"",
+      vocabulary: "",
     }
-    
-    
+
+
   })
-  if(result.length > 0){
+  if (result.length > 0) {
 
     emits('create', result)
     close()
-  }else{
+  } else {
     ElMessage.warning("No new field to add")
   }
 }
@@ -110,26 +116,31 @@ function makeType(type: string) {
   }
 }
 
-defineExpose({ open })
+defineExpose({open})
 </script>
 
 <template>
   <ElDialog v-model="dialogVisible" @close="close">
     <ElForm :model="form" label-position="top">
-      <ElFormItem label="Workflow Name">
-        <ElSelect v-model="form.workflowName" placeholder="Please select" filterable clearable @change="resetInfo">
-          <ElOption v-for="item in workflowList" :key="item.id" :label="item.name" :value="item.id" />
+      <ElFormItem :label="$t('workflowEditor.name')">
+        <ElSelect v-model="form.workflowName" :placeholder="$t('common_selectOccupancyContent')" filterable clearable
+                  @change="resetInfo">
+          <ElOption v-for="item in workflowList" :key="item.id" :label="item.name" :value="item.id"/>
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Workflow Info">
-        <ElSelect v-model="form.infoToImport" multiple placeholder="Please select" filterable clearable>
-          <ElOption v-for="item in workflowInfoOptions" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+      <ElFormItem :label="$t('Workflow.fields')">
+        <ElSelect v-model="form.infoToImport" :placeholder="$t('common_selectOccupancyContent')" filterable multiple
+                  clearable>
+          <ElOption v-for="item in workflowInfoOptions" :key="item.attr_id" :label="item.attr_name"
+                    :value="item.attr_id"/>
         </ElSelect>
       </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton type="primary" @click="submit">Submit</ElButton>
+      <ElButton id="adminCaseManagementDetailImportFromWorkflowSubmit" type="primary" @click="submit">
+        {{ $t('common_submit') }}
+      </ElButton>
     </template>
-      <p>Workflow Info with same name with case info will be ignored</p>
+    <p>Workflow Info with same name with case info will be ignored</p>
   </ElDialog>
 </template>

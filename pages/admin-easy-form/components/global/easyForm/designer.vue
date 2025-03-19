@@ -6,19 +6,21 @@
       :fieldListApi="state.fieldListApi"
     >
       <template #submit>
-        <el-button type="text" :loading="state.submitLoading" @click="handleSubmit">{{
-          $t("submit")
-        }}</el-button>
+        <el-button id="adminEasyFormDetailFormPreviewEditFormSubmit" class="el-button el-button--primary is-link"
+                   :loading="state.submitLoading" @click="handleSubmit">
+          {{ $t("submit") }}
+        </el-button>
       </template>
     </FormDesigner>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { adminApi } from 'api'
-import { ElMessage, ElMessageBox } from "element-plus";
-const { t } = useI18n()
-const { id } = defineProps<{
+import {adminApi} from 'api'
+import {ElMessage, ElMessageBox} from "element-plus";
+
+const {t} = useI18n()
+const {id} = defineProps<{
   id: string;
 }>();
 const state = reactive<State>({
@@ -28,9 +30,10 @@ const state = reactive<State>({
   loadField: false,
 });
 const FormDesignerRef = ref();
+
 async function handleSubmit() {
   const json = FormDesignerRef.value.getFormJson();
-  const param:any = {
+  const param: any = {
     id: id,
     previewStyle: JSON.stringify(json),
   };
@@ -43,16 +46,18 @@ async function handleSubmit() {
     state.submitLoading = false;
   }
 }
+
 function handleFiledList(list) {
   state.loadField = false;
   // formProperties
   state.fieldListApi = {
     labelKey: "id",
     nameKey: "id",
-    data: list.map((item: any) => ({ id: item.name })),
+    data: list.map((item: any) => ({id: item.name})),
   };
   state.loadField = true;
 }
+
 async function getDetail() {
   state.detail = await adminApi.api.getFormDesignDraftId(id).then(res => res.data);
   if (!state.detail) state.detail = {};

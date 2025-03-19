@@ -58,9 +58,14 @@
     </el-form>
     <CaseManagementDetailPermissionDrag :list="state.permissionField"/>
     <template #footer>
-      <el-button v-if="state.setting?.name" type="danger" @click="handleDelete">{{ $t('common_delete') }}
+      <el-button id="adminCaseManagementDetailAddPermissionDelete" v-if="state.setting?.name" type="danger"
+                 @click="handleDelete">
+        {{ $t('common_delete') }}
       </el-button>
-      <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
+      <el-button id="adminCaseManagementDetailAddPermissionSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
@@ -159,61 +164,61 @@ function handleDelete() {
 }
 
 function handleOpen(setting: any) {
-    state.visible = true
-    state.isEdit = false
-    state.permissionField = {
-        hidden: [],
-        mask: [],
-        read: [],
-        edit: []
-    }
-    if (!!setting) {
-        state.isEdit = true
-        state.setting = setting
-        Object.keys(setting.fieldList).forEach(key => {
-            state.permissionField[key] = [...setting.fieldList[key]]
-        })
-    }
-    setTimeout(() => {
-        initOptions()
-        if (!!setting) {
-            form.value.name = setting.name
-            form.value.record = setting?.filter?.filed_condition?.length > 0 ? 'some' : 'all'
-            form.value.filed_condition = setting.filter.filed_condition.map((item: any) => {
-                const info = getRowInfo(item.id)
-                const _item: any = {
-                    id: item.id,
-                    condition: item.condition,
-                    __cdata: item.__cdata,
-                    conditionList: getConditionList(item.id),
-                    type: info.type
-                }
-                if (info.masterTable) {
-                    _item.masterTable = info.masterTable
-                    _item.displayField = info.displayField
-                }
-                return _item
-            })
-        } else {
-            state.permissionField.show = props.caseInformation
-        }
+  state.visible = true
+  state.isEdit = false
+  state.permissionField = {
+    hidden: [],
+    mask: [],
+    read: [],
+    edit: []
+  }
+  if (!!setting) {
+    state.isEdit = true
+    state.setting = setting
+    Object.keys(setting.fieldList).forEach(key => {
+      state.permissionField[key] = [...setting.fieldList[key]]
     })
+  }
+  setTimeout(() => {
+    initOptions()
+    if (!!setting) {
+      form.value.name = setting.name
+      form.value.record = setting?.filter?.filed_condition?.length > 0 ? 'some' : 'all'
+      form.value.filed_condition = setting.filter.filed_condition.map((item: any) => {
+        const info = getRowInfo(item.id)
+        const _item: any = {
+          id: item.id,
+          condition: item.condition,
+          __cdata: item.__cdata,
+          conditionList: getConditionList(item.id),
+          type: info.type
+        }
+        if (info.masterTable) {
+          _item.masterTable = info.masterTable
+          _item.displayField = info.displayField
+        }
+        return _item
+      })
+    } else {
+      state.permissionField.show = props.caseInformation
+    }
+  })
 }
 
 function initOptions() {
-    let caseInformation: any[] = []
-    if (props.caseInformation) caseInformation = props.caseInformation
-    state.caseInformation = caseInformation.map(((item: any) => ({
-        ...item,
-        value: item.id,
-        label: item.name,
-        type: item.type
-    })))
-    state.caseInformation.unshift({
-        value: 'created_by',
-        label: 'Created by',
-        type: 'string'
-    })
+  let caseInformation: any[] = []
+  if (props.caseInformation) caseInformation = props.caseInformation
+  state.caseInformation = caseInformation.map(((item: any) => ({
+    ...item,
+    value: item.id,
+    label: item.name,
+    type: item.type
+  })))
+  state.caseInformation.unshift({
+    value: 'created_by',
+    label: 'Created by',
+    type: 'string'
+  })
 }
 
 function handleRecordChange(value) {

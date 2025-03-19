@@ -1,17 +1,20 @@
 <template>
-<el-dialog v-model="state.visible" :title="$t('caseManagement_create')"
-  :close-on-click-modal="false" destroy-on-close>
-  <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-  <template #footer>
-    <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-  </template>
-</el-dialog>
+  <el-dialog v-model="state.visible" :title="$t('caseManagement_create')"
+             :close-on-click-modal="false" destroy-on-close>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <template #footer>
+      <el-button id="adminCaseManagementCreateNewCaseTemplateSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
-import { adminApi } from 'api'
+import {ElMessage} from 'element-plus'
+import {adminApi} from 'api'
+
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 
 const state = reactive({
@@ -20,7 +23,8 @@ const state = reactive({
 })
 const FormRendererRef = ref()
 import formJson from './new.vform.json'
-async function handleSubmit () {
+
+async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
@@ -33,12 +37,14 @@ async function handleSubmit () {
   }
   state.loading = false
 }
+
 function handleOpen() {
   state.visible = true
 }
-onMounted(async() => {
+
+onMounted(async () => {
 })
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

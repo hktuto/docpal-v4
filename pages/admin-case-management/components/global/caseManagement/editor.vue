@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 
-import { adminApi } from 'api'
+import {adminApi} from 'api'
 
 
 const props = defineProps<{
   caseTypeId: string,
   name: string,
   currentVersion: string,
-  versionId:string
+  versionId: string
 }>()
-const{ t } = useI18n()
+const {t} = useI18n()
 const editorEl = ref()
 const readOnly = ref(false);
 const state = reactive<any>({
@@ -18,45 +18,51 @@ const state = reactive<any>({
 const caseInfo = ref<any>()
 const production = ref(false);
 const routerProvider = inject(MenuRouterKey)
-if(!routerProvider) {
-    throw createError('menu manger not found')
+if (!routerProvider) {
+  throw createError('menu manger not found')
 }
+
 async function getCaseData() {
 
-    const { data } = await adminApi.api.getCaseTypesVersionVersionid(props.versionId) as any
-    readOnly.value = data.production;
-    production.value = data.production
-    caseInfo.value = data
+  const {data} = await adminApi.api.getCaseTypesVersionVersionid(props.versionId) as any
+  readOnly.value = data.production;
+  production.value = data.production
+  caseInfo.value = data
   routerProvider?.updateTabName(props.name)
 }
-async function getFileAndDisplay(path: string){
+
+async function getFileAndDisplay(path: string) {
   // ordercase | test
   const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
   editorEl.value.init(cmmnString)
 }
+
 async function loadX6Json() {
-    const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
-    const x6Json = await fetch('/cmmn/x6Test.json').then(res => res.json())
-    editorEl.value.init(cmmnString, x6Json)
+  const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
+  const x6Json = await fetch('/cmmn/x6Test.json').then(res => res.json())
+  editorEl.value.init(cmmnString, x6Json)
 }
-async function loadXml () {
-    const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, { versionNumber: props?.currentVersion },{
-    format:'blob'
+
+async function loadXml() {
+  const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, {versionNumber: props?.currentVersion}, {
+    format: 'blob'
   }) as any
   const cmmnString = await blob.text()
   editorEl.value.init(cmmnString)
 }
-async function loadJsonAndXml () {
-  let {data:styleJson} = await adminApi.api.getCaseTypesIdStylejson(props.caseTypeId, { versionNumber: props?.currentVersion })
+
+async function loadJsonAndXml() {
+  let {data: styleJson} = await adminApi.api.getCaseTypesIdStylejson(props.caseTypeId, {versionNumber: props?.currentVersion})
   styleJson = styleJson ? JSON.parse(styleJson) : null
-  const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, { versionNumber: props?.currentVersion },{
-    format:'blob'
+  const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, {versionNumber: props?.currentVersion}, {
+    format: 'blob'
   }) as any
   const cmmnString = await blob.text()
   editorEl.value.init(cmmnString, styleJson, readOnly.value, props.versionId)
-  
+
 }
-async function init(){
+
+async function init() {
   loadJsonAndXml()
 }
 
@@ -67,22 +73,22 @@ async function handleSave() {
     const data = editorEl.value.save()
     console.log("save data", data);
     const blob = xmlStringToFile(data.xml, 'file.cmmn.xml')
-    
+
     const formData = new FormData()
     formData.append('file', blob)
     // TODO : method are not correct in swagger, tem use instance.
-    await adminApi.instance.patch(`/docpal/case/types/version/${props.versionId}/save`,formData, {
+    await adminApi.instance.patch(`/docpal/case/types/version/${props.versionId}/save`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
-      await adminApi.api.postCaseTypesStylejsonSave(
-        {
-          caseTypeId: props.caseTypeId,
-          versionNumber: props.currentVersion,
-          styleJson: JSON.stringify(data.json)
-        }
-      )
+    await adminApi.api.postCaseTypesStylejsonSave(
+      {
+        caseTypeId: props.caseTypeId,
+        versionNumber: props.currentVersion,
+        styleJson: JSON.stringify(data.json)
+      }
+    )
 
   } catch (error) {
     console.log(error)
@@ -90,15 +96,17 @@ async function handleSave() {
     state.loading = false
   }
 }
+
 function xmlStringToFile(xmlString, fileName) {
   // 创建一个Blob对象
-  var blob = new Blob([xmlString], { type: 'text/xml' });
+  var blob = new Blob([xmlString], {type: 'text/xml'});
 
   // 创建一个File对象
-  var file = new File([blob], fileName, { type: 'text/xml' });
+  var file = new File([blob], fileName, {type: 'text/xml'});
 
   return file;
 }
+
 async function getSavedData() {
   const cmmnString = await fetch('/cmmn/saved.xml').then(res => res.text())
   const x6Json = await fetch('/cmmn/saved.json').then(res => res.json())
@@ -107,26 +115,26 @@ async function getSavedData() {
 }
 
 function openDetail() {
-  
+
   const newItem = newCaseManagementDetail(props.versionId, props.name, props.currentVersion)
 
   routerProvider?.navigateTo(newItem)
 }
 
-function openVersionList(){
-    const params = {
-        ...caseInfo.value,
-        name: routerProvider?.tabData.value.label,
-        id: props.caseTypeId,
-        draftId: props.caseTypeId
-    }
-    const newItem = newCaseManagementVersionList(params)
+function openVersionList() {
+  const params = {
+    ...caseInfo.value,
+    name: routerProvider?.tabData.value.label,
+    id: props.caseTypeId,
+    draftId: props.caseTypeId
+  }
+  const newItem = newCaseManagementVersionList(params)
 
-    routerProvider?.navigateTo(newItem)
+  routerProvider?.navigateTo(newItem)
 }
 
-async function saveAsNewVersion(){
-  const { data } = await adminApi.api.postCaseTypesVersionVersionidNew(props.versionId)
+async function saveAsNewVersion() {
+  const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.versionId)
   // console.log("data", data)
   routerProvider?.updateProps({
     versionId: data.id,
@@ -138,12 +146,13 @@ async function saveAsNewVersion(){
   // TODO : save as form to new version
 }
 
-async function promoteToProduction(){
-   const { data } = await adminApi.api.postCaseTypesVersionVersionidActive(props.versionId)
-   routerProvider?.message.success(t('dpMsg_success'))
-   await getCaseData()
-    await init()
+async function promoteToProduction() {
+  const {data} = await adminApi.api.postCaseTypesVersionVersionidActive(props.versionId)
+  routerProvider?.message.success(t('dpMsg_success'))
+  await getCaseData()
+  await init()
 }
+
 //
 // provide(CaseManagementDetailProviderKey, {
 //     caseData,
@@ -153,38 +162,51 @@ async function promoteToProduction(){
 // })
 
 onActivated(async () => {
-    await getCaseData()
-    await init()
+  await getCaseData()
+  await init()
 
 })
 </script>
 
 <template>
   <div class="pageContainer">
-      <CmmnEditor ref="editorEl" >
-        <template #actions>
-            <template v-if="!production">
-                <ElButton type="primary" @click="promoteToProduction">Promote To Prodocution : {{ currentVersion }}</ElButton>
-            </template>
-            <ElButton type="primary" @click="saveAsNewVersion">Save As New Version</ElButton>
-            <ElButton @click="openVersionList" type="primary">Version List</ElButton>
-            <ElButton @click="openDetail" type="primary">View Detail</ElButton>
-         <ElButton type="primary" :loading="state.loading" :disabled="readOnly" @click="handleSave"> {{$t('dpTool_save')}}</ElButton>
+    <CmmnEditor ref="editorEl">
+      <template #actions>
+        <template v-if="!production">
+          <ElButton id="adminCaseManagementDetailOpenEditorPromoteToProduction" type="primary"
+                    @click="promoteToProduction">
+            {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
+          </ElButton>
         </template>
-      </CmmnEditor>
-    </div>
+        <ElButton id="adminCaseManagementDetailOpenEditorSaveAsNewVersion" type="primary" @click="saveAsNewVersion">
+          {{ $t('workflowEditor_saveAsNewVersion') }}
+        </ElButton>
+        <ElButton id="adminCaseManagementDetailOpenEditorVersionList" @click="openVersionList" type="primary">
+          {{ $t('workflowEditor_versionList') }}
+        </ElButton>
+        <ElButton id="adminCaseManagementDetailOpenEditorViewDetails" @click="openDetail" type="primary">
+          {{ $t('actions.viewDetails') }}
+        </ElButton>
+        <ElButton id="adminCaseManagementDetailOpenEditorSave" type="primary" :loading="state.loading"
+                  :disabled="readOnly" @click="handleSave">
+          {{ $t('dpTool_save') }}
+        </ElButton>
+      </template>
+    </CmmnEditor>
+  </div>
 </template>
 
 <style scoped lang="scss">
-.pageContainer{
-  width:100%;
+.pageContainer {
+  width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
   padding: var(--app-space-xs);
 }
-.bottom{
-  width:100%;
+
+.bottom {
+  width: 100%;
   padding: calc(var(--app-space-s) * 2);
   border-top: 1px solid var(--app-grey-400);
 }
