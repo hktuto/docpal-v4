@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="state.visible" :close-on-click-modal="false" append-to-body>
+  <el-dialog :title="$t('actions.viewDetails')" v-model="state.visible" :close-on-click-modal="false" append-to-body>
     <el-form
       label-position="top"
       ref="formRef"
@@ -27,28 +27,27 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('tableHeader_subject')" prop="subject">
-        <el-input ref="subjectRef" v-model="form.subject" disabled />
+        <el-input ref="subjectRef" v-model="form.subject" disabled/>
       </el-form-item>
       <el-form-item :label="$t('dpEmail.content')" prop="body">
         <div class="email-body" v-html="form.body"></div>
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button :loading="state.loading" @click="state.visible = false">{{
-        $t("button.close")
-      }}</el-button>
+      <el-button id="" :loading="state.loading" @click="state.visible = false">
+        {{ $t("button.close") }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { clientApi } from "api";
-import { ElMessage } from "element-plus";
-import type { FormInstance } from "element-plus";
+import {clientApi} from "api";
+
 const emits = defineEmits(["email-update"]);
 const props = defineProps(["detail"]);
-const { t } = useI18n();
+const {t} = useI18n();
 const {
-  public: { endPoint },
+  public: {endPoint},
 } = useRuntimeConfig();
 const state = reactive<any>({
   visible: false,
@@ -58,6 +57,7 @@ const form = ref({
   subject: "subject",
   body: "Dear ",
 });
+
 async function handleOpen(row) {
   state.visible = true;
   const email = await clientApi.api.getFormDesignEmailHistoryLogId(row.id).then((res) => res.data);
@@ -68,14 +68,15 @@ async function handleOpen(row) {
   form.value.subject = email.subject;
   form.value.emails = email.userEmails.map(item => item.email)
 }
+
 // #endregion
-defineExpose({ handleOpen });
+defineExpose({handleOpen});
 </script>
 <style lang="scss" scoped>
 .email-body {
   padding: var(--app-space-xs);
-    width: 100%;
-    border: 1px solid var(--app-grey-425);
-    border-radius: var(--app-border-radius-s);
+  width: 100%;
+  border: 1px solid var(--app-grey-425);
+  border-radius: var(--app-border-radius-s);
 }
 </style>
