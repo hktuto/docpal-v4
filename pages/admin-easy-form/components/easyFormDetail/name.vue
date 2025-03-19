@@ -14,14 +14,18 @@
         />
       </el-formItem>
     </el-form>
-    <el-button :loading="state.publishLoading" type="primary" @click="handlePublish">{{ $t('button.publish') }}</el-button>
+    <el-button id="adminEasyFormDetailFormSettingPublish" :loading="state.publishLoading" type="primary"
+               @click="handlePublish">
+      {{ $t('button.publish') }}
+    </el-button>
   </el-card>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
-import { ElMessage } from 'element-plus'
+import {adminApi} from 'api'
+import {ElMessage} from 'element-plus'
+
 const props = defineProps(["detail"]);
-const { t } = useI18n()
+const {t} = useI18n()
 const route = useRoute()
 const state = reactive<any>({
   publishLoading: false
@@ -30,6 +34,7 @@ const form = ref({
   name: "",
 });
 const FormRef = ref();
+
 async function handleChange(value) {
   try {
     if (value === props.detail.name) return
@@ -44,20 +49,22 @@ async function handleChange(value) {
     ElMessage.error(`${t('dpMsg_error')}`)
   }
 }
+
 async function handlePublish() {
   try {
     state.publishLoading = true
-    await adminApi.api.postFormDesignPublish({id:props.detail.id})
+    await adminApi.api.postFormDesignPublish({id: props.detail.id})
     ElMessage.success(t('dpMsg_success'))
   } catch (error) {
-    
+
   } finally {
     state.publishLoading = false
   }
 }
+
 watch(() => props.detail, (newValue, oldValue) => {
-  if(!!oldValue && oldValue.name === newValue.name) return
-  if(!!newValue) form.value.name = newValue.name
+  if (!!oldValue && oldValue.name === newValue.name) return
+  if (!!newValue) form.value.name = newValue.name
 }, {
   immediate: true
 })

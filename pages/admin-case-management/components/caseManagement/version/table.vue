@@ -69,14 +69,14 @@ const { tableConfig , tableEvent, tableRef, reload, qyery } = useVxeTable({
     bodyActions: [
         [
             {
-                code:'edit_version', 
+                code:'dpTool_edit',
                 name: "edit",
                 action: ({row}:any) => {
                             listProvider.openVersionDetail(row)
                         }
             },
             {
-                name:'save_as_new_version',
+                name:'workflowEditor_saveAsNewVersion',
                 code: 'save_as_new_version',
                 action: ({row}:any) => {
                     listProvider.saveAsNewVersion(row)
