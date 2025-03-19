@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<{
     processDefinitionId?: string,
     processKey?: string,
     deploymentId?:string,
+    processDefinitionVersionId?:string,
     steps: any[],
     step: string
 }>(),{
@@ -23,7 +24,6 @@ const viewerRef = ref();
 const x6Json = ref<any>(null)
 
 const getBpmn = async (processDefinitionId: any, processKey: any) => {
-    console.log(processDefinitionId, processKey)
     if (!processDefinitionId && !processKey) return
     const data = processKey
     ? {
@@ -36,14 +36,17 @@ const getBpmn = async (processDefinitionId: any, processKey: any) => {
     })
     try{
         // TODO : get x6json from server, api required data , frontend does not have this data
-        // const  jsonResponse = await clientApi.api.getWorkflowVersionJson({draftId:id, versionNumber:currentVersion}, {})
+        const  jsonResponse = await clientApi.api.getWorkflowVersionJson({versionId:props.processDefinitionVersionId}, {})
+        if(jsonResponse.data && JSON.parse(jsonResponse.data)) {
+            x6Json.value = JSON.parse(jsonResponse.data)
+        }
     }catch(err){
-
+        console.log("err", err)
     }
     // const x6JsonResponse = await clientApi.api.
     const text = await blob.text()
     bpmnFile.value = text;
-    viewerRef.value.init(text, x6Json.value)
+    viewerRef.value.init(text, x6Json.value);
 }
 
 

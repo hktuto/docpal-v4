@@ -69,9 +69,9 @@ function createDisplaySteps() {
 
 
 function graphReady(){
-    setTimeout(() => {
-        viewerEl.value.autoLayout(bpmnXml.value)
-    }, 100)
+    // setTimeout(() => {
+    //     // viewerEl.value.autoLayout(bpmnXml.value)
+    // }, 100)
     if(props.steps){
         createDisplaySteps();
         nextTick(() => {
