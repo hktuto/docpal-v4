@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import dayjs from 'dayjs'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 import {clientApi} from 'api'
 import { ElDialog } from 'element-plus'
@@ -8,8 +9,20 @@ const { options } = defineProps<{
     options: CalendarOptions,
 }>()
 
+const categories = useCalenarCategories()
+const locations = useCalenarLocation()
 
 const routerProvider = inject(MenuRouterKey)
+
+const location = computed(() => {
+    if(!eventDetail.value || !eventDetail.value.detail) return ""
+    return locations.value.find(item => item.id === eventDetail.value.detail.location)?.name || eventDetail.value.detail.location
+})
+
+const category = computed(() => {
+    if(!eventDetail.value || !eventDetail.value.detail) return ""
+    return categories.value.find(item => item.id === eventDetail.value.detail.category)?.name
+})
 
 const eventDetail = ref<CalendarEventExternal>()
 async function open(ev:CalendarEventExternal) {
@@ -32,6 +45,7 @@ async function getCaseData() {
                 "noThrowError":"true"
             }
         })
+        console.log("getCaseData", res)
     }catch(err) {
         caseData.value = null
     }
@@ -76,7 +90,13 @@ defineExpose({
 
     <ElDialog v-model="opened" draggable >
         <div class="content">
-            <ElForm label-position="top">
+            <div class="title">
+                {{ location }} - {{ eventDetail.people.join(", ") }}
+            </div>
+            Location : {{ location}} <br/>
+            Category : {{ category }} <br/>
+            Time: {{ dayjs(eventDetail.detail.startTime).format('YYYY-MM-DD HH:mm') }} - {{ dayjs(eventDetail.detail.endTime).format('YYYY-MM-DD HH:mm') }}
+            <!-- <ElForm label-position="top">
                 <ElRow :gutter="12">
                     <ElCol :span="12">
                         <ElFormItem label="Start">
@@ -89,7 +109,7 @@ defineExpose({
                         </ElFormItem>
                     </ElCol>
                 </ElRow> 
-            </ElForm>
+            </ElForm> -->
             <!-- Related Workflow -->
             <div v-if="eventDetail?.detail?.relatedWorkflows" class="relatedWorkflow pointer">
                 <div class="relatedWorkflowTitle">Related Workflow</div>

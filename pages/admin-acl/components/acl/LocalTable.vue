@@ -2,7 +2,7 @@
   <div class="card">
     <div class="tableTopContainer">
       <h3>{{ $t('accessControl_Local') }}</h3>
-      <el-button id="AccessControlListAddLocalPermission" size="small" type="primary" round
+      <el-button id="adminAccessControlListAddLocalPermission" size="small" type="primary" round
                  @click="handleAclLocalDialogShow">
         {{ $t('accessControl_add') }}
       </el-button>
@@ -28,7 +28,7 @@
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button :id="`AccessControlListRemove${row.userId}`" size="small" :loading="row.loading"
+            <el-button :id="`adminAccessControlListRemove${row.userId}`" size="small" :loading="row.loading"
                        @click="removeLocalAcl(row)">
               {{ $t('dpButtom_remove') }}
             </el-button>

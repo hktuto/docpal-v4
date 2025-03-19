@@ -11,8 +11,8 @@
     <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible/>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="primary" :loading="state.loading" @click="handleSubmit">
-          {{ $t('common_submit') }}1111
+        <el-button id="22" type="primary" :loading="state.loading" @click="handleSubmit">
+          {{ $t('common_submit') }}
         </el-button>
       </div>
     </template>

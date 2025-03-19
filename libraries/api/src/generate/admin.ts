@@ -16987,6 +16987,20 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow
+         * @name GetWorkflowVariablesInstanceid
+         * @request GET:/api/docpal/workflow/variables/{instanceId}
+         */
+        getWorkflowVariablesInstanceid: (instanceId: string, params: RequestParams = {}) =>
+            this.request<ResultMapStringObject, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/variables/${instanceId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
          * @name GetWorkflowQuerydocumenttypeprofileid
          * @request GET:/api/docpal/workflow/querydocumentTypeProFileId
          */
@@ -18759,20 +18773,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         getFormDesignEmailId: (id: string, params: RequestParams = {}) =>
             this.request<ResultEasyFormBaseEmailDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/form/design/email/${id}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags FormDesignController
-         * @name GetFormDesignEmailHistoryLogId
-         * @request GET:/api/docpal/form/design/email/history/log/{id}
-         */
-        getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
-            this.request<ResultEasyFormBaseEmailDTO, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/form/design/email/history/log/${id}`,
                 method: "GET",
                 ...params,
             }),
