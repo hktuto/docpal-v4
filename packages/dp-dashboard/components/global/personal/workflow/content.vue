@@ -1,5 +1,6 @@
 <template>
-  <div class="dashboard-item-tab--content">
+  <div class="worfklow-list-card dashboard-item-tab--content">
+    <h2 v-if="title">{{ title }}</h2>
     <el-dropdown v-if="!isTabView" trigger="click" @command="handleCommand">
       <span class="el-dropdown-link">
         <h4>{{ $t(state.activeTabName) }}</h4>
@@ -11,6 +12,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
+
     <el-tabs v-else v-model="state.activeTab" class="demo-tabs" @tab-change="handleCommand">
       <el-tab-pane v-for="item in list" :key="item.key" :label="$t(item.name)" :name="item.key"></el-tab-pane>
     </el-tabs>
@@ -27,7 +29,7 @@
 </template>
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-const props = defineProps(['isTabView', 'processKeys'])
+const props = defineProps(['isTabView', 'processKeys','title'])
 const emits = defineEmits(['tab-change'])
 const state = reactive<any>({
   activeTab: 'myTask',
@@ -52,5 +54,22 @@ defineExpose({ resize });
 .el-dropdown-link {
   display: flex;
   align-items: center;
+}
+.worfklow-list-card{
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.demo-tabs{
+  overflow: auto;
+}
+.dashboard-item-tab--content--table{
+  flex: 1 0 auto;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 </style>
