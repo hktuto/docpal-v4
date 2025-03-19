@@ -106,18 +106,7 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
 
     // dummy full date event
     //TODO： remove later
-    events.push({
-        id: new Date().valueOf().toString(),
-        start: dayjs().format('YYYY-MM-DD'),
-        end: dayjs().add(1, 'hour').add(1, 'day').format('YYYY-MM-DD'),
-        title: 'David Annual Leave',
-        people:['administrators'],
-        description: 'New Event',
-        calendarId: defaultCalendarId,
-        style:{
-            opacity: 0.5
-        }
-    })
+    
     // check editItem
     if(editItem){
         console.log("editItem", editItem)
