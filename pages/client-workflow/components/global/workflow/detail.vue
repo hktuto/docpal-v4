@@ -162,7 +162,7 @@ async function handleSubmit() {
   try {
     // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
     if(state.taskDetail?.assignee !== userId){
-      const response: any = await clientApi.api.postWorkflowTaskClaim({taskId:id, userId}).then(res => res.data)
+      await clientApi.api.postWorkflowTaskClaim({taskId:id, userId}).then(res => res.data)
 
     }
     // get form data
@@ -203,6 +203,9 @@ function handleAdditionalSetting(xml:any, taskDetail: any, formData:any) {
 
 
 async function addtionalSubmit(formData:any) {
+  if(state.taskDetail?.assignee !== userId){
+      await clientApi.api.postWorkflowTaskClaim({taskId:id, userId}).then(res => res.data)
+  }
   const param = {
       taskId: id,
       properties: { ...formData },
