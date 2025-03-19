@@ -21,7 +21,8 @@
       </template>
     </FormRenderer>
     <template #footer>
-      <el-button :loading="state.loading" data-testid="folderCabinet-next-button" @click="handleSubmit">
+      <el-button clientFolderCabinetAllowOtherFilesCabinetNewItemNext id="" type="primary" :loading="state.loading"
+                 data-testid="folderCabinet-next-button" @click="handleSubmit">
         {{ $t('button.next') }}
       </el-button>
     </template>

@@ -1,19 +1,20 @@
 <script lang="ts" setup>
-import { ElMessage } from "element-plus";
-import { clientApi } from "api";
-import { routeWorkflowPage } from "~/utils/routerHelper";
+import {ElMessage} from "element-plus";
+import {clientApi} from "api";
+import {routeWorkflowPage} from "~/utils/routerHelper";
+
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
-const { id, workflowType } = defineProps<{
+const {id, workflowType} = defineProps<{
   id: string;
   workflowType: string;
 }>();
 // @ts-ignore
 const userId: string = useUserId().value;
 const isMobile = false
-const { t } = useI18n();
+const {t} = useI18n();
 const state = reactive<any>({
   processState: {
     completeTask: "completeTask",
@@ -26,6 +27,7 @@ const state = reactive<any>({
   submitShow: false,
   error: null,
 });
+
 async function getDetail() {
   try {
     state.loading = true;
@@ -33,7 +35,7 @@ async function getDetail() {
     switch (workflowType) {
       case state.processState.completeTask:
         const historyList: any = await clientApi.api
-          .postWorkflowHistoryProcess({ processInstanceId: id, completed: true })
+          .postWorkflowHistoryProcess({processInstanceId: id, completed: true})
           .then((res) => res?.data?.entryList);
         if (!!historyList && historyList.length > 0) {
           state.taskDetail = historyList[0];
@@ -41,12 +43,12 @@ async function getDetail() {
         break;
       default:
         state.taskDetail = await clientApi.api
-          .postWorkflowTask({ taskId: id })
+          .postWorkflowTask({taskId: id})
           .then((res) => res.data);
         if (!state.taskDetail) {
           // handle if workflow task is already complete ,and should use history api
           state.taskDetail = await clientApi.api
-            .postWorkflowHistoryProcess({ processInstanceId: id, completed: true })
+            .postWorkflowHistoryProcess({processInstanceId: id, completed: true})
             .then((res) => res.data);
           state.isCompleted = true;
         }
@@ -65,6 +67,7 @@ async function getDetail() {
     state.loading = false;
   }, 100);
 }
+
 async function handleGetActivity() {
   const processInstanceId =
     state.taskDetail.instanceId || state.taskDetail.processInstanceId;
@@ -72,8 +75,10 @@ async function handleGetActivity() {
     processInstanceId,
   }).then((res: any) => res.data?.list.filter(i => i.activityName).reverse());
 }
+
 // #region module: form
 const vFormRef = ref();
+
 async function handleFormDataGet() {
   let formJson;
   let formData;
@@ -82,10 +87,10 @@ async function handleFormDataGet() {
     case state.processState.completeTask:
       formData = state.taskDetail.processVariables;
       formJson = await formJsonGet("end", state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
-      if(!formJson.formConfig) {
+      if (!formJson.formConfig) {
         formJson = await formJsonGet("complete", state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
-        if(!formJson.formConfig) {
-          if(!state.activityList || state.activityList.length === 0) await handleGetActivity()
+        if (!formJson.formConfig) {
+          if (!state.activityList || state.activityList.length === 0) await handleGetActivity()
           const lastActivity = state.activityList[0]
           formJson = await formJsonGet(lastActivity.activityId, state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
         }
@@ -98,9 +103,9 @@ async function handleFormDataGet() {
 
 
       const properties = await clientApi.api
-        .postWorkflowProperties({ taskId: id })
+        .postWorkflowProperties({taskId: id})
         .then((res) => res.data);
-      
+
       formData = formDataGetFromProps(properties);
       formJson = await formJsonGet(
         state.taskDetail.taskDefinitionKey,
@@ -113,12 +118,14 @@ async function handleFormDataGet() {
       break;
   }
 }
+
 function formDataGet(obj: any) {
   return Object.keys(obj).reduce((prev: any, key: string) => {
     prev[key] = String(obj[key]);
     return prev;
   }, {});
 }
+
 function formDataGetFromProps(list: any) {
   return list.reduce((prev: any, item: any) => {
     // if item type is boolean, convert string to boolean
@@ -130,9 +137,14 @@ function formDataGetFromProps(list: any) {
     return prev;
   }, {});
 }
+
 async function formJsonGet(userTaskId: string, processKey: string, versionId: string) {
   // @ts-ignore
-  const response: any = await clientApi.api.getRelationQuery({ userTaskId, processKey, versionId }).then((res) => res.data);
+  const response: any = await clientApi.api.getRelationQuery({
+    userTaskId,
+    processKey,
+    versionId
+  }).then((res) => res.data);
   if (!response || !response[0] || (response[0] && !response[0].jsonValue)) return {};
   return JSON.parse(response[0].jsonValue);
 }
@@ -142,13 +154,14 @@ function handleDisabledForm() {
     vFormRef.value.disableForm();
   }
 }
+
 async function handleSave() {
   try {
     const data = await vFormRef.value.getFormData(false, false);
     state.loading = true;
     const param = {
       taskId: id,
-      properties: { ...data },
+      properties: {...data},
     };
     await clientApi.api.postWorkflowPropertiesSave(param);
     ElMessage.success(`${t("msg_successfulOperation")}`);
@@ -157,22 +170,23 @@ async function handleSave() {
   }
   state.loading = false;
 }
+
 async function handleSubmit() {
   state.loading = true;
   try {
     // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
-    if(state.taskDetail?.assignee !== userId){
-      await clientApi.api.postWorkflowTaskClaim({taskId:id, userId}).then(res => res.data)
+    if (state.taskDetail?.assignee !== userId) {
+      await clientApi.api.postWorkflowTaskClaim({taskId: id, userId}).then(res => res.data)
 
     }
     // get form data
     const data = await vFormRef.value.getFormData(true, false);
     // return;
     if (!data) throw new Error(`${t("incompleteData")}`);
-    
+
     const param = {
       taskId: id,
-      properties: { ...data },
+      properties: {...data},
     };
     const res: any = await clientApi.api
       .postWorkflowFormSubmit(param)
@@ -185,65 +199,71 @@ async function handleSubmit() {
   } catch (error) {
     console.log('error', error)
     // ElMessage.error(error.message)
-  }finally{
+  } finally {
     state.loading = false;
-  }  
+  }
 }
+
 // #endregion
 
 type AdditionalButton = {
-    props: any,
-    component: string,
+  props: any,
+  component: string,
 }
 const additionalButton = ref<AdditionalButton[]>([])
-function handleAdditionalSetting(xml:any, taskDetail: any, formData:any) {
-    const {buttons,components} = getBpmnAddtionalElement(xml,state.taskDetail.taskDefinitionKey, taskDetail, formData)
-    additionalButton.value = buttons
+
+function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
+  const {buttons, components} = getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+  additionalButton.value = buttons
 }
 
 
-async function addtionalSubmit(formData:any) {
-  if(state.taskDetail?.assignee !== userId){
-      await clientApi.api.postWorkflowTaskClaim({taskId:id, userId}).then(res => res.data)
+async function addtionalSubmit(formData: any) {
+  if (state.taskDetail?.assignee !== userId) {
+    await clientApi.api.postWorkflowTaskClaim({taskId: id, userId}).then(res => res.data)
   }
   const param = {
-      taskId: id,
-      properties: { ...formData },
-    };
-    const res: any = await clientApi.api
-      .postWorkflowFormSubmit(param)
-      .then((res) => res.data);
-    ElMessage.success(`${t("msg_successfulOperation")}`);
-    routerProvider?.navigateTo(
-      routeWorkflowPage({
-        workflowType: workflowType,
-      }),
-      false
-    );
+    taskId: id,
+    properties: {...formData},
+  };
+  const res: any = await clientApi.api
+    .postWorkflowFormSubmit(param)
+    .then((res) => res.data);
+  ElMessage.success(`${t("msg_successfulOperation")}`);
+  routerProvider?.navigateTo(
+    routeWorkflowPage({
+      workflowType: workflowType,
+    }),
+    false
+  );
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   try {
-    state.taskDetail = { ...taskDetailRes };
+    state.taskDetail = {...taskDetailRes};
     handleGetActivity();
     if (!isAssigneeUser.value) {
-      
+
       state.loading = true;
       await handleFormDataGet();
     } else {
       vFormRef.value.disableForm();
     }
-  } catch (error) {}
+  } catch (error) {
+  }
   state.loading = false;
 };
+
 function tabChange(tab: string) {
   // router.push({query: { tab, state: workflowType }})
 }
+
 function handleBack() {
   routerProvider?.navigateTo(routeWorkflowPage({
     workflowType: workflowType,
   }), false);
 }
+
 const isAssigneeUser = computed(() => {
 
   return !state.taskDetail?.assignee || state.taskDetail?.assignee === userId;
@@ -253,7 +273,7 @@ onActivated(() => {
 });
 </script>
 <template>
-  <div  v-if="!state.error" class="pageContainer--padding workflow-detail">
+  <div v-if="!state.error" class="pageContainer--padding workflow-detail">
     <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
       <el-tab-pane
         class="workflow-detail-pane"
@@ -280,19 +300,19 @@ onActivated(() => {
         v-loading="state.loading"
       >
         <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
-            <template #action>
-              <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
-                <template v-for="(item,index) in additionalButton" :key="index">
-                    <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
-                </template>
-                <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
-                <el-button type="primary" @click="handleSubmit">{{
-                  $t("common_submit")
-                }}</el-button>
-              </div>
-            </template>
-          </WorkflowDetailFormRender>
-        
+          <template #action>
+            <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
+              <template v-for="(item,index) in additionalButton" :key="index">
+                <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
+              </template>
+              <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
+              <el-button type="primary" @click="handleSubmit">
+                {{ $t("common_submit") }}
+              </el-button>
+            </div>
+          </template>
+        </WorkflowDetailFormRender>
+
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
         <!-- need to use v-if for bpmn, if not  svg graph will not show -->
@@ -320,12 +340,13 @@ onActivated(() => {
         />
       </el-tab-pane>
     </el-tabs>
-    <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile" :id="state.taskDetail.instanceId"/>
+    <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile"
+                                     :id="state.taskDetail.instanceId"/>
   </div>
   <div v-else>
-        Workflow id not found, workflow id : {{id}}.
-        <el-button type="primary" @click="handleBack">{{$t('common_back')}}</el-button>
-    </div>
+    Workflow id not found, workflow id : {{ id }}.
+    <el-button type="primary" @click="handleBack">{{ $t('common_back') }}</el-button>
+  </div>
 </template>
 <style lang="scss" scoped>
 .pageContainer--padding.workflow-detail {
@@ -339,16 +360,20 @@ onActivated(() => {
     grid-template-rows: min-content 1fr;
   }
 }
+
 .dp-tabs--auto {
   height: 100%;
   overflow: hidden;
+
   .el-tab-pane {
     height: 100%;
   }
 }
+
 .workflow-detail-pane {
   display: grid;
   grid-template-rows: 1fr min-content;
+
   &--btns {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);

@@ -2,7 +2,10 @@
   <el-dialog v-model="state.visible" :title="t('collections_edit')" :close-on-click-modal="false" destroy-on-close>
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button :loading="state.loading" @click="handleSubmit">{{ t('common_submit') }}</el-button>
+      <el-button id="clientCollectionEditCollectionInfoSubmit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ t('common_submit') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

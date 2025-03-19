@@ -9,12 +9,13 @@
           inputPlaceHolder="folder_cabinetFilterItemName"
         />
         <el-button
+          id="clientFolderCabinetAllowOtherFilesCabinetNewItem"
           data-testid="folderCabinetConfig-new-button"
           type="primary"
           @click="handleAdd()"
-        >{{ $t("folderCabinet.newItem") }}
-        </el-button
         >
+          {{ $t("folderCabinet.newItem") }}
+        </el-button>
       </template>
       <template #status="{ row, index }">
         <SvgIcon :src="`/icons/file/status-${row.state}.svg`"></SvgIcon>
