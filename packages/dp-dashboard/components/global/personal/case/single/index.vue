@@ -58,8 +58,8 @@ async function getCaseDetail(caseId: string) {
 watch(
   () => props.setting.caseId,
   async(newVal, oldVal) => {
+    if(!newVal) return
     state.detail = await getCaseDetail(newVal);
-    console.log("state.detail", state.detail)
     handleShowColumn()
     handleRefreshTable()
   },
