@@ -10,28 +10,14 @@
 
     const viewerRef = ref<InstanceType<typeof CalendarViewer>>()
     const detailDialogRef = ref<InstanceType<typeof CalendarDetailDialog>>()
-    const {options = {
-        allowCreate: false,
-        editable: false,
-        showWorkflowFilter: false,
-        showLocationFilter: false,
-        showUserFilter: false,
-        showCategoryFilter: false,
-        defaultUser: "",
-        defaultLocation: "",
-        defaultCategory: "",
-        locationLabel:"",
-        categoryLabel:"",
-        userLabel:"",
-        
-    },addtionalCheckBeforeEventUpdate, editItem} = defineProps<{
-        options?: CalendarOptions;
+    const props = defineProps<{
+        options: CalendarOptions;
         addtionalCheckBeforeEventUpdate: (oldEvent:any, editedEvent:any) => boolean
         editItem?: any
     }>();
 
     const displayOption = ref<CalendarOptions>({
-        ...options,
+        ...props.options,
     })
 
     const emits = defineEmits(['createEvent','filterChange','openDetail','onEventUpdate','updateEvent'])
@@ -76,23 +62,22 @@
     }
 
     async function setDefaultFilter(){
-        console.log("setDefaultFilter", options)
-        if(options.showCategoryFilter || options.showLocationFilter || options.showUserFilter){
+        if(props.options.showCategoryFilter || props.options.showLocationFilter || props.options.showUserFilter){
             await getFilterOptions()
         }
-        if(options.defaultUser){
-            filter.value.user = options.defaultUser
+        if(props.options.defaultUser){
+            filter.value.user = props.options.defaultUser
         }
-        if(options.defaultLocation){
-            filter.value.location = options.defaultLocation
+        if(props.options.defaultLocation){
+            filter.value.location = props.options.defaultLocation
         }
-        if(options.defaultCategory){
-            filter.value.category = options.defaultCategory
+        if(props.options.defaultCategory){
+            filter.value.category = props.options.defaultCategory
         }
-        if(!options.view){
+        if(!props.options.view){
             displayOption.value.view = calendarSettiing.value?.basic.default_view
         }
-        if(!options.firstDayOfWeek){
+        if(!props.options.firstDayOfWeek){
             displayOption.value.firstDayOfWeek = calendarSettiing.value?.basic.default_first_week
         }
     }
@@ -105,8 +90,7 @@
     // calendar Event
     const calendarEvents = {
         onEventClick: (args:any) => {
-            console.log("onEventClick", args, options)
-            if(options.editable) {
+            if(props.options.editable) {
                 emits('openDetail', args)
             }else {
                 detailDialogRef.value?.open(args)
@@ -116,7 +100,7 @@
             console.log('onClickDate', args)
         },
         onClickDateTime: (args:string) => {
-            if(!options.allowCreate) return
+            if(!props.options.allowCreate) return
             emits('createEvent', args)
         },
         onClickAgendaDate: (args) => {
@@ -140,13 +124,13 @@
 
     const filtetColumnWidth = computed(() => {
         let item = 0;
-        if(options.showCategoryFilter) {
+        if(props.options.showCategoryFilter) {
             item++
         }
-        if(options.showUserFilter) {
+        if(props.options.showUserFilter) {
             item++
         }
-        if(options.showLocationFilter) {
+        if(props.options.showLocationFilter) {
             item++
         }
         return 24 / item

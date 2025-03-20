@@ -94,7 +94,6 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
             if(!matLoc) return false
         }
         if(filter.user) {
-            console.log("filter.user", filter.user)
             const userFilter = filter.user === 'currentUser' ? userId : filter.user
             const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
             const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
@@ -109,15 +108,14 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
     
     // check editItem
     if(editItem){
-        console.log("editItem", editItem)
-    const editItemIndex = events.findIndex(item => editItem && item?.detail?.eventId === editItem.eventId)
-        if(editItemIndex !== -1){
-            events[editItemIndex]._options = {
-                disableResize: false,
-                disableDND: false,
+        const editItemIndex = events.findIndex(item => editItem && item?.detail?.eventId === editItem.eventId)
+            if(editItemIndex !== -1){
+                events[editItemIndex]._options = {
+                    disableResize: false,
+                    disableDND: false,
+                }
             }
         }
-    }
     calendarApp.eventsService.set(events);
     return events;
 }

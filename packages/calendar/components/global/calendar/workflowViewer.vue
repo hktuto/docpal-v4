@@ -2,13 +2,13 @@
 <script lang="ts" setup>
 import {snapDownTo15Minutes } from '../../../utils/calendarHelper'
 import dayjs from 'dayjs'
-const {disabled, formData, options, taskDetail} = defineProps<{
+const props= defineProps<{
     disabled: boolean,
     formData: any
     options: CalendarOptions,
     taskDetail:any
 }>();
-
+const {formData} = toRefs(props)
 const newEvent = ref()
 const newEventId = ref(new Date().valueOf().toString())
 
@@ -16,10 +16,10 @@ const newEventId = ref(new Date().valueOf().toString())
 function getFormData(){
     // console.log("getFormData", formData)
     // TODO : handle data mapping , workflow data may not be same as calendar
-    if(newEvent.value.startTime !== formData.startTime || 
-        newEvent.value.endTime !== formData.endTime ||
-        newEvent.value.location !== formData.location ||
-        newEvent.value.category !== formData.category
+    if(newEvent.value.startTime !== props.formData.startTime || 
+        newEvent.value.endTime !== props.formData.endTime ||
+        newEvent.value.location !== props.formData.location ||
+        newEvent.value.category !== props.formData.category
     ) {
         newEvent.value.edited = true
     }else{
@@ -69,7 +69,7 @@ function updateEvent(params:CalendarEventExternal){
 
 const newEventFromRef = ref();
 function editEvent(event:CalendarEventExternal){
-    if(options.editable && formData.eventId === event?.detail?.eventId){
+    if(props.options.editable && props.formData.eventId === event?.detail?.eventId){
         const startDateTime = dayjs(event.start)
         const endDateTime = dayjs(event.end)
         const tempEvent:eventDialogParams = {
@@ -104,10 +104,10 @@ type eventDialogParams = {
     detail: any
 }
 function popNewEvent(dateTime: string) {
-    if(formData.eventId){
-        newEventId.value = formData.eventId
+    if(props.formData.eventId){
+        newEventId.value = props.formData.eventId
     }
-    if(options.allowCreate){
+    if(props.options.allowCreate){
         const selectedDate = dayjs(dateTime)
         if(selectedDate.isBefore(dayjs())) return
         const startDateTime = snapDownTo15Minutes(dayjs(dateTime))
@@ -126,11 +126,11 @@ function popNewEvent(dateTime: string) {
     }
 }
 
-
+const formReady = ref(false)
 function initForm(){
-    if(options.editable && !options.allowCreate){
+    if(props.options.editable){
         
-        newEvent.value = (formData.eventId || formData.eventid) ? formData : undefined;
+        newEvent.value = (props.formData.eventId || props.formData.eventid) ? props.formData : undefined;
         // normalize formData
         if(newEvent.value){
             newEvent.value.eventId = newEvent.value.eventId || newEvent.value.eventid
@@ -138,17 +138,29 @@ function initForm(){
         }
 
     }
+    formReady.value = true
 }
 
-onMounted(() => {
-    initForm()
+
+
+
+watch(formData,() => {
+    formReady.value = false
+    nextTick(() => {
+        initForm()
+        formReady.value = true
+    })
+    
+},{
+    immediate:true,
+    deep:true
 })
 
 defineExpose({ getFormData })
 </script>
 
 <template>
-    <Calendar ref="calendarViewerRef" :options="options" @openDetail="editEvent" @createEvent="popNewEvent" @updateEvent="updateEvent" :editItem="newEvent" >
+    <Calendar v-if="formReady" ref="calendarViewerRef" :options="options" @openDetail="editEvent" @createEvent="popNewEvent" @updateEvent="updateEvent" :editItem="newEvent" >
     </Calendar>
     <CalendarNewEventForm ref="newEventFromRef" :options="options" :checkValid="checkValid" :newEventId="newEventId" @submit="createEditEvent"/>
 </template>
