@@ -1,5 +1,5 @@
 <template>
-<EasyFormEmailLog ref="tableRef"  class="pageContainer--padding":easyFormId="id" />
+<EasyFormEmailLog ref="tableRef"  class="pageContainer--padding":easyFormId="id" canOpen="canOpen" />
 </template>
 <script lang="ts" setup>
 const props = defineProps(["id"]);

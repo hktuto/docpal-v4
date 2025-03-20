@@ -47,7 +47,7 @@ const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
-const props = defineProps(["easyFormId"]);
+const props = defineProps(["easyFormId", 'canOpen']);
 const extraParams = {
   orderBy: "email",
   isDesc: true,
@@ -201,6 +201,7 @@ function handleViewEmail(row) {
   DialogReadonlyRef.value.handleOpen(row);
 }
 async function handleOpenWorkflow(row: any = {}, event) {
+  if(!props.canOpen) return
   // row.processInstanceId = "b2ae2c95-0078-11f0-a987-56bed584d4f1"
   event.preventDefault();
   event.stopPropagation();
@@ -212,6 +213,7 @@ async function handleOpenWorkflow(row: any = {}, event) {
   loading.value = false
 }
 function handleOpenCase(row: any = {}, event) {
+  if(!props.canOpen) return
   event.preventDefault();
   event.stopPropagation();
   if (!row.caseId && !row.caseDefinitionVersionId) return;
