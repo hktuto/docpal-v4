@@ -80,7 +80,7 @@ async function handleDelete(row: any) {
   const res = await groupProvider?.DeleteGroupApi({groupId: row.id})
   if (!!res) {
     ElMessage.success(t("dpMsg_success"));
-    reload();
+    getGroup()
   }
 }
 

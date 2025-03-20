@@ -151,12 +151,13 @@ function setValue(key:string, value:string) {
         }
     })
 }
-function init(list: ResSelectData[]) {
+function init(list: ResSelectData[], initParams: any = {}) {
     state.list = list.reduce((prev, item) => {
         if(item.isMultiple !== false) item.isMultiple = true
         if(!item.value) item.value = []
         if(!item.options) item.options = []
         item.options = item.options.filter(o => !!o.label && (!!o.value || o.value === false))
+        if(!!initParams[item.key]) item.value = typeof initParams[item.key] === 'string' ? initParams[item.key].join(',') : initParams[item.key]
         prev.push(item)
         return prev
     }, [])

@@ -52,7 +52,7 @@ const extraParams = {
   orderBy: "email",
   isDesc: true,
 };
-let filterParams = {};
+let filterParams: any = {};
 const { t } = useI18n();
 const loading = ref(false)
 const {
@@ -182,7 +182,8 @@ async function initCondition() {
 function handleFilterFormChange(formModel) {
   if (!formModel.isDesc) formModel.isDesc = true;
   if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === "false" ? false : true;
-  filterParams = formModel;
+  filterParams = { ...formModel };
+  if(!filterParams.email) delete filterParams.email
   reload();
 }
 // #region module:
