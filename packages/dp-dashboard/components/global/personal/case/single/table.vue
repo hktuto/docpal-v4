@@ -69,6 +69,22 @@ async function handleTask(actionItem: any, row?: any) {
     // await completeEventTaskApi(actionItem.id, actionItem.planItemDefinitionId)
     ElMessage.success(t('dpMsg_success'))
     emits('refresh')
+  } else if(actionItem.planItemDefinitionType === 'processtask') {
+    console.log('handleTask', actionItem, row)
+    const caseInstanceId = actionItem.caseInstanceId ;
+      const res = await clientApi.api.postCaseDashboardInstanceActionPreRequisite({
+      id: actionItem.id
+    }).then(res => res.data)
+    console.log("res", res)
+    // Get Form Json and XML
+    
+    // check start event additional setting
+    const routerItem = caseProcessTaskFormPage({
+      caseInstanceId: row.case_id,
+      actionStepId: actionItem.id,
+      backItem: routerProvider?.tabData.value
+    })
+    routerProvider?.navigateTo(routerItem)
   }
 }
 async function reorderColumn(fields: any) {
@@ -94,6 +110,7 @@ async function reorderColumn(fields: any) {
       {
         title: "dpTable_actions",
         width: 120,
+        fixed: 'right',
         slots: {
           default: "dpActions",
         },
