@@ -24,19 +24,19 @@
                     <td>{{item.content.documentPath}}</td>
                   </tr>
                   <tr v-if="item.createdBy" >
-                    <td>{{$t('operator')}}</td>
+                    <td>{{$t('table_creator')}}</td>
                     <td>{{item.createdBy }}</td>
                   </tr>
                   <tr v-else-if="item.content.creator || item.content.user_creator_id" >
-                    <td>{{$t('user_creator_id')}}</td>
+                    <td>{{$t('table_creator')}}</td>
                     <td>{{item.content.creator || item.content.user_creator_id }}</td>
                   </tr>
                   <tr v-if="item.content.emailList" >
-                    <td>{{$t('emailList')}}</td>
+                    <td>{{$t('dpTable_email')}}</td>
                     <td>{{JSON.parse(item.content.emailList).join(',') }}</td>
                   </tr>
                   <tr v-if="item.content.user_approver_id" >
-                    <td>{{$t('user_approver_id')}}</td>
+                    <td>{{$t('role.approver')}}</td>
                     <td>{{item.content.user_approver_id}}</td>
                   </tr>
                   <tr v-if="item.content.startTime">
