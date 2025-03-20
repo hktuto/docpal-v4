@@ -30,7 +30,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if(!data.userId || !data.username) {
-    ElMessage.error(t("user_username")+ $t('form_common_requird'));
+    ElMessage.error(t("user_username")+ $t('render.hint.fieldRequired'));
     return;
   }
   state.loading = true

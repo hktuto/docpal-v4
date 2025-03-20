@@ -1842,6 +1842,7 @@
   "masterTable_deleteSelectedMsg": "Are you sure you want to delete the selected rows from the master table {name}?<br>This action cannot be undone.",
   "masterTable_deleteSelectedSuccessMsg": "The selected rows have been deleted from the master table {name} successfully.",
   "masterTable_deleteSuccessMsg": "The master table {name} has been deleted successfully.",
+  "masterTable_edit": "Edit Master Table",
   "masterTable_filter": "Filter by Table Name",
   "masterTable_id": "Master Table ID",
   "masterTable_inactivate": "Inactivate Master Table",

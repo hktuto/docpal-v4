@@ -16,7 +16,9 @@
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
+import {ElMessage} from "element-plus";
 
+const {t} = useI18n()
 const props = withDefaults(defineProps<{
   tableId: string,
   ignoreList: string[],

@@ -80,7 +80,6 @@ async function handleSubmit() {
 }
 
 async function addtionalSubmit(formData: any) {
-  console.log(22, formData)
   const form = {
     processKey,
     businessKey: formData.businessKey || "",

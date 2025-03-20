@@ -132,7 +132,7 @@ onActivated(() => {
             inputPlaceHolder="caseManagement_filter"
           />
           <div class="flex-x-end">
-            <el-button type="primary" @click="handleAddCaseDialog">
+            <el-button id="clientCaseManagementDetailsAddNewRow" type="primary" @click="handleAddCaseDialog">
               {{ $t("render.hint.subFormAddActionHint") }}
             </el-button>
           </div>

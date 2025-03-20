@@ -66,7 +66,6 @@ function openSetting() {
 const dialogRef = ref();
 
 function handleClick(item: any) {
-  console.log(22, state.caseList)
   // dialogRef.value.handleOpen(item)
 }
 

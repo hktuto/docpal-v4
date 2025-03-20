@@ -239,7 +239,6 @@ async function getList(param: any) {
 function handlePaginationChange(page: number, pageSize?: number) {
   if (!pageSize) pageSize = pageParams.pageSize
   const time = new Date().valueOf().toString()
-  console.log(2, routerProvider?.updateProps)
   routerProvider?.updateProps({
     query: {
       ...routerProvider?.tabData.value.props?.query,
