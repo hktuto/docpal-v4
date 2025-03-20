@@ -548,7 +548,6 @@ function changeRoute() {
 
 function selectAll() {
     if (tableRef.value) {
-        console.log("selectAll")
         tableRef.value.setAllCheckboxRow(true);
     }
 }

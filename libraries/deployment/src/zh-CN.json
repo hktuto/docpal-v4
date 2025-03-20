@@ -2430,6 +2430,7 @@
     "delete": "删除",
     "deleteSelected": "删除所选",
     "discardShareItem": "确认放弃分享条项吗？",
+    "documentTypeUsed": "文件类型已被使用",
     "download": "下载",
     "duplicate": "检测到重复数据",
     "edit": "编辑内容",

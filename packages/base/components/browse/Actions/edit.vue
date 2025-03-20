@@ -2,7 +2,9 @@
   <div>
     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog">
       <el-tooltip :content="$t('tip.editDocDetail')">
-        <SvgIcon src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"></SvgIcon>
+        <SvgIcon id="clientBrowseInfoEditDetails" src="/icons/file/edit.svg" round
+                 :label="$t('tip.editDocDetail')">
+        </SvgIcon>
       </el-tooltip>
     </BrowseActionsButton>
     <el-dialog v-model="dialogOpened" append-to-body :title="$t('tip.editDocDetail')" class="scroll-dialog">
@@ -15,7 +17,8 @@
 
       <MetaRenderForm2 ref="MetaFormRef" :mode="state.MetaRenderMode"></MetaRenderForm2>
       <template #footer>
-        <el-button :loading="state.loading" @click="handleSave" @keyup.enter="handleSave">
+        <el-button id="clientBrowseInfoEditDetailsSave" type="primary" :loading="state.loading" @click="handleSave"
+                   @keyup.enter="handleSave">
           {{ $t('common_save') }}
         </el-button>
       </template>
