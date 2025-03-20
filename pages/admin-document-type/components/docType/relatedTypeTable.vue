@@ -8,28 +8,44 @@
           inputKey="name"
           inputPlaceHolder="documentType_relatedFilter"
         />
-        <el-button id="adminDocumentTypeAddNewRelatedDocument" type="primary" @click="handleDialogShow()">
-          {{ $t('docType_addRelatedMeta') }}
+        <el-button
+          id="adminDocumentTypeAddNewRelatedDocument"
+          type="primary"
+          @click="handleDialogShow()"
+        >
+          {{ $t("docType_addRelatedMeta") }}
         </el-button>
       </template>
     </VxeGrid>
-    <DocTypeDialogAddRelatedType ref="DialogRef" :docType="docTypeDetail" :name="name" @refresh="getList"/>
+    <DocTypeDialogAddRelatedType
+      ref="DialogRef"
+      :docType="docTypeDetail"
+      :name="name"
+      @refresh="getList"
+    />
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { adminApi } from "api";
 
 const props = defineProps<{
   docTypeDetail: any;
-  name: string
+  name: string;
 }>();
-const {t} = useI18n()
-let _list: any = []
-const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
+const { t } = useI18n();
+let _list: any = [];
+const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   id: "relatedType",
   columns: [
-    {field: "rootDocPalType", title: "dpTable_documentType", fixed: "left"},
+    {
+      field: "rootDocPalType",
+      title: "dpTable_documentType",
+      fixed: "left",
+      formatter({ cellValue }: any) {
+        return t(cellValue);
+      },
+    },
     {
       field: "metaData",
       title: "rightDetail_meta",
@@ -42,8 +58,8 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
         name: "documentType_relatedEdit",
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDialogShow(row)
+        action: ({ row }: any) => {
+          handleDialogShow(row);
         },
       },
       {
@@ -51,62 +67,63 @@ const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
         name: "documentType_relatedDelete",
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDelete(row)
+        action: ({ row }: any) => {
+          handleDelete(row);
         },
-      }
+      },
     ],
   ],
-  dblClickAction: ({row, column, event}: any) => {
-    handleDialogShow(row)
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDialogShow(row);
   },
   virtualScroll: true,
 });
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(
-    `${t('documentType_relatedDeleteMsg')}`,
-    {
-      confirmButtonText: t('common_confirmDelete'),
-    }
-  )
-  if (action !== 'confirm') return
+  const action = await ElMessageBox.confirm(`${t("documentType_relatedDeleteMsg")}`, {
+    confirmButtonText: t("common_confirmDelete"),
+  });
+  if (action !== "confirm") return;
   try {
-    const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id)
-    ElMessage.success(t('documentType_relatedDeleteSuccessMsg'))
-    await getList()
+    const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id);
+    ElMessage.success(t("documentType_relatedDeleteSuccessMsg"));
+    await getList();
   } catch (error) {
-
   } finally {
   }
 }
 
-const DialogRef = ref()
+const DialogRef = ref();
 
 function handleDialogShow(data?: any) {
   DialogRef.value.handleOpen(_list, {
     ...data,
     documentType: data?.rootDocPalType,
-    metadata: data?.metaData
-  })
+    metadata: data?.metaData,
+  });
 }
 
 function handleFilterFormChange(formModel: any) {
-  const name = formModel.name
+  const name = formModel.name;
   const list = _list.filter((item: any) => {
-    return (!formModel.name ||
-      item.rootDocPalType.toLowerCase().includes(name.toLowerCase()))
-  })
-  tableRef?.value?.loadData(list)
+    return (
+      !formModel.name ||
+      item.rootDocPalType.toLowerCase().includes(name.toLowerCase()) ||
+      t(item.rootDocPalType).toLowerCase().includes(name.toLowerCase())
+    );
+  });
+  tableRef?.value?.loadData(list);
 }
 
 async function getList() {
-  _list = await adminApi.api.getDocpaltypeSettingsNameNameRelated(props.name).then(res => res.data)
-  tableRef?.value?.loadData(_list)
+  _list = await adminApi.api
+    .getDocpaltypeSettingsNameNameRelated(props.name)
+    .then((res) => res.data);
+  tableRef?.value?.loadData(_list);
 }
 
 onActivated(() => {
-  getList()
+  getList();
 });
 </script>
 <style lang="scss" scoped>
