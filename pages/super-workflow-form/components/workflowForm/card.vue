@@ -1,7 +1,7 @@
 <template>
 <el-card @dblclick.stop="handleDbClick()">
     <div class="title ellipsis">{{data.name}}</div>
-    <div class="subTitle">{{$t('task')}}1</div>
+    <div class="subTitle">{{$t('task')}}</div>
     <div class="taskListContainer">
         <div v-for="(item, index) in data.userTasks" class="ellipsis" :title="item.name" 
             @dblclick.stop="handleDbClick(item)">{{item.name}}</div>
