@@ -149,7 +149,6 @@ const ResponsiveFilterRef = ref();
 
 async function getFilter() {
   const filters = await masterTableProvider?.GetMasterTablesPageConditionApi();
-  console.log(1, filters.data)
   nextTick(() => {
     ResponsiveFilterRef.value.init(filters.data);
   });

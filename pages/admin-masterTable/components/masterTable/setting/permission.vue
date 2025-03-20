@@ -80,7 +80,6 @@ async function handlePermissionChange(boo: boolean, permission: string, row: any
 }
 
 async function handleRemove(row: any) {
-  console.log(11, row)
   const action = await ElMessageBox.confirm(
     `${t("masterTable_settingRemoveMsg", {name: row.masterTableName})}`,
     {
