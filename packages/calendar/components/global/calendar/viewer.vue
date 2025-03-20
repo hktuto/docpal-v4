@@ -26,19 +26,8 @@ import {getEventFromApi, type CalendarOptions, type DocPalEventType} from '../..
 import {useCalendarStore} from '../../../composables/useCalendar'
 
 const { setting, calendarViewerCategories } = useCalendarStore();
-const {options = {
-    editable: false,
-    allowCreate: false,
-    showCategoryFilter: false,
-    showLocationFilter: false,
-    showUserFilter: false,
-    showWorkflowFilter: false,
-    defaultUser: "",
-    defaultLocation: "",
-    defaultCategory: "",
-    view: "week",
-}, filter, addtionalCheckBeforeEventUpdate, editItem} = defineProps<{
-    options?: CalendarOptions;
+const props = defineProps<{
+    options: CalendarOptions;
     filter: any;
     addtionalCheckBeforeEventUpdate?: (oldEvent:any, editedEvent:any) => boolean,
     editItem?: any
@@ -87,7 +76,7 @@ function getEvent(id:string){
 }
 
 async function getList(){
-    eventList.value = await getEventFromApi(calendarApp, calendarControls, filter, editItem)
+    eventList.value = await getEventFromApi(calendarApp, calendarControls, props.filter, props.editItem)
     // add custom event
     console.log("get List", eventList.value);
     
@@ -103,14 +92,14 @@ function setupCalendar() {
     ]
     const slot = setting.value.basic.allow_custom_slot ? null : setting.value.basic.slot
     plugins.push(createDragAndDropPlugin(slot))
-    if(options.editable){
+    if(props.options.editable){
         if(setting.value.basic.allow_custom_slot){
             plugins.push(createResizePlugin())
         }
     }
     
     calendarApp = createCalendar({
-        selectedDate: editItem ? dayjs(editItem.startTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'),
+        selectedDate: props.editItem ? dayjs(props.editItem.startTime).format('YYYY-MM-DD') : dayjs().format('YYYY-MM-DD'),
         firstDayOfWeek: setting.value.basic.first_day_of_week === 'MONDAY' ? 1 : 0,
         dayBoundaries: {
             start: setting.value.basic.office_start_time || '08:00',
@@ -146,29 +135,30 @@ function setupCalendar() {
     )
     nextTick(() => {
         showCalendar.value = true
-        if(options.view) {
-            calendarControls.setView(options.view)
+        if(props.options.view) {
+            calendarControls.setView(props.options.view)
         }else{
             const view = setting.value?.basic.default_view
             if(view) {
                 calendarControls.setView(view)
             }
         }
-        if(options.firstDayOfWeek) {
-            calendarControls.setFirstDayOfWeek(options.firstDayOfWeek === 'MONDAY' ? 1 : 0)
+        if(props.options.firstDayOfWeek) {
+            calendarControls.setFirstDayOfWeek(props.options.firstDayOfWeek === 'MONDAY' ? 1 : 0)
         }else{
             const firstDayOfWeek = setting.value?.basic.default_first_week
             if(firstDayOfWeek) {
                 calendarControls.setFirstDayOfWeek(firstDayOfWeek === 'MONDAY' ? 1 : 0)
             }
         }
+        getList()
     })
-   getList()
 }
 
 
 
 onDeactivated(() => {
+    
     showCalendar.value = false
 })
 
@@ -188,13 +178,23 @@ function makeDescription(event:CalendarEventExternal){
     return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
 }
 
-watch(() => [setting, options],async() =>{
+watch(() => [setting, props.options],async() =>{
     if(setting.value){
+        console.log('calendar setting changed')
         setupCalendar()
     }
 },{
     deep: true,
     immediate: true
+})
+
+onDeactivated(() => {
+    showCalendar.value = false
+    console.log('calendar deactivated')
+})
+
+onUnmounted(() => {
+    console.log('calendar unmounted')
 })
 
 
@@ -215,7 +215,6 @@ defineExpose({
 
 <template>
     <div :class="{calendarViewerContainer:true, editMode: editItem && editItem.eventId, createMode: options.allowCreate}">
-        <!-- TODO : add tool tip -->
         <ScheduleXCalendar v-if="showCalendar" :calendar-app="calendarApp" >
             <template #timeGridEvent="{ calendarEvent }">
                 <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
