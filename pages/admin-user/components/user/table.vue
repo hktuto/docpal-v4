@@ -179,7 +179,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         const key = column.property;
         const value = row[key];
         if (key === "groupDTOList") {
-          return value.map((item) => item.name).join(", ");
+          return value.map((item: any) => item.name).join(", ");
         }
         if (typeof value === "string") {
           return value;
@@ -314,16 +314,16 @@ function handleGroupSelected() {
 // #region module: ResponsiveFilterRef
 const ResponsiveFilterRef = ref();
 
-async function getFilter(conditions) {
-  conditions.forEach((condition) => {
+async function getFilter(conditions: any, initParams: any) {
+  conditions.forEach((condition: any) => {
     if (condition.options) {
-      condition.options.sort((a, b) => a.value.localeCompare(b.value));
+      condition.options.sort((a: any, b: any) => a.value.localeCompare(b.value));
     }
   });
-  ResponsiveFilterRef.value.init(conditions);
+  ResponsiveFilterRef.value.init(conditions, initParams);
 }
 
-function handleFilterFormChange(formModel, filedData) {
+function handleFilterFormChange(formModel: any) {
   state.extraParamsFilter = formModel;
   emits("filter-change", state.extraParamsFilter);
 }
@@ -337,17 +337,13 @@ function handleClearFilter() {
 
 onActivated(() => {
   state.selectList = [];
+  
 });
 onMounted(() => {
   getAllUserAndActiveCount();
 });
-watch(
-  () => props.condition,
-  (newVal) => {
-    if (!!newVal) getFilter(newVal);
-  }
-);
-defineExpose({reload});
+
+defineExpose({reload, getFilter});
 </script>
 
 <style lang="scss" scoped>
