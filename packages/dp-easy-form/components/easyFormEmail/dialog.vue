@@ -15,10 +15,11 @@
             required: true,
             message: $t('user_email') +' '+ $t('render.hint.fieldRequired')
           },
-          {
-            validator: emailValidate,
-            trigger: 'change'
-          }]"
+          // {
+          //   validator: emailValidate,
+          //   trigger: 'change'
+          // }
+        ]"
       >
         <el-select
           ref="selectRef"
@@ -35,6 +36,7 @@
           <el-option
             v-for="item in state.userList"
             :key="item.userId"
+            :type=" emailCheck ? 'danger' : 'info'"
             :label="`${item.firstName} ${item.lastName} <${item.email}>`"
             :value="item.email"
           />
@@ -121,12 +123,11 @@ const form = ref({
 
 const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
+let emailCheck = false;
 const emailValidate = (rule: any, value: any, callback: any) => {
   value.forEach((item) => {
     if (!emailPattern.test(item)) {
-      if (form._rawValue.emails.length > 0) {
-        form._rawValue.emails.pop();
-      }
+      emailCheck = true
       callback(new Error($t('tip.enterValidEmail')));
     }
   })
