@@ -230,12 +230,10 @@ async function addtionalSubmit(formData: any) {
     .postWorkflowFormSubmit(param)
     .then((res) => res.data);
   ElMessage.success(`${t("msg_successfulOperation")}`);
-  routerProvider?.navigateTo(
-    routeWorkflowPage({
+  const fallbackRoute = routeWorkflowPage({
       workflowType: workflowType,
-    }),
-    false
-  );
+    });
+    routerProvider?.back(fallbackRoute)
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
