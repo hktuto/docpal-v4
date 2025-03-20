@@ -57,6 +57,7 @@ const state = reactive<any>({
   selectedRows: [],
   groupList: []
 })
+let filterParams: any = {}
 const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
   id: 'a-user-group',
   columns: [
@@ -80,7 +81,8 @@ async function getMemberGroupList() {
   const res = await userProviderDetail?.MemberGroupGetApi({
     userId: props.user.userId
   })
-  tableRef.value?.loadData(res.data)
+  handleFilterFormChange(filterParams)
+  // tableRef.value?.loadData(res.data)
   state.groupList = res.data
 }
 
@@ -125,11 +127,12 @@ async function handleDeleteSelected() {
 }
 
 function handleFilterFormChange(formModel: any) {
+  filterParams = formModel
   let data = state.groupList;
   if (formModel.metaData) {
     const searchString = formModel.metaData.toLowerCase();
     data = state.groupList.filter((item: any) => item.name.toLowerCase().includes(searchString));
-  }
+  } 
   tableRef.value?.loadData(data);
 }
 
