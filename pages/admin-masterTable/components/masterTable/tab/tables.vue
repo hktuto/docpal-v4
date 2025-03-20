@@ -51,7 +51,7 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
     [
       {
         code: "edit",
-        name: "masterTable_createdBy",
+        name: "masterTable_edit",
         action: ({row}: any) => {
           handleDblclick(row);
         },

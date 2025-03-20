@@ -12,10 +12,10 @@
                                   message: $t('tableHeader_emailList') +' '+ $t('render.hint.fieldRequired'),
                                   trigger: 'change'
                               },
-                              {
-                                  validator: emailValidate,
-                                  trigger: 'change'
-                              }
+                              // {
+                              //     validator: emailValidate,
+                              //     trigger: 'change'
+                              // }
                           ]">
         <el-input-tag
           v-model="form.emailList"
@@ -123,9 +123,9 @@ const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+")
 const emailValidate = (rule: any, value: any, callback: any) => {
   value.forEach((item) => {
     if (!emailPattern.test(item)) {
-      if (form.emailList.length > 0) {
-        form.emailList.pop();
-      }
+      // if (form.emailList.length > 0) {
+
+      // }
       callback(new Error($t('tip.enterValidEmail')));
     }
   })
