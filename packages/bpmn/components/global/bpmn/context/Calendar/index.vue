@@ -170,7 +170,7 @@ onMounted(async() => {
     grid-template-rows: min-content 1fr;
     gap: var(--app-space-xs);
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     position: relative;
 }
 </style>

@@ -3,8 +3,6 @@
 import {Graph, Cell, View} from "@antv/x6";
 import {useEventListener} from "@vueuse/core";
 
-
-
 const state = reactive<{
     loading: boolean
     opened: boolean

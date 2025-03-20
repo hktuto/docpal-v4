@@ -15,7 +15,7 @@ const props = defineProps<{
 const loading = ref(false)
 const opened = ref()
 const userId = useUserId()
-const workflowFormDetail = inject('workflowFormDetail')
+const workflowFormDetail = inject('workflowFormRender')
 const previewFile =reactive<{
     name:string,
     blob:Blob | null
@@ -30,10 +30,10 @@ async function openPreivew(){
 
 
         loading.value = true;
-        console.log("openPreivew")
         const xmlJson = bpmnStringToJson(props.xml)
         const targetTask = xmlJson.flatObj[props.attr_documentStepId]
         const formData = await workflowFormDetail?.getFormData(false)
+        console.log("openPreivew", formData)
         // get template id
         const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
