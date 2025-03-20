@@ -1843,6 +1843,7 @@
   "masterTable_deleteSelectedMsg": "Are you sure you want to delete the selected rows from the master table {name}?<br>This action cannot be undone.",
   "masterTable_deleteSelectedSuccessMsg": "The selected rows have been deleted from the master table {name} successfully.",
   "masterTable_deleteSuccessMsg": "The master table {name} has been deleted successfully.",
+  "masterTable_edit": "Edit Master Table",
   "masterTable_filter": "按表名筛选",
   "masterTable_id": "主表 ID",
   "masterTable_inactivate": "停用主表",

@@ -4,17 +4,17 @@
       <template #toolbar_buttons>
         <header v-show="state.selectList.length === 0" class="header-flex">
           <div class="flex-x-start">
-            <el-button type="danger" @click="handleDeleteAll">
+            <el-button id="clientTrashEmptyTrash" type="danger" @click="handleDeleteAll">
               {{ t("trash_emptyTrash") }}
             </el-button>
           </div>
         </header>
         <header v-show="state.selectList?.length > 0" class="header-flex">
           <div class="flex-x-start">
-            <el-button type="primary" @click="handleRestore">
+            <el-button id="clientTrashRestoreSelected" type="primary" @click="handleRestore">
               {{ t("trash_actions_restore") }}
             </el-button>
-            <el-button type="danger" @click="handleDelete">
+            <el-button id="clientTrashPermanentlyDeleteSelected" type="danger" @click="handleDelete">
               {{ t("trash_actions_delete") }}
             </el-button>
           </div>

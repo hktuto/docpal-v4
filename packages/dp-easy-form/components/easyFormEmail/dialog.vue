@@ -10,7 +10,15 @@
       <el-form-item
         :label="$t('user_email')"
         prop="emails"
-        :rules="[{ required: true, message: $t('login_username') + $t('form_common_requird') },]"
+        :rules="[
+          {
+            required: true,
+            message: $t('user_email') +' '+ $t('render.hint.fieldRequired')
+          },
+          {
+            validator: emailValidate,
+            trigger: 'change'
+          }]"
       >
         <el-select
           ref="selectRef"
@@ -19,6 +27,8 @@
           allow-create
           clearable
           filterable
+          :placeholder="$t('vxe.base.pleaseInput')"
+          :aria-label="$t('tip_enterAfterInput')"
           default-first-option
           @change="handleSelectChange"
         >
@@ -26,7 +36,7 @@
             v-for="item in state.userList"
             :key="item.userId"
             :label="`${item.firstName} ${item.lastName} <${item.email}>`"
-            :value="item.userId"
+            :value="item.email"
           />
         </el-select>
       </el-form-item>
@@ -36,11 +46,11 @@
         :rules="[
           {
             required: true,
-            message: $t('tableHeader_subject') + $t('form_common_requird'),
+            message: $t('tableHeader_subject') + ' ' + $t('render.hint.fieldRequired'),
           },
         ]"
       >
-        <el-input ref="subjectRef" v-model="form.subject"/>
+        <el-input clearable ref="subjectRef" v-model="form.subject"/>
       </el-form-item>
       <InsertVariables
         :inputRef="subjectRef?.input"
@@ -108,6 +118,21 @@ const form = ref({
   subject: "subject",
   body: "Dear ",
 });
+
+const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+const emailValidate = (rule: any, value: any, callback: any) => {
+  value.forEach((item) => {
+    if (!emailPattern.test(item)) {
+      if (form._rawValue.emails.length > 0) {
+        form._rawValue.emails.pop();
+      }
+      callback(new Error($t('tip.enterValidEmail')));
+    }
+  })
+  callback()
+}
+
 
 async function handleOpen(easyFormId: string = '', userEmail: string = '') {
   state.visible = true;
@@ -210,7 +235,8 @@ function handleSelectChange() {
 // #endregion
 onMounted(async () => {
   const {data} = await adminApi.api.postNuxeoIdentityUsers({});
-  state.userList = data || ([] as any);
+  const uniqueEmails = Array.from(new Map(data.map(item => [item.email, item])).values());
+  state.userList = uniqueEmails || ([] as any);
 });
 
 defineExpose({handleOpen});
