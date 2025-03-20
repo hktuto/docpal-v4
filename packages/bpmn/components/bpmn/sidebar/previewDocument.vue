@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-import { ElButton, ElFormItem, ElOption } from 'element-plus';
 
 const { node}  = defineProps<{
   node: Node

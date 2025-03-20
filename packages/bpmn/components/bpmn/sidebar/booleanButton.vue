@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import type { Node } from '@antv/x6'
-import { ElButton, ElFormItem, ElOption } from 'element-plus';
 
 const { node}  = defineProps<{
   node: Node
@@ -36,7 +35,7 @@ function getForm(){
 
 const allBooleanInfo = computed(() => {
     if(!graphProvider?.allFormField.value) return []
-    return Object.values(graphProvider?.allFormField.value).reduce( (result, current) => {
+    return Object.values(graphProvider?.allFormField.value).reduce( (result:any, current:any) => {
         if(current.attr_type === 'boolean') {
             result.push(current)
         }

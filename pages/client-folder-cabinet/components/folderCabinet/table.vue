@@ -22,7 +22,7 @@
       </template>
     </VxeGrid>
   </div>
-  <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="query({})"/>
+  <FolderCabinetCreateDialog ref="CreateDialogRef" @refresh="reload"/>
 </template>
 <script lang="ts" setup>
 import type {VxeGridPropTypes} from 'vxe-table'
