@@ -11,7 +11,7 @@
         placement="bottom"
         :width="300"
         trigger="click"
-        popper-class="auto"
+        popper-class="auto-popper"
         virtual-triggering
         :popper-append-to-body="false"
     >
@@ -75,5 +75,11 @@ function handleChange (data: typeof ResSelectData) {
         -webkit-line-clamp: 1;
         word-break: break-all;
     }
+}
+</style>
+<style>
+.auto-popper {
+    max-height: 80vh;
+    overflow-y: auto;
 }
 </style>
