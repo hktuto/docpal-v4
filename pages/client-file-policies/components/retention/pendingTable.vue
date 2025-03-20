@@ -6,30 +6,34 @@
         @form-change="handleFilterFormChange"
         inputKey="documentName"
       />
-      <el-button text :loading="refreshLoading" @click="handleRefresh">{{
-        $t("common_refresh")
-      }}</el-button>
+      <el-button id="clientRetentionListPendingRefresh" text :loading="refreshLoading" @click="handleRefresh">
+        {{ $t("common_refresh") }}
+      </el-button>
     </template>
     <template #commonActions="{ row }">
       <template v-if="row.status === 'P'">
         <template v-if="row.applyApprovedBy === userId">
           <el-button
+            id="clientRetentionListPendingApprove"
             class="approval-btn"
             size="small"
             type="primary"
             @click.stop="handleApprove(true, row)"
-            >{{ $t("workflow_startAdhocWorkflow_approve") }}</el-button
           >
+            {{ $t("workflow_startAdhocWorkflow_approve") }}
+          </el-button>
           <el-button
+            id="clientRetentionListPendingReject"
             class="approval-btn"
             size="small"
             type="danger"
             @click.stop="handleApprove(false, row)"
-            >{{ $t("workflow_startAdhocWorkflow_reject") }}</el-button
           >
+            {{ $t("workflow_startAdhocWorkflow_reject") }}
+          </el-button>
         </template>
         <template v-else>
-          <el-button text :disabled="true">
+          <el-button id="clientRetentionListPendingPendingApproval" text :disabled="true">
             {{ $t("status.pendingApproval") }}
           </el-button>
         </template>
@@ -38,7 +42,9 @@
         <el-dropdown v-if="!!row && !!row.policyRetentionId" trigger="click">
           <span class="el-dropdown-link">
             <el-button text>
-              <el-icon><MoreFilled /></el-icon>
+              <el-icon>
+                <MoreFilled/>
+              </el-icon>
             </el-button>
           </span>
           <template #dropdown>
@@ -58,12 +64,13 @@
   </VxeGrid>
 </template>
 <script lang="ts" setup>
-import { MoreFilled } from "@element-plus/icons-vue";
-import { clientApi } from "api";
-import { MenuRouterKey } from "#imports";
+import {MoreFilled} from "@element-plus/icons-vue";
+import {clientApi} from "api";
+import {MenuRouterKey} from "#imports";
+
 const routerProvider = inject(MenuRouterKey);
 let extraParams = {};
-const { t } = useI18n();
+const {t} = useI18n();
 const initParams = {
   orderBy: "createdDate",
   isDesc: true,
@@ -72,7 +79,7 @@ const initParams = {
 
 const events = ref({});
 const userId: string = useUserId().value;
-const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
+const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
   id: "clientRetentionPendingList",
   api: async (pageParams: any) => {
     return clientApi.api.postPolicyRetentionsDocumentPage({
@@ -86,17 +93,17 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: "documentName",
       title: "tableHeader_name",
       type: "html",
-      formatter: ({ cellValue, row }: any) => {
+      formatter: ({cellValue, row}: any) => {
         let icon = "/icons/doc/file.svg";
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
       },
     },
-    { field: "documentPath", title: "document_path" },
-    { field: "policyName", title: "tableHeader_policyName" },
+    {field: "documentPath", title: "document_path"},
+    {field: "policyName", title: "tableHeader_policyName"},
     {
       field: "expireDate",
       title: "tableHeader_dueDate",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return formatDate(cellValue)
       },
     },
@@ -109,11 +116,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       width: 100,
     },
   ],
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row);
   },
   optionalConfig: {
-    cellClassName({ row, column }) {
+    cellClassName({row, column}) {
       if (column.title === "tableHeader_actions") {
         return "row-actions";
       }
@@ -124,6 +131,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 const refreshLoading = ref(false);
 // #region module: ResponsiveFilterRef
 const ResponsiveFilterRef = ref();
+
 async function getFilter() {
   const data = await clientApi.api
     .getPolicyRetentionsDocumentPageConditions()
@@ -135,10 +143,12 @@ async function getFilter() {
   }
   ResponsiveFilterRef.value.init(data);
 }
+
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel;
   reload();
 }
+
 // #endregion
 
 async function handleRefresh() {
@@ -147,6 +157,7 @@ async function handleRefresh() {
   refreshLoading.value = false;
   reload();
 }
+
 function handleDblclick(row: any) {
   routerProvider?.navigateTo(
     createDetailPageParams({
@@ -157,9 +168,11 @@ function handleDblclick(row: any) {
     false
   );
 }
+
 async function getEvents() {
   events.value = await clientApi.api.getPolicyRetentionsEvents().then((res) => res.data);
 }
+
 onMounted(() => {
   getFilter();
   getEvents();
@@ -172,26 +185,32 @@ onMounted(() => {
 :deep(.el-input) {
   width: 200px;
 }
+
 .responsive-container {
   width: 70%;
 }
-:deep(.row-actions){ 
-  .vxe-cell{
+
+:deep(.row-actions) {
+  .vxe-cell {
     display: flex;
     flex-direction: column;
     gap: var(--app-space-xs);
+
     .el-button {
       margin-left: unset;
       width: 80px;
+
       &:first-child {
         margin-top: var(--app-space-xs);
       }
+
       &:last-child {
         margin-bottom: var(--app-space-xs);
       }
     }
   }
 }
+
 :deep(.vxe-buttons--wrapper) {
   display: flex;
   justify-content: space-between;

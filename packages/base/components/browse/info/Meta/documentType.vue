@@ -1,49 +1,51 @@
 <template>
-<div>
+  <div>
     <template v-if="state.docList.length === 0">-
     </template>
     <template v-else>
-        <el-button v-for="item in state.docList" :key="item.value"  text type="primary"
-            @click="handleClickDocumentType(item.value)">
-            {{item.label}}
-        </el-button>
+      <el-button v-for="item in state.docList" :key="item.value" text type="primary"
+                 @click="handleClickDocumentType(item.value)">
+        {{ item.label }}
+      </el-button>
     </template>
-</div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 const props = defineProps<{
-    data: any
+  data: any
 }>();
 const router = useRouter()
 const state = reactive({
-    docList: []
+  docList: []
 })
+
 function getDocTypeList(data) {
-    try {
-        const docList = data.split(';;;')
-        state.docList = docList.map((item, index) => {
-            return {
-                label: item.split('::')[1],
-                value: item.split('::')[0]
-            }
-        })
-    } catch (error) {
-        state.docList = []
-        return
-    }
+  try {
+    const docList = data.split(';;;')
+    state.docList = docList.map((item, index) => {
+      return {
+        label: item.split('::')[1],
+        value: item.split('::')[0]
+      }
+    })
+  } catch (error) {
+    state.docList = []
+    return
+  }
 }
+
 // #region module: documentType
-    function handleClickDocumentType(value: string) {
-        if(!value) return
-        router.push({path: '/browse', query: { path: value }})
-    }
+function handleClickDocumentType(value: string) {
+  if (!value) return
+  router.push({path: '/browse', query: {path: value}})
+}
+
 // #endregion
 onMounted(() => {
-    getDocTypeList(props.data)
+  getDocTypeList(props.data)
 })
 </script>
-
 
 
 <style lang="scss" scoped>

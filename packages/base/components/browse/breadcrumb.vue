@@ -84,18 +84,14 @@ onActivated(() => {
 })
 
 onDeactivated(() => {
-    console.log(222)
     bus.off(fileRefreshHandler)
 })
 
 function fileRefreshHandler({relatedIdOrPath}:any) {
-    console.log(1, relatedIdOrPath)
     // const needRefresh = breadcrumbList.value.some((el) => el.id !== relatedIdOrPath)
     const needRefresh = breadcrumbList.value.some((el) => el.id === relatedIdOrPath)
-    console.log(3, needRefresh)
     getBreadcrumb()
 }
-
 
 </script>
 

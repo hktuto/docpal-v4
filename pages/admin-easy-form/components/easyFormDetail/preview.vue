@@ -40,7 +40,6 @@ const props = defineProps(["detail"]);
 const routerProvider = inject(MenuRouterKey);
 
 function update() {
-  console.log('ssss')
   emits('email-update')
 }
 
