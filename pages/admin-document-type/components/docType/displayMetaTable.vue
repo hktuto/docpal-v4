@@ -132,7 +132,8 @@ function handleFilterFormChange(formModel: any) {
   const data = props.metadata.filter((item: any) => {
     return (
       !formModel.metaData ||
-      item.metadata.toLowerCase().includes(formModel.metaData.toLowerCase())
+      item.metadata.toLowerCase().includes(formModel.metaData.toLowerCase()) ||
+      t(item.metadata).toLowerCase().includes(formModel.metaData.toLowerCase())
     );
   });
   tableRef.value?.loadData(data)
