@@ -21,7 +21,7 @@ async function deleteSelected () {
     })
     .then(async() => {
         const noti = ElNotification({
-            title: $i18n.t('delete'),
+            title: $i18n.t('dpTip_delete'),
             icon: Loading,
             dangerouslyUseHTMLString: true,
             showClose: true,

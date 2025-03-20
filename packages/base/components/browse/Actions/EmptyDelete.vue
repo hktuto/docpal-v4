@@ -33,7 +33,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     })
         .then(async () => {
             const noti = ElNotification({
-                title: t('delete'),
+                title: t('dpTip_delete'),
                 icon: Loading,
                 dangerouslyUseHTMLString: true,
                 message: `<div title="${doc.name}">${doc.name}</div>`,

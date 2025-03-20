@@ -105,8 +105,8 @@ watch(node, () => {
            label-position="top"
            :model="form"
            @submit.prevent>
-    <el-formItem label="workflow" prop="workflow"
-                 :rules="[{ required: true, message: $t('workflow') + ' '+ $t('render.hint.fieldRequired')}]">
+    <el-formItem :label="$t('easyForm.WorkflowTemplateKey')" prop="workflow"
+                 :rules="[{ required: true, message: $t('easyForm.WorkflowTemplateKey') + ' '+ $t('render.hint.fieldRequired')}]">
       <el-select v-model="form.workflow" filterable clearable allow-create @change="handleChange">
         <el-option v-for="item in state.options" :key="item.key"
                    :label="item.name" :value="item.key">

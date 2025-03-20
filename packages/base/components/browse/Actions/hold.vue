@@ -37,7 +37,7 @@
             </el-row>
             <el-row :gutter="10" v-if="(hold.status === 'P' && userId !== hold.applyApprovedBy) || 
                 (hold.status === 'L' && userId !== hold.removeApprovedBy)">
-                <el-col :span="10"><small>{{$t('approvedBy')}}</small></el-col>
+                <el-col :span="10"><small>{{$t('role.approver')}}</small></el-col>
                 <el-col :span="14">{{hold.status === 'P' ? hold.applyApprovedBy : hold.removeApprovedBy}}</el-col>
             </el-row>
             <template v-else>
