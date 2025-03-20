@@ -75,8 +75,11 @@ async function handleSubmit() {
         prev[item] = data[otherKeys]
         return prev
     }, {}) as any
-    console.log("variables", variables)
-    const res = await clientApi.api.postCaseInstanceProcessStart({
+    if(!variables.user_creator_id){
+        variables.user_creator_id = useUserId().value
+    }
+    console.log("variables", variables, data)
+    await clientApi.api.postCaseInstanceProcessStart({
         id: actionStepId,
         variables
     })
