@@ -13,9 +13,9 @@ const {caseId} = useCmmnGraph();
 <template>
   <ElForm ref="FormRef" label-position="top" :model="form" @submit.prevent>
     <el-formItem
-      label="assignee"
+      :label="$t('workflow_assignee')"
       prop="assignee"
-      :rules="[{ required: true, message: $t('assignee') + ' '+ $t('render.hint.fieldRequired') }]"
+      :rules="[{ required: true, message: $t('workflow_assignee') + ' '+ $t('render.hint.fieldRequired') }]"
     ></el-formItem>
   </ElForm>
 </template>

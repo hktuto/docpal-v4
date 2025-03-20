@@ -1,7 +1,7 @@
 <template>
   <el-form ref="FormRef" label-position="top"
            :model="form" @submit.prevent>
-    <el-formItem label="availableCondition" prop="availableCondition"
+    <el-formItem :label="$t('availableCondition')" prop="availableCondition"
                  :rules="[{ required: true, message: $t('availableCondition') + ' '+ $t('render.hint.fieldRequired')}]">
       <el-input v-model="form.availableCondition" @change="handleChange" placeholder="availableCondition"/>
     </el-formItem>
