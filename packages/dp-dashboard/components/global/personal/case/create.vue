@@ -17,7 +17,9 @@
         type="primary"
         :key="item.id"
         @click="handleClick(item)"
-        >{{ item.name }}</el-button
+      >
+        {{ item.name }}
+      </el-button
       >
     </div>
     <PersonalCaseCreateDialog
@@ -29,7 +31,8 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-import { clientApi } from "api";
+import {clientApi} from "api";
+
 const emits = defineEmits(["delete", "refreshSetting"]);
 
 const props = withDefaults(
@@ -46,46 +49,58 @@ const props = withDefaults(
 const state = reactive<any>({
   caseList: [],
 });
+
 async function handleDelete() {
   emits("delete");
 }
+
 const settingRef = ref();
+
 function openSetting() {
   settingRef.value.handleOpen({
     caseList: state.caseList,
     caseKeys: props.setting.caseKeys,
   });
 }
+
 const dialogRef = ref();
+
 function handleClick(item: any) {
+  console.log(22, state.caseList)
   // dialogRef.value.handleOpen(item)
 }
-function handleNewCase() {}
+
+function handleNewCase() {
+}
+
 function handleRefresh(chartSetting, caseList) {
-  console.log({ caseList });
+  console.log({caseList});
 
   state.caseList = caseList;
   emits("refreshSetting", chartSetting);
 }
+
 async function getList() {
   try {
     const res = await clientApi.api.postCaseTypesPage({}).then((res) => res.data);
-    console.log({ res });
+    console.log({res});
     return res?.entryList;
   } catch (error) {
     return [];
   }
 }
+
 async function getCaseList() {
   if (props.setting.caseKeys && props.setting.caseKeys.length > 0) {
     const list = await getList();
     state.caseList = props.setting.caseKeys.reduce((prev, id: any) => {
       const caseItem = list?.find((cases: any) => cases.id === id);
-      prev.push({ ...caseItem });
+      prev.push({...caseItem});
       return prev;
     }, []);
   }
 }
+
 watch(
   () => props.setting.caseKeys,
   () => {
@@ -95,7 +110,10 @@ watch(
     immediate: true,
   }
 );
-function resize() {}
+
+function resize() {
+}
+
 defineExpose({
   resize,
 });
