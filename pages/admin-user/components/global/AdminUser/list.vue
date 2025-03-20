@@ -24,8 +24,6 @@ function openUserDetail(data: any, openInNewTab = false) {
   routerProvider?.navigateTo({ ...newItem }, openInNewTab);
 }
 
-const userCondition = ref({});
-
 // #region module:
 let userTableFilter = {};
 const tableRef = ref();
@@ -41,7 +39,7 @@ provide(userProviderKey, {
       ...userTableFilter,
     });
     const { conditions, page } = res.data;
-    userCondition.value = conditions;
+    tableRef?.value.getFilter(conditions, userTableFilter);
     return { data: page };
   },
   SetUserStatusApi: (params: any) => {
@@ -78,7 +76,6 @@ onActivated(() => {
   <div class="pageContainer">
     <UserTable
       ref="tableRef"
-      :condition="userCondition"
       @filter-change="handleFilterChange"
     ></UserTable>
   </div>
