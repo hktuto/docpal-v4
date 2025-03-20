@@ -12,7 +12,7 @@ const emits = defineEmits(["filter-change", "refresh"]);
 const routerProvider = inject(MenuRouterKey);
 type TableState = {
   columns: any;
-  where: any[];
+  where: any;
 };
 const state = reactive<TableState>({
   columns: [],
