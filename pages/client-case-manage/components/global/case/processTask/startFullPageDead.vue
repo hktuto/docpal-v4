@@ -18,6 +18,7 @@ const formData = ref()
 const additionalButton = ref<any[]>([])
 const vFormRef = ref()
 const inParameters = ref<any>({})
+const primaryForm = ref<any>([])
 async function setUpForm() {
     try{
         loading.value = true
@@ -29,7 +30,7 @@ async function setUpForm() {
         // get latest case detail
         const caseData =  await clientApi.api.getCaseDashboardInstanceCaseidPrimaryformData(caseInstanceId)
                                 .then(res => res.data) as any
-
+        primaryForm.value = caseData.rows
         inParameters.value = stepDetail.inParameters as {[key: string]: string}
         // get form xml 
         const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(stepDetail.processDefinitionVersionId)
@@ -41,7 +42,7 @@ async function setUpForm() {
             }
             return prev
         }, {})
-        console.log("formData", formData)
+        console.log("formData", formData, primaryForm.value)
         // get form json with lateset versiion
         formJson.value = await clientApi.api.getRelationQuery({
             userTaskId: 'start',
@@ -70,20 +71,27 @@ function handelCancel(){
 
 async function handleSubmit() {
     const data = await vFormRef.value.getFormData(false, false);
+    console.log("inParameters", inParameters.value)
     const variables = Object.keys(inParameters.value).reduce((prev:any, item:any) => {
         const otherKeys = inParameters.value[item]
-        prev[item] = data[otherKeys]
+        if(data[otherKeys]){
+            prev[item] = data[otherKeys]
+        }else{
+            const orginValue = primaryForm.value.find(item => item.id === otherKeys)
+            if(orginValue && orginValue.value){
+                prev[item] = orginValue.value
+            }
+        }
         return prev
     }, {}) as any
     if(!variables.user_creator_id){
         variables.user_creator_id = useUserId().value
     }
-    console.log("variables", variables, data)
-    await clientApi.api.postCaseInstanceProcessStart({
-        id: actionStepId,
-        variables
-    })
-    handelCancel()
+    // await clientApi.api.postCaseInstanceProcessStart({
+    //     id: actionStepId,
+    //     variables
+    // })
+    // handelCancel()
     // console.log(res);
 }
 
