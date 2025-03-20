@@ -33,7 +33,7 @@ const FormRendererRef = ref();
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData();
   if(!data.id || !data.name) {
-    ElMessage.error(t("user_userGroupName")+ $t('form_common_requird'));
+    ElMessage.error(t("user_userGroupName")+ $t('render.hint.fieldRequired'));
     return;
   }
   // check group name exist

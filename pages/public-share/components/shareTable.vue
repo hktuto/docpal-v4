@@ -5,10 +5,10 @@
     </template>
     <template #logicalPath="{ row }">
       <el-button v-if="row.readOnly" type="primary" text disabled>
-        {{ $t("readOnly") }}
+        {{ $t("button.readOnly") }}
       </el-button>
       <el-button v-else-if="row.watermarkStatus === 'NO'" type="primary" text disabled>
-        {{ $t("Converting") }}...
+        {{ $t("msg_converting") }}...
       </el-button>
       <el-button
         v-else-if="!row.watermarkStatus || row.watermarkStatus === 'YES'"
@@ -19,7 +19,7 @@
         {{ $t("download") }}
       </el-button>
       <el-button v-else text type="danger" disabled>
-        {{ $t("Conversion failed") }}
+        {{ $t("msg_conversion_failed") }}
       </el-button>
     </template>
   </VxeGrid>

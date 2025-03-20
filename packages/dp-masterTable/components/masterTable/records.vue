@@ -19,14 +19,15 @@
             <div class="column-dynamic-point"></div>
           </div>
           <el-button
+            id="clientMasterTableAdd"
             v-if="permission?.create && !!endPoint && endPoint !== 'admin'"
             class="el-icon--right"
             type="primary"
             size="small"
             @click="handleAddRow()"
-          >{{ $t("button.add") }}
-          </el-button
           >
+            {{ $t("button.add") }}
+          </el-button>
         </div>
       </div>
       <div v-else class="flex-x-between">
@@ -38,10 +39,10 @@
         </div>
         <div>
           <!-- v-if="isSuperAdmin && endPoint === 'admin'" -->
-          <el-button type="danger" @click="handleDeleteSelected">
+          <el-button id="clientMasterTableDelete" type="danger" @click="handleDeleteSelected">
             {{ $t("common_delete") }}
           </el-button>
-          <el-dropdown v-if="endPoint === 'admin' || permission?.enable" trigger="click">
+          <el-dropdown id="clientMasterTableActive" v-if="endPoint === 'admin' || permission?.enable" trigger="click">
             <el-button class="el-icon--left el-icon--right" type="warning">
               {{ $t("actions.active") }}
             </el-button>
@@ -56,7 +57,7 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button type="primary" @click="handleBatchEdit">
+          <el-button id="clientMasterTableBatchEdit" type="primary" @click="handleBatchEdit">
             {{ $t("button.batchEdit") }}
           </el-button>
         </div>
@@ -341,6 +342,7 @@ function getColor(prop: any, option?: any) {
 
 // #endregion
 async function initTableColumns(fields: any) {
+  state.selectList = []
   if (!fields || fields.length === 0) return;
   state.slot = [];
   state.fields = fields;

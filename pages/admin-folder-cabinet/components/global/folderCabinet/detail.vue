@@ -35,7 +35,7 @@ async function handleDeleteChild(setting) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if(action !== 'confirm') return
     const noti = ElNotification({
-      title: t("delete"),
+      title: t("dpTip_delete"),
       icon: Loading,
       dangerouslyUseHTMLString: true,
       message: `<div title="${setting.label}">${setting.label}</div>`,

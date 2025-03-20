@@ -20,7 +20,7 @@ function copyItem(doc){
         }
     ]
     ElMessage({
-            message: doc.name + " " + t('tip_copy') as string,
+            message: doc.name + " " + t('filePopover_copy') as string,
             type: 'success'
         })
 }
@@ -53,7 +53,7 @@ async function pasteItem(doc){
         return
     }
     const noti = ElNotification({
-        title: t('paste'),
+        title: t('filePopover_paste'),
         icon: Loading,
         dangerouslyUseHTMLString: true,
         message: `<div title="${copyItem.name}">${copyItem.name}</div>`,

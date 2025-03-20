@@ -58,19 +58,19 @@
                     <div>{{ item.content.documentPath }}</div>
                   </div>
                   <div v-if="item.createdBy">
-                    <div class="small">{{ $t("operator") }}</div>
+                    <div class="small">{{ $t("table_creator") }}</div>
                     <div>{{ item.createdBy }}</div>
                   </div>
                   <div v-else-if="item.content.creator || item.content.user_creator_id">
-                    <div class="small">{{ $t("user_creator_id") }}</div>
+                    <div class="small">{{ $t("table_creator") }}</div>
                     <div>{{ item.content.creator || item.content.user_creator_id }}</div>
                   </div>
                   <div v-if="item.content.emailList">
-                    <div class="small">{{ $t("emailList") }}</div>
+                    <div class="small">{{ $t("dpTable_email") }}</div>
                     <div>{{ JSON.parse(item.content.emailList).join(",") }}</div>
                   </div>
                   <div v-if="item.content.user_approver_id">
-                    <div class="small">{{ $t("user_approver_id") }}</div>
+                    <div class="small">{{ $t("role.approver") }}</div>
                     <div>{{ item.content.user_approver_id }}</div>
                   </div>
                   <div v-if="item.content.startTime">

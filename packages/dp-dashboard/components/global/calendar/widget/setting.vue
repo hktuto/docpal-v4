@@ -147,7 +147,7 @@ defineExpose({
     </ElForm>
     <template #footer>
       <ElButton id="adminWorkPanelDetailCalendarSettingsCancel" @click="opened = false">
-        {{ $t("Cancel") }}
+        {{ $t("cancelText") }}
       </ElButton>
       <ElButton id="adminWorkPanelDetailCalendarSettingsDelete" type="danger" @click="$emit('delete')">
         {{ $t('common_delete') }}

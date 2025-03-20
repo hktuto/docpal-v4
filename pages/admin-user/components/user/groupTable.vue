@@ -9,7 +9,7 @@
           <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
                    @click="cleanSelectedRows"/>
         </div>
-        <el-button type="danger" @click="handleDeleteSelected()">
+        <el-button id="adminUserInfoDelete" type="danger" @click="handleDeleteSelected()">
           {{ $t("common_delete") }}
         </el-button>
       </div>

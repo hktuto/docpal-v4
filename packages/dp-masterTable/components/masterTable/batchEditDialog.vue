@@ -11,7 +11,7 @@
     <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="22" type="primary" :loading="state.loading" @click="handleSubmit">
+        <el-button id="clientMasterTableBatchEditSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>
@@ -37,7 +37,7 @@ const state = reactive({
   setting: {},
   fields: [],
   edit: false,
-  title: $i18n.t("masterTable.editRows"),
+  title: $t("button.batchEdit"),
   rows: [],
 });
 const route = useRoute();

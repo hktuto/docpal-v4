@@ -47,7 +47,7 @@ async function saveData() {
     const {data} = await adminApi.api.postMessageTemplateEdit(params)
     routerProvider?.message.success(t('dpMsg_success'))
   } catch (e) {
-    routerProvider?.message.error(t('dpMsg_fail'))
+    routerProvider?.message.error(t('dpMsg_error'))
   } finally {
     init()
   }
