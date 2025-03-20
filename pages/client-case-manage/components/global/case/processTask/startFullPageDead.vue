@@ -87,12 +87,11 @@ async function handleSubmit() {
     if(!variables.user_creator_id){
         variables.user_creator_id = useUserId().value
     }
-    // await clientApi.api.postCaseInstanceProcessStart({
-    //     id: actionStepId,
-    //     variables
-    // })
-    // handelCancel()
-    // console.log(res);
+    await clientApi.api.postCaseInstanceProcessStart({
+        id: actionStepId,
+        variables
+    })
+    handelCancel()
 }
 
 async function additionSubmit(formData:any){
