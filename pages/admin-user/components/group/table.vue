@@ -31,6 +31,7 @@ const state = reactive<State>({
   groupList: {},
   _groupList: [],
 });
+let filterParams: any = {}
 const {t} = useI18n()
 const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
   id: 'a-groupTable',
@@ -87,10 +88,15 @@ async function handleDelete(row: any) {
 // #region module: ResponsiveFilterRef
 const ResponsiveFilterRef = ref()
 
-function handleFilterFormChange(formModel: any, filedData: any) {
-  state._groupList = state.groupList.filter((item: any) => {
-    return item.name.toLowerCase().includes(formModel.userNameOrEmail.toLowerCase())
-  })
+function handleFilterFormChange(formModel: any) {
+  filterParams = formModel
+  if(formModel.userNameOrEmail) {
+    state._groupList = state.groupList.filter((item: any) => {
+      return item.name.toLowerCase().includes(formModel.userNameOrEmail.toLowerCase())
+    })
+  } else {
+    state._groupList = [...state.groupList]
+  }
   tableRef.value?.loadData(state._groupList)
 }
 
@@ -98,8 +104,7 @@ function handleFilterFormChange(formModel: any, filedData: any) {
 async function getGroup() {
   tableConfig.loading = true
   state.groupList = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
-  state._groupList = [...state.groupList]
-  tableRef.value?.loadData(state._groupList)
+  handleFilterFormChange(filterParams)
   tableConfig.loading = false
 }
 
