@@ -234,6 +234,7 @@
     "subscription": "订阅Pro",
     "zh-CN": "简体中文"
   },
+  "availableCondition": "可用條件",
   "azure": {
     "OCRTransactionLog": "OCR 轉換日誌",
     "alertEmail": "警報電子郵件",
@@ -1891,7 +1892,8 @@
     "NoLegitimateDataDetected": "檢測到沒有合法數據",
     "NoOtherFilesAllowed": "不允許其他文件",
     "confirmWhetherToDeactivate": "確認是否停用？",
-    "confirmWhetherToPublish": "確認是否發布？"
+    "confirmWhetherToPublish": "確認是否發布？",
+    "onlyOneFileAllow": "僅允許一個文件"
   },
   "msg_confirmWhetherToCancel": "您要取消文件上傳嗎？",
   "msg_confirmWhetherToDelete": "確認刪除該條項嗎？",
@@ -1899,6 +1901,8 @@
   "msg_confirmWhetherToDownloadJar": "是否下載最新jar包?",
   "msg_confirmWhetherToExecuteCommand": "是否執行命令",
   "msg_confirmWhetherToInit": "確認是否初始化",
+  "msg_conversion_failed": "轉換失敗",
+  "msg_converting": "轉換中",
   "msg_fileFetchFailed": "文件獲取失敗",
   "msg_formatNotSupported": "不支持該格式",
   "msg_insufficientPermissions": "權限不足",
@@ -1906,11 +1910,16 @@
   "msg_isShareInternalFile": "是共享內部文件",
   "msg_isShareInternalFiles": "是共享內部文件",
   "msg_limitExceeded": "超出限制",
+  "msg_pleaseSelectEndTime": "請選擇結束時間",
+  "msg_pleaseSelectLocation": "請選擇位置",
+  "msg_pleaseSelectStartTime": "請選擇開始時間",
+  "msg_pleaseSelectUser": "請選擇用戶",
   "msg_requestDataIsEmpty": "請求數據為空",
   "msg_successfulOperation": "操作成功",
   "msg_successfullyModified": "修改成功",
   "msg_thisFormatFileIsNotSupported": "不支持該格式文件",
   "msg_uploadFailed": "上傳失敗",
+  "msg_watermark_empty": "水印為空",
   "multiple": "多個",
   "multipleStepTip": "適用於較複雜的審核、假日審核、供應商選擇...等",
   "noActive": "非激活",
@@ -2233,6 +2242,8 @@
   "searchType_width_between500to1500": "500 - 1500 px",
   "searchType_width_less500": "少於 500px",
   "searchType_width_more2000": "多於 2000 px",
+  "selectSvg": "Select SVG",
+  "selectedSvg": "選取圖示",
   "service": "服务",
   "setting_notification": "通知",
   "setting_theme": "主題",
@@ -3331,7 +3342,12 @@
     "previewForm": "預覽表格",
     "resetTemplate": "重置模板",
     "template": "工作流程模板",
-    "title": "標題"
+    "title": "標題",
+    "viewer": {
+      "draft": "草稿版本",
+      "latest": "最新版本",
+      "production": "目前版本"
+    }
   },
   "workflowEditor_promoteToProduction": "推送至生產：{currentVersion}",
   "workflowEditor_saveAsNewVersion": "另存為新版本",
@@ -3381,6 +3397,7 @@
   "workflow_editorWorkflowCreatedSuccessMsg": "The new workflow has been created successfully.",
   "workflow_form": "表單",
   "workflow_graph": "流程圖",
+  "workflow_holdPolicy": "保單",
   "workflow_info": "信息",
   "workflow_jobName": "工作名稱",
   "workflow_joinTask": "正在參與的任務",

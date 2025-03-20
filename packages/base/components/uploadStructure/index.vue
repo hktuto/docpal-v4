@@ -17,7 +17,7 @@
                 </div>
             </template>
             <el-divider />
-            <el-button v-show="item.finishCount === item.docList.length" type="info" size="small" @click="exportCsv(item.docList)">{{$t('exportCsv')}}</el-button>
+            <el-button v-show="item.finishCount === item.docList.length" type="info" size="small" @click="exportCsv(item.docList)">{{$t('title.ExportCsvFile')}}</el-button>
             <div class="listContainer">
                 <div v-for="uploadItem in item.docList" :key="uploadItem.id" class="uploadItem">
                     <div class="nameContainer" @click="itemClickHandler(uploadItem)">
