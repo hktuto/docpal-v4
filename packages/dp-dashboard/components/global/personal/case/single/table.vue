@@ -7,7 +7,7 @@ const { id, name, detail } = defineProps<{
   name: string;
   detail: any
 }>();
-
+let where = ref({})
 const { t } = useI18n();
 const emits = defineEmits(["filter-change", "refresh"]);
 const routerProvider = inject(MenuRouterKey);
@@ -33,6 +33,13 @@ const {
   api: async (pageParams: any) => {
     pageParams.isDesc = true;
     pageParams.orderBy = "created_date";
+    if (Object.entries(where.value).length !== 0) {
+      if (where.value.q) {
+        pageParams.q = where.value.q;
+      }
+      delete where.value.q;
+      pageParams.where = {...where.value};
+    }
     return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams);
   },
   columns: [],
@@ -103,7 +110,11 @@ async function reorderColumn(fields: any) {
   } catch (e) {}
   tableReady.value = true;
 }
-
+const responsiveFilterRef = ref()
+function handleFilterFormChange(formModel) {
+  where.value = formModel;
+  reload();
+}
 provide(CaseManagementDashboardKey, {
   instanceId,
   caseTypeId,
@@ -120,6 +131,14 @@ defineExpose({ reorderColumn, reload });
 
 <template>
   <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <template #toolbar_buttons>
+      <ResponsiveFilter
+          ref="responsiveFilterRef"
+          @form-change="handleFilterFormChange"
+          inputKey="q"
+          inputPlaceHolder="caseManagement_filter"
+        />
+    </template>
   <template #dpActions="{row}" >
     <el-dropdown trigger="click">
           <span class="el-dropdown-link">
