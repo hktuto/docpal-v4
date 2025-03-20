@@ -234,6 +234,7 @@
     "subscription": "Subscription",
     "zh-CN": "简体中文"
   },
+  "availableCondition": "Available condition",
   "azure": {
     "OCRTransactionLog": "OCR Transaction Log",
     "alertEmail": "Alert Email",
@@ -1048,6 +1049,7 @@
   "doc_typeSmartFolderUpdatedFolderSuccessMsg": "The smart folder has been updated successfully.",
   "doc_typeSmartFolderUserOrGroup": "Access by User / User Group",
   "docpal_sharedocument_user": "Internal Sharing",
+  "documentId": "Document Id",
   "documentTemplate_Create": "Create New Document Template",
   "documentTemplate_Creator": "Document Template Creator",
   "documentTemplate_Delete": "Delete Document",
@@ -1558,6 +1560,7 @@
     "onlyAccept": "Only accept"
   },
   "fileModifiedDate_label": "File Modified Date",
+  "fileNoExist": "File no exist",
   "filePolicies_CreationDate": "Policy Creation Date",
   "filePolicies_PolicyStatus": "Policy Status",
   "filePolicies_RetentionPolicyActivate": "Activate Policy",
@@ -1890,7 +1893,8 @@
     "NoLegitimateDataDetected": "No legitimate data detected",
     "NoOtherFilesAllowed": "No other files allowed",
     "confirmWhetherToDeactivate": "Confirm whether to deactivate?",
-    "confirmWhetherToPublish": "Confirm whether to publish?"
+    "confirmWhetherToPublish": "Confirm whether to publish?",
+    "onlyOneFileAllow": "Only one file allow"
   },
   "msg_confirmWhetherToCancel": "Would you like to cancel the file upload?",
   "msg_confirmWhetherToDelete": "Confirm to delete the item?",
@@ -1898,6 +1902,8 @@
   "msg_confirmWhetherToDownloadJar": "Whether to download the latest jar package?",
   "msg_confirmWhetherToExecuteCommand": "Whether to execute the command",
   "msg_confirmWhetherToInit": "Confirm thether to init",
+  "msg_conversion_failed": "Conversion failed",
+  "msg_converting": "Converting",
   "msg_fileFetchFailed": "File Fetch Failed",
   "msg_formatNotSupported": "This format is not supported",
   "msg_insufficientPermissions": "Insufficient Permissions",
@@ -1905,11 +1911,16 @@
   "msg_isShareInternalFile": "is a shared internal file",
   "msg_isShareInternalFiles": "is shared internal files",
   "msg_limitExceeded": "Limit Exceeded",
+  "msg_pleaseSelectEndTime": "Please select end time",
+  "msg_pleaseSelectLocation": "Please select location",
+  "msg_pleaseSelectStartTime": "Please select start time",
+  "msg_pleaseSelectUser": "Please select user",
   "msg_requestDataIsEmpty": "Request Data Is Empty",
   "msg_successfulOperation": "Successful Operation",
   "msg_successfullyModified": "Successfully modified",
   "msg_thisFormatFileIsNotSupported": "This Format File Is Not Supported",
   "msg_uploadFailed": "Upload Failed",
+  "msg_watermark_empty": "Watermark empty",
   "multiple": "Multiple",
   "multipleStepTip": "Suitable for more complex approval, holiday aproval, supplier selection...etc",
   "noActive": "Inactive",
@@ -2232,6 +2243,8 @@
   "searchType_width_between500to1500": "500 - 1500 pixel",
   "searchType_width_less500": "Less than 500 pixel",
   "searchType_width_more2000": "Over 2000 pixel ",
+  "selectSvg": "Select SVG",
+  "selectedSvg": "Selected SVG",
   "service": "Service",
   "setting_notification": "Notification",
   "setting_theme": "Theme",
@@ -3330,7 +3343,12 @@
     "previewForm": "Preview Form",
     "resetTemplate": "Reset Template",
     "template": "Workflow Template",
-    "title": "Title"
+    "title": "Title",
+    "viewer": {
+      "draft": "Draft version",
+      "latest": "Latest version",
+      "production": "Current version"
+    }
   },
   "workflowEditor_promoteToProduction": "Promote To Production : {currentVersion}",
   "workflowEditor_saveAsNewVersion": "Save As New Version",
@@ -3380,6 +3398,7 @@
   "workflow_editorWorkflowCreatedSuccessMsg": "The new workflow has been created successfully.",
   "workflow_form": "Form",
   "workflow_graph": "Flowchart",
+  "workflow_holdPolicy": "Hold Policy",
   "workflow_info": "Job Info",
   "workflow_jobName": "Job Name",
   "workflow_joinTask": "Task in Progress",

@@ -3,7 +3,7 @@
         destroy-on-close append-to-body :close-on-click-modal="false">
         <WorkflowDetailFormRender ref="vFormRef" />
         <template #footer>
-            <el-button @click="state.dialogVisible = false">{{$t('cancel')}}</el-button>
+            <el-button @click="state.dialogVisible = false">{{$t('cancelText')}}</el-button>
             <el-button @click="handleSubmit">{{$t('submit')}}</el-button>
         </template>
     </el-dialog>

@@ -210,7 +210,7 @@ function handleMsg(selectList, ids) {
     ElNotification.error({
       title: '',
       dangerouslyUseHTMLString: true,
-      message: `${nm} ${t('Fail')}: ${fileNames}`
+      message: `${nm} ${t('commons_error')}: ${fileNames}`
     })
   }
 }
