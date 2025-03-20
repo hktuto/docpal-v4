@@ -62,7 +62,8 @@ async function getFilter() {
   ResponsiveFilterRef.value.init(data)
 }
 onMounted(() => {
-  getFilter()
+  // 因爲頁面不存在“ResponsiveFilterRef”屏蔽下面一句
+  // getFilter()
 })
 </script>
 <style lang="scss" scoped>

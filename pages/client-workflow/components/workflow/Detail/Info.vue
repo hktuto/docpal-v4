@@ -65,7 +65,7 @@ const props = defineProps<{
   taskDetail: any,
   id: string
 }>()
-
+const {t} = useI18n()
 const userId: string = useUserId().value
 const state = reactive({
   deletePopoverShow: false,
