@@ -38,11 +38,11 @@ async function init() {
   console.log(_caseTypeId,id, 'getCaseDashboardInstanceCaseidActions??????' );
   if(id){
     const {data: userAction} = await adminApi.api.getCaseDashboardInstanceCaseidActions(id,{userId})
-    state.data = userAction
+    state.data = userAction?.filter(s => s.state !== 'completed')
   } 
   else if(_caseTypeId){ 
     const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
-    state.data = dashboardActions
+    state.data = dashboardActions?.filter(s => s.state !== 'completed')
   }
 }
 
