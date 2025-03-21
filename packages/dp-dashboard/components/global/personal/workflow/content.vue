@@ -1,7 +1,7 @@
 <template>
   <div class="worfklow-list-card dashboard-item-tab--content">
     <h2 v-if="title">{{ title }}</h2>
-    <el-dropdown v-if="!isTabView" trigger="click" @command="handleCommand">
+    <el-dropdown v-if="!isTabView && !singleTableMode" trigger="click" @command="handleCommand">
       <span class="el-dropdown-link">
         <h4>{{ $t(state.activeTabName) }}</h4>
         <el-icon class="el-icon--right"><arrow-down /></el-icon>
@@ -12,24 +12,38 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-
-    <el-tabs v-else v-model="state.activeTab" class="demo-tabs" @tab-change="handleCommand">
-      <el-tab-pane v-for="item in list" :key="item.key" :label="$t(item.name)" :name="item.key"></el-tab-pane>
-    </el-tabs>
-    <div v-if="state.activeTab === 'myTask'"  class="dashboard-item-tab--content--table" >
-      <PersonalWorkflowMy :processKeys="processKeys" />
+    <div v-if="singleTableMode && selectedTable" class="dashboard-item-tab--content--table" >
+      <template v-if="selectedTable === 'myTask'">
+        
+        <PersonalWorkflowMy :processKeys="processKeys" />
+      </template>
+      <template v-else-if="selectedTable === 'activeTask'">
+        <PersonalWorkflowActive :processKeys="processKeys" />
+      </template>
+      <template v-else-if="selectedTable === 'allTask'">
+        <PersonalWorkflowAvalible :processKeys="processKeys"  />
+      </template>
     </div>
-    <div v-else-if="state.activeTab === 'activeTask'" class="dashboard-item-tab--content--table" >
-      <PersonalWorkflowActive :processKeys="processKeys" />
-    </div>
-    <div v-else="state.activeTab === 'allTask'" class="dashboard-item-tab--content--table" >
-      <PersonalWorkflowAvalible :processKeys="processKeys"  />
-    </div>
-  </div>
+    <template v-if="!singleTableMode && state.activeTab ">
+      <el-tabs  v-model="state.activeTab" class="demo-tabs" @tab-change="handleCommand">
+        <el-tab-pane v-for="item in list" :key="item.key" :label="$t(item.name)" :name="item.key"></el-tab-pane>
+      </el-tabs>
+      <div v-if="state.activeTab === 'myTask'"  class="dashboard-item-tab--content--table" >
+        <PersonalWorkflowMy :processKeys="processKeys" />
+      </div>
+      <div v-else-if="state.activeTab === 'activeTask'" class="dashboard-item-tab--content--table" >
+        <PersonalWorkflowActive :processKeys="processKeys" />
+      </div>
+      <div v-else="state.activeTab === 'allTask'" class="dashboard-item-tab--content--table" >
+        <PersonalWorkflowAvalible :processKeys="processKeys"  />
+      </div>
+    </template>
+    
+</div>
 </template>
 <script lang="ts" setup>
 import { ArrowDown } from '@element-plus/icons-vue'
-const props = defineProps(['isTabView', 'processKeys','title'])
+const props = defineProps(['isTabView', 'processKeys','title', 'singleTableMode','selectedTable'])
 const emits = defineEmits(['tab-change'])
 const state = reactive<any>({
   activeTab: 'myTask',

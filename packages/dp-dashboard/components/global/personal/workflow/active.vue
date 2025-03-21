@@ -30,6 +30,7 @@ const {
   api: (pageParams: any) => getData(pageParams),
   columns: [
     { field: "taskInstance.businessKey", title: "table_name", fixed: "left" },
+    { field: "name", title: "workflow_taskName" },
     { field: "taskInstance.processDefinitionName", title: "workflow_workflow" },
   ],
   dblClickAction: ({ row, column, event }:any) => {
