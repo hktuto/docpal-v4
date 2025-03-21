@@ -4,7 +4,7 @@
       <template #toolbar_buttons>
         <div class="tableHeaderRow">
           <span>{{ $t('docType_metaMapping') }}</span>
-          <el-button id="adminBulkImportMetaAddNewDisplayMeta" class="button" type="primary"
+          <el-button id="BulkImport__Meta__AddNewDisplayMeta" class="button" type="primary"
                      @click="handleDialogShow()">{{ $t('docType_addDisplayMeta') }}
           </el-button>
         </div>

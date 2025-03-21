@@ -10,10 +10,10 @@
       <div class="footer-grid">
         <!-- Please use [[emailContent]] as content container. -->
         <div>{{ $t('tip.emailLayout') }}</div>
-        <el-button id="adminEmailContentTemplateCreateNewEmailLayoutInitEmailLayout" type="info" @click="handleInit">
+        <el-button id="EmailContentTemplate__CreateNewEmailLayout__InitEmailLayout" type="info" @click="handleInit">
           {{ $t('emailTemplate.initLayout') }}
         </el-button>
-        <el-button id="adminEmailContentTemplateCreateNewEmailLayoutSubmit" type="primary" :loading="state.loading"
+        <el-button id="EmailContentTemplate__CreateNewEmailLayout__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>

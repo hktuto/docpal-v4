@@ -3,7 +3,7 @@
     <div class="dashboard-page">
       <div class="dashboard-page--header">
         <el-dropdown trigger="click" @command="createDashboard">
-          <el-button id="adminCaseManagementDetailCaseDashboardViewLayoutAdd" type="primary">
+          <el-button id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Add" type="primary">
             {{ $t('common_add') }}
           </el-button>
           <template #dropdown>
@@ -15,8 +15,8 @@
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button id="adminCaseManagementDetailCaseDashboardViewLayoutSave" class="el-icon--right" type="primary"
-                   :loading="state.saveLoading" @click="handleSave">
+        <el-button id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Save" class="el-icon--right"
+                   type="primary" :loading="state.saveLoading" @click="handleSave">
           {{ $t('common_save') }}
         </el-button>
       </div>

@@ -7,7 +7,7 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminEasyFormDetailFormInformationAddFieldSubmit" type="primary" :loading="state.loading"
+      <el-button id="EasyForm__Detail__FormInformation__AddField__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t("common_submit") }}
       </el-button>

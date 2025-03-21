@@ -2,7 +2,7 @@
   <div class="permission-container">
     <div class="tableTopContainer">
       <h3>{{ $t("folderCabinet.localPermission") }}</h3>
-      <el-button id="adminFolderCabinetSettingInfoAddLocalPermission" size="small" type="primary" round
+      <el-button id="FolderCabinetSetting__Info__AddLocalPermission" size="small" type="primary" round
                  @click="handleAclLocalDialogShow">
         {{ $t("folder_cabinetDetailLocalPermissionAdd") }}
       </el-button>
@@ -38,7 +38,7 @@
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button :id="`adminFolderCabinetSettingInfoLocalPermissionRemove${row.userId}`" size="small" :loading="row.loading"
+            <el-button :id="`FolderCabinetSetting__Info__LocalPermission__Remove__${row.userId}`" size="small" :loading="row.loading"
                        @click="removeLocalAcl(row)">
               {{ $t("dpButtom_remove") }}
             </el-button>

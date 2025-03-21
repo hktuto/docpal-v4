@@ -10,7 +10,7 @@
           </div>
         </div>
         <LanguageUnitForm ref="LanguageUnitFormRef" :lKey="state.docTypeDetail.name"/>
-        <el-button id="adminDocumentTypeDetailSave" :loading="state.lanLoading" type="primary" @click="handleSave">
+        <el-button id="DocumentType__Detail__Save" :loading="state.lanLoading" type="primary" @click="handleSave">
           {{ $t('common_save') }}
         </el-button>
       </div>

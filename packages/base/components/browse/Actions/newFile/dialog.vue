@@ -12,7 +12,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="formChange"/>
     <MetaRenderForm2 ref="MetaFormRef"></MetaRenderForm2>
     <template #footer>
-      <el-button id="clientBrowseNewFileSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="Browse__NewFile__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>

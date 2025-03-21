@@ -2,7 +2,7 @@
   <el-dialog v-model="state.visible" :title="$t('user_addGroups')" :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminUserInfoAssignUserGroupSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="UserList__Info__AssignUserGroup__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>

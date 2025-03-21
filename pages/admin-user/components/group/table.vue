@@ -7,7 +7,7 @@
         inputKey="userNameOrEmail"
         :inputPlaceHolder="$t('placeHolder.userGroupName')"
       />
-      <el-button id="adminUserGroupListCreateGroup" class="el-icon--right button" type="primary"
+      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary"
                  @click="handleGroupDialogShow()">{{ $t('user_newGroup') }}
       </el-button>
     </template>

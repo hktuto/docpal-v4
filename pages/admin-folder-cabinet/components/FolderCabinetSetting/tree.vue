@@ -22,15 +22,15 @@
         placement="top"
       >
         <el-dropdown v-if="data.folder" trigger="click">
-          <el-icon id="adminFolderCabinetSettingInfoCreateNewFileOrFolder">
+          <el-icon id="FolderCabinetSetting__Info__CreateNewFileOrFolder">
             <Plus/>
           </el-icon>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item id="adminFolderCabinetSettingInfoCreateNewFile" @click="handleAdd(data, false)">
+              <el-dropdown-item id="FolderCabinetSetting__Info__CreateNewFile" @click="handleAdd(data, false)">
                 {{ $t('folder_cabinetDetailNewFile') }}
               </el-dropdown-item>
-              <el-dropdown-item id="adminFolderCabinetSettingInfoCreateNewFolderSubmit" @click="handleAdd(data, true)">
+              <el-dropdown-item id="FolderCabinetSetting__Info__CreateNewFolder__Submit" @click="handleAdd(data, true)">
                 {{ $t('folderCabinet.addFolder') }}
               </el-dropdown-item>
             </el-dropdown-menu>

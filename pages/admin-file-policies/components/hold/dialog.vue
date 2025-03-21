@@ -7,7 +7,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson">
     </FormRenderer>
     <template #footer>
-      <el-button id="adminHoldPolicySettingCreateNewHoldPolicySubmit" type="primary" :loading="state.loading"
+      <el-button id="HoldPolicySetting__CreateNewHoldPolicy__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

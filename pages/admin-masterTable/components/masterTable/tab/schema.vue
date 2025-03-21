@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%;overflow: auto" v-if="masterTableDetail">
     <div class="tableHeader">
-      <el-button id="adminMasterTableTableCreatedBySchemaAdd" type="primary" @click="handleSingleSchemaAdd">
+      <el-button id="MasterTable__Tables__Detail__Schema__Add" type="primary" @click="handleSingleSchemaAdd">
         {{ $t('common_add') }}
       </el-button>
     </div>

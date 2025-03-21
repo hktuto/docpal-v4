@@ -44,10 +44,10 @@
       </template>
     </draggable>
     <div class="actionButtons">
-      <el-button id="adminCaseManagementDetailAddField" type="primary" @click="handleOpenDialog()">
+      <el-button id="CaseManagement__Detail__Information__AddField" type="primary" @click="handleOpenDialog()">
         {{ $t('workflowEditor.addField') }}
       </el-button>
-      <ElButton id="adminCaseManagementDetailImportFromWorkflow" type="info" @click="importWorkflowField">
+      <ElButton id="CaseManagement__Detail__Information__ImportFromWorkflow" type="info" @click="importWorkflowField">
         {{ $t('caseManagement_ImportFromWorkflow') }}
       </ElButton>
     </div>

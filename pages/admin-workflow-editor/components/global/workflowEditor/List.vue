@@ -166,7 +166,7 @@ function reload() {
     <LazyWorkflowEditorWorkflowListTable ref="tableRef">
       <template #toolbar_buttons>
         <div class="flex-x-end">
-          <ElButton id="adminWorkflowEditorCreateNewWorkflow" type="primary" @click="createNewWorkflow">
+          <ElButton id="WorkflowEditor__CreateNewWorkflow" type="primary" @click="createNewWorkflow">
             {{ t('workflow_editorCreate') }}
           </ElButton>
         </div>

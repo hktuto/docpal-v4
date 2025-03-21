@@ -119,7 +119,7 @@
     </el-form>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminEasyFormDetailFormActionsAddNewFormActionSubmit" type="primary" :loading="state.loading"
+        <el-button id="EasyForm__Detail__FormActions__AddNewFormAction__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t("common_submit") }}
         </el-button>

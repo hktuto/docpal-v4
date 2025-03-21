@@ -14,7 +14,9 @@
                     @formChange="formChange"/>
       <MetaRenderForm2 ref="MetaFormRef"></MetaRenderForm2>
       <template #footer>
-        <el-button id="clientBrowseNewFolderSubmit" :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('submit') }}</el-button>
+        <el-button id="Browse__NewFolder__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+          {{ $t('submit') }}
+        </el-button>
       </template>
     </el-dialog>
   </div>

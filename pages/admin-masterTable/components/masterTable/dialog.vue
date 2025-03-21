@@ -9,7 +9,7 @@
     </FormRenderer>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminMasterTableMasterTableNameConfirm" type="primary" @click="handleSubmit">
+        <el-button id="MasterTable__Tables__CreateNewMasterTable__MasterTableName__Confirm" type="primary" @click="handleSubmit">
           {{ $t('confirm') }}
         </el-button>
       </div>

@@ -2,11 +2,12 @@
   <div>
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <FormRenderer :form-json="formJson" @formChange="handleFormChange" />
+        <FormRenderer :form-json="formJson" @formChange="handleFormChange"/>
       </template>
       <template #assignee="{ row }">
         <el-tag v-if="row.assignee" round>{{ row.assignee || "" }}</el-tag>
-        <el-button v-else type="primary" size="small" round @click="claimTask(row)">
+        <el-button :id="`Workflow__ActiveTask__Detail__ClaimTask__${row.id}`" v-else type="primary" size="small"
+                   round @click="claimTask(row)">
           {{ $t("workflow_claim") }}
         </el-button>
       </template>
@@ -19,13 +20,14 @@
 </template>
 <script lang="ts" setup>
 import formJson from "./active.vform.json";
-import { clientApi } from "api";
-import { routeWorkflowDetail } from "~/utils/routerHelper";
+import {clientApi} from "api";
+import {routeWorkflowDetail} from "~/utils/routerHelper";
+
 const routerProvider = inject(MenuRouterKey);
 if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
-const { t } = useI18n();
+const {t} = useI18n();
 // @ts-ignore
 const userId: string = useUserId().value;
 let extraParams: any = {};
@@ -45,8 +47,8 @@ const {
       interrelatedUserId: userId,
     }),
   columns: [
-    { field: "taskInstance.businessKey", title: "workflow_jobName", fixed: "left" },
-    { field: "taskInstance.processDefinitionName", title: "workflow_workflow" },
+    {field: "taskInstance.businessKey", title: "workflow_jobName", fixed: "left"},
+    {field: "taskInstance.processDefinitionName", title: "workflow_workflow"},
 
     {
       field: "name",
@@ -65,21 +67,24 @@ const {
     {
       field: "createDate",
       title: "workflow_createDate",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         // @ts-ignore
         return formatDate(cellValue)
       },
     },
   ],
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDblclick(row);
   },
 });
+
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeWorkflowDetail({...row, 
+  routerProvider?.navigateTo(routeWorkflowDetail({
+    ...row,
     name: row.taskInstance.businessKey,
-    workflowType: 'activeTask' }), false);
+    workflowType: 'activeTask'
+  }), false);
 }
 
 async function claimTask(row: any) {
@@ -99,6 +104,7 @@ function handleFormChange(data: any) {
   extraParams = params;
   reload();
 }
+
 function getDownloadParams() {
   return {
     interrelatedUserId: userId,
@@ -106,7 +112,7 @@ function getDownloadParams() {
   };
 }
 
-defineExpose({ getDownloadParams });
+defineExpose({getDownloadParams});
 </script>
 <style lang="scss" scoped>
 :deep .el-input {

@@ -68,7 +68,7 @@ provide(DamProviderKey, {
             attr="sourceType"
             @filter="handleKeywordFilter"
           ></KeywordFilter>
-          <el-button id="adminDAMSettingAdd" class="button-add" type="primary" @click="handleDialog()">
+          <el-button id="DAMSetting__Add" class="button-add" type="primary" @click="handleDialog()">
             {{ $t("common_add") }}
           </el-button>
         </div>

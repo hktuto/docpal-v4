@@ -6,7 +6,7 @@
       <el-option :label="$t('actions.active')" value="A"/>
       <el-option :label="$t('actions.inactive')" value="D"/>
     </el-select>
-    <el-button id="adminMasterTableTableCreatedBySettingActiveSave" type="primary" :loading="state.loading"
+    <el-button id="MasterTable__Tables__Detail__Setting__Active__Save" type="primary" :loading="state.loading"
                @click="handleSave">
       {{ $t("common_save") }}
     </el-button>

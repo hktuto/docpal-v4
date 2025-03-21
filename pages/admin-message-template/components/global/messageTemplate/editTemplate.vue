@@ -138,10 +138,10 @@ const textMessage = "TextMessage"
       <div class="actions">
         <el-popconfirm title="All unsave change will lost" @confirm="init">
           <template #reference>
-            <ElButton id="adminMessageTemplateDetailEditTemplateDiscard">{{ $t('discard') }}</ElButton>
+            <ElButton id="MessageTemplate__Detail__EditTemplate__Discard">{{ $t('discard') }}</ElButton>
           </template>
         </el-popconfirm>
-        <ElButton id="adminMessageTemplateDetailEditTemplateSave" type="primary" @click="saveData">
+        <ElButton id="MessageTemplate__Detail__EditTemplate__Save" type="primary" @click="saveData">
           {{ $t('common_save') }}
         </ElButton>
       </div>

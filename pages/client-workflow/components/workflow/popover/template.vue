@@ -10,10 +10,10 @@
       <FormVariablesRenderer ref="FormVariablesRendererRef"/>
     </div>
     <template #footer>
-      <el-button id="clientWorkflowPersonalWorkflowCancel" @click="state.dialogVisible = false">
+      <el-button id="Workflow__PersonalWorkflow__Cancel" @click="state.dialogVisible = false">
         {{ $t('dpButtom_cancel') }}
       </el-button>
-      <el-button id="clientWorkflowPersonalWorkflowDownload" type="primary" v-if="state.canDownload"
+      <el-button id="Workflow__PersonalWorkflow__Download" type="primary" v-if="state.canDownload"
                  :loading="state.loading" @click="handleSubmit">
         {{ $t('common_download') }}
       </el-button>

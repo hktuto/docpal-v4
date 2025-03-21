@@ -59,10 +59,10 @@
       </el-row>
     </el-form>
     <template #footer>
-      <el-button id="clientExternalSharingEditSharingRequestCancel" @click="dialogVisible = false">
+      <el-button id="ExternalSharing__EditSharingRequest__Cancel" @click="dialogVisible = false">
         {{ $t('dpButtom_cancel') }}
       </el-button>
-      <el-button id="clientExternalSharingEditSharingRequestSubmit" type="primary" @click="handleSubmit">
+      <el-button id="ExternalSharing__EditSharingRequest__Submit" type="primary" @click="handleSubmit">
         {{ $t('submit') }}
       </el-button>
     </template>

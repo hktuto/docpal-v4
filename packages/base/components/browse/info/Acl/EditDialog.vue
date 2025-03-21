@@ -6,7 +6,7 @@
     append-to-body>
     <FormRenderer ref="FromRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="clientBrowseCreateInternalSharingSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="Browse__CreateInternalSharing__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>

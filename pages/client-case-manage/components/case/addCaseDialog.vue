@@ -112,7 +112,7 @@ defineExpose({handleOpen})
     <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="clientCaseManagementDetailsAddNewRowSubmit" type="primary" :loading="state.loading"
+        <el-button id="CaseManagement__Detail__AddNewRow__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
