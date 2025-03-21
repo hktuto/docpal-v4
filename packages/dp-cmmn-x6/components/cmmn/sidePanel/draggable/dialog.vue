@@ -1,14 +1,17 @@
 <template>
-    <el-dialog v-model="state.visible"
-               :title="state.isEdit ? $t('caseManagement_editField') : $t('workflowEditor.addField')"
-               :close-on-click-modal="false"
-               destroy-on-close
-    >
-        <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
-        <template #footer>
-            <el-button id="adminCaseManagementDetailAddFieldSubmit" :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('common_submit') }}</el-button>
-        </template>
-    </el-dialog>
+  <el-dialog v-model="state.visible"
+             :title="state.isEdit ? $t('caseManagement_editField') : $t('workflowEditor.addField')"
+             :close-on-click-modal="false"
+             destroy-on-close
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <template #footer>
+      <el-button id="CaseManagement__Detail__Information__AddField__Submit" :loading="state.loading" type="primary"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 import {adminApi} from 'api'
@@ -19,148 +22,148 @@ import flowableOutForm from './form/flowableOut.vform.json'
 import sentryForm from './form/sentry.vform.json'
 
 const props = defineProps<{
-    formJsonUrl: any,
-    node: any,
-    graph: any,
-    filterList: any
+  formJsonUrl: any,
+  node: any,
+  graph: any,
+  filterList: any
 }>()
 const emits = defineEmits([
-    'refresh', 'edit', 'create'
+  'refresh', 'edit', 'create'
 ])
 const formJson = computed(() => {
-    switch (props.formJsonUrl) {
-        case 'field':
-            return fieldForm
-        case 'humanTaskFields':
-            return humanTaskFieldsForm
-        case 'flowableIn':
-            return flowableInForm
-        case 'flowableOut':
-            return flowableOutForm
-        case 'sentry':
-            return sentryForm
-        default:
-            return {}
-    }
+  switch (props.formJsonUrl) {
+    case 'field':
+      return fieldForm
+    case 'humanTaskFields':
+      return humanTaskFieldsForm
+    case 'flowableIn':
+      return flowableInForm
+    case 'flowableOut':
+      return flowableOutForm
+    case 'sentry':
+      return sentryForm
+    default:
+      return {}
+  }
 })
 const {caseId} = useCmmnGraph();
 const state = reactive({
-    visible: false,
-    isEdit: false,
-    workflowProperties: []
+  visible: false,
+  isEdit: false,
+  workflowProperties: []
 })
 const FormRendererRef = ref()
 
 // const formJson = getJsonApi('admin/adminAclForm.json')
 async function handleSubmit() {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    if (state.isEdit) emits('edit', {...data})
-    else emits('create', {...data})
-    state.visible = false
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  if (state.isEdit) emits('edit', {...data})
+  else emits('create', {...data})
+  state.visible = false
 }
 
 function handleOpen(row: any) {
-    state.isEdit = !!row ? true : false
-    state.visible = true
-    setTimeout(async () => {
-        // FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
-        FormRendererRef.value.vFormRenderRef.resetForm()
-        if (state.isEdit && !!row) await FormRendererRef.value.vFormRenderRef.setFormData({...row})
-        setFormOptions(row)
-    })
+  state.isEdit = !!row ? true : false
+  state.visible = true
+  setTimeout(async () => {
+    // FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    if (state.isEdit && !!row) await FormRendererRef.value.vFormRenderRef.setFormData({...row})
+    setFormOptions(row)
+  })
 }
 
 async function setFormOptions(row: any) {
-    let workflowProperties: any = []
-    let filterList
-    switch (props.formJsonUrl) {
-        case 'field':
-            setFileterList(row)
-            break
-        case 'humanTaskFields':
-            filterList = setFileterList(row)
-            loadCaseInfomationOptions('name', filterList)
-            break
-        case 'flowableIn':
-            const inWorkflowTarget = FormRendererRef.value.vFormRenderRef.getWidgetRef('target')
-            workflowProperties = await getWorkflowProperties()
-            inWorkflowTarget.loadOptions(workflowProperties)
-            filterList = getFilterList(row, 'source')
-            loadCaseInfomationOptions('source', filterList, 'source')
-            break;
-        case 'flowableOut':
-            const outWorkflowSource = FormRendererRef.value.vFormRenderRef.getWidgetRef('source')
-            workflowProperties = await getWorkflowProperties()
-            outWorkflowSource.loadOptions(workflowProperties)
-            filterList = getFilterList(row, 'target')
-            loadCaseInfomationOptions('target', filterList, 'target')
-            break;
-        case 'sentry':
-            // filterList = getFilterList(row, 'target')
-            loadCaseInfomationOptions('properties')
-            break;
-        default:
-            break;
-    }
+  let workflowProperties: any = []
+  let filterList
+  switch (props.formJsonUrl) {
+    case 'field':
+      setFileterList(row)
+      break
+    case 'humanTaskFields':
+      filterList = setFileterList(row)
+      loadCaseInfomationOptions('name', filterList)
+      break
+    case 'flowableIn':
+      const inWorkflowTarget = FormRendererRef.value.vFormRenderRef.getWidgetRef('target')
+      workflowProperties = await getWorkflowProperties()
+      inWorkflowTarget.loadOptions(workflowProperties)
+      filterList = getFilterList(row, 'source')
+      loadCaseInfomationOptions('source', filterList, 'source')
+      break;
+    case 'flowableOut':
+      const outWorkflowSource = FormRendererRef.value.vFormRenderRef.getWidgetRef('source')
+      workflowProperties = await getWorkflowProperties()
+      outWorkflowSource.loadOptions(workflowProperties)
+      filterList = getFilterList(row, 'target')
+      loadCaseInfomationOptions('target', filterList, 'target')
+      break;
+    case 'sentry':
+      // filterList = getFilterList(row, 'target')
+      loadCaseInfomationOptions('properties')
+      break;
+    default:
+      break;
+  }
 }
 
 function getFilterList(row: any = {}, uniqueName: string = 'name') {
-    let list
-    try {
-        if (!!row) list = props.filterList.filter(item => item[uniqueName] !== row[uniqueName])
-        else list = [...props.filterList]
-        console.log(list);
+  let list
+  try {
+    if (!!row) list = props.filterList.filter(item => item[uniqueName] !== row[uniqueName])
+    else list = [...props.filterList]
+    console.log(list);
 
-    } catch (error) {
-        list = []
-    }
-    return list
+  } catch (error) {
+    list = []
+  }
+  return list
 }
 
 function setFileterList(row: any, uniqueName: string = 'filterList') {
-    const filterList = getFilterList(row)
-    const filterListRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
-    filterListRef.loadOptions(filterList)
-    return filterList
+  const filterList = getFilterList(row)
+  const filterListRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
+  filterListRef.loadOptions(filterList)
+  return filterList
 }
 
 async function loadCaseInfomationOptions(uniqueName: string, filterList: any = null, prop: string = 'id') {
-    const widgetRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
-    let caseProperties = await getCaseInformation(props.graph)
-    if (!!filterList) {
-        caseProperties = caseProperties.filter(item => !filterList.find(f => f[prop] === item.value))
-    }
-    widgetRef.loadOptions(caseProperties)
+  const widgetRef = FormRendererRef.value.vFormRenderRef.getWidgetRef(uniqueName)
+  let caseProperties = await getCaseInformation(props.graph)
+  if (!!filterList) {
+    caseProperties = caseProperties.filter(item => !filterList.find(f => f[prop] === item.value))
+  }
+  widgetRef.loadOptions(caseProperties)
 }
 
 async function getWorkflowProperties() {
-    try {
-        const workflow = props.node.data.data.processRefExpression.__cdata
+  try {
+    const workflow = props.node.data.data.processRefExpression.__cdata
 
-        const options = await adminApi.api.postWorkflowProperties({processKey: workflow})
-        return options.map(item => ({
-            label: item.name,
-            value: item.id
-        }))
-    } catch (error) {
+    const options = await adminApi.api.postWorkflowProperties({processKey: workflow})
+    return options.map(item => ({
+      label: item.name,
+      value: item.id
+    }))
+  } catch (error) {
 
-        return []
-    }
+    return []
+  }
 }
 
 function getCaseInformation(graph) {
-    try {
-        const caseNode = graph.getCellById(caseId.value)
-        const casePlanModel = caseNode.data.data.casePlanModel ? caseNode.data.data.casePlanModel : caseNode.data.data.data.casePlanModel
-        const field = casePlanModel.extensionElements['docpal:form'][0].field
-        return field.map(item => ({
-            ...item,
-            label: item.attr_name,
-            value: item.attr_id
-        }))
-    } catch (error) {
-        return []
-    }
+  try {
+    const caseNode = graph.getCellById(caseId.value)
+    const casePlanModel = caseNode.data.data.casePlanModel ? caseNode.data.data.casePlanModel : caseNode.data.data.data.casePlanModel
+    const field = casePlanModel.extensionElements['docpal:form'][0].field
+    return field.map(item => ({
+      ...item,
+      label: item.attr_name,
+      value: item.attr_id
+    }))
+  } catch (error) {
+    return []
+  }
 }
 
 defineExpose({handleOpen})

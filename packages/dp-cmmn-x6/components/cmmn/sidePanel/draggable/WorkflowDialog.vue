@@ -137,7 +137,7 @@ defineExpose({open})
       </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton id="adminCaseManagementDetailImportFromWorkflowSubmit" type="primary" @click="submit">
+      <ElButton id="CaseManagement__Detail__Information__ImportFromWorkflow__Submit" type="primary" @click="submit">
         {{ $t('common_submit') }}
       </ElButton>
     </template>

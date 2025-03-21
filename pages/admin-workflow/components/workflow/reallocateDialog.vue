@@ -16,7 +16,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="adminActiveWorkflowManagementReallocateTaskSubmit" type="primary" @click="handleSubmit">
+      <el-button id="ActiveWorkflowManagement__ReallocateTask__Submit" type="primary" @click="handleSubmit">
         {{ $t('submit') }}
       </el-button>
     </template>

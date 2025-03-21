@@ -2,7 +2,7 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <el-button id="adminActiveWorkflowManagementDelete" v-show="state.selectedRows.length > 0" type="danger"
+        <el-button id="ActiveWorkflowManagement__Delete" v-show="state.selectedRows.length > 0" type="danger"
                    @click="handleDeleteSelected()">
           {{ $t("common_delete") }}
         </el-button>

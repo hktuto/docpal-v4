@@ -2,11 +2,11 @@
   <div class="card">
     <div class="tableTopContainer">
       <h3>{{ $t('Inherent') }}</h3>
-      <el-button id="adminAccessControlListRemoveInherent" v-if="tableData.length > 0" :loading="state.loading" size="small"
+      <el-button id="AccessControlList__Inherent__RemoveInherent" v-if="tableData.length > 0" :loading="state.loading" size="small"
                  type="primary" round @click="blockInherited">
         {{ $t('accessControl_removeInherent') }}
       </el-button>
-      <el-button id="adminAccessControlListInherent" v-else size="small" :loading="state.loading" type="primary" round
+      <el-button id="AccessControlList__Inherent__Inherent" v-else size="small" :loading="state.loading" type="primary" round
                  @click="unBlockInherited">
         {{ $t('accessControl_inherent') }}
       </el-button>

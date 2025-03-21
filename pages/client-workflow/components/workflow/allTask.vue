@@ -7,7 +7,7 @@
       </template>
       <template #assignee="{ row }">
         <el-tag v-if="row.assignee" round>{{ row.assignee || "" }}</el-tag>
-        <el-button v-else type="primary" size="small" round @click="claimTask(row)">
+        <el-button :id="`Workflow__AvaliableTask__Detail__ClaimTask__${row.id}`" v-else type="primary" size="small" round @click="claimTask(row)">
           {{ $t("workflow_claim") }}
         </el-button>
       </template>

@@ -4,7 +4,7 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminMasterTableTableCreatedBySettingPermissionsAddPermissionSubmit" type="primary"
+      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission__Submit" type="primary"
                  :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

@@ -14,7 +14,7 @@
         />
       </el-formItem>
     </el-form>
-    <el-button id="adminEasyFormDetailFormSettingPublish" :loading="state.publishLoading" type="primary"
+    <el-button id="EasyForm__Detail__FormSetting__Publish" :loading="state.publishLoading" type="primary"
                @click="handlePublish">
       {{ $t('button.publish') }}
     </el-button>

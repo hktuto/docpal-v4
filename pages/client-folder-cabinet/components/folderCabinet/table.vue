@@ -9,7 +9,7 @@
           inputPlaceHolder="folder_cabinetFilterItemName"
         />
         <el-button
-          id="clientFolderCabinetAllowOtherFilesCabinetNewItem"
+          id="FolderCabinet__AllowOtherFilesCabinet__NewItem"
           data-testid="folderCabinetConfig-new-button"
           type="primary"
           @click="handleAdd()"

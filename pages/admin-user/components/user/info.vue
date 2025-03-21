@@ -10,7 +10,7 @@
             :content="$t('user_editUser')"
             placement="top"
           >
-            <Icon id="adminUserInfoEdit" name="material-symbols:edit-square" class="normal cursor-pointer" style="width: 20px; height: 20px;"
+            <Icon id="UserList__Info__Edit" name="material-symbols:edit-square" class="normal cursor-pointer" style="width: 20px; height: 20px;"
                   @click="handleEdit"></Icon>
           </el-tooltip>
           <el-tooltip
@@ -19,7 +19,7 @@
             :content="$t('user_editPassword')"
             placement="top"
           >
-            <Icon id="adminUserInfoChangePassword" name="mynaui:lock-password-solid" class="normal cursor-pointer"
+            <Icon id="UserList__Info__ChangePassword" name="mynaui:lock-password-solid" class="normal cursor-pointer"
                   style="width: 20px; height: 20px;" @click="openDialog"></Icon>
           </el-tooltip>
           <el-tooltip
@@ -28,7 +28,7 @@
             :content="$t('user_deleteUser')"
             placement="top"
           >
-            <Icon id="adminUserInfoDeleteUser" name="material-symbols:delete-rounded" style="width: 20px; height: 20px;"
+            <Icon id="UserList__Info__DeleteUser" name="material-symbols:delete-rounded" style="width: 20px; height: 20px;"
                   class="normal cursor-pointer"
                   @click="handleDelete"></Icon>
           </el-tooltip>

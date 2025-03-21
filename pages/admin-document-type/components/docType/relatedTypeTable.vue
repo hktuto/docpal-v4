@@ -9,7 +9,7 @@
           inputPlaceHolder="documentType_relatedFilter"
         />
         <el-button
-          id="adminDocumentTypeAddNewRelatedDocument"
+          id="DocumentType__RelatedDocument__AddNewRelatedDocument"
           type="primary"
           @click="handleDialogShow()"
         >

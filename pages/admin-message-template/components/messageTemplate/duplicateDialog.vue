@@ -7,6 +7,7 @@ const dialogVisible = ref(false)
 const emits = defineEmits(['success'])
 const newTempalteName = ref("")
 const oldTemplate = ref()
+const {t} = useI18n()
 
 async function getOldTemplate(row: any) {
   const res = await adminApi.api.getMessageTemplateDetailsId(row.id)
@@ -44,7 +45,9 @@ defineExpose({
     </ElForm>
     <template #footer>
         <span class="dialog-footer">
-            <ElButton id="adminMessageTemplateDuplicateSubmit" type="primary" @click="submit">Submit</ElButton>
+            <ElButton id="MessageTemplate__Detail__Duplicate__Submit" type="primary" @click="submit">
+              {{ t('common_submit') }}
+            </ElButton>
         </span>
     </template>
   </ElDialog>

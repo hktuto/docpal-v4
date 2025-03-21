@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="dashboard_filter"
         />
-        <el-button id="adminDashboardCreateNewDashboard" type="primary" @click="handleCreate">
+        <el-button id="Dashboard__CreateNewDashboard" type="primary" @click="handleCreate">
           {{ $t('dashboard_create') }}
         </el-button>
       </template>

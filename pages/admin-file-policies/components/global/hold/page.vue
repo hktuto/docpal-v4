@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="holdPolicy_filter"
         />
-        <el-button id="adminHoldPolicySettingCreateNewHoldPolicy" type="primary" @click="handleAdd">
+        <el-button id="HoldPolicySetting__CreateNewHoldPolicy" type="primary" @click="handleAdd">
           {{ $t('holdPolicies.create') }}
         </el-button>
       </template>

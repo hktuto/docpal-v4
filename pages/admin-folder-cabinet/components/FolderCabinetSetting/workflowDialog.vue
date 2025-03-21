@@ -9,7 +9,7 @@
       <li v-for="item in state.list">{{ item.name }}</li>
     </ul>
     <template #footer>
-      <el-button id="adminFolderCabinetSettingInfoSaveConfirm" type="primary" :loading="state.loading"
+      <el-button id="FolderCabinetSetting__Info__Save__Confirm" type="primary" :loading="state.loading"
                  @click="state.visible = false">
         {{ $t("confirm") }}
       </el-button>

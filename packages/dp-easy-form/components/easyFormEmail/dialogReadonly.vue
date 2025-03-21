@@ -34,7 +34,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="" :loading="state.loading" @click="state.visible = false">
+      <el-button id="EasyForm__Detail__EmailLogs__ViewDetails__Close" :loading="state.loading" @click="state.visible = false">
         {{ $t("button.close") }}
       </el-button>
     </template>

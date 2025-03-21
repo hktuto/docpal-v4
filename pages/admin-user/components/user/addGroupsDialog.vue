@@ -5,7 +5,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <!-- <el-text class="mx-1" type="danger">{{ $t('dpTip.resetWarning') }}</el-text> -->
-      <el-button id="adminUserListAssignUserGroupSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="UserList__AssignUserGroup__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -79,11 +79,11 @@ async function handleOptions(exitList) {
 }
 
 async function getGroupList() {
-    // if(state.groupList.length > 0) return
-    state.groupList = await userProvider?.GetGroupListApi()
+  // if(state.groupList.length > 0) return
+  state.groupList = await userProvider?.GetGroupListApi()
 }
 
-defineExpose({ handleOpen })
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 </style>

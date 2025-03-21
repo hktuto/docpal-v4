@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="emailContentTemplate_layoutFilter"
         />
-        <el-button id="adminEmailContentTemplateCreateNewEmailLayout" type="primary" @click="handleAdd">
+        <el-button id="EmailContentTemplate__CreateNewEmailLayout" type="primary" @click="handleAdd">
           {{ $t('emailContentTemplate_layoutCreate') }}
         </el-button>
       </template>

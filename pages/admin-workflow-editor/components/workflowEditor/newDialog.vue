@@ -103,7 +103,7 @@ defineExpose({handleOpen})
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="adminWorkflowEditorCreateNewWorkflowSubmit" type="primary" :loading="state.loading"
+      <el-button id="WorkflowEditor__CreateNewWorkflow__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">{{ $t('common_submit') }}
       </el-button>
     </template>

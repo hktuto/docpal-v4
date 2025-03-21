@@ -58,11 +58,11 @@
     </el-form>
     <CaseManagementDetailPermissionDrag :list="state.permissionField"/>
     <template #footer>
-      <el-button id="adminCaseManagementDetailAddPermissionDelete" v-if="state.setting?.name" type="danger"
+      <el-button id="CaseManagement__Detail__Permission__AddPermission__Delete" v-if="state.setting?.name" type="danger"
                  @click="handleDelete">
         {{ $t('common_delete') }}
       </el-button>
-      <el-button id="adminCaseManagementDetailAddPermissionSubmit" type="primary" :loading="state.loading"
+      <el-button id="CaseManagement__Detail__Permission__AddPermission__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

@@ -3,7 +3,7 @@
     <div>
       <h3 class="title">{{ $t("master.setting.permission") }}</h3>
       <div class="description">{{ $t("master.setting.permissionDescription") }}</div>
-      <el-button id="adminMasterTableTableCreatedBySettingPermissionsAddPermission" type="primary" @click="handleAdd">
+      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission" type="primary" @click="handleAdd">
         {{ $t("masterTable_settingAddPermission") }}
       </el-button>
     </div>
@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button :id="`adminMasterTableTableCreatedBySettingPermissionsRemove${row.userId}`" size="small"
+            <el-button :id="`MasterTable__Tables__Detail__Setting__Permissions__Remove__${row.userId}`" size="small"
                        :loading="row.loading" @click="handleRemove(row)">
               {{ $t("dpButtom_remove") }}
             </el-button>

@@ -161,7 +161,7 @@ onActivated(async () => {
                       :showClose="false">
         <div class="template-title">{{ $t('template.variable') }}</div>
         <FormVariablesRenderer ref="FormVariablesRendererRef"/>
-        <el-button id="adminDocumentTemplatePreviewDocumentTestTemplateDownload" :loading="state.downloadLoading"
+        <el-button id="DocumentTemplate__PreviewDocument__TestTemplateDownload" :loading="state.downloadLoading"
                    @click="handleTest">{{ $t('template.test') }}
         </el-button>
       </InteractDrawer>

@@ -12,11 +12,11 @@
     </FormRenderer>
     <template #footer>
       <!-- <FromRegexButton /> -->
-      <el-button id="adminDocumentTypeDisplayMetaAddNewDisplayMetaSubmit" :loading="state.loading"
+      <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta__Submit" :loading="state.loading"
                  @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
-      <el-button id="adminDocumentTypeDisplayMetaAddNewDisplayMetaSubmitAndAddMore" v-show="!state.isEdit"
+      <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta__SubmitAndAddMore" v-show="!state.isEdit"
                  type="primary" :loading="state.loading" @click="handleSubmit(true)">
         {{ $t('common_addMore') }}
       </el-button>

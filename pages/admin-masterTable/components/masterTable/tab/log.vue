@@ -5,6 +5,7 @@
                 ref="ResponsiveFilterRef"
                 @form-change="handleFilterFormChange"
                 inputKey="name"
+                inputPlaceHolder="masterTable_detailLogFilter"
             />
         </template>
     </VxeGrid>

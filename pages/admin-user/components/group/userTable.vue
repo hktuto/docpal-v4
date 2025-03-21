@@ -6,16 +6,16 @@
           <b class="el-icon--left ">
             {{ $t("notifications.userSelectedByUserGroup") }}: {{ state.selectedRows.length }}
           </b>
-          <SvgIcon id="adminUserGroupInfoClearSelected" :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
+          <SvgIcon id="UserGroupList__Info__ClearSelected" :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
                    @click="cleanSelectedRows"/>
         </div>
-        <el-button id="adminUserGroupInfoRemoveUser" type="danger" @click="handleDeleteSelected()">
+        <el-button id="UserGroupList__Info__RemoveUser" type="danger" @click="handleDeleteSelected()">
           {{ $t("Remove User") }}
         </el-button>
       </div>
       <div v-show="state.selectedRows.length === 0" class="flex-x-between">
         <span>{{ $t('user_users') }}</span>
-        <el-button id="adminUserGroupInfoAddUsersToUserGroup" v-show="group && group.isCanModified" class="button"
+        <el-button id="UserGroupList__Info__AddUsersToUserGroup" v-show="group && group.isCanModified" class="button"
                    type="primary" @click="handleGroupAddMemberFormShow()">
           {{ $t('user_addUsersToUserGroup') }}
         </el-button>

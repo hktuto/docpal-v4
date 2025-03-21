@@ -71,10 +71,12 @@
       </el-row>
     </el-form>
     <template #footer>
-      <el-button id="adminInternalShareEditExternalShareLinkReset" @click="dialogVisible = false">
+      <el-button id="ExternalShare__EditExternalShareLink__Reset" @click="dialogVisible = false">
         {{ $t("common_reset") }}
       </el-button>
-      <el-button id="adminInternalShareEditExternalShareLinkSubmit" @click="handleSubmit">{{ $t("submit") }}</el-button>
+      <el-button id="ExternalShare__EditExternalShareLink__Submit" type="primary" @click="handleSubmit">
+        {{ $t("submit") }}
+      </el-button>
     </template>
   </el-dialog>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown id="clientWorkflowNewWorkflow" popper-class="popover-auto" trigger="click"
+  <el-dropdown id="Workflow__NewWorkflow" popper-class="popover-auto" trigger="click"
                @command="workflowClickHandler">
     <el-button type="primary">
       {{ $t('workflow_newWorkflow') }}
@@ -30,7 +30,7 @@
       </ElTabPane>
     </ElTabs>
     <template #footer>
-      <el-button id="clientWorkflowNewWorkflowStartWorkflow" type="primary" v-if="activeName === 'Form'"
+      <el-button id="Workflow__NewWorkflow__StartWorkflow" type="primary" v-if="activeName === 'Form'"
                  :loading="state.loading" @click="checkAndSubmit">
         {{ $t('workflow_startWorkflow') }}
       </el-button>

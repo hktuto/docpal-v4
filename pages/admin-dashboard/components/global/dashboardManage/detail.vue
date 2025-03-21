@@ -95,12 +95,12 @@ onActivated(() => {
     <div class="flex-x-between">
       <div class="flex-x-between">
         <span class="template-title"> {{ state.info.name }} </span>
-        <Icon id="adminDashboardEditDashboardContentEdit" name="material-symbols:edit-square"
+        <Icon id="Dashboard__EditDashboardContent__Edit" name="material-symbols:edit-square"
               class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
       <div>
         <el-dropdown trigger="click" @command="handleAdd">
-          <el-button id="adminDashboardEditDashboardContentAdd" type="primary">
+          <el-button id="Dashboard__EditDashboardContent__Add" type="primary">
             {{ $t("common_add") }}
           </el-button>
           <template #dropdown>
@@ -123,7 +123,7 @@ onActivated(() => {
         </el-dropdown>
 
         <el-button
-          id="adminDashboardEditDashboardContentSave"
+          id="Dashboard__EditDashboardContent__Save"
           class="el-icon--right"
           type="primary"
           :loading="state.saveLoading"

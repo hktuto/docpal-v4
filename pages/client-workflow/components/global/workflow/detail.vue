@@ -231,9 +231,9 @@ async function addtionalSubmit(formData: any) {
     .then((res) => res.data);
   ElMessage.success(`${t("msg_successfulOperation")}`);
   const fallbackRoute = routeWorkflowPage({
-      workflowType: workflowType,
-    });
-    routerProvider?.back(fallbackRoute)
+    workflowType: workflowType,
+  });
+  routerProvider?.back(fallbackRoute)
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
@@ -303,8 +303,10 @@ onActivated(() => {
               <template v-for="(item,index) in additionalButton" :key="index">
                 <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
               </template>
-              <el-button @click="handleSave">{{ $t("workflow_save") }}</el-button>
-              <el-button type="primary" @click="handleSubmit">
+              <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" @click="handleSave">
+                {{ $t("workflow_save") }}
+              </el-button>
+              <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" @click="handleSubmit">
                 {{ $t("common_submit") }}
               </el-button>
             </div>
@@ -343,7 +345,9 @@ onActivated(() => {
   </div>
   <div v-else>
     Workflow id not found, workflow id : {{ id }}.
-    <el-button type="primary" @click="handleBack">{{ $t('common_back') }}</el-button>
+    <el-button id="Workflow__AvailableTask__Detail__Form__Back" type="primary" @click="handleBack">
+      {{ $t('common_back') }}
+    </el-button>
   </div>
 </template>
 <style lang="scss" scoped>

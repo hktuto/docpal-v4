@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           :inputPlaceHolder="$t('folder_cabinetFilterMsg')"
         />
-        <el-button id="adminFolderCabinetSettingCreateNewFolderCabinet" data-testid="folderCabinetConfig-new-button"
+        <el-button id="FolderCabinetSetting__CreateNewFolderCabinet" data-testid="folderCabinetConfig-new-button"
                    type="primary" @click="handleInfo()">
           {{ $t("folderCabinet.add") }}
         </el-button>

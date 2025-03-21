@@ -9,13 +9,13 @@
           <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
                    @click="cleanSelectedRows"/>
         </div>
-        <el-button id="adminUserInfoDelete" type="danger" @click="handleDeleteSelected()">
+        <el-button id="UserList__Info__Delete" type="danger" @click="handleDeleteSelected()">
           {{ $t("common_delete") }}
         </el-button>
       </div>
       <div v-show="state.selectedRows.length === 0" class="flex-x-between">
         <span><h3>{{ $t('user_userGroupAssignment') }}</h3></span>
-        <el-button id="adminUserInfoAssignUserGroup" class="button" type="primary"
+        <el-button id="UserList__Info__AssignUserGroup" class="button" type="primary"
                    @click="handleGroupAddMemberFormShow()">
           {{ $t('user_addGroups') }}
         </el-button>

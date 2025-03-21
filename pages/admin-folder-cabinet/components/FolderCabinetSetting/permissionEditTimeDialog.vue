@@ -6,7 +6,7 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminFolderCabinetSettingInfoLocalPermissionEditTimeSubmit" type="primary" :loading="state.loading"
+      <el-button id="FolderCabinetSetting__Info__LocalPermission__EditTime__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t("common_submit") }}
       </el-button>

@@ -8,7 +8,7 @@
           inputKey="name"
           inputPlaceHolder="documentType_filter"
         />
-        <el-button id="adminDocumentTypeCreateNewDocumentType" type="primary" @click="handleCreate">
+        <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
           {{ $t('docType.new') }}
         </el-button>
       </template>

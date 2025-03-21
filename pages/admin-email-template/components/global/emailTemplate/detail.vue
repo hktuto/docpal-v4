@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import {adminApi} from "api";
-import {routeEmailTemplate} from "~/utils/routerHelper";
 
 const routerProvider = inject(MenuRouterKey)
 const {t} = useI18n()
@@ -155,18 +154,18 @@ onActivated(async () => {
     <Editorjs v-if="data" ref="editorEl" :data="data" :layout="layoutHtml">
       <template #name>
         <div class="editButton">
-          <SvgIcon id="adminEmailContentTemplateDetailEdit" :src="'/icons/edit.svg'" @click="handleEdit"/>
+          <SvgIcon id="EmailContentTemplate__Detail__Edit" :src="'/icons/edit.svg'" @click="handleEdit"/>
         </div>
       </template>
       <template #action>
         <ElSelect type="primary" v-model="selectedLayout">
           <ElOption v-for="item in layouts" :key="item.id" :label="item.name" :value="item.id"></ElOption>
         </ElSelect>
-        <ElButton id="adminEmailContentTemplateDetailSendTest" type="primary" size="small"
+        <ElButton id="EmailContentTemplate__Detail__SendTest" type="primary" size="small"
                   @click="testEmailOpened = true">
           {{ $t("email_send_test") }}
         </ElButton>
-        <ElButton id="adminEmailContentTemplateDetailSave" type="primary" size="small" @click="save">
+        <ElButton id="EmailContentTemplate__Detail__Save" type="primary" size="small" @click="save">
           {{ $t("common_save") }}
         </ElButton>
       </template>
@@ -188,7 +187,7 @@ onActivated(async () => {
         <!-- <ElButton v-if="!showClose" type="primary" @click="$router.back()">{{
         $t("common_back")
       }}</ElButton> -->
-        <ElButton id="adminEmailContentTemplateCreateNewEmailTemplateSubmit" type="primary" @click="save">
+        <ElButton id="EmailContentTemplate__CreateNewEmailTemplate__Submit" type="primary" @click="save">
           {{ $t("common_submit") }}
         </ElButton>
       </template>

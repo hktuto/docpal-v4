@@ -6,7 +6,7 @@
       </ElFormItem>
     </ElForm>
     <div style="text-align: end;">
-      <ElButton id="adminWatermarkSettingCreateNewWatermarkSubmit" class="button " type="primary" @click="submit">
+      <ElButton id="WatermarkSetting__CreateNewWatermark__Submit" class="button " type="primary" @click="submit">
         {{ t('submit') }}
       </ElButton>
     </div>
