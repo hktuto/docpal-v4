@@ -114,8 +114,21 @@ function setHightLightPanel(panelId:string){
 
 function toggleMenuStick(){
     menuStick.value = !menuStick.value
+    if(!menuStick.value){
+        localStorage.setItem('docpal-closeMenu', '1')
+    }else{
+        localStorage.removeItem('docpal-closeMenu')
+    }
 }
 
+onMounted(() => {
+    const LastMenuClosed = localStorage.getItem('docpal-closeMenu')
+    if(LastMenuClosed){
+        menuStick.value = false
+    }else{
+        menuStick.value = true
+    }
+})
 
 watch(hightLightPanel,(item) => {
     emits('highlightPanelChanged', item)
