@@ -81,9 +81,9 @@ async function getMemberGroupList() {
   const res = await userProviderDetail?.MemberGroupGetApi({
     userId: props.user.userId
   })
+  state.groupList = res.data
   handleFilterFormChange(filterParams)
   // tableRef.value?.loadData(res.data)
-  state.groupList = res.data
 }
 
 async function handleDelete(row: any) {
@@ -141,12 +141,6 @@ onActivated(() => {
   state.selectedRows = []
 })
 
-
-watch(() => props.user, async (newValue: any) => {
-  if (newValue) getMemberGroupList()
-}, {
-  immediate: true
-})
 </script>
 
 <style lang="scss" scoped>
