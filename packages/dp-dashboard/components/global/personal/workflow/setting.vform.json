@@ -54,6 +54,96 @@
       "id": "input58982"
     },
     {
+      "key": 30790,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "singleTableMode",
+        "label": "Single Table Mode",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch27329"
+    },
+    {
+      "key": 20973,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "selectedTable",
+        "label": "Which tab to show",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": false,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "value": "myTask",
+            "label": "workflow_myTask"
+          },
+          {
+            "value": "activeTask",
+            "label": "workflow_ActiveTask"
+          },
+          {
+            "value": "allTask",
+            "label": "workflow_allTask"
+          }
+        ],
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select81131"
+    },
+    {
       "key": 30503,
       "type": "switch",
       "icon": "switch-field",
@@ -141,6 +231,10 @@
           {
             "value": "create_folder_cabinet_1740123507128",
             "label": "create folder cabinet"
+          },
+          {
+            "value": "create-preview_1742373714099",
+            "label": "create-preview"
           },
           {
             "value": "directus-test",
