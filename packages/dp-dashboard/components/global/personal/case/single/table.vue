@@ -161,6 +161,7 @@ defineExpose({ reorderColumn, reload });
           inputKey="q"
           inputPlaceHolder="caseManagement_filter"
         />
+        <slot name="table_right" />
     </template>
   <template #dpActions="{row}" >
     <el-dropdown trigger="click">

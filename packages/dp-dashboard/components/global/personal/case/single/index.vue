@@ -83,9 +83,7 @@ watch(
     <template #header="{ close, titleId, titleClass }">
       <h4>{{ props.setting.caseLabel }}</h4>
       <div class="flex-x-between">
-        <el-button v-if="props.setting.caseId" type="primary" @click="handleAddCaseDialog">
-              {{ $t(props.setting.newButtonLabel) }}
-            </el-button>
+        
         <SvgIcon  v-if="!hideSetting"
           src="/icons/setting.svg"
           class="el-icon--right"
@@ -95,7 +93,13 @@ watch(
       </div>
     </template>
     <div class="workflow-create-content">
-      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" />
+      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" >
+        <template #table_right>
+            <el-button v-if="props.setting.caseId" type="primary" @click="handleAddCaseDialog">
+              {{ $t(props.setting.newButtonLabel) }}
+            </el-button>
+        </template>
+      </PersonalCaseSingleTable>
     </div>
     <PersonalCaseSingleSetting
       ref="settingRef"
