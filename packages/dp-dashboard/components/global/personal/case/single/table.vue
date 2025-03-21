@@ -2,6 +2,7 @@
 import { clientApi } from "api";
 import { MoreFilled } from "@element-plus/icons-vue";
 import { ElMessage} from 'element-plus'
+
 const { id, name, detail } = defineProps<{
   id: string;
   name: string;
@@ -75,7 +76,6 @@ async function handleTask(actionItem: any, row?: any) {
       const res = await clientApi.api.postCaseDashboardInstanceActionPreRequisite({
       id: actionItem.id
     }).then(res => res.data)
-    console.log("res", res)
     // Get Form Json and XML
     
     // check start event additional setting
@@ -116,15 +116,21 @@ async function reorderColumn(fields: any) {
         },
       },
     ];
-    fields.forEach((row: any) => {
-      columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
-    });
+    if(fields.length > 0) {
+      // keep field order
+      columns.splice(1, 0, ...fields.map(item => ({ field: item.id, title: item.name, width: 200 })));
+    }
+    // fields.forEach((row: any) => {
+    //   columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
+    // });
     // const actionColumn = tableConfig.columns.find(
     //   (item) => item.title === "dpTable_actions"
     // );
     // if (!!actionColumn) columns.push(actionColumn);
     tableConfig.columns = columns;
-  } catch (e) {}
+  } catch (e) {
+    console.log("error", e)
+  }
   tableReady.value = true;
 }
 const responsiveFilterRef = ref()
