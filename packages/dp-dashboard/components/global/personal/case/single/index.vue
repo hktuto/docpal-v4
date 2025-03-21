@@ -50,7 +50,21 @@ async function getCaseDetail(caseId: string) {
     const displayColumns = props.setting.displayColumns.reduce((prev: any, columnId: any) => {
       if( state?.detail?.primaryForm?.fields) {
         const column = state.detail.primaryForm.fields.find((p: any) => p.id === columnId)
-        if(!!column) prev.push(column)
+        if(!!column){ 
+          prev.push(column)
+        }
+        // check if the field is default fields
+        if(columnId === 'case_id'){
+          prev.push({id: 'case_id', name: 'caseManagement.name', width: 200})
+        }else if(columnId === 'created_date'){
+          prev.push({id: 'created_date', name: 'workflow_createDate', width: 200, formatter({ cellValue }: any) {
+            return formatDate(cellValue)
+          }})
+        }else if(columnId === 'modified_date'){
+          prev.push({id: 'modified_date', name: 'table_modifiedDate', width: 200, formatter({ cellValue }: any) {
+            return formatDate(cellValue)
+          }})
+        }
       }
       return prev
     }, [])
