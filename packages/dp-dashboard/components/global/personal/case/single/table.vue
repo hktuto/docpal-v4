@@ -56,7 +56,7 @@ const {
 
 async function getActions(row: any) {
   try {
-    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data)
+    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data?.filter(s => s.state !== 'completed'))
   } catch (error) {
     caseEvents.value = []
   }
@@ -109,7 +109,7 @@ async function reorderColumn(fields: any) {
       },
       {
         title: "dpTable_actions",
-        width: 120,
+        width: 60,
         fixed: 'right',
         slots: {
           default: "dpActions",
