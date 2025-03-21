@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
+import { nextTick } from "vue";
 const emits = defineEmits(["delete", "refreshSetting"]);
 
 const props = withDefaults(
@@ -13,6 +14,7 @@ const props = withDefaults(
     hideSetting: false,
   }
 );
+
 const state = reactive<any>({
   detail: {}
 })
@@ -22,6 +24,7 @@ function openSetting() {
 }
 function handleRefresh(chartSetting: any) {
   emits("refreshSetting", chartSetting);
+
 }
 async function handleDelete() {
   emits("delete");
@@ -37,6 +40,7 @@ async function getCaseDetail(caseId: string) {
     const res = await clientApi.api.getCaseTypesCasetypeid(caseId).then((res) => res.data);
     return res
   } catch (error) {
+    console.log("get cast type error", error)
     return {};
   }
 }
@@ -44,27 +48,33 @@ async function getCaseDetail(caseId: string) {
   const tableRef = ref()
   function handleShowColumn(){
     const displayColumns = props.setting.displayColumns.reduce((prev: any, columnId: any) => {
-      const column = state.detail.primaryForm.fields.find((p: any) => p.id === columnId)
-      if(!!column) prev.push(column)
+      if( state?.detail?.primaryForm?.fields) {
+        const column = state.detail.primaryForm.fields.find((p: any) => p.id === columnId)
+        if(!!column) prev.push(column)
+      }
       return prev
     }, [])
+    console.log("handleShowColumn", displayColumns)
     tableRef.value.reorderColumn(displayColumns)
   }
   function handleRefreshTable() {
+    
     tableRef.value.reload()
+    
   }
 // #endregion
 
 watch(
-  () => props.setting.caseId,
-  async(newVal, oldVal) => {
-    if(!newVal) return
-    state.detail = await getCaseDetail(newVal);
+  () => props.setting,
+  async() => {
+    if(!props.setting || !props.setting.caseId) return
+    state.detail = await getCaseDetail(props.setting.caseId);
     handleShowColumn()
     handleRefreshTable()
   },
   {
     immediate: true,
+    deep:true
   }
 );
 </script>
