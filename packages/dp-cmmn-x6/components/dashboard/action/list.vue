@@ -37,13 +37,12 @@ async function handleProcessTask(actionItem) {
   const res = await clientApi.api.postCaseDashboardInstanceActionPreRequisite({
     id: actionItem.id
   }).then(res => res.data)
-  console.log("res", res)
   // Get Form Json and XML
-  
   // check start event additional setting
   const routerItem = caseProcessTaskFormPage({
     caseInstanceId,
     actionStepId: actionItem.id,
+    label: actionItem.name,
     backItem: routerProvider?.tabData.value
   })
   routerProvider?.navigateTo(routerItem)
