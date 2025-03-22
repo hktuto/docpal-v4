@@ -82,6 +82,7 @@ async function handleTask(actionItem: any, row?: any) {
     const routerItem = caseProcessTaskFormPage({
       caseInstanceId: row.case_id,
       actionStepId: actionItem.id,
+      label: actionItem.name,
       backItem: routerProvider?.tabData.value
     })
     routerProvider?.navigateTo(routerItem)

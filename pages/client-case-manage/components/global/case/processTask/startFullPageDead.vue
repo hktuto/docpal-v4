@@ -73,7 +73,6 @@ function handelCancel() {
 
 async function handleSubmit() {
   const data = await vFormRef.value.getFormData(false, false);
-  console.log("inParameters", inParameters.value)
   const variables = Object.keys(inParameters.value).reduce((prev: any, item: any) => {
     const otherKeys = inParameters.value[item]
     if (data[otherKeys]) {
