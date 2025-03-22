@@ -15,6 +15,11 @@ const { categoriesOption, locationsOption, timeSelecteStep, timeSelectLimit } = 
 const userFiterOptions = ref<any>([])
 const emits = defineEmits(['submit'])
 const startTime = ref<any>()
+
+const activeLocations = computed(() => {
+    return locationsOption.value.filter(i => !!i.status);
+})
+
 const form = ref<any>({
     startDate: "",
     startTime: '',
@@ -141,7 +146,7 @@ defineExpose({
                     <ElCol  :span="12">
                         <ElFormItem :label="options.locationLabel || 'Location'" prop="location" required>
                             <ElSelect v-model="form.location" clearable placeholder="Select" filterable>
-                                <ElOption v-for="item in locationsOption" :key="item.id" :label="item.name" :value="item.id" />
+                                <ElOption v-for="item in activeLocations" :key="item.id" :label="item.name" :value="item.id" />
                             </ElSelect>
                         </ElFormItem>
                     </ElCol>
