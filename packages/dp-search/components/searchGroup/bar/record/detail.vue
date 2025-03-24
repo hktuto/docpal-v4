@@ -2,7 +2,7 @@
 import { clientApi } from "api";
 import { ElMessage } from "element-plus";
 const props = defineProps(["query", "aggregation"]);
-const emits = defineEmits(["cancel"]);
+const emits = defineEmits(["cancel", "update"]);
 const { t } = useI18n();
 const filterRef = ref();
 const aggRef = ref();
@@ -42,6 +42,7 @@ async function handleSave() {
   setTimeout(() => {
     loading.value = false;
     ElMessage.success(t("dpMsg_success"));
+    emits("update");
     emits("cancel");
   }, 500);
 }
