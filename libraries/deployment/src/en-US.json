@@ -1152,8 +1152,12 @@
   "dpMsg_noDataUpdate": "No Data Update",
   "dpMsg_success": "Success",
   "dpSearch": {
+    "recordDetailTitle": "Edit Search Criteria",
+    "recordTitle": "Save Search",
+    "records": "User Define",
     "searchMeta": "Metadata",
-    "searchWithMeta": "Search Meta"
+    "searchWithMeta": "Search Meta",
+    "systemRecords": "System Define"
   },
   "dpStatus": {
     "expired": "Expired",
