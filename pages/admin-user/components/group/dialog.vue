@@ -32,8 +32,8 @@ const FormRendererRef = ref();
 
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData();
-  if(!data.id || !data.name) {
-    ElMessage.error(t("user_userGroupName")+ $t('render.hint.fieldRequired'));
+  if(!data.groupId || !data.groupName) {
+    ElMessage.error(t("user_userGroupName") + $t('render.hint.fieldRequired'));
     return;
   }
   // check group name exist
@@ -45,11 +45,12 @@ async function handleSubmit() {
   state.loading = true;
   try {
     await groupProvider?.CreateGroupApi(data);
-    routerProvider?.message.success(t("user_userGroupsCreatedSuccessMsg"));
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('user_UserGroup'), name: ""}));
     state.visible = false;
     FormRendererRef.value.vFormRenderRef.resetForm();
     emits("refresh");
   } catch (error) {
+    console.log(error)
   }
   state.loading = false;
 }
