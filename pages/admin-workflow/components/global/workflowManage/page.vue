@@ -35,7 +35,7 @@ const {
   },
   columns: [
     {field: "taskInstance.businessKey", title: "workflow_ManageName", fixed: "left", type: "checkbox"},
-    {field: "taskInstance.processDefinitionName", title: "workflow_workflow"},
+    {field: "taskInstance.processDefinitionName", title: "workflow_workflowName"},
     {field: "taskInstance.startUserId", title: "workflow_ManageInitiator"},
     {field: "assignee", title: "workflow_assignee"},
     // { field: "taskInstance.startUserId", title: "role.creator" },

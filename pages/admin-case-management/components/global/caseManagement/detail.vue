@@ -53,14 +53,24 @@ async function promoteToProduction() {
 
 async function saveAsNewVersion() {
   // console.log("props",props);
-  // TODO : end point is not correct
   const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
-  // console.log("data", data)
+  //TODO : get all form in case and save as to new version
+  // Step 1 : get all form in case
+  const allFrom = await xmlRef.value.getAllForm()
+  for(let i = 0; i < allFrom.length; i++) {
+    const form = allFrom[i]
+    const params = form.params
+    params.versionId = data?.id;
+    params.jsonValue = JSON.stringify(form.form)
+    await adminApi.api.postRelationSave(params)
+  }
+  console.log("data", data)
+
   routerProvider?.updateProps({
     caseTypeId: data.id,
     currentVersion: data.versionNumber,
   })
-  console.log("new props", props)
+  // console.log("new props", props)
   nextTick(() => {
     init();
   })

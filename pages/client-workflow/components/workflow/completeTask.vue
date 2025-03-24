@@ -43,7 +43,7 @@ const {
     }),
   columns: [
     {field: "businessKey", title: "table_name", fixed: "left"},
-    {field: "processDefinitionName", title: "workflow_workflow"},
+    {field: "processDefinitionName", title: "workflow_workflowName"},
 
     {
       field: "startTime",

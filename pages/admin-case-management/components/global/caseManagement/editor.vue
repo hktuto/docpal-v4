@@ -31,25 +31,25 @@ async function getCaseData() {
   routerProvider?.updateTabName(props.name)
 }
 
-async function getFileAndDisplay(path: string) {
-  // ordercase | test
-  const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
-  editorEl.value.init(cmmnString)
-}
+// async function getFileAndDisplay(path: string) {
+//   // ordercase | test
+//   const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
+//   editorEl.value.init(cmmnString)
+// }
 
-async function loadX6Json() {
-  const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
-  const x6Json = await fetch('/cmmn/x6Test.json').then(res => res.json())
-  editorEl.value.init(cmmnString, x6Json)
-}
+// async function loadX6Json() {
+//   const cmmnString = await fetch('/cmmn/test.xml').then(res => res.text())
+//   const x6Json = await fetch('/cmmn/x6Test.json').then(res => res.json())
+//   editorEl.value.init(cmmnString, x6Json)
+// }
 
-async function loadXml() {
-  const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, {versionNumber: props?.currentVersion}, {
-    format: 'blob'
-  }) as any
-  const cmmnString = await blob.text()
-  editorEl.value.init(cmmnString)
-}
+// async function loadXml() {
+//   const blob = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, {versionNumber: props?.currentVersion}, {
+//     format: 'blob'
+//   }) as any
+//   const cmmnString = await blob.text()
+//   editorEl.value.init(cmmnString)
+// }
 
 async function loadJsonAndXml() {
   let {data: styleJson} = await adminApi.api.getCaseTypesIdStylejson(props.caseTypeId, {versionNumber: props?.currentVersion})
@@ -107,12 +107,12 @@ function xmlStringToFile(xmlString, fileName) {
   return file;
 }
 
-async function getSavedData() {
-  const cmmnString = await fetch('/cmmn/saved.xml').then(res => res.text())
-  const x6Json = await fetch('/cmmn/saved.json').then(res => res.json())
+// async function getSavedData() {
+//   const cmmnString = await fetch('/cmmn/saved.xml').then(res => res.text())
+//   const x6Json = await fetch('/cmmn/saved.json').then(res => res.json())
 
-  editorEl.value.init(cmmnString, x6Json)
-}
+//   editorEl.value.init(cmmnString, x6Json)
+// }
 
 function openDetail() {
 
@@ -134,15 +134,50 @@ function openVersionList() {
 }
 
 async function saveAsNewVersion() {
-  const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.versionId)
-  // console.log("data", data)
-  routerProvider?.updateProps({
-    versionId: data.id,
-    currentVersion: data.versionNumber,
-  })
-  nextTick(() => {
-    init();
-  })
+  try{
+    console.log("saveAsNewVersion", props)
+    const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.versionId) as any
+    // console.log("data", data)
+    // get all form in case and save as to new version
+    const allNodes = editorEl.value.graph.getNodes()
+    console.log("allNodes", allNodes)
+    for(let i = 0; i < allNodes.length; i++) {
+      const node = allNodes[i]
+      const nodeData = node.getData()
+      if(nodeData.type === 'humanTask') {
+        console.log("is human task", nodeData)
+        const response = await adminApi.api.getRelationQuery({
+          processKey: props.name,
+          userTaskId: nodeData.data.attr_id,
+          versionId:  props.versionId
+        });
+        console.log("response", response)
+        if(response && response.data && response.data.length > 0 && response.data[0].jsonValue) {
+          const params = {
+            processKey: props.name,
+            userTaskId: nodeData.data.attr_id,
+            versionId:  data.id,
+            jsonValue: response.data[0].jsonValue
+          }
+          await adminApi.api.postRelationSave(params)
+        }
+      }
+    }
+    
+    routerProvider?.updateProps({
+      versionId: data.id,
+      currentVersion: data.versionNumber,
+    })
+    routerProvider?.message.success(t('dpMsg_success'))
+    nextTick(async() => {
+      await getCaseData()
+      await init();
+    })
+  }catch(err){
+    routerProvider?.message.error(t('dpMsg_error'))
+
+    console.log(err)
+  }
   // TODO : save as form to new version
 }
 

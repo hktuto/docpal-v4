@@ -64,7 +64,7 @@ watch(() => node, () => {
   <el-form ref="FormRef" label-position="top"
            :model="form" @submit.prevent>
     <el-formItem :label="$t('tableHeader_name')" prop="name"
-                 :rules="[{ required: true, message: $t('tableHeader_name') + ' '+ $t('render.hint.fieldRequired')}]">
+                 :rules="[{ required: true, message: $t('tableHeader_name') + $t('render.hint.fieldRequired')}]">
       <el-input v-model="form.name" :disabled="editorProvider.readonly.value" @change="nameChange" placeholder="Name"/>
     </el-formItem>
   </el-form>

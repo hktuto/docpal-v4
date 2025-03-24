@@ -3,7 +3,7 @@
     <el-dialog v-model="dialogOpened" append-to-body :title="$t('filePopover_rename')" class="scroll-dialog">
       <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('tableHeader_name')" prop="name"
-                      :rules="[ { required: true, message: $t('tableHeader_name') +' '+ $t('render.hint.fieldRequired'), trigger: 'change'}]">
+                      :rules="[ { required: true, message: $t('tableHeader_name') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
           <el-input v-model="form.name" clearable/>
         </el-form-item>
       </el-form>

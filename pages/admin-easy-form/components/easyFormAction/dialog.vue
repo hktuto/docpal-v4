@@ -14,7 +14,7 @@
         :rules="[
           {
             required: true,
-            message: $t('docType_label') + ' ' + $t('render.hint.fieldRequired'),
+            message: $t('docType_label') + $t('render.hint.fieldRequired'),
             trigger: 'blur',
           },
         ]"
@@ -27,7 +27,7 @@
         :rules="[
           {
             required: true,
-            message: $t('easyForm.type') + ' ' + $t('render.hint.fieldRequired'),
+            message: $t('easyForm.type') + $t('render.hint.fieldRequired'),
             trigger: 'change',
           },
         ]"
@@ -51,10 +51,7 @@
           :rules="[
             {
               required: true,
-              message:
-                $t('easyForm.' + form.actionType + 'TemplateKey') +
-                ' ' +
-                $t('render.hint.fieldRequired'),
+              message: $t('easyForm.' + form.actionType + 'TemplateKey') + $t('render.hint.fieldRequired'),
               trigger: 'change',
             },
           ]"

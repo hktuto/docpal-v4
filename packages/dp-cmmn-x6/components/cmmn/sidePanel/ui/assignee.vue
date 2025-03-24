@@ -3,7 +3,7 @@
     <el-formItem
       :label="$t('workflow_assignee')"
       prop="assignee"
-      :rules="[{ required: true, message: $t('workflow_assignee') + ' '+ $t('render.hint.fieldRequired') }]"
+      :rules="[{ required: true, message: $t('workflow_assignee') + $t('render.hint.fieldRequired') }]"
     >
       <el-select 
         v-model="form.assignee"
