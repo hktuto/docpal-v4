@@ -1,89 +1,157 @@
 <template>
-<div class="search-group-bar">
-  <div class="search-group-bar-title">
-    {{ $t('file_search') }}
+  <div class="search-group-bar">
+    <div class="search-group-bar__title">
+      <template v-if="mode === 'record'">{{ $t("dpSearch.recordTitle") }}</template>
+      <template v-else-if="['recordDetailAgg', 'recordDetail'].includes(mode)">
+        <ElTooltip :content="$t('common_back')" placement="top">
+          <Icon class="el-icon--left" name="tabler:arrow-back" @click="mode = 'record'" />
+        </ElTooltip>
+        {{ $t("dpSearch.recordDetailTitle") }}
+      </template>
+      <template v-else>{{ $t("file_search") }}</template>
+    </div>
+    <div class="flex-x-start search-group-bar__action">
+      <template v-if="['recordDetailAgg', 'recordDetail'].includes(mode)">
+        <SvgIcon
+          v-if="mode !== 'recordDetailAgg'"
+          src="/icons/tools/filter.svg"
+          class="mr-2"
+          @click="handleMode('recordDetailAgg')"
+          @search="handleSearch"
+        ></SvgIcon>
+        <SvgIcon
+          v-else
+          src="/icons/tools/search.svg"
+          class="mr-2"
+          @click="handleMode('recordDetail')"
+        ></SvgIcon>
+      </template>
+      <template v-else>
+        <SvgIcon
+          v-if="mode !== 'agg'"
+          src="/icons/tools/filter.svg"
+          class="mr-2"
+          @click="handleMode('agg')"
+          @search="handleSearch"
+        ></SvgIcon>
+        <SvgIcon
+          v-else
+          src="/icons/tools/search.svg"
+          class="mr-2"
+          @click="handleMode('filter')"
+        ></SvgIcon>
+        <SvgIcon
+          src="/icons/tools/save1.svg"
+          class="mr-2"
+          @click="handleMode('record')"
+        ></SvgIcon>
+        <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch"  /> -->
+        <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
+      </template>
+    </div>
+    <div class="search-group-bar__content" v-show="mode === 'filter'">
+      <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
+      <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
+    </div>
+    <div class="search-group-bar__content" v-show="mode === 'agg'">
+      <SearchGroupBarAggregation
+        ref="aggRef"
+        :aggregation="aggregation"
+        @filters="handleAgg"
+      ></SearchGroupBarAggregation>
+    </div>
+    <div class="search-group-bar__content" v-show="mode === 'record'">
+      <SearchGroupBarRecord
+        ref="recordRef"
+        @filters="handleLogSearch"
+        @edit="handleEditRecord"
+        @save="handleSave"
+        @dblclick="handleLogSearch"
+      ></SearchGroupBarRecord>
+    </div>
+    <div class="search-group-bar__content" v-show="mode === 'recordDetail'">
+      <SearchGroupBarRecordDetail
+        ref="recordDetailRef"
+        :query="recordDetailData"
+        @cancel="mode = 'record'"
+      ></SearchGroupBarRecordDetail>
+    </div>
   </div>
-  <div class="flex-x-start search-group-bar-action">
-    <SvgIcon v-if="mode === 'filter'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode"
-      @search="handleSearch"></SvgIcon>
-    <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="handleMode"></SvgIcon>
-    <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch" @save="handleSave" />
-    <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
-  </div>
-  <div class="search-group-bar-content" v-show="mode === 'filter'">
-    <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
-    <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
-  </div>
-  <div class="search-group-bar-content" v-show="mode === 'search'">
-    <SearchGroupBarAggregation ref="aggRef" :aggregation="aggregation" @filters="handleAgg"></SearchGroupBarAggregation>
-  </div>
-</div>
 </template>
 <script lang="ts" setup>
-import { clientApi } from 'api'
-import { ElMessage } from 'element-plus'
+import { clientApi } from "api";
+import { ElMessage } from "element-plus";
 const { t } = useI18n();
-const mode = ref<'filter' | 'search'>('filter')
-const props = defineProps(['aggregation'])
-const emits = defineEmits(['search','aggSearch', 'searchLog'])
-const filterRef = ref()
-const aggRef = ref()
-let isHistory = false // 控制是否触发form change事件
+const mode = ref<"filter" | "agg" | "record" | "recordDetail">("filter");
+const props = defineProps(["aggregation"]);
+const emits = defineEmits(["search", "aggSearch", "searchLog"]);
+const filterRef = ref();
+const aggRef = ref();
+let isHistory = false; // 控制是否触发form change事件
 async function handleSearch() {
-  if(isHistory) return
-  const params = await filterRef.value.getData()
-  if(!params.docId && params.query.length === 0) return
-  aggRef.value.clear()
-  emits('search', params)
+  if (isHistory) return;
+  const params = await filterRef.value.getData();
+  if (!params.docId && params.query.length === 0) return;
+  aggRef.value.clear();
+  emits("search", params);
   // mode.value = 'search'
 }
-function handleMode() {
-  mode.value = mode.value === 'filter' ? 'search' : 'filter'
+function handleMode(_mode: string = "filter") {
+  if ((mode.value === "record" || mode.value === "recordDetail") && _mode === "agg")
+    mode.value = "filter";
+  else mode.value = _mode;
 }
 function handleAgg(data: any) {
-  emits('aggSearch', data)
-}
-function handleOpenRecent() {
+  emits("aggSearch", data);
 }
 
-const logRef = ref()
+// #region module: record
+const recordDetailRef = ref();
+const recordDetailData = ref({});
+const recordRef = ref();
+async function handleLogSearch(query: any) {
+  isHistory = true;
+  aggRef.value.clear();
+  console.log({ query });
+
+  // if (query.filter) aggRef.value.setDefaultFilter(query.filter)
+  await filterRef.value.initForm(query);
+  emits("searchLog", query);
+  setTimeout(() => {
+    isHistory = false;
+  }, 2000);
+}
 async function handleSave(data: any) {
-  const condition = await filterRef.value.getData()
+  const condition = await filterRef.value.getData();
   if (!condition.docId && (!condition.query || condition.query.length === 0)) {
-    ElMessage.warning($i18n.t('search.noCondition'))
-    return
+    ElMessage.warning($i18n.t("search.noCondition"));
+    return;
   }
   if (data.includeFilter) {
-    const agg = await aggRef.value.getData()
-    condition.filter = agg
+    const agg = await aggRef.value.getData();
+    condition.filter = agg;
   }
   const params = {
     label: data.label,
-    queryCondition: JSON.stringify(condition)
-  }
+    queryCondition: JSON.stringify(condition),
+  };
   await clientApi.api.postNuxeoSearchSaveNestedSearchLog(params);
-  ElMessage.success(t('dpMsg_success'))
-  logRef.value.getList()
+  ElMessage.success(t("dpMsg_success"));
+  recordRef.value.getList();
 }
- 
-async function handleLogSearch(query: any) {
-  isHistory = true
-  aggRef.value.clear()
-  // if (query.filter) aggRef.value.setDefaultFilter(query.filter)
-  await filterRef.value.initForm(query)
-  emits('searchLog', query)
-  setTimeout(() => {
-    isHistory = false
-  }, 2000)
+function handleEditRecord(query) {
+  // recordDetail(query)
+  mode.value = "recordDetail";
+  recordDetailData.value = query;
+  recordDetailRef.value.filterRef.initForm(query)
 }
-
+// #endregion
 function setQuery(query: any) {
-  filterRef.value.initForm(query)
+  filterRef.value.initForm(query);
 }
 defineExpose({
-  setQuery
-})
-
+  setQuery,
+});
 </script>
 <style lang="scss" scoped>
 .search-group-bar {
@@ -95,24 +163,25 @@ defineExpose({
   height: 100%;
   overflow: hidden;
   gap: var(--app-space-xs);
-  &-title {
+  &__title {
     grid-area: 1 / 1 / 2 / 2;
     font-size: var(--app-font-size-l);
     font-weight: bold;
+    display: flex;
+    align-items: center;
   }
-  &-action {
+  &__action {
     grid-area: 1 / 2 / 2 / 3;
     --icon-size: 16px;
     --icon-color: var(--app-grey-400);
-    :deep svg {
+    :deep(svg) {
       cursor: pointer;
       margin-left: var(--app-space-xs);
     }
   }
-  &-content {
+  &__content {
     grid-area: 2 / 1 / 3 / 3;
     overflow: auto;
   }
 }
-
 </style>

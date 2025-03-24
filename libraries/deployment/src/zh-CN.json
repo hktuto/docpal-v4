@@ -1153,6 +1153,8 @@
   "dpMsg_noDataUpdate": "没有数据更新",
   "dpMsg_success": "成功",
   "dpSearch": {
+    "recordDetailTitle": "编辑搜索条件",
+    "recordTitle": "保存搜索",
     "searchMeta": "Metadata",
     "searchWithMeta": "搜索元"
   },
