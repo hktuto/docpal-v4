@@ -19,7 +19,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "workflow",
-                "label": "workflow_workflow",
+                "label": "workflow_workflowName",
                 "labelAlign": "",
                 "defaultValue": "",
                 "placeholder": "",

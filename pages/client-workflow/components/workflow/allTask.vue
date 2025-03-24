@@ -44,7 +44,7 @@ const {
     clientApi.api.postWorkflowTasksUser({...pageParams, ...extraParams, candidateOrAssigned: userId}),
   columns: [
     {field: "taskInstance.businessKey", title: "workflow_jobName", fixed: "left"},
-    {field: "taskInstance.processDefinitionName", title: "workflow_workflow"},
+    {field: "taskInstance.processDefinitionName", title: "workflow_workflowName"},
 
     {
       field: "name",

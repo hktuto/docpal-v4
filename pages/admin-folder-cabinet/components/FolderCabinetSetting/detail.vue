@@ -25,7 +25,7 @@
           <el-form-item
             prop="labelRule"
             class="intro"
-            :rules="[{ required: true, message: $t('tableHeader_labelRule') + ' '+ $t('render.hint.fieldRequired') }]"
+            :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]"
           >
             <template #label>
               {{ $t("tableHeader_labelRule") }}

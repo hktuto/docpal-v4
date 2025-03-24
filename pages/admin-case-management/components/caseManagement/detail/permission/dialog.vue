@@ -5,7 +5,7 @@
   >
     <el-form ref="FormRef" style="--icon-size: 1.2rem;" label-position="top" :model="form">
       <el-form-item prop="name" :label="$t('user_UserGroup')"
-                    :rules="[{required: true, message: $t('user_UserGroup') + ' '+ $t('render.hint.fieldRequired'), trigger: 'change'}]">
+                    :rules="[{required: true, message: $t('user_UserGroup') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
         <el-select-v2 v-model="form.name"
                       :options="state.groupList"
                       clearable
@@ -13,7 +13,7 @@
                       :placeholder="$t('common_selectedIsRequiredMsg')"/>
       </el-form-item>
       <el-form-item prop="record" :label="$t('caseManagement_record')"
-                    :rules="[{required: true, message: $t('caseManagement_record') + ' '+ $t('render.hint.fieldRequired'), trigger: 'change'}]">
+                    :rules="[{required: true, message: $t('caseManagement_record') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
         <el-select-v2 v-model="form.record"
                       clearable
                       :options="[

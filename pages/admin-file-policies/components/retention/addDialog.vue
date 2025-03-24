@@ -1,14 +1,14 @@
 <template>
   <el-dialog
     class="scroll-dialog retention-add-dialog"
-    v-model="state.visible" :title="$t('filePolicies_RetentionPolicyCreate')"
+    v-model="state.visible" :title="t('filePolicies_RetentionPolicyCreate')"
     :close-on-click-modal="false" append-to-body
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"></FormRenderer>
     <template #footer>
       <el-button id="RetentionPolicySetting__CreateNewRetentionPolicy__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
-        {{ $t('common_submit') }}
+        {{ t('common_submit') }}
       </el-button>
     </template>
   </el-dialog>
@@ -44,7 +44,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     await adminApi.api.postPolicyRetentions(params)
-    ElMessage.success(t('filePolicies_RetentionPolicyCreateSuccessMsg'))
+    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('filePolicies_RetentionPolicy'), name: ""}))
     state.visible = false
     emits('update')
   } catch (error) {

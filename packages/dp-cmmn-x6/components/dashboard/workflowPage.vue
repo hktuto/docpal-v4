@@ -83,7 +83,7 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
       field: 'name',
     },
     {
-      title: 'workflow_workflow',
+      title: 'workflow_workflowName',
       field: 'taskInstance.processDefinitionName',
     },
     {
