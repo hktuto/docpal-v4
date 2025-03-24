@@ -74,7 +74,10 @@ async function handleSubmit() {
     console.log(error);
   }
 
-  let msg = state.isEdit ? t('folder_cabinetEditSuccessMsg') : t('folder_cabinetCreatedSuccessMsg')
+  let msg = state.isEdit ?
+    t('tip_updateSuccessMsg', {modelName: t('menus_folderCabinet'), name: ""})
+    :
+    t('tip_createdSuccessMsg', {modelName: t('docType_displayMeta'), name: ""})
   ElMessage.success(msg)
 
   state.loading = false;

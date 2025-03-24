@@ -124,7 +124,10 @@ async function save() {
     emailTemplateJson: JSON.stringify(json),
     emailTemplateVariable: JSON.stringify(variable),
   });
-  routerProvider?.message.success(t('emailContentTemplate_updatedSuccessMsg', {name: data.value.label}));
+  routerProvider?.message.success(t('tip_updateSuccessMsg', {
+    modelName: t('Email.fields'),
+    name: data.value.label
+  }));
   editInfoOpened.value = false;
   // TODO : add notification
 }

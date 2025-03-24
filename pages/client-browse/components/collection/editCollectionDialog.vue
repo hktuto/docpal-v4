@@ -48,7 +48,7 @@ async function handleSubmit() {
   }
   try {
     await clientApi.api.patchNuxeoCollection(params)
-    ElMessage.success(t('collection_editSuccessMsg', {name: data.name}))
+    ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('collection_collection'), name: data.name}))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

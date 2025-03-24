@@ -2,7 +2,8 @@
   <el-dialog v-model="state.visible" :title="$t('user_editPassword')" :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="UserList__Info__ChangePassword__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="UserList__Info__ChangePassword__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -39,7 +40,10 @@ async function handleSubmit() {
       userId: props.user.userId,
     }
     await userProviderDetail?.PatchUserPasswordApi(param)
-    routerProvider?.message.success(t('user_userPasswordUpdateSuccessMsg', {username: props.user.firstName}));
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+      modelName: t('user_userPassword'),
+      name: param.userId
+    }));
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

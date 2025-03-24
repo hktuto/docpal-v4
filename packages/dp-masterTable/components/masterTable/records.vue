@@ -213,6 +213,7 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
       },
     ],
   ],
+  // TODO admin端點擊無法出現選項卡
   permissionMethod: (args: PermissionMethodParams) => {
     // options 是 menuConfig 中的 body 配置
     switch (args.code) {
