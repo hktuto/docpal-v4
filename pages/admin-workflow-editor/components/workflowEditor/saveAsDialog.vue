@@ -136,8 +136,8 @@ defineExpose({open})
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="adminWorkflowEditorSaveAsNewWorkflowCancel" @click="close">{{ $t('cancelText') }}</el-button>
-      <el-button id="adminWorkflowEditorSaveAsNewWorkflowSave" type="primary" @click="save">
+      <el-button id="WorkflowEditor__SaveAsNewWorkflow__Cancel" @click="close">{{ $t('cancelText') }}</el-button>
+      <el-button id="WorkflowEditor__SaveAsNewWorkflow__Save" type="primary" @click="save">
         {{ $t('common_save') }}
       </el-button>
     </template>

@@ -23,7 +23,7 @@
     </el-select>
     <div class="footer">
       <el-button
-        :id="`clientBrowseInfoAddToCollections${selected ? !selected.path ? 'CreatNewCollection' : 'Confirm' : 'Select' }`"
+        :id="`Browse__Info__AddToCollections__${selected ? !selected.path ? 'CreatNewCollection' : 'Confirm' : 'Select' }`"
         type="primary" @click="handleConfirm" :disabled="!selected">
         {{
           selected ? !selected.path ? $t('collections_new') : $t('dpButtom_confirm') : $t('designer.widgetLabel.select')

@@ -8,7 +8,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminSmartFolderSettingCreateNewSmartFolderSubmit" type="primary" :loading="state.loading"
+        <el-button id="SmartFolderSetting__CreateNewSmartFolder__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>

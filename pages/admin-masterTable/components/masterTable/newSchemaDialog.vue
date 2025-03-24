@@ -35,7 +35,7 @@
             />
           </div>
         </div>
-        <el-button id="adminMasterTableTableCreatedBySchemaAddSubmit" type="primary" @click="handleConfirm">
+        <el-button id="MasterTable__Tables__CreateNewMasterTable__AddColumn__Confirm" type="primary" @click="handleConfirm">
           {{ $t("confirm") }}
         </el-button>
       </div>

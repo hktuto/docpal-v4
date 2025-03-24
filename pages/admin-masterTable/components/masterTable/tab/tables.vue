@@ -8,7 +8,7 @@
           inputKey="name"
           inputPlaceHolder="masterTable_filter"
         />
-        <el-button id="adminMasterTableCreateNewMasterTable" class="el-icon--right button" type="primary"
+        <el-button id="MasterTable__Tables__CreateNewMasterTable" class="el-icon--right button" type="primary"
                    @click="handleAdd()">
           {{ $t("masterTable_create") }}
         </el-button>

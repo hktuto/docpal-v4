@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="easyForm_filter"
         />
-        <el-button id="adminEasyFormCreateNewForm" type="primary" @click="handleAdd()">
+        <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
           {{ $t("easyForm_createForm") }}
         </el-button>
       </template>

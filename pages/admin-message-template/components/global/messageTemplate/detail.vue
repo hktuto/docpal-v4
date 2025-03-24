@@ -50,7 +50,7 @@ onActivated(() => {
         {{ detailData.template.name }}
       </div>
       <div class="actions">
-        <ElButton id="adminMessageTemplateDetailEditTemplate" type="link" @click="handleEditTemplate">
+        <ElButton id="MessageTemplate__Detail__EditTemplate" type="link" @click="handleEditTemplate">
           {{ $t('messageTemplate_edit') }}
         </ElButton>
         <ElDropdown>

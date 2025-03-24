@@ -6,7 +6,7 @@
         <ResponsiveFilter
           ref="ResponsiveFilterRef"
           inputKey="q"
-          inputPlaceHolder="tip.fuzzySearch"
+          inputPlaceHolder="masterTable_detailRecordsFilter"
           @form-change="handleFilterFormChange"
         />
         <div class="flex-x-end">
@@ -19,7 +19,7 @@
             <div class="column-dynamic-point"></div>
           </div>
           <el-button
-            id="clientMasterTableAdd"
+            id="MasterTable__Add"
             v-if="permission?.create && !!endPoint && endPoint !== 'admin'"
             class="el-icon--right"
             type="primary"
@@ -35,14 +35,17 @@
           <b class="el-icon--left">
             {{ $t("masterTable_selected") }}: {{ state.selectList.length }}
           </b>
-          <Icon name="ic:baseline-clear" class="normal cursor-pointer" @click="cleanSelectedRows"></Icon>
+          <Icon id="MasterTable__Tables__Detail__Records__CleanSelected" name="ic:baseline-clear"
+                class="normal cursor-pointer" @click="cleanSelectedRows">
+          </Icon>
         </div>
         <div>
           <!-- v-if="isSuperAdmin && endPoint === 'admin'" -->
-          <el-button id="clientMasterTableDelete" type="danger" @click="handleDeleteSelected">
+          <el-button id="MasterTable__Tables__Detail__Records__Delete" type="danger" @click="handleDeleteSelected">
             {{ $t("common_delete") }}
           </el-button>
-          <el-dropdown id="clientMasterTableActive" v-if="endPoint === 'admin' || permission?.enable" trigger="click">
+          <el-dropdown id="MasterTable__Tables__Detail__Records__Active"
+                       v-if="endPoint === 'admin' || permission?.enable" trigger="click">
             <el-button class="el-icon--left el-icon--right" type="warning">
               {{ $t("actions.active") }}
             </el-button>
@@ -57,7 +60,7 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button id="clientMasterTableBatchEdit" type="primary" @click="handleBatchEdit">
+          <el-button id="MasterTable__Tables__Detail__Records__BatchEdit" type="primary" @click="handleBatchEdit">
             {{ $t("button.batchEdit") }}
           </el-button>
         </div>

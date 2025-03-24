@@ -173,21 +173,21 @@ onActivated(async () => {
     <CmmnEditor ref="editorEl">
       <template #actions>
         <template v-if="!production">
-          <ElButton id="adminCaseManagementDetailOpenEditorPromoteToProduction" type="primary"
+          <ElButton id="CaseManagement__Detail__Design__PromoteToProduction" type="primary"
                     @click="promoteToProduction">
             {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
           </ElButton>
         </template>
-        <ElButton id="adminCaseManagementDetailOpenEditorSaveAsNewVersion" type="primary" @click="saveAsNewVersion">
+        <ElButton id="CaseManagement__Detail__Design__SaveAsNewVersion" type="primary" @click="saveAsNewVersion">
           {{ $t('workflowEditor_saveAsNewVersion') }}
         </ElButton>
-        <ElButton id="adminCaseManagementDetailOpenEditorVersionList" @click="openVersionList" type="primary">
+        <ElButton id="CaseManagement__Detail__Design__VersionList" @click="openVersionList" type="primary">
           {{ $t('workflowEditor_versionList') }}
         </ElButton>
-        <ElButton id="adminCaseManagementDetailOpenEditorViewDetails" @click="openDetail" type="primary">
+        <ElButton id="CaseManagement__Detail__Design__ViewDetails" @click="openDetail" type="primary">
           {{ $t('actions.viewDetails') }}
         </ElButton>
-        <ElButton id="adminCaseManagementDetailOpenEditorSave" type="primary" :loading="state.loading"
+        <ElButton id="CaseManagement__Detail__Design__Save" type="primary" :loading="state.loading"
                   :disabled="readOnly" @click="handleSave">
           {{ $t('dpTool_save') }}
         </ElButton>

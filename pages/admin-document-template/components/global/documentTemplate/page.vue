@@ -164,7 +164,7 @@ provide(DocumentTemplateProviderKey, {
                             inputKey="name"
                             inputPlaceHolder="documentTemplate_Filter"/>
           <div class="button-add">
-            <el-button id="adminDocumentTemplateCreateNewDocumentTemplate" type="primary" @click="handleAdd">
+            <el-button id="DocumentTemplate__CreateNewDocumentTemplate" type="primary" @click="handleAdd">
               {{ $t('documentTemplate_Create') }}
             </el-button>
           </div>

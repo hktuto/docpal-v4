@@ -10,11 +10,10 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminWorkPanelDetailTaskDelete" type="danger" @click="handleDelete">
+        <el-button id="WorkPanel__DetailTask__Delete" type="danger" @click="handleDelete">
           {{ $t("common_delete") }}
         </el-button>
-        <el-button id="adminWorkPanelDetailTaskSubmit" type="primary" :loading="state.loading"
-                   @click="handleSubmit">
+        <el-button id="WorkPanel__DetailTask__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ $t("common_submit") }}
         </el-button>
       </div>

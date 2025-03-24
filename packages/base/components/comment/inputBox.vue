@@ -15,7 +15,7 @@
     <!-- @keydown.enter.native="keyDown" -->
 
     <div class="commentInputBox_ribbon">
-      <el-button id="clientBrowseInfoCommentsEnterYourCommentHereSend" type="primary" size="small" class="buttonText"
+      <el-button id="Browse__Info__Comments__EnterYourCommentHere__Send" type="primary" size="small" class="buttonText"
                  @click="handleAdd" :loading="loading">
         {{ $t('comments_buttonText') }}
       </el-button>

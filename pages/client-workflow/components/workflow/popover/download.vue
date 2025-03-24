@@ -38,7 +38,7 @@
       {{ $t('exportDialog.tip') }}
     </div>
     <template #footer>
-      <el-button id="clientWorkflowExportExport" type="primary" :disabled="state.exportList.length === 0"
+      <el-button id="Workflow__Export__Export" type="primary" :disabled="state.exportList.length === 0"
                  :loading="state.loading" @click="handleSubmit()">
         {{ $t('button.export') }}
       </el-button>

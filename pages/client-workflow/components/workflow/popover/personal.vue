@@ -1,5 +1,6 @@
 <template>
-  <el-dropdown id="clientWorkflowPersonalWorkflow" v-if="checkLicenseFeatures('GENERATE_TEMPLATE') || checkLicenseFeatures('BULK_IMPORT')" trigger="click"
+  <el-dropdown id="Workflow__PersonalWorkflow"
+               v-if="checkLicenseFeatures('GENERATE_TEMPLATE') || checkLicenseFeatures('BULK_IMPORT')" trigger="click"
                @command="handleCommand">
     <el-button type="primary" class="el-icon--left">
       {{ $t('workflow_personalWorkflow') }}

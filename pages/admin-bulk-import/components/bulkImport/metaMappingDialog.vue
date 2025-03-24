@@ -4,7 +4,7 @@
              :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminBulkImportMetaAddNewDisplayMetaSubmit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="BulkImport__Meta__AddNewDisplayMeta__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
     </template>

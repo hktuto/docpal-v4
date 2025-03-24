@@ -11,7 +11,7 @@
     <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="clientMasterTableBatchEditSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+        <el-button id="MasterTable__BatchEdit__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>

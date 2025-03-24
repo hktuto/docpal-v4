@@ -88,7 +88,7 @@ onActivated(() => {
       <template #toolbar_buttons>
         <div class="tableHeaderRow">
           <span>{{ $t('docType_captureProfile') }}</span>
-          <el-button id="adminBulkImportProfileAddNewCaptureProfile" class="button" type="primary"
+          <el-button id="BulkImport__Profile__AddNewCaptureProfile" class="button" type="primary"
                      @click="handleDialogShow()">
             {{ $t('bulkImport_detailAddCaptureProfile') }}
           </el-button>

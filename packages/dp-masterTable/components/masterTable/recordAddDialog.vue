@@ -4,7 +4,7 @@
     <MasterTableVariableForm ref="FormVariablesRenderer" :ignoreList="ignoreList"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminMasterTableTableCreatedBySchemaAddSubmit" type="primary" :loading="state.loading"
+        <el-button id="MasterTable__Tables__Detail__Add__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>

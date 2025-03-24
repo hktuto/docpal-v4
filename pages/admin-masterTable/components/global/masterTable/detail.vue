@@ -175,19 +175,19 @@ onActivated(() => {
       </el-tab-pane>
     </el-tabs>
     <div class="absolute-btns">
-      <el-button id="adminMasterTableTableCreatedByDownloadTemplate" :loading="state.templateLoading" type="info"
+      <el-button id="MasterTable__Tables__Detail__DownloadTemplate" :loading="state.templateLoading" type="info"
                  @click="handleTemplateDownload()">
         {{ $t("button.templateDownload") }}
       </el-button>
-      <el-button id="adminMasterTableTableCreatedByImport" :loading="state.importLoading" type="info"
+      <el-button id="MasterTable__Tables__Detail__Import" :loading="state.importLoading" type="info"
                  @click="handleImport()">
         {{ $t("button.importXLXS") }}
       </el-button>
-      <el-button id="adminMasterTableTableCreatedByExport" :loading="state.exportLoading" type="info"
+      <el-button id="MasterTable__Tables__Detail__Export" :loading="state.exportLoading" type="info"
                  @click="handleExport()">
         {{ $t("button.export") }}
       </el-button>
-      <el-button id="adminMasterTableTableCreatedByAdd" type="primary" @click="handleAddRow()">
+      <el-button id="MasterTable__Tables__Detail__Add" type="primary" @click="handleAddRow()">
         {{ $t("button.add") }}
       </el-button>
     </div>

@@ -4,7 +4,7 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminBulkImportCreateNewBulkImportSubmit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="BulkImport__CreateNewBulkImport__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
     </template>

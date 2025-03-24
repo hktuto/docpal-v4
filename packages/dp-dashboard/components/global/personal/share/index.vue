@@ -1,7 +1,7 @@
 <template>
   <el-card ref="cardRef" class="dashboard-item dashboard-item-tab">
     <SvgIcon
-      id="adminWorkPanelDetailShareSettings"
+      id="WorkPanel__DetailShare__Settings"
       v-if="!hideSetting"
       src="/icons/setting.svg"
       class="el-icon--right setting-icon"

@@ -8,7 +8,7 @@
           inputKey="metaData"
           inputPlaceHolder="documentType_metaFilter"
         />
-        <el-button id="adminDocumentTypeDisplayMetaAddNewDisplayMeta" type="primary" @click="handleDialogShow()">
+        <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta" type="primary" @click="handleDialogShow()">
           {{ $t("documentType_metaAdd") }}
         </el-button>
       </template>

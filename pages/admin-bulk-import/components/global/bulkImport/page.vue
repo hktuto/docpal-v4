@@ -100,7 +100,7 @@ provide(BulkImportListProviderKey, {
     <BulkImportListTable ref="tableRef">
       <template #toolbar_buttons>
         <!--                <KeywordFilter attr="documentType"></KeywordFilter>-->
-        <el-button id="adminBulkImportCreateNewBulkImport" class="button-add" type="primary" @click="handleAdd()">
+        <el-button id="BulkImport__CreateNewBulkImport" class="button-add" type="primary" @click="handleAdd()">
           {{ $t('bulkImport_create') }}
         </el-button>
       </template>

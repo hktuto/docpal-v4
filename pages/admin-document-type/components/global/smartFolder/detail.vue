@@ -104,11 +104,11 @@ onActivated(() => {
     </div>
     <div class="smartFolder-left-bottom">
       <div class="flex-x-center">
-        <el-button id="adminSmartFolderSettingInfoClearFilter" type="info" @click="handleClear">
+        <el-button id="SmartFolderSetting__Info__ClearFilter" type="info" @click="handleClear">
           {{ $t("button.clearFilter") }}
         </el-button>
         <el-button
-          id="adminSmartFolderSettingInfoTest"
+          id="SmartFolderSetting__Info__Test"
           class="test-button"
           type="info"
           :loading="state.testLoading"
@@ -118,7 +118,7 @@ onActivated(() => {
         </el-button>
       </div>
       <el-button
-        id="adminSmartFolderSettingInfoSave"
+        id="SmartFolderSetting__Info__Save"
         style="width: 100%; margin: var(--app-space-xs) 0"
         type="primary"
         :loading="state.loading"

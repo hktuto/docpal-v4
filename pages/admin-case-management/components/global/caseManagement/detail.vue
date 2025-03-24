@@ -129,17 +129,17 @@ provide(CaseManagementDetailProviderKey, {
 
     <CaseManagementDetailInfo :detail="caseTypeInfo">
       <template v-if="!production">
-        <ElButton id="adminCaseManagementDetailPromoteToProduction" type="primary" @click="promoteToProduction">
+        <ElButton id="CaseManagement__Detail__BasicInfo__PromoteToProduction" type="primary" @click="promoteToProduction">
           {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
         </ElButton>
       </template>
-      <ElButton id="adminCaseManagementDetailSaveAsNewVersion" type="primary" @click="saveAsNewVersion">
+      <ElButton id="CaseManagement__Detail__BasicInfo__SaveAsNewVersion" type="primary" @click="saveAsNewVersion">
         {{ $t('workflowEditor_saveAsNewVersion') }}
       </ElButton>
-      <ElButton id="adminCaseManagementDetailVersionList" @click="openVersionList" type="primary">
+      <ElButton id="CaseManagement__Detail__BasicInfo__VersionList" @click="openVersionList" type="primary">
         {{ $t('workflowEditor_versionList') }}
       </ElButton>
-      <ElButton id="adminCaseManagementDetailOpenEditor`" @click="openEditor" type="primary">
+      <ElButton id="CaseManagement__Detail__BasicInfo__OpenEditor" @click="openEditor" type="primary">
         {{ $t('caseManagement_basicInfoOpenEditor') }}
       </ElButton>
     </CaseManagementDetailInfo>

@@ -6,7 +6,7 @@
   >
     <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1" :accept="state.accept"></BrowseActionsReplaceUpload>
     <template #footer>
-      <el-button id="adminDocumentTemplateReplaceDocumentSubmit" type="primary" :loading="state.loading"
+      <el-button id="DocumentTemplate__ReplaceDocument__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

@@ -53,9 +53,9 @@ defineExpose({
     <template #header="{ close, titleId, titleClass }">
       <h4>Calendar</h4>
       <div v-if="!hideSetting" class="settingIcons">
-        <Icon id="adminWorkPanelDetailCalendarShowPreview" :name="showPreview ? 'lucide:eye-closed' : 'lucide:eye'"
+        <Icon id="WorkPanel__Detail__Calendar__ShowPreview" :name="showPreview ? 'lucide:eye-closed' : 'lucide:eye'"
               class="el-icon--right" @click="showPreview = !showPreview"/>
-        <Icon id="adminWorkPanelDetailCalendarSettings" name="lucide:settings" @click="openSetting"/>
+        <Icon id="WorkPanel__Detail__Calendar__Settings" name="lucide:settings" @click="openSetting"/>
       </div>
     </template>
 

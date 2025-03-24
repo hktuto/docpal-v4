@@ -8,7 +8,7 @@
           effect="dark"
           :content="$t('user_editGroup')"
         >
-          <Icon id="adminUserGroupInfoEditUserGroup" v-show="isCanModified" name="material-symbols:edit-square"
+          <Icon id="UserGroupList__Info__EditUserGroup" v-show="isCanModified" name="material-symbols:edit-square"
                 class="normal cursor-pointer" style="width: 20px; height: 20px;" @click="handleEdit">
           </Icon>
         </el-tooltip>
@@ -19,7 +19,7 @@
         :content="$t('user_deleteGroup')"
         placement="top"
       >
-        <Icon id="adminUserGroupInfoDeleteUserGroup" v-show="isCanModified" name="material-symbols:delete-rounded"
+        <Icon id="UserGroupList__Info__DeleteUserGroup" v-show="isCanModified" name="material-symbols:delete-rounded"
               class="normal cursor-pointer" style="width: 20px; height: 20px;" @click="handleDelete"></Icon>
       </el-tooltip>
     </div>

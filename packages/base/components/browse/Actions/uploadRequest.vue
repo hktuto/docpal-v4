@@ -18,7 +18,7 @@
     >
       <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
       <template #footer>
-        <el-button id="clientBrowseFileUploadRequestConfirm" :loading="state.loading" type="primary"
+        <el-button id="Browse__FileUploadRequest__Confirm" :loading="state.loading" type="primary"
                    @click="handleSubmit">
           {{ $t('dpButtom_confirm') }}
         </el-button>

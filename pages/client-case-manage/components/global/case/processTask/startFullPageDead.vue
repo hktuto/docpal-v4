@@ -124,10 +124,10 @@ const loading = ref(false);
           <template v-for="(item,index) in additionalButton" :key="index">
             <component :is="item.component" v-bind="{...item.props, formData}" @submit="additionSubmit"/>
           </template>
-          <el-button id="clientCaseManagementDetailsFormCancel" @click="handelCancel">
+          <el-button id="CaseManagement__Detail__Form_Cancel" @click="handelCancel">
             {{ $t("cancelText") }}
           </el-button>
-          <el-button id="clientCaseManagementDetailsFormSubmit" type="primary" @click="handleSubmit">
+          <el-button id="CaseManagement__Detail__Form_Submit" type="primary" @click="handleSubmit">
             {{ $t("common_submit") }}
           </el-button>
         </div>

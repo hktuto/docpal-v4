@@ -74,7 +74,7 @@ onMounted(() => {
       <textarea ref="textarea" v-model="content" @input="calculateParaameters" :rows="row"></textarea>
     </div>
     <div v-if="showVariables" class="actions">
-      <ElButton :id="`adminMessageTemplateDetailEditTemplate${labelName}Variable`" @click="openNewVariableDialog">
+      <ElButton :id="`MessageTemplate__Detail__EditTemplate__${labelName}Variable`" @click="openNewVariableDialog">
         {{ $t('messageTemplate_editTemplateVariable') }}
       </ElButton>
     </div>

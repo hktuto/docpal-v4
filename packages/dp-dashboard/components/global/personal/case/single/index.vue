@@ -50,7 +50,21 @@ async function getCaseDetail(caseId: string) {
     const displayColumns = props.setting.displayColumns.reduce((prev: any, columnId: any) => {
       if( state?.detail?.primaryForm?.fields) {
         const column = state.detail.primaryForm.fields.find((p: any) => p.id === columnId)
-        if(!!column) prev.push(column)
+        if(!!column){ 
+          prev.push(column)
+        }
+        // check if the field is default fields
+        if(columnId === 'case_id'){
+          prev.push({id: 'case_id', name: 'caseManagement.name', width: 200})
+        }else if(columnId === 'created_date'){
+          prev.push({id: 'created_date', name: 'workflow_createDate', width: 200, formatter({ cellValue }: any) {
+            return formatDate(cellValue)
+          }})
+        }else if(columnId === 'modified_date'){
+          prev.push({id: 'modified_date', name: 'table_modifiedDate', width: 200, formatter({ cellValue }: any) {
+            return formatDate(cellValue)
+          }})
+        }
       }
       return prev
     }, [])
@@ -83,9 +97,7 @@ watch(
     <template #header="{ close, titleId, titleClass }">
       <h4>{{ props.setting.caseLabel }}</h4>
       <div class="flex-x-between">
-        <el-button v-if="props.setting.caseId" type="primary" @click="handleAddCaseDialog">
-              {{ $t(props.setting.newButtonLabel) }}
-            </el-button>
+        
         <SvgIcon  v-if="!hideSetting"
           src="/icons/setting.svg"
           class="el-icon--right"
@@ -95,7 +107,13 @@ watch(
       </div>
     </template>
     <div class="workflow-create-content">
-      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" />
+      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" >
+        <template #table_right>
+            <el-button v-if="props.setting.caseId" type="primary" @click="handleAddCaseDialog">
+              {{ $t(props.setting.newButtonLabel) }}
+            </el-button>
+        </template>
+      </PersonalCaseSingleTable>
     </div>
     <PersonalCaseSingleSetting
       ref="settingRef"

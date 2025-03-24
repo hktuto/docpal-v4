@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="workPanel_filter"
         />
-        <el-button id="adminWorkPanelCreateNewWorkPanel" type="primary" @click="handleCreate">
+        <el-button id="WorkPanel__CreateNewWorkPanel" type="primary" @click="handleCreate">
           {{ $t('workPanel_create') }}
         </el-button>
       </template>

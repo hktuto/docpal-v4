@@ -8,7 +8,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminDashboardCreateNewDashboardSubmit" type="primary" :loading="state.loading"
+        <el-button id="Dashboard__CreateNewDashboard__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>

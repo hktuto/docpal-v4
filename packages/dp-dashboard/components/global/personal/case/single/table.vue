@@ -56,7 +56,7 @@ const {
 
 async function getActions(row: any) {
   try {
-    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data)
+    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data?.filter(s => s.state !== 'completed'))
   } catch (error) {
     caseEvents.value = []
   }
@@ -90,26 +90,26 @@ async function handleTask(actionItem: any, row?: any) {
 async function reorderColumn(fields: any) {
   try {
     const columns = [
-      { field: "case_id", title: "caseManagement.name", width: 200 },
-      {
-        field: "created_date",
-        title: "workflow_createDate",
-        width: 200,
-        formatter({ cellValue }: any) {
-          return formatDate(cellValue)
-        },
-      },
-      {
-        field: "modified_date",
-        title: "table_modifiedDate",
-        width: 200,
-        formatter({ cellValue }: any) {
-          return formatDate(cellValue)
-        },
-      },
+      // { field: "case_id", title: "caseManagement.name", width: 200 },
+      // {
+      //   field: "created_date",
+      //   title: "workflow_createDate",
+      //   width: 200,
+      //   formatter({ cellValue }: any) {
+      //     return formatDate(cellValue)
+      //   },
+      // },
+      // {
+      //   field: "modified_date",
+      //   title: "table_modifiedDate",
+      //   width: 200,
+      //   formatter({ cellValue }: any) {
+      //     return formatDate(cellValue)
+      //   },
+      // },
       {
         title: "dpTable_actions",
-        width: 120,
+        width: 60,
         fixed: 'right',
         slots: {
           default: "dpActions",
@@ -118,7 +118,19 @@ async function reorderColumn(fields: any) {
     ];
     if(fields.length > 0) {
       // keep field order
-      columns.splice(1, 0, ...fields.map(item => ({ field: item.id, title: item.name, width: 200 })));
+      const columneFromSetting = fields.reduce((prev: any, item: any) => {
+        const newItem:any = {
+          field: item.id,
+          title: item.name,
+          width: 200
+        }
+        if(item.formatter){
+          newItem.formatter = item.formatter
+        }
+        prev.push(newItem)
+        return prev
+      },[])
+      columns.splice(0, 0, ...columneFromSetting);
     }
     // fields.forEach((row: any) => {
     //   columns.splice(1, 0, { field: row.id, title: row.name, width: 200 });
@@ -155,12 +167,16 @@ defineExpose({ reorderColumn, reload });
 <template>
   <VxeGrid v-if="tableReady" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <ResponsiveFilter
-          ref="responsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="q"
-          inputPlaceHolder="caseManagement_filter"
-        />
+      <div class="tableActions">
+
+        <ResponsiveFilter
+            ref="responsiveFilterRef"
+            @form-change="handleFilterFormChange"
+            inputKey="q"
+            inputPlaceHolder="caseManagement_filter"
+          />
+        <slot name="table_right" />
+      </div>
     </template>
   <template #dpActions="{row}" >
     <el-dropdown trigger="click">
@@ -188,4 +204,17 @@ defineExpose({ reorderColumn, reload });
 </template>
 
 <style lang="scss" scoped>
+.tableActions{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width:100%;
+  overflow: hidden;
+  gap: var(--app-space-s);
+  .responsive-container{
+    flex: 1 0 auto;
+    width: auto;
+  }
+}
 </style>

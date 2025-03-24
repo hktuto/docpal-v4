@@ -3,16 +3,16 @@
     <div class="title-container">
       <h3 class="title">{{ $t("easyForm.formPreview") }}</h3>
       <div class="btns">
-        <el-button id="adminEasyFormDetailFormPreviewEditForm" type="primary" @click="handleOpenFormDesign">
+        <el-button id="EasyForm__Detail__FormPreview__EditForm" type="primary" @click="handleOpenFormDesign">
           {{ $t("easyForm.editForm") }}
         </el-button>
-        <el-button id="adminEasyFormDetailFormPreviewCopyUrl" type="primary" @click="handleCopyUrl">
+        <el-button id="EasyForm__Detail__FormPreview__CopyUrl" type="primary" @click="handleCopyUrl">
           {{ $t("easyForm.copyUrl") }}
         </el-button>
-        <el-button id="adminEasyFormDetailFormPreviewCopyEmbedCode" type="primary" @click="handleCopyIframe">
+        <el-button id="EasyForm__Detail__FormPreview__CopyEmbedCode" type="primary" @click="handleCopyIframe">
           {{ $t("easyForm.copyEmbedCode") }}
         </el-button>
-        <el-button id="adminEasyFormDetailFormPreviewSendEmail" type="primary" @click="handleSendEmail">
+        <el-button id="EasyForm__Detail__FormPreview__SendEmail" type="primary" @click="handleSendEmail">
           {{ $t("easyForm.sendEmail") }}
         </el-button>
       </div>

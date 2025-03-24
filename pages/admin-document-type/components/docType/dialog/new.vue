@@ -9,7 +9,7 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"></FormRenderer>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminDocumentTypeCreateNewDocumentTypeSubmit" type="primary" :loading="state.loading"
+        <el-button id="DocumentType__CreateNewDocumentType__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>

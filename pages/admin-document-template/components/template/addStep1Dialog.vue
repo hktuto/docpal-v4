@@ -8,7 +8,7 @@
     </FormRenderer>
     <template #footer>
       <!-- <el-button @click="createFile('Excel', 'test')"></el-button> -->
-      <el-button id="adminDocumentTemplateCreateNewDocumentTemplateSubmit" type="primary" :loading="state.loading"
+      <el-button id="DocumentTemplate__CreateNewDocumentTemplate__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

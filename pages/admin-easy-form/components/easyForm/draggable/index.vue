@@ -44,7 +44,7 @@
       </template>
     </draggable>
     <div>
-      <el-button id="adminEasyFormDetailFormInformationAddField" type="primary" @click="handleOpenDialog()">
+      <el-button id="EasyForm__Detail__FormInformation__AddField" type="primary" @click="handleOpenDialog()">
         {{ $t('workflowEditor.addField') }}
       </el-button>
     </div>

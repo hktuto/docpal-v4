@@ -33,23 +33,29 @@
       </div>
     </div>
     <div class="flex-x-start">
-      <el-button class="f-g" v-if="isAssigneeUser" type="primary" :loading="state.loading" @click="handleUnclaim">
+      <el-button id="Workflow__AvailableTask__Detail__JobInfo__UnclaimTask" class="f-g" v-if="isAssigneeUser"
+                 type="primary" :loading="state.loading" @click="handleUnclaim">
         {{ $t('workflow_Unclaim') }}
       </el-button>
-      <el-button class="f-g" v-else-if="!props.taskDetail.assignee" type="primary" :loading="state.loading"
+      <el-button id="Workflow__AvailableTask__Detail__JobInfo__ClaimTask" class="f-g"
+                 v-else-if="!props.taskDetail.assignee" type="primary" :loading="state.loading"
                  @click="handleClaim">
         {{ $t('workflow_claim') }}
       </el-button>
       <el-popover :visible="state.deletePopoverShow" placement="top" :width="160">
         <p>{{ $t('workflow_delete') }}</p>
         <div class="flex-x-end" style="text-align: right; margin: 0">
-          <el-button size="small" text @click="state.deletePopoverShow = false">{{ $t('cancelText') }}</el-button>
+          <el-button size="small" text @click="state.deletePopoverShow = false">
+            {{ $t('cancelText') }}
+          </el-button>
           <el-button size="small" type="primary" @click="handelDelete">
             {{ $t('common_confirmDelete') }}
           </el-button>
         </div>
         <template #reference>
-          <el-button v-if="isStartedUser" @click="state.deletePopoverShow = true">{{ $t('common_delete') }}</el-button>
+          <el-button v-if="isStartedUser" @click="state.deletePopoverShow = true">
+            {{ $t('common_delete') }}
+          </el-button>
         </template>
       </el-popover>
     </div>

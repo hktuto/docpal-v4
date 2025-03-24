@@ -8,7 +8,7 @@
         <WatermarkList :list="list" :selected-id="props.id" @update="getList" @remove="deleteItem"/>
         <WatermarkDetail v-if="detail" ref="watermarkDetail" :detail="detail">
           <template #footer>
-            <ElButton id="adminWatermarkSettingSave" type="primary" @click="save">Save</ElButton>
+            <ElButton id="WatermarkSetting__Save" type="primary" @click="save">Save</ElButton>
           </template>
         </WatermarkDetail>
       </div>

@@ -72,7 +72,7 @@ function addRecord() {
     <div class="categoriesContainer">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
-          <ElButton id="adminCalendarSettingEventLocationsEventCategoriesAdd" type="primary" @click="addRecord">
+          <ElButton id="CalendarSetting__EventLocations__EventCategories__Add" type="primary" @click="addRecord">
             {{ $t("Add") }}
           </ElButton>
         </template>
