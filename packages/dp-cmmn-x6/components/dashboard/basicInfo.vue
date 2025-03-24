@@ -52,12 +52,13 @@ onUnmounted(() => {
   refreshBus.off(needRefresh)
 })
 function needRefresh(detail:any) {
-  const id = caseProvider.instanceId?.value || null;
+  const caseId = caseProvider.instanceId?.value || null;
   console.log("listen to",{
-    id,
+    caseId,
     detail
-  })
-  if(detail.caseId === id) {
+  }, detail.caseId === caseId)
+  if(detail.caseId === caseId) {
+    console.log("success should refresh now")
     initLayout()
   }
 }
