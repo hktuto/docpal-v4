@@ -56,16 +56,16 @@ async function handleSubmit(addMore: boolean = false) {
     docType: props.docTypeDetail.name,
   }
   try {
+    let msg
     if (state.isEdit) {
       param.id = state.setting.id
+      msg = t('tip_updateSuccessMsg', {modelName: t('docType_displayMeta'), name: ""})
+    } else {
+      // msg = t('documentType_duplicateAddSuccessMsg')
+      msg = t('tip_createdSuccessMsg', {modelName: t('docType_displayMeta'), name: ""})
     }
     await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
-
-    if (state.isEdit) {
-      ElMessage.success(t('documentType_duplicateUpdateSuccessMsg'))
-    } else {
-      ElMessage.success(t('documentType_duplicateAddSuccessMsg'))
-    }
+    ElMessage.success(msg)
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh', addMore)
