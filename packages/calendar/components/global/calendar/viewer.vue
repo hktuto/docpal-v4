@@ -236,6 +236,9 @@ defineExpose({
 
 <style lang="scss" scoped>
 .calendarViewerContainer{
+    flex: 1 0 auto;
+    height: 100%;
+    overflow: auto;
     &.editMode, &.createMode{
         .eventContainer{
             filter: grayscale(1);

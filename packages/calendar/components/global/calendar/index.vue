@@ -153,7 +153,7 @@
 </script>
 
 <template>
-<div class="calendarViewerContainer">
+<div class="calendarWidgetViewerContainer">
     <div class="filterContainer">
         <ElForm label-position="top">
         <ElRow :gutter="20">
@@ -189,10 +189,13 @@
 </template>
 
 <style lang="scss" scoped>
-.calendarViewerContainer{
-    width: 100%;
+.calendarWidgetViewerContainer{
     height: 100%;
     min-height: 500px;
     position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-flow: column nowrap;
 }
 </style>
