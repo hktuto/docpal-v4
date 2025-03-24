@@ -32,7 +32,6 @@
       <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
     </div>
     <div class="search-group-bar__content" v-show="mode === 'filter'">
-      <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
       <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
     </div>
     <div class="search-group-bar__content" v-show="mode === 'agg'">
