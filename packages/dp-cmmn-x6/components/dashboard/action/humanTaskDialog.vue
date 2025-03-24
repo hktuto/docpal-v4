@@ -30,8 +30,7 @@ const state = reactive({
   edit: false,
   title: t('masterTable.newRow')
 })
-const route = useRoute()
-const router = useRouter()
+const CMDProvider = inject(CaseManagementDashboardKey)
 async function handleSubmit() {
   state.loading = true
   try {
@@ -49,16 +48,15 @@ async function handleSubmit() {
     
     state.visible = false
     emitBus(EventType.CASE_NEED_REFRESH, {
-      caseId: state.setting.caseInstanceId
+      caseId: CMDProvider?.instanceId?.value
     })
-    console.log("emitBus", state.setting.caseInstanceId)
+    console.log("emitBus", CMDProvider?.instanceId?.value)
     emits('submit')
   } catch (error) {
     state.loading = false
   }
   state.loading = false
 }
-const CMDProvider = inject(CaseManagementDashboardKey)
 const FromVariablesRendererRef = ref()
 const MasterTableVariableFormRef = ref()
 const isWorkflowForm = ref(false)
