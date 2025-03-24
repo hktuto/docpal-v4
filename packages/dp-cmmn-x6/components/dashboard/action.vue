@@ -7,6 +7,8 @@
 </el-card>
 </template>
 <script lang="ts" setup>
+import { emitBus, EventType } from 'eventbus'
+
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 const props = withDefaults( defineProps<{
@@ -25,14 +27,32 @@ async function handleDelete() {
     if(action !== 'confirm') return
     emits('delete')
 }
-
+const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
+onActivated(() => {
+  console.log(" setup listen to on action", CMDProvider.instanceId?.value)
+  refreshBus.on(needRefresh)
+})
+onDeactivated(() => {
+  refreshBus.off(needRefresh)
+})
+function needRefresh(detail:any) {
+  const caseId = CMDProvider.instanceId?.value || null;
+  console.log("listen to",{
+    caseId,
+    detail
+  }, detail.caseId === caseId)
+  if(detail.caseId === caseId) {
+    console.log("success should refresh now")
+    init()
+  }
+}
 const state = reactive<any>({
   data: [],
   loading: false
 })
 const userId:string = useUserId().value
 async function init() {
-  
+  console.log("init")
   const id = CMDProvider.instanceId?.value || null
   const _caseTypeId = CMDProvider.caseTypeId?.value || null
   

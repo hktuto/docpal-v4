@@ -98,8 +98,9 @@ const state = reactive<any>({
 
 async function getCDBasciInfo() {
   try {
-    
-    if (state.data?.fields?.length > 0) return state.data
+    console.log("getCDBasciInfo")
+    // remove this line, cause it will cause refresh data
+    // if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null;
     const caseVersionId = caseProvider.caseVersionId?.value || null;
     console.log("caseProvider", caseProvider);
@@ -128,6 +129,7 @@ async function getCDBasciInfo() {
       }
     }
   } catch (error) {
+    console.log("getCDBasciInfo", error)
     state.data = {
       fields: [],
       rows: []
@@ -137,7 +139,7 @@ async function getCDBasciInfo() {
   }
 } 
 async function initLayout() {
- 
+  console.log("init layout")
   const data = await getCDBasciInfo()
   state.layout = props.setting.layout.reduce((prev: any, item: any) => {
     const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
