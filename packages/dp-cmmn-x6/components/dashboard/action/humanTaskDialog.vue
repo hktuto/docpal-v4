@@ -11,6 +11,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
+import { emitBus, EventType } from 'eventbus'
 import { adminApi } from 'api'
 const props = withDefaults(defineProps<{
   ignoreList: string[],
@@ -47,6 +48,10 @@ async function handleSubmit() {
     })
     
     state.visible = false
+    emitBus(EventType.CASE_NEED_REFRESH, {
+      caseId: state.setting.caseInstanceId
+    })
+    console.log("emitBus", state.setting.caseInstanceId)
     emits('submit')
   } catch (error) {
     state.loading = false

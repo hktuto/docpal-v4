@@ -19,6 +19,8 @@
 </el-card>
 </template>
 <script lang="ts" setup>
+import { useEventBus, EventType } from 'eventbus'
+
 import { set, watchDebounced } from '@vueuse/core'
 import {adminApi } from 'api'
 const props = withDefaults( defineProps<{
@@ -94,6 +96,20 @@ const emits = defineEmits([
   'refreshSetting', 'delete'
 ])
 const { t } = useI18n()
+
+const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
+onActivated(() => {
+  refreshBus.on(needRefresh)
+})
+onDeactivated(() => {
+  refreshBus.off(needRefresh)
+})
+function needRefresh(detail) {
+  const id = caseProvider.instanceId?.value || null;
+  if(detail.caseId === id) {
+    initLayout()
+  }
+}
 
 function displayValue(item) {
   if(!state.mode === 'normal') {
@@ -173,64 +189,6 @@ async function getCDBasciInfo() {
 async function initLayout() {
  
   const data = await getCDBasciInfo()
-  // state.layout = [
-  //       {
-  //           "id": "Patient_Name",
-  //           "name": "Patient Name",
-  //           "type": "short_text",
-  //           "width": "100%"
-  //       },
-  //       {
-  //           "id": "phone",
-  //           "name": "phone",
-  //           "type": "short_text",
-  //           "width": "100%"
-  //       },
-  //       {
-  //           "id": "Date_of_Birth",
-  //           "name": "Date of Birth",
-  //           "type": "date",
-  //           "width": "50%"
-  //       },
-  //       {
-  //           "id": "Age",
-  //           "name": "Age",
-  //           "type": "short_text"
-  //       },
-  //       {
-  //           "id": "Gender",
-  //           "name": "Gender",
-  //           "type": "short_text"
-  //       },
-  //       {
-  //           "id": "Weight",
-  //           "name": "Weight",
-  //           "type": "short_text"
-  //       },
-  //       {
-  //           "id": "Refer_By",
-  //           "name": "Refer By",
-  //           "type": "short_text",
-  //           "width": "100%"
-  //       },
-  //       {
-  //           "id": "Medical_History",
-  //           "name": "Medical History",
-  //           "type": "string",
-  //           "width": "100%"
-  //       },
-  //       {
-  //           "id": "Pacemaker",
-  //           "name": "Pacemaker",
-  //           "type": "boolean"
-  //       },
-  //       {
-  //           "id": "Pregnamcy",
-  //           "name": "Pregnamcy",
-  //           "type": "boolean"
-  //       }
-  //   ]
-  //   state.defaultValue = {}
   state.layout = props.setting.layout.reduce((prev: any, item: any) => {
     const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
     
