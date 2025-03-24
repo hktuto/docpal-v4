@@ -3,8 +3,8 @@
              :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="AccessControlList__LocalPermission__AddLocalPermission__Submit" type="primary" :loading="state.loading"
-                 @click="handleSubmit">
+      <el-button id="AccessControlList__LocalPermission__AddLocalPermission__Submit" type="primary"
+                 :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -47,7 +47,7 @@ async function handleSubmit() {
 
   try {
     await adminApi.api.postNuxeoDocumentAclAdd(params)
-    ElMessage.success(t('accessControl_createdSuccessMsg'))
+    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('accessControl_Local'), name: ""}))
     state.visible = false
     emits('refresh')
   } catch (error) {
