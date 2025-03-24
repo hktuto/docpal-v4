@@ -166,7 +166,7 @@ async function handleSubmit() {
     tokenLiveInMinutes: dayjs(form.dueDate).diff(date, 'minute'),
     shareId: state.shareId,
   };
-  ElMessage.success(t('share_externalUpdateSuccessMsg'));
+  ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('share_externalShareLink'), name: ""}))
   emit("submit", param);
   dialogVisible.value = false;
 }

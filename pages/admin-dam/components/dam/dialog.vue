@@ -2,9 +2,9 @@
   <el-dialog v-model="state.visible"
              :close-on-click-modal="false"
              append-to-body
-             :title="$t(`DAM_${state.title}`)"
   >
     <template #header>
+      {{$t(`DAM_${state.title}`)}}
       <span v-if="state.title !== 'addNewDAM'"> - {{ state.data.sourceType }}</span>
       <span v-if="state.title === 'editNewConvertion'"> - {{ state.data.label }}</span>
     </template>
@@ -158,18 +158,19 @@ async function getFormData() {
 
 function handleOpen(data: any) {
   state.visible = true
-  if (data.rowIndex || data.rowIndex === 0) {
+  if (data.targetType) {
+    state.title = 'editNewConvertion'
+    state.data = data
+    editSourceTypeChange(state.data.sourceType)
+  } else if (data.sourceType) {
     state.title = 'addNewConvertion'
     state.data = data
     state.data.operation = {}
     handleSourceTypeChange(state.data.sourceType)
-  } else if (data.targetType) {
-    state.title = 'editNewConvertion'
-    state.data = data
-    editSourceTypeChange(state.data.sourceType)
   } else {
     state.title = 'addNewDAM'
     state.data = {
+      sourceType: data.sourceType,
       operation: {}
     }
   }

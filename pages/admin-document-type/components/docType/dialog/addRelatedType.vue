@@ -46,7 +46,7 @@ async function handleSubmit() {
         rootDocPalType: data?.documentType,
         id: state.setting.id
       })
-      msg = t('documentType_relatedUpdateSuccessMsg')
+      msg = t('tip_updateSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: ""})
     } else {
       // return
       // props.docType.name
@@ -54,13 +54,15 @@ async function handleSubmit() {
         metaData: data?.metadata,
         rootDocPalType: data?.documentType,
       })
-      msg = t('documentType_relatedAddSuccessMsg')
+      // msg = t('documentType_relatedAddSuccessMsg')
+      msg = t('tip_createdSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: ""})
     }
-    state.visible = false
     ElMessage.success(msg)
+    state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
   } catch (error) {
+    console.log(error)
   }
   state.loading = false
 }

@@ -42,16 +42,17 @@ async function handleSubmit() {
     bind: data.access.join(',')
   }
   try {
+    let msg
     const res = await adminApi.api.patchNuxeoSfolder({
       ...state.setting,
       ..._data
     })
     if (Object.keys(state.setting).length === 0) {
-      ElMessage.success(t('doc_typeSmartFolderCreateFolderSuccessMsg'))
+      msg = t('doc_typeSmartFolderCreateFolderSuccessMsg')
     } else {
-      ElMessage.success(t('doc_typeSmartFolderUpdatedFolderSuccessMsg'))
+      msg = t('tip_updateSuccessMsg', {modelName: t('file_smartFolder'), name: ""})
     }
-
+    ElMessage.success(msg)
     emits('refresh')
     state.visible = false
   } catch (error) {

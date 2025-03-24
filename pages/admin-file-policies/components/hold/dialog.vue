@@ -47,7 +47,7 @@ async function handleSubmit() {
     let msg
     if (state.isEdit) {
       await adminApi.api.putPolicyHolds(params)
-      msg = t('holdPolicy_updateSuccessMsg')
+      msg = t('tip_updateSuccessMsg', {modelName: t('workflow_holdPolicy'), name: ""})
     } else {
       await adminApi.api.postPolicyHolds(params)
       msg = t('holdPolicy_createSuccessMsg')

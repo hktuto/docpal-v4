@@ -45,14 +45,14 @@ async function handleSubmit() {
         ...state.setting,
         ..._data,
       });
-      ElMessage.success(t('workPanel_updateSuccessMsg', {name: _data.name}))
+      ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('adminMenu.workPanel'), name: _data.name}))
       emits("refresh");
     } else {
       const res = await adminApi.api.postPersonalDashboardSave({
         ..._data,
         styleJson: "{}",
       }).then(res => res.data)
-      ElMessage.success(t('workPanel_createdSuccessMsg', {name: _data.name}))
+      ElMessage.success(t('tipMessage_createdSuccessMsg', {modelName: t('adminMenu.workPanel'), name: _data.name}))
       emits('add', res)
     }
     state.visible = false;

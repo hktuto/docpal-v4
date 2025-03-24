@@ -43,14 +43,16 @@ async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
+    let msg
     if (state.edit) {
       data.id = state.setting.id
       await adminApi.api.putTemplateEmailLayout(data)
-      ElMessage.success(t('emailContentTemplate_layoutEditSuccessMsg', {name: data.name}))
+      msg = t('tip_updateSuccessMsg', {modelName: t('emailTemplate.layout'), name: data.name})
     } else {
       await adminApi.api.postTemplateEmailLayout(data)
-      ElMessage.success(t('emailContentTemplate_layoutCreatedSuccessMsg', {name: data.name}))
+      msg = t('emailContentTemplate_layoutCreatedSuccessMsg', {name: data.name})
     }
+    ElMessage.success(msg)
     emits('refresh')
     state.visible = false
   } catch (error) {
