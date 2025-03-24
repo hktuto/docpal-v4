@@ -108,7 +108,7 @@ async function deleteItem(row) {
   )
   if (action !== 'confirm') return
   await adminApi.api.deletePersonalDashboardId(row.id)
-  routerProvider?.message.success(t('workPanel_deleteSuccessMsg', {name: row.name}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('adminMenu.workPanel'), name: row.name}));
   query({})
 }
 

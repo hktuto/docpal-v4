@@ -93,7 +93,7 @@ async function handleDisabled(row: any) {
     const param = [];
     param.push(row.shareID);
     await clientApi.api.deleteNuxeoShare(param);
-    ElMessage.success(t('externalSharing_deleteSuccessMsg'))
+    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('externalSharing_sharingRequest'), name: ""}))
     query();
 }
 

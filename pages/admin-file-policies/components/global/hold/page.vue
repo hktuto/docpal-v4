@@ -150,7 +150,7 @@ async function deleteItem(id: string) {
   )
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyHoldsId(id)
-  ElMessage.success(t('holdPolicy_deleteSuccessMsg'));
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('workflow_holdPolicy'), name: ""}));
   query()
 }
 

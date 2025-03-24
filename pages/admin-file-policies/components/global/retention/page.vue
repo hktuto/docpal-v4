@@ -190,7 +190,7 @@ async function deleteItem(id: string) {
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyRetentionsId(id)
   // query()
-  routerProvider?.message.success(t('filePolicies_RetentionPolicyDeletedSuccessfullyMsg'));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('filePolicies_RetentionPolicy'), name: ""}));
 }
 
 async function handleCreate() {
