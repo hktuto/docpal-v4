@@ -1154,9 +1154,11 @@
   "dpMsg_success": "成功",
   "dpSearch": {
     "recordDetailTitle": "编辑搜索条件",
-    "recordTitle": "保存搜索",
+    "recordTitle": "已存搜索",
+    "records": "用户定义",
     "searchMeta": "Metadata",
-    "searchWithMeta": "搜索元"
+    "searchWithMeta": "搜索元",
+    "systemRecords": "系统定义"
   },
   "dpStatus": {
     "expired": "已失效",
