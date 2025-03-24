@@ -18,7 +18,7 @@
         <div class="title">{{ $t('DAM_setupFileExtension') }}</div>
         <el-form-item :label="$t('DAM_fileType')"
                       prop="sourceType"
-                      :rules="[{ required: true, message: $t('DAM_fileType') + ' '+ $t('render.hint.fieldRequired')}]"
+                      :rules="[{ required: true, message: $t('DAM_fileType') + $t('render.hint.fieldRequired')}]"
         >
           <el-select v-model="state.data.sourceType" filterable clearable @change="handleSourceTypeChange"
                      :placeholder="t('common_selectedIsRequiredMsg')">
@@ -29,7 +29,7 @@
       </template>
       <el-form-item :label="$t('tableHeader_label')"
                     prop="label"
-                    :rules="[{ required: true, message: $t('tableHeader_label') + ' '+ $t('render.hint.fieldRequired')}]"
+                    :rules="[{ required: true, message: $t('tableHeader_label') + $t('render.hint.fieldRequired')}]"
                     required=""
       >
         <el-input type="text" v-model="state.data.label" :maxlength="10000"/>
@@ -39,7 +39,7 @@
       </el-form-item>
       <el-form-item :label="$t('DAM_targetFormat')"
                     prop="targetType"
-                    :rules="[{ required: true, message: $t('DAM_targetFormat') + ' '+ $t('render.hint.fieldRequired')}]"
+                    :rules="[{ required: true, message: $t('DAM_targetFormat') + $t('render.hint.fieldRequired')}]"
       >
         <el-select v-model="state.data.targetType" filterable clearable @change="handleTargetTypeChange"
                    :placeholder="t('common_selectedIsRequiredMsg')">
@@ -59,7 +59,7 @@
         <template v-if="state.data.operation.action === 'zoom'">
           <el-form-item :label="$t('search.height')" prop="operation.height"
                         :rules="[
-                            { required: true, message: $t('search.height') + ' '+ $t('render.hint.fieldRequired'), trigger: 'blur' },
+                            { required: true, message: $t('search.height') + $t('render.hint.fieldRequired'), trigger: 'blur' },
                             { validator: numberValidate, trigger: 'blur'}
                         ]"
           >
@@ -68,7 +68,7 @@
           <el-form-item :label="$t('search.width')"
                         prop="operation.width"
                         :rules="[
-                            { required: true, message: $t('search.width') + ' '+ $t('render.hint.fieldRequired'), trigger: 'blur' },
+                            { required: true, message: $t('search.width') + $t('render.hint.fieldRequired'), trigger: 'blur' },
                             { validator: numberValidate, trigger: 'blur'}
                         ]"
           >
@@ -79,7 +79,7 @@
           <el-form-item :label="$t('dub')"
                         prop="operation.dub"
                         :rules="[
-                            { required: true, message: $t('dam.angle') + ' '+ $t('render.hint.fieldRequired'), trigger: 'blur' },
+                            { required: true, message: $t('dam.angle') + $t('render.hint.fieldRequired'), trigger: 'blur' },
                             { validator: dubValidate, trigger: 'blur'}
                         ]"
           >

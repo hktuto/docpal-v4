@@ -5,7 +5,7 @@
       <el-formItem
         :label="$t('easyForm.name')"
         prop="name"
-        :rules="[{ required: true, message: $t('easyForm.name') + ' ' +$t('render.hint.fieldRequired') }]"
+        :rules="[{ required: true, message: $t('easyForm.name') + $t('render.hint.fieldRequired') }]"
       >
         <el-input
           v-model="form.name"

@@ -11,7 +11,7 @@
                     :rules="[
                               {
                                   required: true,
-                                  message: $t('tableHeader_emailList') +' '+ $t('render.hint.fieldRequired'),
+                                  message: $t('tableHeader_emailList') + $t('render.hint.fieldRequired'),
                                   trigger: 'change'
                               },
                               // {
@@ -48,7 +48,7 @@
           <el-form-item
             :label="$t('share_password')"
             prop="password"
-            :rules="[{ required: true, message: $t('share_password') +' '+ $t('render.hint.fieldRequired')}]"
+            :rules="[{ required: true, message: $t('share_password') + $t('render.hint.fieldRequired')}]"
           >
             <el-input v-model="form.password" clearable type="text"/>
           </el-form-item>
@@ -57,7 +57,7 @@
           <el-form-item
             :label="$t('tableHeader_dueDate')"
             prop="dueDate"
-            :rules="[{ required: true, message: $t('tableHeader_dueDate') +' '+ $t('render.hint.fieldRequired')}]"
+            :rules="[{ required: true, message: $t('tableHeader_dueDate') + $t('render.hint.fieldRequired')}]"
           >
             <el-date-picker
               v-model="form.dueDate"

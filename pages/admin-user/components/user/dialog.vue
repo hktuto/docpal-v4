@@ -14,6 +14,7 @@
 import {adminApi} from 'api'
 import {userProviderKey} from '~/util/userProvider';
 import formJson from './dialog.vform.json'
+import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const userProvider = inject(userProviderKey)
@@ -29,8 +30,8 @@ const FormRendererRef = ref()
 
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  if(!data.userId || !data.username) {
-    ElMessage.error(t("user_username")+ $t('render.hint.fieldRequired'));
+  if (!data.userId || !data.username) {
+    ElMessage.error(t("user_username") + t('render.hint.fieldRequired'));
     return;
   }
   state.loading = true
@@ -41,10 +42,11 @@ async function handleSubmit() {
       userId: data.userId,
       groupIds: data.groupList
     })
-    routerProvider?.message.success(t('user_createdSuccessMsg', {username: data.name}));
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('User'), name: data.userId}));
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
   } catch (error) {
+    console.log(error)
   }
   state.loading = false
 }

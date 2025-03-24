@@ -13,7 +13,7 @@
           <el-form label-position="top" ref="FormRef" :status-icon="true" :model="form" @submit.native.prevent>
             <template v-if="status === 'beforeSubmit'">
               <el-form-item :label="$t('login_username')" prop="userId" class="intro"
-                            :rules="[{ required: true, message: $t('login_username') +' '+ $t('render.hint.fieldRequired')}]">
+                            :rules="[{ required: true, message: $t('login_username') + $t('render.hint.fieldRequired')}]">
                 <el-input v-model="form.userId" type="text" @keyup.enter.native="handleSubmit"/>
               </el-form-item>
               <el-button class="fullSize" type="primary" size="large" :block="true" @click="handleSubmit"

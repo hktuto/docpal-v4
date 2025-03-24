@@ -56,7 +56,7 @@ async function handleSubmit() {
     template: 'Blank',
     name: ""
   }
-  ElMessage.success(t('workflow_editorWorkflowCreatedSuccessMsg'));
+  ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('workflow_workflow'), name: ""}));
   state.visible = false
   emits('created', data)
 
@@ -87,7 +87,7 @@ defineExpose({handleOpen})
              class="demo-ruleForm" status-icon
     >
       <el-form-item :label="$t('workflowEditor.name')" prop="name"
-                    :rules="{required: true, message: $t('workflowEditor.name') +' '+ $t('render.hint.fieldRequired'), trigger: 'blur'}">
+                    :rules="{required: true, message: $t('workflowEditor.name') + $t('render.hint.fieldRequired'), trigger: 'blur'}">
         <el-input v-model="state.form.name" :placeholder="$t('workflowEditor.name')" clearable/>
       </el-form-item>
       <el-form-item :label="$t('workflowEditor.template')" prop="template">
