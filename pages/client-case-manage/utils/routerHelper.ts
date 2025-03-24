@@ -32,16 +32,18 @@ export const caseManageDashboardPage  = function(params: any){
 export const caseProcessTaskFormPage = ({
   caseInstanceId,
   actionStepId,
+  label = 'Form',
   backItem
 }: {
   caseInstanceId: string;
   actionStepId: string;
+  label: string
   backItem:any
 }) => ({
   id: "client-case-manage-process-task-form" + new Date().getTime(),
   name: "client-case-manage-process-task-form-" + actionStepId,
   icon: 'dp-icon:case-outline',
-  label: "Form",
+  label,
   component: 'LazyCaseProcessTaskStartFullPageDead',
   props: {
     caseInstanceId,
