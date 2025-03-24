@@ -89,7 +89,6 @@ async function handleOpen(taskId, actionItem, actionList) {
       userTaskId: actionItem.planItemDefinitionId,
       versionId: CMDProvider?.versionId.value
   })
-  console.log(data.rows)
   if(form.data[0]) {
       isWorkflowForm.value = true
       const json = JSON.parse(form.data[0].jsonValue || "{}")

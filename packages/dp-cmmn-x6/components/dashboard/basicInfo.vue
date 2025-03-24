@@ -30,61 +30,7 @@ const props = withDefaults( defineProps<{
 }>() , {
     setting: {
     "layout": [
-        {
-            "id": "Patient_Name",
-            "name": "Patient Name",
-            "type": "short_text",
-            "width": "100%"
-        },
-        {
-            "id": "phone",
-            "name": "phone",
-            "type": "short_text",
-            "width": "100%"
-        },
-        {
-            "id": "Date_of_Birth",
-            "name": "Date of Birth",
-            "type": "date",
-            "width": "50%"
-        },
-        {
-            "id": "Age",
-            "name": "Age",
-            "type": "short_text"
-        },
-        {
-            "id": "Gender",
-            "name": "Gender",
-            "type": "short_text"
-        },
-        {
-            "id": "Weight",
-            "name": "Weight",
-            "type": "short_text"
-        },
-        {
-            "id": "Refer_By",
-            "name": "Refer By",
-            "type": "short_text",
-            "width": "100%"
-        },
-        {
-            "id": "Medical_History",
-            "name": "Medical History",
-            "type": "string",
-            "width": "100%"
-        },
-        {
-            "id": "Pacemaker",
-            "name": "Pacemaker",
-            "type": "boolean"
-        },
-        {
-            "id": "Pregnamcy",
-            "name": "Pregnamcy",
-            "type": "boolean"
-        }
+        
     ],
     "defaultValue": {}
 },
@@ -105,7 +51,11 @@ onDeactivated(() => {
   refreshBus.off(needRefresh)
 })
 function needRefresh(detail) {
-  const id = caseProvider.instanceId?.value || null;
+  const id = caseProvider.caseTypeId?.value || null;
+  console.log("listen to",{
+    id,
+    detail
+  })
   if(detail.caseId === id) {
     initLayout()
   }
@@ -150,13 +100,12 @@ async function getCDBasciInfo() {
     if (state.data?.fields?.length > 0) return state.data
     const id = caseProvider.instanceId?.value || null;
     const caseVersionId = caseProvider.caseVersionId?.value || null;
-    console.log(id, caseVersionId);
+    console.log("caseProvider", caseProvider);
 
     if(id) {
       state.mode = 'normal'
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       state.data = data
-      console.log("data", data)
     } else if(caseVersionId) {
       state.mode = 'develop'
       const {data:form}: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
@@ -177,7 +126,6 @@ async function getCDBasciInfo() {
       }
     }
   } catch (error) {
-    console.log(error)
     state.data = {
       fields: [],
       rows: []
