@@ -99,7 +99,7 @@ watch(node, async()=> {
         <CmmnSidePanelUiLabel :node="node"/>
         <CmmnSidePanelUiItemControl :node="node"/>
         <el-tabs v-model="state.activeName" @tab-click="handleClick">
-            <el-tab-pane :label="$t('workflow_workflow')" name="workflow">
+            <el-tab-pane :label="$t('workflow_workflowName')" name="workflow">
                 <CmmnSidePanelUiWorkflow :node="node" @change="init"/>
             </el-tab-pane>
             <el-tab-pane v-if="workflowVariable" :label="$t('cmmn.input')" name="input">

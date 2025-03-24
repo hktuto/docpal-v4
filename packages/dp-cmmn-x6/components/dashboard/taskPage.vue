@@ -62,7 +62,7 @@ const CMDProvider = inject(CaseManagementDashboardKey)
   const tableSetting = {
     columns: [
       { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
-      { id: '2', label: 'workflow_workflow', prop: 'taskInstance.processDefinitionName'},
+      { id: '2', label: 'workflow_workflowName', prop: 'taskInstance.processDefinitionName'},
     ],
     events: ['delete'],
     slots: [

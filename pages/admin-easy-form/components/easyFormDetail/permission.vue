@@ -5,7 +5,7 @@
             <el-formItem
                 :label="$t('user_UserGroup')"
                 prop="permission"
-                :rules="[{ required: true, message: $t('user_UserGroup') + ' ' +$t('render.hint.fieldRequired') }]"
+                :rules="[{ required: true, message: $t('user_UserGroup') + $t('render.hint.fieldRequired') }]"
             >
                 <el-select v-model="form.permission" multiple filterable clearable
                            :placeholder = "t('common_selectedIsMultiSelectRequiredMsg')"

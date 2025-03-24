@@ -7,7 +7,7 @@
   >
     <el-form ref="formRef" :model="form" label-position="top" @submit.native.prevent>
       <el-form-item :label="$t('common_file')" prop="targetFile"
-                    :rules="[{ required: true, message: $t('common_file') +' '+ $t('render.hint.fieldRequired')}]">
+                    :rules="[{ required: true, message: $t('common_file') + $t('render.hint.fieldRequired')}]">
         <BrowseActionsReplaceUpload v-model="form.fileList" :limit="1"></BrowseActionsReplaceUpload>
       </el-form-item>
       <el-checkbox v-if="checkLicenseFeatures('AI_CLASSIFICATION')" v-model="form.openAiAnalyzeMetadata">

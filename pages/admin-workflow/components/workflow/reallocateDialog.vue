@@ -7,7 +7,7 @@
              @submit.native.prevent
     >
       <el-form-item :label="$t('workflow_ManageReallocateAssignee')" prop="assignee"
-                    :rules="[ { required: true, message: $t('workflow_ManageReallocateAssignee') +' '+ $t('render.hint.fieldRequired'), trigger: 'change'}]">
+                    :rules="[ { required: true, message: $t('workflow_ManageReallocateAssignee') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
         <el-select v-model="form.assignee" filterable clearable :placeholder="t('common_selectedIsRequiredMsg')"
                    style="width: 100%">
           <el-option v-for="item in state.userList" :key="item.id" :label="item.userId"

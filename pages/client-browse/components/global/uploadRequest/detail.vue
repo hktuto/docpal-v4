@@ -316,7 +316,7 @@ onMounted(async () => {
         <el-form-item
           :label="$t('dpDocument_fileName')"
           prop="name"
-          :rules="[{ required: true, message: $t('dpDocument_fileName') + ' '+ $t('render.hint.fieldRequired') }]"
+          :rules="[{ required: true, message: $t('dpDocument_fileName') + $t('render.hint.fieldRequired') }]"
         >
           <el-input v-model="state.selectedRow.name"/>
         </el-form-item>

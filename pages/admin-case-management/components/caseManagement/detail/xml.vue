@@ -38,6 +38,34 @@ async function save() {
     updateCaseInfo()
 }
 
+async function getAllForm(){
+    let form:any[] = [];
+    const nodes = state.cmmn.graph.getNodes()
+    for(let i = 0; i < nodes.length; i++) {
+        const element = nodes[i]
+        const nodeData = element.getData()
+        if(nodeData.type === 'humanTask') {
+            const response = await adminApi.api.getRelationQuery({
+                processKey: props.name,
+                userTaskId: nodeData.data.attr_id,
+                versionId:  props.caseTypeId
+            });
+            if(response && response.data && response.data.length > 0) {
+                const json = JSON.parse(response.data[0].jsonValue || "{}")
+                form.push({
+                    params:{
+                        processKey: props.name,
+                        userTaskId: nodeData.data.attr_id,
+                        versionId:  props.caseTypeId
+                    },
+                    form: json
+                })
+            }
+        }
+    }
+    return form
+}
+
 function xmlStringToFile(xmlString, fileName) {
     // 创建一个Blob对象
     var blob = new Blob([xmlString], {type: 'text/xml'});
@@ -94,7 +122,7 @@ function handleEdit() {
 onMounted(() => {
     init()
 })
-defineExpose({save})
+defineExpose({save, getAllForm})
 </script>
 
 <template>

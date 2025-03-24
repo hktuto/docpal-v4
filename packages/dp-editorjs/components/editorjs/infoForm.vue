@@ -8,14 +8,14 @@ const rules = {
     label: [
         {
             required: true,
-            message: t('easyForm.EmailTemplateKey') + ' ' + t('render.hint.fieldRequired'),
+            message: t('easyForm.EmailTemplateKey') + t('render.hint.fieldRequired'),
             trigger: 'blur'
         },
     ],
     subject: [
         {
             required: true,
-            message: t('tableHeader_subject') + ' ' + t('render.hint.fieldRequired'),
+            message: t('tableHeader_subject') + t('render.hint.fieldRequired'),
             trigger: 'blur'
         },
     ],

@@ -8,7 +8,7 @@
       label-position="top"
     >
       <ElFormItem :label="$t('convert_documentFormat')" prop="targetFile"
-                  :rules="[{ required: true, message: $t('convert_documentFormat') +' '+ $t('render.hint.fieldRequired')}]">
+                  :rules="[{ required: true, message: $t('convert_documentFormat') + $t('render.hint.fieldRequired')}]">
         <ElSelect v-model="form.targetFile" value-key="targetFileType">
           <ElOption v-for="item in supportedFormatList" :key="item.targetFileType" :label="item.targetFileType"
                     :value="item"></ElOption>

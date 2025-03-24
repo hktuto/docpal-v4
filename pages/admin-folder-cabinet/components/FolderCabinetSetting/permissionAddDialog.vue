@@ -53,9 +53,10 @@ async function handleSubmit() {
   try {
     await adminApi.api.postCabinetTemplatePermission(params);
     state.visible = false;
-    ElMessage.success(t('folder_cabinetDetailAddLocalPermissionSuccessMsg'))
+    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('folder_cabinetLocalPermissionOfFolder'), name: ""}))
     emits("refresh");
   } catch (error) {
+    console.log(error)
   }
   state.loading = false;
 }

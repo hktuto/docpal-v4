@@ -106,7 +106,7 @@ async function save() {
         id: result.id
       })
     }
-    routerProvider?.message.success(t('emailContentTemplate_createdSuccessMsg', {name: data.value.label}));
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('Email.fields'), name: data.value.label}));
     editInfoOpened.value = false;
     showClose.value = true;
     // TODO : add notification

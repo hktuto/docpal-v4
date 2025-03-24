@@ -31,7 +31,7 @@ const {
   columns: [
     { field: "taskInstance.businessKey", title: "table_name", fixed: "left" },
     { field: "name", title: "workflow_taskName" },
-    // { field: "taskInstance.processDefinitionName", title: "workflow_workflow" },
+    // { field: "taskInstance.processDefinitionName", title: "workflow_workflowName" },
   ],
   dblClickAction: ({ row, column, event }:any) => {
     handleDblclick(row)

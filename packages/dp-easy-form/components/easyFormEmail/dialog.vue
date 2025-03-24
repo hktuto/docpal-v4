@@ -13,7 +13,7 @@
         :rules="[
           {
             required: true,
-            message: $t('user_email') +' '+ $t('render.hint.fieldRequired')
+            message: $t('user_email') + $t('render.hint.fieldRequired')
           },
           // {
           //   validator: emailValidate,
@@ -48,7 +48,7 @@
         :rules="[
           {
             required: true,
-            message: $t('tableHeader_subject') + ' ' + $t('render.hint.fieldRequired'),
+            message: $t('tableHeader_subject') + $t('render.hint.fieldRequired'),
           },
         ]"
       >

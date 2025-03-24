@@ -45,7 +45,10 @@ async function handleSubmit() {
   state.loading = true
   try {
     await adminApi.api.postMasterTablesAclsAdd(params)
-    ElMessage.success(t('masterTable_settingCreatedSuccessMsg', {name: props.exitList[0]?.masterTableName}))
+    ElMessage.success(t('tip_createdSuccessMsg', {
+      modelName: t('masterTable_permissionForMaster'),
+      name: props.exitList[0]?.masterTableName
+    }))
     state.visible = false
     emits('refresh')
   } catch (error) {
