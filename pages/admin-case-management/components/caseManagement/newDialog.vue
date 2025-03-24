@@ -12,8 +12,9 @@
 </template>
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
-import {adminApi} from 'api'
+import formJson from './new.vform.json'
 
+const {t} = useI18n()
 const emits = defineEmits([
   'refresh'
 ])
@@ -23,7 +24,6 @@ const state = reactive({
   visible: false,
 })
 const FormRendererRef = ref()
-import formJson from './new.vform.json'
 
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
@@ -31,6 +31,7 @@ async function handleSubmit() {
   try {
     state.visible = false
     const res = await adminApi.api.postCaseTypes(data).then(res => res.data)
+    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('caseManagement_caseTemplate'), name: data.name}))
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh', res)
   } catch (error) {
