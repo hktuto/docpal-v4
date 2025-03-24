@@ -73,7 +73,7 @@ const props = defineProps<{
   display: flex;
   // justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--app-padding);
+  margin-bottom: var(--app-space-s);
 }
 .version-display {
   overflow: hidden;
