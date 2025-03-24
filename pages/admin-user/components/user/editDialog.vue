@@ -31,7 +31,7 @@ async function handleSubmit() {
   state.loading = true
   try {
     await adminApi.api.patchNuxeoIdentityUser({...props.user, properties: null, ...data})
-    routerProvider?.message.success(t('user_userInfoUpdatedSuccessMsg', {username: data.name}));
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('user_info'), name: data.firstName}));
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

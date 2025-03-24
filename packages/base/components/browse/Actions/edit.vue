@@ -99,7 +99,7 @@ async function handleSave() {
       name: form.value.name,
       properties: metaFormData,
     })
-    ElMessage.success(t('document_updateSuccessMsg', {name: form.value.name}))
+    ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('common_item'), name: form.value.name}))
 
     emitBus(EventType.FILE_NEED_REFRESH, {
       relatedIdOrPath: state.doc.id,
