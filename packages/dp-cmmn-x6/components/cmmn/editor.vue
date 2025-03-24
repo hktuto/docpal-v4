@@ -210,7 +210,7 @@ provide(CaseManagementEditorKey, {
 
 
 
-defineExpose({ getGraphJson, init, centerGraph, save })
+defineExpose({ getGraphJson, init, centerGraph, save, graph })
 
 </script>
 
