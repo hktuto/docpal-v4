@@ -89,8 +89,6 @@ defineExpose({ getList });
       ></SvgIcon>
     </div>
     <div class="search-bar-record__list">
-      {{ $t(`dpSearch.records`) }}
-      {{ $t(`dpSearch.systemRecords`) }}
       <div
         v-for="key in ['records', 'systemRecords']"
         style="margin-bottom: var(--app-space-s)"
