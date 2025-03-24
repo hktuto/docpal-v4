@@ -4,7 +4,8 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="BulkImport__CreateNewBulkImport__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="BulkImport__CreateNewBulkImport__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -47,7 +48,7 @@ async function handleSubmit() {
       related: []
     }
     await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
-    ElMessage.success(t('bulkImport_createdSuccess', {name: data.type}))
+    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('bulkImport_bulkImportForDocumentType'), name: data.type}))
     // await AddMetaSettingApi(param)
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
