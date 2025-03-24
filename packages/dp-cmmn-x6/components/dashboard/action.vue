@@ -35,7 +35,7 @@ async function init() {
   
   const id = CMDProvider.instanceId?.value || null
   const _caseTypeId = CMDProvider.caseTypeId?.value || null
-  console.log(_caseTypeId,id, 'getCaseDashboardInstanceCaseidActions??????' );
+  
   if(id){
     const {data: userAction} = await adminApi.api.getCaseDashboardInstanceCaseidActions(id,{userId})
     state.data = userAction?.filter(s => s.state !== 'completed')

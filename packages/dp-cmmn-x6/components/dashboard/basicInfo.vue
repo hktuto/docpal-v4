@@ -44,14 +44,15 @@ const emits = defineEmits([
 const { t } = useI18n()
 
 const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
-onActivated(() => {
+onMounted(() => {
+  console.log(" setup listen to", caseProvider.instanceId?.value)
   refreshBus.on(needRefresh)
 })
-onDeactivated(() => {
+onUnmounted(() => {
   refreshBus.off(needRefresh)
 })
-function needRefresh(detail) {
-  const id = caseProvider.caseTypeId?.value || null;
+function needRefresh(detail:any) {
+  const id = caseProvider.instanceId?.value || null;
   console.log("listen to",{
     id,
     detail
