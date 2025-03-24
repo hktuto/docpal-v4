@@ -15,6 +15,7 @@ export enum EventType {
     FILE_DELETED = 'FILE_DELETED',
     FILE_PREVIEW_OPEN = 'file-preview-open',
     FILE_PREVIEW_CLOSE = 'file-preview-close',
+    CASE_NEED_REFRESH = 'case-need-refresh',
 }
 
 export enum GlobalPasteEvent {
