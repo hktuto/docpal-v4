@@ -170,6 +170,7 @@ function handleOpen(data: any) {
   } else {
     state.title = 'addNewDAM'
     state.data = {
+      sourceType: data.sourceType,
       operation: {}
     }
   }
