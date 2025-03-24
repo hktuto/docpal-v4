@@ -102,6 +102,10 @@ function displayValue(item) {
   if(item.type === 'date') {
     return formatDate(item.value)
   }
+  if(item.type === 'boolean') {
+    // TODO: translate later
+    return item.value ? 'Yes' : 'No'
+  }
   return item.value
 }
 const state = reactive<any>({
