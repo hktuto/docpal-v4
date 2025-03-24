@@ -1155,8 +1155,10 @@
   "dpSearch": {
     "recordDetailTitle": "編輯搜尋條件",
     "recordTitle": "儲存搜尋",
+    "records": "用戶定義",
     "searchMeta": "Metadata",
-    "searchWithMeta": "搜尋元"
+    "searchWithMeta": "搜尋元",
+    "systemRecords": "系統定義"
   },
   "dpStatus": {
     "expired": "已失效",

@@ -1,53 +1,35 @@
 <template>
   <div class="search-group-bar">
-    <div class="search-group-bar__title">
-      <template v-if="mode === 'record'">{{ $t("dpSearch.recordTitle") }}</template>
-      <template v-else-if="['recordDetailAgg', 'recordDetail'].includes(mode)">
-        <ElTooltip :content="$t('common_back')" placement="top">
-          <Icon class="el-icon--left" name="tabler:arrow-back" @click="mode = 'record'" />
-        </ElTooltip>
-        {{ $t("dpSearch.recordDetailTitle") }}
-      </template>
-      <template v-else>{{ $t("file_search") }}</template>
+    <div
+      v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)"
+      class="search-group-bar__title"
+    >
+      {{ $t("file_search") }}
     </div>
-    <div class="flex-x-start search-group-bar__action">
-      <template v-if="['recordDetailAgg', 'recordDetail'].includes(mode)">
-        <SvgIcon
-          v-if="mode !== 'recordDetailAgg'"
-          src="/icons/tools/filter.svg"
-          class="mr-2"
-          @click="handleMode('recordDetailAgg')"
-          @search="handleSearch"
-        ></SvgIcon>
-        <SvgIcon
-          v-else
-          src="/icons/tools/search.svg"
-          class="mr-2"
-          @click="handleMode('recordDetail')"
-        ></SvgIcon>
-      </template>
-      <template v-else>
-        <SvgIcon
-          v-if="mode !== 'agg'"
-          src="/icons/tools/filter.svg"
-          class="mr-2"
-          @click="handleMode('agg')"
-          @search="handleSearch"
-        ></SvgIcon>
-        <SvgIcon
-          v-else
-          src="/icons/tools/search.svg"
-          class="mr-2"
-          @click="handleMode('filter')"
-        ></SvgIcon>
-        <SvgIcon
-          src="/icons/tools/save1.svg"
-          class="mr-2"
-          @click="handleMode('record')"
-        ></SvgIcon>
-        <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch"  /> -->
-        <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
-      </template>
+    <div
+      v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)"
+      class="flex-x-start search-group-bar__action"
+    >
+      <SvgIcon
+        v-if="mode !== 'agg'"
+        src="/icons/tools/filter.svg"
+        class="mr-2"
+        @click="handleMode('agg')"
+        @search="handleSearch"
+      ></SvgIcon>
+      <SvgIcon
+        v-else
+        src="/icons/tools/search.svg"
+        class="mr-2"
+        @click="handleMode('filter')"
+      ></SvgIcon>
+      <SvgIcon
+        src="/icons/tools/save1.svg"
+        class="mr-2"
+        @click="handleMode('record')"
+      ></SvgIcon>
+      <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch"  /> -->
+      <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
     </div>
     <div class="search-group-bar__content" v-show="mode === 'filter'">
       <!-- <SearchGroupBar1Filter ref="filterRef" @search="handleSearch"></SearchGroupBar1Filter> -->
@@ -72,6 +54,7 @@
     <div class="search-group-bar__content" v-show="mode === 'recordDetail'">
       <SearchGroupBarRecordDetail
         ref="recordDetailRef"
+        :aggregation="aggregation"
         :query="recordDetailData"
         @cancel="mode = 'record'"
       ></SearchGroupBarRecordDetail>
@@ -112,9 +95,7 @@ const recordRef = ref();
 async function handleLogSearch(query: any) {
   isHistory = true;
   aggRef.value.clear();
-  console.log({ query });
-
-  // if (query.filter) aggRef.value.setDefaultFilter(query.filter)
+  if (query.filter) aggRef.value.setDefaultFilter(query.filter);
   await filterRef.value.initForm(query);
   emits("searchLog", query);
   setTimeout(() => {
@@ -124,7 +105,7 @@ async function handleLogSearch(query: any) {
 async function handleSave(data: any) {
   const condition = await filterRef.value.getData();
   if (!condition.docId && (!condition.query || condition.query.length === 0)) {
-    ElMessage.warning($i18n.t("search.noCondition"));
+    ElMessage.warning(t("search.noCondition"));
     return;
   }
   if (data.includeFilter) {
@@ -139,11 +120,12 @@ async function handleSave(data: any) {
   ElMessage.success(t("dpMsg_success"));
   recordRef.value.getList();
 }
-function handleEditRecord(query) {
+function handleEditRecord(record: any) {
   // recordDetail(query)
+  handleLogSearch(record.query);
   mode.value = "recordDetail";
-  recordDetailData.value = query;
-  recordDetailRef.value.filterRef.initForm(query)
+  recordDetailData.value = record;
+  recordDetailRef.value.init(record);
 }
 // #endregion
 function setQuery(query: any) {
