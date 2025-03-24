@@ -20,7 +20,6 @@ const additionalButton = ref<any[]>([])
 const vFormRef = ref()
 const inParameters = ref<any>({})
 const primaryForm = ref<any>([])
-
 async function setUpForm() {
   try {
     loading.value = true
@@ -34,17 +33,21 @@ async function setUpForm() {
       .then(res => res.data) as any
     primaryForm.value = caseData.rows
     inParameters.value = stepDetail.inParameters as { [key: string]: string }
+
     // get form xml
     const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(stepDetail.processDefinitionVersionId)
     // get form data
-    formData.value = Object.keys(inParameters).reduce((prev: any, key) => {
+    formData.value = Object.keys(inParameters.value).reduce((prev: any, key) => {
       const valueItem = caseData.rows.find(c => c.id === key)
       if (valueItem) {
-        prev[inParameters[key]] = valueItem.value
+        prev[inParameters.value[key]] = valueItem.value
       }
       return prev
     }, {})
-    console.log("formData", formData, primaryForm.value)
+    // set case info into form data
+    formData.value.caseInstanceId = caseInstanceId
+    formData.value.case_id = caseInstanceId
+
     // get form json with lateset versiion
     formJson.value = await clientApi.api.getRelationQuery({
       userTaskId: 'start',
@@ -57,7 +60,7 @@ async function setUpForm() {
     const {buttons, components} = getBpmnAddtionalElement(xml, 'start', stepDetail, formJson.value)
     additionalButton.value = buttons
     nextTick(() => {
-      console.log("set form data")
+      console.log("set form data", formData.value)
       vFormRef.value.setForm(formJson.value, formData.value, [], xml)
     })
   } catch (error) {
