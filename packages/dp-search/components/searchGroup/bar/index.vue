@@ -56,6 +56,7 @@
         :aggregation="aggregation"
         :query="recordDetailData"
         @cancel="mode = 'record'"
+        @update="updateSaveRecord()"
       ></SearchGroupBarRecordDetail>
     </div>
   </div>
@@ -117,6 +118,9 @@ async function handleSave(data: any) {
   };
   await clientApi.api.postNuxeoSearchSaveNestedSearchLog(params);
   ElMessage.success(t("dpMsg_success"));
+  updateSaveRecord();
+}
+function updateSaveRecord() {
   recordRef.value.getList();
 }
 function handleEditRecord(record: any) {
