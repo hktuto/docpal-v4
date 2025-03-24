@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
-import formJson from './searchGroupSaveForm.vform.json'
+import formJson from './addDialog.vform.json'
 
 const emits = defineEmits(['save'])
 const state = reactive({

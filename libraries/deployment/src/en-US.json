@@ -1154,6 +1154,8 @@
   "dpMsg_noDataUpdate": "No Data Update",
   "dpMsg_success": "Success",
   "dpSearch": {
+    "recordDetailTitle": "Edit Search Criteria",
+    "recordTitle": "Save Search",
     "searchMeta": "Metadata",
     "searchWithMeta": "Search Meta"
   },
