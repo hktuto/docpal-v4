@@ -116,7 +116,7 @@ async function handleDelete(row: any) {
     ElMessage.error(t("dpTip.deleteFailed"));
     return;
   }
-  ElMessage.success(t('masterTable_deleteSuccessMsg', {name: row.name}));
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('marsterTable.type.master_table'), name: row.name}));
   query();
 }
 

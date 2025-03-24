@@ -104,7 +104,7 @@ async function handleDeleteTemplate(row: Template[]) {
     })
   if (action !== 'confirm') return
   await adminApi.api.deleteTemplateEmailTemplateId(row.id)
-  routerProvider?.message.success(t('emailContentTemplate_deleteSuccessMsg', {name: row.label}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('Email.fields'), name: row.label}));
   query({})
 }
 

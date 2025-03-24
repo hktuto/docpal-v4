@@ -120,7 +120,7 @@ async function handelDelete() {
   const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({processInstanceId, userId})
   if (!!response) {
   } else {
-    ElMessage.success(t('workflow_deleteSuccessMsg'))
+    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('common_item'), name: ""}))
   }
 }
 </script>
