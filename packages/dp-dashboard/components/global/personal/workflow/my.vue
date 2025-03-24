@@ -31,7 +31,7 @@ const {
   columns: [
     { field: "taskInstance.businessKey", title: "table_name", fixed: "left" },
     { field: "name", title: "workflow_taskName" },
-    { field: "taskInstance.processDefinitionName", title: "workflow_workflow" },
+    // { field: "taskInstance.processDefinitionName", title: "workflow_workflow" },
   ],
   dblClickAction: ({ row, column, event }:any) => {
     handleDblclick(row)
@@ -70,6 +70,10 @@ watchDebounced(
 
 </script>
 <style lang="scss" scoped>
+.pageContainer{
+  height:100%;
+  position: relative;
+}
 :deep .vxe-buttons--wrapper {
   display: flex;
   justify-content: space-between;
