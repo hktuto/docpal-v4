@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 
-const {disabled, formData, options = {
-    data:{
-        caseIdField:'caseId',
-    }
-}} = defineProps<{
+const props = defineProps<{
     disabled: boolean,
     formData: any
-    options?: Object,
+    options: any,
 }>();
+
+const { options, formData} = toRefs(props)
 const ready = ref(false)
 function getFormData(){
     console.log("getFormData")
@@ -33,27 +31,33 @@ const settings = ref<any>({
         caseId: '222',
     }
 })
+const instanceId = ref()
 function getInfo(){
     // get options
-    const fieldName = options.data.caseIdField || ''
-    if(fieldName && formData[fieldName]) {
-        instanceId.value = formData[fieldName]
+    const fieldName = props.options.data.caseIdField || ''
+    if(fieldName && props.formData[fieldName]) {
+        instanceId.value = props.formData[fieldName]
     }
-    if(options.data.setting) {
+    if(props.options.data.setting) {
         settings.value = {
-            layout: options.data.setting.layout,
-            defaultValue: options.data.setting.defaultValue
+            layout: props.options.data.setting.layout,
+            defaultValue: props.options.data.setting.defaultValue
         }
     }
+    console.log("getInfo", instanceId.value, settings.value, props.options)
     ready.value = true
 }
 
 defineExpose({ getFormData })
 
-onMounted(() => {
+watch(()=>[ options, formData] ,() => {
     getInfo()
+},{
+    immediate: true,
+    deep: true
 })
-const instanceId = ref()
+
+
 provide(CaseManagementDashboardKey, {
     instanceId
 })
