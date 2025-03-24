@@ -51,7 +51,7 @@ async function handleSubmit() {
       ]
       params.parentId = state.setting.id
       await adminApi.api.postCabinetTemplate({...params, labelRule: JSON.stringify(labelRule)})
-      ElMessage.success(t('folder_cabinetDetailNewFolderSuccessMsg', {fileName: state.setting.label}))
+      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('folder_folderUnder'), name: state.setting.label}))
     }
     FormRendererRef.value.vFormRenderRef.resetForm()
     state.visible = false

@@ -41,7 +41,7 @@ async function submit() {
     return;
   }
   const newItem = await createWatermarkTemplate(form.value);
-  ElMessage.success(t('admin_watermarkCreatedSuccessMsg'))
+  ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('watermark.watermark'), name: ""}))
   emits('submit', form.value)
   router.push({
     path: '/watermark',
