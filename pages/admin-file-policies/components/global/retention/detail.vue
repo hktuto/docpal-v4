@@ -89,7 +89,7 @@ onActivated(async () => {
       </div>
       <div>
         <!-- <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button> -->
-        <el-button id="adminRetentionPolicySettingEditRetentionPolicySubmit" utton type="primary" @click="handleSubmit">
+        <el-button id="RetentionPolicySetting__EditRetentionPolicy__Submit" utton type="primary" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>

@@ -5,7 +5,7 @@
         <el-input v-model="form.name" :placeholder="t('admin_watermarkName')"/>
       </ElFormItem>
       <ElFormItem>
-        <ElButton id="adminWatermarkSettingUpdate" class="button" type="primary" @click="submit">
+        <ElButton id="WatermarkSetting__Update" class="button" type="primary" @click="submit">
           {{ $t('watermarkSetting_updateWatermark') }}
         </ElButton>
       </ElFormItem>

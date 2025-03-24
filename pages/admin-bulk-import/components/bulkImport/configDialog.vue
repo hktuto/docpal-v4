@@ -203,7 +203,7 @@ defineExpose({handleOpen})
                    :treeTableFormRule="state.rules"
                    :options="state.options"></TreeTableForm>
     <template #footer>
-      <el-button id="adminBulkImportProfileAddNewCaptureProfileSubmit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="BulkImport__Profile__AddNewCaptureProfile__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
     </template>

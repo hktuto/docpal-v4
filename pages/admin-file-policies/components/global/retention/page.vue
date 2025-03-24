@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           :inputPlaceHolder="$t('filePolicies_tableFilterMsg')"
         />
-        <el-button id="adminRetentionPolicySettingCreateNewRetentionPolicy" type="primary" @click="handleAdd">
+        <el-button id="RetentionPolicySetting__CreateNewRetentionPolicy" type="primary" @click="handleAdd">
           {{ $t('filePolicies_RetentionPolicyCreate') }}
         </el-button>
       </template>

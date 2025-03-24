@@ -27,7 +27,7 @@
       </el-dropdown>
     </div>
     <div style="text-align: center">
-      <el-button id="adminEasyFormDetailFormActionsAddNewFormAction" type="text" @click="handleAdd()">
+      <el-button id="EasyForm__Detail__FormActions__AddNewFormAction" type="text" @click="handleAdd()">
         {{ $t('easyForm_addFormAction') }}
       </el-button>
     </div>

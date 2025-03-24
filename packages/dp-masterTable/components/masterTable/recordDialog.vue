@@ -1,12 +1,13 @@
 <template>
-  <el-dialog v-model="state.visible" :title="state.title"
+  <el-dialog v-model="state.visible"
+             :title="state.title"
              class="scroll-dialog"
              :close-on-click-modal="false"
   >
     <FormVariablesRenderer ref="FormVariablesRendererRef"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminMasterTableTableCreatedByRecordsEditSubmit" type="primary" :loading="state.loading"
+        <el-button id="MasterTable__Tables__Detail__Records__Edit__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>

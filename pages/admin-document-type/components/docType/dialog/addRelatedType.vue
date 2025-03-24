@@ -5,7 +5,8 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-      <el-button id="adminDocumentTypeAddNewRelatedDocumentSubmit" type="primary" :loading="state.loading"
+      <el-button id="DocumentType__RelatedDocument__AddNewRelatedDocument__Submit" type="primary"
+                 :loading="state.loading"
                  @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>

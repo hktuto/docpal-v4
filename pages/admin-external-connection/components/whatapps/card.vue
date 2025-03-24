@@ -17,11 +17,11 @@
       </el-form-item>
     </el-form>
     <div>
-      <el-button id="adminExternalConnectionWhatsAppsTestConnection" :loading="state.testLoading" type="info"
+      <el-button id="ExternalConnection__WhatsApps__TestConnection" :loading="state.testLoading" type="info"
                  @click="handleTestConnection">
         {{ $t('config.testConnection') }}
       </el-button>
-      <el-button id="adminExternalConnectionWhatsAppsSave" :loading="state.saveLoading" type="primary"
+      <el-button id="ExternalConnection__WhatsApps__Save" :loading="state.saveLoading" type="primary"
                  @click="handleSave">
         {{ $t('common_save') }}
       </el-button>

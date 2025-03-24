@@ -1,67 +1,73 @@
 <template>
-<el-dialog v-model="state.visible" :title="`${$t('accessControl_edit')} (${state.aclItem.userId})`"
-    :close-on-click-modal="false"
-    >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
+  <el-dialog v-model="state.visible" :title="`${$t('accessControl_edit')} (${state.aclItem.userId})`"
+             :close-on-click-modal="false"
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
-        <el-button :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
+      <el-button id="AccessControlList__LocalPermission__ValidityPeriod__Submit" :loading="state.loading"
+                 @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
-</el-dialog>
+  </el-dialog>
 </template>
 <script lang="ts" setup>
 
-import { adminApi } from 'api'
+import {adminApi} from 'api'
 import formJson from './editTimeDialog.vform.json'
+
 const props = defineProps<{
-    doc: any,
+  doc: any,
 }>()
 const emits = defineEmits([
-    'refresh'
+  'refresh'
 ])
 const state = reactive<{
-    loading: boolean,
-    visible: boolean,
-    aclItem: any
+  loading: boolean,
+  visible: boolean,
+  aclItem: any
 }>({
-    loading: false,
-    visible: false,
-    aclItem: {}
+  loading: false,
+  visible: false,
+  aclItem: {}
 })
 const FormRendererRef = ref()
 
-async function handleSubmit () {
-    try {
-        const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-        const params:any = {
-            idOrPath: props.doc.id,
-            userId: state.aclItem.userId
-        }
-        if(data.time === 'dateBase') {
-            params.startDate = data.dateRange[0]
-            params.endDate = data.dateRange[1]
-        }
-        
-        if (state.aclItem.aceId) {
-            params.aceId = state.aclItem.aceId
-            params.permission = state.aclItem.acePermission
-        }
-        if (state.aclItem && state.aclItem.length > 0) {
-            params.dpId = state.aclItem.dpId
-        }
-        state.loading = true
-        await adminApi.api.putNuxeoDocumentAclReplace(params)
-        state.visible = false
-        emits('refresh')
-    } catch (error) {
-        
+async function handleSubmit() {
+  try {
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const params: any = {
+      idOrPath: props.doc.id,
+      userId: state.aclItem.userId
     }
-    state.loading = false
+    if (data.time === 'dateBase') {
+      params.startDate = data.dateRange[0]
+      params.endDate = data.dateRange[1]
+    }
+
+    if (state.aclItem.aceId) {
+      params.aceId = state.aclItem.aceId
+      params.permission = state.aclItem.acePermission
+    }
+    if (state.aclItem && state.aclItem.length > 0) {
+      params.dpId = state.aclItem.dpId
+    }
+    state.loading = true
+    await adminApi.api.putNuxeoDocumentAclReplace(params)
+    state.visible = false
+    emits('refresh')
+  } catch (error) {
+
+  }
+  state.loading = false
 }
-function handleOpen(aclItem:any) {
-    state.visible = true
-    state.aclItem = aclItem
+
+function handleOpen(aclItem: any) {
+  state.visible = true
+  state.aclItem = aclItem
 }
-defineExpose({ handleOpen })
+
+defineExpose({handleOpen})
 </script>
 <style lang="scss" scoped>
 

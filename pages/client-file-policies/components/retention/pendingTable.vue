@@ -6,7 +6,8 @@
         @form-change="handleFilterFormChange"
         inputKey="documentName"
       />
-      <el-button id="clientRetentionListPendingRefresh" text :loading="refreshLoading" @click="handleRefresh">
+      <el-button id="RetentionList__RetentionPendingList__Refresh" text :loading="refreshLoading"
+                 @click="handleRefresh">
         {{ $t("common_refresh") }}
       </el-button>
     </template>
@@ -14,7 +15,7 @@
       <template v-if="row.status === 'P'">
         <template v-if="row.applyApprovedBy === userId">
           <el-button
-            id="clientRetentionListPendingApprove"
+            id="RetentionList__RetentionPendingList__Approve"
             class="approval-btn"
             size="small"
             type="primary"
@@ -23,7 +24,7 @@
             {{ $t("workflow_startAdhocWorkflow_approve") }}
           </el-button>
           <el-button
-            id="clientRetentionListPendingReject"
+            id="RetentionList__RetentionPendingList__Reject"
             class="approval-btn"
             size="small"
             type="danger"
@@ -33,7 +34,7 @@
           </el-button>
         </template>
         <template v-else>
-          <el-button id="clientRetentionListPendingPendingApproval" text :disabled="true">
+          <el-button id="RetentionList__RetentionPendingList__PendingApproval" text :disabled="true">
             {{ $t("status.pendingApproval") }}
           </el-button>
         </template>

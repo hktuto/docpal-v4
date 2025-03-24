@@ -8,7 +8,7 @@
                     inputKey="name"
                     inputPlaceHolder="doc_typeSmartFolderFilter"
                 />
-                <el-button id="adminSmartFolderSettingCreateNewSmartFolder" type="primary" @click="handleCreate()">
+                <el-button id="SmartFolderSetting__CreateNewSmartFolder" type="primary" @click="handleCreate()">
                   {{ $t('doc_typeSmartFolderCreateFolder') }}
                 </el-button>
             </template>

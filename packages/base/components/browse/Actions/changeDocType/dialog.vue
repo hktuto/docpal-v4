@@ -99,11 +99,8 @@ defineExpose({iconClickHandler})
 
 <template>
   <el-dialog class="scroll-dialog" v-model="dialogOpened" append-to-body
+             :title="`${$t('filePopover_changeDocType')} ${state.doc.name}`"
              :close-on-click-modal="false">
-    <template #header>
-      <strong class="primaryTitle">{{ $t('filePopover_changeDocType') }}</strong>
-      ({{ state.doc.name }})
-    </template>
     <main>
       <div v-if="state.doc && state.doc.properties">
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_type')" :value="state.doc.type" :noCopy="true"/>
@@ -125,7 +122,7 @@ defineExpose({iconClickHandler})
       <MetaRenderForm2 ref="MetaFormRef" mode="changeDocType"></MetaRenderForm2>
     </main>
     <template #footer>
-      <el-button id="clientBrowseChangeDocumentTypeSubmit" :loading="state.loading" type="primary" @click="handleSubmit">
+      <el-button id="Browse__ChangeDocumentType__Submit" :loading="state.loading" type="primary" @click="handleSubmit">
         {{ $t('submit') }}
       </el-button>
     </template>

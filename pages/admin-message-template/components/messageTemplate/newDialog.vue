@@ -55,8 +55,8 @@ defineExpose({
       </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton id="adminMessageTemplateNewTemplateReset" @click="reset">{{ $t('common_reset') }}</ElButton>
-      <ElButton id="adminMessageTemplateNewTemplateSubmit" type="primary" @click="submit">{{ $t('common_submit') }}
+      <ElButton id="MessageTemplate__NewTemplate__Reset" @click="reset">{{ $t('common_reset') }}</ElButton>
+      <ElButton id="MessageTemplate__NewTemplate__Submit" type="primary" @click="submit">{{ $t('common_submit') }}
       </ElButton>
     </template>
   </ElDialog>

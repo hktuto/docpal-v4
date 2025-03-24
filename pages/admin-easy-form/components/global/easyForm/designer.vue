@@ -6,7 +6,7 @@
       :fieldListApi="state.fieldListApi"
     >
       <template #submit>
-        <el-button id="adminEasyFormDetailFormPreviewEditFormSubmit" class="el-button el-button--primary is-link"
+        <el-button id="EasyForm__Detail__FormPreview__EditForm__Submit" class="el-button el-button--primary is-link"
                    :loading="state.submitLoading" @click="handleSubmit">
           {{ $t("submit") }}
         </el-button>
@@ -17,7 +17,7 @@
 
 <script lang="ts" setup>
 import {adminApi} from 'api'
-import {ElMessage, ElMessageBox} from "element-plus";
+import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const {id} = defineProps<{

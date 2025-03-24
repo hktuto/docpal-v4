@@ -13,7 +13,7 @@
       </FolderCabinetCreateUploadTree>
     </main>
     <template #footer>
-      <el-button id="clientFolderCabinetAllowOtherFilesCabinetNewItemSubmit" type="primary" :loading="state.loading"
+      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>

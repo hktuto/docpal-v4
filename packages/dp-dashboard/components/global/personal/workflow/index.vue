@@ -1,7 +1,7 @@
 <template>
   <el-card ref="cardRef" class="workflow-card dashboard-item dashboard-item-tab">
     <SvgIcon
-      id="adminWorkPanelDetailTaskSettings"
+      id="WorkPanel__DetailTask__Settings"
       v-if="!hideSetting"
       src="/icons/setting.svg"
       class="el-icon--right setting-icon"

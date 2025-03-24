@@ -11,7 +11,7 @@
                                           @refresh="(data) => handleRefresh(data, index)"
                                           @delete="handleDelete"/>
     </div>
-    <el-button id="adminCaseManagementDetailAddPermission" type="primary" text @click="handleAdd()">
+    <el-button id="CaseManagement__Detail__Permission__AddPermission" type="primary" text @click="handleAdd()">
       {{ $t('caseManagement.addPermission') }}
     </el-button>
     <CaseManagementDetailPermissionDialog ref="dialogRef" :caseInformation="state.caseInformation"

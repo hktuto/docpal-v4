@@ -58,7 +58,7 @@ provide(MessageTemplateProviderKey, {
   <div class="pageContainer">
     <MessageTemplateTable ref="tableRef">
       <template #toolbar_buttons>
-        <ElButton id="adminMessageTemplateNewTemplate" type="primary" @click="newTemplateRef.open()">
+        <ElButton id="MessageTemplate_NewTemplate" type="primary" @click="newTemplateRef.open()">
           {{ $t('messageTemplate_Create') }}
         </ElButton>
       </template>

@@ -9,7 +9,7 @@
     </FormRenderer>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="adminEasyFormCreateNewFormSubmit" type="primary" :loading="state.loading" @click="handleSubmit">
+        <el-button id="EasyForm__CreateNewForm__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>

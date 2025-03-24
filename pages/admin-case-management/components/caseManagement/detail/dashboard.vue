@@ -14,7 +14,7 @@
               @form-change="handleFilterFormChange"
               inputKey="q"
             />
-            <el-button id="adminCaseManagementDetailCaseDashboardViewAdd" type="primary" @click="handleAdd()">
+            <el-button id="CaseManagement__Detail__CaseDashboardView__Add" type="primary" @click="handleAdd()">
               {{ $t("button.add") }}
             </el-button>
           </div>
@@ -201,6 +201,14 @@ function handleFilterFormChange(formModel) {
 }
 </script>
 <style lang="scss" scoped>
+.responsive-container {
+  :deep .el-input {
+    width: 200px;
+  }
+
+  width: 100%;
+}
+
 :deep .el-card__body {
   height: 70vh;
 }
@@ -210,10 +218,9 @@ function handleFilterFormChange(formModel) {
 }
 
 .actions {
+  width: 100%;
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: var(--app-space-xs);
+  align-items: center;
 }
 </style>

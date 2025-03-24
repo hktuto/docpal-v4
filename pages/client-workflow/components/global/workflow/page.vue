@@ -27,7 +27,7 @@ async function handleDownload() {
   <div class="pageContainer--padding workflow-page">
     <div class="buttons--absolute">
       <el-button
-        id="clientWorkflowExport"
+        id="Workflow__Export"
         v-show="state.activeTab !== 'adhocTask'"
         class="el-icon--left"
         type="info"

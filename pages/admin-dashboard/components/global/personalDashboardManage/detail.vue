@@ -100,10 +100,10 @@ onActivated(() => {
     <div class="flex-x-between">
       <div class="flex-x-between">
         <span class="template-title"> {{ state.info.name }} </span>
-        <Icon name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
+        <Icon id="WorkPanel__Detail__Edit" name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
       <div>
-        <el-dropdown id="adminWorkPanelDetailAdd" trigger="click" @command="handleAdd">
+        <el-dropdown id="WorkPanel__Detail__Add" trigger="click" @command="handleAdd">
           <el-button type="primary">
             {{ $t("common_add") }}
           </el-button>

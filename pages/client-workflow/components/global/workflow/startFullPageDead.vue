@@ -124,10 +124,10 @@ onMounted(() => {
           <template v-for="(item,index) in additionalButton" :key="index">
             <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
           </template>
-          <el-button id="clientWorkflowNewWorkflowStartFullPageDeadCancel" @click="cancel">
+          <el-button id="Workflow__NewWorkflow__StartFullPageDead__Cancel" @click="cancel">
             {{ $t("cancelText") }}
           </el-button>
-          <el-button id="clientWorkflowNewWorkflowStartFullPageDeadSubmit" type="primary" @click="handleSubmit">
+          <el-button id="Workflow__NewWorkflow__StartFullPageDead__Submit" type="primary" @click="handleSubmit">
             {{ $t("common_submit") }}
           </el-button>
         </div>

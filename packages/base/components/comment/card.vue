@@ -11,7 +11,7 @@
         <span v-html="commentInfo.text"></span>
       </div>
       <div class="commentCard_ribbon">
-        <el-button :id="`clientBrowseInfoComments${commentInfo.replyInputShow ? 'Stow' : 'Reply' }`" v-if="canReply"
+        <el-button :id="`Browse__Info__Comments__${commentInfo.replyInputShow ? 'Stow' : 'Reply' }`" v-if="canReply"
                    class="commentCard_ribbon_reply" @click="replyBoxShow" type="text"
                    :icon="ChatSquare">
           {{ commentInfo.replyInputShow ? $t('dpTool_stow') : $t('dpTool_reply') }}

@@ -99,7 +99,7 @@ defineExpose({
       </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton :id="`adminCalendarSettingEventLocationsEventCategoriesAdd${currentData ? 'Confirm' : 'Add'}`"
+      <ElButton :id="`CalendarSetting__EventLocations__EventCategories__Add__${currentData ? 'Confirm' : 'Add'}`"
                 type="primary" @click="submit">
         {{ currentData ? $t("confirm") : $t("Add") }}
       </ElButton>

@@ -26,56 +26,6 @@
         "multiple": false,
         "multipleLimit": 0,
         "optionItems": [
-          {
-            "value": "9a5b95b7-6eda-46c2-94dc-dbf3ee927ec7",
-            "label": "Finance Case",
-            "versionId": "7:90a26dd9-fa85-4de1-8dc1-37c07fc31536"
-          },
-          {
-            "value": "b9429b16-0d1e-49b0-b23a-01c55a6aa990",
-            "label": "jack_test_01",
-            "versionId": "8:80eb3057-f280-4453-8ba4-58654a7f144c"
-          },
-          {
-            "value": "baead794-7b81-48e8-bf29-d1383c99b11b",
-            "label": "jack_test_02",
-            "versionId": null
-          },
-          {
-            "value": "961051ab-fa78-4028-95c2-3d44c102a8f0",
-            "label": "Order Case",
-            "versionId": "14:51d15581-c6e4-4c51-a3ff-aa5ffe4dc9d2"
-          },
-          {
-            "value": "4b21c53b-1b10-4c7b-879f-b1277e4f7b34",
-            "label": "Patient",
-            "versionId": "33:31bdd598-15a6-4c0d-aa5a-33a0232f07a2"
-          },
-          {
-            "value": "0d840d41-d11d-4115-b3bc-b80d658aa576",
-            "label": "Sean test",
-            "versionId": null
-          },
-          {
-            "value": "e47b557e-a764-42ec-8222-95dcea380f39",
-            "label": "Single Approval Case",
-            "versionId": "24:d172a753-aed2-41c1-8431-f477a0be3ae2"
-          },
-          {
-            "value": "fe870c13-fdff-459e-9a28-21ec463bb4b1",
-            "label": "test create folder cabinet",
-            "versionId": "1:c652cbfd-a475-4b0e-bbe4-c6e3f13e54ed"
-          },
-          {
-            "value": "5bf2aafe-bed2-42f2-b6ca-76c6831333df",
-            "label": "test doc",
-            "versionId": "4:839d4a4a-3a81-4583-ba20-1ba0360cf81b"
-          },
-          {
-            "value": "1019f30f-6ea4-4be1-b9b4-8ba09cfd5552",
-            "label": "test will",
-            "versionId": null
-          }
         ],
         "required": false,
         "requiredHint": "",
@@ -88,7 +38,7 @@
         "onCreated": "const _this = this\nasync function getList() {\n  const data = await $api.post('/docpal/case/types/page',{ }).then(res => res.data.data.entryList)\n  return data.reduce((prev, item) => {\n    if(!item.id || !item.name) return prev \n const resultItem = {\n      value: item.id,\n      label: item.name || '' ,\n      versionId: item.productionVersionId\n    }\n   prev.push(resultItem) \n return prev\n  }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n\n}\nasync function init() {\n  const options = await getList()\n  _this.loadOptions(options)\n}\ninit()",
         "onMounted": "",
         "onRemoteQuery": "",
-        "onChange": "\nconst optionItems = this.getOptionItems()\nconst _this = this\nloadColumn()\nconst curCase = optionItems.find(item => item.value === value)\nif(curCase){\n  const caseLabelRef = _this.getWidgetRef('caseLabel')\n  caseLabelRef.setValue(curCase.label) \n  \n}\n\nasync function loadColumn() {\n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  if(!!oldValue) {\n    displayColumnsRef.setValue([])\n    displayColumnsRef.loadOptions([]) \n  }\n  if(!value) return\n  const primaryData = await getPrimaryData(value)\n  displayColumnsRef.loadOptions(primaryData) \n} \n\nasync function getPrimaryData(id) {\n  try {\n    const data = await $api.get(`/docpal/case/dashboard/caseType/${id}/primaryForm`).then(res => res.data.data.fields)\n  return data.reduce((prev, item) => {\n      if(!item.id || !item.name || prev.some(p => p.value === item.id)) return prev \n      const resultItem = {\n        value: item.id,\n        label: item.name || '' \n      }\n      prev.push(resultItem) \n      return prev\n    }, []).sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) {\n    return []\n  }\n\n}",
+        "onChange": "\nconst optionItems = this.getOptionItems()\nconst _this = this\nloadColumn()\nconst curCase = optionItems.find(item => item.value === value)\nif(curCase){\n  const caseLabelRef = _this.getWidgetRef('caseLabel')\n  caseLabelRef.setValue(curCase.label) \n  \n}\n\nasync function loadColumn() {\n  const displayColumnsRef = _this.getWidgetRef('displayColumns')\n  if(!!oldValue) {\n    displayColumnsRef.setValue([])\n    displayColumnsRef.loadOptions([]) \n  }\n  if(!value) return\n  const primaryData = await getPrimaryData(value)\n  displayColumnsRef.loadOptions(primaryData) \n} \n\nasync function getPrimaryData(id) {\n  try {\n    const data = await $api.get(`/docpal/case/dashboard/caseType/${id}/primaryForm`).then(res => res.data.data.fields)\n  return [...data.reduce((prev, item) => {\n      if(!item.id || !item.name || prev.some(p => p.value === item.id)) return prev \n      const resultItem = {\n        value: item.id,\n        label: item.name || '' \n      }\n      prev.push(resultItem) \n      return prev\n    }, []), {value:'case_id', label:'caseManagement.name'},{value:'created_date', label:'workflow_createDate'},{value:'modified_date',label:'table_modifiedDate'}].sort((a,b)=> (a.label.localeCompare(b.label) ))\n  } catch (e) {\n    return []\n  }\n\n}",
         "changeSettings": [],
         "onChangeSetting": true,
         "onFocus": "",

@@ -99,10 +99,10 @@
       </div>
     </div>
     <div style="padding: var(--app-space-xs); text-align: right">
-      <el-button id="adminFolderCabinetSettingInfoDelete" type="info" @click="handleDelete">
+      <el-button id="FolderCabinetSetting__Info__Delete" type="info" @click="handleDelete">
         {{ $t("common_delete") }}
       </el-button>
-      <el-button id="adminFolderCabinetSettingInfoSave" type="primary" @click="handleSave">
+      <el-button id="FolderCabinetSetting__Info__Save" type="primary" @click="handleSave">
         {{ $t("button.save") }}
       </el-button>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="watermarkListContainer">
     <div class="listActionContainer">
-      <el-button id="adminWatermarkSettingCreateNewWatermark" type="primary" @click="createItem">
+      <el-button id="WatermarkSetting__CreateNewWatermark" type="primary" @click="createItem">
         {{ $t('admin_watermark_create') }}
       </el-button>
       <!--            <SvgIcon src="/icons/add.svg" :title="$t('admin_watermark_create')" class="addButton" @click="createItem"/>-->
@@ -13,12 +13,12 @@
         </div>
         <!-- TODO : icon size and style -->
         <div class="listAction listItemEdit" @click="editItem(item.id)">
-          <SvgIcon id="adminWatermarkSettingEdit" src="/icons/edit_1.svg"/>
+          <SvgIcon id="WatermarkSetting__Edit" src="/icons/edit_1.svg"/>
         </div>
         <ElPopconfirm width="200" :title="$t('admin_watermarkDeleteMsg')" @confirm="deleteItem(item.id)">
           <template #reference>
             <div class="listAction listItemDelete">
-              <SvgIcon id="adminWatermarkSettingDelete" src="/icons/menu/trash.svg"/>
+              <SvgIcon id="WatermarkSetting__Delete" src="/icons/menu/trash.svg"/>
             </div>
           </template>
           <template #actions="{ confirm, cancel }">

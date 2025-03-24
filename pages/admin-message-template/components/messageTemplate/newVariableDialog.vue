@@ -29,7 +29,7 @@ defineExpose({
     </ElForm>
     <template #footer>
         <span class="dialog-footer">
-            <ElButton id="adminMessageTemplateDetailEditTemplateVariableSubmit" type="primary" @click="submit">
+            <ElButton id="MessageTemplate__Detail__EditTemplate__Variable__Submit" type="primary" @click="submit">
               {{ $t('common_submit') }}
             </ElButton>
         </span>

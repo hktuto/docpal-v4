@@ -7,19 +7,19 @@
             {{ $t("notifications.userSelected") }}: {{ state.selectList.length }}
           </b>
           <Icon
-            id="adminUserListClearSelected"
+            id="UserList__ClearSelected"
             name="ic:baseline-clear"
             class="normal cursor-pointer"
             @click="cleanSelectedRows"
           ></Icon>
         </div>
         <div class="flex-x-end">
-          <el-button id="adminUserListDeleteUser" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
+          <el-button id="UserList__Delete" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
             {{ $t("common_delete") }}
           </el-button>
           <el-divider direction="vertical"/>
           <el-dropdown placement="top-start">
-            <el-button id="adminUserListActiveUser" type="primary" class="el-icon--left el-icon--right">
+            <el-button id="UserList__Active" type="primary" class="el-icon--left el-icon--right">
               {{ $t("actions.active") }}
             </el-button>
             <template #dropdown>
@@ -33,7 +33,7 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-          <el-button id="adminUserListAssignUserGroup" type="primary" @click="handleGroupSelected()">
+          <el-button id="UserList__AssignUserGroup" type="primary" @click="handleGroupSelected()">
             {{ $t("userManage.group") }}
           </el-button>
         </div>
@@ -46,7 +46,7 @@
           :inputPlaceHolder="$t('placeHolder.userNameOrEmail')"
         />
         <el-button
-          id="adminUserListCreateUser"
+          id="UserList__CreateNewUser"
           class="el-icon--right"
           type="primary"
           :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
@@ -337,7 +337,7 @@ function handleClearFilter() {
 
 onActivated(() => {
   state.selectList = [];
-  
+
 });
 onMounted(() => {
   getAllUserAndActiveCount();

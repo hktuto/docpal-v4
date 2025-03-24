@@ -182,14 +182,14 @@ watch(() => [id, versionId], (newWorkflowId) => {
                 :readonly="readonly">
       <template #actions>
         <template v-if="!productionVersion || productionVersion !== currentVersion">
-          <ElButton id="" type="primary" @click="promoteToProduction">
+          <ElButton id="WorkflowEditor__DetailDead__PromoteToProduction" type="primary" @click="promoteToProduction">
             {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
           </ElButton>
         </template>
-        <ElButton id="adminWorkflowEditorDetailDeadSaveAsNewVersion" type="primary" @click="saveAsNewVersion">
+        <ElButton id="WorkflowEditor__DetailDead__SaveAsNewVersion" type="primary" @click="saveAsNewVersion">
           {{ $t('workflowEditor_saveAsNewVersion') }}
         </ElButton>
-        <ElButton id="adminWorkflowEditorDetailDeadVersionList" type="primary" @click="openVersionList">
+        <ElButton id="WorkflowEditor__DetailDead__VersionList" type="primary" @click="openVersionList">
           {{ $t('workflowEditor_versionList') }}
         </ElButton>
         <!-- <el-button v-if="state.detail.publishStatus === 'A' && state.detail.status === 'A'" :loading="state.loading" type="info" @click="handleDeactive()">{{$t('actions.inactive')}}</el-button> -->

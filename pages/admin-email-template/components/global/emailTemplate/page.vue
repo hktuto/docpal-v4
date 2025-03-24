@@ -9,10 +9,10 @@
           inputPlaceHolder="emailContentTemplate_filter"
         />
         <div>
-          <el-button id="adminEmailContentTemplateEditEmailLayout" type="info" @click="handleEditEmailLayout">
+          <el-button id="EmailContentTemplate__EditEmailLayout" type="info" @click="handleEditEmailLayout">
             {{ $t('button.editEmailLayout') }}
           </el-button>
-          <el-button id="adminEmailContentTemplateCreateNewEmailTemplate" type="primary" @click="handleAdd">
+          <el-button id="EmailContentTemplate__CreateNewEmailTemplate" type="primary" @click="handleAdd">
             {{ $t('emailContentTemplate_create') }}
           </el-button>
         </div>

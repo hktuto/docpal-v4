@@ -9,7 +9,7 @@
       <span v-if="state.title === 'editNewConvertion'"> - {{ state.data.label }}</span>
     </template>
     <template #footer>
-      <el-button id="adminDAMSettingAddSubmit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="DAMSetting__Add__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
     </template>
