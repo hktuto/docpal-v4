@@ -15,7 +15,8 @@
         <div class="listAction listItemEdit" @click="editItem(item.id)">
           <SvgIcon id="WatermarkSetting__Edit" src="/icons/edit_1.svg"/>
         </div>
-        <ElPopconfirm width="200" :title="$t('admin_watermarkDeleteMsg')" @confirm="deleteItem(item.id)">
+        <ElPopconfirm width="200" :title="$t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: ''})"
+                      @confirm="deleteItem(item.id)">
           <template #reference>
             <div class="listAction listItemDelete">
               <SvgIcon id="WatermarkSetting__Delete" src="/icons/menu/trash.svg"/>

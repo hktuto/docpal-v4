@@ -86,7 +86,7 @@ async function handleDelete(row: any) {
   if (action !== "confirm") return;
   try {
     const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id);
-    ElMessage.success(t("documentType_relatedDeleteSuccessMsg"));
+    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_relatedDocument'), name: ""}))
     await getList();
   } catch (error) {
   } finally {

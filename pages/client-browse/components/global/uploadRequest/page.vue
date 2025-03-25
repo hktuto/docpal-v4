@@ -35,7 +35,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   },
   columns: [
     { field: "email", title: "user_email" },
-    { field: "logicalPath", title: "document_path" },
+    { field: "logicalPath", title: "document_folderPath" },
     { field: "message", title: "dpTable_message" },
     {
       field: "status",
