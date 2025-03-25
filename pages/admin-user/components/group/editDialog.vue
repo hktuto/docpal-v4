@@ -33,7 +33,7 @@ async function handleSubmit() {
   try {
     data.groupId = props.group.id
     const res = await groupProviderDetail?.PatchGroupApi(data)
-    routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('user_UserGroup'), name: ""}));
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('user_UserGroup'), name: null}));
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh', res.data)

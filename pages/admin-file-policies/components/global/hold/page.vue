@@ -143,14 +143,14 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
 
 async function deleteItem(id: string) {
   const action = await ElMessageBox.confirm(
-    `${t('holdPolicy_deleteMsg')}`,
+    t('tip_deleteMsg', {modelName: t('workflow_holdPolicy'), name: null}),
     {
       confirmButtonText: t('common_confirmDelete'),
     }
   )
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyHoldsId(id)
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('workflow_holdPolicy'), name: ""}));
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('workflow_holdPolicy'), name: null}));
   query()
 }
 

@@ -294,12 +294,12 @@ async function handleSave() {
   } finally {
     setTimeout(() => (state.loading = false), 300);
   }
-  routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('folder_folderCabinetDetails'), name: ""}));
+  routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('folder_folderCabinetDetails'), name: null}));
 }
 
 async function handleDelete() {
   const action = await ElMessageBox.confirm(
-    t("folderCabinet.deleteTip"),
+    t('tip_deleteMsg', {modelName: t('folder_entireFolderCabinet'), name: null}),
     {
       confirmButtonText: t('common_confirmDelete'),
     }
@@ -308,7 +308,7 @@ async function handleDelete() {
   await adminApi.api.deleteCabinetId(state.setting.id);
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false);
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('folder_entireFolderCabinet'), name: ""}));
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('folder_entireFolderCabinet'), name: null}));
   } else {
     emits("update");
   }

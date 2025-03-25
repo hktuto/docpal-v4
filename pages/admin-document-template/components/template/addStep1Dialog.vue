@@ -51,7 +51,7 @@ async function handleSubmit() {
         id: state.setting.id,
         fileType: state.setting.fileType
       })
-      routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('adminMenu.template'), name: ""}));
+      routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('adminMenu.template'), name: null}));
       emits('update')
     } else {
       const file = await createFile(formData.type, formData.name)
@@ -61,7 +61,7 @@ async function handleSubmit() {
       params.append('fileType', formData.type)
       params.append('description', formData.description)
       const {data} = await adminApi.api.postTemplateDocument({requestDTO: {}}, params as any) as any
-      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('adminMenu.template'), name: ""}))
+      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('adminMenu.template'), name: null}))
       const templateInfo = data
       const link = createNewDocumentTemplateDetail({
         id: templateInfo.id,

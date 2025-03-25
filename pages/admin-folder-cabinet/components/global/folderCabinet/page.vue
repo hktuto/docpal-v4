@@ -120,7 +120,7 @@ function handleInfo(row?: any) {
 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(
-    t('folder_cabinetDeleteMsg'),
+    t('tip_deleteMsg', {modelName: t('menus_folderCabinet'), name: null}),
     {
       confirmButtonText: t('common_confirmDelete'),
     }
@@ -128,7 +128,7 @@ async function handleDelete(row: any) {
   if (action !== "confirm") return;
   try {
     const result = await adminApi.api.deleteCabinetId(row.id).then((res) => res.data);
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('menus_folderCabinet'), name: ""}));
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('menus_folderCabinet'), name: null}));
     query();
   } catch (error) {
   }

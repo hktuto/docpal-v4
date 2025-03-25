@@ -75,9 +75,9 @@ async function handleSubmit() {
   }
 
   let msg = state.isEdit ?
-    t('tip_updateSuccessMsg', {modelName: t('menus_folderCabinet'), name: ""})
+    t('tip_updateSuccessMsg', {modelName: t('menus_folderCabinet'), name: null})
     :
-    t('tip_createdSuccessMsg', {modelName: t('menus_folderCabinet'), name: ""})
+    t('tip_createdSuccessMsg', {modelName: t('menus_folderCabinet'), name: null})
   ElMessage.success(msg)
 
   state.loading = false;

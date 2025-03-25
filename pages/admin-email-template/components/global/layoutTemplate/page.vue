@@ -88,7 +88,7 @@ function handleAdd() {
 
 async function handleDeleteTemplate(row) {
   const action = await ElMessageBox.confirm(
-    `${t('emailContentTemplate_layoutDeleteMsg', {name: row.name})}`,
+    t('tip_deleteMsg', {modelName: t('emailTemplate.layout'), name: row.name}),
     {
       confirmButtonText: t('common_confirmDelete'),
     })

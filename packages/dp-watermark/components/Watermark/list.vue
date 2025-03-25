@@ -15,7 +15,7 @@
         <div class="listAction listItemEdit" @click="editItem(item.id)">
           <SvgIcon id="WatermarkSetting__Edit" src="/icons/edit_1.svg"/>
         </div>
-        <ElPopconfirm width="200" :title="$t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: ''})"
+        <ElPopconfirm width="200" :title="$t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: null})"
                       @confirm="deleteItem(item.id)">
           <template #reference>
             <div class="listAction listItemDelete">
@@ -64,7 +64,7 @@ const selectedItem = computed(() => {
 })
 
 function deleteItem(id: string) {
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('watermark.watermark'), name: ""}));
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('watermark.watermark'), name: null}));
   emit('remove', id);
 }
 

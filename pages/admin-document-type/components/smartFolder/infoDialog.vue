@@ -48,9 +48,9 @@ async function handleSubmit() {
       ..._data
     })
     if (Object.keys(state.setting).length === 0) {
-      msg = t('tip_createdSuccessMsg', {modelName: t('file_smartFolder'), name: ""})
+      msg = t('tip_createdSuccessMsg', {modelName: t('file_smartFolder'), name: null})
     } else {
-      msg = t('tip_updateSuccessMsg', {modelName: t('file_smartFolder'), name: ""})
+      msg = t('tip_updateSuccessMsg', {modelName: t('file_smartFolder'), name: null})
     }
     ElMessage.success(msg)
     emits('refresh')

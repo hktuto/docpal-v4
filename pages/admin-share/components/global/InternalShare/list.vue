@@ -66,14 +66,14 @@ onMounted(() => {
 
 async function deleteAction(row: any) {
   ElMessageBox.confirm(
-    `${t('share_DeleteMsg')}`,
+    t('tip_deleteMsg', {modelName: t('share_internalShareLink'), name: null}),
     {
       confirmButtonText: t('common_confirmDelete'),
     }
   ).then(async () => {
     // param.push(...row.detailIds.split(','))
     await adminApi.api.deleteInternalshare({internalShareId: row.internalShareId})
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('share_internalShareLink'), name: ""}));
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('share_internalShareLink'), name: null}));
     tableRef.value?.reload()
   })
   return
