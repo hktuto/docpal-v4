@@ -96,6 +96,7 @@ async function handleLogSearch(query: any) {
   isHistory = true;
   aggRef.value.clear();
   if (query.filter) aggRef.value.setDefaultFilter(query.filter);
+  else aggRef.value.setDefaultFilter({});
   await filterRef.value.initForm(query);
   emits("searchLog", query);
   setTimeout(() => {
@@ -134,6 +135,9 @@ function handleEditRecord(record: any) {
 function setQuery(query: any) {
   filterRef.value.initForm(query);
 }
+onActivated(() => {
+  mode.value = "filter";
+});
 defineExpose({
   setQuery,
 });

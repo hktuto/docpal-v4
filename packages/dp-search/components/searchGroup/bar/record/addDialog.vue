@@ -1,53 +1,52 @@
 <template>
-  <el-dialog 
-      v-model="state.dialogVisible"
-      :close-on-click-modal="false"
-      append-to-body>
-      <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
-      <template #footer>
-          <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
-      </template>
-</el-dialog>
+  <el-dialog
+    v-model="state.dialogVisible"
+    :close-on-click-modal="false"
+    append-to-body
+    destroy-on-close
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
+    <template #footer>
+      <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
+        $t("common_submit")
+      }}</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { useEventListener } from '@vueuse/core'
-import formJson from './addDialog.vform.json'
+import { useEventListener } from "@vueuse/core";
+import formJson from "./addDialog.vform.json";
 
-const emits = defineEmits(['save'])
+const emits = defineEmits(["save"]);
 const state = reactive({
   loading: false,
   dialogVisible: false,
-})
-const FormRendererRef = ref()
+});
+const FormRendererRef = ref();
 
-async function handleSubmit () {
+async function handleSubmit() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    if (!data) return
-    emits('save', data)
-    state.dialogVisible = false
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData();
+    if (!data) return;
+    emits("save", data);
+    state.dialogVisible = false;
   } catch (error) {
-      
   } finally {
-      state.loading = false
-  }   
+    state.loading = false;
+  }
 }
-function handleOpen () {
-  state.dialogVisible = true
+function handleOpen() {
+  state.dialogVisible = true;
   // setTimeout(() => {
   //   FormRendererRef.value.vFormRenderRef.setFormData()
   // })
 }
 
-
 defineExpose({
-  handleOpen
-})
-onActivated(async() => {
-})
+  handleOpen,
+});
+onActivated(async () => {});
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

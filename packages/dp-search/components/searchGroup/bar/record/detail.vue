@@ -21,6 +21,7 @@ function init(record: any) {
   filterRef.value.initForm(record.query);
 
   if (record.query.filter) aggRef.value.setDefaultFilter(record.query.filter);
+  else aggRef.value.setDefaultFilter({});
 }
 async function handleSave() {
   const condition = await filterRef.value.getData();
