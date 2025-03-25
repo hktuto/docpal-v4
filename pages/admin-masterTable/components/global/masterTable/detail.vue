@@ -1,74 +1,74 @@
 <script lang="ts" setup>
-import { ElNotification } from "element-plus";
-import { adminApi } from "api";
-import type { MasterTableResponseDTO } from "api/src/generate/admin";
-import { getIgnoreSchemas } from "~/utils/masterTableProvider";
-import { onActivated } from "vue";
+import { ElNotification } from 'element-plus'
+import { adminApi } from 'api'
+import type { MasterTableResponseDTO } from 'api/src/generate/admin'
+import { getIgnoreSchemas } from '~/utils/masterTableProvider'
+import { onActivated } from 'vue'
 
-const { t } = useI18n();
+const { t } = useI18n()
 const { id } = defineProps<{
-  id: string;
-}>();
-const ignoreList = getIgnoreSchemas();
+  id: string
+}>()
+const ignoreList = getIgnoreSchemas()
 const state = reactive<{
-  activeName: string;
-  masterTable: MasterTableResponseDTO | undefined;
-  templateLoading: boolean;
-  importLoading: boolean;
-  exportLoading: boolean;
+  activeName: string
+  masterTable: MasterTableResponseDTO | undefined
+  templateLoading: boolean
+  importLoading: boolean
+  exportLoading: boolean
 }>({
-  activeName: "records",
+  activeName: 'records',
   masterTable: {
-    name: "",
+    name: '',
     fields: [],
-    status: "A",
+    status: 'A'
   },
   templateLoading: false,
   importLoading: false,
-  exportLoading: false,
-});
+  exportLoading: false
+})
 const permission = {
   read: true,
   create: true,
   edit: true,
-  enable: true,
-};
+  enable: true
+}
 function handleClick(tab: any) {
-  state.activeName = tab.name;
+  state.activeName = tab.name
 }
 
-const MasterTableTabRecordsRef = ref();
+const MasterTableTabRecordsRef = ref()
 
 async function init() {
-  const res = await adminApi.api.getMasterTablesId(id);
-  const detail = res.data;
-  state.masterTable = detail;
+  const res = await adminApi.api.getMasterTablesId(id)
+  const detail = res.data
+  state.masterTable = detail
 
-  MasterTableTabRecordsRef.value.initTableColumns(detail?.fields);
+  MasterTableTabRecordsRef.value.initTableColumns(detail?.fields)
 }
 
 async function handleTemplateDownload() {
   try {
-    state.templateLoading = true;
+    state.templateLoading = true
     const res = await adminApi.api.getMasterTablesIdRecordTemplate(
       id,
       {},
       {
-        format: "blob",
-        timeout: 0,
+        format: 'blob',
+        timeout: 0
       }
-    );
-    downloadBlob(res, state.masterTable?.name + "-template");
+    )
+    downloadBlob(res, state.masterTable?.name + '-template')
   } catch (error) {
   } finally {
-    state.templateLoading = false;
+    state.templateLoading = false
   }
 }
 
-const inputRef = ref();
+const inputRef = ref()
 
 function handleImport() {
-  inputRef.value.click();
+  inputRef.value.click()
 }
 
 // TODO: 导入文件接口改造
@@ -81,16 +81,14 @@ async function handleFile(event: any) {
   //     id: route.params.id,
   //     data: json
   // })
-  const formData: any = new FormData();
-  formData.append("file", event.target.files[0]);
-  formData.append("id", id);
+  const formData: any = new FormData()
+  formData.append('file', event.target.files[0])
+  formData.append('id', id)
 
-  const data: any = await adminApi.api
-    .postMasterTablesRecordImportFile(formData, formData)
-    .then((res) => res.data);
-  if (data?.failureNumber > 0) downloadFailList();
-  event.target.value = "";
-  handleRefresh();
+  const data: any = await adminApi.api.postMasterTablesRecordImportFile(formData, formData).then((res) => res.data)
+  if (data?.failureNumber > 0) downloadFailList()
+  event.target.value = ''
+  handleRefresh()
   // } catch (error) {
   // } finally {
   //   state.importLoading = false
@@ -99,133 +97,86 @@ async function handleFile(event: any) {
 
 async function downloadFailList() {
   const noti = ElNotification({
-    title: t("masterTable.importFailList"),
+    title: t('masterTable.importFailList'),
     showClose: true,
     duration: 0,
-    type: "warning",
-  });
+    type: 'warning'
+  })
   const res = await adminApi.api.getMasterTablesDownloadFailure(
     { id },
     {
-      format: "blob",
-      timeout: 0,
+      format: 'blob',
+      timeout: 0
     }
-  );
-  downloadBlob(res, state.masterTable.name + "-failure");
+  )
+  downloadBlob(res, state.masterTable.name + '-failure')
 }
 
 async function handleExport() {
   try {
-    state.exportLoading = true;
+    state.exportLoading = true
     const res = await adminApi.api.postMasterTablesIdRecordExport(
       id,
       {},
       {
-        format: "blob",
-        timeout: 0,
+        format: 'blob',
+        timeout: 0
       }
-    );
-    downloadBlob(res, state.masterTable?.name as string);
+    )
+    downloadBlob(res, state.masterTable?.name as string)
   } catch (error) {
   } finally {
-    state.exportLoading = false;
+    state.exportLoading = false
   }
 }
 
-const MasterTableNewRowDialogRef = ref();
+const MasterTableNewRowDialogRef = ref()
 
 function handleAddRow(row: any = null) {
-  MasterTableNewRowDialogRef.value.handleOpen(state.masterTable?.fields, row);
+  MasterTableNewRowDialogRef.value.handleOpen(state.masterTable?.fields, row)
 }
 
 function handleRefresh() {
-  MasterTableTabRecordsRef.value.query();
+  MasterTableTabRecordsRef.value.query()
 }
 
 onActivated(() => {
-  init();
-});
+  init()
+})
 </script>
 
 <template>
   <div class="pageContainer--padding">
     <el-tabs class="dp-tabs--auto" v-model="state.activeName" @tab-change="handleClick">
       <el-tab-pane :label="$t('masterTable.records')" name="records">
-        <MasterTableRecords
-          ref="MasterTableTabRecordsRef"
-          :tableId="id"
-          :permission="permission"
-        ></MasterTableRecords>
+        <MasterTableRecords ref="MasterTableTabRecordsRef" :tableId="id" :permission="permission"></MasterTableRecords>
       </el-tab-pane>
       <el-tab-pane :label="$t('masterTable.schema')" name="schema">
-        <MasterTableTabSchema
-          ref="MasterTableTabSchemaRef"
-          :masterTableDetail="state.masterTable"
-          :tableId="id"
-          @refresh="init"
-        ></MasterTableTabSchema>
+        <MasterTableTabSchema ref="MasterTableTabSchemaRef" :masterTableDetail="state.masterTable" :tableId="id" @refresh="init"></MasterTableTabSchema>
       </el-tab-pane>
       <el-tab-pane :label="$t('masterTable.log')" name="log">
-        <MasterTableTabLog
-          v-if="state.masterTable?.name"
-          :tableName="state.masterTable.name"
-          :isDetail="true"
-        ></MasterTableTabLog>
+        <MasterTableTabLog v-if="state.masterTable?.name" :tableName="state.masterTable.name" :isDetail="true"></MasterTableTabLog>
       </el-tab-pane>
       <el-tab-pane :label="$t('masterTable.setting')" name="setting">
-        <MasterTableTabSetting
-          v-if="state.masterTable && state.masterTable.id"
-          :table="state.masterTable"
-          :tableId="id"
-        ></MasterTableTabSetting>
+        <MasterTableTabSetting v-if="state.masterTable && state.masterTable.id" :table="state.masterTable" :tableId="id"></MasterTableTabSetting>
       </el-tab-pane>
     </el-tabs>
     <div class="absolute-btns">
-      <el-button
-        id="MasterTable__Tables__Detail__DownloadTemplate"
-        :loading="state.templateLoading"
-        type="info"
-        @click="handleTemplateDownload()"
-      >
-        {{ $t("button.templateDownload") }}
+      <el-button id="MasterTable__Tables__Detail__DownloadTemplate" :loading="state.templateLoading" type="info" @click="handleTemplateDownload()">
+        {{ $t('button.templateDownload') }}
       </el-button>
-      <el-button
-        id="MasterTable__Tables__Detail__Import"
-        :loading="state.importLoading"
-        type="info"
-        @click="handleImport()"
-      >
-        {{ $t("button.importXLXS") }}
+      <el-button id="MasterTable__Tables__Detail__Import" :loading="state.importLoading" type="info" @click="handleImport()">
+        {{ $t('button.importXLXS') }}
       </el-button>
-      <el-button
-        id="MasterTable__Tables__Detail__Export"
-        :loading="state.exportLoading"
-        type="info"
-        @click="handleExport()"
-      >
-        {{ $t("button.export") }}
+      <el-button id="MasterTable__Tables__Detail__Export" :loading="state.exportLoading" type="info" @click="handleExport()">
+        {{ $t('button.export') }}
       </el-button>
-      <el-button
-        id="MasterTable__Tables__Detail__Add"
-        type="primary"
-        @click="handleAddRow()"
-      >
-        {{ $t("button.add") }}
+      <el-button id="MasterTable__Tables__Detail__Add" type="primary" @click="handleAddRow()">
+        {{ $t('button.add') }}
       </el-button>
     </div>
-    <MasterTableRecordAddDialog
-      ref="MasterTableNewRowDialogRef"
-      :ignoreList="ignoreList"
-      :tableId="id"
-      @refresh="handleRefresh()"
-    />
-    <input
-      v-show="false"
-      ref="inputRef"
-      type="file"
-      accept=".xlsx,.xls"
-      @change="handleFile"
-    />
+    <MasterTableRecordAddDialog ref="MasterTableNewRowDialogRef" :ignoreList="ignoreList" :tableId="id" @refresh="handleRefresh()" />
+    <input v-show="false" ref="inputRef" type="file" accept=".xlsx,.xls" @change="handleFile" />
   </div>
 </template>
 <style lang="scss" scoped>
