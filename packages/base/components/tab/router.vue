@@ -26,13 +26,13 @@ const isFullscreen = computed(() => {
 
 function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExist:boolean = false) {
     if(current.has('meta') || current.has('ctrl') || openInNewTab){
-        tabManager?.openTab(param)
+        tabManager?.openInNewTab(param)
         return;
     }
     if(!ignoreExist){
         const existingTab = allComponents.value.find(item => item.name === param.name)
         if(existingTab){
-            tabManager?.openTab(param)
+            tabManager?.openInNewTab(param)
             return;
         }
     }

@@ -37,6 +37,7 @@ provide(
         openNewDialog,
         openInCurrentTab,
         openTab,
+        openInNewTab,
         menuStick,
         toggleMenuStick
     }
@@ -50,6 +51,23 @@ async function openTab(tab:TabItem, ignoreFocus:boolean = false){
     }catch(error){
         addTabInCurrentPanel({...tab})
     } 
+}
+
+async function openInNewTab(tab:MenuItem){
+  // check layout have more than one panel
+  const sourceData = tab;
+  if(layout.value.length === 1){
+    const targetData = layout.value[0] as TabPanel
+    console.log("openInNewTab", targetData, layout.value)
+    addMenuItemToPanel(sourceData, targetData, 'right')
+    return
+  }
+  // if not check current focus panel index
+  const panelIndex = layout.value.findIndex(panel => panel.id === hightLightPanel.value)
+  if(panelIndex === -1) throw new Error('panel not found')
+  const targetTab =  panelIndex === 0 ? layout.value[1]: layout.value[panelIndex -1]
+  console.log("openInNewTab", targetTab, sourceData)
+  addTabToPanel(targetTab.id, sourceData)
 }
 
 function focusExistingTab(tab:TabItem):Promise<void>{
@@ -150,7 +168,8 @@ defineExpose({
     setLayout,
     setHightLightPanel,
     openInCurrentTab,
-    openTab
+    openTab,
+    openInNewTab
 })
 </script>
 

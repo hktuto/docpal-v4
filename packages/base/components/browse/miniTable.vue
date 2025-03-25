@@ -172,7 +172,7 @@ function dblClickHandler(row:any) {
             idOrPath: row.id,
             docName: row.name,
         })
-        routerProvider?.navigateTo(params)
+        routerProvider?.navigateTo(params, true)
     }
 }
 

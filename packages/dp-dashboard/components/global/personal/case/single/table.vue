@@ -110,7 +110,7 @@ async function reorderColumn(fields: any) {
       // },
       {
         title: "dpTable_actions",
-        width: 60,
+        width: 80,
         fixed: 'right',
         slots: {
           default: "dpActions",
@@ -123,7 +123,7 @@ async function reorderColumn(fields: any) {
         const newItem:any = {
           field: item.id,
           title: item.name,
-          width: 200
+          minWidth: 200
         }
         if(item.formatter){
           newItem.formatter = item.formatter
