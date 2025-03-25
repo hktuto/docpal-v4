@@ -82,7 +82,10 @@ provide(BulkImportListProviderKey, {
       const newMetaList = {...allMetaSetting.value}
       delete newMetaList[row.documentType]
       await adminApi.api.putNuxeoAdminSetting("", newMetaList)
-      routerProvider?.message.success(t('bulkImport_deleteSuccessMsg', {name: row.documentType}));
+      routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+        modelName: t('bulkImport_bulkImportForDocumentType'),
+        name: row.documentType
+      }));
       // TODO : show pop confirm to remove
       tableRef.value?.reload()
     })

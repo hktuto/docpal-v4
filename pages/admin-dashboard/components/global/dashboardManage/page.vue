@@ -107,7 +107,10 @@ async function deleteItem(row) {
     })
   if (action !== 'confirm') return
   await publicApi.api.deleteUserDashboardId(row.id)
-  routerProvider?.message.success(t('dashboard_deleteSuccessMsg', {name: row.name}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+    modelName: t('dashboard.PersonalDashboard'),
+    name: row.name
+  }));
   query({})
 }
 
