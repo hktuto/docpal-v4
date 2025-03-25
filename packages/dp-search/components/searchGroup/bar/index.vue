@@ -1,33 +1,12 @@
 <template>
   <div class="search-group-bar">
-    <div
-      v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)"
-      class="search-group-bar__title"
-    >
-      {{ $t("file_search") }}
+    <div v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)" class="search-group-bar__title">
+      {{ $t('file_search') }}
     </div>
-    <div
-      v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)"
-      class="flex-x-start search-group-bar__action"
-    >
-      <SvgIcon
-        v-if="mode !== 'agg'"
-        src="/icons/tools/filter.svg"
-        class="mr-2"
-        @click="handleMode('agg')"
-        @search="handleSearch"
-      ></SvgIcon>
-      <SvgIcon
-        v-else
-        src="/icons/tools/search.svg"
-        class="mr-2"
-        @click="handleMode('filter')"
-      ></SvgIcon>
-      <SvgIcon
-        src="/icons/tools/save1.svg"
-        class="mr-2"
-        @click="handleMode('record')"
-      ></SvgIcon>
+    <div v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)" class="flex-x-start search-group-bar__action">
+      <SvgIcon v-if="mode !== 'agg'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode('agg')" @search="handleSearch"></SvgIcon>
+      <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="handleMode('filter')"></SvgIcon>
+      <SvgIcon src="/icons/tools/save1.svg" class="mr-2" @click="handleMode('record')"></SvgIcon>
       <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch"  /> -->
       <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
     </div>
@@ -35,11 +14,7 @@
       <SearchGroupBar2 ref="filterRef" @search="handleSearch"></SearchGroupBar2>
     </div>
     <div class="search-group-bar__content" v-show="mode === 'agg'">
-      <SearchGroupBarAggregation
-        ref="aggRef"
-        :aggregation="aggregation"
-        @filters="handleAgg"
-      ></SearchGroupBarAggregation>
+      <SearchGroupBarAggregation ref="aggRef" :aggregation="aggregation" @filters="handleAgg"></SearchGroupBarAggregation>
     </div>
     <div class="search-group-bar__content" v-show="mode === 'record'">
       <SearchGroupBarRecord
@@ -62,85 +37,85 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { clientApi } from "api";
-import { ElMessage } from "element-plus";
-const { t } = useI18n();
-const mode = ref<"filter" | "agg" | "record" | "recordDetail">("filter");
-const props = defineProps(["aggregation"]);
-const emits = defineEmits(["search", "aggSearch", "searchLog"]);
-const filterRef = ref();
-const aggRef = ref();
-let isHistory = false; // 控制是否触发form change事件
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
+const { t } = useI18n()
+const mode = ref<'filter' | 'agg' | 'record' | 'recordDetail'>('filter')
+const props = defineProps(['aggregation'])
+const emits = defineEmits(['search', 'aggSearch', 'searchLog'])
+const filterRef = ref()
+const aggRef = ref()
+let isHistory = false // 控制是否触发form change事件
 async function handleSearch() {
-  if (isHistory) return;
-  const params = await filterRef.value.getData();
-  if (!params.docId && params.query.length === 0) return;
-  aggRef.value.clear();
-  emits("search", params);
+  if (isHistory) return
+  const params = await filterRef.value.getData()
+  if (!params.docId && params.query.length === 0) return
+  aggRef.value.clear()
+  emits('search', params)
   // mode.value = 'search'
 }
-function handleMode(_mode: string = "filter") {
-  if ((mode.value === "record" || mode.value === "recordDetail") && _mode === "agg")
-    mode.value = "filter";
-  else mode.value = _mode;
+function handleMode(_mode: string = 'filter') {
+  if ((mode.value === 'record' || mode.value === 'recordDetail') && _mode === 'agg') mode.value = 'filter'
+  else mode.value = _mode
 }
 function handleAgg(data: any) {
-  emits("aggSearch", data);
+  emits('aggSearch', data)
 }
 
 // #region module: record
-const recordDetailRef = ref();
-const recordDetailData = ref({});
-const recordRef = ref();
+const recordDetailRef = ref()
+const recordDetailData = ref({})
+const recordRef = ref()
 async function handleLogSearch(query: any) {
-  isHistory = true;
-  aggRef.value.clear();
-  if (query.filter) aggRef.value.setDefaultFilter(query.filter);
-  else aggRef.value.setDefaultFilter({});
-  await filterRef.value.initForm(query);
-  emits("searchLog", query);
+  isHistory = true
+  aggRef.value.clear()
+  if (query.filter) aggRef.value.setDefaultFilter(query.filter)
+  else aggRef.value.setDefaultFilter({})
+  await filterRef.value.initForm(query)
+  emits('searchLog', query)
   setTimeout(() => {
-    isHistory = false;
-  }, 2000);
+    isHistory = false
+  }, 2000)
 }
 async function handleSave(data: any) {
-  const condition = await filterRef.value.getData();
+  const condition = await filterRef.value.getData()
   if (!condition.docId && (!condition.query || condition.query.length === 0)) {
-    ElMessage.warning(t("search.noCondition"));
-    return;
+    ElMessage.warning(t('search.noCondition'))
+    return
   }
   if (data.includeFilter) {
-    const agg = await aggRef.value.getData();
-    condition.filter = agg;
+    const agg = await aggRef.value.getData()
+    condition.filter = agg
   }
   const params = {
     label: data.label,
-    queryCondition: JSON.stringify(condition),
-  };
-  await clientApi.api.postNuxeoSearchSaveNestedSearchLog(params);
-  ElMessage.success(t("dpMsg_success"));
-  updateSaveRecord();
+    queryCondition: JSON.stringify(condition)
+  }
+  await clientApi.api.postNuxeoSearchSaveNestedSearchLog(params)
+  ElMessage.success(t('dpMsg_success'))
+  updateSaveRecord()
 }
 function updateSaveRecord() {
-  recordRef.value.getList();
+  recordRef.value.getList()
 }
 function handleEditRecord(record: any) {
   // recordDetail(query)
-  handleLogSearch(record.query);
-  mode.value = "recordDetail";
-  recordDetailData.value = record;
-  recordDetailRef.value.init(record);
+  handleLogSearch(record.query)
+  mode.value = 'recordDetail'
+  recordDetailData.value = record
+  recordDetailRef.value.init(record)
 }
 // #endregion
 function setQuery(query: any) {
-  filterRef.value.initForm(query);
+  filterRef.value.initForm(query)
 }
 onActivated(() => {
-  mode.value = "filter";
-});
+  mode.value = 'filter'
+})
 defineExpose({
   setQuery,
-});
+  aggRef
+})
 </script>
 <style lang="scss" scoped>
 .search-group-bar {

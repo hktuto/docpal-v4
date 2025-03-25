@@ -3,31 +3,29 @@
     <template #toolbar_buttons>
       <slot name="toolbar_buttons"></slot>
     </template>
-    <template #docTags="{ row, index }">
+    <template #docTags="{ row }">
       <div v-if="row?.properties && row?.properties['nxtag:tags']">
         <el-tag v-for="item in row?.properties['nxtag:tags']" :key="item.label">{{ item.label }}</el-tag>
       </div>
     </template>
     <template #logicalPath="{ row }">
-      <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath"
-                     canOpen/>
+      <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath" canOpen />
     </template>
-    <template #docIcon="{ row, index }">
+    <template #docIcon="{ row }">
       <div class="nameItem">
-        <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'"/>
+        <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'" />
         <div class="label">{{ row.name }}</div>
       </div>
     </template>
     <template #summary="{ row }">
       <div v-if="row.properties && row.properties.summarys">
-        <div v-if=" row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary">
+        <div v-if="row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary">
           <el-icon :class="row.expandSummary ? 'revert' : 'rotate'">
-            <ArrowUp/>
+            <ArrowUp />
           </el-icon>
         </div>
         <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
-          <div v-for="item in row.properties.summarys" class="summaryItem"
-               :title="`${$t(item.summaryKey)}:${item.summaryValue}`">
+          <div v-for="(item,index) in row.properties.summarys" class="summaryItem" :key="item.summaryKey + index" :title="`${$t(item.summaryKey)}:${item.summaryValue}`">
             [{{ $t(item.summaryKey) }}]: <b>{{ item.summaryValue }}</b>
           </div>
         </template>
@@ -36,16 +34,14 @@
   </VxeGrid>
 </template>
 <script lang="ts" setup>
-import {ArrowLeftBold, ArrowUp} from '@element-plus/icons-vue';
-import {watchDebounced} from '@vueuse/core'
+import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue'
+import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
-import {clientApi} from 'api'
+import { clientApi } from 'api'
 
-const {tableId} = defineProps<{
+const { tableId } = defineProps<{
   tableId: string
-}>(
-
-);
+}>()
 
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['updateAgg'])
@@ -74,79 +70,79 @@ const state = reactive<any>({
   barParams: {},
   aggParams: {}
 })
-const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: tableId || 'search-result', // if tableId is value , use tableID to store tab ordering
   virtualScroll: false,
   columns: [
     {
-      title: "document_name",
+      title: 'document_name',
       field: 'name',
       width: 250,
       slots: {
-        default: "docIcon"
-      },
+        default: 'docIcon'
+      }
     },
     {
-      title: "docInfo.fileExtension",
-      field: "mimeType2",
+      title: 'docInfo.fileExtension',
+      field: 'mimeType2'
     },
     {
-      title: "search.size",
-      field: "properties.file:content.length",
+      title: 'search.size',
+      field: 'properties.file:content.length',
       width: 120,
-      formatter: ({cellValue}: any) => {
+      formatter: ({ cellValue }: any) => {
         if (!cellValue) return '-'
         return displayFileSize(cellValue)
       }
     },
     {
-      title: "document_path",
-      field: "logicalPath",
+      title: 'document_path',
+      field: 'logicalPath',
       width: 200,
       slots: {
-        default: "logicalPath"
+        default: 'logicalPath'
       }
     },
     {
-      title: "tableHeader.summary",
-      field: "properties.summaryValue",
+      title: 'tableHeader.summary',
+      field: 'properties.summaryValue',
       width: 200,
       slots: {
-        default: "summary"
+        default: 'summary'
       }
     },
     {
-      title: "search.authors",
-      field: "createdBy",
-      width: 240,
+      title: 'search.authors',
+      field: 'createdBy',
+      width: 240
     },
     {
-      title: "search.contributors",
-      field: "properties.dc:contributors",
+      title: 'search.contributors',
+      field: 'properties.dc:contributors',
       width: 200,
-      formatter: ({cellValue}: any) => {
-        if (!cellValue) return '-';
+      formatter: ({ cellValue }: any) => {
+        if (!cellValue) return '-'
         return cellValue.join(',')
       }
     },
     {
-      title: "tableHeader_modifiedDate",
-      field: "modifiedDate",
+      title: 'tableHeader_modifiedDate',
+      field: 'modifiedDate',
       width: 200,
-      formatter: ({cellValue}: any) => {
+      formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
       }
     },
     {
-      title: "dpTable_tags",
+      title: 'dpTable_tags',
       width: 120,
       slots: {
-        default: "docTags"
+        default: 'docTags'
       }
     }
   ],
   bodyActions: [],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   },
   optionalConfig: {
@@ -157,18 +153,7 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
       currentPage: state.options.paginationConfig.currentPage + 1 || 1
     },
     tooltipConfig: {
-      contentMethod: ({
-                        items,
-                        row,
-                        rowIndex,
-                        $rowIndex,
-                        column,
-                        columnIndex,
-                        $columnIndex,
-                        type,
-                        cell,
-                        $event
-                      }: any) => {
+      contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }: any) => {
         const key = column.property
         const value = row[key]
         if (typeof value === 'string') {
@@ -181,14 +166,13 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
     }
   },
   optionalEvent: {
-    pageChange: ({currentPage, pageSize}) => {
+    pageChange: ({ currentPage, pageSize }: any) => {
       tableConfig.pagerConfig.currentPage = currentPage
       tableConfig.pagerConfig.pageSize = pageSize
-      getList({pageNum: currentPage - 1, pageSize})
+      getList({ pageNum: currentPage - 1, pageSize })
     }
   }
 })
-
 
 async function getList(param: any) {
   try {
@@ -201,13 +185,14 @@ async function getList(param: any) {
       return
     }
     tableConfig.loading = true
-    const {data: res} = await clientApi.api.postNuxeoSearchNestedsearchV2({...state.barParams, ...state.aggParams, ...param}) as any
-    if (!res || !res.page || !res.page.entryList || !Array.isArray(res.page.entryList)) {
-      throw new Error("api error")
+    const { data: res } = (await clientApi.api.postNuxeoSearchNestedsearchV2({ ...state.barParams, ...state.aggParams, ...param })) as any
+    if(!res.page) res.page = {
+      entryList: [],
+      totalSize: 0
     }
     // const res = await SearchGroupGetApi({ ...state.barParams, ...state.aggParams, ...param })
-    const list = res.page.entryList.map((item) => {
-      const _item = {...item}
+    const list = res.page.entryList.map((item: any) => {
+      const _item = { ...item }
       if (item.properties && item.properties['file:content']) {
         const mimeType = item.properties['file:content']['mime-type']
         _item.mimeType2 = mime.extension(mimeType) ? mime.extension(mimeType) : '-'
@@ -232,7 +217,7 @@ async function getList(param: any) {
   } finally {
     tableConfig.loading = false
     tableRef.value?.loadData(state.tableData)
-    emits('updateAgg', state.aggregation)
+    emits('updateAgg', state.aggregation, state.aggParams)
   }
 }
 
@@ -242,7 +227,10 @@ function handlePaginationChange(page: number, pageSize?: number) {
   routerProvider?.updateProps({
     query: {
       ...routerProvider?.tabData.value.props?.query,
-      ...pageParams, pageNum: page, pageSize, time
+      ...pageParams,
+      pageNum: page,
+      pageSize,
+      time
     }
   })
   // router.push({
@@ -254,20 +242,18 @@ watchDebounced(
   () => routerProvider?.tabData,
   async () => {
     const query = routerProvider?.tabData.value.props?.query
-    console.log(query)
     if (!query) return
-    const {pageNum, pageSize} = query
+    const { pageNum, pageSize } = query
     if (!pageNum || !pageSize) return
     // pageParams = {...newVal}
-    pageParams.pageNum = (Number(pageNum) - 1) > 0 ? (Number(pageNum) - 1) : 0
+    pageParams.pageNum = Number(pageNum) - 1 > 0 ? Number(pageNum) - 1 : 0
     pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-
     await getList(pageParams)
     // setTimeout(() => {
     //     state.firstReady = true
     // }, 100)
   },
-  {debounce: 200, maxWait: 500, immediate: true, deep: true}
+  { debounce: 200, maxWait: 500, immediate: true, deep: true }
 )
 
 // #endregion
@@ -290,8 +276,7 @@ async function handleDblclick(row: any) {
 //       },
 //   })
 // }
-function initBar(searchParams: any,) {
-
+function initBar(searchParams: any) {
   state.barParams = searchParams
   state.aggParams = {}
   handlePaginationChange(1)
@@ -303,12 +288,12 @@ function initAgg(searchParams: any, isSearch: boolean = true) {
 }
 
 function initSearch(searchParams: any) {
-  console.log(searchParams);
+  console.log(searchParams)
   state.barParams = searchParams
   handlePaginationChange(1)
 }
 
-defineExpose({initBar, initAgg, initSearch})
+defineExpose({ initBar, initAgg, initSearch })
 </script>
 
 <style lang="scss" scoped>
@@ -322,7 +307,6 @@ defineExpose({initBar, initAgg, initSearch})
   text-overflow: ellipsis;
 
   b {
-
   }
 }
 
