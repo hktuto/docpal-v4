@@ -38,7 +38,7 @@ async function submit() {
     return;
   }
   await updateWatermarkTemplateDetail(form.value);
-  ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('watermark.watermark'), name: ""}))
+  ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('watermark.watermark'), name: null}))
   emit('submit', form.value)
 }
 </script>

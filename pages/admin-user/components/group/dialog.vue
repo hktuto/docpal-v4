@@ -45,7 +45,7 @@ async function handleSubmit() {
   state.loading = true;
   try {
     await groupProvider?.CreateGroupApi(data);
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('user_UserGroup'), name: ""}));
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('user_UserGroup'), name: null}));
     state.visible = false;
     FormRendererRef.value.vFormRenderRef.resetForm();
     emits("refresh");

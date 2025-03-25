@@ -26,23 +26,23 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from "element-plus";
-import { adminApi } from "api";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {adminApi} from "api";
 
 const props = defineProps<{
   docTypeDetail: any;
   name: string;
 }>();
-const { t } = useI18n();
+const {t} = useI18n();
 let _list: any = [];
-const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
+const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
   id: "relatedType",
   columns: [
     {
       field: "rootDocPalType",
       title: "dpTable_documentType",
       fixed: "left",
-      formatter({ cellValue }: any) {
+      formatter({cellValue}: any) {
         return t(cellValue);
       },
     },
@@ -58,7 +58,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
         name: "documentType_relatedEdit",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDialogShow(row);
         },
       },
@@ -67,26 +67,28 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
         name: "documentType_relatedDelete",
         visible: true,
         disabled: false,
-        action: ({ row }: any) => {
+        action: ({row}: any) => {
           handleDelete(row);
         },
       },
     ],
   ],
-  dblClickAction: ({ row, column, event }: any) => {
+  dblClickAction: ({row, column, event}: any) => {
     handleDialogShow(row);
   },
   virtualScroll: true,
 });
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t("documentType_relatedDeleteMsg")}`, {
-    confirmButtonText: t("common_confirmDelete"),
-  });
+  const action = await ElMessageBox.confirm(
+    t('tip_deleteMsg', {modelName: t('docType_relatedDocument'), name: null}),
+    {
+      confirmButtonText: t("common_confirmDelete"),
+    });
   if (action !== "confirm") return;
   try {
     const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id);
-    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_relatedDocument'), name: ""}))
+    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_relatedDocument'), name: null}))
     await getList();
   } catch (error) {
   } finally {

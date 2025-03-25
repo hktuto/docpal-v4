@@ -89,7 +89,7 @@ async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
   await adminApi.api.deleteWorkflowProcess({processInstanceId: row.instanceId})
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('workflow_WorkflowTasks'), name: ""}))
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('workflow_WorkflowTasks'), name: null}))
   query({})
 }
 

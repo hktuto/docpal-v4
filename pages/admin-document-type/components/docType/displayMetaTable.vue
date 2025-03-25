@@ -109,7 +109,7 @@ function handleRefresh(addMore: boolean = false) {
 
 async function handleDelete(row) {
   const action = await ElMessageBox.confirm(
-    `${t('documentType_displayDeleteMsg')}`,
+    t('tip_deleteMsg', {modelName: t('docType_displayMeta'), name: null}),
     {
       confirmButtonText: t('common_confirmDelete'),
     }
@@ -118,7 +118,7 @@ async function handleDelete(row) {
   const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
     metadata: row.metadata
   })
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_displayMeta'), name: ""}))
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_displayMeta'), name: null}))
   emits('refresh')
 }
 

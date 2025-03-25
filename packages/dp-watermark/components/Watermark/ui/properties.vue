@@ -3,7 +3,7 @@
     <div class="header">
       <span class="header__title">{{ $t('admin_watermark_properties') }}</span>
       <el-popconfirm width="200" @confirm="$emit('delete')"
-                     :title="$t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: ''})"
+                     :title="$t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: null})"
       >
         <template #reference>
           <div class="listItemDelete">

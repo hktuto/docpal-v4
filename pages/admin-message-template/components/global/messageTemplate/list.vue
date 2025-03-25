@@ -39,7 +39,7 @@ provide(MessageTemplateProviderKey, {
     // call delete api
     // deleteDialogRef.value?.open(row)
     let action = await ElMessageBox.confirm(
-      t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: ''}),
+      t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: null}),
       {
         confirmButtonText: t('common_confirmDelete'),
       }

@@ -50,13 +50,13 @@ async function handleSubmit() {
           id: state.setting.id
         }
       })
-      msg = t('tip_updateSuccessMsg', {modelName: t('common_row'), name: ""})
+      msg = t('tip_updateSuccessMsg', {modelName: t('common_row'), name: null})
     } else {
       await adminApi.api.postMasterTablesRecord({
         id: props.tableId,
         data: [data]
       })
-      msg = t('tip_createdSuccessMsg', {modelName: t('common_row'), name: ""})
+      msg = t('tip_createdSuccessMsg', {modelName: t('common_row'), name: null})
     }
     ElMessage.success(msg)
     state.visible = false

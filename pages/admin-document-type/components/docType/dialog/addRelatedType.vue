@@ -46,7 +46,7 @@ async function handleSubmit() {
         rootDocPalType: data?.documentType,
         id: state.setting.id
       })
-      msg = t('tip_updateSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: ""})
+      msg = t('tip_updateSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: null})
     } else {
       // return
       // props.docType.name
@@ -54,7 +54,7 @@ async function handleSubmit() {
         metaData: data?.metadata,
         rootDocPalType: data?.documentType,
       })
-      msg = t('tip_createdSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: ""})
+      msg = t('tip_createdSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: null})
     }
     ElMessage.success(msg)
     state.visible = false

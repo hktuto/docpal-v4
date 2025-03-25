@@ -59,10 +59,10 @@ async function handleSubmit(addMore: boolean = false) {
     let msg
     if (state.isEdit) {
       param.id = state.setting.id
-      msg = t('tip_updateSuccessMsg', {modelName: t('docType_displayMeta'), name: ""})
+      msg = t('tip_updateSuccessMsg', {modelName: t('docType_displayMeta'), name: null})
     } else {
       // msg = t('documentType_duplicateAddSuccessMsg')
-      msg = t('tip_createdSuccessMsg', {modelName: t('docType_displayMeta'), name: ""})
+      msg = t('tip_createdSuccessMsg', {modelName: t('docType_displayMeta'), name: null})
     }
     await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
     ElMessage.success(msg)

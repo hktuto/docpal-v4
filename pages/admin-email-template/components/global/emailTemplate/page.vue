@@ -98,7 +98,7 @@ interface Template {
 
 async function handleDeleteTemplate(row: Template[]) {
   const action = await ElMessageBox.confirm(
-    `${t('emailContentTemplate_deleteMsg', {name: row.label})}`,
+    t('tip_deleteMsg', {modelName: t('Email.fields'), name: row.label}),
     {
       confirmButtonText: t('common_confirmDelete'),
     })

@@ -44,7 +44,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     await adminApi.api.postPolicyRetentions(params)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('filePolicies_RetentionPolicy'), name: ""}))
+    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('filePolicies_RetentionPolicy'), name: null}))
     state.visible = false
     emits('update')
   } catch (error) {

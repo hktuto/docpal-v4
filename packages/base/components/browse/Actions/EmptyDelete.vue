@@ -54,7 +54,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
             } else {
                 emits('success', doc)
             }
-            ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('common_item'), name: ""}))
+            ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('common_item'), name: null}))
             noti.close()
             ElNotification({
                 title: 'Success',

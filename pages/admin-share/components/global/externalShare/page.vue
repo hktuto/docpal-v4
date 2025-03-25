@@ -83,7 +83,7 @@ const {
 
 async function handleDisabled(row) {
   const action = await ElMessageBox.confirm(
-    t('share_externalDeleteMsg'),
+    t('tip_deleteMsg', {modelName: t('share_externalShareLink'), name: null}),
     {
       confirmButtonText: t('common_confirmDelete'),
     }
@@ -92,7 +92,7 @@ async function handleDisabled(row) {
   const param = [];
   param.push(row.shareID);
   await adminApi.api.deleteNuxeoShare(param);
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('share_externalShareLink'), name: ""}))
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('share_externalShareLink'), name: null}))
   query();
 }
 
