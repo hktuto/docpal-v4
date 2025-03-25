@@ -1,9 +1,9 @@
 <template>
-    <div class="pageContainer--padding">
-        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-        </VxeGrid>
-        <ExternalShareDialog ref="shareInfoDialogRef" @submit="handleSubmit"></ExternalShareDialog>
-    </div>
+  <div class="pageContainer--padding">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    </VxeGrid>
+    <ExternalShareDialog ref="shareInfoDialogRef" @submit="handleSubmit"></ExternalShareDialog>
+  </div>
 </template>
 <script lang="ts" setup>
 import {ElMessage, ElMessageBox} from 'element-plus'
@@ -12,104 +12,104 @@ import {adminApi} from "api";
 const {t} = useI18n();
 let extraParams: any = {};
 const {
-    tableConfig,
-    tableEvent,
-    tableRef,
-    query,
-    reload,
-    cleanSelectedRows,
+  tableConfig,
+  tableEvent,
+  tableRef,
+  query,
+  reload,
+  cleanSelectedRows,
 } = useVxeTable({
-    id: "a-external-share",
-    api: async (pageParams: any) => {
-        const params = {
-            ...pageParams,
-            page: pageParams.pageNum,
-            size: pageParams.pageSize,
-        }
-        delete params.pageNum
-        delete params.pageSize
-        const res = await adminApi.api.postNuxeoShareGet({...params, ...extraParams}).then(res => res.data)
-        return {
-            data: {
-                entryList: res.list,
-                totalSize: res.total
-            }
-        }
+  id: "a-external-share",
+  api: async (pageParams: any) => {
+    const params = {
+      ...pageParams,
+      page: pageParams.pageNum,
+      size: pageParams.pageSize,
+    }
+    delete params.pageNum
+    delete params.pageSize
+    const res = await adminApi.api.postNuxeoShareGet({...params, ...extraParams}).then(res => res.data)
+    return {
+      data: {
+        entryList: res.list,
+        totalSize: res.total
+      }
+    }
+  },
+  columns: [
+    {field: "emailList", title: "tableHeader_emailList", fixed: "left"},
+    {field: "documentSize", title: "tableHeader_numberOfFiles"},
+    {
+      field: "created",
+      title: "tableHeader_creationDate",
+      formatter({cellValue}: any) {
+        return formatDate(cellValue)
+      },
     },
-    columns: [
-        {field: "emailList", title: "tableHeader_emailList", fixed: "left"},
-        {field: "documentSize", title: "tableHeader_numberOfFiles"},
-        {
-            field: "created",
-            title: "tableHeader_creationDate",
-            formatter({cellValue}: any) {
-                return formatDate(cellValue)
-            },
-        },
-        {
-            field: "expiredDate",
-            title: "tableHeader_dueDate",
-            formatter({cellValue}: any) {
-                return formatDate(cellValue)
-            },
-        },
-    ],
-    bodyActions: [
-        [
-            {
-                code: "delete",
-                name: t("common_edit"),
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleDblclick(row);
-                },
-            },
-            {
-                code: "delete",
-                name: t("common_delete"),
-                visible: true,
-                disabled: false,
-                action: ({row}: any) => {
-                    handleDisabled(row);
-                },
-            },
-        ],
-    ],
-    dblClickAction: ({row, column, event}: any) => {
-        handleDblclick(row)
+    {
+      field: "expiredDate",
+      title: "tableHeader_dueDate",
+      formatter({cellValue}: any) {
+        return formatDate(cellValue)
+      },
     },
+  ],
+  bodyActions: [
+    [
+      {
+        code: "delete",
+        name: t("common_edit"),
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleDblclick(row);
+        },
+      },
+      {
+        code: "delete",
+        name: t("common_delete"),
+        visible: true,
+        disabled: false,
+        action: ({row}: any) => {
+          handleDisabled(row);
+        },
+      },
+    ],
+  ],
+  dblClickAction: ({row, column, event}: any) => {
+    handleDblclick(row)
+  },
 });
 
 async function handleDisabled(row) {
-    const action = await ElMessageBox.confirm(
-        t('share_externalDeleteMsg'),
-        {
-            confirmButtonText: t('common_confirmDelete'),
-        }
-    )
-    if (action !== 'confirm') return
-    const param = [];
-    param.push(row.shareID);
-    await adminApi.api.deleteNuxeoShare(param);
-    ElMessage.success(t('share_externalDeleteSuccessMsg'))
-    query();
+  const action = await ElMessageBox.confirm(
+    t('share_externalDeleteMsg'),
+    {
+      confirmButtonText: t('common_confirmDelete'),
+    }
+  )
+  if (action !== 'confirm') return
+  const param = [];
+  param.push(row.shareID);
+  await adminApi.api.deleteNuxeoShare(param);
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('share_externalShareLink'), name: ""}))
+  query();
 }
 
 const shareInfoDialogRef = ref()
 
 function handleDblclick(row) {
-    shareInfoDialogRef.value.handleOpen(row)
+  shareInfoDialogRef.value.handleOpen(row)
 }
 
 async function handleSubmit(shareInfo) {
-    await adminApi.api.patchNuxeoShare(shareInfo)
-    query()
+  await adminApi.api.patchNuxeoShare(shareInfo)
+  query()
 }
 
 </script>
 <style lang="scss" scoped>
 :deep .el-input {
-    width: 200px;
+  width: 200px;
 }
 </style>

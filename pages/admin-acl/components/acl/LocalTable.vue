@@ -143,7 +143,7 @@ async function removeLocalAcl(row: any) {
     })
     if (isShareInternal.data) msg += `<span class="color__danger">${t('msg_isShareInternal')}</span>,`
 
-    msg += `${t('accessControl_deleteMsg')}`
+    msg += `${t('tip_deleteMsg', {modelName: t('accessControl_Local'), name: ""})}`
     const action = await ElMessageBox.confirm(msg, {
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete'),

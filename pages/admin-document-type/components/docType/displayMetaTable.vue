@@ -118,7 +118,7 @@ async function handleDelete(row) {
   const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
     metadata: row.metadata
   })
-  ElMessage.success(t('documentType_displayDeleteSuccessMsg'))
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_displayMeta'), name: ""}))
   emits('refresh')
 }
 

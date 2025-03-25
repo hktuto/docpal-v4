@@ -54,7 +54,6 @@ async function handleSubmit() {
         metaData: data?.metadata,
         rootDocPalType: data?.documentType,
       })
-      // msg = t('documentType_relatedAddSuccessMsg')
       msg = t('tip_createdSuccessMsg', {modelName: t('documentType_relatedDocumentOfThis'), name: ""})
     }
     ElMessage.success(msg)

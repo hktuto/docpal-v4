@@ -41,7 +41,7 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
       },
     },
-    {field: "documentPath", title: "document_path"},
+    {field: "documentPath", title: "document_filePath"},
     {field: "policyName", title: "tableHeader_policyName"},
     {
       field: "approver", title: "tableHeader_approver",
