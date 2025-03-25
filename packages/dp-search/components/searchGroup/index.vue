@@ -1,28 +1,28 @@
 <template>
-<div class="search-container">
-  <SearchGroupBar ref="BarRef" :aggregation="state.aggregation" 
-    @search="handleSearch"
-    @aggSearch="handleAggSearch"
-    @searchLog="handleSearchLog"></SearchGroupBar>
-  <div style="height: 100%; overflow: hidden;">
-    <SearchGroupTable ref="tableRef" :tableId="tableId" @updateAgg="handleUpdateAgg">
-      <template #toolbar_buttons>
-        <slot name="toolbar_buttons"></slot>
-      </template>
-    </SearchGroupTable>
+  <div class="search-container">
+    <SearchGroupBar
+      ref="BarRef"
+      :aggregation="state.aggregation"
+      @search="handleSearch"
+      @aggSearch="handleAggSearch"
+      @searchLog="handleSearchLog"
+    ></SearchGroupBar>
+    <div style="height: 100%; overflow: hidden">
+      <SearchGroupTable ref="tableRef" :tableId="String(tableId)" @updateAgg="handleUpdateAgg">
+        <template #toolbar_buttons>
+          <slot name="toolbar_buttons"></slot>
+        </template>
+      </SearchGroupTable>
+    </div>
   </div>
-</div>
 </template>
 <script lang="ts" setup>
-import { on } from 'events';
-
 const state = reactive<any>({
   aggregation: {}
 })
-const {tableId, searchParams } = defineProps<{
-  tableId?: string;
-  searchParams?: any;
-
+const { tableId, searchParams } = defineProps<{
+  tableId?: string
+  searchParams?: any
 }>()
 const BarRef = ref()
 let searchState: 'firstSearch' | 'aggChange' | '' = ''
@@ -37,17 +37,19 @@ function handleSearchLog(params: any) {
   tableRef.value.initSearch(params)
 }
 function handleAggSearch(params: any) {
-  tableRef.value.initAgg({filter: params})
+  tableRef.value.initAgg({ filter: params })
 }
-function handleUpdateAgg(aggregation: any) {
-  if(searchState === 'aggChange') return
+function handleUpdateAgg(aggregation: any, aggParams: any = {}) {
+  // if(searchState === 'aggChange') return
+  console.log(aggParams)
+  BarRef.value.aggRef.setDefaultFilter(aggParams.filter)
   state.aggregation = aggregation
-  searchState = 'aggChange'
+  // searchState = 'aggChange'
 }
 
 onActivated(() => {
   console.log('onActivated')
-  if(searchParams) {
+  if (searchParams) {
     // TODO : save query to tab if changed
     BarRef.value.setQuery(searchParams)
     tableRef.value.initBar(searchParams)
