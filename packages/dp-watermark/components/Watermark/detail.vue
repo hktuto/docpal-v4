@@ -327,7 +327,7 @@ function removeWatermark() {
         let objects = fabricCanvas.getObjects();
 
         fabricCanvas.remove(toRaw(selectedObject.value));
-        ElMessage.success(t('admin_watermarkDeletedSuccessMsg'));
+        ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('watermark.watermark'), name: ""}));
 
         selectedObject.value = null;
         fabricCanvas.renderAll();

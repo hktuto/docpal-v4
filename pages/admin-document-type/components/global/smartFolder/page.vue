@@ -100,7 +100,7 @@ async function handleDelete(id: string) {
     )
     if (action !== 'confirm') return
     await adminApi.api.deleteNuxeoSfolderId(id)
-    routerProvider?.message.success(t('doc_typeSmartFolderDeletedSuccessMsg'));
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('file_smartFolder'), name: ""}));
     query()
 }
 
