@@ -1,46 +1,57 @@
 <template>
-<div class="pageContainer--padding main">
-  <EasyFormDetailName :detail="state.detail" />
-  <EasyFormDetailInfomation :detail="state.detail" />
-  <EasyFormDetailPreview v-if="state.detail.id" :detail="state.detail" @email-update="handleEmailUpdate"/>
-  <EasyFormDetailPermission :detail="state.detail" />
-  <EasyFormAction :detail="state.detail" @refresh="handleUpdateAction" @delete="handleDeleteAction" />
-  <EasyFormDetailEmailLog ref="logRef" :detail="state.detail" />
-</div>
+  <div class="pageContainer--padding main">
+    <EasyFormDetailName :detail="state.detail" />
+    <EasyFormDetailInfomation :detail="state.detail" />
+    <EasyFormDetailPreview
+      v-if="state.detail.id"
+      :detail="state.detail"
+      @email-update="handleEmailUpdate"
+    />
+    <EasyFormDetailPermission :detail="state.detail" />
+    <EasyFormAction
+      :detail="state.detail"
+      @refresh="handleUpdateAction"
+      @delete="handleDeleteAction"
+    />
+    <EasyFormDetailEmailLog ref="logRef" :detail="state.detail" />
+  </div>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api';
+import { adminApi } from "api";
 const { id } = defineProps<{
   id: string;
 }>();
 const state = reactive<any>({
-  detail: {}
-})
+  detail: {},
+});
 async function getDetail() {
-  state.detail = await adminApi.api.getFormDesignDraftId(id).then(res => res.data)
+  state.detail = await adminApi.api.getFormDesignDraftId(id).then((res) => res.data);
   setTimeout(() => {
-    handleEmailUpdate()
-  })
+    handleEmailUpdate();
+  });
 }
 function handleUpdateAction(action: any) {
-  const index = state.detail.formResult.findIndex((item: any) => item.id === action.id)
-  if (index !== -1) state.detail.formResult[index] = action
-  else state.detail.formResult.push(action)
+  const index = state.detail.formResult.findIndex((item: any) => item.id === action.id);
+  if (index !== -1) state.detail.formResult[index] = action;
+  else state.detail.formResult.push(action);
 }
 function handleDeleteAction(id: string) {
-  const index = state.detail.formResult.findIndex((item: any) => item.id === id)
-  if(index !== -1) state.detail.formResult.splice(index, 1)
+  const index = state.detail.formResult.findIndex((item: any) => item.id === id);
+  if (index !== -1) state.detail.formResult.splice(index, 1);
 }
-const logRef = ref()
+const logRef = ref();
 function handleEmailUpdate() {
-  logRef.value.tableRef.reload()
+  setTimeout(() => {
+    // app4测试有延时
+    logRef.value.tableRef.reload();
+  }, 1000);
 }
 onActivated(() => {
-  getDetail()
-})
+  getDetail();
+});
 onDeactivated(() => {
-  state.detail = {}
-})
+  state.detail = {};
+});
 </script>
 <style lang="scss" scoped>
 .main {
