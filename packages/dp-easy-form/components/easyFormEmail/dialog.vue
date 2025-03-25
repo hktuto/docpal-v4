@@ -1,5 +1,10 @@
 <template>
-  <el-dialog :title="$t('easyForm.sendEmail')" v-model="state.visible" :close-on-click-modal="false" append-to-body>
+  <el-dialog
+    :title="$t('easyForm.sendEmail')"
+    v-model="state.visible"
+    :close-on-click-modal="false"
+    append-to-body
+  >
     <el-form
       label-position="top"
       ref="formRef"
@@ -13,7 +18,7 @@
         :rules="[
           {
             required: true,
-            message: $t('user_email') + $t('render.hint.fieldRequired')
+            message: $t('user_email') + $t('render.hint.fieldRequired'),
           },
           // {
           //   validator: emailValidate,
@@ -36,7 +41,7 @@
           <el-option
             v-for="item in state.userList"
             :key="item.userId"
-            :type=" emailCheck ? 'danger' : 'info'"
+            :type="emailCheck ? 'danger' : 'info'"
             :label="`${item.firstName} ${item.lastName} <${item.email}>`"
             :value="item.email"
           />
@@ -52,7 +57,7 @@
           },
         ]"
       >
-        <el-input clearable ref="subjectRef" v-model="form.subject"/>
+        <el-input clearable ref="subjectRef" v-model="form.subject" />
       </el-form-item>
       <InsertVariables
         :inputRef="subjectRef?.input"
@@ -76,44 +81,54 @@
       />
     </el-form>
     <template #footer>
-      <el-button id="EasyForm__Detail__FormPreview__SendEmail__Submit" type="primary" :loading="state.loading"
-                 @click="handleSubmit()">
+      <el-button
+        id="EasyForm__Detail__FormPreview__SendEmail__Submit"
+        type="primary"
+        :loading="state.loading"
+        @click="handleSubmit()"
+      >
         {{ $t("common_submit") }}
       </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
+import { adminApi } from "api";
 
-import type {FormInstance} from "element-plus";
-import {ElMessage} from 'element-plus'
+import type { FormInstance } from "element-plus";
+import { ElMessage } from "element-plus";
 
 const emits = defineEmits(["email-update"]);
-const {t} = useI18n();
+const { t } = useI18n();
 const {
-  public: {endPoint},
+  public: { endPoint },
 } = useRuntimeConfig();
 const state = reactive<any>({
   visible: false,
   userList: [],
-  easyFormId: ''
+  easyFormId: "",
 });
 const subjectRef = ref();
 const bodyRef = ref();
 
 const subjectFieldList = [
-  {label: "Email", value: "${email}"},
-  {label: "Name", value: "${name}"},
+  { label: "Email", value: "${email}" },
+  { label: "Name", value: "${name}" },
 ];
 const bodyFieldList = ref([
-  {label: "Email", value: "${email}", templateValue: '<span th:text="${email}"></span>'},
-  {label: "Name", value: "${name}", templateValue: '<span th:text="${name}"></span>'},
-  {label: "Form Link", value: "${formLink}", templateValue: '<a th:href="${formLink}">Form Link</a>'},
+  {
+    label: "Email",
+    value: "${email}",
+    templateValue: '<span th:text="${email}"></span>',
+  },
+  { label: "Name", value: "${name}", templateValue: '<span th:text="${name}"></span>' },
+  {
+    label: "Form Link",
+    value: "${formLink}",
+    templateValue: '<a th:href="${formLink}">Form Link</a>',
+  },
 ]);
-const bodyFieldExtraList = [
-  {value: "\n", templateValue: '<br />'},
-]
+const bodyFieldExtraList = [{ value: "\n", templateValue: "<br />" }];
 
 const form = ref({
   emails: ["1299962367@qq.com"],
@@ -121,49 +136,47 @@ const form = ref({
   body: "Dear ",
 });
 
-const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 let emailCheck = false;
 const emailValidate = (rule: any, value: any, callback: any) => {
   value.forEach((item) => {
     if (!emailPattern.test(item)) {
-      emailCheck = true
-      callback(new Error($t('tip.enterValidEmail')));
+      emailCheck = true;
+      callback(new Error($t("tip.enterValidEmail")));
     }
-  })
-  callback()
-}
+  });
+  callback();
+};
 
-
-async function handleOpen(easyFormId: string = '', userEmail: string = '') {
+async function handleOpen(easyFormId: string = "", userEmail: string = "") {
   state.visible = true;
-  state.easyFormId = easyFormId
-  const email = await adminApi.api.getFormDesignEmailId(easyFormId).then(res => res.data)
-  if (!email.body) email.body = ''
-  if (!email.subject) email.subject = ''
-  if (!email.userEmails) email.userEmails = []
-  form.value.body = getBody(email.body)
-  form.value.subject = email.subject
-  form.value.emails = []
-  if (userEmail) form.value.emails.push(userEmail)
+  state.easyFormId = easyFormId;
+  const email: any = await adminApi.api
+    .getFormDesignEmailId(easyFormId)
+    .then((res) => res.data);
+  if (!email.body) email.body = "";
+  if (!email.subject) email.subject = "";
+  if (!email.userEmails) email.userEmails = [];
+  form.value.body = getBody(email.body);
+  form.value.subject = email.subject;
+  form.value.emails = [];
+  if (userEmail) form.value.emails.push(userEmail);
   setTimeout(() => {
-    formRef.value.clearValidate()
-  })
+    formRef.value.clearValidate();
+  });
 
   // form.value.emails = email.userEmails.map(item => (item.email))
   function getBody(str) {
-    const list = [
-      ...bodyFieldList.value,
-      ...bodyFieldExtraList
-    ]
+    const list = [...bodyFieldList.value, ...bodyFieldExtraList];
     const body = list.reduce((prev: string, item: any) => {
-      const regex = new RegExp(item.templateValue.replace(/[${}/?\\<>]/g, '\\$&'), 'g');
+      const regex = new RegExp(item.templateValue.replace(/[${}/?\\<>]/g, "\\$&"), "g");
       prev = prev.replace(regex, item.value);
-      return prev
-    }, str)
+      return prev;
+    }, str);
     const regex = /<p>(.*?)<\/p>/;
     const match = body.match(regex);
-    return body.replace('<html><body><p>', '').replace('</p></body></html>', '')
+    return body.replace("<html><body><p>", "").replace("</p></body></html>", "");
   }
 }
 
@@ -171,54 +184,52 @@ const formRef = ref<FormInstance>();
 
 async function handleSubmit() {
   const valid = await formRef.value.validate();
-  if (!valid) return
+  if (!valid) return;
   const params = {
     easyFormId: state.easyFormId,
     formLink: getFormLink(false),
     subject: form.value.subject,
     userEmails: getEmail(),
     body: getBody(form.value.body),
-  }
-  await adminApi.api.postFormDesignSendEmail(params)
+  };
+  await adminApi.api.postFormDesignSendEmail(params);
   emits("email-update");
-  ElMessage.success(t('dpMsg_success'))
+  ElMessage.success(t("dpMsg_success"));
   state.visible = false;
 
   function getBody(str) {
-    const list = [
-      ...bodyFieldList.value,
-      ...bodyFieldExtraList
-    ]
+    const list = [...bodyFieldList.value, ...bodyFieldExtraList];
     const body = list.reduce((prev: string, item: any) => {
-      const regexStr = item.value.replace(/[${}/?\\<>]/g, '\\$&')
+      const regexStr = item.value.replace(/[${}/?\\<>]/g, "\\$&");
 
-      const regex = new RegExp(item.value.replace(/[${}/?\\<>]/g, '\\$&'), 'g');
+      const regex = new RegExp(item.value.replace(/[${}/?\\<>]/g, "\\$&"), "g");
       prev = prev.replace(regex, item.templateValue);
-      return prev
-    }, str)
-    return `<html><body><p>${body}</p></body></html>`
+      return prev;
+    }, str);
+    return `<html><body><p>${body}</p></body></html>`;
   }
 
   function getEmail() {
     return form.value.emails.reduce((prev, email: string) => {
-      const user = state.userList.find(item => item.userId === email)
+      const user = state.userList.find((item) => item.email === email);
+      console.log(user);
       prev.push({
-        username: user ? user.firstName + user.lastName : '',
-        email: user ? user.email : email
-      })
-      return prev
-    }, [])
+        username: user ? user.firstName + user.lastName : "",
+        email: user ? user.email : email,
+      });
+      return prev;
+    }, []);
   }
 
   function getFormLink(initBodyField = true) {
-    const fItem = bodyFieldList.value.find(item => item.label === "Form Link")
+    const fItem = bodyFieldList.value.find((item) => item.label === "Form Link");
     const origin = endPoint?.upload;
-    const href = `https://${origin}/public-form?id=${state.easyFormId}`
+    const href = `https://${origin}/public-form?id=${state.easyFormId}`;
     // if(initBodyField) {
     //   fItem.value = href
     //   fItem.templateValue = `<a href="${href}">${href}</a>`;
     // }
-    return href
+    return href;
   }
 }
 
@@ -235,11 +246,14 @@ function handleSelectChange() {
 // #endregion
 // #endregion
 onMounted(async () => {
-  const {data} = await adminApi.api.postNuxeoIdentityUsers({});
-  const uniqueEmails = Array.from(new Map(data.map(item => [item.email, item])).values());
+  const { data } = await adminApi.api.postNuxeoIdentityUsers({});
+
+  const uniqueEmails = Array.from(
+    new Map(data.map((item) => [item.email, item])).values()
+  );
   state.userList = uniqueEmails || ([] as any);
 });
 
-defineExpose({handleOpen});
+defineExpose({ handleOpen });
 </script>
 <style lang="scss" scoped></style>
