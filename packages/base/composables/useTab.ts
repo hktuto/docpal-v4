@@ -276,13 +276,14 @@ export function addTabToPanel(panelId:string, newTab: TabItem ) {
     const allComponents = useTabComponent()
     const parentId = layout.value.findIndex(tab => tab.id === panelId);
     if(parentId !== -1) {
+        newTab.id = "new-tab-" + new Date().getTime()
+        newTab.initized = true
+        newTab.parent = panelId
         layout.value[parentId].tabs.push(newTab)
         nextTick(() => {
             panelTabFocus(panelId, layout.value[parentId].tabs.length - 1)
             allComponents.value.push({
-                ...newTab,
-                initized:true,
-                parent: panelId
+                ...newTab
             })
         })
     }

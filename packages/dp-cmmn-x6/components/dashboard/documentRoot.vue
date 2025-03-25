@@ -16,7 +16,7 @@ const props = withDefaults(
 const emits = defineEmits(["refreshSetting", "delete"]);
 const caseDetail = ref<any>();
 const home = ref({ secondId: "/", disabled: true });
-const idOrPath = ref("/");
+const idOrPath = ref("");
 const homeId = ref("");
 function changeRoute(path: string) {
   idOrPath.value = path;
@@ -61,9 +61,9 @@ async function getHomeId() {
     if(!!_item && _item.value) {
       homeId.value = _item.value
       home.value.secondId = _item.value
+      idOrPath.value = _item.value
     }
   }
-  console.log("homeId", caseDetail.value)
 }
 // #region module: setting
 const settingRef = ref();
@@ -99,7 +99,7 @@ provide(BrowseListProviderKey, {
       @click="openSetting"
     />
     <div v-if="homeId" class="rootContainer">
-      <BrowseMiniTable ref="tableRef" :home="props.setting.home">
+      <BrowseMiniTable ref="tableRef" :home="homeId">
         <template #toolbar_buttons>
           <BrowseBreadcrumb :idOrPath="homeId" :home="home" />
         </template>
@@ -117,5 +117,14 @@ provide(BrowseListProviderKey, {
 <style lang="scss" scoped>
 h3 {
   margin-bottom: var(--app-space-xs) !important;
+}
+:deep(.el-card__body){
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+.rootContainer{
+  height:100%;
+  overflow: hidden;
 }
 </style>
