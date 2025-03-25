@@ -128,12 +128,11 @@ async function handleDelete(row: any) {
   if (action !== "confirm") return;
   try {
     const result = await adminApi.api.deleteCabinetId(row.id).then((res) => res.data);
-    routerProvider?.message.success(t('folder_cabinetDeleteSuccessMsg'));
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('menus_folderCabinet'), name: ""}));
     query();
   } catch (error) {
   }
 }
-
 
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true;

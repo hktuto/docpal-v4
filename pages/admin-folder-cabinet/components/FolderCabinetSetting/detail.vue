@@ -294,7 +294,7 @@ async function handleSave() {
   } finally {
     setTimeout(() => (state.loading = false), 300);
   }
-  routerProvider?.message.success(t('folder_cabinetDetailUpdatedSuccessMsg'));
+  routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('folder_folderCabinetDetails'), name: ""}));
 }
 
 async function handleDelete() {
@@ -308,7 +308,7 @@ async function handleDelete() {
   await adminApi.api.deleteCabinetId(state.setting.id);
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false);
-    routerProvider?.message.success(t('folder_cabinetDeletedSuccessMsg'));
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('folder_entireFolderCabinet'), name: ""}));
   } else {
     emits("update");
   }

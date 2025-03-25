@@ -83,7 +83,8 @@ async function handleDelete(row: any) {
   })
   if (action !== 'confirm') return
   await adminApi.api.deleteTemplateDocumentId(row.id)
-  routerProvider?.message.success(t('documentTemplate_deleteSuccessMsg'));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('adminMenu.template'), name: ""}));
+
   tableRef.value?.reload()
 }
 

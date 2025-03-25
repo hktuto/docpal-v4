@@ -324,7 +324,7 @@
               "formItemFlag": true,
               "options": {
                 "name": "actionDelayDay",
-                "label": "actionDelayDays",
+                "label": "filePolicies_RetentionPolicyActionDelayDays",
                 "labelAlign": "",
                 "type": "text",
                 "defaultValue": "",

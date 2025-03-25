@@ -63,7 +63,7 @@ const selectedItem = computed(() => {
 })
 
 function deleteItem(id: string) {
-  ElMessage.success(t('admin_watermarkDeletedSuccessMsg'))
+  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('watermark.watermark'), name: ""}));
   emit('remove', id);
 }
 
