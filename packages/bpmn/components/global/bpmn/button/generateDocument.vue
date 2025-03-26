@@ -28,12 +28,12 @@ const iframeUrl = ref('')
 async function openPreivew(){
     try{
 
-
+        console.log(workflowFormDetail)
         loading.value = true;
+        previewFile.blob = null;
         const xmlJson = bpmnStringToJson(props.xml)
         const targetTask = xmlJson.flatObj[props.attr_documentStepId]
         const formData = await workflowFormDetail?.getFormData(false)
-        console.log("openPreivew", formData)
         // get template id
         const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
@@ -72,10 +72,11 @@ async function openPreivew(){
             fileRelativePath: '/' + fileName,
         })
         submitFormData.append('uploadTempFileRequestStr', templaRequest)
-        console.log(res)
-        previewFile.name = fileName
-        previewFile.blob = res
         dialogOpened.value = true
+        setTimeout(() => {
+          previewFile.name = fileName
+          previewFile.blob = res
+        },100)
         // const temDocId = await clientApi.api.postNuxeoDocumentSaveuploadfileoverview(submitFormData as any).then(res => res.data)
         // if(!temDocId){
         //     throw new Error('temDocId is empty')
@@ -84,6 +85,7 @@ async function openPreivew(){
 
         // downloadBlob(res, 'abc.pdf')
     }catch(err){
+      console.log(err)
         // check if error is come from server
         if(err.name !== "AxiosError"){
             routerProvider?.message.error(err.message)
@@ -106,8 +108,8 @@ onMounted(() => {
 
 <template>
    <ElButton type="primary" :loading="loading" @click="openPreivew">{{  props.attr_previewButtonText }}</ElButton>
-    <ElDialog v-model="dialogOpened" apped-to-body>
-        <div class="readerContainer">
+    <ElDialog v-model="dialogOpened" height="600px" width="600px" apped-to-body>
+        <div  class="readerContainer">
             <Reader v-if="previewFile.blob" v-bind="previewFile" />
         </div>
     </ElDialog>
@@ -115,9 +117,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .readerContainer{
-    width: 100%;
-    height: 100%;
-    max-height: 600px;
+    width: 600px;
+    height: 600px;
     overflow: auto;
 }
 </style>
