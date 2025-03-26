@@ -37,6 +37,8 @@
                        :content="t('tip.addToShare')"
                        @click="handleShare"/>
             </template>
+            <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
+
           </div>
         </template>
       </VxeGrid>
@@ -157,7 +159,7 @@ async function handleShare() {
     if (shareDraggableButton) {
       anime({
         targets: '#shareToQueue',
-        translateX: shareDraggableButton.offsetLeft - shareToQueue.offsetLeft,
+        translateX: shareDraggableButton.getBoundingClientRect().left - shareToQueue.getBoundingClientRect().left,
         translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop- 60,
         duration: 750,
         easing: 'easeInOutQuad'
