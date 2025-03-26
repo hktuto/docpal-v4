@@ -26,7 +26,7 @@
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
           <div class="flex-x-between">{{ state.curCollection.name }}
-            <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right"
+            <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right el-icon--left"
                      @click="openEditCollectionDialog"/>
           </div>
           <div class="flex-x-end">
@@ -51,6 +51,7 @@
 
 <script setup lang="ts">
 import {clientApi} from 'api'
+import anime from 'animejs'
 import {ElMessage, ElMessageBox} from "element-plus";
 import {createBrowseListPageParams, createDetailPageParams} from "~/utils/browseMenuHelper";
 import {ArrowDownBold, Delete} from '@element-plus/icons-vue'
@@ -70,11 +71,11 @@ function reloadPage() {
 }
 
 async function getCollectionList() {
-  const {data} = await clientApi.api.getNuxeoCollection()
+  const {data}: any = await clientApi.api.getNuxeoCollection()
   try {
     state.collectionList = data.entryList
     if (state.collectionList.length > 0) {
-      let index = state.collectionList.findIndex(item => item.id === route.query.tab)
+      let index = state.collectionList.findIndex((item: any) => item.id === route.query.tab)
       if (index === -1) index = 0
       handleTabClick(state.collectionList[index])
     }
@@ -84,12 +85,12 @@ async function getCollectionList() {
   }
 }
 
-function handleTabClick(row) {
+function handleTabClick(row: any) {
   state.curCollection = row
   reload();
 }
 
-function handleDelete(row) {
+function handleDelete(row: any) {
   ElMessageBox.confirm(t("collection_deleteMsg", {name: row.name}))
     .then(async () => {
       await clientApi.api.deleteNuxeoDocument({idOrPath: row.id})
@@ -98,7 +99,7 @@ function handleDelete(row) {
     })
 }
 
-function handleDocDelete(row) {
+function handleDocDelete(row: any) {
   let docList = [];
   docList.push({idOrPath: row.id})
   const param = {
@@ -111,7 +112,7 @@ function handleDocDelete(row) {
       try {
         await clientApi.api.deleteNuxeoCollectionRemove(param)
         setTimeout(() => {
-          query();
+          query({});
         }, 1000)
         ElMessage.success(t('collectionFile_deleteSuccessMsg', {name: row.name}))
         reload()
@@ -141,22 +142,23 @@ function handleCollapse() {
   style.collapse = !style.collapse
 }
 
-// const {state: shareState, addToShareList} = `useShareStore`()
+const { addToShareList } = useShareStore()
 async function handleShare() {
-  const data = await clientApi.api.postNuxeoCollectionAlldocuments({idOrPath: state.curCollection.id})
+  const data: any = await clientApi.api.postNuxeoCollectionAlldocuments({idOrPath: state.curCollection.id}).then((res: any) => res.data.entryList)
   // TODO 未調試
-  // addToShareList(data)
+  addToShareList(data)
 
   nextTick(() => {
     const shareDraggableButton = document.getElementById('share-draggable-button')
     const shareToQueue = document.getElementById('shareToQueue')
+    if(!shareToQueue) return
     shareToQueue.style.transform = 'none'
     shareToQueue.style.display = 'block'
     if (shareDraggableButton) {
       anime({
         targets: '#shareToQueue',
         translateX: shareDraggableButton.offsetLeft - shareToQueue.offsetLeft,
-        translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 60,
+        translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop- 60,
         duration: 750,
         easing: 'easeInOutQuad'
       })
@@ -168,7 +170,7 @@ async function handleShare() {
 }
 
 type TableState = {
-  loading: false,
+  loading: boolean,
   tableData: any[],
   options: {
     showPagination: boolean,
@@ -179,7 +181,7 @@ type TableState = {
     },
   },
   collectionList: any,
-  curCollection: string,
+  curCollection: any,
   selectedDocs: any[]
 }
 
@@ -203,7 +205,7 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
   id: "clientCollectionsList",
   api: async (pageParams: any) => {
     let id = state.curCollection.id;
-    const {data: {entryList}} = await clientApi.api.postNuxeoCollectionDocuments({idOrPath: id})
+    const {data: {entryList}}: any = await clientApi.api.postNuxeoCollectionDocuments({idOrPath: id})
     state.tableData = entryList
     return entryList
   },
@@ -253,7 +255,7 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
         showHeaderAction: true
       });
     }
-    routerProvider.navigateTo(newItem)
+    routerProvider?.navigateTo(newItem)
   },
   selectChangeHander: (selectedRows: any[]) => {
     state.selectedDocs = [...selectedRows];
