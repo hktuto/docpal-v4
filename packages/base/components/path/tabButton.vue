@@ -21,7 +21,7 @@ const splitPath = computed(() => {
   return !props.path ? [] : props.path.split('/')
 })
 const displayPathLabel = computed(() => {
-  if (props.path.length <= 32 || splitPath.value.length <= 3) {
+  if (props.path?.length <= 32 || splitPath.value.length <= 3) {
     return props.displayPath
   }
   const last2Items = splitPath.value.slice(-2)

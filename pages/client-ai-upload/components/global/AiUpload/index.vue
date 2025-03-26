@@ -142,6 +142,18 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   dblClickAction: ({ row, column, event }: any) => {
     dblclickHandler(row)
   },
+  permissionMethod:({row,code,column}) => {
+      if(code === 'delete') {
+        return {
+          visible: row.uploadStatus === 'Ready',
+          disabled: false
+        }
+      }
+      return {
+        visible: true,
+        disabled: false
+      }
+  },
   bodyActions: [
     [
       {
@@ -196,9 +208,20 @@ function getTagType(status) {
 
 
 async function handleDelete(id: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`,{
+        confirmButtonText: t('dpButtom_confirm'),
+        cancelButtonText: t('common_close')
+    }).catch((action) => { return action })
   if (action !== 'confirm') return
-  await publicApi.api.deleteUserDashboardId(id)
+  const formData = new FormData()
+    formData.append('userId', userId.value)
+    formData.append('uploadId', id)
+    await clientApi.instance.post(`/nuxeo/document/batchCancel`, {
+        data: formData,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
   reload()
 }
 
