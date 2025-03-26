@@ -43,5 +43,6 @@
   },
   "[less]": {
     "editor.defaultFormatter": "vscode.css-language-features" // less文件，同上
-  }
+  },
+  "vue3snippets.enable-compile-vue-file-on-did-save-code": true
 }
