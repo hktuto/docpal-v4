@@ -155,12 +155,15 @@ const FormRendererRef = ref()
             return false
         })
         if(!formData) return false
-        let resultFormData = onlyWritable ? writableDataDeArray(formData) : dataDeArray(formData)
+        let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
         const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
-        return {
-            ...resultFormData,
-            ...slotData
+        const result = {
+          ...resultFormData,
+          ...slotData
         }
+        
+        // throw new Error("slotData", result)
+        return result
     }
     async function getSlotData(refList: any, needValidation: boolean) {
         let pList: any = []
@@ -182,18 +185,25 @@ const FormRendererRef = ref()
         return dataDeArray(data)
     }
     function dataDeArray (formDatas: any) {
-        console.log(formDatas);
+        console.log("init data", formDatas);
         
         const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
+        const newData = formDatas
+        // TODO : remove later
         const data = Object.keys(formDatas).reduce((prev: any,key: string) => {
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
-                prev[key] = formDatas[key]
+                if(typeof formDatas[key] === 'object') {
+                    prev[key] = deepCopy(formDatas[key])
+                }else{
+                    prev[key] = formDatas[key]
+                }
             }
             return prev
         }, {})
+
         // const data = deepCopy(formDatas)
-        Object.keys(data).forEach((key, _index) => {
-            const _data = toRaw(data[key])
+        Object.keys(newData).forEach((key, _index) => {
+            const _data = toRaw(newData[key])
             if (_data instanceof Array) {
                 if (arrWidgetKeys.includes(key)) {
                     data[key] = JSON.stringify(_data)
@@ -218,7 +228,7 @@ const FormRendererRef = ref()
                 }
             }
         })
-        return data
+        return newData
     }
     function getWidgetNames (widgetNames: string [], checkMultiple: boolean = false, checkNuxeo: boolean = false) {
         const containerWidgets = FormRendererRef.value.vFormRenderRef.getContainerWidgets()
@@ -232,7 +242,7 @@ const FormRendererRef = ref()
                 }
                 else prev.push({
                     name: item.name,
-                    uploadName: item.field.options.uploadName
+                    uploadName: item?.field?.options?.uploadName || undefined
                 })
             }
             return prev

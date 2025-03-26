@@ -166,6 +166,7 @@ async function handleSave() {
     await clientApi.api.postWorkflowPropertiesSave(param);
     ElMessage.success(`${t("msg_successfulOperation")}`);
   } catch (error) {
+    console.log(error);
     // ElMessage.error(error)
   }
   state.loading = false;
@@ -183,7 +184,11 @@ async function handleSubmit() {
     const data = await vFormRef.value.getFormData(true, false);
     // return;
     if (!data) throw new Error(`${t("incompleteData")}`);
-
+    Object.keys(data).forEach((key) => {
+      if(typeof data[key] === 'object') {
+        data[key] = JSON.stringify(data[key])
+      }
+    })
     const param = {
       taskId: id,
       properties: {...data},
