@@ -13,7 +13,7 @@
           type="primary"
           @click="handleDialogShow()"
         >
-          {{ $t("docType_addRelatedMeta") }}
+          {{ $t('docType_addRelatedMeta') }}
         </el-button>
       </template>
     </VxeGrid>
@@ -26,107 +26,109 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from "element-plus";
-import {adminApi} from "api";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
 const props = defineProps<{
   docTypeDetail: any;
   name: string;
-}>();
-const {t} = useI18n();
-let _list: any = [];
-const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
-  id: "relatedType",
+}>()
+const { t } = useI18n()
+let _list: any = []
+const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
+  id: 'relatedType',
   columns: [
     {
-      field: "rootDocPalType",
-      title: "dpTable_documentType",
-      fixed: "left",
-      formatter({cellValue}: any) {
-        return t(cellValue);
+      field: 'rootDocPalType',
+      title: 'dpTable_documentType',
+      fixed: 'left',
+      formatter({ cellValue }: any) {
+        return t(cellValue)
       },
+      sortable: true
     },
     {
-      field: "metaData",
-      title: "rightDetail_meta",
-    },
+      field: 'metaData',
+      title: 'rightDetail_meta',
+      sortable: true
+    }
   ],
   bodyActions: [
     [
       {
-        code: "edit",
-        name: "documentType_relatedEdit",
+        code: 'edit',
+        name: 'documentType_relatedEdit',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDialogShow(row);
-        },
+        action: ({ row }: any) => {
+          handleDialogShow(row)
+        }
       },
       {
-        code: "delete",
-        name: "documentType_relatedDelete",
+        code: 'delete',
+        name: 'documentType_relatedDelete',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDelete(row);
-        },
-      },
-    ],
+        action: ({ row }: any) => {
+          handleDelete(row)
+        }
+      }
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
-    handleDialogShow(row);
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDialogShow(row)
   },
-  virtualScroll: true,
-});
+  virtualScroll: true
+})
 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {modelName: t('docType_relatedDocument'), name: null}),
+    t('tip_deleteMsg', { modelName: t('docType_relatedDocument'), name: null }),
     {
-      confirmButtonText: t("common_confirmDelete"),
-    });
-  if (action !== "confirm") return;
+      confirmButtonText: t('common_confirmDelete')
+    })
+  if (action !== 'confirm') return
   try {
-    const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id);
-    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_relatedDocument'), name: null}))
-    await getList();
+    const res = await adminApi.api.deleteDocpaltypeSettingsRelatedId(row.id)
+    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('docType_relatedDocument'), name: null }))
+    await getList()
   } catch (error) {
   } finally {
   }
 }
 
-const DialogRef = ref();
+const DialogRef = ref()
 
 function handleDialogShow(data?: any) {
   DialogRef.value.handleOpen(_list, {
     ...data,
     documentType: data?.rootDocPalType,
-    metadata: data?.metaData,
-  });
+    metadata: data?.metaData
+  })
 }
 
 function handleFilterFormChange(formModel: any) {
-  const name = formModel.name;
+  const name = formModel.name
   const list = _list.filter((item: any) => {
     return (
       !formModel.name ||
       item.rootDocPalType.toLowerCase().includes(name.toLowerCase()) ||
       t(item.rootDocPalType).toLowerCase().includes(name.toLowerCase())
-    );
-  });
-  tableRef?.value?.loadData(list);
+    )
+  })
+  tableRef?.value?.loadData(list)
 }
 
 async function getList() {
   _list = await adminApi.api
     .getDocpaltypeSettingsNameNameRelated(props.name)
-    .then((res) => res.data);
-  tableRef?.value?.loadData(_list);
+    .then((res) => res.data)
+  tableRef?.value?.loadData(_list)
 }
 
 onActivated(() => {
-  getList();
-});
+  getList()
+})
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

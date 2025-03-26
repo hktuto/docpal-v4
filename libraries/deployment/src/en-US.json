@@ -2262,11 +2262,11 @@
   },
   "submit": "Submit",
   "tableHeader": {
-    "asc": "Z-A",
+    "asc": "A-Z",
     "cc": "CC (Multi-select allowed)",
     "days": "Day(s)",
     "deadline": "Deadline",
-    "desc": "A-Z",
+    "desc": "Z-A",
     "fileOrFolderName": "File/Folder Name",
     "folderName": "Folder Name",
     "formatDate": "Format",

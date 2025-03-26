@@ -1,61 +1,61 @@
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from "element-plus";
-import {adminApi} from "api";
-import {DamListTable} from "#components";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
+import { DamListTable } from '#components'
 // deepCopy, GetDocDetailApi
 
 // #region  tree
-const tabProvider = inject(TabManagerKey);
-const routerProvider = inject(MenuRouterKey);
+const tabProvider = inject(TabManagerKey)
+const routerProvider = inject(MenuRouterKey)
 if (!tabProvider || !routerProvider) {
-  throw new Error("MenuRouterKey is not provided");
+  throw new Error('MenuRouterKey is not provided')
 }
 // #endregion
-const tableRef = ref<InstanceType<typeof DamListTable>>();
-const tableData = ref([]);
-const filteredData = ref<any[]>();
-const {t} = useI18n();
+const tableRef = ref<InstanceType<typeof DamListTable>>()
+const tableData = ref([])
+const filteredData = ref<any[]>()
+const { t } = useI18n()
 
 function handleKeywordFilter(data: any) {
-  console.log("handleKeywordFilter", data);
+  console.log('handleKeywordFilter', data)
 }
 
 async function handleDelete(tag: any) {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`, {
-    confirmButtonText: `${t("dpButtom_confirm")}`,
-    cancelButtonText: `${t("dpButtom_cancel")}`,
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`, {
+    confirmButtonText: `${t('dpButtom_confirm')}`,
+    cancelButtonText: `${t('dpButtom_cancel')}`
   }).catch((action: any) => {
-    return action;
-  });
-  if (action !== "confirm") return;
-  await adminApi.api.postDamDeletesettings([tag.id]);
+    return action
+  })
+  if (action !== 'confirm') return
+  await adminApi.api.postDamDeletesettings([tag.id])
   refresh()
 }
 
 function handleDialog(data?: any) {
-  DamDialogRef.value.handleOpen(deepCopy(data));
+  DamDialogRef.value.handleOpen(deepCopy(data))
 }
 
-const DamDialogRef = ref();
+const DamDialogRef = ref()
 
 function refresh() {
-  tableRef.value?.reload();
+  tableRef.value?.reload()
 }
 
 provide(DamProviderKey, {
   getListApi: async (params: any) => {
-    console.log("getListApi", params, filteredData.value);
+    console.log('getListApi', params, filteredData.value)
     const {
-      data: {list},
-    } = (await adminApi.api.postDamGetallsetting()) as any;
-    const data = mergeDataByKey(list, "sourceType") as any;
+      data: { list }
+    } = (await adminApi.api.postDamGetallsetting()) as any
+    const data = mergeDataByKey(list, 'sourceType') as any
 
-    tableData.value = data;
-    return data;
+    tableData.value = data
+    return data
   },
   handleDialog,
-  handleDelete,
-});
+  handleDelete
+})
 </script>
 
 <template>
@@ -69,7 +69,7 @@ provide(DamProviderKey, {
             @filter="handleKeywordFilter"
           ></KeywordFilter>
           <el-button id="DAMSetting__Add" class="button-add" type="primary" @click="handleDialog()">
-            {{ $t("common_add") }}
+            {{ $t('common_add') }}
           </el-button>
         </div>
       </template>
@@ -78,4 +78,6 @@ provide(DamProviderKey, {
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

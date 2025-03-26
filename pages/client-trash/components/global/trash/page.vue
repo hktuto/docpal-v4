@@ -5,17 +5,17 @@
         <header v-show="state.selectList.length === 0" class="header-flex">
           <div class="flex-x-start">
             <el-button id="Trash__EmptyTrash" type="danger" @click="handleDeleteAll">
-              {{ t("trash_emptyTrash") }}
+              {{ t('trash_emptyTrash') }}
             </el-button>
           </div>
         </header>
         <header v-show="state.selectList?.length > 0" class="header-flex">
           <div class="flex-x-start">
             <el-button id="Trash__RestoreSelected" type="primary" @click="handleRestore">
-              {{ t("trash_actions_restore") }}
+              {{ t('trash_actions_restore') }}
             </el-button>
             <el-button id="Trash__PermanentlyDeleteSelected" type="danger" @click="handleDelete">
-              {{ t("trash_actions_delete") }}
+              {{ t('trash_actions_delete') }}
             </el-button>
           </div>
         </header>
@@ -24,8 +24,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox, ElNotification} from "element-plus";
-import {clientApi} from 'api'
+import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { clientApi } from 'api'
 
 type TableState = {
   ready: boolean,
@@ -39,37 +39,39 @@ const state = reactive<TableState>({
   loading: false,
   extraParams: {},
   extraParamsFilter: {},
-  selectList: [],
-});
+  selectList: []
+})
 
-const {t} = useI18n()
-const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = useVxeTable({
+const { t } = useI18n()
+const ResponsiveFilterRef = ref()
+
+const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = useVxeTable({
   id: 'clientTrashList',
   api: async (pageParams: any) => {
     cleanSelectedRows()
     return clientApi.api.getNuxeoDocumentTrash(pageParams)
   },
   columns: [
-    {field: 'checkbox', type: 'checkbox', width: '50px', fixed: 'left'},
+    { field: 'checkbox', type: 'checkbox', width: '50px', fixed: 'left' },
     {
       field: 'name',
       title: 'document_name',
       type: 'html',
-      formatter: ({cellValue, row}: any) => {
-        let icon = "/icons/doc/file.svg";
+      formatter: ({ cellValue, row }: any) => {
+        let icon = '/icons/doc/file.svg'
         if (row.isFolder) {
-          icon = "/icons/doc/folder.svg";
+          icon = '/icons/doc/folder.svg'
         }
-        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
+        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`
       }
     },
-    {field: 'path', title: 'tableHeader_path',},
-    {field: 'type', title: 'tableHeader_type',},
-    {field: 'properties.principalName', title: 'trash_deleteBy',},
+    { field: 'path', title: 'tableHeader_path' },
+    { field: 'type', title: 'tableHeader_type' },
+    { field: 'properties.principalName', title: 'trash_deleteBy' },
     {
       field: 'properties.trashed_date',
       title: 'trash_date',
-      formatter({cellValue}: any) {
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
     }
@@ -81,7 +83,7 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
         name: 'trash_restored',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleRestore(row)
         }
       },
@@ -90,15 +92,15 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
         name: 'trash_delete',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDelete(row)
         }
       }
     ]
   ],
   selectChangeHander: (selectedRows: any[]) => {
-    state.selectList = [...selectedRows];
-  },
+    state.selectList = [...selectedRows]
+  }
 })
 
 const batchAction = ref('')
@@ -114,19 +116,19 @@ const processDetail = reactive({
  */
 async function handleDeleteAll(row: any) {
   const action = await ElMessageBox.confirm(
-    t("trash_emptyTrashMsg"),
+    t('trash_emptyTrashMsg'),
     {
       dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     }
   )
-  if (action !== "confirm") return;
+  if (action !== 'confirm') return
   state.loading = true
   await clientApi.api.deleteNuxeoDocumentPurge()
   setTimeout(async () => {
     state.loading = false
     ElMessage.success(t('trash_emptyTrashSuccessMsg'))
-    reload();
+    reload()
   }, 2000)
 }
 
@@ -159,17 +161,17 @@ const batchActionHandler = async () => {
       state.selectList.length > 1 ? t('trash_deleteSelectedMsg') : t('trash_deleteMsg'),
       {
         dangerouslyUseHTMLString: true,
-        confirmButtonText: t('common_confirmDelete'),
+        confirmButtonText: t('common_confirmDelete')
       }
     )
-    if (action !== "confirm") return;
+    if (action !== 'confirm') return
   }
 
   processDetail.total = state.selectList.length
   processDetail.completedNum = 0
   const pList = []
-  const selectList = [...state.selectList];
-  let msg;
+  const selectList = [...state.selectList]
+  let msg
   switch (batchAction.value) {
     case 'restore':
       state.selectList.forEach(s => pList.push(restore(s.id)))
@@ -183,10 +185,10 @@ const batchActionHandler = async () => {
   const res = await Promise.all(pList)
 
   batchAction.value = null
-  handleMsg(selectList, res);
+  handleMsg(selectList, res)
   setTimeout(async () => {
     ElMessage.success(msg)
-    query();
+    query()
   }, 2000)
 }
 
@@ -201,10 +203,10 @@ function handleMsg(selectList, ids) {
   const fileNames = ids.reduce((p, id, index) => {
     if (id) {
       num++
-      p += ' <br/>' + selectList.find(item => item.id === id).name;
+      p += ' <br/>' + selectList.find(item => item.id === id).name
     }
     return p
-  }, '');
+  }, '')
 
   if (num !== 0) {
     ElNotification.error({
@@ -221,7 +223,7 @@ function handleMsg(selectList, ids) {
  */
 async function deleteOne(idOrPath: string) {
   try {
-    const res = await clientApi.api.deleteNuxeoDocument({idOrPath});
+    const res = await clientApi.api.deleteNuxeoDocument({ idOrPath })
     processDetail.completedNum++
     return ''
   } catch (error) {
@@ -236,7 +238,7 @@ async function deleteOne(idOrPath: string) {
  */
 const restore = async (idOrPath: string) => {
   try {
-    const res = await clientApi.api.postNuxeoDocumentRestore({idOrPath});
+    const res = await clientApi.api.postNuxeoDocumentRestore({ idOrPath })
     processDetail.completedNum++
     return ''
   } catch (error) {

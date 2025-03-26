@@ -211,8 +211,8 @@ async function handleDisabled(row: any) {
       },
       { key: "isDesc", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
         options: [
-          { label: 'tableHeader.desc', value: false },
-          { label: 'tableHeader.asc', value: true }
+          { label: 'tableHeader.asc', value: false },
+          { label: 'tableHeader.desc', value: true }
         ]
       }
     ]
@@ -221,7 +221,7 @@ async function handleDisabled(row: any) {
 
   function handleFilterFormChange(formModel: any) {
     if (!formModel.isDesc) formModel.isDesc = true
-    if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === 'false' ? false : true
+    if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
     let filterParams: any = {
         name: formModel.name === "" ? undefined : formModel.name,
         orderBy: formModel.orderBy === undefined || formModel.orderBy === "" ? "createdDate" : formModel.orderBy

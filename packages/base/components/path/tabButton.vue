@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { MenuRouterKey } from '#imports';
-import {FolderOpened} from '@element-plus/icons-vue'
+import { MenuRouterKey } from '#imports'
+import { FolderOpened } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 
 const routerProvider = inject(MenuRouterKey)
@@ -11,9 +11,9 @@ const props = withDefaults(defineProps<{
   canOpen: boolean
   fileName: string
   openParent: boolean
-}>(),{
-  path:'',
-  displayPath:"",
+}>(), {
+  path: '',
+  displayPath: '',
   canOpen: false,
   openParent: false
 })
@@ -21,16 +21,18 @@ const splitPath = computed(() => {
   return !props.path ? [] : props.path.split('/')
 })
 const displayPathLabel = computed(() => {
-  if(splitPath.value.length <= 3) return props.displayPath
-  const last2Items = splitPath.value.slice(-2);
-  return '...' + last2Items.join('/');
+  if (props.path.length <= 32 || splitPath.value.length <= 3) {
+    return props.displayPath
+  }
+  const last2Items = splitPath.value.slice(-2)
+  return '...' + last2Items.join('/')
 })
 
-function openPath(){
-  if(props.canOpen){
+function openPath() {
+  if (props.canOpen) {
     const path = props.openParent ? splitPath.value.slice(0, -1).join('/') : props.path
     const newItem = toBrowseItem(path)
-    routerProvider?.navigateTo(newItem);
+    routerProvider?.navigateTo(newItem)
   }
 }
 </script>
@@ -40,7 +42,9 @@ function openPath(){
     effect="dark"
     placement="top-start"
   >
-    <template #content> <div class="pathPoper">{{ displayPath }}</div> </template>
+    <template #content>
+      <div class="pathPoper">{{ displayPath }}</div>
+    </template>
     <div :class="{logicalPathText:true, canOpen}">
       <div class="label">
         {{ displayPathLabel }}
@@ -56,15 +60,17 @@ function openPath(){
 </template>
 
 <style scoped lang="scss">
-.logicalPathText{
+.logicalPathText {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  &.canOpen{
+
+  &.canOpen {
     cursor: pointer;
   }
-  .label{
+
+  .label {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

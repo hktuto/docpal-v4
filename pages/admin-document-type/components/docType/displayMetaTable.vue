@@ -9,7 +9,7 @@
           inputPlaceHolder="documentType_metaFilter"
         />
         <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta" type="primary" @click="handleDialogShow()">
-          {{ $t("documentType_metaAdd") }}
+          {{ $t('documentType_metaAdd') }}
         </el-button>
       </template>
       <template #display="{ row }">
@@ -18,38 +18,39 @@
                    @change="handleDisplayChange(row)"></el-switch>
       </template>
       <template #isRequire="{ row }">
-        <el-icon v-if="row.isRequire" style="--color: var(--app-primary-color)"><Select/></el-icon>
+        <el-icon v-if="row.isRequire" style="--color: var(--app-primary-color)"><Select /></el-icon>
         <el-icon v-else style="--color: #F56C6C">
-          <CloseBold/>
+          <CloseBold />
         </el-icon>
       </template>
     </VxeGrid>
     <DocTypeDialogAddDisplayMeta ref="MetaDisplayMetaDialogRef"
                                  :docTypeDetail="docTypeDetail"
-                                 @refresh="handleRefresh"/>
+                                 @refresh="handleRefresh" />
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
-import {Select, CloseBold} from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
+import { Select, CloseBold } from '@element-plus/icons-vue'
 
-const {t} = useI18n();
+const { t } = useI18n()
 const props = defineProps<{
   docTypeDetail: any;
   metadata: any;
-}>();
+}>()
 const emits = defineEmits(['refresh'])
-const {tableConfig, tableEvent, tableRef} = useVxeTable({
-  id: "displayMetaTable",
+const { tableConfig, tableEvent, tableRef } = useVxeTable({
+  id: 'displayMetaTable',
   columns: [
     {
-      field: "metadata",
-      title: "rightDetail_meta",
-      fixed: "left",
-      formatter({cellValue}: any) {
-        return t(cellValue);
+      field: 'metadata',
+      title: 'rightDetail_meta',
+      fixed: 'left',
+      formatter({ cellValue }: any) {
+        return t(cellValue)
       },
+      sortable: true
     },
     /*        {
                 field: "metaDataType",
@@ -58,49 +59,49 @@ const {tableConfig, tableEvent, tableRef} = useVxeTable({
                     return t(`meta.dataType.${cellValue}`);
                 },
             },*/
-    {field: "dataType", title: "docTypeDetail.type"},
+    { field: 'dataType', title: 'docTypeDetail.type', sortable: true },
     {
-      field: "isRequire",
-      title: "form_isRequire",
+      field: 'isRequire',
+      title: 'form_isRequire',
       slots: {
-        default: "isRequire",
-      },
+        default: 'isRequire'
+      }
     },
     {
-      field: "display",
-      title: "form_display",
+      field: 'display',
+      title: 'form_display',
       slots: {
-        default: "display",
-      },
-    },
+        default: 'display'
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "edit",
-        name: "documentType_edit",
+        code: 'edit',
+        name: 'documentType_edit',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDialogShow(row);
-        },
+        action: ({ row }: any) => {
+          handleDialogShow(row)
+        }
       },
       {
-        code: "delete",
-        name: "documentType_delete",
+        code: 'delete',
+        name: 'documentType_delete',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDelete(row);
-        },
+        action: ({ row }: any) => {
+          handleDelete(row)
+        }
       }
-    ],
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDialogShow(row)
   },
-  virtualScroll: true,
-});
+  virtualScroll: true
+})
 
 function handleRefresh(addMore: boolean = false) {
   if (addMore) handleDialogShow()
@@ -109,16 +110,16 @@ function handleRefresh(addMore: boolean = false) {
 
 async function handleDelete(row) {
   const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {modelName: t('docType_displayMeta'), name: null}),
+    t('tip_deleteMsg', { modelName: t('docType_displayMeta'), name: null }),
     {
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     }
   )
   if (action !== 'confirm') return
   const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
     metadata: row.metadata
   })
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('docType_displayMeta'), name: null}))
+  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('docType_displayMeta'), name: null }))
   emits('refresh')
 }
 
@@ -134,8 +135,8 @@ function handleFilterFormChange(formModel: any) {
       !formModel.metaData ||
       item.metadata.toLowerCase().includes(formModel.metaData.toLowerCase()) ||
       t(item.metadata).toLowerCase().includes(formModel.metaData.toLowerCase())
-    );
-  });
+    )
+  })
   tableRef.value?.loadData(data)
 }
 
@@ -147,7 +148,7 @@ async function handleDisplayChange(row) {
       id: row.id,
       display: row.display,
       ...row,
-      metaData: row.metadata,
+      metaData: row.metadata
     }
     await adminApi.api.postDocpaltypeSettingsAddMetadata(params)
   } catch (error) {
@@ -163,12 +164,12 @@ watch(
   () => props.metadata,
   (newValue: any) => {
     setTimeout(() => {
-      const data = !!newValue ? [...newValue] : [];
+      const data = !!newValue ? [...newValue] : []
       tableRef.value?.loadData(data)
     })
   },
-  {immediate: true, deep: true}
-);
+  { immediate: true, deep: true }
+)
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

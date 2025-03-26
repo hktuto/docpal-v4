@@ -6,29 +6,29 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
-const {t} = useI18n();
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "a-external-share",
+  id: 'a-external-share',
   api: async (pageParams: any) => {
     const params = {
       ...pageParams,
       page: pageParams.pageNum,
-      size: pageParams.pageSize,
+      size: pageParams.pageSize
     }
     delete params.pageNum
     delete params.pageSize
-    const res = await adminApi.api.postNuxeoShareGet({...params, ...extraParams}).then(res => res.data)
+    const res = await adminApi.api.postNuxeoShareGet({ ...params, ...extraParams }).then(res => res.data)
     return {
       data: {
         entryList: res.list,
@@ -37,63 +37,63 @@ const {
     }
   },
   columns: [
-    {field: "emailList", title: "tableHeader_emailList", fixed: "left"},
-    {field: "documentSize", title: "tableHeader_numberOfFiles"},
+    { field: 'emailList', title: 'tableHeader_emailList', fixed: 'left', sortable: true },
+    { field: 'documentSize', title: 'tableHeader_numberOfFiles', sortable: true },
     {
-      field: "created",
-      title: "tableHeader_creationDate",
-      formatter({cellValue}: any) {
+      field: 'created',
+      title: 'tableHeader_creationDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }, sortable: true
     },
     {
-      field: "expiredDate",
-      title: "tableHeader_dueDate",
-      formatter({cellValue}: any) {
+      field: 'expiredDate',
+      title: 'tableHeader_dueDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
-    },
+      }, sortable: true
+    }
   ],
   bodyActions: [
     [
       {
-        code: "delete",
-        name: t("common_edit"),
+        code: 'delete',
+        name: t('common_edit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDblclick(row);
-        },
+        action: ({ row }: any) => {
+          handleDblclick(row)
+        }
       },
       {
-        code: "delete",
-        name: t("common_delete"),
+        code: 'delete',
+        name: t('common_delete'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDisabled(row);
-        },
-      },
-    ],
+        action: ({ row }: any) => {
+          handleDisabled(row)
+        }
+      }
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
-  },
-});
+  }
+})
 
 async function handleDisabled(row) {
   const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {modelName: t('share_externalShareLink'), name: null}),
+    t('tip_deleteMsg', { modelName: t('share_externalShareLink'), name: null }),
     {
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     }
   )
   if (action !== 'confirm') return
-  const param = [];
-  param.push(row.shareID);
-  await adminApi.api.deleteNuxeoShare(param);
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('share_externalShareLink'), name: null}))
-  query();
+  const param = []
+  param.push(row.shareID)
+  await adminApi.api.deleteNuxeoShare(param)
+  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('share_externalShareLink'), name: null }))
+  query()
 }
 
 const shareInfoDialogRef = ref()

@@ -4,7 +4,7 @@
       <header v-show="state.selectList?.length > 0" class="header-flex">
         <div class="title-select color__primary">
           <b class="el-icon--left">
-            {{ $t("notifications.userSelected") }}: {{ state.selectList.length }}
+            {{ $t('notifications.userSelected') }}: {{ state.selectList.length }}
           </b>
           <Icon
             id="UserList__ClearSelected"
@@ -15,26 +15,26 @@
         </div>
         <div class="flex-x-end">
           <el-button id="UserList__Delete" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
-            {{ $t("common_delete") }}
+            {{ $t('common_delete') }}
           </el-button>
-          <el-divider direction="vertical"/>
+          <el-divider direction="vertical" />
           <el-dropdown placement="top-start">
             <el-button id="UserList__Active" type="primary" class="el-icon--left el-icon--right">
-              {{ $t("actions.active") }}
+              {{ $t('actions.active') }}
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleActiveSelected('A')">
-                  {{ $t("actions.activate") }}
+                  {{ $t('actions.activate') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleActiveSelected('D')">
-                  {{ $t("actions.inactivate") }}
+                  {{ $t('actions.inactivate') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
           <el-button id="UserList__AssignUserGroup" type="primary" @click="handleGroupSelected()">
-            {{ $t("userManage.group") }}
+            {{ $t('userManage.group') }}
           </el-button>
         </div>
       </header>
@@ -51,7 +51,7 @@
           type="primary"
           :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
           @click="handleUserDialogShow()"
-        >{{ $t("user_newUser") }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
+        >{{ $t('user_newUser') }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
         </el-button>
       </header>
     </template>
@@ -82,15 +82,15 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from "element-plus";
-import {userProviderKey} from "~/util/userProvider";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { userProviderKey } from '~/util/userProvider'
 
-const {t} = useI18n();
-const routerProvider = inject(MenuRouterKey);
-const emits = defineEmits(["filter-change", "refresh"]);
-const userProvider = inject(userProviderKey);
-const isLdapMode: boolean = useIsLDAP();
-const props = defineProps(["condition"]);
+const { t } = useI18n()
+const routerProvider = inject(MenuRouterKey)
+const emits = defineEmits(['filter-change', 'refresh'])
+const userProvider = inject(userProviderKey)
+const isLdapMode: boolean = useIsLDAP()
+const props = defineProps(['condition'])
 
 type TableState = {
   ready: boolean;
@@ -108,60 +108,60 @@ const state = reactive<TableState>({
   licenseUsers: 50,
   extraParams: {},
   extraParamsFilter: {},
-  selectList: [],
-});
+  selectList: []
+})
 
-const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
-  id: "a-user-table",
+const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
+  id: 'a-user-table',
   api: async (pageParams: any) => {
-    cleanSelectedRows();
-    return await userProvider?.getAllUsersApi(pageParams);
+    cleanSelectedRows()
+    return await userProvider?.getAllUsersApi(pageParams)
   },
   columns: [
-    {field: "username", title: "user_username", fixed: "left", type: "checkbox"},
-    {field: "email", title: "user_email"},
+    { field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox' },
+    { field: 'email', title: 'user_email' },
     {
-      field: "groupDTOList",
-      title: "user_groups",
+      field: 'groupDTOList',
+      title: 'user_groups',
       slots: {
-        default: "group",
-      },
+        default: 'group'
+      }
     },
     {
-      field: "status",
-      title: "user_status",
+      field: 'status',
+      title: 'user_status',
       slots: {
-        default: "status",
-      },
-    },
+        default: 'status'
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "edit_user",
-        name: "Edit User",
+        code: 'edit_user',
+        name: 'Edit User',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          userProvider?.openUserDetail(row);
-        },
+        action: ({ row }: any) => {
+          userProvider?.openUserDetail(row)
+        }
       },
       {
-        code: "delete_user",
-        name: "Delete User",
+        code: 'delete_user',
+        name: 'Delete User',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDelete(row);
-        },
-      },
-    ],
+        action: ({ row }: any) => {
+          handleDelete(row)
+        }
+      }
+    ]
   ],
   optionalConfig: {
     rowConfig: {
       height: 60,
       isCurrent: true,
-      isHover: true,
+      isHover: true
     },
     tooltipConfig: {
       contentMethod: ({
@@ -174,176 +174,200 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                         $columnIndex,
                         type,
                         cell,
-                        $event,
+                        $event
                       }: any) => {
-        const key = column.property;
-        const value = row[key];
-        if (key === "groupDTOList") {
-          return value.map((item: any) => item.name).join(", ");
+        const key = column.property
+        const value = row[key]
+        if (key === 'groupDTOList') {
+          return value.map((item: any) => item.name).join(', ')
         }
-        if (typeof value === "string") {
-          return value;
+        if (typeof value === 'string') {
+          return value
         }
         if (Array.isArray(value)) {
-          return value.join(",");
+          return value.join(',')
         }
-      },
-    },
+      }
+    }
   },
   selectChangeHander: (selectedRows: any[]) => {
-    state.selectList = [...selectedRows];
+    state.selectList = [...selectedRows]
   },
-  dblClickAction: ({row, column, event}: any) => {
-    userProvider?.openUserDetail(row);
-  },
-});
+  dblClickAction: ({ row, column, event }: any) => {
+    userProvider?.openUserDetail(row)
+  }
+})
 
 // #endregion
 // #region module:
 
 // #endregion
-const UserDialogRef = ref();
+const UserDialogRef = ref()
 
 function handleUserDialogShow() {
-  UserDialogRef.value.handleOpen();
+  UserDialogRef.value.handleOpen()
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(t("userTip.confirmWhetherToDeleteItems"), {
-    confirmButtonText: `${t("common_confirmDelete")}`,
-    dangerouslyUseHTMLString: true,
-  });
-  if (action !== "confirm") return;
+  const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
+    confirmButtonText: `${t('common_confirmDelete')}`,
+    dangerouslyUseHTMLString: true
+  })
+  if (action !== 'confirm') return
   const params = {
-    userIds: state.selectList.map((item: any) => item.userId),
-  };
-  await userProvider?.BatchDeleteUserApi(params);
-  routerProvider?.message.success(t("userTip.userSelectedDeleteMsg"));
-  reload();
+    userIds: state.selectList.map((item: any) => item.userId)
+  }
+  await userProvider?.BatchDeleteUserApi(params)
+  routerProvider?.message.success(t('userTip.userSelectedDeleteMsg'))
+  reload()
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(t("userTip.confirmWhetherToDeleteItems"), {
-    confirmButtonText: `${t("common_confirmDelete")}`,
-    dangerouslyUseHTMLString: true,
-  });
-  if (action !== "confirm") return;
-  const res = await userProvider?.BatchDeleteUserApi({userIds: [row.userId]});
+  const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
+    confirmButtonText: `${t('common_confirmDelete')}`,
+    dangerouslyUseHTMLString: true
+  })
+  if (action !== 'confirm') return
+  const res = await userProvider?.BatchDeleteUserApi({ userIds: [row.userId] })
   if (!!res) {
-    routerProvider?.message.success(t("userTip.userSelectedDeleteMsg"));
-    reload();
+    routerProvider?.message.success(t('userTip.userSelectedDeleteMsg'))
+    reload()
   }
 }
 
-async function handleSetStatus(status: "A" | "D", row: any) {
-  if (status === row.value || !row.userId || status === null) return;
-  if (state.activeUsers >= state.licenseUsers && status === "A") {
-    row.status = "D";
+async function handleSetStatus(status: 'A' | 'D', row: any) {
+  if (status === row.value || !row.userId || status === null) return
+  if (state.activeUsers >= state.licenseUsers && status === 'A') {
+    row.status = 'D'
     ElMessage({
-      message: t("user_activeUserOverLimit"),
-      type: "warning",
-    });
-    return;
+      message: t('user_activeUserOverLimit'),
+      type: 'warning'
+    })
+    return
   }
   try {
-    row.loading = true;
-    await userProvider?.SetUserStatusApi(row);
-    await getAllUserAndActiveCount();
+    row.loading = true
+    await userProvider?.SetUserStatusApi(row)
+    await getAllUserAndActiveCount()
   } catch (error) {
-    row.status = row.status = "A" ? "D" : "A";
+    row.status = row.status = 'A' ? 'D' : 'A'
   } finally {
-    row.loading = false;
+    row.loading = false
   }
 }
 
 async function getAllUserAndActiveCount() {
   const {
     ActiveCount,
-    licenseUserNum,
-  } = await userProvider?.getAllUserAndActiveCountApi();
-  state.activeUsers = ActiveCount || 0;
-  state.licenseUsers = licenseUserNum || 0;
+    licenseUserNum
+  } = await userProvider?.getAllUserAndActiveCountApi()
+  state.activeUsers = ActiveCount || 0
+  state.licenseUsers = licenseUserNum || 0
 }
 
 // #region module:select actions
 
-async function handleActiveSelected(status: "A" | "D") {
-  const noActiveUsersCount = state.selectList.filter((item: any) => item.status === "D")
-    .length;
-  if (state.activeUsers + noActiveUsersCount > state.licenseUsers && status === "A") {
+async function handleActiveSelected(status: 'A' | 'D') {
+  const noActiveUsersCount = state.selectList.filter((item: any) => item.status === 'D')
+    .length
+  if (state.activeUsers + noActiveUsersCount > state.licenseUsers && status === 'A') {
     ElMessage({
-      message: t("user_activeUserOverLimit"),
-      type: "warning",
-    });
-    return;
+      message: t('user_activeUserOverLimit'),
+      type: 'warning'
+    })
+    return
   }
   const params = {
     ids: state.selectList.map((item: any) => item.id),
     userIds: state.selectList.map((item: any) => item.userId),
-    active: status,
-  };
-  const result = await userProvider?.BatchActiveUserApi(params);
+    active: status
+  }
+  const result = await userProvider?.BatchActiveUserApi(params)
   if (result.length > 0) {
     ElMessage.error(
-      t("userTip.operationFailed", {
-        users: result.join(","),
+      t('userTip.operationFailed', {
+        users: result.join(',')
       })
-    );
+    )
   } else {
-    if (status === "A") {
-      ElMessage.success(t("user.activate.successfully.msg"));
+    if (status === 'A') {
+      ElMessage.success(t('user.activate.successfully.msg'))
     } else {
-      ElMessage.success(t("user.inactivate.successfully.msg"));
+      ElMessage.success(t('user.inactivate.successfully.msg'))
     }
   }
-  getAllUserAndActiveCount();
-  reload();
+  getAllUserAndActiveCount()
+  reload()
 }
 
-const UserAddGroupDialogRef = ref();
+const UserAddGroupDialogRef = ref()
 
 function handleGroupSelected() {
   const params = {
     ids: state.selectList.map((item: any) => item.id),
-    userIds: state.selectList.map((item: any) => item.userId),
-  };
-  UserAddGroupDialogRef.value.handleOpen([], params);
+    userIds: state.selectList.map((item: any) => item.userId)
+  }
+  UserAddGroupDialogRef.value.handleOpen([], params)
 }
 
 // #endregion
 // #region module: ResponsiveFilterRef
-const ResponsiveFilterRef = ref();
+const ResponsiveFilterRef = ref()
 
 async function getFilter(conditions: any, initParams: any) {
   conditions.forEach((condition: any) => {
     if (condition.options) {
-      condition.options.sort((a: any, b: any) => a.value.localeCompare(b.value));
+      condition.options.sort((a: any, b: any) => a.value.localeCompare(b.value))
     }
-  });
-  ResponsiveFilterRef.value.init(conditions, initParams);
+  })
+  conditions.unshift(
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'user_username', value: 'username' },
+        { label: 'user_email', value: 'email' },
+        { label: 'user_groups', value: 'groupDTOList' }]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  )
+  ResponsiveFilterRef.value.init(conditions, initParams)
 }
 
 function handleFilterFormChange(formModel: any) {
-  state.extraParamsFilter = formModel;
-  emits("filter-change", state.extraParamsFilter);
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  state.extraParamsFilter = formModel
+  emits('filter-change', state.extraParamsFilter)
 }
 
 function handleClearFilter() {
-  state.extraParamsFilter = {};
-  emits("filter-change", state.extraParamsFilter);
+  state.extraParamsFilter = {}
+  emits('filter-change', state.extraParamsFilter)
 }
 
 // #endregion
 
 onActivated(() => {
-  state.selectList = [];
+  state.selectList = []
 
-});
+})
 onMounted(() => {
-  getAllUserAndActiveCount();
-});
+  getAllUserAndActiveCount()
+})
 
-defineExpose({reload, getFilter});
+defineExpose({ reload, getFilter })
 </script>
 
 <style lang="scss" scoped>

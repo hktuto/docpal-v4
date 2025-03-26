@@ -4,13 +4,14 @@
       <div v-show="state.selectedRows.length > 0" class="flex-x-between">
         <div class="title-select color__primary flex-x-start">
           <b class="el-icon--left ">
-            {{ $t("notifications.userSelectedByUserGroup") }}: {{ state.selectedRows.length }}
+            {{ $t('notifications.userSelectedByUserGroup') }}: {{ state.selectedRows.length }}
           </b>
-          <SvgIcon id="UserGroupList__Info__ClearSelected" :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
-                   @click="cleanSelectedRows"/>
+          <SvgIcon id="UserGroupList__Info__ClearSelected" :src="'/icons/close.svg'"
+                   :content="$t('button.clearSelected')"
+                   @click="cleanSelectedRows" />
         </div>
         <el-button id="UserGroupList__Info__RemoveUser" type="danger" @click="handleDeleteSelected()">
-          {{ $t("Remove User") }}
+          {{ $t('Remove User') }}
         </el-button>
       </div>
       <div v-show="state.selectedRows.length === 0" class="flex-x-between">
@@ -24,7 +25,11 @@
     <div style="height: 100%; overflow: hidden;position: relative;">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
-          <slot name="toolbar_buttons"/>
+          <ResponsiveFilter
+            ref="ResponsiveFilterRef"
+            @form-change="handleFilterFormChange"
+            inputKey="username"
+          />
         </template>
       </VxeGrid>
     </div>
@@ -35,24 +40,25 @@
 
 
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {groupProviderDetailKey} from '~/util/userProvider';
-import type {GroupDTO, UserDTO} from 'api/src/generate/admin'
+import { ElMessageBox } from 'element-plus'
+import { groupProviderDetailKey } from '~/util/userProvider'
+import type { GroupDTO, UserDTO } from 'api/src/generate/admin'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const groupProviderDetail = inject(groupProviderDetailKey)
 const props = defineProps<{
   group: GroupDTO
 }>()
 const state = reactive<any>({
-  selectedRows: []
+  selectedRows: [],
+  userList: []
 })
-const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, cleanSelectedRows } = useVxeTable({
   id: 'a-userTableSetting',
   columns: [
-    {field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox'},
-    {field: 'userId', title: 'user_groupIdentifer',},
+    { field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox' },
+    { field: 'userId', title: 'user_groupIdentifer', sortable: true }
   ],
   bodyActions: [
     [
@@ -61,20 +67,28 @@ const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
         name: 'common_remove',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDelete(row)
         }
       }
     ]
   ],
   selectChangeHander: (selectedRows: any[]) => {
-    state.selectedRows = [...selectedRows];
+    state.selectedRows = [...selectedRows]
   },
   optionalConfig: {},
   virtualScroll: true
 })
 
 const UserAddGroupDialogRef = ref()
+
+function handleFilterFormChange(formModel: any) {
+  let data = state.userList
+  if (formModel.username) {
+    data = state.userList.filter((item: any) => item.firstName.toLowerCase().includes(formModel.username.toLowerCase()))
+  }
+  tableRef.value?.loadData(data)
+}
 
 function handleGroupAddMemberFormShow() {
   UserAddGroupDialogRef.value.handleOpen(tableConfig.data)
@@ -85,45 +99,46 @@ async function getMemberGroupList() {
     const res = await groupProviderDetail?.GetMemberListApi({
       groupName: props.group.id
     })
-    state.selectedRows = [];
+    state.userList = res.data
+    state.selectedRows = []
     tableRef.value?.loadData(res.data)
   })
 }
 
 async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
-    `${t("user_userGroupSelectDeletedSuccessMsg")}`,
+    `${t('user_userGroupSelectDeletedSuccessMsg')}`,
     {
-      confirmButtonText: t("common_confirmRemove"),
-      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmRemove'),
+      dangerouslyUseHTMLString: true
     }
-  );
-  if (action !== "confirm") return;
+  )
+  if (action !== 'confirm') return
   const ids = state.selectedRows.map((item: any) => item.userId)
 
   await groupProviderDetail?.BatchGroupRemoveUsersApi({
     groupId: props.group.id,
     userIds: ids
   })
-  routerProvider?.message.success(t('user_userGroupSelectRemovedSuccessMsg'));
+  routerProvider?.message.success(t('user_userGroupSelectRemovedSuccessMsg'))
   getMemberGroupList()
-  state.selectedRows = [];
+  state.selectedRows = []
 }
 
 async function handleDelete(row: UserDTO) {
   const action = await ElMessageBox.confirm(
-    `${t("user_userGroupDeletedSuccessMsg")}`,
+    `${t('user_userGroupDeletedSuccessMsg')}`,
     {
-      confirmButtonText: t("common_confirmRemove"),
-      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmRemove'),
+      dangerouslyUseHTMLString: true
     }
-  );
-  if (action !== "confirm") return;
+  )
+  if (action !== 'confirm') return
   await groupProviderDetail?.BatchGroupRemoveUsersApi({
     userIds: [row.userId],
     groupId: props.group.id
   })
-  routerProvider?.message.success(t('user_userGroupRemovedSuccessMsg'));
+  routerProvider?.message.success(t('user_userGroupRemovedSuccessMsg'))
   getMemberGroupList()
 }
 
@@ -149,4 +164,9 @@ watch(() => props.group, async (newValue) => {
   display: flex;
   justify-content: flex-start;
 }
+
+:deep .el-input {
+  width: 200px;
+}
+
 </style>

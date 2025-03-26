@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import {adminApi} from 'api';
+import { adminApi } from 'api'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw createError('menu manger not found')
@@ -21,9 +21,9 @@ async function openLastestVersion(data: any, openInNewTab = false) {
     versionNumber: data.latestVersion,
     versionId: data.latestVersionId
   }
-  let newItem = newWorkflowEditorDetail(params) as any;
+  let newItem = newWorkflowEditorDetail(params) as any
   newItem.props.currentVersion = data.latestVersion
-  routerProvider?.navigateTo({...newItem}, openInNewTab)
+  routerProvider?.navigateTo({ ...newItem }, openInNewTab)
 }
 
 function openProductionVersion(data: any, openInNewTab = false) {
@@ -32,16 +32,16 @@ function openProductionVersion(data: any, openInNewTab = false) {
     ...data,
     versionNumber: data.productionVersion,
     versionId: data.productionVersionId,
-    draftId: data.id,
+    draftId: data.id
   }
-  const newItem = newWorkflowEditorDetail(praams) as any;
-  routerProvider?.navigateTo({...newItem}, openInNewTab)
+  const newItem = newWorkflowEditorDetail(praams) as any
+  routerProvider?.navigateTo({ ...newItem }, openInNewTab)
 
 }
 
 const saveAsDialogRef = ref()
 const newWorkflowDialogData = ref({
-  latestVersion: "V1"
+  latestVersion: 'V1'
 })
 
 function saveAsNewWorkflow(data: any) {
@@ -53,9 +53,9 @@ function saveAsNewWorkflow(data: any) {
 
 function openVersions(data: any, openInNewTab = false) {
 
-  const newItem = newWorkflowEditorVerionList(data);
+  const newItem = newWorkflowEditorVerionList(data)
 
-  routerProvider?.navigateTo({...newItem}, openInNewTab)
+  routerProvider?.navigateTo({ ...newItem }, openInNewTab)
 }
 
 const newDialogRef = ref()
@@ -64,7 +64,7 @@ function createNewWorkflow() {
   newDialogRef.value.handleOpen()
 }
 
-function actionPermission({row, rowIndex, code}: any) {
+function actionPermission({ row, rowIndex, code }: any) {
   if (code === 'delete') {
     return {
       visible: row.status === 'A',
@@ -79,7 +79,7 @@ function actionPermission({row, rowIndex, code}: any) {
 }
 
 async function deleteWorkflow(row: any) {
-  const {data} = await adminApi.api.deleteWorkflowProcessDefinitionRemoveDraftid(row.id)
+  const { data } = await adminApi.api.deleteWorkflowProcessDefinitionRemoveDraftid(row.id)
   if (data) {
     routerProvider?.message?.success(t('dpMsg_success'))
     reload()
@@ -107,34 +107,51 @@ provide(WorkflowEditorListProviderKey, {
     //         params[key] = filter.value[key]
     //     }
     // })
-    return adminApi.api.postWorkflowProcessDefinitionDraftPage(params)
+    return adminApi.api.postWorkflowProcessDefinitionDraftPage({ ...params, ...filter.value })
   }
 })
 
 const ResponsiveFilterRef = ref()
-const filter = ref<any>({});
+const filter = ref<any>({})
 
 function handleFilterFormChange(formModel: any) {
-  filter.value = formModel;
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  filter.value = formModel
   reload()
 }
 
-// async function getFilter() {
-//   const data = [
-//     {
-//         key: "publishStatus", label: "common_status", type: "string", isMultiple: false,
-//         options: [
-//             { label: 'active', value: 'A' },
-//             { label: 'inactive', value: 'P' }
-//         ]
-//     },
-//   ]
-//   ResponsiveFilterRef.value.init(data)
-
-// }
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'workflowEditor.name', value: 'name' },
+        { label: 'workflow_editorLastModified', value: 'modifiedBy' },
+        { label: 'searchGroup.createdDate', value: 'createdDate' },
+        { label: 'workflow_editorLastDate', value: 'modifiedDate' },
+        { label: 'workflow_editorStatus', value: 'status' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+}
 
 onMounted(() => {
-  // getFilter()
+  getFilter()
 })
 
 function handleSaveAsOrCreate(data: any) {
@@ -143,16 +160,15 @@ function handleSaveAsOrCreate(data: any) {
     name: data.name,
     draftId: data.draftId,
     versionNumber: data.latestVersion,
-    versionId: data.latestVersionId,
+    versionId: data.latestVersionId
   }
-  let newItem = newWorkflowEditorDetail(params) as any;
+  let newItem = newWorkflowEditorDetail(params) as any
   newItem.props.currentVersion = data.latestVersion
-  routerProvider?.navigateTo({...newItem}, false)
+  routerProvider?.navigateTo({ ...newItem }, false)
   reload()
 }
 
 function reload() {
-  console.log("reload")
   if (tableRef.value && tableRef.value.reload) {
     tableRef.value.reload()
   }
@@ -165,23 +181,17 @@ function reload() {
     <!-- <TablePage :config="tableConfig" /> -->
     <LazyWorkflowEditorWorkflowListTable ref="tableRef">
       <template #toolbar_buttons>
-        <div class="flex-x-end">
+        <div class="actionsContainer">
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
           <ElButton id="WorkflowEditor__CreateNewWorkflow" type="primary" @click="createNewWorkflow">
             {{ t('workflow_editorCreate') }}
           </ElButton>
         </div>
-
-        <div class="actions">
-          <!-- <div class="filter">
-
-              <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"  />
-          </div> -->
-        </div>
       </template>
     </LazyWorkflowEditorWorkflowListTable>
-    <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="handleSaveAsOrCreate"/>
+    <LazyWorkflowEditorNewDialog ref="newDialogRef" @created="handleSaveAsOrCreate" />
     <LazyWorkflowEditorSaveAsDialog ref="saveAsDialogRef" :copyVersion="newWorkflowDialogData.latestVersion"
-                                    :data="newWorkflowDialogData" @close="reload" @created="handleSaveAsOrCreate"/>
+                                    :data="newWorkflowDialogData" @close="reload" @created="handleSaveAsOrCreate" />
   </div>
 </template>
 
@@ -193,15 +203,8 @@ function reload() {
   position: relative;
 }
 
-.actions {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr min-content;
-}
-
-.flex-x-end {
-  width: 100%;
+.actionsContainer {
   display: flex;
-  justify-content: flex-end;
+  width: 100%;
 }
 </style>

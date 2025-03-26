@@ -26,14 +26,14 @@
             size="small"
             @click="handleAddRow()"
           >
-            {{ $t("button.add") }}
+            {{ $t('button.add') }}
           </el-button>
         </div>
       </div>
       <div v-else class="flex-x-between">
         <div class="title-select color__primary">
           <b class="el-icon--left">
-            {{ $t("masterTable_selected") }}: {{ state.selectList.length }}
+            {{ $t('masterTable_selected') }}: {{ state.selectList.length }}
           </b>
           <Icon id="MasterTable__Tables__Detail__Records__CleanSelected" name="ic:baseline-clear"
                 class="normal cursor-pointer" @click="cleanSelectedRows">
@@ -42,12 +42,12 @@
         <div>
           <!-- v-if="isSuperAdmin && endPoint === 'admin'" -->
           <el-button id="MasterTable__Tables__Detail__Records__Delete" type="danger" @click="handleDeleteSelected">
-            {{ $t("common_delete") }}
+            {{ $t('common_delete') }}
           </el-button>
           <el-dropdown id="MasterTable__Tables__Detail__Records__Active"
                        v-if="endPoint === 'admin' || permission?.enable" trigger="click">
             <el-button class="el-icon--left el-icon--right" type="warning">
-              {{ $t("actions.active") }}
+              {{ $t('actions.active') }}
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
@@ -61,7 +61,7 @@
             </template>
           </el-dropdown>
           <el-button id="MasterTable__Tables__Detail__Records__BatchEdit" type="primary" @click="handleBatchEdit">
-            {{ $t("button.batchEdit") }}
+            {{ $t('button.batchEdit') }}
           </el-button>
         </div>
       </div>
@@ -84,9 +84,9 @@
     </template>
     <template #status="{ row }">
       <el-tag v-if="row.status" type="success">
-        {{ $t("actions.activated") }}
+        {{ $t('actions.activated') }}
       </el-tag>
-      <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+      <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
     </template>
   </VxeGrid>
   <MasterTableRecordDialog
@@ -104,23 +104,23 @@
 </template>
 
 <script lang="ts" setup>
-import {adminApi} from "api";
-import type {MTColumnInfo} from "api/src/generate/admin";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {onActivated} from "vue";
+import { adminApi } from 'api'
+import type { MTColumnInfo } from 'api/src/generate/admin'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { onActivated } from 'vue'
 
-const emits = defineEmits(["filter-change"]);
+const emits = defineEmits(['filter-change'])
 
-const {t} = useI18n()
+const { t } = useI18n()
 const {
-  public: {endPoint},
-} = useRuntimeConfig();
-const ignoreList = getIgnoreSchemas();
+  public: { endPoint }
+} = useRuntimeConfig()
+const ignoreList = getIgnoreSchemas()
 const isSuperAdmin = useIsSuperAdmin()
 const props = defineProps<{
   tableId: string;
   permission: any;
-}>();
+}>()
 const state = reactive<{
   loading: boolean;
   fields: MTColumnInfo[];
@@ -133,35 +133,35 @@ const state = reactive<{
   extraParams: {},
   slot: [],
   selectList: []
-});
+})
 const baseTableColumns: any = [
-  {type: 'checkbox', fixed: "left", width: 47},
-  {field: "id", title: "masterTable_id",},
+  { type: 'checkbox', fixed: 'left', width: 47 },
+  { field: 'id', title: 'masterTable_id' },
   {
-    field: "created_date",
-    title: "workflow_createDate",
-    formatter({cellValue}: any) {
+    field: 'created_date',
+    title: 'workflow_createDate',
+    formatter({ cellValue }: any) {
       return formatDate(cellValue)
-    },
+    }
   },
   {
-    field: "modified_date",
-    title: "tableHeader_modifiedDate",
-    formatter({cellValue}: any) {
+    field: 'modified_date',
+    title: 'tableHeader_modifiedDate',
+    formatter({ cellValue }: any) {
       return formatDate(cellValue)
-    },
+    }
   },
-  {field: "created_by", title: "role.creator"},
-  {field: "modified_by", title: "modified_by"},
+  { field: 'created_by', title: 'role.creator' },
+  { field: 'modified_by', title: 'modified_by' },
   {
-    field: "status",
-    title: "common_status",
+    field: 'status',
+    title: 'common_status',
     slots: {
-      default: "status",
-    },
+      default: 'status'
+    }
   }]
-const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = useVxeTable({
-  id: "mt_" + props.tableId,
+const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = useVxeTable({
+  id: 'mt_' + props.tableId,
   api: async (pageParams: any) => {
     if (!props.tableId) return {
       data: {
@@ -169,10 +169,10 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
         totalSize: 0
       }
     }
-    const {data} = await adminApi.api.postMasterTablesRecordPage({
+    const { data } = await adminApi.api.postMasterTablesRecordPage({
       ...pageParams,
       ...state.extraParams,
-      id: props.tableId,
+      id: props.tableId
     })
     return {
       data: {
@@ -184,34 +184,34 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
   columns: [...baseTableColumns],
   bodyActions: [
     [{
-      code: "edit",
-      name: "common_edit",
-      action: ({row}: any) => {
-        handleAddRow(row);
-      },
+      code: 'edit',
+      name: 'common_edit',
+      action: ({ row }: any) => {
+        handleAddRow(row)
+      }
     },
       {
-        code: "delete",
-        name: "trash_actions_delete",
-        action: ({row}: any) => {
-          handleDelete(row);
-        },
+        code: 'delete',
+        name: 'trash_actions_delete',
+        action: ({ row }: any) => {
+          handleDelete(row)
+        }
       },
       {
-        code: "inactive",
-        name: "actions.inactive",
-        action: ({row}: any) => {
-          handleActive(row, false);
-        },
+        code: 'inactive',
+        name: 'actions.inactive',
+        action: ({ row }: any) => {
+          handleActive(row, false)
+        }
       },
       {
-        code: "active",
-        name: "actions.active",
-        action: ({row}: any) => {
-          handleActive(row, true);
-        },
-      },
-    ],
+        code: 'active',
+        name: 'actions.active',
+        action: ({ row }: any) => {
+          handleActive(row, true)
+        }
+      }
+    ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
     // options 是 menuConfig 中的 body 配置
@@ -243,29 +243,29 @@ const {tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows} = us
     }
   },
   selectChangeHander: (selectedRows: any[]) => {
-    state.selectList = [...selectedRows];
+    state.selectList = [...selectedRows]
   },
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleAddRow(row)
   },
   optionalConfig: {
     rowConfig: {
       height: 60,
       isCurrent: true,
-      isHover: true,
+      isHover: true
     }
   }
-});
+})
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
-  const result = await adminApi.api.deleteMasterTablesIdRecord(props.tableId, {recordId: row.id}, {});
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  if (action !== 'confirm') return
+  const result = await adminApi.api.deleteMasterTablesIdRecord(props.tableId, { recordId: row.id }, {})
   if (!result) {
-    ElMessage.error(t("dpTip.deleteFailed"));
-    return;
+    ElMessage.error(t('dpTip.deleteFailed'))
+    return
   }
-  query();
+  query()
 }
 
 const BatchDialogRef = ref()
@@ -275,10 +275,10 @@ function handleBatchEdit() {
   BatchDialogRef.value.handleOpen(fields, state.selectList)
 }
 
-const MasterTableNewRowDialogRef = ref();
+const MasterTableNewRowDialogRef = ref()
 
 function handleAddRow(row?: any) {
-  MasterTableNewRowDialogRef.value.handleOpen(state.fields, row);
+  MasterTableNewRowDialogRef.value.handleOpen(state.fields, row)
 }
 
 async function handleBatchActive(status: boolean) {
@@ -288,9 +288,9 @@ async function handleBatchActive(status: boolean) {
       in: {
         id: ids
       },
-      status,
-    });
-    ElMessage.success(t("dpMsg_success"));
+      status
+    })
+    ElMessage.success(t('dpMsg_success'))
     query()
   } catch (error) {
   } finally {
@@ -299,78 +299,78 @@ async function handleBatchActive(status: boolean) {
 
 async function handleActive(row, status: boolean) {
   try {
-    row.loading = true;
-    row.status = status;
+    row.loading = true
+    row.status = status
     await adminApi.api.patchMasterTablesIdRecordStatus(props.tableId, {
       id: row.id,
       status
-    });
-    ElMessage.success(t("dpMsg_success"));
+    })
+    ElMessage.success(t('dpMsg_success'))
   } catch (error) {
-    row.status = row.status ? false : true;
+    row.status = row.status ? false : true
   } finally {
-    row.loading = false;
+    row.loading = false
   }
 }
 
 // #region module: ResponsiveFilterRef
-const ResponsiveFilterRef = ref();
+const ResponsiveFilterRef = ref()
 
 function handleFilterFormChange(formModel: any) {
-  state.extraParams = formModel;
-  console.log("handleFilterFormChange", state.extraParams);
+  state.extraParams = formModel
+  console.log('handleFilterFormChange', state.extraParams)
   reload()
 }
 
 function getColor(prop: any, option?: any) {
   try {
     if (!!prop) {
-      const mItem: any = state.fields.find((item: any) => item.columnName === prop);
-      if (mItem.unique) return "#0099FF";
-      else if (mItem.required) return "#7B61FF";
+      const mItem: any = state.fields.find((item: any) => item.columnName === prop)
+      if (mItem.unique) return '#0099FF'
+      else if (mItem.required) return '#7B61FF'
     }
   } catch (error) {
   }
   switch (option) {
-    case "unique":
-      return "#0099FF";
-    case "required":
-      return "#7B61FF";
+    case 'unique':
+      return '#0099FF'
+    case 'required':
+      return '#7B61FF'
     default:
-      break;
+      break
   }
   // return 'red'
-  return "#373D43";
+  return '#373D43'
 }
 
 // #endregion
 async function initTableColumns(fields: any) {
   state.selectList = []
-  if (!fields || fields.length === 0) return;
-  state.slot = [];
-  state.fields = fields;
+  if (!fields || fields.length === 0) return
+  state.slot = []
+  state.fields = fields
   const columns = fields
     .filter((item: any) => !baseTableColumns.find((c) => c.field === item.columnName))
     .map((item: any) => {
-      if (!item.columnName) return item;
+      if (!item.columnName) return item
       const _item: any = {
         title: item.columnName,
         field: item.columnName,
-        slots: {header: 'defaultHeader'},
+        slots: { header: 'defaultHeader' },
         width: 200
-      };
-      if (item.dataType === "timestamp") {
-        item.formatter = ({cellValue}: any) => {
+      }
+      if (item.dataType === 'timestamp') {
+        item.formatter = ({ cellValue }: any) => {
           return formatDate(cellValue)
-        };
+        }
       }
       if (item.relationTable) {
         _item.slots.default = item.columnName,
 
-          state.slot.push(item.columnName);
+          state.slot.push(item.columnName)
       }
-      return _item;
-    });
+      return _item
+    })
   // TODO: endPoint
   // if (!props.permission?.edit && !props.permission?.enable && endPoint !== "admin") {
   //   const index = baseTableColumns.findIndex(
@@ -378,50 +378,80 @@ async function initTableColumns(fields: any) {
   //   );
   //   if (index !== -1)baseTableColumns.splice(index, 1);
   // }
-  const newColumns = [...baseTableColumns];
-  let selectItemIndex = newColumns.findIndex((item: any) => item.field === "id");
-  if (selectItemIndex < 0) selectItemIndex = 0;
-  else selectItemIndex++;
-  newColumns.splice(selectItemIndex, 0, ...columns);
-  const actions = tableConfig.columns.find((item: any) => item.title === "dpTable_actions")
+  const newColumns = [...baseTableColumns]
+  let selectItemIndex = newColumns.findIndex((item: any) => item.field === 'id')
+  if (selectItemIndex < 0) selectItemIndex = 0
+  else selectItemIndex++
+  newColumns.splice(selectItemIndex, 0, ...columns)
+  const actions = tableConfig.columns.find((item: any) => item.title === 'dpTable_actions')
   if (actions) {
     newColumns.push(actions)
   }
-  tableConfig.columns = newColumns;
+  tableConfig.columns = newColumns
 }
 
 async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
-    `${t("masterTable_deleteSelectedMsg", {name: props.permission.name})}`,
+    t('masterTable_deleteSelectedMsg', { name: props.permission.name }),
     {
       confirmButtonText: t('common_confirmDelete'),
-      dangerouslyUseHTMLString: true,
+      dangerouslyUseHTMLString: true
     }
-  );
-  if (action !== "confirm") return;
+  )
+  if (action !== 'confirm') return
   const ids = state.selectList.map((item: any) => item.id)
   await adminApi.api.postMasterTablesBatchDelete({
     tableId: props.tableId,
     recordIds: ids
-  });
-  ElMessage.success(t("masterTable_deleteSelectedSuccessMsg", {name: props.permission.name}));
-  if (ids.length === tableConfig.data.length) query();
-  else reload();
+  })
+  ElMessage.success(t('masterTable_deleteSelectedSuccessMsg', { name: props.permission.name }))
+  if (ids.length === tableConfig.data.length) query()
+  else reload()
+}
+
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'masterTable_id', value: 'id' },
+        { label: 'workflow_createDate', value: 'created_date' },
+        { label: 'tableHeader_modifiedDate', value: 'modified_date' },
+        { label: 'modified_by', value: 'modified_by' },
+        { label: 'common_status', value: 'status' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
 }
 
 onMounted(() => {
-});
+  getFilter()
+})
 onActivated(() => {
   // query()
-});
+})
 watch(
   () => props.tableId,
   (newValue: any) => {
     reload()
   },
-  {immediate: true, deep: true}
-);
-defineExpose({query, reload, initTableColumns});
+  { immediate: true, deep: true }
+)
+defineExpose({ query, reload, initTableColumns })
 </script>
 
 <style lang="scss" scoped>

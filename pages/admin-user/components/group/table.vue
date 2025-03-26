@@ -16,30 +16,30 @@
 </template>
 
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import {ElMessage, ElMessageBox} from "element-plus";
-import {groupProviderKey} from '~/util/userProvider';
+import { adminApi } from 'api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { groupProviderKey } from '~/util/userProvider'
 
 const emits = defineEmits(['filter-change', 'refresh'])
 const groupProvider = inject(groupProviderKey)
-const isLdapMode: boolean = useIsLDAP();
+const isLdapMode: boolean = useIsLDAP()
 type State = {
   groupList: any,
   _groupList: any[],
 }
 const state = reactive<State>({
   groupList: {},
-  _groupList: [],
-});
+  _groupList: []
+})
 let filterParams: any = {}
-const {t} = useI18n()
-const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
+const { t } = useI18n()
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'a-groupTable',
   columns: [
-    {field: 'name', title: 'user_userGroupName', fixed: 'left'},
-    {field: 'id', title: 'user_userGroupIdentifer',},
+    { field: 'name', title: 'user_userGroupName', fixed: 'left', sortable: true },
+    { field: 'id', title: 'user_userGroupIdentifer', sortable: true }
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     groupProvider?.openGroupDetail(row)
   },
   bodyActions: [
@@ -49,7 +49,7 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
         name: 'common_edit',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           groupProvider?.openGroupDetail(row)
         }
       },
@@ -58,29 +58,29 @@ const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
         name: 'common_delete',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDelete(row)
         }
       }
-    ],
+    ]
   ],
   virtualScroll: true,
   optionalConfig: {}
 })
 
 // #endregion
-const UserDialogRef = ref();
+const UserDialogRef = ref()
 
 function handleUserDialogShow() {
-  UserDialogRef.value.handleOpen();
+  UserDialogRef.value.handleOpen()
 }
 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
-  const res = await groupProvider?.DeleteGroupApi({groupId: row.id})
+  const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
   if (!!res) {
-    ElMessage.success(t("dpMsg_success"));
+    ElMessage.success(t('dpMsg_success'))
     getGroup()
   }
 }
@@ -90,7 +90,7 @@ const ResponsiveFilterRef = ref()
 
 function handleFilterFormChange(formModel: any) {
   filterParams = formModel
-  if(formModel.userNameOrEmail) {
+  if (formModel.userNameOrEmail) {
     state._groupList = state.groupList.filter((item: any) => {
       return item.name.toLowerCase().includes(formModel.userNameOrEmail.toLowerCase())
     })
@@ -116,13 +116,13 @@ function handleGroupDialogShow() {
 
 onActivated(() => {
   getGroup()
-});
+})
 
 function refresh() {
   getGroup()
 }
 
-defineExpose({reload})
+defineExpose({ reload })
 </script>
 
 <style lang="scss" scoped>
