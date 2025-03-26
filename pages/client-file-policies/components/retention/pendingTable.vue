@@ -8,7 +8,7 @@
       />
       <el-button id="RetentionList__RetentionPendingList__Refresh" text :loading="refreshLoading"
                  @click="handleRefresh">
-        {{ $t("common_refresh") }}
+        {{ $t('common_refresh') }}
       </el-button>
     </template>
     <template #commonActions="{ row }">
@@ -21,7 +21,7 @@
             type="primary"
             @click.stop="handleApprove(true, row)"
           >
-            {{ $t("workflow_startAdhocWorkflow_approve") }}
+            {{ $t('workflow_startAdhocWorkflow_approve') }}
           </el-button>
           <el-button
             id="RetentionList__RetentionPendingList__Reject"
@@ -30,12 +30,12 @@
             type="danger"
             @click.stop="handleApprove(false, row)"
           >
-            {{ $t("workflow_startAdhocWorkflow_reject") }}
+            {{ $t('workflow_startAdhocWorkflow_reject') }}
           </el-button>
         </template>
         <template v-else>
           <el-button id="RetentionList__RetentionPendingList__PendingApproval" text :disabled="true">
-            {{ $t("status.pendingApproval") }}
+            {{ $t('status.pendingApproval') }}
           </el-button>
         </template>
       </template>
@@ -44,7 +44,7 @@
           <span class="el-dropdown-link">
             <el-button text>
               <el-icon>
-                <MoreFilled/>
+                <MoreFilled />
               </el-icon>
             </el-button>
           </span>
@@ -65,98 +65,124 @@
   </VxeGrid>
 </template>
 <script lang="ts" setup>
-import {MoreFilled} from "@element-plus/icons-vue";
-import {clientApi} from "api";
-import {MenuRouterKey} from "#imports";
+import { MoreFilled } from '@element-plus/icons-vue'
+import { clientApi } from 'api'
+import { MenuRouterKey } from '#imports'
 
-const routerProvider = inject(MenuRouterKey);
-let extraParams = {};
-const {t} = useI18n();
+const routerProvider = inject(MenuRouterKey)
+let extraParams = {}
+const { t } = useI18n()
 const initParams = {
-  orderBy: "createdDate",
+  orderBy: 'createdDate',
   isDesc: true,
-  states: ["D", "P"],
-};
+  states: ['D', 'P']
+}
 
-const events = ref({});
-const userId: string = useUserId().value;
-const {tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
-  id: "clientRetentionPendingList",
+const events = ref({})
+const userId: string = useUserId().value
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
+  id: 'clientRetentionPendingList',
   api: async (pageParams: any) => {
     return clientApi.api.postPolicyRetentionsDocumentPage({
       ...initParams,
       ...pageParams,
-      ...extraParams,
-    });
+      ...extraParams
+    })
   },
   columns: [
     {
-      field: "documentName",
-      title: "tableHeader_name",
-      type: "html",
-      formatter: ({cellValue, row}: any) => {
-        let icon = "/icons/doc/file.svg";
-        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
-      },
+      field: 'documentName',
+      title: 'tableHeader_name',
+      type: 'html',
+      formatter: ({ cellValue, row }: any) => {
+        let icon = '/icons/doc/file.svg'
+        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`
+      }
     },
-    {field: "documentPath", title: "document_filePath"},
-    {field: "policyName", title: "tableHeader_policyName"},
+    { field: 'documentPath', title: 'document_filePath' },
+    { field: 'policyName', title: 'tableHeader_policyName' },
     {
-      field: "expireDate",
-      title: "tableHeader_dueDate",
-      formatter({cellValue}: any) {
+      field: 'expireDate',
+      title: 'tableHeader_dueDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
 
     {
-      title: "tableHeader_actions",
+      title: 'tableHeader_actions',
       slots: {
-        default: "commonActions",
+        default: 'commonActions'
       },
-      width: 100,
-    },
+      width: 100
+    }
   ],
-  dblClickAction: ({row, column, event}: any) => {
-    handleDblclick(row);
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row)
   },
   optionalConfig: {
-    cellClassName({row, column}) {
-      if (column.title === "tableHeader_actions") {
-        return "row-actions";
+    cellClassName({ row, column }) {
+      if (column.title === 'tableHeader_actions') {
+        return 'row-actions'
       }
-      return null;
-    },
-  },
-});
-const refreshLoading = ref(false);
+      return null
+    }
+  }
+})
+const refreshLoading = ref(false)
 // #region module: ResponsiveFilterRef
-const ResponsiveFilterRef = ref();
+const ResponsiveFilterRef = ref()
 
 async function getFilter() {
   const data = await clientApi.api
     .getPolicyRetentionsDocumentPageConditions()
-    .then((res) => res.data);
-  const foundItem = data.find(item => item.key === "retentionPolicyIds");
+    .then((res) => res.data)
+  const foundItem = data.find(item => item.key === 'retentionPolicyIds')
   if (foundItem.options.length > 0) {
-    foundItem.options.sort((a, b) => a.label.localeCompare(b.label));
-    data[data.indexOf(foundItem)].options = foundItem.options;
+    foundItem.options.sort((a, b) => a.label.localeCompare(b.label))
+    data[data.indexOf(foundItem)].options = foundItem.options
   }
-  ResponsiveFilterRef.value.init(data);
+  data.unshift(
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader_name', value: 'documentName' },
+        { label: 'document_filePath', value: 'createdDate' },
+        // { label: 'tableHeader_policyName', value: 'policyName' },
+        { label: 'tableHeader_dueDate', value: 'expireDate' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  )
+
+
+  ResponsiveFilterRef.value.init(data)
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  extraParams = formModel
+  reload()
 }
 
 // #endregion
 
 async function handleRefresh() {
-  refreshLoading.value = true;
-  await clientApi.api.getPolicyRetentionsScanDocument();
-  refreshLoading.value = false;
-  reload();
+  refreshLoading.value = true
+  await clientApi.api.getPolicyRetentionsScanDocument()
+  refreshLoading.value = false
+  reload()
 }
 
 function handleDblclick(row: any) {
@@ -164,22 +190,22 @@ function handleDblclick(row: any) {
     createDetailPageParams({
       docName: row.documentName,
       idOrPath: row.documentId,
-      showHeaderAction: false,
+      showHeaderAction: false
     }),
     false
-  );
+  )
 }
 
 async function getEvents() {
-  events.value = await clientApi.api.getPolicyRetentionsEvents().then((res) => res.data);
+  events.value = await clientApi.api.getPolicyRetentionsEvents().then((res) => res.data)
 }
 
 onMounted(() => {
-  getFilter();
-  getEvents();
+  getFilter()
+  getEvents()
   // clientApi.api.getPolicyRetentionsPolicyidScanDocument(414105); // 手动扫描
   // clientApi.api.getPolicyRetentionsPolicyidScanExpired(414105); // 手动完成
-});
+})
 </script>
 
 <style lang="scss" scoped>

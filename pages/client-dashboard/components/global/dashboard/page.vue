@@ -12,57 +12,58 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {publicApi} from "api";
+import { publicApi } from 'api'
 
-const routerProvider = inject(MenuRouterKey);
+const routerProvider = inject(MenuRouterKey)
 
-const {t} = useI18n();
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "c-dashboard",
-  api: (pageParams: any) => publicApi.api.postUserDashboardPage({...pageParams, ...extraParams}),
+  id: 'c-dashboard',
+  api: (pageParams: any) => publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "name", title: "dashboard_name", fixed: "left"},
+    { field: 'name', title: 'dashboard_name', fixed: 'left' },
     {
-      field: "createdDate",
-      title: "workflow_createDate",
-      formatter({cellValue}: any) {
+      field: 'createdDate',
+      title: 'workflow_createDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
-    },
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "preview",
-        name: t("dashboard_preview"),
+        code: 'preview',
+        name: t('dashboard_preview'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDblclick(row);
-        },
-      },
-    ],
+        action: ({ row }: any) => {
+          handleDblclick(row)
+        }
+      }
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
-  },
-});
+  }
+})
 
 function handleDblclick(row: any) {
-  routerProvider?.navigateTo(routeDashboardDetailPage(row));
+  routerProvider?.navigateTo(routeDashboardDetailPage(row))
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  extraParams = formModel
   reload()
 }
 </script>

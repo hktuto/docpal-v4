@@ -4,7 +4,7 @@
       <template #toolbar_buttons>
         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
                           inputKey="businessKey" @clear-filter="handleClearFilter"
-                          inputPlaceHolder="workflow_retryFilter"/>
+                          inputPlaceHolder="workflow_retryFilter" />
       </template>
       <template #status="{ row }">
         <el-tag v-if="retryStatues.includes(row.state.toLowerCase())" type="danger">{{ row.state }}</el-tag>
@@ -15,54 +15,54 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
+import { adminApi } from 'api'
 
-const {t} = useI18n();
-let extraParams: any = {};
-const retryStatues = ['error', 'fail', 'start error'];
-const state = reactive<any>({});
+const { t } = useI18n()
+let extraParams: any = {}
+const retryStatues = ['error', 'fail', 'start error']
+const state = reactive<any>({})
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
-  reload,
+  reload
 } = useVxeTable({
-  id: "a-workflow-retry",
+  id: 'a-workflow-retry',
   api: async (pageParams: any) => {
-    return await adminApi.api.postWorkflowQueryWorkflowRetryPage({...pageParams, ...extraParams});
+    return await adminApi.api.postWorkflowQueryWorkflowRetryPage({ ...pageParams, ...extraParams })
   },
   columns: [
-    {field: "businessKey", title: "workflowEditor.name", fixed: "left"},
+    { field: 'businessKey', title: 'workflowEditor.name', fixed: 'left' },
     {
-      field: "startTime",
-      title: "workflow_retryStartDate",
-      formatter({cellValue}: any) {
+      field: 'startTime',
+      title: 'workflow_retryStartDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
-    {field: "creator", title: "workflow_retryInitiator"},
+    { field: 'creator', title: 'workflow_retryInitiator' },
     {
-      field: "status",
-      title: "workflow_retryStatus",
+      field: 'status',
+      title: 'workflow_retryStatus',
       slots: {
-        default: "status",
-      },
-    },
+        default: 'status'
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "try",
-        name: "moreAction.re-try",
+        code: 'try',
+        name: 'moreAction.re-try',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleRetry(row.id);
-        },
-      },
+        action: ({ row }: any) => {
+          handleRetry(row.id)
+        }
+      }
 
-    ],
+    ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
     return {
@@ -70,64 +70,64 @@ const {
       disabled: false
     }
   }
-});
+})
 
 async function handleRetry(id: number) {
   try {
-    await adminApi.api.postWorkflowRetryFailWorkflow({id})
+    await adminApi.api.postWorkflowRetryFailWorkflow({ id })
     query({})
   } catch (error: any) {
   }
 }
 
 function handleFilterFormChange(formModel: any) {
-  if (!formModel.isDesc) formModel.isDesc = true;
-  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === "false" ? false : true;
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   let filterParams: any = {
-    businessKey: formModel.businessKey === "" ? undefined : formModel.businessKey,
+    businessKey: formModel.businessKey === '' ? undefined : formModel.businessKey,
     orderBy:
-      formModel.orderBy === undefined || formModel.orderBy === ""
-        ? "startTime"
-        : formModel.orderBy,
-  };
-  filterParams.isDesc = formModel.isDesc;
-  extraParams = filterParams;
-  reload();
+      formModel.orderBy === undefined || formModel.orderBy === ''
+        ? 'startTime'
+        : formModel.orderBy
+  }
+  filterParams.isDesc = formModel.isDesc
+  extraParams = filterParams
+  reload()
 }
 
-const ResponsiveFilterRef = ref();
+const ResponsiveFilterRef = ref()
 
 function getFilter() {
   const data = [
     {
-      key: "orderBy",
-      label: "tableHeader.sortBy",
-      type: "string",
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
       isMultiple: false,
       options: [
-        {label: "tableHeader_name", value: "businessKey"},
-        {label: "common_status", value: "workflowState"},
-        {label: "role.creator", value: "creator"},
-        {label: "workflow_createDate", value: "startTime"},
-      ],
+        { label: 'workflowEditor.name', value: 'businessKey' },
+        { label: 'workflow_retryStartDate', value: 'startTime' },
+        { label: 'workflow_retryInitiator', value: 'creator' },
+        { label: 'workflow_retryStatus', value: 'workflowState' }
+      ]
     },
     {
-      key: "isDesc",
-      label: "tableHeader.sortOrder",
-      type: "string",
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
       isMultiple: false,
       options: [
-        {label: "tableHeader.desc", value: false},
-        {label: "tableHeader.asc", value: true},
-      ],
-    },
-  ];
-  ResponsiveFilterRef.value.init(data);
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
 }
 
 onMounted(() => {
-  getFilter();
-});
+  getFilter()
+})
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

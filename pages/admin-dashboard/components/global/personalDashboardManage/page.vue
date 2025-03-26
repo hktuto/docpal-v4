@@ -13,78 +13,78 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.status === 'A'" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.status === 'A'" type="success">{{ $t('actions.activated') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
-    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="query({})" @add="handleDblclick"/>
+    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="query({})" @add="handleDblclick" />
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
-import {routePersonalDashboardDetail} from '~/utils/routerHelper';
+import { ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
+import { routePersonalDashboardDetail } from '~/utils/routerHelper'
 
 const routerProvider = inject(MenuRouterKey)
-const {t} = useI18n()
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "personalDashboardManage",
+  id: 'personalDashboardManage',
   api: (pageParams: any) =>
-    adminApi.api.postPersonalDashboard({...pageParams, ...extraParams}),
+    adminApi.api.postPersonalDashboard({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "name", title: "workPanel_name", fixed: "left"},
-    {field: "groupId", title: "workPanel_accessUserGroup"},
+    { field: 'name', title: 'workPanel_name', fixed: 'left' },
+    { field: 'groupId', title: 'workPanel_accessUserGroup' },
     {
-      field: "createdDate",
-      title: "workflow_createDate",
-      formatter({cellValue}: any) {
+      field: 'createdDate',
+      title: 'workflow_createDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
-    },
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "hold_edit",
+        code: 'hold_edit',
         name: t('workPanel_content'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDblclick(row)
-        },
+        }
       },
       {
-        code: "hold_config",
+        code: 'hold_config',
         name: t('workPanel_edit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleConfig(row)
-        },
+        }
       },
       {
-        code: "hold_delete",
+        code: 'hold_delete',
         name: t('workPanel_delete'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          deleteItem(row);
-        },
-      },
-    ],
+        action: ({ row }: any) => {
+          deleteItem(row)
+        }
+      }
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
-  },
-});
+  }
+})
 const DashboardDialogRef = ref()
 
 function handleDblclick(row: any) {
@@ -100,32 +100,32 @@ function handleConfig(row: any) {
 
 async function deleteItem(row) {
   const action = await ElMessageBox.confirm(
-    `${t('workPanel_deleteMsg', {name: row.name})}`,
+    `${t('workPanel_deleteMsg', { name: row.name })}`,
     {
       dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     }
   )
   if (action !== 'confirm') return
   await adminApi.api.deletePersonalDashboardId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('adminMenu.workPanel'), name: row.name}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('adminMenu.workPanel'), name: row.name }))
   query({})
 }
 
 async function handleCreate() {
-  DashboardDialogRef.value.handleOpen();
+  DashboardDialogRef.value.handleOpen()
 }
 
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true
-  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc === 'false' ? false : true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   let filterParams: any = {
-    name: formModel.name === "" ? undefined : formModel.name,
-    orderBy: formModel.orderBy === undefined || formModel.orderBy === "" ? "createdDate" : formModel.orderBy
-  };
+    name: formModel.name === '' ? undefined : formModel.name,
+    orderBy: formModel.orderBy === undefined || formModel.orderBy === '' ? 'createdDate' : formModel.orderBy
+  }
   filterParams.isDesc = formModel.isDesc
-  extraParams = filterParams;
-  reload();
+  extraParams = filterParams
+  reload()
 }
 
 const ResponsiveFilterRef = ref()
@@ -133,18 +133,18 @@ const ResponsiveFilterRef = ref()
 async function getFilter() {
   const data = [
     {
-      key: "orderBy", label: "tableHeader.sortBy", type: "string", isMultiple: false,
+      key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
       options: [
-        {label: 'workPanel_name', value: 'name'},
-        {label: 'workPanel_accessUserGroup', value: 'access'},
-        {label: 'filePopover_fileCreatedDate', value: 'createdDate'}
+        { label: 'workPanel_name', value: 'name' },
+        { label: 'workPanel_accessUserGroup', value: 'access' },
+        { label: 'filePopover_fileCreatedDate', value: 'createdDate' }
       ]
     },
     {
-      key: "isDesc", label: "tableHeader.sortOrder", type: "string", isMultiple: false,
+      key: 'isDesc', label: 'tableHeader.sortOrder', type: 'string', isMultiple: false,
       options: [
-        {label: 'tableHeader.desc', value: false},
-        {label: 'tableHeader.asc', value: true}
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
       ]
     }
   ]

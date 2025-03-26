@@ -4,13 +4,13 @@
       <div v-show="state.selectedRows.length > 0" class="flex-x-between">
         <div class="title-select color__primary flex-x-start">
           <b class="el-icon--left ">
-            {{ $t("user_userGroup_selectedMsg") }}: {{ state.selectedRows.length }}
+            {{ $t('user_userGroup_selectedMsg') }}: {{ state.selectedRows.length }}
           </b>
           <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
-                   @click="cleanSelectedRows"/>
+                   @click="cleanSelectedRows" />
         </div>
         <el-button id="UserList__Info__Delete" type="danger" @click="handleDeleteSelected()">
-          {{ $t("common_delete") }}
+          {{ $t('common_delete') }}
         </el-button>
       </div>
       <div v-show="state.selectedRows.length === 0" class="flex-x-between">
@@ -23,7 +23,7 @@
     </template>
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <slot name="toolbar_buttons"/>
+        <slot name="toolbar_buttons" />
         <ResponsiveFilter
           ref="ResponsiveFilterRef"
           inputPlaceHolder="placeHolder.userGroupName"
@@ -42,10 +42,10 @@
 
 
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {userProviderDetailKey} from '~/util/userProvider';
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { userProviderDetailKey } from '~/util/userProvider'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 if (!userProviderDetail) {
   throw new Error('userProviderDetailKey not found')
@@ -58,14 +58,15 @@ const state = reactive<any>({
   groupList: []
 })
 let filterParams: any = {}
-const {tableConfig, tableEvent, tableRef, cleanSelectedRows} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, cleanSelectedRows } = useVxeTable({
   id: 'a-user-group',
   columns: [
-    {field: 'name', title: 'user_userGroupName', fixed: 'left', type: "checkbox",},
-    {field: 'id', title: 'user_userGroupIdentifer',},
+    { type: 'checkbox', fixed: 'left', width: 47 },
+    { field: 'name', title: 'user_userGroupName', fixed: 'left', sortable: true },
+    { field: 'id', title: 'user_userGroupIdentifer', sortable: true }
   ],
   selectChangeHander: (selectedRows: any[]) => {
-    state.selectedRows = [...selectedRows];
+    state.selectedRows = [...selectedRows]
   },
   virtualScroll: true
 })
@@ -88,12 +89,12 @@ async function getMemberGroupList() {
 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(
-    `${t("groupTip.confirmWhetherToDeleteItem")}`,
+    `${t('groupTip.confirmWhetherToDeleteItem')}`,
     {
-      confirmButtonText: `${t("common_confirmDelete")}`,
+      confirmButtonText: `${t('common_confirmDelete')}`
     }
-  );
-  if (action !== "confirm") return;
+  )
+  if (action !== 'confirm') return
   await userProviderDetail?.BatchUserRemoveGroupsApi({
     groupIds: [row.id],
     userId: props.user.userId
@@ -103,37 +104,37 @@ async function handleDelete(row: any) {
 
 async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
-    t('groupTip.confirmWhetherToDeleteItems', {username: props.user.firstName}),
+    t('groupTip.confirmWhetherToDeleteItems', { username: props.user.firstName }),
     {
-      confirmButtonText: t("common_confirmRemove"),
+      confirmButtonText: t('common_confirmRemove')
     }
-  );
-  if (action !== "confirm") return;
+  )
+  if (action !== 'confirm') return
   const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
   if (ids.length === 0) {
-    ElMessage.warning(t('userTip.noValidGroups', {groupIds: noDeleteList.join(',')}))
+    ElMessage.warning(t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
     return
   }
   await userProviderDetail?.BatchUserRemoveGroupsApi({
     groupIds: ids,
     userId: props.user.userId
   })
-  state.selectedRows = [];
+  state.selectedRows = []
   ElMessage({
     type: 'success',
-    message: t('user_removeGroupsSuccessMsg', {username: props.user.firstName}),
+    message: t('user_removeGroupsSuccessMsg', { username: props.user.firstName })
   })
   getMemberGroupList()
 }
 
 function handleFilterFormChange(formModel: any) {
   filterParams = formModel
-  let data = state.groupList;
+  let data = state.groupList
   if (formModel.metaData) {
-    const searchString = formModel.metaData.toLowerCase();
-    data = state.groupList.filter((item: any) => item.name.toLowerCase().includes(searchString));
-  } 
-  tableRef.value?.loadData(data);
+    const searchString = formModel.metaData.toLowerCase()
+    data = state.groupList.filter((item: any) => item.name.toLowerCase().includes(searchString))
+  }
+  tableRef.value?.loadData(data)
 }
 
 onActivated(() => {

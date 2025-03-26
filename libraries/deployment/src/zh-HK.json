@@ -2260,11 +2260,11 @@
   },
   "submit": "提交",
   "tableHeader": {
-    "asc": "Z-A",
+    "asc": "A-Z",
     "cc": "抄送給",
     "days": "天",
     "deadline": "期限",
-    "desc": "A-Z",
+    "desc": "Z-A",
     "fileOrFolderName": "文件(夾)名稱",
     "folderName": "資料夾名稱",
     "formatDate": "格式",

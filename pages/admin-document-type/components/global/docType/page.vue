@@ -13,119 +13,120 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.enable" type="success">{{ $t('actions.active') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
 
-    <DocTypeDialogNew ref="DocTypeDialogNewRef" @refresh="query({})"/>
-    <DocTypeDialogDuplicate ref="DocTypeDialogDuplicateRef" @refresh="query({})"/>
+    <DocTypeDialogNew ref="DocTypeDialogNewRef" @refresh="query({})" />
+    <DocTypeDialogDuplicate ref="DocTypeDialogDuplicateRef" @refresh="query({})" />
   </div>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
-import {routeDocDetail} from '~/utils/routerHelper';
+import { adminApi } from 'api'
+import { routeDocDetail } from '~/utils/routerHelper'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-let extraParams: any = {};
-const state = reactive<any>({});
-const {tableConfig, tableEvent, tableRef, query, reload} = useVxeTable({
-  id: "docTypeManage",
+let extraParams: any = {}
+const state = reactive<any>({})
+const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
+  id: 'docTypeManage',
   api: async (pageParams: any) => {
     return await adminApi.api.postDocpaltypeSettingsPage({
       ...pageParams,
-      ...extraParams,
-    });
+      ...extraParams
+    })
   },
   columns: [
-    {field: "name", title: "search.type", fixed: "left", sortable: true},
+    { field: 'name', title: 'search.type', fixed: 'left', sortable: true },
     {
-      field: "category",
-      title: "docType.category",
+      field: 'category',
+      title: 'docType.category',
+      sortable: true
     },
-    {field: "dataType", title: "documentType_Type"},
+    { field: 'dataType', title: 'documentType_Type' },
     {
-      field: "status",
-      title: "documentType_Status",
+      field: 'status',
+      title: 'documentType_Status',
       slots: {
-        default: "status",
-      },
-    },
-    {field: "createdBy", title: "role.creator"},
-    {
-      field: "modifiedDate", title: "table_last_update",
-      formatter({cellValue}: any) {
-        return formatDate(cellValue)
+        default: 'status'
       }
     },
+    { field: 'createdBy', title: 'role.creator' },
+    {
+      field: 'modifiedDate', title: 'table_last_update',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
+    }
 
   ],
   bodyActions: [
     [
       {
-        code: "edit",
-        name: "documentType_edit",
+        code: 'edit',
+        name: 'documentType_edit',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDblclick(row)
-        },
+        }
       },
       {
-        code: "duplicate",
-        name: "documentType_duplicate",
+        code: 'duplicate',
+        name: 'documentType_duplicate',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDuplicate(row)
-        },
+        }
       },
       {
-        code: "active",
-        name: "documentType_activate",
+        code: 'active',
+        name: 'documentType_activate',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleActive(row, true)
-        },
+        }
       },
       {
-        code: "inactive",
-        name: "documentType_inactivate",
+        code: 'inactive',
+        name: 'documentType_inactivate',
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleActive(row, false)
-        },
-      },
-    ],
+        }
+      }
+    ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
     switch (args.code) {
-      case "active":
+      case 'active':
         return {
           visible: !args.row.enable,
-          disabled: false,
-        };
-      case "inactive":
+          disabled: false
+        }
+      case 'inactive':
         return {
           visible: args.row.enable,
-          disabled: false,
-        };
+          disabled: false
+        }
       default:
         return {
           visible: true,
-          disabled: false,
+          disabled: false
         }
     }
   },
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
-  },
-});
+  }
+})
 
 function handleDblclick(row) {
   routerProvider?.navigateTo(routeDocDetail(row), false)
@@ -154,46 +155,49 @@ async function handleCreate() {
 
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel
-  reload();
+  reload()
 }
 
-const ResponsiveFilterRef = ref();
+const ResponsiveFilterRef = ref()
 
 async function getFilter() {
   const filters = await adminApi.api.getDocpaltypeSettingsPageConditions().then((res) => {
-    return res.data;
-  });
-  ResponsiveFilterRef.value.init([...filters,{
+    return res.data
+  })
+  ResponsiveFilterRef.value.init([...filters, {
     key: 'orderBy',
     label: 'tableHeader.sortBy',
     type: 'select',
     isMultiple: false,
     value: ['name'],
     options: [
-      {label: 'search.type', value: 'name'},
-      {label: 'table_last_update', value: 'modifiedDate'},
+      { label: 'search.type', value: 'name' },
+      { label: 'docType.category', value: 'category' },
+      { label: 'documentType_Type', value: 'dataType' },
+      { label: 'role.creator', value: 'createdBy' },
+      { label: 'table_last_update', value: 'modifiedDate' }
     ]
-  },{
+  }, {
     key: 'isDesc',
     label: 'tableHeader.sortOrder',
     type: 'select',
     isMultiple: false,
     value: [false],
     options: [
-      {label: 'tableHeader.desc', value: false},
-      {label: 'tableHeader.asc', value: true},
+      { label: 'tableHeader.asc', value: false },
+      { label: 'tableHeader.desc', value: true }
     ]
   }])
   nextTick(() => {
-    extraParams.orderBy = 'name';
-    extraParams.isDesc = false;
-    reload();
+    extraParams.orderBy = 'name'
+    extraParams.isDesc = false
+    reload()
   })
 }
 
 onMounted(() => {
-  getFilter();
-});
+  getFilter()
+})
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {
