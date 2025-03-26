@@ -1,100 +1,123 @@
 <script lang="ts" setup>
-import {adminApi} from 'api';
-import {ElMessage} from "element-plus";
+import { adminApi } from "api";
+import { ElMessage } from "element-plus";
 
-const emits = defineEmits(['created'])
+const emits = defineEmits(["created"]);
 
-const routerProvider = inject(MenuRouterKey)
-const {t} = useI18n()
+const routerProvider = inject(MenuRouterKey);
+const { t } = useI18n();
 const workflowTemplateList = [
   {
-    id: 'Blank',
-    name: 'Blank',
-    icon: '/icons/workflow/singleStepIcon.svg',
-    tip: 'blankStepTip',
-    url: "/bpmn/blank.xml"
+    id: "Blank",
+    name: "Blank",
+    icon: "/icons/workflow/singleStepIcon.svg",
+    tip: "blankStepTip",
+    url: "/bpmn/blank.xml",
   },
   {
-    id: 'Single',
-    name: 'Single Approval',
-    icon: '/icons/workflow/singleStepIcon.svg',
-    tip: 'blankStepTip',
-    url: "/bpmn/single.xml"
-  }
-]
+    id: "Single",
+    name: "Single Approval",
+    icon: "/icons/workflow/singleStepIcon.svg",
+    tip: "blankStepTip",
+    url: "/bpmn/single.xml",
+  },
+];
 
 const state = reactive({
   visible: false,
   loading: false,
   form: {
-    template: 'Blank',
-    name: ''
-  }
-})
-const formRef = ref()
+    template: "Blank",
+    name: "",
+  },
+});
+const formRef = ref();
 
 async function handleSubmit() {
   // TODO : validate form
-  if (!state.form.name) return;
+  const vaild = await formRef.value.validate();
+  if (!vaild) return;
   // router.push(`/workflowEditor/new?template=${state.form.template}&name=${state.form.name}`)
   const text = await getXMLFileTemplate(state.form.template);
-  let name = state.form.name
+  let name = state.form.name;
   const timestamp = new Date().getTime();
-  const nameToId = name.toLowerCase().replaceAll(' ', '_') + '_' + timestamp;
-  const bpmnFile = text.replaceAll('workflowId', nameToId).replaceAll('workflowName', state.form.name);
+  const nameToId = name.toLowerCase().replaceAll(" ", "_") + "_" + timestamp;
+  const bpmnFile = text
+    .replaceAll("workflowId", nameToId)
+    .replaceAll("workflowName", state.form.name);
   // convert to blob
-  const blob = new Blob([bpmnFile], {type: "text/xml;charset=utf-8"});
+  const blob = new Blob([bpmnFile], { type: "text/xml;charset=utf-8" });
   const form: any = new FormData();
-  form.append('name', name)
-  form.append('attr_id', nameToId)
-  form.append('versionId', 'V1')
-  form.append('jsonValue', JSON.stringify({}))
-  form.append('file', blob, 'workflow.bpmn.xml')
-  form.append('isDraft', true)
-  const {data} = await adminApi.api.postWorkflowProcessDefinitionUpload({requestDTO: {}}, form)
+  form.append("name", name);
+  form.append("attr_id", nameToId);
+  form.append("versionId", "V1");
+  form.append("jsonValue", JSON.stringify({}));
+  form.append("file", blob, "workflow.bpmn.xml");
+  form.append("isDraft", true);
+  const { data } = await adminApi.api.postWorkflowProcessDefinitionUpload(
+    { requestDTO: {} },
+    form
+  );
   state.form = {
-    template: 'Blank',
-    name: ""
-  }
-  ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('workflow_workflow'), name: null}));
-  state.visible = false
-  emits('created', data)
-
+    template: "Blank",
+    name: "",
+  };
+  ElMessage.success(
+    t("tip_createdSuccessMsg", { modelName: t("workflow_workflow"), name: null })
+  );
+  state.visible = false;
+  emits("created", data);
 }
 
-
-async function getXMLFileTemplate(template: string = 'Single') {
-  const item: any = workflowTemplateList.find((item) => item.id === template)
-  const templatePath = item.url
+async function getXMLFileTemplate(template: string = "Single") {
+  const item: any = workflowTemplateList.find((item) => item.id === template);
+  const templatePath = item.url;
   const response = await fetch(templatePath);
-  return await response.text() as string;
-
+  return (await response.text()) as string;
 }
 
 function handleOpen(setting: any) {
-  state.visible = true
-  state.loading = false
+  state.visible = true;
+  state.loading = false;
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen });
 </script>
 
 <template>
-  <el-dialog v-model="state.visible" :title="$t('workflow_editorCreate')"
-             :close-on-click-modal="false" distroy-on-close
+  <el-dialog
+    v-model="state.visible"
+    :title="$t('workflow_editorCreate')"
+    :close-on-click-modal="false"
+    distroy-on-close
   >
-    <el-form ref="formRef" :model="state.form" label-position="top"
-             class="demo-ruleForm" status-icon
+    <el-form
+      ref="formRef"
+      :model="state.form"
+      label-position="top"
+      class="demo-ruleForm"
+      status-icon
     >
-      <el-form-item :label="$t('workflowEditor.name')" prop="name"
-                    :rules="{required: true, message: $t('workflowEditor.name') + $t('render.hint.fieldRequired'), trigger: 'blur'}">
-        <el-input v-model="state.form.name" :placeholder="$t('workflowEditor.name')" clearable/>
+      <el-form-item
+        :label="$t('workflowEditor.name')"
+        prop="name"
+        :rules="{
+          required: true,
+          message: $t('workflowEditor.name') + $t('render.hint.fieldRequired'),
+          trigger: 'blur',
+        }"
+      >
+        <el-input
+          v-model="state.form.name"
+          :placeholder="$t('workflowEditor.name')"
+          clearable
+        />
       </el-form-item>
       <el-form-item :label="$t('workflowEditor.template')" prop="template">
         <el-radio-group v-model="state.form.template">
           <el-radio v-for="item in workflowTemplateList" :key="item.id" :label="item.id">
             <div class="workflow-template-step">
-              <SvgIcon class="workflow-template-step-icon" :src="item.icon"/>
+              <SvgIcon class="workflow-template-step-icon" :src="item.icon" />
               <h3 class="workflow-template-step-label">{{ item.name }}</h3>
               <!-- <tip class="workflow-template-step-tip">{{$t(item.tip)}}</tip> -->
             </div>
@@ -103,8 +126,12 @@ defineExpose({handleOpen})
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button id="WorkflowEditor__CreateNewWorkflow__Submit" type="primary" :loading="state.loading"
-                 @click="handleSubmit">{{ $t('common_submit') }}
+      <el-button
+        id="WorkflowEditor__CreateNewWorkflow__Submit"
+        type="primary"
+        :loading="state.loading"
+        @click="handleSubmit"
+        >{{ $t("common_submit") }}
       </el-button>
     </template>
   </el-dialog>
