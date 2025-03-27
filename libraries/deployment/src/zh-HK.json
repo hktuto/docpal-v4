@@ -1823,6 +1823,9 @@
   "messageTemplate_Create": "New Template",
   "messageTemplate_edit": "Edit Template",
   "messageTemplate_editTemplateVariable": "Variable",
+  "message_templateName": "名稱",
+  "message_templateStatus": "狀態",
+  "message_templateUsage": "用途",
   "meta": {
     "array": "數組",
     "dataType": {
