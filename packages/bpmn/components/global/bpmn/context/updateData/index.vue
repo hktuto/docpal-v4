@@ -121,6 +121,14 @@ watch(conditions, (newVal) => {
     deep: true
 })
 
+watch(() => node, async () => {
+  console.log("node changed")
+  refreshData()
+}, {
+    immediate: true,
+    deep: true
+})
+
 onMounted(async () => {
     setUpListener()
     refreshData()

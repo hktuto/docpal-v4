@@ -130,6 +130,14 @@ function setUpListener(){
     })
 }
 
+watch(() => node, async () => {
+  console.log("node changed")
+  refreshData()
+}, {
+    immediate: true,
+    deep: true
+})
+
 onMounted(() => {
     setUpListener()
     refreshData()
