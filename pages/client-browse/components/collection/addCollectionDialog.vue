@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="state.visible" :title="t('collections_new')" :close-on-click-modal="false" destroy-on-close>
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <el-button id="Collection_CreateNewCollection__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
@@ -12,10 +12,10 @@
 
 <script lang="ts" setup>
 import formJson from './addCollectionDialog.vform.json'
-import {ElMessage} from "element-plus";
-import {clientApi} from "api";
+import { ElMessage } from 'element-plus'
+import { clientApi } from 'api'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false
@@ -38,18 +38,20 @@ async function handleSubmit() {
     name: data.name,
     description: null
   }
-
   try {
     await clientApi.api.postNuxeoCollectionCreate(params)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('collection_collection'), name: data.name}))
+    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('collection_collection'), name: data.name }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
-    emits('refresh')
+    setTimeout(() => {
+      emits('refresh')
+    }, 1000)
+
   } catch (error) {
 
   }
   state.loading = false
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
