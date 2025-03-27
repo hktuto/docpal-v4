@@ -26,118 +26,122 @@
         />
       </template>
       <template #isAuto="{ row }">
-        <el-icon v-if="row.isAuto" style="--color: var(--app-primary-color)"><Select/></el-icon>
+        <el-icon v-if="row.isAuto" style="--color: var(--app-primary-color)"><Select /></el-icon>
         <el-icon v-else style="--color: #F56C6C">
-          <CloseBold/>
+          <CloseBold />
         </el-icon>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.status === 'A'" type="success">{{ $t("actions.activate") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.status === 'A'" type="success">{{ $t('actions.activate') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
-    <RetentionAddDialog ref="RetentionAddDialogRef" @update="query"/>
+    <RetentionAddDialog ref="RetentionAddDialogRef" @update="query" />
   </div>
 </template>
 <script lang="ts" setup>
-import {Select, CloseBold} from '@element-plus/icons-vue'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
-import {routeRetentionDetail} from '~/utils/routerHelper';
+import { CloseBold, Select } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
+import { routeRetentionDetail } from '~/utils/routerHelper'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-const {t} = useI18n()
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "a-retention",
+  id: 'a-retention',
   api: (pageParams: any) =>
-    adminApi.api.postPolicyRetentionsPage({...pageParams, ...extraParams}),
+    adminApi.api.postPolicyRetentionsPage({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "policyName", title: "hp.policyName", fixed: "left"},
+    { field: 'policyName', title: 'hp.policyName', fixed: 'left' },
     {
-      field: "documentType", title: "docType_documentType",
+      field: 'documentType', title: 'docType_documentType',
       slots: {
-        default: "documentType",
+        default: 'documentType'
       }
     },
     {
-      field: "periodNum", title: "rp.period",
+      field: 'periodNum', title: 'rp.period',
       slots: {
-        default: "periodNum",
+        default: 'periodNum'
       }
     },
     {
-      field: "createdDate",
-      title: "filePolicies_CreationDate",
-      formatter({cellValue}: any) {
+      field: 'createdDate',
+      title: 'filePolicies_CreationDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
     {
-      field: 'isAuto', title: 'rp.isAuto', width: 150,
-      slots: {
-        default: "isAuto",
-      },
+      field: 'approvalId',
+      title: 'workflowEditor.approver',
     },
     {
-      field: "active",
-      title: "filePolicies_PolicyStatus",
+      field: 'isAuto', title: 'rp.isAuto', width: 200,
       slots: {
-        default: "status",
-      },
+        default: 'isAuto'
+      }
     },
+    {
+      field: 'active',
+      title: 'filePolicies_PolicyStatus',
+      slots: {
+        default: 'status'
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "hold_edit",
+        code: 'hold_edit',
         name: t('filePolicies_RetentionPolicyEdit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDblclick(row)
-        },
+        }
       },
       {
-        code: "hold_delete",
+        code: 'hold_delete',
         name: t('filePolicies_RetentionPolicyDelete'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          deleteItem(row.id);
-        },
+        action: ({ row }: any) => {
+          deleteItem(row.id)
+        }
       },
       {
-        code: "hold_active",
+        code: 'hold_active',
         name: t('filePolicies_RetentionPolicyActivate'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleActive(row, 'A');
-        },
+        action: ({ row }: any) => {
+          handleActive(row, 'A')
+        }
       },
       {
-        code: "hold_inactive",
+        code: 'hold_inactive',
         name: t('filePolicies_RetentionPolicyInactivate'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleActive(row, 'D');
-        },
+        action: ({ row }: any) => {
+          handleActive(row, 'D')
+        }
       }
-    ],
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   },
   permissionMethod: (args: PermissionMethodParams) => {
@@ -147,13 +151,13 @@ const {
           visible: args.row.status === 'D',
           disabled: false
         }
-        break;
+        break
       case 'hold_inactive':
         return {
           visible: args.row.status === 'A',
           disabled: false
         }
-        break;
+        break
       default:
         return {
           visible: true,
@@ -161,7 +165,7 @@ const {
         }
     }
   }
-});
+})
 const RetentionAddDialogRef = ref()
 
 function handleDblclick(row) {
@@ -172,7 +176,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
   try {
     const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(row.id, isActive).then(res => res.data)
     if (!!result) {
-      row.status = isActive;
+      row.status = isActive
       ElMessage.success(t('dpMsg_success'))
     }
   } catch (error) {
@@ -190,16 +194,19 @@ async function deleteItem(id: string) {
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyRetentionsId(id)
   // query()
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('filePolicies_RetentionPolicy'), name: null}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+    modelName: t('filePolicies_RetentionPolicy'),
+    name: null
+  }))
 }
 
 async function handleCreate() {
-  DialogRef.value.handleOpen();
+  DialogRef.value.handleOpen()
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  extraParams = formModel
+  reload()
 }
 
 function handleAdd() {
@@ -209,7 +216,32 @@ function handleAdd() {
 const ResponsiveFilterRef = ref()
 
 async function getFilter() {
-  const data = await adminApi.api.getPolicyRetentionsPageConditions().then(res => res.data)
+  let data = await adminApi.api.getPolicyRetentionsPageConditions().then(res => res.data)
+  data?.unshift(
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'hp.policyName', value: 'policyName' },
+        { label: 'rp.period', value: 'periodNum' },
+        { label: 'filePolicies_CreationDate', value: 'createdDate' },
+        { label: 'workflowEditor.approver', value: 'approvalId' },
+        { label: 'filePolicies_PolicyStatus', value: 'status' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  )
   ResponsiveFilterRef.value.init(data)
 }
 
@@ -218,15 +250,15 @@ function calDate(unit: string) {
   switch (unit) {
     case 'Y':
       date = 'common_years'
-      break;
+      break
     case 'M':
       date = 'common_months'
-      break;
+      break
     case 'D':
       date = 'common_days'
-      break;
+      break
     default:
-      break;
+      break
   }
   return $i18n.t(date)
 }

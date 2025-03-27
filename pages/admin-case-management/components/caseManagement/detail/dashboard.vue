@@ -15,7 +15,7 @@
               inputKey="q"
             />
             <el-button id="CaseManagement__Detail__CaseDashboardView__Add" type="primary" @click="handleAdd()">
-              {{ $t("button.add") }}
+              {{ $t('button.add') }}
             </el-button>
           </div>
         </template>
@@ -30,74 +30,72 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from "element-plus";
-import {adminApi} from "api";
+import { ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
-const routerProvider = inject(MenuRouterKey);
-
+const routerProvider = inject(MenuRouterKey)
+const ResponsiveFilterRef = ref()
 const props = defineProps<{
   caseDetail: any;
   caseTypeId: string;
   name: string;
   currentVersion: string;
   caseDetailId: string;
-}>();
+}>()
 const pageParams = {
   pageNum: 0,
   pageSize: 20,
-  orderBy: "createdDate",
-  isDesc: true,
-};
-const {t} = useI18n();
-const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
-  id: "case-dashboard-table",
+  orderBy: 'createdDate',
+  isDesc: true
+}
+const { t } = useI18n()
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
+  id: 'case-dashboard-table',
   api: async (params: any) => {
     if (!params.orderBy) {
-      params.orderBy = "createdDate";
-      params.isDesc = false;
+      params.orderBy = 'createdDate'
+      params.isDesc = false
     }
-    if (props.currentVersion) params.versionNumber = props.currentVersion;
-    if (props.caseDetailId) params.caseTypeId = props.caseDetailId;
+    if (props.currentVersion) params.versionNumber = props.currentVersion
+    if (props.caseDetailId) params.caseTypeId = props.caseDetailId
     if (!params.caseTypeId) return {
       data: {
         entryList: [],
         totalSize: 0
       }
     }
-    return await adminApi.api.postCaseDashboardPage({...params, ...state.extraParams});
+    return await adminApi.api.postCaseDashboardPage({ ...params, ...state.extraParams })
   },
-  remoteSort: true,
   defaultSort: [
     {
-      field: "createdDate",
-      order: "desc",
-    },
+      field: 'createdDate',
+      order: 'desc'
+    }
   ],
   columns: [
     {
-      field: "label",
-      title: "table_name",
-      fixed: "left",
+      field: 'label',
+      title: 'table_name',
+      fixed: 'left'
     },
     {
-      field: "createdDate",
-      title: "workflow_createDate",
-      sortable: true,
-      formatter({cellValue}: any) {
+      field: 'createdDate',
+      title: 'workflow_createDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
     {
-      field: "modifiedDate",
-      title: "table_modifiedDate",
-      formatter({cellValue}: any) {
+      field: 'modifiedDate',
+      title: 'table_modifiedDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
     {
-      field: "userGroup",
-      title: "caseManagement.userGroup",
-    },
+      field: 'userGroup',
+      title: 'caseManagement.userGroup'
+    }
     // {
     //   field: "status",
     //   title: "dpTable_status",
@@ -106,35 +104,35 @@ const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     //   },
     // },
   ],
-  dblClickAction: ({row, column, event}: any) => {
-    handleDblclick(row);
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row)
   },
   bodyActions: [
     [
       {
-        code: "edit",
-        name: "workflowEditor.editInfo",
-        action: ({row}) => {
-          handleAdd(row);
-        },
+        code: 'edit',
+        name: 'workflowEditor.editInfo',
+        action: ({ row }) => {
+          handleAdd(row)
+        }
       },
       {
-        code: "edit",
-        name: "caseManage.editLayout",
-        action: ({row}) => {
-          handleDblclick(row);
-        },
+        code: 'edit',
+        name: 'caseManage.editLayout',
+        action: ({ row }) => {
+          handleDblclick(row)
+        }
       },
       {
-        code: "delete",
-        name: "common_delete",
-        action: ({row}) => {
-          handleDelete(row);
-        },
-      },
-    ],
-  ],
-});
+        code: 'delete',
+        name: 'common_delete',
+        action: ({ row }) => {
+          handleDelete(row)
+        }
+      }
+    ]
+  ]
+})
 // const tableSetting = {
 //   columns: [
 //     { id: '1', label: 'table_name', prop: 'label', defaultColumn: true },
@@ -161,44 +159,80 @@ const state = reactive<State>({
     paginationConfig: {
       total: 0,
       currentPage: 1,
-      pageSize: pageParams.pageSize,
+      pageSize: pageParams.pageSize
     },
-    rowKey: "id",
+    rowKey: 'id'
   },
-  extraParams: {},
-});
+  extraParams: {}
+})
 
 async function handleDblclick(row) {
-  const newItem = newCaseDashboardLink(row);
-  routerProvider?.navigateTo(newItem);
+  const newItem = newCaseDashboardLink(row)
+  routerProvider?.navigateTo(newItem)
 }
 
 async function handleDelete(row) {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  if (action !== 'confirm') return
   try {
-    state.loading = true;
-    await adminApi.api.deleteCaseDashboardId(row.id);
+    state.loading = true
+    await adminApi.api.deleteCaseDashboardId(row.id)
     reload()
     // await deleteCaseDashboardApi(row.id)
   } catch (error) {
 
   } finally {
-    state.loading = false;
+    state.loading = false
   }
 }
 
-const dialogRef = ref();
+const dialogRef = ref()
 
 function handleAdd(setting: any = null) {
-  dialogRef.value.handleOpen(setting);
-  reload();
+  dialogRef.value.handleOpen(setting)
+  reload()
 }
 
-function handleFilterFormChange(formModel) {
-  state.extraParams = formModel;
-  reload();
+function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  state.extraParams = formModel
+  reload()
 }
+
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'table_name', value: 'label' },
+        { label: 'workflow_createDate', value: 'createdDate' },
+        { label: 'table_modifiedDate', value: 'modifiedDate' },
+        { label: 'caseManagement.userGroup', value: 'userGroup' }
+        // { label: 'tableHeader_confirmAt', value: 'confirmAt' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+}
+
+onMounted(() => {
+  getFilter()
+})
+
 </script>
 <style lang="scss" scoped>
 .responsive-container {

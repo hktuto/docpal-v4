@@ -136,8 +136,8 @@ async function getFilter() {
       key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
       options: [
         { label: 'workPanel_name', value: 'name' },
-        { label: 'workPanel_accessUserGroup', value: 'access' },
-        { label: 'filePopover_fileCreatedDate', value: 'createdDate' }
+        { label: 'workPanel_accessUserGroup', value: 'groupId' },
+        { label: 'workflow_createDate', value: 'createdDate' }
       ]
     },
     {
