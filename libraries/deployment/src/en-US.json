@@ -1825,6 +1825,9 @@
   "messageTemplate_Create": "New Template",
   "messageTemplate_edit": "Edit Template",
   "messageTemplate_editTemplateVariable": "Variable",
+  "message_templateName": "Name",
+  "message_templateStatus": "Status",
+  "message_templateUsage": "Usage",
   "meta": {
     "array": "Array",
     "dataType": {
