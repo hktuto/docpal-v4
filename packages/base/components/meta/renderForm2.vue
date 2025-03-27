@@ -464,6 +464,7 @@ defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
   }
   &--disabled {
     background-color: var(--app-grey-450);
+    padding-right: var(--app-space-s);
   }
 }
 .meta-render-form {
