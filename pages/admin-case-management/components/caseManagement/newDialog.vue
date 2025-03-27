@@ -12,6 +12,7 @@
 </template>
 <script lang="ts" setup>
 import {ElMessage} from 'element-plus'
+import { adminApi} from 'api';
 import formJson from './new.vform.json'
 
 const {t} = useI18n()
