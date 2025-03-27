@@ -13,89 +13,89 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.status === 'A'" type="success">{{ $t("actions.active") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.status === 'A'" type="success">{{ $t('actions.active') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
-    <HoldDialog ref="HoldDialogRef" @update="query"/>
+    <HoldDialog ref="HoldDialogRef" @update="query" />
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
-const {t} = useI18n()
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "a-hold",
+  id: 'a-hold',
   api: (pageParams: any) =>
-    adminApi.api.postPolicyHoldsPage({...pageParams, ...extraParams}),
+    adminApi.api.postPolicyHoldsPage({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "policyName", title: "holdPolicy_name", fixed: "left"},
-    {field: "createdBy", title: "holdPolicy_creator"},
+    { field: 'policyName', title: 'holdPolicy_name', fixed: 'left' },
+    { field: 'createdBy', title: 'holdPolicy_creator' },
     {
-      field: "createdDate",
-      title: "holdPolicy_creationDate",
-      formatter({cellValue}: any) {
+      field: 'createdDate',
+      title: 'holdPolicy_creationDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
     {
-      field: "active",
-      title: "holdPolicy_status",
+      field: 'active',
+      title: 'holdPolicy_status',
       slots: {
-        default: "status",
-      },
-    },
+        default: 'status'
+      }
+    }
   ],
   bodyActions: [
     [
       {
-        code: "hold_edit",
+        code: 'hold_edit',
         name: t('holdPolicy_edit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDblclick(row)
-        },
+        }
       },
       {
-        code: "hold_delete",
+        code: 'hold_delete',
         name: t('holdPolicy_delete'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          deleteItem(row.id);
-        },
+        action: ({ row }: any) => {
+          deleteItem(row.id)
+        }
       },
       {
-        code: "hold_active",
+        code: 'hold_active',
         name: t('holdPolicy_activate'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleActive(row, 'A');
-        },
+        action: ({ row }: any) => {
+          handleActive(row, 'A')
+        }
       },
       {
-        code: "hold_inactive",
+        code: 'hold_inactive',
         name: t('holdPolicy_inactivate'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleActive(row, 'D');
-        },
+        action: ({ row }: any) => {
+          handleActive(row, 'D')
+        }
       }
-    ],
+    ]
   ],
-  dblClickAction: ({row, column, event}: any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   },
   permissionMethod: (args: PermissionMethodParams) => {
@@ -105,13 +105,13 @@ const {
           visible: args.row.status === 'D',
           disabled: false
         }
-        break;
+        break
       case 'hold_inactive':
         return {
           visible: args.row.status === 'A',
           disabled: false
         }
-        break;
+        break
       default:
         return {
           visible: true,
@@ -119,7 +119,7 @@ const {
         }
     }
   }
-});
+})
 const HoldDialogRef = ref()
 
 function handleDblclick(row) {
@@ -133,7 +133,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
   try {
     const result = await adminApi.api.patchPolicyHoldsIdStatusStatus(row.id, isActive).then(res => res.data)
     if (!!result) {
-      row.status = isActive;
+      row.status = isActive
       ElMessage.success(t('dpMsg_success'))
     }
   } catch (error) {
@@ -143,24 +143,24 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
 
 async function deleteItem(id: string) {
   const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {modelName: t('workflow_holdPolicy'), name: null}),
+    t('tip_deleteMsg', { modelName: t('workflow_holdPolicy'), name: null }),
     {
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     }
   )
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyHoldsId(id)
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('workflow_holdPolicy'), name: null}));
+  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_holdPolicy'), name: null }))
   query()
 }
 
 async function handleCreate() {
-  DialogRef.value.handleOpen();
+  DialogRef.value.handleOpen()
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  extraParams = formModel
+  reload()
 }
 
 function handleAdd() {
@@ -172,10 +172,32 @@ const ResponsiveFilterRef = ref()
 async function getFilter() {
   const data = [
     {
-      key: "status", label: "holdPolicy_status", type: "string", isMultiple: false,
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
       options: [
-        {label: "isActive", value: "A"},
-        {label: "noActive", value: "D"},
+        { label: 'holdPolicy_name', value: 'policyName' },
+        { label: 'holdPolicy_creator', value: 'createdBy' },
+        { label: 'holdPolicy_creationDate', value: 'createdDate' },
+        { label: 'holdPolicy_status', value: 'status' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    },
+    {
+      key: 'status', label: 'holdPolicy_status', type: 'string', isMultiple: false,
+      options: [
+        { label: 'isActive', value: 'A' },
+        { label: 'noActive', value: 'D' }
       ]
     }
   ]

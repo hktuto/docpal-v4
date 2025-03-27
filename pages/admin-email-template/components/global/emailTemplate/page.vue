@@ -18,66 +18,66 @@
         </div>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.enable" type="success">{{ $t('actions.activated') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
-import {routeEmailTemplateDetail, routeLayoutTemplatePage} from '~/utils/routerHelper';
+import { ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
+import { routeEmailTemplateDetail, routeLayoutTemplatePage } from '~/utils/routerHelper'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-const {t} = useI18n()
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "a-emailTemplate",
-  api: (pageParams: any) => adminApi.api.postTemplateEmailTemplatePage({...pageParams, ...extraParams}),
+  id: 'a-emailTemplate',
+  api: (pageParams: any) => adminApi.api.postTemplateEmailTemplatePage({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "label", title: "emailContentTemplate_name", fixed: "left"},
-    {field: "subject", title: "tableHeader_subject"},
-    {field: "id", title: "emailContentTemplate_id",},
-    {field: "emailLayoutName", title: "emailContentTemplate_layoutUsed",},
-    {field: "createdBy", title: "emailContentTemplate_creator",},
+    { field: 'label', title: 'emailContentTemplate_name', fixed: 'left' },
+    { field: 'subject', title: 'tableHeader_subject' },
+    { field: 'id', title: 'emailContentTemplate_id' },
+    { field: 'emailLayoutName', title: 'emailContentTemplate_layoutUsed' },
+    { field: 'createdBy', title: 'emailContentTemplate_creator' }
   ],
-  dblClickAction: ({row, column, event}: any) => {
-    handleDblclick(row);
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row)
   },
   bodyActions: [
     [
       {
-        code: "edit",
+        code: 'edit',
         name: t('emailContentTemplate_edit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDblclick(row)
-        },
+        }
       },
       {
-        code: "delete",
+        code: 'delete',
         name: t('emailContentTemplate_delete'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDeleteTemplate(row);
-        },
+        action: ({ row }: any) => {
+          handleDeleteTemplate(row)
+        }
       }
-    ],
-  ],
-});
+    ]
+  ]
+})
 
 function handleDblclick(row) {
   // router.push(`/easyFormManage/${row.id}`);
@@ -98,19 +98,19 @@ interface Template {
 
 async function handleDeleteTemplate(row: Template[]) {
   const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {modelName: t('Email.fields'), name: row.label}),
+    t('tip_deleteMsg', { modelName: t('Email.fields'), name: row.label }),
     {
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     })
   if (action !== 'confirm') return
   await adminApi.api.deleteTemplateEmailTemplateId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('Email.fields'), name: row.label}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('Email.fields'), name: row.label }))
   query({})
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  extraParams = formModel
+  reload()
 }
 
 const ResponsiveFilterRef = ref()
@@ -119,7 +119,30 @@ async function getFilter() {
   const layouts = await adminApi.api.getTemplateEmailLayoutAll().then(res => res.data)
   const filters = [
     {
-      key: "emailLayoutIds", label: "emailContentTemplate_layoutUsed", type: "string",
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'emailContentTemplate_name', value: 'label' },
+        { label: 'tableHeader_subject', value: 'subject' },
+        { label: 'emailContentTemplate_id', value: 'id' },
+        // { label: 'emailContentTemplate_layoutUsed', value: 'emailLayoutName' },
+        { label: 'emailContentTemplate_creator', value: 'createdBy' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    },
+    {
+      key: 'emailLayoutIds', label: 'emailContentTemplate_layoutUsed', type: 'string',
       options: layouts?.map(item => ({
         value: item.id,
         label: item.name

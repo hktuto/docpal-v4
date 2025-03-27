@@ -137,9 +137,9 @@ async function getFilter() {
     {
       key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
       options: [
-        { label: 'table_name', value: 'name' },
-        { label: 'tableHeader_access', value: 'access' },
-        { label: 'filePopover_fileCreatedDate', value: 'createdDate' }
+        { label: 'dashboard_name', value: 'name' },
+        { label: 'dashboard_accessUserGroup', value: 'access' },
+        { label: 'workflow_createDate', value: 'createdDate' }
       ]
     },
     {

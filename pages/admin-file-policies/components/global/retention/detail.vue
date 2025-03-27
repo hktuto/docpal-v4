@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from 'api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 import formJson from '../../retention/addDialog.vform.json'
 
-const {id} = defineProps<{
+const { id } = defineProps<{
   id: string;
 }>()
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive<any>({
   setting: {},
   activeLoading: false,
-  editLoading: false,
+  editLoading: false
 })
 const FormRendererRef = ref()
 
@@ -26,6 +26,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     await adminApi.api.putPolicyRetentions(params)
+    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('filePolicies_RetentionPolicy'), name: null }))
     emits('update')
   } catch (error) {
     init()
@@ -63,7 +64,7 @@ async function init() {
     setTimeout(async () => {
       state.setting = setting
       state.setting.actionType = setting.actionType === 'D' ? true : false
-      await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
+      await FormRendererRef.value.vFormRenderRef.setFormData({ ...state.setting })
     })
   } catch (error) {
 
@@ -85,7 +86,7 @@ onActivated(async () => {
                    v-model="state.setting.status"
                    active-value="A" inactive-value="D"
                    :loading="state.activeLoading"
-                   @change="handleSetStatus"/>
+                   @change="handleSetStatus" />
       </div>
       <div>
         <!-- <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button> -->
