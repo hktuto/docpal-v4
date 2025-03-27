@@ -27,13 +27,21 @@ const dialogOpened = ref(false)
 const iframeUrl = ref('')
 async function openPreivew(){
     try{
-
-        console.log(workflowFormDetail)
-        loading.value = true;
-        previewFile.blob = null;
-        const xmlJson = bpmnStringToJson(props.xml)
-        const targetTask = xmlJson.flatObj[props.attr_documentStepId]
-        const formData = await workflowFormDetail?.getFormData(false)
+      loading.value = true;
+      previewFile.blob = null;
+      const xmlJson = bpmnStringToJson(props.xml)
+      const targetTask = xmlJson.flatObj[props.attr_documentStepId]
+      const latestFormData = await workflowFormDetail?.getFormData(false)
+      // merge latestFormData and props.formData, if item in object is null, use latestFormData
+      const mergeFormData = Object.keys(props.formData).reduce((prev:any, key:string) => {
+        if(props.formData[key]) {
+          prev[key] = props.formData[key]
+        }else{
+          prev[key] = latestFormData[key]
+        }
+        return prev
+      }, {})
+      console.log("open preview",  mergeFormData)
         // get template id
         const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
@@ -48,7 +56,7 @@ async function openPreivew(){
         Object.keys(varibleList).forEach((key:string) => {
             if(varibleList[key] ) {
                 const vari = varibleList[key].replace('${variables:get(','').replace(')}', '')
-                const value = formData[vari]
+                const value = mergeFormData[vari]
                 if(value) {
                     map[key] = value
                 }else{

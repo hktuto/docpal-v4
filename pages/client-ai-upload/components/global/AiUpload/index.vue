@@ -174,7 +174,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         code: 'delete',
         name: 'Delete',
         action: ({ row }: any) => {
-          handleDelete(row.id)
+          handleDelete(row.uploadId)
         }
       }
     ]
@@ -213,12 +213,12 @@ async function handleDelete(id: any) {
         cancelButtonText: t('common_close')
     }).catch((action) => { return action })
   if (action !== 'confirm') return
-  const formData = new FormData()
+    const formData = new FormData()
     formData.append('userId', userId.value)
     formData.append('uploadId', id)
-    await clientApi.instance.post(`/nuxeo/document/batchCancel`, {
-        data: formData,
-        headers: {
+    console.log("formData", formData, id, userId.value)
+    await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData,{
+      headers: {
             'Content-Type': 'multipart/form-data'
         }
     })

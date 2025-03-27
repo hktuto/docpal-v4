@@ -169,6 +169,13 @@ function refreshData(){
   getForm()
 }
 
+watch(() => node, () => {
+  refreshData()
+},{
+  immediate: true,
+  deep: true
+})
+
 onMounted(async() => {
     setUpListener()
     refreshData()
