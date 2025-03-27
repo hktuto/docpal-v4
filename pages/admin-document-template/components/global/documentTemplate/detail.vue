@@ -60,11 +60,23 @@ async function getVariables() {
     const templateVariable = [...new Set(JSON.parse(res.templateVariable))]
     state.variables = []
     templateVariable.forEach((item, index) => {
-      state.variables.push({
-        name: item,
-        type: 'input',
-        required: true
-      })
+      // check item may be an stringify json
+      try {
+        const data = JSON.parse(item)
+        const firstKey = Object.keys(data)[0]
+        state.variables.push({
+          name: firstKey,
+          type: 'json-editor',
+          required: false,
+        })
+      }catch(err){
+
+        state.variables.push({
+          name: item,
+          type: 'input',
+          required: true
+        })
+      }
     });
     nextTick(() => {
       FormVariablesRendererRef.value.createJson(state.variables)

@@ -168,7 +168,9 @@ const FormRendererRef = ref()
     async function getSlotData(refList: any, needValidation: boolean) {
         let pList: any = []
         Object.keys(refList).forEach((key) => {
-            pList.push(refList[key].getFormData(needValidation))
+            if(refList[key] && refList[key].getFormData) {
+                pList.push(refList[key].getFormData(needValidation))
+            }
         });
         const data = await Promise.all(pList)
         return data.reduce((prev, item) => {
