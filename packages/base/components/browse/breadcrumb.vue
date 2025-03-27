@@ -49,6 +49,8 @@ async function getBreadcrumb() {
             const element = document.getElementById('breadcrumb-' + item.id)
             if (element) {
                 dropItems.push(createDropableBreadcrumb(element, item, listProvider.tableRef))
+            }else{
+              console.log("breadcrumb element not found")
             }
         })
     })
