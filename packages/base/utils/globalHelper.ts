@@ -4,7 +4,11 @@ import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs'
 export const deepCopy  = (data:any) => {
     if (!data) return {}
-    return structuredClone(data);
+    try{
+      return structuredClone(data);
+    }catch(error){
+      return JSON.parse(JSON.stringify(data))
+    }
 }
 
 export function downloadBlob (blob:any, name:string, type = "application/octet-stream") {
