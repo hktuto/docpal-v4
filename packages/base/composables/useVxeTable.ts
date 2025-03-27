@@ -494,6 +494,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 subtree: true
             })
             nextTick(() => {
+                console.log('init table observer')
                 params.childChangeHander()
             })
         }
