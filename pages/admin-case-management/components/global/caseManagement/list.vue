@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import {CaseManagementListProviderKey, MenuRouterKey} from '#imports';
-import {CaseManagementNewDialog, CaseManagementSaveAsDialog, ResponsiveFilter} from '#components'
-import {adminApi} from 'api'
-import {newCaseManagementDetail} from '~/utils/caseManagementHelper';
+import { CaseManagementListProviderKey, MenuRouterKey } from '#imports'
+import { CaseManagementNewDialog, CaseManagementSaveAsDialog, ResponsiveFilter } from '#components'
+import { adminApi } from 'api'
+import { newCaseManagementDetail } from '~/utils/caseManagementHelper'
 import tableComponent from '../../caseManagement/list/table.vue'
 
 const routerProvider = inject(MenuRouterKey)
@@ -16,13 +16,13 @@ const props = defineProps<{
   orderBy?: string,
   isDesc?: boolean,
   filters?: any
-}>();
-const {pageNum, pageSize, isDesc, orderBy, filters} = toRefs(props)
-const filterFormdata = ref();
+}>()
+const { pageNum, pageSize, isDesc, orderBy, filters } = toRefs(props)
+const filterFormdata = ref()
 const dialogRef = ref<InstanceType<typeof CaseManagementNewDialog>>()
 const saveAsDialogRef = ref<InstanceType<typeof CaseManagementSaveAsDialog>>()
 
-function updatePageParams({pageNum, pageSize, sort, filters}: any) {
+function updatePageParams({ pageNum, pageSize, sort, filters }: any) {
   routerProvider?.updateProps({
     pageNum,
     pageSize,
@@ -33,8 +33,10 @@ function updatePageParams({pageNum, pageSize, sort, filters}: any) {
 
 const tableRef = ref<InstanceType<typeof tableComponent>>()
 
-function handleFilterFormChange(formData: any) {
-  filterFormdata.value = formData
+function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  filterFormdata.value = formModel
   tableRef.value?.reload()
 }
 
@@ -44,7 +46,7 @@ function openLatestVersion(data: any, openInNewTab: boolean = false) {
 }
 
 const selectedItem = ref({
-  latestVersion: ""
+  latestVersion: ''
 })
 
 function saveAsNewCase(data: any) {
@@ -71,27 +73,56 @@ function reload() {
   tableRef.value?.reload()
 }
 
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'caseManagement_name', value: 'name' },
+        { label: 'workflow_createDate', value: 'createdDate' },
+        { label: 'table_modifiedDate', value: 'modifiedDate' },
+        { label: 'dpTable_status', value: 'enable' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  responsiveFilterRef.value.init(data)
+}
+
 onMounted(() => {
+  getFilter()
   if (filters.value) {
     filterFormdata.value = filters.value
     responsiveFilterRef.value?.setValue('name', filters.value.name)
   }
 })
 
-function actionPermission({row, code}: PermissionMethodParams) {
+function actionPermission({ row, code }: PermissionMethodParams) {
   const isProdcution = row.latestVersion === row.productionVersion
   const hasProdcution = !!row.productionVersion
   switch (code) {
     case 'edit_latest_version':
-      return {visible: !isProdcution, disabled: isProdcution}
+      return { visible: !isProdcution, disabled: isProdcution }
     case 'edit_latest_version_new_tab':
-      return {visible: !isProdcution, disabled: isProdcution}
+      return { visible: !isProdcution, disabled: isProdcution }
     case 'edit_production_version':
-      return {visible: hasProdcution, disabled: !isProdcution}
+      return { visible: hasProdcution, disabled: !isProdcution }
     case 'edit_production_new_tab':
-      return {visible: hasProdcution, disabled: !isProdcution}
+      return { visible: hasProdcution, disabled: !isProdcution }
     default:
-      return {visible: true, disabled: false}
+      return { visible: true, disabled: false }
   }
 }
 
@@ -103,12 +134,12 @@ async function handleAfterNewOrSaveAs(data: any) {
 
 provide(CaseManagementListProviderKey, {
   getListApi: (params: any) => {
-    let filters: any = undefined;
+    let filters: any = undefined
     if (filterFormdata.value) {
       Object.keys(filterFormdata.value).forEach(key => {
         if (filterFormdata.value[key]) params[key] = filterFormdata.value[key]
       })
-      filters = {...filterFormdata.value}
+      filters = { ...filterFormdata.value }
     }
     routerProvider?.updateProps({
       pageNum: params.pageNum + 1,
@@ -147,9 +178,9 @@ provide(CaseManagementListProviderKey, {
         </div>
       </template>
     </CaseManagementListTable>
-    <CaseManagementNewDialog ref="dialogRef" @refresh="reload"/>
+    <CaseManagementNewDialog ref="dialogRef" @refresh="reload" />
     <CaseManagementSaveAsDialog ref="saveAsDialogRef" :copyVersion="selectedItem.latestVersion" :data="selectedItem"
-                                @close="reload"/>
+                                @close="reload" />
   </div>
 </template>
 

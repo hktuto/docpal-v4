@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import {adminApi} from 'api';
-import {ElNotification} from "element-plus";
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 
+const { t } = useI18n()
 const dialogVisible = ref(false)
 
 const emits = defineEmits(['close', 'success'])
 const newForm = ref({
   name: '',
-  header: "",
-  body: "",
+  header: '',
+  body: '',
   bodyParameters: [],
-  footer: "",
-  textMessage: "",
-  confirmButtonName: "",
-  language: "en_US"
+  footer: '',
+  textMessage: '',
+  confirmButtonName: '',
+  language: 'en_US'
 })
 
 function open() {
@@ -24,20 +25,20 @@ function open() {
 function reset() {
   newForm.value = {
     name: '',
-    header: "",
-    body: "",
+    header: '',
+    body: '',
     bodyParameters: [],
-    footer: "",
-    textMessage: "",
-    confirmButtonName: "",
-    language: "en_US"
+    footer: '',
+    textMessage: '',
+    confirmButtonName: '',
+    language: 'en_US'
   }
 }
 
 async function submit() {
   if (newForm.value.name.trim() === '') return
   const res = await adminApi.api.postMessageTemplateCreate(newForm.value)
-  ElNotification.success('Success')
+  ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.messageTemplate'), name: null }))
   emits('success', res.data)
   dialogVisible.value = false
 }
@@ -51,7 +52,7 @@ defineExpose({
   <ElDialog v-model="dialogVisible" append-to-body :title="$t('messageTemplate_Create')">
     <ElForm :model="newForm" label-position="top">
       <ElFormItem label="Name">
-        <ElInput v-model="newForm.name" placeholder="Name"/>
+        <ElInput v-model="newForm.name" placeholder="Name" />
       </ElFormItem>
     </ElForm>
     <template #footer>

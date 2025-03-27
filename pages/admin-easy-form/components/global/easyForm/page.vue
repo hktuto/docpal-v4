@@ -2,162 +2,200 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputKey="name"
-          @form-change="handleFilterFormChange"
-          inputPlaceHolder="easyForm_filter"
-        />
-        <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
-          {{ $t("easyForm_createForm") }}
-        </el-button>
+        <div class="actions">
+          <ResponsiveFilter
+            ref="ResponsiveFilterRef"
+            inputKey="name"
+            @form-change="handleFilterFormChange"
+            inputPlaceHolder="easyForm_filter"
+          />
+          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
+            {{ $t('easyForm_createForm') }}
+          </el-button>
+        </div>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.active") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("Deactivated") }}</el-tag>
+        <el-tag v-if="row.enable" type="success">{{ $t('actions.active') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('Deactivated') }}</el-tag>
       </template>
     </VxeGrid>
-    <EasyFormNewDialog ref="DialogRef" @refresh="query({})"/>
+    <EasyFormNewDialog ref="DialogRef" @refresh="query({})" />
   </div>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
-import {routeEasyFormDetail} from "~/util/easyFormRouterHelper";
+import { adminApi } from 'api'
+import { routeEasyFormDetail } from '~/util/easyFormRouterHelper'
 
-const routerProvider = inject(MenuRouterKey);
+const ResponsiveFilterRef = ref()
+const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
-  throw new Error("MenuRouterKey is not provided");
+  throw new Error('MenuRouterKey is not provided')
 }
-const {t} = useI18n();
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "a-easyForm",
+  id: 'a-easyForm',
   api: (pageParams: any) =>
-    adminApi.api.postFormDesignPage({...pageParams, ...extraParams}),
+    adminApi.api.postFormDesignPage({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "name", title: "easyForm.name", fixed: "left", type: "checkbox"},
+    { field: 'name', title: 'easyForm.name', fixed: 'left', type: 'checkbox' },
     {
-      field: "createdDate",
-      title: "easyForm_creationDate",
-      formatter({cellValue}: any) {
+      field: 'createdDate',
+      title: 'easyForm_creationDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
     {
-      field: "modifiedDate",
-      title: "table_modifiedDate",
-      formatter({cellValue}: any) {
+      field: 'modifiedDate',
+      title: 'table_modifiedDate',
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
+      }
     },
     {
-      field: "status",
-      title: "easyForm_status",
+      field: 'status',
+      title: 'easyForm_status',
       slots: {
-        default: "status",
-      },
+        default: 'status'
+      }
     },
-    {field: "processDefinitionKey", title: "easyForm.submitWorkflow"},
+    { field: 'processDefinitionKey', title: 'easyForm.submitWorkflow' }
   ],
   bodyActions: [
     [
       {
-        code: "edit_easyForm",
-        name: t("easyForm_edit"),
+        code: 'edit_easyForm',
+        name: t('easyForm_edit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDblclick(row);
-        },
+        action: ({ row }: any) => {
+          handleDblclick(row)
+        }
       },
       {
-        code: "active",
-        name: t("easyForm_activate"),
+        code: 'active',
+        name: t('easyForm_activate'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleActive(row, true);
-        },
+        action: ({ row }: any) => {
+          handleActive(row, true)
+        }
       },
       {
-        code: "inactive",
-        name: t("easyForm_inactivate"),
+        code: 'inactive',
+        name: t('easyForm_inactivate'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleActive(row, false);
-        },
-      },
-    ],
+        action: ({ row }: any) => {
+          handleActive(row, false)
+        }
+      }
+    ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
-    if (args.code === "inactive") {
+    if (args.code === 'inactive') {
       return {
         visible: args.row.enable,
-        disabled: false,
-      };
+        disabled: false
+      }
     }
-    if (args.code === "active") {
+    if (args.code === 'active') {
       return {
         visible: !args.row.enable,
-        disabled: false,
-      };
+        disabled: false
+      }
     }
     return {
       visible: true,
-      disabled: false,
-    };
+      disabled: false
+    }
   },
-  dblClickAction: ({row, column, event}: any) => {
-    handleDblclick(row);
-  },
-});
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row)
+  }
+})
 
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeEasyFormDetail(row), false);
+  routerProvider?.navigateTo(routeEasyFormDetail(row), false)
 }
 
 async function handleActive(row: any, isActive: boolean) {
   try {
-    const type = isActive ? "patchFormDesignEnableId" : "patchFormDesignDisableId";
-    const result = await adminApi.api[type](row.id).then((res) => res.data);
+    const type = isActive ? 'patchFormDesignEnableId' : 'patchFormDesignDisableId'
+    const result = await adminApi.api[type](row.id).then((res) => res.data)
     if (!!result) {
-      row.enable = isActive;
+      row.enable = isActive
     }
   } catch (error) {
   }
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  extraParams = formModel
+  reload()
 }
 
-const DialogRef = ref();
+const DialogRef = ref()
 
 async function handleAdd() {
-  DialogRef.value.handleOpen();
+  DialogRef.value.handleOpen()
 }
+
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'easyForm.name', value: 'name' },
+        { label: 'easyForm_creationDate', value: 'createdDate' },
+        { label: 'table_modifiedDate', value: 'modifiedDate' },
+        { label: 'easyForm_status', value: 'enable' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+}
+
+onMounted(() => {
+  getFilter()
+})
 </script>
 <style lang="scss" scoped>
-:deep .vxe-buttons--wrapper {
+.actions {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  flex-flow: row nowrap;
+  gap: var(--app-space-xs);
+  align-items: center;
+  justify-content: flex-start;
+  --icon-size: var(--app-font-size-m);
+}
 
-  .responsive-container {
-    width: 15%;
-
-    :deep .el-input {
-      width: 200px;
-    }
-  }
+:deep .el-input {
+  width: 200px;
 }
 </style>

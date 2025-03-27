@@ -4,21 +4,27 @@ import {
   newMessageTemplateDetailPageRoute,
   newMessageTemplateTemplatePageRoute
 } from '~/utils/messageTemplateHelper'
-import {adminApi} from 'api';
-import {ElMessage, ElMessageBox} from "element-plus";
+import { adminApi } from 'api'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
-
-const tableRef = ref();
-const newTemplateRef = ref();
-const duplicateTemplateRef = ref();
-const deleteDialogRef = ref();
+const ResponsiveFilterRef = ref()
+const tableRef = ref()
+const newTemplateRef = ref()
+const duplicateTemplateRef = ref()
 
 function itemReload() {
   if (tableRef.value) {
     tableRef.value.reload()
   }
+}
+
+function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  tableRef.value.handleFilterFormChange(formModel)
+  itemReload()
 }
 
 provide(MessageTemplateProviderKey, {
@@ -39,11 +45,11 @@ provide(MessageTemplateProviderKey, {
     // call delete api
     // deleteDialogRef.value?.open(row)
     let action = await ElMessageBox.confirm(
-      t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: null}),
+      t('tip_deleteMsg', { modelName: t('adminMenu.messageTemplate'), name: null }),
       {
-        confirmButtonText: t('common_confirmDelete'),
+        confirmButtonText: t('common_confirmDelete')
       }
-    );
+    )
     if (action !== 'confirm') return
     await adminApi.api.deleteMessageTemplateId(row.id)
     ElMessage.success(t('vxe.grid.delSuccess'))
@@ -51,6 +57,39 @@ provide(MessageTemplateProviderKey, {
   }
 })
 
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'message_templateName', value: 'templateName' },
+        { label: 'userSetting_language', value: 'language' },
+        { label: 'message_templateStatus', value: 'whatsAppStatus' },
+        { label: 'role.creator', value: 'createdBy' },
+        { label: 'workflow_editorLastModified', value: 'modifiedBy' },
+        { label: 'table_last_update', value: 'modifiedDate' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+}
+
+onMounted(() => {
+  getFilter()
+})
 </script>
 
 
@@ -58,13 +97,16 @@ provide(MessageTemplateProviderKey, {
   <div class="pageContainer">
     <MessageTemplateTable ref="tableRef">
       <template #toolbar_buttons>
-        <ElButton id="MessageTemplate_NewTemplate" type="primary" @click="newTemplateRef.open()">
-          {{ $t('messageTemplate_Create') }}
-        </ElButton>
+        <div class="actions">
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+          <ElButton id="MessageTemplate_NewTemplate" type="primary" @click="newTemplateRef.open()">
+            {{ $t('messageTemplate_Create') }}
+          </ElButton>
+        </div>
       </template>
     </MessageTemplateTable>
-    <MessageTemplateNewDialog ref="newTemplateRef" @success="itemReload"/>
-    <MessageTemplateDuplicateDialog ref="duplicateTemplateRef" @success="itemReload"/>
+    <MessageTemplateNewDialog ref="newTemplateRef" @success="itemReload" />
+    <MessageTemplateDuplicateDialog ref="duplicateTemplateRef" @success="itemReload" />
   </div>
 </template>
 
@@ -75,5 +117,15 @@ provide(MessageTemplateProviderKey, {
   overflow: hidden;
   position: relative;
   padding: var(--app-space-xs);
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--app-space-xs);
+  align-items: center;
+  justify-content: flex-start;
+  --icon-size: var(--app-font-size-m);
 }
 </style>
