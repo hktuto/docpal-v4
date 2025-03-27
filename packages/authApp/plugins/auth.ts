@@ -1,68 +1,72 @@
-import {defineNuxtPlugin, useAuth, useKeyCloakState} from '#imports'
-import {clientApi, adminApi, publicApi} from 'api'
-import Keycloak from 'keycloak-js'
-import {requestSuccessHelper, requestErrorHelper, responseSuccessHelper, responseErrorHelper} from '~/utils/axiosResponseHelper'
+import { defineNuxtPlugin, useAuth, useKeyCloakState } from '#imports';
+import { clientApi, adminApi, publicApi } from 'api';
+import Keycloak from 'keycloak-js';
+import { requestSuccessHelper, requestErrorHelper, responseSuccessHelper, responseErrorHelper } from '~/utils/axiosResponseHelper';
 
 export default defineNuxtPlugin(async (nuxtApp) => {
-    const keyCloakState = useKeyCloakState()
-    const isSSO = useIsSSO()
-    const isLDAP = useIsLDAP()
-    nuxtApp.hook('app:created', async() => {
-        
-        const {data} = await clientApi.api.getRelationGetkeycloakproperty()
-        keyCloakState.value = new Keycloak({
-            "url": data?.keyCloakProperty?.url,
-            "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
-            "clientId": data?.keyCloakProperty?.clientId || "",
-            // @ts-ignore
-            "ssl-required": data?.keyCloakProperty.sslRequired || "",
-            "public-client": data?.keyCloakProperty?.publicClient || "",
-            "confidential-port": data?.keyCloakProperty?.confidentialPort || ""
-        })
-        isSSO.value = !!data?.keyCloakProperty?.enableSSO
-        isLDAP.value = !!data?.isLdap
-    })
+  const keyCloakState = useKeyCloakState();
+  const isSSO = useIsSSO();
+  const isLDAP = useIsLDAP();
+  nuxtApp.hook('app:created', async () => {
+    const publicPage = usePublicPageState();
+    // check is path public
+    if (publicPage.value.includes(window.location.pathname)) {
+      return;
+    }
+    const { data } = await clientApi.api.getRelationGetkeycloakproperty();
+    keyCloakState.value = new Keycloak({
+      "url": data?.keyCloakProperty?.url,
+      "realm": data?.keyCloakProperty?.realm || "", // ldap: docpal_third_party
+      "clientId": data?.keyCloakProperty?.clientId || "",
+      // @ts-ignore
+      "ssl-required": data?.keyCloakProperty.sslRequired || "",
+      "public-client": data?.keyCloakProperty?.publicClient || "",
+      "confidential-port": data?.keyCloakProperty?.confidentialPort || ""
+    });
+    isSSO.value = !!data?.keyCloakProperty?.enableSSO;
+    isLDAP.value = !!data?.isLdap;
+  });
 
-    nuxtApp.hook('app:mounted', async() => {
-        const publicPage = usePublicPageState()
-        // check is path public
-        if(publicPage.value.includes(window.location.pathname)){ 
-            return
-        }
-        const isSuperAdmin = sessionStorage.getItem('superAdmin')
-        if(isSuperAdmin){
-            await useAuth().verifly()
-        }else{
-            await useAuth().login()
-        }
-    })
+  nuxtApp.hook('app:mounted', async () => {
+    const publicPage = usePublicPageState();
+    // check is path public
+    if (publicPage.value.includes(window.location.pathname)) {
+      return;
+    }
+    const isSuperAdmin = sessionStorage.getItem('superAdmin');
+    if (isSuperAdmin) {
+      await useAuth().verifly();
+    } else {
+      await useAuth().login();
+    }
+  });
 
-    // set refresh token to clientApi and adminApi
-    publicApi.instance.interceptors.request.use(
-        (config) => {
-            return requestSuccessHelper(config, publicApi.instance)
-        },
-        (error) => requestErrorHelper(error, publicApi.instance)
-    )
-    publicApi.instance.interceptors.response.use(
-        (config) => responseSuccessHelper(config, publicApi.instance),
-        (error) => responseErrorHelper(error, publicApi.instance)
-    )
-    clientApi.instance.interceptors.request.use(
-        (config) => requestSuccessHelper(config, clientApi.instance),
-        (error) => requestErrorHelper(error, clientApi.instance)
-    )
-    clientApi.instance.interceptors.response.use(
-        (config) => responseSuccessHelper(config, clientApi.instance),
-        (error) => responseErrorHelper(error, clientApi.instance)
-    )
-    adminApi.instance.interceptors.request.use(
-        (config) => requestSuccessHelper(config, adminApi.instance),
-        (error) => requestErrorHelper(error, adminApi.instance)
-    )
-    adminApi.instance.interceptors.response.use(
-        (config) => responseSuccessHelper(config, adminApi.instance),
-        (error) => responseErrorHelper(error, adminApi.instance)
-    )
+  // set refresh token to clientApi and adminApi
+  publicApi.instance.interceptors.request.use(
+    (config) => {
+      return requestSuccessHelper(config, publicApi.instance);
+    },
+    (error) => requestErrorHelper(error, publicApi.instance)
+  );
+  publicApi.instance.interceptors.response.use(
+    (config) => responseSuccessHelper(config, publicApi.instance),
+    (error) => responseErrorHelper(error, publicApi.instance)
+  );
+  clientApi.instance.interceptors.request.use(
+    (config) => requestSuccessHelper(config, clientApi.instance),
+    (error) => requestErrorHelper(error, clientApi.instance)
+  );
+  clientApi.instance.interceptors.response.use(
+    (config) => responseSuccessHelper(config, clientApi.instance),
+    (error) => responseErrorHelper(error, clientApi.instance)
+  );
+  adminApi.instance.interceptors.request.use(
+    (config) => requestSuccessHelper(config, adminApi.instance),
+    (error) => requestErrorHelper(error, adminApi.instance)
+  );
+  adminApi.instance.interceptors.response.use(
+    (config) => responseSuccessHelper(config, adminApi.instance),
+    (error) => responseErrorHelper(error, adminApi.instance)
+  );
 
-})
+});

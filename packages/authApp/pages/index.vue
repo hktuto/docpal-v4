@@ -1,52 +1,47 @@
 <script lang="ts" setup>
-
 const { loggedIn } = useAuth()
 const authReadyState = useAuthReadyState()
 
 const localeReady = ref(false)
 watch(loggedIn, (bool) => {
-  if(bool) {
+  if (bool) {
     // loadLocaleMessages(locale.value)
-    authReadyState.value = true;
+    authReadyState.value = true
   }
+}, {
+  deep: true,
+  immediate: true
 })
-
-
-
 </script>
 
 <template>
-   <AuthState>
-        <template #default="{ loggedIn, logout }">
-            <AppEntry @ready="localeReady = true">
-                <template v-if="localeReady" #sidebar>
-                    <AppMenu class="sideMenu">
-                        <template #header>
-                            <AuthUser />
-                            <AuthSetting />
-                        </template>
-                        <template #footer>
-                        </template>
-                    </AppMenu>
-                </template>
-            </AppEntry>
-            
+  <AuthState>
+    <template #default="{ loggedIn, logout }">
+      <AppEntry @ready="localeReady = true">
+        <template v-if="localeReady" #sidebar>
+          <AppMenu class="sideMenu">
+            <template #header>
+              <AuthUser />
+              <AuthSetting />
+            </template>
+            <template #footer> </template>
+          </AppMenu>
         </template>
-        <template #placeholder>
-            <LoadingBg >
-                <h1 style="color: #fff;">{{ $t('loading') }}</h1>
-            </LoadingBg>
-        </template>
-    </AuthState>
-
+      </AppEntry>
+    </template>
+    <template #placeholder>
+      <LoadingBg>
+        <h1 style="color: #fff">{{ $t('loading') }}</h1>
+      </LoadingBg>
+    </template>
+  </AuthState>
 </template>
 
 
 <style scoped lang="scss">
-
-.logoContainer{
-    // padding: var(--menu-item-padding);
-    --icon-size: calc(var(--icon-font-size) + (var(--menu-item-padding) * 2));
+.logoContainer {
+  // padding: var(--menu-item-padding);
+  --icon-size: calc(var(--icon-font-size) + (var(--menu-item-padding) * 2));
 }
 </style>
 
