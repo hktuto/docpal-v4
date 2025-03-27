@@ -213,6 +213,14 @@ function setUpListener(){
     })
 }
 
+watch(() => node, async () => {
+  console.log("node changed")
+  setData()
+}, {
+    immediate: true,
+    deep: true
+})
+
 onMounted(async () => {
     setUpListener()
     await getList()
