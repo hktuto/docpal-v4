@@ -19,7 +19,7 @@ const useLayout = vi.fn(() => {
 })
 const deepCopy  = (data:any) => {
   if (!data) return {}
-  return JSON.parse(JSON.stringify(data));
+  return structuredClone(data);
 }
 const $i18n = () => {
 }
