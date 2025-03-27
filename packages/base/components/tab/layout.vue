@@ -9,7 +9,14 @@ const emits = defineEmits(['ready'])
 
 
 const minSize = computed(() => {
-    return (layout ? layout.length : 1) * 640;
+    // get container size 
+    const appContent = document.querySelector('.appContent');
+    if (!appContent) return window.innerWidth;
+    const appContentRect = appContent.getBoundingClientRect();
+    console.log(appContentRect.width)
+    const layoutWIdth = (layout ? layout.length : 1) * 640;
+    // if latoutWidth is smaller than appContent width, return appContent width
+    return Math.min(layoutWIdth, appContentRect.width);
 })
 
 function layoutReadyHandler(){
@@ -17,9 +24,13 @@ function layoutReadyHandler(){
 }
 const splitRef = ref<InstanceType<typeof Splitpanes>>()
 
+const panelMinWidth = computed(() => {
+  return 100 / (layout ? layout.length : 1) 
+})
 
 onMounted(() => {
     emits('ready')
+
 })
 
 </script>
@@ -27,7 +38,7 @@ onMounted(() => {
 <template>
     <div class="layoutContainer" :style="`--panel-min-size: ${minSize}px`">
         <splitpanes vertical ref="splitRef" @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
-            <Pane v-for="(tab, index) in layout" :key="tab.id"   >
+            <Pane v-for="(tab, index) in layout" :key="tab.id" :minSize="panelMinWidth" >
                 <TabPanel :panel="tab" :index="index"/>
             </Pane>
         </splitpanes>
@@ -39,7 +50,7 @@ onMounted(() => {
 .layoutContainer{
     --panel-border-radius: var(--app-border-radius-m);
     height: 100%;
-    width: 100%;
+    width: var(--panel-min-size);
     border-radius: var(--app-border-radius-m);
     box-shadow: var(--app-shadow-s);
     position: relative;

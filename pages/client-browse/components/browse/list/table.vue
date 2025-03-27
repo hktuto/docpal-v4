@@ -441,6 +441,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             showHeader: false,
             highlight: true,
             range: false,
+            trigger:'cell',
             visibleMethod: ({row}: any) => !row.isFolder
         },
         rowConfig: {
