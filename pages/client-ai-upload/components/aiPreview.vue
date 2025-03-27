@@ -19,7 +19,9 @@ const fileType = computed(() => {
 
 async function getBlobFile(id:string) {
   state.loading = true;
-  state.blob = await clientApi.api.getNuxeoDocumentDownloadTempFileId(id as any);
+  state.blob = await clientApi.api.getNuxeoDocumentDownloadTempFileId(id as any, {
+    format: 'blob'
+  });
   state.encodeUrl = URL.createObjectURL(state.blob);
   state.loading = false;
 }
