@@ -67,6 +67,16 @@ function fieldUpdate(item:any, val:string, index:number) {
     console.log("fieldUpdate", form.value)
 }
 
+const allInfo = computed(() => {
+  const formInfo = deepCopy(caseEditorProvider?.allInfo.value)
+  //defeault fields 
+  formInfo.unshift({
+    value:"case_id",
+    label: "case id",
+  })
+  return formInfo
+})
+
 watch(() => [workflowInfos],() => {
     // workflowinfo or form change, should recalculate form data
     makeForm()
@@ -90,7 +100,7 @@ watch(() => [workflowInfos],() => {
             </div>
             <div class="col case">
                 <ElSelect v-model="item.caseInfoId" clearable placeholder="Select Case Infomation" @change="(val) => fieldUpdate(item, val, index)">
-                    <ElOption v-for="item in caseEditorProvider?.allInfo.value" :key="item.value" :label="item.label" :value="item.value" />
+                    <ElOption v-for="item in allInfo" :key="item.value" :label="item.label" :value="item.value" />
                 </ElSelect>
             </div>
         </div>
