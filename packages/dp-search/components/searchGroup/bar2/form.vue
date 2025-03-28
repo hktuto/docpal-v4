@@ -3,7 +3,7 @@
     <el-form-item :label="$t('search.conditionType')">
       <el-select-v2
         v-model="state.form.queryType"
-        :options="conditionType"
+        :options="options.conditionType"
         :placeholder="$t('common_selectOccupancyContent')"
         size="small" clearable filterable
         @clear="emits('selectClear')"
@@ -159,11 +159,12 @@
 </template>
 <script lang="ts" setup>
 import {clientApi} from 'api'
-import {conditionType, getMetadataOptions, languages, mimeTypes, getGroupList, sizes} from '~/utils/formOptions'
+import {conditionType, getMetadataOptions, languages, mimeTypes, getGroupList, sizes, sortListWithI18n} from '~/utils/formOptions'
 import {isJSON} from '~/utils/searchFormHelper'
 
 const props = defineProps(['form'])
 const emits = defineEmits(['selectClear', 'formChange'])
+const { t } = useI18n()
 const state = reactive<any>({
   form: {},
   metadataType: {
@@ -242,15 +243,20 @@ onMounted(async () => {
     getGroupList(),
     getMetadataOptions()
   ])
-  options.docType = docType.data?.map((item: any) => ({label: item.name, value: item.name}))
-  options.users = users.data?.map((item: any) => ({label: item.username, value: item.userId}))
-  options.collections = collections?.data?.entryList?.map((item: any) => ({
+  options.groupList = sortListWithI18n(groupList)
+  options.metadata = sortListWithI18n(metadata)
+  options.conditionType = sortListWithI18n(conditionType)
+  const tagData = tags.data?.map((item: any) => ({label: item, value: item}))
+  options.tags = sortListWithI18n(tagData)
+  const docTypeData = docType.data?.map((item: any) => ({label: item.name, value: item.name}))
+  options.docType = sortListWithI18n(docTypeData)
+  const collectionData = collections?.data?.entryList?.map((item: any) => ({
     label: item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
     value: item.id
   }))
-  options.tags = tags.data?.map((item: any) => ({label: item, value: item}))
-  options.groupList = groupList
-  options.metadata = metadata
+  options.collections = sortListWithI18n(collectionData)
+  const userData = users.data?.map((item: any) => ({label: item.username, value: item.userId}))
+  options.users  = sortListWithI18n(userData)
 })
 watch(() => props.form, (newValue) => {
   state.form = {...newValue, ...newValue.option}
