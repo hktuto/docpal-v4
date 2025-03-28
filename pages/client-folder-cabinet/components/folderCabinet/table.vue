@@ -150,12 +150,12 @@ async function initFilter(id: string) {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'folder_cabinetStatus', value: 'state' },
-        { label: 'folder_cabinetItemName', value: 'label' },
-        { label: 'tableHeader_modifiedDate', value: 'modified_date_' },
         { label: 'role.creator', value: 'created_by_' },
+        { label: 'tableHeader_dueDate', value: 'deadline' },
+        { label: 'folder_cabinetItemName', value: 'label' },
+        { label: 'folder_cabinetStatus', value: 'state' },
         { label: 'search.contributors', value: 'modified_by_' },
-        { label: 'tableHeader_dueDate', value: 'deadline' }
+        { label: 'tableHeader_modifiedDate', value: 'modified_date_' }
       ]
     },
     {

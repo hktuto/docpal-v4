@@ -85,7 +85,7 @@ const {
     },
     {
       field: 'approvalId',
-      title: 'workflowEditor.approver',
+      title: 'workflowEditor.approver'
     },
     {
       field: 'isAuto', title: 'rp.isAuto', width: 200,
@@ -224,11 +224,11 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'hp.policyName', value: 'policyName' },
-        { label: 'rp.period', value: 'periodNum' },
-        { label: 'filePolicies_CreationDate', value: 'createdDate' },
         { label: 'workflowEditor.approver', value: 'approvalId' },
-        { label: 'filePolicies_PolicyStatus', value: 'status' }
+        { label: 'filePolicies_CreationDate', value: 'createdDate' },
+        { label: 'filePolicies_PolicyStatus', value: 'status' },
+        { label: 'rp.period', value: 'periodNum' },
+        { label: 'hp.policyName', value: 'policyName' }
       ]
     },
     {

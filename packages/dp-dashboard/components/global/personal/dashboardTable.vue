@@ -51,8 +51,8 @@ async function getFilter() {
     {
       key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
       options: [
-        { label: 'table_name', value: 'name' },
         { label: 'tableHeader_access', value: 'access' },
+        { label: 'table_name', value: 'name' },
         { label: 'filePopover_fileCreatedDate', value: 'createdDate' }
       ]
     },

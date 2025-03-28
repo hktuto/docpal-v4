@@ -166,10 +166,9 @@ async function initFilter() {
         type: 'string',
         isMultiple: false,
         options: [
-          { label: 'folderCabinet.name', value: 'label' },
           { label: 'folderCabinet.location', value: 'documentPath' },
-          { label: 'documentPath', value: 'folderCabinet.location' },
-          { label: 'docType_documentType', value: 'documentType' }
+          { label: 'docType_documentType', value: 'documentType' },
+          { label: 'folderCabinet.name', value: 'label' }
         ]
       },
       {

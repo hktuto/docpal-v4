@@ -42,8 +42,8 @@ async function getFilter() {
       isMultiple: false,
       options: [
         { label: 'document_path', value: 'uploadPath' },
-        { label: 'document_uploadDate', value: 'createdDate' },
         { label: 'tableHeader_filesCount', value: 'filesCount' },
+        { label: 'document_uploadDate', value: 'createdDate' },
         { label: 'document_uploadStatus', value: 'uploadStatus' }
       ]
     },

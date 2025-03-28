@@ -39,9 +39,9 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
+        { label: 'documentTemplate_Creator', value: 'createdBy' },
         { label: 'documentTemplate_Name', value: 'name' },
         { label: 'info_type', value: 'fileType' },
-        { label: 'documentTemplate_Creator', value: 'createdBy' },
         { label: 'workflow_createDate', value: 'createdDate' }
       ]
     },

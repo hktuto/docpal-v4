@@ -56,10 +56,10 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'masterTable_masterName', value: 'docPath' },
-        { label: 'user_username', value: 'principalName' },
+        { label: 'masterTable.eventDate', value: 'eventDate' },
         { label: 'masterTable.eventType', value: 'eventId' },
-        { label: 'masterTable.eventDate', value: 'eventDate' }
+        { label: 'masterTable_masterName', value: 'docPath' },
+        { label: 'user_username', value: 'principalName' }
       ]
     },
     {
