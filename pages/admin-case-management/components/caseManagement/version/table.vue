@@ -104,10 +104,10 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'file_versionNumber', value: 'createdDate' },
-        { label: 'table_modifiedDate', value: 'modifiedDate' },
+        { label: 'info_by', value: 'createdBy' },
         { label: 'modified_by', value: 'modifiedBy' },
-        { label: 'info_by', value: 'createdBy' }
+        { label: 'table_modifiedDate', value: 'modifiedDate' },
+        { label: 'file_versionNumber', value: 'createdDate' }
       ]
     },
     {
