@@ -4691,6 +4691,20 @@ export interface ResultCaseModelDraft {
     data?: CaseModelDraft;
 }
 
+export interface CopyCaseTypeRequest {
+    caseIdPrefix?: string;
+    /** @format int32 */
+    caseIdDigit?: number;
+    /** @format int32 */
+    startNumber?: number;
+    /** ID */
+    id?: string;
+    /** Name */
+    name?: string;
+    /** Case Version Id */
+    versionId?: string;
+}
+
 /** Case Model Data Permission DTO */
 export interface CmmnDataFilterPermission {
     /** User Group Id */
@@ -13838,7 +13852,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @summary New Case for new case type
          * @request POST:/api/docpal/case/types/{id}/copy
          */
-        postCaseTypesIdCopy: (id: string, data: CaseType, params: RequestParams = {}) =>
+        postCaseTypesIdCopy: (id: string, data: CopyCaseTypeRequest, params: RequestParams = {}) =>
             this.request<ResultCaseTypeResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/case/types/${id}/copy`,
                 method: "POST",
@@ -14487,6 +14501,43 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         postCabinetTemplatePage: (data: FolderCabinetRequestDTO, params: RequestParams = {}) =>
             this.request<ResultPaginationDTOFolderCabinetResponseDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpal/cabinet/template/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FolderCabinetController
+         * @name PostCabinetImport
+         * @request POST:/api/docpal/cabinet/import
+         */
+        postCabinetImport: (
+            query: {
+                /** @format binary */
+                multipartFile: File;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<Result, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/cabinet/import`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FolderCabinetController
+         * @name PostCabinetExport
+         * @request POST:/api/docpal/cabinet/export
+         */
+        postCabinetExport: (data: FolderCabinetRequestDTO, params: RequestParams = {}) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/cabinet/export`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,

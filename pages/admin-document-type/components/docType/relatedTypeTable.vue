@@ -44,13 +44,11 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
       fixed: 'left',
       formatter({ cellValue }: any) {
         return t(cellValue)
-      },
-      sortable: true
+      }
     },
     {
       field: 'metaData',
-      title: 'rightDetail_meta',
-      sortable: true
+      title: 'rightDetail_meta'
     }
   ],
   bodyActions: [
