@@ -68,7 +68,7 @@ function updateNode(){
     node.setData(newData,{ overwrite: true, deep: true, silent:false })
     graphProvider?.graph.value?.stopBatch('update-node-data')
     // TODO : update linked label
-    // get linked edge 
+    // get linked edge, and filter all edge that is start from node.
     const linkedEdges = graphProvider?.graph.value?.getConnectedEdges(node).filter((connectedEdge:any) => {
             // console.log(connectedEdge.source.cell, source.id)
             return connectedEdge.source.cell === node.id
