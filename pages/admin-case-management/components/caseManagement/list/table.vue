@@ -84,12 +84,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       code: 'list_version',
       name: 'caseManagement_viewVersionHistory',
       action: ({ row }) => listProvider.openVersion(row)
-    }
-      // {
-      //     code:'save_as',
-      //     name:"caseManagement_saveCaseTemplate",
-      //     action: ({row}) => listProvider.saveAsNewCase(row)
-      // }
+    },
+      {
+          code:'save_as',
+          name:"caseManagement_saveCaseTemplate",
+          action: ({row}) => listProvider.saveAsNewCase(row)
+      }
 
 
     ]
