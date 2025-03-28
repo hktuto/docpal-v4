@@ -59,14 +59,15 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       field: 'caseIdDigit',
       title: 'caseManagement.digit'
     },
-    {
-      field: 'enable',
-      title: 'dpTable_status',
-      sortable: true,
-      formatter: ({ cellValue }: any) => {
-        return cellValue ? t('actions.active') : t('actions.inactive')
-      }
-    }
+    // TODO 版本管理添加后，active/inactive 失效
+    // {
+    //   field: 'enable',
+    //   title: 'dpTable_status',
+    //   sortable: true,
+    //   formatter: ({ cellValue }: any) => {
+    //     return cellValue ? t('actions.active') : t('actions.inactive')
+    //   }
+    // }
   ],
   bodyActions: [
     [
