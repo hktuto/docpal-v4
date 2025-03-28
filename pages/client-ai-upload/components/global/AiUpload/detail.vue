@@ -115,7 +115,7 @@ import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 const { status, id } = defineProps<{
   id: string
-  status?: string,
+  status?: string
 }>()
 const routerProvider = inject(MenuRouterKey)
 const userId = useUserId()
@@ -328,18 +328,18 @@ async function handleSubmit() {
     if (!metaValid) {
       throw new Error('')
     }
-    const res: any = await clientApi.api.postNuxeoDocumentBatchconfirm({
+    const { data }: any = await clientApi.api.postNuxeoDocumentBatchconfirm({
       userId: userId.value,
       uploadId: id,
       fileConfirmDTOList
     })
     // router.back()
 
-    if (!!res) {
+    if (!!data.uploadSuccess) {
       const item = goAiUploadDetail()
       routerProvider?.navigateTo(item)
       emitBus(EventType.FILE_NEED_REFRESH, {
-        relatedIdOrPath: res.parentId
+        relatedIdOrPath: data.parentId
       })
     } else throw new Error(t('dpMsg_503'))
   } catch (error) {
