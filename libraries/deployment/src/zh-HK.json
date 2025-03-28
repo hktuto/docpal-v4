@@ -433,6 +433,7 @@
   "collectionFile_deleteMsg": "Are you sure you want to remove the select file / folder from the collection {name}?",
   "collectionFile_deleteSuccessMsg": "The selected file / folder has been removed from the collection {name} successfully.",
   "collection_collection": "收藏夾",
+  "collection_delete": "刪除收藏夾",
   "collection_deleteMsg": "Are you sure you want to remove the select file / folder from the collection {name}?",
   "collection_deleteSuccessMsg": "The selected file / folder has been removed from the collection {name} successfully.",
   "collection_name": "收藏夾名稱",
