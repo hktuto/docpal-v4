@@ -63,8 +63,8 @@ function getFilter() {
       isMultiple: false,
       options: [
         { label: 'caseManagement.name', value: 'name' },
-        { label: 'workflow_createDate', value: 'createdDate' },
-        { label: 'table_modifiedDate', value: 'modifiedDate' }
+        { label: 'table_modifiedDate', value: 'modifiedDate' },
+        { label: 'workflow_createDate', value: 'createdDate' }
       ]
     },
     {

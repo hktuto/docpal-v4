@@ -101,10 +101,10 @@ function initFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'easyForm.name', value: 'name' },
         { label: 'easyForm_creationDate', value: 'createdDate' },
-        { label: 'table_modifiedDate', value: 'modifiedDate' },
-        { label: 'easyForm_status', value: 'enable' }
+        { label: 'easyForm.name', value: 'name' },
+        { label: 'easyForm_status', value: 'enable' },
+        { label: 'table_modifiedDate', value: 'modifiedDate' }
       ]
     },
     {
