@@ -7,7 +7,7 @@
         </el-button>
         <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']"
                  @click="handleCollapse">
-          <ArrowDownBold/>
+          <ArrowDownBold />
         </el-icon>
       </div>
       <div class="collection-list" style="--color: #F56C6C">
@@ -17,7 +17,7 @@
           <span class="ellipsis" :title="item.name">{{ item.name }}</span>
           <el-icon :id="`Collection__Delete${item.id}`" class="color__danger__hover cursorPointer"
                    @click.stop="handleDelete(item)">
-            <Delete/>
+            <Delete />
           </el-icon>
         </div>
       </div>
@@ -27,7 +27,7 @@
         <template #toolbar_buttons>
           <div class="flex-x-between">{{ state.curCollection.name }}
             <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right el-icon--left"
-                     @click="openEditCollectionDialog"/>
+                     @click="openEditCollectionDialog" />
           </div>
           <div class="flex-x-end">
             <template v-if="state">
@@ -35,7 +35,7 @@
                        src="/icons/file/share.svg"
                        round
                        :content="t('tip.addToShare')"
-                       @click="handleShare"/>
+                       @click="handleShare" />
             </template>
             <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
 
@@ -44,7 +44,7 @@
       </VxeGrid>
     </div>
 
-    <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @refresh="reloadPage">
+    <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @success="handleAddCollection">
     </LazyCollectionAddCollectionDialog>
     <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reload">
     </LazyCollectionEditCollectionDialog>
@@ -52,15 +52,15 @@
 </template>
 
 <script setup lang="ts">
-import {clientApi} from 'api'
+import { clientApi } from 'api'
 import anime from 'animejs'
-import {ElMessage, ElMessageBox} from "element-plus";
-import {createBrowseListPageParams, createDetailPageParams} from "~/utils/browseMenuHelper";
-import {ArrowDownBold, Delete} from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { createBrowseListPageParams, createDetailPageParams } from '~/utils/browseMenuHelper'
+import { ArrowDownBold, Delete } from '@element-plus/icons-vue'
 
 const routerProvider = inject(MenuRouterKey)
 
-const {t} = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 const pageParams = {
   pageIndex: 0,
@@ -68,12 +68,12 @@ const pageParams = {
 }
 
 function reloadPage() {
-  reload();
-  getCollectionList();
+  reload()
+  getCollectionList()
 }
 
 async function getCollectionList() {
-  const {data}: any = await clientApi.api.getNuxeoCollection()
+  const { data }: any = await clientApi.api.getNuxeoCollection()
   try {
     state.collectionList = data.entryList
     if (state.collectionList.length > 0) {
@@ -81,42 +81,46 @@ async function getCollectionList() {
       if (index === -1) index = 0
       handleTabClick(state.collectionList[index])
     }
-    reload();
+    reload()
   } catch (error) {
 
   }
 }
 
+function handleAddCollection(data: any) {
+  state.collectionList.push(data)
+}
+
 function handleTabClick(row: any) {
   state.curCollection = row
-  reload();
+  reload()
 }
 
 function handleDelete(row: any) {
-  ElMessageBox.confirm(t("collection_deleteMsg", {name: row.name}))
+  ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }))
     .then(async () => {
-      await clientApi.api.deleteNuxeoDocument({idOrPath: row.id})
-      ElMessage.success(t('collection_deleteSuccessMsg', {name: row.name}))
+      await clientApi.api.deleteNuxeoDocument({ idOrPath: row.id })
+      ElMessage.success(t('collection_deleteSuccessMsg', { name: row.name }))
       reloadPage()
     })
 }
 
 function handleDocDelete(row: any) {
-  let docList = [];
-  docList.push({idOrPath: row.id})
+  let docList = []
+  docList.push({ idOrPath: row.id })
   const param = {
     documents: docList,
-    collection: {idOrPath: state.curCollection.id}
+    collection: { idOrPath: state.curCollection.id }
   }
-  ElMessageBox.confirm(t('collectionFile_deleteMsg', {name: row.name}), {confirmButtonText: t('common_confirmDelete'),})
+  ElMessageBox.confirm(t('collectionFile_deleteMsg', { name: row.name }), { confirmButtonText: t('common_confirmDelete') })
     .then(async () => {
       state.loading = true
       try {
         await clientApi.api.deleteNuxeoCollectionRemove(param)
         setTimeout(() => {
-          query({});
+          query({})
         }, 1000)
-        ElMessage.success(t('collectionFile_deleteSuccessMsg', {name: row.name}))
+        ElMessage.success(t('collectionFile_deleteSuccessMsg', { name: row.name }))
         reload()
       } catch (error) {
 
@@ -145,22 +149,23 @@ function handleCollapse() {
 }
 
 const { addToShareList } = useShareStore()
+
 async function handleShare() {
-  const data: any = await clientApi.api.postNuxeoCollectionAlldocuments({idOrPath: state.curCollection.id}).then((res: any) => res.data.entryList)
+  const data: any = await clientApi.api.postNuxeoCollectionAlldocuments({ idOrPath: state.curCollection.id }).then((res: any) => res.data.entryList)
   // TODO 未調試
   addToShareList(data)
 
   nextTick(() => {
     const shareDraggableButton = document.getElementById('share-draggable-button')
     const shareToQueue = document.getElementById('shareToQueue')
-    if(!shareToQueue) return
+    if (!shareToQueue) return
     shareToQueue.style.transform = 'none'
     shareToQueue.style.display = 'block'
     if (shareDraggableButton) {
       anime({
         targets: '#shareToQueue',
         translateX: shareDraggableButton.getBoundingClientRect().left - shareToQueue.getBoundingClientRect().left,
-        translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop- 60,
+        translateY: shareDraggableButton.offsetTop - shareToQueue.offsetTop - 60,
         duration: 750,
         easing: 'easeInOutQuad'
       })
@@ -196,18 +201,18 @@ const state = reactive<TableState>({
       total: 0,
       currentPage: 1,
       pageSize: pageParams.pageSize
-    },
+    }
   },
   collectionList: [],
   curCollection: '',
   selectedDocs: []
 })
 
-const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = useVxeTable({
-  id: "clientCollectionsList",
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
+  id: 'clientCollectionsList',
   api: async (pageParams: any) => {
-    let id = state.curCollection.id;
-    const {data: {entryList}}: any = await clientApi.api.postNuxeoCollectionDocuments({idOrPath: id})
+    let id = state.curCollection.id
+    const { data: { entryList } }: any = await clientApi.api.postNuxeoCollectionDocuments({ idOrPath: id })
     state.tableData = entryList
     return entryList
   },
@@ -215,54 +220,54 @@ const {tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows,} = u
     {
       field: 'name', title: 'tableHeader.fileOrFolderName',
       type: 'html',
-      formatter: ({cellValue, row}: any) => {
-        let icon = "/icons/doc/file.svg";
+      formatter: ({ cellValue, row }: any) => {
+        let icon = '/icons/doc/file.svg'
         if (row.isFolder) {
-          icon = "/icons/doc/folder.svg";
+          icon = '/icons/doc/folder.svg'
         }
-        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`;
+        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`
       }
     },
-    {field: 'path', title: 'document_path',},
+    { field: 'path', title: 'document_path' },
     {
       field: 'modifiedDate',
       title: 'table_modifiedDate',
-      formatter({cellValue}: any) {
+      formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
     },
-    {field: 'type', title: 'table_type',},
+    { field: 'type', title: 'table_type' }
   ],
   bodyActions: [
     [{
-      code: "deleted",
-      name: "collection_remove",
-      action: ({row}: any) => {
-        handleDocDelete(row);
-      },
+      code: 'deleted',
+      name: 'collection_remove',
+      action: ({ row }: any) => {
+        handleDocDelete(row)
+      }
     }
-    ],
+    ]
   ],
   virtualScroll: true,
-  dblClickAction: ({row}) => {
-    let newItem;
+  dblClickAction: ({ row }) => {
+    let newItem
     if (row.isFolder) {
       newItem = createBrowseListPageParams({
         idOrPath: row.id
-      });
+      })
     } else {
       newItem = createDetailPageParams({
         idOrPath: row.id,
         docName: row.name,
         showHeaderAction: true
-      });
+      })
     }
     routerProvider?.navigateTo(newItem)
   },
   selectChangeHander: (selectedRows: any[]) => {
-    state.selectedDocs = [...selectedRows];
-  },
-});
+    state.selectedDocs = [...selectedRows]
+  }
+})
 
 onMounted(() => {
   getCollectionList()

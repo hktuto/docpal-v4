@@ -432,7 +432,6 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             showLine: true,
             hasChildField: 'isFolder',
             loadMethod: async (params) => {
-                console.log("loadMethod", params)
                 const entry = await loadAllChildren([], params.row.path)
                 return entry.sort(sortEntry)
             }
@@ -442,6 +441,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             showHeader: false,
             highlight: true,
             range: false,
+            trigger:'cell',
             visibleMethod: ({row}: any) => !row.isFolder
         },
         rowConfig: {
@@ -475,6 +475,7 @@ let tableDropZone:any;
 let dragableItemList:any[] = [];
 function tableChildChangeHandler(args:any) {
     if(!listProvider?.docDetail.value) {
+        console.log("no docDetail")
         return
     };
     // body row may be empty when table is loading, create root drop zone first
@@ -482,7 +483,10 @@ function tableChildChangeHandler(args:any) {
         tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
     }
     const allBodyRow = tableRef.value.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
-    if(allBodyRow.length === 0) return;
+    if(allBodyRow.length === 0){ 
+      console.log("no body row")
+      return;
+    }
     // unregister all dragableItemList
     dragableItemList.forEach(item => {
         // check if item is a function, if so, call it
