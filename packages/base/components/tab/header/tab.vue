@@ -29,6 +29,12 @@ const {dragState ,setupDrag} = useDragable({
         data: tab
     },
     detectDrop: true,
+    canDrag(args) {
+      const layout = useTabLayout()
+      // if layout has only one panel and one tab, then can not drag
+      if(layout.value.length === 1 && layout.value[0].tabs.length === 1) return false
+      return true
+    },
     allowedEdges: ['left', 'right'],
     onDropFromExternal:({source, self}:any) => {
             const layout = useTabLayout()
