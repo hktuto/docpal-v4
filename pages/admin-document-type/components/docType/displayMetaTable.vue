@@ -49,8 +49,7 @@ const { tableConfig, tableEvent, tableRef } = useVxeTable({
       fixed: 'left',
       formatter({ cellValue }: any) {
         return t(cellValue)
-      },
-      sortable: true
+      }
     },
     /*        {
                 field: "metaDataType",
@@ -59,7 +58,7 @@ const { tableConfig, tableEvent, tableRef } = useVxeTable({
                     return t(`meta.dataType.${cellValue}`);
                 },
             },*/
-    { field: 'dataType', title: 'docTypeDetail.type', sortable: true },
+    { field: 'dataType', title: 'docTypeDetail.type' },
     {
       field: 'isRequire',
       title: 'form_isRequire',

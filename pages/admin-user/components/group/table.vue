@@ -36,8 +36,8 @@ const { t } = useI18n()
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'a-groupTable',
   columns: [
-    { field: 'name', title: 'user_userGroupName', fixed: 'left', sortable: true },
-    { field: 'id', title: 'user_userGroupIdentifer', sortable: true }
+    { field: 'name', title: 'user_userGroupName', fixed: 'left' },
+    { field: 'id', title: 'user_userGroupIdentifer' }
   ],
   dblClickAction: ({ row, column, event }: any) => {
     groupProvider?.openGroupDetail(row)
