@@ -26,7 +26,8 @@ function handleOpen() {
 }
 
 const emits = defineEmits([
-  'refresh'
+  'refresh',
+  'success'
 ])
 
 const FormRendererRef = ref()
@@ -39,16 +40,14 @@ async function handleSubmit() {
     description: null
   }
   try {
-    await clientApi.api.postNuxeoCollectionCreate(params)
-    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('collection_collection'), name: data.name }))
+    const data = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
+    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('collection_collection'), name: params.name }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
-    setTimeout(() => {
-      emits('refresh')
-    }, 1000)
-
+    emits('success', data)
   } catch (error) {
-
+    console.log(error)
+    emits('refresh')
   }
   state.loading = false
 }
