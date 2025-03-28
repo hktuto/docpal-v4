@@ -58,6 +58,7 @@ defineExpose({
 <style lang="scss" scoped>
 .detail {
   margin-bottom: var(--app-space-xs);
+  height: fit-content!important;
   cursor: pointer;
   :deep(.el-card__body) {
     padding: var(--app-space-xs);
