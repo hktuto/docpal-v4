@@ -25,6 +25,8 @@ const previewFile =reactive<{
 })
 const dialogOpened = ref(false)
 const iframeUrl = ref('')
+
+const dialogHeight = ref(640);
 async function openPreivew(){
     try{
       loading.value = true;
@@ -41,7 +43,6 @@ async function openPreivew(){
         }
         return prev
       }, {})
-      console.log("open preview",  mergeFormData)
         // get template id
         const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
@@ -80,18 +81,13 @@ async function openPreivew(){
             fileRelativePath: '/' + fileName,
         })
         submitFormData.append('uploadTempFileRequestStr', templaRequest)
+        dialogHeight.value = window.innerHeight - 60;
         dialogOpened.value = true
         setTimeout(() => {
           previewFile.name = fileName
           previewFile.blob = res
         },100)
-        // const temDocId = await clientApi.api.postNuxeoDocumentSaveuploadfileoverview(submitFormData as any).then(res => res.data)
-        // if(!temDocId){
-        //     throw new Error('temDocId is empty')
-        // }
-
-
-        // downloadBlob(res, 'abc.pdf')
+        
     }catch(err){
       console.log(err)
         // check if error is come from server
@@ -116,17 +112,18 @@ onMounted(() => {
 
 <template>
    <ElButton type="primary" :loading="loading" @click="openPreivew">{{  props.attr_previewButtonText }}</ElButton>
-    <ElDialog v-model="dialogOpened" height="600px" width="600px" apped-to-body>
-        <div  class="readerContainer">
+   <ElDialog v-model="dialogOpened"  width="100%" fullscreen apped-to-body>
+        <div  class="readerContainer" :style="`--height: ${dialogHeight}px`">
             <Reader v-if="previewFile.blob" v-bind="previewFile" />
         </div>
     </ElDialog>
 </template>
 
 <style lang="scss" scoped>
+
 .readerContainer{
-    width: 600px;
-    height: 600px;
+    width:100%;
+    height:var(--height);
     overflow: auto;
 }
 </style>
