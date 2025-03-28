@@ -181,7 +181,7 @@
       "formItemFlag": true,
       "options": {
         "name": "processKeys",
-        "label": "workflow_taskName",
+        "label": "workflow_workflowName",
         "labelAlign": "",
         "defaultValue": [],
         "placeholder": "",
