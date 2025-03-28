@@ -6,6 +6,28 @@ const {layout, initLayout, allComponents, allComponentRef} = useTabsManager()
 const loading = ref(false);
 const hightLightPanel = useCurrentTargetPanel()
 
+// #region hot key to close tab
+const activeElement = useActiveElement()
+const { current } = useMagicKeys()
+const notUsingInput = computed(() =>
+  activeElement.value?.tagName !== 'INPUT'
+  && activeElement.value?.tagName !== 'TEXTAREA'
+)
+
+const { delete: DELETE } = useMagicKeys()
+
+whenever(logicAnd(DELETE, notUsingInput), () => {
+  console.log('Tab has been pressed outside of inputs!')
+  // check layout 
+  if(layout.value.length !== 1 || layout.value[0].tabs.length !== 1){
+    const selectedTab = layout.value.find(panel => panel.id === hightLightPanel.value)
+    if(selectedTab){
+      closePanelTab(hightLightPanel.value, selectedTab.showingTabIndex as number, true)
+    }
+  }
+})
+  // #endregion
+
 const fullscreenItem = ref<TabItem>()
 
 const dialogItem = ref<TabItem>()

@@ -1,295 +1,90 @@
-<definitions
-        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:flowable="http://flowable.org/bpmn"
-        xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-        xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
-        xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="business_processes" exporter="Flowable Open Source Modeler" exporterVersion="6.7.2" workflowTemplate="Single">
-  <process id="workflowId" name="workflowName" isExecutable="true" flowable:candidateStarterGroups="Demo Approval Group">
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:folderCabinetMapping="http://www.w3.org/1999/xhtml"
+  xmlns:permissions="http://www.w3.org/1999/xhtml" xmlns:docpal="http://flowable.org/bpmn"
+  typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+  targetNamespace="business_processes" exporter="Flowable Open Source Modeler"
+  exporterVersion="6.7.2">
+  <process id="workflowId" isExecutable="true" name="workflowName">
     <extensionElements>
-      <flowable:executionListener event="start" delegateExpression="${startProcessInstanceAfterExecutionListener}"/>
-      <flowable:executionListener event="start" delegateExpression="${notificationListener}">
-        <flowable:field name="functionPoint">
-          <flowable:string>
-            <![CDATA[APPLY]]>
-          </flowable:string>
-        </flowable:field>
-        <flowable:field name="notificationUserFromVariables">
-          <flowable:string>
-            <![CDATA[user_approver_id,copy_approver_id]]>
-          </flowable:string>
-        </flowable:field>
-      </flowable:executionListener>
+      <flowable:executionListener event="start"
+        delegateExpression="${startProcessInstanceAfterExecutionListener}"></flowable:executionListener>
     </extensionElements>
-    <startEvent id="start" name="Start" flowable:formFieldValidation="true">
+    <startEvent id="Start" flowable:formFieldValidation="true" name="Start"
+      flowable:candidateStarterGroups="administrators">
       <extensionElements>
-        <flowable:formProperty field_label="Label" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="businessKey" name="Business Key" type="string" fixed="true" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Creator ID" field_type="current_user" field_hidden="true" field_disabled="false" id="user_creator_id" name="Creator ID" type="string" fixed="true" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Description" field_type="multi_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="description" name="Description" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Approver ID" field_type="approve_user_dropdown" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="user_approver_id" name="Approver ID" type="string" field_valid="true" target_step="approvalForm"></flowable:formProperty>
-        <flowable:formProperty field_label="Copy Personnel ID" field_type="user_dropdown" field_hidden="false" field_disabled="false" id="user_copy_personnel_id" name="Copy Personnel ID" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
+        <flowable:formProperty id="businessKey" name="businessKey" type="string"></flowable:formProperty>
+        <flowable:formProperty id="request" name="request" type="string"></flowable:formProperty>
+        <flowable:formProperty id="approve" name="approve" type="boolean"></flowable:formProperty>
+        <flowable:formProperty id="approver" name="approver" type="string"></flowable:formProperty>
+        <flowable:formProperty id="creator" name="creator" type="string"></flowable:formProperty>
+        <docpal:additionaSetting openInNewPage="false"></docpal:additionaSetting>
       </extensionElements>
     </startEvent>
-    <userTask id="rejectForm" name="Reject form" flowable:formFieldValidation="true">
+    <endEvent id="end"></endEvent>
+    <userTask flowable:candidateGroups="" flowable:formFieldValidation="true" id="new_1743139601986"
+      name="refill">
       <extensionElements>
-        <flowable:formProperty field_label="Label" field_type="single_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="businessKey" name="Business Key" type="string" fixed="true" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Description" field_type="multi_line_input" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="description" name="Description" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Approver ID" field_type="approve_user_dropdown" field_required="true" field_writable="true" field_hidden="false" field_disabled="false" id="user_approver_id" name="Approver ID" type="string" field_valid="true" target_step="approvalForm"></flowable:formProperty>
-        <flowable:formProperty field_label="Copy Personnel ID" field_type="user_dropdown" field_hidden="false" field_disabled="false" id="user_copy_personnel_id" name="Copy Personnel ID" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
+        <flowable:formProperty id="businessKey" name="businessKey" type="string"></flowable:formProperty>
+        <flowable:formProperty id="request" name="request" type="string"></flowable:formProperty>
+        <flowable:formProperty id="approve" name="approve" type="boolean"></flowable:formProperty>
+        <flowable:formProperty id="approver" name="approver" type="string"></flowable:formProperty>
+        <flowable:formProperty id="creator" name="creator" type="string"></flowable:formProperty>
+        <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-group>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
         <flowable:taskListener delegateExpression="${autoAssignTaskListener}" event="create">
           <flowable:field name="assignee">
-            <flowable:expression>
-              <![CDATA[${variables:get(Creator)}]]>
-            </flowable:expression>
+            <flowable:expression><![CDATA[${variables:get(creator)}]]></flowable:expression>
           </flowable:field>
         </flowable:taskListener>
       </extensionElements>
     </userTask>
-    <userTask id="approvalForm" name="Start Approval Form" flowable:candidateGroups="administrators" flowable:formFieldValidation="true">
+    <userTask flowable:candidateGroups="administrators" flowable:formFieldValidation="true"
+      id="new_1743139606193" name="approve">
       <extensionElements>
-        <flowable:formProperty field_label="label" field_type="single_line_input" field_hidden="false" field_disabled="true" id="businessKey" name="Business Key" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Creator ID" field_type="user_dropdown" field_hidden="false" field_disabled="true" id="user_creator_id" name="Creator ID" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Description" field_type="multi_line_input" field_hidden="false" field_disabled="true" id="description" name="Description" type="string" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Approve" field_type="boolean" field_required="true" field_hidden="false" field_disabled="false" id="approved" name="Approve" type="boolean" field_valid="true"></flowable:formProperty>
-        <flowable:formProperty field_label="Submit Date" field_type="today" field_hidden="false" field_disabled="true" id="SubmitDate" name="Submit Date" type="date" field_valid="true" datePattern="yyyy-MM-dd HH:mm:ss"></flowable:formProperty>
-        <flowable:formProperty field_label="Reject Reason" field_type="multi_line_input" field_hidden="false" field_disabled="false" id="rejectReason" name="Reject Reason" type="string" field_valid="true"></flowable:formProperty>
+        <flowable:formProperty id="businessKey" name="businessKey" type="string"></flowable:formProperty>
+        <flowable:formProperty id="request" name="request" type="string"></flowable:formProperty>
+        <flowable:formProperty id="approve" name="approve" type="boolean"></flowable:formProperty>
+        <flowable:formProperty id="approver" name="approver" type="string"></flowable:formProperty>
+        <flowable:formProperty id="creator" name="creator" type="string"></flowable:formProperty>
+        <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-group>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
         <flowable:taskListener delegateExpression="${autoAssignTaskListener}" event="create">
           <flowable:field name="assignee">
-            <flowable:expression>
-              <![CDATA[${variables:get(user_approver_id)}]]>
-            </flowable:expression>
+            <flowable:expression><![CDATA[${variables:get(approver)}]]></flowable:expression>
           </flowable:field>
         </flowable:taskListener>
-        <modeler:activiti-idm-candidate-group
-                xmlns:modeler="http://flowable.org/modeler">
-          <![CDATA[true]]>
-        </modeler:activiti-idm-candidate-group>
-        <modeler:initiator-can-complete
-                xmlns:modeler="http://flowable.org/modeler">
-          <![CDATA[false]]>
-        </modeler:initiator-can-complete>
-        <modeler:group-info-name-administrators
-                xmlns:modeler="http://flowable.org/modeler">
-          <![CDATA[Administrators group]]>
-        </modeler:group-info-name-administrators>
+        <modeler:group-info-name-administrators xmlns:modeler="http://flowable.org/modeler"><![CDATA[administrators]]></modeler:group-info-name-administrators>
       </extensionElements>
     </userTask>
-    <serviceTask id="uploadFile" name="Upload File" flowable:delegateExpression="${uploadFileDelegate}">
+    <serviceTask id="new_1743139660137" name="approve checker"
+      flowable:delegateExpression="${conditionValidateDelegate}">
       <extensionElements>
-        <flowable:field name="documentType">
-          <flowable:expression><![CDATA[File]]></flowable:expression>
-        </flowable:field>
-        <flowable:field name="documentName">
-          <flowable:expression><![CDATA[${businessKey}-${user_creator_id}]]></flowable:expression>
-        </flowable:field>
-        <flowable:field name="contentId">
-          <flowable:expression><![CDATA[${variables:get(file)}]]></flowable:expression>
-        </flowable:field>
+        <docpal:decisionTable>
+          <orConditionElements>
+            <element id="element_1743140635336" type="Boolean_Validation" source="form"
+              fieldName="approve" condition="is" target="boolean" targetValue="true"></element>
+          </orConditionElements>
+        </docpal:decisionTable>
+        <docpal:graphLabel successLable="true" failureLable="false"></docpal:graphLabel>
       </extensionElements>
     </serviceTask>
-    <serviceTask id="createDocumentServiceTask" name="Create Document Based On User Input Service Task" flowable:delegateExpression="${generateDocumentDelegate}">
-      <extensionElements>
-        <flowable:field name="templateId">
-          <flowable:expression>
-            <![CDATA[e03c3fa7-dc00-4422-bbc0-923b278fae0d]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field path="[&quot;/default-domain&quot;,&quot;/default-domain/new Folder1685665351412&quot;,&quot;/default-domain/new Folder1685665351412/archive-page-design&quot;]" name="parentPath">
-          <flowable:expression>
-            <![CDATA[/default-domain/new Folder1685665351412/archive-page-design]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="documentType">
-          <flowable:expression>
-            <![CDATA[File]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="variables">
-          <flowable:expression>
-            <![CDATA[{"title":"${variables:get(businessKey)}","content":"${variables:get(description)}","approver":"${variables:get(approved)}","date":"${variables:get(SubmitDate)}"}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="documentName" type="string" value="" required="false" path="[{&quot;attr_field_label&quot;:&quot;label&quot;,&quot;attr_field_type&quot;:&quot;single_line_input&quot;,&quot;attr_field_hidden&quot;:false,&quot;attr_field_disabled&quot;:true,&quot;attr_id&quot;:&quot;businessKey&quot;,&quot;attr_name&quot;:&quot;Business Key&quot;,&quot;attr_type&quot;:&quot;string&quot;,&quot;attr_field_valid&quot;:true},{&quot;attr_field_label&quot;:&quot;Creator ID&quot;,&quot;attr_field_type&quot;:&quot;user_dropdown&quot;,&quot;attr_field_hidden&quot;:false,&quot;attr_field_disabled&quot;:true,&quot;attr_id&quot;:&quot;user_creator_id&quot;,&quot;attr_name&quot;:&quot;Creator ID&quot;,&quot;attr_type&quot;:&quot;string&quot;,&quot;attr_field_valid&quot;:true},{&quot;attr_field_label&quot;:&quot;Submit Date&quot;,&quot;attr_field_type&quot;:&quot;today&quot;,&quot;attr_field_hidden&quot;:false,&quot;attr_field_disabled&quot;:true,&quot;attr_id&quot;:&quot;SubmitDate&quot;,&quot;attr_name&quot;:&quot;Submit Date&quot;,&quot;attr_type&quot;:&quot;date&quot;,&quot;attr_field_valid&quot;:true}]">
-          <flowable:expression>
-            <![CDATA[${businessKey}-${user_creator_id}-${dateUtil.convert2String(variables:get(SubmitDate), 'yyyy-MM-dd HH:mm:ss')}]]>
-          </flowable:expression>
-        </flowable:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="submitFormNotification" name="Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
-      <extensionElements>
-        <flowable:field name="notificationType">
-          <flowable:string>
-            <![CDATA[notification.workflow-editor-submit]]>
-          </flowable:string>
-        </flowable:field>
-        <flowable:field name="approver">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_approver_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="message">
-          <flowable:expression>
-            <![CDATA[${variables:get(description)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="submitedUser">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_creator_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="hostUrl">
-          <flowable:expression>
-            <![CDATA[]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="processInstanceId">
-          <flowable:expression>
-            <![CDATA[]]>
-          </flowable:expression>
-        </flowable:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="completedApprovedNotification" name="Completed Approved Notification to Creator, Copy and Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
-      <extensionElements>
-        <flowable:field name="notificationType">
-          <flowable:string>
-            <![CDATA[notification.workflow.editor.approve]]>
-          </flowable:string>
-        </flowable:field>
-        <flowable:field name="creator">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_creator_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="approver">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_approver_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="hostUrl">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_copy_personnel_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="processInstanceId">
-          <flowable:expression>
-            <![CDATA[]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="copy">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_copy_personnel_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="rejectApprovedNotification" name="Reject Approved Notification to creator， copy creator" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
-      <extensionElements>
-        <flowable:field name="notificationType">
-          <flowable:string>
-            <![CDATA[notification.workflow.editor.reject]]>
-          </flowable:string>
-        </flowable:field>
-        <flowable:field name="creator">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_creator_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="approver">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_approver_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="reason">
-          <flowable:expression>
-            <![CDATA[${variables:get(rejectReason)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="hostUrl">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_copy_personnel_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="processInstanceId">
-          <flowable:expression>
-            <![CDATA[]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="cpoy">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_copy_personnel_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-      </extensionElements>
-    </serviceTask>
-    <serviceTask id="taskDueNotification" name="Task Due Notification to Approver" flowable:async="true" flowable:exclusive="false" flowable:delegateExpression="${sendNotificationDelegate}">
-      <extensionElements>
-        <flowable:field name="notificationType">
-          <flowable:string>
-            <![CDATA[notification.workflow.editor.reminder.email]]>
-          </flowable:string>
-        </flowable:field>
-        <flowable:field name="approver">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_approver_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="creatorName">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_creator_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="submittedDate">
-          <flowable:expression>
-            <![CDATA[${variables:get(SubmitDate)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="hostUrl">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_copy_personnel_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="processInstanceId">
-          <flowable:expression>
-            <![CDATA[]]>
-          </flowable:expression>
-        </flowable:field>
-        <flowable:field name="copy">
-          <flowable:expression>
-            <![CDATA[${variables:get(user_copy_personnel_id)}]]>
-          </flowable:expression>
-        </flowable:field>
-      </extensionElements>
-    </serviceTask>
-    <endEvent id="end" name="End"></endEvent>
-    <exclusiveGateway id="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></exclusiveGateway>
-    <boundaryEvent id="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" attachedToRef="approvalForm" cancelActivity="false">
-      <timerEventDefinition>
-        <timeDuration>P3D</timeDuration>
-      </timerEventDefinition>
-    </boundaryEvent>
-    <sequenceFlow id="sid-4997F99D-0C86-4C63-8974-A52EBC38C4F3" sourceRef="start" targetRef="submitFormNotification"></sequenceFlow>
-    <sequenceFlow id="sid-12A74733-1783-454C-80B9-A66E0ACDF034" sourceRef="submitFormNotification" targetRef="approvalForm"></sequenceFlow>
-    <sequenceFlow id="sid-A641DB66-3A1C-45A4-A03C-3FF308F8BC44" sourceRef="sid-56D4059C-2BD3-4262-88D0-D2FE88CA5C70" targetRef="taskDueNotification"></sequenceFlow>
-    <sequenceFlow id="sid-E6B2EE69-B671-4564-BFF5-0A7BEE7FC110" sourceRef="approvalForm" targetRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F"></sequenceFlow>
-    <sequenceFlow id="sid-65BE74D6-A548-4E70-8B5F-6D919EDDC1BF" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="rejectApprovedNotification">
-      <conditionExpression xsi:type="tFormalExpression">
-        <![CDATA[${!approved}]]>
-      </conditionExpression>
+    <sequenceFlow id="edge-edge-1a2cc754-adac-4362-bf4b-640c71a3a877" sourceRef="Start"
+      targetRef="new_1743139606193"></sequenceFlow>
+    <sequenceFlow id="edge-edge-066e3a1c-a664-45ed-ada8-fec024b82f1b" sourceRef="new_1743139606193"
+      targetRef="new_1743139660137"></sequenceFlow>
+    <sequenceFlow id="edge-edge-a420c5c0-a7f5-4ae3-96b5-41e4edce5248" sourceRef="new_1743139660137"
+      targetRef="end">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${conditionResult}]]></conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="sid-C909A9BF-4EBD-49F6-97B4-B7B823900C32" sourceRef="rejectApprovedNotification" targetRef="rejectForm"></sequenceFlow>
-    <sequenceFlow id="sid-C909A9BF-4EBD-49F6-97B4-B7B823900C34" sourceRef="rejectForm" targetRef="approvalForm"></sequenceFlow>
-    <sequenceFlow id="sid-2060190D-232A-4C95-8D17-CFCE24A7395B" sourceRef="completedApprovedNotification" targetRef="end"></sequenceFlow>
-    <sequenceFlow id="sid-FE76A11C-6B59-429C-9228-DF4D7EF675C8" sourceRef="createDocumentServiceTask" targetRef="completedApprovedNotification"></sequenceFlow>
-    <sequenceFlow id="uploadToCreateDocumentServiceTask" sourceRef="uploadFile" targetRef="createDocumentServiceTask"></sequenceFlow>
-    <sequenceFlow id="sid-D04FB86E-F550-433E-A8A9-D2E0E7668D9B" sourceRef="sid-D1B640B8-7C23-42F3-B409-8D3D7118B60F" targetRef="createDocumentServiceTask">
-      <conditionExpression xsi:type="tFormalExpression">
-        <![CDATA[${approved}]]>
-      </conditionExpression>
+    <sequenceFlow id="edge-edge-7a31cc50-058d-4795-9b06-6906206acc4e" sourceRef="new_1743139660137"
+      targetRef="new_1743139601986">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!conditionResult}]]></conditionExpression>
     </sequenceFlow>
+    <sequenceFlow id="edge-edge-d8f01a59-ab05-4e37-9502-f37a179ceee6" sourceRef="new_1743139601986"
+      targetRef="new_1743139606193"></sequenceFlow>
   </process>
 </definitions>

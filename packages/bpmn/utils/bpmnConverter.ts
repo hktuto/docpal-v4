@@ -134,7 +134,7 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
                     result.edges.push({
                         ...nodeSetting.nodeStyle(item),
                         id: item.attr_id,
-                        label: item.conditionExpression ? item.conditionExpression.__cdata === '${approved}' ? 'Approved' : "Reject" : "",
+                        label: item.conditionExpression ? item.conditionExpression.__cdata.includes('!') ? 'false' : "true" : "",
                         source: {cell: item.attr_sourceRef, port: 'to'},
                         target: {cell: item.attr_targetRef, port: 'from'},
                         connector: {
@@ -151,7 +151,7 @@ export const jsonToX6Node = function(json:BPMNJSON, flatObj: any) {
                 result.edges.push({
                     ...nodeSetting.nodeStyle(item),
                     id: item.attr_id,
-                    label: item.conditionExpression ? item.conditionExpression.__cdata === '${approved}' ? 'Approved' : "Reject" : "",
+                    label: item.conditionExpression ? item.conditionExpression.__cdata.includes('!') ? 'false' : "true" : "",
                     source: {cell:item.attr_sourceRef, port:'to'},
                     target: {cell:item.attr_targetRef, port:'from'},
                     connector: {
@@ -295,7 +295,7 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
         insertEdgeToBpmn(graph, json, edge)
     })
     const xml = jsonToBpmn(json)
-    
+    console.log("xml", xml)
     return {
         xml,
         json,
