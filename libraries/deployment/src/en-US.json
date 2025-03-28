@@ -2437,7 +2437,7 @@
       "noValidData": "No valid data, add at least a schema"
     },
     "needMasterTableName": "Need to fill in the master table name",
-    "new": "New",
+    "new": "New File/Folder",
     "noAdhoc": "No Adhoc Task History",
     "notification": "Notification",
     "office": "Edit in Office",
