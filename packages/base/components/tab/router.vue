@@ -1,11 +1,14 @@
 <script lang="ts" setup>
 import type {TabItem, RouterParams} from '#imports';
 import {ElMessage, ElNotification } from 'element-plus';
+
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
-const { current } = useMagicKeys()
+
 import { use } from 'vxe-table';
 const {allComponents} = useTabsManager()
 
+
+  
 
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
