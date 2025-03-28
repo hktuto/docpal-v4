@@ -17,6 +17,7 @@ export type UseDraggableParam = {
     detectDrop:boolean, 
     allowedEdges?:string[],
     onDragStart?:Function, 
+    canDrag?:(args:any) => boolean,
     onDropItself?:(args:any) => void,
     canDrop?:({ source }:any) => boolean, 
     isSticky?:() => boolean, 
@@ -36,6 +37,7 @@ export const useDragable = ({
     onDragStart,
     onDropItself,
     canDrop,
+    canDrag,
     isSticky,
     onDragEnter,
     onDragOver,
@@ -53,6 +55,10 @@ export const useDragable = ({
         if(!element) return; 
         cleanup = draggable({
             element,
+            canDrag(args) {
+              if(canDrag) return canDrag(args)
+              return true
+            },
             getInitialData(){
                 return dragData
             },

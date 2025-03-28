@@ -29,6 +29,12 @@ const {dragState ,setupDrag} = useDragable({
         data: tab
     },
     detectDrop: true,
+    canDrag(args) {
+      const layout = useTabLayout()
+      // if layout has only one panel and one tab, then can not drag
+      if(layout.value.length === 1 && layout.value[0].tabs.length === 1) return false
+      return true
+    },
     allowedEdges: ['left', 'right'],
     onDropFromExternal:({source, self}:any) => {
             const layout = useTabLayout()
@@ -157,6 +163,12 @@ function closeTab(){
     closePanelTab(tab.parent as string, index, true)
 }
 
+const canDelete = computed(() => {
+  const layout = useTabLayout()
+  // if layout has only one panel and one tab, then can not delete
+  if(layout.value.length === 1 && layout.value[0].tabs.length === 1) return false
+  return true
+})
 
 </script>
 
@@ -179,7 +191,7 @@ function closeTab(){
             <Icon class="closeIcon" name="lucide:share-2" @click="copyToClipboard(tab)" />
             <!-- <Icon class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" /> -->
             <Icon class="closeIcon" name="lucide:screen-share" @click="openInNewTab" />
-            <Icon class="closeIcon alwaysShow" name="ic:round-close" @click.stop="closeTab" />
+            <Icon class="closeIcon alwaysShow" v-if="canDelete" name="ic:round-close" @click.stop="closeTab" />
         </div>
 
         <Teleport v-if="dragState.type === 'preview'" :to="dragState.container">
