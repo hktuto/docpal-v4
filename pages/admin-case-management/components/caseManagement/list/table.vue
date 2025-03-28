@@ -58,11 +58,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     {
       field: 'caseIdDigit',
       title: 'caseManagement.digit'
-    }
+    },
     // TODO 版本管理添加后，active/inactive 失效
     // {
     //   field: 'enable',
     //   title: 'dpTable_status',
+    //   sortable: true,
     //   formatter: ({ cellValue }: any) => {
     //     return cellValue ? t('actions.active') : t('actions.inactive')
     //   }
@@ -83,12 +84,14 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       code: 'list_version',
       name: 'caseManagement_viewVersionHistory',
       action: ({ row }) => listProvider.openVersion(row)
-    }
-      // {
-      //     code:'save_as',
-      //     name:"caseManagement_saveCaseTemplate",
-      //     action: ({row}) => listProvider.saveAsNewCase(row)
-      // }
+    },
+      {
+          code:'save_as',
+          name:"caseManagement_saveCaseTemplate",
+          action: ({row}) => listProvider.saveAsNewCase(row)
+      }
+
+
     ]
   ],
   permissionMethod: listProvider.actionPermission,
@@ -104,8 +107,10 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   }
 })
 
+
 defineExpose({ reload })
 </script>
+
 
 <template>
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">

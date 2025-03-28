@@ -1131,6 +1131,8 @@ export interface ResultEasyShareDTO {
 }
 
 export interface NestedSearchLogRequestDTO {
+    /** @format int64 */
+    id?: number;
     label?: string;
     queryCondition?: string;
 }
@@ -2143,6 +2145,19 @@ export interface FileConfirmRequestDTO {
     userId?: string;
     uploadId?: string;
     fileConfirmDTOList?: FileConfirmDTO[];
+}
+
+export interface FileConfirmResponseDTO {
+    parentId?: string;
+    uploadSuccess?: boolean;
+}
+
+export interface ResultFileConfirmResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: FileConfirmResponseDTO;
 }
 
 /** Audit Trial Log Entry */
@@ -12972,7 +12987,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/document/batchConfirm
          */
         postNuxeoDocumentBatchconfirm: (data: FileConfirmRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+            this.request<ResultFileConfirmResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/batchConfirm`,
                 method: "POST",
                 body: data,
@@ -12989,7 +13004,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/document/batchConfirm/
          */
         postNuxeoDocumentBatchconfirmDeprecate: (data: FileConfirmRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+            this.request<ResultFileConfirmResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/batchConfirm/`,
                 method: "POST",
                 body: data,
@@ -14640,23 +14655,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postWorkflowTaskClaim: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
             this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/task/claim`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskClaimDeprecate
-         * @summary Claim a task
-         * @request POST:/api/docpal/workflow/task/claim/
-         */
-        postWorkflowTaskClaimDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/claim/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
