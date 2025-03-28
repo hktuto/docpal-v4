@@ -69,7 +69,10 @@ function updateNode(){
     graphProvider?.graph.value?.stopBatch('update-node-data')
     // TODO : update linked label
     // get linked edge 
-    const linkedEdges = graphProvider?.graph.value?.getConnectedEdges(node)
+    const linkedEdges = graphProvider?.graph.value?.getConnectedEdges(node).filter((connectedEdge:any) => {
+            // console.log(connectedEdge.source.cell, source.id)
+            return connectedEdge.source.cell === node.id
+        })
     linkedEdges?.forEach((edge:any) => {
         if(!edge.data.data || !edge.data.data.conditionExpression) {
             edge.setLabels('')
