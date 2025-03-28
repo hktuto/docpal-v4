@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import {Pane, Splitpanes} from 'splitpanes'
+import { Pane, Splitpanes } from 'splitpanes'
 
-import {clientApi} from 'api'
-import {BrowseListTable} from '#components'
-import {EventType, useEventBus} from 'eventbus'
-import {actions, ActionsFilter} from '../../../../packages/base/utils/browseActions'
+import { clientApi } from 'api'
+import { BrowseListTable } from '#components'
+import { EventType, useEventBus } from 'eventbus'
+import { actions, ActionsFilter } from '../../../../packages/base/utils/browseActions'
 
 const props = defineProps<{
-  idOrPath: string,
-  filter: any,
-  home: any,
+  idOrPath: string
+  filter: any
+  home: any
   commentId?: string
-}>();
+}>()
 
-const {idOrPath, commentId} = toRefs(props)
+const { idOrPath, commentId } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 const selectedItem = ref<any[]>([])
@@ -21,7 +21,7 @@ const infoOpened = ref(false)
 if (!tabProvider || !routerProvider) {
   throw createError('provider not found')
 }
-const tableRef = ref<InstanceType<typeof BrowseListTable>>();
+const tableRef = ref<InstanceType<typeof BrowseListTable>>()
 const browswInfoRef = ref()
 
 function addToSelection(items: any[]) {
@@ -29,7 +29,7 @@ function addToSelection(items: any[]) {
 }
 
 function removeFromSelection(items: any[]) {
-  selectedItem.value = selectedItem.value.filter(item => !items.includes(item))
+  selectedItem.value = selectedItem.value.filter((item) => !items.includes(item))
 }
 
 function changeRoute(path: string) {
@@ -50,14 +50,16 @@ async function getDoc() {
   docPermission.value = null
   selectedList.value = []
   const userId = useUserId()
-  const {doc, permission} = await getDocDetail(idOrPath.value, userId.value);
+  const { doc, permission } = await getDocDetail(idOrPath.value, userId.value)
   if (!doc.isFolder) {
-    tabProvider?.openInCurrentTab(createDetailPageParams({
-      docName: doc.name,
-      idOrPath: doc.id,
-      commentId: commentId,
-      showHeaderAction: true
-    }))
+    tabProvider?.openInCurrentTab(
+      createDetailPageParams({
+        docName: doc.name,
+        idOrPath: doc.id,
+        commentId: commentId,
+        showHeaderAction: true
+      })
+    )
   } else {
     docDetail.value = doc
     docPermission.value = permission
@@ -68,7 +70,7 @@ function selectedChangeHandler(selectedRows: any[]) {
   selectedList.value = selectedRows
 }
 
-function closePreview({detail}: any) {
+function closePreview({ detail }: any) {
   if (!detail) return
   if (detail.id === docDetail.value.id) {
     const newItem = createBrowseListPageParams({
@@ -79,13 +81,12 @@ function closePreview({detail}: any) {
 }
 
 const docActions = computed(() => {
-  if (!docDetail.value || !docPermission.value) return {};
+  if (!docDetail.value || !docPermission.value) return {}
   if (selectedList.value.length > 0) {
-    return ActionsFilter(actions, docPermission.value, "showInShare");
+    return ActionsFilter(actions, docPermission.value, 'showInShare')
   }
-  return ActionsFilter(actions, docPermission.value, "showInFolder");
-});
-
+  return ActionsFilter(actions, docPermission.value, 'showInFolder')
+})
 
 function handleSelectAll() {
   if (tableRef.value) {
@@ -109,37 +110,44 @@ function handleRefresh() {
 async function handleRefreshChild(childId: string) {
   if (tableRef.value) {
     const tableData: any = tableRef.value?.tableRef?.getData()
-    const cItem = getTableItem(tableData)
+    const cItem = findNodeById({children:tableData}, childId)
     if (!!cItem) tableRef.value?.tableRef?.reloadTreeExpand(cItem)
   }
 
-  function getTableItem(tree: any): any {
-    for (let i = 0; i < tree.length - 1; i++) {
-      const treeItem = tree[i]
-      if (treeItem.id === childId) return treeItem
-      if (treeItem.children) {
-        const treeC = getTableItem(treeItem.children)
-        if (!!treeC) return treeC
+  function findNodeById(node: any, targetId) {
+    // 当前节点匹配时直接返回
+    if (node.id === targetId) {
+      return node
+    }
+    // 遍历子节点递归查找
+    if (node.children && node.children.length > 0) {
+      for (const child of node.children) {
+        const found = findNodeById(child, targetId)
+        if (found) {
+          return found // 找到则立即返回
+        }
       }
     }
-    return null
+    return null // 未找到返回null
   }
 }
 
-function itemDeleted() {
+function itemDeleted() {}
 
-}
-
-watch([idOrPath, commentId], (newVal, oldVal) => {
-  getDoc()
-  if (newVal && newVal[1]) {
-    infoOpened.value = true
-  } else if (oldVal && oldVal[1]) {
-    infoOpened.value = false
+watch(
+  [idOrPath, commentId],
+  (newVal, oldVal) => {
+    getDoc()
+    if (newVal && newVal[1]) {
+      infoOpened.value = true
+    } else if (oldVal && oldVal[1]) {
+      infoOpened.value = false
+    }
+  },
+  {
+    immediate: true
   }
-}, {
-  immediate: true,
-})
+)
 
 onActivated(() => {
   if (tableRef.value) {
@@ -156,18 +164,19 @@ provide(BrowseListProviderKey, {
   docPermission,
   changeRoute,
   addToSelection,
-  removeFromSelection,
+  removeFromSelection
 })
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
-bus.on(({relatedIdOrPath, highlightIdOrPath}: any) => {
+bus.on(({ relatedIdOrPath, highlightIdOrPath }: any) => {
+  console.log(relatedIdOrPath, docDetail.value.id)
   if (relatedIdOrPath !== docDetail.value.id) {
     handleRefreshChild(relatedIdOrPath)
   }
-    // check id relatedIdOrPath is chidlren of current page
+  // check id relatedIdOrPath is chidlren of current page
   // TODO: check if highlightIdOrPath is chidlren of current page
   else if (relatedIdOrPath === docDetail.value.id) {
-    console.log("relatedIdOrPath")
+    console.log('relatedIdOrPath')
     handleRefresh()
   }
 })
@@ -177,8 +186,7 @@ const minSize = ref(20)
 function calMinWidth() {
   // panel size is 280px, check the percentage of window width
   const windowWidth = window.innerWidth
-  minSize.value = 280 / windowWidth * 100
-
+  minSize.value = (280 / windowWidth) * 100
 }
 
 useEventListener(window, 'resize', calMinWidth)
@@ -190,20 +198,17 @@ useEventListener(document, 'closeFilePreview', closePreview)
   <div class="browseContainer">
     <splitpanes>
       <Pane>
-        <BrowseListTable ref="tableRef"
-                         :class="{'selected': selectedList.length > 0}"
-                         :selectedRows="selectedItem"
-                         @selectedChange="selectedChangeHandler">
+        <BrowseListTable ref="tableRef" :class="{ selected: selectedList.length > 0 }" :selectedRows="selectedItem" @selectedChange="selectedChangeHandler">
           <template #toolbar_buttons>
             <slot name="toolbar_buttons">
               <div class="toolsBarContainer">
                 <template v-if="selectedList.length === 0">
-                  <BrowseBreadcrumb :idOrPath="idOrPath" :home="home"/>
+                  <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
                 </template>
                 <template v-else>
                   <div class="selectedNoteContainer">
-                    {{ $t("dpDocument_fileSelected") }}: {{ selectedList.length }}
-                    <Icon name="mdi:close" @click="handleClearSelected"/>
+                    {{ $t('dpDocument_fileSelected') }}: {{ selectedList.length }}
+                    <Icon name="mdi:close" @click="handleClearSelected" />
                   </div>
                 </template>
               </div>
@@ -227,12 +232,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
                   </template>
                 </template>
               </CollapseMenu>
-              <BrowseActionsInfo
-                v-if="idOrPath !== '/'"
-                :doc="docDetail"
-                :permission="docPermission"
-                @itemClicked="infoOpened = !infoOpened"
-              />
+              <BrowseActionsInfo v-if="idOrPath !== '/'" :doc="docDetail" :permission="docPermission" @itemClicked="infoOpened = !infoOpened" />
             </slot>
           </template>
         </BrowseListTable>
