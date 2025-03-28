@@ -190,17 +190,29 @@ export const getDocumentAdditional = async (type: string): Promise<any[]> => {
 };
 
 export const getPermission = async (idOrPath: string, userId: string): Promise<any> => {
-  if (!idOrPath || !userId) {
-    return {};
+  try {
+    if (!idOrPath || !userId) {
+      return {};
+    }
+    const { data } = await clientApi.api.getNuxeoDocumentAclPermission({ docId: idOrPath, userId }, {
+      headers: { 'noThrowError': "true" }
+    });
+    if (!data) {
+      throw new Error('no permission found');
+    }
+    return {
+      ...data,
+      hold: data.hold || {}
+    };
+  } catch (error) {
+    return {
+      "print": false,
+      "permissionList": [],
+      "permission": "Everything",
+      "retention": null,
+      "hold": null
+    };
   }
-  const { data } = await clientApi.api.getNuxeoDocumentAclPermission({ docId: idOrPath, userId });
-  if (!data) {
-    throw new Error('no permission found');
-  }
-  return {
-    ...data,
-    hold: data.hold || {}
-  };
 };
 
 async function DownloadDocApi(idOrPath: string, cb?: Function) {
