@@ -14,8 +14,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
       title: 'DAM_fileType',
       field: 'sourceType',
       fixed: 'left',
-      width: 200,
-      sortable: true
+      width: 200
     },
     {
       title: 'DAM_convertion',

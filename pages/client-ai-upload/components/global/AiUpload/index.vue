@@ -21,7 +21,7 @@
 <script lang="ts" setup>
 import { useVxeTable } from '#imports'
 import { ElMessageBox } from 'element-plus'
-import { clientApi, publicApi } from 'api'
+import { clientApi } from 'api'
 import { createAiUploadDetail } from '../../../utils/aiUpoloadHelper'
 
 const routerProvider = inject(MenuRouterKey)
@@ -114,8 +114,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       field: 'uploadPath',
       slots: {
         default: 'path'
-      },
-      sortable: true
+      }
     },
     {
       field: 'createdDate',
@@ -123,12 +122,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
       },
-      sortable: true
     },
     {
       title: 'tableHeader_filesCount',
       field: 'filesCount',
-      sortable: true
     },
     {
       field: 'uploadStatus',
@@ -136,23 +133,22 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       slots: {
         default: 'status'
       },
-      sortable: true
     }
   ],
   dblClickAction: ({ row, column, event }: any) => {
     dblclickHandler(row)
   },
-  permissionMethod:({row,code,column}) => {
-      if(code === 'delete') {
-        return {
-          visible: row.uploadStatus === 'Ready',
-          disabled: false
-        }
-      }
+  permissionMethod: ({ row, code, column }) => {
+    if (code === 'delete') {
       return {
-        visible: true,
+        visible: row.uploadStatus === 'Ready',
         disabled: false
       }
+    }
+    return {
+      visible: true,
+      disabled: false
+    }
   },
   bodyActions: [
     [
@@ -208,20 +204,22 @@ function getTagType(status) {
 
 
 async function handleDelete(id: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`,{
-        confirmButtonText: t('dpButtom_confirm'),
-        cancelButtonText: t('common_close')
-    }).catch((action) => { return action })
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
+    confirmButtonText: t('dpButtom_confirm'),
+    cancelButtonText: t('common_close')
+  }).catch((action) => {
+    return action
+  })
   if (action !== 'confirm') return
-    const formData = new FormData()
-    formData.append('userId', userId.value)
-    formData.append('uploadId', id)
-    console.log("formData", formData, id, userId.value)
-    await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData,{
-      headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
+  const formData = new FormData()
+  formData.append('userId', userId.value)
+  formData.append('uploadId', id)
+  console.log('formData', formData, id, userId.value)
+  await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
   reload()
 }
 
