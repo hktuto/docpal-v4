@@ -129,7 +129,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
     height: 100%;
     width:100%;
     position: relative;
-    // overflow: hidden;
+    overflow: auto;
     z-index: 2;
     -webkit-app-region: no-drag;
 }

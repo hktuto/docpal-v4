@@ -2,32 +2,53 @@
 import { Splitpanes, Pane } from 'splitpanes'
 
 import {paneResized} from '#imports'
-const { layout } = defineProps<{
+const props = defineProps<{
     layout: TabPanel[]
 }>()
+const {layout} = toRefs(props)
 const emits = defineEmits(['ready'])
 
+const containerSize = ref(0)
+function setMinSize() {
+    const appContent = document.querySelector('.appContent');
+    if(!appContent) {
+      console.log("no appContent")
+      return window.innerWidth;
+    }
+    const appContentRect = appContent.getBoundingClientRect();
+    console.log(appContentRect.width)
+    const layoutWIdth = (layout.value ? layout.value.length : 1) * 640;
+    containerSize.value = Math.min(layoutWIdth, appContentRect.width);
+}
 
-const minSize = computed(() => {
-    return (layout ? layout.length : 1) * 640;
-})
 
 function layoutReadyHandler(){
     emits('ready')
 }
 const splitRef = ref<InstanceType<typeof Splitpanes>>()
 
+const panelMinWidth = computed(() => {
+  return 100 / (layout.value ? layout.value.length : 1) 
+})
+
+watch(layout, () => {
+  setMinSize()
+},{
+  immediate: true,
+  deep: true
+})
 
 onMounted(() => {
     emits('ready')
+
 })
 
 </script>
 
 <template>
-    <div class="layoutContainer" :style="`--panel-min-size: ${minSize}px`">
+    <div class="layoutContainer" :style="`--panel-min-size: ${setMinSize}px`">
         <splitpanes vertical ref="splitRef" @resized="paneResized" :push-other-panes="false" @ready="layoutReadyHandler">
-            <Pane v-for="(tab, index) in layout" :key="tab.id"   >
+            <Pane v-for="(tab, index) in layout" :key="tab.id" :minSize="panelMinWidth" >
                 <TabPanel :panel="tab" :index="index"/>
             </Pane>
         </splitpanes>
@@ -39,7 +60,7 @@ onMounted(() => {
 .layoutContainer{
     --panel-border-radius: var(--app-border-radius-m);
     height: 100%;
-    width: 100%;
+    width: var(--panel-min-size);
     border-radius: var(--app-border-radius-m);
     box-shadow: var(--app-shadow-s);
     position: relative;
