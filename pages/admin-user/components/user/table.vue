@@ -327,9 +327,10 @@ async function getFilter(conditions: any, initParams: any) {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'user_username', value: 'username' },
         { label: 'user_email', value: 'email' },
-        { label: 'user_groups', value: 'groupDTOList' }]
+        { label: 'user_groups', value: 'groupDTOList' },
+        { label: 'user_username', value: 'username' }
+      ]
     },
     {
       key: 'isDesc',

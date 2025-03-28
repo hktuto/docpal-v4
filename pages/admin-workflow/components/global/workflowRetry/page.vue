@@ -106,8 +106,8 @@ function getFilter() {
       isMultiple: false,
       options: [
         { label: 'workflowEditor.name', value: 'businessKey' },
-        { label: 'workflow_retryStartDate', value: 'startTime' },
         { label: 'workflow_retryInitiator', value: 'creator' },
+        { label: 'workflow_retryStartDate', value: 'startTime' },
         { label: 'workflow_retryStatus', value: 'workflowState' }
       ]
     },

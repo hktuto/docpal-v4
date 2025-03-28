@@ -96,8 +96,8 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'tableHeader_name', value: 'documentName' },
-        { label: 'document_filePath', value: 'documentPath' }
+        { label: 'document_filePath', value: 'documentPath' },
+        { label: 'tableHeader_name', value: 'documentName' }
         // { label: 'tableHeader_policyName', value: 'policyName' },
         // { label: 'tableHeader_approver', value: 'approver' },
         // { label: 'tableHeader_confirmAt', value: 'confirmAt' }

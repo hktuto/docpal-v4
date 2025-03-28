@@ -368,12 +368,12 @@ function getFilter() {
       options: [
         { label: 'tableHeader.fileOrFolderName', value: 'documentNames' },
         { label: 'document_path', value: 'path' },
-        { label: 'tableHeader_shareTo', value: 'shareUserIds' },
         { label: 'tableHeader_shareDate', value: 'createdDate' },
-        { label: 'shareWithMe_startDate', value: 'startDate' },
+        { label: 'tableHeader_shareTo', value: 'shareUserIds' },
         { label: 'shareWithMe_endDate', value: 'expiredDate' },
-        { label: 'dpTable_permission', value: 'permission' },
+        { label: 'shareWithMe_startDate', value: 'startDate' },
         { label: 'shareWithMe_status', value: 'status' },
+        { label: 'dpTable_permission', value: 'permission' },
       ]
     },
     {

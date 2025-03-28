@@ -149,10 +149,10 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'tableHeader_name', value: 'documentName' },
+        { label: 'tableHeader_dueDate', value: 'expireDate' },
         { label: 'document_filePath', value: 'createdDate' },
+        { label: 'tableHeader_name', value: 'documentName' }
         // { label: 'tableHeader_policyName', value: 'policyName' },
-        { label: 'tableHeader_dueDate', value: 'expireDate' }
       ]
     },
     {

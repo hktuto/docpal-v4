@@ -178,8 +178,8 @@ async function getFilter() {
       isMultiple: false,
       options: [
         { label: 'holdPolicy_name', value: 'policyName' },
-        { label: 'holdPolicy_creator', value: 'createdBy' },
         { label: 'holdPolicy_creationDate', value: 'createdDate' },
+        { label: 'holdPolicy_creator', value: 'createdBy' },
         { label: 'holdPolicy_status', value: 'status' }
       ]
     },
