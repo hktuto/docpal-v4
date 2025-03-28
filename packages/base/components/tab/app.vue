@@ -8,7 +8,7 @@ const hightLightPanel = useCurrentTargetPanel()
 
 // #region hot key to close tab
 const activeElement = useActiveElement()
-const { current } = useMagicKeys()
+
 const notUsingInput = computed(() =>
   activeElement.value?.tagName !== 'INPUT'
   && activeElement.value?.tagName !== 'TEXTAREA'
