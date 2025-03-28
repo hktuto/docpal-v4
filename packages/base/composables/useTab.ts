@@ -87,6 +87,9 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
 
         if(layout.value[panelIndex].tabs.length === 0) {
             layout.value.splice(panelIndex, 1)
+            // remove old tab, and set focus to another tab
+            const newFocusTab = panelIndex > 0 ? panelIndex -1 : 0;
+            panelTabFocus(layout.value[newFocusTab].id, 0)
         }else{
             layout.value[panelIndex].showingTabIndex = tabIndex > 0 ? tabIndex -1 : 0
             const componentIndex = components.value.findIndex( (component:TabItem) => component.id === layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex || 0].id);
