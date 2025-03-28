@@ -44,7 +44,7 @@
       </VxeGrid>
     </div>
 
-    <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @refresh="reloadPage">
+    <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @success="handleAddCollection">
     </LazyCollectionAddCollectionDialog>
     <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reload">
     </LazyCollectionEditCollectionDialog>
@@ -85,6 +85,10 @@ async function getCollectionList() {
   } catch (error) {
 
   }
+}
+
+function handleAddCollection(data: any) {
+  state.collectionList.push(data)
 }
 
 function handleTabClick(row: any) {
