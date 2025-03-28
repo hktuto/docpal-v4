@@ -103,6 +103,7 @@ defineExpose({
 }
 .el-card {
   margin-bottom: var(--app-space-xs);
+  height: fit-content!important;
 }
 .search-child {
   // background-color: var(--app-primary-color);
