@@ -16,7 +16,6 @@ function setMinSize() {
       return window.innerWidth;
     }
     const appContentRect = appContent.getBoundingClientRect();
-    console.log(appContentRect.width)
     const layoutWIdth = (layout.value ? layout.value.length : 1) * 640;
     containerSize.value = Math.min(layoutWIdth, appContentRect.width);
 }

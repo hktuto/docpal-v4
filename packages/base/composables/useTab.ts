@@ -88,7 +88,7 @@ export function closePanelTab(panelId:string, tabIndex: number, deleteComponent 
         if(layout.value[panelIndex].tabs.length === 0) {
             layout.value.splice(panelIndex, 1)
         }else{
-            layout.value[panelIndex].showingTabIndex = layout.value[panelIndex].tabs.length - 1;
+            layout.value[panelIndex].showingTabIndex = tabIndex > 0 ? tabIndex -1 : 0
             const componentIndex = components.value.findIndex( (component:TabItem) => component.id === layout.value[panelIndex].tabs[layout.value[panelIndex].showingTabIndex || 0].id);
             components.value[componentIndex].initized = true
         }
@@ -162,14 +162,14 @@ export function splitViewToDirection(sourceData:TabItem, targetData:TabPanel, di
         // check if targetParentLayout direction match new direction
         
         if(direction === 'center') {
-            
-            layout.value[targetParentId].tabs.push(
+            const currentTargetIndex = layout.value.findIndex(tab => tab.id === targetData.id)
+            layout.value[currentTargetIndex].tabs.push(
                 {
                     ...sourceData,
                     parent: targetData.id,
                 })
                 nextTick(() => {
-                    panelTabFocus(layout.value[targetParentId].id, layout.value[targetParentId].tabs.length - 1)
+                    panelTabFocus(layout.value[currentTargetIndex].id, layout.value[currentTargetIndex].tabs.length - 1)
                     const component = allComponents.value.find( (component:TabItem) => component.id === sourceData.id)
                     console.log('component in all components', component)
                     if(component) {

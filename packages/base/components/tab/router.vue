@@ -25,7 +25,7 @@ const isFullscreen = computed(() => {
 
 
 function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExist:boolean = false) {
-    if(current.has('meta') || current.has('ctrl') || current.has('Ctrl') || openInNewTab){
+    if(current.has('meta') || current.has('control') || openInNewTab){
         tabManager?.openInNewTab(param)
         return;
     }
