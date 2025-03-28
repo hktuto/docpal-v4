@@ -43,7 +43,7 @@ const {
 function resize() {}
 function handleSearch(data: any) {
   // sessionStorage.setItem("searchParams", JSON.stringify(data));
-  routerProvider?.navigateTo(routeSearch(data), false)
+  routerProvider?.navigateTo(routeSearch({searchParams: data }), false)
   // router.push('/searchGroup')
 }
 async function handleDelete() {
