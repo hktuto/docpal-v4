@@ -58,7 +58,7 @@ const { tableConfig, tableEvent, tableRef, cleanSelectedRows } = useVxeTable({
   id: 'a-userTableSetting',
   columns: [
     { field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox' },
-    { field: 'userId', title: 'user_groupIdentifer', sortable: true }
+    { field: 'userId', title: 'user_groupIdentifer' }
   ],
   bodyActions: [
     [

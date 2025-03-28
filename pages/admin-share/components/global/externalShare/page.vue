@@ -37,21 +37,21 @@ const {
     }
   },
   columns: [
-    { field: 'emailList', title: 'tableHeader_emailList', fixed: 'left', sortable: true },
-    { field: 'documentSize', title: 'tableHeader_numberOfFiles', sortable: true },
+    { field: 'emailList', title: 'tableHeader_emailList', fixed: 'left' },
+    { field: 'documentSize', title: 'tableHeader_numberOfFiles' },
     {
       field: 'created',
       title: 'tableHeader_creationDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      }, sortable: true
+      }
     },
     {
       field: 'expiredDate',
       title: 'tableHeader_dueDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      }, sortable: true
+      }
     }
   ],
   bodyActions: [

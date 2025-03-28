@@ -41,11 +41,10 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     })
   },
   columns: [
-    { field: 'name', title: 'search.type', fixed: 'left', sortable: true },
+    { field: 'name', title: 'search.type', fixed: 'left' },
     {
       field: 'category',
-      title: 'docType.category',
-      sortable: true
+      title: 'docType.category'
     },
     { field: 'dataType', title: 'documentType_Type' },
     {
@@ -62,7 +61,6 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
         return formatDate(cellValue)
       }
     }
-
   ],
   bodyActions: [
     [
@@ -171,10 +169,10 @@ async function getFilter() {
     isMultiple: false,
     value: ['name'],
     options: [
-      { label: 'search.type', value: 'name' },
       { label: 'docType.category', value: 'category' },
-      { label: 'documentType_Type', value: 'dataType' },
       { label: 'role.creator', value: 'createdBy' },
+      { label: 'search.type', value: 'name' },
+      { label: 'documentType_Type', value: 'dataType' },
       { label: 'table_last_update', value: 'modifiedDate' }
     ]
   }, {
