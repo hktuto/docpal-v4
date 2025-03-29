@@ -129,7 +129,8 @@ async function beforeSubmit(){
   }).then(res => res.data.data)
   console.log("res", uploadRes.id)
   return {
-    file: uploadRes.id
+    file: uploadRes.id,
+    hasFile: true
   }
 }
 
