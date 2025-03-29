@@ -360,11 +360,11 @@ function getFilter() {
       options: [
         { label: 'tableHeader.fileOrFolderName', value: 'documentNames' },
         { label: 'document_path', value: 'path' },
+        { label: 'dpTable_permission', value: 'permission' },
         { label: 'tableHeader_shareBy', value: 'createdUserId' },
         { label: 'tableHeader_shareDate', value: 'createdDate' },
-        { label: 'shareWithMe_startDate', value: 'startDate' },
         { label: 'shareWithMe_endDate', value: 'expiredDate' },
-        { label: 'dpTable_permission', value: 'permission' },
+        { label: 'shareWithMe_startDate', value: 'startDate' },
       ]
     },
     {

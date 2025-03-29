@@ -208,9 +208,9 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
+        { label: 'table_modifiedDate', value: 'modifiedDate' },
         { label: 'table_name', value: 'label' },
         { label: 'workflow_createDate', value: 'createdDate' },
-        { label: 'table_modifiedDate', value: 'modifiedDate' },
         { label: 'caseManagement.userGroup', value: 'userGroup' }
         // { label: 'tableHeader_confirmAt', value: 'confirmAt' }
       ]

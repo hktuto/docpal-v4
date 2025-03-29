@@ -417,11 +417,11 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'masterTable_id', value: 'id' },
-        { label: 'workflow_createDate', value: 'created_date' },
-        { label: 'tableHeader_modifiedDate', value: 'modified_date' },
         { label: 'modified_by', value: 'modified_by' },
-        { label: 'common_status', value: 'status' }
+        { label: 'tableHeader_modifiedDate', value: 'modified_date' },
+        { label: 'masterTable_id', value: 'id' },
+        { label: 'common_status', value: 'status' },
+        { label: 'workflow_createDate', value: 'created_date' },
       ]
     },
     {

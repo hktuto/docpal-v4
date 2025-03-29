@@ -156,9 +156,9 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'masterTable_name', value: 'name' },
-        { label: 'masterTable_createdBy', value: 'createdBy' },
         { label: 'dpTable_status', value: 'status' },
+        { label: 'masterTable_createdBy', value: 'createdBy' },
+        { label: 'masterTable_name', value: 'name' }
       ]
     },
     {

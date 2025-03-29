@@ -146,8 +146,8 @@ function getFilter() {
       options: [
         { label: 'user_email', value: 'email' },
         { label: 'document_folderPath', value: 'logicalPath' },
-        { label: 'document_uploadStatus', value: 'status' },
-        { label: 'document_uploadDate', value: 'createdDate' }
+        { label: 'document_uploadDate', value: 'createdDate' },
+        { label: 'document_uploadStatus', value: 'status' }
       ]
     },
     {

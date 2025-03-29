@@ -137,8 +137,8 @@ async function getFilter() {
     {
       key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
       options: [
-        { label: 'dashboard_name', value: 'name' },
         { label: 'dashboard_accessUserGroup', value: 'access' },
+        { label: 'dashboard_name', value: 'name' },
         { label: 'workflow_createDate', value: 'createdDate' }
       ]
     },
