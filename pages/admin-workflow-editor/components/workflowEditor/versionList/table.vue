@@ -114,10 +114,10 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'workflow_editorVersion', value: 'createdDate' },
-        { label: 'workflow_editorLastDate', value: 'modifiedDate' },
         { label: 'workflow_editorCreatedBy', value: 'createdBy' },
-        { label: 'workflow_editorLastModified', value: 'modifiedBy' }
+        { label: 'workflow_editorLastModified', value: 'modifiedBy' },
+        { label: 'workflow_editorLastDate', value: 'modifiedDate' },
+        { label: 'workflow_editorVersion', value: 'createdDate' },
       ]
     },
     {

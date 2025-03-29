@@ -65,12 +65,12 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'message_templateName', value: 'templateName' },
-        { label: 'userSetting_language', value: 'language' },
-        { label: 'message_templateStatus', value: 'whatsAppStatus' },
         { label: 'role.creator', value: 'createdBy' },
+        { label: 'userSetting_language', value: 'language' },
         { label: 'workflow_editorLastModified', value: 'modifiedBy' },
-        { label: 'table_last_update', value: 'modifiedDate' }
+        { label: 'table_last_update', value: 'modifiedDate' },
+        { label: 'message_templateName', value: 'templateName' },
+        { label: 'message_templateStatus', value: 'whatsAppStatus' }
       ]
     },
     {

@@ -124,11 +124,11 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
+        { label: 'emailContentTemplate_creator', value: 'createdBy' },
+        { label: 'emailContentTemplate_id', value: 'id' },
         { label: 'emailContentTemplate_name', value: 'label' },
         { label: 'tableHeader_subject', value: 'subject' },
-        { label: 'emailContentTemplate_id', value: 'id' },
         // { label: 'emailContentTemplate_layoutUsed', value: 'emailLayoutName' },
-        { label: 'emailContentTemplate_creator', value: 'createdBy' }
       ]
     },
     {

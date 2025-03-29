@@ -143,11 +143,11 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'workflow_ManageName', value: 'taskInstance.businessKey' },
-        { label: 'workflow_workflowName', value: 'taskInstance.processDefinitionName' },
-        { label: 'workflow_ManageInitiator', value: 'taskInstance.startUserId' },
         { label: 'workflow_assignee', value: 'assignee' },
-        { label: 'workflow_ManageStartDate', value: 'createDate' }
+        { label: 'workflow_ManageName', value: 'taskInstance.businessKey' },
+        { label: 'workflow_ManageInitiator', value: 'taskInstance.startUserId' },
+        { label: 'workflow_ManageStartDate', value: 'createDate' },
+        { label: 'workflow_workflowName', value: 'taskInstance.processDefinitionName' },
       ]
     },
     {

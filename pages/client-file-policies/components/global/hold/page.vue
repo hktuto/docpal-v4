@@ -84,11 +84,11 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'tableHeader.folderName', value: 'documentName' },
-        { label: 'tableHeader_path', value: 'documentPath' },
-        // { label: 'tableHeader_policyName', value: 'policyHoldName' },
         { label: 'tableHeader_applyBy', value: 'applyBy' },
-        { label: 'tableHeader_approver', value: 'applyApprovedBy' }
+        { label: 'tableHeader_approver', value: 'applyApprovedBy' },
+        { label: 'tableHeader.folderName', value: 'documentName' },
+        { label: 'tableHeader_path', value: 'documentPath' }
+        // { label: 'tableHeader_policyName', value: 'policyHoldName' },
       ]
     },
     {
