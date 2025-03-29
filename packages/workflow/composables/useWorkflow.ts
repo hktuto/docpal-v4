@@ -21,7 +21,11 @@ export const useWorkflow = () => {
     {
       name: 'caseInfo',
       component: 'formWidgetCaseInfo'
-    }
+    },
+    // {
+    //   name: 'uploadTemplate',
+    //   component: 'formWidgetUploadTemplate'
+    // }
   ]));
   const formStartHandle = useState<any>('formRenderSlots', () => ({}));
   const customStartCallBackList = useState<any>('customStartCallBack', () => ({}));

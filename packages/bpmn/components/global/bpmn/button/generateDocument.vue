@@ -27,24 +27,25 @@ const dialogOpened = ref(false)
 const iframeUrl = ref('')
 
 const dialogHeight = ref(640);
-async function openPreivew(){
-    try{
-      loading.value = true;
-      previewFile.blob = null;
-      const xmlJson = bpmnStringToJson(props.xml)
-      const targetTask = xmlJson.flatObj[props.attr_documentStepId]
-      const latestFormData = await workflowFormDetail?.getFormData(false)
-      // merge latestFormData and props.formData, if item in object is null, use latestFormData
-      const mergeFormData = Object.keys(props.formData).reduce((prev:any, key:string) => {
-        if(props.formData[key]) {
-          prev[key] = props.formData[key]
-        }else{
-          prev[key] = latestFormData[key]
-        }
-        return prev
-      }, {})
-        // get template id
-        const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
+
+async function generatePreview(){
+  try{
+    loading.value = true;
+    previewFile.blob = null;
+    const xmlJson = bpmnStringToJson(props.xml)
+    const targetTask = xmlJson.flatObj[props.attr_documentStepId]
+    const latestFormData = await workflowFormDetail?.getFormData(false)
+    // merge latestFormData and props.formData, if item in object is null, use latestFormData
+    const mergeFormData = Object.keys(props.formData).reduce((prev:any, key:string) => {
+      if(props.formData[key]) {
+        prev[key] = props.formData[key]
+      }else{
+        prev[key] = latestFormData[key]
+      }
+      return prev
+    }, {})
+    // get template id
+    const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
 
         if(!templateId || !varible) return;
@@ -59,7 +60,13 @@ async function openPreivew(){
                 const vari = varibleList[key].replace('${variables:get(','').replace(')}', '')
                 const value = mergeFormData[vari]
                 if(value) {
-                    map[key] = value
+                    try{
+                      const data = JSON.parse(value)
+                      map[key] = data
+                    }catch(err){
+
+                      map[key] = value
+                    }
                 }else{
                     map[key] = ""
                 }
@@ -71,43 +78,65 @@ async function openPreivew(){
             }, {
                 format: 'blob'
         })
-        const submitFormData = new FormData()
-        const fileName = 'preview'
-        submitFormData.append('file', res, fileName)
-        const templaRequest = JSON.stringify({
-            fileName: res.name,
-            fileType: 'File',
-            userId: userId.value,
-            fileRelativePath: '/' + fileName,
-        })
-        submitFormData.append('uploadTempFileRequestStr', templaRequest)
-        dialogHeight.value = window.innerHeight - 60;
-        dialogOpened.value = true
-        setTimeout(() => {
-          previewFile.name = fileName
-          previewFile.blob = res
-        },100)
-        
-    }catch(err){
-      console.log(err)
-        // check if error is come from server
-        if(err.name !== "AxiosError"){
-            routerProvider?.message.error(err.message)
-        }
-    }
-    finally{
+        return res;
+  }catch(err){
+    console.log(err)
+    if(err.name !== "AxiosError"){
+          routerProvider?.message.error(err.message)
+      }
+    throw new Error("Generate Preview Error")
+  }finally{
+    loading.value = false;
+  }
+}
 
-        loading.value = false;
-    }
+async function openPreivew(){
+  const res = await generatePreview()
+  dialogHeight.value = window.innerHeight - 60;
+  dialogOpened.value = true
+  setTimeout(() => {
+    previewFile.blob = res
+  },100)
 }
 function init(){
 
 }
 
+async function beforeSubmit(){
+  // because backend can not handle loop data in workflow generate template, so we need to upload file to server
+  const res = await generatePreview() as blob
+  // will set default file name to 'preview'
+  // default filed name is 'file'
+  // get  file extension from blob
+  const ext = mimeTypeToExtension(res.type)
+  
+  const fileName = 'preview.' + ext
+  // return null 
+  const formData = new FormData()
+  formData.append('file', res, fileName)
+  formData.append('nonPermission', true)
+  const params = {
+            properties: {
+              'dc:title': fileName
+            },
+            type:"File",
+          }
+  formData.append('document', JSON.stringify(params))
+  const uploadRes = await clientApi.instance.post('/docpal/workflow/upload/file', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }).then(res => res.data.data)
+  console.log("res", uploadRes.id)
+  return {
+    file: uploadRes.id
+  }
+}
+
 onMounted(() => {
     init()
 })
-
+defineExpose({ beforeSubmit })
 </script>
 
 <template>

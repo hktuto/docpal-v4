@@ -38,6 +38,7 @@ async function getVersionList() {
       copyVersion: data.latestVersion
     }
     FormRendererRef.value.vFormRenderRef.setFormData(defaultValue)
+
 }
 
 async function open(){
@@ -58,10 +59,43 @@ async function save(){
       name: formData.name,
       versionId: versionId
     }
-    const res = await adminApi.api.postCaseTypesIdCopy(data.id, params)
+    const copyRes = await adminApi.api.postCaseTypesIdCopy(data.id, params).then(res => res.data);
+    // get case detail
+    
+    const blob = await adminApi.api.getCaseTypesIdDownloadXml(data.id, {versionNumber: formData.copyVersion}, {
+        format: 'blob'
+    }) as any
+    const cmmnString = await blob.text()
+    const v = cmmnToJson(cmmnString)
+    const humanTasks = v.definitions.case.casePlanModel.humanTask || []
+
+    // const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
+    //TODO : get all form in case and save as to new version
+    // Step 1 : get all form in case
+    // const allFrom = await xmlRef.value.getAllForm()
+    for(let i = 0; i < humanTasks.length; i++) {
+      const task = humanTasks[i] as any
+      const response = await adminApi.api.getRelationQuery({
+                processKey: data.name,
+                userTaskId: task.attr_id,
+                versionId:  versionId
+            });
+      if(response && response.data && response.data.length > 0 && response.data[0].jsonValue && JSON.parse(response.data[0].jsonValue)) {
+        const params:any = {
+          processKey: copyRes.name,
+          userTaskId: task.attr_id,
+          versionId: copyRes.latestVersionId
+        }
+        params.jsonValue = response.data[0].jsonValue
+        await adminApi.api.postRelationSave(params)
+      }
+      
+      
+    }
     // TODO : copy form data
     opened.value = false;
     emits('close')
+
 }
 
 defineExpose({ open })

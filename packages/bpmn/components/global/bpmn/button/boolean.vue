@@ -20,6 +20,12 @@ const workflowProvider = inject("workflowFormRender")
 
 const emits = defineEmits(['submit'])
 
+async function beforeSubmit(){
+  return {
+    [attr_booleanValue]: !attr_applyState
+  };
+}
+
 async function submit(){
     //
     // step 1 get latest form data
@@ -32,7 +38,7 @@ async function submit(){
     emits('submit', formData)
 }
 
-
+defineExpose({ beforeSubmit })
 </script>
 
 

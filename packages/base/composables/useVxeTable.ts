@@ -330,6 +330,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 range: true
             }
         }
+        
         tableEvent.checkboxChange = ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
             console.log("checkboxChange", selectedRows)

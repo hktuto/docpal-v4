@@ -46,7 +46,7 @@ type AdditionalButton = {
   component: string,
 }
 const additionalButton = ref<AdditionalButton[]>([])
-
+const additionalButtonRef = ref<any[]>([])
 function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
   const {buttons, components} = getBpmnAddtionalElement(xml, userTaskId, taskDetail, formData)
   additionalButton.value = buttons
@@ -122,7 +122,7 @@ onMounted(() => {
       <template #action>
         <div class="workflow-actions">
           <template v-for="(item,index) in additionalButton" :key="index">
-            <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
+            <component :is="item.component" ref="additionalButtonRef" v-bind="item.props" @submit="addtionalSubmit" />
           </template>
           <el-button id="Workflow__NewWorkflow__StartFullPageDead__Cancel" @click="cancel">
             {{ $t("cancelText") }}
