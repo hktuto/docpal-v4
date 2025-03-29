@@ -181,9 +181,27 @@ async function handleSubmit() {
 
     }
     // get form data
-    const data = await vFormRef.value.getFormData(true, false);
+    let data = await vFormRef.value.getFormData(true, false);
     // return;
     if (!data) throw new Error(`${t("incompleteData")}`);
+    // check additional button 
+    // if additional button has expose "beforeSubmit" method, call it
+    const additionButtonActions:any = []
+    additionalButtonRef.value.forEach(item => {
+      if(item && item.beforeSubmit) {
+        additionButtonActions.push(item.beforeSubmit())
+      }
+    })
+    const buttonResults = await Promise.all(additionButtonActions)
+    console.log("additionButtonActions", buttonResults)
+    // after check all actions, if any addtional data need to set to from data, set it
+    buttonResults.forEach((item:any) => {
+      if(item && typeof item === 'object') {
+        data = {...data, ...item}
+      }
+    })
+    // end addtional button actions
+
     Object.keys(data).forEach((key) => {
       if(typeof data[key] === 'object') {
         data[key] = JSON.stringify(data[key])
@@ -216,6 +234,7 @@ type AdditionalButton = {
   component: string,
 }
 const additionalButton = ref<AdditionalButton[]>([])
+const additionalButtonRef = ref<any[]>([])
 
 function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
   const {buttons, components} = getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
@@ -306,7 +325,7 @@ onActivated(() => {
           <template #action>
             <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
               <template v-for="(item,index) in additionalButton" :key="index">
-                <component :is="item.component" v-bind="item.props" @submit="addtionalSubmit"/>
+                <component :is="item.component" ref="additionalButtonRef" v-bind="item.props" @submit="addtionalSubmit"/>
               </template>
               <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" @click="handleSave">
                 {{ $t("workflow_save") }}

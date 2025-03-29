@@ -187,27 +187,22 @@ const FormRendererRef = ref()
         return dataDeArray(data)
     }
     function dataDeArray (formDatas: any) {
-        console.log("init data", formDatas);
+        console.log("init data", formDatas, WidgetNames);
         
         const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
-        const newData = formDatas
         // TODO : remove later
         const data = Object.keys(formDatas).reduce((prev: any,key: string) => {
             if(formDatas[key] == '0' ||  formDatas[key] == 'false' || !!formDatas[key]) {
-                if(typeof formDatas[key] === 'object') {
-                    prev[key] = deepCopy(formDatas[key])
-                }else{
-                    prev[key] = formDatas[key]
-                }
+              prev[key] = formDatas[key]
             }
             return prev
         }, {})
-
         // const data = deepCopy(formDatas)
-        Object.keys(newData).forEach((key, _index) => {
-            const _data = toRaw(newData[key])
+        Object.keys(data).forEach((key, _index) => {
+            const _data = toRaw(formDatas[key])
             if (_data instanceof Array) {
-                if (arrWidgetKeys.includes(key)) {
+                if (arrWidgetKeys.some((wid:any) => wid.name ===key)) {
+                    
                     data[key] = JSON.stringify(_data)
                 } else if (_data.length > 0 && (!!_data[0].response || !!_data[0].id)) {
                     const values = _data.reduce((prev, item) => {
@@ -230,7 +225,7 @@ const FormRendererRef = ref()
                 }
             }
         })
-        return newData
+        return data
     }
     function getWidgetNames (widgetNames: string [], checkMultiple: boolean = false, checkNuxeo: boolean = false) {
         const containerWidgets = FormRendererRef.value.vFormRenderRef.getContainerWidgets()
