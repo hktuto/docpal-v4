@@ -1,26 +1,38 @@
 <script lang="ts" setup>
 
-const {disabled, formData, options} = defineProps<{
+const props = defineProps<{
     disabled: boolean,
     formData: any
-    options?: Object,
+    options: any,
 }>();
+
+const {disabled, formData, options} = toRefs(props) 
 
 const docId = ref('');
 
-function getInfo(){
-  docId.value = formData[options.data.updateField]
+function getFormData(){
+  return formData
 }
 
+function getInfo(){
+  docId.value = formData.value[options.value.data.updateField]
+}
 
-onMounted(() => {
-    getInfo()
+defineExpose({ getFormData })
+
+watch( formData, () => {
+  getInfo()
+}, {
+  immediate: true,
+  deep: true
 })
+
+
 </script>
 
 <template>
   <div class="editDocumentContainer">
-    <CollaboraViewer v-if="docId" :docId="docId" :readonly="false" :editable="true" fileType="WORKFLOW"  :editMode="true"/>
+    <CollaboraViewer v-if="docId" :docId="docId" :readonly="false" :editable="true" fileType="WORKFLOW" />
   </div>
 </template>
 
