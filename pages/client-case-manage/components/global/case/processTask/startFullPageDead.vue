@@ -123,13 +123,14 @@ async function handleSubmit() {
         variables[key] = JSON.stringify(variables[key])
       }
     })
+    console.log("before submit", {...variables})
     // some data is not in form, but in formData , add to variables
     Object.keys(formData.value).forEach((key) => {
       if(!variables[key]) {
         variables[key] = formData.value[key]
       }
     })
-
+    console.log("after submit", {...variables})
   await clientApi.api.postCaseInstanceProcessStart({
     id: actionStepId,
     variables
