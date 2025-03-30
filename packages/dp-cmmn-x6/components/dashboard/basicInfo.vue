@@ -74,7 +74,7 @@ function displayValue(item) {
     // TODO: translate later
     return item.value ? 'Yes' : 'No'
   }
-  return item.value
+  return item.value || '--'
 }
 const state = reactive<any>({
   data: {},
@@ -194,6 +194,9 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
       font-size: 18px;
       font-weight: 600;
     }
+  }
+  .content{
+    min-height: var(--app-space-s);
   }
 }
 .o-auto > .el-card__body {

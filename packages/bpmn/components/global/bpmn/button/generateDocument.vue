@@ -36,14 +36,17 @@ async function generatePreview(){
     const targetTask = xmlJson.flatObj[props.attr_documentStepId]
     const latestFormData = await workflowFormDetail?.getFormData(false)
     // merge latestFormData and props.formData, if item in object is null, use latestFormData
-    const mergeFormData = Object.keys(props.formData).reduce((prev:any, key:string) => {
-      if(props.formData[key]) {
-        prev[key] = props.formData[key]
-      }else{
+    // merge form data and latest form data keys
+    const mergeKeys = [...new Set([...Object.keys(props.formData), ...Object.keys(latestFormData)])]
+    const mergeFormData = mergeKeys.reduce((prev:any, key:string) => {
+      if(latestFormData[key]){
         prev[key] = latestFormData[key]
+      } else if(props.formData[key]) {
+        prev[key] = props.formData[key]
       }
       return prev
     }, {})
+    console.log("mergeFormData", mergeFormData, latestFormData)
     // get template id
     const templateId = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "templateId")
         const varible = targetTask.extensionElements['flowable:field'].find((field:any) => field.attr_name === "variables")
@@ -113,15 +116,18 @@ async function beforeSubmit(){
   const fileName = 'preview.' + ext
   // return null 
   const formData = new FormData()
+  
+  const params = {
+    type:"File",
+    properties: {
+      'dc:title': fileName
+    },
+            
+  }
+  formData.append('document', JSON.stringify(params))
   formData.append('file', res, fileName)
   formData.append('nonPermission', true)
-  const params = {
-            properties: {
-              'dc:title': fileName
-            },
-            type:"File",
-          }
-  formData.append('document', JSON.stringify(params))
+  
   const uploadRes = await clientApi.instance.post('/docpal/workflow/upload/file', formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
