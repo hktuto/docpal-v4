@@ -20,7 +20,7 @@ onMounted(() => {
 
 <template>
   <div class="editDocumentContainer">
-    <CollaboraViewer v-if="docId" :docId="docId" :readonly="false" :editable="true" fileType="NUXEO"  :editMode="true"/>
+    <CollaboraViewer v-if="docId" :docId="docId" :readonly="false" :editable="true" fileType="WORKFLOW"  :editMode="true"/>
   </div>
 </template>
 
