@@ -99,7 +99,7 @@ watch(() => [workflowInfos],() => {
                 <Icon name="lucide:arrow-right" />
             </div>
             <div class="col case">
-                <ElSelect v-model="item.caseInfoId" clearable placeholder="Select Case Infomation" @change="(val) => fieldUpdate(item, val, index)">
+                <ElSelect v-model="item.caseInfoId" clearable filterable placeholder="Select Case Infomation" @change="(val) => fieldUpdate(item, val, index)">
                     <ElOption v-for="item in allInfo" :key="item.value" :label="item.label" :value="item.value" />
                 </ElSelect>
             </div>

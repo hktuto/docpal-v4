@@ -22,10 +22,10 @@ export const useWorkflow = () => {
       name: 'caseInfo',
       component: 'formWidgetCaseInfo'
     },
-    // {
-    //   name: 'uploadTemplate',
-    //   component: 'formWidgetUploadTemplate'
-    // }
+    {
+      name: 'updateDocument',
+      component: 'formWidgetUpdateDocument'
+    }
   ]));
   const formStartHandle = useState<any>('formRenderSlots', () => ({}));
   const customStartCallBackList = useState<any>('customStartCallBack', () => ({}));

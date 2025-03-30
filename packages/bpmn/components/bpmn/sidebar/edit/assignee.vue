@@ -52,7 +52,12 @@ function assigneeChanged(newVal: string) {
 
 const allFields = computed(() => {
     if(!graphProvider?.allFormField.value) return []
-    return graphProvider?.allFormField.value
+    const fields = graphProvider?.allFormField.value
+    fields.user_creator_id  = {
+      attr_id: "user_creator_id",
+      attr_name:"Creator",
+    }
+    return fields
 })
 
 function setUpListener(){

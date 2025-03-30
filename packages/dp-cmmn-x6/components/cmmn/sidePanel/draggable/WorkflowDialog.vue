@@ -48,8 +48,9 @@ async function resetInfo() {
       ...json.definitions.process.userTask
     ]
     allFormStep.forEach(item => {
-      const formInfo = item.extensionElements['flowable:formProperty']
+      let formInfo = item.extensionElements['flowable:formProperty']
       if (formInfo) {
+        if(!Array.isArray(formInfo)) formInfo = [formInfo]
         formInfo.forEach(formItem => {
           allFormInfo.set(formItem.attr_id, formItem)
         })

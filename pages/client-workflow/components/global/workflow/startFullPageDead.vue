@@ -55,10 +55,32 @@ function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
 async function handleSubmit() {
   try {
     loading.value = true
-    const data = await vFormRef.value.getFormData(false, false);
-    if (!data) {
-      throw new Error('Form data is empty')
-    }
+    let data = await vFormRef.value.getFormData(false, false);
+    if (!data) throw new Error(`${t("incompleteData")}`);
+
+    // check additional button 
+    // if additional button has expose "beforeSubmit" method, call it
+    const additionButtonActions:any = []
+    additionalButtonRef.value.forEach(item => {
+      if(item && item.beforeSubmit) {
+        additionButtonActions.push(item.beforeSubmit())
+      }
+    })
+    const buttonResults = await Promise.all(additionButtonActions)
+    console.log("additionButtonActions", buttonResults)
+    // after check all actions, if any addtional data need to set to from data, set it
+    buttonResults.forEach((item:any) => {
+      if(item && typeof item === 'object') {
+        data = {...data, ...item}
+      }
+    })
+    // end addtional button actions
+    Object.keys(data).forEach((key) => {
+      if(typeof data[key] === 'object') {
+        data[key] = JSON.stringify(data[key])
+      }
+    })
+
     const form = {
       processKey,
       businessKey: data.businessKey || "",
