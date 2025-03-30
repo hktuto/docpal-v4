@@ -16,6 +16,7 @@ if (!routerProvider) {
 const {t} = useI18n();
 const formJson = ref()
 const formData = ref()
+const additionalButtonRef = ref<any[]>([])
 const additionalButton = ref<any[]>([])
 const vFormRef = ref()
 const inParameters = ref<any>({})
@@ -57,7 +58,7 @@ async function setUpForm() {
       return res.data.length > 0 ? res.data[0].jsonValue ? JSON.parse(res.data[0].jsonValue) : {} : {}
     })
     // get additional element
-    const {buttons, components} = getBpmnAddtionalElement(xml, 'start', stepDetail, formJson.value)
+    const {buttons, components} = getBpmnAddtionalElement(xml, 'Start', stepDetail, formJson.value)
     additionalButton.value = buttons
     nextTick(() => {
       console.log("set form data", formData.value)
@@ -74,9 +75,14 @@ function handelCancel() {
   routerProvider?.back(backItem)
 }
 
+function formKeyToCaseKey(formKey:string){
+  const item = Object.keys(inParameters.value).find(key => inParameters.value[key] === formKey)
+  return item
+}
+
 async function handleSubmit() {
   const data = await vFormRef.value.getFormData(false, false);
-  const variables = Object.keys(inParameters.value).reduce((prev: any, item: any) => {
+  let variables = Object.keys(inParameters.value).reduce((prev: any, item: any) => {
     const otherKeys = inParameters.value[item]
     if (data[otherKeys]) {
       prev[item] = data[otherKeys]
@@ -91,6 +97,34 @@ async function handleSubmit() {
   if (!variables.user_creator_id) {
     variables.user_creator_id = useUserId().value
   }
+
+  const additionButtonActions:any = []
+    additionalButtonRef.value.forEach(item => {
+      if(item && item.beforeSubmit) {
+        additionButtonActions.push(item.beforeSubmit())
+      }
+    })
+    const buttonResults = await Promise.all(additionButtonActions)
+    console.log("additionButtonActions", buttonResults)
+    // after check all actions, if any addtional data need to set to from data, set it
+    buttonResults.forEach((item:any) => {
+      if(item && typeof item === 'object') {
+        Object.keys(item).forEach(updateKey => {
+          // find key in inParameters
+          const otherKeys = formKeyToCaseKey(updateKey)
+          if(otherKeys) {
+            variables[otherKeys] = item[updateKey]
+          }
+        })
+      }
+    })
+    // end addtional button actions
+    Object.keys(variables).forEach((key) => {
+      if(typeof variables[key] === 'object') {
+        variables[key] = JSON.stringify(variables[key])
+      }
+    })
+
   await clientApi.api.postCaseInstanceProcessStart({
     id: actionStepId,
     variables
@@ -124,7 +158,7 @@ const loading = ref(false);
       <template #action>
         <div class="workflow-detail-pane--btns">
           <template v-for="(item,index) in additionalButton" :key="index">
-            <component :is="item.component" v-bind="{...item.props, formData}" @submit="additionSubmit"/>
+            <component :is="item.component" ref="additionalButtonRef" v-bind="{...item.props, formData}" @submit="additionSubmit"/>
           </template>
           <el-button id="CaseManagement__Detail__Form_Cancel" @click="handelCancel">
             {{ $t("cancelText") }}

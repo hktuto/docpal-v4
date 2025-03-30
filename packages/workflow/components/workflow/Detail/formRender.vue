@@ -287,6 +287,17 @@ provide('workflowFormRender', {
         height: 100%;
         overflow-x: hidden;
         overflow-y: auto;
+        .container-wrapper{
+          &.full-height{
+                height: 100%;
+                > *{
+                    height: 100%;
+                }
+                .field-wrapper, .static-content-item, .slot-wrapper-render{
+                    height: 100%;
+                }
+            }
+        }
     }
     :deep(.flex-col){
         display: flex;

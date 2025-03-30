@@ -403,7 +403,7 @@ onActivated(() => {
   &--btns {
     box-shadow: var(--el-box-shadow-light);
     padding: var(--app-space-s);
-    text-align: right;
+    // text-align: right;
   }
 }
 </style>
