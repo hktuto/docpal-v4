@@ -105,7 +105,6 @@ async function handleSubmit() {
       }
     })
     const buttonResults = await Promise.all(additionButtonActions)
-    console.log("additionButtonActions", buttonResults)
     // after check all actions, if any addtional data need to set to from data, set it
     buttonResults.forEach((item:any) => {
       if(item && typeof item === 'object') {
@@ -122,6 +121,12 @@ async function handleSubmit() {
     Object.keys(variables).forEach((key) => {
       if(typeof variables[key] === 'object') {
         variables[key] = JSON.stringify(variables[key])
+      }
+    })
+    // some data is not in form, but in formData , add to variables
+    Object.keys(formData.value).forEach((key) => {
+      if(!variables[key]) {
+        variables[key] = formData.value[key]
       }
     })
 

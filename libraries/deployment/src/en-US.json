@@ -544,6 +544,7 @@
     "PersonalShareInternalOther": "Share With Other",
     "PersonalWorkflow": "Workflow",
     "PersonalWorkflowCreate": "Add Workflow",
+    "PersonalWorkflowSingle": "Single Workflow",
     "WorkflowActiveCount": "Total Activate Task",
     "WorkflowNewCount": "New Workflow",
     "WorkflowTimeSpendPerTask": "Time spend per Task",

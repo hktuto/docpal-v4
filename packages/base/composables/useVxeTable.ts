@@ -378,7 +378,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
         const {data} = await params?.api(pageParams)
         init.value = true;
-        console.log("data", data)
         return {
             result: Array.isArray(data) ? data : data.entryList,
             page: {

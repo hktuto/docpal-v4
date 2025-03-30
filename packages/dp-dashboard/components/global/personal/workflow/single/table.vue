@@ -1,0 +1,223 @@
+<script lang="ts" setup>
+
+import dayjs from 'dayjs'
+import { clientApi } from 'api'
+
+const routerProvider = inject(MenuRouterKey)
+const { t } = useI18n()
+const { public:{platform}} = useRuntimeConfig();
+
+const props = defineProps<{
+  setting: any
+}>()
+const { setting } = toRefs(props)
+
+const isValid = computed(() => {
+  return props.setting?.selectedWorkflow && props.setting.columns.length > 0
+})
+
+async function queryTaskDetail(instanceId:string) {
+  try{
+
+    const res = await clientApi.api.getWorkflowVariablesInstanceid(instanceId, {
+      headers:{
+        noThrowError: true
+      }
+    }).then(res => res.data)
+    return res
+  }catch(err){
+    return {}
+  }
+}
+
+function getRecursiveValue(obj: any, path: string) {
+  if(path.includes('.')) {
+    const pathList = path.split('.')
+    return getRecursiveValue(obj[pathList[0]], pathList.slice(1).join('.'))
+  }
+  return obj[path] || path
+}
+function setupTable() {
+  const newColumn = deepCopy(props.setting.columns) || []
+  const columns:any[] = [
+    ];
+    const addedColumn = newColumn.map((item) => {
+      if(item.field.length > 1) {
+        item.field = item.field.join(',')
+        item.formatter = (args) => {
+          let result = "";
+          const field = args.column.field.split(',')
+          field.forEach((f:string) => {
+            try{
+              const r = getRecursiveValue(args.row, f)
+              if(r) {
+                result += r
+              }else{
+                result += f
+              }
+            }catch(err){
+              console.log("err", err)
+              result += f
+            }
+          })
+          return result || "--"
+        }
+      }else{
+        item.field =  item.field[0]
+      }
+      return item
+    })
+    columns.splice(0, 0, ...addedColumn);
+    tableConfig.columns = columns;
+}
+
+function openDetail(row:any) {
+  routerProvider?.navigateTo(routeWorkflowDetail({
+    ...row,
+    name: row.taskInstance.businessKey,
+    workflowType: 'allTask'
+  }), false);
+}
+
+function filterStep(list):any[]{
+  if(!list || !props.setting.steps || props.setting.steps.length === 0) return list
+  return list.filter((item) =>  {
+    console.log("item", item, item.taskDefinitionKey)
+    return props.setting.steps.includes(item.taskDefinitionKey)
+  })
+}
+
+function sortList(list){
+  if(!list || !props.setting.sortColumn) return list
+  return list.sort((a, b) => {
+    if(!a[props.setting.sortColumn]) return -1
+    if(!b[props.setting.sortColumn]) return 1
+    const aVal = a[props.setting.sortColumn]
+    const bVal = b[props.setting.sortColumn]
+    if(aVal === bVal) return 0
+    if(typeof aVal === 'number' && typeof bVal === 'number') return aVal - bVal
+    if(typeof aVal === 'boolean' && typeof bVal === 'boolean') return aVal ? 1 : -1
+    // check if aVal is date
+    if(aVal instanceof Date && bVal instanceof Date) return aVal.getTime() - bVal.getTime()
+    // check if aVal is date string
+    if(typeof aVal === 'string' && typeof bVal === 'string') {
+      const aDate = dayjs(aVal)
+      const bDate = dayjs(bVal)
+      if(aDate.isValid() && bDate.isValid()) return aDate.diff(bDate)
+      return aVal.localeCompare(bVal)
+    } 
+    return a[props.setting.sortColumn] > b[props.setting.sortColumn] ? 1 : -1
+  })
+}
+
+async function getAllWorkingInstances(processKey: string,  pageNum:number= 0, pageSize:number = 100, result:any[] = [], totalLength= 0) {
+  const pageParams: any = {
+    processKeys : [props.setting.selectedWorkflow],
+    candidateOrAssigned : useUserId().value,
+    pageNum,
+    pageSize
+  }
+  const {data} = await clientApi.api.postWorkflowTasksUser(pageParams)
+  // filter step name
+  totalLength += data?.entryList.length || 0
+  const entryList = filterStep(data?.entryList || [])
+  let promise = []
+  for(let i = 0; i < entryList.length; i++) {
+    const instanceId = entryList[i]?.taskInstance?.processInstanceId
+    if(instanceId){
+      promise.push(queryTaskDetail(instanceId))
+    };
+  }
+  const detailList = await Promise.all(promise)
+  for(let i = 0; i < detailList.length; i++) {
+    const detail = detailList[i]
+    if(detail) {
+      entryList[i] = {
+        ...entryList[i],
+        ...detail
+      }
+    }
+  }
+  result.push(...entryList)
+  if(data?.totalSize > totalLength) {
+    const nextPageNum = pageNum + 1
+    return await getAllWorkingInstances(processKey, nextPageNum, pageSize, entryList, totalLength)
+  }
+  return sortList(result)
+}
+
+const  { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
+  id: 'personal-workflow-single-table',
+  api: async (pageParams: any) => {
+    console.log(platform)
+    if(platform === 'admin'){ 
+      return []
+    }
+    return getAllWorkingInstances(props.setting.selectedWorkflow, 0, 100, [])
+  },
+  zoom: false,
+  saveColumnOrder: false,
+  virtualScroll: true,
+  columns: [],
+  bodyActions: [
+    [
+      {
+        code: 'edit',
+        name: 'common_open',
+        action: ({ row }) => {
+          openDetail(row)
+        }
+      }
+    ]
+  ],
+  dblClickAction: ({row, column, event}) => {
+    openDetail(row)
+  }
+})
+
+watch(setting, () => {
+  console.log("setting change", setting)
+  setupTable()
+}, {
+  deep: true,
+    immediate: true
+})
+
+
+</script>
+
+<template>
+  <div class="worfklow-list-card dashboard-item-tab--content">
+    <h2 v-if="setting && setting.title">{{ setting.title }}</h2>
+    <div class="dashboard-item-tab--content--table">
+        <VxeGrid v-if="isValid" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+            <template #toolbar_buttons>
+            </template>
+        </VxeGrid>
+        <div v-else>
+          <el-empty :description="$t('noData')"></el-empty>
+        </div>
+      </div>
+    </div>
+</template>
+
+
+<style lang="scss" scoped>
+h2{
+  margin: 0;
+}
+.worfklow-list-card{
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.dashboard-item-tab--content--table{
+  flex: 1 0 auto;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+</style>

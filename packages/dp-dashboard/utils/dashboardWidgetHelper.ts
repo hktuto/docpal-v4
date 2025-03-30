@@ -1,3 +1,4 @@
+;
 export type DashboardWidget = "DocTypeCoCount" | 
     "DocTypeCount" | 
     "DocSizeStatistics"  | 
@@ -51,7 +52,7 @@ import PersonalCaseCreate from '../components/global/personal/case/create.vue'
 import PersonalCase from '../components/global/personal/case/index.vue'
 import PersonalCaseSingle from '../components/global/personal/case/single/index.vue'
 import CalendarWidget from '../components/global/calendar/widget/index.vue'
-
+import PersonalWorkflowSingle from '../components/global/personal/workflow/single/index.vue'
 import  '../assets/dashboard.scss'
 
 export type DashboardWidgetSetting = {
@@ -321,6 +322,21 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
             processKeys: []
         }
     },
+    PersonalWorkflowSingle:{
+        type: 'personal',
+        label: 'PersonalWorkflowSingle',
+        minW: 2,
+        minH: 2,
+        maxW: 12,
+        maxH: 12,
+        w: 3,
+        h: 3,
+        component : 'PersonalWorkflowSingle',
+        setting : {
+            selectedWorkflow: '',
+            columns: []
+        }
+    },
     PersonalSearchHistory: {
         type: 'personal',
         // feature: 'SEARCH',
@@ -457,6 +473,7 @@ export const widgetComponent = {
     "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
     "PersonalCaseCreate": PersonalCaseCreate,
     "PersonalCase": PersonalCase,
+    "PersonalWorkflowSingle": PersonalWorkflowSingle,
     "PersonalCaseSingle": PersonalCaseSingle,
     "CalendarWidget": CalendarWidget
 }

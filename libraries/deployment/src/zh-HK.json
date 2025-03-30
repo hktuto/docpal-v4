@@ -544,6 +544,7 @@
     "PersonalShareInternalOther": "內部分享列表管理",
     "PersonalWorkflow": "工作流",
     "PersonalWorkflowCreate": "新增工作流程",
+    "PersonalWorkflowSingle": "單個工作流",
     "WorkflowActiveCount": "總啟動任務",
     "WorkflowNewCount": "新的工作流程",
     "WorkflowTimeSpendPerTask": "每個任務所花費的時間",
