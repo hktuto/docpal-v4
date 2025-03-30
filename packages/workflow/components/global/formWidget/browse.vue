@@ -11,11 +11,12 @@ function handleRefresh(){
     }
 }
 
-const {disabled, formData, options} = defineProps<{
+const props = defineProps<{
     disabled: boolean,
     formData: any
-    options?: Object,
+    options: any,
 }>();
+const {formData, options} = toRefs(props)
 
 function getFormData(){
     console.log("getFormData")
@@ -29,11 +30,12 @@ function changeRoute(path:string) {
 
 function getInfo(){
     // get options
-    if(options.data.folderCabinetId && formData[options.data.folderCabinetId]) {
+    if(props.options.data.folderCabinetId && props.formData[props.options.data.folderCabinetId]) {
         // console.log({formData});
         home.value = {
-            secondId: formData[options.data.folderCabinetId]
+            secondId: props.formData[props.options.data.folderCabinetId]
         }
+        idOrPath.value = props.formData[props.options.data.folderCabinetId]
     }
 }
 
@@ -47,6 +49,13 @@ provide(BrowseListProviderKey,{
     changeRoute,
 })
 
+watch(formData, () => {
+    getInfo()
+},{
+    immediate: true,
+    deep: true
+})
+
 onMounted(() => {
     getInfo()
 })
@@ -54,7 +63,7 @@ onMounted(() => {
 
 <template>
     <div class="browse-cabinet-container">
-     <BrowseMiniTable v-if="home.secondId" ref="tableRef" :home="home" >
+     <BrowseMiniTable v-if="home.secondId" ref="tableRef" :home="idOrPath" >
         <template #toolbar_buttons> 
             <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
         </template>
