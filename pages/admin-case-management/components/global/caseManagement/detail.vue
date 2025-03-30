@@ -64,7 +64,6 @@ async function saveAsNewVersion() {
     params.jsonValue = JSON.stringify(form.form)
     await adminApi.api.postRelationSave(params)
   }
-  console.log("data", data)
 
   routerProvider?.updateProps({
     caseTypeId: data.id,

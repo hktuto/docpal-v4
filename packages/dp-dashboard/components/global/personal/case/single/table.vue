@@ -2,7 +2,7 @@
 import { clientApi } from "api";
 import { MoreFilled } from "@element-plus/icons-vue";
 import { ElMessage} from 'element-plus'
-
+const { public:{platform}} = useRuntimeConfig();
 const { id, name, detail } = defineProps<{
   id: string;
   name: string;
@@ -32,6 +32,12 @@ const {
 } = useVxeTable({
   id: "clientCaseTableList",
   api: async (pageParams: any) => {
+    if(platform === 'admin'){
+      return {
+        entryList: [],
+        totalSize: 0
+      }
+    }
     pageParams.isDesc = true;
     pageParams.orderBy = "created_date";
     if (Object.entries(where.value).length !== 0) {
