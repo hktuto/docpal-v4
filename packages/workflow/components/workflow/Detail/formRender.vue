@@ -42,7 +42,7 @@ const { formRenderSlots } = useWorkflow()
 const WidgetNames = {
   arr: ['sub-form'],
   upload: ['file-upload'],
-  select: ['select']
+  select: ['select', 'async-select', 'ug-select', 'select-group']
 }
 const defaultFormJson = {
   widgetList: [],
