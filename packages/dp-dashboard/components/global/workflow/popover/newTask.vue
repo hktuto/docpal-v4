@@ -1,9 +1,10 @@
 <template>
-  <el-dropdown id="Workflow__NewWorkflow" popper-class="popover-auto" trigger="click" @command="workflowClickHandler">
-    <el-button type="primary">
+  <el-dropdown id="Workflow__NewWorkflow" popper-class="popover-auto" trigger="click"
+               @command="workflowClickHandler">
+    <el-button type="primary" :loading="state.loading">
       {{ $t('workflow_newWorkflow') }}
       <el-icon class="el-icon--right">
-        <arrow-down />
+        <arrow-down/>
       </el-icon>
     </el-button>
     <template #dropdown>
@@ -14,41 +15,40 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <el-dialog
-    v-model="state.formDialogVisible"
-    :title="state.selectedWorkflow.name"
-    destroy-on-close
-    append-to-body
-    width="60%"
-    :close-on-click-modal="false"
-    class="scroll-dialog"
+  <el-dialog v-model="state.formDialogVisible" :title="state.selectedWorkflow.name"
+             destroy-on-close append-to-body width="60%"
+             :close-on-click-modal="false"
+             class="scroll-dialog"
   >
-    <ElTabs v-if="!state.loading" v-model="activeName" @tab-change="tabChangeHandler">
-      <ElTabPane :label="$t('workflow_form')" name="Form">
-        <WorkflowDetailFormRender ref="vFormRef" />
+    <ElTabs v-if="state.formDialogVisible" v-model="activeName" v-loading="state.loading" @tab-change="tabChangeHandler">
+      <ElTabPane v-loading="state.loading" :label="$t('workflow_form')" name="Form">
+        <WorkflowDetailFormRender ref="vFormRef"/>
       </ElTabPane>
       <ElTabPane :label="$t('workflow_graph')" name="Graph">
-        <BpmnViewer v-if="activeName === 'Graph'" ref="graphEl" class="graphContent" step="start" @graphReady="graphReady" />
+        <BpmnViewer v-if="activeName === 'Graph'" ref="graphEl" class="graphContent" step="start"
+                    @graphReady="graphReady"/>
       </ElTabPane>
     </ElTabs>
     <template #footer>
-      <el-button id="Workflow__NewWorkflow__StartWorkflow" type="primary" v-if="activeName === 'Form'" :loading="state.loading" @click="checkAndSubmit">
+      <el-button id="Workflow__NewWorkflow__StartWorkflow" type="primary" v-if="activeName === 'Form'"
+                 :loading="state.loading" @click="checkAndSubmit">
         {{ $t('workflow_startWorkflow') }}
       </el-button>
     </template>
   </el-dialog>
+
 </template>
 
 <script lang="ts" setup>
-import { ElMessage } from 'element-plus'
-import { ArrowDown } from '@element-plus/icons-vue'
+import {ElMessage} from 'element-plus'
+import {ArrowDown} from '@element-plus/icons-vue'
 // @ts-ignore
-import { clientApi } from 'api'
+import {clientApi} from 'api';
 
-const { formStartHandle } = useWorkflow()
+const {formStartHandle} = useWorkflow()
 // @ts-ignore
 const graphEl = ref()
-const emits = defineEmits(['created'])
+const emits = defineEmits(['created']);
 // @ts-ignore
 const activeName = ref('Form')
 // @ts-ignore
@@ -73,23 +73,27 @@ function tabChangeHandler() {
 }
 
 async function getAvailableWorkflow() {
-  state.availableWorkflow = await clientApi.api.postWorkflowProcessList({}).then((res) => res.data)
+  state.availableWorkflow = await clientApi.api.postWorkflowProcessList({}).then(res => res.data)
 }
 
 async function workflowClickHandler(item: any) {
   let step = 'Start'
-
+  state.loading = true
+  
   //TODO : get xml and check if need to open new page
   const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(item.versionId)
-  const { flatObj } = bpmnStringToJson(xml)
-  const startEvent = flatObj.Start
+  const {flatObj} = bpmnStringToJson(xml)
+  const startEvent = flatObj.Start;
+  state.formDialogVisible = true
   // check start event additional setting
   if (startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']) {
     const openInNewPage = startEvent.extensionElements['docpal:additionaSetting'].attr_openInNewPage
     if (openInNewPage) {
+      state.formDialogVisible = false
+      state.loading = false
       const link = newWorkflowStartPage(item.name, step, item.key, item.versionId)
       routerProvider?.navigateTo(link)
-      return
+      return;
     }
   }
   // get bpmn
@@ -102,11 +106,12 @@ async function workflowClickHandler(item: any) {
       return
     }
   }
-
-  state.formDialogVisible = true
+  
+  
   // @ts-ignore
   state.selectedWorkflow = deepCopy(item)
   initForm(item.key, item.versionId)
+  state.loading = false
   // createWorkflowForm.value = await workflowStore.getFromProperties(item.key)
 
   // opened.value = true
@@ -126,38 +131,38 @@ async function checkAndSubmit() {
   if (data) {
     const form = {
       processKey: state.selectedWorkflow.key,
-      businessKey: data.businessKey || '',
+      businessKey: data.businessKey || "",
       properties: Object.entries(data).reduce((newObj, [key, val]) => {
         if (val || val === false || val == '0') newObj[key] = val
-        return newObj
-      }, {})
+        return newObj;
+      }, {}),
     }
     state.loading = true
     try {
-      await clientApi.api.postWorkflowProcessStart(form).then((res) => res.data)
+      await clientApi.api.postWorkflowProcessStart(form).then(res => res.data)
       state.formDialogVisible = false
       ElMessage.success('Workflow created')
       emits('created')
-    } catch (error) {}
+    } catch (error) {
+
+    }
   }
   state.loading = false
 }
 
 async function initForm(processKey: string, versionId: string) {
-  const props = await clientApi.api.postWorkflowProperties({ processKey }).then((res) => res.data)
+  const props = await clientApi.api.postWorkflowProperties({processKey}).then(res => res.data)
   const formData = formDataGet(props)
   const formJson = await formJsonGet('start', processKey, versionId)
   setTimeout(() => {
     vFormRef.value.setForm(formJson, formData, props)
   })
-  const blob: any = await clientApi.api.postWorkflowProcessModel(
-    { processKey },
-    {
-      format: 'blob'
-    }
-  )
+  const blob: any = await clientApi.api.postWorkflowProcessModel({processKey}, {
+    format: 'blob'
+  })
   const text = await blob.text()
   state.bpmnXml = text
+
 }
 
 function graphReady() {
@@ -172,8 +177,9 @@ function formDataGet(propList = []) {
 }
 
 async function formJsonGet(userTaskId: string, processKey: string, versionId: string) {
-  const response: any = await clientApi.api.getRelationQuery({ userTaskId, processKey, versionId }).then((res) => res.data)
-  if (!response[0] || (response[0] && !response[0].jsonValue)) return {}
+  const response: any = await clientApi.api.getRelationQuery({userTaskId, processKey, versionId}).then(res => res.data)
+  if (!response[0] ||
+    response[0] && !response[0].jsonValue) return {}
   return JSON.parse(response[0].jsonValue)
 }
 
@@ -182,12 +188,13 @@ async function formJsonGet(userTaskId: string, processKey: string, versionId: st
 onMounted(() => {
   getAvailableWorkflow()
 })
-defineExpose({ workflowClickHandler })
+defineExpose({workflowClickHandler})
 </script>
 <style lang="scss" scoped>
 .graphContent {
   height: 500px;
 }
+
 </style>
 <style lang="scss">
 .popover-auto {
