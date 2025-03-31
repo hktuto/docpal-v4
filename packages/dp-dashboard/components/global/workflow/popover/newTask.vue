@@ -1,7 +1,7 @@
 <template>
   <el-dropdown id="Workflow__NewWorkflow" popper-class="popover-auto" trigger="click"
                @command="workflowClickHandler">
-    <el-button type="primary">
+    <el-button type="primary" :loading="state.loading">
       {{ $t('workflow_newWorkflow') }}
       <el-icon class="el-icon--right">
         <arrow-down/>
@@ -20,8 +20,8 @@
              :close-on-click-modal="false"
              class="scroll-dialog"
   >
-    <ElTabs v-if="!state.loading" v-model="activeName" @tab-change="tabChangeHandler">
-      <ElTabPane :label="$t('workflow_form')" name="Form">
+    <ElTabs v-if="state.formDialogVisible" v-model="activeName" v-loading="state.loading" @tab-change="tabChangeHandler">
+      <ElTabPane v-loading="state.loading" :label="$t('workflow_form')" name="Form">
         <WorkflowDetailFormRender ref="vFormRef"/>
       </ElTabPane>
       <ElTabPane :label="$t('workflow_graph')" name="Graph">
@@ -78,15 +78,19 @@ async function getAvailableWorkflow() {
 
 async function workflowClickHandler(item: any) {
   let step = 'Start'
-
+  state.loading = true
+  
   //TODO : get xml and check if need to open new page
   const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(item.versionId)
   const {flatObj} = bpmnStringToJson(xml)
   const startEvent = flatObj.Start;
+  state.formDialogVisible = true
   // check start event additional setting
   if (startEvent?.extensionElements && startEvent?.extensionElements['docpal:additionaSetting']) {
     const openInNewPage = startEvent.extensionElements['docpal:additionaSetting'].attr_openInNewPage
     if (openInNewPage) {
+      state.formDialogVisible = false
+      state.loading = false
       const link = newWorkflowStartPage(item.name, step, item.key, item.versionId)
       routerProvider?.navigateTo(link)
       return;
@@ -102,11 +106,12 @@ async function workflowClickHandler(item: any) {
       return
     }
   }
-
-  state.formDialogVisible = true
+  
+  
   // @ts-ignore
   state.selectedWorkflow = deepCopy(item)
   initForm(item.key, item.versionId)
+  state.loading = false
   // createWorkflowForm.value = await workflowStore.getFromProperties(item.key)
 
   // opened.value = true
