@@ -1,372 +1,326 @@
 <script lang="ts" setup>
-import {ElMessage} from "element-plus";
-import {clientApi} from "api";
-import {routeWorkflowPage} from "~/utils/routerHelper";
+import { ElMessage } from 'element-plus'
+import { clientApi } from 'api'
+import { routeWorkflowPage } from '~/utils/routerHelper'
 
-const routerProvider = inject(MenuRouterKey);
+const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
-  throw new Error("MenuRouterKey is not provided");
+  throw new Error('MenuRouterKey is not provided')
 }
-const {id, workflowType} = defineProps<{
-  id: string;
-  workflowType: string;
-}>();
+const { id, workflowType } = defineProps<{
+  id: string
+  workflowType: string
+}>()
 // @ts-ignore
-const userId: string = useUserId().value;
+const userId: string = useUserId().value
 const isMobile = false
-const {t} = useI18n();
+const { t } = useI18n()
 const state = reactive<any>({
   processState: {
-    completeTask: "completeTask",
+    completeTask: 'completeTask'
   },
   isCompleted: false,
-  activeTab: "form",
+  activeTab: 'form',
   taskDetail: {},
   activityList: [],
   loading: false,
   submitShow: false,
-  error: null,
-});
+  error: null
+})
 
 async function getDetail() {
   try {
-    state.loading = true;
-    state.error = null;
+    state.loading = true
+    state.error = null
     switch (workflowType) {
       case state.processState.completeTask:
-        const historyList: any = await clientApi.api
-          .postWorkflowHistoryProcess({processInstanceId: id, completed: true})
-          .then((res) => res?.data?.entryList);
+        const historyList: any = await clientApi.api.postWorkflowHistoryProcess({ processInstanceId: id, completed: true }).then((res) => res?.data?.entryList)
         if (!!historyList && historyList.length > 0) {
-          state.taskDetail = historyList[0];
+          state.taskDetail = historyList[0]
         }
-        break;
+        break
       default:
-        state.taskDetail = await clientApi.api
-          .postWorkflowTask({taskId: id})
-          .then((res) => res.data);
+        state.taskDetail = await clientApi.api.postWorkflowTask({ taskId: id }).then((res) => res.data)
         if (!state.taskDetail) {
           // handle if workflow task is already complete ,and should use history api
-          state.taskDetail = await clientApi.api
-            .postWorkflowHistoryProcess({processInstanceId: id, completed: true})
-            .then((res) => res.data);
-          state.isCompleted = true;
+          state.taskDetail = await clientApi.api.postWorkflowHistoryProcess({ processInstanceId: id, completed: true }).then((res) => res.data)
+          state.isCompleted = true
         }
     }
-    handleGetActivity();
+    handleGetActivity()
   } catch (error) {
-    state.error = error;
+    state.error = error
   }
   setTimeout(async () => {
     try {
-      await handleFormDataGet();
-      handleDisabledForm();
+      await handleFormDataGet()
+      handleDisabledForm()
     } catch (error) {
       console.log(error)
     }
-    state.loading = false;
-  }, 100);
+    state.loading = false
+  }, 100)
 }
 
 async function handleGetActivity() {
-  const processInstanceId =
-    state.taskDetail.instanceId || state.taskDetail.processInstanceId;
-  state.activityList = await clientApi.api.postWorkflowHistoryActivity({
-    processInstanceId,
-  }).then((res: any) => res.data?.list.filter(i => i.activityName).reverse());
+  const processInstanceId = state.taskDetail.instanceId || state.taskDetail.processInstanceId
+  state.activityList = await clientApi.api
+    .postWorkflowHistoryActivity({
+      processInstanceId
+    })
+    .then((res: any) => res.data?.list.filter((i) => i.activityName).reverse())
 }
 
 // #region module: form
-const vFormRef = ref();
+const vFormRef = ref()
 
 async function handleFormDataGet() {
-  let formJson;
-  let formData;
-  let xml;
+  let formJson
+  let formData
+  let xml
   switch (workflowType) {
     case state.processState.completeTask:
-      formData = state.taskDetail.processVariables;
-      formJson = await formJsonGet("end", state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
+      formData = state.taskDetail.processVariables
+      formJson = await formJsonGet('end', state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId)
       if (!formJson.formConfig) {
-        formJson = await formJsonGet("complete", state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
+        formJson = await formJsonGet('complete', state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId)
         if (!formJson.formConfig) {
           if (!state.activityList || state.activityList.length === 0) await handleGetActivity()
           const lastActivity = state.activityList[0]
-          formJson = await formJsonGet(lastActivity.activityId, state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId);
+          formJson = await formJsonGet(lastActivity.activityId, state.taskDetail.processDefinitionKey, state.taskDetail.processDefinitionVersionId)
         }
       }
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      vFormRef.value.setForm(formJson, formData, [], xml);
+      vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
-      break;
+      break
     default:
+      const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
 
-
-      const properties = await clientApi.api
-        .postWorkflowProperties({taskId: id})
-        .then((res) => res.data);
-
-      formData = formDataGetFromProps(properties);
+      formData = formDataGetFromProps(properties)
       formJson = await formJsonGet(
         state.taskDetail.taskDefinitionKey,
         state.taskDetail.taskInstance.processDefinitionKey,
         state.taskDetail.processDefinitionVersionId
-      );
+      )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      vFormRef.value.setForm(formJson, formData, [], xml);
+      vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
-      break;
+      break
   }
 }
 
 function formDataGet(obj: any) {
-  if(!obj) obj = {}
+  if (!obj) obj = {}
   return Object.keys(obj).reduce((prev: any, key: string) => {
-    prev[key] = String(obj[key]);
-    return prev;
-  }, {});
+    prev[key] = String(obj[key])
+    return prev
+  }, {})
 }
 
 function formDataGetFromProps(list: any) {
   return list.reduce((prev: any, item: any) => {
     // if item type is boolean, convert string to boolean
-    if (item.type === "boolean" && (item.value === "true" || item.value === "false")) {
-      item.value = item.value === "true";
+    if (item.type === 'boolean' && (item.value === 'true' || item.value === 'false')) {
+      item.value = item.value === 'true'
     }
 
-    prev[item.id] = item.value;
-    return prev;
-  }, {});
+    prev[item.id] = item.value
+    return prev
+  }, {})
 }
 
 async function formJsonGet(userTaskId: string, processKey: string, versionId: string) {
   // @ts-ignore
-  const response: any = await clientApi.api.getRelationQuery({
-    userTaskId,
-    processKey,
-    versionId
-  }).then((res) => res.data);
-  if (!response || !response[0] || (response[0] && !response[0].jsonValue)) return {};
-  return JSON.parse(response[0].jsonValue);
+  const response: any = await clientApi.api
+    .getRelationQuery({
+      userTaskId,
+      processKey,
+      versionId
+    })
+    .then((res) => res.data)
+  if (!response || !response[0] || (response[0] && !response[0].jsonValue)) return {}
+  return JSON.parse(response[0].jsonValue)
 }
 
 function handleDisabledForm() {
   if (!isAssigneeUser.value) {
-    vFormRef.value.disableForm();
+    vFormRef.value.disableForm()
   }
 }
 
 async function handleSave() {
   try {
-    const data = await vFormRef.value.getFormData(false, false);
-    state.loading = true;
+    const data = await vFormRef.value.getFormData(false, false)
+    state.loading = true
     const param = {
       taskId: id,
-      properties: {...data},
-    };
-    await clientApi.api.postWorkflowPropertiesSave(param);
-    ElMessage.success(`${t("msg_successfulOperation")}`);
+      properties: { ...data }
+    }
+    await clientApi.api.postWorkflowPropertiesSave(param)
+    ElMessage.success(`${t('msg_successfulOperation')}`)
   } catch (error) {
-    console.log(error);
+    console.log(error)
     // ElMessage.error(error)
   }
-  state.loading = false;
+  state.loading = false
 }
 
 async function handleSubmit() {
-  state.loading = true;
+  state.loading = true
   try {
     // FIXME : auto assign workflow to user if assigee is not user, API should auto do this step, if so remove this step
     if (state.taskDetail?.assignee !== userId) {
-      await clientApi.api.postWorkflowTaskClaim({taskId: id, userId}).then(res => res.data)
-
+      await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
     }
     // get form data
-    let data = await vFormRef.value.getFormData(true, false);
+    let data = await vFormRef.value.getFormData(true, false)
     // return;
-    if (!data) throw new Error(`${t("incompleteData")}`);
-    // check additional button 
+    if (!data) throw new Error(`${t('incompleteData')}`)
+    // check additional button
     // if additional button has expose "beforeSubmit" method, call it
-    const additionButtonActions:any = []
-    additionalButtonRef.value.forEach(item => {
-      if(item && item.beforeSubmit) {
+    const additionButtonActions: any = []
+    additionalButtonRef.value.forEach((item) => {
+      if (item && item.beforeSubmit) {
         additionButtonActions.push(item.beforeSubmit())
       }
     })
     const buttonResults = await Promise.all(additionButtonActions)
-    console.log("additionButtonActions", buttonResults)
+    console.log('additionButtonActions', buttonResults)
     // after check all actions, if any addtional data need to set to from data, set it
-    buttonResults.forEach((item:any) => {
-      if(item && typeof item === 'object') {
-        data = {...data, ...item}
+    buttonResults.forEach((item: any) => {
+      if (item && typeof item === 'object') {
+        data = { ...data, ...item }
       }
     })
     // end addtional button actions
 
     Object.keys(data).forEach((key) => {
-      if(typeof data[key] === 'object') {
+      if (typeof data[key] === 'object') {
         data[key] = JSON.stringify(data[key])
       }
     })
     const param = {
       taskId: id,
-      properties: {...data},
-    };
-    const res: any = await clientApi.api
-      .postWorkflowFormSubmit(param)
-      .then((res) => res.data);
-    ElMessage.success(`${t("msg_successfulOperation")}`);
+      properties: { ...data }
+    }
+    const res: any = await clientApi.api.postWorkflowFormSubmit(param).then((res) => res.data)
+    ElMessage.success(`${t('msg_successfulOperation')}`)
     const fallbackRoute = routeWorkflowPage({
-      workflowType: workflowType,
-    });
+      workflowType: workflowType
+    })
     routerProvider?.back(fallbackRoute)
   } catch (error) {
     console.log('error', error)
     // ElMessage.error(error.message)
   } finally {
-    state.loading = false;
+    state.loading = false
   }
 }
 
 // #endregion
 
 type AdditionalButton = {
-  props: any,
-  component: string,
+  props: any
+  component: string
 }
 const additionalButton = ref<AdditionalButton[]>([])
 const additionalButtonRef = ref<any[]>([])
 
 function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
-  const {buttons, components} = getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
+  const { buttons, components } = getBpmnAddtionalElement(xml, state.taskDetail.taskDefinitionKey, taskDetail, formData)
   additionalButton.value = buttons
 }
 
-
 async function addtionalSubmit(formData: any) {
   if (state.taskDetail?.assignee !== userId) {
-    await clientApi.api.postWorkflowTaskClaim({taskId: id, userId}).then(res => res.data)
+    await clientApi.api.postWorkflowTaskClaim({ taskId: id, userId }).then((res) => res.data)
   }
   const param = {
     taskId: id,
-    properties: {...formData},
-  };
-  const res: any = await clientApi.api
-    .postWorkflowFormSubmit(param)
-    .then((res) => res.data);
-  ElMessage.success(`${t("msg_successfulOperation")}`);
+    properties: { ...formData }
+  }
+  const res: any = await clientApi.api.postWorkflowFormSubmit(param).then((res) => res.data)
+  ElMessage.success(`${t('msg_successfulOperation')}`)
   const fallbackRoute = routeWorkflowPage({
-    workflowType: workflowType,
-  });
+    workflowType: workflowType
+  })
   routerProvider?.back(fallbackRoute)
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
   try {
-    state.taskDetail = {...taskDetailRes};
-    handleGetActivity();
+    state.taskDetail = { ...taskDetailRes }
+    handleGetActivity()
     if (!isAssigneeUser.value) {
-
-      state.loading = true;
-      await handleFormDataGet();
+      state.loading = true
+      await handleFormDataGet()
     } else {
-      vFormRef.value.disableForm();
+      vFormRef.value.disableForm()
     }
-  } catch (error) {
-  }
-  state.loading = false;
-};
+  } catch (error) {}
+  state.loading = false
+}
 
 function tabChange(tab: string) {
   // router.push({query: { tab, state: workflowType }})
 }
 
 function handleBack() {
-  routerProvider?.navigateTo(routeWorkflowPage({
-    workflowType: workflowType,
-  }), false);
+  routerProvider?.navigateTo(
+    routeWorkflowPage({
+      workflowType: workflowType
+    }),
+    false
+  )
 }
 
 const isAssigneeUser = computed(() => {
-
-  return !state.taskDetail?.assignee || state.taskDetail?.assignee === userId;
-});
+  return !state.taskDetail?.assignee || state.taskDetail?.assignee === userId
+})
 onActivated(() => {
-  getDetail();
-});
+  getDetail()
+})
 </script>
 <template>
   <div v-if="!state.error" class="pageContainer--padding workflow-detail">
     <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
-      <el-tab-pane
-        class="workflow-detail-pane"
-        :label="$t('workflow_info')"
-        name="info"
-        v-loading="state.loading"
-      >
-        <WorkflowDetailCompleteInfo
-          v-if="state.processState[workflowType]"
-          :taskDetail="state.taskDetail"
-          :state="workflowType"
-        ></WorkflowDetailCompleteInfo>
-        <WorkflowDetailInfo
-          v-else
-          :taskDetail="state.taskDetail"
-          :id="id"
-          @change="handleTaskInfoChange"
-        ></WorkflowDetailInfo>
+      <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
+        <WorkflowDetailCompleteInfo v-if="state.processState[workflowType]" :taskDetail="state.taskDetail" :state="workflowType"></WorkflowDetailCompleteInfo>
+        <WorkflowDetailInfo v-else :taskDetail="state.taskDetail" :id="id" @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
-      <el-tab-pane
-        class="workflow-detail-pane"
-        :label="$t('workflow_form')"
-        name="form"
-        v-loading="state.loading"
-      >
+      <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
         <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
           <template #action>
             <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
-              <template v-for="(item,index) in additionalButton" :key="index">
-                <component :is="item.component" ref="additionalButtonRef" v-bind="item.props" @submit="addtionalSubmit"/>
+              <template v-for="(item, index) in additionalButton" :key="index">
+                <component :is="item.component" ref="additionalButtonRef" v-bind="item.props" @submit="addtionalSubmit" />
               </template>
               <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" @click="handleSave">
-                {{ $t("workflow_save") }}
+                {{ $t('workflow_save') }}
               </el-button>
               <el-button id="Workflow__AvailableTask__Detail__Form__Submit" type="primary" @click="handleSubmit">
-                {{ $t("common_submit") }}
+                {{ $t('common_submit') }}
               </el-button>
             </div>
           </template>
         </WorkflowDetailFormRender>
-
       </el-tab-pane>
       <el-tab-pane :label="$t('workflow_graph')" name="graph">
         <!-- need to use v-if for bpmn, if not  svg graph will not show -->
         <WorkflowDetailGraph
           v-if="state.activeTab === 'graph'"
-          :processDefinitionId="
-            state.taskDetail?.processDefinitionId ||
-            state.taskDetail?.taskInstance?.processDefinitionId
-          "
+          :processDefinitionId="state.taskDetail?.processDefinitionId || state.taskDetail?.taskInstance?.processDefinitionId"
           :processDefinitionVersionId="state.taskDetail?.processDefinitionVersionId"
-          :deploymentId="
-            state.taskDetail?.deploymentId || state.taskDetail?.taskInstance?.deploymentId
-          "
+          :deploymentId="state.taskDetail?.deploymentId || state.taskDetail?.taskInstance?.deploymentId"
           :steps="state.activityList"
         />
       </el-tab-pane>
-      <el-tab-pane
-        v-if=" state.taskDetail &&  state.taskDetail.instanceId && isMobile"
-        :label="$t('common_discussionChannel')"
-        name="command"
-      >
-        <WorkflowDetailDiscussionChannel
-          :id=" state.taskDetail.instanceId"
-          :noToggle="true"
-        />
+      <el-tab-pane v-if="state.taskDetail && state.taskDetail.instanceId && isMobile" :label="$t('common_discussionChannel')" name="command">
+        <WorkflowDetailDiscussionChannel :id="state.taskDetail.instanceId" :noToggle="true" />
       </el-tab-pane>
     </el-tabs>
-    <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile"
-                                     :id="state.taskDetail.instanceId"/>
+    <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile" :id="state.taskDetail.instanceId" />
   </div>
   <div v-else>
     Workflow id not found, workflow id : {{ id }}.
