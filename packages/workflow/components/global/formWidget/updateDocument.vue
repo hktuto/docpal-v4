@@ -27,12 +27,22 @@ watch( formData, () => {
   deep: true
 })
 
+onActivated(() => {
+  console.log('activated')
+  getInfo()
+})
+
+onDeactivated(() => {
+  docId.value = ''
+  props.formData = null;
+})
+
 
 </script>
 
 <template>
   <div class="editDocumentContainer">
-    <CollaboraViewer v-if="docId" :docId="docId" :read-only="false" :editable="true" :editMode="true" fileType="WORKFLOW" />
+    <CollaboraViewer v-if="docId" :docId="docId" :readonly="true" :editable="true"  fileType="NUXEO" />
   </div>
 </template>
 
