@@ -149,7 +149,7 @@ defineExpose({ beforeSubmit })
 
 <template>
    <ElButton type="primary" :loading="loading" @click="openPreivew">{{  props.attr_previewButtonText }}</ElButton>
-   <ElDialog v-model="dialogOpened"  width="100%" fullscreen apped-to-body>
+   <ElDialog v-model="dialogOpened"  width="90%" height="90%" :align-center="true" apped-to-body>
         <div  class="readerContainer" :style="`--height: ${dialogHeight}px`">
             <Reader v-if="previewFile.blob" v-bind="previewFile" />
         </div>
