@@ -120,6 +120,7 @@ async function handleFormDataGet() {
 }
 
 function formDataGet(obj: any) {
+  if(!obj) obj = {}
   return Object.keys(obj).reduce((prev: any, key: string) => {
     prev[key] = String(obj[key]);
     return prev;

@@ -80,7 +80,7 @@ const FormRendererRef = ref()
         if (data && properties) {
             const _data = await handleData(data)
             state.formData = { ..._data }
-            FormRendererRef.value.vFormRenderRef.setFormData(_data)
+            FormRendererRef.value.setFormData(_data)
             handleTypeIds(properties)
         } else {
             state.formData = { ...data }
