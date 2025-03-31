@@ -32,7 +32,7 @@ watch( formData, () => {
 
 <template>
   <div class="editDocumentContainer">
-    <CollaboraViewer v-if="docId" :docId="docId" :readonly="false" :editable="true" fileType="WORKFLOW" />
+    <CollaboraViewer v-if="docId" :docId="docId" :read-only="false" :editable="true" :editMode="true" fileType="WORKFLOW" />
   </div>
 </template>
 
@@ -42,6 +42,6 @@ watch( formData, () => {
   width: 100%;
   height: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 </style>
