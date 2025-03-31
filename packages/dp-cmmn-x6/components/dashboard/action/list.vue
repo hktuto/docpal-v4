@@ -24,7 +24,7 @@ function getBColor(type, state) {
   if(state === 'completed') return '#D9D9D9'
   const map = {
     humantask: '#409EFF',
-    processtask: '#29CC6A'
+    processtask: '#409EFF'
   }
   return map[type] || '#D9D9D9'
 }
