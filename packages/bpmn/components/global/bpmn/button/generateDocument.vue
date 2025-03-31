@@ -112,8 +112,9 @@ async function beforeSubmit(){
   // default filed name is 'file'
   // get  file extension from blob
   const ext = mimeTypeToExtension(res.type)
+
   
-  const fileName = 'preview.' + ext
+  const fileName = 'preview' + Date.now() + '.'+ ext
   // return null 
   const formData = new FormData()
   
