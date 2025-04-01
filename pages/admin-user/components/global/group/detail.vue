@@ -46,6 +46,7 @@ const {id, name, isCanModified} = defineProps<{
   isCanModified: boolean;
 }>();
 const state = reactive<any>({
+  id: id,
   name: name
 })
 

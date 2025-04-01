@@ -56,6 +56,7 @@ async function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
+        // { label: 'docType_description', value: 'comment' },
         { label: 'masterTable.eventDate', value: 'eventDate' },
         { label: 'masterTable.eventType', value: 'eventId' },
         { label: 'masterTable_masterName', value: 'docPath' },
