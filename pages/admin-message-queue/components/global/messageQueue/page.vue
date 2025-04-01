@@ -17,45 +17,47 @@
 </template>
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { adminApi } from "api";
+import { adminApi } from 'api'
+
 const { t } = useI18n()
-let extraParams: any = {};
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "message-queue",
-  api: async(pageParams: any) => {
+  id: 'message-queue',
+  api: async (pageParams: any) => {
     const data = await adminApi.api.postMessageQueuePage({ ...pageParams }, extraParams)
-    return { 
-      data:{
+    return {
+      data: {
         entryList: data.data.content,
-        totalSize: data.data.totalElements,
+        totalSize: data.data.totalElements
       }
     }
   },
   columns: [
-    { field: "fileName", title: "table_fileName", fixed: "left" },
-    { field: "table_path", title: "search.logicalPath" },
-    { field: "category", title: "category" },
-    { field: "status", title: "log_auditEvent",
+    { field: 'fileName', title: 'table_fileName', fixed: 'left' },
+    { field: 'logicalPath', title: 'search.logicalPath' },
+    { field: 'category', title: 'category' },
+    {
+      field: 'status', title: 'log_auditEvent',
       slots: {
         default: 'status'
-      } 
+      }
     },
     {
-      field: "lastUpdateDate",
-      title: "log_jobsStatus_date",
+      field: 'lastUpdateDate',
+      title: 'log_jobsStatus_date',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
-      },
-    },
+      }
+    }
   ],
-  permissionMethod: (args:PermissionMethodParams) => {
+  permissionMethod: (args: PermissionMethodParams) => {
     switch (args.code) {
       case 're-try':
         return {
@@ -65,13 +67,14 @@ const {
       //   break;
       default:
         return {
-          visible:true,
+          visible: true,
           disabled: false
         }
     }
   }
-});
-async function handleReSubmit (row) {
+})
+
+async function handleReSubmit(row) {
   try {
     row.loading = true
     const res = await adminApi.api.postMessageQueueMessageidResubmit(row.messageId, {
@@ -83,34 +86,62 @@ async function handleReSubmit (row) {
     }
   } catch (error) {
 
-  }
-  finally {
+  } finally {
     setTimeout(() => {
       row.loading = false
     }, 500)
   }
 }
+
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  extraParams = formModel
+  reload()
 }
 
 const ResponsiveFilterRef = ref()
+
 async function getFilter() {
   const data = [
-    { key: "status", label: "dpTable_status", type: "string", isMultiple: false,
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
       options: [
-        { label: "CREATE", value: "CREATE" },
-        { label: "PENDING", value: "PENDING" },
-        { label: "COMPLETED", value: "COMPLETED" },
-        { label: "FINISH", value: "FINISH" },
-        { label: "ERROR", value: "ERROR" },
-        { label: "PENDING_FOR_SENDING_MESSAGE", value: "PENDING_FOR_SENDING_MESSAGE" }
+        { label: 'category', value: 'category' },
+        { label: 'log_auditEvent', value: 'status' },
+        { label: 'table_fileName', value: 'fileName' },
+        { label: 'log_jobsStatus_date', value: 'lastUpdateDate' },
+        { label: 'search.logicalPath', value: 'table_path' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    },
+    {
+      key: 'status', label: 'dpTable_status', type: 'string', isMultiple: false,
+      options: [
+        { label: 'CREATE', value: 'CREATE' },
+        { label: 'PENDING', value: 'PENDING' },
+        { label: 'COMPLETED', value: 'COMPLETED' },
+        { label: 'FINISH', value: 'FINISH' },
+        { label: 'ERROR', value: 'ERROR' },
+        { label: 'PENDING_FOR_SENDING_MESSAGE', value: 'PENDING_FOR_SENDING_MESSAGE' }
       ]
     }
   ]
   ResponsiveFilterRef.value.init(data)
 }
+
 onMounted(() => {
   getFilter()
 })
@@ -120,8 +151,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
 }
+
 .responsive-container {
   width: 50%;
+
   :deep .el-input {
     width: 200px;
   }

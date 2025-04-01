@@ -225,6 +225,7 @@ async function getFilter() {
       isMultiple: false,
       options: [
         { label: 'workflowEditor.approver', value: 'approvalId' },
+        // { label: 'docType_documentType', value: 'triggers' },
         { label: 'filePolicies_CreationDate', value: 'createdDate' },
         { label: 'filePolicies_PolicyStatus', value: 'status' },
         { label: 'rp.period', value: 'periodNum' },

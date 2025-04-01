@@ -2,81 +2,85 @@
   <div>
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <FormRenderer :form-json="formJson" @formChange="handleFormChange"/>
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          @form-change="handleFilterFormChange"
+        />
+        <FormRenderer :form-json="formJson" @formChange="handleFormChange" />
       </template>
       <template #assignee="{ row }">
-        <el-tag v-if="row.assignee" round>{{ row.assignee || "" }}</el-tag>
+        <el-tag v-if="row.assignee" round>{{ row.assignee || '' }}</el-tag>
         <el-button :id="`Workflow__ActiveTask__Detail__ClaimTask__${row.id}`" v-else type="primary" size="small"
                    round @click="claimTask(row)">
-          {{ $t("workflow_claim") }}
+          {{ $t('workflow_claim') }}
         </el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.enable" type="success">{{ $t('actions.activated') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
-import formJson from "./active.vform.json";
-import {clientApi} from "api";
-import {routeWorkflowDetail} from "~/utils/routerHelper";
+import formJson from './active.vform.json'
+import { clientApi } from 'api'
+import { routeWorkflowDetail } from '~/utils/routerHelper'
 
-const routerProvider = inject(MenuRouterKey);
+const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
-  throw new Error("MenuRouterKey is not provided");
+  throw new Error('MenuRouterKey is not provided')
 }
-const {t} = useI18n();
+const { t } = useI18n()
 // @ts-ignore
-const userId: string = useUserId().value;
-let extraParams: any = {};
+const userId: string = useUserId().value
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "active_task",
+  id: 'active_task',
   api: (pageParams: any) =>
     clientApi.api.postWorkflowTasksUser({
       ...pageParams,
       ...extraParams,
-      interrelatedUserId: userId,
+      interrelatedUserId: userId
     }),
   columns: [
-    {field: "taskInstance.businessKey", title: "workflow_jobName", fixed: "left"},
-    {field: "taskInstance.processDefinitionName", title: "workflow_workflowName"},
+    { field: 'taskInstance.businessKey', title: 'workflow_jobName', fixed: 'left' },
+    { field: 'taskInstance.processDefinitionName', title: 'workflow_workflowName' },
 
     {
-      field: "name",
-      title: "workflow_taskName",
+      field: 'name',
+      title: 'workflow_taskName'
       //   slots: {
       //     default: "status",
       //   },
     },
     {
-      field: "assignee",
-      title: "workflow_assignee",
+      field: 'assignee',
+      title: 'workflow_assignee',
       slots: {
-        default: "assignee",
-      },
+        default: 'assignee'
+      }
     },
     {
-      field: "createDate",
-      title: "workflow_createDate",
-      formatter({cellValue}: any) {
+      field: 'createDate',
+      title: 'workflow_createDate',
+      formatter({ cellValue }: any) {
         // @ts-ignore
         return formatDate(cellValue)
-      },
-    },
+      }
+    }
   ],
-  dblClickAction: ({row, column, event}: any) => {
-    handleDblclick(row);
-  },
-});
+  dblClickAction: ({ row, column, event }: any) => {
+    handleDblclick(row)
+  }
+})
 
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
@@ -84,35 +88,77 @@ function handleDblclick(row: any) {
     ...row,
     name: row.taskInstance.businessKey,
     workflowType: 'activeTask'
-  }), false);
+  }), false)
 }
 
 async function claimTask(row: any) {
   await clientApi.api.postWorkflowTaskClaim({
     taskId: row.id,
-    userId,
-  });
-  query({});
+    userId
+  })
+  query({})
 }
 
 function handleFormChange(data: any) {
   const params = Object.keys(data.formModel).reduce((prev: any, key: string) => {
     if (data.formModel[key] && data.formModel[key].length > 0)
-      prev[key] = data.formModel[key];
-    return prev;
-  }, {});
-  extraParams = params;
-  reload();
+      prev[key] = data.formModel[key]
+    return prev
+  }, {})
+  extraParams = params
+  reload()
 }
 
 function getDownloadParams() {
   return {
     interrelatedUserId: userId,
-    ...deepCopy(extraParams),
-  };
+    ...deepCopy(extraParams)
+  }
 }
 
-defineExpose({getDownloadParams});
+function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  extraParams = formModel
+  reload()
+}
+
+const ResponsiveFilterRef = ref()
+
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'workflow_jobName', value: 'taskInstance.businessKey' },
+        { label: 'workflow_assignee', value: 'assignee' },
+        { label: 'workflow_createDate', value: 'createDate' },
+        { label: 'workflow_taskName', value: 'name' },
+        { label: 'workflow_workflowName', value: 'taskInstance.processDefinitionName' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+}
+
+onMounted(() => {
+  // getFilter()
+})
+
+defineExpose({ getDownloadParams })
 </script>
 <style lang="scss" scoped>
 :deep .el-input {

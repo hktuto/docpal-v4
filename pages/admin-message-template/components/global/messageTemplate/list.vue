@@ -70,7 +70,8 @@ function getFilter() {
         { label: 'workflow_editorLastModified', value: 'modifiedBy' },
         { label: 'table_last_update', value: 'modifiedDate' },
         { label: 'message_templateName', value: 'templateName' },
-        { label: 'message_templateStatus', value: 'whatsAppStatus' }
+        { label: 'message_templateStatus', value: 'whatsAppStatus' },
+        // { label: 'message_templateUsage', value: 'usages' }
       ]
     },
     {

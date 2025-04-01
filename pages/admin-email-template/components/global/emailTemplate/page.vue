@@ -109,6 +109,8 @@ async function handleDeleteTemplate(row: Template[]) {
 }
 
 function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   extraParams = formModel
   reload()
 }

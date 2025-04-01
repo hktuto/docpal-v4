@@ -66,6 +66,38 @@ function handleFilterFormChange(formModel: any) {
   extraParams = formModel
   reload()
 }
+
+const ResponsiveFilterRef = ref()
+
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'dashboard_name', value: 'name' },
+        { label: 'workflow_createDate', value: 'createdDate' },
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(data)
+}
+
+onMounted(() => {
+  getFilter()
+})
 </script>
 <style lang="scss" scoped>
 :deep .el-input {
