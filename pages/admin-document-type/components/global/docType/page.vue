@@ -152,6 +152,11 @@ async function handleCreate() {
 }
 
 function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  if (formModel.orderBy === 'enable') {
+    formModel.isDesc = !formModel.isDesc
+  }
   extraParams = formModel
   reload()
 }
@@ -172,6 +177,7 @@ async function getFilter() {
       { label: 'docType.category', value: 'category' },
       { label: 'role.creator', value: 'createdBy' },
       { label: 'search.type', value: 'name' },
+      { label: 'documentType_Status', value: 'enable' },
       { label: 'documentType_Type', value: 'dataType' },
       { label: 'table_last_update', value: 'modifiedDate' }
     ]
