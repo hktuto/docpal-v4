@@ -35,9 +35,9 @@ function handleAdd() {
 
 // #endregion
 function init(nodeData: any) {
-  const permission = getExtentionProperties(nodeData.data.casePlanModel, 'docpal:attributes')
-  const filter = getExtentionProperties(nodeData.data.casePlanModel, 'docpal:data_filter')
-
+  const permission = deepCopy(getExtentionProperties(nodeData.data.casePlanModel, 'docpal:attributes'))
+  const filter = deepCopy(getExtentionProperties(nodeData.data.casePlanModel, 'docpal:data_filter'))
+  console.log("nodeData", nodeData, filter)
   state.caseInformation = getExtentionProperties(nodeData.data.casePlanModel, 'docpal:form')
   if (!state.caseInformation) state.caseInformation = []
   permission.forEach(item => {
@@ -80,8 +80,9 @@ function getWholePermissionField(permission) {
 
 function getWholeFilter(filter) {
   try {
-    filter.filed_condition = filter.filed_condition.filter(item => state.caseInformation.find(c => c.id === item.id))
+    filter.filed_condition = filter.filed_condition.filter(item => item.id === 'created_by' ||state.caseInformation.find(c => c.id === item.id))
   } catch (error) {
+    console.log("getWholeFilter", error)
   } finally {
     return filter
   }
@@ -113,7 +114,8 @@ function handleRefresh(data, index) {
   if (index || index === 0) {
     state.groups[index] = data
   } else {
-    state.groups.push(data)
+    console.log('new data', deepCopy(data))
+    state.groups = deepCopy([...state.groups, data])
   }
   const _data = [...state.groups]
   handleSave(_data.map(item => ({
