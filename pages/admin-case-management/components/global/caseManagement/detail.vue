@@ -2,6 +2,7 @@
 import {CaseManagementDetailProviderKey} from '#imports'
 import {adminApi} from 'api'
 
+
 const props = defineProps<{
   caseTypeId: string,
   name: string,
@@ -113,11 +114,16 @@ async function init() {
   routerProvider?.updateTabName(props.name + ` - (${props.currentVersion})`)
 }
 
-onActivated(async () => {
+
+
+defineOptions({
+  name: 'CaseManagementDetailDead'
+})
+onMounted(async () => {
   await init()
 })
 
-onDeactivated(() => {
+onUnmounted(() => {
   caseTypeInfo.value = {}
   caseInfo.value = {}
   production.value = false

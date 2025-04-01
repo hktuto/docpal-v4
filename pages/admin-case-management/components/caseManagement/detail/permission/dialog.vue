@@ -122,20 +122,18 @@ async function handleSubmit() {
   }
   let filter: any = {
     group: form.value.name,
-  }
-  if (state.setting?.permission) permission = {
-    ...state.setting.permission, ...permission
-  }
-  if (state.setting?.filter) filter = {
-    ...state.setting.filter, ...filter,
-    filed_condition: form.value.filed_condition.map((item: any) => ({
+    filed_condition: form.value?.filed_condition?.map((item: any) => ({
       id: item.id,
       condition: item.condition,
       __cdata: item.__cdata,
       type: item.type,
       label: item.label
-    }))
+    })) || []
   }
+  if (state.setting?.permission) permission = {
+    ...state.setting.permission, ...permission
+  }
+
   permission.field = Object.keys(state.permissionField).reduce((prev: any, key: string) => {
     const fields = state.permissionField[key]
     fields.forEach((item: any) => {
@@ -147,6 +145,9 @@ async function handleSubmit() {
     return prev
   }, [])
   // throw new Error('test')
+  console.log({
+    filter
+  })
   emits('refresh', {
     name: form.value.name,
     permission,
@@ -198,7 +199,7 @@ function handleOpen(setting: any) {
           _item.displayField = info.displayField
         }
         return _item
-      })
+      }) || []
     } else {
       state.permissionField.read = props.caseInformation
     }
