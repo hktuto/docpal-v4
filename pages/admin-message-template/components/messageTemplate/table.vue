@@ -22,11 +22,11 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       fixed: 'left'
     },
     {
-      field: 'usage',
+      field: 'usages',
       title: 'message_templateUsage',
       formatter: ({ cellValue }) => {
         if (!cellValue || cellValue.length === 0) return ''
-        return cellValue.join(',')
+        return JSON.parse(cellValue).join(',')
       }
     },
     {

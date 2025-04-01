@@ -129,11 +129,11 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'workflowEditor.name', value: 'name' },
-        { label: 'workflow_editorLastModified', value: 'modifiedBy' },
         { label: 'searchGroup.createdDate', value: 'createdDate' },
+        { label: 'workflow_editorLastModified', value: 'modifiedBy' },
         { label: 'workflow_editorLastDate', value: 'modifiedDate' },
-        { label: 'workflow_editorStatus', value: 'status' }
+        { label: 'workflow_editorStatus', value: 'status' },
+        { label: 'workflowEditor.name', value: 'name' }
       ]
     },
     {
