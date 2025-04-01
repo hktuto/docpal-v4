@@ -130,7 +130,7 @@ async function handleDownload(row: any) {
     position: 'bottom-right'
   })
   try {
-    const blob = await adminApi.api.postNuxeoDocumentDownload(row.id, {
+    const blob = await adminApi.api.postNuxeoDocumentDownload({idOrPath:row.documentId}, {
       format: 'blob',
       onDownloadProgress: (e: any) => {
         const el = document.getElementById(id)
