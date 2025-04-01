@@ -200,7 +200,7 @@ function handleOpen(setting: any) {
         return _item
       })
     } else {
-      state.permissionField.show = props.caseInformation
+      state.permissionField.read = props.caseInformation
     }
   })
 }

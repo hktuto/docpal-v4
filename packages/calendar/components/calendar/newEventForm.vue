@@ -76,8 +76,8 @@ function endTimeChange(){
     if(endTime.isBefore(dayjs())) {
         ElMessage.error("End time cannot be earlier than today");
     }
-    form.value.endDate = endTime.format('YYYY-MM-DD')
-    form.value.endTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).format('HH:mm')
+    form.value.startDate = endTime.format('YYYY-MM-DD')
+    form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).format('HH:mm')
     // form.value.endTime = snapDownTo15Minutes(endTime).toISOString()
     // form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).toISOString()
 }
