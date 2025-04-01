@@ -4,6 +4,7 @@
       <h4>{{ $t("dashboard.PersonalCaseCreate") }}</h4>
       <div v-if="!hideSetting" class="flex-x-between">
         <SvgIcon
+          id="Dashboard__Home__Detail__NewCase__Settings"
           src="/icons/setting.svg"
           class="el-icon--right"
           style="--icon-size: 1.14rem; --icon-color: #8796a4"

@@ -1,11 +1,11 @@
 <template>
   <el-card ref="cardRef" class="workflow-card dashboard-item dashboard-item-tab">
     <SvgIcon
-      id="WorkPanel__DetailTask__Settings"
+      id="Dashboard__Home__Detail__Workflow__Settings"
       v-if="!hideSetting"
       src="/icons/setting.svg"
       class="el-icon--right setting-icon"
-      style="--icon-size: 1.14rem; --icon-color: #8796a4"
+      style="--icon-size: 1.14rem; --icon-color: #8796a4; font-size: 20px"
       @click="openSetting"
     />
     <PersonalWorkflowContent :isTabView="setting.isTabView" :singleTableMode="setting.singleTableMode" :selectedTable="setting.selectedTable" :title="setting.title" :processKeys="setting.processKeys" />

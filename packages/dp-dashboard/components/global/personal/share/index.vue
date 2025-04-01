@@ -1,11 +1,11 @@
 <template>
   <el-card ref="cardRef" class="dashboard-item dashboard-item-tab">
     <SvgIcon
-      id="WorkPanel__DetailShare__Settings"
+      id="Dashboard__Home__Detail__Share__Settings"
       v-if="!hideSetting"
       src="/icons/setting.svg"
       class="el-icon--right setting-icon"
-      style="--icon-size: 1.14rem; --icon-color: #8796a4"
+      style="--icon-size: 1.14rem; --icon-color: #8796a4; font-size: 20px"
       @click="openSetting"
     />
     
