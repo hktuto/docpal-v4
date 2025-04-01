@@ -98,10 +98,12 @@ watch(
       <h4>{{ props.setting.caseLabel }}</h4>
       <div class="flex-x-between">
         
-        <SvgIcon  v-if="!hideSetting"
+        <SvgIcon
+          id="Dashboard__Home__Detail__SingleCase__Settings"
+          v-if="!hideSetting"
           src="/icons/setting.svg"
           class="el-icon--right"
-          style="--icon-size: 1.14rem; --icon-color: #8796a4"
+          style="--icon-size: 1.14rem; --icon-color: #8796a4; font-size: 20px"
           @click="openSetting"
         />
       </div>

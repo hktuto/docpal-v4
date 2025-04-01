@@ -3,9 +3,11 @@
     <template #header="{ close, titleId, titleClass }">
       <h4>{{ $t("search.recentSearchs") }}</h4>
       <Icon
+        id="Dashboard__Home__Detail__RecentSearch__Delete"
         v-show="!hideSetting"
         name="material-symbols:delete-rounded"
         class="normal cursor-pointer"
+        style="font-size: 20px"
         @click="handleDelete"
       ></Icon>
     </template>
