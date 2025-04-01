@@ -2,7 +2,7 @@
 import {Edit} from '@element-plus/icons-vue'
 import {adminApi} from 'api'
 import {newCaseManagementEditor} from "~/utils/caseManagementHelper";
-
+const { caseId } = useCmmnGraph();
 const caseDetailProvider = inject(CaseManagementDetailProviderKey)
 const routerProvider = inject(MenuRouterKey)
 if (!caseDetailProvider || !routerProvider) {
@@ -41,12 +41,13 @@ async function save() {
 async function getAllForm(){
     let form:any[] = [];
     const nodes = state.cmmn.graph.getNodes()
+    const processKey = caseId.value
     for(let i = 0; i < nodes.length; i++) {
         const element = nodes[i]
         const nodeData = element.getData()
         if(nodeData.type === 'humanTask') {
             const response = await adminApi.api.getRelationQuery({
-                processKey: props.name,
+                processKey,
                 userTaskId: nodeData.data.attr_id,
                 versionId:  props.caseTypeId
             });
@@ -54,7 +55,7 @@ async function getAllForm(){
                 const json = JSON.parse(response.data[0].jsonValue || "{}")
                 form.push({
                     params:{
-                        processKey: props.name,
+                        processKey,
                         userTaskId: nodeData.data.attr_id,
                         versionId:  props.caseTypeId
                     },

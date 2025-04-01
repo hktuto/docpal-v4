@@ -21,16 +21,54 @@ const { pageNum, pageSize, orderBy, isDesc } = toRefs(props)
 const caseData = ref();
 
 async function getCaseData(){
-
     const { data } = await adminApi.api.getCaseTypesId(props.caseTypeId)
     caseData.value = data
     console.log(caseData.value)
 }
 
+function getAllHumanTask(json:any, result:any[]){
+  if(!json.humanTask) {
+    json.humanTask = []
+  }
+  json.humanTask.forEach(item => {
+      result.push(item)
+  })
+  if(json.stage && json.stage.length > 0) {
+      json.stage.forEach(item => {
+          result = getAllHumanTask(item, result)
+      })
+  }
+  return result
+}
+
 async function saveAsNewVersion(data:any){
-    console.log("saveAsNewVersion", data)
     // TODO : save as case logic
-    await adminApi.api.postCaseTypesVersionVersionidNew(data.id)
+    const dataData =await adminApi.api.postCaseTypesVersionVersionidNew(data.id).then(res => res.data)
+    // get all form in case and save as to new version
+    // download xml
+    const xml = await adminApi.api.getCaseTypesIdDownloadXml(props.caseTypeId, {versionNumber: data.versionNumber}, {
+        format: 'blob'
+    })
+    const xmlString = await xml.text()
+    const cmmnJson = cmmnToJson(xmlString)
+    const caseId = cmmnJson.definitions.case.attr_id
+    
+    let allHumanTask:any[] = getAllHumanTask(cmmnJson.definitions.case.casePlanModel, [])
+    for(let i = 0; i < allHumanTask.length; i++) {
+        const item = allHumanTask[i]
+        let params:any = {
+            processKey: caseId,
+            userTaskId: item.attr_id,
+            versionId:  data.id,
+        }
+        const response = await adminApi.api.getRelationQuery(params)
+        if(response && response.data && response.data.length > 0 && response.data[0].jsonValue) {
+          const json = response.data[0].jsonValue
+          params.jsonValue = json
+          params.versionId = dataData.id
+          await adminApi.api.postRelationSave(params)
+        }
+    }
     tableRef.value?.reload()
     ElNotification.success(`${data.versionNumber} has save to new version`)
 }

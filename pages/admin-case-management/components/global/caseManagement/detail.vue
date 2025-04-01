@@ -9,6 +9,7 @@ const props = defineProps<{
 }>()
 const {caseTypeId, name, currentVersion} = toRefs(props)
 
+
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey not found')

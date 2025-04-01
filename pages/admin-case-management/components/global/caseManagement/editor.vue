@@ -2,7 +2,7 @@
 
 import {adminApi} from 'api'
 
-
+const { caseId } = useCmmnGraph();
 const props = defineProps<{
   caseTypeId: string,
   name: string,
@@ -140,6 +140,7 @@ async function saveAsNewVersion() {
     // console.log("data", data)
     // get all form in case and save as to new version
     const allNodes = editorEl.value.graph.getNodes()
+    const processKey = caseId.value
     console.log("allNodes", allNodes)
     for(let i = 0; i < allNodes.length; i++) {
       const node = allNodes[i]
@@ -147,14 +148,14 @@ async function saveAsNewVersion() {
       if(nodeData.type === 'humanTask') {
         console.log("is human task", nodeData)
         const response = await adminApi.api.getRelationQuery({
-          processKey: props.name,
+          processKey,
           userTaskId: nodeData.data.attr_id,
           versionId:  props.versionId
         });
         console.log("response", response)
         if(response && response.data && response.data.length > 0 && response.data[0].jsonValue) {
           const params = {
-            processKey: props.name,
+            processKey,
             userTaskId: nodeData.data.attr_id,
             versionId:  data.id,
             jsonValue: response.data[0].jsonValue
