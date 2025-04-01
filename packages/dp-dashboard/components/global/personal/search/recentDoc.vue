@@ -2,7 +2,14 @@
   <el-card ref="cardRef" class="dashboard-item dashboard-item-card">
     <template #header="{ close, titleId, titleClass }">
       <h4>{{$t('search.recentDocument')}}</h4>
-      <Icon v-show="!hideSetting" name="material-symbols:delete-rounded" class="normal cursor-pointer"  @click="handleDelete"></Icon>
+      <Icon
+        id="Dashboard__Home__Detail__RecentDocument__Delete"
+        v-show="!hideSetting"
+        name="material-symbols:delete-rounded"
+        class="normal cursor-pointer"
+        style="font-size: 20px"
+        @click="handleDelete"
+      ></Icon>
     </template>
     <el-skeleton  v-if="!hideSetting" :rows="5" />
     <div v-else class="main" v-infinite-scroll="getRecentDocumentPage"

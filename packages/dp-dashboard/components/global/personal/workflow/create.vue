@@ -4,9 +4,10 @@
       <h4>{{ $t("dashboard.PersonalWorkflowCreate") }}</h4>
       <div v-if="!hideSetting" class="flex-x-between">
         <SvgIcon
+          id="Dashboard__Home__Detail__AddWorkflow__Delete"
           src="/icons/setting.svg"
           class="el-icon--right"
-          style="--icon-size: 1.14rem; --icon-color: #8796a4"
+          style="--icon-size: 1.14rem; --icon-color: #8796a4; font-size: 20px"
           @click="openSetting"
         />
       </div>
