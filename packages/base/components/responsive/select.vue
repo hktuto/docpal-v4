@@ -22,7 +22,7 @@
                     v-model="selectData.value"
                     @change="handleChange(selectData)">
                     <el-checkbox v-for="item in selectData.options" :label="item.value" :key="item.value" 
-                        :data-testid="`filter-${item.value}`" :title="item.label">
+                        :data-testid="`filter-${item.value}`" :title="item.label" :value="item.value">
                         <template v-if="selectData.type === 'date'">
                             {{formatDate(item.label)}}
                         </template>

@@ -5,7 +5,6 @@
     class="scroll-dialog"
     append-to-body
     :close-on-click-modal="false"
-    @close="handleClose"
   >
     <el-form ref="FormRef" style="--icon-size: 1.2rem" label-position="top" :model="form">
       <el-form-item
