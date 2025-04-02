@@ -6,7 +6,15 @@ console.log(wrapper.vm)
 await wrapper.vm.$nextTick() // 等待组件渲染更新
 await wrapper.vm.onActivated()
 ```
-
+### 检查 watch
+```
+it('watches for detail changes', async () => {
+  const newDetail = { id: 'test-id', name: 'Updated Name' };
+  // setProps 重新设置 Props
+  await wrapper.setProps({ detail: newDetail });
+  expect(wrapper.vm.form.name).toBe(newDetail.name);
+});
+```
 ## nuxt项目expect注意事项
 ### 判断组件是否存在
 // 方式1：通过组件定义名（×）
