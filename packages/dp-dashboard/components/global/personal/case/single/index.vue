@@ -68,7 +68,6 @@ async function getCaseDetail(caseId: string) {
       }
       return prev
     }, [])
-    console.log("handleShowColumn", displayColumns)
     tableRef.value.reorderColumn(displayColumns)
   }
   function handleRefreshTable() {
@@ -123,7 +122,7 @@ watch(
       @refresh="handleRefresh"
     />
     
-  <LazyCaseAddCaseDialog ref="addCaseDialog" @refresh="handleRefreshTable"></LazyCaseAddCaseDialog>
+  <LazyCaseAddCaseDialog ref="addCaseDialog" :label="setting.caseLabel" @refresh="handleRefreshTable"></LazyCaseAddCaseDialog>
   </el-card>
 </template>
 <style lang="scss" scoped>

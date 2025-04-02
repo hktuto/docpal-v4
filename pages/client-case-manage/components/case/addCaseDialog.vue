@@ -29,10 +29,8 @@ async function handleOpen(id: string, caseDetail: any) {
     if (form.data[0]) {
       isWorkflowForm.value = true
       const json = JSON.parse(form.data[0].jsonValue || "{}")
-
-
+      state.title = startForm?.[0]?.name
       nextTick(() => {
-        console.log("form", json, FromVariablesRendererRef.value)
         FromVariablesRendererRef.value.setForm(json, [])
 
       })
@@ -98,6 +96,7 @@ async function handleSubmit() {
 
 const props = withDefaults(defineProps<{
   ignoreList?: string[],
+  label?: string,
 }>(), {
   ignoreList: [],
 })
@@ -106,7 +105,7 @@ defineExpose({handleOpen})
 </script>
 
 <template>
-  <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" append-to-body
+  <el-dialog v-model="state.visible" :title="label || state.title" class="scroll-dialog" append-to-body
              :close-on-click-modal="false" destroy-on-close @close="handleClose">
     <WorkflowDetailFormRender v-if="isWorkflowForm" ref="FromVariablesRendererRef"/>
     <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList"/>

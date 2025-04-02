@@ -62,7 +62,7 @@ const {
 
 async function getActions(row: any) {
   try {
-    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data?.filter(s => s.state !== 'completed'))
+    caseEvents.value = await clientApi.api.getCaseDashboardInstanceCaseidActions(row.case_id).then(res => res.data?.filter(s => s.state !== 'completed').sort((a:any,b:any) => a.name.localeCompare(b.name)))
   } catch (error) {
     caseEvents.value = []
   }
