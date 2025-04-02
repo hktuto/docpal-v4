@@ -215,11 +215,6 @@ function initOptions() {
     label: item.name,
     type: item.type
   })))
-  state.caseInformation.unshift({
-    value: 'created_by',
-    label: 'Created by',
-    type: 'string'
-  })
 }
 
 function handleRecordChange(value) {
