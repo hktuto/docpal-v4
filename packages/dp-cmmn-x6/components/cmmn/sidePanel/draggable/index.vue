@@ -1,30 +1,23 @@
 <template>
-  <div :style="`--column-num: ${ dragHeader?.length || 2}`">
+  <div :style="`--column-num: ${dragHeader?.length || 2}`">
     <div class="header">
       <div class="handle"></div>
       <slot name="header">
-        <div v-for="(item, index) in dragHeader" :key="item.name+index">
+        <div v-for="(item, index) in dragHeader" :key="item.name + index">
           {{ item.label }}
         </div>
       </slot>
       <div class="action"></div>
     </div>
-    <draggable
-      tag="ul"
-      :list="list"
-      class="list-group"
-      handle=".handle"
-      item-key="id"
-      @end="handleDrag"
-    >
+    <draggable tag="ul" :list="list" class="list-group" handle=".handle" item-key="id" @end="handleDrag">
       <template #item="{ element, index }">
         <li class="list-group-item">
           <el-icon class="handle">
-            <Rank/>
+            <Rank />
           </el-icon>
           <slot :item="element" :index="index">
-            <div v-for="(item, index) in dragHeader" :key="item.name+index">
-              {{ element[item.name] ? item.i18n ? $t(`${item.i18n}${element[item.name]}`) : element[item.name] : '-' }}
+            <div v-for="(item, index) in dragHeader" :key="item.name + index">
+              {{ element[item.name] ? (item.i18n ? $t(`${item.i18n}${element[item.name]}`) : element[item.name]) : '-' }}
             </div>
           </slot>
           <div class="position-icon">
@@ -32,12 +25,12 @@
             <SvgIcon v-if="element.readOnly" src="/icons/eye.svg"></SvgIcon>
           </div>
 
-          <div class="action flex-x-center">
+          <div v-if="!['created_date', 'created_by', 'modified_by', 'case_id'].includes(element.id)" class="action flex-x-center">
             <el-icon v-if="showEdit" class="cursorPointer el-icon--left" @click="handleOpenDialog(element)">
-              <Edit/>
+              <Edit />
             </el-icon>
             <el-icon class="cursorPointer" v-if="!element.noDelete" @click="removeAt(element, index)">
-              <Delete/>
+              <Delete />
             </el-icon>
           </div>
         </li>
@@ -51,34 +44,37 @@
         {{ $t('caseManagement_ImportFromWorkflow') }}
       </ElButton>
     </div>
-    <CmmnSidePanelDraggableWorkflowDialog
-      ref="workflowDialogRef"
-      :list="list"
-      @create="handleBatchAdd"
-    />
-    <CmmnSidePanelDraggableDialog ref="dialogRef" :formJsonUrl="formJsonUrl"
-                                  :node="node" :graph="graph" :filterList="props.list"
-                                  @create="handleAdd"
-                                  @edit="handleEdit"
+    <CmmnSidePanelDraggableWorkflowDialog ref="workflowDialogRef" :list="list" @create="handleBatchAdd" />
+    <CmmnSidePanelDraggableDialog
+      ref="dialogRef"
+      :formJsonUrl="formJsonUrl"
+      :node="node"
+      :graph="graph"
+      :filterList="props.list"
+      @create="handleAdd"
+      @edit="handleEdit"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {Rank, Edit, Delete} from '@element-plus/icons-vue'
+import { ElMessageBox } from 'element-plus'
+import { Rank, Edit, Delete } from '@element-plus/icons-vue'
 import draggable from 'vuedraggable'
-
-const props = withDefaults(defineProps<{
-  list: any,
-  dragHeader: any,
-  showEdit?: boolean,
-  formJsonUrl: any,
-  node?: any,
-  graph?: any
-}>(), {
-  showEdit: true,
-})
+const { t } = useI18n()
+const props = withDefaults(
+  defineProps<{
+    list: any
+    dragHeader: any
+    showEdit?: boolean
+    formJsonUrl: any
+    node?: any
+    graph?: any
+  }>(),
+  {
+    showEdit: true
+  }
+)
 
 const emits = defineEmits(['change'])
 const state = reactive<any>({
@@ -87,14 +83,14 @@ const state = reactive<any>({
 
 async function removeAt(row, idx) {
   let hasContent = false
-  Object.keys(row).forEach(key => {
+  Object.keys(row).forEach((key) => {
     if (key !== 'id' && row[key]) hasContent = true
-  });
+  })
   if (hasContent) {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
   }
-  props.list.splice(idx, 1);
+  props.list.splice(idx, 1)
   emits('change')
 }
 
@@ -131,7 +127,8 @@ function importWorkflowField() {
 }
 </script>
 <style scoped>
-.list-group-item, .header {
+.list-group-item,
+.header {
   display: grid;
   grid-template-columns: min-content repeat(var(--column-num), 1fr) min-content;
   gap: var(--app-space-xs);
