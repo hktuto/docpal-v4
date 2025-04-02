@@ -204,7 +204,7 @@ watch(() => node, ()=> {
             <ElButton type="primary" @click="editField" :disabled="editorProvider.readonly.value" >
                 Edit Field
                 </ElButton>
-            <ElButton type="primary" @click="editorProvider.openForm(node)" :disabled="editorProvider.readonly.value" >
+            <ElButton type="primary" @click="editorProvider.openForm(node)"  >
                 
                 Edit Form
                 </ElButton>

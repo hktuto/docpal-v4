@@ -1,17 +1,19 @@
 .dashboard-item{ 
-  --el-card-border-radius: .8rem;
-  --el-box-shadow-light: none;
-  
+  --el-card-border-radius: var(--app-border-radius-m);
+  --el-box-shadow-light: 0 0 5px rgba(0,0,0,.07);
+  --el-card-padding: var(--app-space-s);
+  --el-card-border-color: var(--app-grey-850);
   .vue-resizable-handle{
     //border-top-right-radius: var(--el-card-border-radius);
     border-bottom-right-radius: var(--el-card-border-radius);
     background:none;
     border-width: 0px 2px 2px 0px;
-    border-color: var(--app-grey-010);
+    border-color: var(--app-grey-850);
     border-style: solid;
   }
   &:hover{
-    --el-box-shadow-light: 0 0 5px 2px var(--app-grey-010);
+    --el-box-shadow-light: 0 0 10px rgba(0,0,0,.15);
+    // --el-box-shadow-light: 0 0 5px 2px var(--app-grey-010);
   }
   &-card {
     height: 100%;
@@ -28,7 +30,7 @@
       display: flex;
       justify-content: space-between;
       border-bottom: unset;
-      padding: var(--app-space-xs);
+      padding: var(--app-space-s);
       h4 {
         padding: unset;
         margin: unset;

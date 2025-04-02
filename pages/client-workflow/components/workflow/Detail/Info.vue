@@ -73,6 +73,7 @@ const props = defineProps<{
 }>()
 const {t} = useI18n()
 const userId: string = useUserId().value
+const routerProvider = inject(MenuRouterKey)
 const state = reactive({
   deletePopoverShow: false,
   loading: false
@@ -122,6 +123,7 @@ async function handelDelete() {
   } else {
     ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('common_item'), name: null}))
   }
+  routerProvider?.back()
 }
 </script>
 <style lang="scss" scoped>
