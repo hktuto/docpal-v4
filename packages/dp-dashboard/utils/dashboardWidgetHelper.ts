@@ -16,6 +16,7 @@ export type DashboardWidget = "DocTypeCoCount" |
     "PersonalWorkflowCreate" |
     "PersonalWorkflow" |
     "PersonalSearchHistory" |
+    "PersonalSearchDefine" |
     "PersonalSearchRecentDoc" |
     "PersonalCaseCreate" |
     "PersonalCase"
@@ -47,6 +48,7 @@ import PersonalPredefinedSearch from '../components/global/personal/predefinedSe
 import PersonalWorkflowCreate from '../components/global/personal/workflow/create.vue'
 import PersonalWorkflow from '../components/global/personal/workflow/index.vue'
 import PersonalSearchHistory from '../components/global/personal/search/history.vue'
+import PersonalSearchDefine from '../components/global/personal/search/define.vue'
 import PersonalSearchRecentDoc from '../components/global/personal/search/recentDoc.vue'
 import PersonalCaseCreate from '../components/global/personal/case/create.vue'
 import PersonalCase from '../components/global/personal/case/index.vue'
@@ -351,6 +353,19 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         setting : {
         }
     },
+    PersonalSearchDefine: {
+        type: 'personal',
+        label: 'PersonalSearchDefine',
+        minW: 2,
+        minH: 2,
+        maxW: 12,
+        maxH: 6,
+        w: 3,
+        h: 3,
+        component : 'PersonalSearchDefine',
+        setting : {
+        }
+    },
     PersonalSearchRecentDoc: {
         type: 'personal',
         // feature: 'SEARCH',
@@ -470,6 +485,7 @@ export const widgetComponent = {
     "PersonalWorkflowCreate": PersonalWorkflowCreate,
     "PersonalWorkflow": PersonalWorkflow,
     "PersonalSearchHistory": PersonalSearchHistory,
+    "PersonalSearchDefine": PersonalSearchDefine,
     "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
     "PersonalCaseCreate": PersonalCaseCreate,
     "PersonalCase": PersonalCase,
