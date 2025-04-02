@@ -33,6 +33,9 @@
               <Delete />
             </el-icon>
           </div>
+          <div v-else class="action flex-x-center">
+
+          </div>
         </li>
       </template>
     </draggable>
