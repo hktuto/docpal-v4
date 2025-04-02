@@ -536,6 +536,7 @@
     "PersonalCaseSingle": "單一案例",
     "PersonalDashboard": "儀表板",
     "PersonalPredefinedSearch": "智慧型資料夾",
+    "PersonalSearchDefine": "自定義檢索",
     "PersonalSearchHistory": "最近搜索",
     "PersonalSearchRecentDoc": "最近文檔",
     "PersonalShare": "分享",
@@ -2071,6 +2072,7 @@
     "recentNow": "即時"
   },
   "search": {
+    "SearchDefine": "自定義檢索",
     "allFiles": "全部",
     "assetType": "媒體類型",
     "authors": "創建者",
