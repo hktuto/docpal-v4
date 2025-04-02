@@ -46,6 +46,7 @@ let id = 1
 
 export function updateExtentionProperties(element: any, prop: CmmnExtentionProperties = 'docpal:form', data: any, caseId: string) {
     if(!element.extensionElements) element.extensionElements = {}
+    console.log("updateExtentionProperties", data)
     if(!Array.isArray(data)) {
         return updateCmmnObject(element.extensionElements, prop, data, caseId)
     }
@@ -101,7 +102,8 @@ export function updateCmmnProperties(element: any, prop: CmmnExtentionProperties
         })
     }
     function getAttr (key, item) {
-        if(key === 'id' && item.name) return item.name.replace(/ /g,'_')
+        if(key === 'id' && item.id) return item.id
+        else if(key === 'id' && !item.id && item.name) return item.name.replace(/ /g,'_')
         else if(key === 'id' && !item.id) {
             id ++ 
             return  new Date().valueOf().toString() + id
