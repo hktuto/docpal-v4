@@ -42,7 +42,6 @@
 <script lang="ts" setup>
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { clientApi } from 'api'
-
 const emits = defineEmits(['email-update'])
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -142,6 +141,8 @@ const {
 const ResponsiveFilterRef = ref()
 
 async function initCondition() {
+  console.log('initCondition',ResponsiveFilterRef);
+  
   const data = [
     {
       key: 'status',
@@ -186,7 +187,11 @@ function handleFilterFormChange(formModel: any) {
   if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   filterParams = { ...formModel }
   if (!filterParams.email) delete filterParams.email
-  reload()
+  try {
+    reload()
+  } catch (error) {
+    
+  }
 }
 
 // #region module:

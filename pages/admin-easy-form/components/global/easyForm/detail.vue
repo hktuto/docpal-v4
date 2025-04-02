@@ -25,10 +25,15 @@ const state = reactive<any>({
   detail: {},
 });
 async function getDetail() {
-  state.detail = await adminApi.api.getFormDesignDraftId(id).then((res) => res.data);
-  setTimeout(() => {
-    handleEmailUpdate();
-  });
+  try {
+    state.detail = await adminApi.api.getFormDesignDraftId(id).then((res) => res.data);
+    
+    setTimeout(() => {
+      handleEmailUpdate();
+    });
+  } catch (error) {
+    state.detail = {}
+  }
 }
 function handleUpdateAction(action: any) {
   const index = state.detail.formResult.findIndex((item: any) => item.id === action.id);
@@ -46,8 +51,8 @@ function handleEmailUpdate() {
     logRef.value.tableRef.reload();
   }, 1000);
 }
-onActivated(() => {
-  getDetail();
+onActivated(async() => {
+  await getDetail();
 });
 onDeactivated(() => {
   state.detail = {};
