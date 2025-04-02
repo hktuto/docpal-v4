@@ -93,7 +93,7 @@ export const useCalendarStore = () => {
         const data = await adminApi.api.postMasterTablesRecords({
             id: setting.value.location.master_table
         }).then(res => res.data) as any;
-        locationsOption.value = data || []
+        locationsOption.value = (data || []).filter(i => i.status)
     }
 
     async function getCalendarsSetting(){

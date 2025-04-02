@@ -23,6 +23,7 @@ import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
 import {adminApi } from 'api'
+const { public: { platform } } = useRuntimeConfig()
 const props = withDefaults( defineProps<{
     dates?: any;
     setting?: any;
@@ -64,7 +65,7 @@ function needRefresh(detail:any) {
 }
 
 function displayValue(item) {
-  if(!state.mode === 'normal') {
+  if(platform === 'admin') {
     return state.defaultValue[item.id] 
   }
   if(item.type === 'date') {

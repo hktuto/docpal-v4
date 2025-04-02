@@ -30,11 +30,12 @@
             </template>
         </draggable>
     </div>
-    <div>
+    <div class="avalibleFields">
         <h3>{{ $t('caseManage.avalibleFields') }}</h3>
+        <ElInput v-model="filterText" placeholder="Filter" class="filter-input" />
         <draggable
             class="list-group"
-            :list="state.allList"
+            :list="filterList"
             group="people"
             itemKey="id"
         >
@@ -61,10 +62,20 @@ const emits = defineEmits([
     'refresh', 'delete'
 ])
 const {t} = useI18n()
+
+const filterText = ref("");
+
+const filterList = computed(() => {
+  return state.allList.filter((item: any) => {
+    return !filterText.value || item.name.toLowerCase().includes(filterText.value.toLowerCase());
+  });
+});
+
 const widthList = [
     { width: '25%', label: '25%' },
     { width: '33%', label: '33%' },
     { width: '50%', label: '50%' },
+    { width: '75%', label: '75%' },
     { width: '100%', label: '100%' },
 ]
 const state = reactive<any>({
@@ -146,6 +157,9 @@ defineExpose({ handleOpen })
         grid-template-columns: 1fr 30%;
         gap: var(--app-space-xs);
         overflow: auto;
+        .avalibleFields{
+          grid-template-rows: min-content min-content 1fr;
+        }
         & > div {
             background-color: #F2F8F9;
             padding: var(--app-space-xs);
