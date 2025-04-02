@@ -53,6 +53,14 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExi
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
+function getHistory() {
+    return history.value
+}
+
+function addToHistory(param:RouterParams){
+    history.value.push(param)
+}
+
 function back(fallback?:any){
     if(history.value.length === 0) {
         if(fallback){
@@ -174,6 +182,8 @@ provide(MenuRouterKey,{
     updateTabName,
     routerContainer,
     back,
+    getHistory,
+    addToHistory,
     message:{
         success: (...args) => createMessage('success', ...args),
         error: (...args) => createMessage('error', ...args),

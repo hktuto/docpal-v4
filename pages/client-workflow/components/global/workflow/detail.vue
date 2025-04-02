@@ -7,9 +7,10 @@ const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-const { id, workflowType } = defineProps<{
+const { id, workflowType, backItem } = defineProps<{
   id: string
   workflowType: string
+  backItem?:any
 }>()
 // @ts-ignore
 const userId: string = useUserId().value
@@ -242,10 +243,14 @@ async function addtionalSubmit(formData: any) {
   }
   const res: any = await clientApi.api.postWorkflowFormSubmit(param).then((res) => res.data)
   ElMessage.success(`${t('msg_successfulOperation')}`)
-  const fallbackRoute = routeWorkflowPage({
-    workflowType: workflowType
-  })
-  routerProvider?.back(fallbackRoute)
+  if(backItem) {
+    routerProvider?.back(backItem)
+  }else{
+    const fallbackRoute = routeWorkflowPage({
+      workflowType: workflowType
+    })
+    routerProvider?.back(fallbackRoute)
+  }
 }
 
 const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
@@ -279,6 +284,15 @@ const isAssigneeUser = computed(() => {
   return !state.taskDetail?.assignee || state.taskDetail?.assignee === userId
 })
 onActivated(() => {
+  const backLinks = routerProvider?.getHistory()
+  if(!backItem && backLinks && backLinks.length > 0) {
+    routerProvider?.updateProps({
+      backItem: backLinks[backLinks.length - 1]
+    })
+  }
+  if(backItem && backLinks.length === 0) {
+    routerProvider?.addToHistory(backItem)
+  }
   getDetail()
 })
 </script>

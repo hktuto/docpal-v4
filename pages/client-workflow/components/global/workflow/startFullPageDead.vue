@@ -36,6 +36,7 @@ async function init() {
   const formJson = await formJsonGet('start', processKey, versionId)
   const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(versionId)
   handleAdditionalSetting(xml, {}, formData)
+  
   nextTick(() => {
     vFormRef.value.setForm(formJson, formData, props)
   })

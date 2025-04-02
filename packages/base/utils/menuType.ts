@@ -24,6 +24,8 @@ interface MenuProvider {
     updateTabName(newName:string):void
     routerContainer: Ref<HTMLElement | null>,
     back: (fallbackItem?:TabItem) => void,
+    getHistory:() => RouterParams[],
+    addToHistory:(param:RouterParams) => void,
     message:{
         success: (...args) => void,
         error: (...args) => void,

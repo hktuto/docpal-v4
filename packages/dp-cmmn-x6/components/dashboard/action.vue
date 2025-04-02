@@ -1,7 +1,7 @@
 <template>
 <el-card class="o-auto">
   <h3>{{ $t('dashboard.cmmnAction') }}</h3>
-  <DashboardActionList class="dashboard-auto" :actionList="state.data" @refresh="init()" @submit="emits('refresh')"/>
+  <DashboardActionList class="dashboard-auto" :actionList="state.data" @refresh="init()" @submit="handleRefresh"/>
   <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg"
     @click="handleDelete"/>
 </el-card>
@@ -64,6 +64,11 @@ async function init() {
     const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
     state.data = dashboardActions?.filter(s => s.state !== 'completed')
   }
+}
+
+function handleRefresh(){
+  emits('refresh')
+  init()
 }
 
 onMounted(() => {
