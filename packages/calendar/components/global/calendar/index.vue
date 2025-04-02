@@ -44,8 +44,15 @@
     const userFiterOptions = ref<any>([])
     async function getFilterOptions(){
         try{
-            const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-            if(!user) throw new Error("no user")
+            let user:any = [];
+            if(props.options.userFilter) {
+              const res = await clientApi.api.getPermissionUserGroupGroupidUsers(props.options.userFilter).then(res => res.data)
+              user = res.users
+            }else{
+              user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
+              if(!user) throw new Error("no user")
+            }
+            
             userFiterOptions.value = user.map(item => {
                 return {
                     label: item.username,

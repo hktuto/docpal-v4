@@ -28,6 +28,7 @@ export type CalendarOptions = {
     locationLabel?:string,
     categoryLabel?:string,
     userLabel?:string,
+    userFilter?:string,
     userFilterGroup?:string,
     officeStartTime?:string, // office start time default to 08:00
     officeEndTime?:string, // office end time default to 20:00

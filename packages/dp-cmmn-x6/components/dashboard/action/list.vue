@@ -48,12 +48,13 @@ async function handleProcessTask(actionItem) {
   routerProvider?.navigateTo(routerItem)
 
 }
+
+
 async function handleTask(actionItem) {
   if(actionItem.state === 'completed') return
   if(actionItem.planItemDefinitionType === 'processtask') {
     handleProcessTask(actionItem)
   } else if (actionItem.planItemDefinitionType === 'humantask') {
-    console.log('handleTask', actionItem)
     dialogRef.value.handleOpen(actionItem.referenceId, actionItem, props.actionList)
   } else if(actionItem.planItemDefinitionType === 'usereventlistener') {
     await clientApi.api.postCaseInstanceTriggerEvent({ caseInstanceId: actionItem.caseInstanceId, planItemDefinitionId: actionItem.planItemDefinitionId})
@@ -62,6 +63,8 @@ async function handleTask(actionItem) {
     emits('refresh')
   }
 } 
+
+
 </script>
 <style lang="scss" scoped>
 .action-list{

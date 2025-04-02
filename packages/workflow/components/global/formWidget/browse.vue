@@ -2,7 +2,7 @@
 
 import { clientApi } from 'api'
 const home = ref({secondId:'/'})
-const idOrPath = ref('/')
+const idOrPath = ref('')
 
 const tableRef = ref()
 function handleRefresh(){
@@ -63,14 +63,15 @@ onMounted(() => {
 
 <template>
     <div class="browse-cabinet-container">
-     <BrowseMiniTable v-if="home.secondId" ref="tableRef" :home="idOrPath" >
+      <!-- {{idOrPath}} -->
+     <BrowseMiniTable v-if="home.secondId && idOrPath" ref="tableRef" :home="idOrPath" >
         <template #toolbar_buttons> 
             <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
         </template>
     </BrowseMiniTable>
-    <template v-else>
-        No data
-    </template>
+    <div v-else class="el-card"> 
+      <el-skeleton :rows="5"  />
+    </div>
     </div>
 </template>
 
@@ -78,5 +79,9 @@ onMounted(() => {
 .browse-cabinet-container{
     height: 600px;
     position: relative;
+}
+.el-card{
+  padding: var(--app-space-m);
+  
 }
 </style>

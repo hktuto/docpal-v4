@@ -3,7 +3,7 @@
   <h3>{{ $t('dashboard.cmmnBasicInfo') }}</h3>
   <div class="flex-zoom">
     <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
-      <div class="header">{{ item.name }}</div>
+      <div class="header">{{ renderLabel(item.name) }}</div>
       <div class="content">
         {{ 
           displayValue(item)
@@ -95,6 +95,14 @@ const state = reactive<any>({
   }
 // #endregion
 
+
+function renderLabel(label:any){
+  // convert label to titel case
+  return label.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){
+    return str.toUpperCase();
+  });
+
+}
 
 async function getCDBasciInfo() {
   try {
