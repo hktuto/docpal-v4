@@ -25,13 +25,15 @@
             <SvgIcon v-if="element.readOnly" src="/icons/eye.svg"></SvgIcon>
           </div>
 
-          <div v-if="!['created_date', 'created_by', 'modified_by', 'case_id'].includes(element.id)" class="action flex-x-center">
-            <el-icon v-if="showEdit" class="cursorPointer el-icon--left" @click="handleOpenDialog(element)">
-              <Edit />
-            </el-icon>
-            <el-icon class="cursorPointer" v-if="!element.noDelete" @click="removeAt(element, index)">
-              <Delete />
-            </el-icon>
+          <div class="action flex-x-center">
+            <template v-if="!['created_date', 'created_by', 'modified_by', 'case_id'].includes(element.id)">
+              <el-icon v-if="showEdit" class="cursorPointer el-icon--left" @click="handleOpenDialog(element)">
+                <Edit />
+              </el-icon>
+              <el-icon class="cursorPointer" v-if="!element.noDelete" @click="removeAt(element, index)">
+                <Delete />
+              </el-icon>
+            </template>
           </div>
           <div v-else class="action flex-x-center">
 
