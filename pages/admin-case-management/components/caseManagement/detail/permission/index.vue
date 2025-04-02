@@ -80,7 +80,7 @@ function getWholePermissionField(permission) {
 
 function getWholeFilter(filter) {
   try {
-    filter.filed_condition = filter.filed_condition.filter(item => item.id === 'created_by' ||state.caseInformation.find(c => c.id === item.id))
+    filter.filed_condition = filter.filed_condition.filter(item => state.caseInformation.find(c => c.id === item.id))
   } catch (error) {
     console.log("getWholeFilter", error)
   } finally {
