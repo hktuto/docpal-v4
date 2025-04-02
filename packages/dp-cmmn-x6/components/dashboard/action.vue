@@ -54,14 +54,19 @@ const userId:string = useUserId().value
 async function init() {
   console.log("init")
   const id = CMDProvider.instanceId?.value || null
-  const _caseTypeId = CMDProvider.caseTypeId?.value || null
-  
+  // const _caseTypeId = CMDProvider.caseTypeId?.value || null
+  const _caseVersionId = CMDProvider.caseVersionId?.value || null
+
   if(id){
     const {data: userAction} = await adminApi.api.getCaseDashboardInstanceCaseidActions(id,{userId})
     state.data = userAction?.filter(s => s.state !== 'completed').sort((a:any,b:any) => a.name.localeCompare(b.name))
   } 
-  else if(_caseTypeId){ 
-    const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
+  // else if(_caseTypeId){
+  //   const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
+  //   state.data = dashboardActions?.filter(s => s.state !== 'completed')
+  // }
+  else if(_caseVersionId){
+    const { data: dashboardActions } = await adminApi.api.getCaseDashboardVersionVersionidActions(_caseVersionId)
     state.data = dashboardActions?.filter(s => s.state !== 'completed')
   }
 }
