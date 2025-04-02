@@ -73,7 +73,6 @@
 import {CopyDocument} from '@element-plus/icons-vue'
 import type {FormInstance} from 'element-plus'
 import {Base64} from 'js-base64'
-import {useI18n} from "vue-i18n";
 
 const {diffMinute} = useTime()
 const {

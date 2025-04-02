@@ -52,7 +52,7 @@ async function handleSubmit() {
         ..._data,
         styleJson: "{}",
       }).then(res => res.data)
-      ElMessage.success(t('tipMessage_createdSuccessMsg', {modelName: t('adminMenu.workPanel'), name: _data.name}))
+      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('adminMenu.workPanel'), name: _data.name}))
       emits('add', res)
     }
     state.visible = false;

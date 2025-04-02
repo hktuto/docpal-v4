@@ -536,6 +536,7 @@
     "PersonalCaseSingle": "Single Case",
     "PersonalDashboard": "Dashboard",
     "PersonalPredefinedSearch": "Smart Folder",
+    "PersonalSearchDefine": "Search Define",
     "PersonalSearchHistory": "Recent Search",
     "PersonalSearchRecentDoc": "Recent Document",
     "PersonalShare": "Sharing",
@@ -2073,6 +2074,7 @@
     "recentNow": "Retain Now"
   },
   "search": {
+    "SearchDefine": "Search Define",
     "allFiles": "All Files",
     "assetType": "Media Type",
     "authors": "Created By",

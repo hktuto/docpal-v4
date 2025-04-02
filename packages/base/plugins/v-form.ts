@@ -10,8 +10,7 @@ export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.use(VForm3);
   if (window) {
     // @ts-ignore
-    window.$api = clientApi.instance;
-
+    window.$api = clientApi?.instance;
     // @ts-ignore
     window.$i18n = nuxtApp.$i18n;
 

@@ -1,14 +1,13 @@
 <template>
-  <el-card style="--icon-size: 1.2rem;">
-    <h3 class="title">{{ $t("easyForm.actions") }}</h3>
-    <div v-for="item in detail.formResult" :key="item.id" :class="['action', `action_${item.status}`]"
-         @dblclick="handleAdd(item)">
+  <el-card style="--icon-size: 1.2rem">
+    <h3 class="title">{{ $t('easyForm.actions') }}</h3>
+    <div v-for="item in detail.formResult" :key="item.id" :class="['action', `action_${item.status}`]" @dblclick="handleAdd(item)">
       <div class="flex-x-start">
-        <SvgIcon class="el-icon--left el-icon--right" :src="iconMap[item.actionType]"/>
+        <SvgIcon class="el-icon--left el-icon--right" :src="iconMap[item.actionType]" />
         {{ item.actionName }}
       </div>
       <el-dropdown @command="(command) => handleAction(command, item)">
-        <SvgIcon src="/icons/dots.svg" @click.stop/>
+        <SvgIcon src="/icons/dots.svg" @click.stop />
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item command="edit"> {{ $t('easyForm_formActionsEdit') }}</el-dropdown-item>
@@ -27,25 +26,25 @@
       </el-dropdown>
     </div>
     <div style="text-align: center">
-      <el-button id="EasyForm__Detail__FormActions__AddNewFormAction" type="text" @click="handleAdd()">
+      <el-button id="EasyForm__Detail__FormActions__AddNewFormAction" text @click="handleAdd()">
         {{ $t('easyForm_addFormAction') }}
       </el-button>
     </div>
-    <EasyFormActionDialog ref="dialogRef" :detail="detail" @refresh="(action) => emits('refresh', action)"/>
+    <EasyFormActionDialog ref="dialogRef" :detail="detail" @refresh="(action) => emits('refresh', action)" />
   </el-card>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import type {EasyFormResult} from 'api/src/generate/admin'
+import { adminApi } from 'api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import type { EasyFormResult } from 'api/src/generate/admin'
 
-const props = defineProps(["detail"]);
+const props = defineProps(['detail'])
 const emits = defineEmits(['refresh', 'delete'])
-const {t} = useI18n()
+const { t } = useI18n()
 const iconMap = {
-  Workflow: "/icons/easyForm/workflow.svg",
-  CaseType: "/icons/menu/briefcase.svg",
-  Email: "/icons/easyForm/email.svg"
+  Workflow: '/icons/easyForm/workflow.svg',
+  CaseType: '/icons/menu/briefcase.svg',
+  Email: '/icons/easyForm/email.svg'
 }
 const dialogRef = ref()
 
@@ -57,7 +56,7 @@ function handleAction(command: string, row: EasyFormResult) {
   switch (command) {
     case 'delete':
       handleDelete(row.id)
-      break;
+      break
     case 'edit':
       handleAdd(row)
       break
@@ -75,38 +74,36 @@ function handleAction(command: string, row: EasyFormResult) {
     //   router.push(`/caseManage/${row.actionKey}`)
     //   break
     default:
-      break;
+      break
   }
 }
 
 async function handleActive(row: EasyFormResult) {
-
   try {
-    const action = await adminApi.api.postFormDesignSaveFormresultAppend({
-      id: props.detail.id,
-      formResult: {
-        ...row,
-        status: row.status === 'D' ? 'A' : 'D'
-      }
-    }).then(res => res.data)
+    const action = await adminApi.api
+      .postFormDesignSaveFormresultAppend({
+        id: props.detail.id,
+        formResult: {
+          ...row,
+          status: row.status === 'D' ? 'A' : 'D'
+        }
+      })
+      .then((res) => res.data)
     emits('refresh', action)
-  } catch (error) {
-
-  }
+  } catch (error) {}
 }
 
-async function handleDelete(id: string | undefined) {
-  const action = await ElMessageBox.confirm(`${t('easyForm_FormActionsDeleteMsg')}`,
-    {
-      dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete'),
-    })
+async function handleDelete(id: string) {
+  const action = await ElMessageBox.confirm(`${t('easyForm_FormActionsDeleteMsg')}`, {
+    dangerouslyUseHTMLString: true,
+    confirmButtonText: t('common_confirmDelete')
+  })
   if (action !== 'confirm') return
   // const index = list.value.findIndex(item => item.id === id)
   // list.value.splice(index, 1)
   try {
     await adminApi.api.deleteFormDesignDraftidFormresultFormresultid(props.detail.id, id)
-    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('easyForm_formAction'), name: null}))
+    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
     emits('delete', id)
   } catch (error) {
     ElMessage.success(t('dpMsg_success'))
