@@ -36,9 +36,16 @@ const form = ref<any>({
 })
 const userId = useUserId();
 async function getFilterOptions(){
-  // TODO : 
-    const user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-    userFiterOptions.value = user.map(item => {
+  let user:any[] = []
+  console.log("getFilterOptions", options.createUserFilter)
+  if(options.createUserFilter){
+    const res = await clientApi.api.getPermissionUserGroupGroupidUsers(options.createUserFilter).then(res => res.data)
+    user = res.users
+    console.log("user", user)
+  }else{
+    user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
+  }
+  userFiterOptions.value = user.map(item => {
         return {
             label: item.username,
             value: item.userId
