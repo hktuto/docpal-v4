@@ -36,6 +36,11 @@ function getInfo(){
             secondId: props.formData[props.options.data.folderCabinetId]
         }
         idOrPath.value = props.formData[props.options.data.folderCabinetId]
+    }else{
+      idOrPath.value = ""
+      home.value = {
+          secondId: ""
+      }
     }
 }
 
