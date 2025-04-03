@@ -46,10 +46,12 @@ const emits = defineEmits(['onSelectedDateUpdate','onEventUpdate','onEventClick'
 const eventList = ref<CalendarEventExternal[]>([])
 
 function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal){
-    return isEventValid(eventList.value, editedEvent)
+  // isEventValid(eventList.value, editedEvent)  
+  return true;
 }
 
 function addEvent(newEvent:CalendarEventExternal){
+  console.log("addEvent on viewer", newEvent)
     calendarApp.eventsService.add(newEvent)
 }
 

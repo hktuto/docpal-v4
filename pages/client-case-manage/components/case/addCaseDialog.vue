@@ -12,12 +12,14 @@ const state = reactive({
 const FromVariablesRendererRef = ref()
 const MasterTableVariableFormRef = ref()
 const isWorkflowForm = ref(false)
-
+const primaryForm = ref<any>()
+  const routerProvider = inject(MenuRouterKey);
 async function handleOpen(id: string, caseDetail: any) {
   try {
     state.id = id;
     const {data: startForm} = await clientApi.api.getCaseInstanceCasetypeidStarttask(id);
     // get cmmn xml
+    primaryForm.value = startForm
     const form = await clientApi.api.getRelationQuery({
       processKey: caseDetail.caseDefinitionKey,
       userTaskId: startForm[0].key,
@@ -82,10 +84,19 @@ async function handleSubmit() {
     } else {
       data = await MasterTableVariableFormRef.value.getData(true)
     }
-    await clientApi.api.postCaseInstanceStart({
+    const startResponse = await clientApi.api.postCaseInstanceStart({
       caseTypeId: state.id,
       parameters: data
-    })
+    }).then( res => res.data)
+    if(startResponse) {
+      // console.log(primaryForm.value)
+      const newItem = caseManageDashboardPage({
+        ...startResponse,
+        instanceId : startResponse.variables.case_id,
+        versionId: startResponse.variables.cmmnVersionId
+      })
+      routerProvider?.navigateTo(newItem)
+    }
     state.visible = false
     emits('refresh')
   } catch (error) {
