@@ -21,6 +21,7 @@ export type CalendarOptions = {
     showWorkflowFilter: boolean,
     showLocationFilter: boolean,
     showUserFilter: boolean,
+    createUserFilter?:string,
     showCategoryFilter: boolean,
     defaultCategory:string,
     defaultLocation:string,
