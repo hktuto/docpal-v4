@@ -85,8 +85,14 @@ function filterStep(list):any[]{
     return props.setting.steps.includes(item.taskDefinitionKey)
   })
 }
-
-function sortList(list){
+const filterKeyword = ref('')
+function sortAndFilterList(list){
+  // fitler list
+  if(filterKeyword.value) {
+    list = list.filter((item) => {
+      return JSON.stringify(item).toLowerCase().includes(filterKeyword.value.toLowerCase())
+    })
+  }
   if(!list || !props.setting.sortColumn) return list
   return list.sort((a, b) => {
     if(!a[props.setting.sortColumn]) return -1
@@ -142,13 +148,12 @@ async function getAllWorkingInstances(processKey: string,  pageNum:number= 0, pa
     const nextPageNum = pageNum + 1
     return await getAllWorkingInstances(processKey, nextPageNum, pageSize, entryList, totalLength)
   }
-  return sortList(result)
+  return sortAndFilterList(result)
 }
 
 const  { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
   id: 'personal-workflow-single-table',
   api: async (pageParams: any) => {
-    console.log(platform)
     if(platform === 'admin'){ 
       return []
     }
@@ -191,6 +196,7 @@ watch(setting, () => {
     <div class="dashboard-item-tab--content--table">
         <VxeGrid v-if="isValid" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
             <template #toolbar_buttons>
+              <ElInput v-model="filterKeyword" placeholder="common_filter" class="w-100" @change="reload" />
             </template>
         </VxeGrid>
         <div v-else>
