@@ -18,6 +18,7 @@ export type DashboardWidget = "DocTypeCoCount" |
     "PersonalSearchHistory" |
     "PersonalSearchDefine" |
     "PersonalSearchRecentDoc" |
+    "PersonalSearchSubscribed" |
     "PersonalCaseCreate" |
     "PersonalCase"
 export type WorkflowCoCountWidget = "WorkflowActiveCount" | "WorkflowApproveRate" | "WorkflowNewCount"  | "WorkflowTimeSpendPerTask" | "WorkflowTimeSpendPerWorkflow"  
@@ -50,6 +51,7 @@ import PersonalWorkflow from '../components/global/personal/workflow/index.vue'
 import PersonalSearchHistory from '../components/global/personal/search/history.vue'
 import PersonalSearchDefine from '../components/global/personal/search/define.vue'
 import PersonalSearchRecentDoc from '../components/global/personal/search/recentDoc.vue'
+import PersonalSearchSubscribed from '../components/global/personal/search/subscribed.vue'
 import PersonalCaseCreate from '../components/global/personal/case/create.vue'
 import PersonalCase from '../components/global/personal/case/index.vue'
 import PersonalCaseSingle from '../components/global/personal/case/single/index.vue'
@@ -380,6 +382,19 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         setting : {
         }
     },
+    PersonalSearchSubscribed:{
+        type: 'personal',
+        label: 'PersonalSearchSubscribed',
+        minW: 4,
+        minH: 2,
+        maxW: 12,
+        maxH: 5,
+        w: 6,
+        h: 3,
+        component : 'PersonalSearchSubscribed',
+        setting : {
+        }
+    },
     PersonalCaseCreate: {
         type: 'personal',
         label: 'PersonalCaseCreate',
@@ -487,6 +502,7 @@ export const widgetComponent = {
     "PersonalSearchHistory": PersonalSearchHistory,
     "PersonalSearchDefine": PersonalSearchDefine,
     "PersonalSearchRecentDoc": PersonalSearchRecentDoc,
+    "PersonalSearchSubscribed": PersonalSearchSubscribed,
     "PersonalCaseCreate": PersonalCaseCreate,
     "PersonalCase": PersonalCase,
     "PersonalWorkflowSingle": PersonalWorkflowSingle,
