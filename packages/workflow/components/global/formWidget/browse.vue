@@ -36,6 +36,11 @@ function getInfo(){
             secondId: props.formData[props.options.data.folderCabinetId]
         }
         idOrPath.value = props.formData[props.options.data.folderCabinetId]
+    }else{
+      idOrPath.value = ""
+      home.value = {
+          secondId: ""
+      }
     }
 }
 
@@ -64,7 +69,10 @@ onMounted(() => {
 <template>
     <div class="browse-cabinet-container">
       <!-- {{idOrPath}} -->
-     <BrowseMiniTable v-if="home.secondId && idOrPath" ref="tableRef" :home="idOrPath" >
+     <BrowseMiniTable v-if="home.secondId && idOrPath" 
+        ref="tableRef"
+        :hideColumns="['fileSize', 'mimeType', 'documentType']"
+      >
         <template #toolbar_buttons> 
             <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
         </template>
