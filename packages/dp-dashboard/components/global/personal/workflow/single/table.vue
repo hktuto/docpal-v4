@@ -82,7 +82,6 @@ function openDetail(row:any) {
 function filterStep(list):any[]{
   if(!list || !props.setting.steps || props.setting.steps.length === 0) return list
   return list.filter((item) =>  {
-    console.log("item", item, item.taskDefinitionKey)
     return props.setting.steps.includes(item.taskDefinitionKey)
   })
 }
