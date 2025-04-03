@@ -81,11 +81,16 @@ function startTimeChange(){
 }
 function endTimeChange(){
     const endTime = dayjs(form.value.endDate + ' ' + form.value.endTime)
+    const startTime = dayjs(form.value.startDate + ' ' + form.value.startTime)
     if(endTime.isBefore(dayjs())) {
         ElMessage.error("End time cannot be earlier than today");
     }
-    form.value.startDate = endTime.format('YYYY-MM-DD')
-    form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).format('HH:mm')
+    if(startTime.isAfter(endTime)) {
+        ElMessage.error("Start time cannot be later than end time");
+    }
+
+    // form.value.startDate = endTime.format('YYYY-MM-DD')
+    // form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).format('HH:mm')
     // form.value.endTime = snapDownTo15Minutes(endTime).toISOString()
     // form.value.startTime = snapDownTo15Minutes(endTime.subtract(15, 'minutes')).toISOString()
 }
@@ -187,7 +192,7 @@ defineExpose({
                         </ElFormItem>
                     </ElCol>
                     <ElCol :span='6'>
-                        <ElFormItem label="End Date" prop="endTime" required>
+                        <ElFormItem label="End Time" prop="endTime" required>
                             <ElTimeSelect 
                                 v-model="form.endTime" 
                                 placeholder="Select time" 

@@ -7,6 +7,12 @@ const routerProvider = inject(MenuRouterKey)
 if(!listProvider || !routerProvider) {
     throw new Error('BrowseListProviderKey not found')
 }
+
+const {hideColumns= [], home} = defineProps<{
+  hideColumns: any[],
+  home: string
+}>()
+
 const tableContainer = ref<HTMLElement>()
 const emits = defineEmits(['selectedChange'])
 async function loadData(entry:any[], path?:string, pageNum:number = 0) {
@@ -18,6 +24,9 @@ async function loadData(entry:any[], path?:string, pageNum:number = 0) {
         return entry
     }
 }
+const columns = [
+
+]
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     id: 'browseTableSetting',
     api: (pageParams:any) => loadData([], listProvider.idOrPath.value || '/'),
@@ -87,6 +96,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             field: 'mimeType',
             title: 'mimeType',
             minWidth: 60,
+            visible: hideColumns.indexOf('mimeType') === -1,
             formatter: ({ cellValue }:any) => {
                 return mimeTypeToExtension(cellValue)
             },
@@ -94,11 +104,14 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         {
             field: 'documentType',
             title: 'documentType',
+            visible: hideColumns.indexOf('documentType') === -1,
             minWidth: 120,
         },
         {
             field: 'fileSize',
             title: 'fileSize',
+            visible: hideColumns.indexOf('fileSize') === -1,
+
             formatter: ({ cellValue }:any) => {
                 return formatFileSize(cellValue)
             },
