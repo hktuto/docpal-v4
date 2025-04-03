@@ -35,9 +35,6 @@
               </el-icon>
             </template>
           </div>
-          <div v-else class="action flex-x-center">
-
-          </div>
         </li>
       </template>
     </draggable>
