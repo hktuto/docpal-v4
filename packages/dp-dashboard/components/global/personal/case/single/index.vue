@@ -108,7 +108,7 @@ watch(
       </div>
     </template>
     <div class="workflow-create-content">
-      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" >
+      <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" :label="setting.caseLabel" >
         <template #table_right>
             <el-button v-if="props.setting.caseId" type="primary" @click="handleAddCaseDialog">
               {{ $t(props.setting.newButtonLabel) }}
@@ -122,7 +122,7 @@ watch(
       @refresh="handleRefresh"
     />
     
-  <LazyCaseAddCaseDialog ref="addCaseDialog" :label="setting.caseLabel" @refresh="handleRefreshTable"></LazyCaseAddCaseDialog>
+  <LazyCaseAddCaseDialog ref="addCaseDialog" :label="setting.newButtonLabel" @refresh="handleRefreshTable"></LazyCaseAddCaseDialog>
   </el-card>
 </template>
 <style lang="scss" scoped>
