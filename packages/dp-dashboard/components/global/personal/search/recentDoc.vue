@@ -1,7 +1,7 @@
 <template>
   <el-card ref="cardRef" class="dashboard-item dashboard-item-card">
     <template #header="{ close, titleId, titleClass }">
-      <h4>{{$t('search.recentDocument')}}</h4>
+      <h4>{{ $t('search.recentDocument') }}</h4>
       <Icon
         id="Dashboard__Home__Detail__RecentDocument__Delete"
         v-show="!hideSetting"
@@ -11,111 +11,94 @@
         @click="handleDelete"
       ></Icon>
     </template>
-    <el-skeleton  v-if="!hideSetting" :rows="5" />
-    <div v-else class="main" v-infinite-scroll="getRecentDocumentPage"
-      :infinite-scroll-disabled="state.scrollNoMore || state.loading"
-      :infinite-scroll-immediate="false">
-      <div
-        v-for="(item, index) in state.recentDocuments"
-        :key="`${index}-${item.id}`"
-        class="flex-x-start doc-card"
-        @dblclick="handlePreview(item)"
-      >
-        <!-- <BrowseItemIcon
-          class="icon el-icon--left"
-          :type="item.isFolder ? 'folder' : 'file'"
-          :mimeType="item.mimeType"
-          status="general"
-        /> -->
-        <BrowseItemIcon type="file" :mimeType="item.mimeType" status="general"></BrowseItemIcon>
-        <div>{{ item.name }}</div>
-      </div>
-      <p v-show="state.loading" class="center">{{ $t('dpTip.loading') }}</p>
-      <p v-show="!state.loading && state.scrollNoMore" class="center">{{ $t('dpTip.noMore') }}</p>
-    </div>
+    <el-skeleton v-if="!hideSetting" :rows="5" />
+    <VxeGrid v-else ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    </VxeGrid>
   </el-card>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-import { clientApi } from "api";
-import {MenuRouterKey} from "#imports";
+import { clientApi } from 'api'
+import { MenuRouterKey } from '#imports'
 
-const routerProvider = inject(MenuRouterKey);
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
-    setting: {},
-    hideSetting: false
+const props = withDefaults(defineProps<{
+  dates?: any;
+  setting?: any;
+  hideSetting?: boolean,
+}>(), {
+  setting: {},
+  hideSetting: false
 })
 
-const {
-  public: { endPoint },
-} = useRuntimeConfig();
+const { public: { endPoint } } = useRuntimeConfig()
 
 const emits = defineEmits(['delete'])
 const pageParams = reactive({
   pageNum: -1,
-  pageSize: 10,
-});
+  pageSize: 10
+})
 const state = reactive<any>({
   loading: false,
   scrollNoMore: false,
-  recentDocuments: [],
-});
+  recentDocuments: []
+})
 
-async function getRecentDocumentPage() {
-  try {
-    if (endPoint === "admin") {
-      return;
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
+  id: 'subscribed',
+  zoom: false,
+  saveColumnOrder: false,
+  api: (pageParams: any) =>
+    clientApi.api.postLogsRecentDocumentPage(pageParams),
+  columns: [
+    { field: 'name', title: 'table_fileName', fixed: 'left' },
+    {
+      field: 'mimeType',
+      title: 'search.mimeTypes',
+      formatter: ({ cellValue }: any) => {
+        return mimeTypeToExtension(cellValue)
+      }
+    },
+    { field: 'type', title: 'dpDocument_fileType' },
+    { field: 'path', title: 'tableHeader_path' },
+    { field: 'contributors', title: 'search.contributors' },
+    { field: 'creatorBy', title: 'role.creator' },
+    {
+      field: 'modifiedDate',
+      title: 'tableHeader_modifiedDate',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
     }
-    pageParams.pageNum++;
-    state.loading = true;
-    const res: any = await clientApi.api.postLogsRecentDocumentPage(pageParams).then(res => res.data);
-    if(!res) return;
-    state.recentDocuments.push(...res.entryList);
-    state.scrollNoMore = state.recentDocuments.length >= res.totalSize;
-  } catch (error) {
-  } finally {
-    setTimeout(() => {
-      state.loading = false;
-    }, 500);
+  ],
+  dblClickAction: ({ row, column, event }: any) => {
+    handlePreview(row)
   }
-}
+})
+
 function handlePreview(row: any) {
-    routerProvider?.navigateTo(
-      createDetailPageParams({
-        docName: row.name,
-        idOrPath: row.id,
-        showHeaderAction: true,
-      }),
-      false
-    );
+  routerProvider?.navigateTo(
+    createDetailPageParams({
+      docName: row.name,
+      idOrPath: row.id,
+      showHeaderAction: true
+    }),
+    false
+  )
 }
+
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
-  emits("delete");
+  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  if (action !== 'confirm') return
+  emits('delete')
 }
-onMounted(() => {
-  getRecentDocumentPage();
-});
+
 function resize() {
 }
 
-defineExpose({ resize });
+defineExpose({ resize })
 </script>
 <style lang="scss" scoped>
-.doc-card {
-  cursor: pointer;
-  padding: 3px 0;
-  border-radius: 5px;
-  &:hover {
-    background-color: var(--app-primary-color);
-    color: #fff;
-  }
-}
 </style>

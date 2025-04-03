@@ -21,6 +21,7 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { MenuRouterKey } from '#imports'
+import { clientApi } from 'api'
 
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
@@ -53,6 +54,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     clientApi.api.getNotificationSubscriberSubscriberFolders(pageParams),
   columns: [
     { field: 'name', title: 'tableHeader.folderName', fixed: 'left' },
+    { field: 'type', title: 'dpDocument_fileType' },
     { field: 'path', title: 'tableHeader_path' },
     { field: 'contributors', title: 'search.contributors' },
     { field: 'creatorBy', title: 'role.creator' },
