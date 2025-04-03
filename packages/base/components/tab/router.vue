@@ -35,7 +35,7 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExi
     if(!ignoreExist){
         const existingTab = allComponents.value.find(item => item.name === param.name)
         if(existingTab){
-            tabManager?.openInNewTab(param)
+            tabManager?.openTab(param)
             return;
         }
     }
