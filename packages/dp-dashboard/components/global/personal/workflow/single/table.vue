@@ -37,6 +37,19 @@ function getRecursiveValue(obj: any, path: string) {
   }
   return obj[path] || path
 }
+
+function displayValue(f:string) {
+  // check if f is a string date
+  console.log("displayValue")
+  const d = dayjs(f)
+  console.log(f, d.isValid())
+  if(d.isValid()) {
+    const date = d.format('YYYY-MM-DD HH:mm')
+    console.log(date)
+    return date
+  }
+  return f
+}
 function setupTable() {
   const newColumn = deepCopy(props.setting.columns) || []
   const columns:any[] = [
@@ -51,19 +64,22 @@ function setupTable() {
             try{
               const r = getRecursiveValue(args.row, f)
               if(r) {
-                result += r
+                result += displayValue(r)
               }else{
-                result += f
+                result += displayValue(f)
               }
             }catch(err){
               console.log("err", err)
-              result += f
+              result += displayValue(f)
             }
           })
           return result || "--"
         }
       }else{
         item.field =  item.field[0]
+        item.formatter = (args) => {
+          return displayValue(args.row[item.field])
+        }
       }
       return item
     })
@@ -196,7 +212,7 @@ watch(setting, () => {
     <div class="dashboard-item-tab--content--table">
         <VxeGrid v-if="isValid" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
             <template #toolbar_buttons>
-              <ElInput v-model="filterKeyword" placeholder="common_filter" class="w-100" @change="reload" />
+              <ElInput v-model="filterKeyword" placeholder="" class="w-100" @change="reload" />
             </template>
         </VxeGrid>
         <div v-else>

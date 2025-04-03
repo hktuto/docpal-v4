@@ -6,7 +6,7 @@ const { public:{platform}} = useRuntimeConfig();
 const { id, name, detail } = defineProps<{
   id: string;
   name: string;
-  detail: any
+  detail: any,
 }>();
 let where = ref({})
 const { t } = useI18n();
