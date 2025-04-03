@@ -539,6 +539,7 @@
     "PersonalSearchDefine": "Search Define",
     "PersonalSearchHistory": "Recent Search",
     "PersonalSearchRecentDoc": "Recent Document",
+    "PersonalSearchSubscribed": "Subscribed",
     "PersonalShare": "Sharing",
     "PersonalShareExternal": "External Sharing",
     "PersonalShareInternalMe": "Share With Me",
@@ -2075,6 +2076,7 @@
   },
   "search": {
     "SearchDefine": "Search Define",
+    "Subscribed": "Subscribed",
     "allFiles": "All Files",
     "assetType": "Media Type",
     "authors": "Created By",
