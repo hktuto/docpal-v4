@@ -539,6 +539,7 @@
     "PersonalSearchDefine": "自定義檢索",
     "PersonalSearchHistory": "最近搜索",
     "PersonalSearchRecentDoc": "最近文檔",
+    "PersonalSearchSubscribed": "訂閲列表",
     "PersonalShare": "分享",
     "PersonalShareExternal": "外部分享",
     "PersonalShareInternalMe": "內部分享列表",
@@ -2073,6 +2074,7 @@
   },
   "search": {
     "SearchDefine": "自定義檢索",
+    "Subscribed": "已訂閲",
     "allFiles": "全部",
     "assetType": "媒體類型",
     "authors": "創建者",
