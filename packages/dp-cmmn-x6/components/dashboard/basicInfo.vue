@@ -99,9 +99,9 @@ const state = reactive<any>({
 
 function renderLabel(label:any){
   // convert label to titel case
-  return label.replace(/([A-Z])/g, ' $1').replace(/^./, function(str){
-    return str.toUpperCase();
-  });
+  // return orgin label if secound string is also uppercase
+  if(label.toUpperCase() === label) return label
+  return label.toLowerCase().replace(/\b\w/g, s => s.toUpperCase())
 
 }
 
