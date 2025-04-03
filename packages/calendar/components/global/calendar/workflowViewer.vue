@@ -58,8 +58,8 @@ function createEditEvent(newForm:DocPalEventType){
 
 
 function checkValid(event:any){
-    console.log(calendarViewerRef.value.eventList)
-    return isEventValid(calendarViewerRef.value.eventList, event)
+    // console.log(calendarViewerRef.value.eventList)
+    return true
 }
 
 function updateEvent(params:CalendarEventExternal){
