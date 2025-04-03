@@ -404,7 +404,7 @@ defineExpose({
         <BpmnNode v-if="ready" ref="nodeEl" @openForm="openForm"/>
         
     </BpmnViewer>
-    <ElDialog v-model="formDialogVisible" width="100%" top="0" append-to-body destroy-on-close>
+    <ElDialog v-model="formDialogVisible" fullscreen class="bpmn-vform--dialog" width="100%" top="0" append-to-body destroy-on-close>
         <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi"  >
             <template #submit>
                 <ElButton type="primary" @click="formSubmit">{{ $t('submit')}}</ElButton>
@@ -493,5 +493,31 @@ defineExpose({
         }
     }
 }
-
+</style>
+<style lang="scss">
+.bpmn-vform--dialog {
+  overflow: hidden!important;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  .el-dialog__body {
+    overflow: hidden;
+  }
+  .center-layout-container {
+   .el-main {
+    overflow: hidden;
+    .el-scrollbar {
+      height: 100%!important;
+    }
+   } 
+  }
+  .el-aside {
+    .el-tabs {
+      height: 100%;
+      overflow: hidden;
+      .el-tabs__content {
+        overflow: auto;
+      }
+    }
+  }
+}
 </style>
