@@ -48,7 +48,6 @@ function createEditEvent(newForm:DocPalEventType){
     }else{
         console.log("confirm edit", newForm);
         newEvent.value = newForm;
-        console.log("udpate Event", event)
         calendarViewerRef.value.updateEvent(event)
         
         // udpdate event detail local
@@ -69,7 +68,12 @@ function updateEvent(params:CalendarEventExternal){
 
 const newEventFromRef = ref();
 function editEvent(event:CalendarEventExternal){
-    if(props.options.editable && props.formData.eventId === event?.detail?.eventId){
+    // check if allow create and editItem is exist
+    
+    if(
+      (props.options.allowCreate && newEvent.value.id === event?.detail?.id) ||
+      (props.options.editable && props.formData.eventId === event?.detail?.eventId)
+    ){
         const startDateTime = dayjs(event.start)
         const endDateTime = dayjs(event.end)
         const tempEvent:eventDialogParams = {
@@ -104,6 +108,7 @@ type eventDialogParams = {
     detail: any
 }
 function popNewEvent(dateTime: string) {
+  console.log("popNewEvent", dateTime)
     if(props.formData.eventId){
         newEventId.value = props.formData.eventId
     }
@@ -117,9 +122,10 @@ function popNewEvent(dateTime: string) {
             startTime: startDateTime.format('HH:mm'),
             endDate : snapDownTo15Minutes(startDateTime.add(15, 'minutes')).format('YYYY-MM-DD'),
             endTime: snapDownTo15Minutes(startDateTime.add(15, 'minutes')).format('HH:mm'),
-            user: calendarViewerRef.value.filter.user,
-            category: calendarViewerRef.value.filter.category,
-            location: calendarViewerRef.value.filter.location,
+            user: newEvent.value?.user || calendarViewerRef.value.filter.user,
+            category: newEvent.value?.category || calendarViewerRef.value.filter.category,
+            location: newEvent.value?.location || calendarViewerRef.value.filter.location,
+            id: newEvent.value?.id || Date.now(),
             detail: {}
         }
         newEventFromRef.value.open(tempEvent)

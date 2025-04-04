@@ -42,7 +42,7 @@ const eventsServicePlugin = createEventsServicePlugin();
 
 const emits = defineEmits(['onSelectedDateUpdate','onEventUpdate','onEventClick','onClickDate','onClickDateTime','onClickAgendaDate','onClickPlusEvents','onBeforeEventUpdate'])
 
-
+const temEvent = ref();
 const eventList = ref<CalendarEventExternal[]>([])
 
 function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal){
@@ -51,13 +51,13 @@ function onBeforeEventUpdate(oldEvent:CalendarEventExternal, editedEvent:Calenda
 }
 
 function addEvent(newEvent:CalendarEventExternal){
-  console.log("addEvent on viewer", newEvent)
-    calendarApp.eventsService.add(newEvent)
+  temEvent.value = newEvent
+  calendarApp.eventsService.add(newEvent)
 }
 
 function updateEvent(newEvent:CalendarEventExternal){
     console.log("updateEvent on calendar", newEvent);
-    
+    temEvent.value = newEvent
     // calendarApp.eventsService.update(newEvent)
     // remove old event
     calendarApp.eventsService.remove(newEvent.id)
@@ -71,6 +71,7 @@ function updateEvent(newEvent:CalendarEventExternal){
 
 function deleteEvent(id:string){
     calendarApp.eventsService.remove(id)
+    temEvent.value = null
 }
 
 function getEvent(id:string){
