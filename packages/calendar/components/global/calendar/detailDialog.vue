@@ -27,10 +27,10 @@ const category = computed(() => {
 const eventDetail = ref<CalendarEventExternal>()
 async function open(ev:CalendarEventExternal) {
     eventDetail.value = ev
-    if(ev.detail.relatedCases) {
+    if(ev.detail?.relatedCases) {
         await getCaseData()
     }
-    if(ev.detail.relatedUsers) {
+    if(ev.detail?.relatedUsers) {
         await getUserData()
     }
     opened.value = true

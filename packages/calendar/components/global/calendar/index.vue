@@ -97,6 +97,11 @@
     // calendar Event
     const calendarEvents = {
         onEventClick: (args:any) => {
+          if(props.options.allowCreate && args.detail.eventId === props.editItem.value?.id) {
+            console.log("onEventClick editItem", args)
+            emits('openDetail', args)
+            return;
+          }
             if(props.options.editable) {
                 emits('openDetail', args)
             }else {
@@ -108,6 +113,7 @@
         },
         onClickDateTime: (args:string) => {
             if(!props.options.allowCreate) return
+            // if editItem is exist, update it
             emits('createEvent', args)
         },
         onClickAgendaDate: (args) => {

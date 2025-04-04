@@ -54,7 +54,7 @@ async function getFilterOptions(){
 }
 async function open(event) {
     await getFilterOptions()
-    
+    console.log("open event", event)
     opened.value = true;
     form.value.detail = event.detail || {}
     form.value.startDate = event.startDate,
