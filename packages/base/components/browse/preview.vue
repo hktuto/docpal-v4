@@ -40,14 +40,16 @@ const readerType = computed(() => {
         if(mimeType.includes('tiff')) {
             return resolveComponent('LazyTiffViewer');
         }
-        if(mimeType === 'image/bmp' || mimeType === 'image/gif') {
-            return resolveComponent('LazyImageViewer');
-        }
-        if(mimeType.includes('image')) {
+        if( mimeType.includes('pdf') || mimeType.includes('gif') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator') || mimeType.includes('text')) {
+            isPdf.value = true
             return resolveComponent('LazyPdfViewer');
         }
-        if( mimeType.includes('pdf') || mimeType.includes('document') || mimeType.includes('text') || mimeType.includes('photoshop') || mimeType.includes('psd') || mimeType.includes('illustrator') || mimeType.includes('text')) {
-            isPdf.value = true
+        if(mimeType === 'image/bmp') {
+            return resolveComponent('LazyImageViewer');
+        }
+        
+        
+        if(mimeType.includes('image')) {
             return resolveComponent('LazyPdfViewer');
         }
         if(mimeType.includes('video') || mimeType.includes('audio')) {
