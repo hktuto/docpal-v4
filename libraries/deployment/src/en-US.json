@@ -2037,6 +2037,7 @@
   "reportDay": "Report Day",
   "reset": "Reset",
   "responseMsg_errorCode_2": "Server exception, please try again later",
+  "retention_approvedBy": "Approved By",
   "retention_done": "Retention Done List",
   "retention_donePreview": "Preview File",
   "retention_pending": "Retention Pending List",
