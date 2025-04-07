@@ -795,6 +795,7 @@
       "formSize": "Size",
       "format": "Format",
       "globalFunctions": "Global Functions",
+      "isCreateDynamicCode": "Generate before startup",
       "gridColHeight": "Height Of Col(px)",
       "gutter": "Gutter(px)",
       "headers": "Request Headers",

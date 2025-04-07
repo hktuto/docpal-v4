@@ -795,6 +795,7 @@
       "formSize": "全局组件大小",
       "format": "显示格式",
       "globalFunctions": "表单全局函数",
+      "isCreateDynamicCode": "启动前生成",
       "gridColHeight": "栅格列统一高度(px)",
       "gutter": "栅格间隔(px)",
       "headers": "上传请求头",
