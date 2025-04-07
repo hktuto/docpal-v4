@@ -225,4 +225,7 @@ defineExpose({ reorderColumn, reload });
     width: auto;
   }
 }
+:deep .el-input{
+  width: 200px;
+}
 </style>
