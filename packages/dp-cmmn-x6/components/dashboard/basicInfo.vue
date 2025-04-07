@@ -3,7 +3,7 @@
   <h3>{{ $t('dashboard.cmmnBasicInfo') }}</h3>
   <div class="flex-zoom">
     <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
-      <div class="header">{{ renderLabel(item.name) }}</div>
+      <div class="header">{{ state.label[item.id] || renderLabel(item.name) }}</div>
       <div class="content">
         {{ 
           displayValue(item)
@@ -33,7 +33,8 @@ const props = withDefaults( defineProps<{
     "layout": [
         
     ],
-    "defaultValue": {}
+    "defaultValue": {},
+    "label": {}
 },
     hideSetting: false
 })
@@ -81,6 +82,7 @@ const state = reactive<any>({
   data: {},
   layout: [],
   defaultValue: {},
+  label: {},
   mode: 'develop'
 })
 // #region module: dialog
@@ -163,6 +165,7 @@ async function initLayout() {
   }, [])
   if(!props.setting.defaultValue) props.setting.defaultValue = {}
   state.defaultValue = props.setting.defaultValue
+  state.label = props.setting.label || {}
 }
 
 watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
