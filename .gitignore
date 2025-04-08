@@ -9,4 +9,4 @@ node_modules
 # .vscode
 .gitignore
 .vitest-reporter-html
-**/src/generate/
+**/src/generate/**
