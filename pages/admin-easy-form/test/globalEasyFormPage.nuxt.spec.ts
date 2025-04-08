@@ -7,7 +7,7 @@ const mockRouterProvider = {
   navigateTo: vi.fn()
 };
 
-describe('EasyFormPage', () => {
+describe('[admin-easy-form]EasyFormPage', () => {
   let wrapper: any;
   beforeEach(() => {
     vi.clearAllMocks();

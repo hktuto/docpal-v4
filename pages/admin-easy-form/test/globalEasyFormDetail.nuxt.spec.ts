@@ -3,7 +3,9 @@ import { describe, it, vi, expect, beforeEach, afterEach, } from 'vitest';
 import {
   EasyFormDetail,
   EasyFormEmailLog,
-  EasyFormDetailName
+  EasyFormDetailName,
+  EasyFormDetailPermission,
+  EasyFormDetailPreview
 } from '#components';
 import { adminApi } from './mock/api';
 import { VxeGrid } from 'vxe-table';
@@ -27,7 +29,7 @@ const mockRouterProvider = {
 const EmptyComponent = {
   template: '<div></div>',
 };
-describe('EasyFormDetail', () => {
+describe('[admin-easy-form]EasyFormDetail', () => {
   let wrapper: any;
 
   beforeEach(() => {
@@ -129,7 +131,7 @@ describe('EasyFormDetail', () => {
     expect(wrapper.vm.state.detail).toEqual(mockDetail);
   });
 });
-describe('EasyFormEmailLog', () => {
+describe('[admin-easy-form]EasyFormEmailLog', () => {
   let wrapper: any = shallowMount(EasyFormEmailLog, {
     props: {
       id: '1'
@@ -182,7 +184,7 @@ describe('EasyFormEmailLog', () => {
     expect(wrapper.vm.filterParams.isDesc).toBe(true);
   });
 });
-describe('EasyFormDetailName', () => {
+describe('[admin-easy-form]EasyFormDetailName', () => {
   let wrapper: any;
   const mockDetail = {
     id: 'test-id',
@@ -248,5 +250,129 @@ describe('EasyFormDetailName', () => {
 
     expect(wrapper.vm.form.name).toBe(mockDetail.name); // should revert back to original
     expect(ElMessage.error).toHaveBeenCalledWith('dpMsg_error');
+  });
+});
+describe('[admin-easy-form]EasyFormDetailPermission', () => {
+  let wrapper: any;
+  const mockDetail = {
+    id: 'test-id',
+    permission: 'group1,group2'
+  };
+
+  const mockGroups = [
+    { id: 'group1', name: 'Group 1' },
+    { id: 'group2', name: 'Group 2' },
+    { id: 'group3', name: 'Group 3' },
+  ];
+  beforeEach(async () => {
+    vi.spyOn(adminApi.api, 'postNuxeoIdentityGroups').mockResolvedValue({ data: mockGroups });
+    vi.spyOn(adminApi.api, 'postFormDesignSavePermission').mockResolvedValue({});
+    wrapper = mount(EasyFormDetailPermission, {
+      props: {
+        detail: mockDetail
+      },
+      provide: {
+        [MenuRouterKey]: mockRouterProvider
+      },
+      global: {
+        mocks: {
+          $t: (msg: any) => msg // Mock translation function
+        },
+      },
+    });
+    await wrapper.vm.$nextTick(); // 确保 DOM 更新完成
+  });
+  afterEach(() => {
+    wrapper.unmount();
+  });
+  it('renders correctly', () => {
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('h3.title').exists()).toBe(true);
+    expect(wrapper.find('h3.title').text()).toBe('easyForm.permission');
+    expect(wrapper.find('.el-select').exists()).toBe(true);
+  });
+  it('initializes form with detail permissions', () => {
+    expect(wrapper.vm.form.permission).toEqual(['group1', 'group2']);
+  });
+  it('loads user groups on mount', async () => {
+    expect(wrapper.vm.state.groups).toEqual(mockGroups);
+  });
+  it('handles permission change correctly', async () => {
+    const newPermissions = ['group1', 'group3'];
+    wrapper.vm.form.permission = newPermissions;
+    await wrapper.vm.handleChange();
+
+    expect(adminApi.api.postFormDesignSavePermission).toHaveBeenCalledWith({
+      id: mockDetail.id,
+      permission: newPermissions.join(','),
+    });
+    expect(ElMessage.success).toHaveBeenCalledWith('dpMsg_success');
+  });
+  it('does not call API if no permissions are selected', async () => {
+    wrapper.vm.form.permission = [];
+    await wrapper.vm.handleChange();
+
+    expect(adminApi.api.postFormDesignSavePermission).not.toHaveBeenCalled();
+  });
+  it('watches for detail changes', async () => {
+    const newDetail = { id: 'test-id', permission: 'group2,group3' };
+    await wrapper.setProps({ detail: newDetail });
+
+    expect(wrapper.vm.form.permission).toEqual(['group2', 'group3']);
+  });
+});
+describe('[admin-easy-form]EasyFormDetailPreview', () => {
+  let wrapper: any;
+  const mockDetail = {
+    id: 'test-id',
+    previewStyle: '{"field": "value"}'
+  };
+
+  const mockGroups = [
+    { id: 'group1', name: 'Group 1' },
+    { id: 'group2', name: 'Group 2' },
+    { id: 'group3', name: 'Group 3' },
+  ];
+  beforeEach(async () => {
+    vi.spyOn(adminApi.api, 'postNuxeoIdentityGroups').mockResolvedValue({ data: mockGroups });
+    vi.spyOn(adminApi.api, 'postFormDesignSavePermission').mockResolvedValue({});
+    wrapper = shallowMount(EasyFormDetailPreview, {
+      props: {
+        detail: mockDetail
+      },
+      global: {
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: any) => msg // Mock translation function
+        },
+      },
+    });
+    await wrapper.vm.$nextTick();
+  });
+  afterEach(() => {
+    wrapper.unmount();
+  });
+  it('renders correctly', () => {
+    expect(wrapper.exists()).toBe(true);
+  });
+  it('opens form design on button click', async () => {
+    await wrapper.vm.handleOpenFormDesign();
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalled();
+  });
+  it('copies URL to clipboard', async () => {
+    wrapper.vm.handleCopyUrl();
+    expect(ElMessage.success).toHaveBeenCalledWith('dpTip.urlCopied');
+  });
+  it('copies embed code to clipboard', async () => {
+    wrapper.vm.handleCopyIframe();
+    expect(ElMessage.success).toHaveBeenCalledWith('dpTip.embedCodeCopied');
+  });
+  it('opens email dialog on send email button click', async () => {
+    const dialogRef = { handleOpen: vi.fn() };
+    wrapper.vm.dialogRef = dialogRef;
+    wrapper.vm.handleSendEmail();
+    expect(dialogRef.handleOpen).toHaveBeenCalledWith(mockDetail.id);
   });
 });

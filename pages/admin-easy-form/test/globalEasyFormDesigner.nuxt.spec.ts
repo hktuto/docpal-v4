@@ -1,5 +1,4 @@
 import { shallowMount, mount, flushPromises } from '@vue/test-utils';
-import { ref } from 'vue';
 import { describe, it, vi, expect, beforeEach, afterEach, } from 'vitest';
 import {
   EasyFormDesigner,
@@ -15,19 +14,13 @@ const mockFormJson = {
   widgetList: [],
   formConfig: {/*...*/ }
 };
-const FormDesignerStub = {
-  template: '<div class="form-designer-stub"></div>',
-  methods: {
-    getFormJson: vi.fn().mockReturnValue(mockFormJson),
-    setFormJson: vi.fn()
-  }
-};
-describe('EasyFormDesigner', () => {
+
+describe('[admin-easy-form]EasyFormDesigner', () => {
   let wrapper: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    wrapper = mount(EasyFormDesigner, {
+    wrapper = shallowMount(EasyFormDesigner, {
       props: {
         id: '1'
       },
@@ -38,10 +31,6 @@ describe('EasyFormDesigner', () => {
         mocks: {
           $t: (msg: any) => msg,// Mock translation function
         },
-        stubs: {
-          FormDesigner: FormDesignerStub,
-          VFormDesigner: FormDesignerStub,
-        }
       },
     });
   });
@@ -57,35 +46,26 @@ describe('EasyFormDesigner', () => {
   });
 
   it('should call handleSubmit and show success message', async () => {
-    await flushPromises();
-    await nextTick();
     const mockResponse = { data: { success: true } };
     vi.spyOn(adminApi.api, 'postFormDesignSavePreview').mockResolvedValue(mockResponse);
     const elMessageSpy = vi.spyOn(ElMessage, 'success');
-    // console.log(wrapper.html());
-    // setTimeout(async () => {
-    //   console.log(wrapper.vm.FormDesignerRef);
-    //   await wrapper.vm.handleSubmit();
-    //   // 验证 API 被调用
-    //   expect(adminApi.api.postFormDesignSavePreview).toHaveBeenCalledWith();
-    //   console.log('?????????');
-
-    //   // 验证 ElMessage 被调用
-    //   expect(elMessageSpy).toHaveBeenCalledWith('msg_successfullyModified');
-    //   expect(wrapper.vm.state.submitLoading).toBe(false);
-    // }, 500);
+    wrapper.vm.FormDesignerRef = {
+      getFormJson: vi.fn().mockReturnValue(mockFormJson)
+    };
+    await wrapper.vm.handleSubmit();
+    expect(adminApi.api.postFormDesignSavePreview).toHaveBeenCalled();
+    expect(elMessageSpy).toHaveBeenCalledWith('msg_successfullyModified');
   });
 
   it('should handle submit error', async () => {
     wrapper.vm.state.loadField = true;
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const mockJson = { widgetList: [], formConfig: {} };
+    wrapper.vm.FormDesignerRef = {
+      getFormJson: vi.fn().mockReturnValue(mockFormJson)
+    };
     // 模拟 adminApi.api.postFormDesignSavePreview 方法抛出错误
     vi.spyOn(adminApi.api, 'postFormDesignSavePreview').mockRejectedValue(new Error('API Error'));
-
     // 调用 handleSubmit 方法
     await wrapper.vm.handleSubmit();
-
     // 验证 submitLoading 状态
     expect(wrapper.vm.state.submitLoading).toBe(false);
   });
