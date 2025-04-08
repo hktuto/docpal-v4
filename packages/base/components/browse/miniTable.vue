@@ -8,7 +8,7 @@ if(!listProvider || !routerProvider) {
     throw new Error('BrowseListProviderKey not found')
 }
 
-const {hideColumns= [], home} = defineProps<{
+const {hideColumns= ['mimeType','fileSize','documentType'], home} = defineProps<{
   hideColumns: any[],
   home: string
 }>()
@@ -95,7 +95,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         {
             field: 'mimeType',
             title: 'mimeType',
-            minWidth: 60,
+            minWidth: 42,
             visible: hideColumns.indexOf('mimeType') === -1,
             formatter: ({ cellValue }:any) => {
                 return mimeTypeToExtension(cellValue)

@@ -445,7 +445,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             visibleMethod: ({row}: any) => !row.isFolder
         },
         rowConfig: {
-            height: 60,
+            height: 42,
             isCurrent: true,
             isHover: true,
             useKey: true

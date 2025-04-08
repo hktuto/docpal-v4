@@ -73,6 +73,7 @@ export function convertCalendarEventToSiteEvent(event:CalendarEventExternal):Doc
 }
 
 export async function getEventFromApi(calendarApp:any, calendarControls:any, filter:any, editItem?:any){
+    console.log("editItem", editItem)
     const range = calendarControls.getRange()
     const params:any = {
         startTime: dayjs(range.start).toISOString(),
@@ -116,8 +117,12 @@ export async function getEventFromApi(calendarApp:any, calendarControls:any, fil
                     disableResize: false,
                     disableDND: false,
                 }
+            }else{
+                // add new event
+                events.push(editItem)
             }
         }
+        // if editItem is not exist, add it
     calendarApp.eventsService.set(events);
     return events;
 }
