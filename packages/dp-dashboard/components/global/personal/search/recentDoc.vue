@@ -61,10 +61,10 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         return mimeTypeToExtension(cellValue)
       }
     },
-    { field: 'type', title: 'dpDocument_fileType' },
+    { field: 'documentType', title: 'dpDocument_fileType' },
     { field: 'path', title: 'tableHeader_path' },
     { field: 'contributors', title: 'search.contributors' },
-    { field: 'creatorBy', title: 'role.creator' },
+    // { field: 'creatorBy', title: 'role.creator' },
     {
       field: 'modifiedDate',
       title: 'tableHeader_modifiedDate',

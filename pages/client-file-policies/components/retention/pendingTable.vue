@@ -108,7 +108,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
         return formatDate(cellValue)
       }
     },
-
+    { field: 'applyApprovedBy', title: 'retention_approvedBy' },
     {
       title: 'tableHeader_actions',
       slots: {
@@ -151,7 +151,8 @@ async function getFilter() {
       options: [
         { label: 'tableHeader_dueDate', value: 'expireDate' },
         { label: 'document_filePath', value: 'createdDate' },
-        { label: 'tableHeader_name', value: 'documentName' }
+        { label: 'tableHeader_name', value: 'documentName' },
+        { label: 'retention_approvedBy', value: 'applyApprovedBy' }
         // { label: 'tableHeader_policyName', value: 'policyName' },
       ]
     },
