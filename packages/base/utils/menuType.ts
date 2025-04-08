@@ -25,6 +25,7 @@ interface MenuProvider {
     routerContainer: Ref<HTMLElement | null>,
     back: (fallbackItem?:TabItem) => void,
     getHistory:() => RouterParams[],
+    refeshActions: Ref<Function[]>,
     addToHistory:(param:RouterParams) => void,
     message:{
         success: (...args) => void,

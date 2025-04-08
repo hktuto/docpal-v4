@@ -4,11 +4,11 @@ import {ElMessage, ElNotification } from 'element-plus';
 
 import {MenuRouterKey, TabManagerKey, panelRouteUpdate} from '#imports'
 const { current } = useMagicKeys()
-import { use } from 'vxe-table';
 const {allComponents} = useTabsManager()
+const {layout} = useTabsManager()
 
+const hightLightPanel = useCurrentTargetPanel()
 
-  
 
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
@@ -27,6 +27,17 @@ const isFullscreen = computed(() => {
 })
 
 
+const refeshActions = ref<Function[]>([]);
+
+async function handleRefresh() {
+  console.log("handleRefresh on router")
+  try{
+    await Promise.all(refeshActions.value.map(item => item()))
+  }catch(err){
+    console.log(err)
+  }
+}
+
 function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExist:boolean = false) {
     if(current.has('meta') || current.has('control') || openInNewTab){
         tabManager?.openInNewTab(param)
@@ -39,6 +50,7 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExi
             return;
         }
     }
+    refeshActions.value = []
     // forwardHistory.value = [];
     const lastId = tab.value.id
     history.value.push({
@@ -62,6 +74,7 @@ function addToHistory(param:RouterParams){
 }
 
 function back(fallback?:any){
+  refeshActions.value = []
     if(history.value.length === 0) {
         if(fallback){
             console.log("fallback", fallback)
@@ -96,6 +109,7 @@ function forward() {
     const lastItem = forwardHistory.value.pop()
 
     if(lastItem){
+      refeshActions.value = []
         const lastId = tab.value.id
 
         history.value.push({
@@ -139,7 +153,6 @@ function retryError(){
 const routerContainer = computed(( ) => {
     return document.getElementById(tab.value.parent + "_" + tab.value.id)
 })
-const menuSymbol = Symbol(tab.value.id)
 
 function createMessage(type:string, ...args:any[]){
     if(args.length === 1 && typeof args[0] === 'string'){
@@ -176,6 +189,18 @@ function createNotification(type:string, ...args:any[]){
     }
 }
 
+
+watch(() => [layout, hightLightPanel], () => {
+  const currentPanel = layout.value.find(lay => lay.id === hightLightPanel.value)
+  
+  if(!currentPanel) return
+  if(currentPanel.id === tab.value.parent && currentPanel.tabs[currentPanel.showingTabIndex].id === tab.value.id) {
+    handleRefresh()
+  }
+},{
+  deep: true
+})
+
 provide(MenuRouterKey,{
     navigateTo,
     updateProps,
@@ -184,6 +209,7 @@ provide(MenuRouterKey,{
     back,
     getHistory,
     addToHistory,
+    refeshActions,
     message:{
         success: (...args) => createMessage('success', ...args),
         error: (...args) => createMessage('error', ...args),
