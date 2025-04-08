@@ -22,6 +22,8 @@ export const adminApi = {
     getFormDesignDraftId: vi.fn(),
     postFormDesignSavePreview: vi.fn(),
     patchFormDesignName: vi.fn(),
+    postNuxeoIdentityGroups: vi.fn(),
+    postFormDesignSavePermission: vi.fn(),
   }
 }
 

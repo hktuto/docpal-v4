@@ -5,9 +5,20 @@ const useUserId = vi.fn(() => {
     value: 'unit-test',
   };
 });
+const mockEndPoint = {
+  upload: 'http://example.com'
+};
 
+const useRuntimeConfig = vi.fn(() => {
+  return {
+    public: {
+      endPoint: mockEndPoint,
+    },
+  };
+});
 vi.stubGlobal('MenuRouterKey', 'MenuRouterKey');
 vi.stubGlobal('useUserId', useUserId);
+vi.stubGlobal('useRuntimeConfig', useRuntimeConfig);
 vi.stubGlobal('useVxeTable', useVxeTable);
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({

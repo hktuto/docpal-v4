@@ -17,8 +17,15 @@ it('watches for detail changes', async () => {
 ```
 ## nuxt项目expect注意事项
 ### 判断组件是否存在
-// 方式1：通过组件定义名（×）
+// 通过组件定义名（×）
 expect(wrapper.findComponent({ name: 'ResponsiveFilter' }).exists()).toBe(true)
-// 方式2：通过组件引用（√）
+// 通过组件引用（√）
 expect(wrapper.findComponent(ResponsiveFilter).exists()).toBe(true)
+
+### wrapper.find('.el-select').exists()
+查找类名
+// el-select 为元素名（×）
+expect(wrapper.find('el-select').exists()).toBe(true);
+// .el-select为类名（√）
+expect(wrapper.find('.el-select').exists()).toBe(true);
 

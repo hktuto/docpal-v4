@@ -13,7 +13,7 @@ vi.mock('element-plus', async () => ({
   }
 }));
 
-describe('EasyFormAction', () => {
+describe('[admin-easy-form]EasyFormAction', () => {
   let wrapper: any;
   beforeEach(() => {
     wrapper = mount(EasyFormAction, {
