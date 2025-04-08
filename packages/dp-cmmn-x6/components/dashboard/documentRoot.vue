@@ -91,7 +91,7 @@ provide(BrowseListProviderKey, {
 
 <template>
   <ElCard class="o-auto">
-    <h3>{{ $t("dashboard.cmmnDocumentRoot") }}</h3>
+    <!-- <h3>{{ $t("dashboard.cmmnDocumentRoot") }}</h3> -->
     <SvgIcon
       v-if="!hideSetting"
       class="setting--icon"
