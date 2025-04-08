@@ -1,0 +1,22 @@
+{
+  "name": "unit-test",
+  "version": "1.0.0",
+  "description": "",
+  "files": [
+    "/src/*"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "npx ts-node index.ts",
+    "generate": " npx ts-node ./src/generator"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
