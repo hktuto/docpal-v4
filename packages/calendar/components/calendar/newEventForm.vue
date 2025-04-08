@@ -40,7 +40,7 @@ async function getFilterOptions(){
   console.log("getFilterOptions", options.createUserFilter)
   if(options.createUserFilter){
     const res = await clientApi.api.getPermissionUserGroupGroupidUsers(options.createUserFilter).then(res => res.data)
-    user = res.users
+    user = res.users.filter(item => item.status)
     console.log("user", user)
   }else{
     user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
@@ -54,7 +54,7 @@ async function getFilterOptions(){
 }
 async function open(event) {
     await getFilterOptions()
-    
+    console.log("open event", event)
     opened.value = true;
     form.value.detail = event.detail || {}
     form.value.startDate = event.startDate,

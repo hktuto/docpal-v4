@@ -92,6 +92,7 @@ async function handleFormDataGet() {
         }
       }
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
+      console.log("formData", formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break
@@ -105,6 +106,7 @@ async function handleFormDataGet() {
         state.taskDetail.processDefinitionVersionId
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
+      console.log("formData", formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break
@@ -125,8 +127,9 @@ function formDataGetFromProps(list: any) {
     if (item.type === 'boolean' && (item.value === 'true' || item.value === 'false')) {
       item.value = item.value === 'true'
     }
-
-    prev[item.id] = item.value
+    if(item.value !== null && item.value !== undefined) {
+      prev[item.id] = item.value
+    }
     return prev
   }, {})
 }

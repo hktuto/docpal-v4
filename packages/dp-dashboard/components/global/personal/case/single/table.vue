@@ -6,7 +6,7 @@ const { public:{platform}} = useRuntimeConfig();
 const { id, name, detail } = defineProps<{
   id: string;
   name: string;
-  detail: any
+  detail: any,
 }>();
 let where = ref({})
 const { t } = useI18n();
@@ -51,9 +51,9 @@ const {
   },
   columns: [],
   dblClickAction: ({ row }) => {
-    routerProvider?.navigateTo(
-      caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
-    );
+    const newItem =  caseManageDashboardPage({ ...row, id, instanceId: row.case_id, versionId: row.caseDefinitionVersionId, data: detail })
+      console.log(newItem)
+    routerProvider?.navigateTo(newItem);
   },
   zoom: false,
   saveColumnOrder: false,

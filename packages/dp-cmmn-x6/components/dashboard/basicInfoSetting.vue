@@ -14,6 +14,8 @@
         >
             <template #item="{ element, index }">
             <div :style="`--field-width: ${element.width}`" class="list-group-item">
+              <div class="topRow">
+
                 <SvgIcon class="handle-icon" src="/icons/drag.svg" />
                 {{ element.name }}
                 <el-dropdown @command="(command: string) => handleCommand(command, element)">
@@ -24,8 +26,16 @@
                         </el-dropdown-menu>
                     </template>
                 </el-dropdown>
-                <div></div>
-                <el-input v-model="state.setting.defaultValue[element.id]" />
+              </div>
+                <ElForm label-position="top" class="row" size="small">
+
+                  <ElFormItem label="Default value" >
+                    <el-input v-model="state.setting.defaultValue[element.id]" />
+                  </ElFormItem>
+                  <ElFormItem label="Label" >
+                    <el-input v-model="state.setting.label[element.id]" />
+                  </ElFormItem>
+                </ElForm>
             </div>
             </template>
         </draggable>
@@ -89,7 +99,8 @@ async function handleSubmit () {
     try {
         emits('refresh', { 
             layout: state.setting.layout,
-            defaultValue: state.setting.defaultValue
+            defaultValue: state.setting.defaultValue,
+            label: state.setting.label
         })
     } catch (error) {
         state.loading = false
@@ -102,6 +113,10 @@ function handleOpen(setting: any, allList: any) {
     state.visible = true
     setTimeout(async () => {
         if(!setting.layout) setting.layout = []
+        if(!setting.label) setting.label = setting.layout.reduce((prev:any, item:any) => {
+          prev[item.id] = item.name
+          return prev
+        }, {})
         state.setting = deepCopy(setting)
         state.allList = allList.filter((item: any) => !state.setting.layout.find((l: any) => item.id === l.id))
         state.loading = false
@@ -124,13 +139,19 @@ defineExpose({ handleOpen })
     overflow: auto;
 }
 .list-group-item {
-    display: grid;
-    grid-template-columns: min-content 1fr min-content;
+    display: flex;
+    flex-flow: column nowrap;
+    // grid-template-columns: min-content 1fr min-content;
     background-color: #fff;
     padding: var(--app-space-xs);
     margin-bottom: var(--app-space-xs);
     .el-input {
         width: 100%;
+    }
+    .topRow{
+      width:100%;
+      display: grid;
+      grid-template-columns: min-content 1fr min-content;
     }
 }
 .flex-zoom {
