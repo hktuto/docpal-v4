@@ -32,7 +32,7 @@ async function getDocPreview() {
         const idOrPath = docDetail.value.id
         const item = document.querySelector(`.vxe-table--body-wrapper tr[rowId="${docDetail.value._X_ROW_KEY}"]`)
         const {x, y, height, width} = item.getBoundingClientRect()
-        position.value.x = x + 60;
+        position.value.x = x + 350;
         position.value.y = y + (height-20) + previewSize.value > window.innerHeight ? y - previewSize.value + 20 : y + (height-20)
         const blob = await clientApi.api.postNuxeoDocumentThumbnail({idOrPath},{
             format:'blob',

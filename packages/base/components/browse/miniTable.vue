@@ -33,10 +33,8 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     columns:  [
         {
             field: 'name',
-            title: 'Name',
+            title: 'dpTable_name',
             minWidth: 120,
-            treeNode: true,
-            sortable: true,
             type:'html',
             formatter: ({ cellValue, row }:any) => {
                 let icon = '/icons/doc/file.svg';
@@ -94,8 +92,8 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         },
         {
             field: 'mimeType',
-            title: 'mimeType',
-            minWidth: 42,
+            title: 'search.mimeTypes',
+            minWidth: 60,
             visible: hideColumns.indexOf('mimeType') === -1,
             formatter: ({ cellValue }:any) => {
                 return mimeTypeToExtension(cellValue)
@@ -103,13 +101,13 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         },
         {
             field: 'documentType',
-            title: 'documentType',
+            title: 'tableHeader_type',
             visible: hideColumns.indexOf('documentType') === -1,
             minWidth: 120,
         },
         {
             field: 'fileSize',
-            title: 'fileSize',
+            title: 'search.size',
             visible: hideColumns.indexOf('fileSize') === -1,
 
             formatter: ({ cellValue }:any) => {

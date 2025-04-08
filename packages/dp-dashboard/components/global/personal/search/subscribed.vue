@@ -51,13 +51,13 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   zoom: false,
   saveColumnOrder: false,
   api: (pageParams: any) =>
-    clientApi.api.getNotificationSubscriberSubscriberFolders(pageParams),
+    clientApi.api.getNotificationSubscriberSubscriberFolders(useUserId().value, pageParams),
   columns: [
     { field: 'name', title: 'tableHeader.folderName', fixed: 'left' },
-    { field: 'type', title: 'dpDocument_fileType' },
+    { field: 'documentType', title: 'dpDocument_fileType' },
     { field: 'path', title: 'tableHeader_path' },
     { field: 'contributors', title: 'search.contributors' },
-    { field: 'creatorBy', title: 'role.creator' },
+    // { field: 'creatorBy', title: 'role.creator' },
     {
       field: 'fileModifiedDate',
       title: 'tableHeader_modifiedDate',

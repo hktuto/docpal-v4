@@ -42,8 +42,8 @@ const {
 })
 
 function handleDblclick(row: any) {
-  ElMessage.info('need navigate to dashboard detail')
-  // routerProvider?.navigateTo(routeDashboardDetail(row), false)
+  // ElMessage.info('need navigate to dashboard detail')
+  routerProvider?.navigateTo(routeDashboardDetailPage(row), false)
 }
 
 async function getFilter() {
