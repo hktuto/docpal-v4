@@ -35,6 +35,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             field: 'name',
             title: 'dpTable_name',
             minWidth: 120,
+            treeNode: true,
             type:'html',
             formatter: ({ cellValue, row }:any) => {
                 let icon = '/icons/doc/file.svg';
