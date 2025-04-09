@@ -17,7 +17,7 @@ const emits = defineEmits(['submit'])
 const startTime = ref<any>()
 
 const activeLocations = computed(() => {
-    return locationsOption.value.filter(i => !!i.status);
+    return locationsOption.value.filter(i => !!i.status).sort((a,b) => a.name.localeCompare(b.name));
 })
 
 const form = ref<any>({
@@ -40,10 +40,11 @@ async function getFilterOptions(){
   console.log("getFilterOptions", options.createUserFilter)
   if(options.createUserFilter){
     const res = await clientApi.api.getPermissionUserGroupGroupidUsers(options.createUserFilter).then(res => res.data)
-    user = res.users.filter(item => item.status)
+    user = res.users.filter(item => item.status).sort((a,b) => a.username.localeCompare(b.username))
     console.log("user", user)
   }else{
     user = await clientApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
+    user = user.filter(item => item.status).sort((a,b) => a.username.localeCompare(b.username))
   }
   userFiterOptions.value = user.map(item => {
         return {
