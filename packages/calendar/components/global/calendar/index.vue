@@ -58,7 +58,7 @@
                     label: item.username,
                     value: item.userId
                 }
-            })
+            }).sort((a,b) => a.label.localeCompare(b.label))
             userFiterOptions.value.unshift({
                 label: "Current User",
                 value: "currentUser"
