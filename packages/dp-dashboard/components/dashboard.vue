@@ -61,6 +61,9 @@ import { clientApi } from 'api'
 import { allowFeature } from '#imports'
 import { getNormalizeSetting, dashboardWidgetSetting, getWidgetSetting } from '../utils/dashboardWidgetHelper'
 import type { DashboardWidget, DashboardWidgetSetting } from '../utils/dashboardWidgetHelper'
+import { onActivated, onUnmounted } from 'vue'
+
+const routerProvider = inject(MenuRouterKey)
 
 const dateFormat = useDisplayTimeFormat().value
 const state = reactive<any>({
@@ -136,6 +139,7 @@ async function handleClear() {
   }
 }
 async function getDashboardList() {
+  console.log("getDashboardList")
   let personal: any = await clientApi.api.getPersonalLanding().then((res) => res.data)
   let dashboardList: any = await clientApi.api.getPersonalLandingDashboardList().then((res: any) => res.data)
   if (!personal) personal = {}
@@ -170,9 +174,14 @@ async function checkoutDashboard(detail: any) {
     state.loading = false
   })
 }
+
 onMounted(async () => {
+  console.log("onActivated")
   getDashboardList()
+  routerProvider?.refeshActions.value.push(getDashboardList)
 })
+
+
 </script>
 
 <style lang="scss" scoped>
