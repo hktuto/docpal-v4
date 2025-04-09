@@ -19,7 +19,6 @@
   "dependencies": {
     "@atlaskit/pragmatic-drag-and-drop": "^1.5.1",
     "@atlaskit/pragmatic-drag-and-drop-flourish": "^1.2.2",
-    "@element-plus/nuxt": "^1.1.1",
     "@james090500/vue-tagsinput": "^3.1.4",
     "@nuxt/icon": "^1.11.0",
     "@nuxtjs/i18n": "^8.5.6",
