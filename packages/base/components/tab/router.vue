@@ -30,7 +30,7 @@ const isFullscreen = computed(() => {
 const refeshActions = ref<Function[]>([]);
 
 async function handleRefresh() {
-  console.log("handleRefresh on router")
+  console.log("handleRefresh on router", refeshActions.value)
   try{
     await Promise.all(refeshActions.value.map(item => item()))
   }catch(err){
@@ -260,7 +260,7 @@ defineExpose({
     
     <template v-if="tab.initized && !showError">
         <Transition >
-            <KeepAlive :exclude="/Dead/">
+            <KeepAlive :exclude="/Dead/" :max="2">
                 <Suspense>
                     <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
                     <template #fallback>

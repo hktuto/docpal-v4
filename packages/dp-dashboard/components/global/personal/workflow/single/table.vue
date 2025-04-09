@@ -195,6 +195,27 @@ const  { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
   }
 })
 
+const intervalReload = ref();
+
+
+onMounted(() => {
+  if(!intervalReload.value) {
+    intervalReload.value = setInterval(() => {
+      console.log('reload')
+      reload()
+    }, 30000)
+  }
+})
+
+onUnmounted(() => {
+  if(intervalReload.value) {
+    console.log("clean interval")
+    clearInterval(intervalReload.value)
+    intervalReload.value = null;
+  }
+  
+})
+
 watch(setting, () => {
   console.log("setting change", setting)
   setupTable()
