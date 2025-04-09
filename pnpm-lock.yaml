@@ -25,7 +25,7 @@ importers:
         version: 25.0.6
       nuxt:
         specifier: 3.15.4
-        version: 3.15.4(eslint@8.57.1)(rollup@4.34.8)(sass@1.85.1)(typescript@5.8.2)(vite@6.2.2)(vue-tsc@2.2.8)
+        version: 3.15.4(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.2)(vite@6.2.2)(vue-tsc@2.2.4)
       nuxt-auth-utils:
         specifier: ^0.3.9
         version: 0.3.9
@@ -390,8 +390,8 @@ importers:
         specifier: ^1.13.1
         version: 1.13.1(vue@3.5.6)
       v-form:
-        specifier: file:..\dp-form\dist\v-form-designer-3.2.10.tar.gz
-        version: file:packages/dp-form/dist/v-form-designer-3.2.10.tar.gz(ace-builds@1.39.0)(typescript@5.8.2)
+        specifier: file:..\dp-form\dist\v-form-designer-3.2.16.tar.gz
+        version: file:packages/dp-form/dist/v-form-designer-3.2.16.tar.gz(ace-builds@1.39.0)(typescript@5.8.2)
       v-viewer:
         specifier: ^3.0.21
         version: 3.0.21(viewerjs@1.11.7)(vue@3.5.6)
@@ -18169,11 +18169,11 @@ packages:
       tslib: 2.3.0
     dev: false
 
-  file:packages/dp-form/dist/v-form-designer-3.2.10.tar.gz(ace-builds@1.39.0)(typescript@5.8.2):
-    resolution: {integrity: sha512-51G5kdyhrbGAYB3JdS7Wj59fbXdC3WPoNuoO9jXdS3jQoPtoyQlRDdeHc93Tjw67Bw+Pqg2K91nxJhJ1j4eRTQ==, tarball: file:packages/dp-form/dist/v-form-designer-3.2.10.tar.gz}
-    id: file:packages/dp-form/dist/v-form-designer-3.2.10.tar.gz
+  file:packages/dp-form/dist/v-form-designer-3.2.16.tar.gz(ace-builds@1.39.0)(typescript@5.8.2):
+    resolution: {integrity: sha512-SxEzEfymYBcHd4N6XfVN6jRxgKF/uC24WTG0MdrBtH497QgavSRUty6RIgkqH8Wl/ZG7WNANp8/MxUaMh2b+JQ==, tarball: file:packages/dp-form/dist/v-form-designer-3.2.16.tar.gz}
+    id: file:packages/dp-form/dist/v-form-designer-3.2.16.tar.gz
     name: v-form
-    version: 3.2.10
+    version: 3.2.16
     dependencies:
       '@element-plus/icons-vue': 0.2.7(vue@3.5.13)
       '@wangeditor/editor': 5.1.23
