@@ -100,10 +100,13 @@ function handleClearSelected() {
   }
 }
 
-function handleRefresh() {
+async function handleRefresh() {
   getDoc()
   if (tableRef.value) {
     tableRef.value.reload()
+    setTimeout(() => {
+      tableRef.value?.tableConfig?.loading = false
+    },2000)
   }
 }
 
@@ -199,7 +202,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
   <div class="browseContainer">
     <splitpanes>
       <Pane>
-        <BrowseListTable ref="tableRef" :class="{ selected: selectedList.length > 0 }" :selectedRows="selectedItem" @selectedChange="selectedChangeHandler">
+        <BrowseListTable ref="tableRef" :class="{ selected: selectedList.length > 0 }" :selectedRows="selectedItem" @selectedChange="selectedChangeHandler" >
           <template #toolbar_buttons>
             <slot name="toolbar_buttons">
               <div class="toolsBarContainer">

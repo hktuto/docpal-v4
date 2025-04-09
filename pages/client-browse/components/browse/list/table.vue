@@ -531,13 +531,12 @@ function dblClickHandler(row: any) {
 
 
 async function loadAllChildren(entry: any[] = [], path?: string, pageNum: number = 0) {
-    tableConfig.loading = true
+    
     const {data} = await listProvider?.getchildApi({idOrPath: path, pageSize: 1000, pageNum})
     entry.push(...data.entryList)
     if (data.isNextPageAvailable) {
         return loadAllChildren(entry, path, pageNum + 1)
     }
-    tableConfig.loading = false
     // tableRef.value?.loadData([...tableConfig.data, ...entry])
     return entry
 }
@@ -598,6 +597,7 @@ defineExpose({
     cleanSelected,
     reload,
     tableRef,
+    tableConfig,
     loadAllChildren
 })
 
