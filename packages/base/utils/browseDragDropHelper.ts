@@ -15,7 +15,30 @@ import { AppWrapper } from '#components';
 const { createUploadRequest } = useUploadAIStore();
 
 export const useDropFile = () => useState('browseDropFile', () => ([]));
-
+function isCanDrop(data: any) {
+  return (data.type === 'browseFolder' || data.type === 'browseFile') && data.data.source !== 'tempFile';
+}
+function isCanDrag(row: any) {
+  if (row.source === 'tempFile') {
+    ElMessage.error($i18n.t('dpTip.tempFileCanNotMove'));
+    return false;
+  }
+  return true;
+}
+function handleRefresh(sourceFiles: any, targetRoot: any) {
+  emitBus(EventType.FILE_NEED_REFRESH, {
+    relatedIdOrPath: targetRoot.id,
+  });
+  const exitSourceRoots = [];
+  sourceFiles.forEach(item => {
+    if (!exitSourceRoots.includes(item.parentRef)) {
+      exitSourceRoots.push(item.parentRef);
+      emitBus(EventType.FILE_NEED_REFRESH, {
+        relatedIdOrPath: item.parentRef,
+      });
+    }
+  });
+}
 const dragRowClassChange = (source: any, selected: boolean) => {
   const rows = Array.isArray(source.data.data) ? source.data.data : [source.data.data];
   rows.forEach((item: any) => {
@@ -121,7 +144,7 @@ export function createDropableBreadcrumb(element: HTMLElement, row: any, tableRe
     dropTargetForElements({
       element,
       canDrop({ source }) {
-        return source.data.type === 'browseFolder' || source.data.type === 'browseFile';
+        return isCanDrop(source.data);
       },
       onDragEnter({ self, location, source }) {
         resetAllClass(tableRef);
@@ -188,19 +211,11 @@ export function createDropableBreadcrumb(element: HTMLElement, row: any, tableRe
 
               await clientApi.api.postNuxeoDocumentMove(param);
               const copyItemDetail = await clientApi.api.postNuxeoDocument({ idOrPath: item.id });
-              if (copyItemDetail.data) {
-                emitBus(EventType.FILE_NEED_REFRESH, {
-                  relatedIdOrPath: copyItemDetail.data.parentRef,
-                });
-              }
-
             } finally {
               noti.close();
             }
           }
-          emitBus(EventType.FILE_NEED_REFRESH, {
-            relatedIdOrPath: dropItemDetail.data.parentRef,
-          });
+          handleRefresh(copyItems, row);
         });
       },
     }),
@@ -286,7 +301,7 @@ export function createDropableFolder(element: HTMLElement, row: any, tableRef: R
     dropTargetForElements({
       element,
       canDrop({ source }) {
-        return source.data.type === 'browseFolder' || source.data.type === 'browseFile';
+        return isCanDrop(source.data);
       },
       onDragEnter({ self, location, source }) {
         resetAllClass(tableRef);
@@ -301,6 +316,7 @@ export function createDropableFolder(element: HTMLElement, row: any, tableRef: R
       },
       onDrop: async (args) => {
         // error handle
+        if (!isCanDrag(row)) return;
         if (args.location.current.dropTargets[0].element !== element) {
           return;
         }
@@ -354,19 +370,11 @@ export function createDropableFolder(element: HTMLElement, row: any, tableRef: R
 
               await clientApi.api.postNuxeoDocumentMove(param);
               const copyItemDetail = await clientApi.api.postNuxeoDocument({ idOrPath: item.id });
-              if (copyItemDetail.data) {
-                emitBus(EventType.FILE_NEED_REFRESH, {
-                  relatedIdOrPath: copyItemDetail.data.parentRef,
-                });
-              }
-
             } finally {
               noti.close();
             }
           }
-          emitBus(EventType.FILE_NEED_REFRESH, {
-            relatedIdOrPath: dropItemDetail.data.parentRef,
-          });
+          handleRefresh(copyItems, row);
         });
       },
     }),
@@ -420,7 +428,7 @@ export function createRootDropZone(tableRef: Ref<any>, docDetail: Ref<any>) {
             return false;
           }
         }
-        return source.data.type === 'browseFolder' || source.data.type === 'browseFile';
+        return isCanDrop(source.data);
       },
       onDragEnter({ self, location, source }) {
         if (location.current.dropTargets[0].element !== element) {
@@ -488,19 +496,11 @@ export function createRootDropZone(tableRef: Ref<any>, docDetail: Ref<any>) {
 
               await clientApi.api.postNuxeoDocumentMove(param);
               const copyItemDetail = await clientApi.api.postNuxeoDocument({ idOrPath: item.id });
-              if (copyItemDetail.data) {
-                emitBus(EventType.FILE_NEED_REFRESH, {
-                  relatedIdOrPath: copyItemDetail.data.parentRef,
-                });
-              }
-
             } finally {
               noti.close();
             }
           }
-          emitBus(EventType.FILE_NEED_REFRESH, {
-            relatedIdOrPath: docDetail.value.parentRef,
-          });
+          handleRefresh(copyItems, docDetail);
         });
       },
     }),

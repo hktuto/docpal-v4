@@ -18,6 +18,7 @@ const emits = defineEmits(['selectedChange'])
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
     const {data} = await listProvider?.getchildApi({idOrPath: path, pageSize: 1000, pageNum})
+    data.entryList.forEach((item: any) => {item.parentRef = path})
     entry.push(...data.entryList)
     if (data.isNextPageAvailable) {
         return loadData(entry, path, pageNum + 1)
@@ -432,7 +433,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             showLine: true,
             hasChildField: 'isFolder',
             loadMethod: async (params) => {
-                const entry = await loadAllChildren([], params.row.path)
+                const entry = await loadAllChildren([], params.row.id)
                 return entry.sort(sortEntry)
             }
         },
@@ -449,6 +450,13 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             isCurrent: true,
             isHover: true,
             useKey: true
+        },
+        rowStyle: ({ rowIndex, row }) => {
+          if (row.source === 'tempFile') {
+            return {
+              backgroundColor: 'var(--app-grey-800)'
+            }
+          }
         }
     },
     optionalEvent: {
@@ -467,7 +475,8 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                 emitBus(EventType.FILE_PREVIEW_CLOSE, row)
             }
         },
-    }
+    },
+    
 })
 
 
@@ -530,12 +539,13 @@ function dblClickHandler(row: any) {
 }
 
 
-async function loadAllChildren(entry: any[] = [], path?: string, pageNum: number = 0) {
+async function loadAllChildren(entry: any[] = [], id?: string, pageNum: number = 0) {
     
-    const {data} = await listProvider?.getchildApi({idOrPath: path, pageSize: 1000, pageNum})
+    const {data} = await listProvider?.getchildApi({idOrPath: id, pageSize: 1000, pageNum})
+    data.entryList.forEach((item: any) => {item.parentRef = id})
     entry.push(...data.entryList)
     if (data.isNextPageAvailable) {
-        return loadAllChildren(entry, path, pageNum + 1)
+        return loadAllChildren(entry, id, pageNum + 1)
     }
     // tableRef.value?.loadData([...tableConfig.data, ...entry])
     return entry
@@ -605,57 +615,57 @@ defineExpose({
 
 
 <template>
-    <div ref="tableContainer" class="tableContainer">
-        <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-            <template #toolbar_buttons>
-                <slot name="toolbar_buttons"/>
-            </template>
-            <template #toolbarTools>
-                <slot name="toolbarTools"/>
-            </template>
-            <template #tags="{ row, index }">
-                <el-tag class="el-icon--left table-tag" v-for="item in row.tags">
-                    {{ item }}
-                </el-tag>
-            </template>
-        </VxeGrid>
-    </div>
+  <div ref="tableContainer" class="tableContainer">
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <slot name="toolbar_buttons" />
+      </template>
+      <template #toolbarTools>
+        <slot name="toolbarTools" />
+      </template>
+      <template #tags="{ row, index }">
+        <el-tag class="el-icon--left table-tag" v-for="item in row.tags">
+          {{ item }}
+        </el-tag>
+      </template>
+    </VxeGrid>
+  </div>
 </template>
 
 <style lang="scss" scoped>
 .tableContainer {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    :deep(.is-dragging){
-        background: var(--app-grey-900);
-        opacity: 0.5;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  :deep(.is-dragging) {
+    background: var(--app-grey-900);
+    opacity: 0.5;
+  }
+  :deep(.dropOver) {
+    // overflow: hidden;
+    background: var(--app-grey-900);
+    --vxe-ui-layout-background-color: var(--app-grey-900);
+  }
+  &.selected {
+    :deep(.vxe-buttons--wrapper) {
+      border-radius: var(--app-border-radius-m);
+      // overflow: hidden;
+      background: var(--app-grey-900);
+      padding-block: var(--app-space-xs);
+      --vxe-ui-layout-background-color: var(--app-grey-900);
     }
-    :deep(.dropOver) {
-        // overflow: hidden;
-        background: var(--app-grey-900);
-        --vxe-ui-layout-background-color: var(--app-grey-900);
-    }
-    &.selected {
-        :deep(.vxe-buttons--wrapper) {
-            border-radius: var(--app-border-radius-m);
-            // overflow: hidden;
-            background: var(--app-grey-900);
-            padding-block: var(--app-space-xs);
-            --vxe-ui-layout-background-color: var(--app-grey-900);
-        }
-    }
+  }
 
-    :deep(.browseFileIcon) {
-        width: calc(var(--app-space-m) * 1.5);
-        height: calc(var(--app-space-m) * 1.5);
-    }
+  :deep(.browseFileIcon) {
+    width: calc(var(--app-space-m) * 1.5);
+    height: calc(var(--app-space-m) * 1.5);
+  }
 
-    :deep(.browseNameCell) {
-        display: flex;
-        align-items: center;
-        gap: var(--app-space-s);
-        cursor: pointer;
-    }
+  :deep(.browseNameCell) {
+    display: flex;
+    align-items: center;
+    gap: var(--app-space-s);
+    cursor: pointer;
+  }
 }
 </style>
