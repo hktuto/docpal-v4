@@ -16,7 +16,6 @@ const formData = ref<any>([]);
 
 function makeForm() {
     formData.value = []
-    console.log("form", form.value)
     if(!workflowInfos.value ) {
         
         return
@@ -45,6 +44,19 @@ function makeForm() {
 function fieldUpdate(item:any, val:string, index:number) {
     const caseInfoKey = props.type === 'in' ? 'attr_source' : 'attr_target'
     const workflowInfoKey = props.type === 'in' ? 'attr_target' : 'attr_source'
+    // check if val is empty, if empty, remove this item
+    
+    if(!val) {
+        const indexInForm = form.value.findIndex((formItem:any) => {
+            console.log("formItem", workflowInfoKey,  formItem[workflowInfoKey] === item.workflowInfoId,  formItem, item )
+            return formItem[workflowInfoKey] === item.workflowInfoId
+        })
+        if(indexInForm > -1) {
+            form.value.splice(indexInForm, 1)
+            emits('change', form.value)
+        }
+        return
+    }
     // update local form data
     formData.value[index].caseInfoId = val;
 
@@ -55,6 +67,7 @@ function fieldUpdate(item:any, val:string, index:number) {
         return formItem[workflowInfoKey] === item.workflowInfoId
     })
     if(originalValue) {
+        
         originalValue[caseInfoKey] = val
     }else{
         form.value.push({
@@ -99,6 +112,7 @@ watch(() => [workflowInfos],() => {
                 <Icon name="lucide:arrow-right" />
             </div>
             <div class="col case">
+              
                 <ElSelect v-model="item.caseInfoId" clearable filterable placeholder="Select Case Infomation" @change="(val) => fieldUpdate(item, val, index)">
                     <ElOption v-for="item in allInfo" :key="item.value" :label="item.label" :value="item.value" />
                 </ElSelect>
