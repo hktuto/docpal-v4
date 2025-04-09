@@ -188,7 +188,7 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
 
                             await clientApi.api.postNuxeoDocumentMove(param)
                             const copyItemDetail = await clientApi.api.postNuxeoDocument({idOrPath: item.id})
-                            if(copyItemDetail.data) {
+                            if(copyItemDetail.data && copyItemDetail.data.parentRef) {
                                 emitBus(EventType.FILE_NEED_REFRESH, {
                                     relatedIdOrPath: copyItemDetail.data.parentRef,
                                 })
@@ -198,9 +198,12 @@ export function createDropableBreadcrumb(element:HTMLElement,row:any, tableRef: 
                             noti.close()
                         }
                     }
-                    emitBus(EventType.FILE_NEED_REFRESH, {
+                    if(dropItemDetail.data?.parentRef){
+
+                      emitBus(EventType.FILE_NEED_REFRESH, {
                         relatedIdOrPath: dropItemDetail.data.parentRef,
-                    })
+                      })
+                    }
                 })
             },
         }),
