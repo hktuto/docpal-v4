@@ -169,8 +169,9 @@ provide(BrowseListProviderKey, {
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on(({ relatedIdOrPath, highlightIdOrPath }: any) => {
-  console.log(relatedIdOrPath, docDetail.value.id)
-  if (relatedIdOrPath !== docDetail.value.id) {
+  // console.log(relatedIdOrPath, docDetail.value.id)
+  if(!relatedIdOrPath || !docDetail.value?.id) return
+  if (relatedIdOrPath !== docDetail.value?.id) {
     handleRefreshChild(relatedIdOrPath)
   }
   // check id relatedIdOrPath is chidlren of current page
