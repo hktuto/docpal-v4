@@ -361,6 +361,11 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   margin: var(--app-space-xxs) 0 !important;
 }
 
+// TODO :  this is a temp fix for message box dialog may set to lower z-index
+.el-overlay.is-message-box{
+  z-index: 10000 !important;
+}
+
 .tableRow-icon-cell {
   display: flex;
   align-items: center;
