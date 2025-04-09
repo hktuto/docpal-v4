@@ -11,7 +11,7 @@ const {disabled, formData, options} = toRefs(props)
 const docId = ref('');
 
 function getFormData(){
-  return formData
+  return JSON.parse(JSON.stringify(formData.value))
 }
 
 function getInfo(){
@@ -42,7 +42,7 @@ onDeactivated(() => {
 
 <template>
   <div class="editDocumentContainer">
-    <CollaboraViewer v-if="docId" :docId="docId" :readonly="true" :editable="true"  fileType="NUXEO" />
+    <CollaboraViewer v-if="docId" :docId="docId" :readonly="true" :editable="true"  fileType="WORKFLOW" />
   </div>
 </template>
 
