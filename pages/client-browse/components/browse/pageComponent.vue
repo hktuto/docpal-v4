@@ -105,7 +105,9 @@ async function handleRefresh() {
   if (tableRef.value) {
     tableRef.value.reload()
     setTimeout(() => {
-      tableRef.value?.tableConfig?.loading = false
+      if(tableRef.value) {
+        tableRef.value.tableConfig.loading = false
+      }
     },2000)
   }
 }
