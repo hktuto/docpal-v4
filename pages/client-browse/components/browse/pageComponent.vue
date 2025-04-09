@@ -117,8 +117,9 @@ async function handleRefreshChild(childId: string) {
     const tableData: any = tableRef.value?.tableRef?.getData()
     const cItem = findNodeById({children:tableData}, childId)
     if (!!cItem) tableRef.value?.tableRef?.reloadTreeExpand(cItem)
+    console.log('handleRefreshChild', cItem);
   }
-
+  
   function findNodeById(node: any, targetId) {
     // 当前节点匹配时直接返回
     if (node.id === targetId) {
