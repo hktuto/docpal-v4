@@ -17,7 +17,6 @@ function refreshData(){
     }else{
         allPermission.value =  []
     }
-    console.log("allPermission", allPermission.value)
 }
 
 
@@ -34,25 +33,22 @@ function editPermission(editForm:any) {
     editingItemIndex.value = editForm.index
 }
 function editPermissionHandler(editPermission: any) {
+    console.log("editPermissionHandler", editPermission)
     const data = node.getData()
+    const permission = data.data['extensionElements']['flowable:permission']
+    permission[editingItemIndex.value] = editPermission
     node.setData({
         ...data,
-        version: (data.version || 0) + 1,
-        data:{
+        version: (node.data.version || 0) + 1,
+        data: {
             ...data.data,
-            extensionElements:{
-                ...data.data.extensionElements,
-                'flowable:permission': data.map((item:any, index:number) => {
-                    if(index === editingItemIndex.value) {
-                        return editPermission
-                    }else{
-                        return item
-                    }
-                })
+            'extensionElements': {
+                ...data.data['extensionElements'],
+                'flowable:permission': permission
             }
         }
     })
-    console.log("editPermissionHandler", node.getData())
+    refreshData()
     editPermissionDialogShow.value = false
     editingItemIndex.value = -1
     refreshData()
@@ -65,7 +61,18 @@ function deletePermission(index: number) {
 
     const permission = data.data['extensionElements']['flowable:permission']
     permission.splice(index, 1)
-
+    node.setData({
+        ...data,
+        version: (node.data.version || 0) + 1,
+        data: {
+            ...data.data,
+            'extensionElements': {
+                ...data.data['extensionElements'],
+                'flowable:permission': permission
+            }
+        }
+    })
+    refreshData()
 }
 
 // #region new permission
@@ -102,7 +109,6 @@ function newPermissionHandler(newPermission: any) {
                 }
             })
     }
-    console.log("newPermissionHandler", node.getData())
 
     newPermissionDialogShow.value = false
     refreshData()
@@ -172,13 +178,19 @@ onMounted(() => {
         <ElButton type="text" :disabled="editorProvider.readonly.value" @click="newPermission">add</ElButton>
 
         <ElDialog v-model="newPermissionDialogShow" destroy-on-close append-to-body>
-            <BpmnContextPermissionNewDialog @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/>
+            <BpmnContextPermissionNewDialog :allPermission="allPermission" @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/>
             <!-- <WorkflowEditorFormPermissionNewDialog @close="newPermissionDialogShow = false" @submit="newPermissionHandler"/> -->
         </ElDialog>
-        <ElDialog v-model="editPermissionDialogShow" >
-            <BpmnContextPermissionEditDialog ref="editFormEl" @close="editPermissionDialogShow = false" @submit="editPermissionHandler"/>
+        <ElDialog v-model="editPermissionDialogShow" append-to-body>
+            <BpmnContextPermissionEditDialog ref="editFormEl" :allPermission="allPermission" @close="editPermissionDialogShow = false" @submit="editPermissionHandler"/>
 
             <!-- <WorkflowEditorFormPermissionEditDialog ref="editFormEl" @close="editPermissionDialogShow = false" @submit="editPermissionHandler"/> -->
         </ElDialog>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.permissionContainer{
+  overflow: auto;
+}
+</style>
