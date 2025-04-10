@@ -80,7 +80,7 @@ function newWatermark(type: 'text' | 'image') {
 
 function changeOrientation(newOrientation: "ver" | "hoz") {
     orientation.value = newOrientation
-    // initFabric();
+    initFabric();
 }
 
 function setCanvasScale() {
