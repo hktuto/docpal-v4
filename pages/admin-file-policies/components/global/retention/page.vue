@@ -168,7 +168,7 @@ const {
 })
 const RetentionAddDialogRef = ref()
 
-function handleDblclick(row) {
+function handleDblclick(row: any) {
   routerProvider?.navigateTo(routeRetentionDetail(row))
 }
 
@@ -193,7 +193,7 @@ async function deleteItem(id: string) {
     })
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyRetentionsId(id)
-  // query()
+  query({})
   routerProvider?.message.success(t('tip_deleteSuccessMsg', {
     modelName: t('filePolicies_RetentionPolicy'),
     name: null
