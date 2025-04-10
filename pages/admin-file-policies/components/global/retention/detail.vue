@@ -2,9 +2,9 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 import formJson from '../../retention/addDialog.vform.json'
-
+const emits = defineEmits(['update'])
 const { id } = defineProps<{
-  id: string;
+  id: number
 }>()
 const { t } = useI18n()
 const state = reactive<any>({
@@ -30,15 +30,16 @@ async function handleSubmit() {
     emits('update')
   } catch (error) {
     init()
+  } finally {
+    state.loading = false
   }
-  state.loading = false
 }
 
 async function handleSetStatus(isActive: 'A' | 'D') {
   if (!state.setting.id) return
   try {
     state.activeLoading = true
-    const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(id, isActive).then(res => res.data)
+    const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(id, isActive).then((res) => res.data)
     if (!!result) {
       state.setting.status = isActive
       ElMessage.success(t('dpMsg_success'))
@@ -60,14 +61,14 @@ async function deleteItem() {
 async function init() {
   try {
     state.loading = true
-    let setting = await adminApi.api.getPolicyRetentionsId(id).then(res => res.data)
+    let setting = await adminApi.api.getPolicyRetentionsId(id).then((res) => res.data)
+    if (!setting) setting = {}
     setTimeout(async () => {
       state.setting = setting
-      state.setting.actionType = setting.actionType === 'D' ? true : false
+      state.setting.actionType = setting?.actionType === 'D' ? true : false
       await FormRendererRef.value.vFormRenderRef.setFormData({ ...state.setting })
     })
   } catch (error) {
-
   } finally {
     state.loading = false
   }
@@ -82,15 +83,18 @@ onActivated(async () => {
     <div class="rd-container--title flex-x-between">
       <div>
         {{ $t('user_active') }}
-        <el-switch class="el-icon--right"
-                   v-model="state.setting.status"
-                   active-value="A" inactive-value="D"
-                   :loading="state.activeLoading"
-                   @change="handleSetStatus" />
+        <el-switch
+          class="el-icon--right"
+          v-model="state.setting.status"
+          active-value="A"
+          inactive-value="D"
+          :loading="state.activeLoading"
+          @change="handleSetStatus"
+        />
       </div>
       <div>
         <!-- <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button> -->
-        <el-button id="RetentionPolicySetting__EditRetentionPolicy__Submit" utton type="primary" @click="handleSubmit">
+        <el-button :loading="state.loading" id="RetentionPolicySetting__EditRetentionPolicy__Submit" utton type="primary" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>
