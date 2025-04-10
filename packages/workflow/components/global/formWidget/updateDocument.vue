@@ -42,7 +42,7 @@ onDeactivated(() => {
 
 <template>
   <div class="editDocumentContainer">
-    <CollaboraViewer v-if="docId" :docId="docId" :readonly="true" :editable="true"  fileType="WORKFLOW" />
+    <CollaboraViewer v-if="docId" :docId="docId" :readonly="true" :editable="true"  fileType="NUXEO" />
   </div>
 </template>
 

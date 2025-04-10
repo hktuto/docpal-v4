@@ -162,7 +162,7 @@ provide('handleOpenUploadDrawer', handleOpenUpload)
         transform: translateX(0);
     }
     &:after {
-        --extend-width: 20px;
+        --extend-width: var(--app-space-xs);
         content: "";
         position: absolute;
         height: 100%;
