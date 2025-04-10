@@ -61,7 +61,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
             {
                 code:"edit",
                name: 'template.edit',
-               action: ({row}) => listProvider.handleEdit(row)
+               action: ({row}) => listProvider.dblClickHandle(row)
             },
             {
                 code:"info",
