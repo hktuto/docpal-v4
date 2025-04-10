@@ -9,6 +9,7 @@ const {layout} = useTabsManager()
 
 const hightLightPanel = useCurrentTargetPanel()
 
+const historyLimit = 10;
 
 const tab = defineModel<TabItem>('tab', { required: true });
 const tabManager = inject(TabManagerKey)
@@ -30,7 +31,6 @@ const isFullscreen = computed(() => {
 const refeshActions = ref<Function[]>([]);
 
 async function handleRefresh() {
-  console.log("handleRefresh on router", refeshActions.value)
   try{
     await Promise.all(refeshActions.value.map(item => item()))
   }catch(err){
@@ -71,6 +71,9 @@ function getHistory() {
 
 function addToHistory(param:RouterParams){
     history.value.push(param)
+    if(history.value.length > historyLimit){
+        history.value.shift()
+    }
 }
 
 function back(fallback?:any){
@@ -94,6 +97,9 @@ function back(fallback?:any){
             component: tab.value.component,
             props: tab.value.props
         })
+        if(forwardHistory.value.length > historyLimit){
+            forwardHistory.value.shift()
+        }
         tab.value = {
             ...lastItem,
             parent: tab.value.parent,
@@ -115,6 +121,9 @@ function forward() {
         history.value.push({
             ...tab.value,
         })
+        if(history.value.length > historyLimit){
+            history.value.shift()
+        }
         tab.value = {
             ...lastItem,
             parent: tab.value.parent,
@@ -201,6 +210,8 @@ watch(() => [layout, hightLightPanel], () => {
   deep: true
 })
 
+
+
 provide(MenuRouterKey,{
     navigateTo,
     updateProps,
@@ -235,6 +246,11 @@ const historyClass = computed(() => {
 
 defineExpose({
     navigateTo,
+})
+
+onUnmounted(() => {
+  history.value = []
+  forwardHistory.value = []
 })
 
 </script>

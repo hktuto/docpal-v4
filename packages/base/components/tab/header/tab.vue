@@ -94,14 +94,14 @@ async function openContextmenu(ev:any){
                         stopBus.emit()
                     }
                 },
-                {
-                    name: "Open in focus mode",
-                    visible:true,
-                    action:({row}) => {
-                        openInFocusMode()
-                        stopBus.emit()
-                    }
-                },
+                // {
+                //     name: "Open in focus mode",
+                //     visible:true,
+                //     action:({row}) => {
+                //         openInFocusMode()
+                //         stopBus.emit()
+                //     }
+                // },
                 {
                     name: "Open in New Window",
                     visible:true,
@@ -190,9 +190,9 @@ const canDelete = computed(() => {
             <div class="icon"></div>
             <div class="label">
             </div>
-            <Icon class="closeIcon" name="lucide:share-2" @click="copyToClipboard(tab)" />
+            <!-- <Icon class="closeIcon" name="lucide:share-2" @click="copyToClipboard(tab)" /> -->
             <!-- <Icon class="closeIcon" name="lucide:fullscreen" @click="openInFocusMode" /> -->
-            <Icon class="closeIcon" name="lucide:screen-share" @click="openInNewTab" />
+            <!-- <Icon class="closeIcon" name="lucide:screen-share" @click="openInNewTab" /> -->
             <Icon class="closeIcon alwaysShow" v-if="canDelete" name="ic:round-close" @click.stop="closeTab" />
         </div>
 
@@ -239,8 +239,6 @@ const canDelete = computed(() => {
         opacity: 0.4;
     }
     .closeIcon{
-        opacity: 0;
-        display: none;
         &.alwaysShow{
             display: block;
         }
