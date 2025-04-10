@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import { adminApi } from 'api';
 
+const props = defineProps<{
+  allPermission: any[]
+}>()
+
 const form = ref({
     attr_name: "",
     attr_accesstype : "start"
@@ -26,6 +30,11 @@ async function gertUserGroupList() {
     }
     userGroups.value = response.data 
 }
+
+const displayUserList = computed(() => {
+  if(!props.allPermission) return userGroups.value
+  return userGroups.value.filter(item => !props.allPermission.find(oldItem => oldItem.attr_name === item.id))
+})
 
 
 const emits = defineEmits(['submit','cancel'])
@@ -56,7 +65,7 @@ defineExpose({ setForm })
      <ElForm ref="formEl"  :model="form" :rules="validationRules" label-position="top">
         <ElFormItem prop="attr_name"  label="User Group" required>
             <ElSelect v-model="form.attr_name" searchable>
-                <ElOption v-for="item in userGroups" :key="item.id" :label="item.name" :value="item.id" />
+                <ElOption v-for="item in displayUserList" :key="item.id" :label="item.name" :value="item.id" />
             </ElSelect>
         </ElFormItem>
         <ElFormItem prop="attr_accesstype" label="Right" required>
