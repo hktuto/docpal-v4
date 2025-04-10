@@ -55,9 +55,6 @@ const {
     {
       field: "assignee",
       title: "workflow_assignee",
-      slots: {
-        default: "assignee",
-      },
     },
     {
       field: "createDate",
