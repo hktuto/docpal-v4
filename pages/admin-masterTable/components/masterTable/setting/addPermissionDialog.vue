@@ -85,15 +85,17 @@ function handleOptions() {
 
 onMounted(async () => {
   userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-  userList?.forEach(item => {
+  userList?.forEach((item: any) => {
     item.value = item.userId
     item.label = item.username
   });
-  groupList = await adminApi.api.postNuxeoIdentityGroups().then(res => res.data)
-  groupList?.forEach(item => {
+  const _groupList: any = await adminApi.api.postNuxeoIdentityGroups().then(res => res.data)
+  groupList = _groupList.filter((item: any) => item.id !== 'administrators')
+  
+  groupList?.forEach((item: any) => {
     item.value = item.id
     item.label = item.name
-  });
+  })
 })
 defineExpose({handleOpen})
 </script>
