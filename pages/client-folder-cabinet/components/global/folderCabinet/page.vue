@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer--padding">
-    <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
+    <el-tabs v-model="state.activeTab" class="tag-container dp-tabs--auto" @tab-change="tabChange">
       <el-tab-pane
         v-for="item in state.tabList"
         :key="item.id"
@@ -87,6 +87,18 @@ onMounted(async () => {
 });
 </script>
 <style lang="scss" scoped>
+.tag-container {
+  @media (max-width: 1024px) {
+    padding-bottom: 40px;
+  }
+}
+.dp-tabs--auto {
+  height: 100%;
+  overflow: hidden;
+  .el-tab-pane {
+    height: 100%;
+  }
+}
 .pageContainer--padding {
   display: grid;
   grid-template-rows: min-content 1fr;
