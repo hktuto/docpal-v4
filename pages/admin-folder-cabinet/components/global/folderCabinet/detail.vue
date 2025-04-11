@@ -2,7 +2,7 @@
 import { Loading } from '@element-plus/icons-vue'
 import { ElMessageBox, ElNotification } from 'element-plus'
 import { adminApi } from 'api'
-import { onActivated, onDeactivated } from 'vue'
+
 const { t } = useI18n()
 const { id } = defineProps<{
   id: string
@@ -67,10 +67,15 @@ function handleEdit(setting: any, isRoot: boolean = false, parentSettingChildren
 provide('handleEdit', handleEdit)
 provide('handleAddChild', handleAddChild)
 provide('handleDeleteChild', handleDeleteChild)
-onActivated(() => {
+
+// no cache on this page
+defineOptions({
+  name: 'FolderCabinetSettingDetailDead'
+})
+onMounted(() => {
   getData()
 })
-onDeactivated(() => {
+onUnmounted(() => {
   state.setting = {}
   state.currentRow = {}
 })
