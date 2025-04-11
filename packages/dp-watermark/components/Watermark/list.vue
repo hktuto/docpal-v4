@@ -13,13 +13,13 @@
         </div>
         <!-- TODO : icon size and style -->
         <div class="listAction listItemEdit" @click="editItem(item.id)">
-          <SvgIcon id="WatermarkSetting__Edit" src="/icons/edit_1.svg"/>
+          <SvgIcon :id="'WatermarkSetting__Edit__'+item.name" src="/icons/edit_1.svg" />
         </div>
         <ElPopconfirm width="200" :title="$t('tip_deleteMsg', {modelName: t('watermark.watermark'), name: null})"
                       @confirm="deleteItem(item.id)">
           <template #reference>
             <div class="listAction listItemDelete">
-              <SvgIcon id="WatermarkSetting__Delete" src="/icons/menu/trash.svg"/>
+              <SvgIcon :id="'WatermarkSetting__Delete__'+item.name" src="/icons/menu/trash.svg" />
             </div>
           </template>
           <template #actions="{ confirm, cancel }">
@@ -33,30 +33,30 @@
     </div>
     <!-- Edit dialog -->
     <el-dialog v-model="editDialog" :title="$t('admin_watermark_edit')" destroy-on-close>
-      <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler"/>
+      <WatermarkEdit :list="list" :item="selectedItem" @submit="itemChangeHandler" />
     </el-dialog>
     <!-- New dialog -->
     <el-dialog v-model="newDialog" :title="$t('admin_watermark_create')" destroy-on-close>
-      <WatermarkCreate :list="list" @submit="itemChangeHandler"/>
+      <WatermarkCreate :list="list" @submit="itemChangeHandler" />
     </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
-import type {WatermarkTemplate} from "../../composables/Watermark";
-import {ElMessage} from "element-plus";
+import type { WatermarkTemplate } from '../../composables/Watermark'
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const props = defineProps<{
   list: WatermarkTemplate[],
   selectedId: string
-}>();
+}>()
 
 const routerProvider = inject(MenuRouterKey)
 const emit = defineEmits(['update', 'remove'])
 
-const editDialog = ref(false);
-const newDialog = ref(false);
+const editDialog = ref(false)
+const newDialog = ref(false)
 
 
 const selectedItem = computed(() => {
@@ -64,25 +64,25 @@ const selectedItem = computed(() => {
 })
 
 function deleteItem(id: string) {
-  ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('watermark.watermark'), name: null}));
-  emit('remove', id);
+  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
+  emit('remove', id)
 }
 
 function createItem() {
-  newDialog.value = true;
-  editDialog.value = false;
+  newDialog.value = true
+  editDialog.value = false
 }
 
 function itemChangeHandler() {
-  newDialog.value = false;
-  editDialog.value = false;
-  emit('update', null);
+  newDialog.value = false
+  editDialog.value = false
+  emit('update', null)
 }
 
 function editItem(id: string) {
-  newDialog.value = false;
-  editDialog.value = true;
-  switchDetail(id);
+  newDialog.value = false
+  editDialog.value = true
+  switchDetail(id)
 }
 
 function switchDetail(id: string) {
