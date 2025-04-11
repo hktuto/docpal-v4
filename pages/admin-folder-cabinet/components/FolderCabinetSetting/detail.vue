@@ -8,7 +8,6 @@
       <FormRenderer ref="FormRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange"> </FormRenderer>
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
-
         <el-form label-position="top" ref="FormRef" :model="form">
           <el-form-item prop="labelRule" class="intro" :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
             <template #label>

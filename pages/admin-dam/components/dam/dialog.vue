@@ -129,6 +129,7 @@ const FormRef = ref()
 
 async function handleSubmit() {
   try {
+    state.loading = true
     const data = await getFormData()
     data.operation = JSON.stringify(data.operation)
     switch (state.title) {
@@ -139,6 +140,7 @@ async function handleSubmit() {
       case 'editNewConvertion':
         await adminApi.api.postDamEditsetting(data)
     }
+    
     emits('refresh')
     state.visible = false
   } catch (error) {
