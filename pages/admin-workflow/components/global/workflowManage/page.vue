@@ -111,6 +111,8 @@ async function handleDeleteSelected() {
     state.selectedRows.forEach((s: any) => pList.push(adminApi.api.deleteWorkflowProcess({ processInstanceId: s.instanceId }).then(res => res.data)))
 
     await Promise.all(pList)
+    
+    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
     query({})
   } catch (error) {
 
