@@ -172,19 +172,24 @@ watch(
 )
 
 const minSize = ref(20)
+const pageContainerRef = ref()
 function calMinWidth() {
   // panel size is 280px, check the percentage of window width
-  const windowWidth = window.innerWidth
-  minSize.value = (280 / windowWidth) * 100
+  const pageContainer = pageContainerRef.value?.getBoundingClientRect() as any
+  minSize.value = Number(((400 / pageContainer.width) * 100).toFixed(0))
 }
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on(({ relatedIdOrPath, highlightIdOrPath }: any) => {
   if (relatedIdOrPath === idOrPath.value) getDetail()
 })
+
+onMounted(calMinWidth)
+
+useEventListener(window, 'resize', calMinWidth)
 </script>
 
 <template>
-  <div class="pageContainer">
+  <div ref="pageContainerRef" class="pageContainer">
     <splitpanes>
       <Pane>
         <div v-if="docDetail" class="detailContainer">
