@@ -128,6 +128,7 @@ async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(
     t('tip_deleteMsg', { modelName: t('menus_folderCabinet'), name: null }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     }
   )

@@ -104,7 +104,7 @@ const ResponsiveFilterRef = ref()
 
 async function getFilter() {
   const data = [
-    {
+    /*{
       key: 'orderBy',
       label: 'tableHeader.sortBy',
       type: 'string',
@@ -126,9 +126,9 @@ async function getFilter() {
         { label: 'tableHeader.asc', value: false },
         { label: 'tableHeader.desc', value: true }
       ]
-    },
+    },*/
     {
-      key: 'status', label: 'dpTable_status', type: 'string', isMultiple: false,
+      key: 'status', label: 'log_auditEvent', type: 'string', isMultiple: false,
       options: [
         { label: 'CREATE', value: 'CREATE' },
         { label: 'PENDING', value: 'PENDING' },

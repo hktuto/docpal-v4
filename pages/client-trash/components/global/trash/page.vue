@@ -118,6 +118,7 @@ async function handleDeleteAll(row: any) {
   const action = await ElMessageBox.confirm(
     t('trash_emptyTrashMsg'),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     }
@@ -160,6 +161,7 @@ const batchActionHandler = async () => {
     const action = await ElMessageBox.confirm(
       state.selectList.length > 1 ? t('trash_deleteSelectedMsg') : t('trash_deleteMsg'),
       {
+        confirmButtonClass: 'el-button el-button--warning',
         dangerouslyUseHTMLString: true,
         confirmButtonText: t('common_confirmDelete')
       }
