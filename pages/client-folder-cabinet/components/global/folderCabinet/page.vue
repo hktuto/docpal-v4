@@ -87,11 +87,7 @@ onMounted(async () => {
 });
 </script>
 <style lang="scss" scoped>
-.tag-container {
-  @media (max-width: 1024px) {
-    padding-bottom: 40px;
-  }
-}
+
 .dp-tabs--auto {
   height: 100%;
   overflow: hidden;
