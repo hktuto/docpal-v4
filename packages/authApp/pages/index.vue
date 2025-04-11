@@ -1,17 +1,7 @@
 <script lang="ts" setup>
-const { loggedIn } = useAuth()
-const authReadyState = useAuthReadyState()
 
 const localeReady = ref(false)
-watch(loggedIn, (bool) => {
-  if (bool) {
-    // loadLocaleMessages(locale.value)
-    authReadyState.value = true
-  }
-}, {
-  deep: true,
-  immediate: true
-})
+
 </script>
 
 <template>

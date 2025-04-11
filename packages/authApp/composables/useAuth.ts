@@ -7,7 +7,7 @@ import type Keycloak from 'keycloak-js';
 
 import type { UserDTO } from 'api/src/generate/client';
 
-export const useAuthReadyState = () => useState('auth-ready', () => false);
+
 export const useUserState = () => useState<UserDTO | null>('auth-user');
 export const useKeyCloakState = () => useState<Keycloak | null>('keycloak-state');
 export const usePublicPageState = () => useState<string[]>('auth-public-page', () => (['/forgetPassword', '/forgetPassword/', '/login/', '/login']));
@@ -20,20 +20,15 @@ export const useUserPreference = () => useState<Record<string, any>>();
 export const useFeature = () => useState<Record<string, boolean>>('app-feature');
 export const useToken = () => useState<string>('auth-token');
 export const useOcrSetting = () => useState<any>('ocr-setting');
+export const useLoginState = () => useState<boolean>('auth-login-state', () => false);
 
 export const useAuth = () => {
-  const authReadyState = useAuthReadyState();
-  const userState = useUserState();
-  const perference = useUserPreference();
-
+  const loggedIn = useLoginState();
   return {
-    loggedIn: computed(() => {
-      return Boolean(userState.value);
-    }),
+    loggedIn,
     logout,
     login,
-    verifly,
-    ready: computed(() => authReadyState.value)
+    verifly
   };
 };
 
@@ -43,12 +38,14 @@ export const userDisplayTimeSetting = () => {
   return userPreference.value?.metaDateFormat ? userPreference.value.metaDateFormat : 'YYYY-MM-DD';
 };
 export async function verifly() {
+  const logedIn = useLoginState();
   await Promise.all([
     getUser(),
     getFeature(),
     getUserPreference(),
     getOCRSetting()
   ]);
+  logedIn.value = true;
   emitBus(EventType.USER_LOGIN__SUCCESS, "");
 }
 
@@ -105,6 +102,7 @@ export function canOCR(extension: string): boolean {
 
 export function logout() {
   const keyCloakState = useKeyCloakState();
+  const logedIn = useLoginState();
 
   const userState = useUserState();
   const isSuperAdmin = sessionStorage.getItem('superAdmin');
@@ -120,6 +118,7 @@ export function logout() {
     console.log("logout");
     userState.value = null;
   }
+  logedIn.value = false;
 }
 
 /**
