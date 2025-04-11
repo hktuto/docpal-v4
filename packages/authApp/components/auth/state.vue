@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-const { loggedIn, logout, ready  } = useAuth()
+const { loggedIn, logout, loggedIn  } = useAuth()
 </script>
 
 <template>
     <Transition appear>
-        <slot v-if="ready" v-bind="{ loggedIn, logout }" />
+        <slot v-if="loggedIn" v-bind="{ loggedIn, logout }" />
         <slot v-else name="placeholder" />
     </Transition>
 </template>
