@@ -88,7 +88,7 @@ function newTab() {
     overflow-y:hidden ;
     isolation: isolate;
     position: relative;
-    // background: var(--app-grey-900);
+    background: var(--app-grey-950);
     justify-content: flex-start;
     align-items: center;
     &:after {

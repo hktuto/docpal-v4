@@ -235,6 +235,7 @@ const canDelete = computed(() => {
     position: relative;
     max-width: 100%;
     min-width: 60px;
+    background: var(--app-grey-950);
     &.is-dragging {
         opacity: 0.4;
     }
