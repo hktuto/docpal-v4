@@ -6,7 +6,7 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
         />
-        <el-button id="ActiveWorkflowManagement__Delete" v-show="state.selectedRows.length > 0" type="danger"
+        <el-button :loading="state.loading" id="ActiveWorkflowManagement__Delete" v-show="state.selectedRows.length > 0" type="danger"
                    @click="handleDeleteSelected()">
           {{ $t('common_delete') }}
         </el-button>
@@ -22,7 +22,8 @@ import { adminApi } from 'api'
 const { t } = useI18n()
 let extraParams: any = {}
 const state = reactive<any>({
-  selectedRows: []
+  selectedRows: [],
+  loading: false
 })
 const {
   tableConfig,
