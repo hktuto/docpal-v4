@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { loggedIn, logout, loggedIn  } = useAuth()
+const { loggedIn, logout  } = useAuth()
 </script>
 
 <template>
