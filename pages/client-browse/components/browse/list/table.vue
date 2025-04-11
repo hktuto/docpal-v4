@@ -356,6 +356,15 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
                     disabled: false
                 }
             }
+            const docDetail = listProvider.docDetail.value
+            // check if docDetail path is home '/'
+            if(docDetail.path === '/') {
+              return {
+                  visible: false,
+                  disabled: false
+              }
+            }
+            // if(docDetail && docDetail.idOrPath === '/') {
             const otherPublicAction = ['docActionAddFolder', 'docActionNewFile', 'docActionUploadFile', 'docActionUploadFolder']
             if (otherPublicAction.includes(code)) {
                 return {
