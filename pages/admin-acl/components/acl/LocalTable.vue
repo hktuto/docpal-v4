@@ -14,7 +14,7 @@
           <template #default="{ row }">
             <div @dblclick="timeDialogOpen(row)">
               {{
-                !row.startDate && !row.endDate ? 'Permanent' : formatDate(row.startDate) + " ~ " + formatDate(row.endDate)
+                !row.startDate && !row.endDate ? 'Permanent' : formatDate(row.startDate) + ' ~ ' + formatDate(row.endDate)
               }}
             </div>
           </template>
@@ -44,8 +44,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from 'api'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
 const props = defineProps<{
   tableData: any[],
@@ -54,7 +54,7 @@ const props = defineProps<{
 const emits = defineEmits([
   'refresh'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 
 async function handlePermissionChange(open: boolean, permission: string, row: any) {
   try {
@@ -92,21 +92,21 @@ async function handlePermissionChange(open: boolean, permission: string, row: an
           idOrPath: props.doc.id,
           aceId: row.aceId,
           permission: _permission,
-          userId: row.userId,
+          userId: row.userId
         }
         if (row.startDate) _data.startDate = row.startDate
         if (row.endDate) _data.endDate = row.endDate
         await adminApi.api.putNuxeoDocumentAclReplace(_data)
       }
     }
-    if (res && res.errorCode) throw new Error(res.message || 'error');
+    if (res && res.errorCode) throw new Error(res.message || 'error')
   } catch (error) {
     // ElMessage.error(error.message || 'error')
   }
   setTimeout(async () => {
     row.loading = false
     emits('refresh')
-  }, 500);
+  }, 500)
 }
 
 const AclAddDialogRef = ref()
@@ -143,13 +143,14 @@ async function removeLocalAcl(row: any) {
     })
     if (isShareInternal.data) msg += `<span class="color__danger">${t('msg_isShareInternal')}</span>,`
 
-    msg += `${t('tip_deleteMsg', {modelName: t('accessControl_Local'), name: null})}`
+    msg += `${t('tip_deleteMsg', { modelName: t('accessControl_Local'), name: null })}`
     const action = await ElMessageBox.confirm(msg, {
+      confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonText: t('common_confirmDelete')
     })
-    if (action !== 'confirm') throw new Error("cancel");
-    await adminApi.api.deleteNuxeoDocumentAclRemove({idOrPath: props.doc.id, userId: row.userId})
+    if (action !== 'confirm') throw new Error('cancel')
+    await adminApi.api.deleteNuxeoDocumentAclRemove({ idOrPath: props.doc.id, userId: row.userId })
     ElMessage.success(t('accessControl_deleteSuccessMsg'))
     emits('refresh')
   } catch (error) {

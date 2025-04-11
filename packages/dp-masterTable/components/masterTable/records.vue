@@ -394,6 +394,7 @@ async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
     t('masterTable_deleteSelectedMsg', { name: props.permission.name }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete'),
       dangerouslyUseHTMLString: true
     }
@@ -421,7 +422,7 @@ function getFilter() {
         { label: 'tableHeader_modifiedDate', value: 'modified_date' },
         { label: 'masterTable_id', value: 'id' },
         { label: 'common_status', value: 'status' },
-        { label: 'workflow_createDate', value: 'created_date' },
+        { label: 'workflow_createDate', value: 'created_date' }
       ]
     },
     {

@@ -67,6 +67,7 @@ async function deleteAction(row: any) {
   ElMessageBox.confirm(
     t('tip_deleteMsg', { modelName: t('share_internalShareLink'), name: null }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     }
   ).then(async () => {

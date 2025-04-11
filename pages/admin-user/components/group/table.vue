@@ -76,7 +76,12 @@ function handleUserDialogShow() {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  const action = await ElMessageBox.confirm(`${t('user_userGroupDeletedMsg')}`,
+    {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete'),
+      dangerouslyUseHTMLString: true
+    })
   if (action !== 'confirm') return
   const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
   if (!!res) {

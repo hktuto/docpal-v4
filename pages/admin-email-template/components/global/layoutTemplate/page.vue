@@ -13,68 +13,68 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t("actions.activated") }}</el-tag>
-        <el-tag v-else type="danger">{{ $t("actions.inactive") }}</el-tag>
+        <el-tag v-if="row.enable" type="success">{{ $t('actions.activated') }}</el-tag>
+        <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
     <EmailLayoutDialog ref="EmailLayoutDialogRef" @refresh="query({})"></EmailLayoutDialog>
   </div>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {adminApi} from "api";
+import { ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-const {t} = useI18n()
-let extraParams: any = {};
+const { t } = useI18n()
+let extraParams: any = {}
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "a-email-layout-template",
+  id: 'a-email-layout-template',
   api: (pageParams: any) =>
-    adminApi.api.postTemplateEmailLayoutPage({...pageParams, ...extraParams}),
+    adminApi.api.postTemplateEmailLayoutPage({ ...pageParams, ...extraParams }),
   columns: [
-    {field: "name", title: "emailContentTemplate_layoutName", fixed: "left"},
-    {field: "createdBy", title: "emailContentTemplate_layoutCreator"},
+    { field: 'name', title: 'emailContentTemplate_layoutName', fixed: 'left' },
+    { field: 'createdBy', title: 'emailContentTemplate_layoutCreator' },
     {
-      field: "createDate",
-      title: "workflow_createDate",
-      formatter({cellValue}: any) {
-        return formatDate(cellValue);
-      },
+      field: 'createDate',
+      title: 'workflow_createDate',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
     }
   ],
   bodyActions: [
     [
       {
-        code: "edit",
+        code: 'edit',
         name: t('emailContentTemplate_layoutEdit'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
+        action: ({ row }: any) => {
           handleDblclick(row)
-        },
+        }
       },
       {
-        code: "delete",
+        code: 'delete',
         name: t('emailContentTemplate_layoutDelete'),
         visible: true,
         disabled: false,
-        action: ({row}: any) => {
-          handleDeleteTemplate(row);
-        },
+        action: ({ row }: any) => {
+          handleDeleteTemplate(row)
+        }
       }
-    ],
-  ],
-});
+    ]
+  ]
+})
 const EmailLayoutDialogRef = ref()
 
 function handleDblclick(row) {
@@ -88,19 +88,20 @@ function handleAdd() {
 
 async function handleDeleteTemplate(row) {
   const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', {modelName: t('emailTemplate.layout'), name: row.name}),
+    t('tip_deleteMsg', { modelName: t('emailTemplate.layout'), name: row.name }),
     {
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
     })
   if (action !== 'confirm') return
   await adminApi.api.deleteTemplateEmailLayoutId(row.id)
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('emailTemplate.layout'), name: row.name}));
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('emailTemplate.layout'), name: row.name }))
   query({})
 }
 
 function handleFilterFormChange(formModel: any) {
-  extraParams = formModel;
-  reload();
+  extraParams = formModel
+  reload()
 }
 
 onMounted(() => {

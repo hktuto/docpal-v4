@@ -94,6 +94,7 @@ function handleCreate(setting?: any) {
 async function handleDelete(id: string) {
   const action = await ElMessageBox.confirm(`${t('doc_typeSmartFolderDeletedMsg')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     }

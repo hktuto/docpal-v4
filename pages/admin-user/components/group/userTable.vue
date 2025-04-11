@@ -109,6 +109,7 @@ async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
     `${t('user_userGroupSelectDeletedSuccessMsg')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmRemove'),
       dangerouslyUseHTMLString: true
     }
@@ -127,8 +128,9 @@ async function handleDeleteSelected() {
 
 async function handleDelete(row: UserDTO) {
   const action = await ElMessageBox.confirm(
-    `${t('user_userGroupDeletedSuccessMsg')}`,
+    `${t('user_userGroupRemoveMsg')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmRemove'),
       dangerouslyUseHTMLString: true
     }

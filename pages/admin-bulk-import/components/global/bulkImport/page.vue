@@ -1,23 +1,23 @@
 <script lang="ts" setup>
-import {adminApi} from 'api';
-import {BulkImportListTable} from '#components'
-import {newBulkImportDetail} from '~/utils/bulkImportRouter';
-import {ElMessageBox} from 'element-plus';
+import { adminApi } from 'api'
+import { BulkImportListTable } from '#components'
+import { newBulkImportDetail } from '~/utils/bulkImportRouter'
+import { ElMessageBox } from 'element-plus'
 
 const routerProvider = inject(MenuRouterKey)
 
 if (!routerProvider) {
   throw createError('provider not found')
 }
-const {t} = useI18n()
+const { t } = useI18n()
 const props = defineProps<{
   orderBy?: string,
   isDesc?: boolean,
   filters?: any
-}>();
+}>()
 
-const allMetaSetting = ref<any>();
-const allMetaList = ref<any>();
+const allMetaSetting = ref<any>()
+const allMetaList = ref<any>()
 const MetaAddDocTypeDialogRef = ref()
 
 function handleAdd() {
@@ -28,16 +28,16 @@ const tableRef = ref<InstanceType<typeof BulkImportListTable>>()
 provide(BulkImportListProviderKey, {
   getListApi: async (params: any) => {
     let [
-      {data: metaSettingData},
-      {data: documentTypeProfileList},
-      {data: metaMappingList}
+      { data: metaSettingData },
+      { data: documentTypeProfileList },
+      { data: metaMappingList }
     ]: any = await Promise.all([
-      adminApi.api.getNuxeoAdminSetting(""),
+      adminApi.api.getNuxeoAdminSetting(''),
       adminApi.api.getWorkflowQuerydocumenttypeprofile(),
-      adminApi.api.getWorkflowQuerymetadatamapping(),
+      adminApi.api.getWorkflowQuerymetadatamapping()
     ])
     allMetaSetting.value = metaSettingData
-    console.log("response", metaSettingData, documentTypeProfileList, metaMappingList)
+    console.log('response', metaSettingData, documentTypeProfileList, metaMappingList)
     const metaList: any[] = []
 
     metaMappingList.forEach((item: any) => {
@@ -58,7 +58,7 @@ provide(BulkImportListProviderKey, {
       }
     })
     Object.keys(metaSettingData).forEach(key => {
-      metaList.push({...metaSettingData[key], documentType: key})
+      metaList.push({ ...metaSettingData[key], documentType: key })
     })
     const response = metaList.sort((a, b) => (a.documentType.localeCompare(b.documentType)))
     allMetaList.value = response
@@ -72,26 +72,27 @@ provide(BulkImportListProviderKey, {
   },
   handelDelete: async (row: any) => {
     ElMessageBox.confirm(
-      `${t('bulkImport_deleteMsg', {name: row.documentType})}`,
+      `${t('bulkImport_deleteMsg', { name: row.documentType })}`,
       {
+        confirmButtonClass: 'el-button el-button--warning',
         dangerouslyUseHTMLString: true,
-        confirmButtonText: t('common_confirmDelete'),
+        confirmButtonText: t('common_confirmDelete')
       }
     ).then(async () => {
 
-      const newMetaList = {...allMetaSetting.value}
+      const newMetaList = { ...allMetaSetting.value }
       delete newMetaList[row.documentType]
-      await adminApi.api.putNuxeoAdminSetting("", newMetaList)
+      await adminApi.api.putNuxeoAdminSetting('', newMetaList)
       routerProvider?.message.success(t('tip_deleteSuccessMsg', {
         modelName: t('bulkImport_bulkImportForDocumentType'),
         name: row.documentType
-      }));
+      }))
       // TODO : show pop confirm to remove
       tableRef.value?.reload()
     })
   },
   permissionMethod: (params: PermissionMethodParams) => {
-    return {visible: true, disabled: false}
+    return { visible: true, disabled: false }
   }
 })
 

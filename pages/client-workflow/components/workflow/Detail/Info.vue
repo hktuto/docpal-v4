@@ -48,7 +48,7 @@
           <el-button size="small" text @click="state.deletePopoverShow = false">
             {{ $t('cancelText') }}
           </el-button>
-          <el-button size="small" type="primary" @click="handelDelete">
+          <el-button size="small" type="warning" @click="handelDelete">
             {{ $t('common_confirmDelete') }}
           </el-button>
         </div>
@@ -63,15 +63,15 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {clientApi} from 'api'
-import {ElMessage} from 'element-plus'
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
 
 const emits = defineEmits(['change'])
 const props = defineProps<{
   taskDetail: any,
   id: string
 }>()
-const {t} = useI18n()
+const { t } = useI18n()
 const userId: string = useUserId().value
 const routerProvider = inject(MenuRouterKey)
 const state = reactive({
@@ -90,7 +90,7 @@ const isAssigneeUser = computed(() => {
 async function handleUnclaim() {
   try {
     state.loading = true
-    const response = await clientApi.api.postWorkflowTaskUnclaim({taskId: props.id})
+    const response = await clientApi.api.postWorkflowTaskUnclaim({ taskId: props.id })
     // emits('change', response, false)
     props.taskDetail.assignee = ''
   } catch (error) {
@@ -104,7 +104,7 @@ async function handleUnclaim() {
 async function handleClaim() {
   try {
     state.loading = true
-    const response: any = await clientApi.api.postWorkflowTaskClaim({taskId: props.id, userId}).then(res => res.data)
+    const response: any = await clientApi.api.postWorkflowTaskClaim({ taskId: props.id, userId }).then(res => res.data)
     if (!response.errorCode) {
       emits('change', response, true)
     }
@@ -118,10 +118,12 @@ async function handleClaim() {
 
 async function handelDelete() {
   const processInstanceId = props.taskDetail.taskInstance.processInstanceId
-  const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({processInstanceId, userId})
+  const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({
+    processInstanceId, userId
+  })
   if (!!response) {
   } else {
-    ElMessage.success(t('tip_deleteSuccessMsg', {modelName: t('common_item'), name: null}))
+    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('common_item'), name: null }))
   }
   routerProvider?.back()
 }

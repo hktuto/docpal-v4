@@ -93,6 +93,7 @@ async function handleDisabled(row: any) {
   const action = await ElMessageBox.confirm(
     `${t('externalSharing_deleteMsg')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     }
   )
@@ -133,7 +134,7 @@ function getFilter() {
         { label: 'tableHeader_emailList', value: 'emailList' },
         { label: 'tableHeader_numberOfFiles', value: 'documentSize' },
         { label: 'externalSharing_creationDate', value: 'created' },
-        { label: 'externalSharing_expiryDate', value: 'expiredDate' },
+        { label: 'externalSharing_expiryDate', value: 'expiredDate' }
       ]
     },
     {
