@@ -188,12 +188,14 @@ bus.on(({ relatedIdOrPath, highlightIdOrPath }: any) => {
   }
 })
 
-const minSize = ref(20)
+const minSize = ref(30)
 
+const browseContainer = ref()
 function calMinWidth() {
   // panel size is 280px, check the percentage of window width
-  const windowWidth = window.innerWidth
-  minSize.value = (280 / windowWidth) * 100
+  const containerSize = browseContainer.value?.getBoundingClientRect() as any
+  if(!containerSize) return;
+  minSize.value = Number(((400 / containerSize.width) * 100).toFixed(0))
 }
 
 useEventListener(window, 'resize', calMinWidth)
@@ -202,7 +204,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
 </script>
 
 <template>
-  <div class="browseContainer">
+  <div ref="browseContainer" class="browseContainer">
     <splitpanes>
       <Pane>
         <BrowseListTable ref="tableRef" :class="{ selected: selectedList.length > 0 }" :selectedRows="selectedItem" @selectedChange="selectedChangeHandler" >
