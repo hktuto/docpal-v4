@@ -1,10 +1,10 @@
 <template>
   <div class="permission-container">
     <div class="tableTopContainer">
-      <h3>{{ $t("folderCabinet.localPermission") }}</h3>
+      <h3>{{ $t('folderCabinet.localPermission') }}</h3>
       <el-button id="FolderCabinetSetting__Info__AddLocalPermission" size="small" type="primary" round
                  @click="handleAclLocalDialogShow">
-        {{ $t("folder_cabinetDetailLocalPermissionAdd") }}
+        {{ $t('folder_cabinetDetailLocalPermissionAdd') }}
       </el-button>
     </div>
     <div>
@@ -15,8 +15,8 @@
             <div @dblclick="timeDialogOpen(row)">
               {{
                 !row.startDate && !row.endDate
-                  ? "Permanent"
-                  : formatDate(row.startDate) + " ~ " + formatDate(row.endDate)
+                  ? 'Permanent'
+                  : formatDate(row.startDate) + ' ~ ' + formatDate(row.endDate)
               }}
             </div>
           </template>
@@ -38,9 +38,10 @@
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button :id="`FolderCabinetSetting__Info__LocalPermission__Remove__${row.userId}`" size="small" :loading="row.loading"
+            <el-button :id="`FolderCabinetSetting__Info__LocalPermission__Remove__${row.userId}`" size="small"
+                       :loading="row.loading"
                        @click="removeLocalAcl(row)">
-              {{ $t("dpButtom_remove") }}
+              {{ $t('dpButtom_remove') }}
             </el-button>
           </template>
         </el-table-column>
@@ -53,112 +54,113 @@
       @refresh="emits('refresh')"
     />
     <FolderCabinetSettingPermissionEditTimeDialog ref="AclEditTimeDialogRef" :id="id"
-                                                  @refresh="emits('refresh')"/>
+                                                  @refresh="emits('refresh')" />
   </div>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
-import {ElMessage, ElMessageBox} from "element-plus";
+import { adminApi } from 'api'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 
 const props = defineProps<{
   tableData: any;
   id: string;
-}>();
-const emits = defineEmits(["refresh"]);
+}>()
+const emits = defineEmits(['refresh'])
 
 async function handlePermissionChange(open: boolean, permission: string, row: any) {
   try {
-    row.loading = true;
-    let res: any;
-    if (!open && permission === "print")
+    row.loading = true
+    let res: any
+    if (!open && permission === 'print')
       res = await adminApi.api.deleteCabinetTemplatePermission({
         id: props.id,
         userId: row.userId,
-        permission: 'Print',
-      }, {});
-    else if (open && permission === "print") {
+        permission: 'Print'
+      }, {})
+    else if (open && permission === 'print') {
       const _data = {
         userId: row.userId,
         startDate: row.startDate,
         endDate: row.endDate,
         permission: 'Print',
-        id: props.id,
-      };
-      res = await adminApi.api.postCabinetTemplatePermission(_data);
+        id: props.id
+      }
+      res = await adminApi.api.postCabinetTemplatePermission(_data)
     } else {
-      const _permission = permissionRevert(open, permission);
+      const _permission = permissionRevert(open, permission)
       if (!_permission) {
-        const action = await removeLocalAcl(row);
-        if (action === "cancel") row.read = true;
-        row.loading = false;
-        return;
+        const action = await removeLocalAcl(row)
+        if (action === 'cancel') row.read = true
+        row.loading = false
+        return
       } else {
         const _data: any = {
           id: props.id,
           aceId: row.aceId,
           permission: _permission,
-          userId: row.userId,
-        };
-        if (row.startDate) _data.startDate = row.startDate;
-        if (row.endDate) _data.endDate = row.endDate;
-        await adminApi.api.postCabinetTemplatePermission(_data);
+          userId: row.userId
+        }
+        if (row.startDate) _data.startDate = row.startDate
+        if (row.endDate) _data.endDate = row.endDate
+        await adminApi.api.postCabinetTemplatePermission(_data)
       }
     }
-    if (res && res.errorCode) throw new Error(res.message || "error");
+    if (res && res.errorCode) throw new Error(res.message || 'error')
   } catch (error) {
     // ElMessage.error(error.message || 'error')
   }
   setTimeout(async () => {
-    row.loading = false;
-    emits("refresh");
-  }, 500);
+    row.loading = false
+    emits('refresh')
+  }, 500)
 }
 
-const AclAddDialogRef = ref();
+const AclAddDialogRef = ref()
 
 function handleAclLocalDialogShow() {
-  AclAddDialogRef.value.handleOpen();
-  emits("refresh");
+  AclAddDialogRef.value.handleOpen()
+  emits('refresh')
 }
 
-const AclEditTimeDialogRef = ref();
+const AclEditTimeDialogRef = ref()
 
 function timeDialogOpen(row) {
-  AclEditTimeDialogRef.value.handleOpen(row);
+  AclEditTimeDialogRef.value.handleOpen(row)
 }
 
 function permissionRevert(open: boolean, permission) {
   switch (permission) {
-    case "read":
-      return open ? "Read" : "";
-    case "write":
-      return open ? "ReadWrite" : "Read";
+    case 'read':
+      return open ? 'Read' : ''
+    case 'write':
+      return open ? 'ReadWrite' : 'Read'
     default:
-      return open ? "Everything" : "ReadWrite";
+      return open ? 'Everything' : 'ReadWrite'
   }
 }
 
 async function removeLocalAcl(row: any) {
   try {
-    row.loading = true;
+    row.loading = true
     let msg = t('folder_cabinetDetailLocalPermissionRemoveMsg')
     const action = await ElMessageBox.confirm(
       msg,
       {
+        confirmButtonClass: 'el-button el-button--warning',
         dangerouslyUseHTMLString: true,
-        confirmButtonText: t('common_confirmRemove'),
-      });
-    if (action !== "confirm") throw new Error("cancel");
-    await adminApi.api.deleteCabinetTemplatePermission({id: props.id, userId: row.userId}, {});
-    ElMessage.success(t('folder_cabinetDetailLocalPermissionRemoveSuccessMsg'));
-    emits("refresh");
+        confirmButtonText: t('common_confirmRemove')
+      })
+    if (action !== 'confirm') throw new Error('cancel')
+    await adminApi.api.deleteCabinetTemplatePermission({ id: props.id, userId: row.userId }, {})
+    ElMessage.success(t('folder_cabinetDetailLocalPermissionRemoveSuccessMsg'))
+    emits('refresh')
   } catch (error) {
-    row.loading = false;
-    return "cancel";
+    row.loading = false
+    return 'cancel'
   } finally {
-    row.loading = false;
+    row.loading = false
   }
 }
 
@@ -193,7 +195,7 @@ const localList = computed(() => {
       loading: false,
       printLoading: false
     }))
-    result.sort((a, b) => (a.userId.localeCompare(b.userId)));
+    result.sort((a, b) => (a.userId.localeCompare(b.userId)))
     return result
   } catch (error) {
     return []

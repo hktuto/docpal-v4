@@ -102,6 +102,7 @@ async function deleteItem(row) {
   const action = await ElMessageBox.confirm(
     `${t('dashboard_deleteMsg', { name: row.name })}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     })

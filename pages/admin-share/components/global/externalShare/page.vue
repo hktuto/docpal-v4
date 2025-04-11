@@ -85,6 +85,7 @@ async function handleDisabled(row) {
   const action = await ElMessageBox.confirm(
     t('tip_deleteMsg', { modelName: t('share_externalShareLink'), name: null }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     }
   )

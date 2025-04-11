@@ -24,7 +24,7 @@
           </template>
           <template #actions="{ confirm, cancel }">
             <el-button size="small" @click="cancel">{{ $t('el.datepicker.cancel') }}</el-button>
-            <el-button type="danger" size="small" @click="confirm">
+            <el-button type="warning" size="small" @click="confirm">
               {{ $t('common_confirmDelete') }}
             </el-button>
           </template>

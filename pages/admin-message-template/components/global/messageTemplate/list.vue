@@ -47,6 +47,7 @@ provide(MessageTemplateProviderKey, {
     let action = await ElMessageBox.confirm(
       t('tip_deleteMsg', { modelName: t('adminMenu.messageTemplate'), name: null }),
       {
+        confirmButtonClass: 'el-button el-button--warning',
         confirmButtonText: t('common_confirmDelete')
       }
     )

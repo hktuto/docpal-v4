@@ -6,7 +6,8 @@
           ref="ResponsiveFilterRef"
           @form-change="handleFilterFormChange"
         />
-        <el-button :loading="state.loading" id="ActiveWorkflowManagement__Delete" v-show="state.selectedRows.length > 0" type="danger"
+        <el-button :loading="state.loading" id="ActiveWorkflowManagement__Delete" v-show="state.selectedRows.length > 0"
+                   type="danger"
                    @click="handleDeleteSelected()">
           {{ $t('common_delete') }}
         </el-button>
@@ -91,7 +92,12 @@ const {
 })
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  const action = await ElMessageBox.confirm(`${t('workflow_ManageDeleteWorkflowMsg')}`,
+    {
+      confirmButtonClass: 'el-button el-button--warning',
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmDelete')
+    })
   if (action !== 'confirm') return
   await adminApi.api.deleteWorkflowProcess({ processInstanceId: row.instanceId })
   ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
@@ -101,6 +107,7 @@ async function handleDelete(row: any) {
 async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(`${t('workflow_ManageDeleteWorkflowMsg')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     })
@@ -111,7 +118,7 @@ async function handleDeleteSelected() {
     state.selectedRows.forEach((s: any) => pList.push(adminApi.api.deleteWorkflowProcess({ processInstanceId: s.instanceId }).then(res => res.data)))
 
     await Promise.all(pList)
-    
+
     ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
     query({})
   } catch (error) {
@@ -150,7 +157,7 @@ function getFilter() {
         { label: 'workflow_ManageName', value: 'taskInstance.businessKey' },
         { label: 'workflow_ManageInitiator', value: 'taskInstance.startUserId' },
         { label: 'workflow_ManageStartDate', value: 'createDate' },
-        { label: 'workflow_workflowName', value: 'taskInstance.processDefinitionName' },
+        { label: 'workflow_workflowName', value: 'taskInstance.processDefinitionName' }
       ]
     },
     {
