@@ -107,6 +107,7 @@ function handleEditInfo(row: any) {
 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(`${t('documentTemplate_deleteMsg')}`, {
+    confirmButtonClass: 'el-button el-button--warning',
     dangerouslyUseHTMLString: true,
     confirmButtonText: t('common_confirmDelete')
   })
@@ -130,7 +131,7 @@ async function handleDownload(row: any) {
     position: 'bottom-right'
   })
   try {
-    const blob = await adminApi.api.postNuxeoDocumentDownload({idOrPath:row.documentId}, {
+    const blob = await adminApi.api.postNuxeoDocumentDownload({ idOrPath: row.documentId }, {
       format: 'blob',
       onDownloadProgress: (e: any) => {
         const el = document.getElementById(id)

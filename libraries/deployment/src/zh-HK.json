@@ -2006,7 +2006,7 @@
     "hint": {
       "blankCellContent": "--",
       "cancel": "取消",
-      "confirm": "是，刪除",
+      "confirm": "是, 刪除",
       "datePlaceholder": "选择日期",
       "deleteSubFormRow": "删除行",
       "deleteSubFormRowLabel": "是否刪除選取行： {label}?",

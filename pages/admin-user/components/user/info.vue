@@ -10,7 +10,8 @@
             :content="$t('user_editUser')"
             placement="top"
           >
-            <Icon id="UserList__Info__Edit" name="material-symbols:edit-square" class="normal cursor-pointer" style="width: 20px; height: 20px;"
+            <Icon id="UserList__Info__Edit" name="material-symbols:edit-square" class="normal cursor-pointer"
+                  style="width: 20px; height: 20px;"
                   @click="handleEdit"></Icon>
           </el-tooltip>
           <el-tooltip
@@ -28,7 +29,8 @@
             :content="$t('user_deleteUser')"
             placement="top"
           >
-            <Icon id="UserList__Info__DeleteUser" name="material-symbols:delete-rounded" style="width: 20px; height: 20px;"
+            <Icon id="UserList__Info__DeleteUser" name="material-symbols:delete-rounded"
+                  style="width: 20px; height: 20px;"
                   class="normal cursor-pointer"
                   @click="handleDelete"></Icon>
           </el-tooltip>
@@ -59,7 +61,7 @@
                    :active-text="t('user_active')"
                    active-value="A" inactive-value="D"
                    :loading="user.loading" :disabled="user.loading"
-                   @change="(value) => handleSetStatus(value, user)"/>
+                   @change="(value) => handleSetStatus(value, user)" />
       </div>
     </div>
     <UserEditDialog ref="UserEditDialogRef" :user="user" @refresh="emits('refresh')"></UserEditDialog>
@@ -69,11 +71,11 @@
 
 
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
-import {userProviderDetailKey} from '~/util/userProvider';
-import type {UserDTO} from 'api/src/generate/admin'
+import { ElMessageBox } from 'element-plus'
+import { userProviderDetailKey } from '~/util/userProvider'
+import type { UserDTO } from 'api/src/generate/admin'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
@@ -86,16 +88,17 @@ const emits = defineEmits([
 
 async function handleDelete() {
   const action = await ElMessageBox.confirm(
-    t('userTip.confirmWhetherToDelete', {username: props.user.firstName}),
+    t('userTip.confirmWhetherToDelete', { username: props.user.firstName }),
     {
-      confirmButtonText: t("common_confirmDelete"),
-      dangerouslyUseHTMLString: true,
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete'),
+      dangerouslyUseHTMLString: true
     }
-  );
+  )
 
   if (action !== 'confirm') return
-  const res = await userProviderDetail?.BatchDeleteUserApi({userIds: [props.user.userId]})
-  routerProvider?.message.success(t('tip_deleteSuccessMsg', {modelName: t('User'), name: props.user.firstName}));
+  const res = await userProviderDetail?.BatchDeleteUserApi({ userIds: [props.user.userId] })
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('User'), name: props.user.firstName }))
   if (!!res) userProviderDetail?.openUserList()
 }
 

@@ -5,11 +5,12 @@
         <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'" />
         {{ state.setting.label }}
       </div>
-      <FormRenderer ref="FormRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange"> </FormRenderer>
+      <FormRenderer ref="FormRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange"></FormRenderer>
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
         <el-form label-position="top" ref="FormRef" :model="form">
-          <el-form-item prop="labelRule" class="intro" :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
+          <el-form-item prop="labelRule" class="intro"
+                        :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
             <template #label>
               {{ $t('tableHeader_labelRule') }}
               <!-- <span
@@ -254,18 +255,28 @@ async function handleSave() {
   } finally {
     setTimeout(() => (state.loading = false), 300)
   }
-  routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('folder_folderCabinetDetails'), name: null }))
+  routerProvider?.message.success(t('tip_updateSuccessMsg', {
+    modelName: t('folder_folderCabinetDetails'),
+    name: null
+  }))
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('folder_entireFolderCabinet'), name: null }), {
+  const action = await ElMessageBox.confirm(t('tip_deleteMsg', {
+    modelName: t('folder_entireFolderCabinet'),
+    name: null
+  }), {
+    confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_confirmDelete')
   })
   if (action !== 'confirm') throw new Error('cancel')
   await adminApi.api.deleteCabinetId(state.setting.id)
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('folder_entireFolderCabinet'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+      modelName: t('folder_entireFolderCabinet'),
+      name: null
+    }))
   } else {
     emits('update')
   }

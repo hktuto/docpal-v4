@@ -188,6 +188,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
 async function deleteItem(id: string) {
   const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       dangerouslyUseHTMLString: true,
       confirmButtonText: t('common_confirmDelete')
     })

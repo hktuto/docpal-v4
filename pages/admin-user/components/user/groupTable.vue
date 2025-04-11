@@ -61,8 +61,8 @@ let filterParams: any = {}
 const { tableConfig, tableEvent, tableRef, cleanSelectedRows } = useVxeTable({
   id: 'a-user-group',
   columns: [
-    {field: 'name', title: 'user_userGroupName', fixed: 'left', type: "checkbox",},
-    {field: 'id', title: 'user_userGroupIdentifer',},
+    { field: 'name', title: 'user_userGroupName', fixed: 'left', type: 'checkbox' },
+    { field: 'id', title: 'user_userGroupIdentifer' }
   ],
   selectChangeHander: (selectedRows: any[]) => {
     state.selectedRows = [...selectedRows]
@@ -90,6 +90,7 @@ async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(
     `${t('groupTip.confirmWhetherToDeleteItem')}`,
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: `${t('common_confirmDelete')}`
     }
   )
@@ -105,6 +106,7 @@ async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(
     t('groupTip.confirmWhetherToDeleteItems', { username: props.user.firstName }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmRemove')
     }
   )

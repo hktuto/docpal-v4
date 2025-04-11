@@ -97,7 +97,10 @@ function handleTabClick(row: any) {
 }
 
 function handleDelete(row: any) {
-  ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }))
+  ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }), {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete')
+  })
     .then(async () => {
       await clientApi.api.deleteNuxeoDocument({ idOrPath: row.id })
       ElMessage.success(t('collection_deleteSuccessMsg', { name: row.name }))
@@ -112,7 +115,10 @@ function handleDocDelete(row: any) {
     documents: docList,
     collection: { idOrPath: state.curCollection.id }
   }
-  ElMessageBox.confirm(t('collectionFile_deleteMsg', { name: row.name }), { confirmButtonText: t('common_confirmDelete') })
+  ElMessageBox.confirm(t('collectionFile_deleteMsg', { name: row.name }), {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete')
+  })
     .then(async () => {
       state.loading = true
       try {

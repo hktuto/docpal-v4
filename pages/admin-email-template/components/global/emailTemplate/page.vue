@@ -100,6 +100,7 @@ async function handleDeleteTemplate(row: Template[]) {
   const action = await ElMessageBox.confirm(
     t('tip_deleteMsg', { modelName: t('Email.fields'), name: row.label }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     })
   if (action !== 'confirm') return
@@ -129,7 +130,7 @@ async function getFilter() {
         { label: 'emailContentTemplate_creator', value: 'createdBy' },
         { label: 'emailContentTemplate_id', value: 'id' },
         { label: 'emailContentTemplate_name', value: 'label' },
-        { label: 'tableHeader_subject', value: 'subject' },
+        { label: 'tableHeader_subject', value: 'subject' }
         // { label: 'emailContentTemplate_layoutUsed', value: 'emailLayoutName' },
       ]
     },

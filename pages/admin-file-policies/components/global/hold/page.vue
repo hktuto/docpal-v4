@@ -145,6 +145,7 @@ async function deleteItem(id: string) {
   const action = await ElMessageBox.confirm(
     t('tip_deleteMsg', { modelName: t('workflow_holdPolicy'), name: null }),
     {
+      confirmButtonClass: 'el-button el-button--warning',
       confirmButtonText: t('common_confirmDelete')
     }
   )

@@ -210,6 +210,7 @@ function handleUserDialogShow() {
 
 async function handleDeleteSelected() {
   const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
+    confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: `${t('common_confirmDelete')}`,
     dangerouslyUseHTMLString: true
   })
@@ -224,6 +225,7 @@ async function handleDeleteSelected() {
 
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(t('userTip.confirmWhetherToDeleteItems'), {
+    confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: `${t('common_confirmDelete')}`,
     dangerouslyUseHTMLString: true
   })

@@ -1,10 +1,11 @@
 <template>
   <el-card v-loading="state.loading">
     <div>
-      <h3 class="title">{{ $t("master.setting.permission") }}</h3>
-      <div class="description">{{ $t("master.setting.permissionDescription") }}</div>
-      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission" type="primary" @click="handleAdd">
-        {{ $t("masterTable_settingAddPermission") }}
+      <h3 class="title">{{ $t('master.setting.permission') }}</h3>
+      <div class="description">{{ $t('master.setting.permissionDescription') }}</div>
+      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission" type="primary"
+                 @click="handleAdd">
+        {{ $t('masterTable_settingAddPermission') }}
       </el-button>
     </div>
     <div class="table-container">
@@ -37,7 +38,7 @@
           <template #default="{ row }">
             <el-button :id="`MasterTable__Tables__Detail__Setting__Permissions__Remove__${row.userId}`" size="small"
                        :loading="row.loading" @click="handleRemove(row)">
-              {{ $t("dpButtom_remove") }}
+              {{ $t('dpButtom_remove') }}
             </el-button>
           </template>
         </el-table-column>
@@ -52,71 +53,72 @@
   </el-card>
 </template>
 <script setup lang="ts">
-import {ElMessage, ElMessageBox} from "element-plus";
-import {adminApi} from "api";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
-const props = defineProps(["table", "tableId"]);
-const {t} = useI18n();
+const props = defineProps(['table', 'tableId'])
+const { t } = useI18n()
 const state = reactive<any>({
   loading: false,
-  tableData: [],
-});
-const AddPermissionDialogRef = ref();
+  tableData: []
+})
+const AddPermissionDialogRef = ref()
 
 function handleAdd() {
-  AddPermissionDialogRef.value.handleOpen();
+  AddPermissionDialogRef.value.handleOpen()
 }
 
 async function handlePermissionChange(boo: boolean, permission: string, row: any) {
-  row.loading = true;
+  row.loading = true
   try {
     await adminApi.api.postMasterTablesAclsRemove({
       ...row,
-      [permission]: boo,
-    });
+      [permission]: boo
+    })
   } catch (error) {
   }
-  setTimeout(() => (row.loading = false), 500);
+  setTimeout(() => (row.loading = false), 500)
 }
 
 async function handleRemove(row: any) {
   const action = await ElMessageBox.confirm(
-    `${t("masterTable_settingRemoveMsg", {name: row.masterTableName})}`,
+    `${t('masterTable_settingRemoveMsg', { name: row.masterTableName })}`,
     {
-      confirmButtonText: t('common_confirmDelete'),
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
     }
-  );
-  if (action !== "confirm") return;
+  )
+  if (action !== 'confirm') return
   await adminApi.api.postMasterTablesAclsDelete({
     masterTableId: row.masterTableId,
-    userId: row.userId,
-  });
-  ElMessage.success(t('masterTable_settingRemoveSuccessMsg', {name: row.masterTableName}));
-  init();
+    userId: row.userId
+  })
+  ElMessage.success(t('masterTable_settingRemoveSuccessMsg', { name: row.masterTableName }))
+  init()
 }
 
 async function init() {
   try {
-    state.loading = true;
+    state.loading = true
     state.tableData = await adminApi.api
       .getMasterTablesIdAcls(props.tableId)
-      .then((res) => res.data);
+      .then((res) => res.data)
   } catch (error) {
   }
-  state.loading = false;
+  state.loading = false
 }
 
 watch(
   () => props.tableId,
   (newVal) => {
     if (newVal) {
-      init();
+      init()
     }
   },
   {
-    immediate: true,
+    immediate: true
   }
-);
+)
 </script>
 <style lang="scss" scoped>
 .el-button {
