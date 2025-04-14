@@ -1,11 +1,9 @@
 <script lang="ts" setup>
 import { adminApi } from "api";
 import { userProviderKey } from "~/util/userProvider";
-const tabProvider = inject(TabManagerKey);
 const routerProvider = inject(MenuRouterKey);
 
-
-if (!tabProvider || !routerProvider) {
+if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
 function openUserDetail(data: any, openInNewTab = false) {
@@ -29,7 +27,7 @@ let userTableFilter = {};
 const tableRef = ref();
 function handleFilterChange(filter: any) {
   userTableFilter = { ...filter };
-  tableRef?.value.reload();
+  tableRef?.value?.reload();
 }
 // #endregion
 provide(userProviderKey, {

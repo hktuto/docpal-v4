@@ -31,6 +31,8 @@ function openUserList(openInNewTab: boolean = false){
 }
 async function getUser() {
   const res = await adminApi.api.getNuxeoUserUserid(id);
+  console.log(res);
+  
   if(!res.data) return
   res.data.status = res.data.status === "A" ? "A" : "D";
   state.curUser = res.data;

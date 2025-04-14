@@ -118,6 +118,8 @@ async function handleSetStatus(status, row) {
   row.loading = true
   row.properties = null
   const res = await userProviderDetail?.SetUserStatusApi(row)
+  console.log(res);
+  
   if (!res) {
     row.status = row.status = 'A' ? 'D' : 'A'
   } else {
