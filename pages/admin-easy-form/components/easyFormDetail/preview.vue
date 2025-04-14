@@ -31,14 +31,16 @@
   </el-card>
 </template>
 <script lang="ts" setup>
-import {MenuRouterKey} from "#imports";
 import {ElMessage} from "element-plus";
 import {routeEasyFormDesigner} from "~/util/easyFormRouterHelper";
 
 const emits = defineEmits(["email-update"])
 const props = defineProps(["detail"]);
-const routerProvider = inject(MenuRouterKey);
 
+const routerProvider = inject(MenuRouterKey);
+if (!routerProvider) {
+  throw new Error('MenuRouterKey is not provided')
+}
 function update() {
   emits('email-update')
 }
@@ -60,13 +62,17 @@ function handleOpenFormDesign() {
 }
 
 const copy = (data: any, msg = "common_copySuccess") => {
-  const input = document.createElement("input");
-  document.body.appendChild(input);
-  input.value = data;
-  input.focus();
-  input.select();
-  document.execCommand("Copy");
-  document.body.removeChild(input);
+  try {
+    navigator.clipboard.writeText(data)
+  } catch (error) {
+    const input = document.createElement("input");
+    document.body.appendChild(input);
+    input.value = data;
+    input.focus();
+    input.select();
+    document.execCommand("Copy");
+    document.body.removeChild(input);
+  }
   ElMessage.success(msg as string);
 };
 
