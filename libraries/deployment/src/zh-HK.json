@@ -381,6 +381,7 @@
   "caseManagement_detailCaseDashboardView": "案例儀表板檢視",
   "caseManagement_detailCaseInformation": "資訊",
   "caseManagement_detailDesign": "設計",
+  "caseManagement_detailFilter": "Fuzzy filter by all columns",
   "caseManagement_detailPermission": "許可",
   "caseManagement_detailPropertiesAdd": "新增屬性",
   "caseManagement_detailPropertiesEdit": "編輯屬性",

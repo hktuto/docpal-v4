@@ -381,6 +381,7 @@
   "caseManagement_detailCaseDashboardView": "Case Dashboard View",
   "caseManagement_detailCaseInformation": "Information",
   "caseManagement_detailDesign": "Design",
+  "caseManagement_detailFilter": "Fuzzy filter by all columns",
   "caseManagement_detailPermission": "Permission",
   "caseManagement_detailPropertiesAdd": "Add Properties",
   "caseManagement_detailPropertiesEdit": "Edit Properties",

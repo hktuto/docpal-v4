@@ -1,0 +1,10 @@
+import { vi } from 'vitest'
+
+export const clientApi = {
+  api: {
+    postCaseTypesPage: vi.fn(() => Promise.resolve(true)),
+    postCaseTypesCasetypeidRecordsPage: vi.fn(() => Promise.resolve(true)),
+    getCaseDashboardCasetypeCasetypeidPrimaryform: vi.fn(() => Promise.resolve(true)),
+    getCaseTypesCasetypeidRecordsPageConditions: vi.fn(() => Promise.resolve(true)),
+  }
+}
