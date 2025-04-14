@@ -13,3 +13,7 @@ pnpm i --shamefully-hoist
 ```
 pnpm -F api generate
 ```
+4. 生成测试 excel文档
+```
+pnpm -F unit-test start
+```

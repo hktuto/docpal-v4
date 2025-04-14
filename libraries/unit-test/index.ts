@@ -1,25 +1,30 @@
 import * as XLSX from 'xlsx';
 import testReport from '../../.vitest-reporter-html/index.json';
 async function createReport() {
-  // 填充数据（根据JSON结构调整）
-  // console.log(testReport.testResults);
-  // detailsSheet.addRow(['Test Suite', 'Test Case', 'Status', 'Error']);
   const dataArr = [];
   testReport.testResults.forEach(suite => {
     suite.assertionResults.forEach(test => {
-      dataArr.push([test.ancestorTitles.join(','), test.title, test.status, test.duration.toFixed(2), test.failureMessages.join(',')]);
+      const titles = test.ancestorTitles.join(',').split(']');
+      const title1 = titles[0].replace('[', '');
+      dataArr.push([title1, titles[1], test.title, '', '', '', '', '']);
     });
   });
+  dataArr.push(
+    ['Total', '', testReport.numTotalTests],
+    // ['Passed', testReport.numPassedTests],
+    // ['Failed', testReport.numFailedTests],
+  );
   jsonToXlsx(dataArr);
-  console.log(dataArr);
-  // await workbook.xlsx.writeFile('vitest-report.xlsx');
 }
 createReport();
 function jsonToXlsx(exportArr) {
-  const Header = [['module', 'test', 'status', 'duration']];
+  const Header = [['Function', 'Test Case ID', 'Test Case Title', 'Pre-conditions', 'Test Step', 'Expected Result', 'Actual Result', 'Test Automation?']];
   const headerWs = XLSX.utils.aoa_to_sheet(Header);
   const ws = XLSX.utils.sheet_add_json(headerWs, exportArr, { skipHeader: true, origin: 'A2' });
   const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'sheetName');
+  const wscolLens: any = [16, 16, 52, 10, 6, 10, 12, 12];
+  const wscols = wscolLens.map(width => ({ wpx: width * 10 }));
+  ws['!cols'] = wscols;
+  XLSX.utils.book_append_sheet(wb, ws, 'Summary');
   XLSX.writeFile(wb, `unit-test.xlsx`);
 }
