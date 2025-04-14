@@ -1,17 +1,12 @@
 import { shallowMount, mount } from '@vue/test-utils';
 import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest';
-import { AdminUserList, UserTable, AdminUserDetail, UserInfo, ResponsiveFilter } from '#components';
+import { AdminUserList, UserTable, UserEditDialog, UserGroupTable, UserAddGroupDialog, UserAddGroupsDialog, UserPasswordDialog, AdminUserDetail, UserInfo, ResponsiveFilter } from '#components';
 import { adminApi } from './mock/api';
 import { VxeGrid, } from 'vxe-table';
 import { userProviderKey, userProviderDetailKey } from '~/util/userProvider';
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus';
-const mockRouterProvider = {
-  navigateTo: vi.fn(),
-  menuSymbol: 'mockMenuSymbol',
-  message: {
-    success: vi.fn(),
-  }
-};
+import { mockRouterProvider } from './util';
+
 const userProvider = {
   getAllUsersApi: vi.fn(),
   BatchDeleteUserApi: vi.fn(),
@@ -21,6 +16,17 @@ const userProvider = {
   openUserDetail: vi.fn(),
   openUserList: vi.fn(),
 };
+
+const userProviderDetail = {
+  BatchDeleteUserApi: vi.fn(),
+  SetUserStatusApi: vi.fn(),
+  openUserList: vi.fn(),
+  PatchUserPasswordApi: vi.fn(),
+  BatchUserRemoveGroupsApi: vi.fn(),
+  MemberGroupGetApi: vi.fn(),
+  BatchUsersToGroupsApi: vi.fn(),
+  BatchUserAddGroupsApi: vi.fn(),
+};
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -28,12 +34,10 @@ vi.mock('element-plus', () => ({
   ElNotification: {
     success: vi.fn(),
   },
-  ElMessage: vi.fn().mockResolvedValue(() => {
-    return {
-      success: vi.fn(),
-      error: vi.fn(),
-    };
-  }),
+  ElMessage: {
+    success: vi.fn(),
+    warning: vi.fn()
+  }
 }));
 describe('[admin-user]AdminUserList', () => {
   let wrapper: any;
@@ -163,10 +167,7 @@ describe('[admin-user]UserTable', () => {
     await wrapper.vm.handleSetStatus('A', userRow);
 
     expect(userRow.status).toBe('D'); // Status should not change
-    expect(ElMessage).toHaveBeenCalledWith({
-      message: expect.any(String), // Check for warning message
-      type: 'warning',
-    });
+    expect(ElMessage.warning).toHaveBeenCalled();
   });
   it('handles filter form change', async () => {
     const filterModel = { isDesc: false };
@@ -246,12 +247,6 @@ describe('[admin-user]AdminUserDetail', () => {
   });
 });
 
-
-const userProviderDetail = {
-  BatchDeleteUserApi: vi.fn(),
-  SetUserStatusApi: vi.fn(),
-  openUserList: vi.fn(),
-};
 // Mock UserEditDialog
 const mockUserEditDialog = {
   template: '<div class="mock-user-edit-dialog" @refresh="$emit(\'refresh\')"></div>',
@@ -307,8 +302,6 @@ describe('[admin-user]UserInfo', () => {
     await wrapper.vm.$nextTick();
   });
   it('renders correctly', () => {
-    console.log(wrapper.html());
-
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.find('h3').text()).toBe('user_info');
     const rowValues = wrapper.findAll('.rowValue');
@@ -366,4 +359,442 @@ describe('[admin-user]UserInfo', () => {
     expect(mockUser.status).toBe('A'); // 确保状态不变
   });
 });
+describe('[admin-user]UserPasswordDialog', () => {
+  let wrapper: any;
+  const mockUser = {
+    userId: 'user-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    company: 'Example Inc.',
+    status: 'A',
+    loading: false,
+  };
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    wrapper = mount(UserPasswordDialog, {
+      props: {
+        user: mockUser,
+        isLdapMode: false,
+      },
+      global: {
+        provide: {
+          [MenuRouterKey]: mockRouterProvider,
+          [userProviderDetailKey]: userProviderDetail
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    });
+    await wrapper.vm.$nextTick();
+  });
+  it('renders correctly', () => {
+    console.log(wrapper.html());
+    expect(wrapper.exists()).toBe(true);
+  });
+  it('opens the dialog', async () => {
+    await wrapper.vm.handleOpen();
+    expect(wrapper.vm.state.visible).toBe(true);
+  });
+  it('handles password submission', async () => {
+    const formData = {
+      password: 'newPassword123',
+    };
 
+    // Mock the method to return form data
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+        resetForm: vi.fn(),
+      },
+    };
+
+    await wrapper.vm.handleSubmit();
+
+    expect(userProviderDetail.PatchUserPasswordApi).toHaveBeenCalledWith({
+      password: formData.password,
+      userId: mockUser.userId,
+    });
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg')); // 根据你的翻译文本进行调整
+    expect(wrapper.vm.state.visible).toBe(false);
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
+  });
+  it('handles submission failure', async () => {
+    const formData = {
+      password: 'newPassword123',
+    };
+
+    // Mock the method to return form data
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+      },
+    };
+
+    // Simulate an error thrown by the PatchUserPasswordApi
+    userProviderDetail.PatchUserPasswordApi.mockRejectedValue(new Error('Error updating password'));
+    await wrapper.vm.handleSubmit();
+    // Ensure that the loading state is reset
+    expect(wrapper.vm.state.loading).toBe(false);
+  });
+});
+const SvgIcon = {
+  template: '<div class="SvgIcon">SvgIcon</div>',
+  methods: {}
+};
+const Icon = {
+  template: '<div class="Icon">Icon</div>',
+  methods: {}
+};
+describe('[admin-user]UserGroupTable', () => {
+  let wrapper: any;
+  const mockUser = {
+    userId: 'user-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    company: 'Example Inc.',
+    status: 'A',
+    loading: false,
+  };
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    wrapper = mount(UserGroupTable, {
+      props: {
+        user: mockUser,
+        isLdapMode: false,
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, SvgIcon, Icon },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider,
+          [userProviderDetailKey]: userProviderDetail
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    });
+    await wrapper.vm.$nextTick();
+  });
+  it('renders correctly', () => {
+    console.log(wrapper.html());
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-card').exists()).toBe(true);
+    expect(wrapper.find('.vxe-grid').exists()).toBe(true);
+  });
+  it('fetches member group list on activation', async () => {
+    userProviderDetail.MemberGroupGetApi.mockResolvedValueOnce({ data: [] });
+
+    await wrapper.vm.getMemberGroupList();
+
+    expect(userProviderDetail.MemberGroupGetApi).toHaveBeenCalledWith({
+      userId: mockUser.userId,
+    });
+    expect(wrapper.vm.state.groupList).toEqual([]);
+  });
+  it('handles group deletion confirmation', async () => {
+    const mockRow = { id: 'group-1' };
+    ElMessageBox.confirm.mockResolvedValue('confirm');
+    await wrapper.vm.handleDelete(mockRow);
+
+    expect(ElMessageBox.confirm).toHaveBeenCalled();
+    expect(userProviderDetail.BatchUserRemoveGroupsApi).toHaveBeenCalledWith({
+      groupIds: [mockRow.id],
+      userId: mockUser.userId,
+    });
+  });
+  it('handles selected deletion confirmation', async () => {
+    wrapper.vm.state.selectedRows = [{ id: 'group-1' }, { id: 'group-2' }];
+    const confirmSpy = vi.spyOn(ElMessageBox, 'confirm').mockResolvedValue('confirm');
+
+    await wrapper.vm.handleDeleteSelected();
+
+    expect(confirmSpy).toHaveBeenCalled();
+    expect(userProviderDetail.BatchUserRemoveGroupsApi).toHaveBeenCalledWith({
+      groupIds: ['group-1', 'group-2'],
+      userId: mockUser.userId,
+    });
+    expect(wrapper.vm.state.selectedRows).toEqual([]);
+  });
+  it('confirms deletion of selected groups', async () => {
+    wrapper.vm.state.selectedRows = [{ id: 'group-1', name: 'Group 1' }];
+    vi.spyOn(ElMessageBox, 'confirm').mockResolvedValue('confirm');
+
+    await wrapper.vm.handleDeleteSelected();
+
+    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('user_removeGroupsSuccessMsg'));
+  });
+
+  it('handles filter form change', async () => {
+    wrapper.vm.state.groupList = [
+      { name: 'Group A' },
+      { name: 'Group B' },
+    ];
+    wrapper.vm.tableRef = {
+      loadData: vi.fn()
+    };
+    const formModel = { metaData: 'Group A' };
+    await wrapper.vm.handleFilterFormChange(formModel);
+
+    expect(wrapper.vm.state.groupList[0].name).toEqual('Group A');
+    expect(wrapper.vm.tableRef.loadData).toHaveBeenCalledWith([
+      { name: 'Group A' },
+    ]);
+  });
+});
+
+const FormRenderer = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {
+    setFormJson: vi.fn(),
+    setFormData: vi.fn(),
+  }
+};
+const VFormRender = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {}
+};
+const ReaderDialog = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {}
+};
+describe('[admin-user]UserEditDialog', () => {
+  let wrapper: any;
+  const mockUser = {
+    userId: 'user-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    company: 'Example Inc.',
+    status: 'A',
+    loading: false,
+  };
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    wrapper = mount(UserEditDialog, {
+      props: {
+        user: mockUser,
+        isLdapMode: false,
+      },
+      global: {
+        components: { SvgIcon, Icon, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider,
+          [userProviderDetailKey]: userProviderDetail
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    });
+    await wrapper.vm.$nextTick();
+  });
+  it('renders correctly', () => {
+    console.log(wrapper.html());
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-overlay-dialog').exists()).toBe(true);
+  });
+  it('opens the dialog and sets form data', async () => {
+
+    await wrapper.vm.handleOpen();
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    expect(wrapper.vm.state.visible).toBe(true);
+    expect(wrapper.find('.FormRenderer').exists()).toBe(true);
+  });
+  it('submits the form successfully', async () => {
+    const formData = { firstName: 'Updated Name' };
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+        resetForm: vi.fn()
+      }
+    };
+    wrapper.vm.state.loading = false;
+
+    await wrapper.vm.handleSubmit();
+
+    expect(adminApi.api.patchNuxeoIdentityUser).toHaveBeenCalledWith({
+      ...mockUser,
+      properties: null,
+      ...formData,
+    });
+    expect(wrapper.vm.state.visible).toBe(false);
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
+  });
+  it('handles submit error gracefully', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({}),
+        resetForm: vi.fn()
+      }
+    };
+    const error = new Error('Update failed');
+    adminApi.api.patchNuxeoIdentityUser.mockRejectedValue(error);
+    await wrapper.vm.handleSubmit();
+
+    expect(wrapper.vm.state.loading).toBe(false);
+  });
+});
+describe('[admin-user]UserAddGroupsDialog', () => {
+  let wrapper: any;
+  const mockUser = {
+    userId: 'user-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    company: 'Example Inc.',
+    status: 'A',
+    loading: false,
+  };
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    wrapper = mount(UserAddGroupsDialog, {
+      props: {
+        user: mockUser,
+        isLdapMode: false,
+      },
+      global: {
+        components: { SvgIcon, Icon, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider,
+          [userProviderKey]: userProviderDetail
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    });
+    await wrapper.vm.$nextTick();
+  });
+  it('renders correctly', () => {
+    console.log(wrapper.html());
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-overlay-dialog').exists()).toBe(true);
+  });
+  it('opens the dialog and sets options', async () => {
+    const exitList: any = [];
+    const setting = { someSetting: true };
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getWidgetRef: vi.fn()
+      }
+    };
+    await wrapper.vm.handleOpen(exitList, setting);
+
+    expect(wrapper.vm.state.visible).toBe(true); // 确保对话框可见
+    expect(wrapper.vm.state.setting).toEqual(setting); // 确保设置被正确赋值
+  });
+  it('submits the form successfully', async () => {
+    const formData = { id: ['group-1'] };
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+        resetForm: vi.fn()
+      }
+    };
+    await wrapper.vm.handleSubmit();
+
+    expect(userProviderDetail.BatchUsersToGroupsApi).toHaveBeenCalledWith({
+      groupIds: formData.id,
+      ...wrapper.vm.state.setting,
+    });
+    expect(ElMessage.success).toHaveBeenCalledWith('dpMsg_success');
+    expect(wrapper.vm.state.visible).toBe(false);
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
+  });
+  it('handles submit error gracefully', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({}),
+        resetForm: vi.fn()
+      }
+    };
+    const error = new Error('Update failed');
+    userProviderDetail.BatchUsersToGroupsApi.mockRejectedValue(error);
+
+    await wrapper.vm.handleSubmit();
+
+    expect(wrapper.vm.state.loading).toBe(false);
+  });
+
+});
+describe('[admin-user]UserAddGroupDialog', () => {
+  let wrapper: any;
+  const mockUser = {
+    userId: 'user-1',
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    company: 'Example Inc.',
+    status: 'A',
+    loading: false,
+  };
+  beforeEach(async () => {
+    vi.clearAllMocks();
+    wrapper = mount(UserAddGroupDialog, {
+      props: {
+        user: mockUser,
+        isLdapMode: false,
+      },
+      global: {
+        components: { SvgIcon, Icon, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider,
+          [userProviderDetailKey]: userProviderDetail
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    });
+    await wrapper.vm.$nextTick();
+  });
+  it('renders correctly', () => {
+    console.log(wrapper.html());
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-overlay-dialog').exists()).toBe(true);
+  });
+  it('opens the dialog and loads group list', async () => {
+    const exitList: any = [];
+    await wrapper.vm.handleOpen(exitList);
+    expect(wrapper.vm.state.visible).toBe(true);
+  });
+  it('submits the form successfully', async () => {
+    const formData = { id: ['group-1'] };
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+        resetForm: vi.fn()
+      }
+    };
+    await wrapper.vm.handleSubmit();
+
+    expect(userProviderDetail.BatchUserAddGroupsApi).toHaveBeenCalled();
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('user_userGroupsAssignedSuccessMsg');
+    expect(wrapper.vm.state.visible).toBe(false);
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
+  });
+  it('handles submit error gracefully', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({}),
+        resetForm: vi.fn()
+      }
+    };
+    const error = new Error('Update failed');
+    userProviderDetail.BatchUserAddGroupsApi.mockRejectedValue(error); // Mock API 抛出错误
+
+    await wrapper.vm.handleSubmit();
+
+    expect(wrapper.vm.state.loading).toBe(false); // 确保 loading 状态恢复
+    // 可以在这里检查是否有错误处理逻辑，例如显示错误消息
+  });
+});
