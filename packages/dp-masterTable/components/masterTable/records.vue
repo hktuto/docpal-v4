@@ -406,6 +406,8 @@ async function handleDeleteSelected() {
     recordIds: ids
   })
   ElMessage.success(t('masterTable_deleteSelectedSuccessMsg', { name: props.permission.name }))
+  cleanSelectedRows()
+  state.extraParams = {}
   if (ids.length === tableConfig.data.length) query()
   else reload()
 }

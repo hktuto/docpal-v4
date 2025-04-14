@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 export const FromRendererRef = {
   getFormJson: () => ({ widgetList: [], formConfig: {} }),
   init: () => {
@@ -28,5 +29,12 @@ export const MetaFormRef = {
   },
   getData: () => {
     return {};
+  }
+};
+export const mockRouterProvider = {
+  navigateTo: vi.fn(),
+  menuSymbol: 'mockMenuSymbol',
+  message: {
+    success: vi.fn(),
   }
 };

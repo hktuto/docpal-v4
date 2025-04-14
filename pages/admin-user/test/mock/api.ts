@@ -11,6 +11,12 @@ export const adminApi = {
     postNuxeoIdentityGroups: vi.fn(),
     postNuxeoIdentityGetlicenseusernumandactivecount: vi.fn(),
     getNuxeoUserUserid: vi.fn(),
+    patchNuxeoIdentityUser: vi.fn(),
+    BatchUsersToGroupsApi: vi.fn(),
+    GetGroupListApi: vi.fn().mockResolvedValue([{ id: 'group-1', name: 'Group 1' }]),
+
+    deleteNuxeoIdentityGroup: vi.fn(),
+    postNuxeoIdentityGroup: vi.fn(),
   }
 }
 
