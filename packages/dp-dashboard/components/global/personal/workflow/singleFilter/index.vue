@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+
 const props = defineProps<{
   date: any
-  setting?: any;
+  setting: any;
   hideSetting?: boolean;
 }>()
+
 const {
   hideSetting,
   handleDelete, 
@@ -12,10 +14,8 @@ const {
   setting,
   handleRefresh
 } = useDashboard()
-
-
-
 </script>
+
 
 <template>
   <el-card ref="cardRef" class="workflow-card dashboard-item dashboard-item-tab">
@@ -27,10 +27,12 @@ const {
       style="--icon-size: 1.14rem; --icon-color: #8796a4;font-size: 20px"
       @click="openSetting"
     />
-    <PersonalWorkflowSingleTable :setting="setting" />
-    <PersonalWorkflowSingleSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh"/>
+    table
+    <PersonalWorkflowSingleFilterSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh"/>
   </el-card>
+
 </template>
 
 <style lang="scss" scoped>
+  
 </style>

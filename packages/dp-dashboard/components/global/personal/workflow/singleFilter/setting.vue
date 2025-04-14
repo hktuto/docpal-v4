@@ -1,21 +1,15 @@
 <script lang="ts" setup>
-import {adminApi, clientApi} from 'api'
-
+import { adminApi } from 'api'
+import { useDashboardSetting } from '../../../../../composables/useDashborad';
+import { useRuntimeConfig } from 'nuxt/app';
 const { public:{platform}} = useRuntimeConfig();
-const {t} = useI18n()
-
-const { state, handleSubmit, handleDelete } = useDashboardSetting({
-  beforeOpen,
-})
-
-type Columns = {
-  field: string,
-  title: string,
-}
-
 const allWorkflow = ref<any[]>([]);
 const workflowColumns = ref<Columns[]>([]);
 const avalibleSteps = ref<any[]>([]);
+// handle open 
+const { state, handleSubmit, handleDelete, handleClose } = useDashboardSetting({
+  beforeOpen,
+})
 
 async function handleWorkflowhange(newSelectedWorkflow: string) {
   state.setting.columns = []
@@ -68,6 +62,7 @@ async function handleWorkflowhange(newSelectedWorkflow: string) {
     avalibleSteps.value = allStep
 }
 
+
 async function getWorkflow(){
   const {data} = await adminApi.api.postWorkflowProcessList() as any
   allWorkflow.value = data
@@ -79,12 +74,12 @@ async function beforeOpen(setting) {
   if(setting.selectedWorkflow) {
     await handleWorkflowhange(setting.selectedWorkflow)
   }
-
 }
 
 
 
 </script>
+
 
 <template>
   <el-dialog
@@ -95,47 +90,37 @@ async function beforeOpen(setting) {
     :close-on-click-modal="false"
     @close="handleClose"
   >
-    <ElForm label-position="top">
-      <ElFormItem label="Title">
-        <ElInput v-model="state.setting.title" placeholder="Title" />
-      </ElFormItem>
-      <ElFormItem label="workflow">
-        <ElSelect v-model="state.setting.selectedWorkflow" filterable clearable allow-create @change="handleWorkflowhange">
-          <ElOption v-for="item in allWorkflow" :key="item.key" :label="item.name" :value="item.key" />
-        </ElSelect>
-      </ElFormItem>
-      <ElFormItem label="Steps">
-        <ElSelect v-model="state.setting.steps" filterable clearable allow-create multiple>
-          <ElOption v-for="item in avalibleSteps" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-        </ElSelect>
-      </ElFormItem>
-      <ElFormItem label="Sort Column">
-        <ElSelect v-model="state.setting.sortColumn" filterable clearable >
-          <ElOption v-for="item in workflowColumns" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-        </ElSelect>
-      </ElFormItem>
-      <ElFormItem label="Columns">
-        <div class="listContainer">
-          <div class="row">
-            <div>Title</div>
-            <div>Field</div>
-          </div>
-          <div v-for="(row, index) in state.setting.columns" :key="index" class="row">
-            <ElInput v-model="row.title" placeholder="Title" />
-            <ElSelect v-model="row.field" multiple clearable filterable allow-create>
-              <ElOption v-for="item in workflowColumns" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
-            </ElSelect>
-            <ElButton type="link" text @click="state.setting.columns.splice(index, 1)">remove</ElButton>
-          </div>
-          <div class="add-row">
-            <ElButton type="link" text @click="state.setting.columns.push({field: '', title: ''})">
-              Add Column
-            </ElButton>
-            </div>
+  <ElForm label-position="top">
+    <ElFormItem label="Title">
+      <ElInput v-model="state.setting.title" placeholder="Title" />
+    </ElFormItem>
+    <ElFormItem label="workflow">
+      <ElSelect v-model="state.setting.selectedWorkflow" filterable clearable allow-create @change="handleWorkflowhange">
+        <ElOption v-for="item in allWorkflow" :key="item.key" :label="item.name" :value="item.key" />
+      </ElSelect>
+    </ElFormItem>
+    <ElFormItem label="Columns">
+      <div class="listContainer">
+        <div class="row">
+          <div>Title</div>
+          <div>Field</div>
         </div>
-      </ElFormItem>
-    </ElForm>
-    <template #footer>
+        <div v-for="(row, index) in state.setting.columns" :key="index" class="row">
+          <ElInput v-model="row.title" placeholder="Title" />
+          <ElSelect v-model="row.field" multiple clearable filterable allow-create>
+            <ElOption v-for="item in workflowColumns" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
+          </ElSelect>
+          <ElButton type="link" text @click="state.setting.columns.splice(index, 1)">remove</ElButton>
+        </div>
+        <div class="add-row">
+          <ElButton type="link" text @click="state.setting.columns.push({field: '', title: ''})">
+            Add Column
+          </ElButton>
+        </div>
+      </div>
+    </ElFormItem>
+  </ElForm>
+  <template #footer>
       <div class="footer-grid">
         <el-button id="WorkPanel__DetailTask__Delete" type="danger" @click="handleDelete">
           {{ $t("common_delete") }}
@@ -172,3 +157,4 @@ async function beforeOpen(setting) {
   place-items: center;
 }
 </style>
+
