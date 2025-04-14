@@ -1,10 +1,11 @@
 import { shallowMount, mount } from '@vue/test-utils';
-import { describe, test, it, vi, expect, beforeEach, afterEach } from 'vitest';
-import { UserInfo } from '#components';
+import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest';
 import { adminApi } from './mock/api';
 import { VxeGrid, } from 'vxe-table';
-import { userProviderDetailKey } from '~/util/userProvider';
+import { mockRouterProvider } from './util';
+import { GroupList } from '#components';
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus';
+import { groupProviderKey, groupProviderDetailKey } from '~/util/userProvider';
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -12,89 +13,85 @@ vi.mock('element-plus', () => ({
   ElNotification: {
     success: vi.fn(),
   },
-  ElMessage: vi.fn().mockResolvedValue(() => {
-    return {
-      success: vi.fn(),
-      error: vi.fn(),
-    };
-  }),
-}));
-const mockRouterProvider = {
-  navigateTo: vi.fn(),
-  menuSymbol: 'mockMenuSymbol',
-  message: {
+  ElMessage: {
     success: vi.fn(),
+    warning: vi.fn()
   }
+}));
+const groupProviderDetail = {
+  openGroupDetail: vi.fn(),
+  GetGroupListApi: adminApi.api.postNuxeoIdentityGroups,
+  DeleteGroupApi: adminApi.api.deleteNuxeoIdentityGroup,
+  CreateGroupApi: adminApi.api.postNuxeoIdentityGroup,
 };
-const userProviderDetail = {
-  BatchDeleteUserApi: vi.fn(),
-  SetUserStatusApi: vi.fn(),
-  openUserList: vi.fn(),
-};
-// Mock UserEditDialog
-const mockUserEditDialog = {
-  template: '<div class="mock-user-edit-dialog" @refresh="$emit(\'refresh\')"></div>',
-  methods: {
-    handleOpen: vi.fn(),
-  },
-};
-const mockUserPasswordDialog = {
-  template: '<div class="mock-user-password-dialog"></div>',
-  methods: {
-    handleOpen: vi.fn(),
-  },
-};
-// Mock Icon
-const mockIcon = {
-  template: '<span class="mock-icon"></span>',
-};
-describe('[admin-user]UserInfo', () => {
+describe('GroupList', () => {
   let wrapper: any;
-  const mockUser = {
-    userId: 'user-1',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    company: 'Example Inc.',
-    status: 'A',
-    loading: false,
-  };
-  beforeEach(async () => {
-    vi.clearAllMocks();
-    wrapper = mount(UserInfo, {
-      props: {
-        user: mockUser,
-        isLdapMode: false,
-      },
+  const mockTabProvider = {};
+
+  beforeEach(() => {
+    wrapper = mount(GroupList, {
       global: {
-        components: {
-          VxeGrid,
-          UserEditDialog: mockUserEditDialog,
-          UserPasswordDialog: mockUserPasswordDialog,
-          Icon: mockIcon
-        },
         provide: {
+          [TabManagerKey]: mockTabProvider,
           [MenuRouterKey]: mockRouterProvider,
-          [userProviderDetailKey]: userProviderDetail
+          groupProviderKey: groupProviderDetail,
         },
         mocks: {
           $t: (msg: string) => msg,// Mock translation function
           $i18n: { t: (key: string) => key },
         }
-      }
+      },
     });
-    await wrapper.vm.$nextTick();
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+    vi.clearAllMocks(); // 清除所有模拟
   });
   it('renders correctly', () => {
-    console.log(wrapper.html());
-
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('h3').text()).toBe('user_info');
-    const rowValues = wrapper.findAll('.rowValue');
-    expect(rowValues.length).toBe(5);
-    expect(rowValues[0].text()).toBe(mockUser.firstName);
-    expect(rowValues[1].text()).toBe(mockUser.lastName);
-    expect(rowValues[2].text()).toBe(mockUser.email);
-    expect(rowValues[3].text()).toBe(mockUser.company);
+    expect(wrapper.find('.pageContainer').exists()).toBe(true);
+  });
+  it('opens group detail correctly', () => {
+    const groupData = { id: 'group-1', name: 'Group 1', isCanModified: true };
+
+    wrapper.vm.openGroupDetail(groupData);
+
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(expect.objectContaining({
+      id: expect.stringContaining('group-detail-'),
+      name: `group-detail-${groupData.id}`,
+      props: {
+        id: groupData.id,
+        name: groupData.name,
+        isCanModified: groupData.isCanModified,
+      },
+    }), false);
+  });
+  it('fetches group list successfully', async () => {
+    const mockGroupList = [{ id: 'group-1', name: 'Group 1' }];
+    adminApi.api.postNuxeoIdentityGroups.mockResolvedValue({ data: mockGroupList });
+
+    const result = await groupProviderDetail.GetGroupListApi();
+    console.log(result);
+    expect(result.data).toEqual(mockGroupList);
+    expect(adminApi.api.postNuxeoIdentityGroups).toHaveBeenCalled();
+  });
+  it('deletes a group successfully', async () => {
+    const params = { id: 'group-1' };
+    adminApi.api.deleteNuxeoIdentityGroup.mockResolvedValue({ success: true });
+
+    const result = await groupProviderDetail.DeleteGroupApi(params);
+
+    expect(result).toEqual({ success: true });
+    expect(adminApi.api.deleteNuxeoIdentityGroup).toHaveBeenCalledWith(params);
+  });
+  it('creates a group successfully', async () => {
+    const params = { name: 'New Group' };
+    adminApi.api.postNuxeoIdentityGroup.mockResolvedValue({ success: true });
+
+    const result = await groupProviderDetail.CreateGroupApi(params);
+
+    expect(result).toEqual({ success: true });
+    expect(adminApi.api.postNuxeoIdentityGroup).toHaveBeenCalledWith(params);
   });
 });

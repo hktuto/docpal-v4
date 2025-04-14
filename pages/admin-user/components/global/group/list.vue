@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { adminApi } from "api";
 import { groupProviderKey } from "~/util/userProvider";
-const tabProvider = inject(TabManagerKey);
 const routerProvider = inject(MenuRouterKey);
-if (!tabProvider || !routerProvider) {
+if (!routerProvider) {
   throw new Error("MenuRouterKey is not provided");
 }
 function openGroupDetail(data: any, openInNewTab = false) {
