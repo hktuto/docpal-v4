@@ -1,7 +1,7 @@
 <script lang="tsx" setup>
-import { emitBus, EventType } from 'eventbus'
+import { emitBus, EventType, useEventBus } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
-
+const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey);
 const routerProvider = inject(MenuRouterKey)
 import {clientApi} from 'api'
@@ -488,6 +488,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     
 })
 
+cleanSelectedRowsBus.on(cleanSelectedRows)
 
 let tableDropZone:any;
 let dragableItemList:any[] = [];
@@ -598,6 +599,8 @@ onDeactivated(() => {
         })
     }
     emitBus(EventType.FILE_PREVIEW_CLOSE)
+    
+    cleanSelectedRowsBus.off(cleanSelectedRows)
 })
 
 

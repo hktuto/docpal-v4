@@ -241,10 +241,7 @@ async function handleSetStatus(status: 'A' | 'D', row: any) {
   if (status === row.value || !row.userId || status === null) return
   if (state.activeUsers >= state.licenseUsers && status === 'A') {
     row.status = 'D'
-    ElMessage({
-      message: t('user_activeUserOverLimit'),
-      type: 'warning'
-    })
+    ElMessage.warning( t('user_activeUserOverLimit'))
     return
   }
   try {

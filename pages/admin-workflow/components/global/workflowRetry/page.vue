@@ -2,9 +2,11 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                          inputKey="businessKey" @clear-filter="handleClearFilter"
-                          inputPlaceHolder="workflow_retryFilter" />
+        <ResponsiveFilter ref="ResponsiveFilterRef"
+                          inputKey="businessKey"
+                          inputPlaceHolder="workflow_retryFilter"
+                          @form-change="handleFilterFormChange"
+                          />
       </template>
       <template #status="{ row }">
         <el-tag v-if="retryStatues.includes(row.state.toLowerCase())" type="danger">{{ row.state }}</el-tag>
@@ -33,7 +35,7 @@ const {
     return await adminApi.api.postWorkflowQueryWorkflowRetryPage({ ...pageParams, ...extraParams })
   },
   columns: [
-    { field: 'businessKey', title: 'workflowEditor.name', fixed: 'left' },
+    { field: 'businessKey', title: 'workflow_taskName', fixed: 'left' },
     {
       field: 'startTime',
       title: 'workflow_retryStartDate',
@@ -80,6 +82,7 @@ async function handleRetry(id: number) {
   }
 }
 
+
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true
   if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
@@ -105,7 +108,7 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'workflowEditor.name', value: 'businessKey' },
+        { label: 'workflow_taskName', value: 'businessKey' },
         { label: 'workflow_retryInitiator', value: 'creator' },
         { label: 'workflow_retryStartDate', value: 'startTime' },
         { label: 'workflow_retryStatus', value: 'workflowState' }
