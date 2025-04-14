@@ -1,51 +1,51 @@
 <script lang="ts" setup>
-import {clientApi} from "api";
+import { clientApi } from 'api'
 
-const {id, name, data} = defineProps<{
+const { id, name, data } = defineProps<{
   id: string;
   name: string;
   data: string
-}>();
+}>()
 
-const {t} = useI18n();
-const emits = defineEmits(["filter-change", "refresh"]);
-const routerProvider = inject(MenuRouterKey);
+const { t } = useI18n()
+const emits = defineEmits(['filter-change', 'refresh'])
+const routerProvider = inject(MenuRouterKey)
 type TableState = {
   columns: any;
   where: any;
 };
 const state = reactive<TableState>({
   columns: [],
-  where: {},
-});
-const tableReady = ref(false);
+  where: {}
+})
+const tableReady = ref(false)
 const {
   tableConfig,
   tableEvent,
   tableRef,
   query,
   reload,
-  cleanSelectedRows,
+  cleanSelectedRows
 } = useVxeTable({
-  id: "clientCaseTableList",
+  id: 'clientCaseTableList',
   api: async (pageParams: any) => {
-    pageParams.isDesc = true;
-    pageParams.orderBy = "created_date";
+    pageParams.isDesc = true
+    pageParams.orderBy = 'created_date'
 
     if (Object.entries(state.where).length !== 0) {
       if (state.where.q) {
-        pageParams.q = state.where.q;
+        pageParams.q = state.where.q
       }
-      delete state.where.q;
-      pageParams.where = state.where;
+      delete state.where.q
+      pageParams.where = state.where
     }
-    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams);
+    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams)
   },
   defaultSort: {},
   optionalConfig: {
-    tooltipConfig: {},
+    tooltipConfig: {}
   },
-  dblClickAction: ({row}) => {
+  dblClickAction: ({ row }) => {
     const item = caseManageDashboardPage({
       ...row,
       id,
@@ -54,70 +54,68 @@ const {
       data
     })
     console.log('new page', item)
-    routerProvider?.navigateTo(item);
-  },
-});
+    routerProvider?.navigateTo(item)
+  }
+})
 
-const responsiveFilter = ref();
+const responsiveFilter = ref()
 
 async function initCondition() {
   try {
-    const {data} = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id);
-    responsiveFilter.value.init(data);
+    const { data } = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id)
+    responsiveFilter.value.init(data)
   } catch (error) {
   }
 }
 
-function handleFilterFormChange(formModel) {
-  state.where = formModel;
-  reload();
+function handleFilterFormChange(formModel: any) {
+  state.where = formModel
+  reload()
 }
 
 async function reorderColumn() {
   try {
-    const {
-      data: {fields},
-    } = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id);
+    const { data: { fields } } = await clientApi.api.getCaseDashboardCasetypeCasetypeidPrimaryform(id)
     const columns = [
-      {field: "case_id", title: "caseManagement.name",},
+      { field: 'case_id', title: 'caseManagement.name' },
       {
-        field: "created_date",
-        title: "workflow_createDate",
-        formatter({cellValue}: any) {
+        field: 'created_date',
+        title: 'workflow_createDate',
+        formatter({ cellValue }: any) {
           return formatDate(cellValue)
-        },
+        }
       },
       {
-        field: "modified_date",
-        title: "table_modifiedDate",
-        formatter({cellValue}: any) {
+        field: 'modified_date',
+        title: 'table_modifiedDate',
+        formatter({ cellValue }: any) {
           return formatDate(cellValue)
-        },
-      },
-    ];
+        }
+      }
+    ]
     fields.forEach((row) => {
-      columns.splice(1, 0, {field: row.id, title: row.name, width: 200});
-    });
+      columns.splice(1, 0, { field: row.id, title: row.name, width: 200 })
+    })
     const actionColumn = tableConfig.columns.find(
-      (item) => item.title === "dpTable_actions"
-    );
-    if (!!actionColumn) columns.push(actionColumn);
-    tableConfig.columns = columns;
+      (item) => item.title === 'dpTable_actions'
+    )
+    if (!!actionColumn) columns.push(actionColumn)
+    tableConfig.columns = columns
   } catch (e) {
   }
-  tableReady.value = true;
+  tableReady.value = true
 }
 
-const addCaseDialog = ref();
+const addCaseDialog = ref()
 
 function handleAddCaseDialog() {
-  addCaseDialog.value.handleOpen(id, data);
+  addCaseDialog.value.handleOpen(id, data)
 }
 
 onActivated(() => {
-  reorderColumn();
-  initCondition();
-});
+  reorderColumn()
+  initCondition()
+})
 </script>
 
 <template>
@@ -129,11 +127,11 @@ onActivated(() => {
             ref="responsiveFilter"
             @form-change="handleFilterFormChange"
             inputKey="q"
-            inputPlaceHolder="caseManagement_filter"
+            inputPlaceHolder="caseManagement_detailFilter"
           />
           <div class="flex-x-end">
             <el-button id="CaseManagement__Detail__AddNewRow" type="primary" @click="handleAddCaseDialog">
-              {{ $t("render.hint.subFormAddActionHint") }}
+              {{ $t('render.hint.subFormAddActionHint') }}
             </el-button>
           </div>
         </header>

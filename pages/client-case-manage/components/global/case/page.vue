@@ -49,8 +49,10 @@ const {
   }
 })
 
-function handleFilterFormChange(formData: any) {
-  extraParams = formData
+function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  extraParams = formModel
   reload()
 }
 
