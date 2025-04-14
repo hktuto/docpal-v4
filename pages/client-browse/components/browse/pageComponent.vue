@@ -3,7 +3,7 @@ import { Pane, Splitpanes } from 'splitpanes'
 
 import { clientApi } from 'api'
 import { BrowseListTable } from '#components'
-import { EventType, useEventBus } from 'eventbus'
+import { EventType, useEventBus, emitBus } from 'eventbus'
 import { actions, ActionsFilter } from '../../../../packages/base/utils/browseActions'
 
 const props = defineProps<{
@@ -175,6 +175,8 @@ provide(BrowseListProviderKey, {
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on(({ relatedIdOrPath, highlightIdOrPath }: any) => {
+  EventType.FILE_CLEAN_SELECTED_ROWS
+  emitBus(EventType.FILE_NEED_REFRESH)
   // console.log(relatedIdOrPath, docDetail.value.id)
   if(!relatedIdOrPath || !docDetail.value?.id) return
   if (relatedIdOrPath !== docDetail.value?.id) {

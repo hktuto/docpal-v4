@@ -15,7 +15,7 @@
         </template>
       </v-form-render>
     </client-only>
-    <ReaderDialog ref="ReaderRef" v-bind="previewFile"></ReaderDialog>
+    <ReaderDialog ref="ReaderRef" v-bind="previewFile" :collabora="false"></ReaderDialog>
   </div>
 </template>
 

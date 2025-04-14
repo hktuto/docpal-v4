@@ -1,8 +1,6 @@
 <template>
-  <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')"
-             :close-on-click-modal="false" destroy-on-close
-  >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+  <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')" :close-on-click-modal="false" destroy-on-close>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <!-- <el-text class="mx-1" type="danger">{{ $t('dpTip.resetWarning') }}</el-text> -->
       <el-button id="UserList__AssignUserGroup__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
@@ -12,15 +10,13 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {ElMessage} from "element-plus";
-import {userProviderKey} from '~/util/userProvider';
+import { ElMessage } from 'element-plus'
+import { userProviderKey } from '~/util/userProvider'
 import formJson from './addGroupsDialog.vform.json'
-
+const { t } = useI18n()
 const props = defineProps<{}>()
 const userProvider = inject(userProviderKey)
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const state = reactive({
   loading: false,
   visible: false,
@@ -38,13 +34,11 @@ async function handleSubmit() {
   }
   try {
     await userProvider?.BatchUsersToGroupsApi(params)
-    ElMessage.success($i18n.t('dpMsg_success'))
+    ElMessage.success(t('dpMsg_success'))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
-  } catch (error) {
-
-  }
+  } catch (error) {}
   state.loading = false
 }
 
@@ -66,7 +60,7 @@ async function handleOptions(exitList) {
   function userListFilter() {
     if (!exitList) exitList = []
     return state.groupList.reduce((prev, item) => {
-      const index = exitList.findIndex(exitItem => exitItem.id === item.id)
+      const index = exitList.findIndex((exitItem) => exitItem.id === item.id)
       if (index === -1) {
         item.value = item.id
         item.label = item.name
@@ -74,7 +68,7 @@ async function handleOptions(exitList) {
         prev.push(item)
       }
       return prev
-    }, []);
+    }, [])
   }
 }
 
@@ -83,7 +77,7 @@ async function getGroupList() {
   state.groupList = await userProvider?.GetGroupListApi()
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 </style>
