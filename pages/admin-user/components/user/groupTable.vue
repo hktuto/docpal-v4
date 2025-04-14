@@ -83,7 +83,7 @@ async function getMemberGroupList() {
   })
   state.groupList = res.data
   handleFilterFormChange(filterParams)
-  // tableRef.value?.loadData(res.data)
+  tableRef.value?.loadData(res.data)
 }
 
 async function handleDelete(row: any) {
@@ -121,10 +121,7 @@ async function handleDeleteSelected() {
     userId: props.user.userId
   })
   state.selectedRows = []
-  ElMessage({
-    type: 'success',
-    message: t('user_removeGroupsSuccessMsg', { username: props.user.firstName })
-  })
+  ElMessage.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
   getMemberGroupList()
 }
 
@@ -142,7 +139,10 @@ onActivated(() => {
   getMemberGroupList()
   state.selectedRows = []
 })
-
+onMounted(() => {
+  getMemberGroupList()
+  state.selectedRows = []
+})
 </script>
 
 <style lang="scss" scoped>
