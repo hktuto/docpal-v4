@@ -4,8 +4,7 @@ import { CollectionPage } from '#components'
 import { clientApi } from './mock/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { VxeGrid } from 'vxe-table'
-
-const routerProvider = inject(MenuRouterKey)
+import { mockRouterProvider } from './util'
 
 vi.mock('element-plus', () => ({
   ElMessageBox: {
@@ -23,10 +22,10 @@ describe('CollectionAction', () => {
     vi.clearAllMocks()
     wrapper = mount(CollectionPage, {
       global: {
-        components:
-          {
-            VxeGrid
-          },
+        components: { VxeGrid },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
         mocks: {
           $t: (msg: string) => msg,
           $i18n: { t: (key: string) => key }
@@ -68,11 +67,14 @@ describe('CollectionAction', () => {
     const row = { id: 1, name: 'Test Collection' }
     await wrapper.vm.handleDelete(row)
 
-    expect(ElMessageBox.confirm).toHaveBeenCalledWith('collection_deleteMsg')
+    expect(ElMessageBox.confirm).toHaveBeenCalledWith('collection_deleteMsg', {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: 'common_confirmDelete'
+    })
 
     expect(clientApi.api.deleteNuxeoDocument).toHaveBeenCalled()
     await new Promise((resolve) => setTimeout(resolve, 2000))
-    expect(routerProvider?.message.success).toHaveBeenCalled()
+    expect(mockRouterProvider.message.success).toHaveBeenCalled()
   })
 
   it('should reloadPage is correctly', () => {
