@@ -7,8 +7,8 @@
         inputKey="userNameOrEmail"
         :inputPlaceHolder="$t('placeHolder.userGroupName')"
       />
-      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary"
-                 @click="handleGroupDialogShow()">{{ $t('user_newGroup') }}
+      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary" @click="handleGroupDialogShow()"
+        >{{ $t('user_newGroup') }}
       </el-button>
     </template>
   </VxeGrid>
@@ -17,15 +17,15 @@
 
 <script lang="ts" setup>
 import { adminApi } from 'api'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { groupProviderKey } from '~/util/userProvider'
-
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['filter-change', 'refresh'])
 const groupProvider = inject(groupProviderKey)
 const isLdapMode: boolean = useIsLDAP()
 type State = {
-  groupList: any,
-  _groupList: any[],
+  groupList: any
+  _groupList: any[]
 }
 const state = reactive<State>({
   groupList: {},
@@ -76,16 +76,15 @@ function handleUserDialogShow() {
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(`${t('user_userGroupDeletedMsg')}`,
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete'),
-      dangerouslyUseHTMLString: true
-    })
+  const action = await ElMessageBox.confirm(`${t('user_userGroupDeletedMsg')}`, {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete'),
+    dangerouslyUseHTMLString: true
+  })
   if (action !== 'confirm') return
   const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
   if (!!res) {
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
     getGroup()
   }
 }

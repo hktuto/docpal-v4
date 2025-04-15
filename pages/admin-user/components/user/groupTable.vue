@@ -42,9 +42,9 @@
 
 
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { userProviderDetailKey } from '~/util/userProvider'
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 if (!userProviderDetail) {
@@ -113,7 +113,7 @@ async function handleDeleteSelected() {
   if (action !== 'confirm') return
   const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
   if (ids.length === 0) {
-    ElMessage.warning(t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
+    routerProvider?.message.warning(t('userTip.noValidGroups', { groupIds: noDeleteList.join(',') }))
     return
   }
   await userProviderDetail?.BatchUserRemoveGroupsApi({
@@ -121,7 +121,7 @@ async function handleDeleteSelected() {
     userId: props.user.userId
   })
   state.selectedRows = []
-  ElMessage.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
+  routerProvider?.message.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
   getMemberGroupList()
 }
 

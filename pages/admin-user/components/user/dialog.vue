@@ -14,7 +14,6 @@
 import {adminApi} from 'api'
 import {userProviderKey} from '~/util/userProvider';
 import formJson from './dialog.vform.json'
-import {ElMessage} from "element-plus";
 
 const {t} = useI18n()
 const userProvider = inject(userProviderKey)
@@ -31,7 +30,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.userId || !data.username) {
-    ElMessage.error(t("user_username") + t('render.hint.fieldRequired'));
+    routerProvider?.message.error(t("user_username") + t('render.hint.fieldRequired'));
     return;
   }
   state.loading = true

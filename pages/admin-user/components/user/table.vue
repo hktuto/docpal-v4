@@ -3,15 +3,8 @@
     <template #toolbar_buttons>
       <header v-show="state.selectList?.length > 0" class="header-flex">
         <div class="title-select color__primary">
-          <b class="el-icon--left">
-            {{ $t('notifications.userSelected') }}: {{ state.selectList.length }}
-          </b>
-          <Icon
-            id="UserList__ClearSelected"
-            name="ic:baseline-clear"
-            class="normal cursor-pointer"
-            @click="cleanSelectedRows"
-          ></Icon>
+          <b class="el-icon--left"> {{ $t('notifications.userSelected') }}: {{ state.selectList.length }} </b>
+          <Icon id="UserList__ClearSelected" name="ic:baseline-clear" class="normal cursor-pointer" @click="cleanSelectedRows"></Icon>
         </div>
         <div class="flex-x-end">
           <el-button id="UserList__Delete" v-if="!isLdapMode" type="danger" @click="handleDeleteSelected()">
@@ -51,7 +44,7 @@
           type="primary"
           :disabled="state.activeUsers >= state.licenseUsers || isLdapMode"
           @click="handleUserDialogShow()"
-        >{{ $t('user_newUser') }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
+          >{{ $t('user_newUser') }} ({{ state.activeUsers }} / {{ state.licenseUsers }})
         </el-button>
       </header>
     </template>
@@ -75,14 +68,11 @@
   </VxeGrid>
 
   <UserDialog ref="UserDialogRef" @refresh="reload"></UserDialog>
-  <UserAddGroupsDialog
-    ref="UserAddGroupDialogRef"
-    @refresh="reload()"
-  ></UserAddGroupsDialog>
+  <UserAddGroupsDialog ref="UserAddGroupDialogRef" @refresh="reload()"></UserAddGroupsDialog>
 </template>
 
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { userProviderKey } from '~/util/userProvider'
 
 const { t } = useI18n()
@@ -93,14 +83,14 @@ const isLdapMode: boolean = useIsLDAP()
 const props = defineProps(['condition'])
 
 type TableState = {
-  ready: boolean;
-  loading: boolean;
-  activeUsers: number;
-  licenseUsers: number;
-  extraParams: any;
-  extraParamsFilter: any;
-  selectList: any[];
-};
+  ready: boolean
+  loading: boolean
+  activeUsers: number
+  licenseUsers: number
+  extraParams: any
+  extraParamsFilter: any
+  selectList: any[]
+}
 const state = reactive<TableState>({
   ready: false,
   loading: false,
@@ -164,18 +154,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       isHover: true
     },
     tooltipConfig: {
-      contentMethod: ({
-                        items,
-                        row,
-                        rowIndex,
-                        $rowIndex,
-                        column,
-                        columnIndex,
-                        $columnIndex,
-                        type,
-                        cell,
-                        $event
-                      }: any) => {
+      contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }: any) => {
         const key = column.property
         const value = row[key]
         if (key === 'groupDTOList') {
@@ -241,7 +220,7 @@ async function handleSetStatus(status: 'A' | 'D', row: any) {
   if (status === row.value || !row.userId || status === null) return
   if (state.activeUsers >= state.licenseUsers && status === 'A') {
     row.status = 'D'
-    ElMessage.warning( t('user_activeUserOverLimit'))
+    routerProvider?.message.warning(t('user_activeUserOverLimit'))
     return
   }
   try {
@@ -256,10 +235,7 @@ async function handleSetStatus(status: 'A' | 'D', row: any) {
 }
 
 async function getAllUserAndActiveCount() {
-  const {
-    ActiveCount,
-    licenseUserNum
-  } = await userProvider?.getAllUserAndActiveCountApi()
+  const { ActiveCount, licenseUserNum } = await userProvider?.getAllUserAndActiveCountApi()
   state.activeUsers = ActiveCount || 0
   state.licenseUsers = licenseUserNum || 0
 }
@@ -267,13 +243,9 @@ async function getAllUserAndActiveCount() {
 // #region module:select actions
 
 async function handleActiveSelected(status: 'A' | 'D') {
-  const noActiveUsersCount = state.selectList.filter((item: any) => item.status === 'D')
-    .length
+  const noActiveUsersCount = state.selectList.filter((item: any) => item.status === 'D').length
   if (state.activeUsers + noActiveUsersCount > state.licenseUsers && status === 'A') {
-    ElMessage({
-      message: t('user_activeUserOverLimit'),
-      type: 'warning'
-    })
+    routerProvider?.message.warning(t('user_activeUserOverLimit'))
     return
   }
   const params = {
@@ -283,16 +255,16 @@ async function handleActiveSelected(status: 'A' | 'D') {
   }
   const result = await userProvider?.BatchActiveUserApi(params)
   if (result.length > 0) {
-    ElMessage.error(
+    routerProvider?.message.error(
       t('userTip.operationFailed', {
         users: result.join(',')
       })
     )
   } else {
     if (status === 'A') {
-      ElMessage.success(t('user.activate.successfully.msg'))
+      routerProvider?.message.success(t('user.activate.successfully.msg'))
     } else {
-      ElMessage.success(t('user.inactivate.successfully.msg'))
+      routerProvider?.message.success(t('user.inactivate.successfully.msg'))
     }
   }
   getAllUserAndActiveCount()
@@ -361,7 +333,6 @@ function handleClearFilter() {
 
 onActivated(() => {
   state.selectList = []
-
 })
 onMounted(() => {
   getAllUserAndActiveCount()

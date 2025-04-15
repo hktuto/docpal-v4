@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="state.visible" :title="$t('user_editUser')" :close-on-click-modal="false">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <el-button id="UserList__Info__Edit__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
@@ -9,20 +9,18 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 import formJson from './editDialog.vform.json'
 
 const routerProvider = inject(MenuRouterKey)
-const {t} = useI18n()
+const { t } = useI18n()
 const props = defineProps<{
-  user: any,
+  user: any
 }>()
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const state = reactive({
   loading: false,
-  visible: false,
+  visible: false
 })
 const FormRendererRef = ref()
 
@@ -30,14 +28,12 @@ async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
-    await adminApi.api.patchNuxeoIdentityUser({...props.user, properties: null, ...data})
-    routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('user_info'), name: data.firstName}));
+    await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })
+    routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: data.firstName }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
-  } catch (error) {
-
-  }
+  } catch (error) {}
   state.loading = false
 }
 
@@ -48,10 +44,8 @@ function handleOpen() {
   })
 }
 
-onMounted(async () => {
-})
-defineExpose({handleOpen})
+onMounted(async () => {})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
-
 </style>
