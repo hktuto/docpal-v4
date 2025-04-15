@@ -2,9 +2,10 @@
   <el-dialog v-model="state.visible"
              :title="state.isEdit ? $t('docType_editDisplayMeta') : $t('docType_addDisplayMeta')"
              :close-on-click-modal="false">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="BulkImport__Meta__AddNewDisplayMeta__Submit" type="primary" :loading="state.loading" @click="handleSubmit()">
+      <el-button id="BulkImport__Meta__AddNewDisplayMeta__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit()">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -12,8 +13,8 @@
 </template>
 <script lang="ts" setup>
 import formJson from './adminMetaMapping.vform.json'
-import {adminApi} from 'api';
-import {ElMessage} from "element-plus";
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps<{
   metaMapping: any,
@@ -22,7 +23,7 @@ const props = defineProps<{
 const emits = defineEmits([
   'refresh'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false,
@@ -42,8 +43,8 @@ async function handleSubmit() {
         [data.metaData]: data.label
       }
     }
-    await adminApi.api.postWorkflowSavemetadatamapping({documentType: [param]})
-    ElMessage.success(t('bulkImport_displayMetaSuccessMsg', {name: data.metaData}))
+    await adminApi.api.postWorkflowSavemetadatamapping({ documentType: [param] })
+    routerProvider?.message.success(t('bulkImport_displayMetaSuccessMsg', { name: data.metaData }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
@@ -54,7 +55,7 @@ async function handleSubmit() {
 
 function handleOpen(exitList: any, formData: any) {
   state.visible = true
-  console.log("exitList", exitList)
+  console.log('exitList', exitList)
   setTimeout(() => {
     FormRendererRef.value.vFormRenderRef.resetForm()
     handleOptions(exitList)
@@ -81,7 +82,7 @@ async function handleOptions(exitList: any) {
       if (index !== -1) item.disabled = true
       prev.push(item)
       return prev
-    }, []);
+    }, [])
   }
 }
 
@@ -89,7 +90,7 @@ onMounted(async () => {
   const data = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile').then(res => res.data?.keywords) as any
   state.globalSchemaList = data
 })
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

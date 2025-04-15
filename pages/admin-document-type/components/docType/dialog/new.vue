@@ -19,8 +19,7 @@
 </template>
 <script lang="ts" setup>
 import formJson from './new.vform.json'
-import {ElMessage} from "element-plus";
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 
 const emits = defineEmits([
   'refresh'
@@ -28,22 +27,25 @@ const emits = defineEmits([
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {},
+  setting: {}
 })
 
 const FormRendererRef = ref()
-const {t} = useI18n()
+const { t } = useI18n()
 
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
     const result = await adminApi.api.postDocpaltypeSettings(data)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('docType_documentType'), name: data.name}))
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+      modelName: t('docType_documentType'),
+      name: data.name
+    }))
     state.visible = false
     emits('refresh')
   } catch (error) {
-    console.log("error", error)
+    console.log('error', error)
   } finally {
     state.loading = false
   }
@@ -57,7 +59,7 @@ function handleOpen() {
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

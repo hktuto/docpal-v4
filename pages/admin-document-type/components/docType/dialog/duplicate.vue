@@ -18,18 +18,17 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api';
+import { adminApi } from 'api'
 import formJson from './duplicate.vform.json'
-import {ElMessage} from "element-plus";
 
 const emits = defineEmits([
   'refresh', 'delete'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {},
+  setting: {}
 })
 const FormRendererRef = ref()
 
@@ -37,8 +36,8 @@ async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
-    await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, {...data})
-    ElMessage.success(t('documentType_duplicateSuccessMsg'))
+    await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
+    routerProvider?.message.success(t('documentType_duplicateSuccessMsg'))
     emits('refresh')
     state.visible = false
   } catch (error) {
@@ -55,13 +54,13 @@ function handleOpen(setting) {
     await FormRendererRef.value.vFormRenderRef.setFormData({
       fromName: setting.name,
       category: setting.category,
-      dataType: setting.dataType,
+      dataType: setting.dataType
     })
     state.loading = false
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

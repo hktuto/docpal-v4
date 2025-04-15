@@ -262,7 +262,7 @@ async function handleDelete(row: any) {
   if (action !== 'confirm') return
   const result = await adminApi.api.deleteMasterTablesIdRecord(props.tableId, { recordId: row.id }, {})
   if (!result) {
-    ElMessage.error(t('dpTip.deleteFailed'))
+    routerProvider?.message.error(t('dpTip.deleteFailed'))
     return
   }
   query()

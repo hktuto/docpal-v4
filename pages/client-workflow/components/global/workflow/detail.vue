@@ -10,7 +10,7 @@ if (!routerProvider) {
 const { id, workflowType, backItem } = defineProps<{
   id: string
   workflowType: string
-  backItem?:any
+  backItem?: any
 }>()
 // @ts-ignore
 const userId: string = useUserId().value
@@ -35,7 +35,10 @@ async function getDetail() {
     state.error = null
     switch (workflowType) {
       case state.processState.completeTask:
-        const historyList: any = await clientApi.api.postWorkflowHistoryProcess({ processInstanceId: id, completed: true }).then((res) => res?.data?.entryList)
+        const historyList: any = await clientApi.api.postWorkflowHistoryProcess({
+          processInstanceId: id,
+          completed: true
+        }).then((res) => res?.data?.entryList)
         if (!!historyList && historyList.length > 0) {
           state.taskDetail = historyList[0]
         }
@@ -44,7 +47,10 @@ async function getDetail() {
         state.taskDetail = await clientApi.api.postWorkflowTask({ taskId: id }).then((res) => res.data)
         if (!state.taskDetail) {
           // handle if workflow task is already complete ,and should use history api
-          state.taskDetail = await clientApi.api.postWorkflowHistoryProcess({ processInstanceId: id, completed: true }).then((res) => res.data)
+          state.taskDetail = await clientApi.api.postWorkflowHistoryProcess({
+            processInstanceId: id,
+            completed: true
+          }).then((res) => res.data)
           state.isCompleted = true
         }
     }
@@ -92,7 +98,7 @@ async function handleFormDataGet() {
         }
       }
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      console.log("formData", formData)
+      console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break
@@ -106,7 +112,7 @@ async function handleFormDataGet() {
         state.taskDetail.processDefinitionVersionId
       )
       xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(state.taskDetail.processDefinitionVersionId)
-      console.log("formData", formData)
+      console.log('formData', formData)
       vFormRef.value.setForm(formJson, formData, [], xml)
       handleAdditionalSetting(xml, state.taskDetail, formData)
       break
@@ -127,7 +133,7 @@ function formDataGetFromProps(list: any) {
     if (item.type === 'boolean' && (item.value === 'true' || item.value === 'false')) {
       item.value = item.value === 'true'
     }
-    if(item.value !== null && item.value !== undefined) {
+    if (item.value !== null && item.value !== undefined) {
       prev[item.id] = item.value
     }
     return prev
@@ -162,10 +168,10 @@ async function handleSave() {
       properties: { ...data }
     }
     await clientApi.api.postWorkflowPropertiesSave(param)
-    ElMessage.success(`${t('msg_successfulOperation')}`)
+    routerProvider?.message.success(`${t('msg_successfulOperation')}`)
   } catch (error) {
     console.log(error)
-    // ElMessage.error(error)
+    // routerProvider?.message.error(error)
   }
   state.loading = false
 }
@@ -209,14 +215,14 @@ async function handleSubmit() {
       properties: { ...data }
     }
     const res: any = await clientApi.api.postWorkflowFormSubmit(param).then((res) => res.data)
-    ElMessage.success(`${t('msg_successfulOperation')}`)
+    routerProvider?.message.success(`${t('msg_successfulOperation')}`)
     const fallbackRoute = routeWorkflowPage({
       workflowType: workflowType
     })
     routerProvider?.back(fallbackRoute)
   } catch (error) {
     console.log('error', error)
-    // ElMessage.error(error.message)
+    // routerProvider?.message.error(error.message)
   } finally {
     state.loading = false
   }
@@ -245,10 +251,10 @@ async function addtionalSubmit(formData: any) {
     properties: { ...formData }
   }
   const res: any = await clientApi.api.postWorkflowFormSubmit(param).then((res) => res.data)
-  ElMessage.success(`${t('msg_successfulOperation')}`)
-  if(backItem) {
+  routerProvider?.message.success(`${t('msg_successfulOperation')}`)
+  if (backItem) {
     routerProvider?.back(backItem)
-  }else{
+  } else {
     const fallbackRoute = routeWorkflowPage({
       workflowType: workflowType
     })
@@ -266,7 +272,8 @@ const handleTaskInfoChange = async (taskDetailRes: any, isClaim: boolean) => {
     } else {
       vFormRef.value.disableForm()
     }
-  } catch (error) {}
+  } catch (error) {
+  }
   state.loading = false
 }
 
@@ -288,12 +295,12 @@ const isAssigneeUser = computed(() => {
 })
 onActivated(() => {
   const backLinks = routerProvider?.getHistory()
-  if(!backItem && backLinks && backLinks.length > 0) {
+  if (!backItem && backLinks && backLinks.length > 0) {
     routerProvider?.updateProps({
       backItem: backLinks[backLinks.length - 1]
     })
   }
-  if(backItem && backLinks.length === 0) {
+  if (backItem && backLinks.length === 0) {
     routerProvider?.addToHistory(backItem)
   }
   getDetail()
@@ -303,15 +310,18 @@ onActivated(() => {
   <div v-if="!state.error" class="pageContainer--padding workflow-detail">
     <el-tabs v-model="state.activeTab" class="dp-tabs--auto" @tab-change="tabChange">
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_info')" name="info" v-loading="state.loading">
-        <WorkflowDetailCompleteInfo v-if="state.processState[workflowType]" :taskDetail="state.taskDetail" :state="workflowType"></WorkflowDetailCompleteInfo>
-        <WorkflowDetailInfo v-else :taskDetail="state.taskDetail" :id="id" @change="handleTaskInfoChange"></WorkflowDetailInfo>
+        <WorkflowDetailCompleteInfo v-if="state.processState[workflowType]" :taskDetail="state.taskDetail"
+                                    :state="workflowType"></WorkflowDetailCompleteInfo>
+        <WorkflowDetailInfo v-else :taskDetail="state.taskDetail" :id="id"
+                            @change="handleTaskInfoChange"></WorkflowDetailInfo>
       </el-tab-pane>
       <el-tab-pane class="workflow-detail-pane" :label="$t('workflow_form')" name="form" v-loading="state.loading">
         <WorkflowDetailFormRender ref="vFormRef" :taskDetail="state.taskDetail">
           <template #action>
             <div class="workflow-detail-pane--btns" v-if="isAssigneeUser">
               <template v-for="(item, index) in additionalButton" :key="index">
-                <component :is="item.component" ref="additionalButtonRef" v-bind="item.props" @submit="addtionalSubmit" />
+                <component :is="item.component" ref="additionalButtonRef" v-bind="item.props"
+                           @submit="addtionalSubmit" />
               </template>
               <el-button id="Workflow__AvailableTask__Detail__Form__SaveDraft" @click="handleSave">
                 {{ $t('workflow_save') }}
@@ -333,11 +343,13 @@ onActivated(() => {
           :steps="state.activityList"
         />
       </el-tab-pane>
-      <el-tab-pane v-if="state.taskDetail && state.taskDetail.instanceId && isMobile" :label="$t('common_discussionChannel')" name="command">
+      <el-tab-pane v-if="state.taskDetail && state.taskDetail.instanceId && isMobile"
+                   :label="$t('common_discussionChannel')" name="command">
         <WorkflowDetailDiscussionChannel :id="state.taskDetail.instanceId" :noToggle="true" />
       </el-tab-pane>
     </el-tabs>
-    <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile" :id="state.taskDetail.instanceId" />
+    <WorkflowDetailDiscussionChannel v-if="state.taskDetail && state.taskDetail.instanceId && !isMobile"
+                                     :id="state.taskDetail.instanceId" />
   </div>
   <div v-else>
     Workflow id not found, workflow id : {{ id }}.

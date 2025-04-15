@@ -1,5 +1,6 @@
 <template>
-  <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')" :close-on-click-modal="false" destroy-on-close>
+  <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')"
+             :close-on-click-modal="false" destroy-on-close>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <!-- <el-text class="mx-1" type="danger">{{ $t('dpTip.resetWarning') }}</el-text> -->
@@ -39,7 +40,8 @@ async function handleSubmit() {
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
-  } catch (error) {}
+  } catch (error) {
+  }
   state.loading = false
 }
 

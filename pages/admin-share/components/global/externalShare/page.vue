@@ -6,7 +6,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 
 const { t } = useI18n()
@@ -93,7 +93,7 @@ async function handleDisabled(row) {
   const param = []
   param.push(row.shareID)
   await adminApi.api.deleteNuxeoShare(param)
-  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('share_externalShareLink'), name: null }))
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_externalShareLink'), name: null }))
   query()
 }
 

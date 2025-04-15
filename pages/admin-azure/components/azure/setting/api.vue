@@ -1,74 +1,82 @@
 <template>
-<div>
+  <div>
     <div class="title">{{ $t('azure.apiSetting') }}</div>
     <div class="description">{{ $t('azure.apiSettingDescription') }}</div>
     <el-card>
-        <FormRenderer ref="FormRendererRef" :form-json="formJson" >
-        </FormRenderer>
-        <el-button class="p-btn" type="primary" :loading="state.loading" @click="handleSave">{{ $t('common_save') }}</el-button>
+      <FormRenderer ref="FormRendererRef" :form-json="formJson">
+      </FormRenderer>
+      <el-button class="p-btn" type="primary" :loading="state.loading" @click="handleSave">{{ $t('common_save') }}
+      </el-button>
     </el-card>
-</div>
+  </div>
 </template>
 <script setup lang="ts">
-import { ElMessage} from 'element-plus'
+import { ElMessage } from 'element-plus'
 import formJson from './api.vform.json'
 
-import { AzureProviderKey } from '#imports';
+import { AzureProviderKey } from '#imports'
+
 const props = defineProps(['setting'])
 const state = reactive<any>({
-    loading: false
+  loading: false
 })
 const azureProvider = inject(AzureProviderKey)
 const route = useRoute()
 const FormRendererRef = ref()
+
 async function handleSave() {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    state.loading = true
-    // try {
-        const params = {
-            description: data.description
-        }
-        if (!data.apiKey.includes('....')) params.apiKey = data.apiKey
-        const result = await azureProvider.UpdateAzureApiKeyApi({
-            ...params
-        })
-        if (result) ElMessage.success($i18n.t('dpMsg_success'))
-    // } catch (error) {
-    // }
-    setTimeout(() => state.loading = false, 500)
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  state.loading = true
+  // try {
+  const params = {
+    description: data.description
+  }
+  if (!data.apiKey.includes('....')) params.apiKey = data.apiKey
+  const result = await azureProvider.UpdateAzureApiKeyApi({
+    ...params
+  })
+  if (result) routerProvider?.message.success($i18n.t('dpMsg_success'))
+  // } catch (error) {
+  // }
+  setTimeout(() => state.loading = false, 500)
 }
+
 function initForm(setting) {
-    FormRendererRef.value.vFormRenderRef.setFormData(setting)
+  FormRendererRef.value.vFormRenderRef.setFormData(setting)
 }
 
 watch(() => props.setting, (newVal) => {
-    console.log("watch setting", newVal)
-    if(!newVal) return
-    setTimeout(() => initForm(newVal))
+  console.log('watch setting', newVal)
+  if (!newVal) return
+  setTimeout(() => initForm(newVal))
 }, {
-    immediate: true
+  immediate: true
 })
 </script>
 <style lang="scss" scoped>
 .title {
-    font-weight: bold;
-    font-size: 18px;
+  font-weight: bold;
+  font-size: 18px;
 }
+
 .description {
-    line-height: 32px;
-    color: var(--app-grey-500);
+  line-height: 32px;
+  color: var(--app-grey-500);
 }
+
 .el-input {
-    width: 100%;
-    padding: var(--app-space-xs) 0;
+  width: 100%;
+  padding: var(--app-space-xs) 0;
 }
+
 .el-card {
-    position: relative;
-    :deep .p-btn {
-        position: absolute;
-        right: var(--app-space-xs);
-        top: var(--app-space-xs);
-    }
+  position: relative;
+
+  :deep .p-btn {
+    position: absolute;
+    right: var(--app-space-xs);
+    top: var(--app-space-xs);
+  }
 }
 </style>
     

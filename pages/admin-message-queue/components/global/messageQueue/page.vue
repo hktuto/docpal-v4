@@ -81,7 +81,7 @@ async function handleReSubmit(row) {
       businessId: row.businessId
     })
     if (!!res) {
-      ElMessage.success('success')
+      routerProvider?.message.success('success')
       query()
     }
   } catch (error) {

@@ -1,7 +1,7 @@
 <template>
   <el-card>
     <div class="flex-x-start">
-      <h3 class="el-icon--left">{{ $t("adminMenu.whatsApps") }}</h3>
+      <h3 class="el-icon--left">{{ $t('adminMenu.whatsApps') }}</h3>
       <el-switch v-model="state.setting.whatsAppSetting.whatsAppSwitch" :loading="state.switchLoading"
                  @change="handleSwitchChange"></el-switch>
     </div>
@@ -48,15 +48,15 @@
     </div>
     <h3>{{ $t('config.errorLog') }}</h3>
     <div style="height: 50vh;overflow: hidden;">
-      <WhatappsLog/>
+      <WhatappsLog />
     </div>
   </el-card>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import {ElMessage} from 'element-plus'
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive<any>({
   setting: {
     whatsAppSetting: {
@@ -69,8 +69,8 @@ const state = reactive<any>({
 })
 const form = ref({
   accessToken: '',
-  accountNum: "",
-  phoneNum: ""
+  accountNum: '',
+  phoneNum: ''
 
 })
 const formRef = ref()
@@ -86,7 +86,7 @@ async function handleSwitchChange(val) {
       accountNum: form.value.accountNum
     }).then(res => res.data)
     if (!!res) {
-      ElMessage.success(t('dpMsg_success'))
+      routerProvider?.message.success(t('dpMsg_success'))
     }
   } catch (error) {
   } finally {
@@ -107,7 +107,7 @@ async function handleSave(val) {
       accountNum: form.value.accountNum
     }).then(res => res.data)
     if (!!res) {
-      ElMessage.success(t('dpMsg_success'))
+      routerProvider?.message.success(t('dpMsg_success'))
     }
   } catch (error) {
   } finally {
@@ -120,12 +120,12 @@ async function handleTestConnection() {
     state.testLoading = true
     const res = await adminApi.api.getWhatsappTestConnection().then(res => res.data)
     if (res === 'Online') {
-      ElMessage.success(res)
+      routerProvider?.message.success(res)
     } else {
-      ElMessage.error(res)
+      routerProvider?.message.error(res)
     }
   } catch (error) {
-    ElMessage.error(error)
+    routerProvider?.message.error(error)
   } finally {
     setTimeout(() => state.testLoading = false, 500)
   }
@@ -134,8 +134,8 @@ async function handleTestConnection() {
 onMounted(async () => {
   state.setting = await adminApi.api.postWhatsappOverview({}).then(res => res.data)
   form.value.accessToken = state.setting.whatsAppSetting.accessToken
-  form.value.phoneNum = state.setting.whatsAppSetting.phoneNum || ""
-  form.value.accountNum = state.setting.whatsAppSetting.accountNum || ""
+  form.value.phoneNum = state.setting.whatsAppSetting.phoneNum || ''
+  form.value.accountNum = state.setting.whatsAppSetting.accountNum || ''
 })
 </script>
 <style lang="scss" scoped>

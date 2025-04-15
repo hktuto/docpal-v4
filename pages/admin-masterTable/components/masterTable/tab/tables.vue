@@ -114,10 +114,13 @@ async function handleDelete(row: any) {
   if (action !== 'confirm') return
   const result = await masterTableProvider?.DeleteMasterTablesApi(row.id)
   if (!result) {
-    ElMessage.error(t('dpTip.deleteFailed'))
+    routerProvider?.message.error(t('dpTip.deleteFailed'))
     return
   }
-  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('marsterTable.type.master_table'), name: row.name }))
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+    modelName: t('marsterTable.type.master_table'),
+    name: row.name
+  }))
   query()
 }
 
@@ -129,7 +132,7 @@ async function handleActive(row, status: 'A' | 'D') {
       id: row.id,
       status
     })
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
     row.status = row.status = 'A' ? 'D' : 'A'
   }

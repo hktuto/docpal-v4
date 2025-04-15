@@ -57,7 +57,7 @@ async function handleSubmit() {
     template: 'Blank',
     name: ''
   }
-  ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('workflow_workflow'), name: null }))
+  routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('workflow_workflow'), name: null }))
   state.visible = false
   emits('created', data)
 }

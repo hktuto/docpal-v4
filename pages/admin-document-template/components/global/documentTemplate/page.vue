@@ -140,7 +140,7 @@ async function handleDownload(row: any) {
     })
     await downloadBlob(blob, row.name)
   } catch (error) {
-    ElMessage.error(t('download_noFile') as string)
+    routerProvider?.message.error(t('download_noFile') as string)
   } finally {
     notification.close()
   }

@@ -109,7 +109,7 @@ async function handlePermissionChange(open: boolean, permission: string, row: an
     }
     if (res && res.errorCode) throw new Error(res.message || 'error')
   } catch (error) {
-    // ElMessage.error(error.message || 'error')
+    // routerProvider?.message.error(error.message || 'error')
   }
   setTimeout(async () => {
     row.loading = false
@@ -154,7 +154,7 @@ async function removeLocalAcl(row: any) {
       })
     if (action !== 'confirm') throw new Error('cancel')
     await adminApi.api.deleteCabinetTemplatePermission({ id: props.id, userId: row.userId }, {})
-    ElMessage.success(t('folder_cabinetDetailLocalPermissionRemoveSuccessMsg'))
+    routerProvider?.message.success(t('folder_cabinetDetailLocalPermissionRemoveSuccessMsg'))
     emits('refresh')
   } catch (error) {
     row.loading = false

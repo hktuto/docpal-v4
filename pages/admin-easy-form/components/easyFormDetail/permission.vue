@@ -47,7 +47,7 @@ async function handleChange() {
       id: props.detail.id,
       permission: form.value.permission.join(',')
     })
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   } finally {
     state.loading = false
