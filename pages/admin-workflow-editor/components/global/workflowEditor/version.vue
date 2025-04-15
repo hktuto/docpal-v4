@@ -75,7 +75,7 @@ async function saveAsNewVersionHandler(row:any) {
     const { data } = await adminApi.api.postWorkflowVersionNew({requestDTO:{}},form) as any
     await saveWorkflowFormToNewVersion(xml, workflowData.value.key, row.id, data.id)
 
-    routerProvider.message.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
 
     tableRef.value?.reload()
 }

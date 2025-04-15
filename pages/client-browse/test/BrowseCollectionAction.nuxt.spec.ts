@@ -5,6 +5,8 @@ import { clientApi } from './mock/api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { VxeGrid } from 'vxe-table'
 
+const routerProvider = inject(MenuRouterKey)
+
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     confirm: vi.fn(() => Promise.resolve('confirm'))

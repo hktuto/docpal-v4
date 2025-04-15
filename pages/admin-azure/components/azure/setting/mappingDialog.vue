@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import formJson from './mappingDialog.vform.json'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['exitList'])
 const azureProvider = inject(AzureProviderKey)
 const emits = defineEmits([

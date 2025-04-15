@@ -4,7 +4,7 @@ import type { DashboardWidget, DashboardWidgetSetting } from '#imports'
 import { dashboardWidgetSetting, getNormalizeSetting, getWidgetSetting } from '#imports'
 import { publicApi } from 'api'
 import { onActivated } from 'vue'
-
+const routerProvider = inject(MenuRouterKey)
 const { id } = defineProps<{
   id: number;
 }>()

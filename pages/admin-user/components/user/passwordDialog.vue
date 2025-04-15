@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="state.visible" :title="$t('user_editPassword')" :close-on-click-modal="false">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <el-button id="UserList__Info__ChangePassword__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
@@ -10,12 +10,11 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {userProviderDetailKey} from '~/util/userProvider';
+import { userProviderDetailKey } from '~/util/userProvider'
 import formJson from './passwordDialog.vform.json'
 
 const routerProvider = inject(MenuRouterKey)
-
-const {t} = useI18n()
+const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
 
 const props = defineProps<{
@@ -36,13 +35,13 @@ async function handleSubmit() {
   try {
     const param = {
       password: data.password,
-      userId: props.user.userId,
+      userId: props.user.userId
     }
     await userProviderDetail?.PatchUserPasswordApi(param)
     routerProvider?.message.success(t('tip_updateSuccessMsg', {
       modelName: t('user_userPassword'),
       name: param.userId
-    }));
+    }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
@@ -56,7 +55,7 @@ function handleOpen() {
   state.visible = true
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

@@ -7,8 +7,9 @@
         inputKey="userNameOrEmail"
         :inputPlaceHolder="$t('placeHolder.userGroupName')"
       />
-      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary" @click="handleGroupDialogShow()"
-        >{{ $t('user_newGroup') }}
+      <el-button id="UserGroupList__AddNewUserGroup" class="el-icon--right button" type="primary"
+                 @click="handleGroupDialogShow()"
+      >{{ $t('user_newGroup') }}
       </el-button>
     </template>
   </VxeGrid>
@@ -19,6 +20,7 @@
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 import { groupProviderKey } from '~/util/userProvider'
+
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['filter-change', 'refresh'])
 const groupProvider = inject(groupProviderKey)

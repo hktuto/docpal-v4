@@ -24,10 +24,11 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage, type FormInstance} from 'element-plus'
-import {adminApi} from 'api'
+import { ElMessage, type FormInstance } from 'element-plus'
+import { adminApi } from 'api'
 
-const {t} = useI18n()
+const routerProvider = inject(MenuRouterKey)
+const { t } = useI18n()
 const emit = defineEmits(['success'])
 const state = reactive({
   userList: []
@@ -80,7 +81,7 @@ async function handleSubmit() {
     })
     if (!res2) return
 
-    routerProvider?.message.success(t('workflow_ManageReallocateAssigneeSuccessMsg'));
+    routerProvider?.message.success(t('workflow_ManageReallocateAssigneeSuccessMsg'))
     emit('success')
     dialogVisible.value = false
   } catch (error) {
@@ -92,7 +93,7 @@ async function handleSubmit() {
 }
 
 // #endregion
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">

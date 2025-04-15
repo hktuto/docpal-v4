@@ -1,11 +1,11 @@
 <template>
   <div class="pageContainer">
     <template v-if="list.length === 0">
-      <WatermarkEmpty @update="getList"/>
+      <WatermarkEmpty @update="getList" />
     </template>
     <template v-else>
       <div class="listContainer">
-        <WatermarkList :list="list" :selected-id="props.id" @update="getList" @remove="deleteItem"/>
+        <WatermarkList :list="list" :selected-id="props.id" @update="getList" @remove="deleteItem" />
         <WatermarkDetail v-if="detail" ref="watermarkDetail" :detail="detail">
           <template #footer>
             <ElButton id="WatermarkSetting__Save" type="primary" @click="save">Save</ElButton>
@@ -17,29 +17,27 @@
 </template>
 
 <script lang="ts" setup>
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 
-const detail = ref<WatermarkTemplateDetail | null>(null);
+const detail = ref<WatermarkTemplateDetail | null>(null)
 const watermarkDetail = ref()
-const {getWatermarkTemplateDetail, removeWatermarkTemplate, list, updateWatermarkTemplateDetail} = useWatermark()
-
+const { getWatermarkTemplateDetail, removeWatermarkTemplate, list, updateWatermarkTemplateDetail } = useWatermark()
 const routerProvider = inject(MenuRouterKey)
-
 const props = defineProps<{
   id: string
-}>();
+}>()
 
-const {id} = toRefs(props)
-const {t} = useI18n()
+const { id } = toRefs(props)
+const { t } = useI18n()
 
 async function getList(dummy: boolean = false) {
-  const {data} = await adminApi.api.getWatermarkTemplatesAll() as any;
+  const { data } = await adminApi.api.getWatermarkTemplatesAll() as any
   list.value = data.sort((a, b) => a.name.localeCompare(b.name))
 }
 
 async function deleteItem(id: string) {
   await removeWatermarkTemplate(id)
-  await getList();
+  await getList()
   if (list.value.length > 0) {
     routerProvider?.updateProps({
       id: list.value[0].id
@@ -49,8 +47,8 @@ async function deleteItem(id: string) {
 
 async function getDetail(id: string) {
   try {
-    detail.value = await getWatermarkTemplateDetail(id);
-    console.log("detail", detail.value)
+    detail.value = await getWatermarkTemplateDetail(id)
+    console.log('detail', detail.value)
     if (detail.value.type === 'dynamic') detail.value.contentType = detail.value.content
   } catch (error) {
     detail.value = null
@@ -62,16 +60,16 @@ async function save() {
   if (!data) return
   const promise = []
   await updateWatermarkTemplateDetail(data.update)
-  routerProvider?.message.success(t('admin_watermarkSavedSuccessMsg'));
+  routerProvider?.message.success(t('admin_watermarkSavedSuccessMsg'))
 }
 
 watch(() => props, (newId) => {
-  console.log("watch", props.id)
+  console.log('watch', props.id)
   if (props.id) {
 
-    getDetail(props.id);
+    getDetail(props.id)
   }
-  getList();
+  getList()
 }, {
   immediate: true,
   deep: true

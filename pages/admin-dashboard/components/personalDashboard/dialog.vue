@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import formJson from './dialog.vform.json'
-
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['refresh', 'delete', 'add'])
 const { t } = useI18n()
 const state = reactive({

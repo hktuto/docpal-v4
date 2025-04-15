@@ -26,6 +26,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onActivated } from 'vue'
 import { MasterTableProviderKey } from '~/utils/masterTableProvider'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const emits = defineEmits(['filter-change'])
 const masterTableProvider = inject(MasterTableProviderKey)

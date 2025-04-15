@@ -16,7 +16,7 @@ import { adminApi } from 'api'
 import type { GroupDTO, UserDTO } from 'api/src/generate/admin'
 import formJson from './addPermissionDialog.vform.json'
 import { ElMessage } from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   exitList: any[],
   tableId: string,

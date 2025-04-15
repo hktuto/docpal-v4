@@ -15,6 +15,7 @@ import formJson from './addCollectionDialog.vform.json'
 import { ElMessage } from 'element-plus'
 import { clientApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const state = reactive({
   loading: false,

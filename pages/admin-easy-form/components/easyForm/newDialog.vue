@@ -20,7 +20,7 @@
 import formJson from './newDialog.vform.json'
 import { adminApi } from 'api'
 import { ElMessage } from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const emits = defineEmits([
   'refresh'

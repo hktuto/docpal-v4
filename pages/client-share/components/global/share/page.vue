@@ -16,6 +16,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { clientApi } from 'api'
 import dayjs from 'dayjs'
 
+const routerProvider = inject(MenuRouterKey)
 const ResponsiveFilterRef = ref()
 const { t } = useI18n()
 let extraParams: any = {}

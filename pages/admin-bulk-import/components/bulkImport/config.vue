@@ -2,7 +2,7 @@
 import { useVxeTable } from '#imports'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
-
+const routerProvider = inject(MenuRouterKey)
 const { name } = defineProps<{
   name: string
 }>()

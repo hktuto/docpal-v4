@@ -5,7 +5,6 @@ import { provide } from 'vue'
 import InternalShareListTable from '../../InternalShare/list/table.vue'
 import { ElMessageBox } from 'element-plus'
 
-
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')

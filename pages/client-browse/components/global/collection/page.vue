@@ -59,7 +59,6 @@ import { createBrowseListPageParams, createDetailPageParams } from '~/utils/brow
 import { ArrowDownBold, Delete } from '@element-plus/icons-vue'
 
 const routerProvider = inject(MenuRouterKey)
-
 const { t } = useI18n()
 const route = useRoute()
 const pageParams = {

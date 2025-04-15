@@ -9,6 +9,7 @@
 import { ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
 const {

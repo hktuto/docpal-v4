@@ -86,6 +86,7 @@ import { type FormInstance } from 'element-plus'
 import { CopyDocument } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const {
   public: { endPoint }

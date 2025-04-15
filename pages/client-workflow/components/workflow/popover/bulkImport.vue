@@ -16,6 +16,8 @@
 <script lang="ts" setup>
 import { clientApi } from 'api'
 import formJson from './bulkImport.vform.json'
+
+const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
 const { t } = useI18n()
 const state = reactive({

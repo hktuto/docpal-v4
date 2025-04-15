@@ -6,7 +6,6 @@ import {
 import { adminApi } from './mock/api';
 
 import { mockRouterProvider } from './util';
-
 // 模拟 FormDesigner 组件
 const mockFormJson = {
   widgetList: [],

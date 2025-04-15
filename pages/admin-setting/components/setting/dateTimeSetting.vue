@@ -2,6 +2,7 @@
 import formJson from './form.vform.json'
 import { ElMessage } from 'element-plus'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const FormRendererRef = ref()
 
