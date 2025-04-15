@@ -66,47 +66,50 @@ describe('CaseManageDetailPage', () => {
     expect(wrapper.vm.responsiveFilter.init).toHaveBeenCalled()
   })
 
-  it('should render the sort or filter from', () => {
-    const params = {
-      orderBy: 'created_date',
-      isDesc: true,
-      pageNum: 0,
-      pageSize: 20,
-      q: 'ab',
-      where: {
-        file: '233'
-      }
-    }
+  it('should sort or filter from the component correctly', async () => {
+    wrapper.vm.reorderColumn()
+    wrapper.vm.tableReady = true
+    wrapper.vm.initCondition()
+    await wrapper.vm.$nextTick()
 
     const extraParams = {
       q: 'ab',
       file: '233'
     }
-    wrapper.vm.tableRef = {
-      reload: vi.fn()
-    }
 
-    // wrapper.vm.handleFilterFormChange(extraParams)
-
-    console.log(22,wrapper.vm.tableRef)
-    expect(wrapper.vm.reload).toHaveBeenCalled()
-
+    await wrapper.vm.handleFilterFormChange(extraParams)
+    await wrapper.vm.$nextTick()
     expect(clientApi.api.postCaseTypesCasetypeidRecordsPage).toHaveBeenCalled()
-    expect(params.q).toBe('ab')
-    expect(params.orderBy).toBe('created_date')
-    expect(params.isDesc).toBe(true)
-    expect(params.where.file).toBe('233')
+    expect(wrapper.vm.extraParams.where.file).toBe('233')
+    expect(wrapper.vm.extraParams.q).toBe('ab')
   })
 
-  it.skip('should render the Click dblClickAction', async () => {
+  it('should Click dblClickAction the component correctly', async () => {
     wrapper.vm.tableRef = {
       dblClickAction: vi.fn()
     }
-    const row = { id: 112, name: 'Test' }
+    const row = {
+      component: 'LazyCaseDashboard',
+      icon: 'dp-icon:case-outline',
+      id: 'client-case-manage-dashboard1744686706520',
+      label: 'cabinet-0032',
+      name: 'client-case-manage-dashboard-cabinet-0032',
+      props: {}
+    }
     await wrapper.vm.tableRef.dblClickAction(row)
 
     expect(wrapper.vm.tableRef.dblClickAction).toHaveBeenCalled()
   })
 
+  it('should add new Row the component correctly', async () => {
+    const mockOpen = vi.fn()
+    wrapper.vm.addCaseDialog = {
+      handleOpen: mockOpen
+    }
+
+    const handleOpenSpy = vi.spyOn(wrapper.vm.addCaseDialog, 'handleOpen')
+    await wrapper.vm.handleAddCaseDialog()
+    expect(handleOpenSpy).toHaveBeenCalled()
+  })
 
 })

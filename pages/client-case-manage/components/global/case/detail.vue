@@ -12,12 +12,13 @@ const emits = defineEmits(['filter-change', 'refresh'])
 const routerProvider = inject(MenuRouterKey)
 type TableState = {
   columns: any;
-  where: any;
+  where: any
 };
 const state = reactive<TableState>({
   columns: [],
   where: {}
 })
+let extraParams: any = {}
 const tableReady = ref(false)
 const {
   tableConfig,
@@ -34,12 +35,12 @@ const {
 
     if (Object.entries(state.where).length !== 0) {
       if (state.where.q) {
-        pageParams.q = state.where.q
+        extraParams.q = state.where.q
       }
       delete state.where.q
-      pageParams.where = state.where
+      extraParams.where = state.where
     }
-    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, pageParams)
+    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...extraParams })
   },
   defaultSort: {},
   optionalConfig: {
@@ -65,6 +66,7 @@ async function initCondition() {
     const { data } = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id)
     responsiveFilter.value.init(data)
   } catch (error) {
+    console.log(error)
   }
 }
 
