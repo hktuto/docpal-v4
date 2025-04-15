@@ -9,5 +9,6 @@ export const clientApi = {
     getCaseInstanceCasetypeidStarttask: vi.fn(() => Promise.resolve(true)),
     postCaseInstanceStart: vi.fn(() => Promise.resolve(true)),
     getRelationQuery: vi.fn(() => Promise.resolve(true)),
+    getCaseDashboardVersionCmmnversionidPermission: vi.fn(() => Promise.resolve(true)),
   }
 }

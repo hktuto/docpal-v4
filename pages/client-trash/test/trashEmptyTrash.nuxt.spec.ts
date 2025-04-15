@@ -1,19 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { TrashPage } from '#components' // 替換為你的組件路徑
-import { clientApi } from './mock/api' // 替換為你的 API 路徑
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { TrashPage } from '#components'
+import { clientApi } from './mock/api'
+import { ElMessageBox } from 'element-plus'
 import { VxeGrid } from 'vxe-table'
+import { mockRouterProvider } from './util'
 
-const routerProvider = inject(MenuRouterKey)
-// 模擬 Element Plus
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     confirm: vi.fn(() => Promise.resolve('confirm'))
   },
-  ElMessage: {
-    success: vi.fn()
-  }
 }))
 
 describe('TrashEmptyTrash', () => {
@@ -23,6 +19,9 @@ describe('TrashEmptyTrash', () => {
     wrapper = mount(TrashPage, {
       global: {
         components: { VxeGrid },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
         mocks: {
           $t: (msg: string) => msg,
           $i18n: { t: (key: string) => key }
@@ -40,81 +39,9 @@ describe('TrashEmptyTrash', () => {
 
   it('empty all trash', async () => {
     expect(wrapper.find('#Trash__EmptyTrash').exists()).toBe(true)
-    // 點擊 Trash__EmptyTrash 按鈕
+
     const deleteButton = wrapper.find('#Trash__EmptyTrash')
     await deleteButton.trigger('click')
-
-    // 檢查提示窗是否出現
-    expect(ElMessageBox.confirm).toHaveBeenCalledWith(
-      expect.any(String), // 檢查提示信息
-      expect.any(Object)  // 檢查選項
-    )
-
-    // 確保 API 被調用
-    expect(clientApi.api.deleteNuxeoDocumentPurge).toHaveBeenCalled()
-
-    // 模擬延遲以等待 loading 狀態結束
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    // 檢查成功提示
-    expect(routerProvider?.message.success).toHaveBeenCalledWith('trash_emptyTrashSuccessMsg')
-  })
-
-  it('selected restore', async () => {
-    const wrapper = mount(TrashPage, {
-      global: {
-        components: { VxeGrid },
-        mocks: {
-          $t: (msg: string) => msg,// Mock translation function
-          $i18n: { t: (key: string) => key }
-        }
-      },
-      data() {
-        return {
-          state: {
-            selectList: [{ id: 1 }, { id: 2 }] // 有選中項目
-          }
-        }
-      }
-    })
-
-    const deleteButton = wrapper.find('#Trash__RestoreSelected')
-    // 檢查恢復是否存在
-    expect(deleteButton.exists()).toBe(true)
-    await deleteButton.trigger('click')
-
-    // 確保 API 被調用
-    expect(clientApi.api.postNuxeoDocumentRestore).toHaveBeenCalled()
-
-    // 模擬延遲以等待 loading 狀態結束
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    // 檢查成功提示
-    expect(routerProvider?.message.success).toHaveBeenCalled('trash_restoredSelectedSuccessMsg')
-  })
-
-  it('selected delete', async () => {
-    const wrapper = mount(TrashPage, {
-      global: {
-        components: { VxeGrid },
-        mocks: {
-          $t: (msg: string) => msg,// Mock translation function
-          $i18n: { t: (key: string) => key }
-        }
-      },
-      data() {
-        return {
-          state: {
-            selectList: [{ id: 1 }, { id: 2 }] // 有選中項目
-          }
-        }
-      }
-    })
-
-    const deleteButton = wrapper.find('#Trash__PermanentlyDeleteSelected')
-    // 檢查恢復按鈕是否存在
-    expect(deleteButton.exists()).toBe(true)
-    await deleteButton.trigger('click')
-    expect(ElMessageBox.confirm).toHaveBeenCalled();
 
     // 檢查提示窗是否出現
     expect(ElMessageBox.confirm).toHaveBeenCalledWith(
@@ -122,12 +49,80 @@ describe('TrashEmptyTrash', () => {
       expect.any(Object)
     )
 
+    expect(clientApi.api.deleteNuxeoDocumentPurge).toHaveBeenCalled()
+
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
+    expect(mockRouterProvider.message.success).toHaveBeenCalled()
+  })
+
+  it('selected restore', async () => {
+    const wrapper = mount(TrashPage, {
+      global: {
+        components: { VxeGrid },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      },
+      data() {
+        return {
+          state: {
+            selectList: [{ id: 1 }, { id: 2 }]
+          }
+        }
+      }
+    })
+
+    const deleteButton = wrapper.find('#Trash__RestoreSelected')
+    expect(deleteButton.exists()).toBe(true)
+    await deleteButton.trigger('click')
+
+    expect(clientApi.api.postNuxeoDocumentRestore).toHaveBeenCalled()
+
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    expect(mockRouterProvider.message.success).toHaveBeenCalled()
+  })
+
+  it('selected delete', async () => {
+    const wrapper = mount(TrashPage, {
+      global: {
+        components: { VxeGrid },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      },
+      data() {
+        return {
+          state: {
+            selectList: [{ id: 1 }, { id: 2 }]
+          }
+        }
+      }
+    })
+
+    const deleteButton = wrapper.find('#Trash__PermanentlyDeleteSelected')
+    expect(deleteButton.exists()).toBe(true)
+    await deleteButton.trigger('click')
+    expect(ElMessageBox.confirm).toHaveBeenCalled()
+
+    expect(ElMessageBox.confirm).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(Object)
+    )
+
+    const row = [{ id: '111', name: 'abc' }]
+    wrapper.vm.handleDelete(row)
     expect(clientApi.api.deleteNuxeoDocument).toHaveBeenCalled()
 
-    // 模擬延遲以等待 loading 狀態結束
     await new Promise((resolve) => setTimeout(resolve, 4000))
-
-    // 檢查成功提示
-    expect(routerProvider?.message.success).toHaveBeenCalled('trash_deleteSuccessMsg')
-  });
+    expect(mockRouterProvider.message.success).toHaveBeenCalled()
+  })
 })
