@@ -36,7 +36,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
         <div class="actions">
             <UploadStructureButton v-if="uploadState.uploadRequestList && uploadState.uploadRequestList.length > 0" @click="handleOpenUpload(true, 'upload')"></UploadStructureButton>
             <Notification  />
-            <ElDropdown>
+            <ElDropdown id="authUserSettingDropdown">
                 <ElButton size="small" link >
                     <ElIcon><SvgIcon class="dropdownIcon" src="/icons/dots.svg"/></ElIcon>
                 </ElButton>

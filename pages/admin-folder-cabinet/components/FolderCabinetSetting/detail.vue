@@ -248,7 +248,7 @@ async function handleSave() {
   try {
     state.loading = true
     await adminApi.api.patchCabinetTemplate(params)
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
     emits('update')
     WorkflowDialogRef.value.handleCheck()
   } catch (error) {

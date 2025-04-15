@@ -134,7 +134,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
     const result = await adminApi.api.patchPolicyHoldsIdStatusStatus(row.id, isActive).then(res => res.data)
     if (!!result) {
       row.status = isActive
-      ElMessage.success(t('dpMsg_success'))
+      routerProvider?.message.success(t('dpMsg_success'))
     }
   } catch (error) {
 
@@ -151,7 +151,7 @@ async function deleteItem(id: string) {
   )
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyHoldsId(id)
-  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_holdPolicy'), name: null }))
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_holdPolicy'), name: null }))
   query()
 }
 

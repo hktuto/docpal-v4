@@ -1,34 +1,26 @@
 <script lang="ts" setup>
-import dayjs from "dayjs";
-import {ElMessage} from "element-plus";
-import type {
-  DashboardWidgetSetting,
-  DashboardWidget,
-} from "#imports";
-import {
-  dashboardWidgetSetting,
-  getNormalizeSetting,
-  getWidgetSetting,
-} from "#imports";
-import {publicApi} from "api";
-import {onActivated} from "vue";
+import dayjs from 'dayjs'
+import type { DashboardWidget, DashboardWidgetSetting } from '#imports'
+import { dashboardWidgetSetting, getNormalizeSetting, getWidgetSetting } from '#imports'
+import { publicApi } from 'api'
+import { onActivated } from 'vue'
 
-const {id} = defineProps<{
+const { id } = defineProps<{
   id: number;
-}>();
-const {t} = useI18n()
+}>()
+const { t } = useI18n()
 const state = reactive({
   info: {
-    name: "",
+    name: ''
   } as any,
   layout: [] as DashboardWidgetSetting[],
   loading: false,
   saveLoading: false,
   dates: [
-    dayjs().startOf("year").format('YYYY-MM-DD'),
-    dayjs(new Date()).format('YYYY-MM-DD'),
-  ],
-});
+    dayjs().startOf('year').format('YYYY-MM-DD'),
+    dayjs(new Date()).format('YYYY-MM-DD')
+  ]
+})
 
 function handleRefresh(layoutSetting: any) {
   console.log(layoutSetting)
@@ -59,7 +51,7 @@ async function handleSave() {
       ...state.info,
       styleJson: JSON.stringify(state.layout)
     })
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   } finally {
     state.saveLoading = false
@@ -73,13 +65,13 @@ function handleEdit() {
 }
 
 async function getInfo() {
-  state.info = await publicApi.api.getUserDashboardId(id).then(res => res.data);
-  if (!state.info || !state.info.styleJson) return;
-  const temLayout = JSON.parse(state.info.styleJson);
+  state.info = await publicApi.api.getUserDashboardId(id).then(res => res.data)
+  if (!state.info || !state.info.styleJson) return
+  const temLayout = JSON.parse(state.info.styleJson)
   if (Array.isArray(temLayout)) {
     state.layout = temLayout.map((item) => {
-      return Object.assign(item, getNormalizeSetting(item.component));
-    });
+      return Object.assign(item, getNormalizeSetting(item.component))
+    })
   } else {
     // dashboard is new, set layout to empty array
     state.layout = []
@@ -87,7 +79,7 @@ async function getInfo() {
 }
 
 onActivated(() => {
-  getInfo();
+  getInfo()
 })
 </script>
 <template>
@@ -101,7 +93,7 @@ onActivated(() => {
       <div>
         <el-dropdown trigger="click" @command="handleAdd">
           <el-button id="Dashboard__EditDashboardContent__Add" type="primary">
-            {{ $t("common_add") }}
+            {{ $t('common_add') }}
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
@@ -128,7 +120,7 @@ onActivated(() => {
           type="primary"
           :loading="state.saveLoading"
           @click="handleSave"
-        >{{ $t("common_save") }}
+        >{{ $t('common_save') }}
         </el-button>
       </div>
     </div>
@@ -143,7 +135,7 @@ onActivated(() => {
         @refreshSetting="handleRefresh"
       ></DashboardDetail>
     </div>
-    <DashboardDialog ref="DashboardDialogRef" @refresh="getInfo()"/>
+    <DashboardDialog ref="DashboardDialogRef" @refresh="getInfo()" />
   </div>
 </template>
 <style lang="scss" scoped>

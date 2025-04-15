@@ -5,7 +5,7 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" @metaChange="handleMetaChange">
       <template v-slot:languageForm>
-        <LanguageUnitForm ref="LanguageUnitFormRef" class="mg-b" :lKey="state.lKey"/>
+        <LanguageUnitForm ref="LanguageUnitFormRef" class="mg-b" :lKey="state.lKey" />
       </template>
       <!-- <template v-slot:regexDialog>
       </template> -->
@@ -25,13 +25,12 @@
 </template>
 <script lang="ts" setup>
 import formJson from './addDisplayMeta.vform.json'
-import {adminApi} from '../../../../../libraries/api/src';
-import {ElMessage} from "element-plus";
+import { adminApi } from '../../../../../libraries/api/src'
 
 const props = defineProps<{
   docTypeDetail: any,
 }>()
-const {t} = useI18n()
+const { t } = useI18n()
 const emits = defineEmits([
   'refresh'
 ])
@@ -53,19 +52,19 @@ async function handleSubmit(addMore: boolean = false) {
     display: formData.display,
     dataType: formData.dataType,
     options: getFormOptions(formData),
-    docType: props.docTypeDetail.name,
+    docType: props.docTypeDetail.name
   }
   try {
     let msg
     if (state.isEdit) {
       param.id = state.setting.id
-      msg = t('tip_updateSuccessMsg', {modelName: t('docType_displayMeta'), name: null})
+      msg = t('tip_updateSuccessMsg', { modelName: t('docType_displayMeta'), name: null })
     } else {
       // msg = t('documentType_duplicateAddSuccessMsg')
-      msg = t('tip_createdSuccessMsg', {modelName: t('docType_displayMeta'), name: null})
+      msg = t('tip_createdSuccessMsg', { modelName: t('docType_displayMeta'), name: null })
     }
     await adminApi.api.postDocpaltypeSettingsAddMetadata(param)
-    ElMessage.success(msg)
+    routerProvider?.message.success(msg)
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh', addMore)
@@ -83,10 +82,10 @@ async function handleSubmit(addMore: boolean = false) {
       case 'textarea':
         result.length = formOptions.length
         result.regex = formOptions.regex
-        break;
+        break
       case 'date':
         result.formatDate = formOptions.formatDate
-        break;
+        break
       case 'select':
         result.multipleLimit = formOptions.length
         result.dropdownType = formOptions.dropdownType
@@ -100,9 +99,9 @@ async function handleSubmit(addMore: boolean = false) {
           result.documentType = formOptions.documentType
           result.displayField = formOptions.displayField
         }
-        break;
+        break
       default:
-        break;
+        break
     }
     return JSON.stringify(result)
   }
@@ -115,7 +114,7 @@ function handleOpen(exitList: any[], data: any) {
     handleOptions(exitList)
     if (!!data) {
       const pData = data.options ? JSON.parse(data.options) : {}
-      FormRendererRef.value.vFormRenderRef.setFormData({...data, ...pData})
+      FormRendererRef.value.vFormRenderRef.setFormData({ ...data, ...pData })
       state.isEdit = true
       state.setting = data
     } else {
@@ -157,7 +156,7 @@ async function handleOptions(exitList: any[]) {
         prev.push(item)
       }
       return prev
-    }, []);
+    }, [])
   }
 }
 
@@ -174,7 +173,7 @@ async function saveI18n() {
 
 // #endregion
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 .mg-b {

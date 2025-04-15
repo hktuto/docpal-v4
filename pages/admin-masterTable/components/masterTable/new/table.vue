@@ -6,14 +6,16 @@
           {{ $t('masterTable.emptyName') }}
         </span>
         {{ state.name }}
-        <Icon name="material-symbols:edit-square" class="normal cursor-pointer" @click="tableDialogRef.handleOpen({ name: state.name })"></Icon>
+        <Icon name="material-symbols:edit-square" class="normal cursor-pointer"
+              @click="tableDialogRef.handleOpen({ name: state.name })"></Icon>
       </div>
       <div class="flex-x-center">
         <el-dropdown id="MasterTable__Tables__CreateNewMasterTable__AddColumn">
           <el-button class="el-icon--left"> {{ $t('masterTable.newSchema') }}</el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-for="item in state.dataTypeList" :key="item.value" @click="handleSingleSchemaAdd(item)">
+              <el-dropdown-item v-for="item in state.dataTypeList" :key="item.value"
+                                @click="handleSingleSchemaAdd(item)">
                 {{ $t(`marsterTable.type.${item.value}`) }}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -41,7 +43,8 @@
       <Icon v-if="!isDefault(row)" class="closeIcon" name="ic:round-close" @click.stop="handleDelete(row)"></Icon>
     </template>
     <template #dataType="{ row }">
-      {{ row.dataType === 'varchar' && row.length === 4000 ? $t(`marsterTable.type.${row.dataType}:${row.length}`) : $t(`marsterTable.type.${row.dataType}`) }}
+      {{ row.dataType === 'varchar' && row.length === 4000 ? $t(`marsterTable.type.${row.dataType}:${row.length}`) : $t(`marsterTable.type.${row.dataType}`)
+      }}
       <template v-if="row.relationTable">
         -
         <el-tag round> {{ row.relationTable }}</el-tag>
@@ -52,7 +55,8 @@
     </template>
   </VxeGrid>
   <MasterTableDialog ref="tableDialogRef" @confirm="({ name }) => (state.name = name)"></MasterTableDialog>
-  <MasterTableNewSchemaDialog ref="schemaDialogRef" disabledUniqueList="" @add="handleAddSchama" @update="handleUpdateSchama" />
+  <MasterTableNewSchemaDialog ref="schemaDialogRef" disabledUniqueList="" @add="handleAddSchama"
+                              @update="handleUpdateSchama" />
 </template>
 <script lang="ts" setup>
 import { MenuRouterKey } from '#imports'
@@ -150,7 +154,7 @@ async function handleSubmit() {
     return
   }
   if (tableConfig.data.length === 6) {
-    ElMessage.error(t('tip.masterTable.noValidData'))
+    routerProvider?.message.error(t('tip.masterTable.noValidData'))
     handleSingleSchemaAdd(state.dataTypeList[0])
     return
   }
@@ -180,7 +184,7 @@ async function handleDelete(row: any) {
 function handleAddSchama(schema: any) {
   const index = tableConfig.data.findIndex((item) => item.fieldName === schema.fieldName)
   if (index !== -1) {
-    ElMessage.error(t('tip.duplicate'))
+    routerProvider?.message.error(t('tip.duplicate'))
     setTimeout(() => {
       checkDisabledUniqueAndOpenSchemaDialog(schema)
     }, 1000)
@@ -200,7 +204,7 @@ function handleUpdateSchama(schema: any) {
   const curIndex = tableConfig.data.findIndex((item: any) => item.fieldName === state.curRow.fieldName)
   const duplicateIndex = tableConfig.data.findIndex((item: any, index: number) => item.fieldName === schema.fieldName && index !== curIndex)
   if (duplicateIndex !== -1) {
-    ElMessage.error(t('tip.duplicate'))
+    routerProvider?.message.error(t('tip.duplicate'))
     setTimeout(() => {
       checkDisabledUniqueAndOpenSchemaDialog(schema, true)
     }, 1000)

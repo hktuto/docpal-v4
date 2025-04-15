@@ -44,7 +44,7 @@ async function handleTagsAdded(tagSelected:any) {
         labels: [tagSelected.value],
       }
   await clientApi.api.postNuxeoTags(param)
-  ElMessage.success(t('msg_successfullyModified') as string)
+  routerProvider?.message.success(t('msg_successfullyModified') as string)
   emit('update')
 }
 async function handleTagsRemoved(e:any){

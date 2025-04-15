@@ -1,16 +1,12 @@
 <script lang="ts" setup>
-import {ElMessageBox} from "element-plus";
-const emits = defineEmits(["refresh", "delete"]);
 import {adminApi, clientApi} from 'api'
 
 const { public:{platform}} = useRuntimeConfig();
 const {t} = useI18n()
 
-const state = reactive({
-  loading: false,
-  visible: false,
-  setting: {},
-});
+const { state, handleSubmit, handleDelete } = useDashboardSetting({
+  beforeOpen,
+})
 
 type Columns = {
   field: string,
@@ -20,19 +16,6 @@ type Columns = {
 const allWorkflow = ref<any[]>([]);
 const workflowColumns = ref<Columns[]>([]);
 const avalibleSteps = ref<any[]>([]);
-
-async function handleSubmit() {
-  // const data = await FormRendererRef.value.vFormRenderRef.getFormData();
-  state.loading = true;
-  try {
-    emits("refresh", structuredClone(toRaw(state.setting)));
-  } catch (error) {
-    state.loading = false;
-  }finally{
-  state.visible = false;
-  state.loading = false;
-  }
-}
 
 async function handleWorkflowhange(newSelectedWorkflow: string) {
   state.setting.columns = []
@@ -90,33 +73,17 @@ async function getWorkflow(){
   allWorkflow.value = data
 }
 
-async function handleOpen(setting) {
+async function beforeOpen(setting) {
   await getWorkflow()
   if(!setting.columns) setting.columns = []
   if(setting.selectedWorkflow) {
     await handleWorkflowhange(setting.selectedWorkflow)
   }
-  if(!setting.steps) setting.steps = []
-  if(!setting.sortColumn) setting.sortColumn = ''
-  state.visible = true;
-  state.setting = setting;
-  state.loading = false;
-  
-}
 
-function handleClose() {
-  state.visible = false;
-}
-
-async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
-  emits("delete");
-  state.visible = false;
 }
 
 
-defineExpose({handleOpen});
+
 </script>
 
 <template>

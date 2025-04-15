@@ -5,7 +5,7 @@ import {
   newMessageTemplateTemplatePageRoute
 } from '~/utils/messageTemplateHelper'
 import { adminApi } from 'api'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
@@ -53,7 +53,7 @@ provide(MessageTemplateProviderKey, {
     )
     if (action !== 'confirm') return
     await adminApi.api.deleteMessageTemplateId(row.id)
-    ElMessage.success(t('vxe.grid.delSuccess'))
+    routerProvider?.message.success(t('vxe.grid.delSuccess'))
     itemReload()
   }
 })
@@ -71,7 +71,7 @@ function getFilter() {
         { label: 'workflow_editorLastModified', value: 'modifiedBy' },
         { label: 'table_last_update', value: 'modifiedDate' },
         { label: 'message_templateName', value: 'templateName' },
-        { label: 'message_templateStatus', value: 'whatsAppStatus' },
+        { label: 'message_templateStatus', value: 'whatsAppStatus' }
         // { label: 'message_templateUsage', value: 'usages' }
       ]
     },

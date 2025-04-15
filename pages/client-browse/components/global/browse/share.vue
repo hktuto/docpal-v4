@@ -1,33 +1,33 @@
 <template>
-    <div class="pageContainer" >
-        <main class="share-main" v-loading="state.loading">
-            <FormRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
-            <div class="div2" v-loading="previewFile.loading">
-                <template v-if="state.loadingFileFail">
-                    <div class="no-file-preview"> {{$t('tip.loadingFileFail')}}</div>
-                </template>
-                <template v-else-if="previewFile.name">
-                    <div class="reader-container">
-                        <h3>{{previewFile.name}}</h3>
-                        <Reader ref="ReaderRef" v-bind="previewFile" ></Reader>
-                    </div>
-                </template>
-                <template v-else>
-                    <div class="no-file-preview"> {{$t('tip.pleaseSelectFile')}}</div>
-                </template>
-            </div>
-            <BrowseShareTableSet  :tableData="state.minTypeShareList" class="div3"
-                @db-click="handleDblclick"
-                @delete="handleDeleteRow" />
-            <div class="div4 flex-x-end">
-                <div>
-                    <el-button type="primary" @click="handleAddMore">{{$t('button.addMore')}}</el-button>
-                    <el-button type="info" @click="handleDiscard">{{$t('discard')}}</el-button>
-                    <el-button type="primary" @click="handleSubmit">{{$t('dpButtom_confirm')}}</el-button>
-                </div>
-            </div>
-        </main>
-    </div>
+  <div class="pageContainer">
+    <main class="share-main" v-loading="state.loading">
+      <FormRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
+      <div class="div2" v-loading="previewFile.loading">
+        <template v-if="state.loadingFileFail">
+          <div class="no-file-preview"> {{ $t('tip.loadingFileFail') }}</div>
+        </template>
+        <template v-else-if="previewFile.name">
+          <div class="reader-container">
+            <h3>{{ previewFile.name }}</h3>
+            <Reader ref="ReaderRef" v-bind="previewFile"></Reader>
+          </div>
+        </template>
+        <template v-else>
+          <div class="no-file-preview"> {{ $t('tip.pleaseSelectFile') }}</div>
+        </template>
+      </div>
+      <BrowseShareTableSet :tableData="state.minTypeShareList" class="div3"
+                           @db-click="handleDblclick"
+                           @delete="handleDeleteRow" />
+      <div class="div4 flex-x-end">
+        <div>
+          <el-button type="primary" @click="handleAddMore">{{ $t('button.addMore') }}</el-button>
+          <el-button type="info" @click="handleDiscard">{{ $t('discard') }}</el-button>
+          <el-button type="primary" @click="handleSubmit">{{ $t('dpButtom_confirm') }}</el-button>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
 
 
@@ -39,198 +39,221 @@ import { clientApi } from 'api'
 
 const { updateShareList, getMineTypeShareList, getUseWatermark } = useShareStore()
 import formJson from './shareRequest.vform.json'
+
 const FromRendererRef = ref()
 const { diffMinute } = useTime()
-const {t} = useI18n()
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 
 const props = defineProps<{
-    backPath: string
+  backPath: string
 }>()
 
 const state = reactive<any>({
-    minTypeShareList: [],
-    interval: null,
-    loading: false,
-    backPath: '/browse',
-    loadingFileFail: false
+  minTypeShareList: [],
+  interval: null,
+  loading: false,
+  backPath: '/browse',
+  loadingFileFail: false
 })
 
 const previewFile = reactive<any>({
-    blob: null,
-    name: '',
-    id: '',
-    path: '',
-    loading: false,
-    options: {
-        noDownload: true,
-        print: false,
-        loadAnnotations: false,
-        readOnly: true
-    }
+  blob: null,
+  name: '',
+  id: '',
+  path: '',
+  loading: false,
+  options: {
+    noDownload: true,
+    print: false,
+    loadAnnotations: false,
+    readOnly: true
+  }
 })
-async function handleDblclick (row) {
-    previewFile.loading = true
-    state.loadingFileFail = false
-    try {
-        if(row.watermark) {
-            if(!!state.interval) clearInterval(state.interval)
-            let intervalNum = 0
-            state.interval = setInterval(async() => {
-                intervalNum ++
-                if(intervalNum === 50) {
-                    clearInterval(state.interval)
-                    handlePreviewFail()
-                }
-                
-                const res = await clientApi.api.getNuxeoSharePrepareDownloadDocid(row.id).then(res => res.data)
-                if (res === 'YES') {
-                    clearInterval(state.interval)
-                    
-                    previewFile.blob = await clientApi.api.getWatermarkDocumentPreview({
-                        watermarkTemplateId: row.watermark,
-                        documentId: row.id
-                    },{
-                        format: 'blob'
-                    })
-                    previewFile.loading = false
-                }
-            }, 1000)
-        } else {
-            previewFile.blob = await clientApi.api.postNuxeoDocumentPreview({idOrPath: row.id},{
-                format: 'blob'
-            })
-            previewFile.loading = false
+
+async function handleDblclick(row) {
+  previewFile.loading = true
+  state.loadingFileFail = false
+  try {
+    if (row.watermark) {
+      if (!!state.interval) clearInterval(state.interval)
+      let intervalNum = 0
+      state.interval = setInterval(async () => {
+        intervalNum++
+        if (intervalNum === 50) {
+          clearInterval(state.interval)
+          handlePreviewFail()
         }
-        previewFile.name = row.name
-        previewFile.id = row.id
-    } catch (error) {
-        handlePreviewFail()
-    }
-    function handlePreviewFail() {
-        previewFile.loading = false
-        state.loadingFileFail = true
-    }
-}
-async function handleSubmit () {
-    try {
-        state.loading = true
-        if(!!state.interval) clearInterval(state.interval)
-        const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
-        if(!formData) throw new Error("no emailList");
-        const param = {
-            emailList: formData.emailList,
-            documentList: documentIdListGet(),
-            password: formData.password ? formData.password : '',
-            tokenLiveInMinutes: diffMinute(formData.dueDate) 
+
+        const res = await clientApi.api.getNuxeoSharePrepareDownloadDocid(row.id).then(res => res.data)
+        if (res === 'YES') {
+          clearInterval(state.interval)
+
+          previewFile.blob = await clientApi.api.getWatermarkDocumentPreview({
+            watermarkTemplateId: row.watermark,
+            documentId: row.id
+          }, {
+            format: 'blob'
+          })
+          previewFile.loading = false
         }
-        const response = await clientApi.api.postNuxeoShareNew(param).then(res => res.data)
-        ElMessage.success(t('share_success'))
-        updateShareList([])
-        const item = createBrowseListPageParams({
-            idOrPath: props.backPath
-        })
-        routerProvider?.back(item)
-    } catch (error) {
-      ElMessage.error(error.message)
+      }, 1000)
+    } else {
+      previewFile.blob = await clientApi.api.postNuxeoDocumentPreview({ idOrPath: row.id }, {
+        format: 'blob'
+      })
+      previewFile.loading = false
     }
-    finally {
-        state.loading = false
-    }
-    // function watermarkListGet() {
-    //     return state.minTypeShareList.reduce((prev,item) => {
-    //         if (item.watermark) prev[item.id] = item.watermark
-            
-    //         return prev
-    //     }, {})
-    // }
-    function documentIdListGet () {
-        return state.minTypeShareList.map((item:any) => ({
-            docId:item.id,
-            readOnly:item.readOnly,
-            watermarkTemplateId: item.watermark || ""
-        })
-        )
-    }
+    previewFile.name = row.name
+    previewFile.id = row.id
+  } catch (error) {
+    handlePreviewFail()
+  }
+
+  function handlePreviewFail() {
+    previewFile.loading = false
+    state.loadingFileFail = true
+  }
 }
-function handleDeleteRow (row) {
-    const index = state.minTypeShareList.findIndex(item => row.id === item.id)
-    state.minTypeShareList.splice(index, 1)
-    updateShareList(state.minTypeShareList)
-}
-async function handleDiscard () {
-    const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
-    if(action !== 'confirm') return
-    if(!!state.interval) clearInterval(state.interval)
+
+async function handleSubmit() {
+  try {
+    state.loading = true
+    if (!!state.interval) clearInterval(state.interval)
+    const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+    if (!formData) throw new Error('no emailList')
+    const param = {
+      emailList: formData.emailList,
+      documentList: documentIdListGet(),
+      password: formData.password ? formData.password : '',
+      tokenLiveInMinutes: diffMinute(formData.dueDate)
+    }
+    const response = await clientApi.api.postNuxeoShareNew(param).then(res => res.data)
+    routerProvider?.message.success(t('share_success'))
     updateShareList([])
     const item = createBrowseListPageParams({
-        idOrPath: props.backPath
+      idOrPath: props.backPath
     })
-    routerProvider?.navigateTo(item)
-}
-function handleAddMore () {
-    if(!!state.interval) clearInterval(state.interval)
-    const item = createBrowseListPageParams({
-        idOrPath: props.backPath
-    })
-    routerProvider?.navigateTo(item)
-}
-onMounted(async() => {
-    state.backPath = props.backPath || '/'
-    console.log(state.backPath);
-    
-    try {
-        state.minTypeShareList = await getMineTypeShareList()
-    } catch (error) {
+    routerProvider?.back(item)
+  } catch (error) {
+    routerProvider?.message.error(error.message)
+  } finally {
+    state.loading = false
+  }
+  // function watermarkListGet() {
+  //     return state.minTypeShareList.reduce((prev,item) => {
+  //         if (item.watermark) prev[item.id] = item.watermark
 
-    }
-    if(state.minTypeShareList.length === 0) {
-        const item = createBrowseListPageParams({
-            idOrPath: props.backPath
-        })
-        routerProvider?.navigateTo(item)
-    }
-    const mimeTypeList = state.minTypeShareList.reduce((prev, item) => {
-        if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
-        return prev
-    }, [])
-    clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
+  //         return prev
+  //     }, {})
+  // }
+  function documentIdListGet() {
+    return state.minTypeShareList.map((item: any) => ({
+        docId: item.id,
+        readOnly: item.readOnly,
+        watermarkTemplateId: item.watermark || ''
+      })
+    )
+  }
+}
+
+function handleDeleteRow(row) {
+  const index = state.minTypeShareList.findIndex(item => row.id === item.id)
+  state.minTypeShareList.splice(index, 1)
+  updateShareList(state.minTypeShareList)
+}
+
+async function handleDiscard() {
+  const action = await ElMessageBox.confirm(`${t('tip.confirmWhetherToDiscardShareQueue')}`)
+  if (action !== 'confirm') return
+  if (!!state.interval) clearInterval(state.interval)
+  updateShareList([])
+  const item = createBrowseListPageParams({
+    idOrPath: props.backPath
+  })
+  routerProvider?.navigateTo(item)
+}
+
+function handleAddMore() {
+  if (!!state.interval) clearInterval(state.interval)
+  const item = createBrowseListPageParams({
+    idOrPath: props.backPath
+  })
+  routerProvider?.navigateTo(item)
+}
+
+onMounted(async () => {
+  state.backPath = props.backPath || '/'
+  console.log(state.backPath)
+
+  try {
+    state.minTypeShareList = await getMineTypeShareList()
+  } catch (error) {
+
+  }
+  if (state.minTypeShareList.length === 0) {
+    const item = createBrowseListPageParams({
+      idOrPath: props.backPath
+    })
+    routerProvider?.navigateTo(item)
+  }
+  const mimeTypeList = state.minTypeShareList.reduce((prev, item) => {
+    if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
+    return prev
+  }, [])
+  clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
 })
 onUnmounted(() => {
-    if(!!state.interval) clearInterval(state.interval)
+  if (!!state.interval) clearInterval(state.interval)
 })
 </script>
 
 <style lang="scss" scoped>
-.pageContainer{
-    height: 100%;
-    width: 100%;
-    padding: var(--app-space-xs);
-    position: relative;
-    overflow: hidden;
+.pageContainer {
+  height: 100%;
+  width: 100%;
+  padding: var(--app-space-xs);
+  position: relative;
+  overflow: hidden;
 }
+
 .share-main {
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  grid-template-rows: min-content 1fr min-content;
+  gap: var(--app-space-xs);
+
+  .div1 {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+
+  .div2 {
+    grid-area: 1 / 2 / 3 / 3;
+  }
+
+  .div3 {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+
+  .div4 {
+    grid-area: 3 / 1 / 4 / 3;
+  }
+
+  .div1, .div2, .div3, .div4 {
+    overflow: hidden;
+  }
+
+  .reader-container {
     height: 100%;
     overflow: hidden;
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    grid-template-rows: min-content 1fr min-content;
-    gap: var(--app-space-xs);
-    .div1 { grid-area: 1 / 1 / 2 / 2; }
-    .div2 { grid-area: 1 / 2 / 3 / 3; }
-    .div3 { grid-area: 2 / 1 / 3 / 2; }
-    .div4 { grid-area: 3 / 1 / 4 / 3; }
-    .div1,.div2,.div3,.div4 {
-        overflow: hidden;
-    }
-    .reader-container {
-        height: 100%;
-        overflow: hidden;
-        display: grid;
-        grid-template-rows: min-content 1fr;
-    }
+    grid-template-rows: min-content 1fr;
+  }
 }
-.no-file-preview{
+
+.no-file-preview {
   width: 100%;
   height: 100%;
   display: grid;

@@ -80,7 +80,7 @@ async function handleSubmit() {
     })
     if (!res2) return
 
-    ElMessage.success(t('workflow_ManageReallocateAssigneeSuccessMsg'));
+    routerProvider?.message.success(t('workflow_ManageReallocateAssigneeSuccessMsg'));
     emit('success')
     dialogVisible.value = false
   } catch (error) {

@@ -126,7 +126,7 @@ async function handleActive(status: 'close' | 'open', row: any) {
       status
     })
     emits('refresh')
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   }
   tableConfig.loading = false

@@ -3,7 +3,8 @@
     <h3 class="title">{{ $t('master.setting.name') }}</h3>
     <div class="description">{{ $t('master.setting.nameDescription') }}</div>
     <el-input v-model="state.name" clearable :maxlength="61" />
-    <el-button id="MasterTable__Tables__Detail__Setting__Name__Save" :loading="state.loading" type="primary" @click="handleSave">
+    <el-button id="MasterTable__Tables__Detail__Setting__Name__Save" :loading="state.loading" type="primary"
+               @click="handleSave">
       {{ $t('common_save') }}
     </el-button>
   </el-card>
@@ -11,15 +12,17 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
 import { ElMessage } from 'element-plus'
+
 const props = defineProps(['table', 'tableId'])
 const state = reactive<any>({
   name: '',
   loading: false
 })
 const { t } = useI18n()
+
 async function handleSave() {
-  if(!state.name) {
-    ElMessage.error(t('master.setting.name')+t('render.hint.fieldRequired'))
+  if (!state.name) {
+    routerProvider?.message.error(t('master.setting.name') + t('render.hint.fieldRequired'))
     return
   }
   try {
@@ -29,9 +32,9 @@ async function handleSave() {
       name: state.name
     })
 
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
-    //     ElMessage.error($i18n.t('dpMsg_error'))
+    //     routerProvider?.message.error($i18n.t('dpMsg_error'))
   } finally {
     state.loading = false
   }

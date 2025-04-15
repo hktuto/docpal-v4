@@ -1,78 +1,78 @@
 <script lang="ts" setup>
-import {ElMessage} from "element-plus";
-import {adminApi} from "api";
+import { ElMessage } from 'element-plus'
+import { adminApi } from 'api'
 import formJson from './index.vform.json'
 
-const {t} = useI18n()
-const FormRendererRef = ref();
+const { t } = useI18n()
+const FormRendererRef = ref()
 
 function handleFormChange() {
 }
 
 async function handleGet() {
-  const res = await adminApi.api.getOauth2Setting().then(res => res.data);
-  FormRendererRef.value.vFormRenderRef.setFormData(res);
+  const res = await adminApi.api.getOauth2Setting().then(res => res.data)
+  FormRendererRef.value.vFormRenderRef.setFormData(res)
 }
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData();
-  const res = await adminApi.api.postOauth2Setting(data);
-  if (data.authenticationMethod === "DEFAULT") {
-    ElMessage.success(t("msg_successfullyModified"));
+  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const res = await adminApi.api.postOauth2Setting(data)
+  if (data.authenticationMethod === 'DEFAULT') {
+    routerProvider?.message.success(t('msg_successfullyModified'))
   } else {
-    const url: any = res;
-    window.open(url, "_blank");
+    const url: any = res
+    window.open(url, '_blank')
   }
 }
 
 // #region module: import
-const inputRef = ref();
+const inputRef = ref()
 
 function uploadXlsx() {
-  inputRef.value.click();
+  inputRef.value.click()
 }
 
 function handleFile(event) {
-  const reader = new FileReader();
-  reader.readAsText(event.target.files[0], "UTF-8");
-  reader.onload = function (e: any) {
+  const reader = new FileReader()
+  reader.readAsText(event.target.files[0], 'UTF-8')
+  reader.onload = function(e: any) {
     try {
-      let configJson = JSON.parse(e.target.result as string);
-      if (configJson.web) configJson = configJson.web;
-      if (configJson.installed) configJson = configJson.installed;
+      let configJson = JSON.parse(e.target.result as string)
+      if (configJson.web) configJson = configJson.web
+      if (configJson.installed) configJson = configJson.installed
       const _configJson: any = {
         clientId: configJson.client_id || configJson.clientId,
         clientSecret: configJson.client_secret || configJson.clientSecret,
         redirectUri: configJson.redirectUri || configJson.redirect_uris[0],
-        authenticationMethod: configJson.tenantId ? "MICROSOFT_OFFICE_365" : "GOOGLE",
-      };
-      if (configJson.senderAddress) _configJson.senderAddress = configJson.senderAddress;
-      if (configJson.tenantId) _configJson.tenantId = configJson.tenantId;
-      FormRendererRef.value.vFormRenderRef.setFormData(_configJson);
+        authenticationMethod: configJson.tenantId ? 'MICROSOFT_OFFICE_365' : 'GOOGLE'
+      }
+      if (configJson.senderAddress) _configJson.senderAddress = configJson.senderAddress
+      if (configJson.tenantId) _configJson.tenantId = configJson.tenantId
+      FormRendererRef.value.vFormRenderRef.setFormData(_configJson)
     } catch (error) {
-      ElMessage.error("file format error");
+      routerProvider?.message.error('file format error')
     }
-  };
+  }
 }
 
 // #endregion
 onMounted(() => {
   nextTick(async () => {
-    FormRendererRef.value.vFormRenderRef.setFormJson(formJson);
-    await handleGet();
-  });
-});
+    FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
+    await handleGet()
+  })
+})
 </script>
 <template>
   <el-card>
     <div class="flex-x-between">
-      <h3>{{ $t("adminMenu.oauth") }}</h3>
+      <h3>{{ $t('adminMenu.oauth') }}</h3>
       <div class="flex-x-end">
         <el-button id="ExternalConnection__Oauth__Import" @click="uploadXlsx">
-          {{ $t("import") }}
+          {{ $t('import') }}
         </el-button>
         <el-button id="ExternalConnection__Oauth__Save" type="primary" @click="handleSubmit">
-          {{ $t("dpTool_save") }}
+          {{ $t('dpTool_save') }}
         </el-button>
       </div>
     </div>
@@ -81,7 +81,7 @@ onMounted(() => {
       :form-json="formJson"
       @formChange="handleFormChange"
     />
-    <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile"/>
+    <input v-show="false" ref="inputRef" type="file" accept=".json" @change="handleFile" />
   </el-card>
 </template>
 <style lang="scss" scoped></style>

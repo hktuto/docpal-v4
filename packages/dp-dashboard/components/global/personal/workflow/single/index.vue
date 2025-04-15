@@ -1,27 +1,20 @@
 <script lang="ts" setup>
-const emits = defineEmits(['delete', 'refreshSetting']);
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
-    setting: {},
-    hideSetting: false
-})
-async function handleDelete() {
-  emits("delete");
-}
-const settingRef = ref();
-function openSetting() {
-  console.log("close setting")
-  settingRef.value.handleOpen(props.setting);
-}
-function handleRefresh(chartSetting) {
-  emits('refreshSetting', chartSetting)
-}
-function resize() {
-}
-defineExpose({ resize });
+const props = defineProps<{
+  date: any
+  setting?: any;
+  hideSetting?: boolean;
+}>()
+const {
+  hideSetting,
+  handleDelete, 
+  openSetting, 
+  settingRef,
+  setting,
+  handleRefresh
+} = useDashboard()
+
+
+
 </script>
 
 <template>

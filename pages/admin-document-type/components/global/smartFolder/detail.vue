@@ -1,111 +1,110 @@
 <script lang="ts" setup>
-import {ElMessage} from "element-plus";
-import {adminApi} from "api";
-import {onActivated} from "vue";
+import { adminApi } from 'api'
+import { onActivated } from 'vue'
 
-const {id} = defineProps<{
+const { id } = defineProps<{
   id: string;
-}>();
+}>()
 const state = reactive({
   setting: {},
   loading: false,
-  testLoading: false,
-});
-const {t} = useI18n();
-const filterRef = ref();
-const tableRef = ref();
+  testLoading: false
+})
+const { t } = useI18n()
+const filterRef = ref()
+const tableRef = ref()
 
 async function handleInit() {
   try {
-    state.loading = true;
-    state.setting = await adminApi.api.getNuxeoSfolderId(id).then((res) => res.data);
+    state.loading = true
+    state.setting = await adminApi.api.getNuxeoSfolderId(id).then((res) => res.data)
     if (!!state.setting.json_value) {
-      state.setting.json = JSON.parse(state.setting.json_value);
-      tableRef.value.initBar(state.setting.json);
-      filterRef.value.initForm(state.setting.json);
+      state.setting.json = JSON.parse(state.setting.json_value)
+      tableRef.value.initBar(state.setting.json)
+      filterRef.value.initForm(state.setting.json)
     } else {
       state.setting.json = {
-        condition: "and",
-        docId: "",
+        condition: 'and',
+        docId: '',
         query: [
           {
-            id: getUniqueId("query"),
-            condition: "and",
+            id: getUniqueId('query'),
+            condition: 'and',
             matchs: [
               {
-                id: getUniqueId("matchs"),
-                queryType: "keyword",
-                value: "",
-                type: "string",
+                id: getUniqueId('matchs'),
+                queryType: 'keyword',
+                value: '',
+                type: 'string',
                 option: {
                   matchCase: false,
                   fullMatch: false,
                   synonyms: false,
-                  includeLanguages: [],
-                },
-              },
-            ],
-          },
-        ],
-      };
-      tableRef.value.initBar(state.setting.json);
-      filterRef.value.initForm(state.setting.json);
+                  includeLanguages: []
+                }
+              }
+            ]
+          }
+        ]
+      }
+      tableRef.value.initBar(state.setting.json)
+      filterRef.value.initForm(state.setting.json)
     }
   } catch (error) {
   } finally {
-    state.loading = false;
+    state.loading = false
   }
 }
 
 async function handleTest() {
   try {
-    state.testLoading = true;
-    const data = await filterRef.value.getData();
-    tableRef.value.initBar(data);
+    state.testLoading = true
+    const data = await filterRef.value.getData()
+    tableRef.value.initBar(data)
   } catch (error) {
   } finally {
     setTimeout(() => {
-      state.testLoading = false;
-    }, 1000);
+      state.testLoading = false
+    }, 1000)
   }
 }
 
 function handleClear() {
-  filterRef.value.clear();
+  filterRef.value.clear()
 }
 
 async function handleSave() {
   try {
-    state.loading = true;
-    const data = await filterRef.value.getData();
+    state.loading = true
+    const data = await filterRef.value.getData()
     const res = await adminApi.api
       .patchNuxeoSfolder({
         ...state.setting,
-        json_value: JSON.stringify(data),
+        json_value: JSON.stringify(data)
       })
-      .then((res) => res.data);
-    ElMessage.success(t("dpMsg_success"));
+      .then((res) => res.data)
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   } finally {
-    state.loading = false;
+    state.loading = false
   }
 }
 
 onActivated(() => {
-  state.loading = false;
-  handleInit();
-});
+  state.loading = false
+  handleInit()
+})
 </script>
 <template>
   <div class="pageContainer--padding smartFolder">
-    <div class="smartFolder-left-header">{{ $t("smartFolder.searchQuery") }}</div>
+    <div class="smartFolder-left-header">{{ $t('smartFolder.searchQuery') }}</div>
     <div class="smartFolder-left-main">
       <SearchGroupBar2 ref="filterRef"></SearchGroupBar2>
     </div>
     <div class="smartFolder-left-bottom">
       <div class="flex-x-center">
         <el-button id="SmartFolderSetting__Info__ClearFilter" type="info" @click="handleClear">
-          {{ $t("button.clearFilter") }}
+          {{ $t('button.clearFilter') }}
         </el-button>
         <el-button
           id="SmartFolderSetting__Info__Test"
@@ -114,7 +113,7 @@ onActivated(() => {
           :loading="state.testLoading"
           @click="handleTest"
         >
-          {{ $t("button.test") }}
+          {{ $t('button.test') }}
         </el-button>
       </div>
       <el-button
@@ -124,14 +123,14 @@ onActivated(() => {
         :loading="state.loading"
         @click="handleSave"
       >
-        {{ $t("dpTool_save") }}
+        {{ $t('dpTool_save') }}
       </el-button>
     </div>
 
     <div class="smartFolder-right-main" style="height: 100%; overflow: hidden;">
       <SearchGroupTable ref="tableRef" :tableId="id">
         <template #toolbar_buttons>
-          {{ $t("smartFolder.searchResult") }}
+          {{ $t('smartFolder.searchResult') }}
         </template>
       </SearchGroupTable>
     </div>

@@ -2,7 +2,7 @@
   <el-dialog v-model="state.visible" :title="$t('user_newUser')"
              :close-on-click-modal="false" destroy-on-close
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <el-button id="UserList__CreateNewUser__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
@@ -11,11 +11,11 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import {userProviderKey} from '~/util/userProvider';
+import { adminApi } from 'api'
+import { userProviderKey } from '~/util/userProvider'
 import formJson from './dialog.vform.json'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const userProvider = inject(userProviderKey)
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits([
@@ -23,7 +23,7 @@ const emits = defineEmits([
 ])
 const state = reactive({
   loading: false,
-  visible: false,
+  visible: false
 })
 const FormRendererRef = ref()
 
@@ -41,7 +41,7 @@ async function handleSubmit() {
       userId: data.userId,
       groupIds: data.groupList
     })
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {modelName: t('User'), name: data.userId}));
+    routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('User'), name: data.userId }))
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
   } catch (error) {
@@ -56,7 +56,7 @@ function handleOpen() {
 
 onMounted(async () => {
 })
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 
