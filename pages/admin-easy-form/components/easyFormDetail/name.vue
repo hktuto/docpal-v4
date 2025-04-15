@@ -23,7 +23,7 @@
 <script lang="ts" setup>
 import {adminApi} from 'api'
 import {ElMessage} from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps(["detail"]);
 const {t} = useI18n()
 const route = useRoute()
@@ -44,6 +44,8 @@ async function handleChange(value: string) {
       name: value
     })
     props.detail.name = value
+    console.log('??????????????',routerProvider);
+    
     routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
     form.value.name = props.detail.name
