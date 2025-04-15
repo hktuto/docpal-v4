@@ -3,9 +3,7 @@ import { describe, test, vi, expect, beforeEach } from 'vitest';
 import { EasyFormPage, ResponsiveFilter } from '#components';
 import { adminApi } from './mock/api';
 import { VxeGrid } from 'vxe-table';
-const mockRouterProvider = {
-  navigateTo: vi.fn()
-};
+import { mockRouterProvider } from './util';
 
 describe('[admin-easy-form]EasyFormPage', () => {
   let wrapper: any;

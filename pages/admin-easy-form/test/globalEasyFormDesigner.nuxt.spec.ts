@@ -5,10 +5,8 @@ import {
 } from '#components';
 import { adminApi } from './mock/api';
 
-import { ElMessage, ElMessageBox } from 'element-plus';
-const mockRouterProvider = {
-  navigateTo: vi.fn()
-};
+import { mockRouterProvider } from './util';
+
 // 模拟 FormDesigner 组件
 const mockFormJson = {
   widgetList: [],
@@ -24,10 +22,10 @@ describe('[admin-easy-form]EasyFormDesigner', () => {
       props: {
         id: '1'
       },
-      provide: {
-        [MenuRouterKey]: mockRouterProvider
-      },
       global: {
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
         mocks: {
           $t: (msg: any) => msg,// Mock translation function
         },
@@ -48,13 +46,12 @@ describe('[admin-easy-form]EasyFormDesigner', () => {
   it('should call handleSubmit and show success message', async () => {
     const mockResponse = { data: { success: true } };
     vi.spyOn(adminApi.api, 'postFormDesignSavePreview').mockResolvedValue(mockResponse);
-    const elMessageSpy = vi.spyOn(ElMessage, 'success');
     wrapper.vm.FormDesignerRef = {
       getFormJson: vi.fn().mockReturnValue(mockFormJson)
     };
     await wrapper.vm.handleSubmit();
     expect(adminApi.api.postFormDesignSavePreview).toHaveBeenCalled();
-    expect(elMessageSpy).toHaveBeenCalledWith('msg_successfullyModified');
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('msg_successfullyModified');
   });
 
   it('should handle submit error', async () => {
