@@ -126,7 +126,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessage } from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const props = defineProps(['detail'])
 const emits = defineEmits(['refresh', 'delete'])

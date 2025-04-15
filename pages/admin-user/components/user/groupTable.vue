@@ -44,6 +44,7 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
 import { userProviderDetailKey } from '~/util/userProvider'
+
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)

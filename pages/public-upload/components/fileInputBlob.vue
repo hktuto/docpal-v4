@@ -28,6 +28,7 @@
 import { ElMessage } from 'element-plus'
 import { useDebounceFn } from '@vueuse/core'
 
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   disabled?: Boolean;
   multiple?: Boolean;

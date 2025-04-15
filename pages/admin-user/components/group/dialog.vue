@@ -2,7 +2,8 @@
   <el-dialog v-model="state.visible" :title="$t('user_newGroup')" :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="UserGroupList__AddNewUserGroup__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="UserGroupList__AddNewUserGroup__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -11,6 +12,7 @@
 <script lang="ts" setup>
 import { groupProviderKey } from '~/util/userProvider'
 import formJson from './dialog.vform.json'
+
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const groupProvider = inject(groupProviderKey)
@@ -56,7 +58,8 @@ function handleOpen() {
   })
 }
 
-onMounted(async () => {})
+onMounted(async () => {
+})
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped></style>

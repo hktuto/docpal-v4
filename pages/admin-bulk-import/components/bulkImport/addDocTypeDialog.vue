@@ -15,7 +15,7 @@
 import { adminApi } from 'api'
 import formJson from './addDocTypeForm.vfom.json'
 import { ElMessage } from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const { metaSettingData } = defineProps<{
   metaSettingData: any
 }>()

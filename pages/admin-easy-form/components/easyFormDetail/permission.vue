@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { adminApi } from 'api'
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const props = defineProps(['detail'])
 

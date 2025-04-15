@@ -33,7 +33,8 @@ async function handleSubmit() {
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
-  } catch (error) {}
+  } catch (error) {
+  }
   state.loading = false
 }
 
@@ -44,7 +45,8 @@ function handleOpen() {
   })
 }
 
-onMounted(async () => {})
+onMounted(async () => {
+})
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>

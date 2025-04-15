@@ -3,7 +3,7 @@ import {ElMessage} from 'element-plus'
 
 import fromJson from './adminMetaRelated.vform.json'
 import {adminApi} from 'api';
-
+const routerProvider = inject(MenuRouterKey)
 const tableColumns = {
   columns: [
     {id: '1', prop: 'title', label: 'title', defaultColumn: true},

@@ -38,7 +38,7 @@
 import { adminApi } from 'api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { EasyFormResult } from 'api/src/generate/admin'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['detail'])
 const emits = defineEmits(['refresh', 'delete'])
 const { t } = useI18n()

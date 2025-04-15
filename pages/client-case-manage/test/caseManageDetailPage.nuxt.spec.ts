@@ -79,6 +79,7 @@ describe('CaseManageDetailPage', () => {
 
     await wrapper.vm.handleFilterFormChange(extraParams)
     await wrapper.vm.$nextTick()
+
     expect(clientApi.api.postCaseTypesCasetypeidRecordsPage).toHaveBeenCalled()
     expect(wrapper.vm.extraParams.where.file).toBe('233')
     expect(wrapper.vm.extraParams.q).toBe('ab')
@@ -89,24 +90,42 @@ describe('CaseManageDetailPage', () => {
       dblClickAction: vi.fn()
     }
     const row = {
-      component: 'LazyCaseDashboard',
-      icon: 'dp-icon:case-outline',
-      id: 'client-case-manage-dashboard1744686706520',
-      label: 'cabinet-0032',
-      name: 'client-case-manage-dashboard-cabinet-0032',
-      props: {}
+      caseDefinitionVersionId: '5:34e59466-266d-4c46-9265-c5ce63ae18f6',
+      case_id: 'cabinet-0031',
+      created_by: null,
+      created_date: '2025-03-14T09:32:02.000+00:00',
+      execution_id: null,
+      file: '22332233',
+      fileName: null,
+      id: '9bc54ccd-2c92-4a99-b87b-7a85854500b9',
+      modified_by: null,
+      modified_date: '2025-03-14T09:32:02.000+00:00',
+      rootId: '11211221',
+      rootName: '22332233',
+      status: true,
+      _X_ROW_KEY: 'row_122'
     }
     await wrapper.vm.tableRef.dblClickAction(row)
 
     expect(wrapper.vm.tableRef.dblClickAction).toHaveBeenCalled()
   })
 
-  it('should add new Row the component correctly', async () => {
+  it('should add new row dialog the component correctly', async () => {
     const mockOpen = vi.fn()
     wrapper.vm.addCaseDialog = {
       handleOpen: mockOpen
     }
+    wrapper.vm.reorderColumn()
+    wrapper.vm.tableReady = true
+    wrapper.vm.initCondition()
+    await wrapper.vm.$nextTick()
 
+    console.log(wrapper.html())
+    const button = wrapper.findComponent('#CaseManagement__Detail__AddNewRow')
+    expect(button.exists()).toBe(true)
+    button.trigger('click')
+
+    expect(mockOpen).toHaveBeenCalled()
     const handleOpenSpy = vi.spyOn(wrapper.vm.addCaseDialog, 'handleOpen')
     await wrapper.vm.handleAddCaseDialog()
     expect(handleOpenSpy).toHaveBeenCalled()

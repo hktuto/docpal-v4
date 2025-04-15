@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['table', 'tableId'])
 const { t } = useI18n()
 const state = reactive<any>({

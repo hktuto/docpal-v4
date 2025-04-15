@@ -30,8 +30,8 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.userId || !data.username) {
-    routerProvider?.message.error(t("user_username") + t('render.hint.fieldRequired'));
-    return;
+    routerProvider?.message.error(t('user_username') + t('render.hint.fieldRequired'))
+    return
   }
   state.loading = true
   try {

@@ -31,6 +31,8 @@
 
 <script lang="ts" setup>
 import { clientApi } from 'api'
+
+const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
 const { t } = useI18n()
 // @ts-ignore

@@ -36,7 +36,6 @@ import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 
 import { clientApi } from 'api'
 
-
 const { updateShareList, getMineTypeShareList, getUseWatermark } = useShareStore()
 import formJson from './shareRequest.vform.json'
 

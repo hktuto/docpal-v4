@@ -14,7 +14,7 @@
 import {adminApi} from 'api'
 import formJson from './acl.vform.json'
 import {ElMessage} from "element-plus";
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   doc: any,
   exitList: any[],

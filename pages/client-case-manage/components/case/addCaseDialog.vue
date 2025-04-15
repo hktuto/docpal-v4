@@ -41,7 +41,6 @@ async function handleOpen(id: string, caseDetail: any) {
     }
     isWorkflowForm.value = false
     // other, use old form
-
     if (!startForm) throw new Error('no data')
     const first = startForm[0]
     state.title = first.name
@@ -63,7 +62,6 @@ async function handleOpen(id: string, caseDetail: any) {
     setTimeout(() => {
       if (!!fields) MasterTableVariableFormRef.value.init(fields, initData)
     })
-
   } catch (error) {
     routerProvider?.message.error('no data')
     state.visible = false

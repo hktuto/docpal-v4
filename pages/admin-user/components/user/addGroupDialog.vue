@@ -1,18 +1,19 @@
 <template>
   <el-dialog v-model="state.visible" :title="$t('user_addGroups')" :close-on-click-modal="false">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="UserList__Info__AssignUserGroup__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="UserList__Info__AssignUserGroup__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {userProviderDetailKey} from '~/util/userProvider';
+import { userProviderDetailKey } from '~/util/userProvider'
 import formJson from './addGroupDialog.vform.json'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const userProviderDetail = inject(userProviderDetailKey)
 const props = defineProps<{
@@ -33,11 +34,11 @@ async function handleSubmit() {
   state.loading = true
   const param = {
     groupIds: data.id,
-    userId: props.user.userId,
+    userId: props.user.userId
   }
   try {
     await userProviderDetail?.BatchUserAddGroupsApi(param)
-    routerProvider?.message.success(t('user_userGroupsAssignedSuccessMsg'));
+    routerProvider?.message.success(t('user_userGroupsAssignedSuccessMsg'))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
@@ -47,12 +48,12 @@ async function handleSubmit() {
   state.loading = false
 }
 
- function handleOpen(exitList: any) {
-    state.visible = true
-    setTimeout(async() => {
-        state.groupList = await userProviderDetail?.GetGroupListApi()
-        handleOptions(exitList)
-    })
+function handleOpen(exitList: any) {
+  state.visible = true
+  setTimeout(async () => {
+    state.groupList = await userProviderDetail?.GetGroupListApi()
+    handleOptions(exitList)
+  })
 }
 
 function handleOptions(exitList: any) {
@@ -71,13 +72,13 @@ function handleOptions(exitList: any) {
         prev.push(JSON.parse(JSON.stringify(item)))
       }
       return prev
-    }, []);
+    }, [])
   }
 }
 
 onActivated(async () => {
 })
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

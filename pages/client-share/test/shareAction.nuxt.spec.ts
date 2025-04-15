@@ -5,6 +5,7 @@ import { VxeGrid } from 'vxe-table'
 import { clientApi } from './mock/api'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
+const routerProvider = inject(MenuRouterKey)
 // 模擬 Element Plus
 vi.mock('element-plus', () => ({
   ElMessageBox: {

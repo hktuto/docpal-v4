@@ -27,6 +27,7 @@
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import { clientApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
 type TableState = {
   ready: boolean,
   loading: boolean,

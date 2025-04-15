@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { ElMessage } from 'element-plus'
 import formJson from './ocr.vform.json'
-
+const routerProvider = inject(MenuRouterKey)
 const azureProvider = inject(AzureProviderKey)
 const props = defineProps(['setting'])
 const state = reactive<any>({

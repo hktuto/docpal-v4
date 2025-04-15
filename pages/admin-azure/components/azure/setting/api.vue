@@ -16,6 +16,7 @@ import formJson from './api.vform.json'
 
 import { AzureProviderKey } from '#imports'
 
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['setting'])
 const state = reactive<any>({
   loading: false
