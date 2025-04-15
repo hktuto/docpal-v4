@@ -3,9 +3,9 @@ import { mount } from '@vue/test-utils'
 import { SharePage, ShareDialog } from '#components'
 import { VxeGrid } from 'vxe-table'
 import { clientApi } from './mock/api'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
+import { mockRouterProvider } from './util'
 
-const routerProvider = inject(MenuRouterKey)
 // 模擬 Element Plus
 vi.mock('element-plus', () => ({
   ElMessageBox: {
@@ -28,6 +28,9 @@ describe('ShareAction', () => {
     wrapper = mount(SharePage, {
       global: {
         components: { VxeGrid },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        },
         mocks: {
           $t: (msg: string) => msg,
           $i18n: { t: (key: string) => key }
@@ -56,7 +59,7 @@ describe('ShareAction', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    expect(routerProvider?.message.success).toHaveBeenCalled()
+    expect(mockRouterProvider.message.success).toHaveBeenCalled()
   })
 
 })

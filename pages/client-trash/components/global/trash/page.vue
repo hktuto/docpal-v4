@@ -24,7 +24,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
+import { ElMessageBox, ElNotification } from 'element-plus'
 import { clientApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
