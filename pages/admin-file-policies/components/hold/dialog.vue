@@ -52,7 +52,7 @@ async function handleSubmit() {
       await adminApi.api.postPolicyHolds(params)
       msg = t('tip_createdSuccessMsg', {modelName: t('workflow_holdPolicy'), name: null})
     }
-    routerProvider?.message.success(msg)
+    ElMessage.success(msg)
     state.visible = false
     emits('update')
   } catch (error) {

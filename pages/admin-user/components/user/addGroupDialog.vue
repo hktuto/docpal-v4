@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { userProviderDetailKey } from '~/util/userProvider'
 import formJson from './addGroupDialog.vform.json'
-
+import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const userProviderDetail = inject(userProviderDetailKey)
@@ -38,7 +38,7 @@ async function handleSubmit() {
   }
   try {
     await userProviderDetail?.BatchUserAddGroupsApi(param)
-    routerProvider?.message.success(t('user_userGroupsAssignedSuccessMsg'))
+    ElMessage.success(t('user_userGroupsAssignedSuccessMsg'))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

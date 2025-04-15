@@ -32,7 +32,7 @@
 <script lang="ts" setup>
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { adminApi } from 'api'
-
+const routerProvider = inject(MenuRouterKey)
 
 const caseDetailProvider = inject(CaseManagementDetailProviderKey)
 if (!caseDetailProvider) {

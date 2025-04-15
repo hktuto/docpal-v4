@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { ElMessage, ElTimeSelect } from 'element-plus'
 import { snapDownTo15Minutes } from '../../utils/calendarHelper'
 import { clientApi } from 'api'
-
+const routerProvider = inject(MenuRouterKey)
 const opened = ref(false)
 const newEventId = defineModel<string>('newEventId')
 const { options, checkValid } = defineProps<{
@@ -78,7 +78,7 @@ async function open(event) {
 function startTimeChange() {
   const startDay = dayjs(form.value.startDate + ' ' + form.value.startTime)
   if (startDay.isBefore(dayjs())) {
-    routerProvider?.message.error('Start time cannot be earlier than today')
+    ElMessage.error('Start time cannot be earlier than today')
   }
   form.value.endDate = startDay.format('YYYY-MM-DD')
   form.value.endTime = snapDownTo15Minutes(startDay.add(15, 'minutes')).format('HH:mm')
@@ -88,10 +88,10 @@ function endTimeChange() {
   const endTime = dayjs(form.value.endDate + ' ' + form.value.endTime)
   const startTime = dayjs(form.value.startDate + ' ' + form.value.startTime)
   if (endTime.isBefore(dayjs())) {
-    routerProvider?.message.error('End time cannot be earlier than today')
+    ElMessage.error('End time cannot be earlier than today')
   }
   if (startTime.isAfter(endTime)) {
-    routerProvider?.message.error('Start time cannot be later than end time')
+    ElMessage.error('Start time cannot be later than end time')
   }
 
   // form.value.startDate = endTime.format('YYYY-MM-DD')

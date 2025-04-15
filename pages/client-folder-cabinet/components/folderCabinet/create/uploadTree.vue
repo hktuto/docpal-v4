@@ -54,7 +54,7 @@
 
 <script lang="ts" setup>
 import { ElMessageBox, ElMessage } from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   treeData: Object
 }>()

@@ -12,7 +12,7 @@
 import {groupProviderDetailKey} from '~/util/userProvider';
 import formJson from './addUserDialog.vform.json'
 import type {UserDTO, GroupDTO} from 'api/src/generate/admin'
-
+import { ElMessage } from 'element-plus'
 const {t} = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const groupProviderDetail = inject(groupProviderDetailKey)
@@ -45,7 +45,7 @@ async function handleSubmit() {
     setTimeout(() => {
       state.visible = false
     }, 300)
-    routerProvider?.message.success(t('user_addUserGroupSuccessMsg'));
+    ElMessage.success(t('user_addUserGroupSuccessMsg'));
 
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

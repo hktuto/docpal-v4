@@ -53,7 +53,7 @@ async function handleSubmit() {
   try {
     await adminApi.api.postCabinetTemplatePermission(params)
     state.visible = false
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('folder_cabinetLocalPermissionOfFolder'),
       name: null
     }))

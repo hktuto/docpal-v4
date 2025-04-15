@@ -14,10 +14,9 @@
 import { adminApi } from 'api'
 import { userProviderKey } from '~/util/userProvider'
 import formJson from './dialog.vform.json'
-
+import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const userProvider = inject(userProviderKey)
-const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits([
   'refresh'
 ])
@@ -30,7 +29,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.userId || !data.username) {
-    routerProvider?.message.error(t('user_username') + t('render.hint.fieldRequired'))
+    ElMessage.error(t('user_username') + t('render.hint.fieldRequired'))
     return
   }
   state.loading = true
@@ -41,7 +40,7 @@ async function handleSubmit() {
       userId: data.userId,
       groupIds: data.groupList
     })
-    routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('User'), name: data.userId }))
+    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('User'), name: data.userId }))
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
   } catch (error) {

@@ -37,7 +37,7 @@ async function handleSubmit() {
   }
   try {
     await userProvider?.BatchUsersToGroupsApi(params)
-    routerProvider?.message.success(t('dpMsg_success'))
+    ElMessage.success(t('dpMsg_success'))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

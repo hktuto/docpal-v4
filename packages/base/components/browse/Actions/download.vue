@@ -4,7 +4,7 @@ import { ElNotification, ElMessage } from 'element-plus'
 import { useEventListener } from '@vueuse/core'
 import { downloadFileHandler } from '~/utils/browseHelper'
 import * as mime from 'mime-types'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   doc?: any,
   blob?: any,

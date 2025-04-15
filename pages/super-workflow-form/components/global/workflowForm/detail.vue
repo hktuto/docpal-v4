@@ -2,7 +2,7 @@
 import { adminApi } from 'api'
 import type { ProcessDefinitionDTO } from 'api/src/generate/admin'
 import { ArrowDown } from '@element-plus/icons-vue'
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const { taskId, processKey } = defineProps<{
   taskId: string;

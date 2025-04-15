@@ -44,7 +44,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     await adminApi.api.postPolicyRetentions(params)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('filePolicies_RetentionPolicy'),
       name: null
     }))

@@ -9,7 +9,7 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { Graph, Node } from '@antv/x6'
-
+const routerProvider = inject(MenuRouterKey)
 const props = withDefaults(defineProps<{
   graph: Graph,
   node: Node,

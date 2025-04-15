@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import formJson from './new.vform.json'
 import { adminApi } from 'api'
-
+import { ElMessage } from 'element-plus'
 const emits = defineEmits([
   'refresh'
 ])
@@ -38,7 +38,7 @@ async function handleSubmit() {
   state.loading = true
   try {
     const result = await adminApi.api.postDocpaltypeSettings(data)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('docType_documentType'),
       name: data.name
     }))

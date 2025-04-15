@@ -13,7 +13,7 @@
 import { groupProviderDetailKey } from '~/util/userProvider'
 import formJson from './editDialog.vform.json'
 import { adminApi } from 'api'
-
+import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const groupProviderDetail = inject(groupProviderDetailKey)
@@ -32,7 +32,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.groupName) {
-    routerProvider?.message.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
+    ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
     return
   }
   if (props.group.name === data.groupName) {
@@ -42,14 +42,14 @@ async function handleSubmit() {
   const groupList: any = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
   // check group name exist
   if (groupList.some((g: any) => g.name === data.groupName)) {
-    routerProvider?.message.error(t('user_userGroupsIsExistsMsg'))
+    ElMessage.error(t('user_userGroupsIsExistsMsg'))
     return
   }
 
   try {
     data.groupId = props.group.id
     const res = await groupProviderDetail?.PatchGroupApi(data)
-    routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
+    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh', res.data)

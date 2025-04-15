@@ -42,7 +42,7 @@ async function handleSubmit() {
     } else {
       result = await azureProvider?.CreateAzureOcrMappingApi(formData)
     }
-    if (result) routerProvider?.message.success($i18n.t('dpMsg_success'))
+    if (result) ElMessage.success($i18n.t('dpMsg_success'))
     emits('refresh')
     state.visible = false
   } catch (error) {

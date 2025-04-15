@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { useWatermark, WatermarkTemplateDetail } from '../../composables/Watermark'
 import { ElMessage } from 'element-plus'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   modelValue: any
 }>()

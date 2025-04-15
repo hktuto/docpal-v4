@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {ElColorPicker, ElDialog} from 'element-plus';
 import {adminApi} from 'api';
-
+import { ElMessage } from 'element-plus'
 const categoriesColumn = useCategoriesColumn()
 const {setting} = useCalendarStore();
 const opened = ref(false);
@@ -65,7 +65,7 @@ async function submit() {
 
   }
   emits('submit')
-  routerProvider?.message.success(t('dpMsg_success'))
+  ElMessage.success(t('dpMsg_success'))
   opened.value = false
 }
 

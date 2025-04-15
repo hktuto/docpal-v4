@@ -52,7 +52,7 @@ async function handleSubmit() {
     } else {
       msg = t('tip_updateSuccessMsg', { modelName: t('file_smartFolder'), name: null })
     }
-    routerProvider?.message.success(msg)
+    ElMessage.success(msg)
     emits('refresh')
     state.visible = false
   } catch (error) {

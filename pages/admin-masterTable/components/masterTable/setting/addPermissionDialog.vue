@@ -45,7 +45,7 @@ async function handleSubmit() {
   state.loading = true
   try {
     await adminApi.api.postMasterTablesAclsAdd(params)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('masterTable_permissionForMaster'),
       name: props.exitList[0]?.masterTableName
     }))

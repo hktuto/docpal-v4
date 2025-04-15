@@ -26,7 +26,7 @@
 <script lang="ts" setup>
 import formJson from './addDisplayMeta.vform.json'
 import { adminApi } from '../../../../../libraries/api/src'
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   docTypeDetail: any,
 }>()

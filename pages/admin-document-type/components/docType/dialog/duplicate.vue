@@ -19,8 +19,8 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 import formJson from './duplicate.vform.json'
-
 const emits = defineEmits([
   'refresh', 'delete'
 ])
@@ -37,7 +37,7 @@ async function handleSubmit() {
   state.loading = true
   try {
     await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
-    routerProvider?.message.success(t('documentType_duplicateSuccessMsg'))
+    ElMessage.success(t('documentType_duplicateSuccessMsg'))
     emits('refresh')
     state.visible = false
   } catch (error) {

@@ -99,7 +99,7 @@ async function handleSubmit() {
     if (state.profileID) params.profileID = state.profileID
     const res = await adminApi.api.postWorkflowSavedocumenttypeprofile(params)
     if (!res.result) {
-      routerProvider?.message.error(res.message)
+      ElMessage.error(res.message)
       return
     }
     console.log("res", res)
