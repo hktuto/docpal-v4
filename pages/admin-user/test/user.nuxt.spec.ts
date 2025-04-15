@@ -167,7 +167,7 @@ describe('[admin-user]UserTable', () => {
     await wrapper.vm.handleSetStatus('A', userRow);
 
     expect(userRow.status).toBe('D'); // Status should not change
-    expect(ElMessage.warning).toHaveBeenCalled();
+    expect(mockRouterProvider.message.warning).toHaveBeenCalled();
   });
   it('handles filter form change', async () => {
     const filterModel = { isDesc: false };
@@ -417,7 +417,7 @@ describe('[admin-user]UserPasswordDialog', () => {
       password: formData.password,
       userId: mockUser.userId,
     });
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg')); // 根据你的翻译文本进行调整
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg'));
     expect(wrapper.vm.state.visible).toBe(false);
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
   });
@@ -526,7 +526,7 @@ describe('[admin-user]UserGroupTable', () => {
 
     await wrapper.vm.handleDeleteSelected();
 
-    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('user_removeGroupsSuccessMsg'));
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('user_removeGroupsSuccessMsg'));
   });
 
   it('handles filter form change', async () => {
@@ -705,7 +705,7 @@ describe('[admin-user]UserAddGroupsDialog', () => {
       groupIds: formData.id,
       ...wrapper.vm.state.setting,
     });
-    expect(ElMessage.success).toHaveBeenCalledWith('dpMsg_success');
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('dpMsg_success'));
     expect(wrapper.vm.state.visible).toBe(false);
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
   });
