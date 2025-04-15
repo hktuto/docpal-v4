@@ -120,7 +120,6 @@ describe('CaseManageDetailPage', () => {
     wrapper.vm.initCondition()
     await wrapper.vm.$nextTick()
 
-    console.log(wrapper.html())
     const button = wrapper.findComponent('#CaseManagement__Detail__AddNewRow')
     expect(button.exists()).toBe(true)
     button.trigger('click')

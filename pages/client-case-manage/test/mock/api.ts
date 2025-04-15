@@ -8,5 +8,6 @@ export const clientApi = {
     getCaseTypesCasetypeidRecordsPageConditions: vi.fn(() => Promise.resolve(true)),
     getCaseInstanceCasetypeidStarttask: vi.fn(() => Promise.resolve(true)),
     postCaseInstanceStart: vi.fn(() => Promise.resolve(true)),
+    getRelationQuery: vi.fn(() => Promise.resolve(true)),
   }
 }
