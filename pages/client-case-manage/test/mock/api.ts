@@ -6,5 +6,6 @@ export const clientApi = {
     postCaseTypesCasetypeidRecordsPage: vi.fn(() => Promise.resolve(true)),
     getCaseDashboardCasetypeCasetypeidPrimaryform: vi.fn(() => Promise.resolve(true)),
     getCaseTypesCasetypeidRecordsPageConditions: vi.fn(() => Promise.resolve(true)),
+    postCaseInstanceStart: vi.fn(() => Promise.resolve(true)),
   }
 }
