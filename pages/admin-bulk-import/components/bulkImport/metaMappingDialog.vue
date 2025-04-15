@@ -45,7 +45,7 @@ async function handleSubmit() {
       }
     }
     await adminApi.api.postWorkflowSavemetadatamapping({ documentType: [param] })
-    routerProvider?.message.success(t('bulkImport_displayMetaSuccessMsg', { name: data.metaData }))
+    ElMessage.success(t('bulkImport_displayMetaSuccessMsg', { name: data.metaData }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

@@ -20,7 +20,7 @@
 import { adminApi } from 'api'
 import { ExtensionMap } from '~/utils/documentTemplateHelper'
 import formJson from './templateAddStep1.vform.json'
-
+import { ElMessage } from 'element-plus'
 const emits = defineEmits([
   'update'
 ])
@@ -50,7 +50,7 @@ async function handleSubmit() {
         id: state.setting.id,
         fileType: state.setting.fileType
       })
-      routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
+      ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
       emits('update')
     } else {
       const file = await createFile(formData.type, formData.name)
@@ -60,7 +60,7 @@ async function handleSubmit() {
       params.append('fileType', formData.type)
       params.append('description', formData.description)
       const { data } = await adminApi.api.postTemplateDocument({ requestDTO: {} }, params as any) as any
-      routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
+      ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
       const templateInfo = data
       const link = createNewDocumentTemplateDetail({
         id: templateInfo.id,

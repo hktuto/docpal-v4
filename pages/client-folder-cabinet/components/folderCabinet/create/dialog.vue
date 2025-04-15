@@ -174,7 +174,7 @@ async function handleOpen(id: string) {
       }, 10)
     }, 10)
   } catch (error) {
-    routerProvider?.message.error(t('dpMsg_error'))
+    ElMessage.error(t('dpMsg_error'))
     // state.visible = false
   }
 

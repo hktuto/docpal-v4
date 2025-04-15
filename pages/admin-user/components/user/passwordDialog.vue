@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { userProviderDetailKey } from '~/util/userProvider'
 import formJson from './passwordDialog.vform.json'
-
+import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const userProviderDetail = inject(userProviderDetailKey)
@@ -38,7 +38,7 @@ async function handleSubmit() {
       userId: props.user.userId
     }
     await userProviderDetail?.PatchUserPasswordApi(param)
-    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+    ElMessage.success(t('tip_updateSuccessMsg', {
       modelName: t('user_userPassword'),
       name: param.userId
     }))

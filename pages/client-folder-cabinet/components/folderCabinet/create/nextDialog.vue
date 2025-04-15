@@ -57,7 +57,7 @@ async function handleSubmit() {
       const res = await Promise.all(pList)
       state.loading = false
       state.visible = false
-      routerProvider?.message.success(t('tip_createdSuccessMsg', {
+      ElMessage.success(t('tip_createdSuccessMsg', {
         modelName: t('common_item'),
         name: uploadList[0].previewName
       }))

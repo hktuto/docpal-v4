@@ -18,7 +18,6 @@
 
 <script lang="ts" setup>
 import { adminApi } from 'api'
-
 const detail = ref<WatermarkTemplateDetail | null>(null)
 const watermarkDetail = ref()
 const { getWatermarkTemplateDetail, removeWatermarkTemplate, list, updateWatermarkTemplateDetail } = useWatermark()

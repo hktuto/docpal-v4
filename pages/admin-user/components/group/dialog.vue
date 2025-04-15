@@ -12,7 +12,7 @@
 <script lang="ts" setup>
 import { groupProviderKey } from '~/util/userProvider'
 import formJson from './dialog.vform.json'
-
+import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const groupProvider = inject(groupProviderKey)
@@ -29,19 +29,19 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.groupId || !data.groupName) {
-    routerProvider?.message.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
+    ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
     return
   }
   // check group name exist
   if (props.groups.some((g: any) => g.name === data.groupName || g.id === data.groupId)) {
-    routerProvider?.message.error(t('user_userGroupsIsExistsMsg'))
+    ElMessage.error(t('user_userGroupsIsExistsMsg'))
     return
   }
   data.groupName = data.groupName.trim()
   state.loading = true
   try {
     await groupProvider?.CreateGroupApi(data)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
+    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

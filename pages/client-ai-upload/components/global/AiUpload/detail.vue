@@ -365,7 +365,7 @@ async function handleSubmit() {
       })
     } else throw new Error(t('dpMsg_503'))
   } catch (error) {
-    if (error.message) routerProvider?.message.error(error.message)
+    if (error.message) ElMessage.error(error.message)
   }
   setTimeout(() => {
     state.submitLoading = false

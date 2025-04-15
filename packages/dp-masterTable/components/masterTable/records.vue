@@ -110,7 +110,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { onActivated } from 'vue'
 
 const emits = defineEmits(['filter-change'])
-
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const {
   public: { endPoint }

@@ -48,7 +48,7 @@ async function handleSubmit() {
       related: []
     }
     await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('bulkImport_bulkImportForDocumentType'),
       name: data.type
     }))

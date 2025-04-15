@@ -49,7 +49,7 @@ async function handleSubmit() {
   }
   try {
     await clientApi.api.patchNuxeoCollection(params)
-    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+    ElMessage.success(t('tip_updateSuccessMsg', {
       modelName: t('collection_collection'),
       name: data.name
     }))

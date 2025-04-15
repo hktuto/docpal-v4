@@ -63,7 +63,7 @@ async function handleOpen(id: string, caseDetail: any) {
       if (!!fields) MasterTableVariableFormRef.value.init(fields, initData)
     })
   } catch (error) {
-    routerProvider?.message.error('no data')
+    ElMessage.error('no data')
     state.visible = false
   } finally {
     state.loading = false

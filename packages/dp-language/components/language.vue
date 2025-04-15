@@ -152,7 +152,7 @@ async function handleUpload(json: any) {
 
   if (result.length === 0) {
     ElMessage.success(`${$i18n.t('dpMsg_success')}`)
-  } else routerProvider?.message.error(`${$i18n.t('dpMsg_error')}`)
+  } else ElMessage.error(`${$i18n.t('dpMsg_error')}`)
   setTimeout(() => {
     state.loading = false
   }, 200)

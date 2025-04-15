@@ -14,7 +14,6 @@
 import { ElMessage } from 'element-plus'
 import { adminApi } from 'api'
 import formJson from './new.vform.json'
-
 const { t } = useI18n()
 const emits = defineEmits([
   'refresh'
@@ -32,7 +31,7 @@ async function handleSubmit() {
   try {
     state.visible = false
     const res = await adminApi.api.postCaseTypes(data).then(res => res.data)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('caseManagement_caseTemplate'),
       name: data.name
     }))

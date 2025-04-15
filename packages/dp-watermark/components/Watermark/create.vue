@@ -17,7 +17,7 @@
 
 import { ElMessage } from 'element-plus'
 import { useWatermark, WatermarkTemplate } from '../../composables/Watermark'
-
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['submit'])
 const props = defineProps<{
   list: WatermarkTemplate[]

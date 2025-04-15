@@ -11,7 +11,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import formJson from './editDialog.vform.json'
-
+import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const props = defineProps<{
@@ -29,7 +29,7 @@ async function handleSubmit() {
   state.loading = true
   try {
     await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })
-    routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: data.firstName }))
+    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: data.firstName }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')

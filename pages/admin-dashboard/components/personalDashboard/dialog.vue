@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import formJson from './dialog.vform.json'
-const routerProvider = inject(MenuRouterKey)
+import { ElMessage } from 'element-plus'
 const emits = defineEmits(['refresh', 'delete', 'add'])
 const { t } = useI18n()
 const state = reactive({
@@ -44,7 +44,7 @@ async function handleSubmit() {
         ...state.setting,
         ..._data
       })
-      routerProvider?.message.success(t('tip_updateSuccessMsg', {
+      ElMessage.success(t('tip_updateSuccessMsg', {
         modelName: t('adminMenu.workPanel'),
         name: _data.name
       }))
@@ -54,7 +54,7 @@ async function handleSubmit() {
         ..._data,
         styleJson: '{}'
       }).then(res => res.data)
-      routerProvider?.message.success(t('tip_createdSuccessMsg', {
+      ElMessage.success(t('tip_createdSuccessMsg', {
         modelName: t('adminMenu.workPanel'),
         name: _data.name
       }))

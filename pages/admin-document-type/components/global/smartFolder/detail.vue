@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { onActivated } from 'vue'
-
+const routerProvider = inject(MenuRouterKey)
 const { id } = defineProps<{
   id: string;
 }>()

@@ -2,7 +2,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 import formJson from '../../retention/addDialog.vform.json'
-
+const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['update'])
 const { id } = defineProps<{
   id: number

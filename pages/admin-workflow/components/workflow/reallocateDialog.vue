@@ -27,7 +27,6 @@
 import { ElMessage, type FormInstance } from 'element-plus'
 import { adminApi } from 'api'
 
-const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const emit = defineEmits(['success'])
 const state = reactive({
@@ -81,7 +80,7 @@ async function handleSubmit() {
     })
     if (!res2) return
 
-    routerProvider?.message.success(t('workflow_ManageReallocateAssigneeSuccessMsg'))
+    ElMessage.success(t('workflow_ManageReallocateAssigneeSuccessMsg'))
     emit('success')
     dialogVisible.value = false
   } catch (error) {

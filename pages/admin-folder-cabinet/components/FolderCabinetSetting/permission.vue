@@ -62,7 +62,7 @@ import { adminApi } from 'api'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 const { t } = useI18n()
-
+const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   tableData: any;
   id: string;

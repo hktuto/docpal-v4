@@ -42,7 +42,7 @@ async function handleSubmit() {
   }
   try {
     const data = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
-    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+    ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('collection_collection'),
       name: params.name
     }))
