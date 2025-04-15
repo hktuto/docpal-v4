@@ -36,5 +36,7 @@ export const mockRouterProvider = {
   menuSymbol: 'mockMenuSymbol',
   message: {
     success: vi.fn(),
+    warning: vi.fn(),
+    error: vi.fn(),
   }
 };

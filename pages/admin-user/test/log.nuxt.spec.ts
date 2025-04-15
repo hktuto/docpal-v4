@@ -3,12 +3,13 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest';
 import { adminApi } from './mock/api';
 import { VxeGrid, } from 'vxe-table';
 import { mockRouterProvider } from './util';
-import { GroupList } from '#components';
+import { GroupUserTable } from '#components';
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus';
 import { groupProviderKey, groupProviderDetailKey } from '~/util/userProvider';
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
+    confirm: vi.fn(),
   },
   ElNotification: {
     success: vi.fn(),
@@ -20,16 +21,19 @@ vi.mock('element-plus', () => ({
 }));
 const groupProviderDetail = {
   openGroupDetail: vi.fn(),
-  GetGroupListApi: adminApi.api.postNuxeoIdentityGroups,
+  GetGroupDetailApi: adminApi.api.postNuxeoIdentityGroups,
   DeleteGroupApi: adminApi.api.deleteNuxeoIdentityGroup,
   CreateGroupApi: adminApi.api.postNuxeoIdentityGroup,
 };
-describe('GroupList', () => {
+describe('[admin-group]GroupUserTable', () => {
   let wrapper: any;
   const mockTabProvider = {};
 
   beforeEach(() => {
-    wrapper = mount(GroupList, {
+    wrapper = mount(GroupUserTable, {
+      props: {
+        group: { id: 'group-1', isCanModified: true },
+      },
       global: {
         provide: {
           [TabManagerKey]: mockTabProvider,
@@ -42,6 +46,8 @@ describe('GroupList', () => {
         }
       },
     });
+    const dialogRef = wrapper.vm.$refs.UserAddGroupDialogRef;
+    dialogRef.handleOpen = vi.fn();
   });
 
   afterEach(() => {
@@ -50,48 +56,40 @@ describe('GroupList', () => {
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('.pageContainer').exists()).toBe(true);
+    expect(wrapper.find('.el-card').exists()).toBe(true);
   });
-  it('opens group detail correctly', () => {
-    const groupData = { id: 'group-1', name: 'Group 1', isCanModified: true };
-
-    wrapper.vm.openGroupDetail(groupData);
-
-    expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(expect.objectContaining({
-      id: expect.stringContaining('group-detail-'),
-      name: `group-detail-${groupData.id}`,
-      props: {
-        id: groupData.id,
-        name: groupData.name,
-        isCanModified: groupData.isCanModified,
-      },
-    }), false);
+  it('shows the correct number of selected users', async () => {
+    wrapper.vm.state.selectedRows.push({ userId: 'user-1' });
+    wrapper.vm.state.selectedRows.push({ userId: 'user-2' });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toContain('2');
   });
-  it('fetches group list successfully', async () => {
-    const mockGroupList = [{ id: 'group-1', name: 'Group 1' }];
-    adminApi.api.postNuxeoIdentityGroups.mockResolvedValue({ data: mockGroupList });
+  it('opens user add dialog when add button is clicked', async () => {
+    const addButton = wrapper.find('#UserGroupList__Info__AddUsersToUserGroup');
+    await addButton.trigger('click');
 
-    const result = await groupProviderDetail.GetGroupListApi();
-    console.log(result);
-    expect(result.data).toEqual(mockGroupList);
-    expect(adminApi.api.postNuxeoIdentityGroups).toHaveBeenCalled();
+    const dialogRef = wrapper.vm.$refs.UserAddGroupDialogRef;
+    expect(dialogRef.handleOpen).toHaveBeenCalled();
   });
-  it('deletes a group successfully', async () => {
-    const params = { id: 'group-1' };
-    adminApi.api.deleteNuxeoIdentityGroup.mockResolvedValue({ success: true });
+  it('deletes selected users', async () => {
+    ElMessageBox.confirm.mockResolvedValue('confirm');
+    wrapper.vm.state.selectedRows.push({ userId: 'user-1' });
+    await wrapper.vm.$nextTick();
 
-    const result = await groupProviderDetail.DeleteGroupApi(params);
+    await wrapper.vm.handleDeleteSelected();
 
-    expect(result).toEqual({ success: true });
-    expect(adminApi.api.deleteNuxeoIdentityGroup).toHaveBeenCalledWith(params);
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('user_userGroupSelectRemovedSuccessMsg');
+    expect(wrapper.vm.state.selectedRows).toEqual([]
+    );
   });
-  it('creates a group successfully', async () => {
-    const params = { name: 'New Group' };
-    adminApi.api.postNuxeoIdentityGroup.mockResolvedValue({ success: true });
+  it('does not delete users if action is cancelled', async () => {
+    ElMessageBox.confirm.mockResolvedValue('cancel');
+    wrapper.vm.state.selectedRows.push({ userId: 'user-1' });
+    await wrapper.vm.$nextTick();
 
-    const result = await groupProviderDetail.CreateGroupApi(params);
+    await wrapper.vm.handleDeleteSelected();
 
-    expect(result).toEqual({ success: true });
-    expect(adminApi.api.postNuxeoIdentityGroup).toHaveBeenCalledWith(params);
+    expect(mockRouterProvider.message.success).not.toHaveBeenCalled();
   });
+
 });
