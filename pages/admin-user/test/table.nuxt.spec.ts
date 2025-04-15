@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest';
 import { adminApi } from './mock/api';
 import { VxeGrid, } from 'vxe-table';
 import { mockRouterProvider } from './util';
-import { GroupList, GroupDetail } from '#components';
+import { GroupList, GroupDetail, GroupUserTable, GroupTable, GroupDialog, GroupEditDialog, GroupAddUserDialog, ResponsiveFilter } from '#components';
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus';
 import { groupProviderKey, groupProviderDetailKey } from '~/util/userProvider';
 vi.mock('element-plus', () => ({
@@ -24,6 +24,32 @@ const groupProviderDetail = {
   GetGroupListApi: adminApi.api.postNuxeoIdentityGroups,
   DeleteGroupApi: adminApi.api.deleteNuxeoIdentityGroup,
   CreateGroupApi: adminApi.api.postNuxeoIdentityGroup,
+  BatchGroupRemoveUsersApi: vi.fn(),
+  PatchGroupApi: vi.fn(),
+  BatchGroupAddUsersApi: vi.fn(),
+};
+const SvgIcon = {
+  template: '<div class="SvgIcon">SvgIcon</div>',
+  methods: {}
+};
+const Icon = {
+  template: '<div class="Icon">Icon</div>',
+  methods: {}
+};
+const FormRenderer = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {
+    setFormJson: vi.fn(),
+    setFormData: vi.fn(),
+  }
+};
+const VFormRender = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {}
+};
+const ReaderDialog = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {}
 };
 describe('[admin-group]GroupList', () => {
   let wrapper: any;
@@ -32,6 +58,7 @@ describe('[admin-group]GroupList', () => {
   beforeEach(() => {
     wrapper = mount(GroupList, {
       global: {
+        components: { VxeGrid, ResponsiveFilter },
         provide: {
           [TabManagerKey]: mockTabProvider,
           [MenuRouterKey]: mockRouterProvider,
@@ -73,7 +100,6 @@ describe('[admin-group]GroupList', () => {
     adminApi.api.postNuxeoIdentityGroups.mockResolvedValue({ data: mockGroupList });
 
     const result = await groupProviderDetail.GetGroupListApi();
-    console.log(result);
     expect(result.data).toEqual(mockGroupList);
     expect(adminApi.api.postNuxeoIdentityGroups).toHaveBeenCalled();
   });
@@ -108,6 +134,7 @@ describe('[admin-group]GroupDetail', () => {
         isCanModified: true,
       },
       global: {
+        components: { VxeGrid, ResponsiveFilter, Icon },
         provide: {
           [TabManagerKey]: mockTabProvider,
           [MenuRouterKey]: mockRouterProvider,
@@ -163,5 +190,418 @@ describe('[admin-group]GroupDetail', () => {
     wrapper.vm.handleEditRefresh(newGroup);
 
     expect(wrapper.vm.state.name).toBe('Updated Group'); // 确保组名更新
+  });
+});
+describe('[admin-group]GroupUserTable', () => {
+  let wrapper: any;
+  const mockTabProvider = {};
+
+  beforeEach(() => {
+    wrapper = mount(GroupUserTable, {
+      props: {
+        group: { id: 'group-1', isCanModified: true },
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+          [groupProviderDetailKey]: groupProviderDetail,
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      },
+    });
+    const dialogRef = wrapper.vm.$refs.UserAddGroupDialogRef;
+    dialogRef.handleOpen = vi.fn();
+    const tableRef = wrapper.vm.$refs.tableRef;
+    tableRef.loadData = vi.fn();
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+    vi.clearAllMocks(); // 清除所有模拟
+  });
+  it('renders correctly', () => {
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-card').exists()).toBe(true);
+  });
+  it('shows the correct number of selected users', async () => {
+    wrapper.vm.state.selectedRows.push({ userId: 'user-1' });
+    wrapper.vm.state.selectedRows.push({ userId: 'user-2' });
+    await wrapper.vm.$nextTick();
+    expect(wrapper.text()).toContain('2');
+  });
+  it('opens user add dialog when add button is clicked', async () => {
+    const addButton = wrapper.find('#UserGroupList__Info__AddUsersToUserGroup');
+    await addButton.trigger('click');
+
+    const dialogRef = wrapper.vm.$refs.UserAddGroupDialogRef;
+    expect(dialogRef.handleOpen).toHaveBeenCalled();
+  });
+  it('deletes selected users', async () => {
+    ElMessageBox.confirm.mockResolvedValue('confirm');
+    wrapper.vm.state.selectedRows.push({ userId: 'user-1' });
+    await wrapper.vm.$nextTick();
+
+    await wrapper.vm.handleDeleteSelected();
+
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('user_userGroupSelectRemovedSuccessMsg');
+    expect(wrapper.vm.state.selectedRows).toEqual([]
+    );
+  });
+  it('does not delete users if action is cancelled', async () => {
+    ElMessageBox.confirm.mockResolvedValue('cancel');
+    wrapper.vm.state.selectedRows.push({ userId: 'user-1' });
+    await wrapper.vm.$nextTick();
+
+    await wrapper.vm.handleDeleteSelected();
+
+    expect(mockRouterProvider.message.success).not.toHaveBeenCalled();
+  });
+  it('filters user list based on input', async () => {
+    wrapper.vm.state.userList.push({ firstName: 'Alice' });
+    wrapper.vm.state.userList.push({ firstName: 'Bob' });
+
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.handleFilterFormChange({ username: 'Alice' });
+
+    expect(wrapper.vm.tableRef.loadData).toHaveBeenCalledWith([{ firstName: 'Alice' }]);
+  });
+});
+
+describe('[admin-group]GroupTable', () => {
+  let wrapper: any;
+  const mockTabProvider = {};
+
+  beforeEach(() => {
+    wrapper = mount(GroupTable, {
+      global: {
+        components: { VxeGrid, ResponsiveFilter },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+          [groupProviderKey]: groupProviderDetail,
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      },
+    });
+    const dialogRef = wrapper.vm.$refs.GroupDialogRef;
+    dialogRef.handleOpen = vi.fn();
+    const tableRef = wrapper.vm.$refs.tableRef;
+    tableRef.loadData = vi.fn();
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+    vi.clearAllMocks(); // 清除所有模拟
+  });
+  it('renders correctly', () => {
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.vxe-grid').exists()).toBe(true);
+  });
+  it('opens group dialog when add button is clicked', async () => {
+    const addButton = wrapper.find('#UserGroupList__AddNewUserGroup');
+    await addButton.trigger('click');
+
+    const dialogRef = wrapper.vm.$refs.GroupDialogRef;
+    expect(dialogRef.handleOpen).toHaveBeenCalled();
+  });
+  it('deletes a group', async () => {
+    ElMessageBox.confirm.mockResolvedValue('confirm');
+    const groupRow = { id: 'group-1' };
+    groupProviderDetail.DeleteGroupApi.mockResolvedValue(true);
+    await wrapper.vm.handleDelete(groupRow);
+
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('dpMsg_success');
+    expect(groupProviderDetail.DeleteGroupApi).toHaveBeenCalledWith({ groupId: 'group-1' });
+  });
+
+  it('does not delete a group if action is cancelled', async () => {
+    ElMessageBox.confirm.mockResolvedValue('cancel');
+
+    const groupRow = { id: 'group-1' };
+    await wrapper.vm.handleDelete(groupRow);
+
+    expect(mockRouterProvider.message.success).not.toHaveBeenCalled();
+    expect(groupProviderDetail.DeleteGroupApi).not.toHaveBeenCalled();
+  });
+  it('filters group list based on input', async () => {
+
+    wrapper.vm.state.groupList.push({ name: 'Admin Group' });
+    wrapper.vm.state.groupList.push({ name: 'User Group' });
+    wrapper.vm.state._groupList = [];
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.handleFilterFormChange({ userNameOrEmail: 'Admin' });
+
+    expect(wrapper.vm.state._groupList[0].name).toEqual('Admin Group');
+    expect(wrapper.vm.tableRef.loadData).toHaveBeenCalledWith([{ name: 'Admin Group' }]);
+  });
+  it('fetches group list on mount', async () => {
+    const mockGroupList = [{ name: 'Admin Group', id: '1' }, { name: 'User Group', id: '2' }];
+    adminApi.api.postNuxeoIdentityGroups = vi.fn().mockResolvedValue({ data: mockGroupList });
+
+    await wrapper.vm.getGroup();
+
+    expect(wrapper.vm.state.groupList).toEqual(mockGroupList);
+  });
+});
+describe('[admin-group]GroupEditDialog', () => {
+  let wrapper: any;
+  const mockTabProvider = {};
+
+  beforeEach(() => {
+    wrapper = mount(GroupEditDialog, {
+      props: {
+        group: { id: 'group-1', isCanModified: true },
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+          [groupProviderDetailKey]: groupProviderDetail,
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      },
+    });
+    // const dialogRef = wrapper.vm.$refs.GroupDialogRef;
+    // dialogRef.handleOpen = vi.fn();
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+    vi.clearAllMocks(); // 清除所有模拟
+  });
+  it('renders correctly', () => {
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-overlay-dialog').exists()).toBe(true);
+  });
+  it('opens the dialog and sets the form data', async () => {
+
+    await wrapper.vm.handleOpen();
+
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    expect(wrapper.vm.state.visible).toBe(true);
+  });
+  it('submits the form with valid data', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({
+          groupName: 'New Group Name',
+        }),
+        resetForm: vi.fn()
+      }
+    };
+    groupProviderDetail.PatchGroupApi.mockResolvedValue({
+      data: {}
+    });
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_updateSuccessMsg');
+    expect(groupProviderDetail.PatchGroupApi).toHaveBeenCalledWith({
+      groupId: 'group-1',
+      groupName: 'New Group Name',
+    });
+  });
+  it('shows error if group name is empty', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({
+          groupName: '',
+        })
+      }
+    };
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupNamerender.hint.fieldRequired');
+  });
+  it('shows error if group name already exists', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({
+          groupName: 'Admin Group',
+        })
+      }
+    };
+    const mockGroupList = [{ name: 'Admin Group' }, { name: 'User Group' }];
+    adminApi.api.postNuxeoIdentityGroups.mockResolvedValue({ data: mockGroupList });
+
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupsIsExistsMsg');
+  });
+});
+
+describe('[admin-group]GroupDialog', () => {
+  let wrapper: any;
+  const mockTabProvider = {};
+
+  beforeEach(() => {
+    wrapper = mount(GroupDialog, {
+      props: {
+        groups: [{ id: 'group-1', name: 'Existing Group' }],
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+          [groupProviderKey]: groupProviderDetail,
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      },
+    });
+    // const dialogRef = wrapper.vm.$refs.GroupDialogRef;
+    // dialogRef.handleOpen = vi.fn();
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+    vi.clearAllMocks(); // 清除所有模拟
+  });
+  it('renders correctly', () => {
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-overlay-dialog').exists()).toBe(true);
+  });
+  it('opens the dialog and sets option data', async () => {
+    await wrapper.vm.handleOpen();
+    expect(wrapper.vm.state.visible).toBe(true);
+  });
+  it('submits the form with valid data', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({
+          groupId: 'group-2',
+          groupName: 'New Group Name',
+        }),
+        resetForm: vi.fn()
+      }
+    };
+
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_createdSuccessMsg');
+    expect(groupProviderDetail.CreateGroupApi).toHaveBeenCalledWith({
+      groupId: 'group-2',
+      groupName: 'New Group Name',
+    });
+  });
+  it('shows error if group name or ID is empty', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({
+          groupId: '',
+          groupName: ''
+        })
+      }
+    };
+
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupNamerender.hint.fieldRequired');
+  });
+  it('shows error if group name or ID already exists', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({
+          groupId: 'group-1',
+          groupName: 'Existing Group',
+        })
+      }
+    };
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupsIsExistsMsg');
+  });
+});
+describe('[admin-group]GroupAddUserDialog', () => {
+  let wrapper: any;
+  const mockTabProvider = {};
+
+  beforeEach(() => {
+    wrapper = mount(GroupAddUserDialog, {
+      props: {
+        group: { id: 'group-1', name: 'Existing Group' },
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+          [groupProviderDetailKey]: groupProviderDetail
+        },
+        mocks: {
+          $t: (msg: string) => msg,// Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      },
+    });
+
+    // const dialogRef = wrapper.vm.$refs.GroupAddUserDialogRef;
+    // dialogRef.handleOpen = vi.fn();
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  });
+
+  afterEach(() => {
+    wrapper.unmount();
+    vi.clearAllMocks(); // 清除所有模拟
+  });
+  it('renders correctly', () => {
+    console.log(wrapper.html());
+
+    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.el-overlay-dialog').exists()).toBe(true);
+  });
+  it('should call BatchGroupAddUsersApi after successful form submission', async () => {
+    const mockFormRenderer = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({ id: ['user-id'] }),
+        resetForm: vi.fn(),
+      },
+    };
+
+    wrapper.vm.FormRendererRef = mockFormRenderer;
+
+    await wrapper.vm.handleSubmit();
+
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.any(String));
+    expect(groupProviderDetail.BatchGroupAddUsersApi).toHaveBeenCalledWith({
+      groupId: 'group-1',
+      userIds: ['user-id'],
+    });
+    expect(mockFormRenderer.vFormRenderRef.resetForm).toHaveBeenCalled();
+  });
+  it('should handle errors during submission', async () => {
+    groupProviderDetail.BatchGroupAddUsersApi.mockRejectedValue(new Error('API Error'));
+
+    const mockFormRenderer = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue({ id: ['user-id'] }),
+      },
+    };
+
+    wrapper.vm.FormRendererRef = mockFormRenderer;
+
+    await wrapper.vm.handleSubmit();
+
+    expect(groupProviderDetail.BatchGroupAddUsersApi).toHaveBeenCalled();
   });
 });

@@ -47,4 +47,25 @@ expect(wrapper.find('el-select').exists()).toBe(true)
 expect(wrapper.find('.el-select').exists()).toBe(true)
 ```
 
+#### 函数解构方法检测
+```
+const mockReload = vi.fn();
+const mockCleanSelectedRows = vi.fn();
+vi.mock('../../../packages/base/composables/useVxeTable', () => ({
+  useVxeTable: vi.fn(() => ({
+    tableConfig: {},
+    tableEvent: {},
+    tableRef: { value: null },
+    reload: mockReload,
+    cleanSelectedRows: mockCleanSelectedRows,
+  }))
+}));
+// beforeEach
+mockReload.mockClear();
+mockCleanSelectedRows.mockClear();
+
+// test
+expect(mockReload).toHaveBeenCalled(); // 验证 reload 被调用
+```
+
 

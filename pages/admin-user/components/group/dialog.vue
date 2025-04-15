@@ -27,7 +27,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.groupId || !data.groupName) {
-    routerProvider?.message.error(t('user_userGroupName') + $t('render.hint.fieldRequired'))
+    routerProvider?.message.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
     return
   }
   // check group name exist

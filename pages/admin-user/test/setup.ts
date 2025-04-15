@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { useVxeTable } from '../../../packages/base/composables/useVxeTable';
+// import { useVxeTable } from '../../../packages/base/composables/useVxeTable';
 const useUserId = vi.fn(() => {
   return {
     value: 'unit-test',
@@ -21,7 +21,7 @@ vi.stubGlobal('useIsLDAP', () => false);
 vi.stubGlobal('MenuRouterKey', 'MenuRouterKey');
 vi.stubGlobal('useUserId', useUserId);
 vi.stubGlobal('useRuntimeConfig', useRuntimeConfig);
-vi.stubGlobal('useVxeTable', useVxeTable);
+// vi.stubGlobal('useVxeTable', useVxeTable);
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key: string) => {
