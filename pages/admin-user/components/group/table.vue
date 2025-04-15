@@ -85,7 +85,7 @@ async function handleDelete(row: any) {
   if (action !== 'confirm') return
   const res = await groupProvider?.DeleteGroupApi({ groupId: row.id })
   if (!!res) {
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
     getGroup()
   }
 }

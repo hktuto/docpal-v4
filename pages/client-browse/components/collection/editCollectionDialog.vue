@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="state.visible" :title="t('collections_edit')" :close-on-click-modal="false" destroy-on-close>
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <el-button id="Collection__EditCollectionInfo__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit">
@@ -12,10 +12,10 @@
 
 <script lang="ts" setup>
 import formJson from './editCollectionDialog.vform.json'
-import {ElMessage} from "element-plus";
-import {clientApi} from "api";
+import { ElMessage } from 'element-plus'
+import { clientApi } from 'api'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false
@@ -48,7 +48,10 @@ async function handleSubmit() {
   }
   try {
     await clientApi.api.patchNuxeoCollection(params)
-    ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('collection_collection'), name: data.name}))
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+      modelName: t('collection_collection'),
+      name: data.name
+    }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
@@ -59,5 +62,5 @@ async function handleSubmit() {
   state.loading = false
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>

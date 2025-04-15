@@ -2,7 +2,7 @@
   <div class="formContainer">
     <ElForm :model="form" @submit.native.prevent="submit">
       <ElFormItem :label="t('admin_watermarkName')">
-        <ElInput v-model="form.name" :placeholder="t('admin_watermarkName')"/>
+        <ElInput v-model="form.name" :placeholder="t('admin_watermarkName')" />
       </ElFormItem>
     </ElForm>
     <div style="text-align: end;">
@@ -15,33 +15,33 @@
 
 <script lang="ts" setup>
 
-import {ElMessage} from 'element-plus';
-import {useWatermark, WatermarkTemplate} from '../../composables/Watermark'
+import { ElMessage } from 'element-plus'
+import { useWatermark, WatermarkTemplate } from '../../composables/Watermark'
 
 const emits = defineEmits(['submit'])
 const props = defineProps<{
   list: WatermarkTemplate[]
 }>()
-const {t} = useI18n()
+const { t } = useI18n()
 
 const form = ref({
   name: ''
 })
-const {createWatermarkTemplate, list} = useWatermark()
-const router = useRouter();
+const { createWatermarkTemplate, list } = useWatermark()
+const router = useRouter()
 
 async function submit() {
   if (!form.value.name) {
     // TODO : show error
-    return;
+    return
   }
   // if form.name is in list return
   if (props.list.findIndex(item => item.name === form.value.name) !== -1) {
-    ElMessage.error(t('admin_watermark_name_already_exist') as string);
-    return;
+    routerProvider?.message.error(t('admin_watermark_name_already_exist') as string)
+    return
   }
-  const newItem = await createWatermarkTemplate(form.value);
-  ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('watermark.watermark'), name: null}))
+  const newItem = await createWatermarkTemplate(form.value)
+  routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
   emits('submit', form.value)
   router.push({
     path: '/watermark',
@@ -56,7 +56,7 @@ onMounted(() => {
   form.value = {
     name: ''
   }
-});
+})
 
 </script>
 

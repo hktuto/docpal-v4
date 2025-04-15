@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, test } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { SharePage,ShareDialog } from '#components'
+import { SharePage, ShareDialog } from '#components'
 import { VxeGrid } from 'vxe-table'
 import { clientApi } from './mock/api'
 import { ElMessageBox, ElMessage } from 'element-plus'
@@ -55,7 +55,7 @@ describe('ShareAction', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
-    expect(ElMessage.success).toHaveBeenCalled()
+    expect(routerProvider?.message.success).toHaveBeenCalled()
   })
 
 })

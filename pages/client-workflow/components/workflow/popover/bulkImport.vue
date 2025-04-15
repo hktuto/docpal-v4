@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="state.dialogVisible" :title="$t('workflow_bulkImport')"
              destroy-on-close append-to-body :close-on-click-modal="false">
-    <WorkflowDetailFormRender ref="vFormRef"/>
+    <WorkflowDetailFormRender ref="vFormRef" />
     <template #footer>
       <el-button id="Workflow__BulkImport__Cancel" @click="state.dialogVisible = false">
         {{ $t('cancelText') }}
@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts" setup>
-import {clientApi} from 'api'
+import { clientApi } from 'api'
 import formJson from './bulkImport.vform.json'
 // @ts-ignore
-const {t} = useI18n();
+const { t } = useI18n()
 const state = reactive({
   dialogVisible: false
 })
@@ -36,7 +36,7 @@ function handleOpen(shareInfo) {
 async function handleSubmit() {
   try {
     const data = await vFormRef.value.getFormData()
-    if (!data) throw new Error(`${t('incompleteData')}`);
+    if (!data) throw new Error(`${t('incompleteData')}`)
     const param = {
       processKey: data.processKey,
       businessKey: data.businessKey,
@@ -49,15 +49,15 @@ async function handleSubmit() {
       }
     }
     const res: any = await clientApi.api.postWorkflowProcessStart(param).then(res => res.data)
-    if (res.errorCode) throw new Error(res.message);
+    if (res.errorCode) throw new Error(res.message)
     state.dialogVisible = false
   } catch (error) {
-    // ElMessage.error(error.message)
+    // routerProvider?.message.error(error.message)
   }
 }
 
 // #endregion
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">

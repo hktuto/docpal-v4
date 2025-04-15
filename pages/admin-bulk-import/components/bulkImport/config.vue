@@ -1,28 +1,28 @@
 <script lang="ts" setup>
-import {useVxeTable} from '#imports';
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from 'api';
+import { useVxeTable } from '#imports'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 
-const {name} = defineProps<{
+const { name } = defineProps<{
   name: string
 }>()
 const state = reactive({
   list: [],
-  _list: [],
+  _list: []
 })
-const {t} = useI18n()
+const { t } = useI18n()
 
 function newSuccess() {
-  ElMessage.success(`${t('msg_success')}`)
+  routerProvider?.message.success(`${t('msg_success')}`)
   reload()
 }
 
-const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'admin-bulk-import-config',
   api: async () => {
     try {
-      const {data} = await adminApi.api.getWorkflowQuerydocumenttypeprofile({documentType: name}) as any
-      console.log("data on config", data)
+      const { data } = await adminApi.api.getWorkflowQuerydocumenttypeprofile({ documentType: name }) as any
+      console.log('data on config', data)
 
       return data
     } catch (e) {
@@ -32,13 +32,13 @@ const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
   virtualScroll: true,
   columns: [
     {
-      field: "id",
+      field: 'id',
       title: 'dpTable_id'
     },
     {
-      field: "profileName",
+      field: 'profileName',
       title: 'dpTable_name'
-    },
+    }
   ],
   bodyActions: [
     [
@@ -76,7 +76,7 @@ function handleDialogShow(row?: any) {
 // })
 
 onActivated(() => {
-  reload();
+  reload()
 })
 
 

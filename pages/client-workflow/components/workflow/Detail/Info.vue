@@ -94,7 +94,7 @@ async function handleUnclaim() {
     // emits('change', response, false)
     props.taskDetail.assignee = ''
   } catch (error) {
-    // ElMessage.error(error.response.data.message)
+    // routerProvider?.message.error(error.response.data.message)
   }
   setTimeout(() => {
     state.loading = false
@@ -109,7 +109,7 @@ async function handleClaim() {
       emits('change', response, true)
     }
   } catch (error) {
-    // ElMessage.error(error.response.data.message)
+    // routerProvider?.message.error(error.response.data.message)
   }
   setTimeout(() => {
     state.loading = false
@@ -123,7 +123,7 @@ async function handelDelete() {
   })
   if (!!response) {
   } else {
-    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('common_item'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('common_item'), name: null }))
   }
   routerProvider?.back()
 }

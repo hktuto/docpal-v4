@@ -2,193 +2,194 @@ import type { CalendarEventExternal } from '@schedule-x/calendar'
 import { clientApi } from 'api'
 import type { CalendarTaskRespDTO } from 'api/src/generate/client'
 import dayjs, { Dayjs } from 'dayjs'
-import {useCalenarLocation} from '../composables/useCalendar'
+import { useCalenarLocation } from '../composables/useCalendar'
 import { ElMessage } from 'element-plus'
 import isBetween from 'dayjs/plugin/isBetween'
-dayjs.extend(isBetween);
+
+dayjs.extend(isBetween)
 export const viewName = [
-    'day','week','month-grid','month-agenda'
+  'day', 'week', 'month-grid', 'month-agenda'
 ]
 
 export type DocPalEventType = CalendarTaskRespDTO & {
-    user: string
+  user: string
 }
 
 export type CalendarOptions = {
-    allowCreate: boolean,
-    standalone?: boolean
-    editable: boolean,
-    showWorkflowFilter: boolean,
-    showLocationFilter: boolean,
-    showUserFilter: boolean,
-    createUserFilter?:string,
-    showCategoryFilter: boolean,
-    defaultCategory:string,
-    defaultLocation:string,
-    defaultUser:string,
-    locationLabel?:string,
-    categoryLabel?:string,
-    userLabel?:string,
-    userFilter?:string,
-    userFilterGroup?:string,
-    officeStartTime?:string, // office start time default to 08:00
-    officeEndTime?:string, // office end time default to 20:00
-    view?:  'day' | 'week' |'month-grid' |'month-agenda'
-    firstDayOfWeek?:  "MONDAY" | "SUNDAY",
-    addtionalCheckBeforeEventUpdate?:(oldEvent:CalendarEventExternal, editedEvent:CalendarEventExternal) => boolean
+  allowCreate: boolean,
+  standalone?: boolean
+  editable: boolean,
+  showWorkflowFilter: boolean,
+  showLocationFilter: boolean,
+  showUserFilter: boolean,
+  createUserFilter?: string,
+  showCategoryFilter: boolean,
+  defaultCategory: string,
+  defaultLocation: string,
+  defaultUser: string,
+  locationLabel?: string,
+  categoryLabel?: string,
+  userLabel?: string,
+  userFilter?: string,
+  userFilterGroup?: string,
+  officeStartTime?: string, // office start time default to 08:00
+  officeEndTime?: string, // office end time default to 20:00
+  view?: 'day' | 'week' | 'month-grid' | 'month-agenda'
+  firstDayOfWeek?: 'MONDAY' | 'SUNDAY',
+  addtionalCheckBeforeEventUpdate?: (oldEvent: CalendarEventExternal, editedEvent: CalendarEventExternal) => boolean
 }
 
-export function convertSiteEventToCalendarEvent(event:DocPalEventType):CalendarEventExternal {
-    const calendarLocation = useCalenarLocation()
-    const format = event.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
-    const locationName = event.location ? calendarLocation.value.find(item => item.id === event.location)?.name : undefined
-   
-    const newEvent= {
-        id: event.id || new Date().valueOf().toString(),
-        start: dayjs(event.startTime).format(format),
-        end: dayjs(event.endTime).format(format),
-        title: event.eventName,
-        description: event.title,
-        location: locationName,
-        people: event.relatedUsers ? [event.relatedUsers.user] : [],
-        detail: {...event},
-        calendarId: event.status === 'A' ? (event.category || undefined) : undefined,
-        _options:{
-            disableResize: true,
-            disableDND: true,
-        }
+export function convertSiteEventToCalendarEvent(event: DocPalEventType): CalendarEventExternal {
+  const calendarLocation = useCalenarLocation()
+  const format = event.isAllDay ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'
+  const locationName = event.location ? calendarLocation.value.find(item => item.id === event.location)?.name : undefined
+
+  const newEvent = {
+    id: event.id || new Date().valueOf().toString(),
+    start: dayjs(event.startTime).format(format),
+    end: dayjs(event.endTime).format(format),
+    title: event.eventName,
+    description: event.title,
+    location: locationName,
+    people: event.relatedUsers ? [event.relatedUsers.user] : [],
+    detail: { ...event },
+    calendarId: event.status === 'A' ? (event.category || undefined) : undefined,
+    _options: {
+      disableResize: true,
+      disableDND: true
     }
-    return newEvent
+  }
+  return newEvent
 }
 
-export function convertCalendarEventToSiteEvent(event:CalendarEventExternal):DocPalEventType{
-    return {
-        eventId: event.detail.eventId,
-        startTime: dayjs(event.start).toISOString(),
-        endTime: dayjs(event.end).toISOString(),
-        user: event.people ? event.people[0] : undefined,
-        category: event.calendarId,
-        location: event.location,
-    }
+export function convertCalendarEventToSiteEvent(event: CalendarEventExternal): DocPalEventType {
+  return {
+    eventId: event.detail.eventId,
+    startTime: dayjs(event.start).toISOString(),
+    endTime: dayjs(event.end).toISOString(),
+    user: event.people ? event.people[0] : undefined,
+    category: event.calendarId,
+    location: event.location
+  }
 }
 
-export async function getEventFromApi(calendarApp:any, calendarControls:any, filter:any, editItem?:any){
-    console.log("editItem", editItem)
-    const range = calendarControls.getRange()
-    const params:any = {
-        startTime: dayjs(range.start).toISOString(),
-        endTime: dayjs(range.end).toISOString(),
+export async function getEventFromApi(calendarApp: any, calendarControls: any, filter: any, editItem?: any) {
+  console.log('editItem', editItem)
+  const range = calendarControls.getRange()
+  const params: any = {
+    startTime: dayjs(range.start).toISOString(),
+    endTime: dayjs(range.end).toISOString()
+  }
+  const defaultCalendarId = Object.keys(calendarControls.getCalendars())[0]
+  const user = localStorage.getItem('docpal-user')
+  const userId = user ? JSON.parse(user).userId : undefined
+  // TODO : backend is missing filter
+  const data = await clientApi.api.postCalendarsList(params).then(res => res.data)
+  const calendarLocation = useCalenarLocation()
+
+
+  const events = data.filter((event: any) => {
+    if (filter.category) {
+      const matCat = event.category === filter.category
+      if (!matCat) return false
     }
-    const defaultCalendarId = Object.keys(calendarControls.getCalendars())[0]
-    const user = localStorage.getItem('docpal-user')
-    const userId = user ? JSON.parse(user).userId : undefined
-    // TODO : backend is missing filter
-    const data = await clientApi.api.postCalendarsList(params).then( res => res.data)
-    const calendarLocation = useCalenarLocation()
-
-    
-    const events = data.filter( (event:any) => {
-        if(filter.category) {
-            const matCat = event.category === filter.category
-            if(!matCat) return false
-        }
-        if(filter.location) {
-            const matLoc = event.location === filter.location
-            if(!matLoc) return false
-        }
-        if(filter.user) {
-            const userFilter = filter.user === 'currentUser' ? userId : filter.user
-            const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
-            const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
-            if(!mapUser && !userInRelated) return false
-        }
-        return true
-    }).map((ev) => convertSiteEventToCalendarEvent(ev) )
-    // filter events
-
-    // dummy full date event
-    //TODO： remove later
-    
-    // check editItem
-    if(editItem){
-        const editItemIndex = events.findIndex(item => editItem && item?.detail?.eventId === editItem.eventId)
-            if(editItemIndex !== -1){
-                events[editItemIndex]._options = {
-                    disableResize: false,
-                    disableDND: false,
-                }
-            }else{
-                // add new event
-                events.push(editItem)
-            }
-        }
-        // if editItem is not exist, add it
-    calendarApp.eventsService.set(events);
-    return events;
-}
-
-export function isEventValid(allEvents:any[], event:any){
-    const startDay = dayjs(event.start)
-    const endDay = dayjs(event.end)
-    if(startDay.isBefore(dayjs())) {
-        ElMessage.error("Start time cannot be earlier than today");
-        return false
+    if (filter.location) {
+      const matLoc = event.location === filter.location
+      if (!matLoc) return false
     }
-    const people = event.people as string[] || []
-
-    const otherEvs = allEvents.filter((ev:any) => {
-        const evStart = dayjs(ev.start)
-        const evEnd = dayjs(ev.end)
-        const isOverlap = startDay.isBetween(evStart, evEnd, 'day', '[]') || endDay.isBetween(evStart, evEnd, 'day', '[]')
-        if(isOverlap) {
-
-            console.log("isOverlap", event, ev)
-        }
-        return isOverlap && ev.id !== event.id && ev.people.find((item:any) => people.includes(item))
-    })
-    
-    // check if user has all day event in that day
-    const hasAllDayEvent = otherEvs.find((e) => e.start.length === 10 && e.end.length === 10)
-    if(hasAllDayEvent) {
-        ElMessage.error(`${people} has all day event in that day`);
-        return false
-    }
-    // check if user has other location event in that day
-    const hasLocationEvent = otherEvs.find((e) => e.location && e.location !== event.location)
-
-    if(hasLocationEvent) {
-        ElMessage.error(`${people} has other location event in that day`);
-        return false
+    if (filter.user) {
+      const userFilter = filter.user === 'currentUser' ? userId : filter.user
+      const mapUser = event.assignee === userFilter || event.modifiedBy === userFilter
+      const userInRelated = event.relatedUsers ? event.relatedUsers.user === userFilter : false
+      if (!mapUser && !userInRelated) return false
     }
     return true
+  }).map((ev) => convertSiteEventToCalendarEvent(ev))
+  // filter events
+
+  // dummy full date event
+  //TODO： remove later
+
+  // check editItem
+  if (editItem) {
+    const editItemIndex = events.findIndex(item => editItem && item?.detail?.eventId === editItem.eventId)
+    if (editItemIndex !== -1) {
+      events[editItemIndex]._options = {
+        disableResize: false,
+        disableDND: false
+      }
+    } else {
+      // add new event
+      events.push(editItem)
+    }
+  }
+  // if editItem is not exist, add it
+  calendarApp.eventsService.set(events)
+  return events
+}
+
+export function isEventValid(allEvents: any[], event: any) {
+  const startDay = dayjs(event.start)
+  const endDay = dayjs(event.end)
+  if (startDay.isBefore(dayjs())) {
+    routerProvider?.message.error('Start time cannot be earlier than today')
+    return false
+  }
+  const people = event.people as string[] || []
+
+  const otherEvs = allEvents.filter((ev: any) => {
+    const evStart = dayjs(ev.start)
+    const evEnd = dayjs(ev.end)
+    const isOverlap = startDay.isBetween(evStart, evEnd, 'day', '[]') || endDay.isBetween(evStart, evEnd, 'day', '[]')
+    if (isOverlap) {
+
+      console.log('isOverlap', event, ev)
+    }
+    return isOverlap && ev.id !== event.id && ev.people.find((item: any) => people.includes(item))
+  })
+
+  // check if user has all day event in that day
+  const hasAllDayEvent = otherEvs.find((e) => e.start.length === 10 && e.end.length === 10)
+  if (hasAllDayEvent) {
+    routerProvider?.message.error(`${people} has all day event in that day`)
+    return false
+  }
+  // check if user has other location event in that day
+  const hasLocationEvent = otherEvs.find((e) => e.location && e.location !== event.location)
+
+  if (hasLocationEvent) {
+    routerProvider?.message.error(`${people} has other location event in that day`)
+    return false
+  }
+  return true
 }
 
 
-export function snapDownTo15Minutes(time:Dayjs) {
-    const minutes = time.minute();
-    const snappedMinutes = Math.floor(minutes / 15) * 15;
-    return time.minute(snappedMinutes).second(0);
-  }
+export function snapDownTo15Minutes(time: Dayjs) {
+  const minutes = time.minute()
+  const snappedMinutes = Math.floor(minutes / 15) * 15
+  return time.minute(snappedMinutes).second(0)
+}
 
 
 /**
  * example workflow setting
  * {
-    "type": "calendar",
-        "data": {
-            "allowCreate": true,
-            "showLocationFilter": true,
-            "showUserFilter": true,
-            "fieldMapping": {
-            "startTime":"starttime",
-            "endtime":"endtime",
-            "category":"category",
-            "location":"location",
-            "caseId": "caseId",
-            "taskId":"taskId"
-            }
-        }
-    }
- * 
- * 
+ "type": "calendar",
+ "data": {
+ "allowCreate": true,
+ "showLocationFilter": true,
+ "showUserFilter": true,
+ "fieldMapping": {
+ "startTime":"starttime",
+ "endtime":"endtime",
+ "category":"category",
+ "location":"location",
+ "caseId": "caseId",
+ "taskId":"taskId"
+ }
+ }
+ }
+ *
+ *
  */

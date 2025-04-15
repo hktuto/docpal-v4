@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
-import { ElMessage } from 'element-plus'
 
 const { t } = useI18n()
 const dialogVisible = ref(false)
@@ -38,7 +37,7 @@ function reset() {
 async function submit() {
   if (newForm.value.name.trim() === '') return
   const res = await adminApi.api.postMessageTemplateCreate(newForm.value)
-  ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.messageTemplate'), name: null }))
+  routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.messageTemplate'), name: null }))
   emits('success', res.data)
   dialogVisible.value = false
 }

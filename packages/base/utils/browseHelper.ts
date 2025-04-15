@@ -1,12 +1,12 @@
-import { adminApi, clientApi } from 'api';
-import { Download, Loading } from '@element-plus/icons-vue';
-import { ElNotification, ElMessage } from 'element-plus';
-import * as mime from 'mime-types';
+import { adminApi, clientApi } from 'api'
+import { Download, Loading } from '@element-plus/icons-vue'
+import { ElNotification, ElMessage } from 'element-plus'
+import * as mime from 'mime-types'
 
 export function downloadHandler(doc: any) {
 
-  if (!doc.isFolder) downloadFileHandler(doc);
-  else downloadFolderHandler(doc);
+  if (!doc.isFolder) downloadFileHandler(doc)
+  else downloadFolderHandler(doc)
 }
 
 export async function downloadFolderHandler(doc: any) {
@@ -19,100 +19,100 @@ export async function downloadFolderHandler(doc: any) {
     customClass: 'loading-notification',
     duration: 0,
     position: 'bottom-right'
-  });
+  })
   const blob = await adminApi.api.postNuxeoFolderstructureExport({
     idOrPath: doc.id
   }, {
     format: 'blob',
     timeout: 0,
     headers: { 'white': 'true' }
-  });
-  downloadBlob(blob, doc.name + '.zip', 'application/zip');
-  noti.close();
+  })
+  downloadBlob(blob, doc.name + '.zip', 'application/zip')
+  noti.close()
 }
 
 export function canCollaboraEdit(mimeType: string) {
   // is mimeType is .doc or .docx file
   // check is doc or docx
-  const excelType = ['application/vnd.ms-excel', 'application/msexcel', 'application/x-msexcel', 'application/x-ms-excel', 'application/x-excel', 'application/x-dos_ms_excel', 'application/xls', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-  if (excelType.includes(mimeType)) return true;
-  const wordType = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-word.template.macroEnabled.12'];
-  if (wordType.includes(mimeType)) return true;
-  const pptType = ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
-  if (pptType.includes(mimeType)) return true;
+  const excelType = ['application/vnd.ms-excel', 'application/msexcel', 'application/x-msexcel', 'application/x-ms-excel', 'application/x-excel', 'application/x-dos_ms_excel', 'application/xls', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+  if (excelType.includes(mimeType)) return true
+  const wordType = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-word.template.macroEnabled.12']
+  if (wordType.includes(mimeType)) return true
+  const pptType = ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']
+  if (pptType.includes(mimeType)) return true
 
-  if (mimeType.includes('application/vnd.collabora') || mimeType.includes('application/vnd.collabora-project')) return true;
-  return false;
+  if (mimeType.includes('application/vnd.collabora') || mimeType.includes('application/vnd.collabora-project')) return true
+  return false
 }
 
 export function getMimeTypeFromDocument(doc: any): string | undefined {
-  console.log("getMimeTypeFromDocument", doc);
-  const properties = doc.properties as any;
-  const mimeType: string = properties["file:content"] && properties["file:content"]["mime-type"] ? properties["file:content"]["mime-type"] : '';
-  if (!mimeType) return undefined;
-  return mimeType;
+  console.log('getMimeTypeFromDocument', doc)
+  const properties = doc.properties as any
+  const mimeType: string = properties['file:content'] && properties['file:content']['mime-type'] ? properties['file:content']['mime-type'] : ''
+  if (!mimeType) return undefined
+  return mimeType
 }
 
 
 export const formatFileSize = (size: number) => {
-  if (!size) return '';
+  if (!size) return ''
   if (size < 1024) {
-    return size.toFixed(1) + ' KB';
+    return size.toFixed(1) + ' KB'
   } else if (size < 1024 * 1024) {
-    return (size / 1024).toFixed(1) + ' MB';
+    return (size / 1024).toFixed(1) + ' MB'
   } else {
-    return (size / 1024 / 1024).toFixed(2) + ' GB';
+    return (size / 1024 / 1024).toFixed(2) + ' GB'
   }
-};
+}
 
 export const mimeTypeToIcon = (mimeType: string) => {
   // if mimetype is image, return image src
   if (mimeType?.startsWith('image')) {
-    return `/icons/doc/image.svg`;
+    return `/icons/doc/image.svg`
   }
 
   // if mimetype is video, return video src
   if (mimeType?.startsWith('video')) {
-    return `/icons/doc/video.svg`;
+    return `/icons/doc/video.svg`
   }
   // if mimetype is audio, return audio src
   if (mimeType?.startsWith('audio')) {
-    return `/icons/doc/audio.svg`;
+    return `/icons/doc/audio.svg`
   }
 
   // if mimetype is pdf, return pdf src
   if (mimeType?.startsWith('application/pdf')) {
-    return `/icons/doc/pdf.svg`;
+    return `/icons/doc/pdf.svg`
   }
   // if mimetype is text, return text src
   if (mimeType?.startsWith('text')) {
-    return `/icons/doc/text.svg`;
+    return `/icons/doc/text.svg`
   }
   // if mimetype is zip, return zip src
   if (mimeType?.startsWith('application/zip')) {
-    return `/icons/doc/zip.svg`;
+    return `/icons/doc/zip.svg`
   }
   // if mimetype is .xls or xlsx return  excel src
   if (mimeType?.startsWith('application/vnd.ms-excel') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-    return `/icons/doc/excel.svg`;
+    return `/icons/doc/excel.svg`
   }
   // if mimetype is word, return word src
   if (mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-    return `/icons/doc/word.svg`;
+    return `/icons/doc/word.svg`
   }
   // if mimetype is ppt, return ppt src
   if (mimeType?.startsWith('application/vnd.ms-powerpoint') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
-    return `/icons/doc/ppt.svg`;
+    return `/icons/doc/ppt.svg`
   }
 
   // if mimetype is unknown, return unknown src
-  return `/icons/doc/file.svg`;
+  return `/icons/doc/file.svg`
 
-};
+}
 
 export function mimeTypeToExtension(mimeType: string) {
   // if mimetype is image, return image src
-  return mime.extension(mimeType) || '-';
+  return mime.extension(mimeType) || '-'
 }
 
 export function toBrowseItem(path: string) {
@@ -122,113 +122,116 @@ export function toBrowseItem(path: string) {
     icon: 'dp-icon:browse-outline',
     hoverIcon: 'dp-icon:browse-fill',
     label: path,
-    component: "LazyBrowsePage",
+    component: 'LazyBrowsePage',
     props: {
       idOrPath: path
     }
-  };
+  }
 }
 
 export const getUniqueName = async (file: any) => {
   try {
-    const fileName = file.fileName || file.name;
+    const fileName = file.fileName || file.name
     // TODO: check if deprecated
-    const res = await clientApi.api.postNuxeoDocumentIsduplicatename({ path: file.goPath, titles: [fileName] }).then(res => res.data);
-    const name = res[fileName]?.uniqueName || fileName;
-    return name;
+    const res = await clientApi.api.postNuxeoDocumentIsduplicatename({
+      path: file.goPath,
+      titles: [fileName]
+    }).then(res => res.data)
+    const name = res[fileName]?.uniqueName || fileName
+    return name
   } catch (error) {
-    return file.fileName || file.name;
+    return file.fileName || file.name
   }
-};
+}
 
 
 export const getDocDetail = async (idOrPath: string, userId: string) => {
-  let doc: any = {
-  };
-  let permission: any = {};
+  let doc: any = {}
+  let permission: any = {}
   try {
-    console.log(idOrPath, userId);
-    const promise = [];
+    console.log(idOrPath, userId)
+    const promise = []
     promise.push(
       clientApi.api.postNuxeoDocument({ idOrPath }),
       getPermission(idOrPath, userId)
-    );
-    let [{ data: doc }, permission] = await Promise.all(promise);
-    const displayMeta = await getDocumentAdditional(doc.type);
-    doc.displayMeta = displayMeta;
+    )
+    let [{ data: doc }, permission] = await Promise.all(promise)
+    const displayMeta = await getDocumentAdditional(doc.type)
+    doc.displayMeta = displayMeta
     return {
       doc,
       permission
-    };
+    }
 
   } catch (err) {
-    throw err;
+    throw err
   }
-};
+}
 
 export const getDocumentAdditional = async (type: string): Promise<any[]> => {
   // cache type into window object
   try {
-    if (window["docTypeCache"] && window["docTypeCache"][type]) {
-      return window["docTypeCache"][type];
+    if (window['docTypeCache'] && window['docTypeCache'][type]) {
+      return window['docTypeCache'][type]
     }
     const { data } = await clientApi.api.postTypesMetadatas({ name: type }, {
-      headers: { 'noThrowError': "true" }
-    });
+      headers: { 'noThrowError': 'true' }
+    })
     if (!data) {
-      throw new Error('no type found');
+      throw new Error('no type found')
     }
-    if (!window["docTypeCache"]) {
-      window["docTypeCache"] = { [type]: data };
+    if (!window['docTypeCache']) {
+      window['docTypeCache'] = { [type]: data }
     } else {
-      window["docTypeCache"][type] = data;
+      window['docTypeCache'][type] = data
     }
-    return data;
+    return data
   } catch (err) {
-    return [];
+    return []
   }
-};
+}
 
 export const getPermission = async (idOrPath: string, userId: string): Promise<any> => {
   try {
     if (!idOrPath || !userId) {
-      return {};
+      return {}
     }
     const { data } = await clientApi.api.getNuxeoDocumentAclPermission({ docId: idOrPath, userId }, {
-      headers: { 'noThrowError': "true" }
-    });
+      headers: { 'noThrowError': 'true' }
+    })
     if (!data) {
-      throw new Error('no permission found');
+      throw new Error('no permission found')
     }
     return {
       ...data,
       hold: data.hold || {}
-    };
+    }
   } catch (error) {
     return {
-      "print": false,
-      "permissionList": [],
-      "permission": "Everything",
-      "retention": null,
-      "hold": null
-    };
+      'print': false,
+      'permissionList': [],
+      'permission': 'Everything',
+      'retention': null,
+      'hold': null
+    }
   }
-};
+}
 
 async function DownloadDocApi(idOrPath: string, cb?: Function) {
   return clientApi.api.postNuxeoDocumentDownload({ idOrPath }, {
     format: 'blob',
     timeout: 0,
-    onDownloadProgress: function (progressEvent) {
-      if (cb) cb(progressEvent);
+    onDownloadProgress: function(progressEvent) {
+      if (cb) cb(progressEvent)
     }
-  });
+  })
 }
+
 export async function downloadFileHandler(doc: any) {
 
   // const { t } = useI18n() // 会报错SyntaxError: Must be called at the top of a `setup` function
   // exportFolderStructureApi
-  const id = new Date().valueOf() + doc.name;
+  const id = new Date().valueOf() + doc.name
   const notification = ElNotification({
     title: '',
     icon: Download,
@@ -238,22 +241,22 @@ export async function downloadFileHandler(doc: any) {
     customClass: 'download-notification',
     duration: 0,
     position: 'bottom-right'
-  });
+  })
   try {
     const blob = await DownloadDocApi(doc.id, (e: any) => {
-      const el = document.getElementById(id);
-      if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%';
-    });
+      const el = document.getElementById(id)
+      if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+    })
     // TODO : add externsion to file name
-    await downloadBlob(blob, doc.name);
+    await downloadBlob(blob, doc.name)
     // await DownloadDocApi(props.doc.id)
   } catch (error: any) {
     // @ts-ignore
-    ElMessage.error($i18n.t('download_noFile') as string);
+    routerProvider?.message.error($i18n.t('download_noFile') as string)
   }
   setTimeout(() => {
-    notification.close();
-  }, 3000);
+    notification.close()
+  }, 3000)
 }
 
 
@@ -261,10 +264,10 @@ export function allowFeature(f: string) {
   // if(f == 'WORKFLOW') return false 
   // if(f == 'DAM_FILE_CONVERTION') return false 
   // if(f=== 'AUDIT')return false
-  if (f === 'BULK_IMPORT') return false; // 暂时隐藏BULK_IMPORT
-  const features = useFeature().value;
-  if (features && features[f]) return features[f];
-  return false;
+  if (f === 'BULK_IMPORT') return false // 暂时隐藏BULK_IMPORT
+  const features = useFeature().value
+  if (features && features[f]) return features[f]
+  return false
 }
 
 
@@ -276,35 +279,35 @@ export function allowFeature(f: string) {
  */
 export const duplicateNameFilter = async (idOrPath: string, list: any) => {
   try {
-    let result = false;
+    let result = false
     const titles = list.reduce((prev: any, item: any) => {
-      prev.push(item.fileName || item.name);
-      return prev;
-    }, []);
+      prev.push(item.fileName || item.name)
+      return prev
+    }, [])
     const { data: res } = await clientApi.api.postNuxeoDocumentIsduplicatename({
       path: idOrPath,
       titles
-    }) as any;
-    if (!res) return { isDuplicate: false };
+    }) as any
+    if (!res) return { isDuplicate: false }
     list.forEach((doc: any) => {
-      const name = doc.fileName || doc.name;
+      const name = doc.fileName || doc.name
       if (res && res[name] || res[name]) {
-        result = true;
-        doc.goPath = idOrPath;
-        doc.isDuplicate = true;
-        doc.originalPath = res[name].idOrPath;
-        doc.uniqueName = res[name].uniqueName;
+        result = true
+        doc.goPath = idOrPath
+        doc.isDuplicate = true
+        doc.originalPath = res[name].idOrPath
+        doc.uniqueName = res[name].uniqueName
       }
-    });
+    })
     return {
       isDuplicate: result,
-      list,
-    };
+      list
+    }
   } catch (error) {
-    console.log(error);
+    console.log(error)
     return {
       isDuplicate: true,
       list: []
-    };
+    }
   }
-};
+}

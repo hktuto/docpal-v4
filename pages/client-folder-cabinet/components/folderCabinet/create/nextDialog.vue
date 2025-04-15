@@ -13,7 +13,8 @@
       </FolderCabinetCreateUploadTree>
     </main>
     <template #footer>
-      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary" :loading="state.loading"
+      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary"
+                 :loading="state.loading"
                  @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
@@ -21,14 +22,14 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {clientApi} from 'api'
-import {ElMessage} from 'element-plus'
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps(['id'])
 const emits = defineEmits([
   'refresh'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 const userId: string = useUserId().value
 const state = reactive<any>({
   loading: false,
@@ -36,7 +37,7 @@ const state = reactive<any>({
   visible: false,
   cabinetTemplate: {},
   treeData: [],
-  rootDetail: {},
+  rootDetail: {}
 
 })
 // #region module: handleSubmit
@@ -48,7 +49,7 @@ async function handleSubmit() {
   try {
     const uploadList = await FolderCabinetUploadTreeRef.value.getData(true)
     if (!uploadList) {
-      throw new Error("");
+      throw new Error('')
     }
     // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
     setTimeout(async () => {
@@ -56,7 +57,10 @@ async function handleSubmit() {
       const res = await Promise.all(pList)
       state.loading = false
       state.visible = false
-      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('common_item'), name: uploadList[0].previewName}))
+      routerProvider?.message.success(t('tip_createdSuccessMsg', {
+        modelName: t('common_item'),
+        name: uploadList[0].previewName
+      }))
       emits('refresh')
     }, 2000)
   } catch (error) {
@@ -67,7 +71,7 @@ async function handleSubmit() {
     children.forEach(async (item: any) => {
       item.path = parentPath + '/' + item.label
       try {
-        if (parentStatus === 'skip' || parentStatus === 'fail') throw new Error("skip");
+        if (parentStatus === 'skip' || parentStatus === 'fail') throw new Error('skip')
         if (item.folder) {
           item.status = 'loading'
           pList.push(
@@ -77,7 +81,7 @@ async function handleSubmit() {
               name: item.previewName,
               type: item.documentType,
               idOrPath: item.path,
-              properties: item.properties,
+              properties: item.properties
             })
           )
         } else {
@@ -161,7 +165,7 @@ function initTreeData(children: any, parentId: string = '') {
 
 function getLabelList(row: any) {
   const labelRule = row.labelRule ? JSON.parse(row.labelRule) : [
-    {dataType: "string", metadata: "fc:docTitle", noDelete: true}
+    { dataType: 'string', metadata: 'fc:docTitle', noDelete: true }
   ]
   return labelRule
 }
@@ -194,7 +198,7 @@ function getMetaName(formData: any = {}, row: any) {
 
 // #endregion
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 main {

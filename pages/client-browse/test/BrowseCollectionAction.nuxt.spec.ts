@@ -70,7 +70,7 @@ describe('CollectionAction', () => {
 
     expect(clientApi.api.deleteNuxeoDocument).toHaveBeenCalled()
     await new Promise((resolve) => setTimeout(resolve, 2000))
-    expect(ElMessage.success).toHaveBeenCalled()
+    expect(routerProvider?.message.success).toHaveBeenCalled()
   })
 
   it('should reloadPage is correctly', () => {

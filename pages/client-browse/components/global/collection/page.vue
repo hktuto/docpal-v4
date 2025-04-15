@@ -103,7 +103,7 @@ function handleDelete(row: any) {
   })
     .then(async () => {
       await clientApi.api.deleteNuxeoDocument({ idOrPath: row.id })
-      ElMessage.success(t('collection_deleteSuccessMsg', { name: row.name }))
+      routerProvider?.message.success(t('collection_deleteSuccessMsg', { name: row.name }))
       reloadPage()
     })
 }
@@ -126,7 +126,7 @@ function handleDocDelete(row: any) {
         setTimeout(() => {
           query({})
         }, 1000)
-        ElMessage.success(t('collectionFile_deleteSuccessMsg', { name: row.name }))
+        routerProvider?.message.success(t('collectionFile_deleteSuccessMsg', { name: row.name }))
         reload()
       } catch (error) {
 

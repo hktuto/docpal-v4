@@ -177,7 +177,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
     const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(row.id, isActive).then(res => res.data)
     if (!!result) {
       row.status = isActive
-      ElMessage.success(t('dpMsg_success'))
+      routerProvider?.message.success(t('dpMsg_success'))
     }
   } catch (error) {
 

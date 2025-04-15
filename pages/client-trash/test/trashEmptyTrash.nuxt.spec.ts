@@ -56,7 +56,7 @@ describe('TrashEmptyTrash', () => {
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
     // 檢查成功提示
-    expect(ElMessage.success).toHaveBeenCalledWith('trash_emptyTrashSuccessMsg')
+    expect(routerProvider?.message.success).toHaveBeenCalledWith('trash_emptyTrashSuccessMsg')
   })
 
   it('selected restore', async () => {
@@ -88,7 +88,7 @@ describe('TrashEmptyTrash', () => {
     // 模擬延遲以等待 loading 狀態結束
     await new Promise((resolve) => setTimeout(resolve, 2000))
     // 檢查成功提示
-    expect(ElMessage.success).toHaveBeenCalled('trash_restoredSelectedSuccessMsg')
+    expect(routerProvider?.message.success).toHaveBeenCalled('trash_restoredSelectedSuccessMsg')
   })
 
   it('selected delete', async () => {
@@ -127,6 +127,6 @@ describe('TrashEmptyTrash', () => {
     await new Promise((resolve) => setTimeout(resolve, 4000))
 
     // 檢查成功提示
-    expect(ElMessage.success).toHaveBeenCalled('trash_deleteSuccessMsg')
+    expect(routerProvider?.message.success).toHaveBeenCalled('trash_deleteSuccessMsg')
   });
 })

@@ -128,7 +128,7 @@ async function handleDeleteAll(row: any) {
   await clientApi.api.deleteNuxeoDocumentPurge()
   setTimeout(async () => {
     state.loading = false
-    ElMessage.success(t('trash_emptyTrashSuccessMsg'))
+    routerProvider?.message.success(t('trash_emptyTrashSuccessMsg'))
     reload()
   }, 2000)
 }
@@ -189,7 +189,7 @@ const batchActionHandler = async () => {
   batchAction.value = null
   handleMsg(selectList, res)
   setTimeout(async () => {
-    ElMessage.success(msg)
+    routerProvider?.message.success(msg)
     query()
   }, 2000)
 }

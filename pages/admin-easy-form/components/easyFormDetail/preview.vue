@@ -73,7 +73,7 @@ const copy = (data: any, msg = "common_copySuccess") => {
     document.execCommand("Copy");
     document.body.removeChild(input);
   }
-  ElMessage.success(msg as string);
+  routerProvider?.message.success(msg as string);
 };
 
 function handleCopyUrl() {

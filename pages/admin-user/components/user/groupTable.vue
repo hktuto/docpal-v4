@@ -121,7 +121,7 @@ async function handleDeleteSelected() {
     userId: props.user.userId
   })
   state.selectedRows = []
-  ElMessage.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
+  routerProvider?.message.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
   getMemberGroupList()
 }
 

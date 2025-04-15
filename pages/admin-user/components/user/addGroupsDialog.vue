@@ -1,5 +1,6 @@
 <template>
-  <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')" :close-on-click-modal="false" destroy-on-close>
+  <el-dialog class="dialog-footer--between" v-model="state.visible" :title="$t('user_addGroups')"
+             :close-on-click-modal="false" destroy-on-close>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <!-- <el-text class="mx-1" type="danger">{{ $t('dpTip.resetWarning') }}</el-text> -->
@@ -13,6 +14,7 @@
 import { ElMessage } from 'element-plus'
 import { userProviderKey } from '~/util/userProvider'
 import formJson from './addGroupsDialog.vform.json'
+
 const { t } = useI18n()
 const props = defineProps<{}>()
 const userProvider = inject(userProviderKey)
@@ -34,11 +36,12 @@ async function handleSubmit() {
   }
   try {
     await userProvider?.BatchUsersToGroupsApi(params)
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
-  } catch (error) {}
+  } catch (error) {
+  }
   state.loading = false
 }
 
