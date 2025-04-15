@@ -101,7 +101,7 @@ async function handlePermissionChange(open: boolean, permission: string, row: an
     }
     if (res && res.errorCode) throw new Error(res.message || 'error')
   } catch (error) {
-    // ElMessage.error(error.message || 'error')
+    // routerProvider?.message.error(error.message || 'error')
   }
   setTimeout(async () => {
     row.loading = false
@@ -151,7 +151,7 @@ async function removeLocalAcl(row: any) {
     })
     if (action !== 'confirm') throw new Error('cancel')
     await adminApi.api.deleteNuxeoDocumentAclRemove({ idOrPath: props.doc.id, userId: row.userId })
-    ElMessage.success(t('accessControl_deleteSuccessMsg'))
+    routerProvider?.message.success(t('accessControl_deleteSuccessMsg'))
     emits('refresh')
   } catch (error) {
     row.loading = false

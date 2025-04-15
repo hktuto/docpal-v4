@@ -28,17 +28,17 @@
       </el-button>
     </template>
   </el-dialog>
-  <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="(loading: boolean)=>emits('refresh', loading)"/>
+  <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="(loading: boolean)=>emits('refresh', loading)" />
 </template>
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import formJson from './dialog.vform.json'
-import {clientApi} from 'api';
+import { clientApi } from 'api'
 
 const emits = defineEmits([
   'refresh'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive<any>({
   initLoading: false,
   loading: false,
@@ -72,7 +72,7 @@ async function handleSubmit() {
   state.loading = true
   try {
     let fileName = await getMetaName()
-    const _fileName = await getUniqueName({goPath: state.cabinetTemplate.documentPath, fileName})
+    const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName })
     if (fileName !== _fileName) {
       const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => {
         return action
@@ -101,7 +101,7 @@ async function handleSubmit() {
       state.visible = false
       emits('refresh')
       resolve
-    }, 1000));
+    }, 1000))
   } catch (error) {
 
   }
@@ -110,16 +110,16 @@ async function handleSubmit() {
 
 async function getMetaName() {
   const date = new Date()
-  let formData: any = {};
+  let formData: any = {}
   try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     const metadataForm = await MetaFormRef.value.getData()
-    if (data) formData = {...formData, ...data, ...metadataForm}
+    if (data) formData = { ...formData, ...data, ...metadataForm }
   } catch (error) {
   }
   const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
 
-  if (!labelRule || labelRule.length === 0) throw new Error("no labelRule");
+  if (!labelRule || labelRule.length === 0) throw new Error('no labelRule')
   else {
     const name = labelRule.reduce((prev: any, rule: any, index: number) => {
       if (!rule.metadata) rule.metadata = rule.metaData
@@ -166,7 +166,7 @@ async function handleOpen(id: string) {
       await MetaFormRef.value.init(state.cabinetTemplate.documentType, defaultValue)
       await FormRendererRef.value.vFormRenderRef.resetForm()
       MetaFormRef.value.setData(defaultValue)
-      FormRendererRef.value.vFormRenderRef.setFormData({...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport'])})
+      FormRendererRef.value.vFormRenderRef.setFormData({ ...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport']) })
       setTitleRequired()
       setTimeout(async () => {
         state.previewName = await getMetaName()
@@ -174,7 +174,7 @@ async function handleOpen(id: string) {
       }, 10)
     }, 10)
   } catch (error) {
-    ElMessage.error(t('dpMsg_error'))
+    routerProvider?.message.error(t('dpMsg_error'))
     // state.visible = false
   }
 
@@ -204,13 +204,13 @@ async function handleOpen(id: string) {
 
 // #endregion
 // #region module: form change
-async function formChange({fieldName, formModel, newValue, oldValue}: any) {
+async function formChange({ fieldName, formModel, newValue, oldValue }: any) {
   if (state.initLoading) return
   state.previewName = await getMetaName()
 }
 
 // #endregion
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 main {

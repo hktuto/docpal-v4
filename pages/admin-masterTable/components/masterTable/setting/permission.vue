@@ -93,7 +93,7 @@ async function handleRemove(row: any) {
     masterTableId: row.masterTableId,
     userId: row.userId
   })
-  ElMessage.success(t('masterTable_settingRemoveSuccessMsg', { name: row.masterTableName }))
+  routerProvider?.message.success(t('masterTable_settingRemoveSuccessMsg', { name: row.masterTableName }))
   init()
 }
 

@@ -40,7 +40,7 @@ async function handleSubmit() {
   try {
     state.submitLoading = true;
     const res = await adminApi.api.postFormDesignSavePreview(param);
-    if (!!res) ElMessage.success(t("msg_successfullyModified"));
+    if (!!res) routerProvider?.message.success(t("msg_successfullyModified"));
   } catch (error) {
   } finally {
     state.submitLoading = false;

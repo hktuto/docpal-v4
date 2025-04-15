@@ -30,7 +30,8 @@
           <template #toggleText>
             <div class="label">{{ $t('ai.uploadText') }}</div>
           </template>
-          <el-tree ref="treeRef" :data="state.fileList" default-expand-all nodeKey="id" :expand-on-click-node="false" @node-click="handleNodeClick">
+          <el-tree ref="treeRef" :data="state.fileList" default-expand-all nodeKey="id" :expand-on-click-node="false"
+                   @node-click="handleNodeClick">
             <template #default="{ node, data }">
               <div :class="['flex-x-between', 'tree-item', { 'disabled-line': data.isUpload === false }]">
                 <span :class="['flex-x-start', { color__danger: state.repearNameIdList.includes(data.id) }]">
@@ -47,7 +48,8 @@
             </template>
           </el-tree>
         </SplitpanesPanes>
-        <SplitpanesPanes class="main-center" v-model:size="middleSize" :defaultSize="55" parentId="panesContainer" :dragging="dragging" :minSizeInPixel="300">
+        <SplitpanesPanes class="main-center" v-model:size="middleSize" :defaultSize="55" parentId="panesContainer"
+                         :dragging="dragging" :minSizeInPixel="300">
           <div class="flex-x-between" v-show="state.selectedDoc" style="padding: var(--app-space-xs)">
             {{ state.selectedDoc.name }}
           </div>
@@ -90,16 +92,24 @@
       <div class="upload-footer flex-x-between">
         <div class="space"></div>
         <div>
-          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="danger" @click.native="handleDiscard">{{
-            $t('ai.cancelPatch')
-          }}</el-button>
-          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="info" @click.native="handleClose">{{ $t('common_close') }}</el-button>
-          <el-button v-if="state.status === 'Error'" :loading="state.retryLoading" :disabled="state.submitLoading" type="primary" @click.native="handleRetry">{{
-            $t('ai.retryAiLoading')
-          }}</el-button>
-          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="primary" @click.native="handleSubmit">{{
-            $t('dpButtom_confirm')
-          }}</el-button>
+          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="danger"
+                     @click.native="handleDiscard">{{
+              $t('ai.cancelPatch')
+            }}
+          </el-button>
+          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="info"
+                     @click.native="handleClose">{{ $t('common_close') }}
+          </el-button>
+          <el-button v-if="state.status === 'Error'" :loading="state.retryLoading" :disabled="state.submitLoading"
+                     type="primary" @click.native="handleRetry">{{
+              $t('ai.retryAiLoading')
+            }}
+          </el-button>
+          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="primary"
+                     @click.native="handleSubmit">{{
+              $t('dpButtom_confirm')
+            }}
+          </el-button>
         </div>
       </div>
     </main>
@@ -113,6 +123,7 @@ import { emitBus, EventType } from 'eventbus'
 import { clientApi } from 'api'
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+
 const { status, id } = defineProps<{
   id: string
   status?: string
@@ -175,6 +186,7 @@ const handleMetaChange = async ({ fieldName, formModel, newValue, oldValue }) =>
     })
   }
 }
+
 function ocrPermission(doc): boolean {
   try {
     const extension = '.' + doc.name.split('.').pop()
@@ -183,6 +195,7 @@ function ocrPermission(doc): boolean {
     return false
   }
 }
+
 async function handleNodeClick(row) {
   if (row.id === state.selectedDoc.id) return
   state.selectedDoc = row
@@ -210,9 +223,14 @@ async function handleNodeClick(row) {
   })
   setTimeout(() => {
     if (!row.properties) row.properties = {}
-    MetaFormRef.value.setData({ ...row.properties, documentType: row.fileType, docName: getFileName(state.selectedDoc.name, row.isFolder) })
+    MetaFormRef.value.setData({
+      ...row.properties,
+      documentType: row.fileType,
+      docName: getFileName(state.selectedDoc.name, row.isFolder)
+    })
   })
 }
+
 function applyAllAi() {
   const properties = {
     ...state.selectedDoc.properties,
@@ -239,6 +257,7 @@ async function handleDeleteFile(data) {
   await clientApi.api.deleteNuxeoDocumentTempfileId(data.id)
   treeRef.value.remove(data)
 }
+
 async function handleDiscard() {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
     confirmButtonText: t('dpButtom_confirm'),
@@ -261,6 +280,7 @@ async function handleDiscard() {
   // await clientApi.api.postNuxeoDocumentBatchcancel(formData)
   // router.push(state.backPath)
 }
+
 function handleClose() {
   const item = goAiUploadDetail()
   routerProvider?.navigateTo(item)
@@ -279,6 +299,7 @@ function checkExtension(filename: string) {
   }
   return 'notSupport'
 }
+
 async function handleRetry() {
   state.retryLoading = true
   try {
@@ -291,7 +312,8 @@ async function handleRetry() {
       init()
     }
     init()
-  } catch (error) {}
+  } catch (error) {
+  }
   setTimeout(() => (state.retryLoading = false), 1000)
 }
 
@@ -343,12 +365,13 @@ async function handleSubmit() {
       })
     } else throw new Error(t('dpMsg_503'))
   } catch (error) {
-    if (error.message) ElMessage.error(error.message)
+    if (error.message) routerProvider?.message.error(error.message)
   }
   setTimeout(() => {
     state.submitLoading = false
   }, 1000)
 }
+
 async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean> {
   const checkFailedList: any = await clientApi.api
     .postNuxeoDocumentCheckfileexist({
@@ -382,8 +405,12 @@ async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean>
   }
   return checkFailedList && checkFailedList.length > 0
 }
+
 async function init() {
-  let docList: any = await clientApi.api.postNuxeoDocumentQueryuploadfiledetaildtolist({ userId: userId.value, uploadId: id }).then((res) => res.data)
+  let docList: any = await clientApi.api.postNuxeoDocumentQueryuploadfiledetaildtolist({
+    userId: userId.value,
+    uploadId: id
+  }).then((res) => res.data)
   console.log('docList', docList)
   docList = docList.map((item) => ({
     ...item,
@@ -398,6 +425,7 @@ async function init() {
     }, 100)
   }
 }
+
 onActivated(async () => {
   init()
   leftMin.value = CalMax()
@@ -412,6 +440,7 @@ onActivated(async () => {
   padding: var(--app-space-xs);
   position: relative;
 }
+
 .upload-main {
   display: grid;
   grid-template-rows: 1fr min-content;
@@ -419,14 +448,17 @@ onActivated(async () => {
   overflow: hidden;
   position: relative;
   gap: 0;
+
   :deep {
     .splitpanes.default-theme .splitpanes__pane {
       background-color: var(--app-grey-0000);
     }
+
     .splitpanes__splitter {
       width: 2px;
       background-color: var(--app-grey-050);
       position: relative;
+
       &:before {
         content: '';
         position: absolute;
@@ -435,42 +467,51 @@ onActivated(async () => {
         opacity: 0;
         z-index: 1;
       }
+
       &:hover {
         background-color: var(--primary-color);
+
         &:before {
           opacity: 1;
         }
       }
     }
+
     .splitpanes--vertical > .splitpanes__splitter:before {
       top: 50%;
       left: -14px;
       height: 100%;
       width: 30px;
     }
+
     .splitpanes--horizontal > .splitpanes__splitter:before {
       top: -30px;
       bottom: -30px;
       width: 100%;
     }
   }
+
   .uploadContent {
     .main-left {
     }
+
     .main-right {
     }
   }
+
   .upload-footer {
     border-top: 1px solid var(--app-grey-050);
     padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
   }
 }
+
 .main-left {
   :deep .contentContainer {
     height: calc(100% - 32px);
     overflow: auto;
   }
 }
+
 .main-center {
   :deep .contentContainer {
     height: 100%;
@@ -478,32 +519,39 @@ onActivated(async () => {
     display: grid;
     grid-template-rows: min-content 1fr;
     padding: var(--app-space-xs) calc(var(--app-space-xs) * 2);
+
     .vformRender {
       overflow: auto;
     }
   }
 }
+
 .tree-item {
   width: 100%;
   padding-right: var(--app-space-xs);
   display: flex;
   gap: var(--app-space-xs);
 }
+
 :deep(.el-tree-node.is-current > .el-tree-node__content) {
   background-color: var(--el-tree-node-hover-bg-color);
 }
+
 .vform-dp-docName_color__danger {
   :deep(#vform-dp-docName .el-form-item__label) {
     color: #f56c6c;
   }
 }
+
 .disabled-line {
   text-decoration: line-through;
   color: var(--app-grey-500);
 }
+
 :deep .formContainer {
   margin: 0 var(--app-space-xs);
 }
+
 .splitpanes {
   overflow: hidden;
 }

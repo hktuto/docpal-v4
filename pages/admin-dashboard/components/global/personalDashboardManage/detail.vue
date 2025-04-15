@@ -1,34 +1,34 @@
 <script lang="ts" setup>
-import dayjs from "dayjs";
-import {ElMessage} from "element-plus";
+import dayjs from 'dayjs'
+import { ElMessage } from 'element-plus'
 import type {
   DashboardWidgetSetting,
-  DashboardWidget,
-} from "#imports";
+  DashboardWidget
+} from '#imports'
 import {
   dashboardWidgetSetting,
   getNormalizeSetting,
-  getWidgetSetting,
-} from "#imports";
-import {adminApi} from "api";
-import {onActivated} from "vue";
+  getWidgetSetting
+} from '#imports'
+import { adminApi } from 'api'
+import { onActivated } from 'vue'
 
-const {id} = defineProps<{
+const { id } = defineProps<{
   id: number;
-}>();
-const {t} = useI18n()
+}>()
+const { t } = useI18n()
 const state = reactive({
   info: {
-    name: "",
+    name: ''
   } as any,
   layout: [] as DashboardWidgetSetting[],
   loading: false,
   saveLoading: false,
   dates: [
-    dayjs().startOf("year").format('YYYY-MM-DD'),
-    dayjs(new Date()).format('YYYY-MM-DD'),
-  ],
-});
+    dayjs().startOf('year').format('YYYY-MM-DD'),
+    dayjs(new Date()).format('YYYY-MM-DD')
+  ]
+})
 
 function handleRefresh(layoutSetting: any) {
   const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
@@ -61,7 +61,7 @@ async function handleSave() {
       ...state.info,
       styleJson: JSON.stringify(state.layout)
     })
-    // ElMessage.success(t('dpMsg_success'))
+    // routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
   } finally {
     state.saveLoading = false
@@ -75,16 +75,16 @@ function handleEdit() {
 }
 
 async function getInfo() {
-  state.info = await adminApi.api.getPersonalDashboardId(id).then(res => res.data);
-  console.log("getInfo", state.info)
+  state.info = await adminApi.api.getPersonalDashboardId(id).then(res => res.data)
+  console.log('getInfo', state.info)
   if (!state.info || !state.info.styleJson) {
-    return;
+    return
   }
-  const temLayout = JSON.parse(state.info.styleJson);
+  const temLayout = JSON.parse(state.info.styleJson)
   if (Array.isArray(temLayout)) {
     state.layout = temLayout.map((item) => {
-      return Object.assign(item, getNormalizeSetting(item.component));
-    });
+      return Object.assign(item, getNormalizeSetting(item.component))
+    })
   } else {
     // dashboard is new, set layout to empty array
     state.layout = []
@@ -92,7 +92,7 @@ async function getInfo() {
 }
 
 onActivated(() => {
-  getInfo();
+  getInfo()
 })
 </script>
 <template>
@@ -100,12 +100,13 @@ onActivated(() => {
     <div class="flex-x-between">
       <div class="flex-x-between">
         <span class="template-title"> {{ state.info.name }} </span>
-        <Icon id="WorkPanel__Detail__Edit" name="material-symbols:edit-square" class="normal cursor-pointer" @click="handleEdit"></Icon>
+        <Icon id="WorkPanel__Detail__Edit" name="material-symbols:edit-square" class="normal cursor-pointer"
+              @click="handleEdit"></Icon>
       </div>
       <div>
         <el-dropdown id="WorkPanel__Detail__Add" trigger="click" @command="handleAdd">
           <el-button type="primary">
-            {{ $t("common_add") }}
+            {{ $t('common_add') }}
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
@@ -147,7 +148,7 @@ onActivated(() => {
         @refreshSetting="handleRefresh"
       ></DashboardDetail>
     </div>
-    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="getInfo()"/>
+    <PersonalDashboardDialog ref="DashboardDialogRef" @refresh="getInfo()" />
   </div>
 </template>
 <style lang="scss" scoped>

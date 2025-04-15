@@ -526,7 +526,7 @@ describe('[admin-user]UserGroupTable', () => {
 
     await wrapper.vm.handleDeleteSelected();
 
-    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('user_removeGroupsSuccessMsg'));
+    expect(routerProvider?.message.success).toHaveBeenCalledWith(expect.stringContaining('user_removeGroupsSuccessMsg'));
   });
 
   it('handles filter form change', async () => {
@@ -705,7 +705,7 @@ describe('[admin-user]UserAddGroupsDialog', () => {
       groupIds: formData.id,
       ...wrapper.vm.state.setting,
     });
-    expect(ElMessage.success).toHaveBeenCalledWith('dpMsg_success');
+    expect(routerProvider?.message.success).toHaveBeenCalledWith('dpMsg_success');
     expect(wrapper.vm.state.visible).toBe(false);
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
   });

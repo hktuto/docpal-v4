@@ -2,7 +2,7 @@
   <el-dialog v-model="state.visible" :title="$t('bulkImport_create')"
              :close-on-click-modal="false"
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <el-button id="BulkImport__CreateNewBulkImport__Submit" type="primary" :loading="state.loading"
                  @click="handleSubmit()">
@@ -12,18 +12,18 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api';
+import { adminApi } from 'api'
 import formJson from './addDocTypeForm.vfom.json'
-import {ElMessage} from "element-plus";
+import { ElMessage } from 'element-plus'
 
-const {metaSettingData} = defineProps<{
+const { metaSettingData } = defineProps<{
   metaSettingData: any
 }>()
 const exitList = ref()
 const emits = defineEmits([
   'refresh'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive<{
   loading: boolean,
   visible: boolean,
@@ -31,7 +31,7 @@ const state = reactive<{
 }>({
   loading: false,
   visible: false,
-  allDocTypeList: [],
+  allDocTypeList: []
 })
 const FormRendererRef = ref()
 
@@ -48,7 +48,10 @@ async function handleSubmit() {
       related: []
     }
     await adminApi.api.putNuxeoAdminSetting('', metaSettingData)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('bulkImport_bulkImportForDocumentType'), name: data.type}))
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+      modelName: t('bulkImport_bulkImportForDocumentType'),
+      name: data.type
+    }))
     // await AddMetaSettingApi(param)
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
@@ -90,15 +93,15 @@ async function handleOptions(exitList: any) {
         prev.push(item)
       }
       return prev
-    }, []);
+    }, [])
   }
 }
 
 onMounted(async () => {
-  const {data}: any = await adminApi.api.getTypesActive()
+  const { data }: any = await adminApi.api.getTypesActive()
   state.allDocTypeList = data?.sort((a: any, b: any) => (a.name.localeCompare(b.name)))
 })
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

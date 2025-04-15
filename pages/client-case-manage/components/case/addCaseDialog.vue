@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {clientApi} from "api";
-import {ElMessage} from 'element-plus'
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive({
   id: '',
   loading: false,
@@ -13,11 +13,12 @@ const FromVariablesRendererRef = ref()
 const MasterTableVariableFormRef = ref()
 const isWorkflowForm = ref(false)
 const primaryForm = ref<any>()
-  const routerProvider = inject(MenuRouterKey);
+const routerProvider = inject(MenuRouterKey)
+
 async function handleOpen(id: string, caseDetail: any) {
   try {
-    state.id = id;
-    const {data: startForm} = await clientApi.api.getCaseInstanceCasetypeidStarttask(id);
+    state.id = id
+    const { data: startForm } = await clientApi.api.getCaseInstanceCasetypeidStarttask(id)
     // get cmmn xml
     primaryForm.value = startForm
     const form = await clientApi.api.getRelationQuery({
@@ -30,19 +31,19 @@ async function handleOpen(id: string, caseDetail: any) {
     // if form is not empty
     if (form.data[0]) {
       isWorkflowForm.value = true
-      const json = JSON.parse(form.data[0].jsonValue || "{}")
+      const json = JSON.parse(form.data[0].jsonValue || '{}')
       state.title = startForm?.[0]?.name
       nextTick(() => {
         FromVariablesRendererRef.value.setForm(json, [])
 
       })
-      return;
+      return
     }
     isWorkflowForm.value = false
     // other, use old form
 
-    if (!startForm) throw new Error("no data");
-    const first = startForm[0];
+    if (!startForm) throw new Error('no data')
+    const first = startForm[0]
     state.title = first.name
 
     const fields = first.fields?.reduce((prev, item) => {
@@ -64,7 +65,7 @@ async function handleOpen(id: string, caseDetail: any) {
     })
 
   } catch (error) {
-    ElMessage.error('no data')
+    routerProvider?.message.error('no data')
     state.visible = false
   } finally {
     state.loading = false
@@ -78,7 +79,7 @@ const emits = defineEmits([
 async function handleSubmit() {
   state.loading = true
   try {
-    let data: any;
+    let data: any
     if (isWorkflowForm.value) {
       data = await FromVariablesRendererRef.value.getFormData(true)
     } else {
@@ -87,12 +88,12 @@ async function handleSubmit() {
     const startResponse = await clientApi.api.postCaseInstanceStart({
       caseTypeId: state.id,
       parameters: data
-    }).then( res => res.data)
-    if(startResponse) {
+    }).then(res => res.data)
+    if (startResponse) {
       // console.log(primaryForm.value)
       const newItem = caseManageDashboardPage({
         ...startResponse,
-        instanceId : startResponse.variables.case_id,
+        instanceId: startResponse.variables.case_id,
         versionId: startResponse.variables.cmmnVersionId
       })
       routerProvider?.navigateTo(newItem)
@@ -109,17 +110,17 @@ const props = withDefaults(defineProps<{
   ignoreList?: string[],
   label?: string,
 }>(), {
-  ignoreList: [],
+  ignoreList: []
 })
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 
 <template>
   <el-dialog v-model="state.visible" :title="label || state.title" class="scroll-dialog" append-to-body
              :close-on-click-modal="false" destroy-on-close @close="handleClose">
-    <WorkflowDetailFormRender v-if="isWorkflowForm" ref="FromVariablesRendererRef"/>
-    <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList"/>
+    <WorkflowDetailFormRender v-if="isWorkflowForm" ref="FromVariablesRendererRef" />
+    <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList" />
     <template #footer>
       <div class="footer-grid">
         <el-button id="CaseManagement__Detail__AddNewRow__Submit" type="primary" :loading="state.loading"

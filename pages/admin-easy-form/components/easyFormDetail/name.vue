@@ -44,10 +44,10 @@ async function handleChange(value: string) {
       name: value
     })
     props.detail.name = value
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
     form.value.name = props.detail.name
-    ElMessage.error(`${t('dpMsg_error')}`)
+    routerProvider?.message.error(`${t('dpMsg_error')}`)
   }
 }
 
@@ -55,7 +55,7 @@ async function handlePublish() {
   try {
     state.publishLoading = true
     await adminApi.api.postFormDesignPublish({id: props.detail.id})
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
 
   } finally {

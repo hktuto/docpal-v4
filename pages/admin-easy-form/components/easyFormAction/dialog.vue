@@ -18,7 +18,7 @@
           },
         ]"
       >
-        <el-input v-model="form.actionName"/>
+        <el-input v-model="form.actionName" />
       </el-form-item>
       <el-form-item
         :label="$t('easyForm.type')"
@@ -42,7 +42,7 @@
       </el-form-item>
       <template v-if="form.actionType">
         <el-divider content-position="left">
-          {{ $t("easyForm_addFormAction" + form.actionType + "Setting") }}
+          {{ $t('easyForm_addFormAction' + form.actionType + 'Setting') }}
         </el-divider>
         <el-form-item
           :label="$t('easyForm.' + form.actionType + 'TemplateKey')"
@@ -117,129 +117,129 @@
       <div class="footer-grid">
         <el-button id="EasyForm__Detail__FormActions__AddNewFormAction__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
-          {{ $t("common_submit") }}
+          {{ $t('common_submit') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
-import {ElMessage} from "element-plus";
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n();
-const props = defineProps(["detail"]);
-const emits = defineEmits(["refresh", "delete"]);
+const { t } = useI18n()
+const props = defineProps(['detail'])
+const emits = defineEmits(['refresh', 'delete'])
 const state = reactive({
   loading: false,
   visible: false,
   setting: {},
-  icon: "",
+  icon: '',
   editMode: false,
   templateList: [],
   targetList: [],
-  userList: [],
-});
-const userId: string = useUserId().value;
-let workflowList = [];
-let caseList = [];
-let emailList = [];
+  userList: []
+})
+const userId: string = useUserId().value
+let workflowList = []
+let caseList = []
+let emailList = []
 const form = ref({
   dataMapping: [],
-  status: "A",
-});
+  status: 'A'
+})
 const sourceList = computed(() => {
   try {
     return props.detail.information.map((item) => ({
       value: item.name,
-      label: item.name,
-    }));
+      label: item.name
+    }))
   } catch (error) {
-    return [];
+    return []
   }
-});
+})
 const typeOptions = [
-  {label: "Workflow", value: "Workflow"},
-  {label: "CaseType", value: "CaseType"},
-  {label: "Email", value: "Email"},
-];
+  { label: 'Workflow', value: 'Workflow' },
+  { label: 'CaseType', value: 'CaseType' },
+  { label: 'Email', value: 'Email' }
+]
 
 function getTargetLabel(value) {
-  const index = state.targetList.findIndex((i) => i.value === value);
-  return index === -1 ? value : state.targetList[index].label;
+  const index = state.targetList.findIndex((i) => i.value === value)
+  return index === -1 ? value : state.targetList[index].label
 }
 
 function handleOpen(setting) {
   if (setting && setting.id) {
-    state.editMode = true;
-    state.setting = JSON.parse(JSON.stringify(setting));
+    state.editMode = true
+    state.setting = JSON.parse(JSON.stringify(setting))
     form.value = {
       ...state.setting,
-      to: state.setting.to ? state.setting.to.split(",") : [],
-      cc: state.setting.cc ? state.setting.cc.split(",") : [],
-      bcc: state.setting.bcc ? state.setting.bcc.split(",") : [],
-    };
-    handleChange(state.setting.actionType, true);
-    handleKeyChange(state.setting.actionKey, true);
+      to: state.setting.to ? state.setting.to.split(',') : [],
+      cc: state.setting.cc ? state.setting.cc.split(',') : [],
+      bcc: state.setting.bcc ? state.setting.bcc.split(',') : []
+    }
+    handleChange(state.setting.actionType, true)
+    handleKeyChange(state.setting.actionKey, true)
   } else {
-    state.editMode = false;
-    state.setting = {};
+    state.editMode = false
+    state.setting = {}
     form.value = {
-      actionKey: "",
-      actionType: "",
-      actionName: "",
+      actionKey: '',
+      actionType: '',
+      actionName: '',
       dataMapping: [],
-      status: "A",
-    };
+      status: 'A'
+    }
   }
-  state.visible = true;
+  state.visible = true
   setTimeout(() => {
-    FormRef.value.clearValidate();
-  });
+    FormRef.value.clearValidate()
+  })
 }
 
-const FormRef = ref();
+const FormRef = ref()
 
 // #region module: action
 async function handleSubmit() {
-  const validate = await FormRef.value.validate();
-  if (!validate) return;
+  const validate = await FormRef.value.validate()
+  if (!validate) return
   const params = {
     id: props.detail.id,
     formResult: {
       ...form.value,
-      to: form.value.to ? form.value.to.join(",") : "",
-      cc: form.value.cc ? form.value.cc.join(",") : "",
-      bcc: form.value.bcc ? form.value.bcc.join(",") : "",
-      actionId: form.value.actionKey,
-    },
-  };
+      to: form.value.to ? form.value.to.join(',') : '',
+      cc: form.value.cc ? form.value.cc.join(',') : '',
+      bcc: form.value.bcc ? form.value.bcc.join(',') : '',
+      actionId: form.value.actionKey
+    }
+  }
   try {
     if (state.editMode) {
-      params.formResult.id = state.setting.id;
+      params.formResult.id = state.setting.id
     }
     const action = await adminApi.api
       .postFormDesignSaveFormresultAppend(params)
-      .then((res) => res.data);
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('easyForm_formAction'), name: null}));
-    emits("refresh", action);
+      .then((res) => res.data)
+    routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
+    emits('refresh', action)
   } catch (error) {
   } finally {
-    state.visible = false;
-    state.loading = false;
+    state.visible = false
+    state.loading = false
   }
 }
 
 function handleAdd() {
-  if (!form.value.dataMapping) form.value.dataMapping = [];
+  if (!form.value.dataMapping) form.value.dataMapping = []
   form.value.dataMapping.push({
-    source: "",
-    target: "",
-  });
+    source: '',
+    target: ''
+  })
 }
 
 function handleDelete(index: number) {
-  form.value.dataMapping.splice(index, 1);
+  form.value.dataMapping.splice(index, 1)
 }
 
 // #endregion
@@ -247,25 +247,25 @@ function handleDelete(index: number) {
 // #region module: change
 async function handleChange(key, isInit = false) {
   if (!isInit) {
-    state.templateList = [];
-    form.value.actionKey = "";
+    state.templateList = []
+    form.value.actionKey = ''
   }
   switch (key) {
-    case "Workflow":
-      await getWorkflow();
-      state.templateList = [...workflowList];
-      break;
-    case "CaseType":
-      await getCase();
-      state.templateList = [...caseList];
-      break;
-    case "Email":
-      await getEmail();
-      state.templateList = [...emailList];
-      getUserList();
-      break;
+    case 'Workflow':
+      await getWorkflow()
+      state.templateList = [...workflowList]
+      break
+    case 'CaseType':
+      await getCase()
+      state.templateList = [...caseList]
+      break
+    case 'Email':
+      await getEmail()
+      state.templateList = [...emailList]
+      getUserList()
+      break
     default:
-      break;
+      break
   }
 }
 
@@ -273,11 +273,11 @@ async function getWorkflow() {
   if (workflowList.length === 0) {
     const res = await adminApi.api
       .getFormDesignProcessDefinitions()
-      .then((res) => res.data);
+      .then((res) => res.data)
     workflowList = res.map((item) => ({
       label: item.label,
-      value: item.key,
-    }));
+      value: item.key
+    }))
   }
 }
 
@@ -285,24 +285,24 @@ async function getCase() {
   if (caseList.length === 0) {
     const res = await adminApi.api
       .postCaseTypesPage({
-        pageSize: 9999,
+        pageSize: 9999
       })
-      .then((res) => res.data);
+      .then((res) => res.data)
     caseList = res.entryList.map((item) => ({
       label: item.name,
       value: item.id,
       productionVersionId: item.productionVersionId
-    }));
+    }))
   }
 }
 
 async function getEmail() {
   if (emailList.length === 0) {
-    const res = await adminApi.api.getTemplateEmailAll().then((res) => res.data);
+    const res = await adminApi.api.getTemplateEmailAll().then((res) => res.data)
     emailList = res.map((item) => ({
       label: item.label,
-      value: item.id,
-    }));
+      value: item.id
+    }))
   }
 }
 
@@ -310,59 +310,59 @@ async function getEmail() {
 // #region module: keyChange
 async function handleKeyChange(value: string, isInit = false) {
   if (!isInit) {
-    state.targetList = [];
-    form.value.dataMapping = [];
+    state.targetList = []
+    form.value.dataMapping = []
   }
   switch (form.value.actionType) {
-    case "Workflow":
-      state.targetList = await getWorkflowProps(value);
-      break;
-    case "CaseType":
-      state.targetList = await getCaseProps(value);
-      break;
-    case "Email":
-      state.targetList = await getEmailProps(value);
-      break;
+    case 'Workflow':
+      state.targetList = await getWorkflowProps(value)
+      break
+    case 'CaseType':
+      state.targetList = await getCaseProps(value)
+      break
+    case 'Email':
+      state.targetList = await getEmailProps(value)
+      break
     default:
-      break;
+      break
   }
   state.targetList.forEach((item) => {
     const index = form.value.dataMapping.findIndex(
       (fItem) => fItem.target === item.value
-    );
+    )
     if (index === -1)
       form.value.dataMapping.push({
-        source: "",
-        target: item.value,
-      });
-  });
+        source: '',
+        target: item.value
+      })
+  })
 }
 
 async function getWorkflowProps(processKey: string) {
   const options = await adminApi.api
-    .postWorkflowProperties({processKey})
-    .then((res) => res.data);
-  console.log("getWorkflowProps", options);
+    .postWorkflowProperties({ processKey })
+    .then((res) => res.data)
+  console.log('getWorkflowProps', options)
   return options.map((item) => ({
     label: item.name,
-    value: item.id,
-  }));
+    value: item.id
+  }))
 }
 
 async function getEmailProps(id: string) {
   try {
     const options = await adminApi.api
       .getTemplateEmailTemplateId(id)
-      .then((res) => res.data);
+      .then((res) => res.data)
     const variable = options.emailTemplateVariable
       ? JSON.parse(options.emailTemplateVariable)
-      : [];
+      : []
     return variable.map((item) => ({
       label: item,
-      value: item,
-    }));
+      value: item
+    }))
   } catch (error) {
-    return [];
+    return []
   }
 }
 
@@ -372,47 +372,47 @@ async function getCaseProps(key: string) {
 
     const options = await adminApi.api
       .getCaseDashboardVersionVersionidPrimaryform(caseItem.productionVersionId)
-      .then((res) => res.data);
+      .then((res) => res.data)
     return options.fields.map((item) => ({
       label: item.name,
-      value: item.id,
-    }));
+      value: item.id
+    }))
   } catch (error) {
-    return [];
+    return []
   }
 }
 
-let userListStore = [];
+let userListStore = []
 
 async function getUserList() {
   if (userListStore.length > 0) {
-    state.userList = userListStore;
-    return;
+    state.userList = userListStore
+    return
   }
-  const userList = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data);
+  const userList = await adminApi.api.postNuxeoIdentityUsers().then((res) => res.data)
   const _userList = userList
     .map((item) => ({
       label:
         (item.firstName && item.lastName && item.firstName !== item.lastName
-          ? item.firstName + " " + item.lastName
+          ? item.firstName + ' ' + item.lastName
           : item.username) +
-        " <" +
+        ' <' +
         item.email +
-        ">",
-      value: item.userId,
+        '>',
+      value: item.userId
     }))
-    .filter((item) => item.value !== userId);
+    .filter((item) => item.value !== userId)
   // state.userList.unshift(...sourceList.value)
   state.userList = [
-    {label: t("easyForm.formInfomation"), value: "", options: sourceList.value},
-    {label: t("dataField.type.user"), value: "", options: _userList},
-  ];
-  userListStore = state.userList;
+    { label: t('easyForm.formInfomation'), value: '', options: sourceList.value },
+    { label: t('dataField.type.user'), value: '', options: _userList }
+  ]
+  userListStore = state.userList
 }
 
 // #endregion
 
-defineExpose({handleOpen});
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 .el-row {

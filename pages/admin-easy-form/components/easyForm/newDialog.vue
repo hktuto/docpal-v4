@@ -18,17 +18,17 @@
 </template>
 <script lang="ts" setup>
 import formJson from './newDialog.vform.json'
-import {adminApi} from 'api';
-import {ElMessage} from 'element-plus'
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const emits = defineEmits([
   'refresh'
 ])
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {},
+  setting: {}
 })
 
 const FormRendererRef = ref()
@@ -39,7 +39,7 @@ async function handleSubmit() {
   try {
     data.permission = 'members'
     const result = await adminApi.api.postFormDesign(data)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('workflow_form'), name: null}))
+    routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('workflow_form'), name: null }))
     emits('refresh')
   } catch (error) {
     state.loading = false
@@ -56,7 +56,7 @@ function handleOpen() {
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

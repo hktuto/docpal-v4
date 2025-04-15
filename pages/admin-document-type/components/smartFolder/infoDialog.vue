@@ -5,7 +5,7 @@
              :close-on-click-modal="false"
              @close="handleClose"
   >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
       <div class="footer-grid">
         <el-button id="SmartFolderSetting__CreateNewSmartFolder__Submit" type="primary" :loading="state.loading"
@@ -17,14 +17,14 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api';
+import { adminApi } from 'api'
 import formJson from './infoDialog.vform.json'
-import {ElMessage} from "element-plus";
+import { ElMessage } from 'element-plus'
 
 const emits = defineEmits([
   'refresh'
 ])
-const {t} = useI18n()
+const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false,
@@ -48,11 +48,11 @@ async function handleSubmit() {
       ..._data
     })
     if (Object.keys(state.setting).length === 0) {
-      msg = t('tip_createdSuccessMsg', {modelName: t('file_smartFolder'), name: null})
+      msg = t('tip_createdSuccessMsg', { modelName: t('file_smartFolder'), name: null })
     } else {
-      msg = t('tip_updateSuccessMsg', {modelName: t('file_smartFolder'), name: null})
+      msg = t('tip_updateSuccessMsg', { modelName: t('file_smartFolder'), name: null })
     }
-    ElMessage.success(msg)
+    routerProvider?.message.success(msg)
     emits('refresh')
     state.visible = false
   } catch (error) {
@@ -86,7 +86,7 @@ function handleOpen(setting?) {
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

@@ -106,10 +106,10 @@ async function handleDelete(id: string) {
   // list.value.splice(index, 1)
   try {
     await adminApi.api.deleteFormDesignDraftidFormresultFormresultid(props.detail.id, id)
-    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('easyForm_formAction'), name: null }))
     emits('delete', id)
   } catch (error) {
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
   }
 }
 </script>

@@ -100,7 +100,7 @@ async function handleDelete(row: any) {
     })
   if (action !== 'confirm') return
   await adminApi.api.deleteWorkflowProcess({ processInstanceId: row.instanceId })
-  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
   query({})
 }
 
@@ -119,7 +119,7 @@ async function handleDeleteSelected() {
 
     await Promise.all(pList)
 
-    ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
+    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('workflow_WorkflowTasks'), name: null }))
     query({})
   } catch (error) {
 

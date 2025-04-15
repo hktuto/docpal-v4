@@ -47,28 +47,28 @@
     <input v-show="false" ref="fileUploaderRef"
            multiple
            type="file"
-           @change="uploadHandler($event)"/>
+           @change="uploadHandler($event)" />
   </div>
 </template>
 
 
 <script lang="ts" setup>
-import {ElMessageBox, ElMessage} from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const props = defineProps<{
   treeData: Object
-}>();
+}>()
 const state = reactive<any>({
   defaultProps: {
     children: 'children',
-    label: 'label',
+    label: 'label'
   },
   treeItem: {},
   isCheck: true,
   selectedRow: {}
 })
 const userId: string = useUserId().value
-const {t} = useI18n()
+const { t } = useI18n()
 const treeRef = ref()
 const MetaFormRef = ref()
 const MetaFormRef2 = ref()
@@ -81,7 +81,7 @@ async function getData(isValidate: boolean = false) {
       if (item.data.folder ||
         (!item.data.folder && item.data.raw)) {
         prev[item.data.id] = {
-          ...item.data,
+          ...item.data
         }
         const pItem: any = getErrorMessage(prev[item.data.id])
         pList.push(pItem)
@@ -95,9 +95,9 @@ async function getData(isValidate: boolean = false) {
       if (errorMessage.length > 0) {
         ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: t('dpButtom_confirm'),
+          confirmButtonText: t('dpButtom_confirm')
         })
-        throw new Error("error");
+        throw new Error('error')
       }
     }
     const result: any = []
@@ -126,7 +126,7 @@ async function getData(isValidate: boolean = false) {
 
 function getLabelList() {
   const labelRule = state.selectedRow.labelRule ? JSON.parse(state.selectedRow.labelRule) : [
-    {dataType: "string", metadata: "fc:docTitle", noDelete: true}
+    { dataType: 'string', metadata: 'fc:docTitle', noDelete: true }
   ]
   return labelRule
 }
@@ -136,12 +136,12 @@ function getMetaName(formData: any = {}) {
   try {
     try {
       const data = state.selectedRow.properties
-      if (data) formData = {...formData, ...data}
+      if (data) formData = { ...formData, ...data }
     } catch (error) {
     }
     formData.label = state.selectedRow.label
     const labelRule = getLabelList()
-    if (!labelRule || labelRule.length === 0) throw new Error("no labelRule");
+    if (!labelRule || labelRule.length === 0) throw new Error('no labelRule')
     else {
       return labelRule.reduce((prev: any, rule: any, index: number) => {
         const joiner = index === 0 ? '' : '-'
@@ -166,7 +166,7 @@ function getMetaName(formData: any = {}) {
       }, '')
     }
   } catch (error: any) {
-    ElMessage.error(error)
+    routerProvider?.message.error(error)
   }
   return formData.label + '-' + formatDate(date)
 }
@@ -246,7 +246,7 @@ async function uploadHandler(e: any) {
       docName: file.name.split('.').shift(),
       parentId: state.treeItem.parentId,
       documentType: state.treeItem.documentType,
-      properties: {},
+      properties: {}
     }
     treeRef.value.append(param, state.treeItem)
   }

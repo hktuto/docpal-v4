@@ -241,7 +241,7 @@ async function handleSetStatus(status: 'A' | 'D', row: any) {
   if (status === row.value || !row.userId || status === null) return
   if (state.activeUsers >= state.licenseUsers && status === 'A') {
     row.status = 'D'
-    ElMessage.warning( t('user_activeUserOverLimit'))
+    ElMessage.warning(t('user_activeUserOverLimit'))
     return
   }
   try {
@@ -283,16 +283,16 @@ async function handleActiveSelected(status: 'A' | 'D') {
   }
   const result = await userProvider?.BatchActiveUserApi(params)
   if (result.length > 0) {
-    ElMessage.error(
+    routerProvider?.message.error(
       t('userTip.operationFailed', {
         users: result.join(',')
       })
     )
   } else {
     if (status === 'A') {
-      ElMessage.success(t('user.activate.successfully.msg'))
+      routerProvider?.message.success(t('user.activate.successfully.msg'))
     } else {
-      ElMessage.success(t('user.inactivate.successfully.msg'))
+      routerProvider?.message.success(t('user.inactivate.successfully.msg'))
     }
   }
   getAllUserAndActiveCount()

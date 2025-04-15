@@ -2,6 +2,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 import formJson from '../../retention/addDialog.vform.json'
+
 const emits = defineEmits(['update'])
 const { id } = defineProps<{
   id: number
@@ -26,7 +27,10 @@ async function handleSubmit() {
   try {
     state.loading = true
     await adminApi.api.putPolicyRetentions(params)
-    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('filePolicies_RetentionPolicy'), name: null }))
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+      modelName: t('filePolicies_RetentionPolicy'),
+      name: null
+    }))
     emits('update')
   } catch (error) {
     init()
@@ -42,7 +46,7 @@ async function handleSetStatus(isActive: 'A' | 'D') {
     const result = await adminApi.api.patchPolicyRetentionsIdStatusStatus(id, isActive).then((res) => res.data)
     if (!!result) {
       state.setting.status = isActive
-      ElMessage.success(t('dpMsg_success'))
+      routerProvider?.message.success(t('dpMsg_success'))
     }
   } catch (error) {
     state.setting.status = isActive === 'A' ? 'D' : 'A'
@@ -55,7 +59,7 @@ async function deleteItem() {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
   await adminApi.api.deletePolicyRetentionsId(id)
-  ElMessage.success(t('dpMsg_success'))
+  routerProvider?.message.success(t('dpMsg_success'))
 }
 
 async function init() {
@@ -94,7 +98,8 @@ onActivated(async () => {
       </div>
       <div>
         <!-- <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button> -->
-        <el-button :loading="state.loading" id="RetentionPolicySetting__EditRetentionPolicy__Submit" utton type="primary" @click="handleSubmit">
+        <el-button :loading="state.loading" id="RetentionPolicySetting__EditRetentionPolicy__Submit" utton
+                   type="primary" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
       </div>

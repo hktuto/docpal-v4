@@ -33,7 +33,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data.groupName) {
-    ElMessage.error(t('user_userGroupName') + $t('render.hint.fieldRequired'))
+    routerProvider?.message.error(t('user_userGroupName') + $t('render.hint.fieldRequired'))
     return
   }
   if (props.group.name === data.groupName) {
@@ -44,7 +44,7 @@ async function handleSubmit() {
   const groupList = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
   // check group name exist
   if (groupList.some((g: any) => g.name === data.groupName)) {
-    ElMessage.error(t('user_userGroupsIsExistsMsg'))
+    routerProvider?.message.error(t('user_userGroupsIsExistsMsg'))
     return
   }
 

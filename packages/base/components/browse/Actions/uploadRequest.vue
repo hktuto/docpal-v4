@@ -16,7 +16,7 @@
                :close-on-click-modal="false"
                :title="`${$t('publicUpload_requestFileUpload')}`"
     >
-      <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+      <FormRenderer ref="FormRendererRef" :form-json="formJson" />
       <template #footer>
         <el-button id="Browse__FileUploadRequest__Confirm" :loading="state.loading" type="primary"
                    @click="handleSubmit">
@@ -28,8 +28,8 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage} from 'element-plus'
-import {clientApi} from 'api'
+import { ElMessage } from 'element-plus'
+import { clientApi } from 'api'
 import formJson from './form/clientFileRequest.vform.json'
 
 const emits = defineEmits(['success'])
@@ -40,7 +40,7 @@ const state = reactive({
   loading: false,
   dialogOpened: false
 })
-const {t} = useI18n()
+const { t } = useI18n()
 
 function uploadDialog() {
   state.dialogOpened = true
@@ -58,20 +58,20 @@ async function handleSubmit() {
   state.loading = true
   try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-    if (!data) throw new Error(`${t('incompleteData')}`);
+    if (!data) throw new Error(`${t('incompleteData')}`)
     if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
     data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')
     data.idOrPath = props.doc.path
     if (data.fileType) data.fileType = data.fileType.join(',')
     const res: any = await clientApi.api.postNuxeoFilerequest(data).then(res => res.data)
     state.loading = false
-    if (res?.errorCode) throw new Error(res.message || 'error');
+    if (res?.errorCode) throw new Error(res.message || 'error')
     state.dialogOpened = false
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('document_uploadFilesRequest'), name: null}))
+    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('document_uploadFilesRequest'), name: null }))
     ElMessage.success(t('publicUpload_success'))
     emits('success')
   } catch (error) {
-    // ElMessage.error(error.message)
+    // routerProvider?.message.error(error.message)
   }
   state.loading = false
 }

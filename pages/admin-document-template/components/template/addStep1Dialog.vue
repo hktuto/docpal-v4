@@ -14,13 +14,12 @@
       </el-button>
     </template>
   </el-dialog>
-  <TemplateAddStep2Dialog ref="TemplateAddStep2DialogRef"/>
+  <TemplateAddStep2Dialog ref="TemplateAddStep2DialogRef" />
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import {ExtensionMap} from "~/utils/documentTemplateHelper";
+import { adminApi } from 'api'
+import { ExtensionMap } from '~/utils/documentTemplateHelper'
 import formJson from './templateAddStep1.vform.json'
-import {ElMessage} from "element-plus";
 
 const emits = defineEmits([
   'update'
@@ -31,7 +30,7 @@ const state = reactive({
   setting: {},
   isEdit: false
 })
-const {t} = useI18n()
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const form = reactive({
   labelRule: []
@@ -51,7 +50,7 @@ async function handleSubmit() {
         id: state.setting.id,
         fileType: state.setting.fileType
       })
-      routerProvider?.message.success(t('tip_updateSuccessMsg', {modelName: t('adminMenu.template'), name: null}));
+      routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
       emits('update')
     } else {
       const file = await createFile(formData.type, formData.name)
@@ -60,8 +59,8 @@ async function handleSubmit() {
       params.append('name', formData.name)
       params.append('fileType', formData.type)
       params.append('description', formData.description)
-      const {data} = await adminApi.api.postTemplateDocument({requestDTO: {}}, params as any) as any
-      ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('adminMenu.template'), name: null}))
+      const { data } = await adminApi.api.postTemplateDocument({ requestDTO: {} }, params as any) as any
+      routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('adminMenu.template'), name: null }))
       const templateInfo = data
       const link = createNewDocumentTemplateDetail({
         id: templateInfo.id,
@@ -85,7 +84,7 @@ async function handleOpen(setting?) {
     if (setting && setting.isEdit) {
       state.isEdit = true
       state.setting = setting
-      await FormRendererRef.value.vFormRenderRef.setFormData({...state.setting})
+      await FormRendererRef.value.vFormRenderRef.setFormData({ ...state.setting })
       state.loading = false
     } else {
       state.isEdit = false
@@ -98,10 +97,10 @@ async function createFile(fileType: 'Word' | 'Excel' | 'PPT' | 'PDF', name: stri
   const path = `/docTemplate/template${ExtensionMap[fileType]}`
   const file = await fetch(path)
   const fileArrayBuffer = await file.arrayBuffer()
-  return new File([fileArrayBuffer], `${name}${ExtensionMap[fileType]}`, {type: ExtensionMimeTypeMap[fileType]})
+  return new File([fileArrayBuffer], `${name}${ExtensionMap[fileType]}`, { type: ExtensionMimeTypeMap[fileType] })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 

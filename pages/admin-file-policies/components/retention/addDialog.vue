@@ -14,18 +14,18 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 import formJson from './addDialog.vform.json'
-import {ElMessage} from "element-plus";
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const emits = defineEmits([
   'update'
 ])
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {},
+  setting: {}
 })
 const router = useRouter()
 const form = reactive({
@@ -44,7 +44,10 @@ async function handleSubmit() {
   try {
     state.loading = true
     await adminApi.api.postPolicyRetentions(params)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('filePolicies_RetentionPolicy'), name: null}))
+    routerProvider?.message.success(t('tip_createdSuccessMsg', {
+      modelName: t('filePolicies_RetentionPolicy'),
+      name: null
+    }))
     state.visible = false
     emits('update')
   } catch (error) {
@@ -60,7 +63,7 @@ async function handleOpen(setting) {
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss">
 .retention-add-dialog {
