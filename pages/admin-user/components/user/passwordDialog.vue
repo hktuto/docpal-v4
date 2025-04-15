@@ -12,7 +12,6 @@
 <script lang="ts" setup>
 import {userProviderDetailKey} from '~/util/userProvider';
 import formJson from './passwordDialog.vform.json'
-import {ElMessage} from "element-plus";
 
 const routerProvider = inject(MenuRouterKey)
 

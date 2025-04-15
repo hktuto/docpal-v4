@@ -13,6 +13,7 @@
 import { ElMessage } from 'element-plus'
 import { userProviderKey } from '~/util/userProvider'
 import formJson from './addGroupsDialog.vform.json'
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const props = defineProps<{}>()
 const userProvider = inject(userProviderKey)
@@ -34,7 +35,7 @@ async function handleSubmit() {
   }
   try {
     await userProvider?.BatchUsersToGroupsApi(params)
-    ElMessage.success(t('dpMsg_success'))
+    routerProvider?.message.success(t('dpMsg_success'))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
