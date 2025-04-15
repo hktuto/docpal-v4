@@ -28,7 +28,7 @@ type State = {
   _groupList: any[]
 }
 const state = reactive<State>({
-  groupList: {},
+  groupList: [],
   _groupList: []
 })
 let filterParams: any = {}

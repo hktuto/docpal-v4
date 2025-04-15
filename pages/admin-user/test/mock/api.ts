@@ -8,7 +8,9 @@ export const adminApi = {
     postNuxeoUserBatchActive: vi.fn(),
     postNuxeoIdentityUsersBatchDelete: vi.fn(),
     postNuxeoIdentityUsersBatchAddGroups: vi.fn(),
-    postNuxeoIdentityGroups: vi.fn(),
+    postNuxeoIdentityGroups: vi.fn().mockResolvedValue({
+      data: [{ name: 'User Group' }] // 模拟已有用户组
+    }),
     postNuxeoIdentityGetlicenseusernumandactivecount: vi.fn(),
     getNuxeoUserUserid: vi.fn(),
     patchNuxeoIdentityUser: vi.fn(),
