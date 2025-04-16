@@ -11,8 +11,8 @@ if (!routerProvider) {
 }
 
 const props = defineProps<{
-  pageNum: number,
-  pageSize: number,
+  pageNum: number
+  pageSize: number
   filters?: any
 }>()
 const { pageNum, pageSize, filters } = toRefs(props)
@@ -33,48 +33,60 @@ function handleClearFilter() {
 }
 
 onMounted(() => {
-  ResponsiveFilterRef.value.init(
-    [{
-      key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
-      options: [
-        { label: 'tableHeader.fileOrFolderName', value: 'documentNames' },
-        { label: 'tableHeader_shareBy', value: 'shareByUserId' },
-        { label: 'tableHeader_shareTo', value: 'shareToUserIds' },
-        { label: 'workflow_createDate', value: 'createdDate' }
-      ]
-    },
+  setTimeout(() => {
+    // unit-test need
+    initFilter()
+  })
+})
+function initFilter() {
+  try {
+    const data = [
       {
-        key: 'isDesc', label: 'tableHeader.sortOrder', type: 'string', isMultiple: false,
+        key: 'orderBy',
+        label: 'tableHeader.sortBy',
+        type: 'string',
+        isMultiple: false,
+        options: [
+          { label: 'tableHeader.fileOrFolderName', value: 'documentNames' },
+          { label: 'tableHeader_shareBy', value: 'shareByUserId' },
+          { label: 'tableHeader_shareTo', value: 'shareToUserIds' },
+          { label: 'workflow_createDate', value: 'createdDate' }
+        ]
+      },
+      {
+        key: 'isDesc',
+        label: 'tableHeader.sortOrder',
+        type: 'string',
+        isMultiple: false,
         options: [
           { label: 'tableHeader.asc', value: false },
           { label: 'tableHeader.desc', value: true }
         ]
-      }])
-  if (filters.value) {
-    filterData.value = filters.value
-    nextTick(() => {
-      Object.keys(filters.value).forEach(key => {
-        ResponsiveFilterRef.value.setValue(key, filters.value[key])
+      }
+    ]
+    ResponsiveFilterRef.value.init(data)
+    if (filters.value) {
+      filterData.value = filters.value
+      nextTick(() => {
+        Object.keys(filters.value).forEach((key) => {
+          ResponsiveFilterRef.value.setValue(key, filters.value[key])
+        })
+        // tableRef.value?.reload()
       })
-      // tableRef.value?.reload()
-    })
-  }
-})
-
+    }
+  } catch {}
+}
 
 async function deleteAction(row: any) {
-  ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('share_internalShareLink'), name: null }),
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    }
-  ).then(async () => {
-    // param.push(...row.detailIds.split(','))
-    await adminApi.api.deleteInternalshare({ internalShareId: row.internalShareId })
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_internalShareLink'), name: null }))
-    tableRef.value?.reload()
+  const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('share_internalShareLink'), name: null }), {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete')
   })
+  if (action !== 'confirm') return
+  // param.push(...row.detailIds.split(','))
+  await adminApi.api.deleteInternalshare({ internalShareId: row.internalShareId })
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('share_internalShareLink'), name: null }))
+  tableRef.value?.reload()
   return
 }
 
@@ -82,7 +94,7 @@ provide(InternalShareProviderKey, {
   getListApi: (params: any) => {
     let filter: any = undefined
     if (filterData.value) {
-      Object.keys(filterData.value).forEach(key => {
+      Object.keys(filterData.value).forEach((key) => {
         if (filterData.value[key]) params[key] = filterData.value[key]
       })
       filter = { ...filterData.value }
@@ -100,23 +112,22 @@ provide(InternalShareProviderKey, {
   },
   deleteAction
 })
-
-
 </script>
-
 
 <template>
   <div class="pageContainer">
     <InternalShareListTable ref="tableRef">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-                          inputKey="documentName" @clear-filter="handleClearFilter"
-                          inputPlaceHolder="share_FilterByDocumentName" />
+        <ResponsiveFilter
+          ref="ResponsiveFilterRef"
+          @form-change="handleFilterFormChange"
+          inputKey="documentName"
+          @clear-filter="handleClearFilter"
+          inputPlaceHolder="share_FilterByDocumentName"
+        />
       </template>
     </InternalShareListTable>
-
   </div>
-
 </template>
 
 <style lang="scss" scoped>

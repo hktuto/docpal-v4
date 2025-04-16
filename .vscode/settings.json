@@ -5,24 +5,10 @@
   "i18n-ally.displayLanguage": "en-US",
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": true,
-  "i18n-ally.enabledParsers": [
-    "json"
-  ],
-  "cSpell.words": [
-    "Dagre",
-    "docpal",
-    "hitbox",
-    "iconify",
-    "Keycloak",
-    "lucide",
-    "nuxi",
-    "predev",
-    "splitpanes",
-    "typecheck",
-    "vueuse"
-  ],
+  "i18n-ally.enabledParsers": ["json"],
+  "cSpell.words": ["Dagre", "docpal", "hitbox", "iconify", "Keycloak", "lucide", "nuxi", "predev", "splitpanes", "typecheck", "vueuse"],
   // format
-  "editor.formatOnSave": true, // 保存文件自动format
+  "editor.formatOnSave": false, // 保存文件自动format
   "javascript.format.semicolons": "ignore", // js文件，强制必须有分号，设置`remove`则禁止分号
   "typescript.format.semicolons": "insert", // ts文件，同上
   // "editor.wordWrapColumn": 120,
