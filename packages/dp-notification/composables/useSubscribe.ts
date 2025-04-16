@@ -1,55 +1,54 @@
 // @ts-ignore
 
-import {clientApi } from 'api'
+import { clientApi } from 'api'
 
 export const useSubscribe = () => {
+  const subscribeList = useState('subscribeList', () => [])
 
-    const subscribeList = useState('subscribeList', () => []);
+  // @ts-ignore
+  async function getSubscribeList() {
+    const userId = useUserId()
+    const { data } = await clientApi.api.getNotificationSubscriberSubscriberFolders(userId.value)
+    subscribeList.value = data
+  }
 
-    // @ts-ignore
-    async function getSubscribeList() {
-        const userId = useUserId()
-        const { data } = await clientApi.api.getNotificationSubscriberSubscriberFolders(userId.value)
-        subscribeList.value = data
-    }
+  function isSubscribe(folderId: string) {
+    console.log(subscribeList)
 
-    function isSubscribe(folderId:string) {
-        return subscribeList.value.find(item => item === folderId);
-    }
+    return subscribeList.value.find((item) => item.id === folderId)
+  }
 
-    async function subscribe(folderId:string) {
-        const userId = useUserId()
-        await clientApi.api.postNotificationSubscriber({
-            idOrPath: folderId,
-            subscriber: userId.value
-        })
-        await getSubscribeList()
-    }
-
-    async function unSubscribe(folderId:string) {
-        const userId = useUserId()
-        await clientApi.api.deleteNotificationSubscriberSubscriberSubscriberIdorpathIdorpath(userId.value, folderId)
-        
-        await getSubscribeList()
-    }
-
-    async function toggleSubscribe(folderId:string) {
-
-        if (isSubscribe(folderId)) {
-            await unSubscribe(folderId)
-        } else {
-            await subscribe(folderId)
-        }
-    }
-
-
-    onMounted( async() => {
-        await getSubscribeList();
+  async function subscribe(folderId: string) {
+    const userId = useUserId()
+    await clientApi.api.postNotificationSubscriber({
+      idOrPath: folderId,
+      subscriber: userId.value
     })
+    await getSubscribeList()
+  }
 
-    return {
-        toggleSubscribe,
-        subscribeList,
-        isSubscribe
+  async function unSubscribe(folderId: string) {
+    const userId = useUserId()
+    await clientApi.api.deleteNotificationSubscriberSubscriberSubscriberIdorpathIdorpath(userId.value, folderId)
+
+    await getSubscribeList()
+  }
+
+  async function toggleSubscribe(folderId: string) {
+    if (isSubscribe(folderId)) {
+      await unSubscribe(folderId)
+    } else {
+      await subscribe(folderId)
     }
+  }
+
+  onMounted(async () => {
+    await getSubscribeList()
+  })
+
+  return {
+    toggleSubscribe,
+    subscribeList,
+    isSubscribe
+  }
 }
