@@ -90,8 +90,8 @@ onMounted(async () => {
     item.label = item.username
   })
   const _groupList: any = await adminApi.api.postNuxeoIdentityGroups().then(res => res.data)
-  groupList = _groupList.filter((item: any) => item.id !== 'administrators')
-
+  // groupList = _groupList.filter((item: any) => item.id !== 'administrators') // backend fixed
+  groupList = _groupList
   groupList?.forEach((item: any) => {
     item.value = item.id
     item.label = item.name
