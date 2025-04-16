@@ -207,6 +207,11 @@ async function handleSave() {
   const valid = await FormRef.value.validate()
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!valid || !data) return
+  const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+  if (checkName) {
+    ElMessage.error(t('common_nameExists'))
+    return
+  }
   const params = {
     ...data,
     allow: form.allow,
