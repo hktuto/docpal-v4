@@ -89,24 +89,24 @@ async function deleteAction(row: any) {
   tableRef.value?.reload()
   return
 }
-
-provide(InternalShareProviderKey, {
-  getListApi: (params: any) => {
-    let filter: any = undefined
-    if (filterData.value) {
-      Object.keys(filterData.value).forEach((key) => {
-        if (filterData.value[key]) params[key] = filterData.value[key]
-      })
-      filter = { ...filterData.value }
-    }
-    console.log('filte', params)
-    routerProvider?.updateProps({
-      pageNum: params.pageNum + 1,
-      pageSize: params.pageSize,
-      filters: filter
+async function getListApi(params: any) {
+  let filter: any = undefined
+  if (filterData.value) {
+    Object.keys(filterData.value).forEach((key) => {
+      if (filterData.value[key]) params[key] = filterData.value[key]
     })
-    return adminApi.api.postInternalsharePage(params)
-  },
+    filter = { ...filterData.value }
+  }
+  console.log('filte', params)
+  routerProvider?.updateProps({
+    pageNum: params.pageNum + 1,
+    pageSize: params.pageSize,
+    filters: filter
+  })
+  return adminApi.api.postInternalsharePage(params)
+}
+provide(InternalShareProviderKey, {
+  getListApi,
   actionPermission: (args: PermissionMethodParams) => {
     return { visible: true, disabled: false }
   },
