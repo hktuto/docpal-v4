@@ -13,8 +13,6 @@ export const useSubscribe = () => {
   }
 
   function isSubscribe(folderId: string) {
-    console.log(subscribeList)
-
     return subscribeList.value.find((item) => item.id === folderId)
   }
 
