@@ -1,19 +1,18 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
-import type { DashboardWidgetSetting } from "../../../../../packages/dp-dashboard/utils/dashboardWidgetHelper";
-import {
-  CmmnWidgetComponent
-} from "../../../../../packages/dp-cmmn-x6/utils/dashboardHelper";
-import { onActivated } from 'vue';
-import { clientApi } from 'api';
-import { MenuRouterKey } from '#imports';
+import type { DashboardWidgetSetting } from '../../../../../packages/dp-dashboard/utils/dashboardWidgetHelper'
+import { CmmnWidgetComponent } from '../../../../../packages/dp-cmmn-x6/utils/dashboardHelper'
+import { onActivated } from 'vue'
+import { clientApi } from 'api'
+import { MenuRouterKey } from '#imports'
+
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   instanceId: string;
   versionId: string;
-}>();
-const {instanceId, versionId} = toRefs(props)
+}>()
+const { instanceId, versionId } = toRefs(props)
 const caseTypeId = ref('')
 const caseDefinitionKey = ref('')
 const state = reactive<any>({
@@ -24,42 +23,47 @@ const state = reactive<any>({
   time: 3
 })
 const { t } = useI18n()
+
 async function getDashboardList() {
   try {
     state.dashboardList = await clientApi.api.getCaseDashboardVersionCmmnversionidPermission(versionId.value).then(res => res.data)
     const dashboardId = sessionStorage.getItem('case-dashboard-id')
-    let index = state.dashboardList.findIndex(item => item.id === dashboardId )
-    if(!index || index < 0) index = 0
-    getLayout(state.dashboardList[index].id, state.dashboardList[index])
+    let index = state.dashboardList.findIndex(item => item.id === dashboardId)
+    if (!index || index < 0) index = 0
+    await getLayout(state.dashboardList[index].id, state.dashboardList[index])
   } catch (error) {
+    console.log('error', error)
     ElMessage({
       message: `${t('caseManagement.dashboardNotSet')}`,
-      onClose: () => goBack(),
+      onClose: () => goBack()
     })
   }
 }
+
 function goBack() {
   // TODO: add fallback to case list
   routerProvider?.back()
 }
+
 async function getLayout(layoutId: string, row: any) {
   caseTypeId.value = row.caseTypeId
   caseDefinitionKey.value = row.caseDefinitionKey
-  console.log(caseTypeId, caseDefinitionKey, instanceId, versionId);
-  
+  console.log(caseTypeId, caseDefinitionKey, instanceId, versionId)
+
   try {
     state.loading = true
     state.selectedDashboard = row
-    if(row.layout) {
+    if (row.layout) {
       state.layout = row.layout
       return
     }
     sessionStorage.setItem('case-dashboard-id', layoutId)
     const detail = await clientApi.api.getCaseDashboardId(layoutId).then(res => res.data)
-    if(!detail.styleJson) throw new Error("");
-    state.layout = JSON.parse(detail.styleJson)
+    if (!detail?.styleJson) throw new Error('')
+    state.layout = JSON.parse(detail?.styleJson)
     row.layout = state.layout
   } catch (error) {
+    console.log('error', error)
     state.layout = []
     row.layout = []
   } finally {
@@ -68,6 +72,7 @@ async function getLayout(layoutId: string, row: any) {
     }, 200)
   }
 }
+
 provide(CaseManagementDashboardKey, {
   instanceId: instanceId,
   caseTypeId,
@@ -77,6 +82,7 @@ provide(CaseManagementDashboardKey, {
 onActivated(() => {
   getDashboardList()
 })
+
 </script>
 <template>
   <div class="pageContainer--padding case-dashboard">
@@ -118,11 +124,13 @@ onActivated(() => {
 .case-dashboard {
   display: grid;
   grid-template-rows: min-content 1fr;
+
   &-main {
     overflow: auto;
   }
 }
-.case-dashboard-main{
+
+.case-dashboard-main {
   :deep(.el-card) {
     height: 100%;
     overflow: auto;
