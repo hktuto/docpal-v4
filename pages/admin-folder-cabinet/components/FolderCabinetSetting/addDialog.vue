@@ -35,6 +35,11 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!data) return
+  const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+  if (checkName) {
+    ElMessage.error(t('common_nameExists'))
+    return
+  }
   const params = {
     ...data,
     binds: data.userGroups.map((value: string) => {
