@@ -15,7 +15,7 @@
              :class="['collection-item','cursorPointer', {'current': state.curCollection.id === item.id}]"
              @click="handleTabClick(item)">
           <span class="ellipsis" :title="item.name">{{ item.name }}</span>
-          <el-icon :id="`Collection__Delete${item.id}`" class="color__danger__hover cursorPointer"
+          <el-icon :id="`Collection__Delete_${item.name}`" class="color__danger__hover cursorPointer"
                    @click.stop="handleDelete(item)">
             <Delete />
           </el-icon>
