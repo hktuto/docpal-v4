@@ -74,7 +74,7 @@ describe('[admin-group]GroupList', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);
@@ -222,7 +222,7 @@ describe('[admin-group]GroupUserTable', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);
@@ -299,7 +299,7 @@ describe('[admin-group]GroupTable', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);
@@ -381,7 +381,7 @@ describe('[admin-group]GroupEditDialog', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);
@@ -474,7 +474,7 @@ describe('[admin-group]GroupDialog', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);
@@ -562,7 +562,7 @@ describe('[admin-group]GroupAddUserDialog', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     console.log(wrapper.html());

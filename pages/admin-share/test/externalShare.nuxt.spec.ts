@@ -63,7 +63,7 @@ describe('[admin-external-share]ExternalSharePage', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     console.log(wrapper.html());
@@ -125,7 +125,7 @@ describe('[admin-external-share]ExternalShareDialog', () => {
 
   afterEach(() => {
     wrapper.unmount();
-    vi.clearAllMocks(); // 清除所有模拟
+    vi.clearAllMocks(); 
   });
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true);

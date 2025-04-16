@@ -73,7 +73,7 @@ describe('[admin-internale-share]InternalShareList', () => {
 
   afterEach(() => {
     wrapper.unmount()
-    vi.clearAllMocks() // 清除所有模拟
+    vi.clearAllMocks() 
   })
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true)
@@ -107,6 +107,30 @@ describe('[admin-internale-share]InternalShareList', () => {
 
     expect(ElMessageBox.confirm).toHaveBeenCalled()
     expect(wrapper.vm.tableRef.reload).toHaveBeenCalled()
+  })
+  it('should include filter data in params', async () => {
+    wrapper.vm.filterData = { status: 'active', type: 'folder' }; 
+    const params = { pageNum: 0, pageSize: 10 }
+    wrapper.vm.getListApi(params)
+
+    expect(mockRouterProvider.updateProps).toHaveBeenCalledWith({
+      pageNum: 1,
+      pageSize: 10,
+      filters: { status: 'active', type: 'folder' },
+    })
+    expect(adminApi.api.postInternalsharePage).toHaveBeenCalledWith(params)
+  })
+  it('should handle empty filter data', async () => {
+    wrapper.vm.filterData = null; 
+    const params = { pageNum: 0, pageSize: 10 }
+    wrapper.vm.getListApi(params)
+
+    expect(mockRouterProvider.updateProps).toHaveBeenCalledWith({
+      pageNum: 1,
+      pageSize: 10,
+      filters: undefined,
+    })
+    expect(adminApi.api.postInternalsharePage).toHaveBeenCalledWith(params)
   })
 })
 
@@ -146,10 +170,15 @@ describe('[admin-internale-share]InternalShareListTable', () => {
 
   afterEach(() => {
     wrapper.unmount()
-    vi.clearAllMocks() // 清除所有模拟
+    vi.clearAllMocks() 
   })
   it('renders correctly', () => {
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.vm.tableRef).toBeDefined()
+  })
+  it('should handle JSON parsing error in formatter', async () => {
+    const column = wrapper.vm.tableConfig.columns[3]
+    const result = column.formatter({ cellValue: 'invalid json' })
+    expect(result).toBe('invalid json')
   })
 })
