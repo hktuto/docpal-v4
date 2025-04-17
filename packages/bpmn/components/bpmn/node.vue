@@ -235,7 +235,6 @@ onMounted(() => {
     transition: all .2s ease-in-out;
     display: grid;
     grid-template-rows: min-content 1fr;
-    overflow: hidden;
     gap: var(--app-space-xs);
     &.opened{
         transform: translateX(0);

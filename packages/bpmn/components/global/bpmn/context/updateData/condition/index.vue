@@ -6,7 +6,7 @@ const {disabled} = defineProps<{
 const emits = defineEmits(['remove'])
 
 const conditionTypeOption = [
-    'Update_Number',
+    'Update_Data',
     'Look_Up_User_Group',
     'Look_Up_User',
     // TODO : other type is not implemented yet
@@ -36,7 +36,7 @@ function updateCondition(newCondition:any) {
                     <ElOption v-for="item in conditionTypeOption" :key="item" :label="item"  :value="item" />
                 </ElSelect>
             </ElFormItem>
-            <template v-if="condition.attr_type === 'Update_Number'">
+            <template v-if="condition.attr_type === 'Update_Data'">
                 <BpmnContextUpdateDataConditionNumber v-model:condition="condition" :disabled="disabled" />
             </template>
             <template v-else-if="condition.attr_type === 'Look_Up_User_Group'">
