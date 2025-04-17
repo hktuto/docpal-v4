@@ -48,7 +48,7 @@ expect(wrapper.find('.el-select').exists()).toBe(true)
 ```
 
 #### 函数解构方法检测
-```
+```javascript
 const mockReload = vi.fn();
 const mockCleanSelectedRows = vi.fn();
 vi.mock('../../../packages/base/composables/useVxeTable', () => ({

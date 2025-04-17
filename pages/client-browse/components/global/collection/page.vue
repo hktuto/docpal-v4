@@ -15,7 +15,7 @@
              :class="['collection-item','cursorPointer', {'current': state.curCollection.id === item.id}]"
              @click="handleTabClick(item)">
           <span class="ellipsis" :title="item.name">{{ item.name }}</span>
-          <el-icon :id="`Collection__Delete${item.id}`" class="color__danger__hover cursorPointer"
+          <el-icon :id="`Collection__Delete_${item.name}`" class="color__danger__hover cursorPointer"
                    @click.stop="handleDelete(item)">
             <Delete />
           </el-icon>
@@ -46,7 +46,7 @@
 
     <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @success="handleAddCollection">
     </LazyCollectionAddCollectionDialog>
-    <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reload">
+    <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reloadCollection">
     </LazyCollectionEditCollectionDialog>
   </div>
 </template>
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
 import anime from 'animejs'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { createBrowseListPageParams, createDetailPageParams } from '~/utils/browseMenuHelper'
 import { ArrowDownBold, Delete } from '@element-plus/icons-vue'
 
@@ -65,6 +65,98 @@ const pageParams = {
   pageIndex: 0,
   pageSize: 20
 }
+type TableState = {
+  loading: boolean,
+  tableData: any[],
+  options: {
+    showPagination: boolean,
+    paginationConfig: {
+      total: number,
+      currentPage: number,
+      pageSize: number
+    },
+  },
+  collectionList: any,
+  curCollection: any,
+  selectedDocs: any[]
+}
+
+const state = reactive<TableState>({
+  loading: false,
+  tableData: [],
+  options: {
+    showPagination: true,
+    paginationConfig: {
+      total: 0,
+      currentPage: 1,
+      pageSize: pageParams.pageSize
+    }
+  },
+  collectionList: [],
+  curCollection: '',
+  selectedDocs: []
+})
+
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
+  id: 'clientCollectionsList',
+  api: async (pageParams: any) => {
+    let id = state.curCollection.id
+    const { data: { entryList } }: any = await clientApi.api.postNuxeoCollectionDocuments({ idOrPath: id })
+    state.tableData = entryList
+    return entryList
+  },
+  columns: [
+    {
+      field: 'name', title: 'tableHeader.fileOrFolderName',
+      type: 'html',
+      formatter: ({ cellValue, row }: any) => {
+        let icon = '/icons/doc/file.svg'
+        if (row.isFolder) {
+          icon = '/icons/doc/folder.svg'
+        }
+        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`
+      }
+    },
+    { field: 'path', title: 'document_path' },
+    {
+      field: 'modifiedDate',
+      title: 'table_modifiedDate',
+      formatter({ cellValue }: any) {
+        return formatDate(cellValue)
+      }
+    },
+    { field: 'type', title: 'table_type' }
+  ],
+  bodyActions: [
+    [{
+      code: 'deleted',
+      name: 'collection_remove',
+      action: ({ row }: any) => {
+        handleDocDelete(row)
+      }
+    }
+    ]
+  ],
+  virtualScroll: true,
+  dblClickAction: ({ row }) => {
+    let newItem
+    if (row.isFolder) {
+      newItem = createBrowseListPageParams({
+        idOrPath: row.id
+      })
+    } else {
+      newItem = createDetailPageParams({
+        idOrPath: row.id,
+        docName: row.name,
+        showHeaderAction: true
+      })
+    }
+    routerProvider?.navigateTo(newItem)
+  },
+  selectChangeHander: (selectedRows: any[]) => {
+    state.selectedDocs = [...selectedRows]
+  }
+})
 
 function reloadPage() {
   reload()
@@ -181,98 +273,16 @@ async function handleShare() {
   })
 }
 
-type TableState = {
-  loading: boolean,
-  tableData: any[],
-  options: {
-    showPagination: boolean,
-    paginationConfig: {
-      total: number,
-      currentPage: number,
-      pageSize: number
-    },
-  },
-  collectionList: any,
-  curCollection: any,
-  selectedDocs: any[]
+function reloadCollection() {
+  let data = editCollectionDialog.value.getData()
+  state.curCollection.name = data.name
+  state.collectionList.find(item => {
+    if (item.id === data.id) {
+      item.name = data.name
+    }
+  })
+  reload()
 }
-
-const state = reactive<TableState>({
-  loading: false,
-  tableData: [],
-  options: {
-    showPagination: true,
-    paginationConfig: {
-      total: 0,
-      currentPage: 1,
-      pageSize: pageParams.pageSize
-    }
-  },
-  collectionList: [],
-  curCollection: '',
-  selectedDocs: []
-})
-
-const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
-  id: 'clientCollectionsList',
-  api: async (pageParams: any) => {
-    let id = state.curCollection.id
-    const { data: { entryList } }: any = await clientApi.api.postNuxeoCollectionDocuments({ idOrPath: id })
-    state.tableData = entryList
-    return entryList
-  },
-  columns: [
-    {
-      field: 'name', title: 'tableHeader.fileOrFolderName',
-      type: 'html',
-      formatter: ({ cellValue, row }: any) => {
-        let icon = '/icons/doc/file.svg'
-        if (row.isFolder) {
-          icon = '/icons/doc/folder.svg'
-        }
-        return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`
-      }
-    },
-    { field: 'path', title: 'document_path' },
-    {
-      field: 'modifiedDate',
-      title: 'table_modifiedDate',
-      formatter({ cellValue }: any) {
-        return formatDate(cellValue)
-      }
-    },
-    { field: 'type', title: 'table_type' }
-  ],
-  bodyActions: [
-    [{
-      code: 'deleted',
-      name: 'collection_remove',
-      action: ({ row }: any) => {
-        handleDocDelete(row)
-      }
-    }
-    ]
-  ],
-  virtualScroll: true,
-  dblClickAction: ({ row }) => {
-    let newItem
-    if (row.isFolder) {
-      newItem = createBrowseListPageParams({
-        idOrPath: row.id
-      })
-    } else {
-      newItem = createDetailPageParams({
-        idOrPath: row.id,
-        docName: row.name,
-        showHeaderAction: true
-      })
-    }
-    routerProvider?.navigateTo(newItem)
-  },
-  selectChangeHander: (selectedRows: any[]) => {
-    state.selectedDocs = [...selectedRows]
-  }
-})
 
 onMounted(() => {
   getCollectionList()
