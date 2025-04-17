@@ -3,7 +3,6 @@
              class="scroll-dialog"
              append-to-body
              :close-on-click-modal="false"
-             @close="handleClose"
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson">
 
