@@ -10,12 +10,12 @@ if (!graphProvider) {
 }
 const infoType = ref('other')
 const functionOptionsMap = {
-  boolean: ['Set_Value', 'Toogle'],
+  boolean: ['Set_Value', 'Toggle'],
   long: ['Increase_By', 'Decrease_By', 'Set_Value'],
   other: ['Set_Value']
 }
 function functionChange(newFn) {
-  if (newFn === 'Set_Value') {
+  if (['Set_Value', 'Toggle'].includes(newFn)) {
     delete condition.value.attr_step
   } else {
     delete condition.value.attr_value
@@ -27,16 +27,25 @@ const allFields = computed(() => {
     return graphProvider.allFormField.value[key]
   })
 })
-function handleInfoChange(info: any) {
+function handleInfoChange(info: any, isChange: boolean) {
   const infoItem = allFields.value.find((item) => item.attr_id === info)
-  infoType.value = ['boolean','long'].includes(infoItem.attr_type) ? infoItem.attr_type : 'other'
-  condition.value.attr_function = 'Set_Value'
+  infoType.value = ['boolean', 'long'].includes(infoItem.attr_type) ? infoItem.attr_type : 'other'
+  if (isChange) condition.value.attr_function = 'Set_Value'
 }
+watch(
+  () => condition.value.attr_updateFieldName,
+  (newValue, oldValue) => {
+    if (!!newValue) handleInfoChange(newValue, !!oldValue)
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <template>
   <ElFormItem label="Form Info">
-    <ElSelect v-model="condition.attr_updateFieldName" placeholder="Form Info" :disabled="disabled" @change="handleInfoChange">
+    <ElSelect v-model="condition.attr_updateFieldName" placeholder="Form Info" :disabled="disabled">
       <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
     </ElSelect>
   </ElFormItem>
@@ -51,7 +60,7 @@ function handleInfoChange(info: any) {
   <ElFormItem v-else-if="infoType === 'long'" label="Value">
     <ElInputNumber v-model="condition.attr_value" step="1" :disabled="disabled" controls-position="right" style="width: 100%" />
   </ElFormItem>
-  <ElFormItem v-else-if="infoType === 'boolean'&& condition.attr_function === 'Set_Value'" label="Value">
+  <ElFormItem v-else-if="infoType === 'boolean' && condition.attr_function === 'Set_Value'" label="Value">
     <ElSwitch v-model="condition.attr_value" />
   </ElFormItem>
   <ElFormItem v-else-if="infoType !== 'boolean'" label="Value">
