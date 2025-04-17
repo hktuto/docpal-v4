@@ -70,7 +70,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-
+const { t } = useI18n()
 const inputRule = {required: true, message: $i18n.t('tip.input'), trigger: 'blur'}
 const selectRule = {required: true, message: $i18n.t('el.select.placeholder'), trigger: 'change'}
 import {clientApi} from 'api'
@@ -217,7 +217,7 @@ function initOptions() {
   })))
 }
 
-function handleRecordChange(value) {
+function handleRecordChange(value: any) {
   form.value.filed_condition = []
   if (value === 'some') handleAdd()
 }
@@ -301,7 +301,7 @@ function getConditionList(fieldId: string) {
 
 async function getGroup() {
   const {data: groupList} = await clientApi.api.postNuxeoIdentityGroups()
-  state.groupList = groupList.sort((a, b) => a.name.localeCompare(b.name)).map(item => ({
+  state.groupList = groupList?.sort((a: any, b: any) => a.name.localeCompare(b.name)).map(item => ({
     label: item.name,
     value: item.id
   }))

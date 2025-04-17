@@ -13,7 +13,7 @@ if(!graphProvider || !editorProvider) {
 
 
 const defaultCondition = {
-    attr_type: "Update_Number",
+    attr_type: "Update_Data",
     attr_function: "Increase_By",
     attr_source: "form",
     attr_updateFieldName: "",
@@ -58,9 +58,9 @@ function setUpListener(){
 function checkConditions(conditions:any[]) {
     return conditions.map( con => {
         switch(con.attr_type) {
-            case 'Update_Number' :
+            case 'Update_Data' :
                 const temData = {
-                    attr_type: "Update_Number",
+                    attr_type: "Update_Data",
                     attr_function: con.attr_function || "Increase_By",
                     attr_source: "form",
                     attr_updateFieldName: con.attr_updateFieldName || "",
