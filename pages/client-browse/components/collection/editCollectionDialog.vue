@@ -19,7 +19,8 @@ const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const state = reactive({
   loading: false,
-  visible: false
+  visible: false,
+  data: {}
 })
 
 /**
@@ -48,7 +49,7 @@ async function handleSubmit() {
     description: null
   }
   try {
-    await clientApi.api.patchNuxeoCollection(params)
+    state.data = await clientApi.api.patchNuxeoCollection(params).then(res => res.data)
     ElMessage.success(t('tip_updateSuccessMsg', {
       modelName: t('collection_collection'),
       name: data.name
@@ -63,5 +64,9 @@ async function handleSubmit() {
   state.loading = false
 }
 
-defineExpose({ handleOpen })
+function getData() {
+  return state.data
+}
+
+defineExpose({ handleOpen, getData })
 </script>
