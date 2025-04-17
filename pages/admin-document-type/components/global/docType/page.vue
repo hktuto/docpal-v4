@@ -2,12 +2,7 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="name"
-          inputPlaceHolder="documentType_filter"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" />
         <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
           {{ $t('docType.new') }}
         </el-button>
@@ -42,10 +37,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   },
   columns: [
     { field: 'name', title: 'search.type', fixed: 'left' },
-    {
-      field: 'category',
-      title: 'docType.category'
-    },
+    { field: 'category', title: 'docType.category' },
     { field: 'dataType', title: 'documentType_Type' },
     {
       field: 'status',
@@ -56,7 +48,8 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     },
     { field: 'createdBy', title: 'role.creator' },
     {
-      field: 'modifiedDate', title: 'table_last_update',
+      field: 'modifiedDate',
+      title: 'table_last_update',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
@@ -138,10 +131,12 @@ function handleDuplicate(row: any) {
 }
 
 async function handleActive(row: any, isActive: boolean) {
-  const result = await adminApi.api.patchDocpaltypeSettingsActive({
-    name: row.name,
-    enable: isActive
-  }).then(res => res.data)
+  const result = await adminApi.api
+    .patchDocpaltypeSettingsActive({
+      name: row.name,
+      enable: isActive
+    })
+    .then((res) => res.data)
   if (!!result) {
     row.enable = isActive
   }
@@ -167,31 +162,35 @@ async function getFilter() {
   const filters = await adminApi.api.getDocpaltypeSettingsPageConditions().then((res) => {
     return res.data
   })
-  ResponsiveFilterRef.value.init([...filters, {
-    key: 'orderBy',
-    label: 'tableHeader.sortBy',
-    type: 'select',
-    isMultiple: false,
-    value: ['name'],
-    options: [
-      { label: 'docType.category', value: 'category' },
-      { label: 'role.creator', value: 'createdBy' },
-      { label: 'search.type', value: 'name' },
-      { label: 'documentType_Status', value: 'enable' },
-      { label: 'documentType_Type', value: 'dataType' },
-      { label: 'table_last_update', value: 'modifiedDate' }
-    ]
-  }, {
-    key: 'isDesc',
-    label: 'tableHeader.sortOrder',
-    type: 'select',
-    isMultiple: false,
-    value: [false],
-    options: [
-      { label: 'tableHeader.asc', value: false },
-      { label: 'tableHeader.desc', value: true }
-    ]
-  }])
+  ResponsiveFilterRef.value.init([
+    ...filters,
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'select',
+      isMultiple: false,
+      value: ['name'],
+      options: [
+        { label: 'docType.category', value: 'category' },
+        { label: 'role.creator', value: 'createdBy' },
+        { label: 'search.type', value: 'name' },
+        { label: 'documentType_Status', value: 'enable' },
+        { label: 'documentType_Type', value: 'dataType' },
+        { label: 'table_last_update', value: 'modifiedDate' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'select',
+      isMultiple: false,
+      value: [false],
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ])
   nextTick(() => {
     extraParams.orderBy = 'name'
     extraParams.isDesc = false

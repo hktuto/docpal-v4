@@ -137,6 +137,7 @@ function handleFilterFormChange(formModel: any) {
       t(item.metadata).toLowerCase().includes(formModel.metaData.toLowerCase())
     )
   })
+  console.log(data, formModel)
   tableRef.value?.loadData(data)
 }
 

@@ -4,7 +4,6 @@
              append-to-body
              :close-on-click-modal="false"
              destroy-on-close
-             @close="handleClose"
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"></FormRenderer>
     <template #footer>
