@@ -8,6 +8,8 @@ import {
   DocTypeDisplayMetaTable,
   DocTypeDialogNew,
   DocTypeDialogDuplicate,
+  DocTypeDialogAddDisplayMeta,
+  DocTypeDialogAddRelatedType,
   ResponsiveFilter
 } from '#components'
 import { adminApi } from './mock/api'
@@ -451,4 +453,169 @@ describe('[admin-document-type]DocTypeDialogDuplicate', () => {
 
     expect(wrapper.vm.state.visible).toBe(true)
   })
+})
+describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+
+  beforeEach(async () => {
+    wrapper = mount(DocTypeDialogAddDisplayMeta, {
+      props: {
+        docTypeDetail: { name: 'Test Document Type' },
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      },
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef;
+    // dialogRef.handleOpen = vi.fn();
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('renders correctly', async () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('should submit form data and show success message', async () => {
+    const mockData = {
+      metadata: {},
+      isRequire: true,
+      display: 'Test Display',
+      dataType: 'input',
+      options: '{}'
+    };
+    wrapper.vm.LanguageUnitFormRef = { handleSubmit: vi.fn(() => Promise.resolve())  }
+    // Mock the FormRenderer's getFormData method
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn(() => Promise.resolve(mockData)),
+        resetForm: vi.fn(),
+      },
+    };
+    wrapper.vm.state.setting = {
+      id: 'settingID'
+    }
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.postDocpaltypeSettingsAddMetadata).toHaveBeenCalledWith(expect.objectContaining({
+      metaData: mockData.metadata,
+      isRequire: mockData.isRequire,
+      display: mockData.display,
+      dataType: mockData.dataType,
+      options: mockData.options,
+      docType: 'Test Document Type'
+    }));
+    expect(wrapper.vm.state.visible).toBe(false);
+  });
+  it('should open dialog and set form data for editing', async () => {
+    const data = {
+      id: '123',
+      metadata: {},
+      isRequire: true,
+      display: 'Test Display',
+      dataType: 'input',
+      options: '{}'
+    };
+    await wrapper.vm.handleOpen([], data)
+
+    expect(wrapper.vm.state.visible).toBe(true);
+    expect(wrapper.vm.state.isEdit).toBe(false);
+  });
+})
+describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+
+  beforeEach(async () => {
+    wrapper = mount(DocTypeDialogAddRelatedType, {
+      props: {
+        docType: { name: 'Test Document Type' },
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      },
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef;
+    // dialogRef.handleOpen = vi.fn();
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('renders correctly', async () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('should submit form data and show success message for edit', async () => {
+    const mockData = {
+      metadata: {},
+      documentType: 'Related Document Type',
+    };
+
+    // Mock the FormRenderer's getFormData method
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn(() => Promise.resolve(mockData)),
+        resetForm: vi.fn(),
+      },
+    };
+
+    wrapper.vm.state.isEdit = true;
+    wrapper.vm.state.setting = { id: '123' };
+
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.patchDocpaltypeSettingsNameNameRelated).toHaveBeenCalledWith('Test Document Type', {
+      metaData: mockData.metadata,
+      rootDocPalType: mockData.documentType,
+      id: '123'
+    });
+    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg'));
+    expect(wrapper.vm.state.visible).toBe(false);
+  });
+  it('should submit form data and show success message for new entry', async () => {
+    const mockData = {
+      metadata: {},
+      documentType: 'Related Document Type',
+    };
+
+    // Mock the FormRenderer's getFormData method
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn(() => Promise.resolve(mockData)),
+        resetForm: vi.fn(),
+      },
+    };
+
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.postDocpaltypeSettingsNameNameRelated).toHaveBeenCalledWith('Test Document Type', {
+      metaData: mockData.metadata,
+      rootDocPalType: mockData.documentType,
+    });
+    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_createdSuccessMsg'));
+    expect(wrapper.vm.state.visible).toBe(false);
+  });
 })

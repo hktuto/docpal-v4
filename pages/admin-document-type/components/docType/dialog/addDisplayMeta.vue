@@ -25,7 +25,7 @@
 </template>
 <script lang="ts" setup>
 import formJson from './addDisplayMeta.vform.json'
-import { adminApi } from '../../../../../libraries/api/src'
+import { adminApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   docTypeDetail: any,
@@ -75,7 +75,7 @@ async function handleSubmit(addMore: boolean = false) {
     await saveI18n()
   }
 
-  function getFormOptions(formOptions) {
+  function getFormOptions(formOptions: any) {
     const result: any = {}
     switch (formOptions.dataType) {
       case 'input':
@@ -150,7 +150,7 @@ async function handleOptions(exitList: any[]) {
         item.dataType = item.value
         item.length = item.value === 'text' ? 4000 : 200
         item.value = item.name
-        item.label = $i18n.t(item.name)
+        item.label = t(item.name)
         if (index === -1) item.disabled = false
         else item.disabled = true
         prev.push(item)
