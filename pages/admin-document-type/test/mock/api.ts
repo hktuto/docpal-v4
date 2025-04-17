@@ -11,6 +11,8 @@ export const adminApi = {
     postDocpaltypeSettings: vi.fn(() => Promise.resolve({})),
     postDocpaltypeSettingsCopyName: vi.fn(() => Promise.resolve({})),
     getDocpaltypeSettingsMetadataDocumenttype: vi.fn(() => Promise.resolve({})),
+    patchDocpaltypeSettingsNameNameRelated: vi.fn(() => Promise.resolve({})),
+    postDocpaltypeSettingsNameNameRelated: vi.fn(() => Promise.resolve({})),
   }
 }
 

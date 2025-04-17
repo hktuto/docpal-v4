@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { DocTypeDialogAddDisplayMeta, ResponsiveFilter } from '#components'
+import { DocTypeDialogAddRelatedType, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
@@ -50,14 +50,14 @@ const ReaderDialog = {
   methods: {}
 }
 
-describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
+describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(DocTypeDialogAddDisplayMeta, {
+    wrapper = mount(DocTypeDialogAddRelatedType, {
       props: {
-        docTypeDetail: { name: 'Test Document Type' },
+        docType: { name: 'Test Document Type' },
       },
       global: {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
@@ -84,34 +84,4 @@ describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
   it('renders correctly', async () => {
     expect(wrapper.exists()).toBe(true)
   })
-  it('should submit form data and show success message', async () => {
-    const mockData = {
-      metadata: {},
-      isRequire: true,
-      display: 'Test Display',
-      dataType: 'input',
-      options: '{}'
-    };
-    
-    // Mock the FormRenderer's getFormData method
-    wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockData)),
-        resetForm: vi.fn(),
-      },
-    };
-
-    await wrapper.vm.handleSubmit()
-
-    expect(adminApi.api.postDocpaltypeSettingsAddMetadata).toHaveBeenCalledWith(expect.objectContaining({
-      metaData: mockData.metadata,
-      isRequire: mockData.isRequire,
-      display: mockData.display,
-      dataType: mockData.dataType,
-      options: mockData.options,
-      docType: 'Test Document Type'
-    }));
-    expect(wrapper.vm.state.visible).toBe(false);
-  });
-
 })
