@@ -53,7 +53,7 @@
           </el-button>
         </div>
         <template #reference>
-          <el-button v-if="isStartedUser" @click="state.deletePopoverShow = true">
+          <el-button v-if="isStartedUser" id="Workflow__AvailableTask__Detail__JobInfo__Delete" @click="state.deletePopoverShow = true">
             {{ $t('common_delete') }}
           </el-button>
         </template>
