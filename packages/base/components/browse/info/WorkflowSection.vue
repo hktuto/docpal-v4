@@ -5,15 +5,15 @@
     </div>
     <div class="infoContetn">
       <div class="block">
-        <el-button v-if="canAdhoc" type="primary" size="small" @click="dialogShow = true">
+        <el-button v-if="canAdhoc" type="primary" size="small" :loading="checkLoading || loading" @click="dialogShow = true">
           {{ $t('workflow_startAdhocWorkflow') }}
         </el-button>
 
         <template v-if="canApproval">
-          <el-button type="primary" size="mini" :loading="loading" @click="handelAudit(true)">
+          <el-button type="primary" size="mini" :loading="checkLoading || loading" @click="handelAudit(true)">
             {{ $t('workflow_startAdhocWorkflow_approve') }}
           </el-button>
-          <el-button type="danger" size="mini" :loading="loading" @click="handelAudit(false)">
+          <el-button type="danger" size="mini" :loading="checkLoading || loading" @click="handelAudit(false)">
             {{ $t('workflow_startAdhocWorkflow_reject') }}
           </el-button>
         </template>
@@ -48,14 +48,16 @@ import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps<{ doc: any }>()
+const emit = defineEmits(['update'])
+
 const { doc } = toRefs(props)
 const userId = useUserId()
 const { t } = useI18n()
 const loading = ref(false)
+const checkLoading = ref(false)
 const adHocHistory = ref<any>()
 const adHocHistoryList = ref<any>([])
 const { formatDate } = useTime()
-
 const canAdhoc = computed(() => {
   if (!adHocHistory.value) return true
   return adHocHistory.value.approvedBy
@@ -86,12 +88,13 @@ const form = ref({
 })
 
 async function checkAdhocStatus() {
-  console.log('checkAdhocStatus')
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  checkLoading.value = true
+  await new Promise(resolve => setTimeout(resolve, 2000)) // Delay of 1000ms occasionally fails
   const { entryList: list } = await clientApi.api.postWorkflowQueryadhocapprovalpage({ documentId: props.doc.id }).then(res => res.data) as any
 
   adHocHistoryList.value = list.length > 0 ? list : []
   adHocHistory.value = list.length > 0 ? list[0] : null
+  checkLoading.value = false
 }
 
 const FormRef = ref()

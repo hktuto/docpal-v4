@@ -58,6 +58,9 @@ async function handleDownload() {
       <el-tab-pane :label="$t('workflow_ActiveTask')" name="activeTask">
         <WorkflowActiveTask v-if="state.activeTab === 'activeTask'" ref="WorkflowRef"/>
       </el-tab-pane>
+      <el-tab-pane :label="$t('workflow_adhocTask')" name="adhocTask">
+        <WorkflowAdhocTask v-if="state.activeTab === 'adhocTask'" ref="WorkflowRef"/>
+      </el-tab-pane>
       <!-- <el-tab-pane
         v-if="checkLicenseFeatures('WORKFLOW_ADHOC')"
         :label="$t('workflow_adhocTask')"
