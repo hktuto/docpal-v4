@@ -377,6 +377,8 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
     expect(adminApi.api.postDocpaltypeSettings).toHaveBeenCalledWith(mockData)
     expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_createdSuccessMsg'))
     expect(wrapper.vm.state.visible).toBe(false)
+    
+    expect(wrapper.emitted('refresh')).toBeTruthy();
   })
   it('should open dialog and reset form', async () => {
     wrapper.vm.FormRendererRef = {
@@ -441,6 +443,8 @@ describe('[admin-document-type]DocTypeDialogDuplicate', () => {
     expect(adminApi.api.postDocpaltypeSettingsCopyName).toHaveBeenCalled()
     expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('documentType_duplicateSuccessMsg'))
     expect(wrapper.vm.state.visible).toBe(false)
+    
+    expect(wrapper.emitted('refresh')).toBeTruthy();
   })
   it('should open dialog and reset form', async () => {
     wrapper.vm.FormRendererRef = {
@@ -518,6 +522,7 @@ describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
       docType: 'Test Document Type'
     }));
     expect(wrapper.vm.state.visible).toBe(false);
+    expect(wrapper.emitted('refresh')).toBeTruthy();
   });
   it('should open dialog and set form data for editing', async () => {
     const data = {
@@ -594,6 +599,8 @@ describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
     });
     expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg'));
     expect(wrapper.vm.state.visible).toBe(false);
+    
+    expect(wrapper.emitted('refresh')).toBeTruthy();
   });
   it('should submit form data and show success message for new entry', async () => {
     const mockData = {

@@ -13,6 +13,10 @@ export const adminApi = {
     getDocpaltypeSettingsMetadataDocumenttype: vi.fn(() => Promise.resolve({})),
     patchDocpaltypeSettingsNameNameRelated: vi.fn(() => Promise.resolve({})),
     postDocpaltypeSettingsNameNameRelated: vi.fn(() => Promise.resolve({})),
+    getNuxeoSfolderPageConditions : vi.fn(() => Promise.resolve([])),
+    deleteNuxeoSfolderId: vi.fn(() => Promise.resolve({ data: true })),
+    getNuxeoSfolderId: vi.fn(() => Promise.resolve({})),
+    patchNuxeoSfolder: vi.fn(() => Promise.resolve({})),
   }
 }
 

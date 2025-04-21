@@ -31,13 +31,24 @@ vi.mock('vue-i18n', () => ({
     setLocale: vi.fn()
   })
 }));
-// vi.mock('../../../packages/base/composables/useVxeTable', () => ({
-//   useVxeTable: () => ({
-//     reload: vi.fn(),
-//     tableConfig: {},
-//     tableEvent: vi.fn(), tableRef: {}, cleanSelectedRows: vi.fn()
-//   })
-// }));
-// vi.stubGlobal('useLayout', useLayout)
-// vi.stubGlobal('deepCopy', deepCopy)
+
+export const mockReload = vi.fn()
+export const mockQuery = vi.fn()
+export const mockCleanSelectedRows = vi.fn()
+export const mockTable = {
+  value: {
+    loadData: vi.fn(),
+    initBar: vi.fn()
+  }
+}
+vi.mock('../../../packages/base/composables/useVxeTable', () => ({
+  useVxeTable: vi.fn(() => ({
+    tableConfig: {},
+    tableEvent: {},
+    tableRef: mockTable,
+    reload: mockReload,
+    cleanSelectedRows: mockCleanSelectedRows,
+    query: mockQuery
+  }))
+}))
 
