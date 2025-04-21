@@ -46,7 +46,7 @@
         "onFocus": "",
         "onBlur": "",
         "onEnter": "",
-        "onValidate": "",
+        "onValidate": "  /* sample code */\n\n  if (!/^[^\\d].*/.test(value)) {\n    callback(new Error($t('caseManagement_createdCaseNameTip')))  //fail\n  } else {\n    callback();  //pass\n  }",
         "onAppendButtonClick": ""
       },
       "id": "input25646"
@@ -219,6 +219,7 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",

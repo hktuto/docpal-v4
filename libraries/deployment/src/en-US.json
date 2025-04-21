@@ -377,6 +377,7 @@
   "caseManagement_caseTemplate": "Case Template",
   "caseManagement_create": "Create New Case Template",
   "caseManagement_createdCaseDigitsCheck": "Case ID – No. of Digits should be between 1 to 15",
+  "caseManagement_createdCaseNameTip": "Cannot start with a number",
   "caseManagement_detailBasicInfo": "Basic Info",
   "caseManagement_detailCaseDashboardView": "Case Dashboard View",
   "caseManagement_detailCaseInformation": "Information",
