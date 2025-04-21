@@ -3,8 +3,9 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { DocTypeDialogAddRelatedType, ResponsiveFilter } from '#components'
+import { SmartFolderInfoDialog, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
+import { mockQuery,mockTable } from './setup'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -18,22 +19,7 @@ vi.mock('element-plus', () => ({
     warning: vi.fn()
   }
 }))
-const mockReload = vi.fn()
-const mockCleanSelectedRows = vi.fn()
-const mockTable = {
-  value: {
-    loadData: vi.fn()
-  }
-}
-vi.mock('../../../packages/base/composables/useVxeTable', () => ({
-  useVxeTable: vi.fn(() => ({
-    tableConfig: {},
-    tableEvent: {},
-    tableRef: mockTable,
-    reload: mockReload,
-    cleanSelectedRows: mockCleanSelectedRows
-  }))
-}))
+
 const FormRenderer = {
   template: '<div class="FormRenderer">FormRenderer</div>',
   methods: {
@@ -42,25 +28,28 @@ const FormRenderer = {
   }
 }
 const VFormRender = {
-  template: '<div class="FormRenderer">FormRenderer</div>',
+  template: '<div class="VFormRender">VFormRender</div>',
   methods: {}
 }
 const ReaderDialog = {
-  template: '<div class="FormRenderer">FormRenderer</div>',
+  template: '<div class="ReaderDialog">ReaderDialog</div>',
   methods: {}
 }
+const SearchGroupTable = {
+  template: '<div class="SearchGroupTable" ref="tableRef">SearchGroupTable</div>',
+  methods: {
+    initBar: vi.fn()
+  }
+}
 
-describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
+describe('[admin-smart-folder]SmartFolderInfoDialog', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(DocTypeDialogAddRelatedType, {
-      props: {
-        docType: { name: 'Test Document Type' },
-      },
+    wrapper = mount(SmartFolderInfoDialog, {
       global: {
-        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, SearchGroupTable },
         provide: {
           [TabManagerKey]: mockTabProvider,
           [MenuRouterKey]: mockRouterProvider
@@ -71,10 +60,11 @@ describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
         }
       },
     })
-    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef;
+    await wrapper.vm.$nextTick()
+    // const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
     // dialogRef.handleOpen = vi.fn();
     // const tableRef = wrapper.vm.$refs.tableRef;
-    // tableRef.loadData = vi.fn();
+    // tableRef.initBar = vi.fn();
   })
 
   afterEach(() => {

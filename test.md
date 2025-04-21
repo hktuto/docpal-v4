@@ -11,7 +11,7 @@ await wrapper.vm.onActivated()
 wrapper.vm.formRef = {
   validate: vi.fn().mockReturnValue(true)
 }
-    
+
 ```
 
 ### 检查 watch
@@ -29,7 +29,6 @@ it('watches for detail changes', async () => {
 
 ### 判断组件是否存在
 
-
 ```javascript
 // 通过组件定义名（×）
 expect(wrapper.findComponent({ name: 'ResponsiveFilter' }).exists()).toBe(true)
@@ -39,7 +38,9 @@ expect(wrapper.findComponent(ResponsiveFilter).exists()).toBe(true)
 
 wrapper.find('.el-select').exists()
 ```
+
 #### // 查找类名
+
 ```javascript
 // el-select 为元素名（×）
 expect(wrapper.find('el-select').exists()).toBe(true)
@@ -48,24 +49,34 @@ expect(wrapper.find('.el-select').exists()).toBe(true)
 ```
 
 #### 函数解构方法检测
+
 ```javascript
-const mockReload = vi.fn();
-const mockCleanSelectedRows = vi.fn();
+const mockReload = vi.fn()
+const mockCleanSelectedRows = vi.fn()
 vi.mock('../../../packages/base/composables/useVxeTable', () => ({
   useVxeTable: vi.fn(() => ({
     tableConfig: {},
     tableEvent: {},
     tableRef: { value: null },
     reload: mockReload,
-    cleanSelectedRows: mockCleanSelectedRows,
+    cleanSelectedRows: mockCleanSelectedRows
   }))
-}));
+}))
 // beforeEach
-mockReload.mockClear();
-mockCleanSelectedRows.mockClear();
+mockReload.mockClear()
+mockCleanSelectedRows.mockClear()
 
 // test
-expect(mockReload).toHaveBeenCalled(); // 验证 reload 被调用
+expect(mockReload).toHaveBeenCalled() // 验证 reload 被调用
 ```
 
+#### emitted检测
 
+``` javascript
+expect(wrapper.emitted('submit')).toBeTruthy();
+expect(wrapper.emitted().submit[0][0]).toMatchObject({
+  password: 'password',
+  tokenLiveInMinutes: expect.any(Number),
+  shareId: expect.any(String),
+});
+```

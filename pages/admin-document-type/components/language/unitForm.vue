@@ -8,7 +8,7 @@
 <script lang="ts" setup>
 import { getMetaI18n, localeKeys, saveMetaI18n } from '~/utils/languageHelper'
 const props = defineProps<{
-    lKey: string,
+    lKey?: string,
 }>()
 const state: any = reactive({
     form: {

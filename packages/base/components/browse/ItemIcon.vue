@@ -8,7 +8,7 @@
 type IconType = 'folder' | 'file'
 type IconStatus = 'normal' | 'selected' | 'general'
 const props = withDefaults(defineProps<{
-  type: IconType;
+  type?: IconType;
   status?: IconStatus;
   mimeType?: string;
   documentBasicType?: string;
