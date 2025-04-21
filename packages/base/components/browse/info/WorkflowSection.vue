@@ -120,6 +120,7 @@ function handleStart() {
         // TODO : add api
         await checkAdhocStatus()
       } catch (error) {
+        await checkAdhocStatus()
       }
       loading.value = false
     }
