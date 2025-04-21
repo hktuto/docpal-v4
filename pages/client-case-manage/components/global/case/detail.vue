@@ -30,17 +30,18 @@ const {
 } = useVxeTable({
   id: 'clientCaseTableList',
   api: async (pageParams: any) => {
-    pageParams.isDesc = true
-    pageParams.orderBy = 'created_date'
-
-    if (Object.entries(state.where).length !== 0) {
-      if (state.where.q) {
-        extraParams.q = state.where.q
+    try {
+      if (Object.entries(state.where).length !== 0) {
+        if (state.where.q) {
+          extraParams.q = state.where.q
+        }
+        delete state.where.q
+        extraParams.where = state.where
       }
-      delete state.where.q
-      extraParams.where = state.where
+      return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...extraParams })
+    } catch (e) {
+      console.log(e)
     }
-    return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...extraParams })
   },
   defaultSort: {},
   optionalConfig: {
@@ -64,13 +65,42 @@ const responsiveFilter = ref()
 async function initCondition() {
   try {
     const { data } = await clientApi.api.getCaseTypesCasetypeidRecordsPageConditions(id)
-    responsiveFilter.value.init(data)
+    const order = [
+      {
+        key: 'orderBy',
+        label: 'tableHeader.sortBy',
+        type: 'string',
+        isMultiple: false,
+        options: [
+          { label: 'caseManagement.name', value: 'case_id' },
+          { label: 'table_modifiedDate', value: 'modified_date' },
+          { label: 'workflow_createDate', value: 'created_date' }
+        ]
+      },
+      {
+        key: 'isDesc',
+        label: 'tableHeader.sortOrder',
+        type: 'string',
+        isMultiple: false,
+        options: [
+          { label: 'tableHeader.asc', value: false },
+          { label: 'tableHeader.desc', value: true }
+        ]
+      }
+    ]
+    responsiveFilter.value.init([...data, ...order])
   } catch (error) {
     console.log(error)
   }
 }
 
 function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
+  if (formModel.orderBy) {
+    extraParams.orderBy = formModel.orderBy
+    extraParams.isDesc = formModel.isDesc
+  }
   state.where = formModel
   reload()
 }
