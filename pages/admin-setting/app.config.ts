@@ -7,7 +7,7 @@ export default defineAppConfig({
     "admin-setting":{
       id:"admin-setting",
       name: 'admin-setting',
-      label: "Setting",
+      label: "admin.setting.title",
       icon: "lucide:settings",
       hoverIcon: "lucide:settings",
       component: "LazySettingPage",
