@@ -1,0 +1,333 @@
+{
+  "widgetList": [
+    {
+      "key": 59071,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "isShow",
+        "label": "switch",
+        "labelAlign": "",
+        "defaultValue": true,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": true,
+        "disabled": false,
+        "hidden": true,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch78523"
+    },
+    {
+      "key": 28565,
+      "type": "select",
+      "icon": "select-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "dateFormat",
+        "label": "Date format",
+        "labelAlign": "",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "filterable": true,
+        "allowCreate": true,
+        "popperClass": "",
+        "remote": false,
+        "automaticDropdown": false,
+        "multiple": false,
+        "multipleLimit": 0,
+        "optionItems": [
+          {
+            "value": "YY",
+            "label": "YY"
+          },
+          {
+            "value": "YYYY",
+            "label": "YYYY"
+          },
+          {
+            "value": "MM",
+            "label": "MM"
+          },
+          {
+            "value": "dd",
+            "label": "dd"
+          },
+          {
+            "value": "DD",
+            "label": "DD"
+          },
+          {
+            "value": "hh",
+            "label": "hh"
+          },
+          {
+            "value": "HH",
+            "label": "HH"
+          },
+          {
+            "value": "mm",
+            "label": "mm"
+          },
+          {
+            "value": "ss",
+            "label": "ss"
+          },
+          {
+            "value": "HH:mm:ss",
+            "label": "HH:mm:ss"
+          },
+          {
+            "value": "HH:mm",
+            "label": "HH:mm"
+          },
+          {
+            "value": "D/M/YY",
+            "label": "D/M/YY"
+          },
+          {
+            "value": "DD/MM/YY",
+            "label": "DD/MM/YY"
+          },
+          {
+            "value": "DD-MM-YYYY",
+            "label": "DD-MM-YYYY"
+          },
+          {
+            "value": "DD/MM/YY HH:mm:ss",
+            "label": "DD/MM/YY HH:mm:ss"
+          },
+          {
+            "value": "DD/MM/YYYY HH:mm:ss",
+            "label": "DD/MM/YYYY HH:mm:ss"
+          },
+          {
+            "value": "DD/MM/YYYY HH:mm",
+            "label": "DD/MM/YYYY HH:mm"
+          },
+          {
+            "value": "YYYY-MM-DD",
+            "label": "YYYY-MM-DD"
+          },
+          {
+            "value": "YYYY-MM-DD HH:mm",
+            "label": "YYYY-MM-DD HH:mm"
+          },
+          {
+            "value": "YYYY-MM-DD HH:mm:ss",
+            "label": "YYYY-MM-DD HH:mm:ss"
+          }
+        ],
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onRemoteQuery": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onValidate": ""
+      },
+      "id": "select62325"
+    },
+    {
+      "key": 30627,
+      "type": "input",
+      "icon": "text-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "variableName",
+        "label": "Variable Name",
+        "labelAlign": "",
+        "type": "text",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "readonly": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "showPassword": false,
+        "required": true,
+        "requiredHint": "",
+        "validation": "letterAndNumber",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "minLength": null,
+        "maxLength": null,
+        "showWordLimit": false,
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "appendButton": false,
+        "appendButtonText": "",
+        "prependText": "",
+        "appendButtonDisabled": false,
+        "buttonIcon": "custom-search",
+        "onCreated": "",
+        "onMounted": "",
+        "onInput": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onEnter": "",
+        "onValidate": "",
+        "onAppendButtonClick": ""
+      },
+      "id": "input72004"
+    },
+    {
+      "key": 30627,
+      "type": "input",
+      "icon": "text-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "variableValue",
+        "label": "Variable Value",
+        "labelAlign": "",
+        "type": "text",
+        "defaultValue": "",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "readonly": false,
+        "disabled": false,
+        "hidden": false,
+        "clearable": true,
+        "showPassword": false,
+        "required": true,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "minLength": null,
+        "maxLength": null,
+        "showWordLimit": false,
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "appendButton": false,
+        "appendButtonText": "",
+        "prependText": "",
+        "appendButtonDisabled": false,
+        "buttonIcon": "custom-search",
+        "onCreated": "",
+        "onMounted": "",
+        "onInput": "",
+        "onChange": "",
+        "changeSettings": [],
+        "onChangeSetting": true,
+        "onFocus": "",
+        "onBlur": "",
+        "onEnter": "",
+        "onValidate": "",
+        "onAppendButtonClick": ""
+      },
+      "id": "input52268"
+    }
+  ],
+  "formConfig": {
+    "modelName": "formData",
+    "refName": "vForm",
+    "rulesName": "rules",
+    "labelWidth": 80,
+    "labelPosition": "top",
+    "size": "",
+    "labelAlign": "label-left-align",
+    "cssCode": "",
+    "customClass": [],
+    "functions": "",
+    "layoutType": "PC",
+    "jsonVersion": 3,
+    "isCreateDynamicCode": true,
+    "onFormCreated": "",
+    "onFormMounted": "",
+    "onFormDataChange": "",
+    "dhList": [
+      {
+        "id": 65638,
+        "fieldConditionList": [
+          {
+            "fieldName": "isShow",
+            "condition": "===",
+            "value": true
+          }
+        ],
+        "hiddenList": [
+          {
+            "id": 53617,
+            "fieldName": "variableName",
+            "required": true
+          },
+          {
+            "id": 88918,
+            "fieldName": "variableValue",
+            "required": true
+          }
+        ],
+        "disabledList": []
+      },
+      {
+        "id": 80067,
+        "fieldConditionList": [
+          {
+            "fieldName": "isShow",
+            "condition": "===",
+            "value": true
+          }
+        ],
+        "hiddenList": [
+          {
+            "id": 99425,
+            "fieldName": "dateFormat",
+            "required": true
+          }
+        ],
+        "disabledList": []
+      }
+    ],
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "onFormValidate": "",
+    "dataSources": []
+  }
+}
