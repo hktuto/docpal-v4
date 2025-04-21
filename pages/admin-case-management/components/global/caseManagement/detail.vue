@@ -17,6 +17,7 @@ if (!routerProvider) {
 }
 const {t} = useI18n()
 const loading = ref(false)
+const buttonLoading = ref(false)
 const caseInfo = ref<any>()
 
 const xmlRef = ref()
@@ -48,13 +49,17 @@ function handleUpdate() {
 }
 
 async function promoteToProduction() {
+  buttonLoading.value = true
   const {data} = await adminApi.api.postCaseTypesVersionVersionidActive(props.caseTypeId)
   routerProvider?.message.success(t('dpMsg_success'))
   await init()
+  buttonLoading.value = false
 }
 
 async function saveAsNewVersion() {
   // console.log("props",props);
+  
+  buttonLoading.value = true
   const {data} = await adminApi.api.postCaseTypesVersionVersionidNew(props.caseTypeId)
   //TODO : get all form in case and save as to new version
   // Step 1 : get all form in case
@@ -71,6 +76,8 @@ async function saveAsNewVersion() {
     caseTypeId: data.id,
     currentVersion: data.versionNumber,
   })
+  
+  buttonLoading.value = false
   // console.log("new props", props)
   nextTick(() => {
     init();
@@ -145,11 +152,11 @@ provide(CaseManagementDetailProviderKey, {
 
     <CaseManagementDetailInfo :detail="caseTypeInfo">
       <template v-if="!production">
-        <ElButton id="CaseManagement__Detail__BasicInfo__PromoteToProduction" type="primary" @click="promoteToProduction">
+        <ElButton id="CaseManagement__Detail__BasicInfo__PromoteToProduction" :loading="buttonLoading" type="primary" @click="promoteToProduction">
           {{ $t('workflowEditor_promoteToProduction', {currentVersion: currentVersion}) }}
         </ElButton>
       </template>
-      <ElButton id="CaseManagement__Detail__BasicInfo__SaveAsNewVersion" type="primary" @click="saveAsNewVersion">
+      <ElButton id="CaseManagement__Detail__BasicInfo__SaveAsNewVersion" :loading="buttonLoading" type="primary" @click="saveAsNewVersion">
         {{ $t('workflowEditor_saveAsNewVersion') }}
       </ElButton>
       <ElButton id="CaseManagement__Detail__BasicInfo__VersionList" @click="openVersionList" type="primary">
