@@ -36,7 +36,8 @@ export default defineNuxtConfig({
     "../../pages/admin-folder-cabinet",
     "../../pages/admin-email-template",
     "../../pages/admin-watermark",
-    "../../pages/admin-message-template"
+    "../../pages/admin-message-template",
+    "../../pages/admin-unique-id-generator"
     // "../../pages/admin-share",
   ],
   features:{

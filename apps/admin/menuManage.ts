@@ -96,11 +96,13 @@ export const menuList: MenuItem[] = [
     order: 160
   },
   {
-    name:"adminMenu.easyForm", routeName:"easyFormManagement", url: "/easyFormManage", icon: "/icons/menu/easyForm.svg", 
+    name:"adminMenu.easyForm", routeName:"easyFormManagement", url: "/easyFormManage", icon: "/icons/menu/easyForm.svg",
     order: 170
+  },
+  {
+    name:"adminMenu.uniqueIdGenerator", routeName:"uniqueIdGenerator",url: "/uniqueIdGenerator", icon: "/icons/menu/uniqueIdGenerator.svg",
+    order:180
   }
-
-  
   // { feature: "DOCKER_LOG", name: "adminMenu.docker_log", routeName: "dockerLog", url: "/dockerLog", icon: "/icons/menu/dockerLog.svg", 
   //   order: 59, parentId: "adminMenu.system", parentIcon: "/icons/menu/system.svg"
   // },
