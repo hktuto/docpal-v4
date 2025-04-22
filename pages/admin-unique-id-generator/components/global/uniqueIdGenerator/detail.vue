@@ -10,7 +10,7 @@
           <el-form-item label="Prefix" label-position="top" prop="prefix"
                         :rules="[{ required: true, message: t('Prefix') + t('render.hint.fieldRequired') }]">
             <el-input-tag v-model="state.prefix" draggable clearable placeholder="Prefix" tag-effect="dark"
-                          tag-type="primary" @change="handleChangeTag(true)">
+                          tag-type="primary" @change="handleChangeTag(true)" @add-tag="handleAddTag(true)">
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
@@ -19,7 +19,7 @@
           </div>
           <el-form-item label="Suffix" label-position="top">
             <el-input-tag v-model="state.suffix" draggable clearable placeholder="Suffix" tag-effect="dark"
-                          tag-type="primary" @change="handleChangeTag(false)">
+                          tag-type="primary" @change="handleChangeTag(false)" @add-tag="handleAddTag(false)">
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
@@ -46,14 +46,16 @@
       <h4>{{ t('Setting') }}</h4>
       <h5 v-if="state.form.prefix.length > 0">{{ t('Prefix') }}</h5>
       <div v-for="(item,index) in state.form.prefix">
-        <el-form-item :label="handleLabel(item.expression, item.dataValue)" label-position="top">
-          <el-input disabled :formatter="(value: string) => handleExampleData(value)" v-model="item.expression" />
+        <el-form-item :label="handleLabel(item.expression,item.value)" label-position="top">
+          <el-input :disabled="item.type == 'date'" v-model="item.value"
+                    :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
       </div>
       <h5 v-if="state.form.suffix.length > 0">{{ t('Suffix') }}</h5>
       <div v-for="(item,index) in state.form.suffix">
-        <el-form-item :label="handleLabel(item.expression, item.dataValue)" label-position="top">
-          <el-input disabled :formatter="(value: string) => handleExampleData(value)" v-model="item.expression" />
+        <el-form-item :label="handleLabel(item.expression,item.value)" label-position="top">
+          <el-input :disabled="item.type == 'date'" v-model="item.value"
+                    :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
       </div>
       <el-divider />
@@ -66,39 +68,9 @@
     </el-col>
   </div>
 
-  <div class="cardCaontainer">
-
-  </div>
-
-  <el-dialog v-model="state.dialogFormVisible" :title="state.setting ? t('New Date Variable') : t('New Text Variable')"
-             width="500">
+  <el-dialog v-model="state.dialogFormVisible" width="500"
+             :title="state.isAddVariable ? t('New Date Variable') : t('New Text Variable')">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
-    <!--    <el-form ref="formAddItemDialogRef" :model="item" @submit.native.prevent>-->
-    <!--      <el-form-item v-if="state.setting" :label="t('date_format')" label-position="top" prop="expression"-->
-    <!--                    :rules="[{ required: true, message: t('date_format') + t('render.hint.fieldRequired') }]">-->
-    <!--        <el-select v-model="item.expression" clearable allow-create filterable-->
-    <!--                   :placeholder="t('common_selectOccupancyContent')">-->
-    <!--          <el-option v-for="item in state.dateFormatList" :key="item" :value="item" :label="item"></el-option>-->
-    <!--        </el-select>-->
-    <!--      </el-form-item>-->
-    <!--      <div v-else>-->
-    <!--        <el-form-item :label="t('Variable Name')" label-position="top" prop="expression"-->
-    <!--                      :rules="[{ required: true, message: t('Variable Name') + t('render.hint.fieldRequired') }]">-->
-    <!--          <el-input v-model="item.expression" clearable allow-create filterable :placeholder="t('name')">-->
-    <!--          </el-input>-->
-    <!--        </el-form-item>-->
-    <!--        <el-form-item :label="t('Variable Value')" label-position="top" prop="dataValue"-->
-    <!--                      :rules="[{ required: true, message: t('Variable Value') + t('render.hint.fieldRequired') }]">-->
-    <!--          <el-input v-model="item.dataValue" clearable allow-create filterable :placeholder="t('value')">-->
-    <!--          </el-input>-->
-    <!--        </el-form-item>-->
-    <!--      </div>-->
-    <!--      <div class="button-container">-->
-    <!--        <el-button type="primary" @click="handleAddItemTag(formAddItemDialogRef)">-->
-    <!--          Confirm-->
-    <!--        </el-button>-->
-    <!--      </div>-->
-    <!--    </el-form>-->
     <template #footer>
       <el-button type="primary" @click="handleAddItemTag">
         {{ t('common_submit') }}
@@ -119,37 +91,12 @@ const { id } = defineProps<{
   id: string;
 }>()
 const FormRendererRef = ref()
-const formAddItemDialogRef = ref<FormInstance>()
 const state = reactive({
   loading: false,
-  status: true,
+  isAddVariable: true,
   dialogFormVisible: false,
-  setting: true,
-  dateFormatList: [
-    'YY',
-    'YYYY',
-    'MM',
-    'dd',
-    'DD',
-    'hh',
-    'HH',
-    'mm',
-    'ss',
-    'HH:mm:ss',
-    'HH:mm',
-    'D/M/YY',
-    'DD/MM/YY',
-    'DD-MM-YYYY',
-    'DD/MM/YY HH:mm:ss',
-    'DD/MM/YYYY HH:mm:ss',
-    'DD/MM/YYYY HH:mm',
-    'YYYY-MM-DD',
-    'YYYY-MM-DD HH:mm',
-    'YYYY-MM-DD HH:mm:ss'
-  ],
   prefix: [],
   suffix: [],
-  item: { index: 0, expression: '', type: '', value: undefined },
   uniqueId: '',
   form: {
     id: '',
@@ -165,22 +112,18 @@ interface ItemRule {
   index: number,
   expression: string,
   type: string,
-  dataValue: string
+  value: string
 }
 
-let item = reactive<ItemRule>({
+let itemData = reactive<ItemRule>({
   index: 0,
   expression: '',
   type: '',
-  dataValue: ''
+  value: ''
 })
 
-function handleLabel(e: string, value: string) {
-  return e.includes('{date(') ? 'Date' : value
-}
-
-function handleStatus(value: string) {
-  return value.includes('{date(') ? 'Date' : 'Var'
+function handleLabel(key: string, value: string) {
+  return key.includes('{date(') ? 'Date(' + value + ')' : handleDataFormat(key)
 }
 
 function handleDataFormat(value: string) {
@@ -189,14 +132,10 @@ function handleDataFormat(value: string) {
   return match ? match[1] : value
 }
 
-function handleExampleData(value: string) {
+function handleExampleData(type: string, value: string) {
   try {
-    let data = handleDataFormat(value)
-    if (handleStatus(value) === 'Date') {
-      return formatDate(new Date(), data)
-    }
-    if (handleStatus(value) === 'Var') {
-      return data
+    if (type === 'date') {
+      return formatDate(new Date(), value)
     }
     return value
   } catch (e) {
@@ -216,13 +155,13 @@ function handleGenerateId() {
 
     if (prefix.length > 0) {
       prefix.forEach((item: any) => {
-        id += handleExampleData(item.expression)
+        id += handleExampleData(item.type, item.value)
       })
     }
 
     if (suffix.length > 0) {
       suffix.forEach((item: any) => {
-        id += handleExampleData(item.expression)
+        id += handleExampleData(item.type, item.value)
       })
     }
 
@@ -237,12 +176,12 @@ function handleGenerateId() {
  * @param setting (true: date setting, false: var setting)
  */
 async function handleDate(status: boolean, setting: boolean) {
-  state.setting = setting
-  state.status = status
-  item = {}
-  item.type = 'date'
-  console.log(FormRendererRef)
-  // FormRendererRef.value.vFormRenderRef.setFormData({ isShow: true })
+  state.isAddVariable = setting
+  itemData.type = 'date'
+  setTimeout(() => {
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    FormRendererRef.value.vFormRenderRef.setFormData({ isShow: true, isPrefix: status, isDateType: setting })
+  }, 100)
   state.dialogFormVisible = true
 }
 
@@ -251,30 +190,50 @@ async function handleDate(status: boolean, setting: boolean) {
  * @param setting (true: date setting, false: var setting)
  */
 function handleVariable(status: boolean, setting: boolean) {
-  state.setting = setting
-  state.status = status
-  item = {}
-  item.type = 'string'
-  // FormRendererRef.value.vFormRenderRef.setFormData({ isShow: false })
+  state.isAddVariable = setting
+  itemData.type = 'string'
+  setTimeout(() => {
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    FormRendererRef.value.vFormRenderRef.setFormData({ isShow: false, isPrefix: status, isDateType: setting })
+  }, 100)
   state.dialogFormVisible = true
 }
 
-function handleAddItemTag() {
-
-  item.expression = state.setting ? '{date(' + item.expression + ')}' : '{var(' + item.expression + ')}'
-  item.dataValue = state.setting ? '' : item.dataValue
-  if (state.status) {
-    item.index = state.form.prefix.length
-    state.prefix.push(item.expression)
-    state.form.prefix.push(deepCopy(item))
+async function handleAddItemTag() {
+  let formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+  if (formData.isDateType) {
+    itemData.expression = '{date(' + formData.dateFormat + ')}'
+    itemData.value = formData.dateFormat
   } else {
-    item.index = state.form.suffix.length
-    state.suffix.push(item.expression)
-    state.form.suffix.push(deepCopy(item))
+    itemData.expression = '{var(' + formData.variableName + ')}'
+    itemData.value = formData.variableValue
   }
-  item = {}
-  state.dialogFormVisible = false
 
+  if (formData.isPrefix) {
+    itemData.index = state.form.prefix.length
+    state.prefix.push(itemData.expression)
+    state.form.prefix.push(deepCopy(itemData))
+  } else {
+    itemData.index = state.form.suffix.length
+    state.suffix.push(itemData.expression)
+    state.form.suffix.push(deepCopy(itemData))
+  }
+  itemData = {}
+  state.dialogFormVisible = false
+}
+
+/**
+ * 移除手動在輸入的數據
+ * @param status (true: prefix,false: suffix)
+ */
+function handleAddTag(status: boolean) {
+  if (status) {
+    state.prefix.pop()
+    state.form.prefix.pop()
+  } else {
+    state.suffix.pop()
+    state.form.suffix.pop()
+  }
 }
 
 /**
@@ -387,7 +346,6 @@ function setTag(status: boolean, list: any) {
 onActivated(async () => {
   init()
 })
-
 
 </script>
 <style lang="scss" scoped>
