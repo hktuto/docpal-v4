@@ -16,18 +16,8 @@
     </VxeGrid>
   </div>
 
-  <el-dialog v-model="dialogShow" :title="t('Duplicate')" width="500">
-    <el-form ref="duplicateRef" :model="duplicateForm" @submit.native.prevent>
-      <el-form-item :label="t('New Generator Name')" label-position="top"
-                    :rules="[{ required: true, message: t('New Generator Name') + t('render.hint.fieldRequired') }]">
-        <el-input v-model="duplicateForm.name" clearable :placeholder="t('Name')">
-        </el-input>
-      </el-form-item>
-      <el-button type="primary" @click="handleDuplicateSubmit">
-        {{ t('common_submit') }}
-      </el-button>
-    </el-form>
-  </el-dialog>
+  <LazyUniqueIdGeneratorDuplicateDialog ref="duplicateDialogRef" @refresh="reload">
+  </LazyUniqueIdGeneratorDuplicateDialog>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
@@ -38,11 +28,7 @@ const routerProvider = inject(MenuRouterKey)
 const ResponsiveFilterRef = ref()
 const { t } = useI18n()
 let extraParams: any = {}
-let dialogShow = false
-let duplicateForm = {
-  name: ''
-}
-const duplicateRef = ref()
+const duplicateDialogRef = ref()
 
 const {
   tableConfig,
@@ -60,10 +46,9 @@ const {
     })
   },
   columns: [
-    { field: 'name', title: 'name', fixed: 'left' },
-    { field: 'lastIdValue', title: 'Latest Id' },
-    { field: 'startNumber', title: 'startNumber' },
-    { field: 'createdByName', title: 'Create By' },
+    { field: 'name', title: 'uniQueIdGenerator_name', fixed: 'left' },
+    { field: 'lastIdValue', title: 'uniQueIdGenerator_latestId' },
+    { field: 'createdByName', title: 'role.creator' },
     { field: 'modifiedByName', title: 'modified_by' },
     {
       field: 'modifiedDate',
@@ -119,35 +104,17 @@ function handleDetail(row: any) {
  * @param row
  */
 async function handleDuplicate(row: any) {
-  try {
-    duplicateForm = deepCopy(row)
-    duplicateForm.name = ''
-    dialogShow = true
-  } catch (e) {
-    console.log(e)
-  }
+  duplicateDialogRef.value.handleOpen(row)
 }
-
-async function handleDuplicateSubmit() {
-  const data = await adminApi.api.postIdTemplates({ name: duplicateForm.name }).then(res => res.data)
-  duplicateForm.id = data.id
-  await adminApi.api.putIdTemplatesId(data.id, { ...data, ...duplicateForm })
-  routerProvider?.message.success(t('tip_createdSuccessMsg', {
-    modelName: t('Unique Id'),
-    name: duplicateForm.name
-  }))
-  reload()
-}
-
 
 async function handleDelete(row: any) {
-  ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+  ElMessageBox.confirm(`${t('uniQueIdGenerator_deleteMsg', { name: row.name })}`)
     .then(async () => {
       try {
         await adminApi.api.deleteIdTemplatesId(row.id)
         routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-          modelName: t('share_internalShareLink'),
-          name: null
+          modelName: t('adminMenu.uniqueIdGenerator'),
+          name: row.name
         }))
       } catch (error) {
         console.log(error)
@@ -172,11 +139,10 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'name', value: 'name' },
-        { label: 'Latest Id', value: 'lastIdValue' },
-        { label: 'startNumber', value: 'startNumber' },
-        { label: 'createdByName', value: 'Create By' },
-        { label: 'modified_by', value: 'modifiedByName' },
+        { label: 'uniQueIdGenerator_name', value: 'name' },
+        { label: 'uniQueIdGenerator_latestId', value: 'lastIdValue' },
+        { label: 'role.creator', value: 'createdBy' },
+        { label: 'modified_by', value: 'modifiedBy' },
         { label: 'table_last_update', value: 'modifiedDate' }
       ]
     },
@@ -209,5 +175,11 @@ onMounted(() => {
   .responsive-container {
     width: 70%;
   }
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 </style>
