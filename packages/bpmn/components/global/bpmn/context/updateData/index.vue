@@ -65,7 +65,7 @@ function checkConditions(conditions:any[]) {
                     attr_source: "form",
                     attr_updateFieldName: con.attr_updateFieldName || "",
                     attr_step: con.attr_step || "1",
-                    attr_value: con.attr_value || ""
+                    attr_value: con.attr_value === false || con.attr_value ? con.attr_value : ""
                 }
                 if(temData.attr_function === 'Set_Value') {
                     delete temData.attr_step
@@ -95,6 +95,7 @@ function checkConditions(conditions:any[]) {
 }
 
 function updateCondition() {
+  console.log('updateCondition???????????????', conditions.value, checkConditions(conditions.value))
     const nodeData = node.getData()
     const newData = {
         ...nodeData,
