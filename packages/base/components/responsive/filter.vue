@@ -204,7 +204,7 @@ function handleFilter () {
     emits('clear-filter')
     emits('form-change', {}, null )
 }
-defineExpose({ init, setValue })
+defineExpose({ init, setValue,handleFilter })
 </script>
 <style lang="scss" scoped>
 .responsive-container {

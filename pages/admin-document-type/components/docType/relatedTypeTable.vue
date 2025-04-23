@@ -28,11 +28,13 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
+
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   docTypeDetail: any;
   name: string;
 }>()
+const ResponsiveFilterRef = ref()
 const { t } = useI18n()
 let _list: any = []
 const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
@@ -119,6 +121,7 @@ function handleFilterFormChange(formModel: any) {
 }
 
 async function getList() {
+  ResponsiveFilterRef.value.handleFilter()
   _list = await adminApi.api
     .getDocpaltypeSettingsNameNameRelated(props.name)
     .then((res) => res.data)
