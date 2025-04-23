@@ -371,7 +371,8 @@
     "prefix": "案例 ID 前缀",
     "startNumber": "案件编号 - 起始编号",
     "title": "案例管理",
-    "userGroup": "用户组"
+    "userGroup": "用户组",
+    "idTemplateVariables": "ID 模板变量"
   },
   "caseManagement_ImportFromWorkflow": "从工作流程导入",
   "caseManagement_basicInfoOpenEditor": "打开编辑器",
@@ -2017,7 +2018,7 @@
       "downloadFile": "下载",
       "endDatePlaceholder": "结束日期",
       "endTimePlaceholder": "截止时间",
-      "fieldRequired": " 不能为空",
+      "fieldRequired": "{name} 不能为空",
       "fileSizeExceed": "文件大小已超出: ",
       "insertSubFormRow": "插入行",
       "invalidNumber": "数据格式错误",
