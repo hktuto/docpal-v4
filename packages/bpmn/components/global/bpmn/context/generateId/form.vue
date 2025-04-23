@@ -62,7 +62,7 @@ onMounted(() => {
       </ElSelect>
     </ElFormItem>
     <ElFormItem label="Form Info">
-      <ElSelect v-model="condition.worklowInfo" placeholder="Form Info" :disabled="disabled" filterable>
+      <ElSelect v-model="condition.workflowInfo" placeholder="Form Info" :disabled="disabled" filterable>
         <ElOption v-for="item in getTypeFields('string')" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
       </ElSelect>
     </ElFormItem>
