@@ -366,13 +366,14 @@
     "digit": "案件 ID - 位數",
     "editDashboard": "編輯儀表板",
     "editPermission": "編輯權限",
+    "idGenerator": "ID 生成器",
+    "idTemplateVariables": "ID 模板變數",
     "my": "案例",
     "name": "案例名稱",
     "prefix": "案例 ID 前綴",
     "startNumber": "案件 ID - 起始號碼",
     "title": "案例管理",
-    "userGroup": "使用者群組",
-    "idTemplateVariables": "ID 模板變數"
+    "userGroup": "使用者群組"
   },
   "caseManagement_ImportFromWorkflow": "從工作流程匯入",
   "caseManagement_basicInfoOpenEditor": "開啟編輯器",
