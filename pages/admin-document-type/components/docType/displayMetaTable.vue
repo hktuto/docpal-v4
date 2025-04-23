@@ -33,12 +33,14 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 import { Select, CloseBold } from '@element-plus/icons-vue'
+
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const props = defineProps<{
   docTypeDetail: any;
   metadata: any;
 }>()
+const ResponsiveFilterRef = ref()
 const emits = defineEmits(['refresh'])
 const { tableConfig, tableEvent, tableRef } = useVxeTable({
   id: 'displayMetaTable',
@@ -103,6 +105,7 @@ const { tableConfig, tableEvent, tableRef } = useVxeTable({
 })
 
 function handleRefresh(addMore: boolean = false) {
+  ResponsiveFilterRef.value.handleFilter()
   if (addMore) handleDialogShow()
   emits('refresh')
 }
