@@ -188,35 +188,36 @@ function handleId() {
   return String(state.form.startNumber).padStart(state.form.idDigit, '0')
 }
 
-function handleGenerateId() {
+async function handleGenerateId() {
   try {
-    const prefix = state.form.prefix
-    const suffix = state.form.suffix
-    let id = ''
+    // const prefix = state.form.prefix
+    // const suffix = state.form.suffix
+    // let id = ''
     let status = false
-
-    if (prefix.length > 0) {
-      prefix.forEach((item: any) => {
-        const exData = handleExampleData(item.type, item.value)
-        id += exData
-        if (item.type === 'date' && exData === item.value) {
-          status = true
-        }
-      })
-    }
-
-    id += handleId()
-
-    if (suffix.length > 0) {
-      suffix.forEach((item: any) => {
-        const exData = handleExampleData(item.type, item.value)
-        id += exData
-        if (item.type === 'date' && exData === item.value) {
-          status = true
-        }
-      })
-    }
-    state.uniqueId = id
+    //
+    // if (prefix.length > 0) {
+    //   prefix.forEach((item: any) => {
+    //     const exData = handleExampleData(item.type, item.value)
+    //     id += exData
+    //     if (item.type === 'date' && exData === item.value) {
+    //       status = true
+    //     }
+    //   })
+    // }
+    //
+    // id += handleId()
+    //
+    // if (suffix.length > 0) {
+    //   suffix.forEach((item: any) => {
+    //     const exData = handleExampleData(item.type, item.value)
+    //     id += exData
+    //     if (item.type === 'date' && exData === item.value) {
+    //       status = true
+    //     }
+    //   })
+    // }
+    state.uniqueId = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
+    // state.uniqueId = id
     if (status) {
       routerProvider?.message.error(t('uniQueIdGenerator_dateIsIncorrectErrorMsg'))
     }
@@ -342,11 +343,11 @@ async function handleSubmit() {
       return
     }
 
-    const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
-    if (data != state.uniqueId) {
-      routerProvider?.message.error(t('uniQueIdGenerator_idCheckErrorMsg'))
-      return
-    }
+    //const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
+    // if (data != state.uniqueId) {
+    //   routerProvider?.message.error(t('uniQueIdGenerator_idCheckErrorMsg'))
+    //   return
+    // }
     await adminApi.api.putIdTemplatesId(id, state.form)
     routerProvider?.message.success(t('tip_updateSuccessMsg', {
       modelName: t('adminMenu.uniqueIdGenerator'),
@@ -372,6 +373,7 @@ async function handleSubmit() {
 }
 
 async function init() {
+  state.uniqueId = ""
   state.form = await adminApi.api.getIdTemplatesId(id).then(res => res.data)
   setTag(true, state.form.prefix)
   setTag(false, state.form.suffix)
