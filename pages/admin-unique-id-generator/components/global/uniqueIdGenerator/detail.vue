@@ -10,8 +10,7 @@
           <el-form-item :label="t('uniQueIdGenerator_prefix')" label-position="top" prop="prefix"
                         :rules="[{ required: true, message: t('uniQueIdGenerator_prefix') + t('render.hint.fieldRequired') }]">
             <el-input-tag v-model="state.prefix" draggable clearable :placeholder="t('uniQueIdGenerator_prefix')"
-                          tag-effect="dark" tag-type="primary" @change="handleChangeTag(true)"
-            >
+                          tag-effect="dark" tag-type="primary" @change="handleChangeTag(true)">
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
@@ -24,8 +23,7 @@
           </div>
           <el-form-item :label="t('uniQueIdGenerator_suffix')" label-position="top">
             <el-input-tag v-model="state.suffix" draggable clearable :placeholder="t('uniQueIdGenerator_suffix')"
-                          tag-effect="dark" tag-type="primary" @change="handleChangeTag(false)"
-            >
+                          tag-effect="dark" tag-type="primary" @change="handleChangeTag(false)">
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
@@ -39,11 +37,11 @@
           <el-form-item :label="t('uniQueIdGenerator_idDigit')" label-position="top" prop="idDigit"
                         :placeholder="t('uniQueIdGenerator_idDigit')"
                         :rules="[{ required: true, message: t('uniQueIdGenerator_idDigit') + t('render.hint.fieldRequired') }]">
-            <el-input type="number" min="1" clearable v-model="state.form.idDigit" />
+            <el-input type="number" min="1" clearable v-model.number="state.form.idDigit" />
           </el-form-item>
           <el-form-item :label="t('uniQueIdGenerator_startingNumber')" label-position="top" prop="startNumber"
                         :rules="[{ required: true, message: t('uniQueIdGenerator_startingNumber') + t('render.hint.fieldRequired') }]">
-            <el-input type="number" min="0" clearable v-model="state.form.startNumber" />
+            <el-input type="number" min="1" clearable v-model.number="state.form.startNumber" />
           </el-form-item>
         </el-form>
         <el-button id="UniqueId_Detail__Save" type="primary" @click="handleSubmit(formRef)">
@@ -52,19 +50,20 @@
         <el-divider />
       </el-col>
     </el-row>
+
     <el-col :span="12">
       <h3>{{ t('uniQueIdGenerator_example') }}</h3>
       <h4>{{ t('uniQueIdGenerator_setting') }}</h4>
       <h5 v-if="state.form.prefix.length > 0">{{ t('uniQueIdGenerator_prefix') }}</h5>
       <div v-for="(item,index) in state.form.prefix">
-        <el-form-item :label="handleLabel(item.type,item.value)" label-position="top">
+        <el-form-item :label="handleLabel(item.type,item.expression)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
       </div>
       <h5 v-if="state.form.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
       <div v-for="(item,index) in state.form.suffix">
-        <el-form-item :label="handleLabel(item.type,item.value)" label-position="top">
+        <el-form-item :label="handleLabel(item.type,item.expression)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
@@ -135,13 +134,16 @@ let itemData = reactive<ItemRule>({
 })
 
 function handleLabel(type: string, value: string) {
-  if (type === 'date') {
-    return `Date(${value})`
-  }
   if (type === 'string') {
     return 'string'
   }
-  return handleDataFormat(type)
+
+  const label = handleDataFormat(value)
+  if (type === 'date') {
+    return `Date(${label})`
+  }
+
+  return label
 }
 
 function handleDataFormat(value: string) {
@@ -153,6 +155,7 @@ function handleDataFormat(value: string) {
 function handleExampleData(type: string, value: string) {
   try {
     if (type === 'date') {
+      // TODO 前端的format格式并非ISO 8601標準，導致前後端創建出來的ID不一致
       return formatDate(new Date(), value)
     }
     if (type === 'string') {
@@ -173,31 +176,32 @@ function handleGenerateId() {
     const prefix = state.form.prefix
     const suffix = state.form.suffix
     let id = ''
-    let status = true
+    let status = false
 
     if (prefix.length > 0) {
       prefix.forEach((item: any) => {
         const exData = handleExampleData(item.type, item.value)
         id += exData
         if (item.type === 'date' && exData === item.value) {
-          status = false
+          status = true
         }
       })
     }
+
+    id += handleId()
 
     if (suffix.length > 0) {
       suffix.forEach((item: any) => {
         const exData = handleExampleData(item.type, item.value)
         id += exData
         if (item.type === 'date' && exData === item.value) {
-          status = false
+          status = true
         }
       })
     }
-
-    state.uniqueId = id + handleId()
-    if (!status) {
-      routerProvider?.message.error(t('Incorrect data format exists'))
+    state.uniqueId = id
+    if (status) {
+      routerProvider?.message.error(t('There is an incorrect format for the time type'))
     }
     return status
   } catch (e) {
@@ -241,6 +245,11 @@ async function handleAddItemTag() {
   } else {
     itemData.expression = `{var(${formData.variableName})}`
     itemData.value = formData.variableValue
+    // Check if the name exists
+    if (state.prefix.includes(itemData.expression) || state.suffix.includes(itemData.expression)) {
+      routerProvider?.message.error(t('dpTip.exit', { name: t('uniQueIdGenerator_variableName') }))
+      return
+    }
   }
 
   if (formData.isPrefix) {
@@ -259,25 +268,6 @@ async function handleAddItemTag() {
 /**
  * @param status (true: prefix,false: suffix)
  */
-function handleAddTag(status: boolean, value: string) {
-  itemData.expression = value
-  itemData.type = 'string'
-  itemData.value = value
-  if (status) {
-    itemData.index = state.form.prefix.length
-    state.prefix.push(itemData.expression)
-    state.form.prefix.push(deepCopy(itemData))
-  } else {
-    itemData.index = state.form.suffix.length
-    state.suffix.push(itemData.expression)
-    state.form.suffix.push(deepCopy(itemData))
-  }
-  itemData = {}
-}
-
-/**
- * @param status (true: prefix,false: suffix)
- */
 function handleChangeTag(status: boolean) {
   if (status) {
     if (!state.prefix) {
@@ -285,7 +275,6 @@ function handleChangeTag(status: boolean) {
       return
     }
     state.form.prefix = handleList(state.prefix, state.form.prefix)
-    console.log('state.form.prefix', state.form.prefix)
   } else {
     if (!state.suffix) {
       state.suffix = []
@@ -307,7 +296,8 @@ function handleList(formList: any, oldList: any) {
       const newItem = {
         index: index,
         expression: col,
-        type: 'string'
+        type: 'string',
+        value: col
       }
       list.push(newItem)
     }
@@ -328,20 +318,31 @@ async function handleSubmit(formEl: FormInstance | undefined) {
       if (valid) {
         state.loading = true
 
-        // check ID is true
-        if (handleGenerateId) {
+        if (!id) {
           return
         }
-        const re = await adminApi.api.postIdTemplatesGenerate({ id: state.uniqueId })
-        if (!re.status) {
-          routerProvider?.message.error(t('Incorrect data format exists'))
+
+        // Check if the ID is passed
+        if (handleGenerateId()) {
+          return
+        }
+
+        const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
+        console.log('data', data)
+        console.log('state.uniqueId', state.uniqueId)
+        if (data != state.uniqueId) {
+          routerProvider?.message.error(t('Id 不符合規範'))
           return
         }
         return
-        if (!id) {
-          const data = await adminApi.api.postIdTemplates({ name: state.form.name }).then(res => res.data)
-          state.form.id = data.id
-          await adminApi.api.putIdTemplatesId(data.id, { ...data, ...state.form })
+        await adminApi.api.putIdTemplatesId(id, state.form)
+        routerProvider?.message.success(t('tip_updateSuccessMsg', {
+          modelName: t('Unique Id'),
+          modelName: t('adminMenu.uniqueIdGenerator'),
+          name: state.form.name
+        }))
+
+        if (true) {
           const newItem: any = {
             id: 'admin-unique-id-generator',
             name: 'unique-id-generator',
@@ -352,19 +353,9 @@ async function handleSubmit(formEl: FormInstance | undefined) {
             props: {}
           }
           routerProvider?.navigateTo(newItem)
-          routerProvider?.message.success(t('tip_createdSuccessMsg', {
-            modelName: t('adminMenu.uniqueIdGenerator'),
-            name: state.form.name
-          }))
-        } else {
-          const data = await adminApi.api.putIdTemplatesId(id, state.form)
-          routerProvider?.message.success(t('tip_updateSuccessMsg', {
-            modelName: t('adminMenu.uniqueIdGenerator'),
-            name: state.form.name
-          }))
         }
+        emits('success', state.form)
       }
-      emits('success', state.form)
     })
   } catch (error) {
     console.log(error)
