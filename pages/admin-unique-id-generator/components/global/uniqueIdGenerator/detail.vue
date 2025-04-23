@@ -44,7 +44,7 @@
             <el-input type="number" min="1" clearable v-model.number="state.form.startNumber" />
           </el-form-item>
         </el-form>
-        <el-button id="UniqueId_Detail__Save" type="primary" @click="handleSubmit(formRef)">
+        <el-button id="UniqueId_Detail__Save" type="primary" @click="handleSubmit()">
           {{ t('common_save') }}
         </el-button>
         <el-divider />
@@ -92,12 +92,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { FormInstance } from 'element-plus'
 import { adminApi } from 'api'
 import formJson from '../../uniqueIdGenerator/addTagForm.vform.json'
 import { Plus } from '@element-plus/icons-vue'
 
-const formRef = ref<FormInstance>()
+const formRef = ref()
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const { id } = defineProps<{
@@ -219,7 +218,7 @@ function handleGenerateId() {
     }
     state.uniqueId = id
     if (status) {
-      routerProvider?.message.error(t('There is an incorrect format for the time type'))
+      routerProvider?.message.error(t('uniQueIdGenerator_dateIsIncorrectErrorMsg'))
     }
     return status
   } catch (e) {
@@ -329,50 +328,42 @@ const emits = defineEmits([
   'success'
 ])
 
-async function handleSubmit(formEl: FormInstance | undefined) {
-  if (!formEl) return
+async function handleSubmit() {
   try {
-    formEl.validate(async (valid) => {
-      if (valid) {
-        state.loading = true
+    await formRef.value.validate()
+    state.loading = true
 
-        if (!id) {
-          return
-        }
+    if (id == '') {
+      return
+    }
 
-        // Check if the ID is passed
-        if (handleGenerateId()) {
-          return
-        }
+    // Check if the ID is passed
+    if (handleGenerateId()) {
+      return
+    }
 
-        const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
-        console.log('data', data)
-        console.log('state.uniqueId', state.uniqueId)
-        if (data != state.uniqueId) {
-          routerProvider?.message.error(t('Id 不符合規範'))
-          return
-        }
-        await adminApi.api.putIdTemplatesId(id, state.form)
-        routerProvider?.message.success(t('tip_updateSuccessMsg', {
-          modelName: t('adminMenu.uniqueIdGenerator'),
-          name: state.form.name
-        }))
+    const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
+    if (data != state.uniqueId) {
+      routerProvider?.message.error(t('uniQueIdGenerator_idCheckErrorMsg'))
+      return
+    }
+    await adminApi.api.putIdTemplatesId(id, state.form)
+    routerProvider?.message.success(t('tip_updateSuccessMsg', {
+      modelName: t('adminMenu.uniqueIdGenerator'),
+      name: state.form.name
+    }))
 
-        if (true) {
-          const newItem: any = {
-            id: 'admin-unique-id-generator',
-            name: 'unique-id-generator',
-            label: 'adminMenu.uniqueIdGenerator',
-            icon: 'dp-icon:flow-outline',
-            hoverIcon: 'dp-icon:flow-fill',
-            component: 'LazyUniqueIdGeneratorPage',
-            props: {}
-          }
-          routerProvider?.navigateTo(newItem)
-        }
-        emits('success', state.form)
-      }
-    })
+    const newItem: any = {
+      id: 'admin-unique-id-generator',
+      name: 'unique-id-generator',
+      label: 'adminMenu.uniqueIdGenerator',
+      icon: 'dp-icon:flow-outline',
+      hoverIcon: 'dp-icon:flow-fill',
+      component: 'LazyUniqueIdGeneratorPage',
+      props: {}
+    }
+    routerProvider?.navigateTo(newItem)
+    emits('success', state.form)
   } catch (error) {
     console.log(error)
     emits('refresh')
@@ -381,28 +372,21 @@ async function handleSubmit(formEl: FormInstance | undefined) {
 }
 
 async function init() {
-  if (!id) {
-    state.uniqueId = ''
-    state.form = {
-      id: '',
-      name: '',
-      prefix: [],
-      suffix: [],
-      idDigit: 4,
-      startNumber: 1
-    }
-    state.prefix = []
-    state.suffix = []
-    formRef.value.resetFields()
-    return
-  }
   state.form = await adminApi.api.getIdTemplatesId(id).then(res => res.data)
   setTag(true, state.form.prefix)
   setTag(false, state.form.suffix)
+  await formRef.value.resetFields()
 }
 
 function setTag(status: boolean, list: any) {
-  if (list.length < 1) return
+  if (list.length < 1) {
+    if (status) {
+      state.prefix = []
+    } else {
+      state.suffix = []
+    }
+    return
+  }
   if (status) {
     state.prefix = list.map((item: any) => item.expression)
   } else {
@@ -411,7 +395,7 @@ function setTag(status: boolean, list: any) {
 }
 
 onActivated(async () => {
-  init()
+  await init()
 })
 
 </script>
