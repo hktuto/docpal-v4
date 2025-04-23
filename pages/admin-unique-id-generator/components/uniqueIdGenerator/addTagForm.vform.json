@@ -100,7 +100,7 @@
       "formItemFlag": true,
       "options": {
         "name": "dateFormat",
-        "label": "Date format",
+        "label": "date_format",
         "labelAlign": "",
         "defaultValue": "",
         "placeholder": "",
@@ -227,7 +227,7 @@
       "formItemFlag": true,
       "options": {
         "name": "variableName",
-        "label": "Variable Name",
+        "label": "uniQueIdGenerator_variableName",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -280,7 +280,7 @@
       "formItemFlag": true,
       "options": {
         "name": "variableValue",
-        "label": "Variable Value",
+        "label": "uniQueIdGenerator_variableValue",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
