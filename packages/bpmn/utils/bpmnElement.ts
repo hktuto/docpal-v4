@@ -602,8 +602,8 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 { attr_name: 'templateId', ['flowable:expression']: {'__cdata': ''} },
-                { attr_name: 'worklowInfo', ['flowable:expression']: {'__cdata': ''} },
-                { attr_name: 'variables', ['flowable:expression']: {'__cdata': '{"title":"${variables:get(businessKey)}","content":"${variables:get(description)}","approver":"${variables:get(approved)}"}'} },
+                { attr_name: 'workflowInfo', ['flowable:expression']: {'__cdata': ''} },
+                { attr_name: 'variables', ['flowable:expression']: {'__cdata': ''} },
               ]
             }
           })
