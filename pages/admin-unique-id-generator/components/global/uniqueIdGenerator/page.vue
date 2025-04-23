@@ -9,12 +9,14 @@
           inputPlaceHolder="folder_cabinetFilterItemName"
         />
         <el-button id="UniqueIdGeneratorList__AddUniqueIdGenerator" class="el-icon--right button" type="primary"
-                   @click="handleDetail">
+                   @click="handleAdd">
           {{ $t('button.add') }}
         </el-button>
       </template>
     </VxeGrid>
   </div>
+
+  <LazyUniqueIdGeneratorAddDialog ref="addDialogRef"></LazyUniqueIdGeneratorAddDialog>
 
   <LazyUniqueIdGeneratorDuplicateDialog ref="duplicateDialogRef" @refresh="reload">
   </LazyUniqueIdGeneratorDuplicateDialog>
@@ -28,6 +30,7 @@ const routerProvider = inject(MenuRouterKey)
 const ResponsiveFilterRef = ref()
 const { t } = useI18n()
 let extraParams: any = {}
+const addDialogRef = ref()
 const duplicateDialogRef = ref()
 
 const {
@@ -94,15 +97,14 @@ const {
   }
 })
 
+function handleAdd(){
+  addDialogRef.value.handleOpen()
+}
+
 function handleDetail(row: any) {
   routerProvider?.navigateTo(routeUniqueIdGeneratorDetail(row), false)
 }
 
-/**
- * 複製配置
- * 彈窗編寫新的名稱，需要檢查是否存在同名
- * @param row
- */
 async function handleDuplicate(row: any) {
   duplicateDialogRef.value.handleOpen(row)
 }

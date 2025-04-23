@@ -1,37 +1,21 @@
 <script setup lang="ts">
-import formJson from './duplicateDialog.vform.json'
+import formJson from './addDialog.vform.json'
 import { adminApi } from 'api'
+import { routeUniqueIdGeneratorDetail } from '~/utils/routerHelper'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const FormRendererRef = ref()
-const props = defineProps<{
-  row: any
-}>()
-
-const emits = defineEmits([
-  'refresh'
-])
 
 const state = reactive<{
   loading: boolean,
   visible: boolean,
-  row: any,
 }>({
   loading: false,
-  visible: false,
-  row: {
-    name: ''
-  }
+  visible: false
 })
 
-function handleOpen(row: any) {
-  setTimeout(() => {
-    FormRendererRef.value.vFormRenderRef.resetForm()
-    state.row = deepCopy(row)
-    state.row.name = ''
-    FormRendererRef.value.vFormRenderRef.setFormData(state.row)
-  }, 100)
+function handleOpen() {
   state.visible = true
 }
 
@@ -39,14 +23,12 @@ async function handleSubmit() {
   try {
     let { name } = await FormRendererRef.value.vFormRenderRef.getFormData()
     const data = await adminApi.api.postIdTemplates({ name: name }).then(res => res.data)
-    state.row.id = data.id
-    await adminApi.api.putIdTemplatesId(data.id, { ...data, ...state.row })
+    state.visible = false
     routerProvider?.message.success(t('tip_createdSuccessMsg', {
       modelName: t('adminMenu.uniqueIdGenerator'),
       name: name
     }))
-    state.visible = false
-    emits('refresh')
+    routerProvider?.navigateTo(routeUniqueIdGeneratorDetail(data), false)
   } catch (e) {
     console.log(e)
   }
@@ -59,8 +41,8 @@ defineExpose({ handleOpen })
   <el-dialog v-model="state.visible" :title="t('uniQueIdGenerator_duplicate')" width="500">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="UniqueId__Duplicate__Submit" type="primary" @click="handleSubmit">
-        {{ t('common_submit') }}
+      <el-button id="UniqueId__Add__Confirm" type="primary" @click="handleSubmit">
+        {{ t('dpButtom_confirm') }}
       </el-button>
     </template>
   </el-dialog>
