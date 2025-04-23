@@ -367,7 +367,7 @@
     "editDashboard": "编辑仪表板",
     "editPermission": "编辑权限",
     "idGenerator": "ID 生成器",
-    "idTemplateVariables": "ID 模板变量",
+    "idTemplateVariables": "ID 生成器变量",
     "my": "案例",
     "name": "案例名称",
     "prefix": "案例 ID 前缀",
