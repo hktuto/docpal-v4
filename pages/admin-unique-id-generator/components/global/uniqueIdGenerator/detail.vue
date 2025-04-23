@@ -3,57 +3,68 @@
     <el-row>
       <el-col :span="12">
         <el-form ref="formRef" :model="state.form" label-width="auto" @submit.native.prevent>
-          <el-form-item label="Id Generator Name" label-position="top" prop="name"
-                        :rules="[{ required: true, message: t('tableHeader_name') + t('render.hint.fieldRequired') }]">
+          <el-form-item :label="t('uniQueIdGenerator_idGeneratorName')" label-position="top" prop="name"
+                        :rules="[{ required: true, message: t('uniQueIdGenerator_idGeneratorName') + t('render.hint.fieldRequired') }]">
             <el-input clearable v-model="state.form.name" />
           </el-form-item>
-          <el-form-item label="Prefix" label-position="top" prop="prefix"
-                        :rules="[{ required: true, message: t('Prefix') + t('render.hint.fieldRequired') }]">
-            <el-input-tag v-model="state.prefix" draggable clearable placeholder="Prefix" tag-effect="dark"
-                          tag-type="primary" @change="handleChangeTag(true)" @add-tag="handleAddTag(true)">
+          <el-form-item :label="t('uniQueIdGenerator_prefix')" label-position="top" prop="prefix"
+                        :rules="[{ required: true, message: t('uniQueIdGenerator_prefix') + t('render.hint.fieldRequired') }]">
+            <el-input-tag v-model="state.prefix" draggable clearable :placeholder="t('uniQueIdGenerator_prefix')"
+                          tag-effect="dark" tag-type="primary" @change="handleChangeTag(true)"
+            >
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
-            <el-button @click="handleDate(true,true)">Date</el-button>
-            <el-button @click="handleVariable(true,false)">Variable</el-button>
+            <el-button id="UniqueId_Detail__Prefix__Date" :icon="Plus" @click="handleDate(true,true)">
+              {{ t('uniQueIdGenerator_date') }}
+            </el-button>
+            <el-button id="UniqueId_Detail__Prefix__Variable" :icon="Plus" @click="handleVariable(true,false)">
+              {{ t('uniQueIdGenerator_variable') }}
+            </el-button>
           </div>
-          <el-form-item label="Suffix" label-position="top">
-            <el-input-tag v-model="state.suffix" draggable clearable placeholder="Suffix" tag-effect="dark"
-                          tag-type="primary" @change="handleChangeTag(false)" @add-tag="handleAddTag(false)">
+          <el-form-item :label="t('uniQueIdGenerator_suffix')" label-position="top">
+            <el-input-tag v-model="state.suffix" draggable clearable :placeholder="t('uniQueIdGenerator_suffix')"
+                          tag-effect="dark" tag-type="primary" @change="handleChangeTag(false)"
+            >
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
-            <el-button @click="handleDate(false,true)">Date</el-button>
-            <el-button @click="handleVariable(false,false)">Variable</el-button>
+            <el-button id="UniqueId_Detail__Suffix__Date" :icon="Plus" @click="handleDate(false,true)">
+              {{ t('uniQueIdGenerator_date') }}
+            </el-button>
+            <el-button id="UniqueId_Detail__Suffix__Variable" :icon="Plus" @click="handleVariable(false,false)">
+              {{ t('uniQueIdGenerator_variable') }}
+            </el-button>
           </div>
-          <el-form-item label="Id digit" label-position="top" prop="idDigit"
-                        :rules="[{ required: true, message: t('Id digit') + t('render.hint.fieldRequired') }]">
+          <el-form-item :label="t('uniQueIdGenerator_idDigit')" label-position="top" prop="idDigit"
+                        :placeholder="t('uniQueIdGenerator_idDigit')"
+                        :rules="[{ required: true, message: t('uniQueIdGenerator_idDigit') + t('render.hint.fieldRequired') }]">
             <el-input type="number" min="1" clearable v-model="state.form.idDigit" />
           </el-form-item>
-          <el-form-item label="Starting Number" label-position="top" prop="startNumber"
-                        :rules="[{ required: true, message: t('Starting Number') + t('render.hint.fieldRequired') }]">
+          <el-form-item :label="t('uniQueIdGenerator_startingNumber')" label-position="top" prop="startNumber"
+                        :rules="[{ required: true, message: t('uniQueIdGenerator_startingNumber') + t('render.hint.fieldRequired') }]">
             <el-input type="number" min="0" clearable v-model="state.form.startNumber" />
           </el-form-item>
         </el-form>
-        <el-button type="primary" @click="handleSubmit(formRef)">
+        <el-button id="UniqueId_Detail__Save" type="primary" @click="handleSubmit(formRef)">
           {{ t('common_save') }}
         </el-button>
         <el-divider />
       </el-col>
     </el-row>
     <el-col :span="12">
-      <h3>{{ t('Example') }}</h3>
-      <h4>{{ t('Setting') }}</h4>
-      <h5 v-if="state.form.prefix.length > 0">{{ t('Prefix') }}</h5>
+      <h3>{{ t('uniQueIdGenerator_example') }}</h3>
+      <h4>{{ t('uniQueIdGenerator_setting') }}</h4>
+      <h5 v-if="state.form.prefix.length > 0">{{ t('uniQueIdGenerator_prefix') }}</h5>
       <div v-for="(item,index) in state.form.prefix">
-        <el-form-item :label="handleLabel(item.expression,item.value)" label-position="top">
+        <el-form-item :label="handleLabel(item.type,item.value)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
       </div>
-      <h5 v-if="state.form.suffix.length > 0">{{ t('Suffix') }}</h5>
+      <h5 v-if="state.form.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
       <div v-for="(item,index) in state.form.suffix">
-        <el-form-item :label="handleLabel(item.expression,item.value)" label-position="top">
+        <el-form-item :label="handleLabel(item.type,item.value)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
@@ -62,18 +73,18 @@
       <el-form-item :label="t('Id')" label-position="top">
         <el-input disabled v-model="state.uniqueId" />
       </el-form-item>
-      <el-button @click="handleGenerateId">
-        {{ t('Generate') }}
+      <el-button id="UniqueId_Detail__Generate" @click="handleGenerateId">
+        {{ t('uniQueIdGenerator_generate') }}
       </el-button>
     </el-col>
   </div>
 
   <el-dialog v-model="state.dialogFormVisible" width="500"
-             :title="state.isAddVariable ? t('New Date Variable') : t('New Text Variable')">
+             :title="state.isAddVariable ? t('uniQueIdGenerator_creatDateVariable') : t('uniQueIdGenerator_creatTextVariable')">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button type="primary" @click="handleAddItemTag">
-        {{ t('common_submit') }}
+      <el-button id="UniqueId_Detail__NewVariable__Confirm" type="primary" @click="handleAddItemTag">
+        {{ t('dpButtom_confirm') }}
       </el-button>
     </template>
   </el-dialog>
@@ -82,7 +93,8 @@
 <script lang="ts" setup>
 import type { FormInstance } from 'element-plus'
 import { adminApi } from 'api'
-import formJson from './form.vform.json'
+import formJson from '../../uniqueIdGenerator/addTagForm.vform.json'
+import { Plus } from '@element-plus/icons-vue'
 
 const formRef = ref<FormInstance>()
 const routerProvider = inject(MenuRouterKey)
@@ -122,8 +134,14 @@ let itemData = reactive<ItemRule>({
   value: ''
 })
 
-function handleLabel(key: string, value: string) {
-  return key.includes('{date(') ? 'Date(' + value + ')' : handleDataFormat(key)
+function handleLabel(type: string, value: string) {
+  if (type === 'date') {
+    return `Date(${value})`
+  }
+  if (type === 'string') {
+    return 'string'
+  }
+  return handleDataFormat(type)
 }
 
 function handleDataFormat(value: string) {
@@ -136,6 +154,9 @@ function handleExampleData(type: string, value: string) {
   try {
     if (type === 'date') {
       return formatDate(new Date(), value)
+    }
+    if (type === 'string') {
+      return value
     }
     return value
   } catch (e) {
@@ -152,20 +173,33 @@ function handleGenerateId() {
     const prefix = state.form.prefix
     const suffix = state.form.suffix
     let id = ''
+    let status = true
 
     if (prefix.length > 0) {
       prefix.forEach((item: any) => {
-        id += handleExampleData(item.type, item.value)
+        const exData = handleExampleData(item.type, item.value)
+        id += exData
+        if (item.type === 'date' && exData === item.value) {
+          status = false
+        }
       })
     }
 
     if (suffix.length > 0) {
       suffix.forEach((item: any) => {
-        id += handleExampleData(item.type, item.value)
+        const exData = handleExampleData(item.type, item.value)
+        id += exData
+        if (item.type === 'date' && exData === item.value) {
+          status = false
+        }
       })
     }
 
     state.uniqueId = id + handleId()
+    if (!status) {
+      routerProvider?.message.error(t('Incorrect data format exists'))
+    }
+    return status
   } catch (e) {
     console.log(e)
   }
@@ -187,11 +221,11 @@ async function handleDate(status: boolean, setting: boolean) {
 
 /**
  * @param status (true: prefix,false: suffix)
- * @param setting (true: date setting, false: var setting)
+ * @param setting (true: date setting, false: variable setting)
  */
 function handleVariable(status: boolean, setting: boolean) {
   state.isAddVariable = setting
-  itemData.type = 'string'
+  itemData.type = 'variable'
   setTimeout(() => {
     FormRendererRef.value.vFormRenderRef.resetForm()
     FormRendererRef.value.vFormRenderRef.setFormData({ isShow: false, isPrefix: status, isDateType: setting })
@@ -202,10 +236,10 @@ function handleVariable(status: boolean, setting: boolean) {
 async function handleAddItemTag() {
   let formData = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (formData.isDateType) {
-    itemData.expression = '{date(' + formData.dateFormat + ')}'
+    itemData.expression = `{date(${formData.dateFormat})}`
     itemData.value = formData.dateFormat
   } else {
-    itemData.expression = '{var(' + formData.variableName + ')}'
+    itemData.expression = `{var(${formData.variableName})}`
     itemData.value = formData.variableValue
   }
 
@@ -223,17 +257,22 @@ async function handleAddItemTag() {
 }
 
 /**
- * 移除手動在輸入的數據
  * @param status (true: prefix,false: suffix)
  */
-function handleAddTag(status: boolean) {
+function handleAddTag(status: boolean, value: string) {
+  itemData.expression = value
+  itemData.type = 'string'
+  itemData.value = value
   if (status) {
-    state.prefix.pop()
-    state.form.prefix.pop()
+    itemData.index = state.form.prefix.length
+    state.prefix.push(itemData.expression)
+    state.form.prefix.push(deepCopy(itemData))
   } else {
-    state.suffix.pop()
-    state.form.suffix.pop()
+    itemData.index = state.form.suffix.length
+    state.suffix.push(itemData.expression)
+    state.form.suffix.push(deepCopy(itemData))
   }
+  itemData = {}
 }
 
 /**
@@ -246,6 +285,7 @@ function handleChangeTag(status: boolean) {
       return
     }
     state.form.prefix = handleList(state.prefix, state.form.prefix)
+    console.log('state.form.prefix', state.form.prefix)
   } else {
     if (!state.suffix) {
       state.suffix = []
@@ -287,19 +327,39 @@ async function handleSubmit(formEl: FormInstance | undefined) {
     formEl.validate(async (valid) => {
       if (valid) {
         state.loading = true
+
+        // check ID is true
+        if (handleGenerateId) {
+          return
+        }
+        const re = await adminApi.api.postIdTemplatesGenerate({ id: state.uniqueId })
+        if (!re.status) {
+          routerProvider?.message.error(t('Incorrect data format exists'))
+          return
+        }
+        return
         if (!id) {
           const data = await adminApi.api.postIdTemplates({ name: state.form.name }).then(res => res.data)
           state.form.id = data.id
           await adminApi.api.putIdTemplatesId(data.id, { ...data, ...state.form })
-
+          const newItem: any = {
+            id: 'admin-unique-id-generator',
+            name: 'unique-id-generator',
+            label: 'adminMenu.uniqueIdGenerator',
+            icon: 'dp-icon:flow-outline',
+            hoverIcon: 'dp-icon:flow-fill',
+            component: 'LazyUniqueIdGeneratorPage',
+            props: {}
+          }
+          routerProvider?.navigateTo(newItem)
           routerProvider?.message.success(t('tip_createdSuccessMsg', {
-            modelName: t('Unique Id'),
+            modelName: t('adminMenu.uniqueIdGenerator'),
             name: state.form.name
           }))
         } else {
           const data = await adminApi.api.putIdTemplatesId(id, state.form)
           routerProvider?.message.success(t('tip_updateSuccessMsg', {
-            modelName: t('Unique Id'),
+            modelName: t('adminMenu.uniqueIdGenerator'),
             name: state.form.name
           }))
         }
