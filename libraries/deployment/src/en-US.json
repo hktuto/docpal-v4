@@ -371,7 +371,8 @@
     "prefix": "Case ID - Prefix",
     "startNumber": "Case ID – Starting Number",
     "title": "Case management",
-    "userGroup": "User Group"
+    "userGroup": "User Group",
+    "idTemplateVariables": "ID Template Variable"
   },
   "caseManagement_ImportFromWorkflow": "Import from Workflow",
   "caseManagement_basicInfoOpenEditor": "Open Editor",
@@ -2019,7 +2020,7 @@
       "downloadFile": "Download",
       "endDatePlaceholder": "End date",
       "endTimePlaceholder": "End time",
-      "fieldRequired": " cannot be empty.",
+      "fieldRequired": "{name} cannot be empty.",
       "fileSizeExceed": "File size out of limit: ",
       "insertSubFormRow": "insert new row",
       "invalidNumber": "Invalid number format",
