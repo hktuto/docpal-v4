@@ -15,6 +15,9 @@ const state = reactive<{
 }>({
   curUser: null,
 })
+defineOptions({
+  name: 'AdminUserDetailDead'
+})
 function openUserList(openInNewTab: boolean = false){
     // TODO: open detail page
     const newItem: any = {
@@ -31,8 +34,6 @@ function openUserList(openInNewTab: boolean = false){
 }
 async function getUser() {
   const res = await adminApi.api.getNuxeoUserUserid(id);
-  console.log(res);
-  
   if(!res.data) return
   res.data.status = res.data.status === "A" ? "A" : "D";
   state.curUser = res.data;
@@ -66,9 +67,10 @@ provide(userProviderDetailKey, {
   getUser,
   openUserList
 })
-onActivated(async () => {
+
+onMounted(() => {
   getUser()
-});
+})
 </script>
 <template>
   <div class="userDetailSection" v-if="state.curUser">
