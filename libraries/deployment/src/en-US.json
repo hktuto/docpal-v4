@@ -366,13 +366,14 @@
     "digit": "Case ID - No. of Digits",
     "editDashboard": "Edit Dashboard",
     "editPermission": "Edit Permission",
+    "idGenerator": "ID Generator",
+    "idTemplateVariables": "ID Template Variable",
     "my": "My case",
     "name": "Case Name",
     "prefix": "Case ID - Prefix",
     "startNumber": "Case ID – Starting Number",
     "title": "Case management",
-    "userGroup": "User Group",
-    "idTemplateVariables": "ID Template Variable"
+    "userGroup": "User Group"
   },
   "caseManagement_ImportFromWorkflow": "Import from Workflow",
   "caseManagement_basicInfoOpenEditor": "Open Editor",

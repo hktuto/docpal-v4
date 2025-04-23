@@ -367,6 +367,11 @@ export const bpmnElement: BpmnElement = {
           type = 'Update Data'
           color = '#7B61FF'
           break
+        case '${idGeneratorDelegate}':
+          icon = '/bpmn/icons/update-data.svg'
+          type = 'Generate Id'
+          color = '#7B61FF'
+          break
         case '${masterTableRecordDelegate}':
           icon = '/bpmn/icons/master-table.svg'
           type = 'Master Table'
@@ -579,6 +584,32 @@ export const bpmnElement: BpmnElement = {
         })
       },
       {
+        icon: 'bpmn:update-data',
+        label: 'Generate Id',
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${idGeneratorDelegate}',
+            extensionElements: {
+              ['flowable:field']: []
+            }
+          }),
+          label: 'Generate Id',
+          data: bpmnElement.serviceTask.newNodeData(id, 'Generate Id', {
+            attr_id: id,
+            attr_name: 'Generate Id',
+            ['attr_flowable:delegateExpression']: '${idGeneratorDelegate}',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'templateId', ['flowable:expression']: {'__cdata': ''} },
+                { attr_name: 'worklowInfo', ['flowable:expression']: {'__cdata': ''} },
+                { attr_name: 'variables', ['flowable:expression']: {'__cdata': '{"title":"${variables:get(businessKey)}","content":"${variables:get(description)}","approver":"${variables:get(approved)}"}'} },
+              ]
+            }
+          })
+        })
+      },
+      {
         icon: 'bpmn:master-table',
         label: 'Master Table',
         dropData: (id: string) => ({
@@ -689,6 +720,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextWhatsApp'
         case '${updateDataDelegate}':
           return 'LazyBpmnContextUpdateData'
+        case '${idGeneratorDelegate}':
+          return 'LazyBpmnContextGenerateId'
         case '${masterTableRecordDelegate}':
           return 'LazyBpmnContextUpdateMasterTable'
         case '${calendarEventDelegate}':
