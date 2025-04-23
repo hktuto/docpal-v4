@@ -120,12 +120,8 @@
         "multipleLimit": 0,
         "optionItems": [
           {
-            "value": "YY",
-            "label": "YY"
-          },
-          {
-            "value": "YYYY",
-            "label": "YYYY"
+            "value": "yyyy",
+            "label": "yyyy"
           },
           {
             "value": "MM",
@@ -134,10 +130,6 @@
           {
             "value": "dd",
             "label": "dd"
-          },
-          {
-            "value": "DD",
-            "label": "DD"
           },
           {
             "value": "hh",
@@ -156,48 +148,60 @@
             "label": "ss"
           },
           {
-            "value": "HH:mm:ss",
-            "label": "HH:mm:ss"
-          },
-          {
             "value": "HH:mm",
             "label": "HH:mm"
           },
           {
-            "value": "D/M/YY",
-            "label": "D/M/YY"
+            "value": "HH:mm:ss",
+            "label": "HH:mm:ss"
           },
           {
-            "value": "DD/MM/YY",
-            "label": "DD/MM/YY"
+            "value": "dd/MM/yyyy",
+            "label": "dd/MM/yyyy"
           },
           {
-            "value": "DD-MM-YYYY",
-            "label": "DD-MM-YYYY"
+            "value": "dd/MM/yyyy HH:mm",
+            "label": "dd/MM/yyyy HH:mm"
           },
           {
-            "value": "DD/MM/YY HH:mm:ss",
-            "label": "DD/MM/YY HH:mm:ss"
+            "value": "dd/MM/yyyy HH:mm:ss",
+            "label": "dd/MM/yyyy HH:mm:ss"
           },
           {
-            "value": "DD/MM/YYYY HH:mm:ss",
-            "label": "DD/MM/YYYY HH:mm:ss"
+            "value": "dd-MM-yyyy",
+            "label": "dd-MM-yyyy"
           },
           {
-            "value": "DD/MM/YYYY HH:mm",
-            "label": "DD/MM/YYYY HH:mm"
+            "value": "dd-MM-yyyy HH:mm",
+            "label": "dd-MM-yyyy HH:mm"
           },
           {
-            "value": "YYYY-MM-DD",
-            "label": "YYYY-MM-DD"
+            "value": "dd-MM-yyyy HH:mm:ss",
+            "label": "dd-MM-yyyy HH:mm:ss"
           },
           {
-            "value": "YYYY-MM-DD HH:mm",
-            "label": "YYYY-MM-DD HH:mm"
+            "value": "yyyy/MM/dd",
+            "label": "yyyy/MM/dd"
           },
           {
-            "value": "YYYY-MM-DD HH:mm:ss",
-            "label": "YYYY-MM-DD HH:mm:ss"
+            "value": "yyyy/MM/dd HH:mm",
+            "label": "yyyy/MM/dd HH:mm"
+          },
+          {
+            "value": "yyyy/MM/dd HH:mm:ss",
+            "label": "yyyy/MM/dd HH:mm:ss"
+          },
+          {
+            "value": "yyyy-MM-dd",
+            "label": "yyyy-MM-dd"
+          },
+          {
+            "value": "yyyy-MM-dd HH:mm",
+            "label": "yyyy-MM-dd HH:mm"
+          },
+          {
+            "value": "yyyy-MM-dd HH:mm:ss",
+            "label": "yyyy-MM-dd HH:mm:ss"
           }
         ],
         "required": true,
