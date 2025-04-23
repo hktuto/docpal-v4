@@ -58,14 +58,16 @@
       <div v-for="(item,index) in state.form.prefix">
         <el-form-item :label="handleLabel(item.type,item.expression)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
-                    :formatter="(value: string) => handleExampleData(item.type,value)" />
+                    :formatter="(value: string) => handleExampleData(item.type,value)"
+                    @change="handleStringData(true,item)" />
         </el-form-item>
       </div>
       <h5 v-if="state.form.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
       <div v-for="(item,index) in state.form.suffix">
         <el-form-item :label="handleLabel(item.type,item.expression)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
-                    :formatter="(value: string) => handleExampleData(item.type,value)" />
+                    :formatter="(value: string) => handleExampleData(item.type,value)"
+                    @change="handleStringData(false,item)" />
         </el-form-item>
       </div>
       <el-divider />
@@ -165,6 +167,22 @@ function handleExampleData(type: string, value: string) {
   } catch (e) {
     console.log(e)
   }
+}
+
+/**
+ * update type is string expression the value
+ * @param status (true: prefix,false: suffix)
+ * @param item item
+ */
+function handleStringData(status: boolean, item: any) {
+  if (item.type !== 'string') return
+
+  if (status) {
+    state.prefix[state.prefix.indexOf(item.expression)] = item.value
+  } else {
+    state.suffix[state.suffix.indexOf(item.expression)] = item.value
+  }
+  item.expression = item.value
 }
 
 function handleId() {
@@ -334,10 +352,8 @@ async function handleSubmit(formEl: FormInstance | undefined) {
           routerProvider?.message.error(t('Id 不符合規範'))
           return
         }
-        return
         await adminApi.api.putIdTemplatesId(id, state.form)
         routerProvider?.message.success(t('tip_updateSuccessMsg', {
-          modelName: t('Unique Id'),
           modelName: t('adminMenu.uniqueIdGenerator'),
           name: state.form.name
         }))
