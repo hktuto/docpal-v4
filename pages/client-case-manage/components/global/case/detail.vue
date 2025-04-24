@@ -12,11 +12,9 @@ const emits = defineEmits(['filter-change', 'refresh'])
 const routerProvider = inject(MenuRouterKey)
 type TableState = {
   columns: any;
-  where: any
 };
 const state = reactive<TableState>({
-  columns: [],
-  where: {}
+  columns: []
 })
 let extraParams: any = {}
 const tableReady = ref(false)
@@ -31,13 +29,6 @@ const {
   id: 'clientCaseTableList',
   api: async (pageParams: any) => {
     try {
-      if (Object.entries(state.where).length !== 0) {
-        if (state.where.q) {
-          extraParams.q = state.where.q
-        }
-        delete state.where.q
-        extraParams.where = state.where
-      }
       return clientApi.api.postCaseTypesCasetypeidRecordsPage(id, { ...pageParams, ...extraParams })
     } catch (e) {
       console.log(e)
@@ -95,13 +86,22 @@ async function initCondition() {
 }
 
 function handleFilterFormChange(formModel: any) {
-  if (!formModel.isDesc) formModel.isDesc = true
-  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
-  if (formModel.orderBy) {
-    extraParams.orderBy = formModel.orderBy
-    extraParams.isDesc = formModel.isDesc
+  extraParams = {}
+  if ('isDesc' in formModel) {
+    extraParams.isDesc = formModel.isDesc == 'true'
+    delete formModel.isDesc
   }
-  state.where = formModel
+  if ('orderBy' in formModel) {
+    extraParams.orderBy = formModel.orderBy
+    delete formModel.orderBy
+  }
+  if ('q' in formModel) {
+    extraParams.q = formModel.q
+    delete formModel.q
+  }
+
+  extraParams.where = formModel
+  console.log('extraParams', extraParams)
   reload()
 }
 
