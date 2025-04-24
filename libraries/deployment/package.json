@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "start": "node index.js",
+    "compare": "node compare.js",
     "language": "node deploy-language.js",
     "lang:setup": "pnpm -F deployment language --ADMINURL https://admin.demo.docpal.wclsolution.com/api --SUPERADMIN admin --PASSWORD aaAA1234",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,7 +19,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "minimist": "^1.2.8"
+    "minimist": "^1.2.8",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "ts-node": "^10.9.2"
