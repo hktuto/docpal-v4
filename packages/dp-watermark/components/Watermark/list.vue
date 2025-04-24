@@ -44,7 +44,6 @@
 
 <script lang="ts" setup>
 import type { WatermarkTemplate } from '../../composables/Watermark'
-import { ElMessage } from 'element-plus'
 
 const { t } = useI18n()
 const props = defineProps<{
@@ -64,7 +63,7 @@ const selectedItem = computed(() => {
 })
 
 function deleteItem(id: string) {
-  ElMessage.success(t('tip_deleteSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
+  routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
   emit('remove', id)
 }
 
@@ -73,10 +72,11 @@ function createItem() {
   editDialog.value = false
 }
 
-function itemChangeHandler() {
+function itemChangeHandler(id: string) {
   newDialog.value = false
   editDialog.value = false
   emit('update', null)
+  switchDetail(id)
 }
 
 function editItem(id: string) {

@@ -339,9 +339,10 @@ async function handleSubmit() {
     }
 
     // Check if the ID is passed
-    if (handleGenerateId()) {
-      return
-    }
+    // if (handleGenerateId()) {
+    //   return
+    // }
+    handleGenerateId()
 
     //const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
     // if (data != state.uniqueId) {

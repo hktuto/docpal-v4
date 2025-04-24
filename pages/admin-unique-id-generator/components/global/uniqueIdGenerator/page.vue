@@ -64,7 +64,7 @@ const {
   bodyActions: [
     [
       {
-        code: 'delete',
+        code: 'edit',
         name: t('common_edit'),
         visible: true,
         disabled: false,
@@ -110,20 +110,38 @@ async function handleDuplicate(row: any) {
 }
 
 async function handleDelete(row: any) {
-  ElMessageBox.confirm(`${t('uniQueIdGenerator_deleteMsg', { name: row.name })}`)
-    .then(async () => {
-      try {
-        await adminApi.api.deleteIdTemplatesId(row.id)
-        routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-          modelName: t('adminMenu.uniqueIdGenerator'),
-          name: row.name
-        }))
-      } catch (error) {
-        console.log(error)
-      } finally {
-        reload()
-      }
-    })
+
+  ElMessageBox.confirm(t('uniQueIdGenerator_deleteMsg', { name: row.name }), {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_delete')
+  }).then(async () => {
+    try {
+      await adminApi.api.deleteIdTemplatesId(row.id)
+      routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+        modelName: t('adminMenu.uniqueIdGenerator'),
+        name: row.name
+      }))
+    } catch (error) {
+      console.log(error)
+    } finally {
+      reload()
+    }
+  })
+
+  // ElMessageBox.confirm(`${t('uniQueIdGenerator_deleteMsg', { name: row.name })}`)
+  //   .then(async () => {
+  //     try {
+  //       await adminApi.api.deleteIdTemplatesId(row.id)
+  //       routerProvider?.message.success(t('tip_deleteSuccessMsg', {
+  //         modelName: t('adminMenu.uniqueIdGenerator'),
+  //         name: row.name
+  //       }))
+  //     } catch (error) {
+  //       console.log(error)
+  //     } finally {
+  //       reload()
+  //     }
+  //   })
 }
 
 function handleFilterFormChange(formModel: any) {
