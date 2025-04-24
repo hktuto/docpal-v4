@@ -16,6 +16,7 @@ import { publicApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
 
+const userId:string = useUserId().value
 const { t } = useI18n()
 let extraParams: any = {}
 const {
@@ -27,7 +28,7 @@ const {
   cleanSelectedRows
 } = useVxeTable({
   id: 'c-dashboard',
-  api: (pageParams: any) => publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
+  api: (pageParams: any) => publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams, userId }),
   columns: [
     { field: 'name', title: 'dashboard_name', fixed: 'left' },
     {

@@ -17,3 +17,7 @@ pnpm -F api generate
 ```
 pnpm -F unit-test start
 ```
+5. Excel script generation for language differences
+```
+pnpm -F deployment compare
+```

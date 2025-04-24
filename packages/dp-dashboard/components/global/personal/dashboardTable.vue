@@ -9,6 +9,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { publicApi } from 'api'
 import { routeDashboardDetail } from '~/utils/routerHelper'
 
+const userId:string = useUserId().value
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
@@ -23,7 +24,7 @@ const {
   id: 'd-dashboard',
   zoom: false,
   api: (pageParams: any) =>
-    publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams }),
+    publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams, userId }),
   columns: [
     { field: 'name', title: 'tableHeader_name', fixed: 'left' },
     {
