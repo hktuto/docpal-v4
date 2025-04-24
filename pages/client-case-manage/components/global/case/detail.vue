@@ -101,7 +101,6 @@ function handleFilterFormChange(formModel: any) {
   }
 
   extraParams.where = formModel
-  console.log('extraParams', extraParams)
   reload()
 }
 
