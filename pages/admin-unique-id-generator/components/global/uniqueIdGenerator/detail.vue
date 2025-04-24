@@ -11,6 +11,9 @@
                         :rules="[{ required: true, message: t('uniQueIdGenerator_prefix') + t('render.hint.fieldRequired') }]">
             <el-input-tag v-model="state.prefix" draggable clearable :placeholder="t('uniQueIdGenerator_prefix')"
                           tag-effect="dark" tag-type="primary" @change="handleChangeTag(true)">
+              <template #tag="{value, index}">
+                <span @dblclick="handleEditVariable(true,value,index)">{{ value }}</span>
+              </template>
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
@@ -24,6 +27,9 @@
           <el-form-item :label="t('uniQueIdGenerator_suffix')" label-position="top">
             <el-input-tag v-model="state.suffix" draggable clearable :placeholder="t('uniQueIdGenerator_suffix')"
                           tag-effect="dark" tag-type="primary" @change="handleChangeTag(false)">
+              <template #tag="{value, index}">
+                <span @dblclick="handleEditVariable(false,value,index)">{{ value }}</span>
+              </template>
             </el-input-tag>
           </el-form-item>
           <div class="mb-4" style="margin-bottom:18px">
@@ -56,7 +62,8 @@
       <h4>{{ t('uniQueIdGenerator_setting') }}</h4>
       <h5 v-if="state.form.prefix.length > 0">{{ t('uniQueIdGenerator_prefix') }}</h5>
       <div v-for="(item,index) in state.form.prefix">
-        <el-form-item v-if="item.type != 'date'" :label="handleLabel(item.type,item.expression)" label-position="top">
+        <el-form-item v-if="item.type == 'variable'" :label="handleLabel(item.type,item.expression)"
+                      label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)"
                     @change="handleStringData(true,item)" />
@@ -64,7 +71,8 @@
       </div>
       <h5 v-if="state.form.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
       <div v-for="(item,index) in state.form.suffix">
-        <el-form-item v-if="item.type != 'date'" :label="handleLabel(item.type,item.expression)" label-position="top">
+        <el-form-item v-if="item.type == 'variable'" :label="handleLabel(item.type,item.expression)"
+                      label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)"
                     @change="handleStringData(false,item)" />
@@ -89,11 +97,24 @@
       </el-button>
     </template>
   </el-dialog>
+
+  <el-dialog v-model="state.editVisible" width="500"
+             :title="t('uniQueIdGenerator_editTextVariable')">
+    <FormRenderer ref="editFormRendererRef" :form-json="state.editFormJson" />
+    <template #footer>
+      <el-button id="UniqueId_Detail__EditVariable__Confirm" type="primary" @click="handleEditItemTag">
+        {{ t('dpButtom_confirm') }}
+      </el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import formJson from '../../uniqueIdGenerator/addTagForm.vform.json'
+import editDateTagForm from '../../uniqueIdGenerator/editDateTagForm.vform.json'
+import editStringTagForm from '../../uniqueIdGenerator/editStringTagForm.vform.json'
+import editVariableTagForm from '../../uniqueIdGenerator/editVariableTagForm.vform.json'
 import { Plus } from '@element-plus/icons-vue'
 
 const formRef = ref()
@@ -103,10 +124,14 @@ const { id } = defineProps<{
   id: string;
 }>()
 const FormRendererRef = ref()
+const editFormRendererRef = ref()
+let editFormJson = ref()
 const state = reactive({
   loading: false,
   isAddVariable: true,
   dialogFormVisible: false,
+  editVisible: false,
+  editFormJson: {},
   prefix: [],
   suffix: [],
   uniqueId: '',
@@ -255,6 +280,99 @@ function handleVariable(status: boolean, setting: boolean) {
   state.dialogFormVisible = true
 }
 
+/**
+ * @param status (true: prefix,false: suffix)
+ * @param value value
+ * @param index index
+ */
+async function handleEditVariable(status: boolean, value: string, index: number) {
+  state.loading = false
+  let item
+  if (status) {
+    item = state.form.prefix[index]
+  } else {
+    item = state.form.suffix[index]
+  }
+  if (!item) return
+
+  setTimeout(() => {
+    let json
+    let data
+    switch (item.type) {
+      case 'date' :
+        json = editDateTagForm
+        data = {
+          index: index,
+          type: item.type,
+          isPrefix: status,
+          dateFormat: item.value
+        }
+        break
+      case 'variable':
+        json = editVariableTagForm
+        data = {
+          index: index,
+          type: item.type,
+          isPrefix: status,
+          variableName: handleDataFormat(item.expression),
+          variableValue: item.value
+        }
+        break
+      default:
+        json = editStringTagForm
+        data = {
+          index: index,
+          type: item.type,
+          isPrefix: status,
+          stringValue: item.value
+        }
+    }
+    if (!json || !data) {
+      throw new Error('no json or data')
+    }
+    editFormRendererRef.value.setFormJson(json)
+    editFormRendererRef.value.vFormRenderRef.resetForm()
+    editFormRendererRef.value.vFormRenderRef.setFormData(data)
+  }, 100)
+  state.editVisible = true
+}
+
+async function handleEditItemTag() {
+  const formData = await editFormRendererRef.value.vFormRenderRef.getFormData()
+  const index = formData.index
+
+  let item = {}
+  switch (formData.type) {
+    case 'date':
+      item.expression = `{date(${formData.dateFormat})}`
+      item.value = formData.dateFormat
+      break
+    case 'variable':
+      item.expression = `{var(${formData.variableName})}`
+      item.value = formData.variableValue
+      break
+    default:
+      item.expression = formData.stringValue
+      item.value = formData.stringValue
+  }
+
+  if (formData.isPrefix) {
+    state.prefix[index] = item.expression
+    const element = state.form.prefix[index]
+    item.type = element.type
+    item.index = element.index
+    state.form.prefix[index] = deepCopy(item)
+  } else {
+    state.suffix[index] = item.expression
+    const element = state.form.suffix[index]
+    item.type = element.type
+    item.index = element.index
+    state.form.suffix[index] = deepCopy(item)
+  }
+  state.editVisible = false
+}
+
+
 async function handleAddItemTag() {
   let formData = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (formData.isDateType) {
@@ -354,17 +472,6 @@ async function handleSubmit() {
       modelName: t('adminMenu.uniqueIdGenerator'),
       name: state.form.name
     }))
-
-    const newItem: any = {
-      id: 'admin-unique-id-generator',
-      name: 'unique-id-generator',
-      label: 'adminMenu.uniqueIdGenerator',
-      icon: 'dp-icon:flow-outline',
-      hoverIcon: 'dp-icon:flow-fill',
-      component: 'LazyUniqueIdGeneratorPage',
-      props: {}
-    }
-    routerProvider?.navigateTo(newItem)
     emits('success', state.form)
   } catch (error) {
     console.log(error)
