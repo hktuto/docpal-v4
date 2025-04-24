@@ -174,7 +174,9 @@ provide(BrowseListProviderKey, {
 })
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
-bus.on(({ relatedIdOrPath, highlightIdOrPath }: any) => {
+bus.on((ids: any) => {
+  if(!ids) return
+  const relatedIdOrPath = ids?.relatedIdOrPath
   EventType.FILE_CLEAN_SELECTED_ROWS
   emitBus(EventType.FILE_NEED_REFRESH)
   // console.log(relatedIdOrPath, docDetail.value.id)
