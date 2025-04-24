@@ -2504,6 +2504,7 @@
   "uniQueIdGenerator_deleteMsg": "Are you sure you want to delete {name}, Any Workflow using it will fail.",
   "uniQueIdGenerator_duplicate": "複製配置",
   "uniQueIdGenerator_duplicateName": "新Id模板名稱",
+  "uniQueIdGenerator_editTextVariable": "編輯文字變數",
   "uniQueIdGenerator_example": "例子",
   "uniQueIdGenerator_generate": "生成",
   "uniQueIdGenerator_idCheckErrorMsg": "Id does not comply with the specifications",
