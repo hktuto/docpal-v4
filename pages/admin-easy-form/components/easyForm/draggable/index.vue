@@ -36,7 +36,7 @@
             <el-icon v-if="showEdit" class="cursorPointer el-icon--left" @click="handleOpenDialog(element)">
               <Edit/>
             </el-icon>
-            <el-icon class="cursorPointer" @click="removeAt(element, index)">
+            <el-icon v-if="list.length > 1" class="cursorPointer" @click="removeAt(element, index)">
               <Delete/>
             </el-icon>
           </div>
