@@ -127,9 +127,21 @@ async function handleDelete(row: any) {
 }
 
 function handleFilterFormChange(formModel: any) {
-  if (!formModel.isDesc) formModel.isDesc = true
-  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
-  extraParams = formModel
+  extraParams = {}
+  if ('isDesc' in formModel) {
+    extraParams.isDesc = formModel.isDesc == 'true'
+    delete formModel.isDesc
+  }
+  if ('orderBy' in formModel) {
+    extraParams.orderBy = formModel.orderBy
+    delete formModel.orderBy
+  }
+  if ('q' in formModel) {
+    extraParams.q = formModel.q
+    delete formModel.q
+  }
+
+  extraParams.where = formModel
   reload()
 }
 
