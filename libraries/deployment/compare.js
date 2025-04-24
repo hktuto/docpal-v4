@@ -13,19 +13,15 @@ function compareJSON(oldObj, newObj) {
 }
 
 function compareValues(path, oldVal, newVal, diffs) {
-  // 处理null和undefined的情况
   if (oldVal === undefined && newVal === undefined) return;
 
-  // 类型不同直接标记为变化
   if (typeof oldVal !== typeof newVal) {
     diffs.push({ type: 'change', path, oldValue: oldVal, newValue: newVal });
     return;
   }
 
-  // 处理对象类型（包括数组）
   if (typeof oldVal === 'object' && oldVal !== null && newVal !== null) {
     if (Array.isArray(oldVal) || Array.isArray(newVal)) {
-      // 数组比较
       if (!Array.isArray(oldVal) || !Array.isArray(newVal)) {
         diffs.push({ type: 'change', path, oldValue: oldVal, newValue: newVal });
         return;
@@ -42,7 +38,6 @@ function compareValues(path, oldVal, newVal, diffs) {
         }
       }
     } else {
-      // 普通对象比较
       const oldKeys = Object.keys(oldVal);
       const newKeys = Object.keys(newVal);
       const allKeys = new Set([...oldKeys, ...newKeys]);
@@ -59,14 +54,12 @@ function compareValues(path, oldVal, newVal, diffs) {
       });
     }
   } else {
-    // 基础类型比较（包括null）
     if (oldVal !== newVal) {
       diffs.push({ type: 'change', path: path || '.', oldValue: oldVal, newValue: newVal });
     }
   }
 }
 
-// 生成报告的可读格式
 function generateDiffReport(diffs) {
   const arr = []
   if (diffs.length === 0) {
@@ -124,7 +117,7 @@ function jsonToXlsx() {
   const zhWs = XLSX.utils.json_to_sheet(generateDiffReport(zhDiff));
   const zhHKWs = XLSX.utils.json_to_sheet(generateDiffReport(zhHKDiff));
   const wb = XLSX.utils.book_new();
-  const wscolLens = [5, 32, 52, 52];
+  const wscolLens = [6, 32, 52, 52];
   const wscols = wscolLens.map(width => ({ wpx: width * 10 }));
   enWs['!cols'] = wscols;
   zhWs['!cols'] = wscols;
