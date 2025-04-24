@@ -56,7 +56,7 @@
       <h4>{{ t('uniQueIdGenerator_setting') }}</h4>
       <h5 v-if="state.form.prefix.length > 0">{{ t('uniQueIdGenerator_prefix') }}</h5>
       <div v-for="(item,index) in state.form.prefix">
-        <el-form-item :label="handleLabel(item.type,item.expression)" label-position="top">
+        <el-form-item v-if="item.type != 'date'" :label="handleLabel(item.type,item.expression)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)"
                     @change="handleStringData(true,item)" />
@@ -64,7 +64,7 @@
       </div>
       <h5 v-if="state.form.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
       <div v-for="(item,index) in state.form.suffix">
-        <el-form-item :label="handleLabel(item.type,item.expression)" label-position="top">
+        <el-form-item v-if="item.type != 'date'" :label="handleLabel(item.type,item.expression)" label-position="top">
           <el-input :disabled="item.type == 'date'" v-model="item.value"
                     :formatter="(value: string) => handleExampleData(item.type,value)"
                     @change="handleStringData(false,item)" />
@@ -373,7 +373,7 @@ async function handleSubmit() {
 }
 
 async function init() {
-  state.uniqueId = ""
+  state.uniqueId = ''
   state.form = await adminApi.api.getIdTemplatesId(id).then(res => res.data)
   setTag(true, state.form.prefix)
   setTag(false, state.form.suffix)

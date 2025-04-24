@@ -4,7 +4,7 @@
       <template #toolbar_buttons>
         <ResponsiveFilter
           ref="ResponsiveFilterRef"
-          inputKey="label"
+          inputKey="q"
           @form-change="handleFilterFormChange"
           inputPlaceHolder="folder_cabinetFilterItemName"
         />
