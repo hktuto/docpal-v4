@@ -112,7 +112,7 @@
         "hidden": false,
         "clearable": true,
         "filterable": true,
-        "allowCreate": true,
+        "allowCreate": false,
         "popperClass": "",
         "remote": false,
         "automaticDropdown": false,
@@ -130,10 +130,6 @@
           {
             "value": "dd",
             "label": "dd"
-          },
-          {
-            "value": "hh",
-            "label": "hh"
           },
           {
             "value": "HH",

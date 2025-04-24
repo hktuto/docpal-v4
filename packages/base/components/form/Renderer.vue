@@ -50,21 +50,27 @@ const fromJsonNormalizer = computed(() => {
   // normalize vue 2 form designer
   if (!json.formConfig) json.formConfig = {}
   json.formConfig.jsonVersion = 3
-  let st = JSON.stringify(json)
-  st = st.replaceAll('this.$axios', '$api')
-  st = st.replaceAll('this.$cookies.get', '$getCookie')
-  st = st.replaceAll('yyyy-MM-dd', 'YYYY-MM-DD')
-  json = JSON.parse(st)
+  /**
+   * old migrate function , change axious to $api
+   */
+  // let st = JSON.stringify(json)
+  // st = st.replaceAll('this.$axios', '$api')
+  // st = st.replaceAll('this.$cookies.get', '$getCookie')
+  // st = st.replaceAll('yyyy-MM-dd', 'YYYY-MM-DD')
+  // json = JSON.parse(st)
 
   return json
 })
 function setFormJson(json) {
   console.log('setFormJson', json)
-  let st = JSON.stringify(json)
-  st = st.replaceAll('this.$axios', '$api').replaceAll('_$api', '$api')
-  st = st.replaceAll('this.$cookies.get', '$getCookie')
-  st = st.replaceAll('yyyy-MM-dd', 'YYYY-MM-DD')
-  json = JSON.parse(st)
+  /**
+   * old migrate function , change axious to $api
+   */
+  // let st = JSON.stringify(json)
+  // st = st.replaceAll('this.$axios', '$api').replaceAll('_$api', '$api')
+  // st = st.replaceAll('this.$cookies.get', '$getCookie')
+  // st = st.replaceAll('yyyy-MM-dd', 'YYYY-MM-DD')
+  // json = JSON.parse(st)
   vFormRenderRef.value.setFormJson(json)
 }
 function setFormData(data: any) {
