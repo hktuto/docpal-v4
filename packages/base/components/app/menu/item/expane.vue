@@ -31,6 +31,7 @@ function itemClick() {
         return;
     }
     if(props.item.component) {
+      console.log('itemClick',props.item.component)
         tabProvider?.openInCurrentTab(props.item)
     }
 }
