@@ -70,11 +70,14 @@ function setFormJson (json) {
         vFormDesignerRef.value.refreshDesigner()
         return
     }
-    let st = JSON.stringify(json);
-    st = st.replaceAll('this.$axios','$api').replaceAll('_$api','$api');
-    st = st.replaceAll('this.$cookies.get','$getCookie')
-    st = st.replaceAll('yyyy-MM-dd','YYYY-MM-DD')
-    json = JSON.parse(st);
+  /**
+   * old migrate function , change axious to $api
+   */
+  // let st = JSON.stringify(json);
+    // st = st.replaceAll('this.$axios','$api').replaceAll('_$api','$api');
+    // st = st.replaceAll('this.$cookies.get','$getCookie')
+    // st = st.replaceAll('yyyy-MM-dd','YYYY-MM-DD')
+    // json = JSON.parse(st);
     vFormDesignerRef.value.clearDesigner()
     vFormDesignerRef.value.refreshDesigner()
     vFormDesignerRef.value.setFormJson(json)
