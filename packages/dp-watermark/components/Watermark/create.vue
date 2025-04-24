@@ -15,8 +15,8 @@
 
 <script lang="ts" setup>
 
-import { ElMessage } from 'element-plus'
 import { useWatermark, WatermarkTemplate } from '../../composables/Watermark'
+
 const routerProvider = inject(MenuRouterKey)
 const emits = defineEmits(['submit'])
 const props = defineProps<{
@@ -42,13 +42,7 @@ async function submit() {
   }
   const newItem = await createWatermarkTemplate(form.value)
   routerProvider?.message.success(t('tip_createdSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
-  emits('submit', form.value)
-  router.push({
-    path: '/watermark',
-    query: {
-      id: newItem.id
-    }
-  })
+  emits('submit', newItem.id)
   // const { data } = await this.$axios.post('/api/watermark', this.form)
 }
 
