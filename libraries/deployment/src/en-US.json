@@ -2506,6 +2506,7 @@
   "uniQueIdGenerator_deleteMsg": "Are you sure you want to delete {name}, Any Workflow using it will fail.",
   "uniQueIdGenerator_duplicate": "Duplicate Setting",
   "uniQueIdGenerator_duplicateName": "New Generator Name",
+  "uniQueIdGenerator_editTextVariable": "Edit Text Variable",
   "uniQueIdGenerator_example": "Example",
   "uniQueIdGenerator_generate": "Generate",
   "uniQueIdGenerator_idCheckErrorMsg": "Id does not comply with the specifications",
