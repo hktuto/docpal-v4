@@ -3,8 +3,8 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputKey="q"
+          ref="responsiveFilterRef"
+          inputKey="name"
           @form-change="handleFilterFormChange"
           inputPlaceHolder="folder_cabinetFilterItemName"
         />
@@ -27,7 +27,7 @@ import { adminApi } from 'api'
 import { routeUniqueIdGeneratorDetail } from '~/utils/routerHelper'
 
 const routerProvider = inject(MenuRouterKey)
-const ResponsiveFilterRef = ref()
+const responsiveFilterRef = ref()
 const { t } = useI18n()
 let extraParams: any = {}
 const addDialogRef = ref()
@@ -110,7 +110,6 @@ async function handleDuplicate(row: any) {
 }
 
 async function handleDelete(row: any) {
-
   ElMessageBox.confirm(t('uniQueIdGenerator_deleteMsg', { name: row.name }), {
     confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_delete')
@@ -127,21 +126,6 @@ async function handleDelete(row: any) {
       reload()
     }
   })
-
-  // ElMessageBox.confirm(`${t('uniQueIdGenerator_deleteMsg', { name: row.name })}`)
-  //   .then(async () => {
-  //     try {
-  //       await adminApi.api.deleteIdTemplatesId(row.id)
-  //       routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-  //         modelName: t('adminMenu.uniqueIdGenerator'),
-  //         name: row.name
-  //       }))
-  //     } catch (error) {
-  //       console.log(error)
-  //     } finally {
-  //       reload()
-  //     }
-  //   })
 }
 
 function handleFilterFormChange(formModel: any) {
@@ -154,9 +138,9 @@ function handleFilterFormChange(formModel: any) {
     extraParams.orderBy = formModel.orderBy
     delete formModel.orderBy
   }
-  if ('q' in formModel) {
-    extraParams.q = formModel.q
-    delete formModel.q
+  if ('name' in formModel) {
+    extraParams.name = formModel.name
+    delete formModel.name
   }
 
   extraParams.where = formModel
@@ -189,7 +173,7 @@ function getFilter() {
       ]
     }
   ]
-  ResponsiveFilterRef.value.init(data)
+  responsiveFilterRef.value.init(data)
 }
 
 onMounted(() => {
