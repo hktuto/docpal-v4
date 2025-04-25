@@ -45,7 +45,30 @@ describe('CaseManageDetailPage', () => {
           'modifiedDate: "2025-03-10T08:35:05Z", caseDefinitionKey: "test_cabinet", caseDefinitionId: "9126ae0d-fd8a-11ef-b9b3-ae48303c80c6", ' +
           'latestVersion: "V5", latestVersionId: "5:34e59466-266d-4c46-9265-c5ce63ae18f6", ' +
           'productionVersionId: "5:34e59466-266d-4c46-9265-c5ce63ae18f6", _X_ROW_KEY: "row_103"' +
-          '}'
+          '}',
+        order: [
+          {
+            key: 'orderBy',
+            label: 'tableHeader.sortBy',
+            type: 'string',
+            isMultiple: false,
+            options: [
+              { label: 'caseManagement.name', value: 'case_id' },
+              { label: 'table_modifiedDate', value: 'modified_date' },
+              { label: 'workflow_createDate', value: 'created_date' }
+            ]
+          },
+          {
+            key: 'isDesc',
+            label: 'tableHeader.sortOrder',
+            type: 'string',
+            isMultiple: false,
+            options: [
+              { label: 'tableHeader.asc', value: false },
+              { label: 'tableHeader.desc', value: true }
+            ]
+          }
+        ]
       }
     })
   })
@@ -60,7 +83,33 @@ describe('CaseManageDetailPage', () => {
     wrapper.vm.responsiveFilter = {
       init: vi.fn()
     }
-    wrapper.vm.initCondition()
+    const data = {
+      data: [
+        {
+          key: 'age',
+          label: 'age',
+          type: 'String',
+          options: [
+            {
+              value: 1100,
+              label: 1100
+            },
+            {
+              value: 10,
+              label: 10
+            },
+            {
+              value: 11,
+              label: 11
+            }
+          ],
+          'isMultiple': false
+        }
+      ]
+    }
+    vi.spyOn(clientApi.api, 'getCaseTypesCasetypeidRecordsPageConditions').mockResolvedValue(data)
+
+    await wrapper.vm.initCondition()
     await wrapper.vm.$nextTick()
     expect(clientApi.api.getCaseTypesCasetypeidRecordsPageConditions).toHaveBeenCalled()
     expect(wrapper.vm.responsiveFilter.init).toHaveBeenCalled()

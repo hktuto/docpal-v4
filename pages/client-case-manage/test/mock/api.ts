@@ -11,5 +11,6 @@ export const clientApi = {
     getRelationQuery: vi.fn(() => Promise.resolve(true)),
     getCaseDashboardVersionCmmnversionidPermission: vi.fn(() => Promise.resolve(true)),
     getCaseDashboardId: vi.fn(() => Promise.resolve(true)),
+    postCaseDashboardInstanceActionPreRequisite: vi.fn(() => Promise.resolve(true)),
   }
 }
