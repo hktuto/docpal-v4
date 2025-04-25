@@ -41,7 +41,6 @@ function handleAggSearch(params: any) {
 }
 function handleUpdateAgg(aggregation: any, aggParams: any = {}) {
   // if(searchState === 'aggChange') return
-  console.log(aggParams)
   BarRef.value.aggRef.setDefaultFilter(aggParams.filter)
   state.aggregation = aggregation
   // searchState = 'aggChange'
