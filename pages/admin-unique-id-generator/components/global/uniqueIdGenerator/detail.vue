@@ -60,22 +60,19 @@
     <el-col :span="12">
       <h3>{{ t('uniQueIdGenerator_example') }}</h3>
       <h4>{{ t('uniQueIdGenerator_setting') }}</h4>
-      <h5 v-if="state.form.prefix.length > 0">{{ t('uniQueIdGenerator_prefix') }}</h5>
-      <div v-for="(item,index) in state.form.prefix">
+      <h5 v-if="state.example.prefix.length > 0">{{ t('uniQueIdGenerator_prefix') }}</h5>
+      <div v-for="(item,index) in state.example.prefix">
         <el-form-item v-if="item.type == 'variable'" :label="handleLabel(item.type,item.expression)"
                       label-position="top">
-          <el-input :disabled="item.type == 'date'" v-model="item.value"
-                    :formatter="(value: string) => handleExampleData(item.type,value)"
-                    @change="handleStringData(true,item)" />
+          <el-input v-model="item.value" :formatter="(value: string) => handleExampleData(item.type,value)" />
         </el-form-item>
       </div>
-      <h5 v-if="state.form.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
-      <div v-for="(item,index) in state.form.suffix">
+      <h5 v-if="state.example.suffix.length > 0">{{ t('uniQueIdGenerator_suffix') }}</h5>
+      <div v-for="(item,index) in state.example.suffix">
         <el-form-item v-if="item.type == 'variable'" :label="handleLabel(item.type,item.expression)"
                       label-position="top">
-          <el-input :disabled="item.type == 'date'" v-model="item.value"
-                    :formatter="(value: string) => handleExampleData(item.type,value)"
-                    @change="handleStringData(false,item)" />
+          <el-input v-model="item.value" :formatter="(value: string) => handleExampleData(item.type,value)">
+          </el-input>
         </el-form-item>
       </div>
       <el-divider />
@@ -98,8 +95,7 @@
     </template>
   </el-dialog>
 
-  <el-dialog v-model="state.editVisible" width="500"
-             :title="t('uniQueIdGenerator_editTextVariable')">
+  <el-dialog v-model="state.editVisible" width="500" :title="t('uniQueIdGenerator_editTextVariable')">
     <FormRenderer ref="editFormRendererRef" :form-json="state.editFormJson" />
     <template #footer>
       <el-button id="UniqueId_Detail__EditVariable__Confirm" type="primary" @click="handleEditItemTag">
@@ -125,7 +121,6 @@ const { id } = defineProps<{
 }>()
 const FormRendererRef = ref()
 const editFormRendererRef = ref()
-let editFormJson = ref()
 const state = reactive({
   loading: false,
   isAddVariable: true,
@@ -138,6 +133,12 @@ const state = reactive({
   form: {
     id: '',
     name: '',
+    prefix: [],
+    suffix: [],
+    idDigit: 4,
+    startNumber: 1
+  },
+  example: {
     prefix: [],
     suffix: [],
     idDigit: 4,
@@ -181,7 +182,6 @@ function handleDataFormat(value: string) {
 function handleExampleData(type: string, value: string) {
   try {
     if (type === 'date') {
-      // TODO 前端的format格式并非ISO 8601標準，導致前後端創建出來的ID不一致
       return formatDate(new Date(), value)
     }
     if (type === 'string') {
@@ -193,60 +193,11 @@ function handleExampleData(type: string, value: string) {
   }
 }
 
-/**
- * update type is string expression the value
- * @param status (true: prefix,false: suffix)
- * @param item item
- */
-function handleStringData(status: boolean, item: any) {
-  if (item.type !== 'string') return
-
-  if (status) {
-    state.prefix[state.prefix.indexOf(item.expression)] = item.value
-  } else {
-    state.suffix[state.suffix.indexOf(item.expression)] = item.value
-  }
-  item.expression = item.value
-}
-
-function handleId() {
-  return String(state.form.startNumber).padStart(state.form.idDigit, '0')
-}
-
 async function handleGenerateId() {
   try {
-    // const prefix = state.form.prefix
-    // const suffix = state.form.suffix
-    // let id = ''
-    let status = false
-    //
-    // if (prefix.length > 0) {
-    //   prefix.forEach((item: any) => {
-    //     const exData = handleExampleData(item.type, item.value)
-    //     id += exData
-    //     if (item.type === 'date' && exData === item.value) {
-    //       status = true
-    //     }
-    //   })
-    // }
-    //
-    // id += handleId()
-    //
-    // if (suffix.length > 0) {
-    //   suffix.forEach((item: any) => {
-    //     const exData = handleExampleData(item.type, item.value)
-    //     id += exData
-    //     if (item.type === 'date' && exData === item.value) {
-    //       status = true
-    //     }
-    //   })
-    // }
-    state.uniqueId = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
-    // state.uniqueId = id
-    if (status) {
-      routerProvider?.message.error(t('uniQueIdGenerator_dateIsIncorrectErrorMsg'))
-    }
-    return status
+    state.example.idDigit = state.form.idDigit
+    state.example.startNumber = state.form.startNumber
+    state.uniqueId = await adminApi.api.postIdTemplatesValidate(state.example).then(res => res.data)
   } catch (e) {
     console.log(e)
   }
@@ -362,16 +313,17 @@ async function handleEditItemTag() {
     item.type = element.type
     item.index = element.index
     state.form.prefix[index] = deepCopy(item)
+    state.example.prefix[index] = deepCopy(item)
   } else {
     state.suffix[index] = item.expression
     const element = state.form.suffix[index]
     item.type = element.type
     item.index = element.index
     state.form.suffix[index] = deepCopy(item)
+    state.example.suffix[index] = deepCopy(item)
   }
   state.editVisible = false
 }
-
 
 async function handleAddItemTag() {
   let formData = await FormRendererRef.value.vFormRenderRef.getFormData()
@@ -392,12 +344,15 @@ async function handleAddItemTag() {
     itemData.index = state.form.prefix.length
     state.prefix.push(itemData.expression)
     state.form.prefix.push(deepCopy(itemData))
+    state.example.prefix.push(deepCopy(itemData))
   } else {
     itemData.index = state.form.suffix.length
     state.suffix.push(itemData.expression)
     state.form.suffix.push(deepCopy(itemData))
+    state.example.suffix.push(deepCopy(itemData))
   }
   itemData = {}
+  formRef.value.clearValidate('prefix')
   state.dialogFormVisible = false
 }
 
@@ -411,12 +366,14 @@ function handleChangeTag(status: boolean) {
       return
     }
     state.form.prefix = handleList(state.prefix, state.form.prefix)
+    state.example.prefix = handleList(state.prefix, state.form.prefix)
   } else {
     if (!state.suffix) {
       state.suffix = []
       return
     }
     state.form.suffix = handleList(state.suffix, state.form.suffix)
+    state.example.suffix = handleList(state.suffix, state.form.suffix)
   }
 }
 
@@ -456,17 +413,6 @@ async function handleSubmit() {
       return
     }
 
-    // Check if the ID is passed
-    // if (handleGenerateId()) {
-    //   return
-    // }
-    handleGenerateId()
-
-    //const data = await adminApi.api.postIdTemplatesValidate(state.form).then(res => res.data)
-    // if (data != state.uniqueId) {
-    //   routerProvider?.message.error(t('uniQueIdGenerator_idCheckErrorMsg'))
-    //   return
-    // }
     await adminApi.api.putIdTemplatesId(id, state.form)
     routerProvider?.message.success(t('tip_updateSuccessMsg', {
       modelName: t('adminMenu.uniqueIdGenerator'),
@@ -483,6 +429,7 @@ async function handleSubmit() {
 async function init() {
   state.uniqueId = ''
   state.form = await adminApi.api.getIdTemplatesId(id).then(res => res.data)
+  state.example = deepCopy(state.form)
   setTag(true, state.form.prefix)
   setTag(false, state.form.suffix)
   await formRef.value.resetFields()
