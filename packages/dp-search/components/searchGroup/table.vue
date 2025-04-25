@@ -25,7 +25,12 @@
           </el-icon>
         </div>
         <template v-if="row.properties.summarys.length <= 1 || row.expandSummary">
-          <div v-for="(item,index) in row.properties.summarys" class="summaryItem" :key="item.summaryKey + index" :title="`${$t(item.summaryKey)}:${item.summaryValue}`">
+          <div
+            v-for="(item, index) in row.properties.summarys"
+            class="summaryItem"
+            :key="item.summaryKey + index"
+            :title="`${$t(item.summaryKey)}:${item.summaryValue}`"
+          >
             [{{ $t(item.summaryKey) }}]: <b>{{ item.summaryValue }}</b>
           </div>
         </template>
@@ -186,10 +191,11 @@ async function getList(param: any) {
     }
     tableConfig.loading = true
     const { data: res } = (await clientApi.api.postNuxeoSearchNestedsearchV2({ ...state.barParams, ...state.aggParams, ...param })) as any
-    if(!res.page) res.page = {
-      entryList: [],
-      totalSize: 0
-    }
+    if (!res.page)
+      res.page = {
+        entryList: [],
+        totalSize: 0
+      }
     // const res = await SearchGroupGetApi({ ...state.barParams, ...state.aggParams, ...param })
     const list = res.page.entryList.map((item: any) => {
       const _item = { ...item }
@@ -217,7 +223,9 @@ async function getList(param: any) {
   } finally {
     tableConfig.loading = false
     tableRef.value?.loadData(state.tableData)
-    emits('updateAgg', state.aggregation, state.aggParams)
+    let agg = { ...state.aggParams }
+    if (state.barParams.filter) agg = { filter: { ...agg.filter, ...state.barParams.filter } }
+    emits('updateAgg', state.aggregation, agg)
   }
 }
 

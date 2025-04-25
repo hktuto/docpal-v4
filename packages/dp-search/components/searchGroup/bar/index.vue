@@ -69,8 +69,8 @@ const recordRef = ref()
 async function handleLogSearch(query: any) {
   isHistory = true
   aggRef.value.clear()
-  if (query.filter) aggRef.value.setDefaultFilter(query.filter)
-  else aggRef.value.setDefaultFilter({})
+  // if (query.filter) aggRef.value.setDefaultFilter(query.filter,'72')
+  // else aggRef.value.setDefaultFilter({},'73')
   await filterRef.value.initForm(query)
   emits('searchLog', query)
   setTimeout(() => {
