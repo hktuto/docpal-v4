@@ -5,7 +5,7 @@
         v-model="state.form.queryType"
         :options="options.conditionType"
         :placeholder="$t('common_selectOccupancyContent')"
-        size="small" clearable filterable
+        size="small" clearable filterable default-first-option
         @clear="emits('selectClear')"
         @change="handleChangeQueryType"
       >
@@ -23,7 +23,7 @@
       <el-select-v2
         v-model="state.form.metadataKey"
         :options="options.metadata"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         @change="handleMetaChange"
         size="small"
       >
@@ -45,7 +45,7 @@
       <el-select-v2
         v-model="state.form.includeLanguages"
         :options="options.languages"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
         @change="handleChange"
       >
@@ -58,7 +58,7 @@
       <el-select-v2
         v-model="state.form.documentTypes"
         :options="options.docType"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
         @change="handleChange"
       >
@@ -68,7 +68,7 @@
       <el-select-v2
         v-model="state.form.mimeTypes"
         :options="options.mimeTypes"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
         @change="handleChange"
       />
@@ -77,7 +77,7 @@
       <el-select-v2
         v-model="state.form.creators"
         :options="options.users"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
         @change="handleChange"
       />
@@ -86,7 +86,7 @@
       <el-select-v2
         v-model="state.form.authors"
         :options="options.users"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
         @change="handleChange"
       />
@@ -95,7 +95,7 @@
       <el-select-v2
         v-model="state.form.collections"
         :options="options.collections"
-        :placeholder="$t('common_selectOccupancyContent')" clearable filterable
+        :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
         @change="handleChange"
       />
@@ -105,7 +105,7 @@
         v-model="state.form.tags"
         :options="options.tags"
         :placeholder="$t('common_selectOccupancyContent')"
-        size="small" multiple clearable filterable
+        size="small" multiple clearable filterable default-first-option
         @change="handleChange"
       />
     </el-form-item>
@@ -114,7 +114,7 @@
         v-model="state.form.creatorGroups"
         :options="options.groupList"
         :placeholder="$t('common_selectOccupancyContent')"
-        size="small" multiple clearable filterable
+        size="small" multiple clearable filterable default-first-option
         @change="handleChange"
       />
     </el-form-item>
@@ -123,7 +123,7 @@
         v-model="state.form.authorGroups"
         :options="options.groupList"
         :placeholder="$t('common_selectOccupancyContent')"
-        size="small" multiple clearable filterable
+        size="small" multiple clearable filterable default-first-option
         @change="handleChange"
       />
     </el-form-item>
@@ -131,7 +131,7 @@
       <el-select-v2
         v-model="state.form.size"
         :options="options.sizes"
-        :placeholder="$t('common_selectOccupancyContent')"
+        :placeholder="$t('common_selectOccupancyContent')" default-first-option
         size="small"
         @change="handleChange"
       >
