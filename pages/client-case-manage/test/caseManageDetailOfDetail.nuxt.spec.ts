@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { CaseDashboard } from '#components'
 import { clientApi } from './mock/api'
 
-describe('CaseManageDetailPage', () => {
+describe('[client-case]CaseManageDetailPage', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

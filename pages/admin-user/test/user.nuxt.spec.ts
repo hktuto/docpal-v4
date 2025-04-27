@@ -417,7 +417,7 @@ describe('[admin-user]UserPasswordDialog', () => {
       password: formData.password,
       userId: mockUser.userId,
     });
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg'));
+    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('tip_updateSuccessMsg'));
     expect(wrapper.vm.state.visible).toBe(false);
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
   });
@@ -705,7 +705,7 @@ describe('[admin-user]UserAddGroupsDialog', () => {
       groupIds: formData.id,
       ...wrapper.vm.state.setting,
     });
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('dpMsg_success'));
+    expect(ElMessage.success).toHaveBeenCalledWith(expect.stringContaining('dpMsg_success'));
     expect(wrapper.vm.state.visible).toBe(false);
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
   });
@@ -778,7 +778,7 @@ describe('[admin-user]UserAddGroupDialog', () => {
     await wrapper.vm.handleSubmit();
 
     expect(userProviderDetail.BatchUserAddGroupsApi).toHaveBeenCalled();
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('user_userGroupsAssignedSuccessMsg');
+    expect(ElMessage.success).toHaveBeenCalledWith('user_userGroupsAssignedSuccessMsg');
     expect(wrapper.vm.state.visible).toBe(false);
     expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled();
   });

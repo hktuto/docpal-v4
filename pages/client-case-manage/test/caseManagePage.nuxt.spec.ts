@@ -4,7 +4,7 @@ import { CasePage, ResponsiveFilter } from '#components'
 import { VxeGrid } from 'vxe-table'
 import { clientApi } from './mock/api'
 
-describe('CaseManagePage', () => {
+describe('[client-case]CaseManagePage', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

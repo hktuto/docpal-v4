@@ -7,7 +7,7 @@ const mockRouterProvider = {
   navigateTo: vi.fn()
 }
 
-describe('TrashEmptyTrash', () => {
+describe('[client-trash]TrashEmptyTrash', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { SharePage } from '#components'
 import { VxeGrid } from 'vxe-table'
 
-describe('SharePage', () => {
+describe('[client-external-share]SharePage', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

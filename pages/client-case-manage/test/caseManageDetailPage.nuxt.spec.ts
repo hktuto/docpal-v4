@@ -4,7 +4,7 @@ import { CaseDetail, ResponsiveFilter } from '#components'
 import { VxeGrid } from 'vxe-table'
 import { clientApi } from './mock/api'
 
-describe('CaseManageDetailPage', () => {
+describe('[client-case]CaseManageDetailPage', () => {
   let wrapper: any
   const id = '93587467-959d-4b9d-96f0-1967673f28d8'
   beforeEach(() => {
