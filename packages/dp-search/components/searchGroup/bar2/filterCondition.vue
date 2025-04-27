@@ -2,14 +2,14 @@
   <div class="search-group-bar-filter">
     <div class="flex-x-end">
       <el-icon :class="[mode === 'edit' ? 'rotateLast' : 'rotateFirst', 'cursorPointer']" @click="handleUp">
-        <ArrowUp/>
+        <ArrowUp />
       </el-icon>
     </div>
     <div v-show="mode === 'edit'">
       <div v-for="(item, index) in qItem.matchs" :key="item.id">
         <SearchGroupBar2Form :form="item" :ref="el => formRef[item.id] = el"
                              @selectClear="handleDelete(item)"
-                             @formChange="emits('formChange')"/>
+                             @formChange="emits('formChange')" />
         <el-divider v-if="index !== qItem.matchs.length - 1">
           {{ $t(`logic.${qItem.condition}`) }}
         </el-divider>
@@ -19,7 +19,7 @@
           {{ $t(`logic.${qItem.condition}`) }}
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item command="and">{{ $t('logic.and') }}fsa</el-dropdown-item>
+              <el-dropdown-item command="and">{{ $t('logic.and') }}</el-dropdown-item>
               <el-dropdown-item command="or">{{ $t('logic.or') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -28,8 +28,8 @@
     </div>
     <div v-show="mode === 'view'">
       <template v-for="(item, index) in viewData" :key="item.id">
-        <el-tag class="el-tag--ellipsis" closable 
-          v-if="(item.queryType !== 'metadata' && item.value) || 
+        <el-tag class="el-tag--ellipsis" closable
+                v-if="(item.queryType !== 'metadata' && item.value) ||
           (item.value.key && item.value.value)"
                 @close="handleDelete(item)">
           <template v-if="item.queryType !== 'metadata'">
@@ -44,16 +44,15 @@
   </div>
 </template>
 <script lang="ts" setup>
-import type {searchGroupQQ} from '~/typing/search'
-import {ArrowUp} from '@element-plus/icons-vue'
+import type { searchGroupQQ } from '~/typing/search'
+import { ArrowUp } from '@element-plus/icons-vue'
 
 const props = defineProps(['qItem'])
 const emits = defineEmits(['delete', 'deleteChild', 'add', 'command', 'update', 'formChange'])
 const formRef = ref({})
 const mode = ref('edit')
-const viewData = ref({
+const viewData = ref({})
 
-})
 function handleAddFilter() {
   emits('add')
 }
@@ -65,7 +64,7 @@ function handleCommand(command: string) {
 async function handleUp() {
   if (mode.value === 'edit') {
     const data = await getData()
-    console.log(data, props.qItem, 'handleUp');
+    console.log(data, props.qItem, 'handleUp')
     viewData.value = data
     // emits('update', data)
   }
@@ -111,10 +110,9 @@ async function getData() {
           includeLanguages: item.includeLanguages ? item.includeLanguages : []
         }
       }
-      
+
       pre.push(rItem)
-    }
-    else if (item.queryType === 'metadata') {
+    } else if (item.queryType === 'metadata') {
       rItem = {
         queryType: item.queryType,
         value: {
@@ -122,7 +120,7 @@ async function getData() {
           value: item.metadataValue
         },
         option: {
-        // matchCase: item.matchCase,
+          // matchCase: item.matchCase,
           fullMatch: item.fullMatch
         }
       }
@@ -136,7 +134,7 @@ async function getData() {
 async function getFormData(item: any) {
   const id = item.id
   const data = await formRef.value[id].getFormData()
-  return {...data}
+  return { ...data }
 }
 
 onActivated(async () => {
