@@ -1,22 +1,21 @@
 import * as XLSX from 'xlsx';
 import testReport from '../../.vitest-reporter-html/index.json';
-async function createReport() {
+export function createTestReport() {
   const dataArr = [];
   testReport.testResults.forEach(suite => {
     suite.assertionResults.forEach(test => {
       const titles = test.ancestorTitles.join(',').split(']');
       const title1 = titles[0].replace('[', '');
-      dataArr.push([title1, titles[1], test.title, '', '', '', '', '']);
+      dataArr.push([title1, titles[1], test.title, '', '', '', 'Pass', '']);
     });
   });
   dataArr.push(
-    ['Total', '', testReport.numTotalTests],
+    ['Total', '', '', '', '', '', testReport.numTotalTests],
     // ['Passed', testReport.numPassedTests],
     // ['Failed', testReport.numFailedTests],
   );
   jsonToXlsx(dataArr);
 }
-createReport();
 function jsonToXlsx(exportArr) {
   const Header = [['Function', 'Test Case ID', 'Test Case Title', 'Pre-conditions', 'Test Step', 'Expected Result', 'Actual Result', 'Test Automation?']];
   const headerWs = XLSX.utils.aoa_to_sheet(Header);

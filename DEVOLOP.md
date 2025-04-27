@@ -13,12 +13,11 @@ pnpm i --shamefully-hoist
 ```
 pnpm -F api generate
 ```
-4. 生成测试 excel文档
+4. Generate code deployment report
 ```
 pnpm test
-pnpm -F unit-test start
+// Excel script generation for language differences
+// Generate test excel document
+pnpm -F report start
 ```
-5. Excel script generation for language differences
-```
-pnpm -F deployment compare
-```
+

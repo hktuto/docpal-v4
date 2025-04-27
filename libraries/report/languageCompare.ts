@@ -1,11 +1,11 @@
 
-const enJson = require('./src/en-US.json')
-const zhJson = require('./src/zh-CN.json')
-const zhHKJson = require('./src/zh-HK.json')
-const oldEnJson = require('./oldSrc/en-US.json')
-const oldZhJson = require('./oldSrc/zh-CN.json')
-const oldZhHKJson = require('./oldSrc/zh-HK.json')
-const XLSX = require('xlsx')
+import enJson from '../deployment/src/en-US.json'
+import zhJson from '../deployment/src/zh-CN.json'
+import zhHKJson from '../deployment/src/zh-HK.json'
+import oldEnJson from '../deployment/oldSrc/en-US.json'
+import oldZhJson from '../deployment/oldSrc/zh-CN.json'
+import oldZhHKJson from '../deployment/oldSrc/zh-HK.json'
+import * as XLSX from 'xlsx';
 function compareJSON(oldObj, newObj) {
   const diffs = [];
   compareValues('', oldObj, newObj, diffs);
@@ -108,11 +108,11 @@ function generateDiffReport(diffs) {
   });
   return arr
 }
-const enDiff = compareJSON(oldEnJson, enJson);
-const zhDiff = compareJSON(oldZhJson, zhJson);
-const zhHKDiff = compareJSON(oldZhHKJson, zhHKJson);
-jsonToXlsx()
-function jsonToXlsx() {
+
+export function createLanguageReport() {
+  const enDiff = compareJSON(oldEnJson, enJson);
+  const zhDiff = compareJSON(oldZhJson, zhJson);
+  const zhHKDiff = compareJSON(oldZhHKJson, zhHKJson);
   const enWs = XLSX.utils.json_to_sheet(generateDiffReport(enDiff));
   const zhWs = XLSX.utils.json_to_sheet(generateDiffReport(zhDiff));
   const zhHKWs = XLSX.utils.json_to_sheet(generateDiffReport(zhHKDiff));

@@ -7,8 +7,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "start": "npx ts-node index.ts",
-    "generate": " npx ts-node ./src/generator"
+    "start": "npx ts-node index.ts"
   },
   "keywords": [],
   "author": "",
