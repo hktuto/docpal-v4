@@ -246,44 +246,45 @@ async function handleEditVariable(status: boolean, value: string, index: number)
   }
   if (!item) return
 
+  // set Data
+  let json
+  let data
+  switch (item.type) {
+    case 'date' :
+      json = editDateTagForm
+      data = {
+        index: index,
+        type: item.type,
+        isPrefix: status,
+        dateFormat: item.value
+      }
+      break
+    case 'variable':
+      json = editVariableTagForm
+      data = {
+        index: index,
+        type: item.type,
+        isPrefix: status,
+        variableName: handleDataFormat(item.expression),
+        variableValue: item.value
+      }
+      break
+    default:
+      json = editStringTagForm
+      data = {
+        index: index,
+        type: item.type,
+        isPrefix: status,
+        stringValue: item.value
+      }
+  }
+  if (!json || !data) {
+    throw new Error('no json or data')
+  }
   setTimeout(() => {
-    let json
-    let data
-    switch (item.type) {
-      case 'date' :
-        json = editDateTagForm
-        data = {
-          index: index,
-          type: item.type,
-          isPrefix: status,
-          dateFormat: item.value
-        }
-        break
-      case 'variable':
-        json = editVariableTagForm
-        data = {
-          index: index,
-          type: item.type,
-          isPrefix: status,
-          variableName: handleDataFormat(item.expression),
-          variableValue: item.value
-        }
-        break
-      default:
-        json = editStringTagForm
-        data = {
-          index: index,
-          type: item.type,
-          isPrefix: status,
-          stringValue: item.value
-        }
-    }
-    if (!json || !data) {
-      throw new Error('no json or data')
-    }
     editFormRendererRef.value.setFormJson(json)
     editFormRendererRef.value.vFormRenderRef.resetForm()
-    editFormRendererRef.value.vFormRenderRef.setFormData(data)
+    editFormRendererRef.value.setFormData(data)
   }, 100)
   state.editVisible = true
 }
@@ -291,6 +292,7 @@ async function handleEditVariable(status: boolean, value: string, index: number)
 async function handleEditItemTag() {
   const formData = await editFormRendererRef.value.vFormRenderRef.getFormData()
   const index = formData.index
+  let checkNameIsEx = false
 
   let item = {}
   switch (formData.type) {
@@ -301,10 +303,22 @@ async function handleEditItemTag() {
     case 'variable':
       item.expression = `{var(${formData.variableName})}`
       item.value = formData.variableValue
+      const expression = item.expression
+      if ((state.prefix[index] != expression && state.prefix.includes(expression))
+        || (state.suffix[index] != expression && state.suffix.includes(expression))
+      ) {
+        checkNameIsEx = true
+      }
       break
     default:
       item.expression = formData.stringValue
       item.value = formData.stringValue
+  }
+
+  // Check if the name exists
+  if (checkNameIsEx) {
+    routerProvider?.message.error(t('dpTip.exit', { name: t('uniQueIdGenerator_variableName') }))
+    return
   }
 
   if (formData.isPrefix) {
