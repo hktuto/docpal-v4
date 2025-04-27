@@ -15,9 +15,10 @@ pnpm -F api generate
 ```
 4. Generate code deployment report
 ```
-pnpm test
-// Excel script generation for language differences
-// Generate test excel document
+// 1. Excel script generation for language differences
+// 1.1 Need to obtain comparison files first: libraries\deployment\oldSrc\en-US.json
+// 2. Generate test excel document
+// 2.2 Need to generate test files first  pnpm test
 pnpm -F report start
 ```
 

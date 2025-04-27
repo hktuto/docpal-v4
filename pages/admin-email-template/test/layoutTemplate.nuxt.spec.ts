@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { SmartFolderInfoDialog, ResponsiveFilter } from '#components'
+import { LayoutTemplatePage, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery,mockTable } from './setup'
 vi.mock('element-plus', () => ({
@@ -42,12 +42,12 @@ const SearchGroupTable = {
   }
 }
 
-describe('[admin-smart-folder]SmartFolderInfoDialog', () => {
+describe('[admin-email-template]LayoutTemplatePage', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(SmartFolderInfoDialog, {
+    wrapper = mount(LayoutTemplatePage, {
       global: {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, SearchGroupTable },
         provide: {
@@ -73,5 +73,25 @@ describe('[admin-smart-folder]SmartFolderInfoDialog', () => {
   })
   it('renders correctly', async () => {
     expect(wrapper.exists()).toBe(true)
+  })
+  it('should open dialog on add button click', async () => {
+    const dialogRef = wrapper.vm.$refs.EmailLayoutDialogRef
+    dialogRef.handleOpen = vi.fn()
+    wrapper.vm.handleAdd()
+    expect(dialogRef.handleOpen).toHaveBeenCalled() // 确保 handleOpen 被调用
+  })
+  it('should handle filter form change', async () => {
+    wrapper.vm.handleFilterFormChange({ name: 'test' })
+    expect(wrapper.vm.extraParams).toEqual({ name: 'test' }) // 确保 extraParams 被更新
+    expect(wrapper.vm.reload).toHaveBeenCalled() // 确保 reload 被调用
+  })
+  it('should confirm and delete template', async () => {
+    const row = { id: 1, name: 'Test Template' }
+    vi.spyOn(ElMessageBox, 'confirm').mockResolvedValue('confirm') // 模拟确认对话框
+
+    await wrapper.vm.handleDeleteTemplate(row) // 调用删除方法
+
+    expect(ElMessageBox.confirm).toHaveBeenCalled() // 确保确认对话框被调用
+    expect(wrapper.vm.query).toHaveBeenCalled() // 确保 query 被调用
   })
 })

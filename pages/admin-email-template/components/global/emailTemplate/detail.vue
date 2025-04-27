@@ -18,12 +18,17 @@ const infoFormEl = ref();
 const showClose = ref(true);
 
 const layoutHtml = computed(() => {
-  if (!selectedLayout.value || !layouts.value) return null;
-  return layouts.value.find((item) => item.id === selectedLayout.value).layoutContent;
+  try {
+    if (!selectedLayout.value || !layouts.value) return null;
+    return layouts.value.find((item) => item.id === selectedLayout.value).layoutContent;
+  } catch (error) {
+    return null
+  }
 });
 let data: any = ref(null)
 
 async function handleInit() {
+
   // TODO : if id is new , create new dummy data
   if (!id || id === "new") {
     ready.value = true;
@@ -56,7 +61,7 @@ async function handleInit() {
  * @param templateId
  */
 async function getTemplateLayout(templateId?: any) {
-  const res = await adminApi.api
+  const res: any = await adminApi.api
     .postTemplateEmailLayoutPage({pageNum: 0, pageSize: 1000})
     .then((res) => res.data);
   layouts.value = res?.entryList;
@@ -85,7 +90,6 @@ async function save() {
   const {html, json, variable} = await editorEl.value.getData();
   // if id is new , create new
   // check form valid
-
   if (id === "new") {
     if (infoFormEl.value) {
       const valid = await infoFormEl.value.validate();
