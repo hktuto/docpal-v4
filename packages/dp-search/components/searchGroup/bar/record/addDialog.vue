@@ -7,46 +7,48 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
-        $t("common_submit")
-      }}</el-button>
+      <el-button id="Search__Save__Add__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { useEventListener } from "@vueuse/core";
-import formJson from "./addDialog.vform.json";
+import { useEventListener } from '@vueuse/core'
+import formJson from './addDialog.vform.json'
 
-const emits = defineEmits(["save"]);
+const emits = defineEmits(['save'])
 const state = reactive({
   loading: false,
-  dialogVisible: false,
-});
-const FormRendererRef = ref();
+  dialogVisible: false
+})
+const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData();
-    if (!data) return;
-    emits("save", data);
-    state.dialogVisible = false;
+    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    if (!data) return
+    emits('save', data)
+    state.dialogVisible = false
   } catch (error) {
   } finally {
-    state.loading = false;
+    state.loading = false
   }
 }
+
 function handleOpen() {
-  state.dialogVisible = true;
+  state.dialogVisible = true
   // setTimeout(() => {
   //   FormRendererRef.value.vFormRenderRef.setFormData()
   // })
 }
 
 defineExpose({
-  handleOpen,
-});
-onActivated(async () => {});
+  handleOpen
+})
+onActivated(async () => {
+})
 </script>
 
 <style lang="scss" scoped></style>
