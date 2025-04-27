@@ -142,8 +142,9 @@ function handleFilterFormChange(formModel: any) {
     extraParams.name = formModel.name
     delete formModel.name
   }
-
-  extraParams.where = formModel
+  if (Object.keys(formModel).length > 0) {
+    extraParams.where = formModel
+  }
   reload()
 }
 
