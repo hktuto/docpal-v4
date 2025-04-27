@@ -4,7 +4,7 @@ import { UniqueIdGeneratorDetail } from '#components'
 import { mockRouterProvider } from './util'
 import { adminApi } from './mock/api'
 
-describe('UniqueIdGenerator', () => {
+describe('[admin-unique-id-generator]UniqueIdGenerator', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()
