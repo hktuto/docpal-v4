@@ -15,7 +15,7 @@ vi.mock('element-plus', () => ({
   }
 }))
 
-describe('CollectionAction', () => {
+describe('[client-collection]CollectionAction', () => {
   let wrapper: any
   let state: any
   beforeEach(() => {

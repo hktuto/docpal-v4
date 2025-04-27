@@ -12,7 +12,7 @@ vi.mock('element-plus', () => ({
   },
 }))
 
-describe('TrashEmptyTrash', () => {
+describe('[client-trash]TrashEmptyTrash', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

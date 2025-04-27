@@ -16,7 +16,8 @@ vi.mock('element-plus', () => ({
   },
   ElMessage: {
     success: vi.fn(),
-    warning: vi.fn()
+    warning: vi.fn(),
+    error: vi.fn()
   }
 }));
 const groupProviderDetail = {
@@ -409,7 +410,7 @@ describe('[admin-group]GroupEditDialog', () => {
     });
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_updateSuccessMsg');
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_updateSuccessMsg');
     expect(groupProviderDetail.PatchGroupApi).toHaveBeenCalledWith({
       groupId: 'group-1',
       groupName: 'New Group Name',
@@ -425,7 +426,7 @@ describe('[admin-group]GroupEditDialog', () => {
     };
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupNamerender.hint.fieldRequired');
+    expect(ElMessage.error).toHaveBeenCalledWith('user_userGroupNamerender.hint.fieldRequired');
   });
   it('shows error if group name already exists', async () => {
     wrapper.vm.FormRendererRef = {
@@ -440,7 +441,7 @@ describe('[admin-group]GroupEditDialog', () => {
 
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupsIsExistsMsg');
+    expect(ElMessage.error).toHaveBeenCalledWith('user_userGroupsIsExistsMsg');
   });
 });
 
@@ -497,7 +498,7 @@ describe('[admin-group]GroupDialog', () => {
 
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_createdSuccessMsg');
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg');
     expect(groupProviderDetail.CreateGroupApi).toHaveBeenCalledWith({
       groupId: 'group-2',
       groupName: 'New Group Name',
@@ -515,7 +516,7 @@ describe('[admin-group]GroupDialog', () => {
 
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupNamerender.hint.fieldRequired');
+    expect(ElMessage.error).toHaveBeenCalledWith('user_userGroupNamerender.hint.fieldRequired');
   });
   it('shows error if group name or ID already exists', async () => {
     wrapper.vm.FormRendererRef = {
@@ -528,7 +529,7 @@ describe('[admin-group]GroupDialog', () => {
     };
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.error).toHaveBeenCalledWith('user_userGroupsIsExistsMsg');
+    expect(ElMessage.error).toHaveBeenCalledWith('user_userGroupsIsExistsMsg');
   });
 });
 describe('[admin-group]GroupAddUserDialog', () => {
@@ -582,7 +583,7 @@ describe('[admin-group]GroupAddUserDialog', () => {
 
     await wrapper.vm.handleSubmit();
 
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.any(String));
+    expect(ElMessage.success).toHaveBeenCalledWith(expect.any(String));
     expect(groupProviderDetail.BatchGroupAddUsersApi).toHaveBeenCalledWith({
       groupId: 'group-1',
       userIds: ['user-id'],

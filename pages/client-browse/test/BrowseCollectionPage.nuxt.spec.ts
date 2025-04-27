@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { CollectionPage } from '#components'
 import { VxeGrid } from 'vxe-table'
 
-describe('CollectionAction', () => {
+describe('[client-collection]CollectionAction', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

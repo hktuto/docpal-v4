@@ -15,6 +15,7 @@ pnpm -F api generate
 ```
 4. 生成测试 excel文档
 ```
+pnpm test
 pnpm -F unit-test start
 ```
 5. Excel script generation for language differences

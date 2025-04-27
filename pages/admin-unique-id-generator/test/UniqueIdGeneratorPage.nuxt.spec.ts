@@ -20,7 +20,7 @@ vi.mock('element-plus', () => ({
   }
 }))
 
-describe('UniqueIdGenerator', () => {
+describe('[admin-unique-id-generator]UniqueIdGenerator', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()
