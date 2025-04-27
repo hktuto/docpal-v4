@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils'
 import { ResponsiveFilter, UniqueIdGeneratorPage } from '#components'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
+import { ElMessageBox } from 'element-plus'
 import { routeUniqueIdGeneratorDetail } from '~/utils/routerHelper'
 import { adminApi } from './mock/api'
 
@@ -146,6 +146,117 @@ describe('[admin-unique-id-generator]UniqueIdGenerator', () => {
     await wrapper.vm.$nextTick()
     wrapper.vm.getFilter()
     expect(wrapper.vm.responsiveFilterRef.init).toHaveBeenCalled()
+  })
+
+  it('should handleFilterFormChange the component correctly', async () => {
+    const page = [
+      {
+        'id': '1418e91d-840c-4ce2-9e53-a813eb614372',
+        'name': 'test2',
+        'idDigit': 4,
+        'startNumber': 1,
+        'lastIdValue': null,
+        'prefix': [
+          {
+            'index': 0,
+            'expression': 'Prefix-',
+            'type': 'string',
+            'value': 'Prefix-'
+          },
+          {
+            'index': 1,
+            'expression': '{date(yyyy/MM/dd HH:mm:ss)}',
+            'type': 'date',
+            'value': 'yyyy/MM/dd HH:mm:ss'
+          },
+          {
+            'index': 2,
+            'expression': '-',
+            'type': 'string',
+            'value': '-'
+          },
+          {
+            'index': 3,
+            'expression': '{var(name)}',
+            'type': 'variable',
+            'value': 'HKHS'
+          },
+          {
+            'index': 4,
+            'expression': '-',
+            'type': 'string',
+            'value': '-'
+          }
+        ],
+        'suffix': [
+          {
+            'index': 0,
+            'expression': '-PJD',
+            'type': 'string',
+            'value': '-PJD'
+          },
+          {
+            'index': 1,
+            'expression': '-',
+            'type': 'string',
+            'value': '-'
+          },
+          {
+            'index': 2,
+            'expression': '{var(session)}',
+            'type': 'variable',
+            'value': 'PMS'
+          }
+        ],
+        'enabled': true,
+        'createdBy': 'Joshua',
+        'modifiedBy': 'Joshua',
+        'createdDate': '2025-04-23T06:43:47Z',
+        'modifiedDate': '2025-04-23T07:44:19Z',
+        'createdByName': 'Joshua',
+        'modifiedByName': 'Joshua'
+      },
+      {
+        'id': '71f73a02-886d-411c-8ec7-e4bdadc7fb26',
+        'name': 'test3',
+        'idDigit': 2,
+        'startNumber': 100,
+        'lastIdValue': null,
+        'prefix': [
+          {
+            'index': 0,
+            'expression': '{var(qwe)}',
+            'type': 'variable',
+            'value': 'ewq'
+          },
+          {
+            'index': 1,
+            'expression': '{date(yyyy-MM-dd HH:mm)}',
+            'type': 'date',
+            'value': 'yyyy-MM-dd HH:mm'
+          }
+        ],
+        'suffix': [],
+        'enabled': true,
+        'createdBy': 'Joshua',
+        'modifiedBy': 'Joshua',
+        'createdDate': '2025-04-25T01:42:53Z',
+        'modifiedDate': '2025-04-25T01:49:15Z',
+        'createdByName': 'Joshua',
+        'modifiedByName': 'Joshua'
+      }
+    ]
+    vi.spyOn(adminApi.api, 'postIdTemplatesPage').mockResolvedValue({ data: page })
+    const spy = vi.spyOn(wrapper.vm, 'handleFilterFormChange')
+    const formModel = {
+      isDesc: 'true',
+      orderBy: 'name',
+      name: 'test'
+    }
+    await wrapper.vm.handleFilterFormChange(formModel)
+    await wrapper.vm.$nextTick()
+    expect(spy).toHaveBeenCalled()
+    expect(wrapper.vm.extraParams).toEqual({ isDesc: true, orderBy: 'name', name: 'test' })
   })
 
   it('should click addAction the component correctly', async () => {
