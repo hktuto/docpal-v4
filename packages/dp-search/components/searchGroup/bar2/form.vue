@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="form" label-position="top">
+  <el-form v-if="options && options.conditionType" :model="form" label-position="top">
     <el-form-item :label="$t('search.conditionType')">
       <el-select-v2
         v-model="state.form.queryType"
@@ -9,8 +9,6 @@
         @clear="emits('selectClear')"
         @change="handleChangeQueryType"
       >
-        <template #default="{item}">{{ $t('searchGroup.' + item.label) }}</template>
-        <template #label="row">{{ $t('searchGroup.' + row.label) }}</template>
       </el-select-v2>
     </el-form-item>
     <el-form-item v-if="isQuertType('keyword')" :label="$t('search.keyword')">
@@ -46,7 +44,7 @@
     <el-form-item v-if="isQuertType('keyword')" :label="$t('search.includeLanguages')">
       <el-select-v2
         v-model="state.form.includeLanguages"
-        :options="languages"
+        :options="options.languages"
         :placeholder="$t('common_selectOccupancyContent')" clearable filterable
         size="small" multiple
         @change="handleChange"
@@ -69,7 +67,7 @@
     <el-form-item v-if="isQuertType('mimeTypes')" :label="$t('search.mimeTypes')">
       <el-select-v2
         v-model="state.form.mimeTypes"
-        :options="mimeTypes"
+        :options="options.mimeTypes"
         :placeholder="$t('common_selectOccupancyContent')" clearable filterable
         size="small" multiple
         @change="handleChange"
@@ -132,7 +130,7 @@
     <el-form-item v-if="isQuertType('size')" :label="$t('searchGroup.size')">
       <el-select-v2
         v-model="state.form.size"
-        :options="sizes"
+        :options="options.sizes"
         :placeholder="$t('common_selectOccupancyContent')"
         size="small"
         @change="handleChange"
@@ -158,42 +156,28 @@
   </el-form>
 </template>
 <script lang="ts" setup>
-import {clientApi} from 'api'
-import {conditionType, getMetadataOptions, languages, mimeTypes, getGroupList, sizes, sortListWithI18n} from '~/utils/formOptions'
 import {isJSON} from '~/utils/searchFormHelper'
-
 const props = defineProps(['form'])
 const emits = defineEmits(['selectClear', 'formChange'])
-const { t } = useI18n()
 const state = reactive<any>({
   form: {},
   metadataType: {
     type: 'string',
   }
 })
-const options = reactive<any>({
-  metadata: [],
-  languages: [],
-  conditionType: [],
-  mimeTypes: [],
-  docType: [],
-  users: [],
-  collections: [],
-  tags: [],
-  groupList: [],
-  sizes: []
-})
+const options = inject('searchOptions')
+
 const metaForm = ref()
 
 function isQuertType(value: string) {
   return state.form.queryType === value
 }
 
-async function handleMetaChange(value) {
-  state.metadataType = options.metadata.find(item => item.value === value)
+async function handleMetaChange(value: string) {
+  state.metadataType = options.metadata.find((item: any) => item.value === value)
 }
 
-async function handleMetaEcho(q) {
+async function handleMetaEcho(q: any) {
   if (isJSON(q.value.value)) {
     const metaValue = JSON.parse(q.value.value)
     state.metadataType = {
@@ -206,12 +190,12 @@ async function handleMetaEcho(q) {
   }
 }
 
-function handleMetaValueChange(value) {
+function handleMetaValueChange(value: string) {
   state.form.metadataValue = value
   handleChange()
 }
 
-function handleChangeQueryType(value) {
+function handleChangeQueryType(value: string) {
   state.form = {
     queryType: value
   }
@@ -227,38 +211,7 @@ function getFormData() {
   }
 }
 
-onMounted(async () => {
-  const [
-    docType,
-    users,
-    collections,
-    tags,
-    groupList,
-    metadata
-  ] = await Promise.all([
-    clientApi.api.getTypesActive(),
-    clientApi.api.postNuxeoIdentityGetkeycloakallusers(),
-    clientApi.api.getNuxeoCollection(),
-    clientApi.api.postNuxeoTagsGetalltags(),
-    getGroupList(),
-    getMetadataOptions()
-  ])
-  options.groupList = sortListWithI18n(groupList)
-  options.metadata = sortListWithI18n(metadata)
-  options.conditionType = sortListWithI18n(conditionType, 'searchGroup.')
-  const tagData = tags.data?.map((item: any) => ({label: item, value: item}))
-  options.tags = sortListWithI18n(tagData)
-  const docTypeData = docType.data?.map((item: any) => ({label: item.name, value: item.name}))
-  options.docType = sortListWithI18n(docTypeData)
-  const collectionData = collections?.data?.entryList?.map((item: any) => ({
-    label: item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
-    value: item.id
-  }))
-  options.collections = sortListWithI18n(collectionData)
-  const userData = users.data?.map((item: any) => ({label: item.username, value: item.userId}))
-  options.users  = sortListWithI18n(userData)
-})
-watch(() => props.form, (newValue) => {
+watch(() => props.form, (newValue: any) => {
   state.form = {...newValue, ...newValue.option}
   if (newValue.value) {
     state.form[newValue.queryType] = newValue.value
