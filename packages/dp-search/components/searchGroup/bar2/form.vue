@@ -245,7 +245,7 @@ onMounted(async () => {
   ])
   options.groupList = sortListWithI18n(groupList)
   options.metadata = sortListWithI18n(metadata)
-  options.conditionType = sortListWithI18n(conditionType)
+  options.conditionType = sortListWithI18n(conditionType, 'searchGroup.')
   const tagData = tags.data?.map((item: any) => ({label: item, value: item}))
   options.tags = sortListWithI18n(tagData)
   const docTypeData = docType.data?.map((item: any) => ({label: item.name, value: item.name}))

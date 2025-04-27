@@ -88,11 +88,11 @@ export const mimeTypes = [
     ]
   }
 ];
-export function sortListWithI18n(list: any) {
+export function sortListWithI18n(list: any, prefix = '') {
   // @ts-ignore
   const t = window.$t;
   const _list = list.map((item: any) => {
-    item.label = t(item.label);
+    item.label = t(prefix+item.label);
     return item;
   });
   return _list.sort((a: any, b: any) => a.label.localeCompare(b.label));
