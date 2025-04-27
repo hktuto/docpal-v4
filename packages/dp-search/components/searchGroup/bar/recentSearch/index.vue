@@ -8,7 +8,7 @@
 >
   <SearchGroupBarRecentSearchList ref="listRef" @search="handleSearch"></SearchGroupBarRecentSearchList>
   <template #reference>
-    <SvgIcon src="/icons/tools/recent.svg" class="mr-2" ></SvgIcon>
+    <SvgIcon id="Search__Recent" src="/icons/tools/recent.svg" class="mr-2" ></SvgIcon>
   </template>
 </el-popover>
 </template>
@@ -19,7 +19,7 @@ const listRef = ref()
 function hidePopover () {
     popoverRef.value.hide()
 }
-function handleSearch(data: any) {  
+function handleSearch(data: any) {
   emits('search', data)
   hidePopover()
 }

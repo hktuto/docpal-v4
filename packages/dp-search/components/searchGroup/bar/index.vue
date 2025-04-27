@@ -4,9 +4,9 @@
       {{ $t('file_search') }}
     </div>
     <div v-if="!['recordDetailAgg', 'recordDetail'].includes(mode)" class="flex-x-start search-group-bar__action">
-      <SvgIcon v-if="mode !== 'agg'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode('agg')" @search="handleSearch"></SvgIcon>
-      <SvgIcon v-else src="/icons/tools/search.svg" class="mr-2" @click="handleMode('filter')"></SvgIcon>
-      <SvgIcon src="/icons/tools/save1.svg" class="mr-2" @click="handleMode('record')"></SvgIcon>
+      <SvgIcon id="Search__Filter" v-if="mode !== 'agg'" src="/icons/tools/filter.svg" class="mr-2" @click="handleMode('agg')" @search="handleSearch"></SvgIcon>
+      <SvgIcon id="Search__Search" v-else src="/icons/tools/search.svg" class="mr-2" @click="handleMode('filter')"></SvgIcon>
+      <SvgIcon id="Search__Save" src="/icons/tools/save1.svg" class="mr-2" @click="handleMode('record')"></SvgIcon>
       <!-- <SearchGroupBarSaveLog ref="logRef" @search="handleLogSearch"  /> -->
       <SearchGroupBarRecentSearch ref="recentRef" @search="handleLogSearch" />
     </div>
