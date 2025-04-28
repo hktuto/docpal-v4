@@ -5,5 +5,6 @@ export const adminApi = {
     deleteIdTemplatesId: vi.fn(() => Promise.resolve(true)),
     postIdTemplatesPage: vi.fn(() => Promise.resolve(true)),
     getIdTemplatesId: vi.fn(() => Promise.resolve(true)),
+    postIdTemplatesValidate: vi.fn(() => Promise.resolve(true)),
   }
 }
