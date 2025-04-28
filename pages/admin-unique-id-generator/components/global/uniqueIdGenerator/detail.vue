@@ -381,14 +381,15 @@ function handleChangeTag(status: boolean) {
     }
     state.form.prefix = handleList(state.prefix, state.form.prefix)
     state.example.prefix = handleList(state.prefix, state.form.prefix)
-  } else {
-    if (!state.suffix) {
-      state.suffix = []
-      return
-    }
-    state.form.suffix = handleList(state.suffix, state.form.suffix)
-    state.example.suffix = handleList(state.suffix, state.form.suffix)
+    return
   }
+
+  if (!state.suffix) {
+    state.suffix = []
+    return
+  }
+  state.form.suffix = handleList(state.suffix, state.form.suffix)
+  state.example.suffix = handleList(state.suffix, state.form.suffix)
 }
 
 function handleList(formList: any, oldList: any) {
