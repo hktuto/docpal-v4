@@ -97,7 +97,7 @@ const {
   }
 })
 
-function handleAdd(){
+function handleAdd() {
   addDialogRef.value.handleOpen()
 }
 

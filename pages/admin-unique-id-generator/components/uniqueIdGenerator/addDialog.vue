@@ -22,12 +22,14 @@ function handleOpen() {
 async function handleSubmit() {
   try {
     let { name } = await FormRendererRef.value.vFormRenderRef.getFormData()
+    state.loading = true
     const data = await adminApi.api.postIdTemplates({ name: name }).then(res => res.data)
     state.visible = false
     routerProvider?.message.success(t('tip_createdSuccessMsg', {
       modelName: t('adminMenu.uniqueIdGenerator'),
       name: name
     }))
+    state.loading = false
     routerProvider?.navigateTo(routeUniqueIdGeneratorDetail(data), false)
   } catch (e) {
     console.log(e)
@@ -41,7 +43,8 @@ defineExpose({ handleOpen })
   <el-dialog v-model="state.visible" :title="t('uniQueIdGenerator_duplicate')" width="500">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="UniqueId__Add__Confirm" type="primary" @click="handleSubmit">
+      <el-button :disabled="state.loading" :loading="state.loading" id="UniqueId__Add__Confirm" type="primary"
+                 @click="handleSubmit">
         {{ t('dpButtom_confirm') }}
       </el-button>
     </template>
