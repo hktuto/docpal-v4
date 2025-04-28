@@ -11,5 +11,7 @@ export const adminApi = {
     putPolicyRetentions: vi.fn().mockResolvedValue({}),
     getPolicyRetentionsId: vi.fn().mockResolvedValue({ data: { id: 1, status: 'A', actionType: 'A' } }),
     postPolicyRetentions: vi.fn().mockResolvedValue({}),
+
+    getPolicyRetentionsPageConditions: vi.fn().mockResolvedValue({}),
   }
 }
