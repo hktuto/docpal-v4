@@ -8,8 +8,7 @@
           <el-button type="info" @click="handleEditEmailTemplate">{{ $t('emailTemplate.edit') }}</el-button>
         </template>
       </FormRenderer>
-      <el-button class="p-btn" type="primary" :loading="state.loading" @click="handleSave">{{ $t('common_save') }}
-      </el-button>
+      <el-button class="p-btn" type="primary" :loading="state.loading" @click="handleSave">{{ $t('common_save') }} </el-button>
     </el-card>
     <EmailTemplateReader ref="emailTemplateEditor"></EmailTemplateReader>
   </div>
@@ -23,6 +22,7 @@ const props = defineProps(['setting'])
 const state = reactive<any>({
   loading: false
 })
+const { t } = useI18n()
 const FormRendererRef = ref()
 
 async function handleSave() {
@@ -33,10 +33,9 @@ async function handleSave() {
       ...data,
       alertEmail: data.alertEmail.join(',')
     })
-    if (result) routerProvider?.message.success($i18n.t('dpMsg_success'))
-  } catch (error) {
-  }
-  setTimeout(() => state.loading = false, 500)
+    if (result) routerProvider?.message.success(t('dpMsg_success'))
+  } catch (error) {}
+  setTimeout(() => (state.loading = false), 500)
 }
 
 function initForm(setting: any) {
@@ -54,15 +53,19 @@ async function handleEditEmailTemplate() {
     if (!data.emailTemplate) throw new Error('')
     emailTemplateEditor.value.handleOpen(data.emailTemplate, true)
   } catch (error) {
-    routerProvider?.message.error($i18n.t('tip.emailTemplateMissing'))
+    routerProvider?.message.error(t('tip.emailTemplateMissing'))
   }
 }
 
-watch(() => props.setting, (newVal) => {
-  setTimeout(() => initForm({ ...newVal }))
-}, {
-  immediate: true
-})
+watch(
+  () => props.setting,
+  (newVal) => {
+    setTimeout(() => initForm({ ...newVal }))
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .title {
@@ -90,4 +93,3 @@ watch(() => props.setting, (newVal) => {
   }
 }
 </style>
-    
