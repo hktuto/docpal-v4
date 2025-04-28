@@ -2494,6 +2494,7 @@
   "trash_emptyTrash": "Empty Trash",
   "trash_emptyTrashMsg": "Are you sure you want to empty trash by permanently deleting all files / folders from the trash?<br>This action cannot be undone.",
   "trash_emptyTrashSuccessMsg": "All files and folders have been permanently deleted from the trash.",
+  "trash_fileOrFolder": "文件 / 資料夾",
   "trash_restored": "還原檔案 / 資料夾",
   "trash_restoredSelectedSuccessMsg": "The selected files and folders have been restored successfully.",
   "trash_restoredSuccessMsg": "The selected file and folder has been restored successfully.",
