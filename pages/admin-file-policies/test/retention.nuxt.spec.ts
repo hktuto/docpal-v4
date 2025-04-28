@@ -77,8 +77,8 @@ describe('[admin-azure]RetentionPage', () => {
       }
     })
     await wrapper.vm.$nextTick()
-    // const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
-    // dialogRef.handleOpen = vi.fn();
+    const dialogRef = wrapper.vm.$refs.RetentionAddDialogRef;
+    dialogRef.handleOpen = vi.fn();
     // const tableRef = wrapper.vm.$refs.tableRef;
     // tableRef.initBar = vi.fn();
   })
@@ -90,48 +90,54 @@ describe('[admin-azure]RetentionPage', () => {
   it('renders correctly', async () => {
     expect(wrapper.exists()).toBe(true)
   })
-  it('initializes Azure settings', async () => {
-    adminApi.api.getAzureOcrQueryazuresetting.mockResolvedValueOnce({
-      data: {
-        azureOcrApiKey: {},
-        azureOcrSetting: {},
-        azureOcrProfileMappings: [],
-        ocrTransactionLogs: {}
-      }
-    })
-
-    await wrapper.vm.init()
-
-    expect(adminApi.api.getAzureOcrQueryazuresetting).toHaveBeenCalled()
-    expect(wrapper.vm.azureSetting).toEqual({
-      azureOcrApiKey: {},
-      azureOcrSetting: {},
-      azureOcrProfileMappings: [],
-      ocrTransactionLogs: {}
-    })
+  it('handles adding a new retention policy', async () => {
+    wrapper.vm.handleAdd()
+    expect(wrapper.vm.RetentionAddDialogRef.handleOpen).toHaveBeenCalled()
   })
-  it('initializes log conditions', async () => {
-    adminApi.api.getAzureOcrConditions.mockResolvedValueOnce({
-      data: {}
-    })
-    await wrapper.vm.$nextTick()
+  
+  it('fetches filter options on mount', async () => {
     wrapper.vm.ResponsiveFilterRef = {
-      init: vi.fn().mockResolvedValue('true')
+      init: vi.fn()
     }
-    await wrapper.vm.initLogCondition()
+    await wrapper.vm.getFilter()
 
-    expect(adminApi.api.getAzureOcrConditions).toHaveBeenCalled()
-    expect(wrapper.vm.ResponsiveFilterRef.init).toHaveBeenCalled()
+    expect(adminApi.api.getPolicyRetentionsPageConditions).toHaveBeenCalled()
+  })
+  it('handles status activation', async () => {
+    const row = { id: 1, status: 'D' }
+
+    await wrapper.vm.handleActive(row, 'A')
+
+    expect(adminApi.api.patchPolicyRetentionsIdStatusStatus).toHaveBeenCalledWith(1, 'A')
+    expect(row.status).toBe('A')
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('dpMsg_success')
+  })
+
+  it('handles deletion confirmation', async () => {
+    const row = { id: 1 }
+
+    ElMessageBox.confirm.mockResolvedValue('confirm')
+    await wrapper.vm.deleteItem(1)
+
+    expect(ElMessageBox.confirm).toHaveBeenCalled()
+    expect(adminApi.api.deletePolicyRetentionsId).toHaveBeenCalledWith(1)
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_deleteSuccessMsg')
+  })
+  it('does not delete if confirmation is canceled', async () => {
+    ElMessageBox.confirm.mockResolvedValueOnce('cancel')
+
+    await wrapper.vm.deleteItem(1)
+
+    expect(adminApi.api.deletePolicyRetentionsId).not.toHaveBeenCalled()
   })
   it('handles filter form change', async () => {
-    const formData = { name: 'test' }
-    wrapper.vm.logTableRef = {
-      reload: vi.fn()
-    }
-    wrapper.vm.handleFilterFormChange(formData)
+    const formModel = { policyName: 'test' }
 
-    expect(wrapper.vm.filterFormdata).toEqual(formData)
-    expect(wrapper.vm.logTableRef.reload).toHaveBeenCalled()
+    await wrapper.vm.handleFilterFormChange(formModel)
+
+    expect(wrapper.vm.extraParams).toEqual(formModel)
+    expect(wrapper.vm.reload).toHaveBeenCalled()
   })
+
 })
 
