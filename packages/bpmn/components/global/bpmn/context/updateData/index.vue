@@ -14,7 +14,7 @@ if(!graphProvider || !editorProvider) {
 
 const defaultCondition = {
     attr_type: "Update_Data",
-    attr_function: "Increase_By",
+    attr_function: "Set_Value",
     attr_source: "form",
     attr_updateFieldName: "",
     attr_step: "1"
