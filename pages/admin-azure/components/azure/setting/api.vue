@@ -18,6 +18,7 @@ import { AzureProviderKey } from '#imports'
 
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['setting'])
+const { t } = useI18n()
 const state = reactive<any>({
   loading: false
 })
@@ -28,15 +29,16 @@ const FormRendererRef = ref()
 async function handleSave() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
+  
   // try {
-  const params = {
+  const params: any = {
     description: data.description
   }
   if (!data.apiKey.includes('....')) params.apiKey = data.apiKey
-  const result = await azureProvider.UpdateAzureApiKeyApi({
+  const result = await azureProvider?.UpdateAzureApiKeyApi({
     ...params
   })
-  if (result) routerProvider?.message.success($i18n.t('dpMsg_success'))
+  if (result) routerProvider?.message.success(t('dpMsg_success'))
   // } catch (error) {
   // }
   setTimeout(() => state.loading = false, 500)
@@ -47,7 +49,6 @@ function initForm(setting) {
 }
 
 watch(() => props.setting, (newVal) => {
-  console.log('watch setting', newVal)
   if (!newVal) return
   setTimeout(() => initForm(newVal))
 }, {
