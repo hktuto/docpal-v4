@@ -69,7 +69,7 @@ function addRecord() {
         <ElSelect v-model="setting.category.master_table" disabled></ElSelect>
       </ElFormItem>
     </ElForm>
-    <div class="categoriesContainer">
+    <div class="categoriesContainer" style="height: 450px">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
           <ElButton id="CalendarSetting__EventLocations__EventCategories__Add" type="primary" @click="addRecord">
