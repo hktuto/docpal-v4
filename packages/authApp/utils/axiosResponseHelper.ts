@@ -54,7 +54,7 @@ export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstan
   if (error.response.status >= 500) {
     if (error.config.headers.noThrowError) return
 
-    if (error.config.headers.showThrowError) return Promise.reject(error)
+    if (error.config.headers.noErrorMessage) return Promise.reject(error)
 
     const message = error.response.data.message || error.message
     ElMessage.error(message)
