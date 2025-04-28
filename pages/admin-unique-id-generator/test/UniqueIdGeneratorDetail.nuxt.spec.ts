@@ -1,9 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { FormRenderer, UniqueIdGeneratorDetail } from '#components'
+import {
+  FormRenderer,
+  UniqueIdGeneratorDetail,
+  UniqueIdGeneratorAddDialog,
+  UniqueIdGeneratorDuplicateDialog
+} from '#components'
 import { mockRouterProvider } from './util'
 import { adminApi } from './mock/api'
 import editVariableTagForm from '~/components/uniqueIdGenerator/editVariableTagForm.vform.json'
+import addDialogForm from '~/components/uniqueIdGenerator/addDialog.vform.json'
+import duplicateDialogForm from '~/components/uniqueIdGenerator/duplicateDialog.vform.json'
 
 describe('[admin-unique-id-generator]UniqueIdGeneratorDetail', () => {
   let wrapper: any
@@ -36,7 +43,6 @@ describe('[admin-unique-id-generator]UniqueIdGeneratorDetail', () => {
       }
     })
 
-    vi.useFakeTimers()
   })
 
   it('should inti the component correctly', async () => {
@@ -370,4 +376,147 @@ describe('[admin-unique-id-generator]UniqueIdGeneratorDetail', () => {
     expect(wrapper.vm.state.loading).toBe(false)
   })
 
+})
+
+describe('[admin-unique-id-generator]UniqueIdGeneratorAddDetail', () => {
+  let wrapper: any
+  beforeEach(() => {
+    vi.clearAllMocks()
+    wrapper = mount(UniqueIdGeneratorAddDialog, {
+      global: {
+        components: { FormRenderer },
+        mocks: {
+          $t: (msg: string) => msg,
+          $i18n: { t: (key: string) => key }
+        },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        }
+      }
+    })
+
+  })
+
+  it('should addDialog handleSubmit the component correctly', async () => {
+    const data = {
+      id: '71f73a02-886d-411c-8ec7-e4bdadc7fb26',
+      name: 'test1',
+      idDigit: 2,
+      startNumber: 100,
+      lastIdValue: null,
+      prefix: [
+        {
+          index: 0,
+          expression: '{var(qwe)}',
+          type: 'variable',
+          value: 'ewq'
+        },
+        {
+          index: 1,
+          expression: '{date(yyyy-MM-dd HH:mm)}',
+          type: 'date',
+          value: 'yyyy-MM-dd HH:mm'
+        }
+      ],
+      suffix: [],
+      enabled: true,
+      createdBy: 'Joshua',
+      modifiedBy: 'Joshua',
+      createdDate: '2025-04-25T01:42:53Z',
+      modifiedDate: '2025-04-25T01:49:15Z',
+      createdByName: 'Joshua',
+      modifiedByName: 'Joshua'
+    }
+    vi.spyOn(adminApi.api, 'postIdTemplates').mockResolvedValue({ data: data })
+    const formData = {
+      name: 'test1'
+    }
+    wrapper.vm.state.visible = true
+
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+        resetForm: vi.fn(),
+        setFormJson: vi.fn().mockResolvedValue(addDialogForm)
+      }
+    }
+
+    await wrapper.vm.handleSubmit()
+    await wrapper.vm.$nextTick()
+
+    expect(adminApi.api.postIdTemplates).toHaveBeenCalled()
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(expect.anything(), false)
+  })
+})
+
+describe('[admin-unique-id-generator]UniqueIdGeneratorDuplicateDetail', () => {
+  let wrapper: any
+  beforeEach(() => {
+    vi.clearAllMocks()
+    wrapper = mount(UniqueIdGeneratorDuplicateDialog, {
+      global: {
+        components: { FormRenderer },
+        mocks: {
+          $t: (msg: string) => msg,
+          $i18n: { t: (key: string) => key }
+        },
+        provide: {
+          [MenuRouterKey]: mockRouterProvider
+        }
+      }
+    })
+  })
+
+  it('should duplicateDialog handleSubmit the component correctly', async () => {
+    const data = {
+      id: '71f73a02-886d-411c-8ec7-e4bdadc7fb26',
+      name: 'test1',
+      idDigit: 2,
+      startNumber: 100,
+      lastIdValue: null,
+      prefix: [
+        {
+          index: 0,
+          expression: '{var(qwe)}',
+          type: 'variable',
+          value: 'ewq'
+        },
+        {
+          index: 1,
+          expression: '{date(yyyy-MM-dd HH:mm)}',
+          type: 'date',
+          value: 'yyyy-MM-dd HH:mm'
+        }
+      ],
+      suffix: [],
+      enabled: true,
+      createdBy: 'Joshua',
+      modifiedBy: 'Joshua',
+      createdDate: '2025-04-25T01:42:53Z',
+      modifiedDate: '2025-04-25T01:49:15Z',
+      createdByName: 'Joshua',
+      modifiedByName: 'Joshua'
+    }
+    vi.spyOn(adminApi.api, 'postIdTemplates').mockResolvedValue({ data: data })
+    const formData = {
+      name: 'test1'
+    }
+    wrapper.vm.state.visible = true
+
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn().mockResolvedValue(formData),
+        resetForm: vi.fn(),
+        setFormJson: vi.fn().mockResolvedValue(duplicateDialogForm)
+      }
+    }
+
+    await wrapper.vm.handleSubmit()
+    await wrapper.vm.$nextTick()
+
+    expect(adminApi.api.postIdTemplates).toHaveBeenCalled()
+    expect(adminApi.api.putIdTemplatesId).toHaveBeenCalled()
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_createdSuccessMsg'));
+    expect(wrapper.vm.state.visible).toBe(false)
+  })
 })
