@@ -89,6 +89,7 @@ export const mimeTypes = [
   }
 ];
 export function sortListWithI18n(list: any, prefix = '') {
+  list = JSON.parse(JSON.stringify(list))
   // @ts-ignore
   const t = window.$t;
   const _list = list.map((item: any) => {
