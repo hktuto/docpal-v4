@@ -224,7 +224,7 @@ function handleMsg(messages: string) {
 
 async function deleteOne(idOrPath: string) {
   try {
-    await clientApi.api.deleteNuxeoDocument({ idOrPath }, { headers: { 'noErrorMessage': 'true' } })
+    await clientApi.api.deleteNuxeoDocument({ idOrPath }, { headers: { 'noErrorMessage': true } })
   } catch (error) {
     console.log(error)
     return `${t('doc_typeSmartFolderSearchName')}: ${name}, ${t('upload_Status_error')}: ` + (error?.response?.data?.message || 'Server Error') + '.</br> '
@@ -233,7 +233,7 @@ async function deleteOne(idOrPath: string) {
 
 async function restore(idOrPath: string, name: string) {
   try {
-    await clientApi.api.postNuxeoDocumentRestore({ idOrPath }, { headers: { 'noErrorMessage': 'true' } })
+    await clientApi.api.postNuxeoDocumentRestore({ idOrPath }, { headers: { 'noErrorMessage': true } })
     return null
   } catch (error) {
     console.log('call Api error', error)
