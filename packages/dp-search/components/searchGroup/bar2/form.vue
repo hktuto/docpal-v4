@@ -32,13 +32,13 @@
       </el-select-v2>
     </el-form-item>
     <el-form-item v-show="isQuertType('metadata')" :label="$t('search.metadataValue')">
-      <SearchGroupBar2Metaform ref="metaForm" :config="state.metadataType" @formChange="handleMetaValueChange"/>
+      <SearchGroupBar2Metaform ref="metaForm" :config="state.metadataType" @formChange="handleMetaValueChange" />
     </el-form-item>
     <el-form-item v-if="isQuertType('keyword')" :label="$t('search.synonyms')">
       <el-switch
         v-model="state.form.synonyms"
         size="small"
-        @change="handleChange"
+        @change="handleChangeKeyword"
       />
     </el-form-item>
     <el-form-item v-if="isQuertType('keyword')" :label="$t('search.includeLanguages')">
@@ -47,7 +47,7 @@
         :options="options.languages"
         :placeholder="$t('common_selectOccupancyContent')" clearable filterable default-first-option
         size="small" multiple
-        @change="handleChange"
+        @change="handleChangeKeyword"
       >
         <template #default="{item}">{{ $t('languages.' + item.label) }}</template>
         <template #label="row">{{ $t('languages.' + row.label) }}</template>
@@ -156,13 +156,14 @@
   </el-form>
 </template>
 <script lang="ts" setup>
-import {isJSON} from '~/utils/searchFormHelper'
+import { isJSON } from '~/utils/searchFormHelper'
+
 const props = defineProps(['form'])
 const emits = defineEmits(['selectClear', 'formChange'])
 const state = reactive<any>({
   form: {},
   metadataType: {
-    type: 'string',
+    type: 'string'
   }
 })
 const options = inject('searchOptions')
@@ -185,7 +186,7 @@ async function handleMetaEcho(q: any) {
     }
   } else {
     state.metadataType = {
-      type: 'string',
+      type: 'string'
     }
   }
 }
@@ -205,6 +206,12 @@ function handleChange() {
   emits('formChange')
 }
 
+function handleChangeKeyword() {
+  if (state.form.keyword && state.form.keyword.length > 0) {
+    emits('formChange')
+  }
+}
+
 function getFormData() {
   return {
     ...state.form
@@ -212,7 +219,7 @@ function getFormData() {
 }
 
 watch(() => props.form, (newValue: any) => {
-  state.form = {...newValue, ...newValue.option}
+  state.form = { ...newValue, ...newValue.option }
   if (newValue.value) {
     state.form[newValue.queryType] = newValue.value
   }
