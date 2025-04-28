@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer--padding">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <VxeGrid v-loading="state.loading" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <header v-show="state.selectList.length === 0" class="header-flex">
           <div class="flex-x-start">
@@ -11,10 +11,11 @@
         </header>
         <header v-show="state.selectList?.length > 0" class="header-flex">
           <div class="flex-x-start">
-            <el-button id="Trash__RestoreSelected" type="primary" @click="handleRestore">
+            <el-button id="Trash__RestoreSelected" type="primary" @click="handleBathRestore(true,state.selectList)">
               {{ t('trash_actions_restore') }}
             </el-button>
-            <el-button id="Trash__PermanentlyDeleteSelected" type="danger" @click="handleDelete">
+            <el-button id="Trash__PermanentlyDeleteSelected" type="danger"
+                       @click="handleBathDelete(true,state.selectList)">
               {{ t('trash_actions_delete') }}
             </el-button>
           </div>
@@ -85,7 +86,7 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
-          handleRestore(row)
+          handleBathRestore(false, [row])
         }
       },
       {
@@ -94,28 +95,30 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
-          handleDelete(row)
+          handleBathDelete(false, [row])
         }
       }
     ]
   ],
+  permissionMethod: ({ options, column, row, rowIndex }: any) => {
+    if (state.loading) {
+      return {
+        visible: false,
+        disabled: true
+      }
+    }
+
+    return {
+      visible: true,
+      disabled: false
+    }
+  },
   selectChangeHander: (selectedRows: any[]) => {
     state.selectList = [...selectedRows]
   }
 })
 
-const batchAction = ref('')
-const processDetail = reactive({
-  completedNum: 0,
-  total: 0,
-  title: '',
-  delay: 1000
-})
-
-/**
- * 刪除全部
- */
-async function handleDeleteAll(row: any) {
+async function handleDeleteAll() {
   const action = await ElMessageBox.confirm(
     t('trash_emptyTrashMsg'),
     {
@@ -125,6 +128,7 @@ async function handleDeleteAll(row: any) {
     }
   )
   if (action !== 'confirm') return
+
   state.loading = true
   await clientApi.api.deleteNuxeoDocumentPurge()
   setTimeout(async () => {
@@ -134,119 +138,106 @@ async function handleDeleteAll(row: any) {
   }, 2000)
 }
 
-/**
- * 批量恢復
- */
-function handleRestore(row: any) {
-  batchAction.value = 'restore'
-  state.selectList.push(row)
-  batchActionHandler(row)
+async function handleBathRestore(status: boolean, selectList: any) {
+  state.loading = true
+  let promises = []
 
-}
-
-/**
- * 批量刪除
- */
-function handleDelete(row: any) {
-  batchAction.value = 'delete'
-  state.selectList.push(row)
-  batchActionHandler()
-}
-
-/**
- * 批量恢復與刪除公共方法
- */
-const batchActionHandler = async () => {
-  if ('delete' === batchAction.value) {
-    // 刪除時顯示提醒窗口
-    const action = await ElMessageBox.confirm(
-      state.selectList.length > 1 ? t('trash_deleteSelectedMsg') : t('trash_deleteMsg'),
-      {
-        confirmButtonClass: 'el-button el-button--warning',
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: t('common_confirmDelete')
-      }
-    )
-    if (action !== 'confirm') return
+  for (const row of selectList) {
+    promises.push(restore(row.id, row.name))
   }
+  const allResponse = await Promise.all(promises)
 
-  processDetail.total = state.selectList.length
-  processDetail.completedNum = 0
-  const pList = []
-  const selectList = [...state.selectList]
-  let msg
-  switch (batchAction.value) {
-    case 'restore':
-      state.selectList.forEach(s => pList.push(restore(s.id)))
-      msg = state.selectList.length > 1 ? t('trash_restoredSelectedSuccessMsg') : t('trash_restoredSuccessMsg')
-      break
-    case 'delete':
-      state.selectList.forEach(s => pList.push(deleteOne(s.id)))
-      msg = state.selectList.length > 1 ? t('trash_deleteSelectedSuccessMsg') : t('trash_deleteSuccessMsg')
-      break
-  }
-  const res = await Promise.all(pList)
-
-  batchAction.value = null
-  handleMsg(selectList, res)
-  setTimeout(async () => {
-    routerProvider?.message.success(msg)
-    query()
-  }, 2000)
-}
-
-/**
- * 請求失敗消息提醒
- * @param selectList
- * @param ids
- */
-function handleMsg(selectList, ids) {
-  let num = 0
-  // 拼接請求失敗的文件名稱
-  const fileNames = ids.reduce((p, id, index) => {
-    if (id) {
-      num++
-      p += ' <br/>' + selectList.find(item => item.id === id).name
-    }
-    return p
+  const failMessage = allResponse.reduce((result, item) => {
+    if (item) result += item
+    return result
   }, '')
+  if (failMessage.length > 0) {
+    state.loading = false
+    handleMsg(failMessage)
+    return
+  }
 
-  if (num !== 0) {
-    ElNotification.error({
-      title: '',
-      dangerouslyUseHTMLString: true,
-      message: `${nm} ${t('commons_error')}: ${fileNames}`
-    })
+  setTimeout(async () => {
+    state.loading = false
+    routerProvider?.message.success(
+      selectList.length > 1 ? t('trash_restoredSelectedSuccessMsg') : t('trash_restoredSuccessMsg')
+    )
+    query()
+  }, 1000)
+  if (status) {
+    state.selectList = []
   }
 }
 
-/**
- * 根據Id刪除
- * @param idOrPath
- */
+async function handleBathDelete(status: boolean, selectList: any) {
+  const action = await ElMessageBox.confirm(
+    selectList.length > 1 ? t('trash_deleteSelectedMsg') : t('trash_deleteMsg'),
+    {
+      confirmButtonClass: 'el-button el-button--warning',
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmDelete')
+    }
+  )
+  if (action !== 'confirm') return
+
+  state.loading = true
+  let promises = []
+
+  for (const row of selectList) {
+    promises.push(deleteOne(row.id, row.name))
+  }
+  const allResponse = await Promise.all(promises)
+
+  const failMessage = allResponse.reduce((result, item) => {
+    if (item) result += item
+    return result
+  }, '')
+  if (failMessage.length > 0) {
+    state.loading = false
+    handleMsg(failMessage)
+    return
+  }
+
+  setTimeout(async () => {
+    state.loading = false
+    routerProvider?.message.success(
+      selectList.length > 1 ? t('trash_deleteSelectedSuccessMsg') : t('trash_deleteSuccessMsg')
+    )
+    query()
+  }, 1000)
+  if (status) {
+    state.selectList = []
+  }
+}
+
+function handleMsg(messages: string) {
+  const count = messages.trim().split('</br>')
+  console.log('msg', messages)
+  console.log('count', count)
+  if (count.length === 1) return
+  ElNotification.error({
+    title: `${t('commons_error')}: ${count.length - 1} ${t('trash_fileOrFolder')}`,
+    dangerouslyUseHTMLString: true,
+    message: messages
+  })
+}
+
 async function deleteOne(idOrPath: string) {
   try {
-    const res = await clientApi.api.deleteNuxeoDocument({ idOrPath })
-    processDetail.completedNum++
-    return ''
+    await clientApi.api.deleteNuxeoDocument({ idOrPath }, { headers: { 'showThrowError': 'true' } })
   } catch (error) {
-    processDetail.completedNum++
-    return idOrPath
+    console.log(error)
+    return `${t('doc_typeSmartFolderSearchName')}: ${name}, ${t('upload_Status_error')}: ` + (error?.response?.data?.message || 'Server Error') + '.</br> '
   }
 }
 
-/**
- * 根據Id恢復文件
- * @param idOrPath
- */
-const restore = async (idOrPath: string) => {
+async function restore(idOrPath: string, name: string) {
   try {
-    const res = await clientApi.api.postNuxeoDocumentRestore({ idOrPath })
-    processDetail.completedNum++
-    return ''
+    await clientApi.api.postNuxeoDocumentRestore({ idOrPath }, { headers: { 'showThrowError': 'true' } })
+    return null
   } catch (error) {
-    processDetail.completedNum++
-    return idOrPath
+    console.log('call Api error', error)
+    return `Fiel / Folder Name: ${name}` + ', Error: ' + (error?.response?.data?.message || 'Server Error') + '.</br> '
   }
 }
 
