@@ -78,7 +78,7 @@ const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-const props = defineProps(['data', 'isRoot', 'id'])
+const props = defineProps(['data', 'isRoot', 'id', 'tree'])
 const emits = defineEmits(['update'])
 // @ts-ignore
 const ignoreList = getIgnoreSchemas()
@@ -216,6 +216,13 @@ async function handleSave() {
         routerProvider?.message.error(t('common_nameExists'))
         return
       }
+    }
+  } else {
+    // Check whether the same name exists at the same level
+    const reduce = props.tree.some((item: any) => state.setting.id !== item.id && data.label === item.label)
+    if (reduce) {
+      routerProvider?.message.error(t('common_nameExists'))
+      return
     }
   }
 
