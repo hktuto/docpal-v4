@@ -7,7 +7,7 @@ const { t } = useI18n()
 const { id } = defineProps<{
   id: string
 }>()
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   setting: {},
   currentRow: {}
@@ -23,15 +23,15 @@ async function getData() {
   }
 }
 const detailRef = ref()
-function handleCurrentChange(row, node) {
+function handleCurrentChange(row: any, node: any) {
   state.currentRow = row
   detailRef.value.init(row)
 }
 const FolderCabinetAddChildDialogRef = ref()
-function handleAddChild(data, isFolder) {
+function handleAddChild(data: any, isFolder: boolean) {
   FolderCabinetAddChildDialogRef.value.handleOpen(data, data.children, isFolder)
 }
-async function handleDeleteChild(setting) {
+async function handleDeleteChild(setting: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
   const noti = ElNotification({

@@ -31,7 +31,6 @@
         <el-divider />
         <h3>{{ $t('folderCabinet.defaultMetadataValue') }}</h3>
         <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" />
-
         <el-divider />
         <template v-if="state.setting.folder">
           <h3>{{ $t('folderCabinet.allowFilesTip') }}</h3>
@@ -81,6 +80,8 @@ if (!routerProvider) {
 }
 const props = defineProps(['data', 'isRoot', 'id'])
 const emits = defineEmits(['update'])
+// @ts-ignore
+const ignoreList = getIgnoreSchemas()
 const { t } = useI18n()
 const FormRendererRef = ref()
 const state = reactive<any>({
