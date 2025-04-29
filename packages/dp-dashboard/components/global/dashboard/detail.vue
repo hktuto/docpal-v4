@@ -77,7 +77,7 @@
           >
           <NuxtErrorBoundary>
             <component
-              :is="componentMap[item.component]"
+              :is="item.component"
               :ref="
                 (el) => {
                   sheetRefs[item.i] = el;
