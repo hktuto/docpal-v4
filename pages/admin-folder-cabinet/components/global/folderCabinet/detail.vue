@@ -73,7 +73,7 @@ onUnmounted(() => {
 <template>
   <div class="pageContainer--padding main">
     <FolderCabinetSettingTree v-if="state.setting" :data="state.setting" :id="state.currentRow?.id" @current-change="handleCurrentChange" />
-    <FolderCabinetSettingDetail ref="detailRef" :tree="state.setting.children" :data="state.currentRow" :isRoot="state.currentRow?.id === id" @update="getData" />
+    <FolderCabinetSettingDetail ref="detailRef" :tree="state.setting" :data="state.currentRow" :isRoot="state.currentRow?.id === id" @update="getData" />
     <FolderCabinetSettingAddChildDialog ref="FolderCabinetAddChildDialogRef" @update="getData" />
   </div>
 </template>
