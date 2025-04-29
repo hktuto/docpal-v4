@@ -39,7 +39,7 @@ describe('[client-external-share]ShareAction', () => {
     })
   })
 
-  it('should call handleOpen with the correct', async () => {
+  it('should call handleDblclick with the correct', async () => {
     const mockOpen = vi.fn()
     wrapper.vm.shareInfoDialogRef = { handleOpen: mockOpen }
     const handleOpenSpy = vi.spyOn(wrapper.vm.shareInfoDialogRef, 'handleOpen')
