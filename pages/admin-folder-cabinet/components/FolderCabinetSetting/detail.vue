@@ -9,7 +9,8 @@
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
         <el-form label-position="top" ref="FormRef" :model="form">
-          <el-form-item prop="labelRule" class="intro" :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
+          <el-form-item prop="labelRule" class="intro"
+                        :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
             <template #label>
               {{ $t('tableHeader_labelRule') }}
               <!-- <span
@@ -206,11 +207,15 @@ async function handleSave() {
   const valid = await FormRef.value.validate()
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!valid || !data) return
-  const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
-  if (checkName) {
-    ElMessage.error(t('common_nameExists'))
-    return
+
+  if (state.setting.label != data.label) {
+    const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+    if (checkName) {
+      routerProvider?.message.error(t('common_nameExists'))
+      return
+    }
   }
+
   const params = {
     ...data,
     allow: form.allow,
