@@ -523,6 +523,5 @@ export const widgetComponent = {
     "PersonalCase": PersonalCase,
     "PersonalWorkflowSingle": PersonalWorkflowSingle,
     "PersonalCaseSingle": PersonalCaseSingle,
-    "PersonalWorkflowSingleFilter":PersonalWorkflowSingleFilter,
     "CalendarWidget": CalendarWidget
 }
