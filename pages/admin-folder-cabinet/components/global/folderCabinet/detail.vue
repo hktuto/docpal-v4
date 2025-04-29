@@ -54,17 +54,7 @@ async function handleDeleteChild(setting) {
     duration: 2000
   })
 }
-const FolderCabinetAddDialogRef = ref()
-function handleEdit(setting: any, isRoot: boolean = false, parentSettingChildren) {
-  const _setting = deepCopy(setting)
-  _setting.isEdit = true
-  if (!!isRoot) {
-    FolderCabinetAddDialogRef.value.handleOpen(_setting)
-  } else {
-    FolderCabinetAddChildDialogRef.value.handleOpen(_setting, parentSettingChildren, _setting.folder)
-  }
-}
-provide('handleEdit', handleEdit)
+
 provide('handleAddChild', handleAddChild)
 provide('handleDeleteChild', handleDeleteChild)
 
@@ -85,7 +75,6 @@ onUnmounted(() => {
     <FolderCabinetSettingTree v-if="state.setting" :data="state.setting" :id="state.currentRow?.id" @current-change="handleCurrentChange" />
     <FolderCabinetSettingDetail ref="detailRef" :data="state.currentRow" :isRoot="state.currentRow?.id === id" @update="getData" />
     <FolderCabinetSettingAddChildDialog ref="FolderCabinetAddChildDialogRef" @update="getData" />
-    <!-- <FolderCabinetSettingAddDialog ref="FolderCabinetAddDialogRef" @update="getData" /> -->
   </div>
 </template>
 <style lang="scss" scoped>

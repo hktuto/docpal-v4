@@ -9,8 +9,7 @@
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
         <el-form label-position="top" ref="FormRef" :model="form">
-          <el-form-item prop="labelRule" class="intro"
-                        :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
+          <el-form-item prop="labelRule" class="intro" :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
             <template #label>
               {{ $t('tableHeader_labelRule') }}
               <!-- <span
@@ -101,10 +100,10 @@ const form = reactive({
 const FormRef = ref()
 const FormVariablesRendererRef = ref()
 
-function handleDocTypeChange(data) {
+function handleDocTypeChange(data: any) {
   // if (state.editReady) form.labelRule = []
   state.curDocType = data.value
-  state.dragList = data.metaList.reduce((prev, item) => {
+  state.dragList = data.metaList.reduce((prev: any, item: any) => {
     if (item.metaDataType === 'string' || item.metaDataType === 'date') {
       if (item.dataType === 'select') {
         const options = JSON.parse(item.options)
@@ -133,7 +132,7 @@ function handleDocTypeChange(data) {
     )
   }
   FormVariablesRendererRef.value.init(
-    data.metaList.reduce((prev, item) => {
+    data.metaList.reduce((prev: any, item: any) => {
       prev.push({
         id: item.metadata,
         name: item.metadata,
@@ -152,8 +151,8 @@ function handleDocTypeChange(data) {
   )
 }
 
-function getReminder(data, revertList) {
-  return revertList.reduce((prev, item) => {
+function getReminder(data: any, revertList: any) {
+  return revertList.reduce((prev: any, item: any) => {
     if (data[item]?.intervalTime) prev[`${item}.intervalTime`] = data[item].intervalTime
     if (data[item]?.tos) prev[`${item}.tos`] = data[item].tos
     if (data[item]?.ccs) prev[`${item}.ccs`] = data[item].ccs
@@ -162,7 +161,7 @@ function getReminder(data, revertList) {
 }
 
 // #endregion
-function init(row) {
+function init(row: any) {
   if (!row) return
   state.setting = row
   state.loading = true
@@ -186,7 +185,7 @@ function init(row) {
       form.labelRule = []
     }
     if (row.metadata) {
-      _row.metadata = row.metadata.map((item) => item.name)
+      _row.metadata = row.metadata.map((item: any) => item.name)
     }
     if (row.acls) state.acls = row.acls
     if (row.metadataValue) state.defaultValue = JSON.parse(row.metadataValue)
@@ -238,12 +237,14 @@ async function handleSave() {
   if (params.metadata && params.metadata.length > 0) {
     const metaRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metadata')
     const options = metaRef.getOptionItems()
-    params.metadata = params.metadata.reduce((prev, key) => {
-      const item = options.find((t) => t.value === key)
-      prev.push({
-        type: item.dataType,
-        name: key
-      })
+    params.metadata = params.metadata.reduce((prev: any, key: string) => {
+      const item = options.find((t: any) => t.value === key)
+      if (!!item) {
+        prev.push({
+          type: item.dataType,
+          name: key
+        })
+      }
       return prev
     }, [])
   }
@@ -253,35 +254,41 @@ async function handleSave() {
   try {
     state.loading = true
     await adminApi.api.patchCabinetTemplate(params)
-    routerProvider?.message.success(t('dpMsg_success'))
+    routerProvider?.message.success(
+      t('tip_updateSuccessMsg', {
+        modelName: t('folder_folderCabinetDetails'),
+        name: null
+      })
+    )
     emits('update')
     WorkflowDialogRef.value.handleCheck()
   } catch (error) {
   } finally {
     setTimeout(() => (state.loading = false), 300)
   }
-  routerProvider?.message.success(t('tip_updateSuccessMsg', {
-    modelName: t('folder_folderCabinetDetails'),
-    name: null
-  }))
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(t('tip_deleteMsg', {
-    modelName: t('folder_entireFolderCabinet'),
-    name: null
-  }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  })
+  const action = await ElMessageBox.confirm(
+    t('tip_deleteMsg', {
+      modelName: t('folder_entireFolderCabinet'),
+      name: null
+    }),
+    {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    }
+  )
   if (action !== 'confirm') throw new Error('cancel')
   await adminApi.api.deleteCabinetId(state.setting.id)
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-      modelName: t('folder_entireFolderCabinet'),
-      name: null
-    }))
+    routerProvider?.message.success(
+      t('tip_deleteSuccessMsg', {
+        modelName: t('folder_entireFolderCabinet'),
+        name: null
+      })
+    )
   } else {
     emits('update')
   }
