@@ -6,14 +6,18 @@ const props = defineProps<{
   hideSetting?: boolean;
 }>()
 
+
 const {
   hideSetting,
   handleDelete, 
   openSetting, 
   settingRef,
   setting,
-  handleRefresh
+  handleRefresh,
+  resize
 } = useDashboard()
+
+defineExpose({ resize })
 
 
 
