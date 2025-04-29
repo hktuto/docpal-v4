@@ -35,19 +35,27 @@
         </el-button>
       </template>
     </div>
-    <DashboardDetail class="template-container--main"
-      v-if="state.curDashboard && state.curDashboard.layout"
-      ref="DashboardDetailRef"
-      :id="state.curDashboard.id"
-      v-model:layout="state.curDashboard.layout"
-      :dates="state.dates"
-      :hideSetting="!state.editMode"
-      :resizable="state.editMode"
-      :draggable="state.editMode"
-      :editMode="state.editMode"
-      @delete="handleDelete"
-      @refreshSetting="handleRefresh"
-    ></DashboardDetail>
+    <NuxtErrorBoundary>
+
+      <DashboardDetail class="template-container--main"
+        v-if="state.curDashboard && state.curDashboard.layout"
+        ref="DashboardDetailRef"
+        :id="state.curDashboard.id"
+        v-model:layout="state.curDashboard.layout"
+        :dates="state.dates"
+        :hideSetting="!state.editMode"
+        :resizable="state.editMode"
+        :draggable="state.editMode"
+        :editMode="state.editMode"
+        @delete="handleDelete"
+        @refreshSetting="handleRefresh"
+      ></DashboardDetail>
+      <template #error="{ error }">
+        <div class="template-container--main">
+          error {{  error }}
+        </div>
+      </template>
+    </NuxtErrorBoundary>
   </div>
 </template>
 
