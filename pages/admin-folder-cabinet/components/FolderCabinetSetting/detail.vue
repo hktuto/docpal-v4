@@ -218,9 +218,7 @@ async function handleSave() {
       }
     }
   } else {
-    // Check whether the same name exists at the same level
-    const reduce = props.tree.some((item: any) => state.setting.id !== item.id && data.label === item.label)
-    if (reduce) {
+    if (checkDuplicateLabel(state.setting.parentId, state.setting.id, data.label, props.tree.children)) {
       routerProvider?.message.error(t('common_nameExists'))
       return
     }
@@ -281,6 +279,30 @@ async function handleSave() {
   } finally {
     setTimeout(() => (state.loading = false), 300)
   }
+}
+
+const checkDuplicateLabel = (parentId: string, id: string, name: string, data: any) => {
+  let hasDuplicate = false
+
+  const checkItems = (items: any) => {
+    // Check if items exist
+    if (!items || items.length === 0) return
+
+    for (const item of items) {
+      // Check whether the current project meets the criteria
+      if (item.parentId === parentId && item.id !== id && item.label === name) {
+        hasDuplicate = true
+        break
+      }
+      // If children exist
+      if (item.children && item.children.length > 0) {
+        checkItems(item.children)
+      }
+    }
+  }
+
+  checkItems(data)
+  return hasDuplicate
 }
 
 async function handleDelete() {
