@@ -75,6 +75,8 @@
             drag-ignore-from=".no-drag"
             @resize="chartResize(item)"
           >
+          <NuxtErrorBoundary>
+            {{ componentMap[item.component] }}
             <component
               :is="componentMap[item.component]"
               :ref="
@@ -89,6 +91,12 @@
               @delete="handleDelete(item)"
               @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
             ></component>
+            <template #error="{ error }">
+              <div class="template-container--main">
+                error {{  error }}
+              </div>
+            </template>
+          </NuxtErrorBoundary>
           </GridItem>
         </GridLayout>
       </div>
