@@ -4,9 +4,10 @@ import {adminApi, clientApi} from 'api'
 const { public:{platform}} = useRuntimeConfig();
 const {t} = useI18n()
 
-const { state, handleSubmit, handleDelete } = useDashboardSetting({
+const { state, handleSubmit, handleDelete, handleOpen } = useDashboardSetting({
   beforeOpen,
 })
+
 
 type Columns = {
   field: string,
@@ -81,6 +82,10 @@ async function beforeOpen(setting) {
   }
 
 }
+
+defineExpose({
+  handleOpen
+})
 
 
 
