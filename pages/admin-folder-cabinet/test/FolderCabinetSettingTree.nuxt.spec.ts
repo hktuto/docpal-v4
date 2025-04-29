@@ -6,10 +6,7 @@ import { mockRouterProvider } from './util'
 import { FolderCabinetSettingTree, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
-import { useRuntimeConfig } from 'nuxt/app'
-vi.mock('nuxt/app', () => ({
-  useRuntimeConfig: vi.fn()
-}))
+
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -21,9 +18,18 @@ vi.mock('element-plus', () => ({
   ElMessage: {
     success: vi.fn(),
     warning: vi.fn()
-  }
+  },
+  ElDropdown: {
+    name: 'ElDropdown',
+    props: ['trigger'],
+    template: '<div><slot /></div>',
+  },
+  ElTree: {
+    name: 'ElTree',
+    props: ['data', 'node-key', 'props', 'default-expand-all', 'highlight-current'],
+    template: '<div><slot /></div>',
+  },
 }))
-
 const FormRenderer = {
   template: '<div class="FormRenderer">FormRenderer</div>',
   methods: {
@@ -44,47 +50,39 @@ const Editorjs = {
   template: '<div class="Editorjs">Editorjs</div>',
   methods: {}
 }
-
-describe('[admin-azure]FolderCabinetSettingTree', () => {
+const handleAddChild = vi.fn()
+describe('[admin-folder-cabinet]FolderCabinetSettingTree', () => {
   let wrapper: any
   const mockTabProvider = {}
-
+  const mockData = [
+    { id: 1, label: 'Folder 1', folder: true, children: [{ id: 1 - 2, label: 'File 1', folder: false }] },
+    { id: 2, label: 'File 1', folder: false }
+  ]
   beforeEach(async () => {
-    wrapper = shallowMount(FolderCabinetSettingTree, {
+    wrapper = mount(FolderCabinetSettingTree, {
       props: {
         id: 'test-id',
-        data: [
-          { id: 1, label: 'Folder 1', folder: true, children: [] },
-          { id: 2, label: 'File 1', folder: false }
-        ]
+        data: mockData
       },
       global: {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
         provide: {
           [TabManagerKey]: mockTabProvider,
-          [MenuRouterKey]: mockRouterProvider
+          [MenuRouterKey]: mockRouterProvider,
+          handleAddChild: handleAddChild
         },
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key },
-          useRuntimeConfig: () => {
-            return {
-              public: {
-                endPoint: {
-                  docpal: 'ttt'
-                }
-              }
-            }
-          }
         }
       }
     })
     await wrapper.vm.$nextTick()
-    const dialogRef = wrapper.vm.$refs.FolderCabinetAddChildDialogRef
-    dialogRef.handleOpen = vi.fn()
+    // const dialogRef = wrapper.vm.$refs.FolderCabinetAddChildDialogRef
+    // dialogRef.handleOpen = vi.fn()
 
-    const tableRef = wrapper.vm.$refs.detailRef
-    tableRef.init = vi.fn()
+    // const tableRef = wrapper.vm.$refs.detailRef
+    // tableRef.init = vi.fn()
   })
 
   afterEach(() => {
@@ -94,5 +92,10 @@ describe('[admin-azure]FolderCabinetSettingTree', () => {
   it('renders correctly', async () => {
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.find('.folder-tree').exists()).toBe(true)
+  })
+  it('emits current-change event on node change', async () => {
+    wrapper.vm.handleCurrentChange(mockData[0], {})
+    expect(wrapper.emitted()['current-change']).toBeTruthy()
+    expect(wrapper.emitted()['current-change'][0]).toEqual([mockData[0], {}])
   })
 })

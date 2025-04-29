@@ -5,11 +5,7 @@ import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
 import { FolderCabinetDetail, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
-import { mockQuery, mockTable } from './setup'
-import { useRuntimeConfig } from 'nuxt/app'
-vi.mock('nuxt/app', () => ({
-  useRuntimeConfig: vi.fn()
-}))
+
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -45,7 +41,7 @@ const Editorjs = {
   methods: {}
 }
 
-describe('[admin-azure]FolderCabinetDetail', () => {
+describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
 
@@ -63,15 +59,6 @@ describe('[admin-azure]FolderCabinetDetail', () => {
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key },
-          useRuntimeConfig: () => {
-            return {
-              public: {
-                endPoint: {
-                  docpal: 'ttt'
-                }
-              }
-            }
-          }
         }
       }
     })

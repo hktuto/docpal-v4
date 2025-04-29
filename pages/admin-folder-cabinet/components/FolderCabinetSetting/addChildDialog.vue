@@ -20,7 +20,7 @@ const {t} = useI18n()
 const emits = defineEmits([
   'update'
 ])
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false,
   setting: null,
@@ -39,7 +39,7 @@ async function handleSubmit() {
     else delete params.allow
     state.loading = true
     if (params.isEdit) {
-      params.id = state.setting.id
+      params.id = state.setting?.id
       await adminApi.api.patchCabinetTemplate(params)
     } else {
       const labelRule = [
@@ -49,7 +49,7 @@ async function handleSubmit() {
           "noDelete": true
         }
       ]
-      params.parentId = state.setting.id
+      params.parentId = state.setting?.id
       await adminApi.api.postCabinetTemplate({...params, labelRule: JSON.stringify(labelRule)})
       ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('folder_folderUnder'), name: state.setting.label}))
     }
@@ -61,7 +61,7 @@ async function handleSubmit() {
   state.loading = false
 }
 
-function handleOpen(setting, children, isFolder) {
+function handleOpen(setting: any, children: any, isFolder: boolean) {
   state.visible = true
   state.setting = setting
   state.isFolder = isFolder
@@ -73,8 +73,8 @@ function handleOpen(setting, children, isFolder) {
       const options = FormRendererRef.value.vFormRenderRef.optionData[listName]
       if (options.length !== 0) {
         clearInterval(interval)
-        options.forEach(oItem => {
-          const index = children.findIndex(cItem => cItem.documentType === oItem.value)
+        options.forEach((oItem: any) => {
+          const index = children.findIndex((cItem: any) => cItem.documentType === oItem.value)
           oItem.disabled = index !== -1
         });
         documentTypeRef.loadOptions(options)
