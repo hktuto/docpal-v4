@@ -57,7 +57,7 @@ import PersonalCase from '../components/global/personal/case/index.vue'
 import PersonalCaseSingle from '../components/global/personal/case/single/index.vue'
 import CalendarWidget from '../components/global/calendar/widget/index.vue'
 import PersonalWorkflowSingle from '../components/global/personal/workflow/single/index.vue'
-import PersonalWorkflowSingleFilter from '../components/global/personal/workflow/singleFilter/index.vue'
+// import PersonalWorkflowSingleFilter from '../components/global/personal/workflow/singleFilter/index.vue'
 import  '../assets/dashboard.scss'
 
 export type DashboardWidgetSetting = {
@@ -342,21 +342,21 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
             columns: []
         }
     },
-    PersonalWorkflowSingleFilter:{
-        type: 'personal',
-        label: 'PersonalWorkflowSingle',
-        minW: 2,
-        minH: 2,
-        maxW: 12,
-        maxH: 12,
-        w: 3,
-        h: 3,
-        component : 'PersonalWorkflowSingleFilter',
-        setting : {
-            selectedWorkflow: '',
-            columns: []
-        }
-    },
+    // PersonalWorkflowSingleFilter:{
+    //     type: 'personal',
+    //     label: 'PersonalWorkflowSingle',
+    //     minW: 2,
+    //     minH: 2,
+    //     maxW: 12,
+    //     maxH: 12,
+    //     w: 3,
+    //     h: 3,
+    //     component : 'PersonalWorkflowSingleFilter',
+    //     setting : {
+    //         selectedWorkflow: '',
+    //         columns: []
+    //     }
+    // },
     PersonalSearchHistory: {
         type: 'personal',
         // feature: 'SEARCH',
