@@ -51,12 +51,7 @@ const defaultProps = {
   label: 'label',
 }
 
-function handleCurrentChange(row, node) {
-  // router.push({
-  //   query: {
-  //     id
-  //   }
-  // })
+function handleCurrentChange(row: any, node: any) {
   emits('current-change', row, node)
 }
 
