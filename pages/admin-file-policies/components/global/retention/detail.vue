@@ -55,13 +55,6 @@ async function handleSetStatus(isActive: 'A' | 'D') {
   }
 }
 
-async function deleteItem() {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  await adminApi.api.deletePolicyRetentionsId(id)
-  routerProvider?.message.success(t('dpMsg_success'))
-}
-
 async function init() {
   try {
     state.loading = true

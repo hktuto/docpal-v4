@@ -31,7 +31,6 @@
         <el-divider />
         <h3>{{ $t('folderCabinet.defaultMetadataValue') }}</h3>
         <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" />
-
         <el-divider />
         <template v-if="state.setting.folder">
           <h3>{{ $t('folderCabinet.allowFilesTip') }}</h3>
@@ -79,8 +78,10 @@ const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
-const props = defineProps(['data', 'isRoot', 'id'])
+const props = defineProps(['data', 'isRoot', 'id', 'tree'])
 const emits = defineEmits(['update'])
+// @ts-ignore
+const ignoreList = getIgnoreSchemas()
 const { t } = useI18n()
 const FormRendererRef = ref()
 const state = reactive<any>({
@@ -101,10 +102,10 @@ const form = reactive({
 const FormRef = ref()
 const FormVariablesRendererRef = ref()
 
-function handleDocTypeChange(data) {
+function handleDocTypeChange(data: any) {
   // if (state.editReady) form.labelRule = []
   state.curDocType = data.value
-  state.dragList = data.metaList.reduce((prev, item) => {
+  state.dragList = data.metaList.reduce((prev: any, item: any) => {
     if (item.metaDataType === 'string' || item.metaDataType === 'date') {
       if (item.dataType === 'select') {
         const options = JSON.parse(item.options)
@@ -133,7 +134,7 @@ function handleDocTypeChange(data) {
     )
   }
   FormVariablesRendererRef.value.init(
-    data.metaList.reduce((prev, item) => {
+    data.metaList.reduce((prev: any, item: any) => {
       prev.push({
         id: item.metadata,
         name: item.metadata,
@@ -152,8 +153,8 @@ function handleDocTypeChange(data) {
   )
 }
 
-function getReminder(data, revertList) {
-  return revertList.reduce((prev, item) => {
+function getReminder(data: any, revertList: any) {
+  return revertList.reduce((prev: any, item: any) => {
     if (data[item]?.intervalTime) prev[`${item}.intervalTime`] = data[item].intervalTime
     if (data[item]?.tos) prev[`${item}.tos`] = data[item].tos
     if (data[item]?.ccs) prev[`${item}.ccs`] = data[item].ccs
@@ -162,7 +163,7 @@ function getReminder(data, revertList) {
 }
 
 // #endregion
-function init(row) {
+function init(row: any) {
   if (!row) return
   state.setting = row
   state.loading = true
@@ -186,7 +187,7 @@ function init(row) {
       form.labelRule = []
     }
     if (row.metadata) {
-      _row.metadata = row.metadata.map((item) => item.name)
+      _row.metadata = row.metadata.map((item: any) => item.name)
     }
     if (row.acls) state.acls = row.acls
     if (row.metadataValue) state.defaultValue = JSON.parse(row.metadataValue)
@@ -207,11 +208,24 @@ async function handleSave() {
   const valid = await FormRef.value.validate()
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!valid || !data) return
-  const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
-  if (checkName) {
-    ElMessage.error(t('common_nameExists'))
-    return
+
+  if (props.isRoot) {
+    if (state.setting.label != data.label) {
+      const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+      if (checkName) {
+        routerProvider?.message.error(t('common_nameExists'))
+        return
+      }
+    }
+  } else {
+    // Check whether the same name exists at the same level
+    const reduce = props.tree.some((item: any) => state.setting.id !== item.id && data.label === item.label)
+    if (reduce) {
+      routerProvider?.message.error(t('common_nameExists'))
+      return
+    }
   }
+
   const params = {
     ...data,
     allow: form.allow,
@@ -238,12 +252,14 @@ async function handleSave() {
   if (params.metadata && params.metadata.length > 0) {
     const metaRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metadata')
     const options = metaRef.getOptionItems()
-    params.metadata = params.metadata.reduce((prev, key) => {
-      const item = options.find((t) => t.value === key)
-      prev.push({
-        type: item.dataType,
-        name: key
-      })
+    params.metadata = params.metadata.reduce((prev: any, key: string) => {
+      const item = options.find((t: any) => t.value === key)
+      if (!!item) {
+        prev.push({
+          type: item.dataType,
+          name: key
+        })
+      }
       return prev
     }, [])
   }
@@ -253,35 +269,41 @@ async function handleSave() {
   try {
     state.loading = true
     await adminApi.api.patchCabinetTemplate(params)
-    routerProvider?.message.success(t('dpMsg_success'))
+    routerProvider?.message.success(
+      t('tip_updateSuccessMsg', {
+        modelName: t('folder_folderCabinetDetails'),
+        name: null
+      })
+    )
     emits('update')
     WorkflowDialogRef.value.handleCheck()
   } catch (error) {
   } finally {
     setTimeout(() => (state.loading = false), 300)
   }
-  routerProvider?.message.success(t('tip_updateSuccessMsg', {
-    modelName: t('folder_folderCabinetDetails'),
-    name: null
-  }))
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(t('tip_deleteMsg', {
-    modelName: t('folder_entireFolderCabinet'),
-    name: null
-  }), {
-    confirmButtonClass: 'el-button el-button--warning',
-    confirmButtonText: t('common_confirmDelete')
-  })
+  const action = await ElMessageBox.confirm(
+    t('tip_deleteMsg', {
+      modelName: t('folder_entireFolderCabinet'),
+      name: null
+    }),
+    {
+      confirmButtonClass: 'el-button el-button--warning',
+      confirmButtonText: t('common_confirmDelete')
+    }
+  )
   if (action !== 'confirm') throw new Error('cancel')
   await adminApi.api.deleteCabinetId(state.setting.id)
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false)
-    routerProvider?.message.success(t('tip_deleteSuccessMsg', {
-      modelName: t('folder_entireFolderCabinet'),
-      name: null
-    }))
+    routerProvider?.message.success(
+      t('tip_deleteSuccessMsg', {
+        modelName: t('folder_entireFolderCabinet'),
+        name: null
+      })
+    )
   } else {
     emits('update')
   }
