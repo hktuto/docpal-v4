@@ -32,7 +32,7 @@
                   @click="handleCopy(shareLink)">
           <template #suffix>
             <el-icon @click="handleCopy(shareLink)">
-              <CopyDocument/>
+              <CopyDocument />
             </el-icon>
           </template>
         </el-input>
@@ -42,7 +42,7 @@
           <el-form-item :label="$t('share_password')" prop="password"
                         :rules="[{ required: true,
                                   message: $t('share_password') + $t('render.hint.fieldRequired')}]">
-            <el-input v-model="form.password" clearable type="text"/>
+            <el-input v-model="form.password" clearable type="text" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -53,7 +53,7 @@
                             type="datetime"
                             :default-time="defaultTime"
                             :shortcuts="shortcuts"
-                            style="width: 100%"/>
+                            style="width: 100%" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -70,15 +70,13 @@
 </template>
 
 <script lang="ts" setup>
-import {CopyDocument} from '@element-plus/icons-vue'
-import type {FormInstance} from 'element-plus'
-import {Base64} from 'js-base64'
+import { CopyDocument } from '@element-plus/icons-vue'
+import type { FormInstance } from 'element-plus'
+import { Base64 } from 'js-base64'
 
-const {diffMinute} = useTime()
-const {
-  public: {endPoint},
-} = useRuntimeConfig();
-const {t} = useI18n();
+const { diffMinute } = useTime()
+const { public: { endPoint } } = useRuntimeConfig()
+const { t } = useI18n()
 const route = useRoute()
 const state = reactive<any>({
   userList: [],
@@ -88,27 +86,27 @@ const state = reactive<any>({
     {
       text: `1 ${t('common_day')}`,
       value: () => {
-        const date = new Date();
-        date.setTime(date.getTime() + 3600 * 1000 * 24);
+        const date = new Date()
+        date.setTime(date.getTime() + 3600 * 1000 * 24)
         return date
       }
     },
     {
       text: `7 ${t('common_days')}`,
       value: () => {
-        const date = new Date();
-        date.setTime(date.getTime() + 3600 * 1000 * 24 * 7);
+        const date = new Date()
+        date.setTime(date.getTime() + 3600 * 1000 * 24 * 7)
         return date
-      },
+      }
     },
     {
       text: `30 ${t('common_days')}`,
       value: () => {
-        const date = new Date();
-        date.setTime(date.getTime() + 3600 * 1000 * 24 * 30);
+        const date = new Date()
+        date.setTime(date.getTime() + 3600 * 1000 * 24 * 30)
         return date
-      },
-    },
+      }
+    }
   ],
   shareId: ''
 })
@@ -125,16 +123,16 @@ const emailValidate = (rule: any, value: any, callback: any) => {
       // if (form.emailList.length > 0) {
 
       // }
-      callback(new Error($t('tip.enterValidEmail')));
+      callback(new Error($t('tip.enterValidEmail')))
     }
   })
   callback()
 }
 
-function handleOpen(shareInfo) {
-  let decodePwd = Base64.decode(shareInfo.password);//解密
+function handleOpen(shareInfo: any) {
+  let decodePwd = Base64.decode(shareInfo.password)//解密
   state.shareId = shareInfo.shareID
-  initFormatItem({...shareInfo, password: decodePwd})
+  initFormatItem({ ...shareInfo, password: decodePwd })
   dialogVisible.value = true
 }
 
@@ -161,12 +159,12 @@ async function handleSubmit() {
 }
 
 // #endregion
-function initFormatItem(shareInfo) {
+function initFormatItem(shareInfo: any) {
   form.emailList = shareInfo.emailList
   echoEamilList()
   form.password = shareInfo.password || ''
   form.dueDate = shareInfo.expiredDate
-  const origin = endPoint?.upload;
+  const origin = endPoint?.upload
   state.shareLink = `${origin}/share?token=${shareInfo.accessToken}`
   setTimeout(() => {
     formRef.value.clearValidate()
@@ -186,10 +184,10 @@ function echoEamilList() {
 }
 
 onMounted(async () => {
-  echoEamilList()
+  // echoEamilList()
 })
-const {defaultTime, shortcuts, shareLink, userList} = toRefs(state)
-defineExpose({handleOpen})
+const { defaultTime, shortcuts, shareLink, userList } = toRefs(state)
+defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">
