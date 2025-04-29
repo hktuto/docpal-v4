@@ -55,7 +55,7 @@ async function handleSubmit() {
   state.loading = false
 }
 
-async function handleOpen(setting) {
+async function handleOpen() {
   state.visible = true
   setTimeout(async () => {
     await FormRendererRef.value.vFormRenderRef.resetForm()

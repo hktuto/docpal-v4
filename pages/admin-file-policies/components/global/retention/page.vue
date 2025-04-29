@@ -18,13 +18,6 @@
       <template #periodNum="{row, index}">
         {{ row.periodNum }} {{ calDate(row.periodUnit) }}
       </template>
-      <template #active="{row, index}">
-        <el-switch v-model="row.status"
-                   active-value="A" inactive-value="D"
-                   :loading="row.loading"
-                   @change="(value) => handleSetStatus(value, row)"
-        />
-      </template>
       <template #isAuto="{ row }">
         <el-icon v-if="row.isAuto" style="--color: var(--app-primary-color)"><Select /></el-icon>
         <el-icon v-else style="--color: #F56C6C">
@@ -185,7 +178,7 @@ async function handleActive(row: any, isActive: 'A' | 'D') {
 }
 
 // TODO
-async function deleteItem(id: string) {
+async function deleteItem(id: number) {
   const action = await ElMessageBox.confirm(`${t('filePolicies_RetentionPolicyDeletedMsg')}`,
     {
       confirmButtonClass: 'el-button el-button--warning',
@@ -201,10 +194,6 @@ async function deleteItem(id: string) {
   }))
 }
 
-async function handleCreate() {
-  DialogRef.value.handleOpen()
-}
-
 function handleFilterFormChange(formModel: any) {
   extraParams = formModel
   reload()
@@ -217,7 +206,7 @@ function handleAdd() {
 const ResponsiveFilterRef = ref()
 
 async function getFilter() {
-  let data = await adminApi.api.getPolicyRetentionsPageConditions().then(res => res.data)
+  let data: any = await adminApi.api.getPolicyRetentionsPageConditions().then(res => res.data)
   data?.unshift(
     {
       key: 'orderBy',
@@ -262,14 +251,14 @@ function calDate(unit: string) {
     default:
       break
   }
-  return $i18n.t(date)
+  return t(date)
 }
 
 onMounted(() => {
   getFilter()
 })
 onActivated(async () => {
-  query()
+  query({})
 })
 </script>
 <style lang="scss" scoped>
