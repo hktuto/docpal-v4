@@ -209,11 +209,13 @@ async function handleSave() {
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!valid || !data) return
 
-  if (state.setting.label != data.label) {
-    const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
-    if (checkName) {
-      routerProvider?.message.error(t('common_nameExists'))
-      return
+  if (props.isRoot) {
+    if (state.setting.label != data.label) {
+      const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+      if (checkName) {
+        routerProvider?.message.error(t('common_nameExists'))
+        return
+      }
     }
   }
 
