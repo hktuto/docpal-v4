@@ -118,8 +118,8 @@ const config = {
       },
     },
     esbuild: {
-      drop: ['debugger'],
-      pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
+      // drop: ['debugger'],
+      // pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
     },
     vue: {
       features: {

@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+
 const props = defineProps<{
   date: any
   setting?: any;
   hideSetting?: boolean;
 }>()
+
 const {
   hideSetting,
   handleDelete, 

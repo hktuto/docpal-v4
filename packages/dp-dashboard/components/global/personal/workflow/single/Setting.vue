@@ -109,11 +109,11 @@ async function beforeOpen(setting) {
           <ElOption v-for="item in avalibleSteps" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Sort Column">
+      <!-- <ElFormItem label="Sort Column">
         <ElSelect v-model="state.setting.sortColumn" filterable clearable >
           <ElOption v-for="item in workflowColumns" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
         </ElSelect>
-      </ElFormItem>
+      </ElFormItem> -->
       <ElFormItem label="Columns">
         <div class="listContainer">
           <div class="row">
