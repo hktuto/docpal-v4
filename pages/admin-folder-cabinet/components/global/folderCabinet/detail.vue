@@ -7,7 +7,11 @@ const { t } = useI18n()
 const { id } = defineProps<{
   id: string
 }>()
-const state = reactive<any>({
+const state = reactive<{
+  loading: boolean
+  setting: any
+  currentRow: any
+}>({
   loading: false,
   setting: {},
   currentRow: {}
@@ -34,6 +38,7 @@ function handleAddChild(data: any, isFolder: boolean) {
 async function handleDeleteChild(setting: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
   if (action !== 'confirm') return
+  console.log(action)
   const noti = ElNotification({
     title: t('dpTip_delete'),
     icon: Loading,
@@ -44,15 +49,25 @@ async function handleDeleteChild(setting: any) {
     duration: 0,
     position: 'bottom-right'
   })
-  const response = await adminApi.api.deleteCabinetId(setting.id)
-  await getData()
-  noti.close()
-  ElNotification({
-    title: 'Success',
-    message: 'Item deleted',
-    type: 'success',
-    duration: 2000
-  })
+  try {
+    await adminApi.api.deleteCabinetId(setting.id)
+    await getData()
+    noti.close()
+    ElNotification({
+      title: 'Success',
+      message: 'Item deleted',
+      type: 'success',
+      duration: 2000
+    })
+  } catch {
+    noti.close()
+    ElNotification({
+      title: 'Error',
+      message: 'Failed to delete item',
+      type: 'error',
+      duration: 2000
+    })
+  }
 }
 
 provide('handleAddChild', handleAddChild)
