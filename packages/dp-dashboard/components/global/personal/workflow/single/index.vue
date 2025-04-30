@@ -1,17 +1,23 @@
 <script lang="ts" setup>
+
 const props = defineProps<{
   date: any
   setting?: any;
   hideSetting?: boolean;
 }>()
+
+
 const {
   hideSetting,
   handleDelete, 
   openSetting, 
   settingRef,
   setting,
-  handleRefresh
+  handleRefresh,
+  resize
 } = useDashboard()
+
+defineExpose({ resize })
 
 
 

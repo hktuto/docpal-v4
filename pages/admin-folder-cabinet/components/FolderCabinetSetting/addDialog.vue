@@ -9,8 +9,7 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"></FormRenderer>
     <template #footer>
-      <el-button id="FolderCabinetSetting__CreateNewFolderCabinet__Submit" type="primary" :loading="state.loading"
-                 @click="handleSubmit">
+      <el-button id="FolderCabinetSetting__CreateNewFolderCabinet__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -23,7 +22,7 @@ import { ElMessage } from 'element-plus'
 
 const { t } = useI18n()
 const emits = defineEmits(['update'])
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false,
   setting: null,
@@ -75,20 +74,18 @@ async function handleSubmit() {
       edit: state.isEdit,
       response
     })
+    let msg = state.isEdit
+      ? t('tip_updateSuccessMsg', { modelName: t('menus_folderCabinet'), name: null })
+      : t('tip_createdSuccessMsg', { modelName: t('menus_folderCabinet'), name: null })
+    ElMessage.success(msg)
   } catch (error) {
     console.log(error)
+  } finally {
+    state.loading = false
   }
-
-  let msg = state.isEdit ?
-    t('tip_updateSuccessMsg', { modelName: t('menus_folderCabinet'), name: null })
-    :
-    t('tip_createdSuccessMsg', { modelName: t('menus_folderCabinet'), name: null })
-  ElMessage.success(msg)
-
-  state.loading = false
 }
 
-function handleOpen(setting) {
+function handleOpen(setting: any) {
   state.visible = true
   state.loading = false
   if (setting) {
@@ -125,9 +122,7 @@ function handleOpen(setting) {
 
 async function getRootIds(idOrPath: string) {
   try {
-    const data = await adminApi.api
-      .postNuxeoDocumentBreadcrumb({ idOrPath })
-      .then((res) => res.data)
+    const data = await adminApi.api.postNuxeoDocumentBreadcrumb({ idOrPath }).then((res) => res.data)
     return data?.map((item) => item.id)
   } catch (error) {
     return []
@@ -137,4 +132,3 @@ async function getRootIds(idOrPath: string) {
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped></style>
-log.inf

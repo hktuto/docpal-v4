@@ -19,7 +19,7 @@ import formJson from './permissionAddDialog.vform.json'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps<{
-  id: object;
+  id: string;
   exitList: any;
 }>()
 const { t } = useI18n()
