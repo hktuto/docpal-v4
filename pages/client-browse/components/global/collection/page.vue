@@ -193,7 +193,7 @@ function handleDelete(row: any) {
     confirmButtonText: t('common_confirmDelete')
   })
     .then(async () => {
-      await clientApi.api.deleteNuxeoDocument({ idOrPath: row.id })
+      await clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid(row.id)
       routerProvider?.message.success(t('collection_deleteSuccessMsg', { name: row.name }))
       reloadPage()
     })
