@@ -168,3 +168,192 @@ describe('[admin-folder-cabinet]FolderCabinetSettingPermission', () => {
     expect(mockRouterProvider.message.success).not.toHaveBeenCalled()
   })
 })
+describe('[admin-folder-cabinet]FolderCabinetSettingPermissionAddDialog', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+  beforeEach(async () => {
+    wrapper = shallowMount(FolderCabinetSettingPermissionAddDialog, {
+      props: {
+        exitList: [],
+        id: 'test-id',
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    })
+    await wrapper.vm.$nextTick()
+    // const tableRef = wrapper.vm.$refs.detailRef
+    // tableRef.init = vi.fn()
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+  it('renders correctly', async () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('loads users and groups on mount', async () => {
+    const mockUsers: any = [
+      { userId: 'user3', username: 'User 3' },
+      { userId: 'user4', username: 'User 4' },
+    ]
+    const mockGroups: any = [
+      { id: 'group1', name: 'Group 1' },
+      { id: 'group2', name: 'Group 2' },
+    ]
+    
+    adminApi.api.postNuxeoIdentityUsers.mockResolvedValue({ data: mockUsers })
+    adminApi.api.postNuxeoIdentityGroups.mockResolvedValue({ data: mockGroups })
+
+    await wrapper.vm.init()
+
+    expect(wrapper.vm.state.userList).toEqual(mockUsers.map((user: any) => ({ ...user, value: user.userId, label: user.username })))
+    expect(wrapper.vm.state.groupList).toEqual(mockGroups.map((group: any) => ({ ...group, value: group.id, label: group.name })))
+  })
+  it('handles form submission', async () => {
+    const mockFormData = { userId: 'user3', permission: 'Read', time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn(() => Promise.resolve(mockFormData)),
+        resetForm: vi.fn(),
+        setFormData: vi.fn()
+      }
+    }
+    adminApi.api.postCabinetTemplatePermission.mockResolvedValue({})
+
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.postCabinetTemplatePermission).toHaveBeenCalledWith({
+      id: 'test-id',
+      userId: 'user3',
+      permission: 'Read',
+      startDate: '2023-01-01',
+      endDate: '2023-12-31',
+    })
+    expect(wrapper.vm.state.visible).toBe(false)
+    expect(ElMessage.success).toHaveBeenCalled()
+  })
+  it('handles form submission error', async () => {
+    const mockFormData = { userId: 'user3', permission: 'Read', time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData: vi.fn(() => Promise.resolve(mockFormData)),
+        resetForm: vi.fn(),
+        setFormData: vi.fn()
+      }
+    }
+    adminApi.api.postCabinetTemplatePermission.mockRejectedValue(new Error('Submission failed'))
+
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.postCabinetTemplatePermission).toHaveBeenCalled()
+    expect(wrapper.vm.state.loading).toBe(false) 
+  })
+  it('loads options for userId field', async () => {
+    const userIdRef = { loadOptions: vi.fn() }
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        resetForm: vi.fn(),
+        setFormData: vi.fn(),
+        getWidgetRef: vi.fn().mockReturnValue(userIdRef)
+      }
+    }
+
+    await wrapper.vm.handleOptions()
+    expect(userIdRef.loadOptions).toHaveBeenCalled()
+  })
+})
+
+describe('[admin-folder-cabinet]FolderCabinetSettingPermissionEditTimeDialog', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+  const mockAclItem = {
+    userId: 'user1',
+    permission: 'Read',
+    startDate: '2023-01-01',
+    endDate: '2023-12-31',
+  }
+
+  beforeEach(async () => {
+    wrapper = shallowMount(FolderCabinetSettingPermissionEditTimeDialog, {
+      props: {
+        exitList: [],
+        id: 'test-id',
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider,
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key },
+        }
+      }
+    })
+    await wrapper.vm.$nextTick()
+    // const tableRef = wrapper.vm.$refs.detailRef
+    // tableRef.init = vi.fn()
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+  it('renders correctly', async () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('opens dialog and sets form data', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        resetForm: vi.fn(),
+        setFormData: vi.fn().mockReturnValue(true),
+      }
+    }
+    const formData = {
+      time: 'dateBase',
+      dateRange: [mockAclItem.startDate, mockAclItem.endDate],
+    }
+    await wrapper.vm.handleOpen(mockAclItem)
+
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.setFormData).toHaveBeenCalledWith(formData)
+  })
+  it('handles form submission successfully', async () => {
+    const mockFormData = { time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData:  vi.fn().mockResolvedValue(mockFormData),
+        resetForm: vi.fn(),
+        setFormData: vi.fn().mockReturnValue(true),
+      }
+    }
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.postCabinetTemplatePermission).toHaveBeenCalled()
+    expect(wrapper.vm.state.visible).toBe(false)
+  })
+
+  it('handles form submission error', async () => {
+    const mockFormData = { time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: {
+        getFormData:  vi.fn().mockResolvedValue(mockFormData),
+        resetForm: vi.fn(),
+        setFormData: vi.fn().mockReturnValue(true),
+      }
+    }
+    adminApi.api.postCabinetTemplatePermission.mockRejectedValue(new Error('Submission failed'))
+    await wrapper.vm.handleSubmit()
+
+    expect(adminApi.api.postCabinetTemplatePermission).toHaveBeenCalled()
+    expect(wrapper.vm.state.loading).toBe(false) // 确保 loading 状态被重置
+  })
+})
