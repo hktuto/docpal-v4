@@ -1,0 +1,5 @@
+{
+  "CLIENT_URL": "https://sit-v2.wclsolution.com",
+  "ADMIN_URL": "https://admin.sit-v2.wclsolution.com",
+  "PUBLIC_URL": "https://sit-v2.wclsolution.com/public-api/report/v1"
+}
