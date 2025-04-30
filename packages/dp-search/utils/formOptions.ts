@@ -99,23 +99,27 @@ export function sortListWithI18n(list: any, prefix = '') {
   return _list.sort((a: any, b: any) => a.label.localeCompare(b.label));
 }
 export const getMetadataOptions = async () => {
-  const { public: { platform } } = useRuntimeConfig();
-  /// TODO: depecate in next version
-  let globalType;
-  if (platform === 'admin') {
-    const { data }: any = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile');
-    globalType = data.keywords;
-  } else {
-    const { data } = await clientApi.api.getNuxeoTypesDocumenttype('GlobalFile');
-    globalType = data.keywords;
-
+  try {
+    const { public: { platform } } = useRuntimeConfig();
+    /// TODO: depecate in next version
+    let globalType;
+    if (platform === 'admin') {
+      const { data }: any = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile');
+      globalType = data.keywords;
+    } else {
+      const { data } = await clientApi.api.getNuxeoTypesDocumenttype('GlobalFile');
+      globalType = data?.keywords;
+  
+    }
+    const optionList = globalType.map((item: any) => ({
+      ...item,
+      label: item.name,
+      value: item.name
+    }));
+    return optionList;
+  } catch (error) {
+    return []
   }
-  const optionList = globalType.map((item: any) => ({
-    ...item,
-    label: item.name,
-    value: item.name
-  }));
-  return optionList;
 };
 export const getGroupList = async () => {
   const { data } = await clientApi.api.postNuxeoIdentityGroups() as any;

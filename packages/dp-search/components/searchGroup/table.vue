@@ -190,7 +190,7 @@ async function getList(param: any) {
       return
     }
     tableConfig.loading = true
-    const { data: res } = (await clientApi.api.postNuxeoSearchNestedsearchV2({ ...state.barParams, ...state.aggParams, ...param })) as any
+    const { data: res } = (await clientApi.api.postNuxeoSearchOpenSearch({ ...state.barParams, ...state.aggParams, ...param })) as any
     if (!res.page)
       res.page = {
         entryList: [],
