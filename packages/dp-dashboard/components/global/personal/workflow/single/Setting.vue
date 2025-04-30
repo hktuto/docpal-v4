@@ -4,9 +4,10 @@ import {adminApi, clientApi} from 'api'
 const { public:{platform}} = useRuntimeConfig();
 const {t} = useI18n()
 
-const { state, handleSubmit, handleDelete } = useDashboardSetting({
+const { state, handleSubmit, handleDelete, handleOpen } = useDashboardSetting({
   beforeOpen,
 })
+
 
 type Columns = {
   field: string,
@@ -82,6 +83,10 @@ async function beforeOpen(setting) {
 
 }
 
+defineExpose({
+  handleOpen
+})
+
 
 
 </script>
@@ -109,11 +114,11 @@ async function beforeOpen(setting) {
           <ElOption v-for="item in avalibleSteps" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Sort Column">
+      <!-- <ElFormItem label="Sort Column">
         <ElSelect v-model="state.setting.sortColumn" filterable clearable >
           <ElOption v-for="item in workflowColumns" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
         </ElSelect>
-      </ElFormItem>
+      </ElFormItem> -->
       <ElFormItem label="Columns">
         <div class="listContainer">
           <div class="row">

@@ -4,5 +4,11 @@ export const adminApi = {
     postCabinetTemplatePage: vi.fn().mockResolvedValue({ data: [] }),
     deleteCabinetId: vi.fn().mockResolvedValue({}),
     getCabinetTemplateId: vi.fn().mockResolvedValue({ data: { folder: true } }),
+    patchCabinetTemplate: vi.fn(),
+    postCabinetTemplate: vi.fn(),
+    postCabinetTemplateDuplicateName: vi.fn(),
+    
+    postCabinetTemplatePermission: vi.fn(),
+    deleteCabinetTemplatePermission: vi.fn(),
   }
 }

@@ -36,7 +36,7 @@ const ReaderDialog = {
   methods: {}
 }
 
-describe('[admin-retention]FolderCabinetPage', () => {
+describe('[admin-folder-cabinet]FolderCabinetPage', () => {
   let wrapper: any
   const mockTabProvider = {}
 
