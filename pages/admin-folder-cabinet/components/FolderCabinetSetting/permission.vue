@@ -2,8 +2,7 @@
   <div class="permission-container">
     <div class="tableTopContainer">
       <h3>{{ $t('folderCabinet.localPermission') }}</h3>
-      <el-button id="FolderCabinetSetting__Info__AddLocalPermission" size="small" type="primary" round
-                 @click="handleAclLocalDialogShow">
+      <el-button id="FolderCabinetSetting__Info__AddLocalPermission" size="small" type="primary" round @click="handleAclLocalDialogShow">
         {{ $t('folder_cabinetDetailLocalPermissionAdd') }}
       </el-button>
     </div>
@@ -13,48 +12,31 @@
         <el-table-column :label="$t('dpTable_validityPeriod')">
           <template #default="{ row }">
             <div @dblclick="timeDialogOpen(row)">
-              {{
-                !row.startDate && !row.endDate
-                  ? 'Permanent'
-                  : formatDate(row.startDate) + ' ~ ' + formatDate(row.endDate)
-              }}
+              {{ !row.startDate && !row.endDate ? 'Permanent' : formatDate(row.startDate) + ' ~ ' + formatDate(row.endDate) }}
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          v-for="item in ['read', 'write', 'manage', 'print']"
-          :key="item"
-          :label="$t(`permission.${item}`)"
-          align="center"
-          header-align="center"
-        >
+        <el-table-column v-for="item in ['read', 'write', 'manage', 'print']" :key="item" :label="$t(`permission.${item}`)" header-align="center">
           <template #default="{ row }">
-            <el-switch
-              v-model="row[item]"
-              :loading="row.loading"
-              @change="(value) => handlePermissionChange(value, item, row)"
-            ></el-switch>
+            <el-switch v-model="row[item]" :loading="row.loading" @change="(value: any) => handlePermissionChange(value, item, row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button :id="`FolderCabinetSetting__Info__LocalPermission__Remove__${row.userId}`" size="small"
-                       :loading="row.loading"
-                       @click="removeLocalAcl(row)">
+            <el-button
+              :id="`FolderCabinetSetting__Info__LocalPermission__Remove__${row.userId}`"
+              size="small"
+              :loading="row.loading"
+              @click="removeLocalAcl(row)"
+            >
               {{ $t('dpButtom_remove') }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <FolderCabinetSettingPermissionAddDialog
-      ref="AclAddDialogRef"
-      :id="id"
-      :exit-list="[]"
-      @refresh="emits('refresh')"
-    />
-    <FolderCabinetSettingPermissionEditTimeDialog ref="AclEditTimeDialogRef" :id="id"
-                                                  @refresh="emits('refresh')" />
+    <FolderCabinetSettingPermissionAddDialog ref="AclAddDialogRef" :id="id" :exit-list="[]" @refresh="emits('refresh')" />
+    <FolderCabinetSettingPermissionEditTimeDialog ref="AclEditTimeDialogRef" :id="id" @refresh="emits('refresh')" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -64,8 +46,8 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  tableData: any;
-  id: string;
+  tableData: any
+  id: string
 }>()
 const emits = defineEmits(['refresh'])
 
@@ -74,11 +56,14 @@ async function handlePermissionChange(open: boolean, permission: string, row: an
     row.loading = true
     let res: any
     if (!open && permission === 'print')
-      res = await adminApi.api.deleteCabinetTemplatePermission({
-        id: props.id,
-        userId: row.userId,
-        permission: 'Print'
-      }, {})
+      res = await adminApi.api.deleteCabinetTemplatePermission(
+        {
+          id: props.id,
+          userId: row.userId,
+          permission: 'Print'
+        },
+        {}
+      )
     else if (open && permission === 'print') {
       const _data = {
         userId: row.userId,
@@ -110,11 +95,11 @@ async function handlePermissionChange(open: boolean, permission: string, row: an
     if (res && res.errorCode) throw new Error(res.message || 'error')
   } catch (error) {
     // routerProvider?.message.error(error.message || 'error')
-  }
-  setTimeout(async () => {
+  } finally {
+    await new Promise(resolve => setTimeout(resolve, 500)); 
     row.loading = false
     emits('refresh')
-  }, 500)
+  }
 }
 
 const AclAddDialogRef = ref()
@@ -126,11 +111,11 @@ function handleAclLocalDialogShow() {
 
 const AclEditTimeDialogRef = ref()
 
-function timeDialogOpen(row) {
+function timeDialogOpen(row: any) {
   AclEditTimeDialogRef.value.handleOpen(row)
 }
 
-function permissionRevert(open: boolean, permission) {
+function permissionRevert(open: boolean, permission: string) {
   switch (permission) {
     case 'read':
       return open ? 'Read' : ''
@@ -145,13 +130,11 @@ async function removeLocalAcl(row: any) {
   try {
     row.loading = true
     let msg = t('folder_cabinetDetailLocalPermissionRemoveMsg')
-    const action = await ElMessageBox.confirm(
-      msg,
-      {
-        confirmButtonClass: 'el-button el-button--warning',
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: t('common_confirmRemove')
-      })
+    const action = await ElMessageBox.confirm(msg, {
+      confirmButtonClass: 'el-button el-button--warning',
+      dangerouslyUseHTMLString: true,
+      confirmButtonText: t('common_confirmRemove')
+    })
     if (action !== 'confirm') throw new Error('cancel')
     await adminApi.api.deleteCabinetTemplatePermission({ id: props.id, userId: row.userId }, {})
     routerProvider?.message.success(t('folder_cabinetDetailLocalPermissionRemoveSuccessMsg'))
@@ -165,25 +148,25 @@ async function removeLocalAcl(row: any) {
 }
 
 // #region module: getPermission
-function isRead(permission) {
+function isRead(permission: string) {
   return ['Read', 'ReadWrite', 'ManageRecord', 'ManageLegalHold', 'Everything'].includes(permission)
 }
 
-function isWrite(permission) {
+function isWrite(permission: string) {
   return ['ReadWrite', 'ManageRecord', 'ManageLegalHold', 'Everything'].includes(permission)
 }
 
-function isManage(permission) {
+function isManage(permission: string) {
   return ['Everything'].includes(permission)
 }
 
-function isPrint(permission) {
+function isPrint(permission: string) {
   return ['Print'].includes(permission)
 }
 
 const localList = computed(() => {
   try {
-    const result = props.tableData.map((item) => ({
+    const result = props.tableData.map((item: any) => ({
       userId: item.userId,
       permission: item.permission,
       startDate: item.startDate,
@@ -195,7 +178,7 @@ const localList = computed(() => {
       loading: false,
       printLoading: false
     }))
-    result.sort((a, b) => (a.userId.localeCompare(b.userId)))
+    result.sort((a: any, b: any) => a.userId.localeCompare(b.userId))
     return result
   } catch (error) {
     return []

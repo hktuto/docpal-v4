@@ -7,5 +7,8 @@ export const adminApi = {
     patchCabinetTemplate: vi.fn(),
     postCabinetTemplate: vi.fn(),
     postCabinetTemplateDuplicateName: vi.fn(),
+    
+    postCabinetTemplatePermission: vi.fn(),
+    deleteCabinetTemplatePermission: vi.fn(),
   }
 }
