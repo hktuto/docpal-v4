@@ -86,7 +86,9 @@ const { t } = useI18n()
 const FormRendererRef = ref()
 const state = reactive<any>({
   loading: false,
-  setting: {},
+  setting: {
+    id: ''
+  },
   curDocType: '',
   dragList: [],
   defaultValue: {},
@@ -223,7 +225,6 @@ async function handleSave() {
       return
     }
   }
-
   const params = {
     ...data,
     allow: form.allow,
@@ -316,7 +317,7 @@ async function handleDelete() {
       confirmButtonText: t('common_confirmDelete')
     }
   )
-  if (action !== 'confirm') throw new Error('cancel')
+  if (action !== 'confirm') return
   await adminApi.api.deleteCabinetId(state.setting.id)
   if (props.isRoot) {
     routerProvider?.navigateTo(routeFolderCabinetPage(), false)

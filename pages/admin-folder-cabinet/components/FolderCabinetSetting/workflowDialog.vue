@@ -6,7 +6,7 @@
   >
     <h3>{{ $t('folderCabinet.workflowTip') }}</h3>
     <ul>
-      <li v-for="item in state.list">{{ item.name }}</li>
+      <li v-for="item in state.list" :key="item.name">{{ item.name }}</li>
     </ul>
     <template #footer>
       <el-button id="FolderCabinetSetting__Info__Save__Confirm" type="primary" :loading="state.loading"
@@ -22,7 +22,7 @@ import {adminApi} from "api";
 const props = defineProps<{
   id: string;
 }>();
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false,
   list: []
