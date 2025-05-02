@@ -51,18 +51,17 @@ async function handleSubmit() {
   }
 }
 
-function handleOpen(aclItem) {
+async function handleOpen(aclItem: any) {
   state.visible = true;
   state.aclItem = aclItem;
-  setTimeout(() => {
-    const params: any = {
-      time: !!aclItem.startDate ? 'dateBase' : 'permanent',
-    }
-    if (aclItem.startDate) {
-      params.dateRange = [aclItem.startDate, aclItem.endDate]
-    }
-    FormRendererRef.value.vFormRenderRef.setFormData(params)
-  })
+  await new Promise(resolve => setTimeout(resolve, 10)); 
+  const params: any = {
+    time: !!aclItem.startDate ? 'dateBase' : 'permanent',
+  }
+  if (aclItem.startDate) {
+    params.dateRange = [aclItem.startDate, aclItem.endDate]
+  }
+  FormRendererRef.value.vFormRenderRef.setFormData(params)
 }
 
 defineExpose({handleOpen});

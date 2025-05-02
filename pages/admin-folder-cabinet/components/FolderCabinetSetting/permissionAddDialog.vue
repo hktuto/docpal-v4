@@ -19,12 +19,12 @@ import formJson from './permissionAddDialog.vform.json'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps<{
-  id: object;
+  id: string;
   exitList: any;
 }>()
 const { t } = useI18n()
 const emits = defineEmits(['refresh'])
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false,
 
@@ -94,19 +94,22 @@ function handleOptions() {
     )
   }
 }
-
-onMounted(async () => {
+async function init() {
   state.userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-  state.userList.forEach((item) => {
+  state.userList.forEach((item: any) => {
     item.value = item.userId
     item.label = item.username
   })
   state.groupList = await adminApi.api.postNuxeoIdentityGroups().then(res => res.data)
-  state.groupList.forEach((item) => {
+  state.groupList.forEach((item: any) => {
     item.value = item.id
     item.label = item.name
   })
+}
+onMounted(async () => {
+  init()
 })
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped></style>
+ 

@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { FolderCabinetSettingAddChildDialog, FolderCabinetSettingAddDialog, ResponsiveFilter } from '#components'
+import { FolderCabinetSettingAddChildDialog, FolderCabinetSettingAddDialog, FolderCabinetSettingWorkflowDialog,ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
@@ -232,4 +232,75 @@ describe('[admin-folder-cabinet]FolderCabinetSettingAddDialog', () => {
     expect(wrapper.vm.state.loading).toBe(false)
     expect(ElMessage.success).not.toHaveBeenCalled()
   })
+})
+describe('[admin-folder-cabinet]FolderCabinetSettingWorkflowDialog', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+  const mockData = {
+    id: 'test-id',
+    label: 'Test Label',
+    allow: true,
+    multiple: false,
+    repeatName: false,
+    labelRule: JSON.stringify([{ metadata: 'fc:docTitle', dataType: 'string' }]),
+  };
+
+  beforeEach(async () => {
+    wrapper = mount(FolderCabinetSettingWorkflowDialog, {
+      props: {
+        id: 'test-id'
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    await wrapper.vm.$nextTick()
+    // const dialogRef = wrapper.vm.$refs.FolderCabinetAddChildDialogRef;
+    // dialogRef.handleOpen = vi.fn();
+
+    // const tableRef = wrapper.vm.$refs.detailRef;
+    // tableRef.init = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('renders correctly', async () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('closes dialog on confirm button click', async () => {
+    await wrapper.vm.handleOpen();
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    expect(wrapper.vm.state.visible).toBe(true); 
+
+    await wrapper.find('#FolderCabinetSetting__Info__Save__Confirm').trigger('click'); 
+    expect(wrapper.vm.state.visible).toBe(false); 
+  });
+  it('fetches data and opens dialog', async () => {
+    const mockResponse = [{ id: '1', name: 'Test Item 1' }, { id: '2', name: 'Test Item 2' }];
+    adminApi.api.getCabinetIdUseWorkflow.mockResolvedValueOnce({ data: mockResponse });
+
+    await wrapper.vm.handleCheck(); 
+
+    expect(adminApi.api.getCabinetIdUseWorkflow).toHaveBeenCalledWith(mockData.id); 
+    expect(wrapper.vm.state.list).toEqual(mockResponse); 
+    expect(wrapper.vm.state.visible).toBe(true); 
+  });
+  it('does not open dialog if list is empty', async () => {
+    adminApi.api.getCabinetIdUseWorkflow.mockResolvedValueOnce({ data: [] });
+
+    await wrapper.vm.handleCheck(); 
+
+    expect(wrapper.vm.state.list).toEqual([]); 
+    expect(wrapper.vm.state.visible).toBe(false); 
+  });
 })
