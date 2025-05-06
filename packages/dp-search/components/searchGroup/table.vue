@@ -66,7 +66,7 @@ const state = reactive<any>({
     showPagination: true,
     paginationConfig: {
       total: 0,
-      currentPage: 1,
+      currentPage: 0,
       pageSize: pageParams.pageSize
     },
     sortKey: 'clientSearch',
