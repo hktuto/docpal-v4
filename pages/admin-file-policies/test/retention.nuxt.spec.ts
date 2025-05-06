@@ -3,13 +3,10 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { RetentionPage, AzureSettingOcr, AzureSettingMappingTable, AzureSettingLogTable, AzureSettingApi, ResponsiveFilter } from '#components'
+import { RetentionPage, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
-import { useRuntimeConfig } from 'nuxt/app'
-vi.mock('nuxt/app', () => ({
-  useRuntimeConfig: vi.fn()
-}))
+
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -64,15 +61,7 @@ describe('[admin-azure]RetentionPage', () => {
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key },
-          useRuntimeConfig: () => {
-            return {
-              public: {
-                endPoint: {
-                  docpal: 'ttt'
-                }
-              }
-            }
-          }
+
         }
       }
     })
