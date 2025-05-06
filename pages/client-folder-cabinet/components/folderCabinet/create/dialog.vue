@@ -92,10 +92,11 @@ async function handleSubmit() {
       type: state.cabinetTemplate.documentType,
       idOrPath,
       properties: metaFormData,
-      templateId: state.cabinetTemplate.id
+      templateId: state.cabinetTemplate.id,
+      parentId: state.cabinetTemplate.rootId
     }).then(res => res.data)
     if (res?.path) {
-      NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path)
+      NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path, res.id)
     }
     await new Promise(resolve => setTimeout(() => {
       state.visible = false

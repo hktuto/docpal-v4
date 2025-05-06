@@ -53,7 +53,7 @@ async function handleSubmit() {
     }
     // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
     setTimeout(async () => {
-      await uploadHandler(uploadList, state.rootDetail.idOrPath)
+      await uploadHandler(uploadList, state.rootDetail.idOrPath, state.rootDetail.id)
       const res = await Promise.all(pList)
       state.loading = false
       state.visible = false
@@ -67,7 +67,7 @@ async function handleSubmit() {
 
   }
 
-  async function uploadHandler(children: any, parentPath: string = '', parentStatus?: 'skip' | 'fail') {
+  async function uploadHandler(children: any, parentPath: string = '', parentId: string = '',parentStatus?: 'skip' | 'fail') {
     children.forEach(async (item: any) => {
       item.path = parentPath + '/' + item.label
       try {
@@ -81,6 +81,7 @@ async function handleSubmit() {
               name: item.previewName,
               type: item.documentType,
               idOrPath: item.path,
+              parentId,
               properties: item.properties
             })
           )
@@ -95,6 +96,7 @@ async function handleSubmit() {
               ...defaultValue
             }, item),
             idOrPath: item.path,
+            parentId,
             type: item.documentType,
             properties: item.properties
             // languages: file.languages,
@@ -112,7 +114,7 @@ async function handleSubmit() {
         item.status = 'skip'
       }
       await new Promise(resolve => setTimeout(async () => {
-        if (item.children) await uploadHandler(item.children, item.path, item.status)
+        if (item.children) await uploadHandler(item.children, item.path, item.id, item.status)
         resolve(500)
       }, 500))
     })
@@ -122,9 +124,10 @@ async function handleSubmit() {
 // #endregion
 
 // #region module: init
-async function handleOpen(cabinetTemplate: any, idOrPath: string) {
+async function handleOpen(cabinetTemplate: any, path: string, id: string) {
   state.cabinetTemplate = cabinetTemplate
-  state.rootDetail.idOrPath = idOrPath
+  state.rootDetail.idOrPath = path
+  state.rootDetail.id = id
   state.visible = true
   state.loading = false
   state.treeLoading = true
