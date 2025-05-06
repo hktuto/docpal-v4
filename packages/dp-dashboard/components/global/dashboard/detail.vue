@@ -76,8 +76,10 @@
             @resize="chartResize(item)"
           >
           <NuxtErrorBoundary>
+            {{ componentMap[item.component] }}
+            {{ item.component }}
             <component
-              :is="widgetComponent[item.component]"
+              :is="componentMap[item.component]"
               :ref="
                 (el) => {
                   sheetRefs[item.i] = el;
