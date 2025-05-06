@@ -76,8 +76,6 @@
             @resize="chartResize(item)"
           >
           <NuxtErrorBoundary>
-            {{ componentMap[item.component] }}
-            {{ item.component }}
             <component
               :is="componentMap[item.component]"
               :ref="
