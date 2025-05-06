@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { FolderCabinetDetail, ResponsiveFilter } from '#components'
+import { FolderCabinetDetail, FolderCabinetSettingDetail, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 
 vi.mock('element-plus', () => ({
@@ -12,7 +12,7 @@ vi.mock('element-plus', () => ({
     confirm: vi.fn()
   },
   ElNotification: vi.fn().mockReturnValue({
-    close: vi.fn(), 
+    close: vi.fn()
   }),
   ElMessage: {
     success: vi.fn(),
@@ -40,7 +40,10 @@ const Editorjs = {
   template: '<div class="Editorjs">Editorjs</div>',
   methods: {}
 }
-
+global.getIgnoreSchemas = () => {
+  console.log('这是一个全局函数');
+  return ['createDate']
+};
 describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
@@ -48,7 +51,7 @@ describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
   beforeEach(async () => {
     wrapper = shallowMount(FolderCabinetDetail, {
       props: {
-        id: 'test-id',
+        id: 'test-id'
       },
       global: {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
@@ -58,16 +61,16 @@ describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
         },
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
-          $i18n: { t: (key: string) => key },
+          $i18n: { t: (key: string) => key }
         }
       }
     })
     await wrapper.vm.$nextTick()
-    const dialogRef = wrapper.vm.$refs.FolderCabinetAddChildDialogRef;
-    dialogRef.handleOpen = vi.fn();
-    
-    const tableRef = wrapper.vm.$refs.detailRef;
-    tableRef.init = vi.fn();
+    const dialogRef = wrapper.vm.$refs.FolderCabinetAddChildDialogRef
+    dialogRef.handleOpen = vi.fn()
+
+    const tableRef = wrapper.vm.$refs.detailRef
+    tableRef.init = vi.fn()
   })
 
   afterEach(() => {
@@ -76,7 +79,7 @@ describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
   })
   it('renders correctly', async () => {
     expect(wrapper.exists()).toBe(true)
-  }) 
+  })
   it('fetches data on mount', async () => {
     await wrapper.vm.getData()
     expect(adminApi.api.getCabinetTemplateId).toHaveBeenCalledWith('test-id')
@@ -107,11 +110,13 @@ describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
 
     expect(ElMessageBox.confirm).toHaveBeenCalledWith(expect.any(String))
     expect(adminApi.api.deleteCabinetId).toHaveBeenCalledWith(1)
-    expect(ElNotification).toHaveBeenCalledWith(expect.objectContaining({
-      title: 'Success',
-      message: 'Item deleted',
-      type: 'success',
-    }))
+    expect(ElNotification).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Success',
+        message: 'Item deleted',
+        type: 'success'
+      })
+    )
   })
   it('does not delete if confirmation is canceled', async () => {
     ElMessageBox.confirm.mockResolvedValueOnce('cancel')
@@ -130,12 +135,13 @@ describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
 
     await wrapper.vm.handleDeleteChild(setting)
 
-    expect(ElNotification).toHaveBeenCalledWith(expect.objectContaining({
-      title: 'Error',
-      message: 'Failed to delete item',
-      type: 'error',
-      duration: 2000
-    }))
+    expect(ElNotification).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Error',
+        message: 'Failed to delete item',
+        type: 'error',
+        duration: 2000
+      })
+    )
   })
 })
-
