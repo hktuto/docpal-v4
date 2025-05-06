@@ -8,7 +8,7 @@
           @form-change="handleFilterFormChange"
           inputPlaceHolder="folder_cabinetFilterItemName"
         />
-        <el-button
+        <el-button v-if="id"
           id="FolderCabinet__AllowOtherFilesCabinet__NewItem"
           data-testid="folderCabinetConfig-new-button"
           type="primary"
@@ -170,10 +170,10 @@ async function initFilter(id: string) {
     }
   )
 
-  const foundItem = data.find(item => item.key === 'createdBy')
+  const foundItem = data.find((item: any) => item.key === 'createdBy')
   if (foundItem) {
     if (foundItem.options.length > 0) {
-      foundItem.options.sort((a, b) => a.label.localeCompare(b.label))
+      foundItem.options.sort((a: any, b: any) => a.label.localeCompare(b.label))
     }
     data[data.indexOf(foundItem)].options = foundItem.options
   }
@@ -188,7 +188,7 @@ async function initFilter(id: string) {
   }, [])
   const newColumns = [...basicColumns]
   newColumns.splice(2, 0, ...columns)
-  const actionColumn = tableConfig.columns.find(item => item.title === 'dpTable_actions')
+  const actionColumn = tableConfig.columns.find((item: any) => item.title === 'dpTable_actions')
   if (!!actionColumn) newColumns.push(actionColumn)
   tableConfig.columns = newColumns
 
