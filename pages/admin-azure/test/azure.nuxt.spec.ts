@@ -6,10 +6,7 @@ import { mockRouterProvider } from './util'
 import { AzurePage, AzureSettingOcr, AzureSettingMappingTable, AzureSettingLogTable, AzureSettingApi, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
-import { useRuntimeConfig } from 'nuxt/app'
-vi.mock('nuxt/app', () => ({
-  useRuntimeConfig: vi.fn()
-}))
+
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -50,13 +47,7 @@ describe('[admin-azure]AzurePage', () => {
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    useRuntimeConfig.mockReturnValue({
-      public: {
-        endpoint: {
-          docpal: 'example.com'
-        }
-      }
-    })
+
     wrapper = shallowMount(AzurePage, {
       props: {
         page: 1,
@@ -71,15 +62,6 @@ describe('[admin-azure]AzurePage', () => {
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key },
-          useRuntimeConfig: () => {
-            return {
-              public: {
-                endPoint: {
-                  docpal: 'ttt'
-                }
-              }
-            }
-          }
         }
       }
     })
