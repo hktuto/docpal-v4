@@ -54,7 +54,10 @@ async function getDetail() {
   docDetail.value = doc
   docPermission.value = permission
   loading.value = false
-  console.log('doc detail', docDetail.value)
+  const newItem = createBrowseListPageParams({
+    idOrPath: doc.parentRef
+  })
+  routerProvider?.addToHistory(newItem)
 }
 const isPdf = ref(false)
 const readerType = computed(() => {
@@ -143,7 +146,6 @@ const detailActions = computed(() => {
 })
 
 function goParent() {
-  console.log('goParent', docDetail.value)
   const newItem = createBrowseListPageParams({
     idOrPath: docDetail.value.parentRef
   })
