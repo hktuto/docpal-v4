@@ -16,7 +16,6 @@ const props = defineProps();
             />
         </div>
         <table style="width:50%; text-align:center;">
-          <tbody>
             <tr>
                 <th>國家</th>
                 <th>Capital</th>
@@ -47,7 +46,6 @@ const props = defineProps();
                     </ol>
                 </td>
             </tr>
-          </tbody>
         </table>
         <div class="page-break" style="page-break-after: always"></div>
         <div>
