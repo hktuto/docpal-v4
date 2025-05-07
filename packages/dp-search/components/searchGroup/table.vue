@@ -89,11 +89,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'docInfo.fileExtension',
-      field: 'mimeType2'
+      field: 'file_suffix'
     },
     {
       title: 'search.size',
-      field: 'properties.file:content.length',
+      field: 'file_content.length',
       width: 120,
       formatter: ({ cellValue }: any) => {
         if (!cellValue) return '-'
@@ -102,7 +102,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'document_path',
-      field: 'logicalPath',
+      field: 'path',
       width: 200,
       slots: {
         default: 'logicalPath'
@@ -118,12 +118,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'search.authors',
-      field: 'createdBy',
+      field: 'create_by',
       width: 240
     },
     {
       title: 'search.contributors',
-      field: 'properties.dc:contributors',
+      field: 'contributors',
       width: 200,
       formatter: ({ cellValue }: any) => {
         if (!cellValue) return '-'
@@ -132,7 +132,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'tableHeader_modifiedDate',
-      field: 'modifiedDate',
+      field: 'modify_date',
       width: 200,
       formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
