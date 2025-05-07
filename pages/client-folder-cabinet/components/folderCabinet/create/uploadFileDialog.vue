@@ -116,6 +116,7 @@ async function handleSubmit () {
             properties: metaFormData,
             idOrPath: state.setting.documentPath + '/' + state.setting.previewName,
             type: state.setting.documentType,
+            parentId: state.setting.documentId
         }
         const duplicateResult: any = await clientApi.api.postNuxeoDocumentIsduplicatename({
             path: state.setting.documentPath, 
