@@ -106,6 +106,7 @@ function handleAddQueryFilter(qItem: any) {
 function handleDeleteFilter(id: string, qItem: searchGroupQuery[] | searchGroupQQ[]) {
   const index = qItem.findIndex(i => i.id === id)
   if(index !== -1 ) qItem.splice(index, 1)
+  emits('search')
 }
 function handleCommand(command: 'and' | 'or', item: searchGroup | searchGroupQuery) {
   item.condition = command
