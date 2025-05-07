@@ -47,9 +47,26 @@ describe('[client-ai-upload]AiUploadIndex', () => {
     expect(wrapper.vm.extraParams).toEqual(filterModel)
   })
 
-  it('should dblclickHandler the component correctly', () => {
+  it('should dblclickHandler the component correctly', async () => {
 
+    const row = {
+      uploadStatus: 'Ready',
+      uploadId: '111'
+    }
+    wrapper.vm.dblclickHandler(row)
+    wrapper.vm.$nextTick()
 
+    const item = {
+      id: 'ai-upload-detial-' + row.uploadId,
+      name: 'ai-upload-detial-' + row.uploadId,
+      label: 'AIUpload',
+      component: 'LazyAiUploadDetail',
+      props: {
+        id: row.uploadId,
+        status: row.uploadStatus
+      }
+    }
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(item)
   })
 
   it('should handleDelete the component correctly', async () => {
