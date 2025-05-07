@@ -21,7 +21,6 @@ function nodeSelectedHandler(node:Node){
   
   const role = useRoleList()
   const label = node.data.label
-  console.log("label", label)
   selectedNodeUser.value = users.value.filter((item:any) => item.role === label)
   selectedNode.value = node
 }
@@ -40,6 +39,7 @@ defineExpose({
     node
     <template v-if="selectedNodeUser">
       {{ selectedNodeUser }}
+      
     </template>
   </div>
 
