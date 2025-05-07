@@ -83,6 +83,17 @@ onMounted(async() => {
     setUpListener()
 })
 
+
+watch(() => node, ()=> {
+  if(node) {
+    refreshData()
+  }
+},{
+  immediate: true,
+  deep: true
+})
+
+
 </script>
 
 <template>
