@@ -59,7 +59,7 @@ async function init() {
 
   if(id){
     const {data: userAction} = await adminApi.api.getCaseDashboardInstanceCaseidActions(id,{userId})
-    state.data = userAction?.filter(s => s.state !== 'completed').sort((a:any,b:any) => a.name.localeCompare(b.name))
+    state.data = userAction?.filter(s => s.state === 'available' || s.state === 'enabled').sort((a:any,b:any) => a.name.localeCompare(b.name))
   } 
   // else if(_caseTypeId){
   //   const { data: dashboardActions } = await adminApi.api.getCaseDashboardCasetypeCasetypeidActions(_caseTypeId)
@@ -67,7 +67,7 @@ async function init() {
   // }
   else if(_caseVersionId){
     const { data: dashboardActions } = await adminApi.api.getCaseDashboardVersionVersionidActions(_caseVersionId)
-    state.data = dashboardActions?.filter(s => s.state !== 'completed')
+    state.data = dashboardActions?.filter(s => s.state === 'available' || s.state === 'enabled')
   }
 }
 
