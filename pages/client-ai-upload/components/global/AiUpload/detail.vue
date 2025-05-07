@@ -93,22 +93,16 @@
         <div class="space"></div>
         <div>
           <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="danger"
-                     @click.native="handleDiscard">{{
-              $t('ai.cancelPatch')
-            }}
+                     @click.native="handleDiscard"> {{ $t('ai.cancelPatch') }}
           </el-button>
           <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="info"
                      @click.native="handleClose">{{ $t('common_close') }}
           </el-button>
           <el-button v-if="state.status === 'Error'" :loading="state.retryLoading" :disabled="state.submitLoading"
-                     type="primary" @click.native="handleRetry">{{
-              $t('ai.retryAiLoading')
-            }}
+                     type="primary" @click.native="handleRetry">{{ $t('ai.retryAiLoading') }}
           </el-button>
           <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="primary"
-                     @click.native="handleSubmit">{{
-              $t('dpButtom_confirm')
-            }}
+                     @click.native="handleSubmit">{{ $t('dpButtom_confirm') }}
           </el-button>
         </div>
       </div>
@@ -431,6 +425,7 @@ onActivated(async () => {
   leftMin.value = CalMax()
   rightMin.value = CalMax()
 })
+
 </script>
 
 <style lang="scss" scoped>
