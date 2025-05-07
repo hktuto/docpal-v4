@@ -55,7 +55,7 @@ async function getCaseDetail(caseId: string) {
         }
         // check if the field is default fields
         if(columnId === 'case_id'){
-          prev.push({id: 'case_id', name: 'caseManagement.name', minWidth: 200})
+          prev.push({id: 'case_id', name: 'Case Id', minWidth: 200})
         }else if(columnId === 'created_date'){
           prev.push({id: 'created_date', name: 'workflow_createDate', minWidth: 200, formatter({ cellValue }: any) {
             return formatDate(cellValue)
