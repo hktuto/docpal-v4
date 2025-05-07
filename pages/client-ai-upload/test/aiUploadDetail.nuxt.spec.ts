@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, test } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { AiUploadDetail } from '#components'
 import { clientApi } from './mock/api'
-import { ElMessage, ElMessageBox } from 'element-plus'
 import { mockRouterProvider } from './util'
 
 vi.mock('element-plus', async () => ({

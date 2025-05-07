@@ -222,6 +222,7 @@ async function handleNodeClick(row) {
       documentType: row.fileType,
       docName: getFileName(state.selectedDoc.name, row.isFolder)
     })
+    console.log(222)
   })
 }
 
