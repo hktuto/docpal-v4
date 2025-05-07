@@ -27,8 +27,12 @@
 </div>
 </template>
 <script lang="ts" setup>
+import { clientApi } from 'api'
+
 import type { searchGroup, searchGroupQuery, searchGroupQQ } from '~/typing/search'
 import { getUniqueId } from '../../../utils/searchFormHelper'
+import { conditionType, getMetadataOptions, languages, mimeTypes, getGroupList, sizes, sortListWithI18n } from '~/utils/formOptions'
+
 const state = reactive<any>({
   loading: false
 })
@@ -125,6 +129,40 @@ function clear() {
   filters.value.query = []
   handleAddFilter()
 }
+const searchOptions = ref({})
+
+async function getOptions() {
+  const [docType, users, collections, tags, groupList, metadata] = await Promise.all([
+    clientApi.api.getTypesActive(),
+    clientApi.api.postNuxeoIdentityGetkeycloakallusers(),
+    clientApi.api.getNuxeoCollection(),
+    clientApi.api.postNuxeoTagsGetalltags(),
+    getGroupList(),
+    getMetadataOptions()
+  ])
+  searchOptions.value.groupList = sortListWithI18n(groupList)
+  searchOptions.value.metadata = sortListWithI18n(metadata)
+  searchOptions.value.conditionType = sortListWithI18n(conditionType, 'searchGroup.')
+  const tagData = tags.data?.map((item: any) => ({ label: item, value: item }))
+  searchOptions.value.tags = sortListWithI18n(tagData)
+  const docTypeData = docType.data?.map((item: any) => ({ label: item.name, value: item.name }))
+  searchOptions.value.docType = sortListWithI18n(docTypeData)
+  const collectionData = collections?.data?.entryList?.map((item: any) => ({
+    label: item.createdBy ? item.createdBy + ' - ' + item.name : item.name,
+    value: item.id
+  }))
+  searchOptions.value.collections = sortListWithI18n(collectionData)
+  const userData = users.data?.map((item: any) => ({ label: item.username, value: item.userId }))
+  searchOptions.value.users = sortListWithI18n(userData)
+  searchOptions.value.languages = sortListWithI18n(languages)
+  searchOptions.value.mimeTypes = mimeTypes
+  searchOptions.value.sizes = sizes
+}
+provide('searchOptions', searchOptions)
+    
+onMounted(() => {
+  getOptions()
+})
 onActivated(() => {
   const searchParams = sessionStorage.getItem('searchParams')
   if(!!searchParams) {
