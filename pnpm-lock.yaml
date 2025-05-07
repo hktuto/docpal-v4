@@ -261,6 +261,52 @@ importers:
         specifier: ^2.2.0
         version: 2.2.8(typescript@5.8.2)
 
+  demo/rbac:
+    dependencies:
+      '@antv/layout':
+        specifier: 0.3.25
+        version: 0.3.25(dagre@0.8.5)
+      '@antv/x6':
+        specifier: ^2.18.1
+        version: 2.18.1
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      nuxt:
+        specifier: 3.15.4
+        version: 3.15.4(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.2)(vite@6.2.2)(vue-tsc@2.2.8)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.8.2)
+      vue-router:
+        specifier: latest
+        version: 4.5.1(vue@3.5.6)
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: ^3.14.1
+        version: 3.17.2(@vitest/ui@2.0.5)(@vue/test-utils@2.4.6)(happy-dom@15.11.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.2)(vitest@2.0.5)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^15.7.3
+        version: 15.11.7
+      playwright-core:
+        specifier: ^1.47.0
+        version: 1.51.0
+      sass:
+        specifier: ^1.78.0
+        version: 1.85.1
+      typescript:
+        specifier: ^5.6.2
+        version: 5.8.2
+      vue-tsc:
+        specifier: ^2.1.6
+        version: 2.2.8(typescript@5.8.2)
+
   libraries/api:
     dependencies:
       axios:
@@ -6081,7 +6127,7 @@ packages:
       ufo: 1.5.4
       unplugin: 1.16.1
       vue-i18n: 9.14.2(vue@3.5.6)
-      vue-router: 4.5.0(vue@3.5.6)
+      vue-router: 4.5.1(vue@3.5.6)
     transitivePeerDependencies:
       - magicast
       - petite-vue-i18n
@@ -7312,7 +7358,7 @@ packages:
     dependencies:
       '@vue/compiler-sfc': 3.5.13
       ast-kit: 1.4.0
-      local-pkg: 1.1.0
+      local-pkg: 1.1.1
       magic-string-ast: 0.7.0
       pathe: 2.0.3
       picomatch: 4.0.2
@@ -9660,6 +9706,7 @@ packages:
     resolution: {integrity: sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==}
     engines: {node: '>=0.10'}
     hasBin: true
+    requiresBuild: true
 
   /detect-libc@2.0.3:
     resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
@@ -13382,6 +13429,7 @@ packages:
 
   /node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
+    requiresBuild: true
 
   /node-api-version@0.2.0:
     resolution: {integrity: sha512-fthTTsi8CxaBXMaBAD7ST2uylwvsnYxh2PfaScwpMhos6KlSFajXQPcM4ogNE1q2s3Lbz9GCGqeIHC+C6OZnKg==}
@@ -17672,6 +17720,15 @@ packages:
     dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.13(typescript@5.8.2)
+
+  /vue-router@4.5.1(vue@3.5.6):
+    resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
+    peerDependencies:
+      vue: ^3.2.0
+    dependencies:
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.6(typescript@5.8.2)
+    dev: false
 
   /vue-tsc@2.2.4(typescript@5.8.2):
     resolution: {integrity: sha512-3EVHlxtpMXcb5bCaK7QDFTbEkMusDfVk0HVRrkv5hEb+Clpu9a96lKUXJAeD/akRlkoA4H8MCHgBDN19S6FnzA==}
