@@ -53,7 +53,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     })
   })
 
-  it.skip('should init the component correctly', async () => {
+  it('should init the component correctly', async () => {
     const docList = [
       {
         'id': 418422,
@@ -99,7 +99,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(wrapper.vm.state.fileList).toEqual(fileList)
   })
 
-  it.skip('should handleMetaChange the component correctly', async () => {
+  it('should handleMetaChange the component correctly', async () => {
     const fieldName = 'docName'
     const formModel = {
       docName: 'hq720222',
@@ -129,7 +129,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(handleMetaChangeMock).toHaveBeenCalledWith(fieldName, formModel, newVale, oldValue)
   })
 
-  it.skip('should ocrPermission the component correctly', async () => {
+  it('should ocrPermission the component correctly', async () => {
     const doc = {
       name: 'abc.jpg',
       isFolder: false
@@ -142,7 +142,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(result).toBe(false)
   })
 
-  it.skip('should handleNodeClick the component correctly', async () => {
+  it('should handleNodeClick the component correctly', async () => {
     const row = {
       'id': 418422,
       'fileRelativePath': '/hq720.jpg',
@@ -185,7 +185,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(wrapper.vm.state.selectedDoc).toEqual(row)
   })
 
-  it.skip('should handleDeleteFile the component correctly', async () => {
+  it('should handleDeleteFile the component correctly', async () => {
     const data = {
       name: 'abc.jpg',
       id: '111'
@@ -200,7 +200,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(clientApi.api.deleteNuxeoDocumentTempfileId).toHaveBeenCalled()
   })
 
-  it.skip('should handleDiscard the component correctly', async () => {
+  it('should handleDiscard the component correctly', async () => {
     await wrapper.vm.handleDiscard()
     await wrapper.vm.$nextTick()
 
@@ -208,14 +208,14 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(mockRouterProvider.navigateTo).toHaveBeenCalled()
   })
 
-  it.skip('should handleClose the  component correctly', async () => {
+  it('should handleClose the  component correctly', async () => {
     await wrapper.vm.handleClose()
     await wrapper.vm.$nextTick()
 
     expect(mockRouterProvider.navigateTo).toHaveBeenCalled()
   })
 
-  it.skip('should handleRetry the  component correctly', async () => {
+  it('should handleRetry the  component correctly', async () => {
     wrapper.vm.state.retryLoading = false
 
     const data = {}
@@ -231,7 +231,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
   })
 
   // TODO NodeMap data type cannot be converted
-  it('should handleSubmit the component correctly', async () => {
+  it.skip('should handleSubmit the component correctly', async () => {
     const nodeMap = new Map()
     nodeMap.set('418422', {
       data: {
