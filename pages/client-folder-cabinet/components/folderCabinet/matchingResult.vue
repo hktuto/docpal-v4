@@ -110,13 +110,14 @@ async function init(docItem: any, templateId: string) {
   state.loading = false
 }
 
-function addDocToChildren(children: any, documentPath: any) {
+function addDocToChildren(children: any, documentPath: any,documentId: string = '') {
   if (children)
     children.forEach((item: any) => {
-      addDocToChildren(item.children, item.documentPath)
+      let folderId = item.documents && item.documents[0] ?item.documents[0].id : ''
+      addDocToChildren(item.children, item.documentPath, folderId)
       if (item.documents) {
         if (!item.children) item.children = []
-        const documents = item.documents.reduce((prev, docItem) => {
+        const documents = item.documents.reduce((prev: any, docItem: any) => {
           if (!docItem.isFolder) {
             docItem.isDoc = true
             prev.push(docItem)
@@ -126,6 +127,7 @@ function addDocToChildren(children: any, documentPath: any) {
         item.children.push(...documents)
       }
       if (!item.documentPath && documentPath) item.documentPath = documentPath
+      if (!item.documentId && documentId) item.documentId = documentId
     })
 }
 

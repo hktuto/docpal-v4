@@ -74,8 +74,9 @@ async function handleSubmit() {
         if (parentStatus === 'skip' || parentStatus === 'fail') throw new Error('skip')
         if (item.folder) {
           item.status = 'loading'
+          
           pList.push(
-            clientApi.api.postNuxeoDocumentCreatefolders({
+            item.Createfolders = await clientApi.api.postNuxeoDocumentCreatefolders({
               templateId: props.id,
               layoutId: item.id,
               name: item.previewName,
@@ -83,7 +84,7 @@ async function handleSubmit() {
               idOrPath: item.path,
               parentId,
               properties: item.properties
-            })
+            }).then(res => res.data)
           )
         } else {
           let defaultValue = {}
@@ -114,9 +115,9 @@ async function handleSubmit() {
         item.status = 'skip'
       }
       await new Promise(resolve => setTimeout(async () => {
-        if (item.children) await uploadHandler(item.children, item.path, item.id, item.status)
+        if (item.children) await uploadHandler(item.children, item.path, item.Createfolders.id, item.status)
         resolve(500)
-      }, 500))
+      }, 1000))
     })
   }
 }
