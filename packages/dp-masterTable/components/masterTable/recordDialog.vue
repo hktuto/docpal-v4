@@ -4,27 +4,27 @@
              class="scroll-dialog"
              :close-on-click-modal="false"
   >
-    <FormVariablesRenderer ref="FormVariablesRendererRef"/>
+    <FormVariablesRenderer ref="FormVariablesRendererRef" />
     <template #footer>
       <div class="footer-grid">
         <el-button id="MasterTable__Tables__Detail__Records__Edit__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
-          {{ $t('common_submit') }}
+          {{ t('common_submit') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
-import {ElMessage} from "element-plus";
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
 
-const {t} = useI18n()
+const { t } = useI18n()
 const props = withDefaults(defineProps<{
   tableId: string,
   ignoreList: string[],
 }>(), {
-  ignoreList: [],
+  ignoreList: []
 })
 const emits = defineEmits([
   'refresh', 'delete'
@@ -35,14 +35,14 @@ const state = reactive({
   setting: {},
   fields: [],
   edit: false,
-  title: $i18n.t('masterTable.newRow')
+  title: t('masterTable.newRow')
 })
 
 async function handleSubmit() {
   try {
     state.loading = true
     const data = await FormVariablesRendererRef.value.getData(true)
-    let msg;
+    let msg
     if (state.edit) {
       await adminApi.api.putMasterTablesIdRecord(props.tableId, {
         data: [data],
@@ -50,13 +50,13 @@ async function handleSubmit() {
           id: state.setting.id
         }
       })
-      msg = t('tip_updateSuccessMsg', {modelName: t('common_row'), name: null})
+      msg = t('tip_updateSuccessMsg', { modelName: t('common_row'), name: null })
     } else {
       await adminApi.api.postMasterTablesRecord({
         id: props.tableId,
         data: [data]
       })
-      msg = t('tip_createdSuccessMsg', {modelName: t('common_row'), name: null})
+      msg = t('tip_createdSuccessMsg', { modelName: t('common_row'), name: null })
     }
     ElMessage.success(msg)
     state.visible = false
@@ -148,16 +148,16 @@ async function handleOpen(fields: any, row?: any) {
       state.edit = true
       state.setting = row
       FormVariablesRendererRef.value.setData(row)
-      state.title = $i18n.t('masterTable.editRow')
+      state.title = t('masterTable.editRow')
     } else {
       state.edit = false
-      state.title = $i18n.t('masterTable.newRow')
+      state.title = t('masterTable.newRow')
       FormVariablesRendererRef.value.setData({})
     }
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
 
