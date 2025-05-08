@@ -18,6 +18,6 @@ const options = ref({});
 
 <style lang="scss" scoped>
 .pageContainer{
-  padding: var(--app-space-s);
+  // padding: var(--app-space-s);
 }
 </style>
