@@ -14,8 +14,31 @@ export default defineAppConfig({
   //     }
   // ],
   appMenu: [
+    
     {
-      name: "RBAC"
+      label: "User Base Role",
+      icon: "lucide:file-text",
+      children: [
+        {
+          name: "RBAC-editor"
+        },
+        {
+          name: "user-role-file-action",
+        },
+        {
+          name: "user-role-file-role",
+        },
+      ] 
     },
+    {
+      label: "File Base Role",
+      name: "file-role-user",
+      icon: "lucide:file-text",
+      children: [
+        {
+          name: "file-role-user",
+        }
+      ]
+    }
   ],
 });

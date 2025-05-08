@@ -10,7 +10,6 @@ function nodeOnClickHandler({node}: {node:Node}) {
 }
 
 function setupListeners() {
-  console.log('setupListeners', graph.value)
   graph.value.on('node:dblclick', nodeOnClickHandler)
 }
 

@@ -31,6 +31,7 @@ export interface UseVxeTableParams<R = any> {
     id:string,
     height?:string, // 'auto' | number
     api?:Function,
+    export: boolean,
     remoteSort?:boolean,
     remoteFilter?:boolean,
     customeToolBar?:boolean,
