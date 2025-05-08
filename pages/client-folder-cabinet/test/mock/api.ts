@@ -1,0 +1,12 @@
+import { vi } from 'vitest'
+
+export const clientApi = {
+  api: {
+    getCabinetLoginuserList: vi.fn(() => Promise.resolve(true)),
+    getCabinetTemplateidPageConditions: vi.fn(() => Promise.resolve(true)),
+    getCabinetRefreshcompletestatusId: vi.fn(() => Promise.resolve(true)),
+    deleteNuxeoDocumentTrash: vi.fn(() => Promise.resolve(true)),
+    postCabinetVerificationComplete: vi.fn(() => Promise.resolve(true)),
+    getCabinetTemplateId: vi.fn(() => Promise.resolve(true)),
+  }
+}
