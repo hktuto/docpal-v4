@@ -25,7 +25,7 @@ export const useRBAC = () => {
   const roles = useRoleList()
   const users = useUserList()
 
-
+  const flatRole = useState<string[]>('flatRole', () => ([]))
 
   function init(){
     const localRole = localStorage.getItem('demo_role')
@@ -40,8 +40,11 @@ export const useRBAC = () => {
     }else{
       seedUser()
     }
+    flatRole.value = flatMap(roles.value)
     save();
   }
+
+  
 
   function save(){
     localStorage.setItem('demo_role', JSON.stringify(roles.value))
@@ -51,6 +54,7 @@ export const useRBAC = () => {
   return {
     save,
     init,
+    flatRole
   }
 
 }
