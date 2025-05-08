@@ -63,6 +63,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         data.sort(sortEntry)
         return data
     },
+    exportTool: true,
     columns: [
         {
             field: 'name',
@@ -192,6 +193,17 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     virtualScroll: true,
     remoteSort: false,
     remoteFilter: false,
+    bodyActions: [
+      [
+        {
+          code: 'edit',
+          name: 'common_edit',
+          action: ({row}) => {
+            console.log("edit", row)
+          }
+        }
+      ]
+    ],
     dblClickAction: ({row, column, event}) => {
       if (row.isFolder){
         changeRoute(row.id)
@@ -259,7 +271,7 @@ watch(idOrPath, () => {
         <slot name="toolbar_buttons" />
       </template>
       <template #toolbarTools>
-        <ElSelect v-model="selectedRole" placeholder="Select Role" multiple>
+        <ElSelect v-model="selectedRole" placeholder="Select Role" multiple style="min-width: 120px;">
           <ElOption v-for="item in flatRole" :key="item" :label="item" :value="item" />
         </ElSelect>
         <slot name="toolbarTools" />

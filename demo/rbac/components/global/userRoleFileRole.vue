@@ -63,6 +63,7 @@ function sortEntry(a, b) {
 }
 const {tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     id: 'userRoleTableSetting',
+    exportTool: true,
     api: async (pageParams: any) => {
         const data = await loadData([], idOrPath.value || '/')
         data.sort(sortEntry)
