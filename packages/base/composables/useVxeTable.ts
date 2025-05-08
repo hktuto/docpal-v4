@@ -31,7 +31,7 @@ export interface UseVxeTableParams<R = any> {
     id:string,
     height?:string, // 'auto' | number
     api?:Function,
-    export: boolean,
+    exportTool: boolean,
     remoteSort?:boolean,
     remoteFilter?:boolean,
     customeToolBar?:boolean,
@@ -74,6 +74,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         saveColumnOrder = true, 
         columns = [], 
         zoom =true,
+        exportTool = false,
         permissionMethod = () => {return {visible:true, disabled: false}},
         bodyActions : actions = [],
         selectChangeHander = () => { console.log("defauilt selectChangeHander, please implement") },
@@ -101,6 +102,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         toolbarConfig:{
             custom: saveColumnOrder ,
             zoom,
+            export : exportTool,
             slots: {
                 buttons: 'toolbar_buttons'
             }
@@ -216,6 +218,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 
     if(params.customeToolBar){
         tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
+    }
+    if(exportTool){
+      tableConfig.exportConfig = {
+      }
     }
 
     // #region handle actions column
