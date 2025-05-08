@@ -7,7 +7,8 @@ export const clientApi = {
     postNuxeoDocumentCheckfileexist: vi.fn(() => Promise.resolve(true)),
     deleteNuxeoDocumentTempfileId: vi.fn(() => Promise.resolve(true)),
     getNuxeoDocumentRetryClassificationUploadid: vi.fn(() => Promise.resolve(true)),
-    postNuxeoDocumentBatchconfirm: vi.fn(() => Promise.resolve(true))
+    postNuxeoDocumentBatchconfirm: vi.fn(() => Promise.resolve(true)),
+    getNuxeoDocumentDownloadTempFileId: vi.fn(() => Promise.resolve(true)),
   },
   instance: {
     post: vi.fn()
