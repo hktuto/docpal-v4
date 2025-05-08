@@ -2,6 +2,7 @@
 
 const editorRef = ref()
 const options = ref({});
+
 </script>
 
 
@@ -14,3 +15,9 @@ const options = ref({});
     </DocTemplateEditor>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.pageContainer{
+  padding: var(--app-space-s);
+}
+</style>
