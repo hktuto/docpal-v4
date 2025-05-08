@@ -68,8 +68,9 @@ function calMinWidth(){
     minSize.value = 280 / windowWidth * 100
 
 }
-
-useEventListener(window, 'resize', calMinWidth)
+if(window){
+    useEventListener(window, 'resize', calMinWidth)
+}
 
 provide('handleOpenUploadDrawer', handleOpenUpload)
 

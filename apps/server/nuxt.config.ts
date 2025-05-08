@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxt/test-utils/module'],
   extends:[
+    "../../packages/base",
     "../../packages/doc-template",
   ],
   features:{
