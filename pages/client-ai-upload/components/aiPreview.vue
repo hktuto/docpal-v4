@@ -1,50 +1,51 @@
 <script lang="ts" setup>
 
-import {clientApi} from 'api'
+import { clientApi } from 'api'
+
 const props = defineProps<{
   doc: any
-}>();
+}>()
 
 const state = reactive({
   loading: false,
   blob: null,
-  encodeUrl: ""
+  encodeUrl: ''
 })
 const fileType = computed(() => {
   console.log(props.doc)
-  if(!props.doc || !props.doc.fileRelativePath) return "notSupport"
-  if(props.doc.isFolder) return "folder"
+  if (!props.doc || !props.doc.fileRelativePath) return 'notSupport'
+  if (props.doc.isFolder) return 'folder'
   return checkExtension(props.doc.fileRelativePath)
 })
 
-async function getBlobFile(id:string) {
-  state.loading = true;
+async function getBlobFile(id: string) {
+  state.loading = true
   state.blob = await clientApi.api.getNuxeoDocumentDownloadTempFileId(id as any, {
     format: 'blob'
-  });
-  state.encodeUrl = URL.createObjectURL(state.blob);
-  state.loading = false;
+  })
+  state.encodeUrl = URL.createObjectURL(state.blob)
+  state.loading = false
 }
 
-function checkExtension(filename:string) {
+function checkExtension(filename: string) {
   const ext = filename.split('.').pop()
-  if(!ext) return 'notSupport'
-  const collaboraList = ['doc','docx','xls','xlsx','ppt','pptx']
-  const imgList = ['jpg','png','jpeg','tif','gif', 'webp','bmp', 'svg']
-  const pdfList = ['pdf','txt']
+  if (!ext) return 'notSupport'
+  const collaboraList = ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']
+  const imgList = ['jpg', 'png', 'jpeg', 'tif', 'gif', 'webp', 'bmp', 'svg']
+  const pdfList = ['pdf', 'txt']
   const videoList = ['mp4']
-  if(collaboraList.includes(ext)) {
+  if (collaboraList.includes(ext)) {
     return 'collabora'
   }
   getBlobFile(props.doc.id)
-  if(imgList.includes(ext)) {
+  if (imgList.includes(ext)) {
     return 'image'
   }
-  
-  if(pdfList.includes(ext)) {
+
+  if (pdfList.includes(ext)) {
     return 'pdf'
   }
-  if(videoList.includes(ext)) {
+  if (videoList.includes(ext)) {
     return 'video'
   }
   return 'notSupport'
@@ -53,7 +54,6 @@ function checkExtension(filename:string) {
 
 <template>
   <div class="viewerContainer">
-    
     <template v-if="fileType === 'folder'">
       <SvgIcon src="icons/folder.svg" />
     </template>
@@ -68,17 +68,17 @@ function checkExtension(filename:string) {
     </templat>
     <template v-else-if="fileType === 'video'">
       <Video v-if="state.encodeUrl" :src="state.encodeUrl" />
-<!--      <VideoViewer :fileName="props.doc.fileName" />-->
+      <!--      <VideoViewer :fileName="props.doc.fileName" />-->
     </template>
     <template v-else>
       <Reader v-if="state.blob" :blob="state.blob" />
-<!--      <VideoViewer :fileName="props.doc.fileName" />-->
+      <!--      <VideoViewer :fileName="props.doc.fileName" />-->
     </template>
   </div>
 </template>
 
 <style scoped lang="scss">
-.viewerContainer{
+.viewerContainer {
   width: 100%;
   height: 100%;
 }
