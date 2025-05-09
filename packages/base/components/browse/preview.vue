@@ -78,7 +78,7 @@ const readerType = computed(() => {
                     fileType="NUXEO" 
                     :readonly="true" 
                     :editable="AllowTo({feature:'ReadWrite', permission:docPermission })"
-                    :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: docPermission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')}"
+                    :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: docPermission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', permission:docPermission }) || !allowFeature('DOC_ANNOTATION')}"
                     @saved="() => handleRefresh(false)"
                 />
                 <slot name="previewOverlay" />

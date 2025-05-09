@@ -21,7 +21,10 @@ type AllowToArgs = {
 }
 export const AllowTo = ({feature, permission}:AllowToArgs) => {
     if(feature === 'Read') return true
-    if(!permission) return false
+    if(!permission){ 
+      console.log('permission is null')
+      return false
+    }
     // 针对 hold-policy, 仅 acl 为 ReadWrite 权限时显示
     if (feature !== 'ACL-ReadWrite') {
         if (!!permission.hold && ['A', 'L', 'P'].includes(permission.hold.status)) return false
@@ -33,5 +36,6 @@ export const AllowTo = ({feature, permission}:AllowToArgs) => {
     // if (!userPermission || feature === 'Read') {
     //     return false;
     // }
+    console.log("check permission", PermissionArray.indexOf(userPermission) >= PermissionArray.indexOf(feature))
     return PermissionArray.indexOf(userPermission) >= PermissionArray.indexOf(feature);
 };
