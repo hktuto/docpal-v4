@@ -541,7 +541,6 @@ describe('[client-folder-cabinet]MatchingResult', () => {
   })
 
   it('should showAddButton the component correctly', async () => {
-
     const data = {
       'id': 'd4a1058b-7bc0-4df3-a131-fcc9db3a693a',
       'rootId': 'f7fb03a7-38c9-49b8-9f72-c618c42ba93f',
