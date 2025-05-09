@@ -14,7 +14,7 @@ import { adminApi } from 'api'
 import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['table', 'tableId'])
-const state = reactive<any>({
+const state = reactive<{ name: string; loading: boolean }>({
   name: '',
   loading: false
 })
@@ -27,11 +27,10 @@ async function handleSave() {
   }
   try {
     state.loading = true
-    await adminApi.api.putMasterTables({
+    const data = await adminApi.api.putMasterTables({
       id: props.tableId,
       name: state.name
     })
-
     routerProvider?.message.success(t('dpMsg_success'))
   } catch (error) {
     //     routerProvider?.message.error($i18n.t('dpMsg_error'))
