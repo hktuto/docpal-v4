@@ -1,45 +1,46 @@
 <template>
   <el-card>
-    <h3 class="title">{{ $t("master.setting.active") }}</h3>
-    <div class="description">{{ $t("master.setting.activeDescription") }}</div>
+    <h3 class="title">{{ $t('master.setting.active') }}</h3>
+    <div class="description">{{ $t('master.setting.activeDescription') }}</div>
     <el-select v-model="state.isActive" placeholder="Select">
-      <el-option :label="$t('actions.active')" value="A"/>
-      <el-option :label="$t('actions.inactive')" value="D"/>
+      <el-option :label="$t('actions.active')" value="A" />
+      <el-option :label="$t('actions.inactive')" value="D" />
     </el-select>
-    <el-button id="MasterTable__Tables__Detail__Setting__Active__Save" type="primary" :loading="state.loading"
-               @click="handleSave">
-      {{ $t("common_save") }}
+    <el-button id="MasterTable__Tables__Detail__Setting__Active__Save" type="primary" :loading="state.loading" @click="handleSave">
+      {{ $t('common_save') }}
     </el-button>
   </el-card>
 </template>
 <script setup lang="ts">
-import {adminApi} from "api";
+import { adminApi } from 'api'
 
-const props = defineProps(["table", "tableId"]);
+const props = defineProps(['table', 'tableId'])
 const state = reactive<any>({
-  isActive: "D",
-  loading: false,
-});
+  isActive: 'D',
+  loading: false
+})
 
 async function handleSave() {
-  state.loading = true;
+  state.loading = true
   try {
     await adminApi.api.putMasterTables({
       id: props.tableId,
-      status: state.isActive,
-    });
+      status: state.isActive
+    })
   } catch (error) {
-    state.isActive = state.isActive === "A" ? "D" : "A";
+    state.isActive = state.isActive === 'A' ? 'D' : 'A'
+  } finally {
+    await new Promise(resolve => setTimeout(resolve, 300)); 
+    state.loading = false
   }
-  setTimeout(() => (state.loading = false), 500);
 }
 
 watch(
   () => props.table,
   (newVal) => {
-    state.isActive = props.table.status;
+    state.isActive = props.table.status
   }
-);
+)
 </script>
 <style lang="scss" scoped>
 .el-select {

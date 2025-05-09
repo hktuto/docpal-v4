@@ -109,7 +109,7 @@ async function downloadFailList() {
       timeout: 0
     }
   )
-  downloadBlob(res, state.masterTable.name + '-failure')
+  downloadBlob(res, state.masterTable?.name + '-failure')
 }
 
 async function handleExport() {
