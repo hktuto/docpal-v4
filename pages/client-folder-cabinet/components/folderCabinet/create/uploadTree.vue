@@ -51,9 +51,9 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
 import { ElMessageBox, ElMessage } from 'element-plus'
+
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   treeData: Object
@@ -182,8 +182,8 @@ function handleNodeClick(row: any) {
     await MetaFormRef.value.init(state.selectedRow.documentType)
     MetaFormRef.value.setData({
       docName: state.selectedRow.docName ? state.selectedRow.docName : row.label,
-      ...state.selectedRow.properties
-      , ...defaultValue
+      ...state.selectedRow.properties,
+      ...defaultValue
     })
   })
 }
