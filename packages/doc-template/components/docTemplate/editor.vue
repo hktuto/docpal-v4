@@ -25,12 +25,8 @@ defineExpose({
 .template-editor{
   width:100%;
   height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  position: relative;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: min-content  1fr min-content;
 }
 
 </style>

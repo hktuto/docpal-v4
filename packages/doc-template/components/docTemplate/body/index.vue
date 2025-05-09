@@ -2,7 +2,6 @@
 
 const {doc, options, scale} = inject('docEditor')
 
-const pageCount = ref(1);
 
 
 </script>
@@ -10,15 +9,7 @@ const pageCount = ref(1);
 <template>
   <div class="docContent">
     <div class="scaleContainer" >
-        <DocTemplateBodyPage />
-    </div>
-    <div class="hiddenComoponent">
-      <component 
-        v-for="item in doc" 
-        :is="`DocTemplateConent${item.type}`" 
-        :key="item.id" 
-        :setting="item"
-      />
+        <DocTemplateBodyPage v-for="(page,index) in doc" :key="index" :index="index"  />
     </div>
   </div>
 </template>
@@ -29,6 +20,7 @@ const pageCount = ref(1);
   overflow: auto;
   background: var(--app-grey-900);
   padding: var(--app-space-s);
+  flex: 1 0 auto;
 }
 .scaleContainer{
   display: flex;

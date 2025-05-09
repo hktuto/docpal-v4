@@ -48,6 +48,10 @@ export type DocTool = {
   name: string,
   components: any 
 }
+export type DocPage = {
+  pageSetting: any,
+  content: DocConentItem[]
+}
 export type DocConentType = 'paragraph' | 'image' | 'table' | 'list' | 'code' | 'header' | 'footer' | 'pageBreak' | "lineBreak";
 export type DocConentItem = {
   id: string,
