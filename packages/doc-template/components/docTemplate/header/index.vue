@@ -29,7 +29,7 @@ const activeName = ref(headers.value[0].name);
 <style lang="scss" scoped>
 .headerContainer{
   width:100%;
-  background: var(--app-grey-925);
+  background: var(--app-grey-975);
   padding-inline: var(--app-space-s) ;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 2;

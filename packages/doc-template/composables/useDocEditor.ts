@@ -1,4 +1,4 @@
-import type { DocConentItem, DocumentOptions, ToolSection } from "~/utils/docTempalteHelper";
+import type { DocConentItem, DocPage, DocumentOptions, ToolSection } from "~/utils/docTempalteHelper";
 
 
 export const useDocHeader = () => useState<ToolSection[]>('header', () => (
@@ -51,7 +51,7 @@ export const useDocEditor = () => {
   const header = useDocHeader
   const loading = ref(true);
   const selectedText = ref();
-  const doc = ref<DocConentItem[]>([])
+  const doc = ref<DocPage[]>([])
   const scale = ref(100);
 
   function setupEdtior(settings?: DocOptions) {
@@ -61,6 +61,10 @@ export const useDocEditor = () => {
       options.value = settings.docOptions
     }
     doc.value = [
+      {
+        pageSetting:{},
+        content:[]
+      }
     ]
     loading.value = false
   }

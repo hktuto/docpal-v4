@@ -21,7 +21,7 @@ const {scale} = inject('docEditor')
   justify-content: space-around;
   align-items: center;
   padding: var(--app-space-s);
-  background: var(--app-grey-925);
+  background: var(--app-grey-975);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 .space{

@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-const { options, scale } = inject('docEditor')
-const {page} = defineProps<{
-  page: number,
+const { options, scale, doc } = inject('docEditor')
+const {index} = defineProps<{
+  index: number,
 }>()
+
+const emits = defineEmits(['addPage', 'emptyPage'])
+
 const pageSize = computed(() => {
   return {
     width: twipToPx(options.value.pageSize.width || '11905.511811'), // A4 size in TWIP
@@ -13,6 +16,20 @@ const pageSize = computed(() => {
     marginBottom: twipToPx(options.value.pageMargins.bottom || '1000'), // A4 size in TWIP
   }
 })
+const elsRef = ref([])
+function handleEmptyCase() {
+  // push empty block to page
+  if(doc.value[index].content.length === 0) {
+
+    doc.value[index].content.push({
+      id: options.value.title + '_page_' + index + '_empty',
+      type: 'Paragraph',
+      content: ''
+    })
+  }
+  console.log(elsRef.value)
+}
+
 </script>
 
 
@@ -36,7 +53,14 @@ const pageSize = computed(() => {
     <div class="bottomCenter"></div>
     <div class="bottomRight"></div>
     <div class="mairginContainer" 
-      :id="options.title + '_page_' + page" >
+      :id="options.title + '_page_' + page" @click="handleEmptyCase" >
+        <component 
+          v-for="(item,itemIndex) in doc[index].content" 
+          :is="`DocTemplateContent${item.type}`" 
+          ref="elsRef" 
+          :key="item.id" 
+          :setting="item" 
+          :id="item.id" />
     </div>
   </div>
 </template>
