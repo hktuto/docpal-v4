@@ -207,6 +207,7 @@ describe('[client-ai-upload]AiUploadDetail', () => {
   })
 
   // TODO NodeMap data type cannot be converted
+/*
   it.skip('should handleSubmit the component correctly', async () => {
     const nodeMap = new Map()
     nodeMap.set('418422', {
@@ -278,4 +279,6 @@ describe('[client-ai-upload]AiUploadDetail', () => {
     expect(clientApi.api.postNuxeoDocumentBatchconfirm).toHaveBeenCalled()
     expect(wrapper.vm.state.submitLoading).toBe(false)
   })
+*/
+
 })
