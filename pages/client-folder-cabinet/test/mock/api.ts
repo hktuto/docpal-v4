@@ -8,5 +8,8 @@ export const clientApi = {
     deleteNuxeoDocumentTrash: vi.fn(() => Promise.resolve(true)),
     postCabinetVerificationComplete: vi.fn(() => Promise.resolve(true)),
     getCabinetTemplateId: vi.fn(() => Promise.resolve(true)),
+    patchNuxeoDocumentReplacefileV2: vi.fn(() => Promise.resolve(true)),
+    postNuxeoDocumentIsduplicatename: vi.fn(() => Promise.resolve(true)),
+    postNuxeoDocumentCreatedocument: vi.fn(() => Promise.resolve(true)),
   }
 }
