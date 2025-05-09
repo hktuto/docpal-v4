@@ -1,0 +1,33 @@
+<script lang="ts" setup>
+const {scale} = inject('docEditor')
+</script>
+
+<template>
+  <div class="footerContainer">
+    footer
+    <div class="space"></div>
+    <el-slider v-model="scale" class="scale" :step="1" :min="10" :max="300" ></el-slider>
+    <div class="scaleText">
+      {{ scale }}%
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.footerContainer{
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: center;
+  padding: var(--app-space-s);
+  background: var(--app-grey-925);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.space{
+  flex: 1 0 auto;
+}
+.scale{
+  max-width: 100px;
+}
+</style>

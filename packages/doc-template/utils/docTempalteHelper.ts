@@ -5,7 +5,7 @@ export type DocOptions = {
   
 }
 
-type DocumentOptions = {
+export type DocumentOptions = {
   pageSize?: { // Defaults to U.S. letter portrait orientation.
     width: number, // width of the page for all pages in this section in TWIP. Defaults to 12240 Maximum 31680.
     height: number, // height of the page for all pages in this section in TWIP. Defaults to 15808 Maximum 31680.
@@ -38,3 +38,23 @@ type DocumentOptions = {
   fontSize?: number, 
   lang ?: string 
 }
+
+export type ToolSection = {
+  name : string,
+  tools: DocTool[]
+}
+
+export type DocTool = {
+  name: string,
+  components: any 
+}
+export type DocConentType = 'paragraph' | 'image' | 'table' | 'list' | 'code' | 'header' | 'footer' | 'pageBreak' | "lineBreak";
+export type DocConentItem = {
+  id: string,
+  type: DocConentType,
+  content: string, // html string
+  variables: string[] // variables used in content
+  setting: any ,
+  height: number // height of the content, in TWIP
+}
+export type Doc = DocConentItem[]
