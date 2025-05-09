@@ -7,6 +7,7 @@ const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
+const { t } = useI18n()
 const state = reactive<any>({
   activeName: 'tabels',
   tableFilter: {},
@@ -18,7 +19,7 @@ const state = reactive<any>({
 })
 function openNew() {
   const newItem = routeMasterTableNew({
-    name: $t('adminMenu.masterTable') + '/new'
+    name: t('adminMenu.masterTable') + '/new'
   })
   console.log('newItem', newItem)
   routerProvider?.navigateTo({ ...newItem })

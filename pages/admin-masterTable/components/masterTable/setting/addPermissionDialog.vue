@@ -1,11 +1,8 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('masterTable_settingAddPermission')"
-             :close-on-click-modal="false"
-  >
+  <el-dialog v-model="state.visible" :title="$t('masterTable_settingAddPermission')" :close-on-click-modal="false">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission__Submit" type="primary"
-                 :loading="state.loading" @click="handleSubmit">
+      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -18,21 +15,18 @@ import formJson from './addPermissionDialog.vform.json'
 import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  exitList: any[],
-  tableId: string,
+  exitList: any[]
+  tableId: string
 }>()
 const { t } = useI18n()
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 
-const state = reactive({
+const state = reactive<any>({
   loading: false,
   visible: false
-
 })
-let userList: never[] | UserDTO[] | undefined | any[] = []
-let groupList: never[] | GroupDTO[] | undefined | any[] = []
+let userList: UserDTO[] | any = []
+let groupList:GroupDTO[] | any = []
 const FormRendererRef = ref()
 
 async function handleSubmit() {
@@ -45,23 +39,27 @@ async function handleSubmit() {
   state.loading = true
   try {
     await adminApi.api.postMasterTablesAclsAdd(params)
-    ElMessage.success(t('tip_createdSuccessMsg', {
-      modelName: t('masterTable_permissionForMaster'),
-      name: props.exitList[0]?.masterTableName
-    }))
+    ElMessage.success(
+      t('tip_createdSuccessMsg', {
+        modelName: t('masterTable_permissionForMaster'),
+        name: props.exitList[0]?.masterTableName
+      })
+    )
     state.visible = false
     emits('refresh')
   } catch (error) {
+  } finally {
+    state.loading = false
   }
-  state.loading = false
 }
 
-function handleOpen() {
+async function handleOpen() {
   state.visible = true
-  setTimeout(() => {
-    FormRendererRef.value.vFormRenderRef.resetForm()
-    handleOptions()
-  }, 100)
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  console.log(FormRendererRef);
+  
+  FormRendererRef.value.vFormRenderRef.resetForm()
+  handleOptions()
 }
 
 function handleOptions() {
@@ -70,35 +68,35 @@ function handleOptions() {
     { value: 'user_groups', label: t('user_groups'), options: groupListFilter() },
     { value: 'user_users', label: t('user_users'), options: userListFilter() }
   ]
+  console.log(userIdRef);
+  
   userIdRef.loadOptions(options)
 
   function userListFilter() {
-    return userList?.filter((allItem: any) =>
-      !props.exitList.some((exitItem: any) => exitItem.userId === allItem.userId))
+    return userList?.filter((allItem: any) => !props.exitList.some((exitItem: any) => exitItem.userId === allItem.userId))
   }
 
   function groupListFilter() {
-    return groupList?.filter((allItem: any) =>
-      !props.exitList.some((exitItem: any) => exitItem.userId === allItem.id))
+    return groupList?.filter((allItem: any) => !props.exitList.some((exitItem: any) => exitItem.userId === allItem.id))
   }
 }
 
 onMounted(async () => {
-  userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-  userList?.forEach((item: any) => {
-    item.value = item.userId
-    item.label = item.username
-  })
-  const _groupList: any = await adminApi.api.postNuxeoIdentityGroups().then(res => res.data)
-  // groupList = _groupList.filter((item: any) => item.id !== 'administrators') // backend fixed
-  groupList = _groupList
-  groupList?.forEach((item: any) => {
-    item.value = item.id
-    item.label = item.name
-  })
+  try {
+    userList = await adminApi.api.postNuxeoIdentityUsers({}).then((res) => res.data)
+    userList?.forEach((item: any) => {
+      item.value = item.userId
+      item.label = item.username
+    })
+    const _groupList: any = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+    // groupList = _groupList.filter((item: any) => item.id !== 'administrators') // backend fixed
+    groupList = _groupList
+    groupList?.forEach((item: any) => {
+      item.value = item.id
+      item.label = item.name
+    })
+  } catch (error) {}
 })
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
