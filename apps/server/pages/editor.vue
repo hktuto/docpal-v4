@@ -3,15 +3,16 @@
 const editorRef = ref()
 const options = ref({});
 
+onMounted(async () => {
+  editorRef.value.setupEdtior()
+})
+
 </script>
 
 
 <template>
   <div class="pageContainer">
     <DocTemplateEditor :options="options" ref="editorRef">
-        <template #toolbar>
-          <ElButton type="primary" >Preview</ElButton>
-        </template>
     </DocTemplateEditor>
   </div>
 </template>
@@ -19,5 +20,11 @@ const options = ref({});
 <style lang="scss" scoped>
 .pageContainer{
   // padding: var(--app-space-s);
+  height: 100svh;
+  width: 100svw;
+  position: relative;
+  overflow: hidden;
 }
 </style>
+
+
