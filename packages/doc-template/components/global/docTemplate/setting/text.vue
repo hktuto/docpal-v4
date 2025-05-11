@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const editor = inject('docEditor')
+const {editor} = inject('editor')
 
 </script>
 

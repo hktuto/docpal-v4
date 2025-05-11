@@ -1,11 +1,17 @@
 <script lang="ts" setup>
-
+const {editor} = inject('editor')
 </script>
 
 <template>
   <div class="footerContainer">
     footer
     <div class="space"></div>
+    <div class="wordCount">
+      {{ editor.storage.characterCount.characters() }}
+      characters
+      <span class="slash">/</span>
+      {{ editor.storage.characterCount.words() }} <span class="word">words</span>
+    </div>
   </div>
 </template>
 
