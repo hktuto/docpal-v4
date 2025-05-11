@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 
-
-const editor = inject('docEditor')
 const headers = useDocHeader()
 const activeName = ref(headers.value[0].name);
 </script>
