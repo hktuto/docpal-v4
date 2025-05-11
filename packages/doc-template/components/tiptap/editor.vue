@@ -6,12 +6,17 @@ import link from '@tiptap/extension-link'
 import SuperScript from '@tiptap/extension-superscript'
 import Underline from '@tiptap/extension-underline'
 
-import TextStyle from '@tiptap/extension-text-style'
 import CharacterCount from '@tiptap/extension-character-count'
 import Document from '@tiptap/extension-document'
+import Heading from '@tiptap/extension-heading'
 import FontFamily from '@tiptap/extension-font-family'
 import Paragraph from '@tiptap/extension-paragraph'
 import Text from '@tiptap/extension-text'
+import Table from '@tiptap/extension-table'
+import TableCell from '@tiptap/extension-table-cell'
+import TableHeader from '@tiptap/extension-table-header'
+import TableRow from '@tiptap/extension-table-row'
+import List from '@tiptap/extension-list'
 import TextStyle from '@tiptap/extension-text-style'
 import Gapcursor from '@tiptap/extension-gapcursor'
 import Image from '@tiptap/extension-image'
@@ -34,9 +39,11 @@ function initEditor() {
   editor.value = new Editor({
     content: "<p>I'm running Tiptap with Vue.js. 🎉</p>",
     extensions: [
+      Heading,
       Document,
       FontFamily,
       Paragraph,
+      List,
       Text,
       TextStyle,
       Gapcursor,
@@ -47,6 +54,12 @@ function initEditor() {
       Underline,
       SuperScript,
       link,
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
       CharacterCount.configure({
         limit: editorOptions.textCount,
       })
