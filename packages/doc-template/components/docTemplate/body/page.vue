@@ -5,7 +5,7 @@ const {index} = defineProps<{
 }>()
 
 const emits = defineEmits(['addPage', 'emptyPage'])
-
+const pageEl = ref()
 const pageSize = computed(() => {
   return {
     width: twipToPx(options.value.pageSize.width || '11905.511811'), // A4 size in TWIP
@@ -17,24 +17,70 @@ const pageSize = computed(() => {
   }
 })
 const elsRef = ref([])
+const focusEl = ref(0)
 function handleEmptyCase() {
   // push empty block to page
   if(doc.value[index].content.length === 0) {
-
     doc.value[index].content.push({
-      id: options.value.title + '_page_' + index + '_empty',
+      id: Date.now(),
       type: 'Paragraph',
       content: ''
     })
+
+    setTimeout(() => {
+      console.log(elsRef.value.length)
+      if(elsRef.value[0]) {
+        elsRef.value[0].focus()
+      }
+    },100)
+  }else{
+    if(elsRef.value[elsRef.value.length - 1]) {
+      elsRef.value[elsRef.value.length - 1].focus()
+    }
   }
-  console.log(elsRef.value)
+}
+
+function deleteComponent(deletItemIndex:number) {
+  console.log('deleteComponent',  doc.value[index].content.length, doc.value[index].content.length === 0)
+  if(doc.value[index].content.length !== 0) {
+    doc.value[index].content.splice(deletItemIndex, 1)
+    setTimeout(() => {
+      elsRef.value[deletItemIndex - 1].focus()
+    },100)
+  }
+}
+
+function addComponent(spliIndex:number) {
+  const newComponent = {
+    id: Date.now(),
+    type: 'Paragraph',
+    content: ''
+  }
+  doc.value[index].content.splice(spliIndex + 1, 0, newComponent)
+  setTimeout(() => {
+    elsRef.value[spliIndex + 1].focus()
+  },100)
+}
+
+function focusNext(selectIndex?:number = -1) {
+  if(focusEl.value + 1 < elsRef.value.length) {
+    elsRef.value[focusEl.value + 1].focus(null, selectIndex)
+  }
+}
+function focusPrev(selectIndex?:number = -1) {
+  if(focusEl.value - 1 >= 0) {
+    console.log(selectIndex)
+    elsRef.value[focusEl.value - 1].focus(null, selectIndex)
+  }
 }
 
 </script>
 
 
 <template>
-  <div class="pageContainer"
+  <div
+    ref="pageEl"
+    class="pageContainer"
     :style="`
       width: ${pageSize.width * scale / 100}px;
       height: ${pageSize.height * scale / 100}px;
@@ -54,13 +100,20 @@ function handleEmptyCase() {
     <div class="bottomRight"></div>
     <div class="mairginContainer" 
       :id="options.title + '_page_' + page" @click="handleEmptyCase" >
+      <template  v-for="(item,itemIndex) in doc[index].content" :key="item.id" >
         <component 
-          v-for="(item,itemIndex) in doc[index].content" 
           :is="`DocTemplateContent${item.type}`" 
           ref="elsRef" 
-          :key="item.id" 
           :setting="item" 
-          :id="item.id" />
+          :index="itemIndex"
+          :id="item.id" 
+          @next="focusNext"
+          @prev="focusPrev"
+          @focus="focusEl = itemIndex"
+          @remove="deleteComponent(itemIndex)"
+          @add="addComponent(itemIndex)"
+        />
+      </template>
     </div>
   </div>
 </template>

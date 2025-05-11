@@ -1,15 +1,11 @@
 <script lang="ts" setup>
-const {scale} = inject('docEditor')
+
 </script>
 
 <template>
   <div class="footerContainer">
     footer
     <div class="space"></div>
-    <el-slider v-model="scale" class="scale" :step="1" :min="10" :max="300" ></el-slider>
-    <div class="scaleText">
-      {{ scale }}%
-    </div>
   </div>
 </template>
 
