@@ -7,7 +7,7 @@
 <template>
   <div class="pageContainer">
     <client-only>
-      <docTempalteEditor />
+      <DocTemplateEditor />
     </client-only>
   </div>
 </template>
