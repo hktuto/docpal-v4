@@ -26,33 +26,44 @@ import Paragraph from '@tiptap/extension-paragraph'
 // utils
 import FontFamily from '@tiptap/extension-font-family'
 import TextStyle from '@tiptap/extension-text-style'
+import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
 
 
 
 export const convertTipTapToHTML = (editorJson :any) => {
-  const html = generateHTML(editorJson, [
-    Bold,
-    Italic,
-    Highlight,
-    Underline,
-    SuperScript,
-    link,
-    BulletList,
-    OrderedList,
-    ListItem,
-    // table
-    Table,
-    TableRow,
-    TableHeader,
-    TableCell,
-    TextStyle,
-    FontFamily,
-    Text,
-    Paragraph,
-    Image,
-    Heading,
-    Document,
-  ])
+  try{
+      const html = generateHTML(editorJson, [
+        Bold,
+        Italic,
+        Highlight,
+        Underline,
+        SuperScript,
+        link,
+        BulletList,
+        OrderedList,
+        ListItem,
+        // table
+        Table,
+        TableRow,
+        TableHeader,
+        TableCell,
+        TextStyle,
+        FontFamily,
+        Text,
+        Paragraph,
+        Image,
+        Heading,
+        Document,
+        PaginationExtension,
+        HeaderFooterNode,
+        PageNode,
+        BodyNode
+      ])
+      return html
+    }catch(err) {
+      console.log(err)
+      return ""
+    }
   // TODO : may need to normalize the html
-  return html
+  
 }

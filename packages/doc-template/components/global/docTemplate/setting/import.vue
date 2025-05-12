@@ -41,7 +41,7 @@ function setOptionsFoJson(json) {
   }
 }
 
-function setContentFoJson(json) {
+function setContentFoJson(json:any) {
   try {
     editor.value.commands.setContent(json);
   } catch (e) {
