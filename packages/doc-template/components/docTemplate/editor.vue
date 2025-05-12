@@ -58,20 +58,6 @@ provide(DocTemplateProveKey, {
   <div class="editorContainer">
     <DocTemplateHeader  />
     <div class="editorBody">
-      <bubble-menu
-        :editor="editor"
-        :tippy-options="{ duration: 100 }"
-        v-if="editor"
-      >
-        <div class="bubble-menu">
-          <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
-            Bold
-          </button>
-          <button @click="editor.chain().focus().toggleItalic().run()" :class="{ 'is-active': editor.isActive('italic') }">
-            Italic
-          </button>
-        </div>
-      </bubble-menu>
       <EditorContent :editor="editor" />
     </div>
     <DocTemplateFooter />

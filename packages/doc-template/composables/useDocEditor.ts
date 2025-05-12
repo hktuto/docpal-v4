@@ -1,7 +1,7 @@
 import type { DocumentOptions, ToolSection } from "~/utils/docTempalteHelper";
 
 
-export const useDocHeader = () => useState<ToolSection[]>('header', () => (
+export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
   [
     {
       name: "Home",
@@ -34,3 +34,9 @@ export const useDocHeader = () => useState<ToolSection[]>('header', () => (
   ]
 ))
 
+export const useDocExtendElement = () => useState<any[]>('docExtendEelement', () => ([
+  {
+    name: "Bubble Menu",
+    components: "lazyDocTemplateSettingBubbleMenu"
+  }
+]))
