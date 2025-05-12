@@ -12,7 +12,6 @@
         <el-tag v-else type="info">{{ row.status }}</el-tag>
       </template>
     </VxeGrid>
-    <HoldDialog ref="HoldDialogRef" @update="query" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -73,25 +72,6 @@ const {
     }
   }
 })
-
-async function handleReSubmit(row) {
-  try {
-    row.loading = true
-    const res = await adminApi.api.postMessageQueueMessageidResubmit(row.messageId, {
-      businessId: row.businessId
-    })
-    if (!!res) {
-      routerProvider?.message.success('success')
-      query()
-    }
-  } catch (error) {
-
-  } finally {
-    setTimeout(() => {
-      row.loading = false
-    }, 500)
-  }
-}
 
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true

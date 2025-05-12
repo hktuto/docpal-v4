@@ -280,6 +280,7 @@ export function allowFeature(f: string) {
 export const duplicateNameFilter = async (idOrPath: string, list: any) => {
   try {
     let result = false
+    const titleList = []
     const titles = list.reduce((prev: any, item: any) => {
       prev.push(item.fileName || item.name)
       return prev
@@ -289,25 +290,29 @@ export const duplicateNameFilter = async (idOrPath: string, list: any) => {
       titles
     }) as any
     if (!res) return { isDuplicate: false }
+    if (!res.hasDuplicateTitle) return { isDuplicate: false }
     list.forEach((doc: any) => {
       const name = doc.fileName || doc.name
-      if (res && res[name] || res[name]) {
+      if (res && res.titles[name]) {
         result = true
         doc.goPath = idOrPath
         doc.isDuplicate = true
-        doc.originalPath = res[name].idOrPath
-        doc.uniqueName = res[name].uniqueName
+        doc.originalPath = res.titles[name].idOrPath
+        doc.uniqueName = res.titles[name].uniqueName
+        titleList.push({ name: name, newName: res.titles[name].uniqueName })
       }
     })
     return {
       isDuplicate: result,
-      list
+      list,
+      titleList
     }
   } catch (error) {
     console.log(error)
     return {
       isDuplicate: true,
-      list: []
+      list: [],
+      titleList: []
     }
   }
 }

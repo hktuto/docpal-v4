@@ -1,20 +1,21 @@
 <template>
   <el-dialog v-model="state.visible" :title="state.title" class="scroll-dialog" append-to-body
              :close-on-click-modal="false" destroy-on-close @close="handleClose">
-    <MasterTableVariableForm ref="FormVariablesRenderer" :ignoreList="ignoreList"/>
+    <MasterTableVariableForm ref="FormVariablesRenderer" :ignoreList="ignoreList" />
     <template #footer>
       <div class="footer-grid">
         <el-button id="MasterTable__Tables__Detail__Add__Submit" type="primary" :loading="state.loading"
                    @click="handleSubmit">
-          {{ $t('common_submit') }}
+          {{ t('common_submit') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 
+const { t } = useI18n()
 const props = withDefaults(defineProps<{
   tableId: string,
   ignoreList: string[],
@@ -30,7 +31,7 @@ const state = reactive({
   setting: {},
   fields: [],
   edit: false,
-  title: $i18n.t('masterTable.newRow')
+  title: t('masterTable.newRow')
 })
 
 async function handleSubmit() {
@@ -66,16 +67,16 @@ async function handleOpen(fields, row?) {
   if (row) {
     state.edit = true
     state.setting = row
-    state.title = $i18n.t('masterTable.editRow')
+    state.title = t('masterTable.editRow')
   } else {
     state.edit = false
-    state.title = $i18n.t('masterTable.newRow')
+    state.title = t('masterTable.newRow')
   }
   setTimeout(() => {
     FormVariablesRenderer.value.init(fields, row)
   })
 }
 
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped></style>

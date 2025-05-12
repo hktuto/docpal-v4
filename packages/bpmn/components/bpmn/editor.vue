@@ -85,7 +85,6 @@ const graph = ref()
 const dnd = ref()
 
 function graphReady() {
-  console.log('graph ready')
   ready.value = true
   graph.value = viewerRef.value.graph
   graph.value.use(

@@ -39,7 +39,7 @@
          v-else-if="state.cabinetTemplate && state.cabinetTemplate.children && state.cabinetTemplate.children.length > 0">
         <span>{{ $t('fc.noDataAndInit') }}
             <el-button type="primary" text size="small"
-                       @click="handleInitFoldeCabinet()">{{ $t('fc.initFolderCabinet') }}</el-button>?
+                       @click="handleInitFolderCabinet()">{{ $t('fc.initFolderCabinet') }}</el-button>
         </span>
     </div>
     <div class="flex-x-center" v-else>
@@ -100,9 +100,7 @@ async function init(docItem: any, templateId: string) {
       state.treeData = data.children
     } else {
       state.treeData = []
-      state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(templateId)
-      console.log(state.cabinetTemplate)
-
+      state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(templateId).then(res => res.data)
     }
   } catch (error) {
     state.treeData = []
@@ -138,7 +136,6 @@ function showError(data: any) {
 }
 
 function showFolderError(data: any) {
-  return false
   return data.folder && !data.complete
 }
 
@@ -212,7 +209,7 @@ async function refreshCabinet() {
 // #region module: next
 const NextDialogRef = ref()
 
-function handleInitFoldeCabinet() {
+function handleInitFolderCabinet() {
   NextDialogRef.value.handleOpen(state.cabinetTemplate, state.activeDoc.documentPath)
 }
 

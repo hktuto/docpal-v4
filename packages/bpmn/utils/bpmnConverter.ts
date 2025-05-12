@@ -295,7 +295,6 @@ export const graphToBpmnJson = (graph:Graph, bpmnJson:any) => {
         insertEdgeToBpmn(graph, json, edge)
     })
     const xml = jsonToBpmn(json)
-    console.log("xml", xml)
     return {
         xml,
         json,
