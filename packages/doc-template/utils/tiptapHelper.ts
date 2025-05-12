@@ -28,7 +28,7 @@ import Gapcursor from '@tiptap/extension-gapcursor'
 import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
-import { Pagination } from 'tiptap-pagination-breaks';
+
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
 
 
@@ -74,11 +74,6 @@ export const setupExtensions = (options: TipTapOptions) => {
       
   ]
   if(options.mode === 'PAGE') {
-    // extensions.push(
-    //   Pagination.configure({
-        
-    //   }),
-    // )
     extensions.unshift(
       PaginationExtension.configure({
         defaultPaperSize: "A4",
