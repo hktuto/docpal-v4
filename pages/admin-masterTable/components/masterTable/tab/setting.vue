@@ -1,13 +1,10 @@
 <template>
   <div class="masterTable-setting" style="height: 100%">
     <MasterTableSettingActive class="card-active" v-bind="props">
-      1
     </MasterTableSettingActive>
     <MasterTableSettingName class="card-name" v-bind="props">
-      2
     </MasterTableSettingName>
     <MasterTableSettingPermission class="card-permission" v-bind="props">
-      3
     </MasterTableSettingPermission>
   </div>
 </template>

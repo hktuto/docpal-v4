@@ -12,5 +12,8 @@ export const adminApi = {
     postMasterTablesAclsRemove: vi.fn(),
     postMasterTablesAclsDelete: vi.fn(),
     postMasterTablesAclsAdd: vi.fn(),
+    postMasterTablesLogsPageConditions: vi.fn(),
+    postMasterTablesLogs: vi.fn(),
+    postMasterTablesColumnAdd: vi.fn(),
   }
 }
