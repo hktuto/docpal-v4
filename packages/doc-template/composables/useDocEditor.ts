@@ -10,29 +10,31 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
           name: "Text Setting",
           components: "lazyDocTemplateSettingText"
         },
-        
         {
-          name:"import",
+          name: "import",
           components: "lazyDocTemplateSettingImport"
+        },
+        {
+          name: "export",
+          components: "lazyDocTemplateSettingExport"
         }
-        
       ]
     },
     {
       name: "Page",
-      tools:[
+      tools: [
         {
           name: "Page Setting",
           components: "lazyDocTemplateSettingPage"
-        },
+        }
       ]
     },
     {
       name: "Image",
-      tools:[]
+      tools: []
     }
   ]
-))
+));
 
 export const useDocExtendElement = () => useState<any[]>('docExtendEelement', () => ([
   {
