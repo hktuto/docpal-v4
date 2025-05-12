@@ -15,7 +15,7 @@
             class="column-dynamic el-icon--left"
             :style="`--column-color: ${getColor('', item)}`"
           >
-            {{ $t(`marsterTable.${item}`) }}
+            {{ t(`marsterTable.${item}`) }}
             <div class="column-dynamic-point"></div>
           </div>
           <el-button
@@ -26,14 +26,14 @@
             size="small"
             @click="handleAddRow()"
           >
-            {{ $t('button.add') }}
+            {{ t('button.add') }}
           </el-button>
         </div>
       </div>
       <div v-else class="flex-x-between">
         <div class="title-select color__primary">
           <b class="el-icon--left">
-            {{ $t('masterTable_selected') }}: {{ state.selectList.length }}
+            {{ t('masterTable_selected') }}: {{ state.selectList.length }}
           </b>
           <Icon id="MasterTable__Tables__Detail__Records__CleanSelected" name="ic:baseline-clear"
                 class="normal cursor-pointer" @click="cleanSelectedRows">
@@ -42,26 +42,26 @@
         <div>
           <!-- v-if="isSuperAdmin && endPoint === 'admin'" -->
           <el-button id="MasterTable__Tables__Detail__Records__Delete" type="danger" @click="handleDeleteSelected">
-            {{ $t('common_delete') }}
+            {{ t('common_delete') }}
           </el-button>
           <el-dropdown id="MasterTable__Tables__Detail__Records__Active"
                        v-if="endPoint === 'admin' || permission?.enable" trigger="click">
             <el-button class="el-icon--left el-icon--right" type="warning">
-              {{ $t('actions.active') }}
+              {{ t('actions.active') }}
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item @click="handleBatchActive(true)">
-                  {{ $t('actions.active') }}
+                  {{ t('actions.active') }}
                 </el-dropdown-item>
                 <el-dropdown-item @click="handleBatchActive(false)">
-                  {{ $t('actions.inactive') }}
+                  {{ t('actions.inactive') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
           <el-button id="MasterTable__Tables__Detail__Records__BatchEdit" type="primary" @click="handleBatchEdit">
-            {{ $t('button.batchEdit') }}
+            {{ t('button.batchEdit') }}
           </el-button>
         </div>
       </div>
@@ -71,7 +71,7 @@
         class="column-dynamic"
         :style="`--column-color: ${getColor(column.field)}`"
       >
-          {{ $t(column.title) }}
+          {{ t(column.title) }}
         <!-- <div class="column-dynamic-point"></div> -->
         </span>
     </template>
@@ -84,9 +84,9 @@
     </template>
     <template #status="{ row }">
       <el-tag v-if="row.status" type="success">
-        {{ $t('actions.activated') }}
+        {{ t('actions.activated') }}
       </el-tag>
-      <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
+      <el-tag v-else type="danger">{{ t('actions.inactive') }}</el-tag>
     </template>
   </VxeGrid>
   <MasterTableRecordDialog
@@ -116,7 +116,7 @@ const {
   public: { endPoint }
 } = useRuntimeConfig()
 const ignoreList = getIgnoreSchemas()
-const isSuperAdmin = useIsSuperAdmin()
+// const isSuperAdmin = useIsSuperAdmin()
 const props = defineProps<{
   tableId: string;
   permission: any;

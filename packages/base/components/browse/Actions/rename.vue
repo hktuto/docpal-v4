@@ -4,7 +4,7 @@
       <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
         <el-form-item :label="$t('tableHeader_name')" prop="name"
                       :rules="[ { required: true, message: $t('tableHeader_name') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
-          <el-input v-model="form.name" clearable/>
+          <el-input v-model="form.name" clearable />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -19,11 +19,12 @@
 </template>
 
 <script lang="ts" setup>
-import {emitBus, EventType} from 'eventbus'
-import {useEventListener} from '@vueuse/core'
-import {ElMessage} from 'element-plus'
-import {clientApi} from 'api'
+import { emitBus, EventType } from 'eventbus'
+import { useEventListener } from '@vueuse/core'
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
 
+const { t } = useI18n()
 const props = defineProps<{
   doc?: any,
   parentPath?: string
@@ -50,7 +51,7 @@ async function openDialog(detail: any) {
   form.value.path = detail.path
   dialogOpened.value = true
   nextTick(async () => {
-    const {data} = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
+    const { data } = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
     const metadatas = data.metaDatas.reduce((prev: any, item) => {
       if (item.label || item.value) {
         prev[item.name] = {}
@@ -74,30 +75,27 @@ async function openDialog(detail: any) {
 
 async function handleSave() {
   state.loading = true
-  const detail = await clientApi.api.postNuxeoDocument({idOrPath: state.doc.id}).then(res => res.data)
+  const detail = await clientApi.api.postNuxeoDocument({ idOrPath: state.doc.id }).then(res => res.data)
 
   try {
     // check if the name is exist in the folder
-    const {isDuplicate} = await duplicateNameFilter(detail.parentRef, [form.value]);
+    const { isDuplicate } = await duplicateNameFilter(detail.parentRef, [form.value])
 
-    if (isDuplicate && form.value.name !== props.doc.name) {
-      ElMessage({
-        message: $i18n.t('dpTip_duplicateFileName') as string,
-        type: 'error'
-      })
+    if (isDuplicate && form.value.name !== state.doc.name) {
+      ElMessage.error(t('dpTip.duplicateFileName2'))
       state.loading = false
       return
     }
     await clientApi.api.patchNuxeoDocument({
       idOrPath: form.value.id,
-      name: form.value.name,
+      name: form.value.name
     })
     dialogOpened.value = false
     emits('success', state.doc)
   } catch (error) {
     console.log(error)
   } finally {
-    console.log("finally", state.doc)
+    console.log('finally', state.doc)
     emitBus(EventType.FILE_NEED_REFRESH, {
       relatedIdOrPath: detail.parentRef,
       highlightIdOrPath: state.doc.id
@@ -108,5 +106,5 @@ async function handleSave() {
 
 useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))
 
-defineExpose({openDialog})
+defineExpose({ openDialog })
 </script>
