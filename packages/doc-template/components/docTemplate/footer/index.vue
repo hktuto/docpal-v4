@@ -1,16 +1,21 @@
 <script lang="ts" setup>
-const {editor} = inject('editor')
+import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
+
+const editorProvider = inject(DocTemplateProveKey)
+if(!editorProvider) {
+  throw createError('editorProvider is not found')
+}
 </script>
 
 <template>
   <div class="footerContainer">
     footer
     <div class="space"></div>
-    <div v-if="editor && editor.storage" class="wordCount">
-      {{ editor.storage.characterCount.characters() }}
+    <div v-if="editorProvider.editor && editorProvider.editor.storage" class="wordCount">
+      {{ editorProvider.editor.storage.characterCount.characters() }}
       characters
       <span class="slash">/</span>
-      {{ editor.storage.characterCount.words() }} <span class="word">words</span>
+      {{ editorProvider.editor.storage.characterCount.words() }} <span class="word">words</span>
     </div>
   </div>
 </template>

@@ -34,7 +34,21 @@ import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tipta
 
 export type TipTapOptions = {
   textCount?: number,
-  mode: 'PAGE' | 'ENDLESS'
+  mode: 'PAGE' | 'ENDLESS',
+  pageSetting ?: {
+    defaultPagerSize: 'A4',
+    defaultPaperOrientation: "portrait" | "landscape",
+    defaultMarginConfig: {
+      top: number,
+      right: number,
+      bottom: number,
+      left: number,
+    },
+    pageAmendmentOptions: {
+      enableHeader: boolean,
+      enableFooter: boolean
+    }
+  }
 }
 
 export const setupExtensions = (options: TipTapOptions) => {
