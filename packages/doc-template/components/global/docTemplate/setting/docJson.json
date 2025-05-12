@@ -39,6 +39,37 @@
         "onValidate": ""
       },
       "id": "textarea39637"
+    },
+    {
+      "key": 58977,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "isExport",
+        "label": "isExport",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": true,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "const textContentRef = this.getWidgetRef('textContent')\r\nconst isExportRef = this.getWidgetRef('isExport')\r\nif(value) {\r\n  textContentRef.setDisabled(true)\r\n} else {\r\n  textContentRef.setDisabled(false)\r\n}\r\n",
+        "onValidate": ""
+      },
+      "id": "switch32236"
     }
   ],
   "formConfig": {
