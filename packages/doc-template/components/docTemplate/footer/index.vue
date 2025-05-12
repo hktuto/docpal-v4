@@ -6,7 +6,7 @@ const {editor} = inject('editor')
   <div class="footerContainer">
     footer
     <div class="space"></div>
-    <div class="wordCount">
+    <div v-if="editor && editor.storage" class="wordCount">
       {{ editor.storage.characterCount.characters() }}
       characters
       <span class="slash">/</span>

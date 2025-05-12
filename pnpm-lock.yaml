@@ -692,6 +692,9 @@ importers:
       '@tiptap/extension-bubble-menu':
         specifier: ^2.12.0
         version: 2.12.0(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)
+      '@tiptap/extension-bullet-list':
+        specifier: ^2.12.0
+        version: 2.12.0(@tiptap/core@2.12.0)
       '@tiptap/extension-character-count':
         specifier: ^2.12.0
         version: 2.12.0(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)
@@ -723,6 +726,12 @@ importers:
         specifier: ^2.12.0
         version: 2.12.0(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)
       '@tiptap/extension-list-item':
+        specifier: ^2.12.0
+        version: 2.12.0(@tiptap/core@2.12.0)
+      '@tiptap/extension-list-keymap':
+        specifier: ^2.12.0
+        version: 2.12.0(@tiptap/core@2.12.0)
+      '@tiptap/extension-ordered-list':
         specifier: ^2.12.0
         version: 2.12.0(@tiptap/core@2.12.0)
       '@tiptap/extension-paragraph':
@@ -770,6 +779,12 @@ importers:
       nuxt:
         specifier: 3.15.4
         version: 3.15.4(eslint@8.57.1)(rollup@4.34.8)(sass@1.85.1)(typescript@5.8.2)(vite@6.2.2)(vue-tsc@2.2.8)
+      tiptap-extension-pagination:
+        specifier: ^2.1.4
+        version: 2.1.4(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)
+      tiptap-pagination-breaks:
+        specifier: ^1.0.3
+        version: 1.0.3(@tiptap/pm@2.12.0)
     devDependencies:
       '@nuxt/test-utils':
         specifier: ^3.14.1
@@ -7165,6 +7180,14 @@ packages:
 
   /@tiptap/extension-list-item@2.12.0(@tiptap/core@2.12.0):
     resolution: {integrity: sha512-4YwZooC8HP+gPxs6YrkB1ayggyYbgVvJx/rWBT6lKSW2MVVg8QXi1zAcSI3MhIhHmqDysXXFPL8JURlbeGjaFA==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
+    dependencies:
+      '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
+    dev: false
+
+  /@tiptap/extension-list-keymap@2.12.0(@tiptap/core@2.12.0):
+    resolution: {integrity: sha512-2I7udw2FABIKAr49/S/zvcYEDKl6znX2+tKOT1VqKUQuQCrovYwxwtPQJxTjRKo3h0s5fzqeLaeahVj6VIs4fA==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
     dependencies:
@@ -17024,6 +17047,25 @@ packages:
     resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
     dependencies:
       '@popperjs/core': 2.11.8
+    dev: false
+
+  /tiptap-extension-pagination@2.1.4(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0):
+    resolution: {integrity: sha512-ol7wdiueeufFsafbdhGSj0LSdd4FUrGkYybNf2+Dn1pE28ysSewSp2TDWJxJTjBjNEVoivKWYQYdRLFh+KQHZw==}
+    peerDependencies:
+      '@tiptap/core': ^2.11.5
+      '@tiptap/pm': ^2.11.5
+    dependencies:
+      '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
+      '@tiptap/pm': 2.12.0
+    dev: false
+
+  /tiptap-pagination-breaks@1.0.3(@tiptap/pm@2.12.0):
+    resolution: {integrity: sha512-t7Q9lG40Me73WHxHxKu4UG16VLSF9IcV2uoUSL86oZxv1OZxexlG0gTrUBxa8RMB+lPq2ienb+s9dlL2djvjmg==}
+    dependencies:
+      '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
+      prosemirror-state: 1.4.3
+    transitivePeerDependencies:
+      - '@tiptap/pm'
     dev: false
 
   /tmp-promise@3.0.3:
