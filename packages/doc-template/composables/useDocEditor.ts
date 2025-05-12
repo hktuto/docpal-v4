@@ -7,6 +7,10 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
       name: "Home",
       tools: [
         {
+          name: "Undo Redo",
+          components: "lazyDocTemplateSettingUndo"
+        },
+        {
           name: "Text Setting",
           components: "lazyDocTemplateSettingText"
         },

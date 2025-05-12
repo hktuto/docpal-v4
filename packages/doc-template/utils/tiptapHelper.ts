@@ -28,6 +28,7 @@ import Gapcursor from '@tiptap/extension-gapcursor'
 import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
+import History from '@tiptap/extension-history'
 
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
 
@@ -95,6 +96,7 @@ export const setupExtensions = (options: TipTapOptions) => {
       TextStyle,
       FontFamily,
       Gapcursor,
+      History
       
   ]
   if(options?.mode === 'PAGE') {

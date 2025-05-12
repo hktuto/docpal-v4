@@ -44,6 +44,9 @@ button {
   background: var(--app-grey-950);
   padding: var(--app-space-xs);
   border-radius: var(--app-border-radius-s);
+  &:hover {
+    background: var(--app-success-3);
+  }
   &.is-active {
     background: var(--app-accent-color);
     color : #fff;
