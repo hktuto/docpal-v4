@@ -14,9 +14,6 @@ export default defineAppConfig({
                     name:"admin-group"
                 },
                 {
-                  name :"user-role-file-action"
-                },
-                {
                   name: "RBAC-editor"
                 }
             ]
