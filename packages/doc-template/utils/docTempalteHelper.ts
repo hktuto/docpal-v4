@@ -52,8 +52,8 @@ export type DocTool = {
 
 interface DocTemplateProvider {
   editor: Ref<any>,
-  editorOptions: Ref<TipTapOptions>,
-  setConfig: (TipTapOptions) => void
+  options: Ref<TipTapOptions, TipTapOptions>,
+  initEditor: (options:TipTapOptions) => void
 }
 
 export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')
