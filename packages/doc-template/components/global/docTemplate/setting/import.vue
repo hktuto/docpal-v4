@@ -2,7 +2,7 @@
 import { DocTemplateProveKey } from "~/utils/docTempalteHelper";
 import formJson from "./docJson.json";
 
-const { editor, editorOptions } = inject(DocTemplateProveKey);
+const { editor, options, initEditor } = inject(DocTemplateProveKey);
 const { t } = useI18n();
 
 const state = reactive({
@@ -13,12 +13,20 @@ const state = reactive({
 
 const FormRendererRef = ref();
 
+function handleOpen() {
+  state.visible = true;
+  setTimeout(async () => {
+    await FormRendererRef.value.vFormRenderRef.resetForm();
+    state.loading = false;
+  });
+}
+
 async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData();
     const json = JSON.parse(data.textContent);
-    setOptionsFoJson(json.Options);
-    setContentFoJson(json.Content);
+    setOptionsFoJson(json.options);
+    setContentFoJson(json.content);
     state.visible = false;
   } catch (e) {
     console.log(e);
@@ -26,9 +34,8 @@ async function handleSubmit() {
 }
 
 function setOptionsFoJson(json) {
-  console.log(22, editor.value);
   try {
-    editor.value.setOptions(json);
+    initEditor.value = json;
   } catch (e) {
     console.log("set options is error", e);
   }
@@ -53,8 +60,7 @@ function setContentFoHtml(html: string) {
 </script>
 
 <template>
-  <ElButton @click="state.visible = true">Import</ElButton>
-
+  <ElButton @click="handleOpen">Import</ElButton>
   <el-dialog v-model="state.visible" :title="t('Import')">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
