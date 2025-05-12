@@ -39,7 +39,7 @@ export type TipTapOptions = {
 
 export const setupExtensions = (options: TipTapOptions) => {
   const extensions = [
-    Heading,
+      Heading,
       Document,
       // text
       Text,
