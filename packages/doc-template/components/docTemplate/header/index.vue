@@ -1,12 +1,21 @@
 <script lang="ts" setup>
+import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
 
+const editorProvider = inject(DocTemplateProveKey)
+if(!editorProvider) {
+  throw createError('editorProvider not found')
+}
+const { editor } = editorProvider
 const headers = useDocHeader()
 const activeName = ref(headers.value[0].name);
+const extendElement = useDocExtendElement()
 </script>
 
 
 <template>
 <div class="headerContainer">
+  <template v-if="editor">
+
   <el-tabs v-model="activeName" class="demo-tabs" >
     <el-tab-pane
       v-for="header in headers"
@@ -21,6 +30,9 @@ const activeName = ref(headers.value[0].name);
     </div>
     </el-tab-pane>
   </el-tabs>
+  <!-- extend Element -->
+  <component v-for="elemeent in extendElement" :key="elemeent.name" :is="elemeent.components" />
+  </template>
 </div>
 </template>
 
