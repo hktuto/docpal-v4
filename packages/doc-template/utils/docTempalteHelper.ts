@@ -1,9 +1,8 @@
-import { el } from "element-plus/es/locales.mjs";
+import type { InjectionKey } from "vue";
+import type { TipTapOptions } from "./tiptapHelper";
 
 export type DocOptions = {
   docOptions: DocumentOptions,
-
-  
 }
 
 export type DocumentOptions = {
@@ -49,68 +48,11 @@ export type DocTool = {
   name: string,
   components: any 
 }
-export type DocPage = {
-  pageSetting: any,
-  content: DocConentItem[]
+
+
+interface DocTemplateProvider {
+  editor: Ref<any>,
+  editorOptions: TipTapOptions
 }
 
-
-type ElementSelctionResponse = {
-  startPosition: number,
-  selectedText: string
-}
-export const getElementSelection = (el:HTMLElement) : null | ElementSelctionResponse => {
-  const selection = window.getSelection();
-  if (!selection ||selection.rangeCount === 0) {
-    return null;
-  }
-  const range = selection.getRangeAt(0);
-  const preSelectionRange = range.cloneRange();
-  preSelectionRange.selectNodeContents(el);
-  preSelectionRange.setEnd(range.startContainer, range.startOffset);
-  return {
-    startPosition: preSelectionRange.toString().length,
-    selectedText: selection.toString(),
-  }
-  
-}
-
-export const setElementSelection = (el:HTMLElement, startPosition:number = 0) => {
-  el.focus();  
-  const range = createRange(el, startPosition);
-    console.log(range)
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-}
-
-const createRange = (node:any, targetPosition:number) => {
-  let range = document.createRange();
-  range.selectNode(node);
-  range.setStart(node, 0);
-
-  let pos = 0;
-  const stack = [node];
-  while (stack.length > 0) {
-      const current = stack.pop();
-
-      if (current.nodeType === Node.TEXT_NODE) {
-          const len = current.textContent.length;
-          if (pos + len >= targetPosition) {
-              range.setEnd(current, targetPosition - pos);
-              return range;
-          }
-          pos += len;
-      } else if (current.childNodes && current.childNodes.length > 0) {
-          for (let i = current.childNodes.length - 1; i >= 0; i--) {
-              stack.push(current.childNodes[i]);
-          }
-      }
-  }
-
-  // The target position is greater than the
-  // length of the contenteditable element.
-  range.setEnd(node, node.childNodes.length);
-  return range;
-};
-
+export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')

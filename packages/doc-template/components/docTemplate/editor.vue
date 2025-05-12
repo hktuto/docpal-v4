@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
+import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
  
 
 const { editorOptions= {
@@ -8,6 +9,7 @@ const { editorOptions= {
 } } = defineProps<{
   editorOptions: TipTapOptions
 }>()
+
 
 
 const editor = ref()
@@ -36,8 +38,9 @@ onUnmounted(() => {
   editor.value.destroy()
 })
 
-provide('editor', {
-  editor
+provide(DocTemplateProveKey, {
+  editor,
+  editorOptions,
 })
 
 </script>
