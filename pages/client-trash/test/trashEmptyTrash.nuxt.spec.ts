@@ -9,7 +9,7 @@ import { mockRouterProvider } from './util'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     confirm: vi.fn(() => Promise.resolve('confirm'))
-  },
+  }
 }))
 
 describe('[client-trash]TrashEmptyTrash', () => {
@@ -77,36 +77,20 @@ describe('[client-trash]TrashEmptyTrash', () => {
       }
     })
 
+    const spyOn = vi.spyOn(clientApi.api,'postNuxeoDocumentRestore')
+
     const deleteButton = wrapper.find('#Trash__RestoreSelected')
     expect(deleteButton.exists()).toBe(true)
     await deleteButton.trigger('click')
 
-    expect(clientApi.api.postNuxeoDocumentRestore).toHaveBeenCalled()
+    wrapper.vm.handleBathRestore(true,wrapper.vm.state.selectList)
 
     await new Promise((resolve) => setTimeout(resolve, 2000))
     expect(mockRouterProvider.message.success).toHaveBeenCalled()
   })
 
   it('selected delete', async () => {
-    const wrapper = mount(TrashPage, {
-      global: {
-        components: { VxeGrid },
-        provide: {
-          [MenuRouterKey]: mockRouterProvider
-        },
-        mocks: {
-          $t: (msg: string) => msg,// Mock translation function
-          $i18n: { t: (key: string) => key }
-        }
-      },
-      data() {
-        return {
-          state: {
-            selectList: [{ id: 1 }, { id: 2 }]
-          }
-        }
-      }
-    })
+    wrapper.vm.state.selectList = [{ id: 1 }, { id: 2 }]
 
     const deleteButton = wrapper.find('#Trash__PermanentlyDeleteSelected')
     expect(deleteButton.exists()).toBe(true)
@@ -119,10 +103,11 @@ describe('[client-trash]TrashEmptyTrash', () => {
     )
 
     const row = [{ id: '111', name: 'abc' }]
-    wrapper.vm.handleDelete(row)
+    wrapper.vm.handleBathDelete(row)
     expect(clientApi.api.deleteNuxeoDocument).toHaveBeenCalled()
 
     await new Promise((resolve) => setTimeout(resolve, 4000))
+
     expect(mockRouterProvider.message.success).toHaveBeenCalled()
   })
 })

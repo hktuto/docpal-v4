@@ -45,10 +45,8 @@
     <div class="flex-x-center" v-else>
       {{ $t('tip.cabinetNotFound') }}
     </div>
-    <BrowseActionsReplaceDialog ref="BrowseActionsReplaceDialogRef"
-                                @update="refresh" />
-    <FolderCabinetCreateUploadFileDialog ref="UploadFileDialogRef"
-                                         @success="refresh" />
+    <BrowseActionsReplaceDialog ref="BrowseActionsReplaceDialogRef" @update="refresh" />
+    <FolderCabinetCreateUploadFileDialog ref="UploadFileDialogRef" @success="refresh" />
     <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="refresh" />
   </div>
 </template>

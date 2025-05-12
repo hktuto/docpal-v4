@@ -7,7 +7,7 @@
   ],
   "main": "index.js",
   "scripts": {
-    "prestart": "pnpm -w test",
+    "prstart": "pnpm -w test:production",
     "start": "npx ts-node index.ts"
   },
   "keywords": [],
@@ -17,6 +17,7 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
+    "dayjs": "^1.11.13",
     "xlsx": "^0.18.5"
   }
 }

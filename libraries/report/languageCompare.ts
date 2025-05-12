@@ -6,6 +6,7 @@ import oldEnJson from '../deployment/oldSrc/en-US.json'
 import oldZhJson from '../deployment/oldSrc/zh-CN.json'
 import oldZhHKJson from '../deployment/oldSrc/zh-HK.json'
 import * as XLSX from 'xlsx';
+import dayjs from 'dayjs'
 function compareJSON(oldObj, newObj) {
   const diffs = [];
   compareValues('', oldObj, newObj, diffs);
@@ -125,5 +126,8 @@ export function createLanguageReport() {
   XLSX.utils.book_append_sheet(wb, enWs, 'English');
   XLSX.utils.book_append_sheet(wb, zhWs, '中文简体');
   XLSX.utils.book_append_sheet(wb, zhHKWs, '中文繁体');
-  XLSX.writeFile(wb, `4.9-4.24 Language changes.xlsx`);
+  const date  = new Date()
+  const now = dayjs(date).format('MM.DD')
+  const twoWeeksAgo = dayjs().subtract(2, 'week').format('MM.DD');
+  XLSX.writeFile(wb, `./report_languageChange/${twoWeeksAgo}-${now} Language changes.xlsx`);
 }
