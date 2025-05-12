@@ -28,6 +28,8 @@ const readerType = computed(() => {
           return resolveComponent('LazyOtherPlayer');
         } 
         const mimeType = getMimeTypeFromDocument(docDetail);
+        console.log(mimeType);
+        
         if(!mimeType) return resolveComponent('LazyPdfViewer'); // set to pdf for testing
         // check if it is excel
         
@@ -44,13 +46,8 @@ const readerType = computed(() => {
             isPdf.value = true
             return resolveComponent('LazyPdfViewer');
         }
-        if(mimeType === 'image/bmp') {
-            return resolveComponent('LazyImageViewer');
-        }
-        
-        
         if(mimeType.includes('image')) {
-            return resolveComponent('LazyPdfViewer');
+            return resolveComponent('LazyImageViewer');
         }
         if(mimeType.includes('video') || mimeType.includes('audio')) {
             return resolveComponent('LazyVideoPlayer');
