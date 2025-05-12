@@ -14,8 +14,7 @@ const { editor } = editorProvider
 <template>
     <bubble-menu
         :editor="editor"
-        :tippy-options="{ duration: 100 }"
-        
+        :tippy-options="{ duration: 300 }"
       >
         <div class="bubble-menu">
           <button @click="editor.chain().focus().toggleBold().run()" :class="{ 'is-active': editor.isActive('bold') }">
@@ -27,3 +26,27 @@ const { editor } = editorProvider
         </div>
       </bubble-menu>
 </template>
+
+<style lang="scss" scoped>
+.bubble-menu {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  border: 1px solid var(--app-grey-950);
+  gap: var(--app-space-xxs);
+  background: var(--app-grey-1000);
+  padding: var(--app-space-xs);
+  border-radius: var(--app-border-radius-s);
+}
+button {
+  border: none;
+  background: var(--app-grey-950);
+  padding: var(--app-space-xs);
+  border-radius: var(--app-border-radius-s);
+  &.is-active {
+    background: var(--app-accent-color);
+    color : #fff;
+  }
+}
+</style>
