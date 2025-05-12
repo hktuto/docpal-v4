@@ -57,11 +57,13 @@ export function getMimeTypeFromDocument(doc: any): string | undefined {
 export const formatFileSize = (size: number) => {
   if (!size) return ''
   if (size < 1024) {
-    return size.toFixed(1) + ' KB'
+    return size.toFixed(1) + ' B'
   } else if (size < 1024 * 1024) {
-    return (size / 1024).toFixed(1) + ' MB'
+    return (size / 1024).toFixed(1) + ' KB'
+  }else if (size < 1024 * 1024 * 1024) {
+    return (size / 1024 / 1024).toFixed(1) + ' MB'
   } else {
-    return (size / 1024 / 1024).toFixed(2) + ' GB'
+    return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB'
   }
 }
 
