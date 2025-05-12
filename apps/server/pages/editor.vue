@@ -1,19 +1,14 @@
 <script lang="ts" setup>
 
-const editorRef = ref()
-const options = ref({});
-
-onMounted(async () => {
-  editorRef.value.setupEdtior()
-})
 
 </script>
 
 
 <template>
   <div class="pageContainer">
-    <DocTemplateEditor :options="options" ref="editorRef">
-    </DocTemplateEditor>
+    <client-only>
+      <docTempalteEditor />
+    </client-only>
   </div>
 </template>
 
