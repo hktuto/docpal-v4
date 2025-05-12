@@ -35,20 +35,30 @@ import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tipta
 export type TipTapOptions = {
   textCount?: number,
   mode: 'PAGE' | 'ENDLESS',
-  pageSetting ?: {
-    defaultPagerSize: 'A4',
-    defaultPaperOrientation: "portrait" | "landscape",
-    defaultMarginConfig: {
-      top: number,
-      right: number,
-      bottom: number,
-      left: number,
-    },
-    pageAmendmentOptions: {
-      enableHeader: boolean,
+  pageSetting ?: pageSettingOptions
+}
+
+export type pageSettingOptions = {
+  defaultMarginConfig: {
+    bottom: number,
+    left: number,
+    top: number,
+    right: number,
+  },
+  defaultPageBorders:{
+     bottom: number,
+    left: number,
+    top: number,
+    right: number,
+  },
+  defaultPaperColour: string,
+  defaultPaperOrientation: "portrait" | "landscape",
+  defaultPaperSize : string,
+  pageAmendmentOptions: {
+     enableHeader: boolean,
       enableFooter: boolean
-    }
-  }
+  },
+  useDeviceThemeForPaperColour: false,
 }
 
 export const setupExtensions = (options: TipTapOptions) => {
@@ -80,19 +90,21 @@ export const setupExtensions = (options: TipTapOptions) => {
       TableCell,
       // utils
       CharacterCount.configure({
-        limit: options.textCount,
+        limit: options?.textCount || null,
       }),
       TextStyle,
       FontFamily,
       Gapcursor,
       
   ]
-  if(options.mode === 'PAGE') {
+  if(options?.mode === 'PAGE') {
     extensions.unshift(
       PaginationExtension.configure({
-        defaultPaperSize: "A4",
-        defaultPaperOrientation: "portrait",
-        defaultMarginConfig: { top: 5, right: 5, bottom: 5, left: 5 },
+        defaultPaperSize: options.pageSetting?.defaultPaperSize || 'A4',
+        defaultPaperOrientation: options.pageSetting?.defaultPaperOrientation || 'portrait',
+        defaultMarginConfig: options.pageSetting?.defaultPageBorders || {
+            top: 5, right: 5, bottom: 5, left: 5 
+          },
         defaultPageBorders: { top: 1, right: 1, bottom: 1, left: 1 },
         pageAmendmentOptions:{
           enableHeader: false,
