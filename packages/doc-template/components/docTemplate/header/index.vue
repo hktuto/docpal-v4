@@ -16,22 +16,22 @@ const extendElement = useDocExtendElement()
 <div class="headerContainer">
   <template v-if="editor">
 
-  <el-tabs v-model="activeName" class="demo-tabs" >
-    <el-tab-pane
-      v-for="header in headers"
-      :key="header.name"
-      :label="header.name"
-      :name="header.name"
-    >
-    <div class="tooleContainer">
-      <div v-for="tool in header.tools" :key="tool.name" class="tool">
-        <component  :is="tool.components" />
+    <el-tabs v-model="activeName" class="demo-tabs" >
+      <el-tab-pane
+        v-for="header in headers"
+        :key="header.name"
+        :label="header.name"
+        :name="header.name"
+      >
+      <div class="tooleContainer">
+        <div v-for="tool in header.tools" :key="tool.name" class="tool">
+          <component  :is="tool.components" />
+        </div>
       </div>
-    </div>
-    </el-tab-pane>
-  </el-tabs>
-  <!-- extend Element -->
-  <component v-for="elemeent in extendElement" :key="elemeent.name" :is="elemeent.components" />
+      </el-tab-pane>
+    </el-tabs>
+    <!-- extend Element -->
+    <component v-for="elemeent in extendElement" :key="elemeent.name" :is="elemeent.components" />
   </template>
 </div>
 </template>
