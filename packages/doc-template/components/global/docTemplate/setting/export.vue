@@ -2,7 +2,7 @@
 import { DocTemplateProveKey } from "~/utils/docTempalteHelper";
 import formJson from "./docJson.json";
 
-const { editor, editorOptions } = inject(DocTemplateProveKey);
+const { editor, options, initEditor } = inject(DocTemplateProveKey);
 const { t } = useI18n();
 
 const state = reactive({
@@ -15,11 +15,20 @@ const FormRendererRef = ref();
 
 async function getJsonConfig() {
   state.visible = true;
-
+  state.loading = true;
+  const data = {
+    options: "",
+    content: ""
+  };
   try {
-    const json = editor.value.getJSON()
-    editor.value.getOptions()
-    navigator.clipboard.writeText(json)
+    data.options = options.value;
+    data.content = editor.value.getJSON();
+    const textContent = JSON.stringify(data);
+    setTimeout(async () => {
+      await FormRendererRef.value.vFormRenderRef.setFormData({ textContent: textContent, isExport: true });
+      state.loading = false;
+    });
+    navigator.clipboard.writeText(textContent);
   } catch (e) {
     console.log(e);
   }
@@ -30,6 +39,6 @@ async function getJsonConfig() {
 <template>
   <ElButton @click="getJsonConfig">Export</ElButton>
   <el-dialog v-model="state.visible" :title="t('Export')">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
+    <FormRenderer ref="FormRendererRef" v-loading="state.loading" :form-json="formJson" />
   </el-dialog>
 </template>
