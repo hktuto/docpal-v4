@@ -53,16 +53,6 @@ export type DocPage = {
   pageSetting: any,
   content: DocConentItem[]
 }
-export type DocConentType = 'paragraph' | 'image' | 'table' | 'list' | 'code' | 'header' | 'footer' | 'pageBreak' | "lineBreak";
-export type DocConentItem = {
-  id: string,
-  type: DocConentType,
-  content: string, // html string
-  variables: string[] // variables used in content
-  setting: any ,
-  height: number // height of the content, in TWIP
-}
-export type Doc = DocConentItem[]
 
 
 type ElementSelctionResponse = {
