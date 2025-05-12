@@ -17,7 +17,7 @@
         </div>
         <div v-if="info.properties['file:content']" class="infoSection">
             <div class="infoTitle">{{ $t('info_size') }}</div>
-            <div class="infoContent">{{ fileSizeCalc(info.properties['file:content'].length) }}</div>
+            <div class="infoContent">{{ formatFileSize(info.properties['file:content'].length) }}</div>
         </div>
         <div class="infoSection">
             <div class="infoTitle">{{ $t('info_modified') }}</div>
