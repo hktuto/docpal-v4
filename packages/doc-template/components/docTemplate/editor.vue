@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
- 
 
-const { editorOptions= {
-  textCount: null,
-  mode: 'PAGE'
-} } = defineProps<{
+const props = defineProps<{
   editorOptions: TipTapOptions
 }>()
-
+const { editorOptions } = toRef(props)
 
 
 const editor = ref()
-const extensions = setupExtensions(editorOptions)
+
 function initEditor() {
+  if(editor.value) {
+    editor.value.destroy()
+  }
+  const extensions = setupExtensions(editorOptions.value)
   editor.value = new Editor({
     content: `<p>I'm running Tiptap with Vue.js. 🎉</p> 
     <div style="page-break-after: always;"></div>
@@ -22,12 +22,17 @@ function initEditor() {
     `,
     extensions,
   })
-  if(editorOptions.mode === 'PAGE') {
+  if(editorOptions.value.mode === 'PAGE') {
     // set up margin
     editor.value.commands.setDocumentPageMargins({
       top: 5, right: 5, bottom: 5, left: 5 
     })
   }
+}
+
+function setConfig(newOptions:TipTapOptions) {
+  editorOptions.value = newOptions
+  initEditor()
 }
 
 onMounted(() => {
@@ -41,6 +46,7 @@ onUnmounted(() => {
 provide(DocTemplateProveKey, {
   editor,
   editorOptions,
+  setConfig
 })
 
 </script>
