@@ -62,16 +62,20 @@ async function save() {
   routerProvider?.message.success(t('admin_watermarkSavedSuccessMsg'))
 }
 
+
 watch(() => props, (newId) => {
   console.log('watch', props.id)
   if (props.id) {
 
     getDetail(props.id)
   }
-  getList()
+
 }, {
   immediate: true,
   deep: true
+})
+onActivated(() => {
+  getList()
 })
 onDeactivated(() => {
   detail.value = null
