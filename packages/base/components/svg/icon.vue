@@ -1,5 +1,5 @@
 <template>
-<div class="flex-x-center">
+<div class="flex-x-center svgIcon">
     <template v-if="src">
         <template v-if="content">
             <el-tooltip :content="content">
