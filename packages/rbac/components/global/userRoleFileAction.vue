@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {clientApi } from 'api';
-function createRadomRight() {
 
-}
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
     idOrPath: string
@@ -56,6 +54,8 @@ function sortEntry(a, b) {
     }
     return b.isFolder ? 1 : -1
 }
+const detailDialog = ref()
+const selectedItem = ref()
 const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
     id: 'userRoleTableSetting',
     api: async (pageParams: any) => {
@@ -199,6 +199,8 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
           code: 'edit',
           name: 'common_edit',
           action: ({row}) => {
+            selectedItem.value = row;
+            detailDialog.value.open(JSON.parse(JSON.stringify(row)))
             console.log("edit", row)
           }
         }
@@ -241,6 +243,14 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     },
     
 })
+
+
+async function updateData(newData:any) {
+  // selectedItem.value = newData;
+  // setRow 
+  const update = await tableRef.value.setRow(selectedItem.value, newData)
+  console.log("update", update)
+}
 
 function changeRoute(path: string) {
   // change route, update tab
@@ -304,6 +314,7 @@ watch(idOrPath, () => {
         <div>Name：{{ row.name }}</div>
       </template> -->
     </VxeGrid>
+    <UserRoleDialog ref="detailDialog" @update="updateData" />
 </div>
 </template>
 
