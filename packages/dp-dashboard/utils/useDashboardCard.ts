@@ -5,6 +5,7 @@ export type useDashboardCardParams = {
   initStyleActionExtend?: (pHeight: number, pWidth: number) => void
   resizeAction?: () => void
   resizeActionExtend?: () => void
+  onClick?: (instance) => void
 
   handleInitCardAction?: (chartSetting) => void
   getOptions?: (chartSetting) => any
@@ -19,30 +20,31 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   const cardRef = ref()
   const settingRef = ref()
 
-  const initStyle = params.initStyleAction
-    ? params.initStyleAction
-    : () => {
-        const pHeight = cardRef.value.$el.offsetHeight - 36 // - header
-        const pWidth = cardRef.value.$el.offsetWidth - 20
-        if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
-        if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
-      }
+  const initStyle = () => {
+    if (params.initStyleAction) {
+      params.initStyleAction()
+    } else {
+      const pHeight = cardRef.value.$el.offsetHeight - 36 // - header
+      const pWidth = cardRef.value.$el.offsetWidth - 20
+      if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
+      if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
+    }
+  }
 
   const initChart = (_options) => {
     if (echartInstance) echartInstance.clear()
     echartInstance = echarts.init(chartRef.value)
     echartInstance.setOption(_options)
+    echartInstance.resize()
   }
   const handleInitCard = async (chartSetting) => {
-    console.log('handleInitCard')
-    if(!params.handleInitCardAction) {
+    if (!params.handleInitCardAction) {
       const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : {}
-      console.log(options)
-  
       initChart(options)
     } else {
       params.handleInitCardAction(chartSetting)
     }
+    if (params.onClick) params.onClick(echartInstance)
   }
   const resize = () => {
     setTimeout(() => {
@@ -50,7 +52,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
       if (echartInstance) echartInstance.resize()
     })
   }
- 
+
   onMounted(async () => {
     console.log('????onMounted?????')
     setTimeout(async () => {
@@ -80,6 +82,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     cardRef,
     settingRef,
     initChart,
-    resize
+    resize,
+    handleInitCard
   }
 }

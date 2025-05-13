@@ -70,6 +70,7 @@ defineExpose({
 :deep .el-card__body {
   padding: 0;
   margin: 0 auto;
+  width: 100%;
 }
 h4 {
   padding: unset;

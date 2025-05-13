@@ -106,7 +106,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         maxW: 2,
         maxH: 4,
         w: 1,
-        h: 1,
+        h: 2,
         component : 'DocTypeCount',
         setting : {
             documentType: 'File',
@@ -119,7 +119,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         minW: 2,
         minH: 2,
         maxW: 12,
-        maxH: undefined,
+        maxH: 8,
         w: 6,
         h: 2,
         component : 'DocTypeCoCount',
