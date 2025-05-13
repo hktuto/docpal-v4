@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     extends: [
         "../../packages/icon",
         '../../packages/authApp',
+        '../../packages/rbac',
         "../../pages/client-browse",
         "../../pages/client-search",
         "../../pages/client-master-table",
