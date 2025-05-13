@@ -1,10 +1,13 @@
 <script lang="ts" setup>
-import { Editor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
+import { Editor, EditorContent } from '@tiptap/vue-3';
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
-import { setupExtensions, type TipTapOptions } from '~/utils/tiptapHelper';
+import { normalizeTipTapOptions, setupExtensions, type TipTapOptions } from '~/utils/tiptapHelper';
+
 
 const props = withDefaults(defineProps<{
-  editorOptions: TipTapOptions
+  editorOptions: TipTapOptions,
+  json?: any,
+  variables ?: any
 }>(), {
  editorOptions:{
    mode: "PAGE",
@@ -16,25 +19,36 @@ const options = ref<TipTapOptions>({
 })
 const editor = ref()
 
-function initEditor(initOptions:TipTapOptions) {
+function normalizeJson(option:TipTapOptions, json?:any){
+  if(json) {
+    return json
+  }
+  if(option.mode === 'PAGE') {
+    return ""        
+  } else {
+    return ""
+  }
+
+}
+
+
+function initEditor(initOptions:TipTapOptions, json?:any) {
   if(editor.value) {
     editor.value.destroy()
   }
-  const extensions = setupExtensions(initOptions)
+  const normlizeOption = normalizeTipTapOptions(initOptions)
+  const extensions = setupExtensions(normlizeOption)
   editor.value = new Editor({
-    content: `<p>I'm running Tiptap with Vue.js. 🎉</p> 
-    <div style="page-break-after: always;"></div>
-    <p>I'm running Tiptap with Vue.js. 🎉</p> 
-    `,
+    content: normalizeJson(normlizeOption, json),
     extensions,
   })
-  if(initOptions.mode === 'PAGE') {
+  if(normlizeOption.mode === 'PAGE') {
     // set up margin
-    editor.value.commands.setDocumentPageMargins(initOptions.pageSetting?.defaultMarginConfig || {
-      top: 5, right: 5, bottom: 5, left: 5 
-    })
+    // editor.value.commands.setDocumentPageMargins(initOptions.pageSetting?.defaultMarginConfig || {
+    //   top: 5, right: 5, bottom: 5, left: 5 
+    // })
   }
-  options.value = initOptions
+  options.value = {...normlizeOption}
 }
 
 

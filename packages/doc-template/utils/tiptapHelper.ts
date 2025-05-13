@@ -146,7 +146,7 @@ export const setupExtensions = (options: TipTapOptions) => {
       PaginationExtension.configure({
         defaultPaperSize: options.pageSetting?.defaultPaperSize || 'A4',
         defaultPaperOrientation: options.pageSetting?.defaultPaperOrientation || 'portrait',
-        defaultMarginConfigs: options.pageSetting?.defaultPageBorders || {
+        defaultMarginConfig: options.pageSetting?.defaultPageBorders || {
             top: 5, right: 5, bottom: 5, left: 5 
           },
           
@@ -160,6 +160,7 @@ export const setupExtensions = (options: TipTapOptions) => {
       PageNode,
       BodyNode
     )
+    console.log(extensions[0])
   }
   return extensions
 }
