@@ -2,9 +2,10 @@
 import Bold from '@tiptap/extension-bold'
 import Italic from '@tiptap/extension-italic'
 import Highlight from '@tiptap/extension-highlight'
-import link from '@tiptap/extension-link'
+import Link from '@tiptap/extension-link'
 import SuperScript from '@tiptap/extension-superscript'
 import Underline from '@tiptap/extension-underline'
+import FontSize from "@tiptap/extension-font-size"
 
 import Document from '@tiptap/extension-document'
 
@@ -29,7 +30,7 @@ import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
 import History from '@tiptap/extension-history'
-import VariableText from './variable/text'
+import {VariableText} from './variable/text'
 
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
 
@@ -37,7 +38,16 @@ import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tipta
 export type TipTapOptions = {
   textCount?: number,
   mode: 'PAGE' | 'ENDLESS',
-  pageSetting ?: pageSettingOptions
+  pageSetting ?: pageSettingOptions,
+  theme: {
+    fontSize: 12,
+    fontColor: "#000000",
+    fontBackgroundColor: "#ffffff",
+    fontFamily: "",
+    bodyFontSize: 20,
+    h1FontSize: 20,
+    highlightColor: "#ffff00"
+  }
 }
 
 export type pageSettingOptions = {
@@ -47,7 +57,7 @@ export type pageSettingOptions = {
     top: number,
     right: number,
   },
-  defaultPageBorders:{
+  defaultPageBorders: {
     bottom: number,
     left: number,
     top: number,
@@ -55,39 +65,39 @@ export type pageSettingOptions = {
   },
   defaultPaperColour: string,
   defaultPaperOrientation: "portrait" | "landscape",
-  defaultPaperSize : string,
+  defaultPaperSize: string,
   pageAmendmentOptions: {
-     enableHeader: boolean,
-      enableFooter: boolean
+    enableHeader: boolean,
+    enableFooter: boolean
   },
-  useDeviceThemeForPaperColour: false,
+  useDeviceThemeForPaperColour: false
 }
 
 const defaultPageSetting: pageSettingOptions = {
-      defaultMarginConfig:{
-        bottom: 5,
-        top: 5,
-        left: 5,
-        right: 5,
-      },
-      defaultPageBorders: {
-        bottom: 1,
-        top: 1,
-        left: 1,
-        right: 1
-      },
-      defaultPaperColour: "#fff",
-      defaultPaperOrientation: "portrait",
-      defaultPaperSize: "A4",
-      pageAmendmentOptions: {
-        enableHeader: false,
-        enableFooter: false
-      }
-    }
+  defaultMarginConfig: {
+    bottom: 5,
+    top: 5,
+    left: 5,
+    right: 5
+  },
+  defaultPageBorders: {
+    bottom: 1,
+    top: 1,
+    left: 1,
+    right: 1
+  },
+  defaultPaperColour: "#fff",
+  defaultPaperOrientation: "portrait",
+  defaultPaperSize: "A4",
+  pageAmendmentOptions: {
+    enableHeader: false,
+    enableFooter: false
+  }
+};
 
-export function normalizeTipTapOptions(options : TipTapOptions) {
+export function normalizeTipTapOptions(options: TipTapOptions) {
   //defautl mode is page
-  if(!options.mode) {
+  if (!options.mode) {
     options.mode = 'PAGE'
   }
   if(options.mode === 'PAGE') {
@@ -117,10 +127,14 @@ export const setupExtensions = (options: TipTapOptions) => {
       // style
       Bold,
       Italic,
-      Highlight,
+      Highlight.configure({ multicolor: true }),
       Underline,
       SuperScript,
-      link,
+      Link.configure({
+        openOnClick: false,
+        // defaultProtocol: "https"
+      }),
+      FontSize,
       // table
       Table.configure({
         resizable: true,
@@ -134,7 +148,7 @@ export const setupExtensions = (options: TipTapOptions) => {
       CharacterCount.configure({
         limit: options?.textCount || null,
       }),
-      TextStyle,
+      TextStyle.configure({ mergeNestedSpanStyles: true }),
       FontFamily,
       Gapcursor,
       History,
@@ -147,13 +161,13 @@ export const setupExtensions = (options: TipTapOptions) => {
         defaultPaperSize: options.pageSetting?.defaultPaperSize || 'A4',
         defaultPaperOrientation: options.pageSetting?.defaultPaperOrientation || 'portrait',
         defaultMarginConfig: options.pageSetting?.defaultPageBorders || {
-            top: 5, right: 5, bottom: 5, left: 5 
+            top: 5, right: 5, bottom: 5, left: 5
           },
           
         defaultPageBorders: { top: 1, right: 1, bottom: 1, left: 1 },
-        pageAmendmentOptions:{
+        pageAmendmentOptions: {
           enableHeader: false,
-          enableFooter: false,
+          enableFooter: false
         }
       }),
       HeaderFooterNode,
