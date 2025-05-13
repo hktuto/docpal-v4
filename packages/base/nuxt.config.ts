@@ -59,11 +59,11 @@ const config = {
     ],
     strategy:'no_prefix',
     lazy: false,
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      redirectOn: 'root' // recommended
-    }
+    // detectBrowserLanguage: {
+    //   useCookie: true,
+    //   cookieKey: 'i18n_redirected',
+    //   redirectOn: 'root' // recommended
+    // }
   },
   nitro:{
     routeRules:{
