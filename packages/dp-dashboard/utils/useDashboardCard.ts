@@ -5,8 +5,11 @@ export type useDashboardCardParams = {
   initStyleActionExtend?: (pHeight: number, pWidth: number) => void
   resizeAction?: () => void
   resizeActionExtend?: () => void
+
+  handleInitCardAction?: (chartSetting) => void
   getOptions?: (chartSetting) => any
   options?: any
+
   props: any
 }
 export const useDashboardCard = (params: useDashboardCardParams) => {
@@ -19,9 +22,9 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   const initStyle = params.initStyleAction
     ? params.initStyleAction
     : () => {
-        const pHeight = cardRef.value.$el.offsetHeight - 30
-        const pWidth = cardRef.value.$el.offsetWidth - 40
-        chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
+        const pHeight = cardRef.value.$el.offsetHeight - 36 // - header
+        const pWidth = cardRef.value.$el.offsetWidth - 20
+        if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
         if (params.initStyleActionExtend) params.initStyleActionExtend(pHeight, pWidth)
       }
 
@@ -30,17 +33,21 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     echartInstance = echarts.init(chartRef.value)
     echartInstance.setOption(_options)
   }
-  const handleInitChart = async (chartSetting) => {
-    console.log('handleInitChart')
-    const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : {}
-    console.log(options)
-
-    initChart(options)
+  const handleInitCard = async (chartSetting) => {
+    console.log('handleInitCard')
+    if(!params.handleInitCardAction) {
+      const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : {}
+      console.log(options)
+  
+      initChart(options)
+    } else {
+      params.handleInitCardAction(chartSetting)
+    }
   }
   const resize = () => {
     setTimeout(() => {
       initStyle()
-      echartInstance.resize()
+      if (echartInstance) echartInstance.resize()
     })
   }
  
@@ -62,7 +69,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
 
       if (!props.setting) return
       if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-        handleInitChart(props.setting)
+        handleInitCard(props.setting)
       }
     },
     { debounce: 200, maxWait: 500, immediate: true }
