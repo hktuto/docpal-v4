@@ -1,4 +1,4 @@
-import HTMLtoDOCX from 'html-to-docx'
+
 import {Readable} from 'stream'
 import { sendStream } from 'h3'
 export default defineEventHandler(async (event) => {
@@ -33,8 +33,9 @@ export default defineEventHandler(async (event) => {
   //   })
   // }
   // clean up script in html
-  const fileBuffer = await HTMLtoDOCX(html, pageSetting)
   // console.log(fileBuffer)
-  await sendStream(event, Readable.from(fileBuffer))
+  // TODO : create pdf and send stream
+  return html
+  // await sendStream(event, Readable.from(fileBuffer))
 
 })
