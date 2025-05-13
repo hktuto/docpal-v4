@@ -29,6 +29,7 @@ import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
 import History from '@tiptap/extension-history'
+import {VariableText} from './variable/text'
 
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
 
@@ -47,7 +48,7 @@ export type pageSettingOptions = {
     right: number,
   },
   defaultPageBorders:{
-     bottom: number,
+    bottom: number,
     left: number,
     top: number,
     right: number,
@@ -60,6 +61,44 @@ export type pageSettingOptions = {
       enableFooter: boolean
   },
   useDeviceThemeForPaperColour: false,
+}
+
+const defaultPageSetting: pageSettingOptions = {
+      defaultMarginConfig:{
+        bottom: 5,
+        top: 5,
+        left: 5,
+        right: 5,
+      },
+      defaultPageBorders: {
+        bottom: 1,
+        top: 1,
+        left: 1,
+        right: 1
+      },
+      defaultPaperColour: "#fff",
+      defaultPaperOrientation: "portrait",
+      defaultPaperSize: "A4",
+      pageAmendmentOptions: {
+        enableHeader: false,
+        enableFooter: false
+      }
+    }
+
+export function normalizeTipTapOptions(options : TipTapOptions) {
+  //defautl mode is page
+  if(!options.mode) {
+    options.mode = 'PAGE'
+  }
+  if(options.mode === 'PAGE') {
+    // normalize page setting here
+    if(!options.pageSetting)  {
+      options.pageSetting = defaultPageSetting
+    }else{
+      options.pageSetting = Object.assign(defaultPageSetting, options.pageSetting)
+    }
+  }
+  return options
 }
 
 export const setupExtensions = (options: TipTapOptions) => {
@@ -89,6 +128,8 @@ export const setupExtensions = (options: TipTapOptions) => {
       TableRow,
       TableHeader,
       TableCell,
+      // custom 
+      VariableText,
       // utils
       CharacterCount.configure({
         limit: options?.textCount || null,
@@ -96,7 +137,8 @@ export const setupExtensions = (options: TipTapOptions) => {
       TextStyle,
       FontFamily,
       Gapcursor,
-      History
+      History,
+      
       
   ]
   if(options?.mode === 'PAGE') {
@@ -104,9 +146,10 @@ export const setupExtensions = (options: TipTapOptions) => {
       PaginationExtension.configure({
         defaultPaperSize: options.pageSetting?.defaultPaperSize || 'A4',
         defaultPaperOrientation: options.pageSetting?.defaultPaperOrientation || 'portrait',
-        defaultMarginConfig: options.pageSetting?.defaultPageBorders || {
+        defaultMarginConfigs: options.pageSetting?.defaultPageBorders || {
             top: 5, right: 5, bottom: 5, left: 5 
           },
+          
         defaultPageBorders: { top: 1, right: 1, bottom: 1, left: 1 },
         pageAmendmentOptions:{
           enableHeader: false,
