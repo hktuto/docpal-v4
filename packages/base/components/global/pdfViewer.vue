@@ -126,7 +126,7 @@ async function saveAnnotation(annotation:Map<string, object>) {
         },
         comments
     }
-    await clientApi.api.postAnnotation([param])
+    await clientApi.api.postNuxeoAnnotation([param])
 
 }
 // TODO : message must contain doc id, and match with props.doc.id
