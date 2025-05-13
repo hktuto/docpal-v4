@@ -21,6 +21,10 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
         {
           name: "export",
           components: "lazyDocTemplateSettingExport"
+        },
+        {
+          name:'font',
+          components: "lazyDocTemplateContentToolbarFont"
         }
       ]
     },
