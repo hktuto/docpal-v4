@@ -1,7 +1,5 @@
 import { useEventListener, watchDebounced } from '@vueuse/core'
-import { ElMessageBox } from 'element-plus'
 import * as echarts from 'echarts'
-import { getCurrentInstance } from 'vue'
 export type useDashboardCardParams = {
   initStyleAction?: () => void
   initStyleActionExtend?: (pHeight: number, pWidth: number) => void
@@ -12,8 +10,6 @@ export type useDashboardCardParams = {
   props: any
 }
 export const useDashboardCard = (params: useDashboardCardParams) => {
-  const { emit, exposed } = getCurrentInstance()
-  // const emits = defineEmits(['refreshSetting', 'delete'])
   const props = params.props
   let echartInstance
   const chartRef = ref()
@@ -47,9 +43,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
       echartInstance.resize()
     })
   }
-  const handleDelete = async () => {
-    emit('delete')
-  }
+ 
   onMounted(async () => {
     console.log('????onMounted?????')
     setTimeout(async () => {
@@ -73,14 +67,12 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     },
     { debounce: 200, maxWait: 500, immediate: true }
   )
-  
-  exposed.resize = resize
 
   return {
     chartRef,
     cardRef,
     settingRef,
     initChart,
-    handleDelete
+    resize
   }
 }

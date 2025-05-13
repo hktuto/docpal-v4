@@ -240,7 +240,7 @@ const dbSetting = {
   defaultSetting: {}
 }
 const emits = defineEmits(['refreshSetting', 'delete'])
-let { chartRef, cardRef, settingRef, resize, handleDelete } = useDashboardCard({
+let { chartRef, cardRef, settingRef, resize } = useDashboardCard({
   props,
   initStyleActionExtend: (pHeight, pWidth) => {
     chartWidth = Math.min(pWidth, pHeight)
@@ -420,9 +420,11 @@ async function getTrendData(displayList, dataType: string = 'trendSizeData') {
 function handleRefresh(chartSetting) {
   emits('refreshSetting', chartSetting)
 }
+function handleDelete() {
+  emits('delete')
+}
 // #endregion
-
-
+defineExpose({ resize })
 </script>
 
 <style lang="scss" scoped></style>
