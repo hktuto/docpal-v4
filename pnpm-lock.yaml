@@ -956,6 +956,9 @@ importers:
       '@tiptap/starter-kit':
         specifier: ^2.12.0
         version: 2.12.0
+      '@tiptap/suggestion':
+        specifier: ^2.12.0
+        version: 2.12.0(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)
       '@tiptap/vue-3':
         specifier: ^2.12.0
         version: 2.12.0(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)(vue@3.5.6)
@@ -968,6 +971,9 @@ importers:
       nuxt:
         specifier: 3.15.4
         version: 3.15.4(eslint@8.57.1)(rollup@4.34.8)(sass@1.85.1)(typescript@5.8.2)(vite@6.2.2)(vue-tsc@2.2.8)
+      tippy.js:
+        specifier: ^6.3.7
+        version: 6.3.7
       tiptap-extension-pagination:
         specifier: ^2.1.4
         version: 2.1.4(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0)
@@ -8689,6 +8695,16 @@ packages:
       '@tiptap/extension-strike': 2.12.0(@tiptap/core@2.12.0)
       '@tiptap/extension-text': 2.12.0(@tiptap/core@2.12.0)
       '@tiptap/extension-text-style': 2.12.0(@tiptap/core@2.12.0)
+      '@tiptap/pm': 2.12.0
+    dev: false
+
+  /@tiptap/suggestion@2.12.0(@tiptap/core@2.12.0)(@tiptap/pm@2.12.0):
+    resolution: {integrity: sha512-bsXLoZbjUo1oOF1Z+XSfoGzbcnrTcYtJdfylM/FerMLU9T12dhsM/Ri2SKLX4IR5D0HJ07FcsEHCrGEy8Y5y0A==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
+      '@tiptap/pm': ^2.7.0
+    dependencies:
+      '@tiptap/core': 2.12.0(@tiptap/pm@2.12.0)
       '@tiptap/pm': 2.12.0
     dev: false
 

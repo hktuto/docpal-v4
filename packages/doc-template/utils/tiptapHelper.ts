@@ -29,7 +29,7 @@ import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
 import History from '@tiptap/extension-history'
-import {VariableText} from './variable/text'
+import VariableText from './variable/text'
 
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
 
