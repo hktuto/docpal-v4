@@ -1,54 +1,24 @@
 <template>
-  <el-card
-    class="dashboard-item dashboard-item-main"
-    :style="`--setting-color:${setting.color}`"
-  >
-    <template #header="{ close, titleId, titleClass }">
-      <h4>
-        {{ $t(setting.documentType) }}
-        <DashboardUserFilter
-          class="el-icon--right"
-          :user="state.filterUser"
-          :show="setting.showUserFilter"
-          @refreshSetting="handleFilterUser"
-        ></DashboardUserFilter>
-      </h4>
-      <SvgIcon
-        v-if="!hideSetting"
-        src="/icons/setting.svg"
-        style="--icon-size: 1.14rem; --icon-color: #8796a4"
-        @click="openSetting"
-      />
+  <DashboardCard ref="cardRef" :title="$t(setting.documentType)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+    <template #title_suffix>
+      <DashboardUserFilter
+        class="el-icon--right"
+        :user="state.filterUser"
+        :show="setting.showUserFilter"
+        @refreshSetting="handleFilterUser"
+      ></DashboardUserFilter>
     </template>
     <div class="trendContainer">
-      <DocCoCountFileCount
-        v-if="setting.showCount"
-        ref="DocCoCountCountRef"
-        :dates="dates"
-        :documentType="setting.documentType"
-        :user="state.filterUser"
-      />
-      <DocCoCountSize
-        v-if="setting.showSize"
-        ref="DocCoCountSizeRef"
-        :dates="dates"
-        :documentType="setting.documentType"
-        :user="state.filterUser"
-      />
+      <DocCoCountFileCount v-if="setting.showCount" ref="DocCoCountCountRef" :dates="dates" :setting="setting" :user="state.filterUser" />
+      <DocCoCountSize v-if="setting.showSize" ref="DocCoCountSizeRef" :dates="dates" :setting="setting" :user="state.filterUser" />
     </div>
-    <el-button
-      v-if="state.drillDownFlag"
-      :loading="state.drillDownBackLoading"
-      @click="handleDrillDownBack"
-      text
-      >{{ $t("dpButtom_back") }}</el-button
-    >
+    <el-button v-if="state.drillDownFlag" :loading="state.drillDownBackLoading" @click="handleDrillDownBack" text>{{ $t('dpButtom_back') }}</el-button>
     <div class="metaContainer" style="--trend-columns: 1fr 1fr 1fr 1fr">
       <DocCoCountMeta
         v-for="item in setting.displayList"
         :ref="
           (el) => {
-            displayListRef[item.meta] = el;
+            displayListRef[item.meta] = el
           }
         "
         :documentType="setting.documentType"
@@ -59,165 +29,129 @@
       />
     </div>
     <DocCoCountDialog ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
-  </el-card>
+  </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { ArrowDown } from "@element-plus/icons-vue";
-import { publicApi } from "api";
-import { watchDebounced } from "@vueuse/core";
+import { publicApi } from 'api'
+import { watchDebounced } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean;
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
   }>(),
   {
     setting: {},
-    hideSetting: false,
+    hideSetting: false
   }
-);
-const emits = defineEmits(["refreshSetting", "delete"]);
-const metaData = ref({});
+)
+const emits = defineEmits(['refreshSetting', 'delete'])
+const metaData = ref({})
 const state = reactive({
   drillDownBackLoading: false,
   drillDownFlag: false,
   drillDownParams: {},
-  filterUser: "",
-});
+  filterUser: ''
+})
 
-const DocCoCountCountRef = ref();
-const DocCoCountSizeRef = ref();
-const displayListRef = ref({});
+const DocCoCountCountRef = ref()
+const DocCoCountSizeRef = ref()
+const displayListRef = ref({})
 function resize() {
-  DocCoCountCountRef.value.resize();
-  DocCoCountSizeRef.value.resize();
+  DocCoCountCountRef?.value.resize()
+  DocCoCountSizeRef?.value.resize()
   Object.keys(displayListRef.value).forEach((key) => {
-    const item = displayListRef.value[key];
-    if (item) item.resize();
-  });
+    const item = displayListRef.value[key]
+    if (item) item.resize()
+  })
 }
-const settingRef = ref();
-function openSetting() {
-  settingRef.value.handleOpen(props.setting);
-}
+const settingRef = ref()
+
 function handleFilterUser(user) {
-  state.filterUser = user;
-  getMetaData();
+  state.filterUser = user
+  getMetaData()
 }
 const GetCoCountMetaApi = async (params: any) => {
-  if (params.creator)
-    return await publicApi.api
-      .postDashboardNewfilesofspecifyusermetabydtypebyrange(params)
-      .then((res) => res.data);
-  return await publicApi.api
-    .postDashboardNewfilesofusersmetabydtypebyrange(params)
-    .then((res) => res.data);
-};
+  if (params.creator) return await publicApi.api.postDashboardNewfilesofspecifyusermetabydtypebyrange(params).then((res) => res.data)
+  return await publicApi.api.postDashboardNewfilesofusersmetabydtypebyrange(params).then((res) => res.data)
+}
 const GetCoCountMetaFilterApi = async (params: any) => {
-  if (params.creator)
-    return await publicApi.api
-      .postDashboardNewfilesofspecifyuserbydtypebyrangefiltermatedata(params)
-      .then((res) => res.data);
-  return await publicApi.api
-    .postDashboardNewfilesofuserbydtypebyrangefiltermatedata(params)
-    .then((res) => res.data);
-};
+  if (params.creator) return await publicApi.api.postDashboardNewfilesofspecifyuserbydtypebyrangefiltermatedata(params).then((res) => res.data)
+  return await publicApi.api.postDashboardNewfilesofuserbydtypebyrangefiltermatedata(params).then((res) => res.data)
+}
 async function getMetaData() {
   const params: any = {
     groupByMetadatas: props.setting.displayList.map((item) => item.meta),
     primaryType: props.setting.documentType,
-    creator: state.filterUser,
-  };
+    creator: state.filterUser
+  }
   if (props.dates) {
-    params.isQueryList = true;
+    params.isQueryList = true
     params.dateRange = {
       from: props.dates[0],
-      to: props.dates[1],
-    };
+      to: props.dates[1]
+    }
   }
   try {
-    metaData.value = await GetCoCountMetaApi(params);
+    metaData.value = await GetCoCountMetaApi(params)
   } catch (error) {}
 }
 async function handleDrillDownBack() {
-  state.drillDownParams = {};
-  state.drillDownBackLoading = true;
+  state.drillDownParams = {}
+  state.drillDownBackLoading = true
   try {
-    await getMetaData();
-    state.drillDownFlag = false;
+    await getMetaData()
+    state.drillDownFlag = false
   } catch (error) {}
-  state.drillDownBackLoading = false;
+  state.drillDownBackLoading = false
 }
 async function handleDrillDown(metaParams) {
-  state.drillDownParams[metaParams.meta] = metaParams.key;
+  state.drillDownParams[metaParams.meta] = metaParams.key
   try {
     const params: any = {
       filterByMetaDatas: state.drillDownParams,
       creator: state.filterUser,
       primaryType: props.setting.documentType,
-      groupByMetadatas: props.setting.displayList.map((item) => item.meta),
-    };
+      groupByMetadatas: props.setting.displayList.map((item) => item.meta)
+    }
     if (props.dates) {
-      params.isQueryList = true;
+      params.isQueryList = true
       params.dateRange = {
         from: props.dates[0],
-        to: props.dates[1],
-      };
+        to: props.dates[1]
+      }
     }
-    metaData.value = await GetCoCountMetaFilterApi(params);
-    state.drillDownFlag = true;
+    metaData.value = await GetCoCountMetaFilterApi(params)
+    state.drillDownFlag = true
   } catch (error) {}
 }
 function handleDelete() {
-  emits("delete");
+  emits('delete')
 }
 function handleRefresh(chartSetting) {
-  emits("refreshSetting", chartSetting);
+  emits('refreshSetting', chartSetting)
 }
 watchDebounced(
   () => [props.setting, props.dates],
   (newValue, oldValue) => {
-    if (!props.setting) return;
+    if (!props.setting) return
     if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-      getMetaData();
-      state.filterUser = newValue[0].user;
+      getMetaData()
+      state.filterUser = newValue[0].user
     }
   },
   { debounce: 200, maxWait: 500, immediate: true }
-);
+)
 defineExpose({
-  resize,
-});
+  resize
+})
 </script>
 
 <style lang="scss" scoped>
-.dashboard-item-main {
-  display: grid;
-  grid-template-rows: min-content 1fr;
-  overflow: hidden;
-  background-color: var(--setting-color, #fff);
-}
-.dashboard-item-main :deep(.el-card__body) {
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.dashboard-item-main :deep(.el-card__header) {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: unset;
-  padding: var(--app-space-xs) var(--app-space-xs) 0;
-  h4 {
-    padding: unset;
-    margin: unset;
-    color: #464646;
-    font-size: 18px;
-    font-family: Arial;
-  }
-}
 .trendContainer {
+  width: 100%;
   display: flex;
   flex-flow: row wrap;
   container-type: inline-size;
@@ -226,6 +160,7 @@ defineExpose({
   display: flex;
   flex-flow: row wrap;
   container-type: inline-size;
+  padding: 0 var(--el-card-padding);
 }
 @container (min-width: 640px) {
   .co-count {
