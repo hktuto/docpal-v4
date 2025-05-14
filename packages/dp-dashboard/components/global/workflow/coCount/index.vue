@@ -1,24 +1,12 @@
 <template>
-  <el-card
-    class="dashboard-item dashboard-item-main"
-    :style="`--setting-color:${setting.color}`"
-  >
-    <template #header="{ close, titleId, titleClass }">
-      <h4>
-        {{ setting.workflowName || setting.workflow }}
-        <DashboardUserFilter
-          class="el-icon--right"
-          :user="state.filterUser"
-          :show="setting.showUserFilter"
-          @refreshSetting="handleFilterUser"
-        ></DashboardUserFilter>
-      </h4>
-      <SvgIcon
-        v-if="!hideSetting"
-        src="/icons/setting.svg"
-        style="--icon-size: 1.14rem; --icon-color: #8796a4"
-        @click="openSetting"
-      />
+  <DashboardCard ref="cardRef" :title="$t(setting.workflowName || setting.workflow)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+    <template #title_suffix>
+      <DashboardUserFilter
+        class="el-icon--right"
+        :user="state.filterUser"
+        :show="setting.showUserFilter"
+        @refreshSetting="handleFilterUser"
+      ></DashboardUserFilter>
     </template>
     <div class="chartContainer">
       <component
@@ -28,79 +16,76 @@
         :is="widgetComponent[item]"
         :ref="
           (el) => {
-            displayListRef[item] = el;
+            displayListRef[item] = el
           }
         "
+        :setting="setting"
         :workflow="setting.workflow"
         :user="state.filterUser"
       ></component>
     </div>
-    <WorkflowCoCountDialog
-      ref="settingRef"
-      @delete="handleDelete"
-      @refresh="handleRefresh"
-    />
-  </el-card>
+    <WorkflowCoCountDialog ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+  </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import { watchDebounced } from "@vueuse/core";
-import { widgetComponent } from "~/utils/dashboardWidgetHelper";
+import { watchDebounced } from '@vueuse/core'
+import { widgetComponent } from '~/utils/dashboardWidgetHelper'
 
 const props = withDefaults(
   defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean;
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
   }>(),
   {
     setting: {},
-    hideSetting: false,
+    hideSetting: false
   }
-);
-const emits = defineEmits(["refreshSetting", "delete"]);
+)
+const emits = defineEmits(['refreshSetting', 'delete'])
 const state = reactive({
-  filterUser: "",
-});
-const displayListRef = ref({});
+  filterUser: ''
+})
+const displayListRef = ref({})
 function resize() {
   Object.keys(displayListRef.value).forEach((key) => {
-    const item = displayListRef.value[key];
-    if (item) item.resize();
-  });
+    const item = displayListRef.value[key]
+    if (item) item.resize()
+  })
 }
-const settingRef = ref();
+const settingRef = ref()
 function openSetting() {
-  settingRef.value.handleOpen(props.setting);
+  settingRef.value.handleOpen(props.setting)
 }
 function handleDelete() {
-  emits("delete");
+  emits('delete')
 }
 function handleRefresh(chartSetting) {
-  emits("refreshSetting", chartSetting);
+  emits('refreshSetting', chartSetting)
 }
 function handleFilterUser(user) {
-  state.filterUser = user;
+  state.filterUser = user
 }
 
 watchDebounced(
   () => props.setting,
   (newValue, oldValue) => {
-    if (props.setting) return;
+    if (props.setting) return
     if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-      state.filterUser = newValue.user;
+      state.filterUser = newValue.user
     }
   },
   {
     debounce: 200,
     maxWait: 500,
     immediate: true,
-    deep: true,
+    deep: true
   }
-);
+)
 defineExpose({
-  resize,
-});
+  resize
+})
 </script>
 
 <style lang="scss" scoped>

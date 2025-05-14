@@ -240,7 +240,7 @@ const dbSetting = {
   defaultSetting: {}
 }
 const emits = defineEmits(['refreshSetting', 'delete'])
-let { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
   props,
   initStyleActionExtend: (pHeight, pWidth) => {
     chartWidth = Math.min(pWidth, pHeight)
