@@ -21,7 +21,7 @@ const props = withDefaults(
   }
 )
 const { t } = useI18n()
-let { chartRef, cardRef, resize, handleInitCard } = useDashboardCard({
+const { chartRef, cardRef, resize, handleInitCard } = useDashboardCard({
   props,
   initStyleAction: () => {
     initStyle()

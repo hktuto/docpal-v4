@@ -1,6 +1,4 @@
 <template>
-  <!-- <el-card ref="cardRef" class="dashboard-item-main"> -->
-  <!-- <el-button @click="handleDelete"></el-button> -->
   <div ref="cardRef" class="dashboard-item dashboard-item-progress" :style="`--icon-size: ${state.iconSize}`">
     <el-progress type="circle" :percentage="state.percentage" :stroke-width="state.width / 8" :width="state.width" :color="setting.color">
       <SvgIcon :content="`${state.percentage}%`" :src="setting.icon" @dblclick="openSetting" />
@@ -11,7 +9,6 @@
     </div>
     <DocCountSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </div>
-  <!-- </el-card> -->
 </template>
 
 <script lang="ts" setup>
@@ -47,7 +44,7 @@ function initStyle() {
   state.iconSize = state.width / 3 + 'px'
 }
 
-let { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
   props,
   initStyleAction: () => {
     initStyle()

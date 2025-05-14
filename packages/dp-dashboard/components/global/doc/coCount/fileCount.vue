@@ -20,7 +20,7 @@ const props = withDefaults(
 const { t } = useI18n()
 const emits = defineEmits(['refreshSetting', 'delete'])
 
-let { chartRef, cardRef, resize } = useDashboardCard({
+const { chartRef, cardRef, resize } = useDashboardCard({
   props,
   initStyleAction: () => {
     initStyle()

@@ -21,7 +21,7 @@ const props = withDefaults(
   }
 )
 const emits = defineEmits(['refreshSetting', 'delete'])
-let { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
   props,
   initStyleAction: () => {
     initStyle()
