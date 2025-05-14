@@ -217,6 +217,7 @@ export async function getUserPreference() {
     const timeBus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME);
     timeBus.emit(preference.value.metaDateFormat);
   }
+  
 }
 
 async function getUser() {

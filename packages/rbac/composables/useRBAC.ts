@@ -26,7 +26,29 @@ export const useRBAC = () => {
   const users = useUserList()
 
   const flatRole = useState<string[]>('flatRole', () => ([]))
-
+  const right = [
+    {
+      title: "Read",
+      field: "permission.read",
+      slots:{
+        default:"read"
+      }
+    },
+    {
+      title: "ReadWrite",
+      field: "permission.readWrite",
+      slots:{
+        default:"readWrite"
+      }
+    },
+    {
+      title: "Manage",
+      field: "permission.manage",
+      slots:{
+        default:"manage"
+      }
+    }
+  ]
   function init(){
     const localRole = localStorage.getItem('demo_role')
     if(localRole){
@@ -54,6 +76,7 @@ export const useRBAC = () => {
   return {
     save,
     init,
+    right,
     flatRole
   }
 
