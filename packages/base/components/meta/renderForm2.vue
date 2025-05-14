@@ -223,7 +223,7 @@ function getAIFormJson(formJson: any) {
   return { formConfig: formJson.formConfig, widgetList }
 }
 function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
-  return `if(!/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
+  return `if((value || value === 0 || value === false) && !/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
 }
 function clear() {
   state.variables = []
