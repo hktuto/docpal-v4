@@ -292,12 +292,11 @@ async function openForm(node: Node) {
   // console.log(selectedStep.value?.data.extensionElements['flowable:formProperty'] , fieldListApi.value)
 }
 
-const copyKey = ref('')
-const copyObj = ref<any>()
+const copyKey = useState('copy-key', "")
+const copyObj = useState('copy-obj', null)
 async function copyForm(node: Node, obj: any) {
   copyKey.value = node.data.id
   copyObj.value = obj
-  console.log('copyed', copyObj.value, node.data)
   routerProvider?.message.success(`${node.data.name || node.data.id} form has copied`)
 }
 async function pasteForm(node: Node) {
