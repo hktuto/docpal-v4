@@ -39,6 +39,7 @@ export interface UseVxeTableParams<R = any> {
     saveColumnOrder?:boolean,
     virtualScroll?:boolean,
     pageSize?:number,
+    refresh?:boolean,
     zoom?:boolean,
     dblClickAction?:({row, column, event}:any) => void,
     headerActions?:TableMenuActions[][],
@@ -73,6 +74,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         saveColumnOrder = true, 
         columns = [], 
         zoom =true,
+        refresh = true,
         permissionMethod = () => {return {visible:true, disabled: false}},
         bodyActions : actions = [],
         selectChangeHander = () => { console.log("defauilt selectChangeHander, please implement") },
@@ -100,6 +102,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         toolbarConfig:{
             custom: saveColumnOrder ,
             zoom,
+            refresh,
             slots: {
                 buttons: 'toolbar_buttons'
             }
