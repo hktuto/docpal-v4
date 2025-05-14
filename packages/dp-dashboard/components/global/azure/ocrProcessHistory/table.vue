@@ -1,5 +1,5 @@
 <template>
-  <div class="pageContainer--padding">
+  <div style="height: 100%;overflow: hidden;">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <ResponsiveFilter
