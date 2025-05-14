@@ -4,6 +4,7 @@ const emits = defineEmits(['delete', 'refreshSetting', 'openSetting'])
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
+    showSetting: boolean
     showSkeleton: boolean
     hideSetting: boolean
     title: string
@@ -11,6 +12,7 @@ const props = withDefaults(
     setting: any
   }>(),
   {
+    showSetting: true,
     showSkeleton: false,
     hideSetting: false,
     title: 'title'
@@ -47,7 +49,7 @@ defineExpose({
         </h4>
 
         <div class="flex-x-end">
-          <SvgIcon v-if="!hideSetting" class="" src="/icons/setting.svg" @click="openSetting" />
+          <SvgIcon v-if="!hideSetting && showSetting" class="" src="/icons/setting.svg" @click="openSetting" />
           <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg" @click="handleDelete" />
         </div>
       </slot>
@@ -59,7 +61,11 @@ defineExpose({
 
 <style lang="scss" scoped>
 .el-card {
+  --dashboard-item-padding: 4px;
   height: 100%;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  overflow: hidden;
 }
 :deep .el-card__header {
   margin: 0;
@@ -86,6 +92,7 @@ defineExpose({
   padding: 0;
   margin: 0 auto;
   width: 100%;
+  overflow: hidden;
 }
 :deep h4 {
   padding: unset;
