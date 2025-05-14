@@ -192,7 +192,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         minW: 4,
         minH: 2,
         maxW: 12,
-        maxH: 6,
+        maxH: 8,
         w: 12,
         h: 5,
         component : 'AzureOcrProcessed',
