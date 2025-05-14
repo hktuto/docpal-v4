@@ -15,7 +15,7 @@ export type useDashboardCardParams = {
 }
 export const useDashboardCard = (params: useDashboardCardParams) => {
   const props = params.props
-  let echartInstance
+  let echartInstance 
   const chartRef = ref()
   const cardRef = ref()
   const settingRef = ref()
@@ -45,6 +45,9 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
       params.handleInitCardAction(chartSetting)
     }
     if (params.onClick) params.onClick(echartInstance)
+  }
+  const getInstance = () => {
+    return echartInstance
   }
   const resize = () => {
     setTimeout(() => {
@@ -83,6 +86,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     settingRef,
     initChart,
     resize,
-    handleInitCard
+    handleInitCard,
+    getInstance
   }
 }
