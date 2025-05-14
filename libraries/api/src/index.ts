@@ -13,17 +13,17 @@ let publicBaseURL = '/public-api/report/v1/api'
 
 export const clientApi = new Client({
     baseURL:clientBaseURL,
-    timeout: 30000,
+    timeout: 300000,
 })
 
 export const adminApi = new Admin({
     baseURL:adminBaseURL,
-    timeout: 30000,
+    timeout: 300000,
 })
 
 export const publicApi = new Public({
     baseURL:publicBaseURL,
-    timeout: 30000,
+    timeout: 300000,
 })
 // if node env mode is dev set proxy
 
