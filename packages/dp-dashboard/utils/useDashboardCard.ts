@@ -1,7 +1,7 @@
 import { useEventListener, watchDebounced } from '@vueuse/core'
 import * as echarts from 'echarts'
 export type useDashboardCardParams = {
-  initStyleAction?: () => void
+  initStyleAction?: (cardRef, chartRef) => void
   initStyleActionExtend?: (pHeight: number, pWidth: number) => void
   resizeAction?: () => void
   resizeActionExtend?: () => void
@@ -22,7 +22,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
 
   const initStyle = () => {
     if (params.initStyleAction) {
-      params.initStyleAction()
+      params.initStyleAction(cardRef, chartRef)
     } else {
       const pHeight = cardRef.value.$el.offsetHeight - 36 // - header
       const pWidth = cardRef.value.$el.offsetWidth - 20
