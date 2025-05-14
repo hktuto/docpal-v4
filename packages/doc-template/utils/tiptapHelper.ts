@@ -5,7 +5,8 @@ import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import SuperScript from '@tiptap/extension-superscript'
 import Underline from '@tiptap/extension-underline'
-import FontSize from "@tiptap/extension-font-size"
+import FontSize from '@tiptap/extension-font-size'
+import { Color } from '@tiptap/extension-color'
 
 import Document from '@tiptap/extension-document'
 
@@ -24,29 +25,38 @@ import ListKeymap from '@tiptap/extension-list-keymap'
 import Heading from '@tiptap/extension-heading'
 import Text from '@tiptap/extension-text'
 import Paragraph from '@tiptap/extension-paragraph'
+import Strike from '@tiptap/extension-strike'
+import Subscript from '@tiptap/extension-subscript'
+import Code from '@tiptap/extension-code'
+import CodeBlock from '@tiptap/extension-code-block'
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import { all, createLowlight } from 'lowlight'
+import hljs from 'highlight.js'
+
 // utils
+import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Gapcursor from '@tiptap/extension-gapcursor'
 import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
 import History from '@tiptap/extension-history'
-import {VariableText} from './variable/text'
+import VariableText from './variable/text'
 
-import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
+import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from 'tiptap-extension-pagination'
 
-
+const lowlight = createLowlight(all)
 export type TipTapOptions = {
   textCount?: number,
   mode: 'PAGE' | 'ENDLESS',
-  pageSetting ?: pageSettingOptions,
+  pageSetting?: pageSettingOptions,
   theme: {
     fontSize: 12,
-    fontColor: "#000000",
-    fontBackgroundColor: "#ffffff",
-    fontFamily: "",
+    fontColor: '#000000',
+    fontBackgroundColor: '#ffffff',
+    fontFamily: '',
     bodyFontSize: 20,
     h1FontSize: 20,
-    highlightColor: "#ffff00"
+    highlightColor: '#ffff00'
   }
 }
 
@@ -64,7 +74,7 @@ export type pageSettingOptions = {
     right: number,
   },
   defaultPaperColour: string,
-  defaultPaperOrientation: "portrait" | "landscape",
+  defaultPaperOrientation: 'portrait' | 'landscape',
   defaultPaperSize: string,
   pageAmendmentOptions: {
     enableHeader: boolean,
@@ -86,25 +96,25 @@ const defaultPageSetting: pageSettingOptions = {
     left: 1,
     right: 1
   },
-  defaultPaperColour: "#fff",
-  defaultPaperOrientation: "portrait",
-  defaultPaperSize: "A4",
+  defaultPaperColour: '#fff',
+  defaultPaperOrientation: 'portrait',
+  defaultPaperSize: 'A4',
   pageAmendmentOptions: {
     enableHeader: false,
     enableFooter: false
   }
-};
+}
 
 export function normalizeTipTapOptions(options: TipTapOptions) {
   //defautl mode is page
   if (!options.mode) {
     options.mode = 'PAGE'
   }
-  if(options.mode === 'PAGE') {
+  if (options.mode === 'PAGE') {
     // normalize page setting here
-    if(!options.pageSetting)  {
+    if (!options.pageSetting) {
       options.pageSetting = defaultPageSetting
-    }else{
+    } else {
       options.pageSetting = Object.assign(defaultPageSetting, options.pageSetting)
     }
   }
@@ -113,57 +123,65 @@ export function normalizeTipTapOptions(options: TipTapOptions) {
 
 export const setupExtensions = (options: TipTapOptions) => {
   const extensions = [
-      Heading,
-      Document,
-      // text
-      Text,
-      Paragraph,
-      Image,
-      //list
-      BulletList,
-      OrderedList,
-      ListItem,
-      ListKeymap,
-      // style
-      Bold,
-      Italic,
-      Highlight.configure({ multicolor: true }),
-      Underline,
-      SuperScript,
-      Link.configure({
-        openOnClick: false,
-        // defaultProtocol: "https"
-      }),
-      FontSize,
-      // table
-      Table.configure({
-        resizable: true,
-      }),
-      TableRow,
-      TableHeader,
-      TableCell,
-      // custom 
-      VariableText,
-      // utils
-      CharacterCount.configure({
-        limit: options?.textCount || null,
-      }),
-      TextStyle.configure({ mergeNestedSpanStyles: true }),
-      FontFamily,
-      Gapcursor,
-      History,
-      
-      
+    Heading.configure({
+      levels: [1, 2, 3, 4, 5]
+    }),
+    Document,
+    // text
+    Text,
+    Paragraph,
+    Strike,
+    Subscript,
+    Image,
+    Code,
+    CodeBlock,
+    CodeBlockLowlight.configure({ lowlight }),
+    hljs,
+    //list
+    BulletList,
+    OrderedList,
+    ListItem,
+    ListKeymap,
+    // style
+    Bold,
+    Italic,
+    Highlight.configure({ multicolor: true }),
+    Underline,
+    SuperScript,
+    Link.configure({
+      openOnClick: false
+      // defaultProtocol: "https"
+    }),
+    FontSize,
+    Color,
+    // table
+    Table.configure({
+      resizable: true,
+    }),
+    TableRow,
+    TableHeader,
+    TableCell,
+    // custom
+    VariableText,
+    // utils
+    HorizontalRule,
+    CharacterCount.configure({
+      limit: options?.textCount || null
+    }),
+    TextStyle.configure({ mergeNestedSpanStyles: true }),
+    FontFamily,
+    Gapcursor,
+    History
   ]
-  if(options?.mode === 'PAGE') {
+  if (options?.mode === 'PAGE') {
     extensions.unshift(
       PaginationExtension.configure({
         defaultPaperSize: options.pageSetting?.defaultPaperSize || 'A4',
         defaultPaperOrientation: options.pageSetting?.defaultPaperOrientation || 'portrait',
         defaultMarginConfig: options.pageSetting?.defaultPageBorders || {
-            top: 5, right: 5, bottom: 5, left: 5
-          },
-          
+          top: 5, right: 5, bottom: 5, left: 5
+        },
+
         defaultPageBorders: { top: 1, right: 1, bottom: 1, left: 1 },
         pageAmendmentOptions: {
           enableHeader: false,

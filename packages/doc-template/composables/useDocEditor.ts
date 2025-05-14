@@ -1,52 +1,68 @@
-import type { DocumentOptions, ToolSection } from "~/utils/docTempalteHelper";
+import type { DocumentOptions, ToolSection } from '~/utils/docTempalteHelper'
 
 
 export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
   [
     {
-      name: "Home",
+      name: 'Home',
       tools: [
         {
-          name: "Undo Redo",
-          components: "lazyDocTemplateSettingUndo"
+          name: 'Undo Redo',
+          components: 'lazyDocTemplateSettingUndo'
         },
         {
-          name: "Text Setting",
-          components: "lazyDocTemplateSettingText"
+          name: 'Text Setting',
+          components: 'lazyDocTemplateSettingText'
         },
         {
-          name: "import",
-          components: "lazyDocTemplateSettingImport"
+          name: 'import',
+          components: 'lazyDocTemplateSettingImport'
         },
         {
-          name: "export",
-          components: "lazyDocTemplateSettingExport"
+          name: 'export',
+          components: 'lazyDocTemplateSettingExport'
         },
         {
-          name:'font',
-          components: "lazyDocTemplateContentToolbarFont"
+          name: 'font',
+          components: 'lazyDocTemplateContentToolbarFont'
+        },
+        {
+          name: 'paragraph',
+          components: 'lazyDocTemplateContentToolbarParagraph'
+        },
+        {
+          name: 'fontStyle',
+          components: 'lazyDocTemplateContentToolbarFontStyle'
+        },
+        {
+          name: 'auxiliary',
+          components: 'lazyDocTemplateContentToolbarAuxiliary'
+        },
+        {
+          name: 'table',
+          components: 'lazyDocTemplateContentToolbarTable'
         }
       ]
     },
     {
-      name: "Page",
+      name: 'Page',
       tools: [
         {
-          name: "Page Setting",
-          components: "lazyDocTemplateSettingPage"
+          name: 'Page Setting',
+          components: 'lazyDocTemplateSettingPage'
         }
       ]
     },
     {
-      name: "Image",
+      name: 'Image',
       tools: []
     }
   ]
-));
+))
 
 export const useDocExtendElement = () => useState<any[]>('docExtendEelement', () => ([
   {
-    name: "Bubble Menu",
-    components: "lazyDocTemplateSettingBubbleMenu"
+    name: 'Bubble Menu',
+    components: 'lazyDocTemplateSettingBubbleMenu'
   }
 ]))
