@@ -532,7 +532,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 function getPageSize(id: string){
   let pageSize = 20
   const tableSetting = useUserPreference().value.tableSettings[id]
-  if (tableSetting.tablePageSize){
+  if (Object.keys(tableSetting).includes('tablePageSize')){
     pageSize = tableSetting.tablePageSize
   }
   return  pageSize
