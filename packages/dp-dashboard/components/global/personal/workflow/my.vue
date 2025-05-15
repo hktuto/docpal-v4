@@ -1,5 +1,5 @@
 <template>
-  <div class="pageContainer">
+  <div class="table-container">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     </VxeGrid>
   </div>

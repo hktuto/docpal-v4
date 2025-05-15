@@ -1,5 +1,5 @@
 <template>
-  <DashboardCard ref="cardRef" class="dp-dashboard--card__padding" :title="$t('dashboard.azureOcrProcessedHistory')" :showSetting="false" :setting="setting" @delete="handleDelete">
+  <DashboardCard ref="cardRef" :hideSetting="hideSetting" class="dp-dashboard--card__padding" :title="$t('dashboard.azureOcrProcessedHistory')" :setting="setting" @delete="handleDelete">
     <AzureOcrProcessHistoryTable ref="tableRef" :dates="dates" />
   </DashboardCard>
 </template>

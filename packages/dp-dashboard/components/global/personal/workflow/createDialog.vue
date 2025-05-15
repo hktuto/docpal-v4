@@ -18,9 +18,6 @@
 
     <template #footer>
       <div class="footer-grid">
-        <el-button type="danger" @click="handleDelete">{{
-          $t("common_delete")
-        }}</el-button>
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
           $t("common_submit")
         }}</el-button>
@@ -30,8 +27,7 @@
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from "element-plus";
-import { clientApi } from "api";
-const props = defineProps(["setting"]);
+const props = defineProps(["setting", "workflowList", "workflowAList"]);
 const emits = defineEmits(["refresh", "delete"]);
 const { t } = useI18n()
 
@@ -64,27 +60,14 @@ function handleOpen(setting) {
   state.loading = true
   setTimeout(async () => {
     state.setting = setting;
-    if(!setting.workflowList) setting.workflowList = []
+    let workflowList = props.workflowList ? [...props.workflowList] : []
     if(!setting.workflowKeys) setting.workflowKeys = []
-    form.value.workflowList = [...setting.workflowList];
+    form.value.workflowList = workflowList
     state.loading = false;
     
-    state.workflowAList = state.workflowAList.filter(item => !setting.workflowKeys.includes(item.key))
+    state.workflowAList = props.workflowAList.filter(item => !setting.workflowKeys.includes(item.key))
   });
 }
-async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
-  emits("delete");
-  state.visible = false;
-}
-async function getWorkflowList() {
-  state.workflowAList = await clientApi.api.postWorkflowProcessList({}).then(res => res.data);
-}
-onMounted(() => {
-  getWorkflowList()
-});
-
 defineExpose({ handleOpen });
 </script>
 <style lang="scss" scoped>

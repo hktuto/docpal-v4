@@ -56,18 +56,5 @@
       top: var(--app-space-xs);
       z-index: 5;
     }
-    &--content {
-      height: 100%;
-      display: grid;
-      grid-template-rows: min-content 1fr;
-      overflow: hidden;
-      &--table {
-        overflow: hidden;
-      }
-      .el-tabs {
-        width: 100%;
-        overflow: hidden;
-      }
-    }
   }
 }

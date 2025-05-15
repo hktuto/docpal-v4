@@ -51,7 +51,7 @@ const state = reactive<any>({
 })
 const list = [
   { name: 'workflow_myTask', key: 'myTask' },
-  { name: 'workflow_ActiveTask', key: 'activeTask' },
+  { name: 'workflow_activeTask', key: 'activeTask' },
   { name: 'workflow_allTask', key: 'allTask' },
 ]
 function handleCommand(command: string | number | object) {
