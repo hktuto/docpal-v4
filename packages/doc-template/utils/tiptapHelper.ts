@@ -30,6 +30,7 @@ import Subscript from '@tiptap/extension-subscript'
 import Code from '@tiptap/extension-code'
 import CodeBlock from '@tiptap/extension-code-block'
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
+import TextAlign from '@tiptap/extension-text-align'
 import { all, createLowlight } from 'lowlight'
 import hljs from 'highlight.js'
 
@@ -41,6 +42,9 @@ import CharacterCount from '@tiptap/extension-character-count'
 import TextStyle from '@tiptap/extension-text-style'
 import History from '@tiptap/extension-history'
 import VariableText from './variable/text'
+import Typography from '@tiptap/extension-typography'
+import TaskItem from '@tiptap/extension-task-item'
+import TaskList from '@tiptap/extension-task-list'
 
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from 'tiptap-extension-pagination'
 
@@ -134,6 +138,9 @@ export const setupExtensions = (options: TipTapOptions) => {
     Subscript,
     Image,
     Code,
+    TextAlign.configure({
+      types: ['heading', 'paragraph'],
+    }),
     CodeBlock,
     CodeBlockLowlight.configure({ lowlight }),
     hljs,
@@ -168,10 +175,15 @@ export const setupExtensions = (options: TipTapOptions) => {
     CharacterCount.configure({
       limit: options?.textCount || null
     }),
+    TaskList,
+    TaskItem.configure({
+      nested: true,
+    }),
     TextStyle.configure({ mergeNestedSpanStyles: true }),
     FontFamily,
     Gapcursor,
-    History
+    History,
+    Typography
   ]
   if (options?.mode === 'PAGE') {
     extensions.unshift(
