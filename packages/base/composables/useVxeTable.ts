@@ -40,6 +40,7 @@ export interface UseVxeTableParams<R = any> {
     virtualScroll?:boolean,
     pageSize?:number,
     refresh?:boolean,
+    refreshCode?:string,
     zoom?:boolean,
     dblClickAction?:({row, column, event}:any) => void,
     headerActions?:TableMenuActions[][],
@@ -74,7 +75,9 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         saveColumnOrder = true,
         columns = [],
         zoom =true,
-        refresh = true,
+        refresh = {
+            code: 'reload'
+        },
         permissionMethod = () => {return {visible:true, disabled: false}},
         bodyActions : actions = [],
         selectChangeHander = () => { console.log("defauilt selectChangeHander, please implement") },
@@ -218,6 +221,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 
     if(params.customeToolBar){
         tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
+    }
+
+    if (params?.refreshCode){
+      tableConfig.toolbarConfig.refresh = { code: params.refreshCode}
     }
 
     // #region handle actions column
@@ -532,7 +539,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 function getPageSize(id: string){
   let pageSize = 20
   const tableSetting = useUserPreference().value.tableSettings[id]
-  if (Object.keys(tableSetting).includes('tablePageSize')){
+  if (tableSetting?.tablePageSize){
     pageSize = tableSetting.tablePageSize
   }
   return  pageSize
