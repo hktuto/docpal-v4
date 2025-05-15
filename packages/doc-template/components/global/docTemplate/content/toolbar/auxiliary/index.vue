@@ -53,6 +53,13 @@ function handleSetLink() {
   state.fontLinkDialogVisible = false
 }
 
+/**
+ * Set the selected string to task list
+ */
+function handleTaskList(){
+  editor.value.chain().focus().toggleTaskList().run()
+}
+
 </script>
 
 <template>
@@ -73,6 +80,12 @@ function handleSetLink() {
     <!-- font link -->
     <el-button @click="openSetLinkDialog">
       <p>🔗</p>
+    </el-button>
+  </div>
+
+  <div>
+    <el-button @click="handleTaskList" :class="{ 'is-active': editor.isActive('taskList') }">
+      Toggle task list
     </el-button>
   </div>
 

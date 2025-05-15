@@ -234,32 +234,32 @@ function handleSuperscript() {
 
   <div>
     <!-- font bold  -->
-    <el-button @click="handleFontBoldChange">
+    <el-button @click="handleFontBoldChange" :class="{ 'is-active': editor.isActive('bold') }">
       <p style="font-weight: bold">B</p>
     </el-button>
 
     <!--  font italic  -->
-    <el-button @click="handleFontItalicChange">
+    <el-button @click="handleFontItalicChange" :class="{ 'is-active': editor.isActive('italic') }">
       <p><em>I</em></p>
     </el-button>
 
     <!--  font Underline  -->
-    <el-button @click="handleUnderline">
+    <el-button @click="handleUnderline" :class="{ 'is-active': editor.isActive('underline') }">
       <p><u>U</u></p>
     </el-button>
 
     <!--  font Strike  -->
-    <el-button @click="handleStrike">
+    <el-button @click="handleStrike" :class="{ 'is-active': editor.isActive('strike') }">
       <p><s>abc</s></p>
     </el-button>
 
     <!--  font Subscript  -->
-    <el-button @click="handleSubscript">
+    <el-button @click="handleSubscript" :class="{ 'is-active': editor.isActive('subscript') }">
       <p>X<sub>2</sub></p>
     </el-button>
 
     <!--  font Superscript  -->
-    <el-button @click="handleSuperscript">
+    <el-button @click="handleSuperscript" :class="{ 'is-active': editor.isActive('superscript') }">
       <p>X<sup>2</sup></p>
     </el-button>
 

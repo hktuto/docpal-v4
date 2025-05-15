@@ -58,17 +58,42 @@ function handleTableCreateCol(state: boolean) {
   } else {
     editor.value.chain().focus().addColumnAfter().run()
   }
+}
 
+/**
+ * @param state (true: row, false: col)
+ */
+function handleTableToggleHeaderRowOrColumn(state: boolean) {
+  if (state) {
+    editor.value.chain().focus().toggleHeaderRow().run()
+  } else {
+    editor.value.chain().focus().toggleHeaderColumn().run()
+  }
+}
+
+/**
+ * @param state (true: merge, false: split)
+ */
+function handleTableCellsMergeOrSplit(state: boolean) {
+  if (state) {
+    editor.value.chain().focus().mergeCells().run()
+  } else {
+    editor.value.chain().focus().splitCell().run()
+  }
+}
+
+function handleFixTables() {
+  editor.value.chain().focus().fixTables().run()
 }
 
 </script>
 
 <template>
   <div>
-    <el-popover :visible="state.createTablePopoverVisible" placement="right" :width="300" title="Create Table"
+    <el-popover :visible="state.createTablePopoverVisible" placement="bottom" :width="300" title="Create Table"
                 trigger="click">
       <template #reference>
-        <el-button style="margin-right: 16px" placement="bottom" @click="state.createTablePopoverVisible = true">
+        <el-button style="margin-right: 16px" @click="state.createTablePopoverVisible = true">
           {{ $t('Create table') }}
         </el-button>
       </template>
@@ -92,6 +117,7 @@ function handleTableCreateCol(state: boolean) {
         </div>
       </el-form>
     </el-popover>
+
     <div>
       <el-button-group>
         <el-button @click="handleDeleteTable">
@@ -104,6 +130,7 @@ function handleTableCreateCol(state: boolean) {
           {{ t('Delete Col') }}
         </el-button>
       </el-button-group>
+
       <el-button-group>
         <el-button @click="handleTableCreateRow(true)">
           {{ t('Add row up') }}
@@ -122,6 +149,32 @@ function handleTableCreateCol(state: boolean) {
         </el-button>
       </el-button-group>
     </div>
+
+    <div>
+      <el-button-group>
+        <el-button @click="handleTableToggleHeaderRowOrColumn(true)">
+          Toggle header row
+        </el-button>
+        <el-button @click="handleTableToggleHeaderRowOrColumn(false)">
+          Toggle header column
+        </el-button>
+      </el-button-group>
+
+      <el-divider direction="vertical" />
+
+      <el-button-group>
+        <el-button @click="handleTableCellsMergeOrSplit(true)">
+          Merge cells
+        </el-button>
+        <el-button @click="handleTableCellsMergeOrSplit(false)">
+          Split cell
+        </el-button>
+      </el-button-group>
+    </div>
+
+<!--    <el-button @click="handleFixTables">-->
+    <!--      Fix-->
+    <!--    </el-button>-->
 
 
   </div>
