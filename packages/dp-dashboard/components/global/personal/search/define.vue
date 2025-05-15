@@ -1,37 +1,26 @@
 <template>
-  <el-card ref="cardRef" class="dashboard-item dashboard-item-card">
-    <template #header="{ close, titleId, titleClass }">
-      <h4>{{ t('search.SearchDefine') }}</h4>
-      <Icon
-        id="Dashboard__Home__Detail__SearchDefine__Delete"
-        v-show="!hideSetting"
-        name="material-symbols:delete-rounded"
-        class="normal cursor-pointer"
-        style="font-size: 20px"
-        @click="handleDelete"
-      ></Icon>
-    </template>
-    <el-card v-if="!hideSetting" v-for="item in 2" :key="item" class="detail">
-      <el-skeleton :rows="4" />
-    </el-card>
-    <div
-      v-else
-      v-for="key in ['records', 'systemRecords']"
-      style="margin-bottom: var(--app-space-s)"
-    >
+  <DashboardCard
+    ref="cardRef"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="$t('search.SearchDefine')"
+    :setting="setting"
+    @delete="handleDelete"
+  >
+    <div v-if="!hideSetting" style="height: 100%; overflow: auto">
+      <el-card v-for="item in 2" :key="item" class="detail">
+        <el-skeleton :rows="4" />
+      </el-card>
+    </div>
+    <div v-else v-for="key in ['records', 'systemRecords']" style="margin-bottom: var(--app-space-s)">
       <h3>{{ t(`dpSearch.${key}`) }}</h3>
-      <div
-        v-for="item in state[key]"
-        class="search-bar-record__list__item flex-x-between"
-        @dblclick="handleDblclick(item)"
-      >
+      <div v-for="item in state[key]" class="search-bar-record__list__item flex-x-between" @dblclick="handleDblclick(item)">
         {{ item.label }}
       </div>
     </div>
-  </el-card>
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
 import { onMounted } from 'vue'
 import { clientApi } from 'api'
 
@@ -40,9 +29,9 @@ const { t } = useI18n()
 const emits = defineEmits(['dblclick', 'search', 'delete'])
 const props = withDefaults(
   defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean;
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
   }>(),
   {
     setting: {},
@@ -56,9 +45,6 @@ const state = reactive<any>({
   _systemRecords: [],
   input: ''
 })
-
-function resize() {
-}
 
 async function getList() {
   const { data } = (await clientApi.api.getNuxeoSearchQueryNestedSearchLog()) as any
@@ -74,13 +60,9 @@ async function getSystemRecords() {
   }))
   state._systemRecords = [...state.systemRecords]
 }
-
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
-  if (action !== 'confirm') return
   emits('delete')
 }
-
 function handleDblclick(row: any) {
   const query = JSON.parse(row.queryCondition)
   conditionDecorators(query)
@@ -92,11 +74,23 @@ onMounted(() => {
   getSystemRecords()
 })
 
-defineExpose({
-  resize
-})
 </script>
 <style lang="scss" scoped>
+.detail {
+  margin-bottom: var(--app-space-xs);
+  height: fit-content !important;
+  cursor: pointer;
+  :deep(.el-card__body) {
+    padding: var(--app-space-xs);
+  }
+  .el-divider {
+    margin: var(--app-space-xs) 0;
+  }
+  &:hover {
+    background-color: var(--app-primary-color);
+    color: #fff;
+  }
+}
 .search-bar-record {
   height: 100%;
   overflow: hidden;
