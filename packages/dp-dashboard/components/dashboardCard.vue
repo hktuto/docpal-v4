@@ -4,7 +4,6 @@ const emits = defineEmits(['delete', 'refreshSetting', 'openSetting'])
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
-    showSetting: boolean
     showSkeleton: boolean
     hideSetting: boolean
     title: string
@@ -12,7 +11,6 @@ const props = withDefaults(
     setting: any
   }>(),
   {
-    showSetting: true,
     showSkeleton: false,
     hideSetting: false,
     title: 'title'
@@ -43,13 +41,13 @@ defineExpose({
   <ElCard ref="cardRef" class="dp-dashboard--card">
     <template #header>
       <slot name="header">
-        <h4 v-if="title">
+        <h4>
           {{ title }}
           <slot name="title_suffix"></slot>
         </h4>
 
         <div class="flex-x-end">
-          <SvgIcon v-if="!hideSetting && showSetting" class="" src="/icons/setting.svg" @click="openSetting" />
+          <SvgIcon v-if="!hideSetting && settingRef" class="" src="/icons/setting.svg" @click="openSetting" />
           <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg" @click="handleDelete" />
         </div>
       </slot>
@@ -61,7 +59,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .el-card {
-  --dashboard-item-padding: 4px;
+  --dashboard-item-padding: var(--el-card-padding);
   height: 100%;
   display: grid;
   grid-template-rows: min-content 1fr;
@@ -82,10 +80,10 @@ defineExpose({
 }
 .dp-dashboard--card__padding {
   :deep .el-card__body {
-    padding: var(--el-card-padding)
+    padding: var(--el-card-padding);
   }
   :deep .el-card__header {
-    padding: var(--el-card-padding) !important
+    padding: var(--el-card-padding) !important;
   }
 }
 :deep .el-card__body {
@@ -97,5 +95,18 @@ defineExpose({
 :deep h4 {
   padding: unset;
   margin: unset;
+  flex: 1 0 auto;
+}
+:deep .table-container {
+  height: 100%;
+  overflow: hidden;
+  .vxe-toolbar {
+    display: none;
+  }
+}
+:deep .tab-container {
+  .el-tabs__header {
+    margin-bottom: 0;
+  }
 }
 </style>
