@@ -1,66 +1,47 @@
 <template>
-  <el-card ref="cardRef" class="dashboard-item dashboard-item-card">
-    <template #header="{ close, titleId, titleClass }">
-      <h4>{{ $t("search.recentSearchs") }}</h4>
-      <Icon
-        id="Dashboard__Home__Detail__RecentSearch__Delete"
-        v-show="!hideSetting"
-        name="material-symbols:delete-rounded"
-        class="normal cursor-pointer"
-        style="font-size: 20px"
-        @click="handleDelete"
-      ></Icon>
-    </template>
-    <el-card v-if="!hideSetting" v-for="item in 2" :key="item" class="detail">
-      <el-skeleton :rows="5" />
-    </el-card>
-    <SearchGroupBarRecentSearchList
-      v-else
-      ref="listRef"
-      @search="handleSearch"
-    ></SearchGroupBarRecentSearchList>
-  </el-card>
+  <DashboardCard
+    ref="cardRef"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="$t('search.recentSearchs')"
+    :setting="setting"
+    @delete="handleDelete"
+  >
+    <div v-if="!hideSetting" style="height: 100%; overflow: auto">
+      <el-card v-for="item in 2" :key="item" class="detail">
+        <el-skeleton :rows="5" />
+      </el-card>
+    </div>
+    <SearchGroupBarRecentSearchList v-else ref="listRef" @search="handleSearch"></SearchGroupBarRecentSearchList>
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from "element-plus";
-const emits = defineEmits(["setSearchParams", "delete"]);
-import {MenuRouterKey} from '#imports';
-const { t } = useI18n();
+const emits = defineEmits(['setSearchParams', 'delete'])
+import { MenuRouterKey } from '#imports'
 const routerProvider = inject(MenuRouterKey)
 const props = withDefaults(
   defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean;
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
   }>(),
   {
     setting: {},
-    hideSetting: false,
+    hideSetting: false
   }
-);
-const {
-  public: { endPoint },
-} = useRuntimeConfig();
+)
 
-function resize() {}
 function handleSearch(data: any) {
-  // sessionStorage.setItem("searchParams", JSON.stringify(data));
-  routerProvider?.navigateTo(routeSearch({searchParams: data }), false)
-  // router.push('/searchGroup')
+  routerProvider?.navigateTo(routeSearch({ searchParams: data }), false)
 }
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
-  emits("delete");
+  emits('delete')
 }
-defineExpose({
-  resize,
-});
 </script>
 <style lang="scss" scoped>
 .detail {
   margin-bottom: var(--app-space-xs);
-  height: fit-content!important;
+  height: fit-content !important;
   cursor: pointer;
   :deep(.el-card__body) {
     padding: var(--app-space-xs);
@@ -73,10 +54,7 @@ defineExpose({
     color: #fff;
   }
 }
-.center {
-  text-align: center;
-  padding: var(--app-space-xs);
-}
+
 .el-tag {
   max-width: 100%;
   overflow: hidden;

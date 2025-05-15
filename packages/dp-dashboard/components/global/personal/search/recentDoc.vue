@@ -1,20 +1,17 @@
 <template>
-  <el-card ref="cardRef" class="dashboard-item dashboard-item-card">
-    <template #header="{ close, titleId, titleClass }">
-      <h4>{{ $t('search.recentDocument') }}</h4>
-      <Icon
-        id="Dashboard__Home__Detail__RecentDocument__Delete"
-        v-show="!hideSetting"
-        name="material-symbols:delete-rounded"
-        class="normal cursor-pointer"
-        style="font-size: 20px"
-        @click="handleDelete"
-      ></Icon>
-    </template>
-    <el-skeleton v-if="!hideSetting" :rows="5" />
-    <VxeGrid v-else ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    </VxeGrid>
-  </el-card>
+  <DashboardCard
+    ref="cardRef"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="$t('search.recentDocument')"
+    :setting="setting"
+    @delete="handleDelete"
+  >
+    <div v-if="!hideSetting" style="height: 100%; overflow: auto">
+      <el-skeleton :rows="5" />
+    </div>
+    <VxeGrid v-else ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
@@ -24,34 +21,23 @@ import { MenuRouterKey } from '#imports'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 
-const props = withDefaults(defineProps<{
-  dates?: any;
-  setting?: any;
-  hideSetting?: boolean,
-}>(), {
-  setting: {},
-  hideSetting: false
-})
-
-const { public: { endPoint } } = useRuntimeConfig()
-
+const props = withDefaults(
+  defineProps<{
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
+  }>(),
+  {
+    setting: {},
+    hideSetting: false
+  }
+)
 const emits = defineEmits(['delete'])
-const pageParams = reactive({
-  pageNum: -1,
-  pageSize: 10
-})
-const state = reactive<any>({
-  loading: false,
-  scrollNoMore: false,
-  recentDocuments: []
-})
-
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'subscribed',
   zoom: false,
   saveColumnOrder: false,
-  api: (pageParams: any) =>
-    clientApi.api.postLogsRecentDocumentPage(pageParams),
+  api: (pageParams: any) => clientApi.api.postLogsRecentDocumentPage(pageParams),
   columns: [
     { field: 'name', title: 'table_fileName', fixed: 'left' },
     {
@@ -90,15 +76,7 @@ function handlePreview(row: any) {
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
   emits('delete')
 }
-
-function resize() {
-}
-
-defineExpose({ resize })
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-
 import dayjs from 'dayjs'
 import { clientApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const { public:{platform}} = useRuntimeConfig();
+const {
+  public: { platform }
+} = useRuntimeConfig()
 
 const props = defineProps<{
   setting: any
@@ -16,34 +17,35 @@ const isValid = computed(() => {
   return props.setting?.selectedWorkflow && props.setting.columns.length > 0
 })
 
-async function queryTaskDetail(instanceId:string) {
-  try{
-
-    const res = await clientApi.api.getWorkflowVariablesInstanceid(instanceId, {
-      headers:{
-        noThrowError: true
-      }
-    }).then(res => res.data)
+async function queryTaskDetail(instanceId: string) {
+  try {
+    const res = await clientApi.api
+      .getWorkflowVariablesInstanceid(instanceId, {
+        headers: {
+          noThrowError: true
+        }
+      })
+      .then((res) => res.data)
     return res
-  }catch(err){
+  } catch (err) {
     return {}
   }
 }
 
 function getRecursiveValue(obj: any, path: string) {
-  if(path.includes('.')) {
+  if (path.includes('.')) {
     const pathList = path.split('.')
     return getRecursiveValue(obj[pathList[0]], pathList.slice(1).join('.'))
   }
   return obj[path] || path
 }
 
-function displayValue(f:string) {
+function displayValue(f: string) {
   // check if f is a string date
-  console.log("displayValue")
+  console.log('displayValue')
   const d = dayjs(f)
   console.log(f, d.isValid())
-  if(d.isValid()) {
+  if (d.isValid()) {
     const date = d.format('YYYY-MM-DD HH:mm')
     console.log(date)
     return date
@@ -52,107 +54,109 @@ function displayValue(f:string) {
 }
 function setupTable() {
   const newColumn = deepCopy(props.setting.columns) || []
-  const columns:any[] = [
-    ];
-    const addedColumn = newColumn.map((item) => {
-      if(item.field.length > 1) {
-        item.field = item.field.join(',')
-        item.formatter = (args) => {
-          let result = "";
-          const field = args.column.field.split(',')
-          field.forEach((f:string) => {
-            try{
-              const r = getRecursiveValue(args.row, f)
-              if(r) {
-                result += displayValue(r)
-              }else{
-                result += displayValue(f)
-              }
-            }catch(err){
-              console.log("err", err)
+  const columns: any[] = []
+  const addedColumn = newColumn.map((item) => {
+    if (item.field.length > 1) {
+      item.field = item.field.join(',')
+      item.formatter = (args) => {
+        let result = ''
+        const field = args.column.field.split(',')
+        field.forEach((f: string) => {
+          try {
+            const r = getRecursiveValue(args.row, f)
+            if (r) {
+              result += displayValue(r)
+            } else {
               result += displayValue(f)
             }
-          })
-          return result || "--"
-        }
-      }else{
-        item.field =  item.field[0]
-        item.formatter = (args) => {
-          return displayValue(args.row[item.field])
-        }
+          } catch (err) {
+            console.log('err', err)
+            result += displayValue(f)
+          }
+        })
+        return result || '--'
       }
-      return item
-    })
-    columns.splice(0, 0, ...addedColumn);
-    tableConfig.columns = columns;
+    } else {
+      item.field = item.field[0]
+      item.formatter = (args) => {
+        return displayValue(args.row[item.field])
+      }
+    }
+    return item
+  })
+  columns.splice(0, 0, ...addedColumn)
+  tableConfig.columns = columns
 }
 
-function openDetail(row:any) {
-  routerProvider?.navigateTo(routeWorkflowDetail({
-    ...row,
-    name: row.taskInstance.businessKey,
-    workflowType: 'allTask'
-  }), false);
+function openDetail(row: any) {
+  routerProvider?.navigateTo(
+    routeWorkflowDetail({
+      ...row,
+      name: row.taskInstance.businessKey,
+      workflowType: 'allTask'
+    }),
+    false
+  )
 }
 
-function filterStep(list):any[]{
-  if(!list || !props.setting.steps || props.setting.steps.length === 0) return list
-  return list.filter((item) =>  {
+function filterStep(list): any[] {
+  if (!list || !props.setting.steps || props.setting.steps.length === 0) return list
+  return list.filter((item) => {
     return props.setting.steps.includes(item.taskDefinitionKey)
   })
 }
 const filterKeyword = ref('')
-function sortAndFilterList(list){
+function sortAndFilterList(list) {
   // fitler list
-  if(filterKeyword.value) {
+  if (filterKeyword.value) {
     list = list.filter((item) => {
       return JSON.stringify(item).toLowerCase().includes(filterKeyword.value.toLowerCase())
     })
   }
-  if(!list || !props.setting.sortColumn) return list
+  if (!list || !props.setting.sortColumn) return list
   return list.sort((a, b) => {
-    if(!a[props.setting.sortColumn]) return -1
-    if(!b[props.setting.sortColumn]) return 1
+    if (!a[props.setting.sortColumn]) return -1
+    if (!b[props.setting.sortColumn]) return 1
     const aVal = a[props.setting.sortColumn]
     const bVal = b[props.setting.sortColumn]
-    if(aVal === bVal) return 0
-    if(typeof aVal === 'number' && typeof bVal === 'number') return aVal - bVal
-    if(typeof aVal === 'boolean' && typeof bVal === 'boolean') return aVal ? 1 : -1
+    if (aVal === bVal) return 0
+    if (typeof aVal === 'number' && typeof bVal === 'number') return aVal - bVal
+    if (typeof aVal === 'boolean' && typeof bVal === 'boolean') return aVal ? 1 : -1
     // check if aVal is date
-    if(aVal instanceof Date && bVal instanceof Date) return aVal.getTime() - bVal.getTime()
+    if (aVal instanceof Date && bVal instanceof Date) return aVal.getTime() - bVal.getTime()
     // check if aVal is date string
-    if(typeof aVal === 'string' && typeof bVal === 'string') {
+    if (typeof aVal === 'string' && typeof bVal === 'string') {
       const aDate = dayjs(aVal)
       const bDate = dayjs(bVal)
-      if(aDate.isValid() && bDate.isValid()) return aDate.diff(bDate)
+      if (aDate.isValid() && bDate.isValid()) return aDate.diff(bDate)
       return aVal.localeCompare(bVal)
-    } 
+    }
     return a[props.setting.sortColumn] > b[props.setting.sortColumn] ? 1 : -1
   })
 }
 
-async function getAllWorkingInstances(processKey: string,  pageNum:number= 0, pageSize:number = 100, result:any[] = [], totalLength= 0) {
+async function getAllWorkingInstances(processKey: string, pageNum: number = 0, pageSize: number = 100, result: any[] = [], totalLength = 0) {
   const pageParams: any = {
-    processKeys : [props.setting.selectedWorkflow],
-    candidateOrAssigned : useUserId().value,
+    processKeys: [props.setting.selectedWorkflow],
+    candidateOrAssigned: useUserId().value,
     pageNum,
     pageSize
   }
-  const {data} = await clientApi.api.postWorkflowTasksUser(pageParams)
+  const { data } = await clientApi.api.postWorkflowTasksUser(pageParams)
   // filter step name
   totalLength += data?.entryList.length || 0
   const entryList = filterStep(data?.entryList || [])
   let promise = []
-  for(let i = 0; i < entryList.length; i++) {
+  for (let i = 0; i < entryList.length; i++) {
     const instanceId = entryList[i]?.taskInstance?.processInstanceId
-    if(instanceId){
+    if (instanceId) {
       promise.push(queryTaskDetail(instanceId))
-    };
+    }
   }
   const detailList = await Promise.all(promise)
-  for(let i = 0; i < detailList.length; i++) {
+  for (let i = 0; i < detailList.length; i++) {
     const detail = detailList[i]
-    if(detail) {
+    if (detail) {
       entryList[i] = {
         ...entryList[i],
         ...detail
@@ -160,17 +164,17 @@ async function getAllWorkingInstances(processKey: string,  pageNum:number= 0, pa
     }
   }
   result.push(...entryList)
-  if(data?.totalSize > totalLength) {
+  if (data?.totalSize > totalLength) {
     const nextPageNum = pageNum + 1
     return await getAllWorkingInstances(processKey, nextPageNum, pageSize, entryList, totalLength)
   }
   return sortAndFilterList(result)
 }
 
-const  { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'personal-workflow-single-table',
   api: async (pageParams: any) => {
-    if(platform === 'admin'){ 
+    if (platform === 'admin') {
       return []
     }
     return getAllWorkingInstances(props.setting.selectedWorkflow, 0, 100, [])
@@ -190,16 +194,15 @@ const  { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
       }
     ]
   ],
-  dblClickAction: ({row, column, event}) => {
+  dblClickAction: ({ row, column, event }) => {
     openDetail(row)
   }
 })
 
-const intervalReload = ref();
-
+const intervalReload = ref()
 
 onMounted(() => {
-  if(!intervalReload.value) {
+  if (!intervalReload.value) {
     intervalReload.value = setInterval(() => {
       console.log('reload')
       reload()
@@ -208,58 +211,44 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if(intervalReload.value) {
-    console.log("clean interval")
+  if (intervalReload.value) {
+    console.log('clean interval')
     clearInterval(intervalReload.value)
-    intervalReload.value = null;
+    intervalReload.value = null
   }
-  
 })
 
-watch(setting, () => {
-  console.log("setting change", setting)
-  setupTable()
-}, {
-  deep: true,
+watch(
+  setting,
+  () => {
+    console.log('setting change', setting)
+    setupTable()
+  },
+  {
+    deep: true,
     immediate: true
-})
-
-
+  }
+)
 </script>
 
 <template>
-  <div class="worfklow-list-card dashboard-item-tab--content">
-    <h2 v-if="setting && setting.title">{{ setting.title }}</h2>
-    <div class="dashboard-item-tab--content--table">
-        <VxeGrid v-if="isValid" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-            <template #toolbar_buttons>
-              <ElInput v-model="filterKeyword" placeholder="" class="w-100" @change="reload" />
-            </template>
-        </VxeGrid>
-        <div v-else>
-          <el-empty :description="$t('noData')"></el-empty>
-        </div>
-      </div>
+  <div class="table-container">
+    <VxeGrid v-if="isValid" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+      <template #toolbar_buttons>
+        <ElInput v-model="filterKeyword" placeholder="" class="w-100" @change="reload" />
+      </template>
+    </VxeGrid>
+    <div v-else>
+      <el-empty :description="$t('noData')"></el-empty>
     </div>
+  </div>
 </template>
 
-
 <style lang="scss" scoped>
-h2{
-  margin: 0;
-}
-.worfklow-list-card{
-  height: 100%;
-  overflow: auto;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-.dashboard-item-tab--content--table{
-  flex: 1 0 auto;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+.table-container {
+  :deep .vxe-toolbar {
+    display: flex;
+    padding-top: 0;
+  }
 }
 </style>
