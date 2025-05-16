@@ -92,8 +92,6 @@
             ></component>
             <template #error="{ error }">
               <div class="template-container--main">
-                {{ componentMap }}
-                {{ item.component }}
                 error {{  error }}
               </div>
             </template>
