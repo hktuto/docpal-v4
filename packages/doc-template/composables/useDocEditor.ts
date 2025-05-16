@@ -14,14 +14,7 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
           name: 'Text Setting',
           components: 'lazyDocTemplateSettingText'
         },
-        {
-          name: 'import',
-          components: 'lazyDocTemplateSettingImport'
-        },
-        {
-          name: 'export',
-          components: 'lazyDocTemplateSettingExport'
-        },
+        
         {
           name: 'font',
           components: 'lazyDocTemplateContentToolbarFont'
@@ -38,6 +31,19 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
           name: 'auxiliary',
           components: 'lazyDocTemplateContentToolbarAuxiliary'
         },
+        {
+          name: 'import',
+          components: 'lazyDocTemplateSettingImport'
+        },
+        {
+          name: 'export',
+          components: 'lazyDocTemplateSettingExport'
+        },
+      ]
+    },
+    {
+      name: "Table",
+      tools: [
         {
           name: 'table',
           components: 'lazyDocTemplateContentToolbarTable'

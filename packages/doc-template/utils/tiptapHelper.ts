@@ -45,7 +45,6 @@ import VariableText from './variable/text'
 import Typography from '@tiptap/extension-typography'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
-
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from 'tiptap-extension-pagination'
 
 const lowlight = createLowlight(all)
@@ -163,6 +162,9 @@ export const setupExtensions = (options: TipTapOptions) => {
     Color,
     // table
     Table.configure({
+      HTMLAttributes: {
+        class: 'my-custom-class',
+      },
       resizable: true,
     }),
     TableRow,
