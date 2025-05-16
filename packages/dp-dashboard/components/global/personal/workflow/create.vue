@@ -46,8 +46,8 @@ function handleRefresh(chartSetting, workflowList) {
   emits('refreshSetting', chartSetting)
 }
 onMounted(async() => {
+  state.workflowAList = await clientApi.api.postWorkflowProcessList({}).then(res => res.data);
   if(props.setting.workflowKeys && props.setting.workflowKeys.length > 0) {
-    state.workflowAList = await clientApi.api.postWorkflowProcessList({}).then(res => res.data);
     state.workflowList = props.setting.workflowKeys.reduce((prev, key: any) => {
       const workflowItem = state.workflowAList?.find((workflow: any) => workflow.key === key)
       prev.push({ ...workflowItem })
