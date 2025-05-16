@@ -91,6 +91,11 @@ defineExpose({
     padding: var(--el-card-padding) !important;
   }
 }
+.dp-dashboard--card__scroll {
+  :deep .el-card__body {
+    overflow: auto;
+  }
+}
 :deep .el-card__body {
   padding: 0;
   margin: 0 auto;
@@ -123,4 +128,5 @@ defineExpose({
   margin-right: var(--app-space-xxs);
   cursor: pointer;
 }
+
 </style>

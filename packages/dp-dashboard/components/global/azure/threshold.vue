@@ -3,6 +3,7 @@
     ref="cardRef"
     class="dp-dashboard--card__padding"
     :title="props.setting.scanType + ' ' + $t('dashboard.threshold')"
+    :hideSetting="hideSetting"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"

@@ -117,5 +117,9 @@ defineExpose({
   margin-bottom: var(--app-space-xs);
   padding: var(--app-space-xs);
   border-radius: 4px;
+  overflow: hidden;
+  .el-tag {
+    overflow: hidden;
+  }
 }
 </style>
