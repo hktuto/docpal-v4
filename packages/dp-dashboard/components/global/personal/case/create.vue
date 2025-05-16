@@ -1,122 +1,82 @@
 <template>
-  <el-card ref="cardRef" class="dashboard-item dashboard-item-card">
-    <template #header="{ close, titleId, titleClass }">
-      <h4>{{ $t("dashboard.PersonalCaseCreate") }}</h4>
-      <div v-if="!hideSetting" class="flex-x-between">
-        <SvgIcon
-          id="Dashboard__Home__Detail__NewCase__Settings"
-          src="/icons/setting.svg"
-          class="el-icon--right"
-          style="--icon-size: 1.14rem; --icon-color: #8796a4"
-          @click="openSetting"
-        />
-      </div>
-    </template>
+  <DashboardCard
+    ref="cardRef"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="$t('dashboard.PersonalCaseCreate')"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
     <div class="workflow-create-content">
-      <el-button
-        v-for="item in state.caseList"
-        type="primary"
-        :key="item.id"
-        @click="handleClick(item)"
-      >
+      <el-button v-for="item in state.caseList" type="primary" :key="item.id" @click="handleClick(item)">
         {{ item.name }}
-      </el-button
-      >
+      </el-button>
     </div>
-    <PersonalCaseCreateDialog
-      ref="settingRef"
-      @delete="handleDelete"
-      @refresh="handleRefresh"
-    />
-    <!-- <CaseNewDialog ref="dialogRef" @refresh="handleNewCase"/> -->
-  </el-card>
+    <PersonalCaseCreateDialog ref="settingRef" :caseList="state.caseList" :caseAList="state.caseAList" @delete="handleDelete" @refresh="handleRefresh" />
+    <CaseNewDialog ref="dialogRef" />
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
-import {clientApi} from "api";
+import { clientApi } from 'api'
 
-const emits = defineEmits(["delete", "refreshSetting"]);
+const emits = defineEmits(['delete', 'refreshSetting'])
 
 const props = withDefaults(
   defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean;
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
   }>(),
   {
     setting: {},
-    hideSetting: false,
+    hideSetting: false
   }
-);
+)
 const state = reactive<any>({
   caseList: [],
-});
+  caseAList: []
+})
 
 async function handleDelete() {
-  emits("delete");
+  emits('delete')
 }
 
-const settingRef = ref();
-
-function openSetting() {
-  settingRef.value.handleOpen({
-    caseList: state.caseList,
-    caseKeys: props.setting.caseKeys,
-  });
-}
-
-const dialogRef = ref();
+const settingRef = ref()
+const dialogRef = ref()
 
 function handleClick(item: any) {
-  // dialogRef.value.handleOpen(item)
-}
-
-function handleNewCase() {
+  dialogRef.value.handleOpen(item)
 }
 
 function handleRefresh(chartSetting, caseList) {
-  console.log({caseList});
-
-  state.caseList = caseList;
-  emits("refreshSetting", chartSetting);
+  state.caseList = caseList
+  emits('refreshSetting', chartSetting)
 }
 
 async function getList() {
   try {
-    const res = await clientApi.api.postCaseTypesPage({}).then((res) => res.data);
-    console.log({res});
-    return res?.entryList;
+    const res = await clientApi.api.postCaseTypesPage({}).then((res) => res.data)
+    return res?.entryList
   } catch (error) {
-    return [];
+    return []
   }
 }
 
 async function getCaseList() {
+  state.caseAList = await getList()
   if (props.setting.caseKeys && props.setting.caseKeys.length > 0) {
-    const list = await getList();
     state.caseList = props.setting.caseKeys.reduce((prev, id: any) => {
-      const caseItem = list?.find((cases: any) => cases.id === id);
-      prev.push({...caseItem});
-      return prev;
-    }, []);
+      const caseItem = state.caseAList?.find((cases: any) => cases.id === id)
+      prev.push({ ...caseItem })
+      return prev
+    }, [])
   }
 }
 
-watch(
-  () => props.setting.caseKeys,
-  () => {
-    getCaseList();
-  },
-  {
-    immediate: true,
-  }
-);
-
-function resize() {
-}
-
-defineExpose({
-  resize,
-});
+onMounted(async() => {
+  getCaseList()
+})
 </script>
 <style lang="scss" scoped>
 .workflow-create-content {

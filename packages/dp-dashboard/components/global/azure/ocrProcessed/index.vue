@@ -89,22 +89,26 @@ defineExpose({
   .dashboard-item {
     height: 300px;
   }
-  .dashboard-item-drillDown--table {
-    margin: 0 var(--app-space-xs);
-    height: 500px;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: min-content 1fr;
-  }
+}
+.dashboard-item-drillDown--table {
+  margin: 0 var(--app-space-xs);
+  height: 500px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  container: table-container / size;
 }
 // .el-card {
 //   container-type: inline-size;
 //   container-name: container;
 // }
-// @container container(min-width: 700px) {
-//   .el-card__body {
-//     display: grid;
-//     grid-template-rows: min-content 1fr;
-//   }
-// }
+@container table-container(height > 100px) {
+  h3 {
+    background-color: red;
+  }
+  .el-card__body {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+  }
+}
 </style>

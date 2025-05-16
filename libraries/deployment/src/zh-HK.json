@@ -3350,7 +3350,7 @@
   "workflowEditor_promoteToProduction": "推送至生產：{currentVersion}",
   "workflowEditor_saveAsNewVersion": "另存為新版本",
   "workflowEditor_versionList": "版本清單",
-  "workflow_ActiveTask": "進行中任務",
+  "workflow_activeTask": "進行中任務",
   "workflow_GenerateDocument": "生成文檔",
   "workflow_ManageDeleteTask": "刪除任務",
   "workflow_ManageDeleteWorkflowMsg": "Are you sure you want to delete the selected workflow task(s)?<br>This action cannot be undone.",

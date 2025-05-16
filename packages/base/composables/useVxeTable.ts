@@ -40,6 +40,7 @@ export interface UseVxeTableParams<R = any> {
     virtualScroll?:boolean,
     pageSize?:number,
     refresh?:boolean,
+    refreshCode?:string,
     zoom?:boolean,
     dblClickAction?:({row, column, event}:any) => void,
     headerActions?:TableMenuActions[][],
@@ -68,18 +69,20 @@ interface Config extends VxeGridProps {
 
 export const useVxeTable = (params: UseVxeTableParams) => {
     // set Defalut value for params
-    const { 
-        optionalConfig = {},  
-        optionalEvent = {}, 
-        saveColumnOrder = true, 
-        columns = [], 
+    const {
+        optionalConfig = {},
+        optionalEvent = {},
+        saveColumnOrder = true,
+        columns = [],
         zoom =true,
-        refresh = true,
+        refresh = {
+            code: 'reload'
+        },
         permissionMethod = () => {return {visible:true, disabled: false}},
         bodyActions : actions = [],
         selectChangeHander = () => { console.log("defauilt selectChangeHander, please implement") },
     } = params
-    
+
     const tableRef = ref<VxeGridInstance<any>>()
     const viewport = useViewport()
     const tableData = ref<any>([])
@@ -89,8 +92,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         total:0,
     })
     const init = ref(false);
-    
-    
+
     const tableConfig = reactive<any>({...{
         id: params.id,
         border: true,
@@ -124,7 +126,8 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         },
         pagerConfig: {
             enabled: params.virtualScroll? false : true,
-            pageSize : params.pageSize || 20
+            // pageSize : params.pageSize || 20
+            pageSize: getPageSize(params.id)
         },
         customConfig: {
             enabled: saveColumnOrder,
@@ -138,7 +141,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                         return perference.value.tableSettings[id]
                     }
                 } catch (error) {
-                    
+
                 }
             },
             updateStore ({ id, storeData }) {
@@ -151,7 +154,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                     // save perference
                     return clientApi.api.putUserSetting(perference.value)
                 } catch (error) {
-                    
+
                 }
             }
         },
@@ -189,7 +192,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                             // loop all children , and set visible and disabled
                             // if all children are not visible , set iten.visible = false
                             // if all children are disabled , set item.disabled = true
-                            
+
                             item.children.forEach(child => {
                                 const {visible, disabled} =  permissionMethod({row, rowIndex, code:child.code, additionalData})
                                 child.visible = visible
@@ -218,6 +221,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 
     if(params.customeToolBar){
         tableConfig.toolbarConfig.slots.tools = 'toolbarTools'
+    }
+
+    if (params?.refreshCode){
+      tableConfig.toolbarConfig.refresh = { code: params.refreshCode}
     }
 
     // #region handle actions column
@@ -250,7 +257,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 return `<img src="/icons/dots.svg" style="width: 1.2rem; height: 1.2rem; cursor: pointer;" />`
             }
         };
-        if(!tableConfig.columns || tableConfig.columns.length === 0) {  
+        if(!tableConfig.columns || tableConfig.columns.length === 0) {
             tableConfig.columns = [actionsColumn]
         }else{
             tableConfig.columns.push(actionsColumn)
@@ -300,7 +307,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                     event:$event,
                 }
                 bus.emit(evtParams)
-                
+
             }
             if(optionalEvent?.cellClick && typeof optionalEvent.cellClick === 'function'){
                 optionalEvent.cellClick({row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, triggerRadio, triggerCheckbox, triggerTreeNode, triggerExpandNode, $event ,$grid, $table, cell}) as any
@@ -333,7 +340,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 range: true
             }
         }
-        
+
         tableEvent.checkboxChange = ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
             console.log("checkboxChange", selectedRows)
@@ -354,7 +361,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         selectChangeHander([])
     }
     // #endregion
-    
+
 
     async function loadData(args:any) {
         if(!params?.api) {
@@ -362,7 +369,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         }
         if(params.virtualScroll) {
             init.value = true;
-            return await params?.api(args)  
+            return await params?.api(args)
         }
         const { page, sorts, filters } = args
         // 默认接收 Promise<{ result: [], page: { total: 100 } }>
@@ -390,7 +397,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 
     }
     async function responsiveScrollHandler({scrollTop, direction}:VxeGridDefines.ScrollEventParams){
-        if(params.virtualScroll || !params.api || !viewport.isLessThan('tablet')){  
+        if(params.virtualScroll || !params.api || !viewport.isLessThan('tablet')){
             console.log("scrollTop", viewport.isLessThan('tablet'))
             return;
         }
@@ -406,7 +413,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         console.log("lazyLoad")
         if(tablePageParams.value.total && tablePageParams.value.total === tableConfig.data.length ) {
             console.log("no more data")
-            return 
+            return
         }
         tableConfig.loading = true
         const data = await loadData({
@@ -508,14 +515,32 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             observer.disconnect()
         }
     })
-    
-    
+
+    tableEvent.pageChange = ({ pageSize })=>{
+      const tableSetting = useUserPreference().value.tableSettings[params.id]
+      tableSetting.tablePageSize = pageSize
+      const data = {
+        id:params.id,
+        storeData: tableSetting
+      }
+      tableConfig.customConfig.updateStore(data)
+    }
+
     return {
         tableConfig,
         tableEvent,
         tableRef,
         cleanSelectedRows,
-        reload, 
+        reload,
         query
     }
+}
+
+function getPageSize(id: string){
+  let pageSize = 20
+  const tableSetting = useUserPreference().value.tableSettings[id]
+  if (tableSetting?.tablePageSize){
+    pageSize = tableSetting.tablePageSize
+  }
+  return  pageSize
 }

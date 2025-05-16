@@ -1,5 +1,5 @@
 <template>
-  <DashboardCard class="dp-dashboard--card__padding" ref="cardRef" :title="$t('dashboard.workflowGroup')" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard ref="cardRef" :hideSetting="hideSetting" class="dp-dashboard--card__padding" :title="$t('dashboard.workflowGroup')" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
     <div class="chartContainer">
       <WorkflowGroupDetailFilter :filterList="setting.filterHeaderList" @change="handleChange" />
       <!-- <el-divider /> -->
