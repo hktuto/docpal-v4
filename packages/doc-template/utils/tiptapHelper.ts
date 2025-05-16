@@ -1,53 +1,35 @@
 // style
-import Bold from '@tiptap/extension-bold'
-import Italic from '@tiptap/extension-italic'
-import Highlight from '@tiptap/extension-highlight'
+
 import Link from '@tiptap/extension-link'
-import SuperScript from '@tiptap/extension-superscript'
-import Underline from '@tiptap/extension-underline'
-import FontSize from '@tiptap/extension-font-size'
+
 import { Color } from '@tiptap/extension-color'
 
-import Document from '@tiptap/extension-document'
 
 import Image from '@tiptap/extension-image'
+import {TextNode } from './packages/text'
+import {TextStyleNode} from './packages/textStyle'
+import {DocumentSetting} from './packages/document'
 // table
-import Table from '@tiptap/extension-table'
-import TableCell from '@tiptap/extension-table-cell'
-import TableHeader from '@tiptap/extension-table-header'
-import TableRow from '@tiptap/extension-table-row'
+import {TableSetting} from './packages/table'
+import {Task} from './packages/task'
 // list
 import BulletList from '@tiptap/extension-bullet-list'
 import ListItem from '@tiptap/extension-list-item'
 import OrderedList from '@tiptap/extension-ordered-list'
 import ListKeymap from '@tiptap/extension-list-keymap'
-// text
-import Heading from '@tiptap/extension-heading'
-import Text from '@tiptap/extension-text'
-import Paragraph from '@tiptap/extension-paragraph'
-import Strike from '@tiptap/extension-strike'
-import Subscript from '@tiptap/extension-subscript'
-import Code from '@tiptap/extension-code'
-import CodeBlock from '@tiptap/extension-code-block'
-import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight'
-import TextAlign from '@tiptap/extension-text-align'
-import { all, createLowlight } from 'lowlight'
-import hljs from 'highlight.js'
+
 
 // utils
 import HorizontalRule from '@tiptap/extension-horizontal-rule'
 import Gapcursor from '@tiptap/extension-gapcursor'
 import FontFamily from '@tiptap/extension-font-family'
 import CharacterCount from '@tiptap/extension-character-count'
-import TextStyle from '@tiptap/extension-text-style'
 import History from '@tiptap/extension-history'
 import VariableText from './variable/text'
 import Typography from '@tiptap/extension-typography'
-import TaskItem from '@tiptap/extension-task-item'
-import TaskList from '@tiptap/extension-task-list'
+
 import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from 'tiptap-extension-pagination'
 
-const lowlight = createLowlight(all)
 export type TipTapOptions = {
   textCount?: number,
   mode: 'PAGE' | 'ENDLESS',
@@ -126,50 +108,28 @@ export function normalizeTipTapOptions(options: TipTapOptions) {
 
 export const setupExtensions = (options: TipTapOptions) => {
   const extensions = [
-    Heading.configure({
-      levels: [1, 2, 3, 4, 5]
-    }),
-    Document,
+    ...TextNode,
+    ...DocumentSetting,
+    ...TextStyleNode,
+    ...Task,
     // text
-    Text,
-    Paragraph,
-    Strike,
-    Subscript,
+    ...TableSetting,
     Image,
-    Code,
-    TextAlign.configure({
-      types: ['heading', 'paragraph'],
-    }),
-    CodeBlock,
-    CodeBlockLowlight.configure({ lowlight }),
-    hljs,
+    
     //list
     BulletList,
     OrderedList,
     ListItem,
     ListKeymap,
     // style
-    Bold,
-    Italic,
-    Highlight.configure({ multicolor: true }),
-    Underline,
-    SuperScript,
+    
     Link.configure({
       openOnClick: false
       // defaultProtocol: "https"
     }),
-    FontSize,
     Color,
     // table
-    Table.configure({
-      HTMLAttributes: {
-        class: 'my-custom-class',
-      },
-      resizable: true,
-    }),
-    TableRow,
-    TableHeader,
-    TableCell,
+    
     // custom
     VariableText,
     // utils
@@ -177,11 +137,8 @@ export const setupExtensions = (options: TipTapOptions) => {
     CharacterCount.configure({
       limit: options?.textCount || null
     }),
-    TaskList,
-    TaskItem.configure({
-      nested: true,
-    }),
-    TextStyle.configure({ mergeNestedSpanStyles: true }),
+    
+    
     FontFamily,
     Gapcursor,
     History,
@@ -206,7 +163,6 @@ export const setupExtensions = (options: TipTapOptions) => {
       PageNode,
       BodyNode
     )
-    console.log(extensions[0])
   }
   return extensions
 }
