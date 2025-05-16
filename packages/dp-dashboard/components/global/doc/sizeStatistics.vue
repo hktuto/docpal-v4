@@ -1,532 +1,430 @@
 <template>
-    <el-card ref="cardRef" class="dashboard-item dashboard-item-main">
-        <div id="myEcharts" ref="chartRef" class="echart"></div>
-        <DocSizeStatisticsSetting ref="settingRef" 
-            @delete="handleDelete"
-            @refresh="handleRefresh"/>
-    </el-card>
+  <DashboardCard ref="cardRef" :hideSetting="hideSetting" :title="$t(title)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+    <div id="myEcharts" ref="chartRef" class="echart"></div>
+    <DocSizeStatisticsSetting ref="settingRef" @refresh="handleRefresh" />
+  </DashboardCard>
 </template>
 
 <script lang="ts" setup>
-import * as echarts from "echarts";
 import { publicApi } from 'api'
-import { fileSize, parseSvg } from '~/utils/tool'
-import { useEventListener, watchDebounced } from '@vueuse/core'
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
+import { fileSize } from '../../../utils/tool'
+import { useDashboardCard } from '../../../utils/useDashboardCard'
+const props = withDefaults(
+  defineProps<{
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
+  }>(),
+  {
     setting: {},
     hideSetting: false
-})
-type EChartsOption = echarts.EChartsOption;
-const chartRef = ref()
-const cardRef = ref()
+  }
+)
 const { t } = useI18n()
-let echartInstance
-const emits = defineEmits([
-    'refreshSetting', 'delete'
-])
-const setting = {
-    volumeSetting: {
-        options: {
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-            },
-            yAxis: {
-                type: 'value',
-                // interval: 1024 ,
-                axisLabel: {
-                    formatter:function (value, index) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                        return fileSize(value, ['MB', 'GB', 'TB', 'PB'])
-                    }
-                },
-                splitLine: {
-                    show: true
-                }
-            },
-            tooltip: {
-                appendToBody: true,
-                trigger: 'item',
-                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                    return `${item.seriesName}: ${fileSize(item.value, ['MB', 'GB', 'TB', 'PB'])}`
-                }
-            },
-            legend: {
-                bottom: '5%',
-                left: 'center',
-                itemWidth: 10,
-                itemHeight: 10,
-            }
-        },
-        series: {
-            smooth: true,
-            type: 'line'
-        }
-    },
-    percentSetting: {
-        options: {
-            xAxis: {
-                type: 'category',
-                boundaryGap: false,
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-            },
-            yAxis: {
-                type: 'value'
-            },
-            tooltip: {
-                appendToBody: true,
-                trigger: 'item',
-                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                    return `${item.name} <br/>${item.seriesName}  ${item.value.toFixed(2)}`
-                }
-            },
-            legend: {
-                bottom: '5%',
-                left: 'center',
-                itemWidth: 10,
-                itemHeight: 10,
-            }
-        },
-        series: {
-            smooth: true,
-            type: 'line'
-        }
-    },
-    brickSetting: {
-        options: {
-            xAxis: {
-                type: 'value',
-                show: false
-            },
-            yAxis: {
-                show: false,
-                data: [t('dashboard.documentSize')]
-            },
-            tooltip: {
-                appendToBody: true,
-                trigger: 'item',
-                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                    return `${item.seriesName}: ${fileSize(item.value)}`
-                }
-            },
-            legend: {
-                bottom: '5%',
-                left: 'center',
-                itemWidth: 10,
-                itemHeight: 10,
-            }
-        },
-        series: {
-            type: 'bar',
-            stack: '总量',
-            label: {
-                normal: {
-                    position: 'inside', // 在内部显示，outseide 是在外部显示
-                    show: true,
-                    formatter:  function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                        return fileSize(item.value)
-                    }
-                }
-            },
-            itemStyle: {
-                height: 50
-            }
-        }
-    },
-    barSetting: {
-        options: {
-            xAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter:function (value, index) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                        return fileSize(value)
-                    }
-                }
-            },
-            yAxis: {
-                data: [],
-                type: 'category',
-            },
-            tooltip: {
-                appendToBody: true,
-                trigger: 'item',
-                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                    return `${item.seriesName}1: ${fileSize(item.value)}`
-                }
-            },
-            legend: {
-                bottom: '5%',
-                left: 'center',
-                itemWidth: 10,
-                itemHeight: 10,
-            }
-        },
-        series: {
-            type: 'bar',
-            label: {
-                normal: {
-                    position: 'inside', // 在内部显示，outseide 是在外部显示
-                    show: true,
-                    formatter:  function (item, params) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                        return fileSize(item.value)
-                    }
-                }
-            },
-            
-        }
-    },
-    pieSetting: {
-        options: {
-            tooltip: {
-                appendToBody: true,
-                trigger: 'item',
-                formatter:function (item) {//自定义提示框里提示的内容、样式等，可以打印看item里的值
-                    return `${item.name}: ${fileSize(item.value)}`
-                }
-            },
-            legend: {
-                itemWidth: 10,
-                itemHeight: 10,
-                bottom: '5%',
-                left: 'center',
-                type: 'scroll',
-            },
-            title: [
-                {
-                    text: 143,
-                    subtext: t('dashboard.totalStorage'),
-                    x: 'center',
-                    y: 'center',
-                    textStyle: {
-                        fontWeight: 'bolder',
-                        color: '#373D43',
-                    },
-                    subtextStyle: {
-                        fontWeight: 'bold',
-                        color: '#8796A4',
-                    },
-                },
-                {
-                    text: t('dashboard.totalStorage'),
-                    x: 'left',
-                    y: 'top',
-                }
-            ]
-        },
-        series: {
-            type: 'pie',
-            radius: ['40%', '70%'],
-            itemStyle: {
-                // borderRadius: 5,
-                // borderColor: '#fff',
-                // borderWidth: 1
-            },
-            label: {
-                normal: {
-                    position: 'inside', // 在内部显示，outseide 是在外部显示
-                    show: true,
-                    formatter: '{d}%'
-                }
-            }
-        }
-    },
-    defaultSetting: {
-        options: {
-            title: {
-                text: t('dashboard.documentSize'),
-                left: "left",
-            },
-            
-        },
-    },
-    toolbox: {
-        show: true,
-        showTitle: true, 
-        itemSize: 15, 
-        feature: {
-            mySetting: {
-                show: true,
-                title: t('dashboard.setting'),
-                icon: '',
-                onclick: ()=> openSetting()
-            }
-        }
-    }
-}
-const state = reactive({
-    initData: [],
-    initTrendData: [],
-    data: {
-    },
-    trendSizeData: {
-        test: '4156456'
-    },
-    trendPercentData: {
-    },
-    trendXAxis: [],
+const title = ref('dashboard.documentSize')
 
-    width: 100,
-    totalStorage: 0
-})
-const picStore: any = {
+let seriesData: any = {}
+let trendSizeData: any = {}
+let trendPercentData: any = {}
+let trendXAxis: any = []
+let chartWidth: number = 100
+let totalStorage: number = 0
+const dbSetting = {
+  volumeSetting: {
+    options: {
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      },
+      yAxis: {
+        type: 'value',
+        // interval: 1024 ,
+        axisLabel: {
+          formatter: function (value, index) {
+            //自定义提示框里提示的内容、样式等，可以打印看item里的值
+            return fileSize(value, ['MB', 'GB', 'TB', 'PB'])
+          }
+        },
+        splitLine: {
+          show: true
+        }
+      },
+      tooltip: {
+        appendToBody: true,
+        trigger: 'item',
+        formatter: function (item) {
+          //自定义提示框里提示的内容、样式等，可以打印看item里的值
+          return `${item.seriesName}: ${fileSize(item.value, ['MB', 'GB', 'TB', 'PB'])}`
+        }
+      },
+      legend: {
+        bottom: '5%',
+        left: 'center',
+        itemWidth: 10,
+        itemHeight: 10
+      }
+    },
+    series: {
+      smooth: true,
+      type: 'line'
+    }
+  },
+  percentSetting: {
+    options: {
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      tooltip: {
+        appendToBody: true,
+        trigger: 'item',
+        formatter: function (item) {
+          //自定义提示框里提示的内容、样式等，可以打印看item里的值
+          return `${item.name} <br/>${item.seriesName}  ${item.value.toFixed(2)}`
+        }
+      },
+      legend: {
+        bottom: '5%',
+        left: 'center',
+        itemWidth: 10,
+        itemHeight: 10
+      }
+    },
+    series: {
+      smooth: true,
+      type: 'line'
+    }
+  },
+  brickSetting: {
+    options: {
+      xAxis: {
+        type: 'value',
+        show: false
+      },
+      yAxis: {
+        show: false
+      },
+      tooltip: {
+        appendToBody: true,
+        trigger: 'item',
+        formatter: function (item) {
+          //自定义提示框里提示的内容、样式等，可以打印看item里的值
+          return `${item.seriesName}: ${fileSize(item.value)}`
+        }
+      },
+      legend: {
+        bottom: '5%',
+        left: 'center',
+        itemWidth: 10,
+        itemHeight: 10
+      }
+    },
+    series: {
+      type: 'bar',
+      stack: '总量',
+      label: {
+        normal: {
+          position: 'inside', // 在内部显示，outseide 是在外部显示
+          show: true,
+          formatter: function (item) {
+            //自定义提示框里提示的内容、样式等，可以打印看item里的值
+            return fileSize(item.value)
+          }
+        }
+      },
+      itemStyle: {
+        height: 50
+      }
+    }
+  },
+  barSetting: {
+    options: {
+      xAxis: {
+        type: 'value',
+        axisLabel: {
+          formatter: function (value, index) {
+            //自定义提示框里提示的内容、样式等，可以打印看item里的值
+            return fileSize(value)
+          }
+        }
+      },
+      yAxis: {
+        data: [],
+        type: 'category'
+      },
+      tooltip: {
+        appendToBody: true,
+        trigger: 'item',
+        formatter: function (item) {
+          //自定义提示框里提示的内容、样式等，可以打印看item里的值
+          return `${item.seriesName}1: ${fileSize(item.value)}`
+        }
+      },
+      legend: {
+        bottom: '5%',
+        left: 'center',
+        itemWidth: 10,
+        itemHeight: 10
+      }
+    },
+    series: {
+      type: 'bar',
+      label: {
+        normal: {
+          position: 'inside', // 在内部显示，outseide 是在外部显示
+          show: true,
+          formatter: function (item, params) {
+            //自定义提示框里提示的内容、样式等，可以打印看item里的值
+            return fileSize(item.value)
+          }
+        }
+      }
+    }
+  },
+  pieSetting: {
+    options: {
+      tooltip: {
+        appendToBody: true,
+        trigger: 'item',
+        formatter: function (item) {
+          //自定义提示框里提示的内容、样式等，可以打印看item里的值
+          return `${item.name}: ${fileSize(item.value)}`
+        }
+      },
+      legend: {
+        itemWidth: 10,
+        itemHeight: 10,
+        bottom: '5%',
+        left: 'center',
+        type: 'scroll'
+      },
+      title: [
+        {
+          text: 143,
+          subtext: t('dashboard.totalStorage'),
+          x: 'center',
+          y: 'center',
+          textStyle: {
+            fontWeight: 'bolder',
+            color: '#373D43'
+          },
+          subtextStyle: {
+            fontWeight: 'bold',
+            color: '#8796A4'
+          }
+        }
+      ]
+    },
+    series: {
+      type: 'pie',
+      radius: ['40%', '70%'],
+      itemStyle: {
+        // borderRadius: 5,
+        // borderColor: '#fff',
+        // borderWidth: 1
+      },
+      label: {
+        normal: {
+          position: 'inside', // 在内部显示，outseide 是在外部显示
+          show: true,
+          formatter: '{d}%'
+        }
+      }
+    }
+  },
+  defaultSetting: {}
 }
-let options: any = {}
+const emits = defineEmits(['refreshSetting', 'delete'])
+const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+  props,
+  initStyleActionExtend: (pHeight, pWidth) => {
+    chartWidth = Math.min(pWidth, pHeight)
+  },
+  getOptions: async (chartSetting) => {
+    const chartType = chartSetting?.style || 'pie'
+    const displayList = chartSetting?.displayList || []
+    let resultOptions = {
+      ...dbSetting[`${chartType}Setting`].options
+    }
+    switch (chartType) {
+      case 'pie':
+        await getData(displayList)
+        resultOptions.series = getSeries(seriesData, chartType, displayList)
+        resultOptions.title[0].text = fileSize(totalStorage)
+        resultOptions.title[0].textStyle.fontSize = Math.max(chartWidth / 32, 14)
+        resultOptions.title[0].subtextStyle.fontSize = Math.max(chartWidth / 42, 10)
+        resultOptions.title[0].subtext = t('dashboard.totalStorage')
+        title.value = t('dashboard.documentSize')
+        break
+      case 'bar':
+        await getData(displayList)
+        resultOptions.series = getTrendSeries(seriesData, chartType, displayList)
+        title.value = t('dashboard.documentSize')
+        break
+      case 'brick':
+        await getData(displayList)
+        resultOptions.series = getTrendSeries(seriesData, chartType, displayList)
+        title.value = t('dashboard.documentSize')
+        break
+      case 'percent':
+        await getTrendData(displayList, 'trendPercentData')
+        resultOptions.series = getTrendSeries(trendPercentData, chartType, displayList)
+        resultOptions.xAxis.data = trendXAxis
+        title.value = t('dashboard.documentPercent')
+        break
+      case 'volume':
+        await getTrendData(displayList)
+        resultOptions.series = getTrendSeries(trendSizeData, chartType, displayList)
+        resultOptions.xAxis.data = trendXAxis
+        title.value = t('dashboard.documentSize')
+        break
+    }
+    return resultOptions
+  }
+})
 
-// #region module: set
-    function initStyle () {
-        const pHeight = cardRef.value.$el.offsetHeight -30
-        const pWidth = cardRef.value.$el.offsetWidth - 40
-        state.width = Math.min(pWidth, pHeight)  
-        // 需要扣除 .el-card 的 padding
-        chartRef.value.style = `height: ${pHeight }px; width: ${pWidth}px`
+// #region module: Series
+function getSeries(chartData, type: string = 'pie', displayList: any[]) {
+  const data = Object.keys(chartData).reduce((prev: any[], key) => {
+    const value = chartData[key]
+    const _sItem: any = {
+      value,
+      name: t(key)
     }
-    async function setMySettingIcon() {
-        
-    }
-    function getXAxis(chartData) {
-        const x = Object.keys(chartData).reduce((prev: any,item: any) => {
-            prev.push(item)
-            return prev
-        },[])
-        options.xAxis.data = x
-    }
-    function getSeries (chartData, type: string = 'pie', displayList: any[]) {
-        const data = Object.keys(chartData).reduce((prev: any[],key) => {
-            const value = chartData[key]
-            const _sItem: any = {
-                value,
-                name: t(key)
-            }
-            const dItem = displayList.find(item => item.documentType === key)
-            if(!!dItem && !!dItem.color) {
-                _sItem.itemStyle = {
-                    normal: {
-                        color: dItem.color
-                    }
-                }
-            } 
-            prev.push(_sItem)
-            return prev
-        },[])
-        return {
-            data,
-            ...setting[`${type}Setting`].series
+    const dItem = displayList.find((item) => item.documentType === key)
+    if (!!dItem && !!dItem.color) {
+      _sItem.itemStyle = {
+        normal: {
+          color: dItem.color
         }
+      }
     }
-    function getTrendSeries (chartData, type: string = 'pie', displayList: any[]) {
-        return Object.keys(chartData).reduce((prev: any,key) => {
-            const values = chartData[key]
-            const _sItem = {
-                ...setting[`${type}Setting`].series,
-                name: t(key),
-                data: values instanceof Array ? values : [values]
-            }
-            if(!displayList) displayList = []
-            const dItem = displayList.find(item => item.documentType === key)
-            if(!!dItem && !!dItem.color) {
-                if(!_sItem.itemStyle) _sItem.itemStyle = {}
-                else _sItem.itemStyle = deepCopy(_sItem.itemStyle) // 处理所有数据同一itemStyle问题
-                if(!_sItem.itemStyle.normal) _sItem.itemStyle.normal = {}
-                _sItem.itemStyle.normal.color = dItem.color
-            }
-            prev.push(_sItem)
-            return prev
-        },[])
-    }
-// #endregion
-async function initChart() {
-    if (echartInstance) echartInstance.clear()
-    echartInstance = echarts.init(chartRef.value);
-    echartInstance.setOption(options);
+    prev.push(_sItem)
+    return prev
+  }, [])
+  return {
+    data,
+    ...dbSetting[`${type}Setting`].series
+  }
 }
-function resize() {
-    setTimeout(() => {
-        initStyle()
-        if (props.setting.style === 'pie') {
-            options.title[0].textStyle.fontSize =Math.max(state.width / 32 , 14)
-            options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 12)
-            initChart()
-            echartInstance.resize();
-        }
-        else if(echartInstance) echartInstance.resize();
-    })
+function getTrendSeries(chartData, type: string = 'pie', displayList: any[]) {
+  return Object.keys(chartData).reduce((prev: any, key) => {
+    const values = chartData[key]
+    const _sItem = {
+      ...dbSetting[`${type}Setting`].series,
+      name: t(key),
+      data: values instanceof Array ? values : [values]
+    }
+    if (!displayList) displayList = []
+    const dItem = displayList.find((item) => item.documentType === key)
+    if (!!dItem && !!dItem.color) {
+      if (!_sItem.itemStyle) _sItem.itemStyle = {}
+      else _sItem.itemStyle = deepCopy(_sItem.itemStyle) // 处理所有数据同一itemStyle问题
+      if (!_sItem.itemStyle.normal) _sItem.itemStyle.normal = {}
+      _sItem.itemStyle.normal.color = dItem.color
+    }
+    prev.push(_sItem)
+    return prev
+  }, [])
 }
-// #region module: setting
-    const settingRef = ref()
-    function openSetting() {
-        settingRef.value.handleOpen(props.setting)
-    }
-    async function handleInitChart(chartSetting) {
-        const chartType = chartSetting?.style || 'pie' 
-        console.log(chartSetting, chartType)
-        const displayList = chartSetting?.displayList || []
-        console.log('???');
-        
-        options = { 
-            ...setting.defaultSetting.options, 
-            ...setting[`${chartType}Setting`].options 
-        }
-        console.log('???', options);
-        console.log('???', parseSvg);
-        if(!props.hideSetting) {
-            if(!picStore.setting) picStore.setting = 'image://' + await parseSvg('/icons/setting.svg')
-            setting.toolbox.feature.mySetting.icon = picStore.setting
-            options.toolbox = setting.toolbox
-        }
-        console.log(chartType)
-        switch(chartType) {
-            case 'pie':
-                await getData(displayList)
-                options.series = getSeries(state.data, chartType, displayList)
-                options.title[0].text = fileSize(state.totalStorage)
-                options.title[0].textStyle.fontSize = Math.max(state.width / 32 , 14)
-                options.title[0].subtextStyle.fontSize =Math.max(state.width / 42 , 10)
-                options.title[0].subtext =t('dashboard.totalStorage')
-                options.title[1].text =t('dashboard.documentSize')
-                
-                break
-            case 'bar':
-                await getData(displayList)
-                options.series = getTrendSeries(state.data, chartType, displayList)
-                options.title.text =t('dashboard.documentSize')
-                break
-            case 'brick':
-                await getData(displayList)
-                options.series = getTrendSeries(state.data, chartType, displayList)
-                options.title.text =t('dashboard.documentSize')
-                break
-            case 'percent':
-                await getTrendData(displayList, 'trendPercentData')
-                options.series = getTrendSeries(state.trendPercentData, chartType, displayList)
-                options.xAxis.data = state.trendXAxis
-                options.title.text =t('dashboard.documentPercent')
-                break
-            case 'volume':
-                await getTrendData(displayList)
-                options.series = getTrendSeries(state.trendSizeData, chartType, displayList)
-                options.xAxis.data = state.trendXAxis
-                options.title.text =t('dashboard.documentSize')
-                break
-        }
-        initChart()
-    }
-    async function getData(displayList: any = []) {
-        console.log(displayList)
-        if(!displayList || displayList.length === 0) return {}
-        // try {
-            const params: any = {}
-            if (props.dates) {
-                params.isQueryList = true
-                params.dateRange = {
-                    from: props.dates[0],
-                    to: props.dates[1]
-                }
-            }
-            const res = await publicApi.api.postDashboardDocumenttypeofsizebyrange(params).then(res => res.data)
-            state.initData = res
-            state.data = {}
-            let others = 0
-            state.totalStorage = 0
-            state.data = state.initData.reduce((prev,item) => {
-                const index = displayList.findIndex((i) => i.documentType === item.key)
-                if(index === -1) others += item.count
-                else prev[item.key] = item.count
-                state.totalStorage += item.count
-                return prev
-            }, {})
-            state.data.others = others
-        // } catch (error) {
-        // }
-    }
-    async function getTrendData(displayList, dataType: string = 'trendSizeData') {
-        if(!displayList || displayList.length === 0) return {}
-        try {
-            if(!state.initTrendData || state.initTrendData.length === 0) {
-                const res: any = await publicApi.api.postDashboardDocumenttypeofsizebymonthlyrangecumulation({}).then(res => res.data)
-                state.initTrendData = res?.group_document_type?.buckets || []
-            }
-            let trendData
-            let monthTotal = {}
-            let others: any[] = []
-            state.trendXAxis = []
-            trendData = state.initTrendData.reduce((initPrev,initItem, initIndex) => {
-                const index = displayList.findIndex((i) => i.documentType === initItem.key)
-                if(index === -1) {
-                    initItem.group_by_time.buckets.reduce((prev, bucketsItem, index) => {
-                        if(!others[index]) others[index] = 0
-                        if(!monthTotal[index]) monthTotal[index] = 0
-                        others[index] += bucketsItem.cumulative_sum_mb.value
-                        if(initIndex === 0) {
-                            state.trendXAxis.push(bucketsItem.key_as_string)
-                        }
-                        monthTotal[index] += bucketsItem.cumulative_sum_mb.value
-                    }, [])
-                }
-                else {
-                    const t = initItem.group_by_time.buckets.reduce((prev, bucketsItem, index) => {
-                        prev.push(bucketsItem.cumulative_sum_mb.value)
-                        if(initIndex === 0) {
-                            state.trendXAxis.push(bucketsItem.key_as_string)
-                        }
-                        if(!monthTotal[index]) monthTotal[index] = 0
-                        monthTotal[index] += bucketsItem.cumulative_sum_mb.value
-                        return prev
-                    }, [])
-                    initPrev[initItem.key] = t
-                }
-                return initPrev
-            }, {})
-            
-            trendData.others = others
-            if(dataType === 'trendPercentData') {
-                state[dataType] = Object.keys(trendData).reduce((prev, key) => {
-                    const item = trendData[key]
-                    prev[key] = item.reduce((_prev,_item, _index) => {
-                        if(monthTotal[_index] === 0) _prev.push(0)
-                        else _prev.push( _item / monthTotal[_index])
-                        return _prev
-                    }, [])
-                    return prev
-                }, {})
-            } else {
-                state[dataType] = trendData
-            }
-        } catch (error) {
-        }
-    }
-    function handleDelete() {
-        emits('delete')
-    }
-    function handleRefresh(chartSetting) {
-        emits('refreshSetting', chartSetting)
-    }
 // #endregion
-// #region module: 
-// #endregion
-onMounted(async() => {
-    setTimeout(async() => {
-        initStyle()
-        // 随着屏幕大小调节图表
-        useEventListener(window, 'resize', resize)
-    })
-})
-onUnmounted(() => {
-    if(!!echartInstance) echartInstance.dispose()
-})
-watchDebounced(() => [props.setting, props.dates], (newValue,oldValue) => {
-    if (!props.setting) return
-    if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-        handleInitChart(props.setting)
+
+// #region module: Data
+async function getData(displayList: any = []) {
+  if (!displayList || displayList.length === 0) return {}
+  // try {
+  const params: any = {}
+  if (props.dates) {
+    params.isQueryList = true
+    params.dateRange = {
+      from: props.dates[0],
+      to: props.dates[1]
     }
-},{ debounce: 200, maxWait: 500, immediate: true })
-defineExpose({
-    resize
-})
+  }
+  const initData: any = await publicApi.api.postDashboardDocumenttypeofsizebyrange(params).then((res) => res.data)
+  seriesData = {}
+  let others = 0
+  totalStorage = 0
+  seriesData = initData?.reduce((prev, item) => {
+    const index = displayList.findIndex((i) => i.documentType === item.key)
+    if (index === -1) others += item.count
+    else prev[item.key] = item.count
+    totalStorage += item.count
+    return prev
+  }, {})
+  seriesData.others = others
+  // } catch (error) {
+  // }
+}
+let initTrendData = []
+async function getTrendData(displayList, dataType: string = 'trendSizeData') {
+  if (!displayList || displayList.length === 0) return {}
+  try {
+    if (!initTrendData || initTrendData.length === 0) {
+      const res: any = await publicApi.api.postDashboardDocumenttypeofsizebymonthlyrangecumulation({}).then((res) => res.data)
+      initTrendData = res?.group_document_type?.buckets || []
+    }
+    let trendData
+    let monthTotal = {}
+    let others: any[] = []
+    trendXAxis = []
+    trendData = initTrendData.reduce((initPrev, initItem: any, initIndex) => {
+      const index = displayList.findIndex((i) => i.documentType === initItem.key)
+      if (index === -1) {
+        initItem.group_by_time.buckets.reduce((prev, bucketsItem, index) => {
+          if (!others[index]) others[index] = 0
+          if (!monthTotal[index]) monthTotal[index] = 0
+          others[index] += bucketsItem.cumulative_sum_mb.value
+          if (initIndex === 0) {
+            trendXAxis.push(bucketsItem.key_as_string)
+          }
+          monthTotal[index] += bucketsItem.cumulative_sum_mb.value
+        }, [])
+      } else {
+        const buckets = initItem.group_by_time.buckets.reduce((prev, bucketsItem, index) => {
+          prev.push(bucketsItem.cumulative_sum_mb.value)
+          if (initIndex === 0) {
+            trendXAxis.push(bucketsItem.key_as_string)
+          }
+          if (!monthTotal[index]) monthTotal[index] = 0
+          monthTotal[index] += bucketsItem.cumulative_sum_mb.value
+          return prev
+        }, [])
+        initPrev[initItem.key] = buckets
+      }
+      return initPrev
+    }, {})
+
+    trendData.others = others
+    if (dataType === 'trendPercentData') {
+      trendPercentData = Object.keys(trendData).reduce((prev, key) => {
+        const item = trendData[key]
+        prev[key] = item.reduce((_prev, _item, _index) => {
+          if (monthTotal[_index] === 0) _prev.push(0)
+          else _prev.push(_item / monthTotal[_index])
+          return _prev
+        }, [])
+        return prev
+      }, {})
+    } else {
+      trendSizeData = trendData
+    }
+  } catch (error) {}
+}
+
+function handleRefresh(chartSetting) {
+  emits('refreshSetting', chartSetting)
+}
+function handleDelete() {
+  emits('delete')
+}
+// #endregion
+defineExpose({ resize })
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

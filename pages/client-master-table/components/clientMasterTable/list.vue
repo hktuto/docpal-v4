@@ -13,7 +13,8 @@
 </template>
 
 <script lang="ts" setup>
-import {} from "element-plus";
+import {} from 'element-plus'
+
 const props = withDefaults(
   defineProps<{
     list: any[];
@@ -21,23 +22,27 @@ const props = withDefaults(
     valueKey: string;
   }>(),
   {
-    labelKey: "name",
-    valueKey: "id",
+    labelKey: 'name',
+    valueKey: 'id'
   }
-);
+)
 
-const emits = defineEmits(["click"]);
+const emits = defineEmits(['click'])
 const state = reactive<any>({
-  active: "",
-});
+  active: ''
+})
+
 function handleClick(item: any) {
-  state.active = item[props.valueKey];
-  emits("click", state.active, item);
+  state.active = item[props.valueKey]
+  emits('click', state.active, item)
 }
+
 function setActive(activeName: string) {
-  state.active = activeName;
+  state.active = activeName
+  console.log('activeName--', activeName)
 }
-defineExpose({ setActive });
+
+defineExpose({ setActive })
 </script>
 
 <style lang="scss" scoped>
@@ -46,6 +51,7 @@ defineExpose({ setActive });
   overflow-y: auto;
   overflow-x: hidden;
 }
+
 .menu-item {
   line-height: 24px;
   padding: 3px;
@@ -57,6 +63,7 @@ defineExpose({ setActive });
     color: var(--app-grey-950);
     opacity: 0.8;
   }
+
   &.cur {
     background-color: var(--app-primary-color);
     color: var(--app-grey-950);

@@ -150,7 +150,7 @@ function handleSingleSchemaAdd(row: any) {
 
 async function handleSubmit() {
   if (!state.name) {
-    tableDialogRef.value.handleOpen({ name: state.name })
+    tableDialogRef.value.handleOpen()
     return
   }
   if (tableConfig.data.length === 6) {
@@ -177,12 +177,12 @@ function checkDisabledUniqueAndOpenSchemaDialog(row: any, edit: boolean = false)
 async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(t('msg_confirmWhetherToDelete'))
   if (action !== 'confirm') return
-  const index = tableConfig.data.findIndex((item) => item.fieldName === row.fieldName)
+  const index = tableConfig.data.findIndex((item: any) => item.fieldName === row.fieldName)
   tableConfig.data.splice(index, 1)
 }
 
 function handleAddSchama(schema: any) {
-  const index = tableConfig.data.findIndex((item) => item.fieldName === schema.fieldName)
+  const index = tableConfig.data.findIndex((item: any) => item.fieldName === schema.fieldName)
   if (index !== -1) {
     routerProvider?.message.error(t('tip.duplicate'))
     setTimeout(() => {

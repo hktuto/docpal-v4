@@ -1,5 +1,5 @@
 <template>
-  <div class="pageContainer--padding">
+  <div class="table-container">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #fileType> Smart Folder </template>
     </VxeGrid>

@@ -85,7 +85,6 @@ const graph = ref()
 const dnd = ref()
 
 function graphReady() {
-  console.log('graph ready')
   ready.value = true
   graph.value = viewerRef.value.graph
   graph.value.use(
@@ -293,12 +292,11 @@ async function openForm(node: Node) {
   // console.log(selectedStep.value?.data.extensionElements['flowable:formProperty'] , fieldListApi.value)
 }
 
-const copyKey = ref('')
-const copyObj = ref<any>()
+const copyKey = useState('copy-key', () => "")
+const copyObj = useState('copy-obj')
 async function copyForm(node: Node, obj: any) {
   copyKey.value = node.data.id
   copyObj.value = obj
-  console.log('copyed', copyObj.value, node.data)
   routerProvider?.message.success(`${node.data.name || node.data.id} form has copied`)
 }
 async function pasteForm(node: Node) {

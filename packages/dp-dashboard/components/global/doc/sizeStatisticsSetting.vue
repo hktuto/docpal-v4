@@ -8,9 +8,6 @@
     <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <div class="footer-grid">
-        <el-button id="11" type="danger" @click="handleDelete">
-          {{ $t('common_delete') }}
-        </el-button>
         <el-button id="22" type="primary" :loading="state.loading" @click="handleSubmit">
           {{ $t('common_submit') }}
         </el-button>
@@ -19,7 +16,6 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {ElMessageBox} from 'element-plus'
 import formJson from './sizeStatisticsSetting.vform.json'
 
 const emits = defineEmits([
@@ -54,12 +50,6 @@ function handleOpen(setting) {
   })
 }
 
-async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  emits('delete')
-  state.visible = false
-}
 
 defineExpose({handleOpen})
 </script>

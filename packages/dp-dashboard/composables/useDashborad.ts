@@ -3,7 +3,7 @@ import {ElMessageBox} from "element-plus";
 
 export const useDashboard = () => {
 
-  const { emit, props, exposed }= getCurrentInstance();
+  const { emit, props }= getCurrentInstance();
   const { dates, setting, hideSetting } = toRefs(props);
   const settingRef = ref();
   function handleDelete(){
@@ -20,12 +20,13 @@ export const useDashboard = () => {
 
   function resize() {
   }
-  exposed.resize = resize
+
 
   return {
     settingRef,
     dates, setting, hideSetting,
-    handleDelete, openSetting, handleRefresh
+    handleDelete, openSetting, handleRefresh,
+    resize
   }
 }
 
@@ -94,7 +95,6 @@ export const useDashboardSetting = ({
     state.visible = false;
   }
 
-  exposed.handleOpen = handleOpen
 
 
   return {

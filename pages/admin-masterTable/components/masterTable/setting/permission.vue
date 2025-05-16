@@ -3,19 +3,13 @@
     <div>
       <h3 class="title">{{ $t('master.setting.permission') }}</h3>
       <div class="description">{{ $t('master.setting.permissionDescription') }}</div>
-      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission" type="primary"
-                 @click="handleAdd">
+      <el-button id="MasterTable__Tables__Detail__Setting__Permissions__AddPermission" type="primary" @click="handleAdd">
         {{ $t('masterTable_settingAddPermission') }}
       </el-button>
     </div>
     <div class="table-container">
-      <el-table
-        :data="state.tableData"
-        style="width: 100%; height: 100%"
-        :default-sort="{ prop: 'userId', order: 'descending' }"
-      >
-        <el-table-column sortable prop="userId" :label="$t('dpTable_name')">
-        </el-table-column>
+      <el-table :data="state.tableData" style="width: 100%; height: 100%" :default-sort="{ prop: 'userId', order: 'descending' }">
+        <el-table-column sortable prop="userId" :label="$t('dpTable_name')"> </el-table-column>
         <el-table-column
           v-for="item in ['read', 'edit', 'create', 'enable']"
           :key="item"
@@ -36,20 +30,19 @@
         </el-table-column>
         <el-table-column :label="$t('dpTable_actions')">
           <template #default="{ row }">
-            <el-button :id="`MasterTable__Tables__Detail__Setting__Permissions__Remove__${row.userId}`" size="small"
-                       :loading="row.loading" @click="handleRemove(row)">
+            <el-button
+              :id="`MasterTable__Tables__Detail__Setting__Permissions__Remove__${row.userId}`"
+              size="small"
+              :loading="row.loading"
+              @click="handleRemove(row)"
+            >
               {{ $t('dpButtom_remove') }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
-    <MasterTableSettingAddPermissionDialog
-      ref="AddPermissionDialogRef"
-      :tableId="table.id"
-      :exitList="state.tableData"
-      @refresh="init"
-    />
+    <MasterTableSettingAddPermissionDialog ref="AddPermissionDialogRef" :tableId="table.id" :exitList="state.tableData" @refresh="init" />
   </el-card>
 </template>
 <script setup lang="ts">
@@ -58,7 +51,7 @@ import { adminApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['table', 'tableId'])
 const { t } = useI18n()
-const state = reactive<any>({
+const state = reactive<{ loading: boolean; tableData: any }>({
   loading: false,
   tableData: []
 })
@@ -76,36 +69,40 @@ async function handlePermissionChange(boo: boolean, permission: string, row: any
       [permission]: boo
     })
   } catch (error) {
+  } finally {
+    await new Promise((resolve) => setTimeout(resolve, 10))
+    row.loading = false
   }
-  setTimeout(() => (row.loading = false), 500)
 }
 
 async function handleRemove(row: any) {
-  const action = await ElMessageBox.confirm(
-    `${t('masterTable_settingRemoveMsg', { name: row.masterTableName })}`,
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    }
-  )
-  if (action !== 'confirm') return
-  await adminApi.api.postMasterTablesAclsDelete({
-    masterTableId: row.masterTableId,
-    userId: row.userId
+  const action = await ElMessageBox.confirm(`${t('masterTable_settingRemoveMsg', { name: row.masterTableName })}`, {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete')
   })
-  routerProvider?.message.success(t('masterTable_settingRemoveSuccessMsg', { name: row.masterTableName }))
-  init()
+  if (action !== 'confirm') return
+  try {
+    row.loading = true
+    await adminApi.api.postMasterTablesAclsDelete({
+      masterTableId: row.masterTableId,
+      userId: row.userId
+    })
+    routerProvider?.message.success(t('masterTable_settingRemoveSuccessMsg', { name: row.masterTableName }))
+    init()
+  } catch (error) {
+  } finally {
+    row.loading = false
+  }
 }
 
 async function init() {
   try {
     state.loading = true
-    state.tableData = await adminApi.api
-      .getMasterTablesIdAcls(props.tableId)
-      .then((res) => res.data)
+    state.tableData = await adminApi.api.getMasterTablesIdAcls(props.tableId).then((res) => res.data)
   } catch (error) {
+  } finally {
+    state.loading = false
   }
-  state.loading = false
 }
 
 watch(

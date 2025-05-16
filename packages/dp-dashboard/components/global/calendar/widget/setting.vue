@@ -41,13 +41,12 @@ const form = ref<CalendarOptions>({
   defaultCategory: "",
   locationLabel: "",
   categoryLabel: "",
-  categoryLabel: "",
   userFilterGroup: "",
   view: "",
   firstDayOfWeek: "",
 })
 
-function open() {
+function handleOpen() {
   opened.value = true;
   getOptions()
   Object.keys(setting).forEach(key => {
@@ -71,7 +70,7 @@ function submit() {
 }
 
 defineExpose({
-  open
+  handleOpen
 })
 
 </script>

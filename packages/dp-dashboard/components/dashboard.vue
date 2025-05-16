@@ -35,9 +35,7 @@
         </el-button>
       </template>
     </div>
-    <NuxtErrorBoundary>
-
-      <DashboardDetail class="template-container--main"
+    <DashboardDetail class="template-container--main"
         v-if="state.curDashboard && state.curDashboard.layout"
         ref="DashboardDetailRef"
         :id="state.curDashboard.id"
@@ -50,12 +48,6 @@
         @delete="handleDelete"
         @refreshSetting="handleRefresh"
       ></DashboardDetail>
-      <template #error="{ error }">
-        <div class="template-container--main">
-          error {{  error }}
-        </div>
-      </template>
-    </NuxtErrorBoundary>
   </div>
 </template>
 
