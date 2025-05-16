@@ -50,7 +50,7 @@ const props = withDefaults(
   }
 )
 const activeTab = ref('activeTask')
-const activeTabName = ref('activeTask')
+const activeTabName = ref('workflow_activeTask')
 const list = [
   { name: 'workflow_myTask', key: 'myTask' },
   { name: 'workflow_activeTask', key: 'activeTask' },

@@ -1,7 +1,7 @@
 <template>
   <DashboardCard
     ref="cardRef"
-    class="dp-dashboard--card__padding"
+    class="dp-dashboard--card__padding dp-dashboard--card__scroll"
     :hideSetting="hideSetting"
     :title="$t('search.SearchDefine')"
     :setting="setting"

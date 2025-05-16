@@ -195,11 +195,6 @@ onMounted(async () => {
   &--main {
     overflow:auto
   }
-
-  :deep(.el-card) {
-    height: 100%;
-    overflow: auto;
-  }
   :deep(.splitpanes__pane) {
     box-shadow: unset !important;
   }

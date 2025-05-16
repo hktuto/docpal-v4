@@ -21,8 +21,11 @@ const {
 } = useVxeTable({
   id: "d-smartFolder",
   zoom: false,
-  api: (pageParams: any) =>
-  clientApi.api.getNuxeoSfolder({ ...pageParams, ...extraParams }),
+  virtualScroll: true,
+  api: async (pageParams: any) => {
+    const { data } = await clientApi.api.getNuxeoSfolder({ ...pageParams, ...extraParams })
+    return data
+  },
   columns: [
     { field: "name", title: "table_name", fixed: "left" },
     { field: "fileType", title: "dpDocument_fileType", 
