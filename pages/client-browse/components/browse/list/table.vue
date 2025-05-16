@@ -1,4 +1,5 @@
 <script lang="tsx" setup>
+import { useDebounceFn } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
@@ -35,6 +36,35 @@ function sortEntry(a, b) {
 }
 
 
+function resursiveLoadChild(checkList:any[] = [], treeData:any[], result:any[]=[]) {
+  checkList.forEach( (row,index) => {
+    const rowData = treeData.find(el => el.id === row.id)
+    if(rowData) {
+      if(!tableRef.value.isTreeExpandByRow(rowData)){
+        result.push(rowData)
+      }else{
+        result = resursiveLoadChild(checkList, rowData.children, result)
+      }
+
+    }
+  })
+  return result
+}
+
+const reopenFolder = useDebounceFn(() =>{
+   if(!listProvider?.docDetail.value) {
+        console.log("no docDetail")
+        return
+    };
+  if(!tableRef.value || expandedItem.length === 0) return
+  const tableData = tableRef.value.getData()
+  let needExpandList:any[] = resursiveLoadChild(expandedItem, tableData, [])
+
+  tableRef.value?.setTreeExpand(needExpandList, true)
+  // get table opened row
+
+}, 500)
+
 const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
     id: 'browseTableSetting',
     api: async (pageParams: any) => {
@@ -44,7 +74,10 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
         emits('selectedChange', [])
         return data
     },
-    childChangeHander: tableChildChangeHandler,
+    childChangeHander: () => {
+      tableChildChangeHandler();
+      reopenFolder();
+    },
     columns: [
         {
             type: 'checkbox',
@@ -435,7 +468,6 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     optionalConfig: {
         treeConfig: {
             transform: true,
-            rowField: 'id',
             parentField: 'parentId',
             lazy: true,
             indent: 20,
@@ -458,7 +490,7 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
             height: 42,
             isCurrent: true,
             isHover: true,
-            useKey: true
+            useKey: true,
         },
         rowStyle: ({ rowIndex, row }) => {
           if (row.source === 'tempFile') {
@@ -471,6 +503,15 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     optionalEvent: {
         checkboxAll: ({checked}) => {
             console.log("checkbox-all", checked)
+        },
+        toggleTreeExpand: ({expanded, row}) => {
+          if(expanded){
+            expandedItem.push(row)
+          }else{
+            const index = expandedItem.findIndex( ex => ex.id === row.id)
+            if(index !== -1 )
+            expandedItem.splice(index,1)
+          }
         },
         // cellMouseenter: ({row, column, rowIndex}) => {
         // },
@@ -487,12 +528,12 @@ const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTab
     },
     
 })
-
+const expandedItem:any[] = []
 cleanSelectedRowsBus.on(cleanSelectedRows)
 
 let tableDropZone:any;
 let dragableItemList:any[] = [];
-function tableChildChangeHandler(args:any) {
+const tableChildChangeHandler = useDebounceFn(() =>{
     if(!listProvider?.docDetail.value) {
         console.log("no docDetail")
         return
@@ -527,7 +568,7 @@ function tableChildChangeHandler(args:any) {
             dragableItemList.push(createDropableFile(item, rowData, tableRef))
         }
     })
-}
+}, 100)
 
 function dblClickHandler(row: any) {
     if (row.source === 'tempFile') {
