@@ -27,9 +27,13 @@ function openSetting() {
 }
 
 async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-  if (action !== 'confirm') return
-  emits('delete')
+  try{
+    await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    emits('delete')
+  }catch{
+    return
+  }
+  
 }
 
 defineExpose({
