@@ -1,5 +1,5 @@
 <template>
-  <DashboardCard ref="cardRef" :title="$t(setting.workflowName || setting.workflow)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard ref="cardRef" :hideSetting="hideSetting" :title="$t(setting.workflowName || setting.workflow)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
     <template #title_suffix>
       <DashboardUserFilter
         class="el-icon--right"

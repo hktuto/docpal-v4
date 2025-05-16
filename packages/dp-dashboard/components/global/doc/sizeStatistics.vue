@@ -1,5 +1,5 @@
 <template>
-  <DashboardCard ref="cardRef" :title="$t(title)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard ref="cardRef" :hideSetting="hideSetting" :title="$t(title)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <DocSizeStatisticsSetting ref="settingRef" @refresh="handleRefresh" />
   </DashboardCard>
