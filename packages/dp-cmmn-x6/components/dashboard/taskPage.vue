@@ -1,38 +1,47 @@
 <template>
-<el-card class="o-auto">
-  <h3>{{ $t('dashboard.cmmnTaskPage') }}</h3>
-  <div>
-    <Table v-loading="state.loading" :columns="tableSetting.columns" :table-data="state.tableData" :options="state.options"
-      @command="handleAction"
-      @row-dblclick="handleDblclick"
-      @pagination-change="handlePaginationChange">
-      <template #preSortButton>
+  <DashboardCard
+    class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
+    ref="cardRef"
+    :hideSetting="hideSetting"
+    :title="$t('dashboard.cmmnTaskPage')"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
+    <div>
+      <Table
+        v-loading="state.loading"
+        :columns="tableSetting.columns"
+        :table-data="state.tableData"
+        :options="state.options"
+        @command="handleAction"
+        @row-dblclick="handleDblclick"
+        @pagination-change="handlePaginationChange"
+      >
+        <template #preSortButton>
           <!-- {{ $t('msg.confirmWhetherToDeactivate') }} -->
-          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange"
-              inputKey="q"/>
-      </template> 
-    </Table>
-  </div>
-  <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg"
-    @click="handleDelete"/>
-</el-card>
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" />
+        </template>
+      </Table>
+    </div>
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
+const props = withDefaults(
+  defineProps<{
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
+  }>(),
+  {
     setting: {},
     hideSetting: false
-})
+  }
+)
 const emits = defineEmits(['delete'])
 async function handleDelete() {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
-    emits('delete')
+  emits('delete')
 }
 const pageParams = {
   pageNum: 0,
@@ -55,77 +64,73 @@ const state = reactive<any>({
   },
   extraParams: {}
 })
-const { t } = useI18n();
+const { t } = useI18n()
 
 const CMDProvider = inject(CaseManagementDashboardKey)
-// #region module: 
-  const tableSetting = {
-    columns: [
-      { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
-      { id: '2', label: 'workflow_workflowName', prop: 'taskInstance.processDefinitionName'},
-    ],
-    events: ['delete'],
-    slots: [
-    ],
-    options: { pageSize: 20 }
-  }
-  function handlePaginationChange (page: number, pageSize?: number) {
-    pageParams.pageNum = (Number(page) - 1) || 0
-    pageParams.pageSize = Number(pageSize) || pageParams.pageSize
-    getList(pageParams)
-  }
-  async function getList (param) {
-    try {
-      state.loading = true
-      const _instanceId = CMDProvider.instanceId?.value || null
+// #region module:
+const tableSetting = {
+  columns: [
+    { id: '1', label: 'table_name', prop: 'name', defaultColumn: true },
+    { id: '2', label: 'workflow_workflowName', prop: 'taskInstance.processDefinitionName' }
+  ],
+  events: ['delete'],
+  slots: [],
+  options: { pageSize: 20 }
+}
+function handlePaginationChange(page: number, pageSize?: number) {
+  pageParams.pageNum = Number(page) - 1 || 0
+  pageParams.pageSize = Number(pageSize) || pageParams.pageSize
+  getList(pageParams)
+}
+async function getList(param) {
+  try {
+    state.loading = true
+    const _instanceId = CMDProvider.instanceId?.value || null
 
-      if(!_instanceId) {
-        state.tableData = []
-        state.options.paginationConfig.total = 0
-        state.options.paginationConfig.pageSize = 20
-        state.options.paginationConfig.currentPage = 1
-        return
-      }
-      const { data:res }: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams })
-      state.tableData = res.entryList
-      state.options.paginationConfig.total = res.totalSize
-      state.options.paginationConfig.pageSize = param.pageSize
-      state.options.paginationConfig.currentPage = param.pageNum + 1
-    } catch (error) {
+    if (!_instanceId) {
+      state.tableData = []
+      state.options.paginationConfig.total = 0
+      state.options.paginationConfig.pageSize = 20
+      state.options.paginationConfig.currentPage = 1
+      return
+    }
+    const { data: res }: any = await adminApi.api.postCaseDashboardInstanceCaseidProcessInstancePage(_instanceId, { ...param, ...state.extraParams })
+    state.tableData = res.entryList
+    state.options.paginationConfig.total = res.totalSize
+    state.options.paginationConfig.pageSize = param.pageSize
+    state.options.paginationConfig.currentPage = param.pageNum + 1
+  } catch (error) {
+  } finally {
+    state.loading = false
+  }
+}
 
-    } finally {
+function handleAction(command: string, row: any, rowIndex: number) {
+  switch (command) {
+    case 'edit':
+      handleDblclick(row)
+      break
+  }
+}
+async function handleDblclick(row) {
+  try {
+    state.loading = true
+    // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
+  } catch (error) {
+  } finally {
+    setTimeout(() => {
       state.loading = false
-    }
+    }, 300)
   }
-
-  function handleAction (command:string, row: any, rowIndex: number) {
-    switch (command) {
-        case 'edit':
-            handleDblclick(row)
-            break
-    }
-  }
-  async function handleDblclick(row) {
-    try {
-      state.loading = true
-      // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
-    } catch (error) {
-    } finally {
-      setTimeout(() => {
-        state.loading = false
-      }, 300)
-    }
-  }
-  function handleFilterFormChange(formModel) {
-    state.extraParams = formModel
-    handlePaginationChange(1)
-  }
+}
+function handleFilterFormChange(formModel) {
+  state.extraParams = formModel
+  handlePaginationChange(1)
+}
 // #endregion
-
 
 onMounted(() => {
   handlePaginationChange(1)
 })
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

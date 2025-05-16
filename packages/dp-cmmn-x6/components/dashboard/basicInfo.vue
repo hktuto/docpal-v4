@@ -1,78 +1,74 @@
 <template>
-<el-card class="o-auto">
-  <h3>{{ $t('dashboard.cmmnBasicInfo') }}</h3>
-  <div class="flex-zoom">
-    <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
-      <div class="header">{{ state.label[item.id] || renderLabel(item.name) }}</div>
-      <div class="content">
-        {{ 
-          displayValue(item)
-        }} 
+  <DashboardCard
+    class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
+    ref="cardRef"
+    :hideSetting="hideSetting"
+    :title="$t('dashboard.cmmnBasicInfo')"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
+    <div class="flex-zoom">
+      <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
+        <div class="header">{{ state.label[item.id] || renderLabel(item.name) }}</div>
+        <div class="content">
+          {{ displayValue(item) }}
+        </div>
       </div>
     </div>
-  </div>
-  <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/setting.svg"
-    @click="openSetting"/>
-  <DashboardBasicInfoSetting ref="settingRef" 
-    @delete="handleDelete"
-    @refresh="handleRefresh"/>
-</el-card>
+    <DashboardBasicInfoSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
 import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
-import {adminApi } from 'api'
-const { public: { platform } } = useRuntimeConfig()
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
+import { adminApi } from 'api'
+const {
+  public: { platform }
+} = useRuntimeConfig()
+const props = withDefaults(
+  defineProps<{
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
+  }>(),
+  {
     setting: {
-    "layout": [
-        
-    ],
-    "defaultValue": {},
-    "label": {}
-},
+      layout: [],
+      defaultValue: {},
+      label: {}
+    },
     hideSetting: false
-})
+  }
+)
 
 const caseProvider: any = inject(CaseManagementDashboardKey)
-const emits = defineEmits([
-  'refreshSetting', 'delete'
-])
+const emits = defineEmits(['refreshSetting', 'delete'])
 const { t } = useI18n()
 
 const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
 onMounted(() => {
-  console.log(" setup listen to", caseProvider.instanceId?.value)
   refreshBus.on(needRefresh)
 })
 onUnmounted(() => {
   refreshBus.off(needRefresh)
 })
-function needRefresh(detail:any) {
-  const caseId = caseProvider.instanceId?.value || null;
-  console.log("listen to",{
-    caseId,
-    detail
-  }, detail.caseId === caseId)
-  if(detail.caseId === caseId) {
-    console.log("success should refresh now")
+function needRefresh(detail: any) {
+  const caseId = caseProvider.instanceId?.value || null
+  if (detail.caseId === caseId) {
     initLayout()
   }
 }
 
-function displayValue(item) {
-  if(platform === 'admin') {
-    return state.defaultValue[item.id] 
+function displayValue(item: any) {
+  if (platform === 'admin') {
+    return state.defaultValue[item.id]
   }
-  if(item.type === 'date') {
+  if (item.type === 'date') {
     return formatDate(item.value)
   }
-  if(item.type === 'boolean') {
+  if (item.type === 'boolean') {
     // TODO: translate later
     return item.value ? 'Yes' : 'No'
   }
@@ -86,43 +82,37 @@ const state = reactive<any>({
   mode: 'develop'
 })
 // #region module: dialog
-  const settingRef = ref()
-  function openSetting() {
-    settingRef.value.handleOpen(props.setting, state.data.fields)
-  }
-  function handleDelete() {
-    emits('delete')
-  }
-  function handleRefresh(chartSetting: any) {
-    emits('refreshSetting', chartSetting)
-  }
+const settingRef = ref()
+
+function handleDelete() {
+  emits('delete')
+}
+function handleRefresh(chartSetting: any) {
+  emits('refreshSetting', chartSetting)
+}
 // #endregion
 
-
-function renderLabel(label:any){
+function renderLabel(label: any) {
   // convert label to titel case
   // return orgin label if secound string is also uppercase
-  if(label.toUpperCase() === label) return label
-  return label.toLowerCase().replace(/\b\w/g, s => s.toUpperCase())
-
+  if (label.toUpperCase() === label) return label
+  return label.toLowerCase().replace(/\b\w/g, (s) => s.toUpperCase())
 }
 
 async function getCDBasciInfo() {
   try {
-    console.log("getCDBasciInfo")
     // remove this line, cause it will cause refresh data
     // if (state.data?.fields?.length > 0) return state.data
-    const id = caseProvider.instanceId?.value || null;
-    const caseVersionId = caseProvider.caseVersionId?.value || null;
-    console.log("caseProvider", caseProvider);
+    const id = caseProvider.instanceId?.value || null
+    const caseVersionId = caseProvider.caseVersionId?.value || null
 
-    if(id) {
+    if (id) {
       state.mode = 'normal'
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidPrimaryformData(id)
       state.data = data
-    } else if(caseVersionId) {
+    } else if (caseVersionId) {
       state.mode = 'develop'
-      const {data:form}: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
+      const { data: form }: any = await adminApi.api.getCaseDashboardVersionVersionidPrimaryform(caseVersionId)
       form.rows = form.fields.reduce((prev: any, item: any) => {
         let value = item.type
         if (item.type === 'date') value = '2024-01-01'
@@ -132,7 +122,6 @@ async function getCDBasciInfo() {
         return prev
       }, [])
       state.data = form
-      
     } else {
       state.data = {
         fields: [],
@@ -140,7 +129,6 @@ async function getCDBasciInfo() {
       }
     }
   } catch (error) {
-    console.log("getCDBasciInfo", error)
     state.data = {
       fields: [],
       rows: []
@@ -148,40 +136,42 @@ async function getCDBasciInfo() {
   } finally {
     return state.data
   }
-} 
+}
 async function initLayout() {
-  console.log("init layout")
   const data = await getCDBasciInfo()
   state.layout = props.setting.layout.reduce((prev: any, item: any) => {
     const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
-    
-    if(_item) {
-      if(!item.width) item.width = '50%'
-      prev.push({...item, ..._item })
-    }else{
-      prev.push({...item})
+
+    if (_item) {
+      if (!item.width) item.width = '50%'
+      prev.push({ ...item, ..._item })
+    } else {
+      prev.push({ ...item })
     }
     return prev
   }, [])
-  if(!props.setting.defaultValue) props.setting.defaultValue = {}
+  if (!props.setting.defaultValue) props.setting.defaultValue = {}
   state.defaultValue = props.setting.defaultValue
   state.label = props.setting.label || {}
 }
 
-watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
+watchDebounced(
+  () => props.setting.layout,
+  (newValue, oldValue) => {
     setTimeout(() => {
-      console.log("initLayout", newValue)
-      if(!!newValue) {
+      if (!!newValue) {
         // if(oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) return
         initLayout()
       }
     })
-}, {
-    debounce: 200, 
+  },
+  {
+    debounce: 200,
     maxWait: 500,
     deep: true,
     immediate: true
-})
+  }
+)
 </script>
 <style lang="scss" scoped>
 :deep .flex-zoom {
@@ -200,14 +190,14 @@ watchDebounced(() => props.setting.layout, (newValue, oldValue) => {
     --icon-size: 1.14rem;
     .header {
       margin: var(--app-input-padding) 0;
-      color: #687A8F;
+      color: #687a8f;
     }
     .content {
       font-size: 18px;
       font-weight: 600;
     }
   }
-  .content{
+  .content {
     min-height: var(--app-space-s);
   }
 }
