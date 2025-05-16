@@ -51,6 +51,7 @@ defineExpose({
         </h4>
 
         <div class="flex-x-end">
+          <slot name="action_prefix"></slot>
           <SvgIcon v-if="!hideSetting && settingRef" class="" src="/icons/setting.svg" @click="openSetting" />
           <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg" @click="handleDelete" />
         </div>
@@ -71,7 +72,7 @@ defineExpose({
 }
 :deep .el-card__header {
   margin: 0;
-  --icon-size: 16px;
+  --icon-size: 1.2rem;
   --icon-color: var(--app-grey-525);
   padding: var(--app-space-s) var(--app-space-s) 0 var(--app-space-s) !important;
   display: flex;
@@ -112,5 +113,14 @@ defineExpose({
   .el-tabs__header {
     margin-bottom: 0;
   }
+}
+:deep .iconify {
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: var(--app-grey-525);
+}
+:deep .iconify.icon-right {
+  margin-right: var(--app-space-xxs);
+  cursor: pointer;
 }
 </style>
