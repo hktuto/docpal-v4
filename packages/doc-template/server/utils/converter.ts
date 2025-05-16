@@ -7,14 +7,13 @@ import link from '@tiptap/extension-link'
 import SuperScript from '@tiptap/extension-superscript'
 import Underline from '@tiptap/extension-underline'
 
-import Document from '@tiptap/extension-document'
+
 
 import Image from '@tiptap/extension-image'
+import {DocumentSetting} from '../../utils/packages/document'
 // table
-import Table from '@tiptap/extension-table'
-import TableCell from '@tiptap/extension-table-cell'
-import TableHeader from '@tiptap/extension-table-header'
-import TableRow from '@tiptap/extension-table-row'
+import {TableSetting} from '../../utils/packages/table'
+import {Task} from '../../utils/packages/task'
 // list
 import BulletList from '@tiptap/extension-bullet-list'
 import ListItem from '@tiptap/extension-list-item'
@@ -42,18 +41,16 @@ export const convertTipTapToHTML = (editorJson :any) => {
         BulletList,
         OrderedList,
         ListItem,
+        ...DocumentSetting,
         // table
-        Table,
-        TableRow,
-        TableHeader,
-        TableCell,
+        ...TableSetting,
+        ...Task,
         TextStyle,
         FontFamily,
         Text,
         Paragraph,
         Image,
         Heading,
-        Document,
         PaginationExtension,
         HeaderFooterNode,
         PageNode,

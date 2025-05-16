@@ -24,7 +24,7 @@ function normalizeJson(option:TipTapOptions, json?:any){
     return json
   }
   if(option.mode === 'PAGE') {
-    return ""        
+    return ``        
   } else {
     return ""
   }
