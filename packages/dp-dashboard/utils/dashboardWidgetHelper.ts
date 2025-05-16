@@ -414,11 +414,11 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
     PersonalCaseCreate: {
         type: 'personal',
         label: 'PersonalCaseCreate',
-        minW: 2,
+        minW: 1,
         minH: 2,
         maxW: 12,
         maxH: 6,
-        w: 3,
+        w: 2,
         h: 3,
         component : 'PersonalCaseCreate',
         setting : {
