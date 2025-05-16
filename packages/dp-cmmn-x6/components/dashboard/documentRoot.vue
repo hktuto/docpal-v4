@@ -67,9 +67,6 @@ async function getHomeId() {
 }
 // #region module: setting
 const settingRef = ref();
-function openSetting() {
-  settingRef.value.handleOpen(props.setting, caseDetail.value?.fields);
-}
 function handleDelete() {
   emits("delete");
 }
@@ -90,14 +87,14 @@ provide(BrowseListProviderKey, {
 </script>
 
 <template>
-  <ElCard class="o-auto">
-    <!-- <h3>{{ $t("dashboard.cmmnDocumentRoot") }}</h3> -->
-    <SvgIcon
-      v-if="!hideSetting"
-      class="setting--icon"
-      src="/icons/setting.svg"
-      @click="openSetting"
-    />
+  <DashboardCard
+    class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
+    ref="cardRef"
+    :hideSetting="hideSetting"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
     <div v-if="homeId" class="rootContainer">
       <BrowseMiniTable ref="tableRef" :home="homeId">
         <template #toolbar_buttons>
@@ -112,17 +109,9 @@ provide(BrowseListProviderKey, {
       @delete="handleDelete"
       @refresh="handleRefresh"
     ></DashboardDocumentRootSetting>
-  </ElCard>
+  </DashboardCard>
 </template>
 <style lang="scss" scoped>
-h3 {
-  margin-bottom: var(--app-space-xs) !important;
-}
-:deep(.el-card__body){
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
 .rootContainer{
   height:100%;
   overflow: hidden;
