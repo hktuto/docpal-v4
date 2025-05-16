@@ -240,7 +240,7 @@ defineExpose({
 <style lang="scss" scoped>
 .calendarViewerContainer{
     flex: 1;
-    overflow: auto;
+    overflow: hidden;
     &.editMode, &.createMode{
         .eventContainer{
             filter: grayscale(1);
@@ -250,6 +250,9 @@ defineExpose({
         }
     }
 }   
+.sx-vue-calendar-wrapper {
+  height: 100%;
+}
 .eventContainer{
     height:100%;
     padding:var(--app-space-xs);
