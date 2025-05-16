@@ -4,16 +4,16 @@ const emits = defineEmits(['delete', 'refreshSetting', 'openSetting'])
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
-    showSkeleton: boolean
-    hideSetting: boolean
-    title: string
-    settingRef: any
-    setting: any
+    showSkeleton?: boolean
+    hideSetting?: boolean
+    title?: string
+    settingRef?: any
+    setting?: any
   }>(),
   {
     showSkeleton: false,
     hideSetting: false,
-    title: 'title'
+    title: ''
   }
 )
 

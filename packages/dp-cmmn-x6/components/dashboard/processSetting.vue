@@ -39,7 +39,6 @@
     </div>
     <template #footer>
       <div class="footer-grid">
-        <el-button type="danger" @click="handleDelete">{{$t('common_delete')}}</el-button>
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{$t('common_submit')}}</el-button>
       </div>
     </template>
@@ -83,12 +82,7 @@ function handleOpen(setting, allList) {
         state.loading = false
     })
 }
-async function handleDelete() {
-    const action = await ElMessageBox.confirm(`${$i18n.t('msg_confirmWhetherToDelete')}`)
-    if(action !== 'confirm') return
-    emits('delete')
-    state.visible = false
-}
+
 defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped>
