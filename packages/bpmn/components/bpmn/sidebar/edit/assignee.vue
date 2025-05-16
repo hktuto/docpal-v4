@@ -19,7 +19,6 @@ function refreshData(){
     }else{
         autoAssignField.value = ''
     }
-    console.log("refreshData", autoAssignField.value)
 }
 
 function assigneeChanged(newVal: string) {
@@ -61,7 +60,6 @@ const allFields = computed(() => {
 })
 
 function setUpListener(){
-    console.log("setUpListener")
     graphProvider?.graph.value?.on('history:undo', () => {
       refreshData()
     })
@@ -74,6 +72,17 @@ onMounted(async() => {
     refreshData()
     setUpListener()
 })
+
+
+watch(() => node, ()=> {
+  if(node) {
+    refreshData()
+  }
+},{
+  immediate: true,
+  deep: true
+})
+
 
 </script>
 

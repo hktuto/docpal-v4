@@ -1,4 +1,5 @@
 <script lang="tsx" setup>
+import { useDebounceFn } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
@@ -36,81 +37,173 @@ function sortEntry(a: any, b: any) {
   return b.isFolder ? 1 : -1
 }
 
-const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
-  id: 'browseTableSetting',
-  api: async (pageParams: any) => {
-    cleanSelectedRows()
-    const data = await loadData([], listProvider.idOrPath.value || '/')
-    data.sort(sortEntry)
-    emits('selectedChange', [])
-    return data
-  },
-  childChangeHander: tableChildChangeHandler,
-  columns: [
-    {
-      type: 'checkbox',
-      fixed: 'left',
-      width: 50
-    },
-    {
-      field: 'name',
-      title: 'document_name',
-      minWidth: 200,
-      treeNode: true,
-      type: 'html',
-      formatter: ({ cellValue, row }: any) => {
-        let icon = '/icons/doc/file.svg'
-        if (row.isFolder) {
-          icon = '/icons/doc/folder.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        // get differnent icon base on row.mimeType
-        if (!row.mimeType) {
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        const mimeType = row.mimeType
-        if (mimeType?.startsWith('image')) {
-          icon = '/icons/doc/image.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('video')) {
-          icon = '/icons/doc/video.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('audio')) {
-          icon = '/icons/doc/audio.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('application/pdf')) {
-          icon = '/icons/doc/pdf.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('text')) {
-          icon = '/icons/doc/text.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('application/zip')) {
-          icon = '/icons/doc/zip.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('application/vnd.ms-excel') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')) {
-          icon = '/icons/doc/excel.svg'
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        if (mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-          icon = `/icons/doc/word.svg`
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        // if mimetype is ppt, return ppt src
-        if (
-          mimeType?.startsWith('application/vnd.ms-powerpoint') ||
-          mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')
-        ) {
-          icon = `/icons/doc/ppt.svg`
-          return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
-        }
-        return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
+function resursiveLoadChild(checkList:any[] = [], treeData:any[], result:any[]=[]) {
+  checkList.forEach( (row,index) => {
+    const rowData = treeData.find(el => el.id === row.id)
+    if(rowData) {
+      if(!tableRef.value.isTreeExpandByRow(rowData)){
+        result.push(rowData)
+      }else{
+        result = resursiveLoadChild(checkList, rowData.children, result)
       }
+
+    }
+  })
+  return result
+}
+
+const reopenFolder = useDebounceFn(() =>{
+   if(!listProvider?.docDetail.value) {
+        console.log("no docDetail")
+        return
+    };
+  if(!tableRef.value || expandedItem.length === 0) return
+  const tableData = tableRef.value.getData()
+  let needExpandList:any[] = resursiveLoadChild(expandedItem, tableData, [])
+
+  tableRef.value?.setTreeExpand(needExpandList, true)
+  // get table opened row
+
+}, 500)
+
+const {tableConfig, tableEvent, tableRef, reload, cleanSelectedRows} = useVxeTable({
+    id: 'browseTableSetting',
+    api: async (pageParams: any) => {
+        cleanSelectedRows()
+        const data = await loadData([], listProvider.idOrPath.value || '/')
+        data.sort(sortEntry)
+        emits('selectedChange', [])
+        return data
+    },
+    childChangeHander: () => {
+      tableChildChangeHandler();
+      reopenFolder();
+    },
+    columns: [
+        {
+            type: 'checkbox',
+            fixed: 'left',
+            width: 50,
+        },
+        {
+            field: 'name',
+            title: 'document_name',
+            minWidth: 200,
+            treeNode: true,
+            type: 'html',
+            formatter: ({cellValue, row}: any) => {
+                let icon = '/icons/doc/file.svg';
+                if (row.isFolder) {
+                    icon = '/icons/doc/folder.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                // get differnent icon base on row.mimeType
+                if(!row.mimeType) {
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                const mimeType = row.mimeType
+                if(mimeType?.startsWith('image')){
+                    icon = '/icons/doc/image.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('video')){
+                    icon = '/icons/doc/video.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('audio')){
+                    icon = '/icons/doc/audio.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/pdf')){
+                    icon = '/icons/doc/pdf.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('text')){
+                    icon = '/icons/doc/text.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/zip')){    
+                    icon = '/icons/doc/zip.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/vnd.ms-excel') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')){
+                    icon = '/icons/doc/excel.svg';
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+                }
+                if(mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+                    icon = `/icons/doc/word.svg`
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
+                }
+                // if mimetype is ppt, return ppt src
+                if(mimeType?.startsWith('application/vnd.ms-powerpoint') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+                    icon = `/icons/doc/ppt.svg`
+                    return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
+                }
+                return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} ${row.source === 'tempFile' ? '(temp)' : ''}</span> `
+
+            }
+        },
+        {
+            field: 'mimeType',
+            title: 'search.mimeTypes',
+            formatter: ({cellValue}: any) => {
+                return mimeTypeToExtension(cellValue)
+            },
+        },
+        {
+            field: 'documentType',
+            title: 'docType_documentType',
+        },
+        {
+            field: 'fileSize',
+            title: 'search.size',
+            formatter: ({cellValue}: any) => {
+                return formatFileSize(cellValue)
+            },
+        },
+        {
+            field: 'modifiedDate',
+            title: 'table_modifiedDate',
+            formatter: ({ cellValue }:any) => {
+                return formatDate(cellValue)
+            },
+        },
+        {
+            field: 'createdDate',
+            title: 'dpTable_createdDate',
+            formatter: ({ cellValue }:any) => {
+                return formatDate(cellValue)
+            },
+        },
+        {
+            field: 'fileModifiedDate',
+            title: 'fileModifiedDate_label',
+            formatter: ({ cellValue }:any) => {
+                return formatDate(cellValue)
+            },
+        },
+        {
+            field: 'tags',
+            title: 'rightDetail_tags',
+            slots: {
+                default: 'tags',
+            }
+        },
+        {
+            field: 'contributors',
+            title: 'info_contributors',
+        },
+
+    ],
+    customeToolBar: true,
+    virtualScroll: true,
+    remoteSort: false,
+    remoteFilter: false,
+    dblClickAction: ({row, column, event}) => {
+        dblClickHandler(row)
     },
     {
       field: 'mimeType',
@@ -130,170 +223,34 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         return formatFileSize(cellValue)
       }
     },
-    {
-      field: 'modifiedDate',
-      title: 'table_modifiedDate',
-      formatter: ({ cellValue }: any) => {
-        return formatDate(cellValue)
-      }
-    },
-    {
-      field: 'createdDate',
-      title: 'dpTable_createdDate',
-      formatter: ({ cellValue }: any) => {
-        return formatDate(cellValue)
-      }
-    },
-    {
-      field: 'fileModifiedDate',
-      title: 'fileModifiedDate_label',
-      formatter: ({ cellValue }: any) => {
-        return formatDate(cellValue)
-      }
-    },
-    {
-      field: 'tags',
-      title: 'rightDetail_tags',
-      slots: {
-        default: 'tags'
-      }
-    },
-    {
-      field: 'contributors',
-      title: 'info_contributors'
-    }
-  ],
-  customeToolBar: true,
-  virtualScroll: true,
-  remoteSort: false,
-  remoteFilter: false,
-  dblClickAction: ({ row, column, event }) => {
-    dblClickHandler(row)
-  },
-  bodyActions: [
-    [
-      {
-        code: 'docOpen',
-        name: 'common_open',
-        action: ({ row }: any) => {
-          dblClickHandler(row)
-        }
-      },
-      {
-        code: 'docActionAddFolder',
-        name: 'filePopover_newFolder',
-        action: ({ row }) => {
-          const doc = row || listProvider.docDetail.value
-          const ev = new CustomEvent('docActionAddFolder', { detail: doc })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionNewFile',
-        name: 'filePopover_newFile',
-        action: ({ row }) => {
-          const doc = row || listProvider.docDetail.value
-          const ev = new CustomEvent('docActionNewFile', { detail: doc })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionUploadFile',
-        name: 'filePopover_uploadFile',
-        action: ({ row }) => {
-          const doc = row || listProvider.docDetail.value
-          const ev = new CustomEvent('docActionUploadFile', { detail: doc })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionUploadFolder',
-        name: 'filePopover_uploadFolder',
-        action: ({ row }) => {
-          const doc = row || listProvider.docDetail.value
-          const ev = new CustomEvent('docActionUploadFolder', { detail: doc })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionRename',
-        name: 'filePopover_rename',
-        action: ({ row }) => {
-          const ev = new CustomEvent('docActionRename', { detail: row })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionChangeDocType',
-        name: 'filePopover_changeDocType',
-        action: ({ row }) => {
-          const ev = new CustomEvent('docActionChangeDocType', { detail: row })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docWatermark',
-        name: 'filePopover_watermark',
-        action: async ({ row }) => {
-          const detail = await clientApi.api.postNuxeoDocument({ idOrPath: row.id }).then((res) => res.data)
-          const ev = new CustomEvent('docWatermark', { detail: detail })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionCopy',
-        name: 'filePopover_copy',
-        action: ({ row }) => {
-          const ev = new CustomEvent('docActionCopy', { detail: row })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionCut',
-        name: 'filePopover_cut',
-        action: ({ row }) => {
-          const ev = new CustomEvent('docActionCut', { detail: row })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionPaste',
-        name: 'filePopover_paste',
-        action: ({ row }) => {
-          const doc = row || listProvider.docDetail.value
-          const ev = new CustomEvent('docActionPaste', { detail: doc })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionInternalShare',
-        name: 'filePopover_internalShare',
-        action: ({ row }) => {
-          const ev = new CustomEvent('docActionInternalShare', { detail: row })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionDelete',
-        name: 'filePopover_delete',
-        action: async ({ row }) => {
-          const detail = await clientApi.api.postNuxeoDocument({ idOrPath: row.id }).then((res) => res.data)
-          const ev = new CustomEvent('docActionDelete', { detail: detail })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionRefresh',
-        name: 'common_refresh',
-        action: ({ row }) => {
-          const doc = row || listProvider.docDetail.value
-          reload()
-        }
-      },
-      {
-        code: 'docActionNewTab',
-        name: 'rightClick.newTab',
-        action: ({ row }) => {
+    optionalConfig: {
+        treeConfig: {
+            transform: true,
+            parentField: 'parentId',
+            lazy: true,
+            indent: 20,
+            showLine: true,
+            hasChildField: 'isFolder',
+            loadMethod: async (params) => {
+                const entry = await loadAllChildren([], params.row.id)
+                return entry.sort(sortEntry)
+            }
+        },
+        checkboxConfig: {
+            checkStrictly: true,
+            showHeader: false,
+            highlight: true,
+            range: false,
+            trigger:'cell',
+            visibleMethod: ({row}: any) => !row.isFolder
+        },
+        rowConfig: {
+            height: 42,
+            isCurrent: true,
+            isHover: true,
+            useKey: true,
+        },
+        rowStyle: ({ rowIndex, row }) => {
           if (row.source === 'tempFile') {
             const newItem = createAiUploadDetail({
               id: row.doc.uploadId
@@ -462,13 +419,31 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         return entry.sort(sortEntry)
       }
     },
-    checkboxConfig: {
-      checkStrictly: true,
-      showHeader: false,
-      highlight: true,
-      range: false,
-      trigger: 'cell',
-      visibleMethod: ({ row }: any) => !row.isFolder
+    optionalEvent: {
+        checkboxAll: ({checked}) => {
+            console.log("checkbox-all", checked)
+        },
+        toggleTreeExpand: ({expanded, row}) => {
+          if(expanded){
+            expandedItem.push(row)
+          }else{
+            const index = expandedItem.findIndex( ex => ex.id === row.id)
+            if(index !== -1 )
+            expandedItem.splice(index,1)
+          }
+        },
+        // cellMouseenter: ({row, column, rowIndex}) => {
+        // },
+        cellMouseleave: ({row, column, rowIndex}) => {
+            emitBus(EventType.FILE_PREVIEW_CLOSE, row)
+        },
+        cellClick: ({row, column, rowIndex}) => {
+            if(column.field === 'name') {
+                emitBus(EventType.FILE_PREVIEW_OPEN, row)
+            }else{
+                emitBus(EventType.FILE_PREVIEW_CLOSE, row)
+            }
+        },
     },
     rowConfig: {
       height: 42,
@@ -502,30 +477,19 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     }
   }
 })
-
+const expandedItem:any[] = []
 cleanSelectedRowsBus.on(cleanSelectedRows)
 
-let tableDropZone: any
-let dragableItemList: any[] = []
-function tableChildChangeHandler(args: any) {
-  if (!listProvider?.docDetail.value) {
-    console.log('no docDetail')
-    return
-  }
-  // body row may be empty when table is loading, create root drop zone first
-  if (!tableDropZone) {
-    tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
-  }
-  const allBodyRow = tableRef.value?.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
-  if (allBodyRow.length === 0) {
-    console.log('no body row')
-    return
-  }
-  // unregister all dragableItemList
-  dragableItemList.forEach((item) => {
-    // check if item is a function, if so, call it
-    if (typeof item === 'function') {
-      item()
+let tableDropZone:any;
+let dragableItemList:any[] = [];
+const tableChildChangeHandler = useDebounceFn(() =>{
+    if(!listProvider?.docDetail.value) {
+        console.log("no docDetail")
+        return
+    };
+    // body row may be empty when table is loading, create root drop zone first
+    if(!tableDropZone){
+        tableDropZone = createRootDropZone(tableRef, listProvider?.docDetail)
     }
   })
   dragableItemList = []
@@ -535,14 +499,14 @@ function tableChildChangeHandler(args: any) {
     if (!rowid) return
     const rowData = tableRef.value?.getRowById(rowid)
 
-    if (!rowData) return
-    if (rowData.isFolder) {
-      dragableItemList.push(createDropableFolder(item, rowData, tableRef))
-    } else {
-      dragableItemList.push(createDropableFile(item, rowData, tableRef))
-    }
-  })
-}
+        if(!rowData) return;
+        if(rowData.isFolder){
+            dragableItemList.push(createDropableFolder(item,rowData, tableRef))
+        }else{
+            dragableItemList.push(createDropableFile(item, rowData, tableRef))
+        }
+    })
+}, 100)
 
 function dblClickHandler(row: any) {
   if (row.source === 'tempFile') {

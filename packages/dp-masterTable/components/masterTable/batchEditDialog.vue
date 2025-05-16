@@ -8,49 +8,50 @@
     destroy-on-close
     @close="handleClose"
   >
-    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible/>
+    <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" isAddRelation flexible />
     <template #footer>
       <div class="footer-grid">
         <el-button id="MasterTable__BatchEdit__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
-          {{ $t('common_submit') }}
+          {{ t('common_submit') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from "api";
+import { adminApi } from 'api'
 
+const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
     ignoreList: any;
     tableId: string
   }>(),
   {
-    ignoreList: [],
+    ignoreList: []
   }
-);
-const emits = defineEmits(["refresh", "delete"]);
+)
+const emits = defineEmits(['refresh', 'delete'])
 const state = reactive({
   loading: false,
   visible: false,
   setting: {},
   fields: [],
   edit: false,
-  title: $t("button.batchEdit"),
-  rows: [],
-});
-const route = useRoute();
-const router = useRouter();
+  title: t('button.batchEdit'),
+  rows: []
+})
+const route = useRoute()
+const router = useRouter()
 
 // #region module: submit
 async function handleSubmit() {
   try {
-    state.loading = true;
-    const data = await FormVariablesRendererRef.value.getData(true);
+    state.loading = true
+    const data = await FormVariablesRendererRef.value.getData(true)
     const params: any = {
-      data: [{...data}],
-      in: {id: state.rows.map(item => item.id)}
+      data: [{ ...data }],
+      in: { id: state.rows.map(item => item.id) }
     }
     if (data.relationRecords) {
       params.relationRecords = data.relationRecords
@@ -58,34 +59,34 @@ async function handleSubmit() {
     }
     await adminApi.api.putMasterTablesIdBatchRecord(props.tableId, params)
     // console.log(params);
-    emits("refresh");
-    state.visible = false;
+    emits('refresh')
+    state.visible = false
   } catch (error) {
 
   } finally {
-    state.loading = false;
+    state.loading = false
   }
 }
 
 // #endregion
 
-const FormVariablesRendererRef = ref();
+const FormVariablesRendererRef = ref()
 
 async function handleOpen(fields, rows) {
-  state.visible = true;
-  state.loading = false;
+  state.visible = true
+  state.loading = false
   state.rows = deepCopy(rows)
   state.fields = fields
   setTimeout(() => {
     initForm(state.rows[0])
-  });
+  })
 }
 
 function initForm(row: any) {
   console.log(state.fields)
-  FormVariablesRendererRef.value.init(state.fields, row);
+  FormVariablesRendererRef.value.init(state.fields, row)
 }
 
-defineExpose({handleOpen});
+defineExpose({ handleOpen })
 </script>
 <style lang="scss" scoped></style>

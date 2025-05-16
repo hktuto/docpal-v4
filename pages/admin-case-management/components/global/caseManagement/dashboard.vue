@@ -134,30 +134,6 @@ provide(CaseManagementDashboardKey, {
   }
 }
 
-:deep .o-auto {
-  height: 100%;
-
-  & > .el-card__body {
-    height: 100%;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: min-content 1fr;
-    gap: var(--app-space-xs);
-
-    h3 {
-      margin: unset;
-    }
-  }
-
-  .setting--icon {
-    --icon-size: 1.14rem;
-    --icon-color: #8796A4;
-    position: absolute;
-    top: var(--app-space-xs);
-    right: var(--app-space-xs);
-  }
-}
-
 :deep .responsive-container {
   margin-bottom: 10px;
 }

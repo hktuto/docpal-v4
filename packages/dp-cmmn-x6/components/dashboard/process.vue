@@ -1,6 +1,13 @@
 <template>
-  <el-card class="o-auto">
-    <h3>{{ $t("dashboard.cmmnProcess") }}</h3>
+  <DashboardCard
+    class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
+    ref="cardRef"
+    :hideSetting="hideSetting"
+    :title="$t('dashboard.cmmnProcess')"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
     <div class="card-main">
       <el-card class="process-item" v-for="item in state.layout">
         <div class="title">
@@ -23,18 +30,12 @@
         </div>
       </el-card>
     </div>
-    <SvgIcon
-      v-if="!hideSetting"
-      class="setting--icon"
-      src="/icons/setting.svg"
-      @click="openSetting"
-    />
     <DashboardProcessSetting
       ref="settingRef"
       @delete="handleDelete"
       @refresh="handleRefresh"
     />
-  </el-card>
+  </DashboardCard>
 </template>
 <script lang="ts" setup>
 import { watchDebounced } from "@vueuse/core";
@@ -57,18 +58,16 @@ const state = reactive<any>({
 });
 // #region module: dialog
 const settingRef = ref();
-function openSetting() {
-  settingRef.value.handleOpen(props.setting, state.data);
-}
+
 function handleDelete() {
   emits("delete");
 }
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits("refreshSetting", chartSetting);
 }
 // #endregion
 
-function getIcon(state) {
+function getIcon(state: any) {
   switch (state) {
     case "active":
       return "pendding";
@@ -78,7 +77,7 @@ function getIcon(state) {
       return "pendding";
   }
 }
-function getIconColor(state) {
+function getIconColor(state: any) {
   switch (state) {
     case "completed":
       return "#266CD6";
@@ -86,11 +85,11 @@ function getIconColor(state) {
       return "#000";
   }
 }
-function getPercent(process) {
+function getPercent(process: any) {
   if (process.subItems && process.subItems.length > 0) {
     let finish = 0,
       total = 0;
-    process.subItems.forEach((element) => {
+    process.subItems.forEach((element: any) => {
       if (element.state === "completed") finish++;
       total++;
     });
@@ -99,7 +98,6 @@ function getPercent(process) {
     return process.state === "completed" ? 100 : 0;
   }
 }
-const { t } = useI18n();
 
 const CMDProvider = inject(CaseManagementDashboardKey)
 async function getCDProcess() {
@@ -124,8 +122,8 @@ async function getCDProcess() {
 }
 async function initLayout() {
   const list = await getCDProcess();
-  state.layout = props.setting.layout.reduce((prev, item) => {
-    const _item = list.find((d) => d.planItemDefinitionId === item.planItemDefinitionId);
+  state.layout = props.setting.layout.reduce((prev: any, item: any) => {
+    const _item = list.find((d: any) => d.planItemDefinitionId === item.planItemDefinitionId);
     if (_item) {
       _item.state = _item.state ? _item.state : "NULL";
       prev.push(_item);

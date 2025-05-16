@@ -122,7 +122,7 @@ async function getMetaName() {
 
   if (!labelRule || labelRule.length === 0) throw new Error('no labelRule')
   else {
-    const name = labelRule.reduce((prev: any, rule: any, index: number) => {
+    return labelRule.reduce((prev: any, rule: any, index: number) => {
       if (!rule.metadata) rule.metadata = rule.metaData
       const joiner = index === 0 ? '' : '-'
       if (rule.metadata === 'fc:createDate') {
@@ -140,7 +140,6 @@ async function getMetaName() {
       }
       return prev
     }, '')
-    return name
   }
   // return state.cabinetTemplate.label + '-' + formatDate(date,'YYYY-MM-DD')
 }

@@ -168,7 +168,7 @@ function handleRefreshSetting(setting: any, row: any) {
 
 const chartResize = useDebounceFn(
   (row: any) => {
-    if (sheetRefs.value[row.i]) {
+    if (sheetRefs.value[row.i] && sheetRefs.value[row.i].resize) {
       sheetRefs.value[row.i].resize();
     }
     emits("save");

@@ -64,7 +64,7 @@ async function handleSubmit() {
       emits('refresh')
     }, 2000)
   } catch (error) {
-
+    console.log(error)
   }
 
   async function uploadHandler(children: any, parentPath: string = '', parentId: string = '',parentStatus?: 'skip' | 'fail') {
@@ -143,7 +143,7 @@ async function handleOpen(cabinetTemplate: any, path: string, id: string) {
       }
     })
   } catch (error) {
-
+    console.log(error)
   }
   state.treeLoading = false
 }
@@ -168,10 +168,8 @@ function initTreeData(children: any, parentId: string = '') {
 }
 
 function getLabelList(row: any) {
-  const labelRule = row.labelRule ? JSON.parse(row.labelRule) : [
-    { dataType: 'string', metadata: 'fc:docTitle', noDelete: true }
-  ]
-  return labelRule
+  return row.labelRule ? JSON.parse(row.labelRule)
+    : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
 }
 
 function getMetaName(formData: any = {}, row: any) {

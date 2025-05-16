@@ -3352,7 +3352,7 @@
   "workflowEditor_promoteToProduction": "Promote To Production : {currentVersion}",
   "workflowEditor_saveAsNewVersion": "Save As New Version",
   "workflowEditor_versionList": "Version List",
-  "workflow_ActiveTask": "Active Task",
+  "workflow_activeTask": "Active Task",
   "workflow_GenerateDocument": "Generate Document",
   "workflow_ManageDeleteTask": "Delete Task",
   "workflow_ManageDeleteWorkflowMsg": "Are you sure you want to delete the selected workflow task(s)?<br>This action cannot be undone.",

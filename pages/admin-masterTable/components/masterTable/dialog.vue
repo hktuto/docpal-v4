@@ -37,11 +37,10 @@ async function handleSubmit() {
   }
 }
 
-function handleOpen(data = {name: ''}) {
+async function handleOpen(data = {name: ''}) {
   state.visible = true
-  setTimeout(async () => {
-    await FormRendererRef.value.vFormRenderRef.setFormData({...data})
-  })
+  await new Promise(resolve => setTimeout(resolve, 10)); 
+  FormRendererRef.value.vFormRenderRef.setFormData({...data})
 }
 
 defineExpose({handleOpen})

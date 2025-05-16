@@ -1,41 +1,32 @@
 <script lang="ts" setup>
-
 const props = defineProps<{
   date: any
   setting?: any;
   hideSetting?: boolean;
 }>()
-
-
-const {
-  hideSetting,
-  handleDelete, 
-  openSetting, 
-  settingRef,
-  setting,
-  handleRefresh,
-  resize
-} = useDashboard()
-
-defineExpose({ resize })
-
-
-
+const settingRef = ref()
+const emits = defineEmits(['refreshSetting', 'delete'])
+function handleDelete() {
+  emits('delete')
+}
+function handleRefresh(chartSetting) {
+  emits('refreshSetting', chartSetting)
+}
 </script>
 
 <template>
-  <el-card ref="cardRef" class="workflow-card dashboard-item dashboard-item-tab">
-    <SvgIcon
-      id="Dashboard__Home__Detail__SingleWorkflow__Settings"
-      v-if="!hideSetting"
-      src="/icons/setting.svg"
-      class="el-icon--right setting-icon"
-      style="--icon-size: 1.14rem; --icon-color: #8796a4;font-size: 20px"
-      @click="openSetting"
-    />
+  <DashboardCard
+    ref="cardRef"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="setting.title"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
     <PersonalWorkflowSingleTable :setting="setting" />
     <PersonalWorkflowSingleSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh"/>
-  </el-card>
+  </DashboardCard>
 </template>
 
 <style lang="scss" scoped>

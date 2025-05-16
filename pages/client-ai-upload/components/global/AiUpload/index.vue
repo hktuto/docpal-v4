@@ -73,7 +73,9 @@ async function getFilter() {
   ResponsiveFilterRef.value.init(data)
 }
 
-function handleFilterFormChange(formModel) {
+function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   extraParams.value = formModel
   reload()
 }
@@ -121,18 +123,18 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       title: 'document_uploadDate',
       formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
-      },
+      }
     },
     {
       title: 'tableHeader_filesCount',
-      field: 'filesCount',
+      field: 'filesCount'
     },
     {
       field: 'uploadStatus',
       title: 'document_uploadStatus',
       slots: {
         default: 'status'
-      },
+      }
     }
   ],
   dblClickAction: ({ row, column, event }: any) => {
@@ -207,8 +209,6 @@ async function handleDelete(id: any) {
   const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToCancel')}`, {
     confirmButtonText: t('dpButtom_confirm'),
     cancelButtonText: t('common_close')
-  }).catch((action) => {
-    return action
   })
   if (action !== 'confirm') return
   const formData = new FormData()

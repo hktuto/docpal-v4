@@ -159,7 +159,7 @@ async function getOptions() {
   searchOptions.value.sizes = sizes
 }
 provide('searchOptions', searchOptions)
-
+    
 onMounted(() => {
   getOptions()
 })
