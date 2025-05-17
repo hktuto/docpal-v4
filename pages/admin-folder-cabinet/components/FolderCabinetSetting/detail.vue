@@ -164,6 +164,7 @@ function getReminder(data: any, revertList: any) {
   }, {})
 }
 
+const showNotification = ref(props.isRoot);
 // #endregion
 function init(row: any) {
   if (!row) return
@@ -182,6 +183,9 @@ function init(row: any) {
       labelRule.forEach((item: any) => {
         if (item.metaData) {
           item.metadata = item.metaData
+          if(item.metadata === 'fc:docTitle'){
+            item.noDelete = false
+          }
         }
       })
       form.labelRule = labelRule
@@ -194,11 +198,15 @@ function init(row: any) {
     if (row.acls) state.acls = row.acls
     if (row.metadataValue) state.defaultValue = JSON.parse(row.metadataValue)
     else state.defaultValue = {}
+    
+    const reminder = getReminder(row, ['notificationReminder', 'emailReminder', 'emailReport'])
+    console.log("reminder", reminder)
     FormRendererRef.value.vFormRenderRef.setFormData({
       ...row,
       ..._row,
       ...getReminder(row, ['notificationReminder', 'emailReminder', 'emailReport']),
-      showNotification: props.isRoot
+      showNotification: props.isRoot,
+      useNotification : reminder?.['notificationReminder.tos']?.length > 1
     })
     state.loading = false
   })
@@ -207,6 +215,7 @@ function init(row: any) {
 const WorkflowDialogRef = ref()
 
 async function handleSave() {
+  console.log("handleSave")
   const valid = await FormRef.value.validate()
   const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   if (!valid || !data) return
@@ -235,18 +244,20 @@ async function handleSave() {
     // folder: true
     folder: state.setting.folder
   }
+  
   if (props.isRoot) {
     const arr = ['notificationReminder', 'emailReminder', 'emailReport']
     arr.forEach((key) => {
       params[key] = {}
       params[key].intervalTime = params[`${key}.intervalTime`]
 
-      if (params[`${key}.tos`]) params[key].tos = params[`${key}.tos`]
+      if (params[`${key}.tos`]) params[key].tos = data.useNotification ? params[`${key}.tos`] : ['createBy']
       if (params[`${key}.ccs`]) params[key].ccs = params[`${key}.ccs`]
       delete params[`${key}.intervalTime`]
       delete params[`${key}.tos`]
       delete params[`${key}.ccs`]
     })
+    
   }
   if (params.metadata && params.metadata.length > 0) {
     const metaRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metadata')
@@ -277,6 +288,7 @@ async function handleSave() {
     emits('update')
     WorkflowDialogRef.value.handleCheck()
   } catch (error) {
+    console.log('call err', error)
   } finally {
     setTimeout(() => (state.loading = false), 300)
   }
