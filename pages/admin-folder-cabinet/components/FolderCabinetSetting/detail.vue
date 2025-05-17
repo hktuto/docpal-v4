@@ -96,7 +96,7 @@ const state = reactive<any>({
 })
 // #region module:
 const form = reactive({
-  labelRule: [{ metadata: 'fc:docTitle', dataType: 'string', noDelete: true }],
+  labelRule: [{ metadata: 'fc:docTitle', dataType: 'string', noDelete: false }],
   allow: false,
   multiple: false,
   repeatName: false
