@@ -1,60 +1,30 @@
 import { generateHTML } from '@tiptap/html'
 // style
-import Bold from '@tiptap/extension-bold'
-import Italic from '@tiptap/extension-italic'
-import Highlight from '@tiptap/extension-highlight'
-import link from '@tiptap/extension-link'
-import SuperScript from '@tiptap/extension-superscript'
-import Underline from '@tiptap/extension-underline'
-
-
-
-import Image from '@tiptap/extension-image'
+import {TextNode } from '../../utils/packages/text'
+import {TextStyleNode} from '../../utils/packages/textStyle'
 import {DocumentSetting} from '../../utils/packages/document'
+import {ImageSetting} from '../../utils/packages/image'
+import {LinkSetting} from '../../utils/packages/link'
+import {ListSetting} from '../../utils/packages/list'
 // table
 import {TableSetting} from '../../utils/packages/table'
-import {Task} from '../../utils/packages/task'
-// list
-import BulletList from '@tiptap/extension-bullet-list'
-import ListItem from '@tiptap/extension-list-item'
-import OrderedList from '@tiptap/extension-ordered-list'
-// text
-import Heading from '@tiptap/extension-heading'
-import Text from '@tiptap/extension-text'
-import Paragraph from '@tiptap/extension-paragraph'
-// utils
-import FontFamily from '@tiptap/extension-font-family'
-import TextStyle from '@tiptap/extension-text-style'
-import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from "tiptap-extension-pagination";
+import {TaskSetting} from '../../utils/packages/task'
+import {HorizontalRuleSetting} from '../../utils/packages/horizontalRuleSetting'
+import { usePagination } from '../../utils/packages/pagination';
 
-
-
-export const convertTipTapToHTML = (editorJson :any) => {
+export const convertTipTapToHTML = (editorJson :any, options: TipTapOptions) => {
   try{
       const html = generateHTML(editorJson, [
-        Bold,
-        Italic,
-        Highlight,
-        Underline,
-        SuperScript,
-        link,
-        BulletList,
-        OrderedList,
-        ListItem,
+        ...TextNode,
         ...DocumentSetting,
-        // table
+        ...TextStyleNode,
+        ...TaskSetting,
         ...TableSetting,
-        ...Task,
-        TextStyle,
-        FontFamily,
-        Text,
-        Paragraph,
-        Image,
-        Heading,
-        PaginationExtension,
-        HeaderFooterNode,
-        PageNode,
-        BodyNode
+        ...ImageSetting,
+        ...LinkSetting,
+        ...ListSetting,
+        ...HorizontalRuleSetting,
+        ...usePagination(options.pageSetting)
       ])
       return html
     }catch(err) {

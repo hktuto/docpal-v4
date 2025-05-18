@@ -1,34 +1,29 @@
 // style
 
-import Link from '@tiptap/extension-link'
-
-import { Color } from '@tiptap/extension-color'
 
 
-import Image from '@tiptap/extension-image'
+
+
 import {TextNode } from './packages/text'
 import {TextStyleNode} from './packages/textStyle'
 import {DocumentSetting} from './packages/document'
-// table
+import {ImageSetting} from './packages/image'
+import {LinkSetting} from './packages/link'
+import {ListSetting} from './packages/list'
+import {HorizontalRuleSetting} from './packages/horizontalRuleSetting'
 import {TableSetting} from './packages/table'
-import {Task} from './packages/task'
+import {TaskSetting} from './packages/task'
+import { useUtils } from './packages/utils'
 // list
-import BulletList from '@tiptap/extension-bullet-list'
-import ListItem from '@tiptap/extension-list-item'
-import OrderedList from '@tiptap/extension-ordered-list'
-import ListKeymap from '@tiptap/extension-list-keymap'
+
 
 
 // utils
-import HorizontalRule from '@tiptap/extension-horizontal-rule'
-import Gapcursor from '@tiptap/extension-gapcursor'
-import FontFamily from '@tiptap/extension-font-family'
-import CharacterCount from '@tiptap/extension-character-count'
-import History from '@tiptap/extension-history'
-import VariableText from './variable/text'
-import Typography from '@tiptap/extension-typography'
 
-import PaginationExtension, { PageNode, HeaderFooterNode, BodyNode } from 'tiptap-extension-pagination'
+import VariableText from './variable/text'
+import { usePagination } from './packages/pagination';
+
+
 
 export type TipTapOptions = {
   textCount?: number,
@@ -84,6 +79,7 @@ const defaultPageSetting: pageSettingOptions = {
   defaultPaperColour: '#fff',
   defaultPaperOrientation: 'portrait',
   defaultPaperSize: 'A4',
+  useDeviceThemeForPaperColour: false,
   pageAmendmentOptions: {
     enableHeader: false,
     enableFooter: false
@@ -111,57 +107,27 @@ export const setupExtensions = (options: TipTapOptions) => {
     ...TextNode,
     ...DocumentSetting,
     ...TextStyleNode,
-    ...Task,
-    // text
+    ...TaskSetting,
     ...TableSetting,
-    Image,
-    
+    ...ImageSetting,
+    ...LinkSetting,
+    ...ListSetting,
+    ...HorizontalRuleSetting,
+    ...useUtils(options),
     //list
-    BulletList,
-    OrderedList,
-    ListItem,
-    ListKeymap,
+    
     // style
     
-    Link.configure({
-      openOnClick: false
-      // defaultProtocol: "https"
-    }),
-    Color,
+    
     // table
     
     // custom
     VariableText,
-    // utils
-    HorizontalRule,
-    CharacterCount.configure({
-      limit: options?.textCount || null
-    }),
     
-    
-    FontFamily,
-    Gapcursor,
-    History,
-    Typography
   ]
   if (options?.mode === 'PAGE') {
     extensions.unshift(
-      PaginationExtension.configure({
-        defaultPaperSize: options.pageSetting?.defaultPaperSize || 'A4',
-        defaultPaperOrientation: options.pageSetting?.defaultPaperOrientation || 'portrait',
-        defaultMarginConfig: options.pageSetting?.defaultPageBorders || {
-          top: 5, right: 5, bottom: 5, left: 5
-        },
-
-        defaultPageBorders: { top: 1, right: 1, bottom: 1, left: 1 },
-        pageAmendmentOptions: {
-          enableHeader: false,
-          enableFooter: false
-        }
-      }),
-      HeaderFooterNode,
-      PageNode,
-      BodyNode
+      ...usePagination(options.pageSetting)
     )
   }
   return extensions
