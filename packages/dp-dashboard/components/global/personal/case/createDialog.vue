@@ -18,9 +18,6 @@
 
     <template #footer>
       <div class="footer-grid">
-        <el-button type="danger" @click="handleDelete">{{
-          $t("common_delete")
-        }}</el-button>
         <el-button type="primary" :loading="state.loading" @click="handleSubmit">{{
           $t("common_submit")
         }}</el-button>
@@ -29,16 +26,9 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from "element-plus";
-import { clientApi } from "api";
-const props = defineProps(["setting"]);
-const { t } = useI18n()
-
+const props = defineProps(["setting","caseList","caseAList"]);
 const emits = defineEmits(["refresh", "delete"]);
 
-const {
-  public: { endPoint },
-} = useRuntimeConfig();
 const state = reactive({
   loading: false,
   visible: false,
@@ -68,29 +58,13 @@ function handleOpen(setting) {
   state.loading = true
   setTimeout(async () => {
     state.setting = setting;
-    if(!setting.caseList) setting.caseList = []
+    let caseList = props.caseList ? [...props.caseList] : []
     if(!setting.caseKeys) setting.caseKeys = []
-    form.value.caseList = [...setting.caseList];
+    form.value.caseList = caseList;
     state.loading = false;
-    state.list = state.list.filter(item => !setting.caseKeys.includes(item.id))
+    state.list = props.caseAList.filter(item => !setting.caseKeys.includes(item.id))
   });
 }
-async function handleDelete() {
-  const action = await ElMessageBox.confirm(`${t("msg_confirmWhetherToDelete")}`);
-  if (action !== "confirm") return;
-  emits("delete");
-  state.visible = false;
-}
-async function getList() {
-  try {
-    const res = await clientApi.api.postCaseTypesPage({}).then(res => res.data)
-    state.list = res?.entryList
-  } catch (error) {
-  }
-}
-onMounted(() => {
-  getList()
-});
 
 defineExpose({ handleOpen });
 </script>

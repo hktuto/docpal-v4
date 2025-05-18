@@ -1,120 +1,115 @@
 <template>
-    <el-card :class="['dashboard-item', 'dashboard-item-main', { 'dashboard-item-drillDown': state.showDrillDown}]" >
-        <template #header="{ close, titleId, titleClass }">
-            <h4>{{$t('dashboard.azure.ocrProcessPage')}}({{$t(`azureDashboard.${setting.dataType}`)}})</h4>
-            <SvgIcon v-if="!hideSetting" src="/icons/setting.svg" style="--icon-size: 1.14rem; --icon-color: #8796A4"
-                @click="openSetting"/>
-        </template>
-        <div>
-            <AzureOcrProcessedChart ref="chartRef" :dataType="setting.dataType" :dates="dates" @drillDown="handleDrillDown"/>
-        </div>
-        <div v-if="state.showDrillDown" style="max-height: 400px;">
-            <h3 class="flex-x-start">
-                {{state.dashboardParams.workflow || state.dashboardParams.scanType}} ({{formatDate(state.dashboardParams.startDate, 'YYYY-MM')}})
-                <SvgIcon class="el-icon--right" src="/icons/close.svg" @click="closeDrillDown"/>
-            </h3>
-            <AzureOcrProcessHistoryTable ref="tableRef" />
-        </div>
-        <DashboardSetting ref="settingRef"
-            :formJson="formJson" 
-            @delete="handleDelete"
-            @refresh="handleRefresh"/>
-    </el-card>
+  <DashboardCard
+    ref="cardRef"
+    :class="{ 'dashboard-item-drillDown': state.showDrillDown }"
+    :title="$t('dashboard.azure.ocrProcessPage') + '(' + $t(`azureDashboard.${setting.dataType}`) + ')'"
+    :setting="setting"
+    :hideSetting="hideSetting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+  >
+    <AzureOcrProcessedChart ref="chartRef" :setting="setting" :dates="dates" @drillDown="handleDrillDown" />
+    <div v-if="state.showDrillDown" class="dashboard-item-drillDown--table">
+      <h3 class="flex-x-start">
+        {{ state.dashboardParams.workflow || state.dashboardParams.scanType }} ({{ formatDate(state.dashboardParams.startDate, 'YYYY-MM') }})
+        <SvgIcon class="el-icon--right" src="/icons/close.svg" @click="closeDrillDown" />
+      </h3>
+      <AzureOcrProcessHistoryTable ref="tableRef" />
+    </div>
+    <DashboardSetting ref="settingRef" :formJson="formJson" @delete="handleDelete" @refresh="handleRefresh" />
+  </DashboardCard>
 </template>
 
 <script lang="ts" setup>
 import formJson from '../ocrProcessed.vform.json'
-const props = withDefaults( defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean,
-}>() , {
+const props = withDefaults(
+  defineProps<{
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
+  }>(),
+  {
     setting: {},
     hideSetting: false
-})
-const emits = defineEmits([
-    'refreshSetting', 'delete'
-])
+  }
+)
+const emits = defineEmits(['refreshSetting', 'delete'])
 const state = reactive({
-    dashboardParams: {
-        startDate: '',
-        endDate: '',
-        creator: '',
-    },
-    showDrillDown: false,
+  dashboardParams: {
+    startDate: '',
+    endDate: '',
+    creator: ''
+  },
+  showDrillDown: false
 })
 // #region module: handleDrillDown
-    const tableRef = ref()
-    function handleDrillDown(params) {
-        state.showDrillDown = true
-        state.dashboardParams = params
-        setTimeout(() => {
-            // tableRef.value.getData(params) 
-            chartRef.value.resize()
-        })
-    }
-    function closeDrillDown () {
-        state.showDrillDown = false
-        chartRef.value.setHighlight()
-        setTimeout(() => {
-            chartRef.value.resize()
-        })
-    }
+const tableRef = ref()
+function handleDrillDown(params) {
+  state.showDrillDown = true
+  state.dashboardParams = params
+  setTimeout(() => {
+    // tableRef.value.getData(params)
+    chartRef.value.resize()
+  })
+}
+function closeDrillDown() {
+  state.showDrillDown = false
+  chartRef.value.setHighlight()
+  setTimeout(() => {
+    chartRef.value.resize()
+  })
+}
 // #endregion
 
 // #region module: setting
-    const settingRef = ref()
-    function openSetting() {
-        console.log(props.setting);
-        settingRef.value.handleOpen(props.setting)
-    }
-    function handleDelete() {
-        emits('delete')
-    }
-    function handleRefresh(chartSetting) {
-        emits('refreshSetting', chartSetting)
-    }
+const settingRef = ref()
 
-    const chartRef = ref()
-    function resize() {
-        if(chartRef.value) chartRef.value.resize()
-    }
+function handleDelete() {
+  emits('delete')
+}
+function handleRefresh(chartSetting) {
+  emits('refreshSetting', chartSetting)
+}
+
+const chartRef = ref()
+function resize() {
+  if (chartRef.value) chartRef.value.resize()
+}
 // #endregion
 
-
 defineExpose({
-    resize
+  resize
 })
 </script>
 
 <style lang="scss" scoped>
-.dashboard-item-main {
+.dashboard-item-drillDown :deep(.el-card__body) {
+  
+  overflow-y: auto;
+  overflow-x: hidden;
+  .dashboard-item {
+    height: 300px;
+  }
+}
+.dashboard-item-drillDown--table {
+  margin: 0 var(--app-space-xs);
+  height: 500px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  container: table-container / size;
+}
+// .el-card {
+//   container-type: inline-size;
+//   container-name: container;
+// }
+@container table-container(height > 100px) {
+  h3 {
+    background-color: red;
+  }
+  .el-card__body {
     display: grid;
     grid-template-rows: min-content 1fr;
-    overflow: hidden;
-    background-color: var(--setting-color, #fff);
-}
-.dashboard-item-main :deep(.el-card__body) {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: grid;
-    grid-template-rows: 1fr min-content;
-}
-.dashboard-item-drillDown :deep(.el-card__body){
-    grid-template-rows: 300px 1fr;
-}
-.dashboard-item-main :deep(.el-card__header) {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: unset;
-    padding: var(--app-space-xs);
-    h4 {
-        padding: unset;
-        margin: unset;
-        color: #464646;
-        font-size: 18px;
-        font-family: Arial;
-    }
+  }
 }
 </style>

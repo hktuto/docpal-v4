@@ -106,7 +106,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         maxW: 2,
         maxH: 4,
         w: 1,
-        h: 1,
+        h: 2,
         component : 'DocTypeCount',
         setting : {
             documentType: 'File',
@@ -119,7 +119,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         minW: 2,
         minH: 2,
         maxW: 12,
-        maxH: undefined,
+        maxH: 8,
         w: 6,
         h: 2,
         component : 'DocTypeCoCount',
@@ -192,7 +192,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         minW: 4,
         minH: 2,
         maxW: 12,
-        maxH: 6,
+        maxH: 8,
         w: 12,
         h: 5,
         component : 'AzureOcrProcessed',
@@ -282,20 +282,21 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         setting : {
         }
     },
-    PersonalPredefinedSearch: {
-        type: 'personal',
-        feature: 'SMART_FOLDER',
-        label: 'PersonalPredefinedSearch',
-        minW: 2,
-        minH: 2,
-        maxW: 12,
-        maxH: 6,
-        w: 3,
-        h: 3,
-        component : 'PersonalPredefinedSearch',
-        setting : {
-        }
-    },
+    // merge to search
+    // PersonalPredefinedSearch: {
+    //     type: 'personal',
+    //     feature: 'SMART_FOLDER',
+    //     label: 'PersonalPredefinedSearch',
+    //     minW: 2,
+    //     minH: 2,
+    //     maxW: 12,
+    //     maxH: 6,
+    //     w: 3,
+    //     h: 3,
+    //     component : 'PersonalPredefinedSearch',
+    //     setting : {
+    //     }
+    // },
     PersonalWorkflowCreate: {
         type: 'personal',
         feature: 'WORKFLOW',
@@ -414,11 +415,11 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
     PersonalCaseCreate: {
         type: 'personal',
         label: 'PersonalCaseCreate',
-        minW: 2,
+        minW: 1,
         minH: 2,
         maxW: 12,
         maxH: 6,
-        w: 3,
+        w: 2,
         h: 3,
         component : 'PersonalCaseCreate',
         setting : {

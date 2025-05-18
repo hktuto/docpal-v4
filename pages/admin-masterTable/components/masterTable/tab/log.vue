@@ -26,7 +26,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'masterTable-log',
   api: (pageParams: any) => adminApi.api.postMasterTablesLogs({ ...pageParams, ...extraParams, ...filtersParams }),
   columns: [
-    { id: '10', field: 'docPath', title: 'masterTable_masterName', fixed: 'left' },
+    { field: 'docPath', title: 'masterTable_masterName', fixed: 'left' },
     { field: 'principalName', title: 'user_username' },
     {
       field: 'eventId', title: 'masterTable.eventType',
@@ -47,8 +47,8 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 const ResponsiveFilterRef = ref()
 
 async function getFilter() {
-  const filters = await adminApi.api.postMasterTablesLogsPageConditions({ ...extraParams }).then(res => res.data)
-  let data = filters.filter(item => item.key !== 'orderBy' && item.key !== 'isDesc')
+  const filters: any = await adminApi.api.postMasterTablesLogsPageConditions({ ...extraParams }).then(res => res.data)
+  let data = filters.filter((item: any) => item.key !== 'orderBy' && item.key !== 'isDesc')
   data?.unshift(
     {
       key: 'orderBy',

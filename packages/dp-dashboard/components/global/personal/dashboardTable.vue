@@ -1,5 +1,5 @@
 <template>
-  <div class="pageContainer--padding">
+  <div class="table-container">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     </VxeGrid>
   </div>
@@ -74,16 +74,5 @@ onMounted(() => {
 })
 </script>
 <style lang="scss" scoped>
-:deep .vxe-buttons--wrapper {
-  display: flex;
-  justify-content: space-between;
-}
 
-.responsive-container {
-  width: 70%;
-
-  :deep .el-input {
-    width: 200px;
-  }
-}
 </style>
