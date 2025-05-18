@@ -11,4 +11,5 @@ node_modules
 .vitest-reporter-html
 **/src/generate/**
 **/oldSrc/**
-*Language changes.xlsx
+**/report_unitTest/**
+**/report_languageChange/**

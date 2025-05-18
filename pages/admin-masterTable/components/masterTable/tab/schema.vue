@@ -80,11 +80,16 @@ const tableConfig = ref<any>({
 })
 
 async function handleAddSchama(schema: any) {
-  await adminApi.api.postMasterTablesColumnAdd({
-    id: props.tableId,
-    ...schema
-  })
-  emits('refresh')
+  try {
+    await adminApi.api.postMasterTablesColumnAdd({
+      id: props.tableId,
+      ...schema
+    })
+    emits('refresh')
+    
+  } catch (error) {
+    
+  }
 }
 
 watch(

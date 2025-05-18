@@ -1,0 +1,132 @@
+<script lang="ts" setup>
+import { ElMessageBox } from 'element-plus'
+const emits = defineEmits(['delete', 'refreshSetting', 'openSetting'])
+const { t } = useI18n()
+const props = withDefaults(
+  defineProps<{
+    showSkeleton?: boolean
+    hideSetting?: boolean
+    title?: string
+    settingRef?: any
+    setting?: any
+  }>(),
+  {
+    showSkeleton: false,
+    hideSetting: false,
+    title: ''
+  }
+)
+
+function resize() {}
+
+function openSetting() {
+  console.log(props.settingRef, props.setting)
+
+  if (!!props.settingRef) props.settingRef.handleOpen(props.setting)
+  else emits('openSetting', props.setting)
+}
+
+async function handleDelete() {
+  try{
+    await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    emits('delete')
+  }catch{
+    return
+  }
+  
+}
+
+defineExpose({
+  resize
+})
+</script>
+
+<template>
+  <ElCard ref="cardRef" class="dp-dashboard--card">
+    <template #header>
+      <slot name="header">
+        <h4>
+          {{ title }}
+          <slot name="title_suffix"></slot>
+        </h4>
+
+        <div class="flex-x-end">
+          <slot name="action_prefix"></slot>
+          <SvgIcon v-if="!hideSetting && settingRef" class="" src="/icons/setting.svg" @click="openSetting" />
+          <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg" @click="handleDelete" />
+        </div>
+      </slot>
+    </template>
+    <el-skeleton v-if="showSkeleton" :rows="5"> </el-skeleton>
+    <slot v-else></slot>
+  </ElCard>
+</template>
+
+<style lang="scss" scoped>
+.el-card {
+  --dashboard-item-padding: var(--el-card-padding);
+  height: 100%;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  overflow: hidden;
+}
+:deep .el-card__header {
+  margin: 0;
+  --icon-size: 1.2rem;
+  --icon-color: var(--app-grey-525);
+  padding: var(--app-space-s) var(--app-space-s) 0 var(--app-space-s) !important;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: unset;
+  .svgIcon + .svgIcon {
+    margin-left: var(--app-space-xxs);
+  }
+}
+.dp-dashboard--card__padding {
+  :deep .el-card__body {
+    padding: var(--el-card-padding);
+  }
+  :deep .el-card__header {
+    padding: var(--el-card-padding) !important;
+  }
+}
+.dp-dashboard--card__scroll {
+  :deep .el-card__body {
+    overflow: auto;
+  }
+}
+:deep .el-card__body {
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+  overflow: hidden;
+}
+:deep h4 {
+  padding: unset;
+  margin: unset;
+  flex: 1 0 auto;
+}
+:deep .table-container {
+  height: 100%;
+  overflow: hidden;
+  .vxe-toolbar {
+    display: none;
+  }
+}
+:deep .tab-container {
+  .el-tabs__header {
+    margin-bottom: 0;
+  }
+}
+:deep .iconify {
+  width: 1.2rem;
+  height: 1.2rem;
+  background-color: var(--app-grey-525);
+}
+:deep .iconify.icon-right {
+  margin-right: var(--app-space-xxs);
+  cursor: pointer;
+}
+
+</style>
