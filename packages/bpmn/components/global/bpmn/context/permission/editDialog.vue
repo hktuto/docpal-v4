@@ -32,8 +32,11 @@ async function gertUserGroupList() {
 }
 
 const displayUserList = computed(() => {
-  if(!props.allPermission) return userGroups.value
-  return userGroups.value.filter(item => !props.allPermission.find(oldItem => oldItem.attr_name === item.id))
+  if(!props.allPermission || !form.attr_accesstype) return userGroups.value
+  // const accesstypeList = props.allPermission.find(oldItem => oldItem.attr_name === item.id)
+  const hideList = props.allPermission.filter(oldItem =>  oldItem.attr_accesstype === form.value.attr_accesstype)
+
+  return userGroups.value.filter(item => !hideList.find(oldItem => oldItem.attr_name === item.id))
 })
 
 
@@ -64,7 +67,7 @@ defineExpose({ setForm })
 <template>
      <ElForm ref="formEl"  :model="form" :rules="validationRules" label-position="top">
         <ElFormItem prop="attr_name"  label="User Group" required>
-            <ElSelect v-model="form.attr_name" searchable>
+            <ElSelect v-model="form.attr_name" filterable>
                 <ElOption v-for="item in displayUserList" :key="item.id" :label="item.name" :value="item.id" />
             </ElSelect>
         </ElFormItem>
