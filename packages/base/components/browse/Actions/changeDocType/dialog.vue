@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useEventListener } from '@vueuse/core'
 import { clientApi } from 'api'
-
+import { emitBus, EventType } from 'eventbus'
 const props = defineProps<{
   doc: any
 }>()
@@ -62,10 +62,15 @@ async function handleSubmit() {
     } else {
       emits('success', state.doc)
     }
-  } catch (error) {}
-  setTimeout(() => {
+  } catch (error: any) {
+    throw new Error(error)
+  } finally {
+    emitBus(EventType.FILE_NEED_REFRESH, {
+      relatedIdOrPath: state.doc.id,
+      highlightIdOrPath: state.doc.id
+    })
     state.loading = false
-  }, 500)
+  }
 }
 
 function getVersion(doc) {
