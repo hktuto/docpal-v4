@@ -7,7 +7,7 @@ import type Keycloak from 'keycloak-js';
 
 import type { UserDTO } from 'api/src/generate/client';
 
-
+export const useDesktopMode = () => useState<boolean>('is-desktop');
 export const useUserState = () => useState<UserDTO | null>('auth-user');
 export const useKeyCloakState = () => useState<Keycloak | null>('keycloak-state');
 export const usePublicPageState = () => useState<string[]>('auth-public-page', () => (['/forgetPassword', '/forgetPassword/', '/login/', '/login']));
@@ -39,13 +39,14 @@ export const userDisplayTimeSetting = () => {
 };
 export async function verifly() {
   const logedIn = useLoginState();
+  const isDesktopMode = useDesktopMode()
   await Promise.all([
     getUser(),
     getFeature(),
     getUserPreference(),
     getOCRSetting()
   ]);
-
+  isDesktopMode.value = !(!window || !window.navigator || !window.navigator.userAgent || !window.navigator.userAgent.toLowerCase().includes('electron'))
   logedIn.value = true;
   emitBus(EventType.USER_LOGIN__SUCCESS, "");
 }
