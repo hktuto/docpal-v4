@@ -16,20 +16,6 @@ function addHorizontalRule() {
   editor.value.chain().focus().setHorizontalRule().run()
 }
 
-/**
- * Set the selected string to code
- */
-function handleCode() {
-  editor.value.chain().focus().toggleCode().run()
-}
-
-/**
- * Set the selected string to code block
- */
-function handleCodeBlock() {
-  editor.value.chain().focus().toggleCodeBlock().run()
-}
-
 function openSetLinkDialog() {
   state.fontLinkDialogVisible = true
   const href = editor.value.getAttributes('link').href
@@ -56,7 +42,7 @@ function handleSetLink() {
 /**
  * Set the selected string to task list
  */
-function handleTaskList(){
+function handleTaskList() {
   editor.value.chain().focus().toggleTaskList().run()
 }
 
@@ -67,25 +53,14 @@ function handleTaskList(){
     <el-button @click="addHorizontalRule">
       Horizontal line
     </el-button>
-    
-    <el-button @click="handleCode">
-      Code
-    </el-button>
 
-    <!--  code block  -->
-    <el-button @click="handleCodeBlock">
-      Code block
+    <el-button @click="handleTaskList" :class="{ 'is-active': editor.isActive('taskList') }">
+      Toggle task list
     </el-button>
 
     <!-- font link -->
     <el-button @click="openSetLinkDialog">
       <p>🔗</p>
-    </el-button>
-  </div>
-
-  <div>
-    <el-button @click="handleTaskList" :class="{ 'is-active': editor.isActive('taskList') }">
-      Toggle task list
     </el-button>
   </div>
 
