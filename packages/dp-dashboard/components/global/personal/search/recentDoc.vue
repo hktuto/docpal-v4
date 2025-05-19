@@ -79,4 +79,8 @@ async function handleDelete() {
   emits('delete')
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep .vxe-toolbar {
+  display: none;
+}
+</style>

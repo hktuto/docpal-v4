@@ -35,7 +35,12 @@ async function gertUserGroupList() {
 
 const displayUserList = computed(() => {
   if(!props.allPermission) return userGroups.value
-  return userGroups.value.filter(item => !props.allPermission.find(oldItem => oldItem.attr_name === item.id))
+  // userGroup is all user list, allPermission is list of applyed user,
+  // so we need to filter userGroup to get the list of user that is not in allPermission if allPermission item attr_accesstype is not equal to form.value.attr_accesstype
+  // step 1, get the list of user list that already in allPermission and form.value.attr_accesstype is equal to allPermission item attr_accesstype
+  const hideList = props.allPermission.filter(oldItem =>  oldItem.attr_accesstype === form.value.attr_accesstype)
+  // step 2, return the list of user list that is not in hideList
+  return userGroups.value.filter(item => !hideList.find(oldItem => oldItem.attr_name === item.id))
 })
 
 
@@ -58,7 +63,7 @@ onMounted(() => {
 <template>
     <ElForm ref="formEl"  :model="form" :rules="validationRules" label-position="top">
         <ElFormItem prop="attr_name"  label="User Group" required>
-            <ElSelect v-model="form.attr_name" searchable>
+            <ElSelect v-model="form.attr_name" filterable>
                 <ElOption v-for="item in displayUserList" :key="item.id" :label="item.name" :value="item.id" />
             </ElSelect>
         </ElFormItem>

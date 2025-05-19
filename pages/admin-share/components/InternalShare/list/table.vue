@@ -60,12 +60,12 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
     }
   ],
   bodyActions: [
-    [
-      {
-        name: 'common_delete',
-        action: ({ row }) => listProvider.deleteAction(row)
-      }
-    ]
+    // [
+    //   {
+    //     name: 'common_delete',
+    //     action: ({ row }) => listProvider.deleteAction(row)
+    //   }
+    // ]
   ],
   permissionMethod: listProvider?.actionPermission
 })

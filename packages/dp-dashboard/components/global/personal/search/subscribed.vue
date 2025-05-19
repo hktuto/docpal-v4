@@ -36,7 +36,11 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   id: 'subscribed',
   zoom: false,
   saveColumnOrder: false,
-  api: (pageParams: any) => clientApi.api.getNotificationSubscriberSubscriberFolders(useUserId().value, pageParams),
+  virtualScroll: true,
+  api: async (pageParams: any) => {
+    const { data } = await clientApi.api.getNotificationSubscriberSubscriberFolders(useUserId().value, pageParams)
+    return data
+  },
   columns: [
     { field: 'name', title: 'tableHeader.folderName', fixed: 'left' },
     { field: 'documentType', title: 'dpDocument_fileType' },
@@ -63,4 +67,8 @@ async function handleDelete() {
   emits('delete')
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep .vxe-toolbar {
+  display: none;
+}
+</style>
