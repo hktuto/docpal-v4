@@ -1,18 +1,20 @@
 <script lang="ts" setup>
 import { Editor, EditorContent } from '@tiptap/vue-3';
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
-import { normalizeTipTapOptions, setupExtensions, type TipTapOptions } from '~/utils/tiptapHelper';
+import { normalizeTipTapOptions, setupExtensions, defaultPageSetting, type TipTapOptions } from '~/utils/tiptapHelper';
 
 
 const props = withDefaults(defineProps<{
   editorOptions: TipTapOptions,
   json?: any,
-  variables ?: any
+  variables ?: any[]
 }>(), {
  editorOptions:{
-   mode: "PAGE",
- }
+   ...defaultPageSetting
+ },
+ variables:[]
 })
+const { variables } = toRefs(props)
 
 const options = ref<TipTapOptions>({
   mode: "PAGE"
@@ -24,14 +26,14 @@ function normalizeJson(option:TipTapOptions, json?:any){
     return json
   }
   if(option.mode === 'PAGE') {
-    return ``        
+    return ""     
   } else {
     return ""
   }
 
 }
 
-
+const headerRef = ref<any>(null)
 function initEditor(initOptions:TipTapOptions, json?:any) {
   if(editor.value) {
     editor.value.destroy()
@@ -49,6 +51,7 @@ function initEditor(initOptions:TipTapOptions, json?:any) {
     // })
   }
   options.value = {...normlizeOption}
+  headerRef.value.init(normlizeOption)
 }
 
 
@@ -63,14 +66,15 @@ onUnmounted(() => {
 provide(DocTemplateProveKey, {
   editor,
   options,
-  initEditor
+  initEditor,
+  variables
 })
 
 </script>
 
 <template>
   <div class="editorContainer">
-    <DocTemplateHeader  />
+    <DocTemplateHeader ref="headerRef"  />
     <div class="editorBody">
       <EditorContent :editor="editor" />
     </div>
