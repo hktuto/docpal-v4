@@ -498,7 +498,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       highlight: true,
       range: false,
       trigger: 'cell',
-      visibleMethod: ({ row }: any) => !row.isFolder
+      visibleMethod: ({ row }: any) => !row.isFolder && row.source !== 'tempFile'
     },
     rowConfig: {
       height: 42,
