@@ -63,7 +63,7 @@ export type pageSettingOptions = {
   useDeviceThemeForPaperColour: false
 }
 
-const defaultPageSetting: pageSettingOptions = {
+export const defaultPageSetting: pageSettingOptions = {
   defaultMarginConfig: {
     bottom: 5,
     top: 5,

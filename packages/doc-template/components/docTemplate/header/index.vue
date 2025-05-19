@@ -9,6 +9,34 @@ const { editor } = editorProvider
 const headers = useDocHeader()
 const activeName = ref(headers.value[0].name);
 const extendElement = useDocExtendElement()
+
+const displayHeader = ref<ToolSection[]>([])
+
+function init(options:TipTapOptions) {
+  displayHeader.value = headers.value.reduce((acc, cur) => {
+    if(cur.requiredOptions && cur.requiredOptions.length > 0) {
+      const isAllRequiredOptionsFilled = cur.requiredOptions.every(requiredOption => options[requiredOption])
+      if(isAllRequiredOptionsFilled) {
+        // loop through tools
+        const tools = cur.tools.filter(tool => !tool.requiredOptions || tool.requiredOptions.length === 0 || tool.requiredOptions?.every(requiredOption => options[requiredOption]))
+        if(tools.length > 0) {
+          acc.push(cur)
+        }
+      }
+    }else{
+      const tools = cur.tools.filter(tool => !tool.requiredOptions || tool.requiredOptions.length === 0 || tool.requiredOptions?.every(requiredOption => options[requiredOption]))
+      if(tools.length > 0) {
+        acc.push(cur)
+      }
+    }
+    return acc
+    }, [])
+}
+
+defineExpose({
+  init
+})
+
 </script>
 
 
@@ -18,7 +46,7 @@ const extendElement = useDocExtendElement()
 
     <el-tabs v-model="activeName" class="demo-tabs" >
       <el-tab-pane
-        v-for="header in headers"
+        v-for="header in displayHeader"
         :key="header.name"
         :label="header.name"
         :name="header.name"

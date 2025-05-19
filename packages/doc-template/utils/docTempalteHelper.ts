@@ -41,12 +41,14 @@ export type DocumentOptions = {
 
 export type ToolSection = {
   name : string,
-  tools: DocTool[]
+  tools: DocTool[],
+  requiredOptions?: string[]
 }
 
 export type DocTool = {
   name: string,
-  components: any 
+  components: any ,
+  requiredOptions?: string[]
 }
 
 
