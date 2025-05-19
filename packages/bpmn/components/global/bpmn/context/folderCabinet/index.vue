@@ -30,7 +30,7 @@ async function loopChildren(all:any, item: any, level = 0) {
 
     const response = await adminApi.api.getDocpaltypeSettingsNameName(item.documentType);
     const meta = response.data
-    all.push({...item, level, displayMeta : meta && meta.metadata ? ['folderCabinetId', 'Title', ...meta.metadata.map((item:any) => item.metadata) ]: ['folderCabinetId', 'Title'] })
+    all.push({...item, level, displayMeta : meta && meta.metadata ? ['folderCabinetId', 'fc:docTitle', ...meta.metadata.map((item:any) => item.metadata) ]: ['folderCabinetId', 'fc:docTitle'] })
 
     if(item.children){
         level ++ ;
