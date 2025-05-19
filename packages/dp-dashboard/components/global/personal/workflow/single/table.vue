@@ -55,10 +55,10 @@ function displayValue(f: string) {
 function setupTable() {
   const newColumn = deepCopy(props.setting.columns) || []
   const columns: any[] = []
-  const addedColumn = newColumn.map((item) => {
+  const addedColumn = newColumn.map((item: any) => {
     if (item.field.length > 1) {
       item.field = item.field.join(',')
-      item.formatter = (args) => {
+      item.formatter = (args: any) => {
         let result = ''
         const field = args.column.field.split(',')
         field.forEach((f: string) => {
@@ -78,7 +78,7 @@ function setupTable() {
       }
     } else {
       item.field = item.field[0]
-      item.formatter = (args) => {
+      item.formatter = (args: any) => {
         return displayValue(args.row[item.field])
       }
     }
@@ -89,32 +89,37 @@ function setupTable() {
 }
 
 function openDetail(row: any) {
-  routerProvider?.navigateTo(
-    routeWorkflowDetail({
-      ...row,
-      name: row.taskInstance.businessKey,
-      workflowType: 'allTask'
-    }),
-    false
-  )
+  if(!routeWorkflowDetail) return
+  try {
+    routerProvider?.navigateTo(
+      routeWorkflowDetail({
+        ...row,
+        name: row.taskInstance.businessKey,
+        workflowType: 'allTask'
+      }),
+      false
+    )
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
-function filterStep(list): any[] {
+function filterStep(list: any) {
   if (!list || !props.setting.steps || props.setting.steps.length === 0) return list
-  return list.filter((item) => {
+  return list.filter((item: any) => {
     return props.setting.steps.includes(item.taskDefinitionKey)
   })
 }
 const filterKeyword = ref('')
-function sortAndFilterList(list) {
+function sortAndFilterList(list: any) {
   // fitler list
   if (filterKeyword.value) {
-    list = list.filter((item) => {
+    list = list.filter((item: any) => {
       return JSON.stringify(item).toLowerCase().includes(filterKeyword.value.toLowerCase())
     })
   }
   if (!list || !props.setting.sortColumn) return list
-  return list.sort((a, b) => {
+  return list.sort((a: any, b: any) => {
     if (!a[props.setting.sortColumn]) return -1
     if (!b[props.setting.sortColumn]) return 1
     const aVal = a[props.setting.sortColumn]
@@ -142,9 +147,9 @@ async function getAllWorkingInstances(processKey: string, pageNum: number = 0, p
     pageNum,
     pageSize
   }
-  const { data } = await clientApi.api.postWorkflowTasksUser(pageParams)
+  const { data }: any = await clientApi.api.postWorkflowTasksUser(pageParams)
   // filter step name
-  totalLength += data?.entryList.length || 0
+  totalLength += data?.entryList?.length || 0
   const entryList = filterStep(data?.entryList || [])
   let promise = []
   for (let i = 0; i < entryList.length; i++) {

@@ -52,7 +52,6 @@ const {
   saveColumnOrder: false,
 });
 async function getData(params: any = {}) {
-  if (endPoint === "admin") return;
   const res = await clientApi.api
     .postNuxeoSharePage({ page: params.pageNum, size: params.pageSize, ...extraParams })
     .then((res) => res.data);
@@ -66,11 +65,16 @@ async function getData(params: any = {}) {
 const shareInfoDialogRef = ref();
 
 function handleDblclick(row: any) {
-  shareInfoDialogRef.value.handleOpen(row);
+  if(!shareInfoDialogRef?.value.handleOpen) return
+  try {
+    shareInfoDialogRef.value.handleOpen(row);
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 async function handleSubmit(shareInfo: any) {
   await clientApi.api.patchNuxeoShare(shareInfo);
-  query();
+  query({});
 }
 onMounted(() => {});
 </script>

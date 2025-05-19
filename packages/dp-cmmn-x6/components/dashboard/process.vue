@@ -31,7 +31,7 @@
       </el-card>
     </div>
     <DashboardProcessSetting
-      ref="settingRef"
+      ref="settingRef" :allList="state.allList"
       @delete="handleDelete"
       @refresh="handleRefresh"
     />
@@ -53,7 +53,7 @@ const props = withDefaults(
 );
 const emits = defineEmits(["refreshSetting", "delete"]);
 const state = reactive<any>({
-  data: [],
+  allList: [],
   layout: [],
 });
 // #region module: dialog
@@ -102,23 +102,25 @@ function getPercent(process: any) {
 const CMDProvider = inject(CaseManagementDashboardKey)
 async function getCDProcess() {
   try {
-    if (state.data.length > 0) return state.data;
+    if (state.allList.length > 0) return state.allList;
     const id = CMDProvider?.instanceId?.value || null;
     const caseVersionId = CMDProvider?.caseVersionId?.value || null;
     if (id) {
       const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id);
-      state.data = data;
+      state.allList = data;
     } else if (caseVersionId) {
       const {
         data : caseTypeData,
       } = await adminApi.api.getCaseDashboardVersionVersionidStages(caseVersionId);
-      state.data = caseTypeData;
+      state.allList = caseTypeData;
     }
   } catch (error) {
-    state.data = [];
+    state.allList = [];
   } finally {
-    return state.data;
+    console.log(state.allList);
+    return state.allList;
   }
+  
 }
 async function initLayout() {
   const list = await getCDProcess();

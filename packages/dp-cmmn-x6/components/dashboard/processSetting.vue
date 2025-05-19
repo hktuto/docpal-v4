@@ -45,8 +45,8 @@
 </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
 import draggable from "vuedraggable";
+const props = defineProps(['allList'])
 const emits = defineEmits([
     'refresh', 'delete'
 ])
@@ -71,14 +71,12 @@ async function handleSubmit () {
     state.visible = false
     state.loading = false
 }
-function handleOpen(setting, allList) {
+function handleOpen(setting) {
     state.visible = true
-    console.log({allList});
-    
     setTimeout(async () => {
         if(!setting.layout) setting.layout = []
         state.setting = setting
-        state.allList = allList.filter(item => !state.setting.layout.find(l => item.planItemDefinitionId === l.planItemDefinitionId))
+        state.allList = props.allList.filter(item => !state.setting.layout.find(l => item.planItemDefinitionId === l.planItemDefinitionId))
         state.loading = false
     })
 }

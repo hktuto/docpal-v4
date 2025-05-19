@@ -67,9 +67,11 @@ function openCase(){
 }
 
 async function openWorkflow(){
-    const workflow = eventDetail.value.detail.relatedWorkflows
-    const processInstanceId = workflow.processInstanceId
-    const taskList = await clientApi.api.getWorkflowTasks({processInstanceId}).then(res => res.data)
+  if(!routeWorkflowDetail) return
+  const workflow = eventDetail.value.detail.relatedWorkflows
+  const processInstanceId = workflow.processInstanceId
+  const taskList = await clientApi.api.getWorkflowTasks({processInstanceId}).then(res => res.data)
+  try {
     if(taskList && taskList.length > 0) {
         const task = taskList[0]
         const newTab = routeWorkflowDetail({
@@ -78,6 +80,9 @@ async function openWorkflow(){
         })
         routerProvider?.navigateTo(newTab, true)
     }
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
 
