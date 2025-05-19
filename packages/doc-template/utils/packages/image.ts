@@ -1,4 +1,3 @@
-
 import Image from '@tiptap/extension-image'
 
 export const ImageSetting = [
@@ -6,7 +5,7 @@ export const ImageSetting = [
     inline: true,
     allowBase64: true,
     HTMLAttributes: {
-      class: 'my-custom-class',
+      style: "width: 100%; height: 100%;",
     },
   })
 ]
