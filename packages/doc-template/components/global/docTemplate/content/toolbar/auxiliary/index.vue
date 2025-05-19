@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
-import type { UploadFile } from 'element-plus'
-import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
-import Base64 from 'happy-dom/lib/base64/Base64.d.ts.js'
+import { ElMessage, type UploadFile } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
 
 const { editor, options, initEditor } = inject(DocTemplateProveKey)
 const { t } = useI18n()
-const disabled = ref(false)
-const dialogVisible = ref(false)
-let dialogImageUrl = ref('')
 
 const state = reactive({
   fontLinkDialogVisible: false,
   imageDialogVisible: false,
-  isImageLink: false,
+  isImageUrl: true,
   imageLink: '',
-
-
+  imageUrl: '',
+  previewDialogVisible: false,
+  previewDialogImage: '',
+  imageList: [],
   link: ''
 })
 
@@ -62,38 +60,53 @@ function handleTaskList() {
 
 function openSetImageDialog() {
   state.imageDialogVisible = true
-  state.isImageLink = false
+  state.isImageUrl = true
   state.imageLink = ''
+  state.imageUrl = ''
 }
 
 function handleImage() {
+  let url
 
-  if (state.isImageLink) {
-    const url = state.imageLink
-    if (url) {
-      editor.value.commands.setImage({ src: url })
-    }
+  if (!state.isImageUrl) {
+    url = state.imageLink
     state.imageLink = ''
   } else {
-    Base64(state.dialogImageUrl)
+    url = state.imageUrl
+    state.imageUrl = ''
   }
-  state.isImageLink = false
+
+  if (url) {
+    editor.value.commands.setImage({ src: url })
+  }
+  state.isImageUrl = true
   state.imageDialogVisible = false
 }
 
-const handleRemove = (file: UploadFile) => {
-  console.log(file)
-  dialogImageUrl = ''
+function handleBeforeUpload(file: File) {
+  const isLt1m = file.size / 1024 / 2048 < 1
+  if (!isLt1m) {
+    ElMessage.error('上传头像图片大小不得超过 1M!')
+  }
+  return isLt1m
 }
 
-const handlePictureCardPreview = (file: UploadFile) => {
-  dialogImageUrl.value = file.url!
-  dialogVisible.value = true
+function handlePictureCardPreview(file: UploadFile) {
+  state.previewDialogImage = file.url!
+  state.previewDialogVisible = true
 }
 
-const handleDownload = (file: UploadFile) => {
-  console.log(file)
+const toBase64 = (file: any) => new Promise((resolve, reject) => {
+  const reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onload = () => resolve(reader.result)
+  reader.onerror = reject
+})
+
+async function handleSuccess(uploadFile: any, uploadFiles: any) {
+  state.imageUrl = await toBase64(uploadFiles.raw)
 }
+
 
 </script>
 
@@ -141,57 +154,37 @@ const handleDownload = (file: UploadFile) => {
   <el-dialog v-model="state.imageDialogVisible" title="Set Image" width="500">
     <el-form>
       <el-switch
-        v-model="state.isImageLink"
+        v-model="state.isImageUrl"
         size="large"
         active-text="Image"
         inactive-text="Link(Base64)"
       />
 
-      <el-form-item v-if="!state.isImageLink" label="Image link(Base64)">
+      <el-form-item v-if="!state.isImageUrl" label="Image link(Base64)">
         <el-input v-model="state.imageLink" />
       </el-form-item>
 
       <el-form-item v-else label="Image" lable="Update Image">
-        <el-upload v-if="!dialogImageUrl" action="#" list-type="picture-card" :auto-upload="false" limit="1">
+        <el-upload
+          action="#"
+          :file-list="state.imageList"
+          v-model="state.imageList"
+          list-type="picture-card"
+          accept="image/jpeg,image/png,image/jpg"
+          limit="1"
+          :on-success="handleSuccess"
+          :before-upload="handleBeforeUpload"
+          :on-preview="handlePictureCardPreview"
+        >
           <el-icon>
             <Plus />
           </el-icon>
-
-          <template #file="{ file }">
-            <div>
-              <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-              <span class="el-upload-list__item-actions">
-          <span
-            class="el-upload-list__item-preview"
-            @click="handlePictureCardPreview(file)"
-          >
-            <el-icon><zoom-in /></el-icon>
-          </span>
-                <!--          <span
-                            v-if="!disabled"
-                            class="el-upload-list__item-delete"
-                            @click="handleDownload(file)"
-                          >
-                            <el-icon><Download /></el-icon>
-                          </span>-->
-          <span
-            v-if="!disabled"
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)"
-          >
-            <el-icon><Delete /></el-icon>
-          </span>
-        </span>
-            </div>
-          </template>
         </el-upload>
-
-        <el-dialog v-model="dialogVisible">
-          <img w-full :src="dialogImageUrl" alt="Preview Image" />
+        <el-dialog v-model="state.previewDialogVisible">
+          <img w-full style="width: 100%; height: 100%" :src="state.previewDialogImage" alt="Preview Image" />
         </el-dialog>
       </el-form-item>
     </el-form>
-
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleImage">
@@ -199,6 +192,7 @@ const handleDownload = (file: UploadFile) => {
         </el-button>
       </div>
     </template>
+
   </el-dialog>
 </template>
 
