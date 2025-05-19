@@ -1,0 +1,38 @@
+directories:
+  output: release/${version}
+  buildResources: build
+appId: docpal.wclsolution.com
+productName: DocPal
+asar: true
+files:
+  - filter:
+      - package.json
+      - pref/**/*
+      - dist/**/*
+      - public/**/*
+mac:
+  artifactName: ${productName}_${version}.${ext}
+  icon: public/icon.png
+  target:
+    - dmg
+win:
+  icon: public/icon.png
+  signAndEditExecutable: false
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${productName}_${version}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+protocols:
+  - name: DocPal Protocol
+    schemes:
+      - docpal
+publish:
+  - provider: generic
+    url: https://app4.wclsolution.com/app
+electronVersion: 36.2.1
