@@ -510,7 +510,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
     })
 
     tableEvent.pageChange = ({ pageSize })=>{
-      const tableSetting = useUserPreference().value.tableSettings[params.id]
+      if(!params.id){
+        throw new Error("table Id is null");
+      }
+      const tableSetting = useUserPreference().value.tableSettings[params.id] ||= {}
       tableSetting.tablePageSize = pageSize
       const data = {
         id:params.id,
@@ -530,10 +533,5 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 }
 
 function getPageSize(id: string){
-  let pageSize = 20
-  const tableSetting = useUserPreference().value.tableSettings[id]
-  if (tableSetting?.tablePageSize){
-    pageSize = tableSetting.tablePageSize
-  }
-  return  pageSize
+  return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
 }
