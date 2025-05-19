@@ -6,11 +6,12 @@ const editorProvider = inject(DocTemplateProveKey)
 if (!editorProvider) {
   throw createError('editorProvider not found')
 }
-const { editor } = editorProvider
+const { editor, lastSelection } = editorProvider
 
 
-function isText(editor: any) {
-  return editor.state.selection.ranges.length == 1
+function getDataType(editor: any) {
+  // console.log('22', editor.state.selection)
+  console.log(lastSelection.type)
 }
 </script>
 
@@ -22,37 +23,42 @@ function isText(editor: any) {
     style="width: 118%"
   >
     <div class="bubble-menu">
-      <button v-if="isText" @click="editor.chain().focus().toggleBold().run()"
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleBold().run()"
               :class="{ 'is-active': editor.isActive('bold') }">
         Bold
       </button>
-      <button v-if="isText" @click="editor.chain().focus().toggleItalic().run()"
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleItalic().run()"
               :class="{ 'is-active': editor.isActive('italic') }">
         Italic
       </button>
       <!--  font Underline  -->
-      <button v-if="isText" @click="editor.chain().focus().toggleUnderline().run()"
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleUnderline().run()"
               :class="{ 'is-active': editor.isActive('underline') }">
         Underline
       </button>
       <!--  font Strike  -->
-      <button v-if="isText" @click="editor.chain().focus().toggleStrike().run()"
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleStrike().run()"
               :class="{ 'is-active': editor.isActive('strike') }">
         Strike
       </button>
       <!--  font Subscript  -->
-      <button v-if="isText" @click="editor.chain().focus().toggleSubscript().run()"
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleSubscript().run()"
               :class="{ 'is-active': editor.isActive('subscript') }">
         Subscript
       </button>
       <!--  font Superscript  -->
-      <button v-if="isText" @click="editor.chain().focus().toggleSuperscript().run()"
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleSuperscript().run()"
               :class="{ 'is-active': editor.isActive('superscript') }">
         Superscript
       </button>
-      <button v-if="isText" @click="editor.chain().focus().unsetAllMarks().run()">
+      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().unsetAllMarks().run()">
         Clear
       </button>
+
+      <button v-if="lastSelection?.type == 'image'" @click="getDataType(editor)">
+        test
+      </button>
+
     </div>
   </bubble-menu>
 </template>

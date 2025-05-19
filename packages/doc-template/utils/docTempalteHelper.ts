@@ -51,11 +51,17 @@ export type DocTool = {
   requiredOptions?: string[]
 }
 
+export type LastSelection = {
+  type: "text" | "" | "image",
+  data: any
+}
 
 interface DocTemplateProvider {
   editor: Ref<any>,
   options: Ref<TipTapOptions, TipTapOptions>,
-  initEditor: (options:TipTapOptions) => void
+  initEditor: (options:TipTapOptions) => void,
+  lastSelection: Ref<LastSelection | null | undefined>,
+  variables : Ref<any>
 }
 
 export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')
