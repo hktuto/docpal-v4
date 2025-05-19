@@ -14,7 +14,7 @@
       </el-button>
     </div>
     <PersonalCaseCreateDialog ref="settingRef" :caseList="state.caseList" :caseAList="state.caseAList" @delete="handleDelete" @refresh="handleRefresh" />
-    <CaseNewDialog ref="dialogRef" />
+    <LazyCaseAddCaseDialog ref="dialogRef" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
@@ -46,10 +46,15 @@ const settingRef = ref()
 const dialogRef = ref()
 
 function handleClick(item: any) {
-  dialogRef.value.handleOpen(item)
+  if(!dialogRef.value.handleOpen) return
+  try {
+    dialogRef.value.handleOpen(item.id, item)
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 
-function handleRefresh(chartSetting, caseList) {
+function handleRefresh(chartSetting: any, caseList: any) {
   state.caseList = caseList
   emits('refreshSetting', chartSetting)
 }
@@ -66,7 +71,7 @@ async function getList() {
 async function getCaseList() {
   state.caseAList = await getList()
   if (props.setting.caseKeys && props.setting.caseKeys.length > 0) {
-    state.caseList = props.setting.caseKeys.reduce((prev, id: any) => {
+    state.caseList = props.setting.caseKeys.reduce((prev: any, id: any) => {
       const caseItem = state.caseAList?.find((cases: any) => cases.id === id)
       prev.push({ ...caseItem })
       return prev
@@ -74,7 +79,7 @@ async function getCaseList() {
   }
 }
 
-onMounted(async() => {
+onMounted(async () => {
   getCaseList()
 })
 </script>

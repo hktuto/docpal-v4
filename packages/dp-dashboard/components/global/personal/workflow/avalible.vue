@@ -1,50 +1,42 @@
 <template>
   <div class="table-container">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    </VxeGrid>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
 import { watchDebounced } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
-import { clientApi } from "api";
+import { clientApi } from 'api'
 const props = defineProps(['processKeys'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const {
-  public: { endPoint },
-} = useRuntimeConfig();
+  public: { platform }
+} = useRuntimeConfig()
 let extraParams: any = ref({
-  candidateOrAssigned: useUserId(),
-});
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows,
-} = useVxeTable({
-  id: "d-workflowAvalible",
+  candidateOrAssigned: useUserId()
+})
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
+  id: 'd-workflowAvalible',
   zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
-    { field: "taskInstance.businessKey", title: "table_name", fixed: "left" },
-    { field: "name", title: "workflow_taskName" },
+    { field: 'taskInstance.businessKey', title: 'table_name', fixed: 'left' },
+    { field: 'name', title: 'workflow_taskName' }
     // { field: "taskInstance.processDefinitionName", title: "workflow_workflowName" },
   ],
-  dblClickAction: ({ row, column, event }:any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   },
   saveColumnOrder: false
-});
+})
 async function getData(params: any = {}) {
-  if(endPoint === 'admin') return
-  const settingParams = {}
-  if(props.processKeys && props.processKeys.length > 0) {
+  // if (platform === 'admin') return
+  const settingParams: any = {}
+  if (props.processKeys && props.processKeys.length > 0) {
     settingParams.processKeys = props.processKeys
   }
-  const res = await clientApi.api.postWorkflowTasksUser({ ...params, ...extraParams.value, ...settingParams }).then(res => res.data)
+  const res = await clientApi.api.postWorkflowTasksUser({ ...params, ...extraParams.value, ...settingParams }).then((res) => res.data)
   return {
     data: {
       entryList: res?.entryList,
@@ -53,26 +45,33 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  routerProvider?.navigateTo(routeWorkflowDetail({
-    ...row,
-    name: row.taskInstance.businessKey,
-    workflowType: 'allTask'
-  }), false);
+  if (platform === 'admin') return
+  try {
+    routerProvider?.navigateTo(
+      routeWorkflowDetail({
+        ...row,
+        name: row.taskInstance.businessKey,
+        workflowType: 'allTask'
+      }),
+      false
+    )
+  } catch (error: any) {
+    throw new Error(error)
+  }
 }
 watchDebounced(
   () => props.processKeys,
   (newValue, oldValue) => {
-    if (!oldValue) return;
-    if(JSON.stringify(oldValue) === JSON.stringify(newValue)) return;
+    if (!oldValue) return
+    if (JSON.stringify(oldValue) === JSON.stringify(newValue)) return
     reload()
   },
   { debounce: 200, maxWait: 500, immediate: true }
-);
-
+)
 </script>
 <style lang="scss" scoped>
-.pageContainer{
-  height:100%;
+.pageContainer {
+  height: 100%;
   position: relative;
 }
 :deep .vxe-buttons--wrapper {
@@ -86,4 +85,3 @@ watchDebounced(
   }
 }
 </style>
- 

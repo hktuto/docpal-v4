@@ -92,16 +92,17 @@ function handleFilterFormChange(formModel: any) {
 }
 
 async function handleDblclick(row: any) {
+  if(!routeWorkflowDetail) return
   try {
     state.loading = true
-    console.log('row', row)
     const newItem = routeWorkflowDetail({
       id: row.id,
       name: row.name
     })
     routerProvider?.navigateTo(newItem)
     // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
-  } catch (error) {
+  } catch (error: any) {
+    throw new Error(error);
   } finally {
     setTimeout(() => {
       state.loading = false
