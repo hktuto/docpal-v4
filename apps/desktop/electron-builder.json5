@@ -1,0 +1,51 @@
+{
+  "appId": "docpal.wclsolution.com",
+  productName: "DocPal",
+  "asar": false,
+  "directories": {
+    "output": "release/${version}"
+  },
+  "files": [
+    "pref/**/*",
+    ".output/**/*",
+    "dist-electron"
+  ],
+  "mac": {
+    "artifactName": "${productName}_${version}.${ext}",
+    icon: ".output/public/icon.png",
+    "target": [
+      "dmg"
+    ]
+  },
+  "win": {
+    icon: ".output/public/icon.png",
+    "signAndEditExecutable": false,
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "artifactName": "${productName}_${version}.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
+  },
+  "protocols":[
+      {
+        "name":"DocPal Protocol",
+        "schemes":["docpal"]
+      }
+    ],
+  "publish": [
+    {
+      "provider": "generic",
+      "url": "https://app4.wclsolution.com/app"
+    }
+  ]
+}
