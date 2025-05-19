@@ -45,6 +45,7 @@ export async function verifly() {
     getUserPreference(),
     getOCRSetting()
   ]);
+
   logedIn.value = true;
   emitBus(EventType.USER_LOGIN__SUCCESS, "");
 }
@@ -115,7 +116,7 @@ export function logout() {
     keyCloakState.value?.logout();
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-    console.log("logout");
+
     userState.value = null;
   }
   logedIn.value = false;
@@ -192,6 +193,7 @@ export async function getUserPreference() {
   // normalize user preference , user may be come from old version
   userSetting.size ||= '14px';
   userSetting.color ||= 'light';
+  userSetting.language ||= 'en-US';
   // normalize uploadFileMaxSize
   if (userSetting.uploadFileMaxSize && typeof userSetting.uploadFileMaxSize === 'string') {
     userSetting.uploadFileMaxSize = Number(userSetting.uploadFileMaxSize.replace('M', '').replace('G', ''));
@@ -204,7 +206,7 @@ export async function getUserPreference() {
     {
       size: '14px',
       folderView: 'tree',
-      language: navigator.language,
+      language: 'en-US',
       color: 'light',
       tableSettings: {},
       uploadFileMaxSize: 1200

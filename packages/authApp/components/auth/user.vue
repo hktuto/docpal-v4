@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import {emitBus, EventType} from 'eventbus';
+import {clientApi} from 'api'
 import {logout} from '#imports'
 const user = useUserState()
 const config = useRuntimeConfig()
 const { locales, locale, setLocale } = useI18n()
 const { uploadState } = useUploadAIStore()
-function changeLanguage(langCode:string) {
+async function changeLanguage(langCode:string) {
+    const perference = useUserPreference()
+    perference.value.language = langCode
+    await clientApi.api.putUserSetting(perference.value as any)
     setLocale(langCode);
     window.location.reload()
 }

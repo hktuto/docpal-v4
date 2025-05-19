@@ -4,8 +4,18 @@ import zhHKJson from 'deployment/src/zh-HK.json'
 import { clientApi } from 'api'
 
 export async function getLocale(){
-    const { locale, availableLocales, setLocaleMessage } = useI18n()
+    const { locale, availableLocales, setLocaleMessage, setLocale } = useI18n()
+    // if app is not public, then get user preference language
+    
     const config = useRuntimeConfig()
+    console.log("locale when getLocale", locale.value, config)
+    if(config.public.platform === 'admin' || config.public.platform === 'client'){
+      const perference = useUserPreference()
+      // check if perference is value and language is not equal to locale
+      if(perference.value && perference.value.language && perference.value.language !== locale.value){
+        await setLocale(perference.value.language)
+      }
+    }
     let clientJson;
     if(config.public.isProduction){
         const { data:clientData } = await clientApi.api.getRelationQuerylanguage({
