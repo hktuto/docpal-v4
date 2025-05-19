@@ -50,7 +50,7 @@
             itemKey="id"
         >
             <template #item="{ element, index }">
-                <div class="list-group-item">
+                <div class="list-group-item list-group-item--right">
                     <SvgIcon class="handle-icon" src="/icons/drag.svg" />
                     {{ element.name }}
                 </div>
@@ -70,6 +70,7 @@ import draggable from "vuedraggable";
 const emits = defineEmits([
     'refresh', 'delete'
 ])
+const props = defineProps(['allList'])
 const {t} = useI18n()
 
 const filterText = ref("");
@@ -107,8 +108,7 @@ async function handleSubmit () {
     state.visible = false
     state.loading = false
 }
-function handleOpen(setting: any, allList: any) {
-    if(!allList) allList = []
+function handleOpen(setting: any) {
     state.visible = true
     setTimeout(async () => {
         if(!setting.layout) setting.layout = []
@@ -117,7 +117,7 @@ function handleOpen(setting: any, allList: any) {
           return prev
         }, {})
         state.setting = deepCopy(setting)
-        state.allList = allList.filter((item: any) => !state.setting.layout.find((l: any) => item.id === l.id))
+        state.allList = props.allList.filter((item: any) => !state.setting.layout.find((l: any) => item.id === l.id))
         state.loading = false
     })
 }
@@ -147,6 +147,10 @@ defineExpose({ handleOpen })
       display: grid;
       grid-template-columns: min-content 1fr min-content;
     }
+}
+.list-group-item--right {
+  flex-flow: row nowrap;
+  align-items: center;
 }
 .flex-zoom {
     display: flex;
