@@ -7,7 +7,7 @@ import { normalizeTipTapOptions, setupExtensions, defaultPageSetting, type TipTa
 const props = withDefaults(defineProps<{
   editorOptions: TipTapOptions,
   json?: any,
-  variables ?: any[]
+  variables : any[]
 }>(), {
  editorOptions:{
    ...defaultPageSetting
@@ -32,6 +32,14 @@ function normalizeJson(option:TipTapOptions, json?:any){
   }
 
 }
+type LastSelection = {
+  type: "text" | "textRange" | "image",
+  data: any
+}
+
+const lastSelection = ref<LastSelection | null>(
+
+)
 
 const headerRef = ref<any>(null)
 function initEditor(initOptions:TipTapOptions, json?:any) {
@@ -43,6 +51,34 @@ function initEditor(initOptions:TipTapOptions, json?:any) {
   editor.value = new Editor({
     content: normalizeJson(normlizeOption, json),
     extensions,
+    onSelectionUpdate({ editor }) {
+      const selection = editor.state.selection;
+      if(!selection || !selection?.jsonID) return;
+      let newSelectionData:LastSelection = {
+        type: 'text',
+        data: selection
+      }
+      switch(selection?.jsonID) {
+        case 'text':
+          // text or textRange
+          if(!selection?.text){
+            lastSelection.type = "text"
+          }else{
+            lastSelection.type = "textRange"
+          }
+          break;
+        case 'node' :
+          // check image
+          if(selection?.node.type.name ==="image"){
+            lastSelection.type = "image"
+          }
+          break;
+        default:
+          break;
+      }
+      // console.log("type",lastSelection.type)
+      lastSelection.value = newSelectionData
+    },
   })
   if(normlizeOption.mode === 'PAGE') {
     // set up margin
@@ -67,7 +103,8 @@ provide(DocTemplateProveKey, {
   editor,
   options,
   initEditor,
-  variables
+  variables,
+  lastSelection
 })
 
 </script>
