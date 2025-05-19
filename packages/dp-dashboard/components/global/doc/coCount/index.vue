@@ -1,5 +1,5 @@
 <template>
-  <DashboardCard ref="cardRef" :hideSetting="hideSetting" :title="$t(setting.documentType)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard class="dp-dashboard--card__scroll" ref="cardRef" :hideSetting="hideSetting" :title="$t(setting.documentType)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
     <template #title_suffix>
       <DashboardUserFilter
         class="el-icon--right"

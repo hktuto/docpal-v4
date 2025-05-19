@@ -28,6 +28,7 @@ async function handleDelete() {
 const addCaseDialog = ref()
 
 function handleAddCaseDialog() {
+  if(!addCaseDialog.value.handleOpen) return
   addCaseDialog.value.handleOpen(props.setting.caseId, state.detail)
 }
 async function getCaseDetail(caseId: string) {
