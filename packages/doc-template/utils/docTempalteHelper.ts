@@ -51,8 +51,50 @@ export type DocTool = {
   requiredOptions?: string[]
 }
 
+export const variableType = [
+  {
+    type: 'Text',
+    dataType: 'string',
+  },
+  {
+    type: 'Paragraph',
+    dataType: 'string',
+  },
+  {
+    type: 'documentId',
+    dataType: 'string',
+  },
+   {
+    type: "CaseId",
+    dataType: "string",
+  },
+  {
+    type: "WorkflowId",
+    dataType: "string", 
+  },
+  {
+    type: "Email",
+    dataType: "string",
+  },
+    {
+    type: "Website",
+    dataType: "string", 
+  },
+  {
+    type : "Table",
+    dataType: "list",
+  }
+]
+
+export type VariableItem = {
+  type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
+  dataType: "string" | "list",
+  key: string,
+  value: any
+}
+
 export type LastSelection = {
-  type: "text" | "" | "image",
+  type: "text" | "textRange" | "image",
   data: any
 }
 
@@ -61,7 +103,7 @@ interface DocTemplateProvider {
   options: Ref<TipTapOptions, TipTapOptions>,
   initEditor: (options:TipTapOptions) => void,
   lastSelection: Ref<LastSelection | null | undefined>,
-  variables : Ref<any>
+  variables : Ref<VariableItem[]>
 }
 
 export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')

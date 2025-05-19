@@ -2,21 +2,38 @@
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
 
 const editorProvider = inject(DocTemplateProveKey)
+
 if(!editorProvider) {
   throw createError('editorProvider is not found')
 }
+const { editor, options } = editorProvider
 </script>
 
 <template>
   <div class="footerContainer">
-    footer
+    Footer
     <div class="space"></div>
-    <div v-if="editorProvider.editor && editorProvider.editor.storage" class="wordCount">
-      {{ editorProvider.editor.storage.characterCount.characters() }}
-      characters
-      <span class="slash">/</span>
-      {{ editorProvider.editor.storage.characterCount.words() }} <span class="word">words</span>
-    </div>
+    <template v-if="options.textCount">
+      <div v-if="editor " class="wordCount">
+        {{ editor.storage.characterCount.characters() }}
+        characters
+        <template v-if="options.textCount">
+          <span class="slash">/</span>
+          {{ options.textCount }} <span class="word">characters</span>
+        </template>
+        
+      </div>
+    </template>
+    <template v-else>
+      <div v-if="editor " class="wordCount">
+        {{ editor.storage.characterCount.characters() }}
+        characters
+        
+          <span class="slash">/</span>
+          {{ editor.storage.characterCount.words() }} <span class="word">word</span>
+        
+      </div>
+    </template>
   </div>
 </template>
 

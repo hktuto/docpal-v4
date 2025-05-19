@@ -14,7 +14,7 @@ import { usePagination } from '../../utils/packages/pagination';
 
 export const convertTipTapToHTML = (editorJson :any, options: TipTapOptions) => {
   try{
-      const html = generateHTML(editorJson, [
+    const plugins = [
         ...TextNode,
         ...DocumentSetting,
         ...TextStyleNode,
@@ -24,11 +24,13 @@ export const convertTipTapToHTML = (editorJson :any, options: TipTapOptions) => 
         ...LinkSetting,
         ...ListSetting,
         ...HorizontalRuleSetting,
-        ...usePagination(options.pageSetting)
-      ])
+      ]
+      if(options?.pageSetting){
+        plugins.push(...usePagination(options?.pageSetting))
+      }
+      const html = generateHTML(editorJson, plugins)
       return html
     }catch(err) {
-      console.log(err)
       return ""
     }
   // TODO : may need to normalize the html

@@ -1,14 +1,26 @@
 <script lang="ts" setup>
 
+const pageReady = ref(false)
+
+const documentOptions = ref<TipTapOptions>()
+
+function newSetting(newData) {
+  documentOptions.value = newData;
+  pageReady.value = true
+}
+
 
 </script>
 
 
 <template>
   <div class="pageContainer">
-    <client-only>
-      <DocTemplateEditor />
-    </client-only>
+    <template v-if="pageReady">
+      <client-only>
+        <DocTemplateEditor :editorOptions="documentOptions" />
+      </client-only>
+    </template>
+    <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="true" @submit="newSetting" />
   </div>
 </template>
 
