@@ -17,7 +17,9 @@ function isText(editor: any) {
 <template>
   <bubble-menu
     :editor="editor"
-    :tippy-options="{ duration: 300 }"
+    :tippy-options="{ duration: 500 }"
+    v-if="editor"
+    style="width: 118%"
   >
     <div class="bubble-menu">
       <button v-if="isText" @click="editor.chain().focus().toggleBold().run()"
@@ -51,10 +53,6 @@ function isText(editor: any) {
       <button v-if="isText" @click="editor.chain().focus().unsetAllMarks().run()">
         Clear
       </button>
-
-      <!--      <button @click="isText(editor)">-->
-      <!--        get-->
-      <!--      </button>-->
     </div>
   </bubble-menu>
 </template>
