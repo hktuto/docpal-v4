@@ -15,13 +15,15 @@ app.whenReady().then( async() => {
         },
     })
   if (process.env.VITE_DEV_SERVER_URL) {
+    console.log("process.env.VITE_DEV_SERVER_URL", process.env.VITE_DEV_SERVER_URL)
     mainWindow.loadURL("http://localhost:3000"); // dev
+    mainWindow.webContents.openDevTools()
   } else {
     mainWindow.loadFile("dist/index.html",{
         
     }); // production
   }
-  mainWindow.webContents.openDevTools()
+  
    
 })
 
