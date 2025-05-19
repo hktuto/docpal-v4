@@ -14,7 +14,6 @@ const state = reactive({
   imageUrl: '',
   previewDialogVisible: false,
   previewDialogImage: '',
-  imageList: [],
   link: ''
 })
 
@@ -65,6 +64,8 @@ function openSetImageDialog() {
   state.imageUrl = ''
 }
 
+const uploadRef = ref()
+
 function handleImage() {
   let url
 
@@ -79,6 +80,8 @@ function handleImage() {
   if (url) {
     editor.value.commands.setImage({ src: url })
   }
+
+  uploadRef.value.clearFiles()
   state.isImageUrl = true
   state.imageDialogVisible = false
 }
@@ -166,9 +169,8 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
 
       <el-form-item v-else label="Image" lable="Update Image">
         <el-upload
+          ref="uploadRef"
           action="#"
-          :file-list="state.imageList"
-          v-model="state.imageList"
           list-type="picture-card"
           accept="image/jpeg,image/png,image/jpg"
           limit="1"
@@ -185,6 +187,7 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
         </el-dialog>
       </el-form-item>
     </el-form>
+
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleImage">
@@ -192,7 +195,6 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
         </el-button>
       </div>
     </template>
-
   </el-dialog>
 </template>
 
