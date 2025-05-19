@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <DashboardBasicInfoSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
+    <DashboardBasicInfoSetting ref="settingRef" :allList="state.data.fields" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
