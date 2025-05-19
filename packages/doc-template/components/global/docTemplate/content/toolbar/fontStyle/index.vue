@@ -5,9 +5,7 @@ const { editor, options, initEditor } = inject(DocTemplateProveKey)
 const { t } = useI18n()
 
 const titlePredefine = ref(['H1', 'H2', 'H3', 'H4', 'H5'])
-const state = reactive({
-
-})
+const state = reactive({})
 
 function handleTitle(number: number) {
   editor.value.chain().focus().toggleHeading({ level: number }).run()

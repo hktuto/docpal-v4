@@ -21,7 +21,7 @@ const state = reactive({
 })
 
 function checkFontSizeIsNumber() {
-  console.log('value', state.fontSize)
+
   // Regular expressions that allow integers and up to one decimals
   const regex = /^\d+(\.\d{1})?$/
   if (!regex.test(state.fontSize.toString())) {
@@ -36,7 +36,6 @@ function checkFontSizeIsNumber() {
   } else {
     state.fontSize = fontSize
   }
-  console.log('fontDataOptions', state.fontDataOptions)
   handleFontSizeChange(state.fontSize)
 }
 
@@ -181,12 +180,8 @@ function handleFontColorFocus() {
  * Set the selected string to unset all font style
  */
 function handleFontStyleClear() {
-  editor.value.chain().focus().unsetAllMarks().run();
+  editor.value.chain().focus().unsetAllMarks().run()
 }
-
-/**
- * Set the selected string to link
- */
 
 /**
  * Set the selected string to Strike
@@ -225,16 +220,19 @@ function handleSuperscript() {
       </template>
     </el-dropdown>
 
-    <!-- font size -->
-    <el-select-v2
+    <el-select
       v-model="state.fontSize"
-      :options="state.fontDataOptions"
-      placeholder="please select"
-      style="width: 16%"
       allow-create
       filterable
-      @blur="checkFontSizeIsNumber"
-    />
+      default-first-option
+      :reserve-keyword="false"
+      placeholder="please select"
+      style="width: 16%"
+      @change="checkFontSizeIsNumber"
+    >
+      <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+
     <el-button @click="handlerFontSizeResize(true)">
       <p>A<sup>+</sup></p>
     </el-button>
