@@ -1,9 +1,10 @@
+// @ts-ignore
 import HTMLtoDOCX from 'html-to-docx'
 import {Readable} from 'stream'
 import { sendStream } from 'h3'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { html, pageSetting = 
+  const { html, options, pageSetting = 
     {
       orientation: 'portrait',
       pageSize:{

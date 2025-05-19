@@ -2,8 +2,9 @@
 import { DocTemplateProveKey } from "~/utils/docTempalteHelper";
 import formJson from "./docJson.json";
 
-const { editor, options, initEditor } = inject(DocTemplateProveKey);
+const docTempalteProvider = inject(DocTemplateProveKey);
 const { t } = useI18n();
+const { editor, options} = docTempalteProvider
 
 const state = reactive({
   loading: false,
@@ -21,7 +22,8 @@ async function exportDocx(){
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      json
+      json,
+      options : options.value
     })
   }).then( res => res.text())
   const blob = await fetch('/htmlToDocx',{
@@ -43,13 +45,14 @@ async function exportDocx(){
 }
 async function exportHTML(){
   const json = getJsonConfig();
+  console.log(options)
   const res = await fetch('/jsonToHtml', {
      method:"POST",
     headers:{
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      json
+      json, options : options.value
     })
   }).then( res => res.text())
   const blob = new Blob([res], { type: 'text/html' });

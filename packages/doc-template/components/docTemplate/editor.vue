@@ -7,7 +7,7 @@ import { normalizeTipTapOptions, setupExtensions, defaultPageSetting, type TipTa
 const props = withDefaults(defineProps<{
   editorOptions: TipTapOptions,
   json?: any,
-  variables : any[]
+  variables : VariableItem[]
 }>(), {
  editorOptions:{
    ...defaultPageSetting
@@ -32,14 +32,9 @@ function normalizeJson(option:TipTapOptions, json?:any){
   }
 
 }
-type LastSelection = {
-  type: "text" | "textRange" | "image",
-  data: any
-}
 
-const lastSelection = ref<LastSelection | null>(
 
-)
+const lastSelection = ref<LastSelection | null>()
 
 const headerRef = ref<any>(null)
 function initEditor(initOptions:TipTapOptions, json?:any) {
