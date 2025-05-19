@@ -4,6 +4,7 @@
     :class="{ 'dashboard-item-drillDown': state.showDrillDown }"
     :title="$t('dashboard.azure.ocrProcessPage') + '(' + $t(`azureDashboard.${setting.dataType}`) + ')'"
     :setting="setting"
+    :hideSetting="hideSetting"
     :settingRef="settingRef"
     @delete="handleDelete"
   >
