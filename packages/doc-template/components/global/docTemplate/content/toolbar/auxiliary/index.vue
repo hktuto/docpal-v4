@@ -34,6 +34,9 @@ function handleResetLink() {
   state.fontLinkDialogVisible = false
 }
 
+/**
+ * Set the selected string to link
+ */
 function handleSetLink() {
   editor.value.chain().focus().extendMarkRange('link').setLink({ href: state.link }).run()
   state.fontLinkDialogVisible = false
