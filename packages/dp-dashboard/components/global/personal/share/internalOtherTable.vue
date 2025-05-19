@@ -1,47 +1,41 @@
 <template>
   <div class="table-container">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    </VxeGrid>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
-import { clientApi } from "api";
+import { clientApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
+const {
+  public: { platform }
+} = useRuntimeConfig()
 const { t } = useI18n()
-const {
-  public: { endPoint },
-} = useRuntimeConfig();
-let extraParams: any = {
-};
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows,
-} = useVxeTable({
-  id: "d-share",
+let extraParams: any = {}
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
+  id: 'd-share',
   zoom: false,
   api: (pageParams: any) => getData(pageParams),
   columns: [
-    { field: "documentNames", title: "tableHeader.fileOrFolderName", fixed: "left" },
-    { field: "shareUserIds", title: "tableHeader_shareTo",
-      formatter({cellValue}: any) {
-        if (!cellValue) return "";
-        const userList = JSON.parse(cellValue);
-        return userList.join(",");
-      } },
+    { field: 'documentNames', title: 'tableHeader.fileOrFolderName', fixed: 'left' },
+    {
+      field: 'shareUserIds',
+      title: 'tableHeader_shareTo',
+      formatter({ cellValue }: any) {
+        if (!cellValue) return ''
+        const userList = JSON.parse(cellValue)
+        return userList.join(',')
+      }
+    }
   ],
-  dblClickAction: ({ row, column, event }:any) => {
+  dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   },
   saveColumnOrder: false
-});
+})
 async function getData(params: any = {}) {
-  if(endPoint === 'admin') return
-  const res = await clientApi.api.postInternalshareOthers({ ...params, ...extraParams }).then(res => res.data)
+  if (platform === 'admin') return
+  const res = await clientApi.api.postInternalshareOthers({ ...params, ...extraParams }).then((res) => res.data)
   return {
     data: {
       entryList: res?.entryList,
@@ -50,21 +44,21 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
+  if (platform === 'admin') return
   if (row.isFolder) {
-    routerProvider?.navigateTo(routeShareOtherPageFolder(row), false);
+    routerProvider?.navigateTo(routeShareOtherPageFolder(row), false)
   } else {
     routerProvider?.navigateTo(
       createDetailPageParams({
         docName: row.documentNames,
         idOrPath: row.documentIds,
-        showHeaderAction: true,
+        showHeaderAction: true
       }),
       false
-    );
+    )
   }
 }
-onMounted(() => {
-})
+onMounted(() => {})
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {
@@ -78,4 +72,3 @@ onMounted(() => {
   }
 }
 </style>
- 
