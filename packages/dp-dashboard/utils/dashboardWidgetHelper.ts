@@ -282,20 +282,21 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         setting : {
         }
     },
-    PersonalPredefinedSearch: {
-        type: 'personal',
-        feature: 'SMART_FOLDER',
-        label: 'PersonalPredefinedSearch',
-        minW: 2,
-        minH: 2,
-        maxW: 12,
-        maxH: 6,
-        w: 3,
-        h: 3,
-        component : 'PersonalPredefinedSearch',
-        setting : {
-        }
-    },
+    // merge to search
+    // PersonalPredefinedSearch: {
+    //     type: 'personal',
+    //     feature: 'SMART_FOLDER',
+    //     label: 'PersonalPredefinedSearch',
+    //     minW: 2,
+    //     minH: 2,
+    //     maxW: 12,
+    //     maxH: 6,
+    //     w: 3,
+    //     h: 3,
+    //     component : 'PersonalPredefinedSearch',
+    //     setting : {
+    //     }
+    // },
     PersonalWorkflowCreate: {
         type: 'personal',
         feature: 'WORKFLOW',

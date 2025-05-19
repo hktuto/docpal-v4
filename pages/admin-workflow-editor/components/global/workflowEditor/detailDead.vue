@@ -124,7 +124,6 @@ async function promoteToProduction() {
       draftId: id,
       versionNumber: currentVersion
     }) as any
-    console.log("xml", xml, workflowVersionData)
     const {data} = await adminApi.api.postWorkflowVersionVersionidDeploy(workflowVersionData.id, {requestDTO: {}}, form) as any
 
     routerProvider?.message?.success(t('dpMsg_success'))
