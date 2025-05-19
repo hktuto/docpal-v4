@@ -6,6 +6,8 @@ const user = useUserState()
 const config = useRuntimeConfig()
 const { locales, locale, setLocale } = useI18n()
 const { uploadState } = useUploadAIStore()
+const isDesktop = useDesktopMode()
+
 async function changeLanguage(langCode:string) {
     const perference = useUserPreference()
     perference.value.language = langCode
@@ -13,6 +15,11 @@ async function changeLanguage(langCode:string) {
     setLocale(langCode);
     window.location.reload()
 }
+function removeBaseUrl(){
+   const ev = new CustomEvent('removeBaseUrl')
+    window.dispatchEvent(ev)
+}
+
 
 function openHelp(){
     const url = "https://docpal-admin-guide.vercel.app/"
@@ -55,6 +62,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
                         {{$t(lang.code)}}
                     </ElDropdownItem>
                     <ElDivider />
+                    <ElDropdownItem v-if="isDesktop" @click="removeBaseUrl">Reset Desktop</ElDropdownItem>
                     <ElDropdownItem @click="logout">{{ $t('login_loginOut')}}</ElDropdownItem>
                 </template>
             </ElDropdown>
