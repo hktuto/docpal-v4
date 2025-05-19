@@ -136,6 +136,11 @@ function handleFontFamilyChange(fontFamily: string) {
   editor.value.chain().focus().setFontFamily(state.fontFamily).run()
 }
 
+function handleFontSizeChangeOnDown(fontFamily: string) {
+  state.fontFamily = fontFamily
+  handleFontFamilyChange(fontFamily)
+}
+
 /**
  * Set the selected string font size
  * @param size font size number
@@ -172,6 +177,12 @@ function handleFontColorFocus() {
   }
 }
 
+/**
+ * Set the selected string to unset all font style
+ */
+function handleFontStyleClear() {
+  editor.value.chain().focus().unsetAllMarks().run();
+}
 
 /**
  * Set the selected string to link
@@ -200,13 +211,14 @@ function handleSuperscript() {
 </script>
 
 <template>
-  <div style="margin-bottom: 9px;">
+  <div style="margin-bottom: 12px;">
     <!-- font family -->
     <el-dropdown trigger="click" split-button type="primary" @click="handleFontFamilyChange(state.fontFamily)">
       {{ state.fontFamily }}
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index" @click="state.fontFamily = item">
+          <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
+                            @click="handleFontSizeChangeOnDown(item)">
             {{ item }}
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -218,18 +230,22 @@ function handleSuperscript() {
       v-model="state.fontSize"
       :options="state.fontDataOptions"
       placeholder="please select"
-      style="width: 11%"
+      style="width: 16%"
       allow-create
       filterable
       @blur="checkFontSizeIsNumber"
     />
     <el-button @click="handlerFontSizeResize(true)">
-      <p>A<sup>-</sup></p>
-    </el-button>
-    <el-button @click="handlerFontSizeResize(false)">
       <p>A<sup>+</sup></p>
     </el-button>
+    <el-button @click="handlerFontSizeResize(false)">
+      <p>A<sup>-</sup></p>
+    </el-button>
     <el-divider direction="vertical" />
+
+    <el-button @click="handleFontStyleClear">
+      🗑️
+    </el-button>
   </div>
 
   <div>
@@ -281,8 +297,7 @@ function handleSuperscript() {
         A
       </el-button>
       <el-button style="width: 31%;">
-        <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors"
-                         @change="handleSetFontColor"
+        <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors" @change="handleSetFontColor"
                          @focus="handleFontColorFocus" />
       </el-button>
     </el-button-group>
