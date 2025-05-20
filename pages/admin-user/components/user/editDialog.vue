@@ -25,7 +25,7 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   try {
     await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })

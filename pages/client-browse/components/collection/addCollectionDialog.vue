@@ -34,7 +34,7 @@ const emits = defineEmits([
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   let params = {
     name: data.name,

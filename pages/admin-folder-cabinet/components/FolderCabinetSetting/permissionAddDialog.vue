@@ -34,7 +34,7 @@ const state = reactive<any>({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   const params: any = {
     id: props.id,
     userId: data.userId

@@ -15,7 +15,7 @@ async function handleGet() {
 }
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   const res = await adminApi.api.postOauth2Setting(data)
   if (data.authenticationMethod === 'DEFAULT') {
     routerProvider?.message.success(t('msg_successfullyModified'))
