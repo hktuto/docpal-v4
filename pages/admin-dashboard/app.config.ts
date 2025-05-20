@@ -20,6 +20,7 @@ export default defineAppConfig({
       hoverIcon: "carbon:dashboard",
       component: "LazyPersonalDashboardManagePage",
       feature: "DASHBOARD",
+      handleError:true,
       props:{},
     }
   }
