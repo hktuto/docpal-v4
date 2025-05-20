@@ -17,17 +17,17 @@
   "license": "ISC",
   "dependencies": {
     "eventbus": "workspace:*",
-    "keycloak-js": "^25.0.6",
-    "nuxt": "3.15.4",
-    "nuxt-authorization": "^0.1.0",
+    "keycloak-js": "^26.2.0",
+    "nuxt": "^3.17.3",
+    "nuxt-authorization": "^0.3.4",
     "vue": "3.5.6",
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.15.4",
+    "@nuxt/test-utils": "^3.19.0",
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
-    "happy-dom": "^15.11.7",
+    "happy-dom": "^17.4.7",
     "playwright-core": "^1.50.1",
     "sass": "^1.85.0",
     "typescript": "^5.7.3",
