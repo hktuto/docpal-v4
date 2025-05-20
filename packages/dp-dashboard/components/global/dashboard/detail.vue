@@ -3,32 +3,17 @@
     class="default-theme"
     @resized="
       (e) => {
-        leftSize = e[0].size;
-        rightSize = e[1].size;
+        leftSize = e[0].size
+        rightSize = e[1].size
       }
     "
   >
-    <Pane
-      v-if="dashboardSettingList && editMode"
-      max-size="20"
-      min-size="2"
-      :size="leftSize"
-      class="dp-left-pane"
-    >
-      <el-icon
-        class="cursorPointer"
-        color="var(--app-primary-color)"
-        @click="handleEditMode"
-      >
-        <Setting/>
+    <Pane v-if="dashboardSettingList && editMode" max-size="20" min-size="2" :size="leftSize" class="dp-left-pane">
+      <el-icon class="cursorPointer" color="var(--app-primary-color)" @click="handleEditMode">
+        <Setting />
       </el-icon>
       <el-collapse v-if="leftSize > 10" v-model="activeNames">
-        <el-collapse-item
-          v-for="(item, key) in dashboardSettingList"
-          :key="key"
-          :title="key"
-          :name="key"
-        >
+        <el-collapse-item v-for="(item, key) in dashboardSettingList" :key="key" :title="key" :name="key">
           <div
             class="dashboard-item-widget"
             v-for="(c, ckey) in item"
@@ -39,12 +24,7 @@
             @drag="drag"
             @dragend="dragEnd"
           >
-            <SvgIcon
-              v-if="c.icon"
-              class="el-icon--left"
-              :src="`/icons/dashboard/${c.icon}.svg`"
-              style="--icon-size: 12px"
-            />
+            <SvgIcon v-if="c.icon" class="el-icon--left" :src="`/icons/dashboard/${c.icon}.svg`" style="--icon-size: 12px" />
             {{ $t(`dashboard.${c.label}`) }}
           </div>
         </el-collapse-item>
@@ -67,35 +47,29 @@
           :preventCollision="false"
           :use-css-transforms="true"
         >
-          <GridItem
-            v-for="(item, index) in layout"
-            :key="item.i"
-            class="dashboard-item"
-            v-bind="item"
-            drag-ignore-from=".no-drag"
-            @resize="chartResize(item)"
-          >
-          <NuxtErrorBoundary>
-            <component
-              :is="componentMap[item.component]"
-              :ref="
-                (el) => {
-                  sheetRefs[item.i] = el;
-                }
-              "
-              :key="item.i"
-              :setting="item.setting"
-              :hideSetting="hideSetting"
-              :dates="dates"
-              @delete="handleDelete(item)"
-              @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
-            ></component>
-            <template #error="{ error }">
-              <div class="template-container--main">
-                error {{  error }}
-              </div>
-            </template>
-          </NuxtErrorBoundary>
+          <GridItem v-for="(item, index) in layout" :key="item.i" class="dashboard-item" v-bind="item" drag-ignore-from=".no-drag" @resize="chartResize(item)">
+            <NuxtErrorBoundary>
+              <component
+                :is="componentMap[item.component]"
+                :ref="
+                  (el) => {
+                    sheetRefs[item.i] = el
+                  }
+                "
+                :key="item.i"
+                :setting="item.setting"
+                :hideSetting="hideSetting"
+                :dates="dates"
+                @delete="handleDelete(item)"
+                @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
+              ></component>
+              <template #error="{ error, clearError }">
+                <div class="template-container--main">
+                  error {{ error }}
+                  <el-button size="small" :icon="Refresh" circle  @click="clearError"></el-button>
+                </div>
+              </template>
+            </NuxtErrorBoundary>
           </GridItem>
         </GridLayout>
       </div>
@@ -104,27 +78,28 @@
 </template>
 
 <script lang="ts" setup>
-import {Setting} from "@element-plus/icons-vue";
-import {Pane, Splitpanes} from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
+import { Refresh } from '@element-plus/icons-vue'
+import { Setting } from '@element-plus/icons-vue'
+import { Pane, Splitpanes } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
 // import { GridLayout, GridItem } from "vue3-grid-layout-next";
-import {GridItem, GridLayout} from "grid-layout-plus";
-import type {DashboardWidgetSetting} from "~/utils/dashboardWidgetHelper";
-import {widgetComponent} from "~/utils/dashboardWidgetHelper";
-import {useDebounceFn} from "@vueuse/core";
+import { GridItem, GridLayout } from 'grid-layout-plus'
+import type { DashboardWidgetSetting } from '~/utils/dashboardWidgetHelper'
+import { widgetComponent } from '~/utils/dashboardWidgetHelper'
+import { useDebounceFn } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
     // layout: DashboardWidgetSetting[],
-    resizable?: boolean;
-    draggable?: boolean;
-    hideSetting?: boolean;
-    colNum?: number;
-    rowHeight?: number;
-    dates?: any;
-    editMode?: boolean;
-    dashboardSettingList?: any;
-    componentMap?: any;
+    resizable?: boolean
+    draggable?: boolean
+    hideSetting?: boolean
+    colNum?: number
+    rowHeight?: number
+    dates?: any
+    editMode?: boolean
+    dashboardSettingList?: any
+    componentMap?: any
   }>(),
   {
     // layout: [],
@@ -133,13 +108,13 @@ const props = withDefaults(
     hideSetting: false,
     colNum: 12,
     rowHeight: 100,
-    componentMap: widgetComponent,
+    componentMap: widgetComponent
   }
-);
-const activeNames = ref(["default", "2", "3", "4"]);
-const leftSize = ref(15);
-const rightSize = ref(100);
-const layout = defineModel<DashboardWidgetSetting>("layout");
+)
+const activeNames = ref(['default', '2', '3', '4'])
+const leftSize = ref(15)
+const rightSize = ref(100)
+const layout = defineModel<DashboardWidgetSetting>('layout')
 // const layout = computed({
 //   get() {
 //         return props.layout
@@ -148,73 +123,69 @@ const layout = defineModel<DashboardWidgetSetting>("layout");
 //         emits('update:layout', val)
 //     }
 // })
-const emits = defineEmits(["refreshSetting", "delete", "update:layout", "save"]);
+const emits = defineEmits(['refreshSetting', 'delete', 'update:layout', 'save'])
 
-const sheetRefs = ref<any>({});
+const sheetRefs = ref<any>({})
 
 function handleEditMode() {
-  if (leftSize.value > 10) leftSize.value = 2;
-  else leftSize.value = 20;
+  if (leftSize.value > 10) leftSize.value = 2
+  else leftSize.value = 20
 }
 
 function handleDelete(row: any) {
-  emits("delete", row.i);
+  emits('delete', row.i)
 }
 
 function handleRefreshSetting(setting: any, row: any) {
-  row.setting = setting;
-  emits("refreshSetting", row);
+  row.setting = setting
+  emits('refreshSetting', row)
 }
 
 const chartResize = useDebounceFn(
   (row: any) => {
     if (sheetRefs.value[row.i] && sheetRefs.value[row.i].resize) {
-      sheetRefs.value[row.i].resize();
+      sheetRefs.value[row.i].resize()
     }
-    emits("save");
+    emits('save')
   },
   1000,
-  {maxWait: 5000}
-);
+  { maxWait: 5000 }
+)
 
-const dropId = "drop";
-let dragItem = {x: -1, y: -1, w: 2, h: 2, i: ""};
+const dropId = 'drop'
+let dragItem = { x: -1, y: -1, w: 2, h: 2, i: '' }
 const defaultSize = {
   w: 2,
-  h: 2,
-};
-const mouseAt = {x: -1, y: -1};
+  h: 2
+}
+const mouseAt = { x: -1, y: -1 }
 
 function syncMousePosition(event: MouseEvent) {
-  mouseAt.x = event.clientX;
-  mouseAt.y = event.clientY;
+  mouseAt.x = event.clientX
+  mouseAt.y = event.clientY
 }
 
 onActivated(() => {
-  document.addEventListener("dragover", syncMousePosition);
-});
+  document.addEventListener('dragover', syncMousePosition)
+})
 
 onDeactivated(() => {
-  document.removeEventListener("dragover", syncMousePosition);
-});
-const wrapper = ref<HTMLElement>();
-const gridLayout = ref();
+  document.removeEventListener('dragover', syncMousePosition)
+})
+const wrapper = ref<HTMLElement>()
+const gridLayout = ref()
 
 function dragStart(c) {
-  dragItem = JSON.parse(JSON.stringify(c));
+  dragItem = JSON.parse(JSON.stringify(c))
 }
 
 const drag = () => {
   // dragItem = JSON.parse(JSON.stringify(item));
-  const parentRect = wrapper.value?.getBoundingClientRect();
+  const parentRect = wrapper.value?.getBoundingClientRect()
 
-  if (!parentRect || !gridLayout.value) return;
+  if (!parentRect || !gridLayout.value) return
 
-  const mouseInGrid =
-    mouseAt.x > parentRect.left &&
-    mouseAt.x < parentRect.right &&
-    mouseAt.y > parentRect.top &&
-    mouseAt.y < parentRect.bottom;
+  const mouseInGrid = mouseAt.x > parentRect.left && mouseAt.x < parentRect.right && mouseAt.y > parentRect.top && mouseAt.y < parentRect.bottom
 
   if (mouseInGrid && !layout.value.find((item) => item.i === dropId)) {
     layout.value.push({
@@ -222,85 +193,59 @@ const drag = () => {
       y: layout.value.length + 12, // puts it at the bottom
       w: defaultSize.w,
       h: defaultSize.h,
-      i: dropId,
-    });
+      i: dropId
+    })
   }
 
-  const index = layout.value.findIndex((item) => item.i === dropId);
+  const index = layout.value.findIndex((item) => item.i === dropId)
   if (index !== -1) {
-    const item = gridLayout.value.getItem(dropId);
+    const item = gridLayout.value.getItem(dropId)
 
-    if (!item) return;
+    if (!item) return
 
     try {
-      item.wrapper.style.display = "none";
-    } catch (e) {
-    }
+      item.wrapper.style.display = 'none'
+    } catch (e) {}
 
     Object.assign(item.state, {
       top: mouseAt.y - parentRect.top,
-      left: mouseAt.x - parentRect.left,
-    });
-    const newPos = item.calcXY(mouseAt.y - parentRect.top, mouseAt.x - parentRect.left);
+      left: mouseAt.x - parentRect.left
+    })
+    const newPos = item.calcXY(mouseAt.y - parentRect.top, mouseAt.x - parentRect.left)
 
     if (mouseInGrid) {
-      gridLayout.value.dragEvent(
-        "dragstart",
-        dropId,
-        newPos.x,
-        newPos.y,
-        defaultSize.h,
-        defaultSize.w
-      );
+      gridLayout.value.dragEvent('dragstart', dropId, newPos.x, newPos.y, defaultSize.h, defaultSize.w)
       // dragItem.i = String(index);
-      dragItem.x = layout.value[index].x;
-      dragItem.y = layout.value[index].y;
+      dragItem.x = layout.value[index].x
+      dragItem.y = layout.value[index].y
     } else {
-      gridLayout.value.dragEvent(
-        "dragend",
-        dropId,
-        newPos.x,
-        newPos.y,
-        defaultSize.h,
-        defaultSize.w
-      );
+      gridLayout.value.dragEvent('dragend', dropId, newPos.x, newPos.y, defaultSize.h, defaultSize.w)
 
-      layout.value = layout.value.filter((item) => item.i !== dropId);
+      layout.value = layout.value.filter((item) => item.i !== dropId)
     }
   }
-};
+}
 
 function dragEnd() {
-  const parentRect = wrapper.value?.getBoundingClientRect();
-  if (!parentRect || !gridLayout.value) return;
-  const mouseInGrid =
-    mouseAt.x > parentRect.left &&
-    mouseAt.x < parentRect.right &&
-    mouseAt.y > parentRect.top &&
-    mouseAt.y < parentRect.bottom;
+  const parentRect = wrapper.value?.getBoundingClientRect()
+  if (!parentRect || !gridLayout.value) return
+  const mouseInGrid = mouseAt.x > parentRect.left && mouseAt.x < parentRect.right && mouseAt.y > parentRect.top && mouseAt.y < parentRect.bottom
   if (mouseInGrid) {
     // alert(`Dropped element props:\n${JSON.stringify(dragItem, ['x', 'y', 'w', 'h'], 2)}`)
-    gridLayout.value.dragEvent(
-      "dragend",
-      dropId,
-      dragItem.x,
-      dragItem.y,
-      defaultSize.h,
-      defaultSize.w
-    );
-    const newLayout = layout.value.filter((item) => item.i !== dropId);
+    gridLayout.value.dragEvent('dragend', dropId, dragItem.x, dragItem.y, defaultSize.h, defaultSize.w)
+    const newLayout = layout.value.filter((item) => item.i !== dropId)
     newLayout.push({
       ...dragItem,
       w: defaultSize.w,
       h: defaultSize.h,
-      i: new Date().valueOf().toString(),
-    });
-    emits("update:layout", newLayout);
-    return;
+      i: new Date().valueOf().toString()
+    })
+    emits('update:layout', newLayout)
+    return
   } else {
-    const newLayout = layout.value.filter((item) => item.i !== dropId);
-    emits("update:layout", newLayout);
-    return;
+    const newLayout = layout.value.filter((item) => item.i !== dropId)
+    emits('update:layout', newLayout)
+    return
   }
 }
 </script>
@@ -336,7 +281,7 @@ function dragEnd() {
 
   &::after {
     --b-gap: 24px;
-    content: "";
+    content: '';
     width: 100%;
     height: 100%;
     overflow-x: hidden;
@@ -344,16 +289,9 @@ function dragEnd() {
     z-index: -1;
     background-color: var(--app-grey-200); /* 背景颜色 */
     background-size: calc((100% - 20px) / 12) calc(var(--grid-row-height) + var(--grid-row-margin)); /* 网格大小 */
-    background-image: linear-gradient(
-        to right,
-        var(--app-grey-1000) var(--b-gap),
-        transparent var(--b-gap)
-    ),
-    linear-gradient(
-        to bottom,
-        var(--app-grey-1000) var(--b-gap),
-        transparent var(--b-gap)
-    );
+    background-image:
+      linear-gradient(to right, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap)),
+      linear-gradient(to bottom, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap));
   }
 }
 
