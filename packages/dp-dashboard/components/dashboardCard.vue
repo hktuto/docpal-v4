@@ -52,8 +52,8 @@ defineExpose({
 
         <div class="flex-x-end">
           <slot name="action_prefix"></slot>
-          <SvgIcon v-if="!hideSetting && settingRef" class="" src="/icons/setting.svg" @click="openSetting" />
-          <SvgIcon v-if="!hideSetting" class="setting--icon" src="/icons/delete.svg" @click="handleDelete" />
+          <SvgIcon v-if="!hideSetting && settingRef" class="" :id="`Dashboard__Home__Detail__${title.replace(/\s+/g, '')}__Setting`" src="/icons/setting.svg" @click="openSetting" />
+          <SvgIcon v-if="!hideSetting" class="setting--icon" :id="`Dashboard__Home__Detail__${title.replace(/\s+/g, '')}__Delete`" src="/icons/delete.svg" @click="handleDelete" />
         </div>
       </slot>
     </template>
