@@ -6,5 +6,10 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module'
   ],
   extends:[
-  ]
+  ],
+  nitro: {
+    experimental: {
+      websocket: true
+    }
+  },
 })

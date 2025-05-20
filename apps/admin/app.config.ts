@@ -98,6 +98,9 @@ export default defineAppConfig({
                     name: "admin-document-template"
                 },
                 {
+                  name : "admin-doc-template"
+                },
+                {
                     name: "admin-email-template"
                 },
                 {
