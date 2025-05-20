@@ -13,7 +13,7 @@
       <template v-for="item in formRenderSlots" :key="item.name" v-slot:[item.name]="{ data }">
         <component
           :is="item.component"
-          :ref="(el: any) => formRenderSlotsRef[item.name] = el"
+          :ref="(el: any) => (formRenderSlotsRef[item.name] = el)"
           :disabled="state.readonly"
           :formData="state.formData"
           :options="data.options.dynamicConfig"
@@ -143,26 +143,32 @@ function handleTypeIds(properties: any) {
 const formRenderSlotsRef = ref<any>({})
 async function getFormData(needValidation = true, onlyWritable = false) {
   let formData = {}
-  if (!needValidation) formData = FormRendererRef.value.vFormRenderRef.getFormData(false)
-  else
-    formData = await FormRendererRef.value.vFormRenderRef
-      .getFormData()
-      .then((res: any) => {
-        return res
-      })
-      .catch((error: any) => {
-        return false
-      })
-  if (!formData) return false
-  let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
-  const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
-  const result = {
-    ...resultFormData,
-    ...slotData
-  }
 
-  // throw new Error("slotData", result)
-  return result
+  try {
+    if (!needValidation) formData = FormRendererRef.value.vFormRenderRef.getFormData(false)
+    else {
+      formData = await FormRendererRef.value.vFormRenderRef
+        .getFormData()
+        .then((res: any) => {
+          return res
+        })
+        .catch((error: any) => {
+          return false
+        })
+    }
+    if (!formData) return false
+    let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
+    const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
+    const result = {
+      ...resultFormData,
+      ...slotData
+    }
+
+    // throw new Error("slotData", result)
+    return result
+  } catch (error) {
+    throw new Error("error", error)
+  }
 }
 async function getSlotData(refList: any, needValidation: boolean) {
   let pList: any = []
