@@ -331,11 +331,9 @@ function handleClearFilter() {
 
 // #endregion
 
-onActivated(() => {
-  state.selectList = []
-})
 onMounted(() => {
   getAllUserAndActiveCount()
+  state.selectList = []
 })
 
 defineExpose({ reload, getFilter })

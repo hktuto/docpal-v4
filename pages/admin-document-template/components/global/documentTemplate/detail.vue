@@ -139,7 +139,7 @@ function handleRefresh(state: any) {
   if (!state || state.preview) getPreviewFile()
 }
 
-onActivated(async () => {
+onMounted(async () => {
   getVariables()
   await getInfo()
   getPreviewFile()

@@ -107,7 +107,7 @@
 import { adminApi } from 'api'
 import type { MTColumnInfo } from 'api/src/generate/admin'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onActivated } from 'vue'
+import { onMounted } from 'vue'
 
 const emits = defineEmits(['filter-change'])
 const routerProvider = inject(MenuRouterKey)
@@ -444,9 +444,7 @@ function getFilter() {
 onMounted(() => {
   getFilter()
 })
-onActivated(() => {
-  // query()
-})
+
 watch(
   () => props.tableId,
   (newValue: any) => {

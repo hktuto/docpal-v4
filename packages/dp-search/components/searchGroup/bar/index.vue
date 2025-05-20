@@ -109,7 +109,7 @@ function handleEditRecord(record: any) {
 function setQuery(query: any) {
   filterRef.value.initForm(query)
 }
-onActivated(() => {
+onMounted(() => {
   mode.value = 'filter'
 })
 defineExpose({

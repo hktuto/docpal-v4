@@ -88,7 +88,7 @@ function handleFilterFormChange(formModel: any) {
 
 // #endregion
 
-onActivated(() => {
+onMounted(() => {
   if (!!props.tableName) extraParams.name = props.tableName
   else delete extraParams.name
   getFilter()

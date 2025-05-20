@@ -76,7 +76,7 @@ function handleOptions(exitList: any) {
   }
 }
 
-onActivated(async () => {
+onMounted(async () => {
 })
 defineExpose({ handleOpen })
 </script>

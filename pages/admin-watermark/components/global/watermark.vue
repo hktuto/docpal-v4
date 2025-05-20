@@ -74,7 +74,7 @@ watch(() => props, (newId) => {
   immediate: true,
   deep: true
 })
-onActivated(() => {
+onMounted(() => {
   getList()
 })
 onDeactivated(() => {

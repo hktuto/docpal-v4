@@ -60,7 +60,7 @@ async function getPreviewFile (previewFile:any, id:string) {
     }
     previewFile.loading = false
 }
-onActivated( async() => {
+onMounted( async() => {
     console.log(props.id, props.oldVersionNum);
     // init(id as string);
     newVersion.value = await clientApi.api.postNuxeoDocument({ idOrPath: props.id }).then(res => res.data)

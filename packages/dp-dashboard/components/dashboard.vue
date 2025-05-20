@@ -61,7 +61,7 @@ import { clientApi } from 'api'
 import { allowFeature } from '#imports'
 import { getNormalizeSetting, dashboardWidgetSetting, getWidgetSetting } from '../utils/dashboardWidgetHelper'
 import type { DashboardWidget, DashboardWidgetSetting } from '../utils/dashboardWidgetHelper'
-import { onActivated, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
 const routerProvider = inject(MenuRouterKey)
 
@@ -176,7 +176,6 @@ async function checkoutDashboard(detail: any) {
 }
 
 onMounted(async () => {
-  console.log("onActivated")
   getDashboardList()
   routerProvider?.refeshActions.value.push(getDashboardList)
 })

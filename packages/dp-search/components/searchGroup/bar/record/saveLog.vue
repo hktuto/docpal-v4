@@ -5,13 +5,13 @@
   size="small"
   trigger="click"
 >
-  <el-input v-model="state.input1" placeholder="Please Input" clearable :suffix-icon="Search" 
+  <el-input v-model="state.input1" placeholder="Please Input" clearable :suffix-icon="Search"
     @input="handleChange"></el-input>
 
   <div class="list">
     <div v-for="item in state._searchList" :key="item.id" class="log-item flex-x-between" @click="handleSearch(item)">
       <div>{{ item.label }}</div>
-      <SvgIcon style="--icon-size: 16px;--icon-color:var(--app-grey-400);"src="/icons/menu/trash.svg" 
+      <SvgIcon style="--icon-size: 16px;--icon-color:var(--app-grey-400);"src="/icons/menu/trash.svg"
         @click.stop="handleDelete(item)"></SvgIcon>
     </div>
   </div>
@@ -41,8 +41,8 @@ function hidePopover () {
 }
 function handleChange(value: string) {
   state._searchList = state.searchList.filter((item: any) => {
-    return (!item.label || 
-            item.label.toLowerCase().includes(value.toLowerCase())) 
+    return (!item.label ||
+            item.label.toLowerCase().includes(value.toLowerCase()))
   })
 }
 const addRef = ref()
@@ -67,7 +67,7 @@ async function handleDelete(item: any) {
   await clientApi.api.deleteNuxeoSearchDeleteNestedSearchLogId(item.id)
   getList()
 }
-onActivated(() => {
+onMounted(() => {
   getList()
 })
 defineExpose({

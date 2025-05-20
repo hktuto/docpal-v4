@@ -110,7 +110,7 @@ function actionPermission({row, code }:PermissionMethodParams) : {disabled:boole
     return result
 }
 
-onActivated(async () => {
+onMounted(async () => {
     await getWorkflowDetail()
 })
 

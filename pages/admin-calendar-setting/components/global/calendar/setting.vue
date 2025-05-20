@@ -25,8 +25,7 @@ provide(CalendarSettingKey, {
   saveSetting
 })
 
-
-onActivated(() => {
+onMounted(() => {
   // getCalendarsSetting()
 })
 

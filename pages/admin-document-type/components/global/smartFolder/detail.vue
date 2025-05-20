@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
-import { onActivated } from 'vue'
+import { onMounted } from 'vue'
 const routerProvider = inject(MenuRouterKey)
 const { id } = defineProps<{
   id: string;
@@ -90,7 +90,7 @@ async function handleSave() {
   }
 }
 
-onActivated(() => {
+onMounted(() => {
   state.loading = false
   handleInit()
 })

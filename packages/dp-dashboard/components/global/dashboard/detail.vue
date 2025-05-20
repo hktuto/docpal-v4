@@ -177,7 +177,7 @@ function syncMousePosition(event: MouseEvent) {
   mouseAt.y = event.clientY
 }
 
-onActivated(() => {
+onMounted(() => {
   document.addEventListener('dragover', syncMousePosition)
 })
 
