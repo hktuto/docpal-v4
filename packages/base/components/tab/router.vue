@@ -4,7 +4,7 @@ import { ElMessage, ElNotification } from 'element-plus'
 import { Refresh } from '@element-plus/icons-vue'
 
 import { MenuRouterKey, TabManagerKey, panelRouteUpdate } from '#imports'
-
+const errorBoundary = useTemplateRef('errorBoundary')
 const { current } = useMagicKeys()
 const { allComponents } = useTabsManager()
 const { layout } = useTabsManager()
@@ -63,7 +63,9 @@ function navigateTo(param: RouterParams, openInNewTab: boolean = false, ignoreEx
     id: tab.value.id,
     initized: true
   }
-  componentKey.value++
+  if(errorBoundary.value) {
+    errorBoundary.value?.clearError()
+  }
   panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
@@ -102,13 +104,16 @@ function back(fallback?: any) {
     if (forwardHistory.value.length > historyLimit) {
       forwardHistory.value.shift()
     }
+    if(errorBoundary.value) {
+      errorBoundary.value?.clearError()
+    }
     tab.value = {
       ...lastItem,
       parent: tab.value.parent,
       id: tab.value.id,
       initized: true
     }
-    componentKey.value++
+    
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
   }
 }
@@ -133,7 +138,9 @@ function forward() {
       id: tab.value.id,
       initized: true
     }
-    componentKey.value++
+    if(errorBoundary.value) {
+      errorBoundary.value?.clearError()
+    }
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
   }
 }
@@ -141,6 +148,7 @@ function forward() {
 function updateProps(newProps: any) {
   tab.value.props = { ...tab.value.props, ...newProps }
   panelRouteUpdate(tab.value.parent, tab.value.id, tab.value)
+  
 }
 
 function updateTabName(newName: string) {
@@ -152,15 +160,6 @@ function updateTabName(newName: string) {
     }
   })
 
-}
-
-const componentKey = ref(0)
-const showError = ref(false)
-const errorMessage = ref('')
-
-function showErrorPage(error: Error) {
-  showError.value = true
-  errorMessage.value = error.message
 }
 
 function retryError() {
@@ -241,12 +240,22 @@ provide(MenuRouterKey, {
     info: (...args) => createNotification('info', ...args),
     loading: (...args) => createNotification('loading', ...args)
   },
-  showErrorPage,
   tabData: tab
 })
 
+const renderComponent = ref(true)
+
 function reloadComponent() {
-  componentKey.value++
+  // componentKey.value++
+  // try to find a way to refresh component
+  renderComponent.value = false;
+  nextTick(() => {
+    renderComponent.value = true;
+  })
+}
+
+function handleError(err){
+  console.log(err)
 }
 
 const historyClass = computed(() => {
@@ -289,13 +298,13 @@ onUnmounted(() => {
       </div>
     </Teleport>
 
-    <template v-if="tab.initized && !showError">
+    <template v-if="tab.initized">
       <Transition>
         <KeepAlive :exclude="/Dead/" :max="2">
           <Suspense>
             <template v-if="!tab.handleError" >
-            <NuxtErrorBoundary @error="reloadComponent">
-              <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
+            <NuxtErrorBoundary ref="errorBoundary" @error="handleError">
+              <component v-if="renderComponent" :is="tab.component" :tab="tab" v-bind="tab.props" />
               <template #error="{ error, clearError }">
                 <div class="errorBoundaryContainer">
                   <div class="messageContainer">
@@ -315,7 +324,7 @@ onUnmounted(() => {
             </NuxtErrorBoundary>
             </template>
             <template v-else>
-              <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
+              <component v-if="renderComponent"  :is="tab.component" :tab="tab" v-bind="tab.props" />
             </template>
             <template #fallback>
               <LoadingBgInline />
@@ -324,19 +333,7 @@ onUnmounted(() => {
         </KeepAlive>
       </Transition>
     </template>
-    <template v-else>
-      <div class="errorContainer">
-        <div class="errorIcon">
-          <Icon name="lucide:alert-triangle" size="24" />
-        </div>
-        <div class="errorMessage">
-          {{ errorMessage }}
-        </div>
-        <div class="errorRetry" @click="retryError">
-          Retry
-        </div>
-      </div>
-    </template>
+    
   </div>
 </template>
 
