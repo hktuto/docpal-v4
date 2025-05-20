@@ -1,8 +1,14 @@
 <script lang="ts" setup>
 import { Editor, EditorContent } from '@tiptap/vue-3';
-import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
+import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
 import { normalizeTipTapOptions, setupExtensions, defaultPageSetting, type TipTapOptions } from '~/utils/tiptapHelper';
 
+export type VariableItem = {
+  type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
+  dataType: "string" | "list",
+  key: string,
+  value: any
+}
 
 const props = withDefaults(defineProps<{
   editorOptions: TipTapOptions,
@@ -30,9 +36,12 @@ function normalizeJson(option:TipTapOptions, json?:any){
   } else {
     return ""
   }
-
 }
 
+export type LastSelection = {
+  type: "text" | "textRange" | "image",
+  data: any
+}
 
 const lastSelection = ref<LastSelection | null>()
 
@@ -57,21 +66,20 @@ function initEditor(initOptions:TipTapOptions, json?:any) {
         case 'text':
           // text or textRange
           if(!selection?.text){
-            lastSelection.type = "text"
+            newSelectionData.type = "text"
           }else{
-            lastSelection.type = "textRange"
+            newSelectionData.type = "textRange"
           }
           break;
         case 'node' :
           // check image
           if(selection?.node.type.name ==="image"){
-            lastSelection.type = "image"
+            newSelectionData.type = "image"
           }
           break;
         default:
           break;
       }
-      // console.log("type",lastSelection.type)
       lastSelection.value = newSelectionData
     },
   })
