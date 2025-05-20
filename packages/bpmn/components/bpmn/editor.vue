@@ -9,7 +9,6 @@ import { adminApi } from 'api'
 import { bpmnElement } from '~/utils/bpmnElement'
 import { ElMessage, ElNotification } from 'element-plus'
 import { EDITOR_PROVIDER, conditionOptions } from '#imports'
-import { vi } from 'vitest'
 /**
  *  options: bpmn viewer options
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
