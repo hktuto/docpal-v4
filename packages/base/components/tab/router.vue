@@ -291,37 +291,35 @@ onUnmounted(() => {
 
     <template v-if="tab.initized && !showError">
       <Transition>
-        <KeepAlive :exclude="/Dead/" :max="2">
-          <Suspense>
-            <template v-if="!tab.handleError" >
+        <Suspense>
+          <template v-if="!tab.handleError">
             <NuxtErrorBoundary @error="reloadComponent">
               <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
               <template #error="{ error, clearError }">
                 <div class="errorBoundaryContainer">
                   <div class="messageContainer">
-                    <h3 class="errorTitle">ERROR :  {{ $t(tab.label) }}</h3>
+                    <h3 class="errorTitle">ERROR : {{ $t(tab.label) }}</h3>
                     <pre>
                        {{ error }}
                     </pre>
                     <pre>
                       {{ tab }}
                     </pre>
-                    <el-button  :icon="Refresh" @click="clearError">
+                    <el-button :icon="Refresh" @click="clearError">
                       {{ $t('common_refresh') }}
                     </el-button>
                   </div>
                 </div>
               </template>
             </NuxtErrorBoundary>
-            </template>
-            <template v-else>
-              <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
-            </template>
-            <template #fallback>
-              <LoadingBgInline />
-            </template>
-          </Suspense>
-        </KeepAlive>
+          </template>
+          <template v-else>
+            <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
+          </template>
+          <template #fallback>
+            <LoadingBgInline />
+          </template>
+        </Suspense>
       </Transition>
     </template>
     <template v-else>
