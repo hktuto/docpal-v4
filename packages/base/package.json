@@ -36,6 +36,7 @@
     "element-plus": "^2.9.6",
     "eventbus": "workspace:*",
     "i": "^0.3.7",
+    "interactjs": "^1.10.27",
     "mime-types": "^2.1.35",
     "nuxt": "^3.17.3",
     "nuxt-viewport": "^2.2.0",
