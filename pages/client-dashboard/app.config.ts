@@ -19,6 +19,7 @@ export default defineAppConfig({
             hoverIcon : 'material-symbols:dashboard-customize-outline-rounded',
             component: "LazyHomePage",
             feature: "DASHBOARD",
+            handleError:true,
             props:{}
         }
     }

@@ -24,7 +24,8 @@
             @drag="drag"
             @dragend="dragEnd"
           >
-            <SvgIcon v-if="c.icon" class="el-icon--left" :src="`/icons/dashboard/${c.icon}.svg`" style="--icon-size: 12px" />
+            <SvgIcon v-if="c.icon" class="el-icon--left" :src="`/icons/dashboard/${c.icon}.svg`"
+                     style="--icon-size: 12px" />
             {{ $t(`dashboard.${c.label}`) }}
           </div>
         </el-collapse-item>
@@ -47,7 +48,8 @@
           :preventCollision="false"
           :use-css-transforms="true"
         >
-          <GridItem v-for="(item, index) in layout" :key="item.i" class="dashboard-item" v-bind="item" drag-ignore-from=".no-drag" @resize="chartResize(item)">
+          <GridItem v-for="(item, index) in layout" :key="item.i" class="dashboard-item" v-bind="item"
+                    drag-ignore-from=".no-drag" @resize="chartResize(item)">
             <NuxtErrorBoundary>
               <component
                 :is="componentMap[item.component]"
@@ -64,9 +66,19 @@
                 @refreshSetting="(setting) => handleRefreshSetting(setting, item)"
               ></component>
               <template #error="{ error, clearError }">
-                <div class="template-container--main">
-                  error {{ error }}
-                  <el-button size="small" :icon="Refresh" circle  @click="clearError"></el-button>
+                <div class="errorBoundaryContainer dashboard">
+                  <div class="messageContainer">
+                    <h5 class="errorTitle">ERROR : {{ $t(item.label) }}</h5>
+                    <pre>
+                      {{ error }}
+                    </pre>
+                    <pre>
+                      {{ item }}
+                    </pre>
+                    <el-button size="small" :icon="Refresh" circle @click="clearError">
+                      {{ $t('common_refresh') }}
+                    </el-button>
+                  </div>
                 </div>
               </template>
             </NuxtErrorBoundary>
@@ -205,7 +217,8 @@ const drag = () => {
 
     try {
       item.wrapper.style.display = 'none'
-    } catch (e) {}
+    } catch (e) {
+    }
 
     Object.assign(item.state, {
       top: mouseAt.y - parentRect.top,
@@ -289,9 +302,8 @@ function dragEnd() {
     z-index: -1;
     background-color: var(--app-grey-200); /* 背景颜色 */
     background-size: calc((100% - 20px) / 12) calc(var(--grid-row-height) + var(--grid-row-margin)); /* 网格大小 */
-    background-image:
-      linear-gradient(to right, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap)),
-      linear-gradient(to bottom, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap));
+    background-image: linear-gradient(to right, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap)),
+    linear-gradient(to bottom, var(--app-grey-1000) var(--b-gap), transparent var(--b-gap));
   }
 }
 
