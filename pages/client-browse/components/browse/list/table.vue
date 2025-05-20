@@ -53,11 +53,7 @@ function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   return result
 }
 const reopenFolder = useDebounceFn(() => {
-  if (!listProvider?.docDetail?.value) {
-    console.log("no docDetail")
-    return
-  }
-  console.log("Check list", expandedItems)
+
   if (!tableRef.value || expandedItems.length === 0) return
   const tableData = tableRef.value.getData()
   let needExpandList: any[] = resursiveLoadChild(expandedItems, tableData, [])
@@ -557,6 +553,10 @@ let tableDropZone: any
 let dragableItemList: any[] = []
 const tableChildChangeHandler = useDebounceFn(() => {
   if (!listProvider?.docDetail.value) {
+    // wait for docDetail to be ready
+    setTimeout(() => {
+      tableChildChangeHandler()
+    }, 300);
     return
   }
   // body row may be empty when table is loading, create root drop zone first

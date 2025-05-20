@@ -65,6 +65,7 @@ async function getDoc() {
   } else {
     docDetail.value = doc
     docPermission.value = permission
+    console.log("docDetail", docDetail.value)
   }
 }
 

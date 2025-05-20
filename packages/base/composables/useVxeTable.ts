@@ -486,7 +486,6 @@ export const useVxeTable = (params: UseVxeTableParams) => {
       if(init.value) {
             reload()
         }
-        console.log("table onActivated childChangeHander", params.childChangeHander)
         if(params.childChangeHander) {
             if(observer && observer.disconnect){
                 observer.disconnect()
