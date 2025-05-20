@@ -52,7 +52,6 @@ async function handleDeleteChild(setting: any) {
   try {
     await adminApi.api.deleteCabinetId(setting.id)
     await getData()
-    noti.close()
     ElNotification({
       title: 'Success',
       message: 'Item deleted',
@@ -60,13 +59,14 @@ async function handleDeleteChild(setting: any) {
       duration: 2000
     })
   } catch {
-    noti.close()
     ElNotification({
       title: 'Error',
       message: 'Failed to delete item',
       type: 'error',
       duration: 2000
     })
+  } finally {
+    noti.close()
   }
 }
 
