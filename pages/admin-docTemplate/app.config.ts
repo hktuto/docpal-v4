@@ -1,0 +1,23 @@
+import { adminApi } from '../../libraries/api/src/index';
+// create nuxt app config
+
+export default defineAppConfig({
+  menu:{
+    "admin-doc-template": {
+      id:"admin-doc-template",
+      name: 'document-template',
+      label: "adminMenu.template",
+      icon: "lucide:file-sliders",
+      hoverIcon: "lucide:file-sliders",
+      component: "LazyDocumentTemplatePage",
+      feature: "GENERATE_TEMPLATE",
+      props:{
+        pageNum: 0,
+        pageSize: 20,
+        orderBy: 'createdDate',
+        isDesc: true
+      },
+    }
+  } ,
+
+})
