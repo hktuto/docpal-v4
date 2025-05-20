@@ -48,7 +48,7 @@ function handleUpdateAgg(aggregation: any, aggParams: any = {}) {
   // searchState = 'aggChange'
 }
 
-onActivated(() => {
+onMounted(() => {
   console.log('onActivated')
   if (searchParams) {
     // TODO : save query to tab if changed

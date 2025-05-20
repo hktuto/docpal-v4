@@ -45,7 +45,7 @@ function getFormData(){
 }
 
 
-onActivated(() => {
+onMounted(() => {
     getInfo()
 })
 defineExpose({ getFormData })

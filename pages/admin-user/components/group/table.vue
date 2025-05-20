@@ -120,7 +120,7 @@ function handleGroupDialogShow() {
   GroupDialogRef.value.handleOpen()
 }
 
-onActivated(() => {
+onMounted(() => {
   getGroup()
 })
 

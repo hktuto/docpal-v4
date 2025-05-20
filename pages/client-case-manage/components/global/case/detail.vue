@@ -143,7 +143,7 @@ function handleAddCaseDialog() {
   addCaseDialog.value.handleOpen(id, data)
 }
 
-onActivated(() => {
+onMounted(() => {
   reorderColumn()
   initCondition()
 })

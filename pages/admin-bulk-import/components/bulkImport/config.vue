@@ -71,12 +71,9 @@ function handleDialogShow(row?: any) {
   BulkImportConfigDialogRef.value.handleOpen(data)
 }
 
-// onMounted(async() => {
-//     getTable()
-// })
-
-onActivated(() => {
+onMounted(() => {
   reload()
+//     getTable()
 })
 
 

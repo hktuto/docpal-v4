@@ -128,7 +128,7 @@ async function getList() {
   tableRef?.value?.loadData(_list)
 }
 
-onActivated(() => {
+onMounted(() => {
   getList()
 })
 </script>

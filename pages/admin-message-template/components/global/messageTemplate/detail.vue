@@ -38,7 +38,7 @@ function goBack() {
   routerProvider?.navigateTo(tabItem)
 }
 
-onActivated(() => {
+onMounted(() => {
   getData()
 })
 </script>

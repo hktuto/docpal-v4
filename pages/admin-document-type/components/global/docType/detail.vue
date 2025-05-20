@@ -52,7 +52,7 @@ async function initDocType() {
   state.docTypeDetail = await adminApi.api.getDocpaltypeSettingsNameName(name).then(res => res.data)
 }
 
-onActivated(async () => {
+onMounted(async () => {
   initDocType()
 })
 </script>

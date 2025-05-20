@@ -11,7 +11,6 @@ import {
   getWidgetSetting
 } from '#imports'
 import { adminApi } from 'api'
-import { onActivated } from 'vue'
 const routerProvider = inject(MenuRouterKey)
 const { id } = defineProps<{
   id: number;
@@ -91,7 +90,7 @@ async function getInfo() {
   }
 }
 
-onActivated(() => {
+onMounted(() => {
   getInfo()
 })
 </script>

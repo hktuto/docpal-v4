@@ -231,7 +231,7 @@ function handleCheckChange() {
 }
 
 // #endregion
-onActivated(() => {
+onMounted(() => {
   getData();
 });
 onMounted(async () => {

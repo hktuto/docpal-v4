@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {BPMN_PROVIDER, createError } from '#imports'
-import { onActivated, onMounted } from 'vue';
+import { onMounted } from 'vue';
 
 
 const graphProvider = inject(BPMN_PROVIDER)

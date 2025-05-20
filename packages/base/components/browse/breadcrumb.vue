@@ -81,7 +81,7 @@ watch(idOrPath, () => {
     immediate: true
 })
 
-onActivated(() => {
+onMounted(() => {
     bus.on(fileRefreshHandler)
 })
 

@@ -197,7 +197,7 @@ async function promoteToProduction() {
 //     currentVersion: props.currentVersion,
 // })
 
-onActivated(async () => {
+onMounted(async () => {
   await getCaseData()
   await init()
 

@@ -645,7 +645,7 @@ function cleanSelected() {
   }
 }
 
-onActivated(() => {})
+onMounted(() => {})
 
 onDeactivated(() => {
   if (tableDropZone) {
