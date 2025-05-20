@@ -192,7 +192,7 @@ async function handleOpen(row: any = {}, options: any = {}) {
 }
 
 async function handleConfirm() {
-  let data = await FormRendererRef.value.vFormRenderRef.getFormData();
+  let data = await FormRendererRef.value.getFormData();
   data = Object.keys(data).reduce((prev: any , key) => {
     if (data[key]) prev[key] = data[key];
     return prev;

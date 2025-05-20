@@ -34,7 +34,7 @@ const state = reactive<any>({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   if (!data) return
   if (state.oldName != data.name) {
     const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })

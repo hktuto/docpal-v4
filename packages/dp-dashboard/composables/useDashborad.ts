@@ -56,7 +56,7 @@ export const useDashboardSetting = ({
   });
 
   async function handleSubmit() {
-    // const data = await FormRendererRef.value.vFormRenderRef.getFormData();
+    // const data = await FormRendererRef.value.getFormData();
     state.loading = true;
     try {
       emit("refresh", structuredClone(toRaw(state.setting)));

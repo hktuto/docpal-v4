@@ -54,7 +54,7 @@ const MetaFormRef = ref()
 
 async function handleSubmit() {
   // 获取 v-form 数据
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const formData = await FormRendererRef.value.getFormData()
   const arr = ['notificationReminder', 'emailReminder', 'emailReport']
   arr.forEach(key => {
     formData[key] = {}
@@ -112,7 +112,7 @@ async function getMetaName() {
   const date = new Date()
   let formData: any = {}
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData()
     const metadataForm = await MetaFormRef.value.getData()
     if (data) formData = { ...formData, ...data, ...metadataForm }
   } catch (error) {

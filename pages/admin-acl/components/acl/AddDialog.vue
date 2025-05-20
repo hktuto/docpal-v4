@@ -33,7 +33,7 @@ const FormRendererRef = ref()
 const {t} = useI18n()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   const params: any = {
     idOrPath: props.doc.id,
     userId: data.userId,
