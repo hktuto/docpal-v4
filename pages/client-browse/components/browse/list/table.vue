@@ -10,8 +10,9 @@ import { clientApi } from 'api'
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
 }
-const { selectedRows } = defineProps<{
-  selectedRows: any[]
+const { selectedRows, expandedItems } = defineProps<{
+  selectedRows: any[],
+  expandedItems: any[]
 }>()
 const copyDocumentList = useCopyDocumnetList()
 const tableContainer = ref<HTMLElement>()
@@ -39,7 +40,8 @@ function sortEntry(a:any, b:any) {
 
 function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
   checkList.forEach((row, index) => {
-    const rowData = treeData.find((el) => el.id === row.id)
+    const rowData = treeData.find((el) => el.id === row)
+    console.log("found", rowData, row)
     if (rowData) {
       if (!tableRef.value?.isTreeExpandByRow(rowData)) {
         result.push(rowData)
@@ -50,19 +52,15 @@ function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   })
   return result
 }
-
 const reopenFolder = useDebounceFn(() => {
-  if (!listProvider?.docDetail?.value) {
-    console.log('no docDetail')
-    return
-  }
-  if (!tableRef.value || expandedItem.length === 0) return
+
+  if (!tableRef.value || expandedItems.length === 0) return
   const tableData = tableRef.value.getData()
-  let needExpandList: any[] = resursiveLoadChild(expandedItem, tableData, [])
+  let needExpandList: any[] = resursiveLoadChild(expandedItems, tableData, [])
 
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
-}, 500)
+}, 300)
 
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'browseTableSetting',
@@ -520,10 +518,18 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     },
     toggleTreeExpand: ({ expanded, row }) => {
       if (expanded) {
-        expandedItem.push(row)
+        // check if item exist in expandedItems
+        if (expandedItems.includes(row.id)) return
+        expandedItems.push(row.id)
+        routerProvider?.updateProps({
+          expandedItems
+        })
       } else {
-        const index = expandedItem.findIndex((ex) => ex.id === row.id)
-        if (index !== -1) expandedItem.splice(index, 1)
+        const index = expandedItems.findIndex((ex) => ex === row.id)
+        if (index !== -1) expandedItems.splice(index, 1)
+        routerProvider?.updateProps({
+          expandedItems
+        })
       }
     },
     // cellMouseenter: ({row, column, rowIndex}) => {
@@ -540,14 +546,17 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     }
   }
 })
-const expandedItem: any[] = []
+
 cleanSelectedRowsBus.on(cleanSelectedRows)
 
 let tableDropZone: any
 let dragableItemList: any[] = []
 const tableChildChangeHandler = useDebounceFn(() => {
   if (!listProvider?.docDetail.value) {
-    console.log('no docDetail')
+    // wait for docDetail to be ready
+    setTimeout(() => {
+      tableChildChangeHandler()
+    }, 300);
     return
   }
   // body row may be empty when table is loading, create root drop zone first
@@ -591,6 +600,9 @@ function dblClickHandler(row: any) {
     return
   }
   if (row.isFolder) {
+    routerProvider?.updateProps({
+      expandedItems:[]
+    })
     listProvider?.changeRoute(row.path)
   } else {
     const params = createDetailPageParams({

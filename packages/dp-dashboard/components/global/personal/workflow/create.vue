@@ -41,14 +41,14 @@ const newTaskRef = ref()
 function handleClick (item: any) {
   newTaskRef.value.workflowClickHandler(item)
 }
-function handleRefresh(chartSetting, workflowList) {
+function handleRefresh(chartSetting: any, workflowList: any) {
   state.workflowList = workflowList
   emits('refreshSetting', chartSetting)
 }
 onMounted(async() => {
   state.workflowAList = await clientApi.api.postWorkflowProcessList({}).then(res => res.data);
   if(props.setting.workflowKeys && props.setting.workflowKeys.length > 0) {
-    state.workflowList = props.setting.workflowKeys.reduce((prev, key: any) => {
+    state.workflowList = props.setting.workflowKeys.reduce((prev: any, key: any) => {
       const workflowItem = state.workflowAList?.find((workflow: any) => workflow.key === key)
       prev.push({ ...workflowItem })
       return prev

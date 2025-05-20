@@ -482,9 +482,8 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableRef.value?.commitProxy('query', params)
     }
     let observer:any ;
-    onActivated(() => {
-        console.log("table onActivated")
-        if(init.value) {
+    function tableActivated(){
+      if(init.value) {
             reload()
         }
         if(params.childChangeHander) {
@@ -501,8 +500,14 @@ export const useVxeTable = (params: UseVxeTableParams) => {
                 params.childChangeHander()
             })
         }
+    }
+    onMounted(tableActivated)
+    onActivated(tableActivated)
+    onUnmounted(() => { 
+        if(observer && observer.disconnect){
+            observer.disconnect()
+        }
     })
-
     onDeactivated(() => {
         if(observer && observer.disconnect){
             observer.disconnect()

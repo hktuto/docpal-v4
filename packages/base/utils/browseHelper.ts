@@ -20,15 +20,20 @@ export async function downloadFolderHandler(doc: any) {
     duration: 0,
     position: 'bottom-right'
   })
-  const blob = await adminApi.api.postNuxeoFolderstructureExport({
-    idOrPath: doc.id
-  }, {
-    format: 'blob',
-    timeout: 0,
-    headers: { 'white': 'true' }
-  })
-  downloadBlob(blob, doc.name + '.zip', 'application/zip')
-  noti.close()
+  try {
+    const blob = await adminApi.api.postNuxeoFolderstructureExport({
+      idOrPath: doc.id
+    }, {
+      format: 'blob',
+      timeout: 0,
+      headers: { 'white': 'true' }
+    })
+    downloadBlob(blob, doc.name + '.zip', 'application/zip')
+  } catch (error: any) {
+    throw new Error(error)
+  } finally {
+    noti.close()
+  }
 }
 
 export function canCollaboraEdit(mimeType: string) {

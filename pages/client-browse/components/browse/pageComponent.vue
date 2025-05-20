@@ -6,14 +6,17 @@ import { BrowseListTable } from '#components'
 import { EventType, useEventBus, emitBus } from 'eventbus'
 import { actions, ActionsFilter } from '../../../../packages/base/utils/browseActions'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   idOrPath: string
-  filter: any
-  home: any
+  home?: any
   commentId?: string
-}>()
+  expandedItems: any[]
+}>(), {
+  idOrPath: '/',
+  expandedItems: []
+})
 
-const { idOrPath, commentId } = toRefs(props)
+const { idOrPath, commentId, expandedItems } = toRefs(props)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 const selectedItem = ref<any[]>([])
@@ -37,7 +40,6 @@ function changeRoute(path: string) {
   // clean filter
   routerProvider?.updateProps({
     idOrPath: path,
-    filter: {}
   })
 }
 
@@ -63,6 +65,7 @@ async function getDoc() {
   } else {
     docDetail.value = doc
     docPermission.value = permission
+    console.log("docDetail", docDetail.value)
   }
 }
 
@@ -210,7 +213,11 @@ useEventListener(document, 'closeFilePreview', closePreview)
   <div ref="browseContainer" class="browseContainer">
     <splitpanes>
       <Pane>
-        <BrowseListTable ref="tableRef" :class="{ selected: selectedList.length > 0 }" :selectedRows="selectedItem" @selectedChange="selectedChangeHandler" >
+        <BrowseListTable ref="tableRef" 
+          :class="{ selected: selectedList.length > 0 }" 
+          :selectedRows="selectedItem" 
+          :expandedItems="expandedItems"
+          @selectedChange="selectedChangeHandler" >
           <template #toolbar_buttons>
             <slot name="toolbar_buttons">
               <div class="toolsBarContainer">

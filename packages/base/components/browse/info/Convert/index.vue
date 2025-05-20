@@ -71,9 +71,11 @@ async function handleDownload (row) {
         const blobStream = new Blob([response], { type:"application/octet-stream"})
         const url = window.URL.createObjectURL(blobStream)
         downloadUrl(url, row.fileName)
-    } catch (error) {
+    } catch (error: any) {
+      throw new Error(error);
+    } finally {
+      noti.close()
     }
-    noti.close()
 }
 const handleGetConversionHistory = async() => {
     refreshLoading.value = true

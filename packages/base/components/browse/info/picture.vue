@@ -29,14 +29,15 @@ const state = reactive({
   damSettings: {}
 })
 const { displayTime } = useTime()
+const { t } = useI18n()
 const pictureViews = computed(() => {
     switch(props.doc.type) {
         case 'Picture' :
           if(!props.doc?.properties || !props.doc.properties['picture:views']) return [];
-          return props.doc.properties['picture:views'].filter(item => item.tag === 'custom')
+          return props.doc.properties['picture:views'].filter((item: any) => item.tag === 'custom')
         case 'Video' :
           if(!props.doc.properties['vid:transcodedVideos'] || props.doc.properties['vid:transcodedVideos'].length === 0) return [];
-          const list = props.doc.properties['vid:transcodedVideos'].reduce((prev, item) => {
+          const list = props.doc.properties['vid:transcodedVideos'].reduce((prev: any, item: any) => {
             if(filterMimeType(item.info.format)) {
               prev.push({
                 content: item.content,
@@ -56,12 +57,12 @@ const pictureViews = computed(() => {
 function filterMimeType(format: string) {
   try {
     const _mimeType = props.doc?.properties['file:content']['mime-type'].split('/').pop()
-    return state.damSettings[_mimeType].find(item => item.targetType === format)
+    return state.damSettings[_mimeType].find((item: any) => item.targetType === format)
   } catch (error) {
     return false    
   }
 }
-function formatter (row, column) {
+function formatter (row: any, column: any) {
       switch(column.property) {
         case "fileSize": 
           return fileSizeFilter(row.length || row.content.length)
@@ -72,7 +73,7 @@ function formatter (row, column) {
       }
     }
 
-function fileSizeFilter (bytes) {
+function fileSizeFilter (bytes: any) {
   bytes = Number(bytes)
   const units = ["B", "KB", "MB", "GB", "TB"]
   let unit = ''
@@ -82,10 +83,10 @@ function fileSizeFilter (bytes) {
   }
   return bytes.toFixed(2) + unit
 }
-async function handleDownload (row) {
+async function handleDownload (row: any) {
   const name = row.filename || row.content.name
   const noti = ElNotification({
-    title: $i18n.t('download'),
+    title: t('download'),
     icon: Loading,
     dangerouslyUseHTMLString: true,
     message: `<div title="${name}">${name}</div>`,
@@ -100,9 +101,11 @@ async function handleDownload (row) {
       timeout: 0,
     })
     downloadBlob(response, name)
-  } catch (error) {
+  } catch (error: any) {
+    throw new Error(error);
+  } finally {
+    noti.close()
   }
-  noti.close()
 }
 onMounted(async() => {
   state.damSettings = await clientApi.api.getDamSettings().then(res => res.data) as any
