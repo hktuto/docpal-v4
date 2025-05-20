@@ -62,6 +62,7 @@ function navigateTo(param: RouterParams, openInNewTab:boolean = false, ignoreExi
         id: tab.value.id,
         initized: true,
     }
+    componentKey.value ++
     panelRouteUpdate(tab.value.parent, lastId, tab.value)
 }
 
@@ -106,6 +107,7 @@ function back(fallback?:any){
             id: tab.value.id,
             initized: true,
         }
+        componentKey.value ++
         panelRouteUpdate(tab.value.parent, lastId, tab.value)
     }
 }
@@ -130,6 +132,7 @@ function forward() {
             id: tab.value.id,
             initized: true
         }
+        componentKey.value ++
         panelRouteUpdate(tab.value.parent, lastId, tab.value)
     }
 }
@@ -149,7 +152,7 @@ function updateTabName(newName:string){
     })
    
 }
-
+const componentKey = ref(0);
 const showError = ref(false);
 const errorMessage = ref("");
 function showErrorPage(error:Error){
@@ -165,7 +168,6 @@ const routerContainer = computed(( ) => {
 
 function createMessage(type:string, ...args:any[]){
     if(args.length === 1 && typeof args[0] === 'string'){
-        console.log("createMessage", args[0], routerContainer.value)
         ElMessage({
             type,
             message: args[0],
@@ -239,6 +241,10 @@ provide(MenuRouterKey,{
     tabData: tab
 })
 
+function reloadComponent() {
+    componentKey.value ++
+}
+
 const historyClass = computed(() => {
     if(isFullscreen.value) return `#fullscreen-tab-header-${tab.value.parent}-${tab.value.id} > .tabLeftTeleportContainer`
     return `#tab-header-${tab.value.parent}-${tab.value.id} > .tabLeftTeleportContainer`
@@ -262,6 +268,7 @@ onUnmounted(() => {
         <div class="historyContainer">
             <Icon name="lucide:chevron-left" :class="{historyBtn:true, active: history.length !== 0}" @click="() => back()"/>
             <Icon name="lucide:chevron-right" :class="{historyBtn:true, active: forwardHistory.length !== 0}" @click="() => forward()"/>
+            <Icon name="lucide:refresh-ccw" :class="{historyBtn:true, active: true}" @click="reloadComponent"/>
         </div>
     </Teleport>
     <Teleport  v-if="tab.icon" defer :to="`#${isFullscreen? 'fullscreen-':''}tab-header-${tab.parent}-${tab.id} > .icon`">
@@ -278,7 +285,15 @@ onUnmounted(() => {
         <Transition >
             <KeepAlive :exclude="/Dead/" :max="2">
                 <Suspense>
-                    <component :is="tab.component" :tab="tab" v-bind="tab.props"/>
+                  <NuxtErrorBoundary @error="reloadComponent">
+                      <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props"/>
+                      <template #error="{ error, clearError }">
+                          <div class="template-container--main">
+                            error {{ error }}
+                            <el-button size="small" :icon="Refresh" circle  @click="clearError"></el-button>
+                          </div>
+                        </template>
+                  </NuxtErrorBoundary>
                     <template #fallback>
                         <LoadingBgInline />
                     </template>
