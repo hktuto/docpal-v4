@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   extends:[
     "../../packages/icon",
     '../../packages/authApp',
+    "../../packages/rbac",
     "../../pages/admin-workflow-editor",
     "../../pages/admin-user",
     "../../pages/admin-acl",

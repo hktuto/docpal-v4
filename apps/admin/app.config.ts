@@ -12,6 +12,9 @@ export default defineAppConfig({
                 },
                 {
                     name:"admin-group"
+                },
+                {
+                  name: "RBAC-editor"
                 }
             ]
         },

@@ -7,4 +7,4 @@ export default defineNuxtPlugin(nuxtApp => {
       window.dispatchEvent(ev)
       console.log('localeChange', newLocale)
     }
-  })
+})
