@@ -73,7 +73,7 @@ function handleRefresh() {
   emits('refresh')
   init()
 }
-onActivated(() => {
+onMounted(() => {
   refreshBus.on(needRefresh)
 })
 onDeactivated(() => {

@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { onActivated } from 'vue'
+import { onMounted } from 'vue'
 import { MasterTableProviderKey } from '~/utils/masterTableProvider'
 
 const routerProvider = inject(MenuRouterKey)
@@ -191,9 +191,6 @@ function handleFilterFormChange(formModel: any) {
 
 onMounted(() => {
   getFilter()
-})
-onActivated(() => {
-  query()
 })
 
 defineExpose({ query, reload })

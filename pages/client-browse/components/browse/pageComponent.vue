@@ -158,7 +158,7 @@ watch(
   }
 )
 
-onActivated(() => {
+onMounted(() => {
   if (tableRef.value) {
     tableRef.value.reload()
   }

@@ -90,7 +90,7 @@ async function handleSave() {
 
 const caseVersionId = ref()
 
-onActivated(async () => {
+onMounted(async () => {
   const {data} = await adminApi.api.getCaseDashboardId(props.id)
   caseVersionId.value = data.cmmnVersionId;
   state.detail = data

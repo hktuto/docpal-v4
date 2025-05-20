@@ -82,9 +82,6 @@ function initList() {
   pageParams.pageNum = -1;
   getList();
 }
-onActivated(() => {
-  initList();
-});
 onMounted(() => {
   initList();
 });

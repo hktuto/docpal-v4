@@ -27,7 +27,7 @@ async function getInfo() {
     });
   }
 }
-onActivated(() => {
+onMounted(() => {
   getInfo()
 })
 </script>

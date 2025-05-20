@@ -293,7 +293,7 @@ function handleBack() {
 const isAssigneeUser = computed(() => {
   return !state.taskDetail?.assignee || state.taskDetail?.assignee === userId
 })
-onActivated(() => {
+onMounted(() => {
   const backLinks = routerProvider?.getHistory()
   if (!backItem && backLinks && backLinks.length > 0) {
     routerProvider?.updateProps({
