@@ -567,6 +567,9 @@ importers:
       i:
         specifier: ^0.3.7
         version: 0.3.7
+      interactjs:
+        specifier: ^1.10.27
+        version: 1.10.27
       mime-types:
         specifier: ^2.1.35
         version: 2.1.35
