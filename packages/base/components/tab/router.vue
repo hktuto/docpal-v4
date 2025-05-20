@@ -254,6 +254,10 @@ function reloadComponent() {
   })
 }
 
+function handleError(err){
+  console.log(err)
+}
+
 const historyClass = computed(() => {
   if (isFullscreen.value) return `#fullscreen-tab-header-${tab.value.parent}-${tab.value.id} > .tabLeftTeleportContainer`
   return `#tab-header-${tab.value.parent}-${tab.value.id} > .tabLeftTeleportContainer`
@@ -299,7 +303,7 @@ onUnmounted(() => {
         <KeepAlive :exclude="/Dead/" :max="2">
           <Suspense>
             <template v-if="!tab.handleError" >
-            <NuxtErrorBoundary ref="errorBoundary" >
+            <NuxtErrorBoundary ref="errorBoundary" @error="handleError">
               <component v-if="renderComponent" :is="tab.component" :tab="tab" v-bind="tab.props" />
               <template #error="{ error, clearError }">
                 <div class="errorBoundaryContainer">
