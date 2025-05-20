@@ -250,6 +250,36 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   }
 }
 
+.errorBoundaryContainer {
+  width: 100%;
+  height: 100%;
+  padding: var(--app-space-s);
+  overflow: auto;
+  position: relative;
+  display: grid;
+  place-items: center;
+  .messageContainer{
+    max-width: 620px;
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: var(--app-space-m);
+    .errorTitle{
+      margin:0;
+    }
+    pre{
+      width:100%;
+      background-color: var(--app-grey-950);
+      padding: var(--app-space-m);
+      margin: 0;
+      text-align: left;
+      border-radius: var(--app-border-radius-m);
+    }
+  }
+}
+
 
 // splitpanes
 
