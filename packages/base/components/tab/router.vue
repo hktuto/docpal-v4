@@ -293,6 +293,7 @@ onUnmounted(() => {
       <Transition>
         <KeepAlive :exclude="/Dead/" :max="2">
           <Suspense>
+            <template v-if="!tab.handleError" >
             <NuxtErrorBoundary @error="reloadComponent">
               <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
               <template #error="{ error, clearError }">
@@ -312,6 +313,10 @@ onUnmounted(() => {
                 </div>
               </template>
             </NuxtErrorBoundary>
+            </template>
+            <template v-else>
+              <component :is="tab.component" :key="tab.name + componentKey" :tab="tab" v-bind="tab.props" />
+            </template>
             <template #fallback>
               <LoadingBgInline />
             </template>
