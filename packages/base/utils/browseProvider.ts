@@ -1,10 +1,10 @@
 interface BrowseListProvider {
-    getchildApi?:(pageParams:any) => Promise<any>
+    getchildApi:(pageParams:any) => Promise<any>
     idOrPath?: Ref<string, string>,
-    changeRoute?:(path:string) => void
+    changeRoute:(path:string) => void
     addToSelection?:(items: any[]) => void
     removeFromSelection?:(items: any[]) => void
-    docDetail?: Ref<any>,
+    docDetail: Ref<any>,
     docPermission?: Ref<any>,
 }
 

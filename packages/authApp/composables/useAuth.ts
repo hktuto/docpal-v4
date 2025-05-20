@@ -214,7 +214,11 @@ export async function getUserPreference() {
     },
     userSetting
   );
-
+  // normalize language, check if perference language is one of 'en-US' | "zh-HK' | 'zh-CN'
+  const allLang= ['en-US', 'zh-HK', 'zh-CN'];
+  if(!allLang.includes(preference.value.language)) {
+    preference.value.language = 'en-US';
+  }
   if (preference.value.metaDateFormat) {
     // emit time format change
     const timeBus = useEventBus<string>(EventType.USER_PREFERENCE_CHANGE__TIME);
