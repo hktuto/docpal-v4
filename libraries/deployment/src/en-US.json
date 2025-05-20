@@ -2042,7 +2042,8 @@
       "unsupportedFileType": "Unsupported format: ",
       "uploadError": "Upload error: ",
       "uploadExceed": "The maximum number({uploadLimit}) of file uploads has been exceeded.",
-      "validationFailed": "Form validation failed"
+      "validationFailed": "Form validation failed",
+      "fileLoading": "The file is being uploaded, please try again later"
     }
   },
   "reorderColumn": "Reorder Table Column",

@@ -2040,7 +2040,8 @@
       "unsupportedFileType": "不支持格式: ",
       "uploadError": "上传错误: ",
       "uploadExceed": "最大上传数量({uploadLimit})已超出.",
-      "validationFailed": "表单数据校验失败"
+      "validationFailed": "表单数据校验失败",
+      "fileLoading": "文件正在上传，请稍后再试"
     }
   },
   "reorderColumn": "列排序",
