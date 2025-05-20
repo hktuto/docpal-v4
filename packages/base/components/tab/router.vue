@@ -243,14 +243,15 @@ provide(MenuRouterKey, {
   tabData: tab
 })
 
-const isError = ref()
-function handleError(error: any) {
-  console.log("handleError", error)
-  isError.value = error
-}
+const renderComponent = ref(true)
+
 function reloadComponent() {
   // componentKey.value++
   // try to find a way to refresh component
+  renderComponent.value = false;
+  nextTick(() => {
+    renderComponent.value = true;
+  })
 }
 
 const historyClass = computed(() => {
@@ -298,8 +299,8 @@ onUnmounted(() => {
         <KeepAlive :exclude="/Dead/" :max="2">
           <Suspense>
             <template v-if="!tab.handleError" >
-            <NuxtErrorBoundary ref="errorBoundary" @error="handleError" >
-              <component :is="tab.component" :tab="tab" v-bind="tab.props" />
+            <NuxtErrorBoundary ref="errorBoundary" >
+              <component v-if="renderComponent" :is="tab.component" :tab="tab" v-bind="tab.props" />
               <template #error="{ error, clearError }">
                 <div class="errorBoundaryContainer">
                   <div class="messageContainer">
@@ -319,7 +320,7 @@ onUnmounted(() => {
             </NuxtErrorBoundary>
             </template>
             <template v-else>
-              <component :is="tab.component" :tab="tab" v-bind="tab.props" />
+              <component v-if="renderComponent"  :is="tab.component" :tab="tab" v-bind="tab.props" />
             </template>
             <template #fallback>
               <LoadingBgInline />
