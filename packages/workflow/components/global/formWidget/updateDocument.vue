@@ -27,7 +27,7 @@ watch( formData, () => {
   deep: true
 })
 
-onActivated(() => {
+onMounted(() => {
   console.log('activated')
   getInfo()
 })

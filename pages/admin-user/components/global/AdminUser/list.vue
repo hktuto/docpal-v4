@@ -64,7 +64,7 @@ provide(userProviderKey, {
   openUserDetail,
 });
 
-onActivated(() => {
+onMounted(() => {
   tableRef.value?.reload()
 })
 

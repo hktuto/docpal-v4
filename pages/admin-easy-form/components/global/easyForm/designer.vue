@@ -75,7 +75,7 @@ async function getDetail() {
   });
 }
 
-onActivated(() => {
+onMounted(() => {
   state.loadField = false;
   getDetail();
 });

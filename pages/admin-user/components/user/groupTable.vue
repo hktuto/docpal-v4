@@ -136,10 +136,6 @@ function handleFilterFormChange(formModel: any) {
   tableRef.value?.loadData(data)
 }
 
-onActivated(() => {
-  getMemberGroupList()
-  state.selectedRows = []
-})
 onMounted(() => {
   getMemberGroupList()
   state.selectedRows = []

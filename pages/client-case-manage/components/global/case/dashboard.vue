@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus'
 import { ArrowDown } from '@element-plus/icons-vue'
 import type { DashboardWidgetSetting } from '../../../../../packages/dp-dashboard/utils/dashboardWidgetHelper'
 import { CmmnWidgetComponent } from '../../../../../packages/dp-cmmn-x6/utils/dashboardHelper'
-import { onActivated } from 'vue'
+import { onMounted } from 'vue'
 import { clientApi } from 'api'
 import { MenuRouterKey } from '#imports'
 
@@ -79,7 +79,7 @@ provide(CaseManagementDashboardKey, {
   caseDefinitionKey,
   versionId
 })
-onActivated(() => {
+onMounted(() => {
   getDashboardList()
 })
 

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { clientApi } from "api";
-import { onActivated } from "vue";
+import { onMounted } from "vue";
 const { id } = defineProps<{
   id: string;
 }>();
@@ -32,7 +32,7 @@ async function getSfolder() {
   if(!searchParams.query) searchParams.query = []
   tableRef.value.initBar(searchParams)
 }
-onActivated(() => {
+onMounted(() => {
   getSfolder()
 })
 </script>

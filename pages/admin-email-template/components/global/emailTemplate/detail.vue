@@ -152,7 +152,7 @@ async function sendTest() {
   // TODO : add notification
 }
 
-onActivated(async () => {
+onMounted(async () => {
   data.value = await handleInit()
 })
 </script>

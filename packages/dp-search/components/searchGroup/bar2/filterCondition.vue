@@ -137,7 +137,7 @@ async function getFormData(item: any) {
   return { ...data }
 }
 
-onActivated(async () => {
+onMounted(async () => {
 })
 defineExpose({
   getData

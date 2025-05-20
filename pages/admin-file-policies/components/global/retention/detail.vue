@@ -71,7 +71,7 @@ async function init() {
   }
 }
 
-onActivated(async () => {
+onMounted(async () => {
   await init()
 })
 </script>

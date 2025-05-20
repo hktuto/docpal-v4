@@ -127,7 +127,7 @@ provide(CaseManagementVersionProviderKey,{
     openVersionDetail
 })
 
-onActivated(async () => {
+onMounted(async () => {
     init()
 })
 

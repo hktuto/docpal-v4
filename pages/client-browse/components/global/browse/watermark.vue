@@ -191,7 +191,7 @@ async function confimSaveNewFile(){
 
 
 }
-onActivated(() => {
+onMounted(() => {
     watermarkDetail.value = {
         name: "tem_"+ new Date().getTime(),
         type: "dynamic",
