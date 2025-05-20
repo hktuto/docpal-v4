@@ -1,11 +1,11 @@
+import type { InjectionKey } from "vue";
+import type { TipTapOptions } from "./tiptapHelper";
 
 export type DocOptions = {
   docOptions: DocumentOptions,
-
-  
 }
 
-type DocumentOptions = {
+export type DocumentOptions = {
   pageSize?: { // Defaults to U.S. letter portrait orientation.
     width: number, // width of the page for all pages in this section in TWIP. Defaults to 12240 Maximum 31680.
     height: number, // height of the page for all pages in this section in TWIP. Defaults to 15808 Maximum 31680.
@@ -38,3 +38,72 @@ type DocumentOptions = {
   fontSize?: number, 
   lang ?: string 
 }
+
+export type ToolSection = {
+  name : string,
+  tools: DocTool[],
+  requiredOptions?: string[]
+}
+
+export type DocTool = {
+  name: string,
+  components: any ,
+  requiredOptions?: string[]
+}
+
+export const variableType = [
+  {
+    type: 'Text',
+    dataType: 'string',
+  },
+  {
+    type: 'Paragraph',
+    dataType: 'string',
+  },
+  {
+    type: 'documentId',
+    dataType: 'string',
+  },
+   {
+    type: "CaseId",
+    dataType: "string",
+  },
+  {
+    type: "WorkflowId",
+    dataType: "string", 
+  },
+  {
+    type: "Email",
+    dataType: "string",
+  },
+    {
+    type: "Website",
+    dataType: "string", 
+  },
+  {
+    type : "Table",
+    dataType: "list",
+  }
+]
+
+export type VariableItem = {
+  type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
+  dataType: "string" | "list",
+  key: string,
+  value: any
+}
+
+export type LastSelection = {
+  type: "text" | "textRange" | "image",
+  data: any
+}
+
+interface DocTemplateProvider {
+  editor: Ref<any>,
+  options: Ref<TipTapOptions, TipTapOptions>,
+  initEditor: (options:TipTapOptions) => void,
+  lastSelection: Ref<LastSelection | null | undefined>,
+  variables : Ref<VariableItem[]>
+}
+
+export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')
