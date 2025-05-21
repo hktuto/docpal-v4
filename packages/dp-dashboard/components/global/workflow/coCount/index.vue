@@ -1,5 +1,15 @@
 <template>
-  <DashboardCard ref="cardRef" :hideSetting="hideSetting" :title="$t(setting.workflowName || setting.workflow)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard
+    ref="cardRef"
+    v-loading="loading"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="$t(setting.workflowName || setting.workflow)"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+    @refresh="refresh"
+  >
     <template #title_suffix>
       <DashboardUserFilter
         class="el-icon--right"
@@ -29,7 +39,6 @@
 </template>
 
 <script lang="ts" setup>
-import { watchDebounced } from '@vueuse/core'
 import { widgetComponent } from '~/utils/dashboardWidgetHelper'
 
 const props = withDefaults(
@@ -47,42 +56,36 @@ const emits = defineEmits(['refreshSetting', 'delete'])
 const state = reactive({
   filterUser: ''
 })
-const displayListRef = ref({})
-function resize() {
-  Object.keys(displayListRef.value).forEach((key) => {
-    const item = displayListRef.value[key]
-    if (item) item.resize()
-  })
-}
-const settingRef = ref()
-function openSetting() {
-  settingRef.value.handleOpen(props.setting)
-}
+const displayListRef = ref<any>({})
+const { settingRef, cardRef, resize, refresh, loading } = useDashboardCard({
+  props,
+  resizeAction: () => {
+    Object.keys(displayListRef.value).forEach((key) => {
+      const item = displayListRef.value[key]
+      if (item) item.resize()
+    })
+  },
+  handleInitCardAction: (setting: any) => {
+    state.filterUser = setting.user
+  },
+  handleRefreshAction: (setting: any) => {
+    for (const key in displayListRef.value) {
+      const item = displayListRef.value[key]
+      if (item && item.handleInitCard) item.handleInitCard(setting)
+    }
+  }
+})
+
 function handleDelete() {
   emits('delete')
 }
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
-function handleFilterUser(user) {
+function handleFilterUser(user: any) {
   state.filterUser = user
 }
 
-watchDebounced(
-  () => props.setting,
-  (newValue, oldValue) => {
-    if (props.setting) return
-    if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-      state.filterUser = newValue.user
-    }
-  },
-  {
-    debounce: 200,
-    maxWait: 500,
-    immediate: true,
-    deep: true
-  }
-)
 defineExpose({
   resize
 })
