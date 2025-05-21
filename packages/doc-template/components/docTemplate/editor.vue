@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Editor, EditorContent } from '@tiptap/vue-3';
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
-import { normalizeTipTapOptions, setupExtensions, defaultPageSetting, type TipTapOptions } from '~/utils/tiptapHelper';
+import { normalizeTipTapOptions, clientEditorExtensions, defaultPageSetting, type TipTapOptions } from 'docpal-document-editor';
 
 export type VariableItem = {
   type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
@@ -51,7 +51,7 @@ function initEditor(initOptions:TipTapOptions, json?:any) {
     editor.value.destroy()
   }
   const normlizeOption = normalizeTipTapOptions(initOptions)
-  const extensions = setupExtensions(normlizeOption)
+  const extensions = clientEditorExtensions(normlizeOption)
   editor.value = new Editor({
     content: normalizeJson(normlizeOption, json),
     extensions,

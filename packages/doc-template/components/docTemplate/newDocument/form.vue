@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+import  { type TipTapOptions, defaultPageSetting} from "docpal-document-editor"
 import {paperSizes} from "tiptap-extension-pagination"
-import {} from ''
 
 const emits = defineEmits(['submit'])
 
@@ -11,11 +11,11 @@ watch(showTextCounter, (bool) => {
   if(bool){
     form.textCount ||= 200
   }else{
-    form.textCount &&= null
+    form.textCount &&= undefined
   }
 })
 const form = reactive<TipTapOptions>({
-  textCount: null,
+  textCount: undefined,
   mode: "ENDLESS",
   pageSetting: {
     ...defaultPageSetting

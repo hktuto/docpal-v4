@@ -1,0 +1,3 @@
+[submodule "libraries/docpal-document-editor"]
+	path = libraries/docpal-document-editor
+	url = https://gitea.wclsolution.com/DocPal/docpal-document-editor.git
