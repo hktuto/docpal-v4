@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-const emits = defineEmits(['delete', 'refreshSetting', 'openSetting'])
+const emits = defineEmits(['delete', 'refreshSetting', 'openSetting', 'refresh'])
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
@@ -25,7 +25,9 @@ function openSetting() {
   if (!!props.settingRef) props.settingRef.handleOpen(props.setting)
   else emits('openSetting', props.setting)
 }
-
+function handleRefresh() {
+  emits('refresh', props.setting)
+}
 async function handleDelete() {
   try{
     await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
@@ -52,6 +54,7 @@ defineExpose({
 
         <div class="flex-x-end">
           <slot name="action_prefix"></slot>
+          <SvgIcon v-if="!hideSetting" class="" id="refresh" src="/icons/refresh.svg" @click="handleRefresh" />
           <SvgIcon v-if="!hideSetting && settingRef" class="" id="setting" src="/icons/setting.svg" @click="openSetting" />
           <SvgIcon v-if="!hideSetting" class="setting--icon" id="delete" src="/icons/delete.svg" @click="handleDelete" />
         </div>

@@ -1,5 +1,15 @@
 <template>
-  <DashboardCard class="dp-dashboard--card__scroll" ref="cardRef" :hideSetting="hideSetting" :title="$t(setting.documentType)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard
+    v-loading="loading"
+    class="dp-dashboard--card__scroll dp-dashboard--card__padding"
+    ref="cardRef"
+    :hideSetting="hideSetting"
+    :title="$t(setting.documentType)"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+    @refresh="handleInitCard"
+  >
     <template #title_suffix>
       <DashboardUserFilter
         class="el-icon--right"
@@ -34,7 +44,6 @@
 
 <script lang="ts" setup>
 import { publicApi } from 'api'
-import { watchDebounced } from '@vueuse/core'
 
 const props = withDefaults(
   defineProps<{
@@ -48,8 +57,8 @@ const props = withDefaults(
   }
 )
 const emits = defineEmits(['refreshSetting', 'delete'])
-const metaData = ref({})
-const state = reactive({
+const metaData = ref<any>({})
+const state = reactive<any>({
   drillDownBackLoading: false,
   drillDownFlag: false,
   drillDownParams: {},
@@ -58,18 +67,24 @@ const state = reactive({
 
 const DocCoCountCountRef = ref()
 const DocCoCountSizeRef = ref()
-const displayListRef = ref({})
-function resize() {
-  DocCoCountCountRef?.value.resize()
-  DocCoCountSizeRef?.value.resize()
-  Object.keys(displayListRef.value).forEach((key) => {
-    const item = displayListRef.value[key]
-    if (item) item.resize()
-  })
-}
-const settingRef = ref()
+const displayListRef = ref<any>({})
+const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
+  props,
+  resizeAction: () => {
+    DocCoCountCountRef?.value.resize()
+    DocCoCountSizeRef?.value.resize()
+    Object.keys(displayListRef.value).forEach((key) => {
+      const item = displayListRef.value[key]
+      if (item) item.resize()
+    })
+  },
+  handleInitCardAction: (setting: any) => {
+    getMetaData()
+    state.filterUser = setting.user
+  }
+})
 
-function handleFilterUser(user) {
+function handleFilterUser(user: any) {
   state.filterUser = user
   getMetaData()
 }
@@ -83,7 +98,7 @@ const GetCoCountMetaFilterApi = async (params: any) => {
 }
 async function getMetaData() {
   const params: any = {
-    groupByMetadatas: props.setting.displayList.map((item) => item.meta),
+    groupByMetadatas: props.setting.displayList.map((item: any) => item.meta),
     primaryType: props.setting.documentType,
     creator: state.filterUser
   }
@@ -107,14 +122,14 @@ async function handleDrillDownBack() {
   } catch (error) {}
   state.drillDownBackLoading = false
 }
-async function handleDrillDown(metaParams) {
+async function handleDrillDown(metaParams: any) {
   state.drillDownParams[metaParams.meta] = metaParams.key
   try {
     const params: any = {
       filterByMetaDatas: state.drillDownParams,
       creator: state.filterUser,
       primaryType: props.setting.documentType,
-      groupByMetadatas: props.setting.displayList.map((item) => item.meta)
+      groupByMetadatas: props.setting.displayList.map((item: any) => item.meta)
     }
     if (props.dates) {
       params.isQueryList = true
@@ -130,20 +145,10 @@ async function handleDrillDown(metaParams) {
 function handleDelete() {
   emits('delete')
 }
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
-watchDebounced(
-  () => [props.setting, props.dates],
-  (newValue, oldValue) => {
-    if (!props.setting) return
-    if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-      getMetaData()
-      state.filterUser = newValue[0].user
-    }
-  },
-  { debounce: 200, maxWait: 500, immediate: true }
-)
+
 defineExpose({
   resize
 })
