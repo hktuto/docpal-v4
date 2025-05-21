@@ -65,7 +65,7 @@ const basicColumns: VxeGridPropTypes.Columns = [
     field: 'documentType',
     title: 'tableHeader_type',
     formatter({ cellValue }: any) {
-      return t(cellValue)
+      return cellValue ? t(cellValue) : ''
     },
     width: 220
   }
@@ -199,7 +199,7 @@ async function initFilter(id: string) {
         title: row.label,
         width: 200,
         formatter({ cellValue }: any) {
-          return t(cellValue)
+          return cellValue ? t(cellValue) : ''
         }
       }
     else {
