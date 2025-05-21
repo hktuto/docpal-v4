@@ -14,22 +14,6 @@ const state = reactive({
   height: 100
 })
 
-function openImageUpdateWidthAndHeightDialog() {
-  state.imagePopoverVisible = true
-
-}
-
-function handleWidthAndHeightChange() {
-  const width = 30
-  const height = 20
-
-  editor.value.chain().focus().setImage({
-    src: editor.value.state.selection.node.attrs.src,
-    style: `width: ${width}%; height: ${height}%;`
-  }).run()
-  state.imagePopoverVisible = false
-}
-
 </script>
 
 <template>
@@ -72,34 +56,8 @@ function handleWidthAndHeightChange() {
         Clear
       </button>
 
-      <button v-if="lastSelection?.type === 'image'" @click="openImageUpdateWidthAndHeightDialog">
-        update width and height
-      </button>
     </div>
   </bubble-menu>
-
-  <el-dialog v-model="state.imagePopoverVisible" width="320">
-    <el-form>
-      <el-form-item label="Width">
-        <el-input type="number" minlength="1" maxlength="100" v-model="state.width">
-          <template #append>%</template>
-        </el-input>
-      </el-form-item>
-      <el-form-item label="Height">
-        <el-input type="number" minlength="1" maxlength="100" v-model="state.height">
-          <template #append>%</template>
-        </el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <div class="dialog-footer">
-        <el-button @click="state.imagePopoverVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="handleWidthAndHeightChange">
-          Confirm
-        </el-button>
-      </div>
-    </template>
-  </el-dialog>
 
 </template>
 
