@@ -45,9 +45,9 @@ onDeactivated(() => {
     </template>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"> </el-skeleton>
     <Calendar v-else :options="setting" />
+    <CalendarWidgetCreateDialog ref="createDialogRef" />
+    <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
   </DashboardCard>
-  <CalendarWidgetCreateDialog ref="createDialogRef" />
-  <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
 </template>
 
 <style lang="scss" scoped></style>
