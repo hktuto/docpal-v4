@@ -58,7 +58,7 @@
                     sheetRefs[item.i] = el
                   }
                 "
-                :id="item.component + index"
+                :id="item.component"
                 :key="item.i"
                 :setting="item.setting"
                 :hideSetting="hideSetting"
