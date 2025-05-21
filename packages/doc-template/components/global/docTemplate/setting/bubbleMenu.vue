@@ -8,11 +8,7 @@ if (!editorProvider) {
 }
 const { editor, lastSelection } = editorProvider
 
-const state = reactive({
-  imagePopoverVisible: false,
-  width: 100,
-  height: 100
-})
+const state = reactive({})
 
 </script>
 
@@ -23,39 +19,38 @@ const state = reactive({
     v-if="editor"
     style="width: auto"
   >
-    <div class="bubble-menu">
-      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleBold().run()"
+    <div v-if="lastSelection?.type === 'text'" class="bubble-menu">
+      <button @click="editor.chain().focus().toggleBold().run()"
               :class="{ 'is-active': editor.isActive('bold') }">
         Bold
       </button>
-      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleItalic().run()"
+      <button @click="editor.chain().focus().toggleItalic().run()"
               :class="{ 'is-active': editor.isActive('italic') }">
         Italic
       </button>
       <!--  font Underline  -->
-      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleUnderline().run()"
+      <button @click="editor.chain().focus().toggleUnderline().run()"
               :class="{ 'is-active': editor.isActive('underline') }">
         Underline
       </button>
       <!--  font Strike  -->
-      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleStrike().run()"
+      <button @click="editor.chain().focus().toggleStrike().run()"
               :class="{ 'is-active': editor.isActive('strike') }">
         Strike
       </button>
       <!--  font Subscript  -->
-      <button v-if="lastSelection?.type == 'text'" @click="editor.chain().focus().toggleSubscript().run()"
+      <button @click="editor.chain().focus().toggleSubscript().run()"
               :class="{ 'is-active': editor.isActive('subscript') }">
         Subscript
       </button>
       <!--  font Superscript  -->
-      <button v-if="lastSelection?.type === 'text'" @click="editor.chain().focus().toggleSuperscript().run()"
+      <button @click="editor.chain().focus().toggleSuperscript().run()"
               :class="{ 'is-active': editor.isActive('superscript') }">
         Superscript
       </button>
-      <button v-if="lastSelection?.type === 'text'" @click="editor.chain().focus().unsetAllMarks().run()">
+      <button @click="editor.chain().focus().unsetAllMarks().run()">
         Clear
       </button>
-
     </div>
   </bubble-menu>
 
