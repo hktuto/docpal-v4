@@ -79,8 +79,10 @@ const { cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCar
     })
   },
   handleInitCardAction: (setting: any) => {
-    getMetaData()
     state.filterUser = setting.user
+    DocCoCountCountRef?.value.handleInitCard(setting)
+    DocCoCountSizeRef?.value.handleInitCard(setting)
+    getMetaData()
   }
 })
 

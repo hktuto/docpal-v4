@@ -8,6 +8,7 @@ export type useDashboardCardParams = {
   onClick?: (instance) => void
 
   handleInitCardAction?: (chartSetting) => void
+  handleRefreshAction?: (chartSetting) => void
   getOptions?: (chartSetting) => any
   options?: any
 
@@ -38,10 +39,23 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     echartInstance.setOption(_options)
     echartInstance.resize()
   }
+
+  // refresh: handleRefreshAction || handleInitCard
+  const refresh = async (chartSetting) => {
+    if (params.handleRefreshAction) {
+      try {
+        loading.value = true
+        params.handleRefreshAction(chartSetting)
+      } catch (error: any) {
+        throw new Error(error)
+      } finally {
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        loading.value = false
+      }
+    } else handleInitCard(chartSetting)
+  }
   const handleInitCard = async (chartSetting) => {
     try {
-      console.log(chartSetting);
-      
       loading.value = true
       if (!params.handleInitCardAction) {
         const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : {}
@@ -62,7 +76,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   }
   const resize = () => {
     setTimeout(() => {
-      if(params.resizeAction) {
+      if (params.resizeAction) {
         params.resizeAction(echartInstance)
       } else {
         initStyle()
@@ -89,8 +103,6 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
 
       if (!props.setting) return
       if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-        console.log('??????????');
-        
         handleInitCard(props.setting)
       }
     },
@@ -104,6 +116,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     settingRef,
     initChart,
     resize,
+    refresh,
     handleInitCard,
     getInstance
   }
