@@ -1,21 +1,17 @@
 <template>
   <el-dialog
     style="--scroll-dialog-height: 80vh"
-    v-model="state.visible" :title="$t('folderCabinet.newItem')"
+    v-model="state.visible"
+    :title="$t('folderCabinet.newItem')"
     :close-on-click-modal="false"
     class="scroll-dialog"
     append-to-body
   >
     <main>
-      <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef"
-                                     :treeData="state.treeData"
-                                     v-loading="state.treeLoading">
-      </FolderCabinetCreateUploadTree>
+      <FolderCabinetCreateUploadTree ref="FolderCabinetUploadTreeRef" :treeData="state.treeData" v-loading="state.treeLoading"> </FolderCabinetCreateUploadTree>
     </main>
     <template #footer>
-      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary"
-                 :loading="state.loading"
-                 @click="handleSubmit">
+      <el-button id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -26,9 +22,7 @@ import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps(['id'])
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const { t } = useI18n()
 const userId: string = useUserId().value
 const state = reactive<any>({
@@ -38,14 +32,12 @@ const state = reactive<any>({
   cabinetTemplate: {},
   treeData: [],
   rootDetail: {}
-
 })
 // #region module: handleSubmit
 const FolderCabinetUploadTreeRef = ref()
 
 async function handleSubmit() {
   state.loading = true
-  const pList: any = []
   try {
     const uploadList = await FolderCabinetUploadTreeRef.value.getData(true)
     if (!uploadList) {
@@ -53,69 +45,90 @@ async function handleSubmit() {
     }
     // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
     setTimeout(async () => {
-      await uploadHandler(uploadList, state.rootDetail.idOrPath)
-      const res = await Promise.all(pList)
+      await uploadFiles(uploadList, state.rootDetail.idOrPath)
       state.loading = false
       state.visible = false
-      ElMessage.success(t('tip_createdSuccessMsg', {
-        modelName: t('common_item'),
-        name: uploadList[0].previewName
-      }))
+      ElMessage.success(
+        t('tip_createdSuccessMsg', {
+          modelName: t('common_item'),
+          name: uploadList[0].previewName
+        })
+      )
       emits('refresh')
     }, 2000)
   } catch (error) {
     console.log(error)
   }
-
-  async function uploadHandler(children: any, parentPath: string = '', parentStatus?: 'skip' | 'fail') {
-    children.forEach(async (item: any) => {
-      item.path = parentPath + '/' + item.label
-      try {
-        if (parentStatus === 'skip' || parentStatus === 'fail') throw new Error('skip')
-        if (item.folder) {
-          item.status = 'loading'
-          pList.push(
-            clientApi.api.postNuxeoDocumentCreatefolders({
-              templateId: props.id,
-              layoutId: item.id,
-              name: item.previewName,
-              type: item.documentType,
-              idOrPath: item.path,
-              properties: item.properties
-            })
-          )
-        } else {
-          let defaultValue = {}
-          if (item.metadataValue) defaultValue = JSON.parse(item.metadataValue)
-          const document = {
-            templateId: props.id,
-            layoutId: item.parentId,
-            name: item.previewName ? item.previewName : getMetaName({
-              docName: item.docName,
-              ...defaultValue
-            }, item),
-            idOrPath: item.path,
-            type: item.documentType,
-            properties: item.properties
-            // languages: file.languages,
-            // properties: {}
-          }
-          const formData: any = new FormData()
-          formData.append('files', item.raw)
-          formData.append('document', JSON.stringify(document))
-          pList.push(
-            clientApi.api.postNuxeoDocumentCreatedocument(formData).then(res => res.data)
-          )
-        }
-        item.status = 'finish'
-      } catch (error) {
-        item.status = 'skip'
+  async function uploadFiles(fileTree: any, parentPath: string) {
+    const uploadPromises = fileTree.map((item: any) => {
+      if (item.folder) {
+        item.path = parentPath + '/' + item.label
+        return createDirectory(item).then((dir: any) => {
+          if (dir?.id && item.children) uploadFiles(item.children, item.path)
+        })
+      } else {
+        return uploadFile(item, parentPath)
       }
-      await new Promise(resolve => setTimeout(async () => {
-        if (item.children) await uploadHandler(item.children, item.path, item.status)
-        resolve(500)
-      }, 500))
     })
+    await Promise.all(uploadPromises)
+    // for (const item of fileTree) {
+    //   item.path = parentPath + '/' + item.label
+    //   if (item.folder) {
+    //     // 如果是目录，先创建目录
+    //     const dir: any = await createDirectory(item)
+    //     // 然后递归上传子文件
+    //     if(dir.id && item.children) await uploadFiles(item.children, item.path)
+    //   } else {
+    //     // 如果是文件，上传文件
+    //     await uploadFile(item)
+    //   }
+    // }
+  }
+  async function createDirectory(directory: any) {
+    let defaultValue = {}
+    if (directory.metadataValue) defaultValue = JSON.parse(directory.metadataValue)
+    const name = directory.previewName ? directory.previewName : getMetaName(
+      {
+        label: directory.label,
+        ...defaultValue
+      },
+      directory
+    )
+    return await clientApi.api
+      .postNuxeoDocumentCreatefolders({
+        templateId: props.id,
+        layoutId: directory.id,
+        name,
+        type: directory.documentType,
+        idOrPath: directory.path,
+        properties: directory.properties
+      })
+      .then((res) => res.data)
+  }
+  async function uploadFile(file: any, parentPath: string) {
+    let defaultValue = {}
+    if (file.metadataValue) defaultValue = JSON.parse(file.metadataValue)
+    const name = file.previewName ? file.previewName : getMetaName(
+      {
+        label: file.label,
+        docName: file.docName,
+        ...defaultValue
+      },
+      file
+    )
+
+    const document = {
+      templateId: props.id,
+      layoutId: file.parentId,
+      name,
+      idOrPath:  parentPath + '/' + name,
+      type: file.documentType,
+      properties: file.properties
+    }
+    const formData: any = new FormData()
+    formData.append('files', file.raw)
+    formData.append('document', JSON.stringify(document))
+    return await clientApi.api.postNuxeoDocumentCreatedocument(formData).then((res) => res.data)
   }
 }
 
@@ -153,10 +166,14 @@ function initTreeData(children: any, parentId: string = '') {
     }
     let defaultValue = {}
     if (item.metadataValue) defaultValue = JSON.parse(item.metadataValue)
-    item.previewName = getMetaName({
-      docName: item.label,
-      ...defaultValue
-    }, item)
+    item.previewName = getMetaName(
+      {
+        ...defaultValue,
+        docName: item.label,
+        label: item.label
+      },
+      item
+    )
 
     if (item.children) initTreeData(item.children, item.id)
     else item.children = []
@@ -164,8 +181,7 @@ function initTreeData(children: any, parentId: string = '') {
 }
 
 function getLabelList(row: any) {
-  return row.labelRule ? JSON.parse(row.labelRule)
-    : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
+  return row.labelRule ? JSON.parse(row.labelRule) : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
 }
 
 function getMetaName(formData: any = {}, row: any) {
