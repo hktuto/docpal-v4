@@ -20,8 +20,7 @@ const CalendarRef = ref()
 const { settingRef, cardRef, refresh, loading } = useDashboardCard({
   props,
   handleRefreshAction: async (setting: any) => {
-    if (CalendarRef.value?.setDefaultFilter) CalendarRef.value.setDefaultFilter()
-    CalendarRef.value.getFilterOptions()
+    if (CalendarRef.value?.refresh) CalendarRef.value.refresh()
   }
 })
 onDeactivated(() => {
