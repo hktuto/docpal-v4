@@ -1,12 +1,14 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="$t('dashboard.PersonalShareExternal')"
     @delete="handleDelete"
+    @refresh="refresh"
   >
-    <PersonalShareExternalTable />
+    <PersonalShareExternalTable ref="tableRef" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
@@ -22,7 +24,13 @@ const props = withDefaults(
     hideSetting: false
   }
 )
-
+const tableRef = ref()
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: (setting: any) => {
+    tableRef.value.query({})
+  }
+})
 async function handleDelete() {
   emits('delete')
 }
