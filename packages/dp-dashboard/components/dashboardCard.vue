@@ -54,7 +54,7 @@ defineExpose({
 
         <div class="flex-x-end">
           <slot name="action_prefix"></slot>
-          <SvgIcon v-if="!hideSetting" class="" id="refresh" src="/icons/refresh.svg" @click="handleRefresh" />
+          <SvgIcon id="refresh" src="/icons/refresh.svg" @click="handleRefresh" />
           <SvgIcon v-if="!hideSetting && settingRef" class="" id="setting" src="/icons/setting.svg" @click="openSetting" />
           <SvgIcon v-if="!hideSetting" class="setting--icon" id="delete" src="/icons/delete.svg" @click="handleDelete" />
         </div>
@@ -109,6 +109,7 @@ defineExpose({
   padding: unset;
   margin: unset;
   flex: 1 0 auto;
+  max-width: calc(100% - 100px);
 }
 :deep .table-container {
   height: 100%;

@@ -11,7 +11,7 @@
     @refresh="refresh"
   >
     <template #title_suffix>
-      <el-dropdown v-if="!isTabView" trigger="click" @command="handleCommand">
+      <el-dropdown v-if="!setting.isTabView" trigger="click" @command="handleCommand">
         <span class="el-dropdown-link">
           <h4>{{ $t('caseManagement.my') }}
             <template v-if="activeTabName">({{ $t(activeTabName) }})</template>
