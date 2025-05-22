@@ -1,12 +1,14 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     title=""
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <template #title_suffix>
       <h4 v-if="setting.title || setting.selectedTable">{{ setting.title  }}
@@ -29,9 +31,9 @@
         <el-tab-pane v-for="item in list" :key="item.key" :label="$t(item.name)" :name="item.key"></el-tab-pane>
       </el-tabs>
     </template>
-    <PersonalWorkflowMy v-if="setting.selectedTable === 'myTask' || (!setting.selectedTable && activeTab === 'myTask')" :processKeys="processKeys" />
-    <PersonalWorkflowActive v-else-if="setting.selectedTable === 'activeTask' || (!setting.selectedTable && activeTab === 'activeTask')" :processKeys="processKeys" />
-    <PersonalWorkflowAvalible v-else :processKeys="processKeys" />
+    <PersonalWorkflowMy ref="tableRef" v-if="setting.selectedTable === 'myTask' || (!setting.selectedTable && activeTab === 'myTask')" :processKeys="processKeys" />
+    <PersonalWorkflowActive ref="tableRef" v-else-if="setting.selectedTable === 'activeTask' || (!setting.selectedTable && activeTab === 'activeTask')" :processKeys="processKeys" />
+    <PersonalWorkflowAvalible ref="tableRef" v-else :processKeys="processKeys" />
     <PersonalWorkflowSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
@@ -56,14 +58,20 @@ const list = [
   { name: 'workflow_activeTask', key: 'activeTask' },
   { name: 'workflow_allTask', key: 'allTask' },
 ]
-function handleCommand(command: string | number | object) {
+function handleCommand(command: string) {
   activeTab.value = command
   activeTabName.value = list.find(item => item.key === command)?.name
 }
+const tableRef = ref()
+const { cardRef, settingRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: (setting: any) => {
+    tableRef.value.query({})
+  }
+})
 async function handleDelete() {
   emits('delete')
 }
-const settingRef = ref()
 
 function handleRefresh(chartSetting) {
   emits('refreshSetting', chartSetting)

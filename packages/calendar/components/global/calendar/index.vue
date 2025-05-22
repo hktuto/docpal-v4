@@ -161,7 +161,9 @@ defineExpose({
   updateEvent,
   filter,
   openDetail,
-  eventList
+  eventList,
+  setDefaultFilter,
+  getFilterOptions
 })
 </script>
 
