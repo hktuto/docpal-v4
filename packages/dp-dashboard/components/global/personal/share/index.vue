@@ -1,12 +1,14 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :settingRef="settingRef"
     :hideSetting="hideSetting"
     title=""
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <template #title_suffix>
       <el-dropdown v-if="!setting.isTabView" trigger="click" @command="handleCommand">
@@ -26,9 +28,9 @@
         <el-tab-pane v-for="item in list" :key="item.key" :label="$t(item.name)" :name="item.key"></el-tab-pane>
       </el-tabs>
     </template>
-    <PersonalShareExternalTable v-show="activeTab === 'file_share'" />
-    <PersonalShareInternalMeTable v-show="activeTab === 'file_share_me'" />
-    <PersonalShareInternalOtherTable v-show="activeTab === 'file_share_other'" />
+    <PersonalShareExternalTable ref="tableRef" v-if="activeTab === 'file_share'" />
+    <PersonalShareInternalMeTable ref="tableRef" v-else-if="activeTab === 'file_share_me'" />
+    <PersonalShareInternalOtherTable ref="tableRef" v-else-if="activeTab === 'file_share_other'" />
     <PersonalShareSetting ref="settingRef" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
@@ -47,7 +49,6 @@ const props = withDefaults(
     hideSetting: false
   }
 )
-const date = new Date().valueOf()
 const activeTab = ref('file_share_me')
 const activeTabName = ref('file_share_me')
 const list = [
@@ -56,21 +57,27 @@ const list = [
   { name: 'file_share', key: 'file_share' }
 ]
 
+const settingRef = ref()
+function handleCommand(command: string) {
+  activeTab.value = command
+  const name = list.find((item) => item.key === command)?.name
+  activeTabName.value = name || ''
+}
+const tableRef = ref()
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: (setting: any) => {
+    tableRef.value.query({})
+  }
+})
 async function handleDelete() {
   emits('delete')
 }
-const settingRef = ref()
-function handleCommand(command: string | number | object) {
-  activeTab.value = command
-  activeTabName.value = list.find((item) => item.key === command)?.name
-}
-
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
-function resize() {}
 
-defineExpose({ resize })
+defineExpose({})
 </script>
 <style lang="scss" scoped>
 .el-dropdown-link {

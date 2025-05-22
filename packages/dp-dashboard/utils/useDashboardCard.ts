@@ -35,9 +35,11 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
 
   const initChart = (_options) => {
     if (echartInstance) echartInstance.clear()
-    echartInstance = echarts.init(chartRef.value)
-    echartInstance.setOption(_options)
-    echartInstance.resize()
+    if (chartRef.value && _options) {
+      echartInstance = echarts.init(chartRef.value)
+      echartInstance.setOption(_options)
+      echartInstance.resize()
+    }
   }
 
   // refresh: handleRefreshAction || handleInitCard
@@ -45,7 +47,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     if (params.handleRefreshAction) {
       try {
         loading.value = true
-        params.handleRefreshAction(chartSetting)
+        await params.handleRefreshAction(chartSetting)
       } catch (error: any) {
         throw new Error(error)
       } finally {
@@ -58,7 +60,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     try {
       loading.value = true
       if (!params.handleInitCardAction) {
-        const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : {}
+        const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : null
         initChart(options)
       } else {
         params.handleInitCardAction(chartSetting)
