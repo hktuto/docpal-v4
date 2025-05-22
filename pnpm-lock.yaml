@@ -1871,6 +1871,9 @@ importers:
       api:
         specifier: workspace:*
         version: link:../../libraries/api
+      docpal-document-editor:
+        specifier: workspace:*
+        version: link:../../libraries/docpal-document-editor
       happy-dom:
         specifier: ^15.7.3
         version: 15.11.7
