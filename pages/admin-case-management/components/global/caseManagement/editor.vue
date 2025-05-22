@@ -23,7 +23,7 @@ if (!routerProvider) {
 }
 
 async function getCaseData() {
-
+  console.log("getCaseData")
   const {data} = await adminApi.api.getCaseTypesVersionVersionid(props.versionId) as any
   readOnly.value = data.production;
   production.value = data.production
@@ -198,6 +198,7 @@ async function promoteToProduction() {
 // })
 
 onMounted(async () => {
+  console.log("onMounted case editor")
   await getCaseData()
   await init()
 
