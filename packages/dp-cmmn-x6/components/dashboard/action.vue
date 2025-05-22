@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
+    v-loading="loading"
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
     :title="$t('dashboard.cmmnAction')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <DashboardActionList class="dashboard-auto" :actionList="state.data" @refresh="init()" @submit="handleRefresh" />
   </DashboardCard>
@@ -68,7 +70,12 @@ async function init() {
     state.data = dashboardActions?.filter(filterActions)
   }
 }
-
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    await init()
+  }
+})
 function handleRefresh() {
   emits('refresh')
   init()
