@@ -28,7 +28,7 @@
       </el-button>
     </template>
   </el-dialog>
-  <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="(loading: boolean)=>emits('refresh', loading)" />
+  <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="emits('refresh')" />
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'

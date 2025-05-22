@@ -237,13 +237,15 @@ async function uploadHandler(e: any) {
       ElMessage.warning('tip.fileExists')
       return
     }
+    const names =  file.name.split('.')
+    names.pop()
     const param = {
       labelRule: state.treeItem.labelRule,
       metadataValue: state.treeItem.metadataValue,
       id: new Date().valueOf() + num++,
       raw: file,
       label: state.treeItem.label,
-      docName: file.name.split('.').shift(),
+      docName: names.join('.'),
       parentId: state.treeItem.parentId,
       documentType: state.treeItem.documentType,
       properties: {}
