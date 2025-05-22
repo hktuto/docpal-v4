@@ -21,7 +21,8 @@ export default defineNuxtConfig({
         "../../pages/client-file-policies",
         "../../packages/dp-cmmn-x6",
         "../../pages/client-case-manage",
-        "../../pages/client-easy-form"
+        "../../pages/client-easy-form",
+        "../../packages/rbac"
     ],
     features: {
         inlineStyles: true,
