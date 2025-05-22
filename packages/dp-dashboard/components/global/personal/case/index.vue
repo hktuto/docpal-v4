@@ -1,12 +1,14 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     title=""
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <template #title_suffix>
       <el-dropdown v-if="!isTabView" trigger="click" @command="handleCommand">
@@ -51,7 +53,6 @@ const activeTab = ref<string>('')
 const activeTabName = ref<string>('')
 const list = ref<any>([])
 const tableRef = ref();
-const settingRef = ref()
 
 async function handleDelete() {
   emits('delete')
@@ -64,6 +65,12 @@ function handleCommand(command: string | number | object) {
   activeTabName.value = list.value.find((item) => item.id === command)?.name
   tableRef.value.setCaseId(command);
 }
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async(setting: any) => {
+    tableRef.value.query({})
+  }
+})
 onMounted(async () => {
   try {
     const res = await clientApi.api.postCaseTypesPage({}).then((res) => res.data)
