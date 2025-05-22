@@ -49,7 +49,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
         loading.value = true
         await params.handleRefreshAction(chartSetting)
       } catch (error: any) {
-        throw new Error(error)
+        console.error(error)
       } finally {
         await new Promise((resolve) => setTimeout(resolve, 300))
         loading.value = false
