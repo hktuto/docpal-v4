@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-
+import type {TipTapOptions} from 'docpal-document-editor'
 const pageReady = ref(false)
 
 const documentOptions = ref<TipTapOptions>()
 
-function newSetting(newData) {
+function newSetting(newData:any) {
   documentOptions.value = newData;
   pageReady.value = true
 }
@@ -17,7 +17,7 @@ function newSetting(newData) {
   <div class="pageContainer">
     <template v-if="pageReady">
       <client-only>
-        <DocTemplateEditor :editorOptions="documentOptions" />
+        <DocTemplateEditor :editorOptions="documentOptions" :variables="[]" />
       </client-only>
     </template>
     <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="true" @submit="newSetting" />

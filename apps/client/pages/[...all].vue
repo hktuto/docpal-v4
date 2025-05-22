@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-// TODO : add custom router control
+
 let index = 0;
 const route = useRoute();
 const router = useRouter();

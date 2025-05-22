@@ -11,7 +11,7 @@
 
 
 <script lang="ts" setup>
-import { routeWorkflowFormDetail } from '~/utils/routerHelper';
+import { routeWorkflowFormDetail } from '~/utils/superWorkflowRouterHelper';
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
     data: any
