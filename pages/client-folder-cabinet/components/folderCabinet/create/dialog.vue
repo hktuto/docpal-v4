@@ -10,14 +10,14 @@
       </template>
       <template v-slot:namingRule>
         <div>{{ $t('tableHeader_labelRule') }}：
-          <template v-for="(item, index) in getLabelList()" :key="index">
+          <template v-for="(item, index) in getLabelList(state.cabinetTemplate.labelRule)" :key="index">
             <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
-            <template v-if="index !== getLabelList().length - 1"> -</template>
+            <template v-if="index !== getLabelList(state.cabinetTemplate.labelRule).length - 1"> -</template>
           </template>
         </div>
       </template>
       <template v-slot:previewName>
-        <div>{{ $t('folderCabinet.previewName') }}： {{ state.previewName }}</div>
+        <el-text :type="hasPreviewName(state.previewName) ? '': 'danger'">{{ $t('folderCabinet.previewName') }}：{{ state.previewName }}</el-text>
       </template>
     </FormRenderer>
     <template #footer>
@@ -72,6 +72,10 @@ async function handleSubmit() {
   state.loading = true
   try {
     let fileName = await getMetaName()
+    if(!fileName) {
+      ElMessage.error($t('dpTip.noValidName'))
+      throw new Error('dpTip.noValidName')
+    }
     const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName })
     if (fileName !== _fileName) {
       const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => {
@@ -103,49 +107,23 @@ async function handleSubmit() {
       resolve
     }, 1000))
   } catch (error) {
-
+    console.error(error)
   }
   state.loading = false
 }
 
 async function getMetaName() {
-  const date = new Date()
   let formData: any = {}
   try {
-    const data = await FormRendererRef.value.getFormData()
+    const data = await FormRendererRef.value.getFormData(false)
     const metadataForm = await MetaFormRef.value.getData()
-    if (data) formData = { ...formData, ...data, ...metadataForm }
+    if (data) formData = { ...formData, ...data, ...metadataForm,  }
+    formData.docName = formData.title
   } catch (error) {
+    console.error(error)
   }
-  const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
-
-  if (!labelRule || labelRule.length === 0) throw new Error('no labelRule')
-  else {
-    return labelRule.reduce((prev: any, rule: any, index: number) => {
-      if (!rule.metadata) rule.metadata = rule.metaData
-      const joiner = index === 0 ? '' : '-'
-      if (rule.metadata === 'fc:createDate') {
-        prev += joiner + formatDate(date, 'YYYY-MM-DD')
-      } else if (rule.metadata === 'fc:label') {
-        prev += joiner + state.cabinetTemplate.label
-      } else if (rule.metadata === 'fc:creator') {
-        prev += joiner + userId
-      } else if (rule.metadata === 'fc:docTitle') {
-        prev += formData.title ? joiner + formData.title : ''
-      } else if (rule.dataType === 'date') {
-        prev += formData[rule.metadata] ? joiner + formatDate(formData[rule.metadata], 'YYYY-MM-DD') : ''
-      } else {
-        prev += formData[rule.metadata] ? joiner + formData[rule.metadata] : ''
-      }
-      return prev
-    }, '')
-  }
-  // return state.cabinetTemplate.label + '-' + formatDate(date,'YYYY-MM-DD')
-}
-
-function getLabelList() {
-  const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
-  return labelRule
+  const labelRules = getLabelList(state.cabinetTemplate.labelRule)
+  return getNameByLabelRule(labelRules, formData)
 }
 
 // #endregion

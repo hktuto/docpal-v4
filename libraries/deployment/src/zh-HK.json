@@ -1217,6 +1217,7 @@
     "loading": "載入中...",
     "newFolderDuplicateName": "系統偵測到重複的資料夾名稱，請重新填寫資料夾名稱",
     "noMore": "沒有更多數據了",
+    "noValidName": "系統偵測到未產生有效名稱",
     "pleaseSelectApprovalStatus": "請選擇審核狀態",
     "resetWarning": "提交後，所有選定使用者的群組將被重置",
     "stopShareConfirm": "確認是否停止分享？",
@@ -2022,6 +2023,7 @@
       "endDatePlaceholder": "結束日期",
       "endTimePlaceholder": "截止时间",
       "fieldRequired": "{name} 不能為空",
+      "fileLoading": "文件正在上传，请稍后再试",
       "fileSizeExceed": "文件大小已超出: ",
       "insertSubFormRow": "插入行",
       "invalidNumber": "数据格式错误",
@@ -2040,8 +2042,7 @@
       "unsupportedFileType": "不支持格式: ",
       "uploadError": "上传错误: ",
       "uploadExceed": "最大上传数量({uploadLimit})已超出.",
-      "validationFailed": "表单数据校验失败",
-      "fileLoading": "文件正在上传，请稍后再试"
+      "validationFailed": "表单数据校验失败"
     }
   },
   "reorderColumn": "列排序",

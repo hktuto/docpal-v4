@@ -1,9 +1,15 @@
 <template>
   <div class="new-item-child">
-    <el-tree ref="treeRef" :data="treeData" :props="state.defaultProps"
-             nodeKey="id" default-expand-all :expand-on-click-node="false"
-             :highlight-current="true"
-             @node-click="handleNodeClick">
+    <el-tree
+      ref="treeRef"
+      :data="treeData"
+      :props="state.defaultProps"
+      nodeKey="id"
+      default-expand-all
+      :expand-on-click-node="false"
+      :highlight-current="true"
+      @node-click="handleNodeClick"
+    >
       <template #default="{ node, data }">
         <div class="tree-item">
           <div>
@@ -11,32 +17,31 @@
             <SvgIcon v-if="data.folder" src="/icons/folder-general.svg"></SvgIcon>
             <SvgIcon v-else-if="data.folder === false" src="/icons/file-general.svg"></SvgIcon>
             <span :class="getCss(data)">
-                        {{ data.docName || data.label }}
-                    </span>
+              {{ data.docName || data.label }}
+            </span>
           </div>
           <div style="--icon-size: 18px">
-            <SvgIcon v-if="showAddButton(data)" src="/icons/add.svg"
-                     @click="handleAddFile(data)"></SvgIcon>
-            <SvgIcon v-if="data.raw" src="/icons/menu/trash.svg"
-                     @click="handleDeleteFile(data)"></SvgIcon>
+            <SvgIcon v-if="showAddButton(data)" src="/icons/add.svg" @click="handleAddFile(data)"></SvgIcon>
+            <SvgIcon v-if="data.raw" src="/icons/menu/trash.svg" @click="handleDeleteFile(data)"></SvgIcon>
           </div>
         </div>
       </template>
     </el-tree>
     <div>
-      <template v-if="state.selectedRow && state.selectedRow.folder !== false ">
+      <template v-if="state.selectedRow && state.selectedRow.folder !== false">
         <div class="flex-x-start">
           <SvgIcon v-if="state.selectedRow.folder" class="el-icon--left" src="/icons/folder-general.svg"></SvgIcon>
           <SvgIcon v-else class="el-icon--left" src="/icons/file-general.svg"></SvgIcon>
           {{ state.selectedRow.docName || state.selectedRow.label }}
         </div>
-        <div>{{ $t('tableHeader_labelRule') }}：
-          <template v-for="(item, index) in getLabelList()" :key="index">
+        <div>
+          {{ $t('tableHeader_labelRule') }}：
+          <template v-for="(item, index) in getLabelList(state.selectedRow.labelRule)" :key="index">
             <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
-            <template v-if="index !== getLabelList().length - 1"> -</template>
+            <template v-if="index !== getLabelList(state.selectedRow.labelRule).length - 1"> -</template>
           </template>
         </div>
-        <div style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}</div>
+        <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}</el-text>
         <MetaRenderForm ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
       </template>
       <template v-else>
@@ -44,10 +49,7 @@
       </template>
     </div>
     <MetaRenderForm ref="MetaFormRef2" @formChange="handleMetaChange"></MetaRenderForm>
-    <input v-show="false" ref="fileUploaderRef"
-           multiple
-           type="file"
-           @change="uploadHandler($event)" />
+    <input v-show="false" ref="fileUploaderRef" multiple type="file" @change="uploadHandler($event)" />
   </div>
 </template>
 
@@ -78,8 +80,7 @@ async function getData(isValidate: boolean = false) {
   try {
     const pList: any = []
     const nodeMap: any = Object.values(treeRef.value.store.nodesMap).reduce((prev: any, item: any) => {
-      if (item.data.folder ||
-        (!item.data.folder && item.data.raw)) {
+      if (item.data.folder || (!item.data.folder && item.data.raw)) {
         prev[item.data.id] = {
           ...item.data
         }
@@ -91,7 +92,7 @@ async function getData(isValidate: boolean = false) {
     }, {})
     if (isValidate) {
       let errorMessage = await Promise.all(pList)
-      errorMessage = errorMessage.filter(item => !!item)
+      errorMessage = errorMessage.filter((item) => !!item)
       if (errorMessage.length > 0) {
         ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
           dangerouslyUseHTMLString: true,
@@ -114,61 +115,23 @@ async function getData(isValidate: boolean = false) {
     })
     return result
   } catch (error) {
-
+  } finally {
   }
 
   async function getErrorMessage(doc: any) {
     const _msg = await MetaFormRef2.value.getValidateMsg(doc.documentType, deepCopy(doc.properties))
     if (_msg) return `<h4 class="msg-h4">${doc.label}:</h4>${_msg}`
+
+    if (!hasPreviewName(doc.previewName)) return `<h4 class="msg-h4">${doc.label}:</h4>${$t('dpTip.noValidName')}`
     return ''
   }
 }
 
-function getLabelList() {
-  const labelRule = state.selectedRow.labelRule ? JSON.parse(state.selectedRow.labelRule) : [
-    { dataType: 'string', metadata: 'fc:docTitle', noDelete: true }
-  ]
-  return labelRule
-}
-
 function getMetaName(formData: any = {}) {
-  const date = new Date()
-  try {
-    try {
-      const data = state.selectedRow.properties
-      if (data) formData = { ...formData, ...data }
-    } catch (error) {
-    }
-    formData.label = state.selectedRow.label
-    const labelRule = getLabelList()
-    if (!labelRule || labelRule.length === 0) throw new Error('no labelRule')
-    else {
-      return labelRule.reduce((prev: any, rule: any, index: number) => {
-        const joiner = index === 0 ? '' : '-'
-        if (!rule.metadata) rule.metadata = rule.metaData
-        if (rule.metadata === 'fc:createDate') {
-          prev += joiner + formatDate(date)
-        } else if (rule.metadata === 'fc:label') {
-          prev += joiner + formData.label
-        } else if (rule.metadata === 'fc:creator') {
-          prev += joiner + userId
-        } else if (rule.metadata === 'fc:docTitle') {
-          if (!formData.docName) prev += joiner + ''
-          else prev += joiner + formData.docName
-        } else if (rule.dataType === 'date') {
-          if (!formData[rule.metadata]) prev += joiner + ''
-          else prev += joiner + formatDate(formData[rule.metadata])
-        } else {
-          if (!formData[rule.metadata]) prev += joiner + ''
-          else prev += joiner + formData[rule.metadata]
-        }
-        return prev
-      }, '')
-    }
-  } catch (error: any) {
-    routerProvider?.message.error(error)
-  }
-  return formData.label + '-' + formatDate(date)
+  const labelRules = getLabelList(state.selectedRow.labelRule)
+  let data = { ...formData }
+  if (state.selectedRow?.properties) data = { ...data, ...state.selectedRow.properties }
+  return getNameByLabelRule(labelRules, data)
 }
 
 function handleNodeClick(row: any) {
@@ -203,8 +166,7 @@ function getCss(data: any) {
 }
 
 function showAddButton(data: any) {
-  return data.folder === false &&
-    !(!data.multiple && data.children && data.children.length > 0)
+  return data.folder === false && !(!data.multiple && data.children && data.children.length > 0)
 }
 
 // #endregion
@@ -237,7 +199,7 @@ async function uploadHandler(e: any) {
       ElMessage.warning('tip.fileExists')
       return
     }
-    const names =  file.name.split('.')
+    const names = file.name.split('.')
     names.pop()
     const param = {
       labelRule: state.treeItem.labelRule,
@@ -279,7 +241,11 @@ function handleDeleteFile(treeItem: any) {
 
 // #endregion
 defineExpose({
-  getData, treeRef, getLabelList, getMetaName, handleNodeClick
+  getData,
+  treeRef,
+  getLabelList,
+  getMetaName,
+  handleNodeClick
 })
 </script>
 
@@ -289,7 +255,7 @@ defineExpose({
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--app-space-xs);
-  @media(max-width: 640px) {
+  @media (max-width: 640px) {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
   }
@@ -314,7 +280,6 @@ defineExpose({
 .scroll-dialog {
   height: 50vh;
 }
-
 </style>
 <style lang="scss">
 .msg-h4 {
