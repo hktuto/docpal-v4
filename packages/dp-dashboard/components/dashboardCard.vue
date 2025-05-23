@@ -29,13 +29,12 @@ function handleRefresh() {
   emits('refresh', props.setting)
 }
 async function handleDelete() {
-  try{
+  try {
     await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     emits('delete')
-  }catch{
-    return
+  } catch(error) {
+    console.error(error)
   }
-  
 }
 
 defineExpose({
@@ -47,7 +46,7 @@ defineExpose({
   <ElCard ref="cardRef" class="dp-dashboard--card">
     <template #header>
       <slot name="header">
-        <h4>
+        <h4 class="dp-dashboard--card__title">
           {{ title }}
           <slot name="title_suffix"></slot>
         </h4>
@@ -82,8 +81,17 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   border-bottom: unset;
+  width: 100%;
+  overflow: hidden;
   .svgIcon + .svgIcon {
     margin-left: var(--app-space-xxs);
+  }
+  .dp-dashboard--card__title {
+    max-width: calc(100% - 4rem);
+    overflow: hidden;
+    .el-dropdown {
+      padding-top: 3px;
+    }
   }
 }
 .dp-dashboard--card__padding {
@@ -109,7 +117,6 @@ defineExpose({
   padding: unset;
   margin: unset;
   flex: 1 0 auto;
-  max-width: calc(100% - 100px);
 }
 :deep .table-container {
   height: 100%;
@@ -132,5 +139,4 @@ defineExpose({
   margin-right: var(--app-space-xxs);
   cursor: pointer;
 }
-
 </style>
