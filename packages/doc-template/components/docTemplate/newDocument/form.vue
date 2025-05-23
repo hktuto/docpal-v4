@@ -20,6 +20,8 @@ const form = reactive<TipTapOptions>({
   pageSetting: {
     ...defaultPageSetting
   },
+  title: "",
+  creator: "",
   theme: {
     fontSize: 12,
     fontColor: '#000000',

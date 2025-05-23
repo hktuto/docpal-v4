@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
+import { defaultAvailableFonts } from 'docpal-document-editor/src/utils/fontHelper'
 
 const { editor, options, initEditor } = inject(DocTemplateProveKey)
 const { t } = useI18n()
 
-const fontPredefineFamily = ['Inter', 'Comic Sans MS, Comic Sans', 'serif', 'monospace', 'cursive']
+const fontPredefineFamily = [...defaultAvailableFonts]
 const fontPredefineSize = [8, 9, 10, 11, 12, 14, 15, 18, 20, 22, 24, 26, 28, 36, 48]
 const fontPredefineColors = ref(['#000000'])
 const fontPredefineHighlightColors = ref(['#FFFFFF', '#ffff00', '#00ff00', '#007FFF', '#FF0000', '#FF00FF', '#00FFFF'])

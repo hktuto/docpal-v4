@@ -16,6 +16,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hocuspocus/provider": "^3.1.1",
+    "@tiptap/extension-collaboration": "^2.12.0",
+    "@tiptap/extension-collaboration-caret": "3.0.0-next.7",
+    "@tiptap/extension-collaboration-cursor": "^2.12.0",
     "@tiptap/vue-3": "^2.12.0",
     "docpal-document-editor": "workspace:*",
     "docx": "^9.5.0",
@@ -24,7 +28,9 @@
     "nuxt": "3.17.3",
     "tippy.js": "^6.3.7",
     "tiptap-extension-pagination": "^2.1.4",
-    "ws": "^8.18.2"
+    "ws": "^8.18.2",
+    "y-prosemirror": "^1.3.5",
+    "yjs": "^13.6.27"
   },
   "devDependencies": {
     "@nuxt/test-utils": "^3.14.1",

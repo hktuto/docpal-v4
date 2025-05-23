@@ -14,10 +14,10 @@ const state = reactive({
 
 const FormRendererRef = ref();
 // TODO : the server should add to nuxtConfig runtime
-const nodeBackendEndpoint = 'http://localhost:3333/api'
+const nodeBackendEndpoint = 'http://localhost:3333'
 async function exportDocx(){
   const json = getJsonConfig();
-  const blob = await fetch(nodeBackendEndpoint+'/docTemplate/convert/docx', {
+  const blob = await fetch(nodeBackendEndpoint+'/convert/docx', {
      method:"POST",
     headers:{
       'Content-Type': 'application/json'
@@ -38,13 +38,13 @@ async function exportDocx(){
 async function exportHTML(){
   const json = getJsonConfig();
   console.log(options)
-  const res = await fetch(nodeBackendEndpoint + '/docTemplate/convert/html', {
+  const res = await fetch(nodeBackendEndpoint + '/convert/html', {
      method:"POST",
     headers:{
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      json, options : options.value
+      json
     })
   }).then( res => res.text())
   const blob = new Blob([res], { type: 'text/html' });

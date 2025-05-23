@@ -1,11 +1,15 @@
 <script lang="ts" setup>
-
+import type {TipTapOptions} from 'docpal-document-editor'
 const pageReady = ref(false)
 
+const json = ref({})
 const documentOptions = ref<TipTapOptions>()
 
-function newSetting(newData) {
+const user = useUserState()
+
+function newSetting(newData:TipTapOptions) {
   documentOptions.value = newData;
+  documentOptions.value.editable = true;
   pageReady.value = true
 }
 
@@ -16,9 +20,7 @@ function newSetting(newData) {
 <template>
   <div class="pageContainer">
     <template v-if="pageReady">
-      <client-only>
-        <DocTemplateEditor :editorOptions="documentOptions" />
-      </client-only>
+      <DocTemplateEditor :editorOptions="documentOptions" :user="user" :variables="[]" :json="json" />
     </template>
     <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="true" @submit="newSetting" />
   </div>
@@ -27,8 +29,8 @@ function newSetting(newData) {
 <style lang="scss" scoped>
 .pageContainer{
   // padding: var(--app-space-s);
-  height: 100svh;
-  width: 100svw;
+  height: 100%;
+  width: 100%;
   position: relative;
   overflow: hidden;
 }
