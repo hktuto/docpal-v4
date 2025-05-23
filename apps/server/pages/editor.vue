@@ -17,7 +17,7 @@ function newSetting(newData:any) {
   <div class="pageContainer">
     <template v-if="pageReady">
       <client-only>
-        <DocTemplateEditor :editorOptions="documentOptions" :variables="[]" />
+        <DocTemplateEditor :editorOptions="documentOptions" :user="{username:'abcde'}" :variables="[]" />
       </client-only>
     </template>
     <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="true" @submit="newSetting" />
