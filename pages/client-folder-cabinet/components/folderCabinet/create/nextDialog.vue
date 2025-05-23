@@ -44,20 +44,20 @@ async function handleSubmit() {
       throw new Error('')
     }
     // 后端folder-cabinet有延时，立即上传folder-cabinet不起作用
-    setTimeout(async () => {
-      await uploadFiles(uploadList, state.rootDetail.idOrPath)
-      state.loading = false
-      state.visible = false
-      ElMessage.success(
-        t('tip_createdSuccessMsg', {
-          modelName: t('common_item'),
-          name: uploadList[0].previewName
-        })
-      )
-      emits('refresh')
-    }, 2000)
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await uploadFiles(uploadList, state.rootDetail.idOrPath)
+    state.visible = false
+    ElMessage.success(
+      t('tip_createdSuccessMsg', {
+        modelName: t('common_item'),
+        name: uploadList[0].previewName
+      })
+    )
+    emits('refresh')
   } catch (error) {
     console.log(error)
+  } finally {
+    state.loading = false
   }
   async function uploadFiles(fileTree: any, parentPath: string) {
     const uploadPromises = fileTree.map((item: any) => {
@@ -71,29 +71,19 @@ async function handleSubmit() {
       }
     })
     await Promise.all(uploadPromises)
-    // for (const item of fileTree) {
-    //   item.path = parentPath + '/' + item.label
-    //   if (item.folder) {
-    //     // 如果是目录，先创建目录
-    //     const dir: any = await createDirectory(item)
-    //     // 然后递归上传子文件
-    //     if(dir.id && item.children) await uploadFiles(item.children, item.path)
-    //   } else {
-    //     // 如果是文件，上传文件
-    //     await uploadFile(item)
-    //   }
-    // }
   }
   async function createDirectory(directory: any) {
     let defaultValue = {}
     if (directory.metadataValue) defaultValue = JSON.parse(directory.metadataValue)
-    const name = directory.previewName ? directory.previewName : getMetaName(
-      {
-        label: directory.label,
-        ...defaultValue
-      },
-      directory
-    )
+    const name = directory.previewName
+      ? directory.previewName
+      : getMetaName(
+          {
+            label: directory.label,
+            ...defaultValue
+          },
+          directory
+        )
     return await clientApi.api
       .postNuxeoDocumentCreatefolders({
         templateId: props.id,
@@ -108,20 +98,22 @@ async function handleSubmit() {
   async function uploadFile(file: any, parentPath: string) {
     let defaultValue = {}
     if (file.metadataValue) defaultValue = JSON.parse(file.metadataValue)
-    const name = file.previewName ? file.previewName : getMetaName(
-      {
-        label: file.label,
-        docName: file.docName,
-        ...defaultValue
-      },
-      file
-    )
+    const name = file.previewName
+      ? file.previewName
+      : getMetaName(
+          {
+            label: file.label,
+            docName: file.docName,
+            ...defaultValue
+          },
+          file
+        )
 
     const document = {
       templateId: props.id,
       layoutId: file.parentId,
       name,
-      idOrPath:  parentPath + '/' + name,
+      idOrPath: parentPath + '/' + name,
       type: file.documentType,
       properties: file.properties
     }
