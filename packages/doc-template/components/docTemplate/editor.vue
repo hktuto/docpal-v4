@@ -1,98 +1,130 @@
 <script lang="ts" setup>
-import { Editor, EditorContent } from '@tiptap/vue-3';
+import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
-import { normalizeTipTapOptions, clientEditorExtensions, defaultPageSetting, type TipTapOptions } from 'docpal-document-editor';
+import { normalizeTipTapOptions, clientEditorExtensions, defaultPageSetting, type TipTapOptions } from 'docpal-document-editor'
+import Collaboration from '@tiptap/extension-collaboration'
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
+import * as Y from 'yjs'
+import { HocuspocusProvider } from '@hocuspocus/provider'
+
 
 export type VariableItem = {
-  type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
-  dataType: "string" | "list",
-  key: string,
+  type: 'Text' | 'Paragraph' | 'documentId' | 'CaseId' | 'WorkflowId' | 'Email' | 'Website' | 'Table'
+  dataType: 'string' | 'list'
+  key: string
   value: any
 }
 
-const props = withDefaults(defineProps<{
-  editorOptions: TipTapOptions,
-  json?: any,
-  variables : VariableItem[]
-}>(), {
- editorOptions:{
-   ...defaultPageSetting
- },
- variables:[]
-})
+const props = defineProps<{
+    editorOptions: TipTapOptions
+    json?: any
+    user?: any
+    variables: any[],
+  }>()
 const { variables } = toRefs(props)
 
 const options = ref<TipTapOptions>({
-  mode: "PAGE"
+  mode: 'PAGE',
+  pageSetting : {...defaultPageSetting},
+  title: "Editor",
+  creator: "",
+  editable: false,
+  theme: {
+    fontSize: 12,
+    fontColor: '#000000',
+    fontBackgroundColor: '#ffffff',
+    fontFamily: 'Arial',
+    bodyFontSize: 20,
+    h1FontSize: 20,
+    highlightColor: '#ffff00'
+  }
 })
 const editor = ref()
-
-function normalizeJson(option:TipTapOptions, json?:any){
-  if(json) {
+const room = ref("12345")
+function normalizeJson(option: TipTapOptions, json?: any) {
+  if (json) {
     return json
   }
-  if(option.mode === 'PAGE') {
-    return ""     
+  if (option.mode === 'PAGE') {
+    return ''
   } else {
-    return ""
+    return ''
   }
 }
 
 export type LastSelection = {
-  type: "text" | "textRange" | "image",
+  type: 'text' | 'textRange' | 'image'
   data: any
 }
 
 const lastSelection = ref<LastSelection | null>()
 
+const ydoc = new Y.Doc();
+
+const provider = new HocuspocusProvider({
+  url: "ws://localhost:3333/ws",
+  name: "docpal-doc-editor",
+  document: ydoc,
+});
+
 const headerRef = ref<any>(null)
-function initEditor(initOptions:TipTapOptions, json?:any) {
-  if(editor.value) {
+function initEditor(initOptions: TipTapOptions, json?: any) {
+  if (editor.value) {
     editor.value.destroy()
   }
   const normlizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normlizeOption)
+  if(initOptions.editable) {
+  }
   editor.value = new Editor({
     content: normalizeJson(normlizeOption, json),
-    extensions,
+    extensions:[
+      ...extensions,
+      Collaboration.configure({
+        document: ydoc,
+      }),
+      CollaborationCursor.configure({
+        provider,
+        user: { name: props.user.username, color: "#ffcc00" },
+      }),
+    ],
     onSelectionUpdate({ editor }) {
-      const selection = editor.state.selection;
-      if(!selection || !selection?.jsonID) return;
-      let newSelectionData:LastSelection = {
+      const selection = editor.state.selection as any
+      if (!selection || !selection?.jsonID) return
+      let newSelectionData: LastSelection = {
         type: 'text',
         data: selection
       }
-      switch(selection?.jsonID) {
+      switch (selection?.jsonID) {
         case 'text':
           // text or textRange
-          if(!selection?.text){
-            newSelectionData.type = "text"
-          }else{
-            newSelectionData.type = "textRange"
+          if (!selection?.text) {
+            newSelectionData.type = 'text'
+          } else {
+            newSelectionData.type = 'textRange'
           }
-          break;
-        case 'node' :
+          break
+        case 'node':
           // check image
-          if(selection?.node.type.name ==="image"){
-            newSelectionData.type = "image"
+          if (selection?.node.type.name === 'image') {
+            newSelectionData.type = 'image'
           }
-          break;
+          break
         default:
-          break;
+          break
       }
       lastSelection.value = newSelectionData
-    },
+    }
   })
-  if(normlizeOption.mode === 'PAGE') {
+  if (normlizeOption.mode === 'PAGE') {
     // set up margin
     // editor.value.commands.setDocumentPageMargins(initOptions.pageSetting?.defaultMarginConfig || {
-    //   top: 5, right: 5, bottom: 5, left: 5 
+    //   top: 5, right: 5, bottom: 5, left: 5
     // })
   }
-  options.value = {...normlizeOption}
+  options.value = { ...normlizeOption }
   headerRef.value.init(normlizeOption)
 }
-
 
 onMounted(() => {
   initEditor(props.editorOptions)
@@ -109,12 +141,11 @@ provide(DocTemplateProveKey, {
   variables,
   lastSelection
 })
-
 </script>
 
 <template>
   <div class="editorContainer">
-    <DocTemplateHeader ref="headerRef"  />
+    <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
       <EditorContent :editor="editor" />
     </div>
@@ -123,22 +154,20 @@ provide(DocTemplateProveKey, {
 </template>
 
 <style lang="scss" scoped>
-.editorContainer{
-  width:100%;
+.editorContainer {
+  width: 100%;
   height: 100%;
   display: grid;
-  grid-template-rows: min-content  1fr min-content;
+  grid-template-rows: min-content 1fr min-content;
 }
-.editorBody{
+.editorBody {
   flex: 1 0 auto;
   padding: var(--app-space-m);
   overflow: auto;
-  :deep(.tiptap){
+  :deep(.tiptap) {
     outline: none;
   }
 }
-
-
 </style>
 
 <style>
@@ -177,8 +206,11 @@ provide(DocTemplateProveKey, {
 
     .selectedCell:after {
       background: var(--app-grey-975);
-      content: "";
-      left: 0; right: 0; top: 0; bottom: 0;
+      content: '';
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
       pointer-events: none;
       position: absolute;
       z-index: 2;
@@ -204,14 +236,40 @@ provide(DocTemplateProveKey, {
     cursor: ew-resize;
     cursor: col-resize;
   }
-  [data-type="taskList"]{
+  [data-type='taskList'] {
     list-style: none;
     padding-inline-start: 0;
-    li{
+    li {
       > * {
         display: inline-block;
       }
     }
   }
+}
+
+.collaboration-cursor__caret {
+  border-left: 1px solid #0d0d0d;
+  border-right: 1px solid #0d0d0d;
+  margin-left: -1px;
+  margin-right: -1px;
+  pointer-events: none;
+  position: relative;
+  word-break: normal;
+}
+
+/* Render the username above the caret */
+.collaboration-cursor__label {
+  border-radius: 3px 3px 3px 0;
+  color: #0d0d0d;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  left: -1px;
+  line-height: normal;
+  padding: 0.1rem 0.3rem;
+  position: absolute;
+  top: -1.4em;
+  user-select: none;
+  white-space: nowrap;
 }
 </style>

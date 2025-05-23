@@ -98,7 +98,7 @@ export default defineAppConfig({
                     name: "admin-document-template"
                 },
                 {
-                  name : "admin-doc-template"
+                  name : "admin-doc-template-collaboration"
                 },
                 {
                     name: "admin-email-template"
