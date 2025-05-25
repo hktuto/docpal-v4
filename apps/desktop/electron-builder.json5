@@ -1,25 +1,24 @@
 {
   "appId": "docpal.wclsolution.com",
-  "productName": "DocPal",
-  "asar": true,
+  productName: "DocPal",
+  "asar": false,
   "directories": {
     "output": "release/${version}"
   },
   "files": [
-    "package.json",
     "pref/**/*",
     "dist/**/*",
-    "public/**/*",
+    "images/**/*"
   ],
   "mac": {
     "artifactName": "${productName}_${version}.${ext}",
-    icon: "public/icon.png",
+    icon: "images/icon.png",
     "target": [
       "dmg"
     ]
   },
   "win": {
-    icon: "public/icon.png",
+    icon: "images/icon.png",
     "signAndEditExecutable": false,
     "target": [
       {

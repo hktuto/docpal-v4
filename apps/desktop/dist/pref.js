@@ -7,7 +7,6 @@ exports.createSetPrefFrontend = exports.setPrefs = exports.removePrefs = exports
 var electron_1 = require("electron");
 var path_1 = __importDefault(require("path"));
 var fs_1 = __importDefault(require("fs"));
-var main_1 = __importDefault(require("electron-log/main"));
 var havePrefs = function () {
     var prefsPath = path_1.default.resolve(electron_1.app.getPath('userData'), 'prefs.json');
     if (fs_1.default.existsSync(prefsPath)) {
@@ -31,7 +30,6 @@ var removePrefs = function () {
 exports.removePrefs = removePrefs;
 var setPrefs = function (jsonData) {
     var prefsPath = path_1.default.resolve(electron_1.app.getPath('userData'), 'prefs.json');
-    main_1.default.log(prefsPath);
     fs_1.default.writeFileSync(prefsPath, JSON.stringify(jsonData));
 };
 exports.setPrefs = setPrefs;
