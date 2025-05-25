@@ -1,45 +1,104 @@
-這是 DocPal 4.0 的 REPO , 
+# DocPal v4.0
 
-# 開發計劃
-這項目還在進中行，計劃分成 3 部份, 目標 1 月低前完成。
+DocPal v4.0 is a modern document management system built with Vue.js and Nuxt.js, offering advanced document handling capabilities with a microservices architecture.
 
-### 1. 測試可能性
-![[libraries/api/README#使用 Swagger 生成 Axios 和 TypeScript|用Swagger. 來生成 Axios 和Typescript]] 
+## 🚀 Features
 
-### 2. Migrate 舊頁面
-- [ ] 設計多分頁頁面
-- Client
-	![[Browse Migration task|Browse]] 
-		
-	- [ ] Collection
-	- [ ] Share
-	- [ ] Workflow
-	- [ ] 
-	- [ ] ...
-- Admin
-	- [ ] User 
-	- [ ] User Group
-	- [ ] ...
+- Document management and organization
+- User authentication and authorization (Keycloak integration)
+- Multi-language support (i18n)
+- Dark/Light mode support
+- Advanced search capabilities
+- Document sharing and collaboration
+- Workflow management
+- Administrative controls
 
-### 3. 測試和部署
+## 📁 Project Structure
+
+```
+docpal-v4/
+├── apps/                    # Application frontends
+│   ├── admin/              # Admin dashboard
+│   └── client/             # Client web application
+├── libraries/              # Shared libraries
+│   ├── api/                # Swagger-generated API client
+│   ├── eventbus/          # Event handling system
+│   └── pdf-js/            # PDF handling utilities
+├── packages/              # Core functionality packages
+│   ├── base/              # Base components and utilities
+│   ├── authApp/           # Authentication module
+│   ├── dp-search/         # Search functionality
+│   └── publicApp/         # Public-facing components
+├── pages/                 # Pages ui for admin and client
+```
+
+## 🛠️ Technology Stack
+
+- Vue.js 3
+- Nuxt.js 3
+- Element Plus UI
+- Keycloak for authentication
+- TypeScript
+- Vitest for testing
+- PNPM for package management
+
+## 🚦 Getting Started
+
+### Prerequisites
+
+- Node.js (LTS version)
+- PNPM 8.14.3 or higher
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone [repository-url]
+   cd docpal-v4
+   ```
+
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp env/.env.example env/.env
+   ```
+
+### Development
+
+To start the development server:
+
+```bash
+pnpm dev
+```
+
+To run tests:
+
+```bash
+pnpm test
+```
+
+To build for production:
+
+```bash
+pnpm build
+```
 
 
+## 📚 Documentation
 
-## 項目結構
+Additional documentation can be found in the following locations:
+- API Documentation: `libraries/api/README.md`
+- Component Library: `packages/base/README.md`
+- Authentication: `packages/authApp/README.md`
 
-- Apps
-	- Web <- 網頁客氣端
-	- Packages <- 所有功能
-		- [[apps/packages/base/README|Base]] <- 所有不用Auth 的基本模組
-			- [x] i18n
-			- [ ] colorMode
-			- [x] element-plus
-			- [x] css variable
-			- [ ] basic component
-		- [[Authapp/README|AuthApp]] <- 所有需要 Auth 的基本模組
-			- [ ] global keycloak
-			- [ ] get user
-			- [ ] refresh token
-			- [ ] 403 logou
-- Library 
-	- [[libraries/api/README|API]] <- 從 Swagger 生成來的 Axios 客戶
+## 🤝 Contributing
+
+Please read our contributing guidelines before submitting pull requests.
+
+## 📄 License
+
+[License Information]
