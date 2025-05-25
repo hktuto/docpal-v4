@@ -1,5 +1,5 @@
-export default defineNuxtPlugin(nuxtApp => {
-    nuxtApp.$i18n.onBeforeLanguageSwitch = (oldLocale, newLocale, isInitialSetup, nuxtApp) => {
+export default defineNuxtPlugin((nuxtApp:any) => {
+    nuxtApp.$i18n.onBeforeLanguageSwitch = (oldLocale:any, newLocale:any, isInitialSetup:any, nuxtApp:any) => {
       localStorage.setItem('v_form_locale', newLocale)
       const ev = new CustomEvent('localeChange', { detail: {
           locale: newLocale
