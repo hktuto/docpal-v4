@@ -1,19 +1,23 @@
 {
   "name": "desktop",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "npm run build && electron .",
+    "pack": "electron-builder --dir",
+    "predist": "pnpm -F desktop run build",
+    "dist": "electron-builder"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "electron": "^32.3.0",
+    "electron-builder": "^24.9.1",
     "electron-log": "^5.4.0",
     "eslint": "^9.27.0",
     "typescript": "^5.8.3"
