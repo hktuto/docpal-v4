@@ -10,9 +10,7 @@
   ],
   "scripts": {
     "build": "nuxt build",
-    "test": "vitest --ui --watch",
-    "test:production": "vitest",
-    "testw": "vitest run --workspace"
+    "test": "vitest --ui"
   },
   "dependencies": {
     "@vueuse/core": "^11.3.0",
@@ -20,22 +18,22 @@
     "element-plus": "2.9.6",
     "keycloak-js": "^26.2.0",
     "nuxt": "^3.17.3",
-    "nuxt-auth-utils": "^0.3.9",
+    "nuxt-auth-utils": "0.5.20",
     "vue": "3.5.6",
     "vue-inline-svg": "^3.1.4",
     "vue-router": "latest"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.19.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vitest/ui": "2.1.9",
     "@vue/test-utils": "^2.4.6",
-    "@vitest/ui": "3.1.4",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.4",
     "happy-dom": "^17.4.7",
     "playwright-core": "^1.50.1",
     "prettier": "3.5.3",
     "sass": "^1.85.0",
-    "vitest": "2.0.5"
+    "vitest": "2.1.9"
   },
   "packageManager": "pnpm@8.14.3+sha1.872b21adeaae4e71acd5c551ba848d927d6aa446"
 }
