@@ -35,17 +35,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MAIN_DIST = void 0;
+exports.createMenu = createMenu;
 var electron_1 = require("electron");
 var path_1 = __importDefault(require("path"));
-var main_1 = __importDefault(require("electron-log/main"));
 var pref_1 = require("./pref");
 var app_1 = require("./app");
-exports.MAIN_DIST = path_1.default.join(__dirname, '../dist-electron');
+exports.MAIN_DIST = path_1.default.join(__dirname, '../dist');
 // set up env
 process.env.ROOT = path_1.default.join(__dirname, '..');
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
@@ -60,7 +69,6 @@ electron_1.app.whenReady().then(function () { return __awaiter(void 0, void 0, v
             mainWindow = (0, app_1.createAppClient)(mainWindow);
         }
         else {
-            main_1.default.log("no pref");
             mainWindow = (0, pref_1.createSetPrefFrontend)(mainWindow);
         }
         return [2 /*return*/];
@@ -70,7 +78,6 @@ electron_1.app.on('window-all-closed', function () {
     electron_1.app.quit();
 });
 electron_1.ipcMain.handle('setBaseUrl', function (event, url) {
-    main_1.default.log('setBaseUrl', url);
     mainWindow.close();
     var setting = {
         "pdfReaderUrl": "https://".concat(url, "/resources/pdfjs/web/viewer.html"),
@@ -115,4 +122,57 @@ electron_1.ipcMain.handle('removeBaseUrl', function () {
 //         newWindow = null
 //     })
 // })
+function createMenu() {
+    var _this = this;
+    var isMac = process.platform === 'darwin';
+    var template = __spreadArray(__spreadArray([], (isMac ? [{
+            label: electron_1.app.name,
+            submenu: [
+                { role: 'about' },
+                { type: 'separator' },
+                { role: 'services' },
+                { type: 'separator' },
+                { role: 'hide' },
+                { role: 'hideOthers' },
+                { role: 'unhide' },
+                { type: 'separator' },
+                { role: 'quit' }
+            ]
+        }] : []), true), [
+        {
+            label: 'File',
+            submenu: [
+                isMac ? { role: 'close' } : { role: 'quit' }
+            ]
+        },
+        {
+            role: 'help',
+            submenu: [
+                {
+                    label: 'reset',
+                    click: function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            (0, pref_1.removePrefs)();
+                            console.log('removeBaseUrl');
+                            mainWindow.close();
+                            mainWindow = (0, pref_1.createSetPrefFrontend)(mainWindow);
+                            return [2 /*return*/];
+                        });
+                    }); }
+                },
+                {
+                    label: 'debug',
+                    click: function () { return __awaiter(_this, void 0, void 0, function () {
+                        return __generator(this, function (_a) {
+                            mainWindow.webContents.openDevTools();
+                            return [2 /*return*/];
+                        });
+                    }); }
+                }
+            ]
+        }
+    ], false);
+    var menu = electron_1.Menu.buildFromTemplate(template);
+    electron_1.Menu.setApplicationMenu(menu);
+}
 //# sourceMappingURL=main.js.map
