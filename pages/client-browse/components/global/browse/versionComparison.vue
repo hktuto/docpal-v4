@@ -101,7 +101,7 @@ onMounted( async() => {
           <h3 class="">{{$t('common_info')}}</h3>
           <InfoDiff ref="infoDiff" :newVersion="newVersion" :oldVersion="oldVersion"></InfoDiff>
           <h3 class="">{{$t('common_file')}}</h3>
-          <div class="flex__50 viewersContainer">
+          <div class="viewersContainer">
               <Reader ref="ReaderRef" v-bind="state.previewOldFile" ></Reader>
               <Reader ref="ReaderRef" v-bind="state.previewNewFile" ></Reader>
               <!-- <PdfViewer :doc="oldVersion"  /> -->
@@ -128,6 +128,9 @@ onMounted( async() => {
   grid-gap: 20px;
   height: 100%;
   flex: 1 0 auto;
+  &>div{
+    overflow: hidden;
+  }
 }
 h3{
   margin: 0;
@@ -146,18 +149,5 @@ main {
   font-size: 1.2rem;
   cursor: pointer;
 }
-.flex__50 {
-  display: flex;
-  &>div {
-    width: 48%;
-    margin-right: 2%;
-  }
-  :deep .pdfContainer {
-    height: calc(100vh - 170px);
-    min-height: 300px;
-  }
-  :deep .preview__container {
-    display: unset;
-  }
-}
+
 </style>
