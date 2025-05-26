@@ -24,8 +24,6 @@ import { ElNotification, ElMessage } from 'element-plus'
 import { Download, Loading } from '@element-plus/icons-vue'
 import { clientApi } from 'api'
 const props = defineProps<{ doc: any }>()
-const state = reactive({
-})
 const { displayTime } = useTime()
 const { t } = useI18n()
 const tableList = ref<any>([])
