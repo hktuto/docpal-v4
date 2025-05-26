@@ -2,6 +2,7 @@
 import { useDebounceFn } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
+import { useMagicKeys } from '@vueuse/core'
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
@@ -11,12 +12,15 @@ if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
 }
 const { selectedRows, expandedItems } = defineProps<{
-  selectedRows: any[],
+  selectedRows: any[]
   expandedItems: any[]
 }>()
 const copyDocumentList = useCopyDocumnetList()
 const tableContainer = ref<HTMLElement>()
 const emits = defineEmits(['selectedChange'])
+const lastSelectedIndex = ref(-1)
+const lastSelectedRow = ref<any>(null)
+const { shift } = useMagicKeys()
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -31,7 +35,7 @@ async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   }
 }
 
-function sortEntry(a:any, b:any) {
+function sortEntry(a: any, b: any) {
   if (a.isFolder === b.isFolder) {
     return a.name.localeCompare(b.name)
   }
@@ -41,7 +45,6 @@ function sortEntry(a:any, b:any) {
 function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
   checkList.forEach((row, index) => {
     const rowData = treeData.find((el) => el.id === row)
-    console.log("found", rowData, row)
     if (rowData) {
       if (!tableRef.value?.isTreeExpandByRow(rowData)) {
         result.push(rowData)
@@ -53,7 +56,6 @@ function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   return result
 }
 const reopenFolder = useDebounceFn(() => {
-
   if (!tableRef.value || expandedItems.length === 0) return
   const tableData = tableRef.value.getData()
   let needExpandList: any[] = resursiveLoadChild(expandedItems, tableData, [])
@@ -469,13 +471,14 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
     }
   },
-  selectChangeHander: (selectedRows: any[]) => {
+  selectChangeHander: (selectedRows: any[], selectedRow: any) => {
     // check if selectedRows is not Folder
     if (selectedRows.length === 0) {
       emits('selectedChange', [])
       return
     }
-    emits('selectedChange', selectedRows)
+    const resultSelectedRows = handleCheckboxChange(selectedRows, selectedRow)
+    emits('selectedChange', resultSelectedRows)
   },
   optionalConfig: {
     treeConfig: {
@@ -494,7 +497,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       checkStrictly: true,
       showHeader: false,
       highlight: true,
-      range: false,
       trigger: 'cell',
       visibleMethod: ({ row }: any) => row.source !== 'tempFile'
     },
@@ -532,8 +534,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         })
       }
     },
-    // cellMouseenter: ({row, column, rowIndex}) => {
-    // },
     cellMouseleave: ({ row, column, rowIndex }) => {
       emitBus(EventType.FILE_PREVIEW_CLOSE, row)
     },
@@ -556,7 +556,7 @@ const tableChildChangeHandler = useDebounceFn(() => {
     // wait for docDetail to be ready
     setTimeout(() => {
       tableChildChangeHandler()
-    }, 300);
+    }, 300)
     return
   }
   // body row may be empty when table is loading, create root drop zone first
@@ -601,7 +601,7 @@ function dblClickHandler(row: any) {
   }
   if (row.isFolder) {
     routerProvider?.updateProps({
-      expandedItems:[]
+      expandedItems: []
     })
     listProvider?.changeRoute(row.path)
   } else {
@@ -676,6 +676,47 @@ watch(
     deep: true
   }
 )
+
+function handleCheckboxChange(rows: any, selectedRow: any) {
+  if (
+    shift.value &&
+    lastSelectedIndex.value !== -1 &&
+    selectedRow.rowIndex !== lastSelectedIndex.value &&
+    lastSelectedRow.value.parentRef === selectedRow.row.parentRef
+  ) {
+    const allData = tableRef.value?.getData() || []
+    const cItem = findNodeById({ children: allData }, selectedRow.row.parentRef)
+    const startIndex = Math.min(lastSelectedIndex.value, selectedRow.rowIndex)
+    const endIndex = Math.max(lastSelectedIndex.value, selectedRow.rowIndex)
+
+    for (let i = startIndex; i <= endIndex; i++) {
+      const currentRow = cItem.children[i]
+      if (currentRow && !currentRow.isFolder && currentRow.source !== 'tempFile') {
+        tableRef.value?.setCheckboxRow(currentRow, selectedRow.checked)
+      }
+    }
+  }
+
+  lastSelectedIndex.value = selectedRow.rowIndex
+  lastSelectedRow.value = selectedRow.row
+  const selectedRows = tableRef.value?.getCheckboxRecords() || []
+  return selectedRows
+  function findNodeById(node: any, targetId) {
+    if (node.id === targetId) {
+      return node
+    }
+    
+    if (node.children && node.children.length > 0) {
+      for (const child of node.children) {
+        const found = findNodeById(child, targetId)
+        if (found) {
+          return found 
+        }
+      }
+    }
+    return null 
+  }
+}
 
 defineExpose({
   selectAll,

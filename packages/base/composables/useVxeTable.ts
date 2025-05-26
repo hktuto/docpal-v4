@@ -46,7 +46,7 @@ export interface UseVxeTableParams<R = any> {
     bodyActions?:TableMenuActions[][],
     permissionMethod?: (params:PermissionMethodParams) => {visible:boolean, disabled:boolean},
     optionalConfig?: VxeGridProps<R>,
-    selectChangeHander?:(selectedRows:any[]) => void,
+    selectChangeHander?:(selectedRows:any[], selectedRow:any) => void,
     optionalEvent?: VxeGridListeners<R>,
     childChangeHander?: (childRows: any[]) => void,
     additionalPermission?: (params:any) => Promise<any>
@@ -336,7 +336,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableEvent.checkboxChange = ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
             console.log("checkboxChange", selectedRows)
-            selectChangeHander(selectedRows)
+            selectChangeHander(selectedRows, {checked, row, rowIndex})
         }
         tableEvent.checkboxRangeChange = ({ $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
