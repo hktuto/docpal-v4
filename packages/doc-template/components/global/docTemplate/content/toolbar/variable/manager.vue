@@ -3,18 +3,22 @@ import { ref, inject } from 'vue'
 import VariableManager from '~/components/docTemplate/VariableManager.vue'
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
 
-const show = ref(false)
 const editorProvider = inject(DocTemplateProveKey)
 if (!editorProvider) throw new Error('editorProvider not found')
 const { variables } = editorProvider
+
+const variableManagerRef = ref()
+
+const show = () => {
+  variableManagerRef.value.open()
+}
 </script>
 
 <template>
   <div>
-    <el-button size="small" @click="show = true">Variables</el-button>
+    <el-button size="small" @click="show">{{ $t('docTemplate.variableManager.title') }}</el-button>
     <VariableManager
-      :visible="show"
-      @close="show = false"
+      ref="variableManagerRef"
     />
   </div>
 </template> 

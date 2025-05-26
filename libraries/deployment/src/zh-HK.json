@@ -345,7 +345,7 @@
     "condition": "條件",
     "groupName": "群組名稱",
     "value": "填值",
-    "value_tip": "使用“currentUser”可當用戶ID為值"
+    "value_tip": "使用'currentUser'可當用戶ID為值"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
@@ -704,7 +704,7 @@
       "letterValidator": "字母",
       "loadFormTemplate": "加载此模板",
       "loadFormTemplateFailed": "表单模板加载失败",
-      "loadFormTemplateHint": "是否加载这个模板？加载后会覆盖设计器当前表单，你可以使用“撤销”功能恢复。",
+      "loadFormTemplateHint": "是否加载这个模板？加载后会覆盖设计器当前表单，你可以使用'撤销'功能恢复。",
       "loadFormTemplateSuccess": "表单模板加载成功",
       "mobilePhoneValidator": "手机号码",
       "moveDownLastChildHint": "已经移动到最下面",
@@ -1625,7 +1625,7 @@
     "notFound": "找不到文件夾模板",
     "previewName": "預覽文件櫃名稱",
     "repeatName": "如果檔案名稱存在則替換",
-    "repeatNameTip": "如果替換為“否”，則將向檔案新增增量編號",
+    "repeatNameTip": "如果替換為\"否\"，則將向檔案新增增量編號",
     "uploadList": "上傳列表",
     "workflowTip": "以下工作流程使用此櫃體，請確保設定正確。"
   },
@@ -2406,7 +2406,7 @@
     "addToCollection": "添加到收藏夾",
     "addToShare": "添加到分享隊列",
     "adhocHistory": "Adhoc 任務記錄",
-    "attributeNameFillingRule": "必須以字母或底線開頭、可帶數字、“_”",
+    "attributeNameFillingRule": "必須以字母或底線開頭、可帶數字、\"_\"",
     "attributeNameFillingRuleDisabled": "含禁用字段",
     "beforeunload": "系統可能不會保存您所做的更改。",
     "cabinetNotFound": "文件櫃異常，請聯絡管理員",
@@ -3424,5 +3424,41 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容"
+  "檔案內容": "檔案內容",
+  "docTemplate": {
+    "variableManager": {
+      "title": "變量管理",
+      "currentVariables": "當前變量",
+      "addNew": "添加新變量",
+      "addNewTitle": "添加新變量",
+      "key": "鍵名",
+      "type": "類型",
+      "value": "值",
+      "selectType": "選擇類型",
+      "add": "添加",
+      "types": {
+        "text": "文本",
+        "paragraph": "段落",
+        "documentId": "文檔ID",
+        "caseId": "案例ID",
+        "workflowId": "工作流ID",
+        "email": "電子郵件",
+        "website": "網站",
+        "table": "表格"
+      },
+      "keyRequired": "鍵名為必填項",
+      "duplicateKey": "該鍵名已存在，請使用其他鍵名",
+      "dataType": "數據類型",
+      "selectDataType": "選擇數據類型",
+      "dataTypes": {
+        "string": "字符串",
+        "number": "數字",
+        "boolean": "布爾值",
+        "array": "數組",
+        "object": "對象"
+      },
+      "insertVariable": "插入變量",
+      "selectVariable": "選擇變量"
+    }
+  }
 }
