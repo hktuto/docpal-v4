@@ -4,20 +4,27 @@
     title="Manage Variables"
     direction="rtl"
     size="30%"
+    :modal="false"
     @close="$emit('close')"
   >
     <div >
       <h3>Current Variables</h3>
-      <el-table v-if="editorProvider && editorProvider.variables" :data="editorProvider.variables" style="width: 100%">
-        <el-table-column prop="key" label="Key" />
-        <el-table-column prop="type" label="Type" />
-        <el-table-column prop="dataType" label="Data Type" />
-        <el-table-column prop="value" label="Value" />
-      </el-table>
+      {{editorProvider?.variables?.value}}
+      <vxe-grid
+        ref="tableRef"
+        v-bind="tableConfig"
+        v-on="tableEvent"
+      >
+        <template #toolbar_buttons>
+
+        </template>
+      </vxe-grid>
     </div>
     <el-divider />
     <div>
-      <h3>Add New Variable</h3>
+      <el-button type="primary" @click="addDialogVisible = true">Add New Variable</el-button>
+    </div>
+    <el-dialog v-model="addDialogVisible" title="Add New Variable" width="400px" @close="resetForm">
       <el-form :model="newVar" label-width="80px">
         <el-form-item label="Key">
           <el-input v-model="newVar.key" />
@@ -39,16 +46,20 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submit">Add</el-button>
+          <el-button @click="addDialogVisible = false">Cancel</el-button>
         </el-form-item>
       </el-form>
-    </div>
+    </el-dialog>
   </el-drawer>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from 'vue'
-const editorProvider = inject(DocTemplateProveKey)
+import { ref, watch, defineProps, defineEmits, inject } from 'vue'
+import { DocTemplateProveKey } from '../../utils/docTempalteHelper'
+import { useVxeTable } from '../../../base/composables/useVxeTable'
 
+const editorProvider = inject(DocTemplateProveKey)
+const opened = ref(false);
 if (!editorProvider) throw new Error('editorProvider not found')
 const props = defineProps({
   visible: Boolean,
@@ -62,9 +73,37 @@ const newVar = ref<VariableItem>({
   value: ''
 })
 
+const addDialogVisible = ref(false)
+
+const columns = [
+  { field: 'key', title: 'Key', minWidth: 100 },
+  { field: 'type', title: 'Type', minWidth: 100 },
+  { field: 'dataType', title: 'Data Type', minWidth: 100 },
+  { field: 'value', title: 'Value', minWidth: 100 },
+]
+
+
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
+  id: 'variable-table',
+  api: () => {
+    return editorProvider?.variables?.value
+  },
+  columns: columns,
+  virtualScroll: true,
+  saveColumnOrder: false,
+  height: '300px',
+})
+
 function submit() {
   editorProvider?.addVariable(newVar.value)
+  resetForm()
+  addDialogVisible.value = false
+  reload()
+}
+
+function resetForm() {
   newVar.value = { key: '', type: 'Text', dataType: 'string', value: '' }
 }
+
 
 </script> 
