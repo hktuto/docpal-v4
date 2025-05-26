@@ -14,7 +14,6 @@ const { variables } = editorProvider
     <el-button size="small" @click="show = true">Variables</el-button>
     <VariableManager
       :visible="show"
-      :variables="variables"
       @close="show = false"
     />
   </div>

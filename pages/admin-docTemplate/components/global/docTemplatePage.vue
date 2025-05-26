@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {TipTapOptions} from 'docpal-document-editor'
+import type {TipTapOptions} from 'docpal-document-editor/src/types'
 const pageReady = ref(false)
 
 const json = ref({})
