@@ -86,6 +86,10 @@ function handleFixTables() {
   editor.value.chain().focus().fixTables().run()
 }
 
+function handleToggleBorder(){
+  editor.value.commands.toggleBorder();
+}
+
 </script>
 
 <template>
@@ -175,6 +179,10 @@ function handleFixTables() {
 <!--    <el-button @click="handleFixTables">-->
     <!--      Fix-->
     <!--    </el-button>-->
+
+    <el-button @click="handleToggleBorder">
+          border
+        </el-button>
 
 
   </div>
