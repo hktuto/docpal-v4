@@ -116,6 +116,13 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
           break
       }
       lastSelection.value = newSelectionData
+    },
+    onCreate({editor}) {
+      // update page setting base on normlizeOption
+      console.log(editor)
+      if(normlizeOption.mode === 'PAGE' && normlizeOption?.pageSetting?.defaultMarginConfig) {
+        editor.commands.setDocumentPageMargins(normlizeOption?.pageSetting?.defaultMarginConfig)
+      }
     }
   })
   options.value = { ...normlizeOption }
