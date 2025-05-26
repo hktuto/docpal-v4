@@ -120,6 +120,14 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   headerRef.value.init(normlizeOption)
 }
 
+function addVariable(variable: VariableItem) {
+  variables.value.push(variable)
+}
+
+function removeVariable(variable: VariableItem) {
+  variables.value = variables.value.filter(v => v.key !== variable.key)
+}
+
 onMounted(() => {
   initEditor(props.editorOptions)
 })
@@ -133,6 +141,8 @@ provide(DocTemplateProveKey, {
   options,
   initEditor,
   variables,
+  addVariable,
+  removeVariable,
   lastSelection
 })
 </script>
