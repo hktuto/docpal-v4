@@ -48,7 +48,7 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
       tools: [
         {
           name: "Variable",
-          components: 'lazyDocTemplateContentToolbarVariableToolbar'
+          components: 'DocTemplateContentToolbarVariableManager'
         }
       ]
     },

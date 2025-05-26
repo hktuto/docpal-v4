@@ -1,5 +1,5 @@
 import type { InjectionKey } from "vue";
-import type { TipTapOptions } from "./tiptapHelper";
+import type { TipTapOptions } from "docpal-document-editor";
 
 export type DocOptions = {
   docOptions: DocumentOptions,
@@ -103,7 +103,9 @@ interface DocTemplateProvider {
   options: Ref<TipTapOptions, TipTapOptions>,
   initEditor: (options:TipTapOptions) => void,
   lastSelection: Ref<LastSelection | null | undefined>,
-  variables : Ref<VariableItem[]>
+  variables : Ref<VariableItem[]>,
+  addVariable: (variable: VariableItem) => void,
+  removeVariable: (variable: VariableItem) => void
 }
 
 export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')
