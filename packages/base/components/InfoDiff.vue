@@ -34,22 +34,14 @@ const props = defineProps<{
     } 
     function handleDoc (doc):string {
       let result = "";
-      doc.version = versionGet(doc)
+      doc.version = doc.version
       doc.modifiedDate = displayTime(doc.modifiedDate)
-      doc.contributors = doc.properties['dc:contributors'] ? doc.properties['dc:contributors'].join(',') : ""
+      doc.contributors = doc.contributors ? doc.contributors.join(',') : ""
       displayInfo.forEach((item: any) => {
         result +=  `${item.label}：${doc[item.key]}\n`
       })
       return result;
     }
-
-    function versionGet (doc) {
-      const major_version = doc?.properties?.['uid:major_version'] || 0
-      const minor_version = doc?.properties?.['uid:minor_version'] || 0
-      const plus = doc.isCheckedOut ? '+' : ''
-      return major_version + '.' + minor_version + plus
-    }
-
     defineExpose({
       handleData
     })

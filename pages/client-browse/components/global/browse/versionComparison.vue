@@ -42,7 +42,7 @@ const state = reactive({
 
 const back = () => {
     const newItem = createDetailPageParams({
-        idOrPath: newVersion.value.path,
+        idOrPath: newVersion.value.id,
         docName: newVersion.value.name,
         showHeaderAction: true
     })
@@ -82,7 +82,7 @@ onMounted( async() => {
 <template>
 <div class="versionPageContainer">  
 
-    <div class="flex__50 padding">
+    <div class="viewersContainer padding">
             <VersionHeader :doc="oldVersion" :canRestore="true" >
                 <ElTooltip :content="$t('common_back')" placement="top">
                     <Icon name="tabler:arrow-back" @click="back" class=""/>
