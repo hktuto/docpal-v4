@@ -545,5 +545,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 }
 
 function getPageSize(id: string){
-  return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
+  try {
+    return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
+  } catch (error) {
+    console.error(error)
+    return 20
+  }
 }
