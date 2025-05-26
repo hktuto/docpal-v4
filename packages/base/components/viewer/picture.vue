@@ -38,13 +38,15 @@ function show(){
 </script>
 
 <template>
+<div class="pictureContainer">
   <div class="viewerContainer" v-viewer="renderOptions">
     <img v-for="src in images" :src="src" :key="src" hidden @error="$emit('fail')">
   </div>
+</div>
 </template>
 
 <style scoped lang="scss">
-.viewerContainer{
+.pictureContainer, .viewerContainer{
   width: 100%;
   height: 100%;
 }
