@@ -11,7 +11,7 @@
       <template v-slot:namingRule>
         <div>{{ $t('tableHeader_labelRule') }}：
           <template v-for="(item, index) in getLabelList(state.cabinetTemplate.labelRule)" :key="index">
-            <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
+            <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
             <template v-if="index !== getLabelList(state.cabinetTemplate.labelRule).length - 1"> -</template>
           </template>
         </div>
@@ -119,6 +119,7 @@ async function getMetaName() {
     const metadataForm = await MetaFormRef.value.getData()
     if (data) formData = { ...formData, ...data, ...metadataForm,  }
     formData.docName = formData.title
+    formData.label = state.setting.label || state.setting.docName || ""
   } catch (error) {
     console.error(error)
   }

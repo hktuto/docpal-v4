@@ -7,7 +7,7 @@
     </template>
     <div>{{ $t('tableHeader_labelRule') }}：
       <template v-for="(item, index) in getLabelList(state.setting.labelRule)" :key="index">
-        <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
+        <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
         <template v-if="index !== getLabelList(state.setting.labelRule).length - 1"> -</template>
       </template>
     </div>
@@ -47,6 +47,7 @@ function getMetaName(formData: any = {}) {
   } catch (error) {
 
   }
+  console.log('getMetaName', formData)
   const labelRules = getLabelList(state.setting.labelRule)
   return getNameByLabelRule(labelRules, formData)
 }
