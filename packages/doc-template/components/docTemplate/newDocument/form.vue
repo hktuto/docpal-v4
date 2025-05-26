@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import  { type TipTapOptions, defaultPageSetting} from "docpal-document-editor"
+import { defaultPageSetting } from "docpal-document-editor/src/utils"
+import  { type TipTapOptions} from "docpal-document-editor/src/types"
 import {paperSizes} from "tiptap-extension-pagination"
 
 const emits = defineEmits(['submit'])

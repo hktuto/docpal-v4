@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
-import { normalizeTipTapOptions, clientEditorExtensions, defaultPageSetting, type TipTapOptions } from 'docpal-document-editor'
+import {type TipTapOptions} from 'docpal-document-editor/src/types' 
+import { defaultPageSetting} from 'docpal-document-editor/src/utils'
+import { normalizeTipTapOptions, clientEditorExtensions  } from 'docpal-document-editor/src/client'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import * as Y from 'yjs'
