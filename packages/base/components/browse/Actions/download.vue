@@ -78,7 +78,7 @@ async function handleDownload(doc) {
       <el-button v-if="isPdf" type="text" @click="downloadPdfAndAnnotationHandler">Download PDF with annotation
       </el-button>
       <BrowseActionsDownloadConversion v-if="checkLicenseFeatures('DOCUMENT_CONVERSION')"
-                                       :doc="doc"></BrowseActionsDownloadConversion>
+                                       :doc="doc" @success="popupOpened = false"></BrowseActionsDownloadConversion>
     </div>
   </ElDialog>
 </template>
