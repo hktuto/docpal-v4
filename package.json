@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "build": "nuxt build",
-    "test": "vitest --ui --watch",
+    "test": "vitest --ui",
     "test:production": "vitest",
     "testw": "vitest run --workspace"
   },
