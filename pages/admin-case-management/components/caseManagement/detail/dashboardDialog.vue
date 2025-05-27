@@ -37,7 +37,7 @@ const FormRendererRef = ref()
 
 async function handleSubmit() {
   // try {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   const params = {
     caseTypeId: props.caseDetail.id,
     label: data.label,

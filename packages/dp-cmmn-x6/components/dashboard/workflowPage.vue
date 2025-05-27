@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
+    v-loading="loading"
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
     :title="$t('dashboard.cmmnWorkflowPage')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div style="width: 100%; height: 100%; overflow: hidden; position: relative">
       <VxeGrid v-if="CMDProvider?.instanceId" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
@@ -42,7 +44,7 @@ const state = reactive<any>({
 
 const CMDProvider = inject(CaseManagementDashboardKey)
 
-const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'case-management-dashboard-table',
   api: (params: any) => {
     params = {
@@ -92,7 +94,7 @@ function handleFilterFormChange(formModel: any) {
 }
 
 async function handleDblclick(row: any) {
-  if(!routeWorkflowDetail) return
+  if (!routeWorkflowDetail) return
   try {
     state.loading = true
     const newItem = routeWorkflowDetail({
@@ -102,7 +104,7 @@ async function handleDblclick(row: any) {
     routerProvider?.navigateTo(newItem)
     // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
   } catch (error: any) {
-    throw new Error(error);
+    throw new Error(error)
   } finally {
     setTimeout(() => {
       state.loading = false
@@ -122,7 +124,13 @@ async function initCondition() {
   } catch (error) {}
 }
 // #endregion
-
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    query({})
+    initCondition()
+  }
+})
 onMounted(() => {
   initCondition()
 })

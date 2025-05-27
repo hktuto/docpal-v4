@@ -254,7 +254,11 @@ function reloadComponent() {
   })
 }
 
+<<<<<<< HEAD
 function handleErr(err){
+=======
+function handleError(err){
+>>>>>>> 279fe80a4c9a8a1b4dafa1ebbce3558e0c519f3a
   console.log(err)
 }
 
@@ -298,9 +302,14 @@ onUnmounted(() => {
       </div>
     </Teleport>
 
+<<<<<<< HEAD
     <template v-if="tab.initized">
+=======
+    <template v-if="tab.initized && renderComponent">
+>>>>>>> 279fe80a4c9a8a1b4dafa1ebbce3558e0c519f3a
       <Transition>
           <Suspense>
+<<<<<<< HEAD
             <template v-if="!tab.handleError" >
             <NuxtErrorBoundary ref="errorBoundary" @error="handleErr">
               <component v-if="renderComponent" :is="tab.component" :tab="tab" v-bind="tab.props" />
@@ -325,6 +334,9 @@ onUnmounted(() => {
             <template v-else>
               <component v-if="renderComponent"  :is="tab.component" :tab="tab" v-bind="tab.props" />
             </template>
+=======
+            <component :is="tab.component" :tab="tab" v-bind="tab.props" />
+>>>>>>> 279fe80a4c9a8a1b4dafa1ebbce3558e0c519f3a
             <template #fallback>
               <LoadingBgInline />
             </template>

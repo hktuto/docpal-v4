@@ -30,7 +30,7 @@ const FormRendererRef = ref()
 // #region module: handleSubmit
 async function handleSubmit() {
   // 获取 v-form 数据
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const formData = await FormRendererRef.value.getFormData()
   state.loading = true
   try {
     let result = false

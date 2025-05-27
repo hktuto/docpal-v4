@@ -1,5 +1,6 @@
 <template>
   <DashboardCard
+    v-loading="loading"
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
@@ -7,6 +8,7 @@
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div class="flex-zoom">
       <div :style="`--field-width: ${item.width}`" class="list-group-item" v-for="item in state.layout">
@@ -47,19 +49,6 @@ const caseProvider: any = inject(CaseManagementDashboardKey)
 const emits = defineEmits(['refreshSetting', 'delete'])
 const { t } = useI18n()
 
-const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
-onMounted(() => {
-  refreshBus.on(needRefresh)
-})
-onUnmounted(() => {
-  refreshBus.off(needRefresh)
-})
-function needRefresh(detail: any) {
-  const caseId = caseProvider.instanceId?.value || null
-  if (detail.caseId === caseId) {
-    initLayout()
-  }
-}
 
 function displayValue(item: any) {
   if (platform === 'admin') {
@@ -82,7 +71,6 @@ const state = reactive<any>({
   mode: 'develop'
 })
 // #region module: dialog
-const settingRef = ref()
 
 function handleDelete() {
   emits('delete')
@@ -137,41 +125,39 @@ async function getCDBasciInfo() {
     return state.data
   }
 }
-async function initLayout() {
-  const data = await getCDBasciInfo()
-  state.layout = props.setting.layout.reduce((prev: any, item: any) => {
-    const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleInitCardAction: async (setting: any) => {
+    const data = await getCDBasciInfo()
+    state.layout = setting.layout.reduce((prev: any, item: any) => {
+      const _item = data.rows.find((d: any) => d.id === item.id) // 获取 item.value
 
-    if (_item) {
-      if (!item.width) item.width = '50%'
-      prev.push({ ...item, ..._item })
-    } else {
-      prev.push({ ...item })
-    }
-    return prev
-  }, [])
-  if (!props.setting.defaultValue) props.setting.defaultValue = {}
-  state.defaultValue = props.setting.defaultValue
-  state.label = props.setting.label || {}
-}
-
-watchDebounced(
-  () => props.setting.layout,
-  (newValue, oldValue) => {
-    setTimeout(() => {
-      if (!!newValue) {
-        // if(oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) return
-        initLayout()
+      if (_item) {
+        if (!item.width) item.width = '50%'
+        prev.push({ ...item, ..._item })
+      } else {
+        prev.push({ ...item })
       }
-    })
-  },
-  {
-    debounce: 200,
-    maxWait: 500,
-    deep: true,
-    immediate: true
+      return prev
+    }, [])
+    if (!setting.defaultValue) setting.defaultValue = {}
+    state.defaultValue = setting.defaultValue
+    state.label = setting.label || {}
   }
-)
+})
+const refreshBus = useEventBus(EventType.CASE_NEED_REFRESH)
+onMounted(() => {
+  refreshBus.on(needRefresh)
+})
+onUnmounted(() => {
+  refreshBus.off(needRefresh)
+})
+function needRefresh(detail: any) {
+  const caseId = caseProvider.instanceId?.value || null
+  if (detail.caseId === caseId) {
+    refresh()
+  }
+}
 </script>
 <style lang="scss" scoped>
 :deep .flex-zoom {

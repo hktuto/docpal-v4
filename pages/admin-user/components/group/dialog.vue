@@ -27,7 +27,7 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   if (!data.groupId || !data.groupName) {
     ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
     return

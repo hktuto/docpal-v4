@@ -156,7 +156,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     tooltipConfig: {
       contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }: any) => {
         const key = column.property
-        const value = row[key]
+        const value = row[key] ?? ""
         if (key === 'groupDTOList') {
           return value.map((item: any) => item.name).join(', ')
         }
