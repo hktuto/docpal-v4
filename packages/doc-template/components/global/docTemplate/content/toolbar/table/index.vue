@@ -86,8 +86,13 @@ function handleFixTables() {
   editor.value.chain().focus().fixTables().run()
 }
 
-function handleToggleBorder(){
-  editor.value.commands.updateAttributes('table', { border: "1" });
+function handleClearBoundaries() {
+  editor.value.commands.updateAttributes('table',{ border: '0'})
+  // editor.value.commands.()
+}
+
+function handleShowBoundaries() {
+  editor.value.commands.updateAttributes('table',{ border: '1'})
 }
 
 </script>
@@ -176,14 +181,17 @@ function handleToggleBorder(){
       </el-button-group>
     </div>
 
-<!--    <el-button @click="handleFixTables">-->
+    <!--    <el-button @click="handleFixTables">-->
     <!--      Fix-->
     <!--    </el-button>-->
 
-    <el-button @click="handleToggleBorder">
-          border
-        </el-button>
+    <el-button @click="handleClearBoundaries">
+      Clear boundaries
+    </el-button>
 
+    <el-button @click="handleShowBoundaries">
+      Show boundaries
+    </el-button>
 
   </div>
 
