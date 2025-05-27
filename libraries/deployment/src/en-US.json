@@ -3460,7 +3460,15 @@
         "object": "Object"
       },
       "insertVariable": "Insert Variable",
-      "selectVariable": "Select Variable"
+      "selectVariable": "Select or Create Variable"
+    },
+    "textManager": {
+      "insertText": "Insert Text",
+      "selectText": "Select or Create Text"
+    },
+    "paragraphManager": {
+      "insertParagraph": "Insert Paragraph",
+      "selectParagraph": "Select or Create Paragraph"
     }
   }
 }
