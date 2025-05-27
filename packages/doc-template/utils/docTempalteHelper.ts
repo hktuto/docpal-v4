@@ -54,43 +54,36 @@ export type DocTool = {
 export const variableType = [
   {
     type: 'Text',
-    dataType: 'string',
   },
   {
     type: 'Paragraph',
-    dataType: 'string',
   },
   {
     type: 'documentId',
-    dataType: 'string',
   },
    {
     type: "CaseId",
-    dataType: "string",
   },
   {
     type: "WorkflowId",
-    dataType: "string", 
   },
   {
     type: "Email",
-    dataType: "string",
   },
     {
     type: "Website",
-    dataType: "string", 
   },
   {
     type : "Table",
-    dataType: "list",
   }
 ]
 
 export type VariableItem = {
   type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
-  dataType: "string" | "list",
+  isMultiple: boolean,
   key: string,
-  value: any
+  value: any,
+  update?: boolean // or specify the correct type if it's a function or other type
 }
 
 export type LastSelection = {

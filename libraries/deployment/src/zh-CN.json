@@ -3458,7 +3458,15 @@
         "object": "对象"
       },
       "insertVariable": "插入变量",
-      "selectVariable": "选择变量"
+      "selectVariable": "选择或创建变量"
+    },
+    "textManager": {
+      "insertText": "插入文本",
+      "selectText": "选择或创建文本"
+    },
+    "paragraphManager": {
+      "insertParagraph": "插入段落",
+      "selectParagraph": "选择或创建段落"
     }
   }
 }

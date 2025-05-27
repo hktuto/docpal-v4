@@ -74,23 +74,23 @@ function insertVariable(variableName?: string) {
 <template>
   <div>
     <el-button size="small" @click="dialogVisible = true">
-      {{ $t('docTemplate.variableManager.insertVariable') }}
+      {{ $t('docTemplate.textManager.insertText') }}
     </el-button>
 
     <el-dialog
       v-model="dialogVisible"
-      :title="$t('docTemplate.variableManager.insertVariable')"
+      :title="$t('docTemplate.textManager.insertText')"
       width="400px"
       destroy-on-close
     >
       <el-form label-position="top">
-        <el-form-item :label="$t('docTemplate.variableManager.selectVariable')">
+        <el-form-item :label="$t('docTemplate.textManager.selectText')">
           <el-select
             v-model="selectedVariable"
             filterable
             allow-create
             default-first-option
-            :placeholder="$t('docTemplate.variableManager.selectVariable')"
+            :placeholder="$t('docTemplate.textManager.selectText')"
             style="width: 100%"
             @change="handleVariableSelect"
           >
@@ -123,4 +123,4 @@ function insertVariable(variableName?: string) {
       @variable-added="handleVariableAdded"
     />
   </div>
-</template> 
+</template>

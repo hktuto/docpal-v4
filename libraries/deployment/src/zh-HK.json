@@ -3457,8 +3457,16 @@
         "array": "數組",
         "object": "對象"
       },
-      "insertVariable": "插入變量",
-      "selectVariable": "選擇變量"
+      "insertVariable": "插入變數",
+      "selectVariable": "選擇或創建變數"
+    },
+    "textManager": {
+      "insertText": "插入文字",
+      "selectText": "選擇或創建文字"
+    },
+    "paragraphManager": {
+      "insertParagraph": "插入段落",
+      "selectParagraph": "選擇或創建段落"
     }
   }
 }
