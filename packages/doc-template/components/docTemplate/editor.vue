@@ -44,16 +44,7 @@ const options = ref<TipTapOptions>({
 })
 const editor = ref()
 const room = ref("12345")
-function normalizeJson(option: TipTapOptions, json?: any) {
-  if (json) {
-    return json
-  }
-  if (option.mode === 'PAGE') {
-    return ''
-  } else {
-    return ''
-  }
-}
+
 
 export type LastSelection = {
   type: 'text' | 'textRange' | 'image'
@@ -80,16 +71,9 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   if(initOptions.editable) {
   }
   editor.value = new Editor({
-    content: normalizeJson(normlizeOption, json),
+    content: json || "",
     extensions:[
       ...extensions,
-      Collaboration.configure({
-        document: ydoc,
-      }),
-      CollaborationCursor.configure({
-        provider,
-        user: { name: props.user.username, color: "#ffcc00" },
-      }),
     ],
     onSelectionUpdate({ editor }) {
       const selection = editor.state.selection as any
