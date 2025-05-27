@@ -73,6 +73,7 @@ const defaultFormJson = {
 const FormRendererRef = ref()
 // #region module: set
 async function setForm(json: string | object, data?: object, properties: any[] = [], xml?: string) {
+  console.log('setForm', json, data, properties, xml)
   if (JSON.stringify(json) === '{}') {
     FormRendererRef.value.setFormJson(defaultFormJson)
     return
@@ -82,6 +83,7 @@ async function setForm(json: string | object, data?: object, properties: any[] =
   if (data && properties) {
     const _data = await handleData(data)
     state.formData = { ..._data }
+
     FormRendererRef.value.setFormData(_data)
     handleTypeIds(properties)
   } else {

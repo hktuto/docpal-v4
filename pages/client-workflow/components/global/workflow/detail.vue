@@ -106,6 +106,7 @@ async function handleFormDataGet() {
       const properties = await clientApi.api.postWorkflowProperties({ taskId: id }).then((res) => res.data)
 
       formData = formDataGetFromProps(properties)
+      console.log('formData', formData)
       formJson = await formJsonGet(
         state.taskDetail.taskDefinitionKey,
         state.taskDetail.taskInstance.processDefinitionKey,

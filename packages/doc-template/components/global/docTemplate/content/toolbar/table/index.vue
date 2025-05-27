@@ -3,12 +3,14 @@ import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
 
 const { editor, options, initEditor } = inject(DocTemplateProveKey)
 const { t } = useI18n()
+const fontPredefineBackgroundColors = ref(['#FFFFFF', '#97FC00', '#00DDFF'])
 
 const state = reactive({
   createTablePopoverVisible: false,
   tableRow: 3,
   tableCol: 3,
-  withHeaderRow: ref(true)
+  withHeaderRow: ref(true),
+  tableBackgroundColor: '#FFFFFF'
 })
 
 function handlePopoverCreateTable() {
@@ -86,8 +88,24 @@ function handleFixTables() {
   editor.value.chain().focus().fixTables().run()
 }
 
-function handleToggleBorder(){
-  editor.value.commands.updateAttributes('table', { border: "1" });
+function handleClearOuterBoundaries() {
+  editor.value.commands.updateAttributes('table', { border: '0' })
+}
+
+function handleShowOuterBoundaries() {
+  editor.value.commands.updateAttributes('table', { border: '1' })
+}
+
+function handleClearInnerBoundaries() {
+  editor.value.chain().focus().setCellAttribute('border', 'none;')
+}
+
+function handleShowInnerBoundaries() {
+  editor.value.chain().focus().setCellAttribute('border', '1px solid black;')
+}
+
+function handleBackgroundColor(backgroundColor: string) {
+  editor.value.chain().focus().setCellAttribute('backgroundColor', backgroundColor).run()
 }
 
 </script>
@@ -176,14 +194,39 @@ function handleToggleBorder(){
       </el-button-group>
     </div>
 
-<!--    <el-button @click="handleFixTables">-->
+    <!--    <el-button @click="handleFixTables">-->
     <!--      Fix-->
     <!--    </el-button>-->
 
-    <el-button @click="handleToggleBorder">
-          border
-        </el-button>
+    <el-button @click="handleClearOuterBoundaries">
+      Clear Outer Boundaries
+    </el-button>
 
+    <el-button @click="handleShowOuterBoundaries">
+      Show Outer Boundaries
+    </el-button>
+
+    <el-button @click="handleClearInnerBoundaries">
+      Clear Inner Boundaries
+    </el-button>
+
+    <el-button @click="handleShowInnerBoundaries">
+      Show Inner Boundaries
+    </el-button>
+
+    <!--    <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">-->
+    <!--      Set Background Color-->
+    <!--    </el-button>-->
+
+    <el-button-group>
+      <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">
+        <p>Set Table Background Color</p>
+      </el-button>
+      <el-button style="width: 12%;">
+        <el-color-picker v-model="state.tableBackgroundColor" :predefine="fontPredefineBackgroundColors"
+                         @blur="handleBackgroundColor(state.tableBackgroundColor)" />
+      </el-button>
+    </el-button-group>
 
   </div>
 

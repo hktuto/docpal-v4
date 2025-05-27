@@ -15,7 +15,7 @@ const state = reactive({})
 <template>
   <bubble-menu
     :editor="editor"
-    :tippy-options="{ duration: 500 }"
+    :tippy-options="{ duration: 500, zIndex:11 }"
     v-if="editor"
     style="width: auto"
   >

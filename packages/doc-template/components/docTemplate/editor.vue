@@ -12,9 +12,10 @@ import { HocuspocusProvider } from '@hocuspocus/provider'
 
 export type VariableItem = {
   type: 'Text' | 'Paragraph' | 'documentId' | 'CaseId' | 'WorkflowId' | 'Email' | 'Website' | 'Table'
-  dataType: 'string' | 'list'
   key: string
   value: any
+  isMultiple?: boolean
+  update?: boolean // or the correct type
 }
 
 const props = defineProps<{
