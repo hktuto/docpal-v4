@@ -254,7 +254,7 @@ function reloadComponent() {
   })
 }
 
-function handleError(err){
+function handleErr(err){
   console.log(err)
 }
 

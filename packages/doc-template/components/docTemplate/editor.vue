@@ -133,9 +133,15 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
 function addVariable(variable: VariableItem) {
   variables.value.push(variable)
 }
-
+function updateVariable(variable: VariableItem) {
+  variables.value = variables.value.map(v => v.key === variable.key ? variable : v)
+}
 function removeVariable(variable: VariableItem) {
-  variables.value = variables.value.filter(v => v.key !== variable.key)
+  // find index of variable
+  const index = variables.value.findIndex(v => v.key === variable.key)
+  if (index !== -1) {
+    variables.value.splice(index, 1)
+  }
 }
 
 onMounted(() => {
@@ -153,7 +159,8 @@ provide(DocTemplateProveKey, {
   variables,
   addVariable,
   removeVariable,
-  lastSelection
+  lastSelection,
+  updateVariable
 })
 </script>
 

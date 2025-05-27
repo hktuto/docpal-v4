@@ -78,14 +78,6 @@ export const variableType = [
   }
 ]
 
-export type VariableItem = {
-  type : "Text" | "Paragraph" | "documentId" | "CaseId" | "WorkflowId" | "Email" | "Website" | "Table",
-  isMultiple: boolean,
-  key: string,
-  value: any,
-  update?: boolean // or specify the correct type if it's a function or other type
-}
-
 export type LastSelection = {
   type: "text" | "textRange" | "image",
   data: any
@@ -98,7 +90,8 @@ interface DocTemplateProvider {
   lastSelection: Ref<LastSelection | null | undefined>,
   variables : Ref<VariableItem[]>,
   addVariable: (variable: VariableItem) => void,
-  removeVariable: (variable: VariableItem) => void
+  removeVariable: (variable: VariableItem) => void,
+  updateVariable?: (variable: VariableItem) => void
 }
 
 export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('DocTemplateProvide')
