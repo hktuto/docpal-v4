@@ -21,6 +21,7 @@ const state = reactive<{ name: string; loading: boolean }>({
 const { t } = useI18n()
 
 async function handleSave() {
+  state.name = state.name.trim()
   if (!state.name) {
     routerProvider?.message.error(t('master.setting.name') + t('render.hint.fieldRequired'))
     return
