@@ -67,7 +67,8 @@ async function handleDownload(row: any) {
       { documentId: props.doc.id, fileContentId: row.content },
       {
         type: 'application/json',
-        timeout: 0
+        timeout: 0,
+        format: 'blob'
       }
     )
     downloadBlob(response, name)
