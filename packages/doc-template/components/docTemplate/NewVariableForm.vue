@@ -22,15 +22,6 @@
           <el-option :label="$t('docTemplate.variableManager.types.table')" value="Table" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('docTemplate.variableManager.dataType')">
-        <el-select v-model="newVar.dataType" :placeholder="$t('docTemplate.variableManager.selectDataType')">
-          <el-option :label="$t('docTemplate.variableManager.dataTypes.string')" value="string" />
-          <el-option :label="$t('docTemplate.variableManager.dataTypes.number')" value="number" />
-          <el-option :label="$t('docTemplate.variableManager.dataTypes.boolean')" value="boolean" />
-          <el-option :label="$t('docTemplate.variableManager.dataTypes.array')" value="array" />
-          <el-option :label="$t('docTemplate.variableManager.dataTypes.object')" value="object" />
-        </el-select>
-      </el-form-item>
       <el-form-item :label="$t('docTemplate.variableManager.value')">
         <el-input v-model="newVar.value" />
       </el-form-item>
@@ -50,8 +41,9 @@ import { DocTemplateProveKey } from '../../utils/docTempalteHelper'
 interface VariableItem {
   key: string
   type: string
-  dataType: string
   value: string
+  isMultiple?: boolean
+  update?: boolean
 }
 
 const { t } = useI18n()
@@ -73,8 +65,9 @@ const formRef = ref()
 const newVar = ref<VariableItem>({
   key: '',
   type: 'Text',
-  dataType: 'string',
-  value: ''
+  value: '',
+  isMultiple: false,
+  update: false
 })
 
 const rules = {
@@ -118,7 +111,7 @@ function handleClose() {
 }
 
 function resetForm() {
-  newVar.value = { key: '', type: 'Text', dataType: 'string', value: '' }
+  newVar.value = { key: '', type: 'Text', value: '', isMultiple: false, update: false }
   formRef.value?.resetFields()
 }
 

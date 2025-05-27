@@ -46,8 +46,8 @@ const newVariableFormRef = ref()
 const columns = [
   { field: 'key', title: 'Key', minWidth: 100 },
   { field: 'type', title: 'Type', minWidth: 100 },
-  { field: 'dataType', title: 'Data Type', minWidth: 100 },
   { field: 'value', title: 'Value', minWidth: 100 },
+  { field: 'update', title: 'Update', minWidth: 100 },
 ]
 
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({

@@ -13,7 +13,7 @@ function handleTitle(number: number) {
 </script>
 
 <template>
-  <div>
+  <div class="font-style-toolbar">
     <el-button-group>
       <el-button v-for="(item,index) in titlePredefine" @click="handleTitle(index + 1)"
                  :class="{ 'is-active': editor.isActive('heading', { level: index + 1 }) }">
@@ -29,5 +29,7 @@ function handleTitle(number: number) {
 </template>
 
 <style scoped lang="scss">
-
+.font-style-toolbar{
+  width: max-content;
+}
 </style>
