@@ -51,30 +51,54 @@ export type DocTool = {
   requiredOptions?: string[]
 }
 
+export type VariableType = 'Text' | 'Paragraph' | 'documentId' | 'CaseId' | 'WorkflowId' | 'Email' | 'Website' | 'List' | 'Table'
+
+export interface TableColumn {
+  header: string
+  key: string
+  width?: string
+  align?: 'left' | 'center' | 'right'
+}
+
+export interface TableRow {
+  [key: string]: string | number | boolean
+}
+
+export interface VariableItem {
+  type: VariableType
+  key: string
+  displayValue: string | string[] | TableRow[]
+  tableColumns?: TableColumn[] // Only for Table type
+  listStyle?: 'bullet' | 'numbered' | 'none' // Only for List type
+}
+
 export const variableType = [
   {
-    type: 'Text',
+    type: 'Text' as const,
   },
   {
-    type: 'Paragraph',
+    type: 'Paragraph' as const,
   },
   {
-    type: 'documentId',
+    type: 'documentId' as const,
   },
    {
-    type: "CaseId",
+    type: "CaseId" as const,
   },
   {
-    type: "WorkflowId",
+    type: "WorkflowId" as const,
   },
   {
-    type: "Email",
+    type: "Email" as const,
   },
     {
-    type: "Website",
+    type: "Website" as const,
   },
   {
-    type : "Table",
+    type: "List" as const,
+  },
+  {
+    type : "Table" as const,
   }
 ]
 
