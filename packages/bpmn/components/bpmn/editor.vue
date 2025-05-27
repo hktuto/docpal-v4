@@ -7,13 +7,10 @@ import { History } from '@antv/x6-plugin-history'
 import { graphToBpmnJson } from '~/utils/bpmnConverter'
 import { adminApi } from 'api'
 import { bpmnElement } from '~/utils/bpmnElement'
-<<<<<<< HEAD
+
 import { ElMessage } from 'element-plus'
 import { EDITOR_PROVIDER, conditionOptions, MenuRouterKey } from '#imports'
-=======
-import { ElMessage, ElNotification } from 'element-plus'
-import { EDITOR_PROVIDER, conditionOptions } from '#imports'
->>>>>>> 279fe80a4c9a8a1b4dafa1ebbce3558e0c519f3a
+
 /**
  *  options: bpmn viewer options
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
