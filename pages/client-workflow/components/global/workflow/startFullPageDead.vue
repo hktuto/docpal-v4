@@ -15,7 +15,7 @@ defineOptions({
 const loading = ref(false)
 const vFormRef = ref()
 const routerProvider = inject(MenuRouterKey)
-
+const { t } = useI18n()
 function formDataGet(propList: any = []) {
   return propList.reduce((prev: any, item: any) => {
     if (item.value) prev[item.id] = item.value
@@ -61,7 +61,7 @@ function handleAdditionalSetting(xml: any, taskDetail: any, formData: any) {
 async function handleSubmit() {
   try {
     loading.value = true
-    let data = await vFormRef.value.getFormData(false, false)
+    let data = await vFormRef.value.getFormData(true, false)
     if (!data) throw new Error(`${t('incompleteData')}`)
 
     // check additional button 
@@ -95,7 +95,7 @@ async function handleSubmit() {
         return newObj
       }, {})
     }
-
+    console.log('form', form)
     await clientApi.api.postWorkflowProcessStart(form).then(res => res.data)
 
     routerProvider?.message.success('Workflow created')
