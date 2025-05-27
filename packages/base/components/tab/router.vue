@@ -254,11 +254,7 @@ function reloadComponent() {
   })
 }
 
-<<<<<<< HEAD
 function handleErr(err){
-=======
-function handleError(err){
->>>>>>> 279fe80a4c9a8a1b4dafa1ebbce3558e0c519f3a
   console.log(err)
 }
 
