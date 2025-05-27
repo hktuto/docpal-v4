@@ -51,14 +51,14 @@ const defaultSetting = {
   }
 }
 
-const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize, handleInitCard } = useDashboardCard({
   props,
-  initStyleAction: (_cardRef, _chartRef) => {
+  initStyleAction: (_cardRef: any, _chartRef: any) => {
     const pHeight = _cardRef.value.offsetHeight
     const pWidth = _cardRef.value.offsetWidth
     _chartRef.value.style = `height: ${pHeight}px; width: ${pWidth - 20}px`
   },
-  getOptions: async (chartSetting) => {
+  getOptions: async (chartSetting: any) => {
     let resultOptions: any = {
       ...defaultSetting.options
     }
@@ -95,7 +95,7 @@ async function getData(workflow: string) {
       resultData.xAxis.push(item.key)
       return prev
     }, [])
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error)
   } finally {
     return resultData
@@ -103,7 +103,7 @@ async function getData(workflow: string) {
 }
 
 defineExpose({
-  resize
+  resize, handleInitCard
 })
 </script>
 

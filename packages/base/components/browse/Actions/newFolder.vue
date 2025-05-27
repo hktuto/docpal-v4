@@ -69,7 +69,7 @@ async function handleSubmit() {
     const timestamp = new Date().valueOf()
     const metaFormData = await MetaFormRef.value.getData()
     if (!metaFormData) return
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData()
     const parentPath = state.docPath === '/' ? '' : state.docPath
     state.loading = true
     const params = {

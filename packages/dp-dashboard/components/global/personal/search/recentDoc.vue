@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="$t('search.recentDocument')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div v-if="!hideSetting" style="height: 100%; overflow: auto">
       <el-skeleton :rows="5" />
@@ -74,7 +76,12 @@ function handlePreview(row: any) {
     false
   )
 }
-
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    query({})
+  }
+})
 async function handleDelete() {
   emits('delete')
 }

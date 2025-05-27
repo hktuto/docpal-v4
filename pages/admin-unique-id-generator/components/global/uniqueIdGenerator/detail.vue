@@ -290,7 +290,7 @@ async function handleEditVariable(status: boolean, value: string, index: number)
 }
 
 async function handleEditItemTag() {
-  const formData = await editFormRendererRef.value.vFormRenderRef.getFormData()
+  const formData = await editFormRendererRef.value.getFormData()
   const index = formData.index
   let checkNameIsEx = false
 
@@ -340,7 +340,7 @@ async function handleEditItemTag() {
 }
 
 async function handleAddItemTag() {
-  let formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+  let formData = await FormRendererRef.value.getFormData()
   if (formData.isDateType) {
     itemData.expression = `{date(${formData.dateFormat})}`
     itemData.value = formData.dateFormat

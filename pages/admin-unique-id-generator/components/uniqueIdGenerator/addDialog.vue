@@ -21,7 +21,7 @@ function handleOpen() {
 
 async function handleSubmit() {
   try {
-    let { name } = await FormRendererRef.value.vFormRenderRef.getFormData()
+    let { name } = await FormRendererRef.value.getFormData()
     state.loading = true
     const data = await adminApi.api.postIdTemplates({ name: name }).then(res => res.data)
     state.visible = false

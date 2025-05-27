@@ -1,30 +1,44 @@
 <template>
-  <DashboardCard ref="cardRef" class="dp-dashboard--card__padding" :hideSetting="hideSetting" :title="$t('dashboard.PersonalDashboard')" :setting="setting" @delete="handleDelete">
-    <PersonalDashboardTable />
+  <DashboardCard
+    ref="cardRef"
+    v-loading="loading"
+    class="dp-dashboard--card__padding"
+    :hideSetting="hideSetting"
+    :title="$t('dashboard.PersonalDashboard')"
+    :setting="setting"
+    @delete="handleDelete"
+    @refresh="refresh"
+  >
+    <PersonalDashboardTable ref="tableRef" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
-
 const emits = defineEmits(['delete'])
 const { t } = useI18n()
-const props = withDefaults(defineProps<{
-  dates?: any;
-  setting?: any;
-  hideSetting?: boolean,
-}>(), {
-  setting: {},
-  hideSetting: false
-})
+const props = withDefaults(
+  defineProps<{
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
+  }>(),
+  {
+    setting: {},
+    hideSetting: false
+  }
+)
 
 async function handleDelete() {
   emits('delete')
 }
+const tableRef = ref()
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: (setting: any) => {
+    tableRef.value.query({})
+  }
+})
 
-function resize() {
-}
-
-defineExpose({ resize })
+defineExpose({})
 </script>
 <style lang="scss" scoped>
 :deep .vxe-toolbar {

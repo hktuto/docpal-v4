@@ -20,12 +20,12 @@ const props = withDefaults(
 const { t } = useI18n()
 const emits = defineEmits(['refreshSetting', 'delete'])
 
-const { chartRef, cardRef, resize } = useDashboardCard({
+const { chartRef, cardRef, resize, handleInitCard } = useDashboardCard({
   props,
   initStyleAction: () => {
     initStyle()
   },
-  getOptions: async (chartSetting) => {
+  getOptions: async (chartSetting: any) => {
     const resultOptions: any = {
       xAxis: {
         type: 'category',
@@ -116,7 +116,7 @@ async function getData(documentType: string) {
 }
 
 defineExpose({
-  resize
+  resize, handleInitCard
 })
 </script>
 

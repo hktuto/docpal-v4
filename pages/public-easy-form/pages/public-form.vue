@@ -46,7 +46,7 @@ async function getFormJson() {
 
 async function handleSubmit() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData(true, false)
+    const data = await FormRendererRef.value.getFormData(true, false)
     const params = Object.keys(data).reduce((prev: any, key) => {
       const item = data[key]
       if (item instanceof Array && item[0].response) {

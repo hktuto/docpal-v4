@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="$t('search.Subscribed')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div v-if="!hideSetting" style="height: 100%; overflow: auto">
       <el-card class="detail">
@@ -59,7 +61,12 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     handleDblclick(row)
   }
 })
-
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    query({})
+  }
+})
 function handleDblclick(row: any) {
   routerProvider?.navigateTo(createBrowseListPageParams({ idOrPath: row.id }), false)
 }

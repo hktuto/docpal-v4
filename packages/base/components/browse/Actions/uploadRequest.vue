@@ -57,7 +57,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   state.loading = true
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData()
     if (!data) throw new Error(`${t('incompleteData')}`)
     if (data.expiredAt) data.expiredAt = data.expiredAt.replace(/.000.*$/, 'Z')
     data.message = data.message.replace(/\r\n|\r|\n/g, '<br/>')

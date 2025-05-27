@@ -149,6 +149,10 @@ const filtetColumnWidth = computed(() => {
   return 24 / item
 })
 
+const showCalendar = ref(true)
+function refresh() {
+  viewerRef.value.getList()
+}
 onMounted(async () => {
   await setDefaultFilter()
 })
@@ -161,7 +165,8 @@ defineExpose({
   updateEvent,
   filter,
   openDetail,
-  eventList
+  eventList,
+  refresh
 })
 </script>
 

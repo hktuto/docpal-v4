@@ -27,7 +27,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
   })
   if (isShareInternal) msg += `<span class="color__danger">${doc.name} ${t('msg_isShareInternalFile')}</span>,`
   msg += t('document_deleteMsg')
-  ElMessageBox.confirm(msg, {
+  const action = await ElMessageBox.confirm(msg, {
     confirmButtonClass: 'el-button el-button--warning',
     dangerouslyUseHTMLString: true,
     confirmButtonText: t('common_confirmDelete')
@@ -42,6 +42,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
     duration: 0,
     position: 'bottom-right'
   })
+  if (action !== 'confirm') return
   try {
     const response = await clientApi.api.deleteNuxeoDocumentTrash([{ idOrPath }])
     if (deleteType === 'file') {

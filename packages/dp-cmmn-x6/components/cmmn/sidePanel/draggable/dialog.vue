@@ -56,7 +56,7 @@ const FormRendererRef = ref()
 
 // const formJson = getJsonApi('admin/adminAclForm.json')
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   if (state.isEdit){ 
     emits('edit', deepCopy(data))
   } else{ 
