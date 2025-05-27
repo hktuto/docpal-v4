@@ -87,7 +87,7 @@ function handleFixTables() {
 }
 
 function handleToggleBorder(){
-  editor.value.commands.toggleBorder();
+  editor.value.commands.updateAttributes('table', { border: "1" });
 }
 
 </script>

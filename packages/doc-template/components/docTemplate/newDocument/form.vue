@@ -17,7 +17,7 @@ watch(showTextCounter, (bool) => {
 })
 const form = reactive<TipTapOptions>({
   textCount: undefined,
-  mode: "ENDLESS",
+  mode: "PAGE",
   pageSetting: {
     ...defaultPageSetting
   },

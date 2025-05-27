@@ -3426,5 +3426,41 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content"
+  "檔案內容": "Content",
+  "docTemplate": {
+    "variableManager": {
+      "title": "Variable Manager",
+      "currentVariables": "Current Variables",
+      "addNew": "Add New Variable",
+      "addNewTitle": "Add New Variable",
+      "key": "Key",
+      "type": "Type",
+      "value": "Value",
+      "add": "Add",
+      "keyRequired": "Key is required",
+      "duplicateKey": "This key already exists. Please use a different key.",
+      "selectType": "Select type",
+      "types": {
+        "text": "Text",
+        "paragraph": "Paragraph",
+        "documentId": "Document ID",
+        "caseId": "Case ID",
+        "workflowId": "Workflow ID",
+        "email": "Email",
+        "website": "Website",
+        "table": "Table"
+      },
+      "dataType": "Data Type",
+      "selectDataType": "Select data type",
+      "dataTypes": {
+        "string": "String",
+        "number": "Number",
+        "boolean": "Boolean",
+        "array": "Array",
+        "object": "Object"
+      },
+      "insertVariable": "Insert Variable",
+      "selectVariable": "Select Variable"
+    }
+  }
 }
