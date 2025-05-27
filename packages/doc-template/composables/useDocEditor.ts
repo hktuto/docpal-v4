@@ -47,16 +47,16 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
       name: "Data",
       tools: [
         {
-          name: "Variable",
-          components: 'DocTemplateContentToolbarVariableManager'
+          name: 'Variable Manager',
+          components: 'DocTemplateContentToolbarVariableToolbarButton'
         },
         {
-          name: "Insert Variable",
-          components: 'lazyDocTemplateContentToolbarVariableInsert'
+          name: 'Insert Variable',
+          components: 'DocTemplateContentToolbarVariableInertText'
         },
         {
-          name: "Insert Paragraph", // New entry for the paragraph component
-          components: 'lazyDocTemplateContentToolbarVariableInsertParagraph' // Assuming lazy loading and similar naming convention
+          name: 'Insert Link',
+          components: 'DocTemplateContentToolbarVariableInertLink'
         }
       ]
     },

@@ -3428,47 +3428,26 @@
   "文件Keywords": "文件Keywords",
   "檔案內容": "檔案內容",
   "docTemplate": {
-    "variableManager": {
-      "title": "變量管理",
-      "currentVariables": "當前變量",
-      "addNew": "添加新變量",
-      "addNewTitle": "添加新變量",
-      "key": "鍵名",
-      "type": "類型",
-      "value": "值",
-      "selectType": "選擇類型",
-      "add": "添加",
-      "types": {
-        "text": "文本",
-        "paragraph": "段落",
-        "documentId": "文檔ID",
-        "caseId": "案例ID",
-        "workflowId": "工作流ID",
-        "email": "電子郵件",
-        "website": "網站",
-        "table": "表格"
-      },
-      "keyRequired": "鍵名為必填項",
-      "duplicateKey": "該鍵名已存在，請使用其他鍵名",
-      "dataType": "數據類型",
-      "selectDataType": "選擇數據類型",
-      "dataTypes": {
-        "string": "字符串",
-        "number": "數字",
-        "boolean": "布爾值",
-        "array": "數組",
-        "object": "對象"
-      },
+    "variable": {
+      "manager": "變數管理器",
+      "addVariable": "新增變數",
+      "editVariable": "編輯變數",
+      "deleteVariable": "刪除變數",
+      "variableName": "變數名稱",
+      "variableType": "變數類型",
+      "variableValue": "變數值",
+      "save": "儲存",
+      "cancel": "取消",
+      "confirmDelete": "您確定要刪除此變數嗎？",
       "insertVariable": "插入變數",
-      "selectVariable": "選擇或創建變數"
-    },
-    "textManager": {
-      "insertText": "插入文字",
-      "selectText": "選擇或創建文字"
-    },
-    "paragraphManager": {
-      "insertParagraph": "插入段落",
-      "selectParagraph": "選擇或創建段落"
+      "selectVariable": "選擇變數",
+      "insertLink": "插入連結",
+      "createLink": "建立連結",
+      "editLink": "編輯連結",
+      "linkLabel": "標籤",
+      "linkTarget": "目標",
+      "linkLabelPlaceholder": "輸入連結標籤（可選）",
+      "selectTargetVariable": "選擇目標變數"
     }
   }
 }

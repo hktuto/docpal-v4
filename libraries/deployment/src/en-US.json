@@ -3430,47 +3430,26 @@
   "文件Keywords": "Keywords",
   "檔案內容": "Content",
   "docTemplate": {
-    "variableManager": {
-      "title": "Variable Manager",
-      "currentVariables": "Current Variables",
-      "addNew": "Add New Variable",
-      "addNewTitle": "Add New Variable",
-      "key": "Key",
-      "type": "Type",
-      "value": "Value",
-      "add": "Add",
-      "keyRequired": "Key is required",
-      "duplicateKey": "This key already exists. Please use a different key.",
-      "selectType": "Select type",
-      "types": {
-        "text": "Text",
-        "paragraph": "Paragraph",
-        "documentId": "Document ID",
-        "caseId": "Case ID",
-        "workflowId": "Workflow ID",
-        "email": "Email",
-        "website": "Website",
-        "table": "Table"
-      },
-      "dataType": "Data Type",
-      "selectDataType": "Select data type",
-      "dataTypes": {
-        "string": "String",
-        "number": "Number",
-        "boolean": "Boolean",
-        "array": "Array",
-        "object": "Object"
-      },
+    "variable": {
+      "manager": "Variable Manager",
+      "addVariable": "Add Variable",
+      "editVariable": "Edit Variable",
+      "deleteVariable": "Delete Variable",
+      "variableName": "Variable Name",
+      "variableType": "Variable Type",
+      "variableValue": "Variable Value",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirmDelete": "Are you sure you want to delete this variable?",
       "insertVariable": "Insert Variable",
-      "selectVariable": "Select or Create Variable"
-    },
-    "textManager": {
-      "insertText": "Insert Text",
-      "selectText": "Select or Create Text"
-    },
-    "paragraphManager": {
-      "insertParagraph": "Insert Paragraph",
-      "selectParagraph": "Select or Create Paragraph"
+      "selectVariable": "Select Variable",
+      "insertLink": "Insert Link",
+      "createLink": "Create Link",
+      "editLink": "Edit Link",
+      "linkLabel": "Label",
+      "linkTarget": "Target",
+      "linkLabelPlaceholder": "Enter link label (optional)",
+      "selectTargetVariable": "Select target variable"
     }
   }
 }
