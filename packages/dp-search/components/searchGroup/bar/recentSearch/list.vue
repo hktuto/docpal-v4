@@ -77,10 +77,10 @@ async function getList() {
     state.loading = false;
   }
 }
-function initList() {
+async function initList() {
   state.list = [];
   pageParams.pageNum = -1;
-  getList();
+  await getList();
 }
 onMounted(() => {
   initList();

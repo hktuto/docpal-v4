@@ -83,7 +83,7 @@ async function setCaseId(id: string) {
 }
 
 defineExpose({
-  setCaseId,
+  setCaseId, query, reload
 });
 </script>
 <style lang="scss" scoped>

@@ -12,23 +12,27 @@ const props = withDefaults(
     hideSetting: false
   }
 )
+const tableRef = ref()
+const addCaseDialog = ref()
 
 const state = reactive<any>({
   detail: {}
 })
-const settingRef = ref()
-
 function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
 async function handleDelete() {
   emits('delete')
 }
-
-const addCaseDialog = ref()
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    tableRef.value.query({})
+  }
+})
 
 function handleAddCaseDialog() {
-  if(!addCaseDialog.value.handleOpen) return
+  if (!addCaseDialog.value.handleOpen) return
   addCaseDialog.value.handleOpen(props.setting.caseId, state.detail)
 }
 async function getCaseDetail(caseId: string) {
@@ -41,7 +45,6 @@ async function getCaseDetail(caseId: string) {
   }
 }
 // #region module: tableRef
-const tableRef = ref()
 function handleShowColumn() {
   const displayColumns = props.setting.displayColumns.reduce((prev: any, columnId: any) => {
     if (state?.detail?.primaryForm?.fields) {
@@ -98,12 +101,14 @@ watch(
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="props.setting.caseLabel"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div class="table-container">
       <PersonalCaseSingleTable ref="tableRef" :id="setting.caseId" :detail="state.detail" :label="setting.caseLabel">

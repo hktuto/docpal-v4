@@ -21,7 +21,7 @@ const props = withDefaults(
   }
 )
 const emits = defineEmits(['refreshSetting', 'delete'])
-const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize, handleInitCard } = useDashboardCard({
   props,
   initStyleAction: () => {
     initStyle()
@@ -100,7 +100,7 @@ async function getData(documentType: string) {
 // #endregion
 
 defineExpose({
-  resize
+  resize, handleInitCard
 })
 </script>
 

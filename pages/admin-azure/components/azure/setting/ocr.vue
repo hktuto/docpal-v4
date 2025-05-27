@@ -26,7 +26,7 @@ const { t } = useI18n()
 const FormRendererRef = ref()
 
 async function handleSave() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   try {
     const result = await azureProvider?.UpdateAzureOcrSettingApi({
@@ -49,7 +49,7 @@ const emailTemplateEditor = ref()
 
 async function handleEditEmailTemplate() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData(false)
+    const data = await FormRendererRef.value.getFormData(false)
     if (!data.emailTemplate) throw new Error('')
     emailTemplateEditor.value.handleOpen(data.emailTemplate, true)
   } catch (error) {

@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="$t('search.recentSearchs')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div v-if="!hideSetting" style="height: 100%; overflow: auto">
       <el-card v-for="item in 2" :key="item" class="detail">
@@ -30,7 +32,13 @@ const props = withDefaults(
     hideSetting: false
   }
 )
-
+const listRef = ref()
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    if (listRef.value?.initList) await listRef.value.initList()
+  }
+})
 function handleSearch(data: any) {
   routerProvider?.navigateTo(routeSearch({ searchParams: data }), false)
 }

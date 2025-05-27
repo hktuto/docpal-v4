@@ -27,7 +27,7 @@ const route = useRoute()
 const FormRendererRef = ref()
 
 async function handleSave() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   
   // try {

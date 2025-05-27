@@ -1,34 +1,30 @@
 <template>
-  <el-form v-if="filterList.length > 0"
-    label-position="top"
-    ref="FormRef"
-    :model="form"
-    @submit.native.prevent
-  >
-    <el-form-item v-for="item in filterList"
-      :label="$t(item.name)"
-      :prop="item.name"
-    >
-      <el-input v-model="form[item.name]" type="text" 
-        :placeholder="$t('common_filter')" clearable
-        @change="handleSubmit"
-        @keyup.enter.native="handleSubmit" />
-    </el-form-item>
+  <el-form label-position="top" ref="FormRef" :model="form" @submit.native.prevent>
+    <template v-if="filterList.length > 0">
+      <el-form-item v-for="item in filterList" :label="$t(item.name)" :prop="item.name">
+        <el-input
+          v-model="form[item.name]"
+          type="text"
+          :placeholder="$t('common_filter')"
+          clearable
+          @change="handleSubmit"
+          @keyup.enter.native="handleSubmit"
+        /> </el-form-item
+    ></template>
   </el-form>
 </template>
 <script lang="ts" setup>
 import { useDebounceFn } from '@vueuse/core'
 const props = withDefaults(
   defineProps<{
-    filterList: any;
+    filterList: any
   }>(),
   {
-    filterList: [],
+    filterList: []
   }
-);
+)
 const emits = defineEmits(['change'])
-const form = ref<any>({
-});
+const form = ref<any>({})
 const handleSubmit = useDebounceFn(() => {
   emits('change', form.value)
 }, 300)
