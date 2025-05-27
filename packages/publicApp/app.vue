@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getLocale } from "~/utils/loading";
+
 const loadState: string = useLoadState();
 initPublicLayout();
 </script>

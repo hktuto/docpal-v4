@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding dp-dashboard--card__scroll"
     :hideSetting="hideSetting"
     :title="$t('search.SearchDefine')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div v-if="!hideSetting" style="height: 100%; overflow: auto">
       <el-card v-for="item in 2" :key="item" class="detail">
@@ -21,7 +23,6 @@
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { onMounted } from 'vue'
 import { clientApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
@@ -68,12 +69,21 @@ function handleDblclick(row: any) {
   conditionDecorators(query)
   routerProvider?.navigateTo(routeSearch({ searchParams: query }), false)
 }
-
-onMounted(() => {
-  getList()
-  getSystemRecords()
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    try {
+      await getSystemRecords()
+      await getList()
+    } catch (error) {
+      console.error(error)      
+    }
+  }
 })
-
+onMounted(() => {
+  getSystemRecords()
+  getList()
+})
 </script>
 <style lang="scss" scoped>
 .detail {

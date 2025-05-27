@@ -39,7 +39,7 @@ const FormRendererRef = ref()
 const TemplateAddStep2DialogRef = ref()
 
 async function handleSubmit() {
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const formData = await FormRendererRef.value.getFormData()
   if (!formData) return
   try {
     state.loading = true

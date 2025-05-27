@@ -68,6 +68,7 @@ watchDebounced(
   },
   { debounce: 200, maxWait: 500, immediate: true }
 )
+defineExpose({ query, reload })
 </script>
 <style lang="scss" scoped>
 .pageContainer {

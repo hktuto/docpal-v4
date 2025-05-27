@@ -1,5 +1,6 @@
 <template>
   <DashboardCard
+    v-loading="loading"
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
@@ -7,6 +8,7 @@
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div>
       <Table
@@ -128,7 +130,12 @@ function handleFilterFormChange(formModel) {
   handlePaginationChange(1)
 }
 // #endregion
-
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    handlePaginationChange(1)
+  }
+})
 onMounted(() => {
   handlePaginationChange(1)
 })

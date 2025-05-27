@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
-const emits = defineEmits(['delete', 'refreshSetting', 'openSetting'])
+const emits = defineEmits(['delete', 'refreshSetting', 'openSetting', 'refresh'])
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
@@ -25,15 +25,16 @@ function openSetting() {
   if (!!props.settingRef) props.settingRef.handleOpen(props.setting)
   else emits('openSetting', props.setting)
 }
-
+function handleRefresh() {
+  emits('refresh', props.setting)
+}
 async function handleDelete() {
-  try{
+  try {
     await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     emits('delete')
-  }catch{
-    return
+  } catch(error) {
+    console.error(error)
   }
-  
 }
 
 defineExpose({
@@ -45,15 +46,16 @@ defineExpose({
   <ElCard ref="cardRef" class="dp-dashboard--card">
     <template #header>
       <slot name="header">
-        <h4>
+        <h4 class="dp-dashboard--card__title">
           {{ title }}
           <slot name="title_suffix"></slot>
         </h4>
 
         <div class="flex-x-end">
           <slot name="action_prefix"></slot>
-          <SvgIcon v-if="!hideSetting && settingRef" class="" :id="`Dashboard__Home__Detail__${title.replace(/\s+/g, '')}__Setting`" src="/icons/setting.svg" @click="openSetting" />
-          <SvgIcon v-if="!hideSetting" class="setting--icon" :id="`Dashboard__Home__Detail__${title.replace(/\s+/g, '')}__Delete`" src="/icons/delete.svg" @click="handleDelete" />
+          <SvgIcon id="refresh" src="/icons/refresh.svg" @click="handleRefresh" />
+          <SvgIcon v-if="!hideSetting && settingRef" class="" id="setting" src="/icons/setting.svg" @click="openSetting" />
+          <SvgIcon v-if="!hideSetting" class="setting--icon" id="delete" src="/icons/delete.svg" @click="handleDelete" />
         </div>
       </slot>
     </template>
@@ -79,8 +81,17 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   border-bottom: unset;
+  width: 100%;
+  overflow: hidden;
   .svgIcon + .svgIcon {
     margin-left: var(--app-space-xxs);
+  }
+  .dp-dashboard--card__title {
+    max-width: calc(100% - 4rem);
+    overflow: hidden;
+    .el-dropdown {
+      padding-top: 3px;
+    }
   }
 }
 .dp-dashboard--card__padding {
@@ -128,5 +139,4 @@ defineExpose({
   margin-right: var(--app-space-xxs);
   cursor: pointer;
 }
-
 </style>

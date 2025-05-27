@@ -33,7 +33,7 @@ const FormRendererRef = ref()
 const { t } = useI18n()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   try {
     const result = await adminApi.api.postDocpaltypeSettings(data)

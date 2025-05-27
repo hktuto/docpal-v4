@@ -1,12 +1,14 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="$t('dashboard.PersonalCaseCreate')"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div class="workflow-create-content">
       <el-button v-for="item in state.caseList" type="primary" :key="item.id" @click="handleClick(item)">
@@ -42,7 +44,6 @@ async function handleDelete() {
   emits('delete')
 }
 
-const settingRef = ref()
 const dialogRef = ref()
 
 function handleClick(item: any) {
@@ -78,7 +79,12 @@ async function getCaseList() {
     }, [])
   }
 }
-
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async(setting: any) => {
+    await getCaseList()
+  }
+})
 onMounted(async () => {
   getCaseList()
 })

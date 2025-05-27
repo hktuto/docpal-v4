@@ -30,7 +30,7 @@ let groupList:GroupDTO[] | any = []
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   const params = {
     masterTableId: props.tableId,
     userId: data.userId,

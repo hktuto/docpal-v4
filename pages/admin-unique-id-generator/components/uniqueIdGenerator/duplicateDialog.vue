@@ -37,7 +37,7 @@ function handleOpen(row: any) {
 
 async function handleSubmit() {
   try {
-    let { name } = await FormRendererRef.value.vFormRenderRef.getFormData()
+    let { name } = await FormRendererRef.value.getFormData()
     const data = await adminApi.api.postIdTemplates({ name: name }).then(res => res.data)
     state.row.id = data.id
     await adminApi.api.putIdTemplatesId(data.id, { ...data, ...state.row })

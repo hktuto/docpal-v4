@@ -50,7 +50,7 @@ async function open(){
 
 async function save(){
     // TODO : handle save as logic
-    let formData = await FormRendererRef.value.vFormRenderRef.getFormData()
+    let formData = await FormRendererRef.value.getFormData()
     const versionId = versionList.find(item => item.versionNumber === formData.copyVersion).id
     const params = {
       caseIdPrefix: formData.caseIdPrefix,

@@ -61,7 +61,7 @@ const setting = {
     type: 'bar',
     tooltip: {
       appendToBody: true,
-      valueFormatter: function (value) {
+      valueFormatter: function (value: any) {
         return value
       }
     },
@@ -78,20 +78,20 @@ const setting = {
     type: 'line',
     tooltip: {
       appendToBody: true,
-      valueFormatter: function (value) {
+      valueFormatter: function (value: any) {
         return value
       }
     }
   }
 }
-const { chartRef, cardRef, settingRef, resize, getInstance } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize, getInstance, refresh } = useDashboardCard({
   props,
-  initStyleAction: (_cardRef, _chartRef) => {
+  initStyleAction: (_cardRef: any, _chartRef: any) => {
     const pHeight = _cardRef.value.offsetHeight
     const pWidth = _cardRef.value.offsetWidth
     _chartRef.value.style = `height: ${pHeight}px; width: ${pWidth - 20}px`
   },
-  getOptions: async (chartSetting) => {
+  getOptions: async (chartSetting: any) => {
     let resultOptions: any = {
       ...setting.defaultSetting.options
     }
@@ -100,8 +100,8 @@ const { chartRef, cardRef, settingRef, resize, getInstance } = useDashboardCard(
     resultOptions.series = series
     return resultOptions
   },
-  onClick: (instance) => {
-    instance.on('click', (event) => {
+  onClick: (instance: any) => {
+    instance.on('click', (event: any) => {
       const month = dayjs(props.dates[0]).diff(props.dates[1], 'month')
       if (month === 0) return
       // 只更新被点击的柱子的样式
@@ -118,12 +118,12 @@ const { chartRef, cardRef, settingRef, resize, getInstance } = useDashboardCard(
   }
 })
 
-function setHighlight( curSeriesIndex = -1, curDataIndex: -1) {
+function setHighlight(curSeriesIndex = -1, curDataIndex: -1) {
   const instance = getInstance()
   const currentOption = instance.getOption()
-  currentOption.series.forEach((seriesItem, seriesIndex) => {
+  currentOption.series.forEach((seriesItem: any, seriesIndex: any) => {
     if (seriesItem.data) {
-      seriesItem.data.forEach((dataItem, dataIndex) => {
+      seriesItem.data.forEach((dataItem: any, dataIndex: any) => {
         if (curSeriesIndex === seriesIndex && curDataIndex === dataIndex && dataItem.value) {
           dataItem.itemStyle = {
             borderColor: 'red',
@@ -161,9 +161,9 @@ async function getData(dataType: string) {
     ]
     Object.keys(yData).forEach((key) => {
       series.push({
-        name: key,
         type: 'bar',
-        data: yData[key].map((item) => ({
+        name: key,
+        data: yData[key].map((item: any) => ({
           value: item.pageCount
         })),
         ...setting.defaultSeriesBarSetting
@@ -171,7 +171,7 @@ async function getData(dataType: string) {
     })
     resultData.xAxis = xAxis
     resultData.series = series
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error)
   } finally {
     return resultData
@@ -210,7 +210,7 @@ const GetOcrProcessApi = async ({ dataType, mode, startDate, endDate }: any) => 
         .then((res) => res.data)
   }
 }
-function getXAxisAndFillZeroData(data, mode) {
+function getXAxisAndFillZeroData(data: any, mode: any) {
   const yData: any = {}
   const xData: any = {}
   const xAxis: any = getYearMonthDates(props.dates[0], props.dates[1], mode)
@@ -222,8 +222,8 @@ function getXAxisAndFillZeroData(data, mode) {
   })
 
   Object.keys(yData).forEach((name) => {
-    xAxis.forEach((x) => {
-      if (!yData[name].find((item) => item.date + '' === x || item.yearMonth + '' === x)) {
+    xAxis.forEach((x: any) => {
+      if (!yData[name].find((item: any) => item.date + '' === x || item.yearMonth + '' === x)) {
         yData[name].push({
           [mode]: x,
           pageCount: 0,
@@ -231,13 +231,13 @@ function getXAxisAndFillZeroData(data, mode) {
         })
       }
     })
-    yData[name] = yData[name].sort((a, b) => a[mode] - b[mode])
+    yData[name] = yData[name].sort((a: any, b: any) => a[mode] - b[mode])
   })
 
-  const totalData = xAxis.reduce((prev, key) => {
+  const totalData = xAxis.reduce((prev: any, key: any) => {
     if (!xData[key]) prev.push(0)
     else {
-      const count = xData[key].reduce((acc, cur) => {
+      const count = xData[key].reduce((acc: any, cur: any) => {
         acc += cur
         return acc
       }, 0)
@@ -256,6 +256,7 @@ function getXAxisAndFillZeroData(data, mode) {
 
 defineExpose({
   resize,
+  refresh,
   setHighlight
 })
 </script>

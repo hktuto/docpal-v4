@@ -217,7 +217,7 @@ const WorkflowDialogRef = ref()
 async function handleSave() {
   console.log("handleSave")
   const valid = await FormRef.value.validate()
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+  const data = await FormRendererRef.value.getFormData()
   if (!valid || !data) return
 
   if (props.isRoot) {

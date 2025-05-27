@@ -55,7 +55,7 @@ let formJson = jsonMap[props.formJsonUrl];
 
 // const formJson = getJsonApi('admin/adminAclForm.json')
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData();
+  const data = await FormRendererRef.value.getFormData();
   if (state.isEdit) emits("edit", {...data});
   else emits("create", {...data});
   state.visible = false;

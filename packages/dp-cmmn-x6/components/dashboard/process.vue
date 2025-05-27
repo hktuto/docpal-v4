@@ -1,5 +1,6 @@
 <template>
   <DashboardCard
+    v-loading="loading"
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
@@ -7,149 +8,122 @@
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div class="card-main">
       <el-card class="process-item" v-for="item in state.layout">
         <div class="title">
-          <SvgIcon
-            :style="`--icon-color: ${getIconColor(item.state)}`"
-            :src="`/icons/status/${getIcon(item.state)}.svg`"
-          ></SvgIcon>
+          <SvgIcon :style="`--icon-color: ${getIconColor(item.state)}`" :src="`/icons/status/${getIcon(item.state)}.svg`"></SvgIcon>
           {{ item.name }}
         </div>
         <el-progress :percentage="getPercent(item)" />
         <el-divider />
         <div>
           <div class="process-item--sub" v-for="sItem in item.subItems">
-            <SvgIcon
-              :style="`--icon-color: ${getIconColor(sItem.state)}`"
-              :src="`/icons/status/${getIcon(sItem.state)}.svg`"
-            ></SvgIcon>
+            <SvgIcon :style="`--icon-color: ${getIconColor(sItem.state)}`" :src="`/icons/status/${getIcon(sItem.state)}.svg`"></SvgIcon>
             {{ sItem.name }}
           </div>
         </div>
       </el-card>
     </div>
-    <DashboardProcessSetting
-      ref="settingRef" :allList="state.allList"
-      @delete="handleDelete"
-      @refresh="handleRefresh"
-    />
+    <DashboardProcessSetting ref="settingRef" :allList="state.allList" @delete="handleDelete" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { watchDebounced } from "@vueuse/core";
-import { adminApi } from "api";
+import { watchDebounced } from '@vueuse/core'
+import { adminApi } from 'api'
 const props = withDefaults(
   defineProps<{
-    dates?: any;
-    setting?: any;
-    hideSetting?: boolean;
+    dates?: any
+    setting?: any
+    hideSetting?: boolean
   }>(),
   {
     setting: {},
-    hideSetting: false,
+    hideSetting: false
   }
-);
-const emits = defineEmits(["refreshSetting", "delete"]);
+)
+const emits = defineEmits(['refreshSetting', 'delete'])
 const state = reactive<any>({
   allList: [],
-  layout: [],
-});
-// #region module: dialog
-const settingRef = ref();
+  layout: []
+})
 
 function handleDelete() {
-  emits("delete");
+  emits('delete')
 }
 function handleRefresh(chartSetting: any) {
-  emits("refreshSetting", chartSetting);
+  emits('refreshSetting', chartSetting)
 }
 // #endregion
 
 function getIcon(state: any) {
   switch (state) {
-    case "active":
-      return "pendding";
-    case "completed":
-      return "finish";
+    case 'active':
+      return 'pendding'
+    case 'completed':
+      return 'finish'
     default:
-      return "pendding";
+      return 'pendding'
   }
 }
 function getIconColor(state: any) {
   switch (state) {
-    case "completed":
-      return "#266CD6";
+    case 'completed':
+      return '#266CD6'
     default:
-      return "#000";
+      return '#000'
   }
 }
 function getPercent(process: any) {
   if (process.subItems && process.subItems.length > 0) {
     let finish = 0,
-      total = 0;
+      total = 0
     process.subItems.forEach((element: any) => {
-      if (element.state === "completed") finish++;
-      total++;
-    });
-    return ((finish / total) * 100).toFixed(0);
+      if (element.state === 'completed') finish++
+      total++
+    })
+    return ((finish / total) * 100).toFixed(0)
   } else {
-    return process.state === "completed" ? 100 : 0;
+    return process.state === 'completed' ? 100 : 0
   }
 }
 
 const CMDProvider = inject(CaseManagementDashboardKey)
 async function getCDProcess() {
   try {
-    if (state.allList.length > 0) return state.allList;
-    const id = CMDProvider?.instanceId?.value || null;
-    const caseVersionId = CMDProvider?.caseVersionId?.value || null;
+    if (state.allList.length > 0) return state.allList
+    const id = CMDProvider?.instanceId?.value || null
+    const caseVersionId = CMDProvider?.caseVersionId?.value || null
     if (id) {
-      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id);
-      state.allList = data;
+      const { data } = await adminApi.api.getCaseDashboardInstanceCaseidStages(id)
+      state.allList = data
     } else if (caseVersionId) {
-      const {
-        data : caseTypeData,
-      } = await adminApi.api.getCaseDashboardVersionVersionidStages(caseVersionId);
-      state.allList = caseTypeData;
+      const { data: caseTypeData } = await adminApi.api.getCaseDashboardVersionVersionidStages(caseVersionId)
+      state.allList = caseTypeData
     }
   } catch (error) {
-    state.allList = [];
+    state.allList = []
   } finally {
-    console.log(state.allList);
-    return state.allList;
+    console.log(state.allList)
+    return state.allList
   }
-  
 }
-async function initLayout() {
-  const list = await getCDProcess();
-  state.layout = props.setting.layout.reduce((prev: any, item: any) => {
-    const _item = list.find((d: any) => d.planItemDefinitionId === item.planItemDefinitionId);
-    if (_item) {
-      _item.state = _item.state ? _item.state : "NULL";
-      prev.push(_item);
-    }
-    return prev;
-  }, []);
-}
-watchDebounced(
-  () => props.setting.layout,
-  (newValue, oldValue) => {
-    nextTick(() => {
-      if (!!newValue) {
-        // if(oldValue && JSON.stringify(newValue) === JSON.stringify(oldValue)) return
-        initLayout();
+
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleInitCardAction: async (setting: any) => {
+    const list = await getCDProcess()
+    state.layout = setting.layout.reduce((prev: any, item: any) => {
+      const _item = list.find((d: any) => d.planItemDefinitionId === item.planItemDefinitionId)
+      if (_item) {
+        _item.state = _item.state ? _item.state : 'NULL'
+        prev.push(_item)
       }
-    });
-  },
-  {
-    debounce: 200,
-    maxWait: 500,
-    deep: true,
-    immediate: true,
+      return prev
+    }, [])
   }
-);
+})
 </script>
 <style lang="scss" scoped>
 .card-main {
