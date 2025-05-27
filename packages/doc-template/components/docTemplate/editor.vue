@@ -133,8 +133,12 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
 function addVariable(variable: VariableItem) {
   variables.value.push(variable)
 }
-function updateVariable(variable: VariableItem) {
-  variables.value = variables.value.map(v => v.key === variable.key ? variable : v)
+function updateVariable(updateVariable: VariableItem) {
+  console.log('updateVariable', updateVariable)
+  const index = variables.value.findIndex(v => v.key === updateVariable.key)
+  if (index !== -1) {
+    variables.value[index] = updateVariable
+  }
 }
 function removeVariable(variable: VariableItem) {
   // find index of variable
