@@ -97,11 +97,19 @@ function handleShowOuterBoundaries() {
 }
 
 function handleClearInnerBoundaries() {
-  editor.value.chain().focus().setCellAttribute('border', 'none;')
+  editor.value.chain().focus().setCellAttribute('border', 'none;').run()
+  // editor.value.chain().focus().setCellAttribute('borderBottom', 'none;').run()
+  // editor.value.chain().focus().setCellAttribute('borderTop', 'none;').run()
+  // editor.value.chain().focus().setCellAttribute('borderLeft', 'none;').run()
+  // editor.value.chain().focus().setCellAttribute('borderRight', 'none;').run()
 }
 
 function handleShowInnerBoundaries() {
-  editor.value.chain().focus().setCellAttribute('border', '1px solid black;')
+  editor.value.chain().focus().setCellAttribute('border', '1px solid black;').run()
+  // editor.value.chain().focus().setCellAttribute('borderBottom', '1px solid black;').run()
+  // editor.value.chain().focus().setCellAttribute('borderTop', '1px solid black;').run()
+  // editor.value.chain().focus().setCellAttribute('borderLeft', '1px solid black;').run()
+  // editor.value.chain().focus().setCellAttribute('borderRight', '1px solid black;').run()
 }
 
 function handleBackgroundColor(backgroundColor: string) {
@@ -214,20 +222,16 @@ function handleBackgroundColor(backgroundColor: string) {
       Show Inner Boundaries
     </el-button>
 
-    <!--    <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">-->
-    <!--      Set Background Color-->
-    <!--    </el-button>-->
-
-    <el-button-group>
-      <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">
-        <p>Set Table Background Color</p>
-      </el-button>
-      <el-button style="width: 12%;">
-        <el-color-picker v-model="state.tableBackgroundColor" :predefine="fontPredefineBackgroundColors"
-                         @blur="handleBackgroundColor(state.tableBackgroundColor)" />
-      </el-button>
-    </el-button-group>
-
+    <!-- TODO: style Not effective   -->
+    <!--    <el-button-group>-->
+    <!--      <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">-->
+    <!--        <p>Set Table Background Color</p>-->
+    <!--      </el-button>-->
+    <!--      <el-button style="width: 12%;">-->
+    <!--        <el-color-picker v-model="state.tableBackgroundColor" :predefine="fontPredefineBackgroundColors"-->
+    <!--                         @blur="handleBackgroundColor(state.tableBackgroundColor)" />-->
+    <!--      </el-button>-->
+    <!--    </el-button-group>-->
   </div>
 
   <div style="text-align: center; margin-top: 9px;">
