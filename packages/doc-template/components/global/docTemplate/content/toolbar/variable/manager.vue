@@ -23,7 +23,7 @@ const editError = ref('')
 const tableColumns = ref<TableColumn[]>([])
 const tableRows = ref<TableRow[]>([])
 const newColumnName = ref('')
-
+const tableKeyPrefix = ref(0)
 const editorProvider = inject(DocTemplateProveKey)
 if (!editorProvider) throw new Error('editorProvider not found')
 const { variables, addVariable, removeVariable, updateVariable } = editorProvider
@@ -153,6 +153,7 @@ function confirmEdit() {
   
   safeUpdateVariable(variableToUpdate)
   showEdit.value = false
+  tableKeyPrefix.value += 1
   ElMessage.success(t('docTemplate.variable.editSuccess'))
 }
 
@@ -226,7 +227,9 @@ function closeTableEditor() {
 
 <template>
   <ElDialog :model-value="true" :title="t('docTemplate.variable.managerTitle')" width="800px" @close="closeDialog">
-    <ElTable :data="variables" style="width: 100%">
+    {{ tableKeyPrefix }} {{ variables.length }}
+    {{ variables }}
+    <ElTable :data="variables" :key="tableKeyPrefix + '_' +variables.length" style="width: 100%">
       <ElTableColumn :prop="'type'" :label="t('docTemplate.variable.type')" width="120">
         <template #default="scope">
           <ElTag :type="scope.row.type === 'Table' ? 'success' : 'primary'">{{ scope.row.type }}</ElTag>
