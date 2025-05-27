@@ -8,8 +8,16 @@ if (!editorProvider) {
 }
 const { editor, lastSelection } = editorProvider
 
-const state = reactive({})
+const state = reactive({
+  imageWidth: 100
+})
 
+function handleWidthChange() {
+  editor.value.chain().focus().setImage({
+    src: editor.value.state.selection.node.attrs.src,
+    width: `${state.imageWidth}%;`
+  }).run()
+}
 </script>
 
 <template>
@@ -50,6 +58,13 @@ const state = reactive({})
       </button>
       <button @click="editor.chain().focus().unsetAllMarks().run()">
         Clear
+      </button>
+    </div>
+
+    <div v-if="lastSelection?.type === 'image'">
+      <input v-model="state.imageWidth" type="number" min="1" max="100" step="1" />
+      <button  @click="handleWidthChange">
+        Set image size
       </button>
     </div>
   </bubble-menu>
