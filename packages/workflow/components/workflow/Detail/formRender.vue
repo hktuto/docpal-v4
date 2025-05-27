@@ -143,7 +143,7 @@ function handleTypeIds(properties: any) {
 const formRenderSlotsRef = ref<any>({})
 async function getFormData(needValidation = true, onlyWritable = false) {
   let formData = {}
-  if (!needValidation) formData = FormRendererRef.value.getFormData(false)
+  if (!needValidation) formData = await FormRendererRef.value.getFormData(false)
   else {
     formData = await FormRendererRef.value
       .getFormData()
