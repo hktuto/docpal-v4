@@ -133,7 +133,7 @@ function handleBackgroundColor(backgroundColor: string) {
                   trigger="click">
         <template #reference>
           <el-button @click="state.createTablePopoverVisible = true">
-            {{ $t('Create Table') }}
+            {{ $t('docTemplate.table.createTable') }}
           </el-button>
         </template>
         <el-form ref="createTableFormRef" label-position="left" label-width="auto">
@@ -148,10 +148,10 @@ function handleBackgroundColor(backgroundColor: string) {
           </el-form-item>
           <div style="display: flex; justify-content: flex-end; margin: 0">
             <el-button @click="state.createTablePopoverVisible = false">
-              {{ $t('Cancel') }}
+              {{ $t('vxe.button.cancel') }}
             </el-button>
             <el-button type="primary" @click="handlePopoverCreateTable">
-              {{ $t('Create') }}
+              {{ $t('docTemplate.table.create') }}
             </el-button>
           </div>
         </el-form>
@@ -161,10 +161,10 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleTableCreateRow(true)">
-          {{ $t('Add Row Up') }}
+          {{ $t('docTemplate.table.addRowUp') }}
         </el-button>
         <el-button @click="handleTableCreateRow(false)">
-          {{ $t('Add Row Down') }}
+          {{ $t('docTemplate.table.addRowDown') }}
         </el-button>
       </el-button-group>
 
@@ -172,10 +172,10 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleTableCreateCol(true)">
-          {{ $t('Add col left') }}
+          {{ $t('docTemplate.table.addColLeft') }}
         </el-button>
         <el-button @click="handleTableCreateCol(false)">
-          {{ $t('Add col right') }}
+          {{ $t('docTemplate.table.addColRight') }}
         </el-button>
       </el-button-group>
 
@@ -183,13 +183,13 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleDeleteTable">
-          {{ $t('Delete table') }}
+          {{ $t('docTemplate.table.delete') }}
         </el-button>
         <el-button @click="handleTableDeleteRowOrCol(true)">
-          {{ $t('Delete Row') }}
+          {{ $t('docTemplate.table.deleteRow') }}
         </el-button>
         <el-button @click="handleTableDeleteRowOrCol(false)">
-          {{ $t('Delete Col') }}
+          {{ $t('docTemplate.table.deleteCol') }}
         </el-button>
       </el-button-group>
 
@@ -197,10 +197,10 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleTableCellsMergeOrSplit(true)">
-          {{ $t('Merge cells') }}
+          {{ $t('docTemplate.table.MergeCells') }}
         </el-button>
         <el-button @click="handleTableCellsMergeOrSplit(false)">
-          {{ $t('Split cell') }}
+          {{ $t('docTemplate.table.SplitCell') }}
         </el-button>
       </el-button-group>
 
@@ -208,7 +208,7 @@ function handleBackgroundColor(backgroundColor: string) {
       <el-divider direction="vertical" />
       <el-button-group>
         <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">
-          {{ $t('Set Table Background Color') }}
+          {{ $t('docTemplate.table.cellBackgroundColor') }}
         </el-button>
         <el-button style="width: 22px;">
           <el-color-picker v-model="state.tableBackgroundColor" :predefine="fontPredefineBackgroundColors"
@@ -221,10 +221,10 @@ function handleBackgroundColor(backgroundColor: string) {
     <el-col :span="24">
       <el-button-group>
         <el-button @click="handleTableToggleHeaderRowOrColumn(true)">
-          {{ $t('Toggle header row') }}
+          {{ $t('docTemplate.table.toggleHeaderRow') }}
         </el-button>
         <el-button @click="handleTableToggleHeaderRowOrColumn(false)">
-          {{ $t('Toggle header column') }}
+          {{ $t('docTemplate.table.toggleHeaderColumn') }}
         </el-button>
       </el-button-group>
 
@@ -232,7 +232,7 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleThBackgroundColor(state.tableThBackgroundColor)">
-          {{ $t('Set Header Background Color') }}
+          {{ $t('docTemplate.table.setHeaderBackgroundColor') }}
         </el-button>
 
         <el-button style="width: 22px;">
@@ -245,11 +245,11 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleClearOuterBoundaries">
-          {{ $t('Clear Outer Boundaries') }}
+          {{ $t('docTemplate.table.clearingOuterBoundaries') }}
         </el-button>
 
         <el-button @click="handleShowOuterBoundaries">
-          {{ $t('Show Outer Boundaries') }}
+          {{ $t('docTemplate.table.showOuterBoundaries') }}
         </el-button>
       </el-button-group>
 
@@ -257,11 +257,11 @@ function handleBackgroundColor(backgroundColor: string) {
 
       <el-button-group>
         <el-button @click="handleClearInnerBoundaries">
-          {{ $t('Clear Inner Boundaries') }}
+          {{ $t('docTemplate.table.clearingInnerBoundaries') }}
         </el-button>
 
         <el-button @click="handleShowInnerBoundaries">
-          {{ $t('Show Inner Boundaries') }}
+          {{ $t('docTemplate.table.showInnerBoundaries') }}
         </el-button>
       </el-button-group>
     </el-col>

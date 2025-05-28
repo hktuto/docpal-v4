@@ -210,113 +210,204 @@ function handleSuperscript() {
   <el-row>
     <el-col :span="24">
       <!-- font family -->
-      <el-dropdown trigger="click" split-button type="primary" @click="handleFontFamilyChange(state.fontFamily)">
-        {{ state.fontFamily }}
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
-                              @click="handleFontSizeChangeOnDown(item)">
-              {{ item }}
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.family')"
+        placement="bottom"
+      >
+        <el-dropdown trigger="click" split-button @click="handleFontFamilyChange(state.fontFamily)">
+          {{ state.fontFamily }}
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
+                                @click="handleFontSizeChangeOnDown(item)">
+                {{ item }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </el-tooltip>
 
       <el-divider direction="vertical" />
-
-      <el-select
-        v-model="state.fontSize"
-        allow-create
-        filterable
-        default-first-option
-        :reserve-keyword="false"
-        placeholder="please select"
-        style="width: 16%"
-        @change="checkFontSizeIsNumber"
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.size')"
+        placement="bottom"
       >
-        <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+        <el-select
+          v-model="state.fontSize"
+          allow-create
+          filterable
+          default-first-option
+          :reserve-keyword="false"
+          placeholder="please select"
+          style="width: 16%"
+          @change="checkFontSizeIsNumber"
+        >
+          <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-tooltip>
 
       <el-divider direction="vertical" />
 
       <el-button-group>
-        <el-button style="width: 41px" @click="handlerFontSizeResize(true)">
-          <p>A<sup>+</sup></p>
-        </el-button>
-        <el-button style="width: 41px" @click="handlerFontSizeResize(false)">
-          <p>A<sup>-</sup></p>
-        </el-button>
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content="t('docTemplate.font.increaseSize')"
+          placement="bottom"
+        >
+          <el-button style="width: 41px" @click="handlerFontSizeResize(true)">
+            <p>A<sup>+</sup></p>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content="t('docTemplate.font.reduceSize')"
+          placement="bottom"
+        >
+          <el-button style="width: 41px" @click="handlerFontSizeResize(false)">
+            <p>A<sup>-</sup></p>
+          </el-button>
+        </el-tooltip>
       </el-button-group>
 
       <el-divider direction="vertical" />
 
       <!-- font color   -->
-      <el-button-group>
-        <el-button @click="handleSetFontColor(state.fontColor)">
-          A
-        </el-button>
-        <el-button style="width: 22px">
-          <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors" @change="handleSetFontColor"
-                           @focus="handleFontColorFocus" />
-        </el-button>
-      </el-button-group>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.color')"
+        placement="bottom"
+      >
+        <el-button-group>
+          <el-button @click="handleSetFontColor(state.fontColor)">
+            A
+          </el-button>
+          <el-button style="width: 22px">
+            <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors" @change="handleSetFontColor"
+                             @focus="handleFontColorFocus" />
+          </el-button>
+        </el-button-group>
+      </el-tooltip>
 
       <el-divider direction="vertical" />
 
-      <el-button style="width: 38px"  @click="handleFontStyleClear">
-        🗑️
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.deleteStyle')"
+        placement="bottom"
+      >
+        <el-button style="width: 38px" @click="handleFontStyleClear">
+          🗑️
+        </el-button>
+      </el-tooltip>
     </el-col>
   </el-row>
   <el-row>
     <el-col :span="24">
       <!-- font bold  -->
-      <el-button style="width: 36px" @click="handleFontBoldChange" :class="{ 'is-active': editor.isActive('bold') }">
-        <p style="font-weight: bold">B</p>
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.bold')"
+        placement="bottom"
+      >
+        <el-button style="width: 36px" @click="handleFontBoldChange" :class="{ 'is-active': editor.isActive('bold') }">
+          <p style="font-weight: bold">B</p>
+        </el-button>
+      </el-tooltip>
 
       <!--  font italic  -->
-      <el-button @click="handleFontItalicChange" :class="{ 'is-active': editor.isActive('italic') }">
-        <p><em>I</em></p>
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.italic')"
+        placement="bottom"
+      >
+        <el-button @click="handleFontItalicChange" :class="{ 'is-active': editor.isActive('italic') }">
+          <p><em>I</em></p>
+        </el-button>
+      </el-tooltip>
 
       <!--  font Underline  -->
-      <el-button style="width: 36px" @click="handleUnderline" :class="{ 'is-active': editor.isActive('underline') }">
-        <p><u>U</u></p>
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.underline')"
+        placement="bottom"
+      >
+        <el-button style="width: 36px" @click="handleUnderline" :class="{ 'is-active': editor.isActive('underline') }">
+          <p><u>U</u></p>
+        </el-button>
+      </el-tooltip>
 
       <!--  font Strike  -->
-      <el-button @click="handleStrike" :class="{ 'is-active': editor.isActive('strike') }">
-        <p><s>abc</s></p>
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.delineate')"
+        placement="bottom"
+      >
+        <el-button @click="handleStrike" :class="{ 'is-active': editor.isActive('strike') }">
+          <p><s>abc</s></p>
+        </el-button>
+      </el-tooltip>
 
       <!--  font Subscript  -->
-      <el-button style="width: 36px" @click="handleSubscript" :class="{ 'is-active': editor.isActive('subscript') }">
-        <p>X<sub>2</sub></p>
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.subscript')"
+        placement="bottom"
+      >
+        <el-button style="width: 36px" @click="handleSubscript" :class="{ 'is-active': editor.isActive('subscript') }">
+          <p>X<sub>2</sub></p>
+        </el-button>
+      </el-tooltip>
 
       <!--  font Superscript  -->
-      <el-button style="width: 36px" @click="handleSuperscript"
-                 :class="{ 'is-active': editor.isActive('superscript') }">
-        <p>X<sup>2</sup></p>
-      </el-button>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.superscript')"
+        placement="bottom"
+      >
+        <el-button style="width: 36px" @click="handleSuperscript"
+                   :class="{ 'is-active': editor.isActive('superscript') }">
+          <p>X<sup>2</sup></p>
+        </el-button>
+      </el-tooltip>
 
       <el-divider direction="vertical" />
+
       <!-- font highlight -->
-      <el-button-group>
-        <el-button @click="handleFontHighlight(state.fontHighlightColor)">
-          <p>Highlight</p>
-        </el-button>
-        <el-button style="width: 22px;">
-          <el-color-picker v-model="state.fontHighlightColor" :predefine="fontPredefineHighlightColors"
-                           @blur="handleFontHighlight(state.fontHighlightColor)" />
-        </el-button>
-      </el-button-group>
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.font.highlight')"
+        placement="bottom"
+      >
+        <el-button-group>
+          <el-button @click="handleFontHighlight(state.fontHighlightColor)">
+            <p>Highlight</p>
+          </el-button>
+          <el-button style="width: 22px;">
+            <el-color-picker v-model="state.fontHighlightColor" :predefine="fontPredefineHighlightColors"
+                             @blur="handleFontHighlight(state.fontHighlightColor)" />
+          </el-button>
+        </el-button-group>
+      </el-tooltip>
     </el-col>
   </el-row>
 
   <div style="text-align: center; margin-top: 9px;">
-    {{ t('Font') }}
+    {{ $t('docTemplate.font.font') }}
   </div>
 </template>
 

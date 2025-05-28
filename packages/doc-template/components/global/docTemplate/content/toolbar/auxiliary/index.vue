@@ -115,27 +115,55 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
 
 <template>
   <div class="font-style-toolbar">
-    <el-button @click="addHorizontalLine">
-      {{ $t('Horizontal line')}}
-    </el-button>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="t('docTemplate.utils.HorizontalLine')"
+      placement="bottom"
+    >
+      <el-button @click="addHorizontalLine">
+        {{ $t('docTemplate.utils.HorizontalLine') }}
+      </el-button>
+    </el-tooltip>
 
-    <el-button @click="handleTaskList" :class="{ 'is-active': editor.isActive('taskList') }">
-      {{ $t('Toggle task list')}}
-    </el-button>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="t('docTemplate.utils.toggleTaskList')"
+      placement="bottom"
+    >
+      <el-button @click="handleTaskList" :class="{ 'is-active': editor.isActive('taskList') }">
+        {{ $t('docTemplate.utils.TaskList') }}
+      </el-button>
+    </el-tooltip>
 
     <!-- font link -->
-    <el-button style="width: 38px"  @click="openSetLinkDialog">
-      <p>🔗</p>
-    </el-button>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="t('docTemplate.utils.link')"
+      placement="bottom"
+    >
+      <el-button style="width: 38px" @click="openSetLinkDialog">
+        <p>🔗</p>
+      </el-button>
+    </el-tooltip>
 
     <!-- set image   -->
-    <el-button @click="openSetImageDialog">
-      {{ $t('image')}}
-    </el-button>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="t('docTemplate.utils.image')"
+      placement="bottom"
+    >
+      <el-button @click="openSetImageDialog">
+        {{ $t('docTemplate.utils.image') }}
+      </el-button>
+    </el-tooltip>
   </div>
 
   <div style="text-align: center; margin-top: 44px;">
-    {{ $t('Utils') }}
+    {{ $t('docTemplate.utils.utils') }}
   </div>
 
   <el-dialog v-model="state.fontLinkDialogVisible" title="Set Link" width="500">
@@ -199,7 +227,7 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
 </template>
 
 <style scoped lang="scss">
-.font-style-toolbar{
+.font-style-toolbar {
   width: max-content;
 }
 </style>
