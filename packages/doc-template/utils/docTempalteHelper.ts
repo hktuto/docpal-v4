@@ -114,7 +114,7 @@ interface DocTemplateProvider {
   lastSelection: Ref<LastSelection | null | undefined>,
   variables : Ref<VariableItem[]>,
   addVariable: (variable: VariableItem) => void,
-  removeVariable: (variable: VariableItem) => void,
+  removeVariable: (updateVariable: VariableItem) => void,
   updateVariable?: (variable: VariableItem) => void
 }
 

@@ -3493,6 +3493,15 @@
       "insertTableVariable": "Insert Table Variable",
       "selectListVariable": "Select list variable",
       "selectTableVariable": "Select table variable"
+    },
+    "export": {
+      "configureVariables": "Configure Variables",
+      "noVariables": "No variables to configure.",
+      "export": "Export",
+      "exportJSON": "Export JSON",
+      "exportHTML": "Export HTML",
+      "exportPDF": "Export PDF",
+      "exportDOCX": "Export DOCX"
     }
   }
 }
