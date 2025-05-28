@@ -24,8 +24,9 @@ function handleOpen() {
 async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    if (!data) return
     const json = JSON.parse(data.textContent)
-    initEditor(json.options, json.content)
+    initEditor(json.json.options, json.json.content)
     state.visible = false
   } catch (e) {
     console.log(e)

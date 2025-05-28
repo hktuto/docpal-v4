@@ -4,13 +4,15 @@ import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
 const { editor, options, initEditor } = inject(DocTemplateProveKey)
 const { t } = useI18n()
 const fontPredefineBackgroundColors = ref(['#FFFFFF', '#97FC00', '#00DDFF'])
+const fontPredefineThBackgroundColors = ref(['#ADADAD', '#fc8f00', '#00b2ff'])
 
 const state = reactive({
   createTablePopoverVisible: false,
   tableRow: 3,
   tableCol: 3,
   withHeaderRow: ref(true),
-  tableBackgroundColor: '#FFFFFF'
+  tableBackgroundColor: '#FFFFFF',
+  tableThBackgroundColor: '#ADADAD'
 })
 
 function handlePopoverCreateTable() {
@@ -73,6 +75,10 @@ function handleTableToggleHeaderRowOrColumn(state: boolean) {
   }
 }
 
+function handleThBackgroundColor(backgroundColor: string) {
+  editor.value.chain().focus().setCellAttribute('thBackgroundColor', backgroundColor).run()
+}
+
 /**
  * @param state (true: merge, false: split)
  */
@@ -98,6 +104,7 @@ function handleShowOuterBoundaries() {
 
 function handleClearInnerBoundaries() {
   editor.value.chain().focus().setCellAttribute('border', 'none;').run()
+  // TODO: style Not effective
   // editor.value.chain().focus().setCellAttribute('borderBottom', 'none;').run()
   // editor.value.chain().focus().setCellAttribute('borderTop', 'none;').run()
   // editor.value.chain().focus().setCellAttribute('borderLeft', 'none;').run()
@@ -106,6 +113,7 @@ function handleClearInnerBoundaries() {
 
 function handleShowInnerBoundaries() {
   editor.value.chain().focus().setCellAttribute('border', '1px solid black;').run()
+  // TODO: style Not effective
   // editor.value.chain().focus().setCellAttribute('borderBottom', '1px solid black;').run()
   // editor.value.chain().focus().setCellAttribute('borderTop', '1px solid black;').run()
   // editor.value.chain().focus().setCellAttribute('borderLeft', '1px solid black;').run()
@@ -188,6 +196,10 @@ function handleBackgroundColor(backgroundColor: string) {
         <el-button @click="handleTableToggleHeaderRowOrColumn(false)">
           Toggle header column
         </el-button>
+        <el-button style="width: 9%;">
+          <el-color-picker v-model="state.tableThBackgroundColor" :predefine="fontPredefineThBackgroundColors"
+                           @blur="handleThBackgroundColor(state.tableThBackgroundColor)" />
+        </el-button>
       </el-button-group>
 
       <el-divider direction="vertical" />
@@ -214,24 +226,23 @@ function handleBackgroundColor(backgroundColor: string) {
       Show Outer Boundaries
     </el-button>
 
-    <el-button @click="handleClearInnerBoundaries">
-      Clear Inner Boundaries
-    </el-button>
+     <el-button @click="handleClearInnerBoundaries">
+       Clear Inner Boundaries
+     </el-button>
 
-    <el-button @click="handleShowInnerBoundaries">
-      Show Inner Boundaries
-    </el-button>
+     <el-button @click="handleShowInnerBoundaries">
+       Show Inner Boundaries
+     </el-button>
 
-    <!-- TODO: style Not effective   -->
-    <!--    <el-button-group>-->
-    <!--      <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">-->
-    <!--        <p>Set Table Background Color</p>-->
-    <!--      </el-button>-->
-    <!--      <el-button style="width: 12%;">-->
-    <!--        <el-color-picker v-model="state.tableBackgroundColor" :predefine="fontPredefineBackgroundColors"-->
-    <!--                         @blur="handleBackgroundColor(state.tableBackgroundColor)" />-->
-    <!--      </el-button>-->
-    <!--    </el-button-group>-->
+    <el-button-group>
+      <el-button @click="handleBackgroundColor(state.tableBackgroundColor)">
+        <p>Set Table Background Color</p>
+      </el-button>
+      <el-button style="width: 12%;">
+        <el-color-picker v-model="state.tableBackgroundColor" :predefine="fontPredefineBackgroundColors"
+                         @blur="handleBackgroundColor(state.tableBackgroundColor)" />
+      </el-button>
+    </el-button-group>
   </div>
 
   <div style="text-align: center; margin-top: 9px;">
