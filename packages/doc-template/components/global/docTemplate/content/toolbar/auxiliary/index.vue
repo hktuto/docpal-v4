@@ -18,9 +18,9 @@ const state = reactive({
 })
 
 /**
- * Add horizontal
+ * Add horizontal Line
  */
-function addHorizontalRule() {
+function addHorizontalLine() {
   editor.value.chain().focus().setHorizontalRule().run()
 }
 
@@ -114,28 +114,28 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
 </script>
 
 <template>
-  <div>
-    <el-button @click="addHorizontalRule">
-      Horizontal line
+  <div class="font-style-toolbar">
+    <el-button @click="addHorizontalLine">
+      {{ $t('Horizontal line')}}
     </el-button>
 
     <el-button @click="handleTaskList" :class="{ 'is-active': editor.isActive('taskList') }">
-      Toggle task list
+      {{ $t('Toggle task list')}}
     </el-button>
 
     <!-- font link -->
-    <el-button @click="openSetLinkDialog">
+    <el-button style="width: 38px"  @click="openSetLinkDialog">
       <p>🔗</p>
     </el-button>
 
     <!-- set image   -->
     <el-button @click="openSetImageDialog">
-      image
+      {{ $t('image')}}
     </el-button>
   </div>
 
-  <div style="text-align: center; margin-top: 9px;">
-    {{ t('Utils') }}
+  <div style="text-align: center; margin-top: 44px;">
+    {{ $t('Utils') }}
   </div>
 
   <el-dialog v-model="state.fontLinkDialogVisible" title="Set Link" width="500">
@@ -199,5 +199,7 @@ async function handleSuccess(uploadFile: any, uploadFiles: any) {
 </template>
 
 <style scoped lang="scss">
-
+.font-style-toolbar{
+  width: max-content;
+}
 </style>

@@ -57,6 +57,14 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
         {
           name: 'Insert Link',
           components: 'DocTemplateContentToolbarVariableInertLink'
+        },
+        {
+          name: 'Insert List',
+          components: 'DocTemplateContentToolbarVariableInsertList'
+        },
+        {
+          name: 'Insert Table',
+          components: 'DocTemplateContentToolbarVariableInsertTable'
         }
       ]
     },
