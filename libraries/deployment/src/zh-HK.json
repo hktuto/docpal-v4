@@ -3491,6 +3491,15 @@
       "insertTableVariable": "插入表格變數",
       "selectListVariable": "選擇清單變數",
       "selectTableVariable": "選擇表格變數"
+    },
+    "export": {
+      "configureVariables": "設定變數",
+      "noVariables": "沒有可設定的變數。",
+      "export": "匯出",
+      "exportJSON": "匯出 JSON",
+      "exportHTML": "匯出 HTML",
+      "exportPDF": "匯出 PDF",
+      "exportDOCX": "匯出 DOCX"
     }
   }
 }

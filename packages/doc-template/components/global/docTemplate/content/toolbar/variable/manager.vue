@@ -227,8 +227,7 @@ function closeTableEditor() {
 
 <template>
   <ElDialog :model-value="true" :title="t('docTemplate.variable.managerTitle')" width="800px" @close="closeDialog">
-    {{ tableKeyPrefix }} {{ variables.length }}
-    {{ variables }}
+
     <ElTable :data="variables" :key="tableKeyPrefix + '_' +variables.length" style="width: 100%">
       <ElTableColumn :prop="'type'" :label="t('docTemplate.variable.type')" width="120">
         <template #default="scope">

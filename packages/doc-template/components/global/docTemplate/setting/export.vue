@@ -1,65 +1,95 @@
 <script lang="ts" setup>
-import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
+import { DocTemplateProveKey, type VariableItem } from '~/utils/docTempalteHelper'
 import formJson from './docJson.json'
+import ExportVariableSidebar from './ExportVariableSidebar.vue'
+import { useI18n } from 'vue-i18n'
 
 const docTempalteProvider = inject(DocTemplateProveKey)
 const { t } = useI18n()
-const { editor, options } = docTempalteProvider
+const { editor, options, variables } = docTempalteProvider!
 
 const state = reactive({
   loading: false,
   visible: false,
-  textContent: ''
+  textContent: '',
+  sidebarVisible: false,
+  exportType: 'html' as 'html' | 'docx' | 'pdf'
 })
 
 const FormRendererRef = ref()
 // TODO : the server should add to nuxtConfig runtime
 const nodeBackendEndpoint = 'http://localhost:3333'
-async function exportDocx(){
-  const json = getJsonConfig();
-  const blob = await fetch(nodeBackendEndpoint+'/convert/docx', {
-     method:"POST",
-    headers:{
+
+async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
+  const res = await fetch(nodeBackendEndpoint + endpoint, {
+    method: 'POST',
+    headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      json
-    })
-  }).then(res => res.blob())
+    body: JSON.stringify(data)
+  })
+  return await res.blob()
+}
 
-  const url = URL.createObjectURL(blob)
+async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: VariableItem[]) {
+  const data = getJsonConfig(configuredVariables)
+  let endpoint = ''
+  let filename = ''
+  let mime = ''
+  if (exportType === 'docx') {
+    endpoint = '/convert/docx'
+    filename = 'test.docx'
+    mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  } else if (exportType === 'pdf') {
+    endpoint = '/convert/pdf'
+    filename = 'test.pdf'
+    mime = 'application/pdf'
+  } else {
+    endpoint = '/convert/html'
+    filename = 'test.html'
+    mime = 'text/html'
+  }
+  const blob = await fetchExportBlob(endpoint, data)
+  // For HTML, the server may return text, so we need to handle it as text
+  let finalBlob = blob
+  if (exportType === 'html') {
+    // Try to convert blob to text and back to blob for correct encoding
+    const text = await blob.text()
+    finalBlob = new Blob([text], { type: mime })
+  }
+  const url = URL.createObjectURL(finalBlob)
   const link = document.createElement('a')
   link.href = url
-  link.download = 'test.docx'
+  link.download = filename
   document.body.appendChild(link)
   link.click()
   link.remove()
 }
 
-async function exportHTML() {
-  const json = getJsonConfig()
-  console.log(options)
-  const res = await fetch(nodeBackendEndpoint + '/convert/html', {
-    method:'POST',
-    headers:{
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      json
-    })
-  }).then(res => res.text())
-  const blob = new Blob([res], { type: 'text/html' })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = 'test.html'
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
+function handleExportDropdown(command: 'html' | 'pdf' | 'docx' | 'json') {
+  if(command === 'json') {
+    openDialog()
+    return
+  }
+  if (variables.value.length > 0) {
+    state.exportType = command
+    state.sidebarVisible = true
+  } else {
+    performExport(command, [])
+  }
+}
+
+function handleSidebarExport(configuredVariables: VariableItem[]) {
+  state.sidebarVisible = false
+  performExport(state.exportType, configuredVariables)
+}
+
+function handleSidebarClose() {
+  state.sidebarVisible = false
 }
 
 function openDialog() {
-  const json = getJsonConfig()
+  const json = getJsonConfig([])
   const textContent = JSON.stringify(json)
   state.visible = true
   state.loading = true
@@ -70,23 +100,44 @@ function openDialog() {
   })
 }
 
-function getJsonConfig() {
+function getJsonConfig(configuredVariables: VariableItem[] = []) {
   const data = {
-    options: '',
-    content: ''
+    json: {
+      options: '',
+      content: '',
+    },
+    variables: configuredVariables
   }
-  data.options = options.value
-  data.content = editor.value.getJSON()
+  data.json.options = options.value
+  data.json.content = editor.value.getJSON()
   return data
 }
 
 </script>
 
 <template>
-  <ElButton @click="openDialog">Export</ElButton>
-  <ElButton size="small" @click="exportHTML">Export HTML</ElButton>
-  <ElButton size="small" @click="exportDocx">Export Docx</ElButton>
+  <el-dropdown @command="handleExportDropdown">
+    <ElButton >
+      {{ t('docTemplate.export.export') }} <i class="el-icon-arrow-down el-icon--right"></i>
+    </ElButton>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="json">{{ t('docTemplate.export.exportJSON') }}</el-dropdown-item>
+      <el-dropdown-item command="html">{{ t('docTemplate.export.exportHTML') }}</el-dropdown-item>
+      <el-dropdown-item command="pdf">{{ t('docTemplate.export.exportPDF') }}</el-dropdown-item>
+      <el-dropdown-item command="docx">{{ t('docTemplate.export.exportDOCX') }}</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  
   <el-dialog v-model="state.visible" :title="t('Export')">
     <FormRenderer ref="FormRendererRef" v-loading="state.loading" :form-json="formJson" />
   </el-dialog>
+  
+  <ExportVariableSidebar
+    :visible="state.sidebarVisible"
+    :export-type="state.exportType"
+    @close="handleSidebarClose"
+    @export="handleSidebarExport"
+  />
 </template>
