@@ -22,7 +22,7 @@ function handleTitle(number: number) {
     </el-button-group>
   </div>
 
-  <div style="text-align: center; margin-top: 9px;">
+  <div style="text-align: center; margin-top: 44px;">
     {{ t('Style') }}
   </div>
 

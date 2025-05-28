@@ -207,100 +207,113 @@ function handleSuperscript() {
 </script>
 
 <template>
-  <div style="margin-bottom: 12px;">
-    <!-- font family -->
-    <el-dropdown trigger="click" split-button type="primary" @click="handleFontFamilyChange(state.fontFamily)">
-      {{ state.fontFamily }}
-      <template #dropdown>
-        <el-dropdown-menu>
-          <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
-                            @click="handleFontSizeChangeOnDown(item)">
-            {{ item }}
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </template>
-    </el-dropdown>
+  <el-row>
+    <el-col :span="24">
+      <!-- font family -->
+      <el-dropdown trigger="click" split-button type="primary" @click="handleFontFamilyChange(state.fontFamily)">
+        {{ state.fontFamily }}
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
+                              @click="handleFontSizeChangeOnDown(item)">
+              {{ item }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
 
-    <el-select
-      v-model="state.fontSize"
-      allow-create
-      filterable
-      default-first-option
-      :reserve-keyword="false"
-      placeholder="please select"
-      style="width: 16%"
-      @change="checkFontSizeIsNumber"
-    >
-      <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
-    </el-select>
+      <el-divider direction="vertical" />
 
-    <el-button @click="handlerFontSizeResize(true)">
-      <p>A<sup>+</sup></p>
-    </el-button>
-    <el-button @click="handlerFontSizeResize(false)">
-      <p>A<sup>-</sup></p>
-    </el-button>
-    <el-divider direction="vertical" />
+      <el-select
+        v-model="state.fontSize"
+        allow-create
+        filterable
+        default-first-option
+        :reserve-keyword="false"
+        placeholder="please select"
+        style="width: 16%"
+        @change="checkFontSizeIsNumber"
+      >
+        <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
+      </el-select>
 
-    <el-button @click="handleFontStyleClear">
-      🗑️
-    </el-button>
-  </div>
+      <el-divider direction="vertical" />
 
-  <div>
-    <!-- font bold  -->
-    <el-button @click="handleFontBoldChange" :class="{ 'is-active': editor.isActive('bold') }">
-      <p style="font-weight: bold">B</p>
-    </el-button>
+      <el-button-group>
+        <el-button style="width: 41px" @click="handlerFontSizeResize(true)">
+          <p>A<sup>+</sup></p>
+        </el-button>
+        <el-button style="width: 41px" @click="handlerFontSizeResize(false)">
+          <p>A<sup>-</sup></p>
+        </el-button>
+      </el-button-group>
 
-    <!--  font italic  -->
-    <el-button @click="handleFontItalicChange" :class="{ 'is-active': editor.isActive('italic') }">
-      <p><em>I</em></p>
-    </el-button>
+      <el-divider direction="vertical" />
 
-    <!--  font Underline  -->
-    <el-button @click="handleUnderline" :class="{ 'is-active': editor.isActive('underline') }">
-      <p><u>U</u></p>
-    </el-button>
+      <!-- font color   -->
+      <el-button-group>
+        <el-button @click="handleSetFontColor(state.fontColor)">
+          A
+        </el-button>
+        <el-button style="width: 22px">
+          <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors" @change="handleSetFontColor"
+                           @focus="handleFontColorFocus" />
+        </el-button>
+      </el-button-group>
 
-    <!--  font Strike  -->
-    <el-button @click="handleStrike" :class="{ 'is-active': editor.isActive('strike') }">
-      <p><s>abc</s></p>
-    </el-button>
+      <el-divider direction="vertical" />
 
-    <!--  font Subscript  -->
-    <el-button @click="handleSubscript" :class="{ 'is-active': editor.isActive('subscript') }">
-      <p>X<sub>2</sub></p>
-    </el-button>
-
-    <!--  font Superscript  -->
-    <el-button @click="handleSuperscript" :class="{ 'is-active': editor.isActive('superscript') }">
-      <p>X<sup>2</sup></p>
-    </el-button>
-
-    <el-divider direction="vertical" />
-    <!-- font highlight -->
-    <el-button-group>
-      <el-button @click="handleFontHighlight(state.fontHighlightColor)">
-        <p>Highlight</p>
+      <el-button style="width: 38px"  @click="handleFontStyleClear">
+        🗑️
       </el-button>
-      <el-button style="width: 22%;">
-        <el-color-picker v-model="state.fontHighlightColor" :predefine="fontPredefineHighlightColors"
-                         @blur="handleFontHighlight(state.fontHighlightColor)" />
+    </el-col>
+  </el-row>
+  <el-row>
+    <el-col :span="24">
+      <!-- font bold  -->
+      <el-button style="width: 36px" @click="handleFontBoldChange" :class="{ 'is-active': editor.isActive('bold') }">
+        <p style="font-weight: bold">B</p>
       </el-button>
-    </el-button-group>
 
-    <!-- font color   -->
-    <el-button-group>
-      <el-button @click="handleSetFontColor(state.fontColor)">
-        A
+      <!--  font italic  -->
+      <el-button @click="handleFontItalicChange" :class="{ 'is-active': editor.isActive('italic') }">
+        <p><em>I</em></p>
       </el-button>
-      <el-button style="width: 31%;">
-        <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors" @change="handleSetFontColor"
-                         @focus="handleFontColorFocus" />
+
+      <!--  font Underline  -->
+      <el-button style="width: 36px" @click="handleUnderline" :class="{ 'is-active': editor.isActive('underline') }">
+        <p><u>U</u></p>
       </el-button>
-    </el-button-group>
-  </div>
+
+      <!--  font Strike  -->
+      <el-button @click="handleStrike" :class="{ 'is-active': editor.isActive('strike') }">
+        <p><s>abc</s></p>
+      </el-button>
+
+      <!--  font Subscript  -->
+      <el-button style="width: 36px" @click="handleSubscript" :class="{ 'is-active': editor.isActive('subscript') }">
+        <p>X<sub>2</sub></p>
+      </el-button>
+
+      <!--  font Superscript  -->
+      <el-button style="width: 36px" @click="handleSuperscript"
+                 :class="{ 'is-active': editor.isActive('superscript') }">
+        <p>X<sup>2</sup></p>
+      </el-button>
+
+      <el-divider direction="vertical" />
+      <!-- font highlight -->
+      <el-button-group>
+        <el-button @click="handleFontHighlight(state.fontHighlightColor)">
+          <p>Highlight</p>
+        </el-button>
+        <el-button style="width: 22px;">
+          <el-color-picker v-model="state.fontHighlightColor" :predefine="fontPredefineHighlightColors"
+                           @blur="handleFontHighlight(state.fontHighlightColor)" />
+        </el-button>
+      </el-button-group>
+    </el-col>
+  </el-row>
 
   <div style="text-align: center; margin-top: 9px;">
     {{ t('Font') }}
@@ -308,5 +321,15 @@ function handleSuperscript() {
 </template>
 
 <style scoped lang="scss">
+.el-row {
+  margin-bottom: 5px;
+}
 
+.el-row:last-child {
+  margin-bottom: 0;
+}
+
+.el-col {
+  border-radius: 2px;
+}
 </style>

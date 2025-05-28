@@ -103,7 +103,7 @@ export const variableType = [
 ]
 
 export type LastSelection = {
-  type: "text" | "textRange" | "image",
+  type: "text" | "textRange" | "image" | "cell",
   data: any
 }
 
