@@ -9,8 +9,8 @@ const state = reactive({
     path: '',
 })
 
-function getData(){
-    return formEl.value.vFormRenderRef.getFormData()
+async function getData(){
+    return await formEl.value.vFormRenderRef.getFormData()
 }
 
 onMounted(() => {

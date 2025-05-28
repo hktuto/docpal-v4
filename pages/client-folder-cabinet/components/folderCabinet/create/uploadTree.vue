@@ -131,6 +131,7 @@ function getMetaName(formData: any = {}) {
   const labelRules = getLabelList(state.selectedRow.labelRule)
   let data = { ...formData }
   if (state.selectedRow?.properties) data = { ...data, ...state.selectedRow.properties }
+  data.label = state.selectedRow.docName ? state.selectedRow.docName : state.selectedRow.label
   return getNameByLabelRule(labelRules, data)
 }
 

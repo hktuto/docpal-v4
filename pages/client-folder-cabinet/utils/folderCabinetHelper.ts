@@ -3,6 +3,7 @@ export function getNameByLabelRule(labelRules: any, data: any) {
   const date = new Date()
   const userId: string = useUserId().value
   try {
+    console.log("getNameByLabelRule", labelRules, data)
     if (!labelRules || labelRules.length === 0) throw new Error('no labelRules')
     else {
       return labelRules.reduce((prev: any, rule: any, index: number) => {

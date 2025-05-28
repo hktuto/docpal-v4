@@ -5,6 +5,7 @@ import { clientApi } from "api"
 import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
 import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
+import { useUserPreference } from '../../authApp/composables/useAuth';
 
 
 export type TableActionsParams = {
@@ -512,18 +513,25 @@ export const useVxeTable = (params: UseVxeTableParams) => {
             observer.disconnect()
         }
     })
+    //
+    if(!params.virtualScroll) {
+      tableEvent.pageChange = ({ pageSize })=>{
+        try{
+          if(!params.id){
+            throw new Error("table Id is null");
+          }
+          const tableSetting = useUserPreference().value.tableSettings[params.id] ||= {}
+          tableSetting.tablePageSize = pageSize
+          const data = {
+            id:params.id,
+            storeData: tableSetting
+          }
+          tableConfig.customConfig.updateStore(data)
+        }catch(e) {
+          console.error(e);
 
-    tableEvent.pageChange = ({ pageSize })=>{
-      if(!params.id){
-        throw new Error("table Id is null");
+        }
       }
-      const tableSetting = useUserPreference().value.tableSettings[params.id] ||= {}
-      tableSetting.tablePageSize = pageSize
-      const data = {
-        id:params.id,
-        storeData: tableSetting
-      }
-      tableConfig.customConfig.updateStore(data)
     }
 
     return {
@@ -537,5 +545,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 }
 
 function getPageSize(id: string){
-  return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
+  try {
+    return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
+  } catch (error) {
+    console.error(error)
+    return 20
+  }
 }
