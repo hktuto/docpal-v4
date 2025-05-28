@@ -34,17 +34,18 @@ async function setUpForm() {
       .then(res => res.data) as any
     primaryForm.value = caseData.rows
     inParameters.value = stepDetail.inParameters as { [key: string]: string }
-
+    
     // get form xml
     const xml = await clientApi.api.getWorkflowVersionVersionidBpmnxml(stepDetail.processDefinitionVersionId)
     // get form data
     formData.value = Object.keys(inParameters.value).reduce((prev: any, key) => {
       const valueItem = caseData.rows.find(c => c.id === key)
-      if (valueItem) {
+      if (valueItem && valueItem.value) {
         prev[inParameters.value[key]] = valueItem.value
       }
       return prev
     }, {})
+    console.log("inParameters", inParameters.value, stepDetail, caseData.rows, formData.value)
     // set case info into form data
     formData.value.caseInstanceId = caseInstanceId
     formData.value.case_id = caseInstanceId
