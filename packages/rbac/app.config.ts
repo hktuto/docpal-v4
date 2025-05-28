@@ -10,6 +10,15 @@ export default defineAppConfig({
       component: "LazyRbacPage",
       feature: "CORE",
     },
+    "RBAC-editor2":{
+      id:"RBAC-editor2",
+      name: 'rgac2',
+      label: "ROLE-Editor2",
+      icon: "lucide:file-cog",
+      hoverIcon: "lucide:file-cog",
+      component: "LazyRbacPage2",
+      feature: "CORE",
+    },
     "user-role-file-action": {
       id: "user-role-file-action",
       name: "user-role-file-action",
