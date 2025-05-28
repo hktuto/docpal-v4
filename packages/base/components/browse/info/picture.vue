@@ -30,7 +30,7 @@ const tableList = ref<any>([])
 function formatter(row: any, column: any) {
   switch (column.property) {
     case 'fileSize':
-      return fileSizeFilter(row.length || row.content.length)
+      return fileSizeFilter(row.fileSize)
     case 'width*height':
       const width = row.width || row.info.width
       const height = row.height || row.info.height
@@ -44,7 +44,7 @@ function fileSizeFilter(bytes: any) {
   bytes = Number(bytes)
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let unit = ''
-  for (let i = 1; bytes / 1024 >= 1; i++) {
+  for (let i = 0; bytes / 1024 >= 1; i++) {
     unit = units[i]
     bytes = bytes / 1024
   }
