@@ -74,10 +74,11 @@ watch(() => props, (newId) => {
   immediate: true,
   deep: true
 })
-onMounted(() => {
-  getList()
+onMounted( async () => {
+  console.log("watermark onMounted")
+  await getList()
 })
-onDeactivated(() => {
+onUnmounted(() => {
   detail.value = null
 })
 </script>

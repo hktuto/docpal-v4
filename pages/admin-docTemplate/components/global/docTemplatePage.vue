@@ -1,7 +1,11 @@
 <script lang="ts" setup>
+import { MenuRouterKey } from '#imports'
 import type {TipTapOptions} from 'docpal-document-editor/src/types'
 const pageReady = ref(false)
-
+const routerProvider = inject(MenuRouterKey)
+if(!routerProvider) {
+  throw new Error("routerProvider not found")
+}
 const json = ref({})
 const documentOptions = ref<TipTapOptions>()
 
@@ -10,6 +14,10 @@ const user = useUserState()
 function newSetting(newData:TipTapOptions) {
   documentOptions.value = newData;
   documentOptions.value.editable = true;
+  // if documentOptions.value.title is valid, the update router title
+  if (newData.title) {
+    routerProvider?.updateTabName(newData.title)
+  }
   pageReady.value = true
 }
 

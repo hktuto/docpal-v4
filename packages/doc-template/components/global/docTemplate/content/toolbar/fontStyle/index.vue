@@ -14,22 +14,29 @@ function handleTitle(number: number) {
 
 <template>
   <div class="font-style-toolbar">
-    <el-button-group>
-      <el-button v-for="(item,index) in titlePredefine" @click="handleTitle(index + 1)"
-                 :class="{ 'is-active': editor.isActive('heading', { level: index + 1 }) }">
-        {{ item }}
-      </el-button>
-    </el-button-group>
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="t('docTemplate.style.titleTags')"
+      placement="bottom"
+    >
+      <el-button-group>
+        <el-button v-for="(item,index) in titlePredefine" @click="handleTitle(index + 1)"
+                   :class="{ 'is-active': editor.isActive('heading', { level: index + 1 }) }">
+          {{ item }}
+        </el-button>
+      </el-button-group>
+    </el-tooltip>
   </div>
 
   <div style="text-align: center; margin-top: 44px;">
-    {{ t('Style') }}
+    {{ t('docTemplate.style.style') }}
   </div>
 
 </template>
 
 <style scoped lang="scss">
-.font-style-toolbar{
+.font-style-toolbar {
   width: max-content;
 }
 </style>
