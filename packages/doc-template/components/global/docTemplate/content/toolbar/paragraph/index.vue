@@ -28,60 +28,102 @@ function handleTextAlign(align: string) {
   <div>
     <el-row>
       <el-col :span="24">
-        <el-button @click="handleBulletList" :class="{ 'is-active': editor.isActive('bulletList') }">
-          Bullet List
-        </el-button>
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content="t('docTemplate.paragraph.bulletList')"
+          placement="bottom"
+        >
+          <el-button @click="handleBulletList" :class="{ 'is-active': editor.isActive('bulletList') }">
+            {{$t('docTemplate.paragraph.bulletList')}}
+          </el-button>
+        </el-tooltip>
 
-        <el-button @click="handleOrderedList" :class="{ 'is-active': editor.isActive('orderedList') }">
-          Ordered List
-        </el-button>
-
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content="t('docTemplate.paragraph.orderedList')"
+          placement="bottom"
+        >
+          <el-button @click="handleOrderedList" :class="{ 'is-active': editor.isActive('orderedList') }">
+            {{ $t('docTemplate.paragraph.orderedList') }}
+          </el-button>
+        </el-tooltip>
         <el-divider direction="vertical" />
 
         <el-button-group class="font-style-toolbar">
-          <el-button @click="editor.chain().focus().splitListItem('listItem').run()"
-                     :disabled="!editor.can().splitListItem('listItem')">
-            {{ t('Split list item') }}
-          </el-button>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="t('docTemplate.paragraph.splitListItem')"
+            placement="bottom"
+          >
+            <el-button @click="editor.chain().focus().splitListItem('listItem').run()"
+                       :disabled="!editor.can().splitListItem('listItem')">
+              {{ $t('docTemplate.paragraph.splitListItem') }}
+            </el-button>
+          </el-tooltip>
 
-          <el-button @click="editor.chain().focus().sinkListItem('listItem').run()"
-                     :disabled="!editor.can().sinkListItem('listItem')">
-            {{ t('Sink list item') }}
-          </el-button>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="t('docTemplate.paragraph.sinkListItem')"
+            placement="bottom"
+          >
+            <el-button @click="editor.chain().focus().sinkListItem('listItem').run()"
+                       :disabled="!editor.can().sinkListItem('listItem')">
+              {{ $t('docTemplate.paragraph.sinkListItem') }}
+            </el-button>
+          </el-tooltip>
 
-          <el-button @click="editor.chain().focus().liftListItem('listItem').run()"
-                     :disabled="!editor.can().liftListItem('listItem')">
-            {{ t('Lift list item') }}
-          </el-button>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            :content="t('docTemplate.paragraph.liftListItem')"
+            placement="bottom"
+          >
+            <el-button @click="editor.chain().focus().liftListItem('listItem').run()"
+                       :disabled="!editor.can().liftListItem('listItem')">
+              {{ $t('docTemplate.paragraph.liftListItem') }}
+            </el-button>
+          </el-tooltip>
         </el-button-group>
       </el-col>
     </el-row>
     <el-row class="font-style-toolbar">
       <el-col :span="24">
-        <el-button-group>
-          <el-button size="small" @click="handleTextAlign('left')"
-                     :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
-            {{ t('Left') }}
-          </el-button>
-          <el-button size="small" @click="handleTextAlign('center')"
-                     :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
-            {{ t('Center') }}
-          </el-button>
-          <el-button size="small" @click="handleTextAlign('right')"
-                     :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
-            {{ t('Right') }}
-          </el-button>
-          <el-button size="small" @click="handleTextAlign('justify')"
-                     :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }">
-            {{ t('Justify') }}
-          </el-button>
-        </el-button-group>
+
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content="t('docTemplate.paragraph.textAlign')"
+          placement="bottom"
+        >
+          <el-button-group>
+            <el-button size="small" @click="handleTextAlign('left')"
+                       :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
+              {{ $t('docTemplate.paragraph.left') }}
+            </el-button>
+            <el-button size="small" @click="handleTextAlign('center')"
+                       :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
+              {{ $t('docTemplate.paragraph.center') }}
+            </el-button>
+            <el-button size="small" @click="handleTextAlign('right')"
+                       :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
+              {{ $t('docTemplate.paragraph.right') }}
+            </el-button>
+            <el-button size="small" @click="handleTextAlign('justify')"
+                       :class="{ 'is-active': editor.isActive({ textAlign: 'justify' }) }">
+              {{ $t('docTemplate.paragraph.justify') }}
+            </el-button>
+          </el-button-group>
+        </el-tooltip>
       </el-col>
     </el-row>
   </div>
 
   <div style="text-align: center; margin-top: 10px;">
-    {{ t('Paragraph') }}
+    {{ $t('docTemplate.paragraph.paragraph') }}
   </div>
 </template>
 
