@@ -30,7 +30,7 @@ const tableList = ref<any>([])
 function formatter(row: any, column: any) {
   switch (column.property) {
     case 'fileSize':
-      return fileSizeFilter(row.length || row.content.length)
+      return fileSizeFilter(row.fileSize)
     case 'width*height':
       const width = row.width || row.info.width
       const height = row.height || row.info.height

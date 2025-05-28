@@ -6,6 +6,7 @@ const users = useUserList()
 const graphRef = ref()
 onMounted(async () => {
   await init()
+  console.log('graphRef', graphRef.value)
   graphRef.value.initGraph()
 })
 
