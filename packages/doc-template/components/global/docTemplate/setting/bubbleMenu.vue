@@ -8,8 +8,27 @@ if (!editorProvider) {
 }
 const { editor, lastSelection } = editorProvider
 
-const state = reactive({})
+const state = reactive({
+  imageWidth: 100
+})
 
+function handleWidthChange() {
+  editor.value.chain().focus().setImage({
+    src: editor.value.state.selection.node.attrs.src,
+    width: `${state.imageWidth}%;`
+  }).run()
+}
+
+/**
+ * @param state (true: merge, false: split)
+ */
+function handleTableCellsMergeOrSplit(state: boolean) {
+  if (state) {
+    editor.value.chain().focus().mergeCells().run()
+  } else {
+    editor.value.chain().focus().splitCell().run()
+  }
+}
 </script>
 
 <template>
@@ -22,34 +41,50 @@ const state = reactive({})
     <div v-if="lastSelection?.type === 'text'" class="bubble-menu">
       <button @click="editor.chain().focus().toggleBold().run()"
               :class="{ 'is-active': editor.isActive('bold') }">
-        Bold
+        {{ $t('Bold') }}
       </button>
       <button @click="editor.chain().focus().toggleItalic().run()"
               :class="{ 'is-active': editor.isActive('italic') }">
-        Italic
+        {{ $t('Italic') }}
       </button>
       <!--  font Underline  -->
       <button @click="editor.chain().focus().toggleUnderline().run()"
               :class="{ 'is-active': editor.isActive('underline') }">
-        Underline
+        {{ $t('Underline') }}
       </button>
       <!--  font Strike  -->
       <button @click="editor.chain().focus().toggleStrike().run()"
               :class="{ 'is-active': editor.isActive('strike') }">
-        Strike
+        {{ $t('Strike') }}
       </button>
       <!--  font Subscript  -->
       <button @click="editor.chain().focus().toggleSubscript().run()"
               :class="{ 'is-active': editor.isActive('subscript') }">
-        Subscript
+        {{ $t('Subscript') }}
       </button>
       <!--  font Superscript  -->
       <button @click="editor.chain().focus().toggleSuperscript().run()"
               :class="{ 'is-active': editor.isActive('superscript') }">
-        Superscript
+        {{ $t('Superscript') }}
       </button>
       <button @click="editor.chain().focus().unsetAllMarks().run()">
-        Clear
+        {{ $t('Clear') }}
+      </button>
+    </div>
+
+    <div v-if="lastSelection?.type === 'image'" class="bubble-menu">
+      <input v-model="state.imageWidth" type="number" min="1" max="100" step="1" />
+      <button @click="handleWidthChange">
+        {{ $t('Set image size') }}
+      </button>
+    </div>
+
+    <div v-if="lastSelection?.type === 'cell'" class="bubble-menu">
+      <button @click="handleTableCellsMergeOrSplit(true)">
+        {{ $t('Merge Cells') }}
+      </button>
+      <button @click="handleTableCellsMergeOrSplit(false)">
+        {{ $t('Split Cell') }}
       </button>
     </div>
   </bubble-menu>

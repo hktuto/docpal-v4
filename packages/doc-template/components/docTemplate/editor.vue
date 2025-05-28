@@ -44,19 +44,10 @@ const options = ref<TipTapOptions>({
 })
 const editor = ref()
 const room = ref("12345")
-function normalizeJson(option: TipTapOptions, json?: any) {
-  if (json) {
-    return json
-  }
-  if (option.mode === 'PAGE') {
-    return ''
-  } else {
-    return ''
-  }
-}
+
 
 export type LastSelection = {
-  type: 'text' | 'textRange' | 'image'
+  type: 'text' | 'textRange' | 'image' | 'cell'
   data: any
 }
 
@@ -80,16 +71,9 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   if(initOptions.editable) {
   }
   editor.value = new Editor({
-    content: normalizeJson(normlizeOption, json),
+    content: json || "",
     extensions:[
       ...extensions,
-      Collaboration.configure({
-        document: ydoc,
-      }),
-      CollaborationCursor.configure({
-        provider,
-        user: { name: props.user.username, color: "#ffcc00" },
-      }),
     ],
     onSelectionUpdate({ editor }) {
       const selection = editor.state.selection as any
@@ -113,6 +97,10 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
             newSelectionData.type = 'image'
           }
           break
+        case 'cell':
+          // cell
+          newSelectionData.type = 'cell'
+          break
         default:
           break
       }
@@ -133,8 +121,12 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
 function addVariable(variable: VariableItem) {
   variables.value.push(variable)
 }
-function updateVariable(variable: VariableItem) {
-  variables.value = variables.value.map(v => v.key === variable.key ? variable : v)
+function updateVariable(updateVariable: VariableItem) {
+  console.log('updateVariable', updateVariable)
+  const index = variables.value.findIndex(v => v.key === updateVariable.key)
+  if (index !== -1) {
+    variables.value[index] = updateVariable
+  }
 }
 function removeVariable(variable: VariableItem) {
   // find index of variable
