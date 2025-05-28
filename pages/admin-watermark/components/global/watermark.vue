@@ -19,8 +19,8 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 const detail = ref<WatermarkTemplateDetail | null>(null)
-const watermarkDetail = ref()
 const { getWatermarkTemplateDetail, removeWatermarkTemplate, list, updateWatermarkTemplateDetail } = useWatermark()
+const watermarkDetail = ref()
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   id: string
@@ -63,6 +63,13 @@ async function save() {
 }
 
 
+onMounted(() => {
+  console.log("watermark onMounted")
+})
+onUnmounted(() => {
+  detail.value = null
+})
+
 watch(() => props, (newId) => {
   console.log('watch', props.id)
   if (props.id) {
@@ -75,10 +82,6 @@ watch(() => props, (newId) => {
 }, {
   immediate: true,
   deep: true
-})
-
-onUnmounted(() => {
-  detail.value = null
 })
 </script>
 
