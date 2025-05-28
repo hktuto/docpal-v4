@@ -47,7 +47,7 @@ const room = ref("12345")
 
 
 export type LastSelection = {
-  type: 'text' | 'textRange' | 'image'
+  type: 'text' | 'textRange' | 'image' | 'cell'
   data: any
 }
 
@@ -96,6 +96,10 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
           if (selection?.node.type.name === 'image') {
             newSelectionData.type = 'image'
           }
+          break
+        case 'cell':
+          // cell
+          newSelectionData.type = 'cell'
           break
         default:
           break
