@@ -44,7 +44,7 @@ function fileSizeFilter(bytes: any) {
   bytes = Number(bytes)
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   let unit = ''
-  for (let i = 0; bytes / 1024 >= 1; i++) {
+  for (let i = 1; bytes / 1024 >= 1; i++) {
     unit = units[i]
     bytes = bytes / 1024
   }
