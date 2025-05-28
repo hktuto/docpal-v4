@@ -21,7 +21,7 @@ const form = reactive<TipTapOptions>({
   pageSetting: {
     ...defaultPageSetting
   },
-  title: "",
+  title: "New Document",
   creator: "",
   theme: {
     fontSize: 12,
@@ -34,15 +34,21 @@ const form = reactive<TipTapOptions>({
   }
 })
 
-const rules = reactive({})
+const rules = reactive({
+  title: [
+    { required: true, message: 'Title is required', trigger: 'blur' }
+  ]
+})
 
 const ModeOption = ['PAGE', "ENDLESS"]
 
 async function submit(){
-// check form valie
-  const valid = await formRef.value.validate()
-  if(valid) {
+// check form valid
+  try{
+    await formRef.value.validate()
     emits("submit", {...form})
+  }catch(e){
+    console.error(e)
   }
 }
 
@@ -50,6 +56,9 @@ async function submit(){
 
 <template>
   <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
+    <ElFormItem prop="title" label="Title">
+      <ElInput v-model="form.title" placeholder="Enter document title" />
+    </ElFormItem>
     <ElFormItem prop="mode" label="Page Mode">
       <ElSelect v-model="form.mode" filterable>
         <ElOption v-for="mode in ModeOption" :key="mode" :label="mode" :value="mode" />
@@ -105,6 +114,7 @@ async function submit(){
           </ElRow>
         </ElFormItem>
     </template>
+    
     <ElFormItem >
       <ElButton type="primary" @click="submit" >Save</ElButton>
     </ElFormItem>

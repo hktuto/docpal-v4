@@ -1,8 +1,10 @@
 <script lang="ts" setup>
+import { MenuRouterKey } from '#imports'
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
 import {paperSizes} from "tiptap-extension-pagination"
 import type { pageSettingOptions } from '~/utils/tiptapHelper';
 
+const routerProvider = inject(MenuRouterKey)
 const editorProvider = inject(DocTemplateProveKey)
 if(!editorProvider){
   throw createError('editor Provider not found')
@@ -14,22 +16,32 @@ const { editor, options, initEditor } = editorProvider
 const opened = ref(false);
 const form = ref<pageSettingOptions>()
 
+const rules = reactive({
+  title: [
+    { required: true, message: 'Title is required', trigger: 'blur' }
+  ]
+})
+
 function updatePageSetting(){
-  console.log(form.value, editor.value.commands);
   // check if pageSize change = 
   // editor.value.commands.
   // editor.value.commands.setDocumentPaperSize(form.value?.defaultPaperSize);
   // editor.value.commands.setDocumentPaperOrientation(form.value?.defaultPaperOrientation || "landscape")
-  editor.value.commands.setDocumentPageMargins(form.value?.defaultMarginConfig)
+  editor.value.commands.setDocumentPageMargins(form.value?.pageSetting.defaultMarginConfig)
   const extension = editor.value.options.extensions.find((ex:any) => ex.name === "pagination")
+
   extension.options = {
+    ...extension.options,
+    ...form.value.pageSetting
+  }
+  // TODO : get content and 
+  const newOptions = {
     ...form.value
   }
-  const newOptiosn = {
-    ...options.value,
-    pageSetting: {...form.value}
-  }
-  initEditor(newOptiosn)
+  initEditor(newOptions)
+  // check if title has changed
+  routerProvider?.updateTabName(form.value?.title)
+
   opened.value = false;
 }
 
@@ -44,7 +56,7 @@ function open(){
   if(!extension) {
     throw createError('no pagination found')
   }
-  form.value = options.value.pageSetting || {...extension.options} as pageSettingOptions
+  form.value = options.value
 }
 
 </script>
@@ -55,14 +67,16 @@ function open(){
 
   <ElDialog v-model="opened">
       <ElForm :model="form" label-position="top">
-        
+        <ElFormItem prop="title" label="Title">
+          <ElInput v-model="form.title" placeholder="Enter document title" />
+        </ElFormItem>
         <ElFormItem label="Page Size">
-          <ElSelect v-model="form.defaultPaperSize">
+          <ElSelect v-model="form.pageSetting.defaultPaperSize">
             <ElOption v-for="key in paperSizes" :key="key" :label="key" :value="key" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="Orientation">
-          <ElSelect v-model="form.defaultPaperOrientation">
+          <ElSelect v-model="form.pageSetting.defaultPaperOrientation">
             <ElOption label="portrait" value="portrait" />
             <ElOption label="landscape" value="landscape" />
           </ElSelect>
@@ -73,22 +87,22 @@ function open(){
         <ElRow :gutter="12">
           <ElCol :span="6">
              <ElFormItem label="Left">
-                <ElInputNumber v-model="form.defaultMarginConfig.left" />
+                <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" />
               </ElFormItem>
           </ElCol>
           <ElCol :span="6">
              <ElFormItem label="Top">
-                <ElInputNumber v-model="form.defaultMarginConfig.top" />
+                <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" />
               </ElFormItem>
           </ElCol>
           <ElCol :span="6">
              <ElFormItem label="Right">
-                <ElInputNumber v-model="form.defaultMarginConfig.right" />
+                <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" />
               </ElFormItem>
           </ElCol>
           <ElCol :span="6">
              <ElFormItem label="Bottom">
-                <ElInputNumber v-model="form.defaultMarginConfig.bottom" />
+                <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" />
               </ElFormItem>
           </ElCol>
         </ElRow>
