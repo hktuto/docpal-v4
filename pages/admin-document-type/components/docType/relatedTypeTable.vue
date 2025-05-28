@@ -122,6 +122,8 @@ function handleFilterFormChange(formModel: any) {
 
 async function getList() {
   ResponsiveFilterRef.value.handleFilter()
+  console.log(adminApi.api);
+  
   _list = await adminApi.api
     .getDocpaltypeSettingsNameNameRelated(props.name)
     .then((res) => res.data)
