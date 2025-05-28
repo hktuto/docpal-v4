@@ -68,16 +68,15 @@ watch(() => props, (newId) => {
   if (props.id) {
 
     getDetail(props.id)
+  }else{
+    getList()
   }
 
 }, {
   immediate: true,
   deep: true
 })
-onMounted( async () => {
-  console.log("watermark onMounted")
-  await getList()
-})
+
 onUnmounted(() => {
   detail.value = null
 })
