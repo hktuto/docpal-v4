@@ -1,29 +1,31 @@
 <template>
   <div ref="nodeWrapper" class="org-chart-node-wrapper">
     <div class="org-chart-node-person" :style="nodeStyle">
-      <div class="person-avatar" v-if="data.avatar" @click.stop="handleClick">
-        <img :src="data.avatar" :alt="data.name" />
-      </div>
-      <div class="person-info" v-for="i in length" :key="i" >
+
+      <div class="person-info">
         <div class="person-name">{{ data.name }}</div>
-        <div class="person-title" v-if="data.title">{{ data.title }}</div>
+        <div class="person-title" v-if="data.grade">{{ data.grade }}</div>
+        <div class="person-tag" v-if="data.tag">{{ data.tag }}</div>
+        <div class="person-count" v-if="data.userCount">人数: {{ data.userCount }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 interface NodeData {
+  id: string
   name: string
-  title?: string
-  avatar?: string
+  grade?: string
+  tag?: string
   style?: Record<string, string | number>
   children?: any[]
-  collapsed?: boolean
+  parentId?: string
+  userCount?: number
 }
-const length = ref(1)
+
 const props = defineProps<{
   node: {
     getData: () => NodeData
@@ -138,5 +140,21 @@ function handleClick() {
   overflow: hidden;
   text-overflow: ellipsis;
   background: transparent;
+}
+
+.person-tag {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  padding: 2px 6px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.person-count {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
 }
 </style>

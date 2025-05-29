@@ -40,7 +40,7 @@ const emit = defineEmits<{
   (e: 'update:data', data: OrgNode[]): void
   (e: 'delete', id: string, data: OrgNode[]): void
   (e: 'add', formData: OrgNode, selectedNodeId: string): void
-  (e: 'edit',formData: OrgNode, selectedNodeId: string): void
+  (e: 'edit', formData: OrgNode, selectedNodeId: string): void
 }>()
 
 const contextMenuVisible = ref(false)
@@ -199,7 +199,7 @@ const initGraph = () => {
   if (!graph) return
 
   graph.clearCells()
-  
+
   // 渲染每个根节点
   props.data.forEach((rootNode, index) => {
     const startX = 300 + index * (NODE_WIDTH + VERTICAL_GAP)
@@ -252,8 +252,22 @@ const handleContextMenu = (e: MouseEvent, cell: any) => {
   }
   selectedCell.value = cell
   selectedNode.value = cell.getData()
+  console.log('selectedNodsafse', selectedNode.value)
 }
-
+function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
+  for (const node of nodes) {
+    if (node.id === targetId) {
+      return node
+    }
+    if (node.children) {
+      const found = findNodeById(node.children, targetId)
+      if (found) {
+        return found
+      }
+    }
+  }
+  return null
+}
 // 关闭右键菜单
 const closeContextMenu = () => {
   contextMenuVisible.value = false
@@ -263,6 +277,10 @@ const closeContextMenu = () => {
 const handleEdit = () => {
   isAddingNode.value = false
   sidebarVisible.value = true
+  const parentNode = findNodeById(props.data, selectedNode.value.parentId)
+  if (!!parentNode) {
+    selectedNode.value.parentName = parentNode.name
+  }
   closeContextMenu()
 }
 
@@ -270,6 +288,10 @@ const handleEdit = () => {
 const handleAdd = () => {
   isAddingNode.value = true
   sidebarVisible.value = true
+  selectedNode.value = {
+    parentName: selectedNode.value.name,
+    parentId: selectedNode.value.id,
+  }
   closeContextMenu()
 }
 
@@ -278,20 +300,22 @@ const handleDelete = () => {
   if (!selectedNode.value || !selectedCell.value) return
   const data = JSON.parse(JSON.stringify(props.data))
   function deleteChildById(nodes: OrgNode[], childId: string): OrgNode[] {
-    return nodes.map(node => {
-      if (node.id === childId) {
-        return null
-      }
-      if (node.children) {
-        node.children = node.children.filter(child => child.id !== childId)
-        node.children.forEach(child => {
-          if (child.children) {
-            child.children = deleteChildById(child.children, childId)
-          }
-        })
-      }
-      return node
-    }).filter(Boolean) as OrgNode[]
+    return nodes
+      .map((node) => {
+        if (node.id === childId) {
+          return null
+        }
+        if (node.children) {
+          node.children = node.children.filter((child) => child.id !== childId)
+          node.children.forEach((child) => {
+            if (child.children) {
+              child.children = deleteChildById(child.children, childId)
+            }
+          })
+        }
+        return node
+      })
+      .filter(Boolean) as OrgNode[]
   }
 
   const newData = deleteChildById(data, selectedNode.value.id)
@@ -309,7 +333,7 @@ const closeSidebar = () => {
 const handleSave = (formData: Partial<OrgNode>) => {
   if (!selectedNode.value || !selectedCell.value) return
   if (isAddingNode.value) {
-    emit('add', formData, selectedNode.value.id)
+    emit('add', formData, selectedNode.value.parentId)
   } else {
     // 更新现有节点
     emit('edit', formData, selectedNode.value.id)
