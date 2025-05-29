@@ -66,7 +66,7 @@ async function handleDownload(row) {
     const url = window.URL.createObjectURL(blobStream)
     downloadUrl(url, row.fileName)
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     noti.close()
   }

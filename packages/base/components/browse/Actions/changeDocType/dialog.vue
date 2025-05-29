@@ -63,7 +63,7 @@ async function handleSubmit() {
       emits('success', state.doc)
     }
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     emitBus(EventType.FILE_NEED_REFRESH, {
       relatedIdOrPath: state.doc.id,

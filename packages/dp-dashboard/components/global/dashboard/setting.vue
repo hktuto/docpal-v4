@@ -36,9 +36,9 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
     emits('refresh', data)
   } catch (error) {
     state.loading = false

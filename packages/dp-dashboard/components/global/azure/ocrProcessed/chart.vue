@@ -172,7 +172,7 @@ async function getData(dataType: string) {
     resultData.xAxis = xAxis
     resultData.series = series
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     return resultData
   }

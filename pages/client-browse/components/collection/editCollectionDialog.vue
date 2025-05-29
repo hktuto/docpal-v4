@@ -41,14 +41,14 @@ const emits = defineEmits([
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
-  let params = {
-    idOrPath: data.id,
-    name: data.name,
-    description: null
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
+    let params = {
+      idOrPath: data.id,
+      name: data.name,
+      description: null
+    }
     state.data = await clientApi.api.patchNuxeoCollection(params).then(res => res.data)
     ElMessage.success(t('tip_updateSuccessMsg', {
       modelName: t('collection_collection'),

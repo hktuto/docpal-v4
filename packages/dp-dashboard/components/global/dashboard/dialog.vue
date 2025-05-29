@@ -34,13 +34,13 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
   state.loading = true
-  const _data = {
-    name: data.name,
-    access: data.access.join(',')
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const _data = {
+      name: data.name,
+      access: data.access.join(',')
+    }
     if (state.edit) {
       const res = await publicApi.api.putUserDashboard({
         ...state.setting,

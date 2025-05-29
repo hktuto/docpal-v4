@@ -23,6 +23,7 @@
 import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 const emits = defineEmits(['submit', 'clean', 'fail', 'formChange', 'emit'])
+const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
     data?: Object
@@ -154,11 +155,15 @@ async function handleFilePreview({ file, options }) {
   previewFile.loading = false
 }
 async function getFormData(needValidation: boolean = true) {
+  let data = null
   try {
-    return await vFormRenderRef.value.getFormData(needValidation)
+    data = await vFormRenderRef.value.getFormData(needValidation)
   } catch (error: any) {
     console.log(error)
     ElMessage.error(error)
+  } finally {
+    if (!data) throw new Error(t('render.hint.validationFailed'))
+    return data
   }
 }
 defineExpose({ vFormRenderRef, setFormJson, setFormData, getFormData })

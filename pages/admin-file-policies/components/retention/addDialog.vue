@@ -34,14 +34,13 @@ const form = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  if (!data) return
-  const params = {
-    ...state.setting,
-    ...data,
-    actionType: data.actionType ? 'D' : 'A'
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const params = {
+      ...state.setting,
+      ...data,
+      actionType: data.actionType ? 'D' : 'A'
+    }
     state.loading = true
     await adminApi.api.postPolicyRetentions(params)
     ElMessage.success(t('tip_createdSuccessMsg', {
