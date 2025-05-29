@@ -27,19 +27,19 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  if (!data.groupId || !data.groupName) {
-    ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
-    return
-  }
-  // check group name exist
-  if (props.groups.some((g: any) => g.name === data.groupName || g.id === data.groupId)) {
-    ElMessage.error(t('user_userGroupsIsExistsMsg'))
-    return
-  }
-  data.groupName = data.groupName.trim()
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    if (!data.groupId || !data.groupName) {
+      ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
+      return
+    }
+    // check group name exist
+    if (props.groups.some((g: any) => g.name === data.groupName || g.id === data.groupId)) {
+      ElMessage.error(t('user_userGroupsIsExistsMsg'))
+      return
+    }
+    data.groupName = data.groupName.trim()
+    state.loading = true
     await groupProvider?.CreateGroupApi(data)
     ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
     state.visible = false

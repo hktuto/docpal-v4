@@ -30,7 +30,7 @@ export async function downloadFolderHandler(doc: any) {
     })
     downloadBlob(blob, doc.name + '.zip', 'application/zip')
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     noti.close()
   }

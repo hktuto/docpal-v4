@@ -32,9 +32,9 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
     await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
     ElMessage.success(t('documentType_duplicateSuccessMsg'))
     emits('refresh')

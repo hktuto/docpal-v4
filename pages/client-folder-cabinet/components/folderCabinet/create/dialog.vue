@@ -53,24 +53,24 @@ const FormRendererRef = ref()
 const MetaFormRef = ref()
 
 async function handleSubmit() {
-  // 获取 v-form 数据
-  const formData = await FormRendererRef.value.getFormData()
-  const arr = ['notificationReminder', 'emailReminder', 'emailReport']
-  arr.forEach(key => {
-    formData[key] = {}
-    formData[key].intervalTime = formData[`${key}.intervalTime`]
-    if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
-    if (formData[`${key}.ccs`]) formData[key].ccs = formData[`${key}.ccs`]
-    delete formData[`${key}.intervalTime`]
-    delete formData[`${key}.tos`]
-    delete formData[`${key}.ccs`]
-  })
-  // 获取 metaForm 数据
-  const metaFormData = await MetaFormRef.value.getData()
-
-  if (!formData) return
-  state.loading = true
   try {
+    // 获取 v-form 数据
+    const formData = await FormRendererRef.value.getFormData()
+    const arr = ['notificationReminder', 'emailReminder', 'emailReport']
+    arr.forEach(key => {
+      formData[key] = {}
+      formData[key].intervalTime = formData[`${key}.intervalTime`]
+      if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
+      if (formData[`${key}.ccs`]) formData[key].ccs = formData[`${key}.ccs`]
+      delete formData[`${key}.intervalTime`]
+      delete formData[`${key}.tos`]
+      delete formData[`${key}.ccs`]
+    })
+    // 获取 metaForm 数据
+    const metaFormData = await MetaFormRef.value.getData()
+  
+    if (!formData) return
+    state.loading = true
     let fileName = await getMetaName()
     if(!fileName) {
       ElMessage.error($t('dpTip.noValidName'))

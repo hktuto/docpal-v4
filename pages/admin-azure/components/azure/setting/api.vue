@@ -3,10 +3,8 @@
     <div class="title">{{ $t('azure.apiSetting') }}</div>
     <div class="description">{{ $t('azure.apiSettingDescription') }}</div>
     <el-card>
-      <FormRenderer ref="FormRendererRef" :form-json="formJson">
-      </FormRenderer>
-      <el-button class="p-btn" type="primary" :loading="state.loading" @click="handleSave">{{ $t('common_save') }}
-      </el-button>
+      <FormRenderer ref="FormRendererRef" :form-json="formJson"> </FormRenderer>
+      <el-button class="p-btn" type="primary" :loading="state.loading" @click="handleSave">{{ $t('common_save') }} </el-button>
     </el-card>
   </div>
 </template>
@@ -27,33 +25,37 @@ const route = useRoute()
 const FormRendererRef = ref()
 
 async function handleSave() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
-  
-  // try {
-  const params: any = {
-    description: data.description
+  try {
+    state.loading = true
+    const data = await FormRendererRef.value.getFormData()
+    const params: any = {
+      description: data.description
+    }
+    if (!data.apiKey.includes('....')) params.apiKey = data.apiKey
+    const result = await azureProvider?.UpdateAzureApiKeyApi({
+      ...params
+    })
+    if (result) routerProvider?.message.success(t('dpMsg_success'))
+  } catch (error) {
+  } finally {
+    setTimeout(() => (state.loading = false), 500)
   }
-  if (!data.apiKey.includes('....')) params.apiKey = data.apiKey
-  const result = await azureProvider?.UpdateAzureApiKeyApi({
-    ...params
-  })
-  if (result) routerProvider?.message.success(t('dpMsg_success'))
-  // } catch (error) {
-  // }
-  setTimeout(() => state.loading = false, 500)
 }
 
 function initForm(setting) {
   FormRendererRef.value.vFormRenderRef.setFormData(setting)
 }
 
-watch(() => props.setting, (newVal) => {
-  if (!newVal) return
-  setTimeout(() => initForm(newVal))
-}, {
-  immediate: true
-})
+watch(
+  () => props.setting,
+  (newVal) => {
+    if (!newVal) return
+    setTimeout(() => initForm(newVal))
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 <style lang="scss" scoped>
 .title {
@@ -81,4 +83,3 @@ watch(() => props.setting, (newVal) => {
   }
 }
 </style>
-    

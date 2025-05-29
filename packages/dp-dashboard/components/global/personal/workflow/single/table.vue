@@ -100,7 +100,7 @@ function openDetail(row: any) {
       false
     )
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 

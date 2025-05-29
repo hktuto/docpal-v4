@@ -144,28 +144,32 @@ function handleTypeIds(properties: any) {
 // #region module: get
 const formRenderSlotsRef = ref<any>({})
 async function getFormData(needValidation = true, onlyWritable = false) {
-  let formData = {}
-  if (!needValidation) formData = FormRendererRef.value.getFormData(false)
-  else {
-    formData = await FormRendererRef.value
-      .getFormData()
-      .then((res: any) => {
-        return res
-      })
-      .catch((error: any) => {
-        return false
-      })
+  try {
+    let formData = {}
+    if (!needValidation) formData = await FormRendererRef.value.getFormData(false)
+    else {
+      formData = await FormRendererRef.value
+        .getFormData()
+        .then((res: any) => {
+          return res
+        })
+        .catch((error: any) => {
+          return false
+        })
+    }
+    if (!formData) return false
+    let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
+    const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
+    const result = {
+      ...resultFormData,
+      ...slotData
+    }
+  
+    // throw new Error("slotData", result)
+    return result
+  } catch (error) {
+    console.log(error)
   }
-  if (!formData) return false
-  let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
-  const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
-  const result = {
-    ...resultFormData,
-    ...slotData
-  }
-
-  // throw new Error("slotData", result)
-  return result
 }
 async function getSlotData(refList: any, needValidation: boolean) {
   let pList: any = []

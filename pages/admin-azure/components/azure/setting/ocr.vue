@@ -26,16 +26,18 @@ const { t } = useI18n()
 const FormRendererRef = ref()
 
 async function handleSave() {
-  const data = await FormRendererRef.value.getFormData()
   state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
     const result = await azureProvider?.UpdateAzureOcrSettingApi({
       ...data,
       alertEmail: data.alertEmail.join(',')
     })
     if (result) routerProvider?.message.success(t('dpMsg_success'))
-  } catch (error) {}
-  setTimeout(() => (state.loading = false), 500)
+  } catch (error) {
+  } finally {
+    setTimeout(() => (state.loading = false), 500)
+  }
 }
 
 function initForm(setting: any) {

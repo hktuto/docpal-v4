@@ -30,13 +30,13 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
-  const param = {
-    groupIds: data.id,
-    userId: props.user.userId
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
+    const param = {
+      groupIds: data.id,
+      userId: props.user.userId
+    }
     await userProviderDetail?.BatchUserAddGroupsApi(param)
     ElMessage.success(t('user_userGroupsAssignedSuccessMsg'))
     state.visible = false
