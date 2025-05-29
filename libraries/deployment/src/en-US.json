@@ -1007,6 +1007,9 @@
     "paragraph": {
       "bulletList": "Bullet List",
       "center": "Center",
+      "indentation": "Indentation",
+      "indentationDecrease": "Decrease Indentation",
+      "indentationIncrease": "Increase Indentation",
       "justify": "Justify",
       "left": "Left",
       "liftListItem": "Lift List Item",
@@ -1055,6 +1058,7 @@
       "add": "Add",
       "addColumn": "Add Column",
       "addErrorKeyExists": "Variable key already exists",
+      "addErrorKeyInvalid": "Variable key is invalid",
       "addErrorKeyRequired": "Variable key is required",
       "addListItem": "Add Item",
       "addRow": "Add Row",
