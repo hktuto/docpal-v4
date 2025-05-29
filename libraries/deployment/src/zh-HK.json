@@ -1007,6 +1007,9 @@
     "paragraph": {
       "bulletList": "清單",
       "center": "居中對齊",
+      "indentation": "縮進",
+      "indentationDecrease": "減少縮進",
+      "indentationIncrease": "增加縮進",
       "justify": "兩端對齊",
       "left": "左對齊",
       "liftListItem": "提升列表項目",
