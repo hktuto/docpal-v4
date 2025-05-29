@@ -22,6 +22,18 @@ function handleTextAlign(align: string) {
   editor.value.chain().focus().toggleTextAlign(align).run()
 }
 
+/**
+ * @param state boolean(true:indent,false:outdent)
+ */
+function handleIndent(state: boolean) {
+  if (state) {
+    editor.value.chain().focus().indent().run()
+  } else {
+    editor.value.chain().focus().outdent().run()
+  }
+}
+
+
 </script>
 
 <template>
@@ -35,7 +47,7 @@ function handleTextAlign(align: string) {
           placement="bottom"
         >
           <el-button @click="handleBulletList" :class="{ 'is-active': editor.isActive('bulletList') }">
-            {{$t('docTemplate.paragraph.bulletList')}}
+            {{ $t('docTemplate.paragraph.bulletList') }}
           </el-button>
         </el-tooltip>
 
@@ -92,7 +104,6 @@ function handleTextAlign(align: string) {
     </el-row>
     <el-row class="font-style-toolbar">
       <el-col :span="24">
-
         <el-tooltip
           class="box-item"
           effect="dark"
@@ -119,6 +130,22 @@ function handleTextAlign(align: string) {
           </el-button-group>
         </el-tooltip>
       </el-col>
+
+      <el-tooltip
+        class="box-item"
+        effect="dark"
+        :content="t('docTemplate.paragraph.indentation')"
+        placement="bottom"
+      >
+        <el-button-group>
+          <el-button size="small" @click="handleIndent(true)">
+            {{ $t('docTemplate.paragraph.indentationIncrease') }}
+          </el-button>
+          <el-button size="small" @click="handleIndent(false)">
+            {{ $t('docTemplate.paragraph.indentationDecrease') }}
+          </el-button>
+        </el-button-group>
+      </el-tooltip>
     </el-row>
   </div>
 
