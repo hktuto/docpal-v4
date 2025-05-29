@@ -1055,6 +1055,7 @@
       "add": "新增",
       "addColumn": "新增欄位",
       "addErrorKeyExists": "變數鍵已存在",
+      "addErrorKeyInvalid": "变量键無效",
       "addErrorKeyRequired": "變數鍵是必需的",
       "addListItem": "新增項目",
       "addRow": "新增列",
