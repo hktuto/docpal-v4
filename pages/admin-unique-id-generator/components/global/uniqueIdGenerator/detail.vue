@@ -279,7 +279,7 @@ async function handleEditVariable(status: boolean, value: string, index: number)
       }
   }
   if (!json || !data) {
-    throw new Error('no json or data')
+    console.error('no json or data')
   }
   setTimeout(() => {
     editFormRendererRef.value.setFormJson(json)
@@ -290,84 +290,92 @@ async function handleEditVariable(status: boolean, value: string, index: number)
 }
 
 async function handleEditItemTag() {
-  const formData = await editFormRendererRef.value.getFormData()
-  const index = formData.index
-  let checkNameIsEx = false
-
-  let item = {}
-  switch (formData.type) {
-    case 'date':
-      item.expression = `{date(${formData.dateFormat})}`
-      item.value = formData.dateFormat
-      break
-    case 'variable':
-      item.expression = `{var(${formData.variableName})}`
-      item.value = formData.variableValue
-      const expression = item.expression
-      if ((state.prefix[index] != expression && state.prefix.includes(expression))
-        || (state.suffix[index] != expression && state.suffix.includes(expression))
-      ) {
-        checkNameIsEx = true
-      }
-      break
-    default:
-      item.expression = formData.stringValue
-      item.value = formData.stringValue
-  }
-
-  // Check if the name exists
-  if (checkNameIsEx) {
-    routerProvider?.message.error(t('dpTip.exit', { name: t('uniQueIdGenerator_variableName') }))
-    return
-  }
-
-  if (formData.isPrefix) {
-    state.prefix[index] = item.expression
-    const element = state.form.prefix[index]
-    item.type = element.type
-    item.index = element.index
-    state.form.prefix[index] = deepCopy(item)
-    state.example.prefix[index] = deepCopy(item)
-  } else {
-    state.suffix[index] = item.expression
-    const element = state.form.suffix[index]
-    item.type = element.type
-    item.index = element.index
-    state.form.suffix[index] = deepCopy(item)
-    state.example.suffix[index] = deepCopy(item)
-  }
-  state.editVisible = false
-}
-
-async function handleAddItemTag() {
-  let formData = await FormRendererRef.value.getFormData()
-  if (formData.isDateType) {
-    itemData.expression = `{date(${formData.dateFormat})}`
-    itemData.value = formData.dateFormat
-  } else {
-    itemData.expression = `{var(${formData.variableName})}`
-    itemData.value = formData.variableValue
+  try {
+    const formData = await editFormRendererRef.value.getFormData()
+    const index = formData.index
+    let checkNameIsEx = false
+  
+    let item = {}
+    switch (formData.type) {
+      case 'date':
+        item.expression = `{date(${formData.dateFormat})}`
+        item.value = formData.dateFormat
+        break
+      case 'variable':
+        item.expression = `{var(${formData.variableName})}`
+        item.value = formData.variableValue
+        const expression = item.expression
+        if ((state.prefix[index] != expression && state.prefix.includes(expression))
+          || (state.suffix[index] != expression && state.suffix.includes(expression))
+        ) {
+          checkNameIsEx = true
+        }
+        break
+      default:
+        item.expression = formData.stringValue
+        item.value = formData.stringValue
+    }
+  
     // Check if the name exists
-    if (state.prefix.includes(itemData.expression) || state.suffix.includes(itemData.expression)) {
+    if (checkNameIsEx) {
       routerProvider?.message.error(t('dpTip.exit', { name: t('uniQueIdGenerator_variableName') }))
       return
     }
+  
+    if (formData.isPrefix) {
+      state.prefix[index] = item.expression
+      const element = state.form.prefix[index]
+      item.type = element.type
+      item.index = element.index
+      state.form.prefix[index] = deepCopy(item)
+      state.example.prefix[index] = deepCopy(item)
+    } else {
+      state.suffix[index] = item.expression
+      const element = state.form.suffix[index]
+      item.type = element.type
+      item.index = element.index
+      state.form.suffix[index] = deepCopy(item)
+      state.example.suffix[index] = deepCopy(item)
+    }
+    state.editVisible = false
+  } catch (error: any) {
+    throw new Error(error)
   }
+}
 
-  if (formData.isPrefix) {
-    itemData.index = state.form.prefix.length
-    state.prefix.push(itemData.expression)
-    state.form.prefix.push(deepCopy(itemData))
-    state.example.prefix.push(deepCopy(itemData))
-  } else {
-    itemData.index = state.form.suffix.length
-    state.suffix.push(itemData.expression)
-    state.form.suffix.push(deepCopy(itemData))
-    state.example.suffix.push(deepCopy(itemData))
+async function handleAddItemTag() {
+  try {
+    let formData = await FormRendererRef.value.getFormData()
+    if (formData.isDateType) {
+      itemData.expression = `{date(${formData.dateFormat})}`
+      itemData.value = formData.dateFormat
+    } else {
+      itemData.expression = `{var(${formData.variableName})}`
+      itemData.value = formData.variableValue
+      // Check if the name exists
+      if (state.prefix.includes(itemData.expression) || state.suffix.includes(itemData.expression)) {
+        routerProvider?.message.error(t('dpTip.exit', { name: t('uniQueIdGenerator_variableName') }))
+        return
+      }
+    }
+  
+    if (formData.isPrefix) {
+      itemData.index = state.form.prefix.length
+      state.prefix.push(itemData.expression)
+      state.form.prefix.push(deepCopy(itemData))
+      state.example.prefix.push(deepCopy(itemData))
+    } else {
+      itemData.index = state.form.suffix.length
+      state.suffix.push(itemData.expression)
+      state.form.suffix.push(deepCopy(itemData))
+      state.example.suffix.push(deepCopy(itemData))
+    }
+    itemData = {}
+    formRef.value.clearValidate('prefix')
+    state.dialogFormVisible = false
+  } catch (error: any) {
+    throw new Error(error)
   }
-  itemData = {}
-  formRef.value.clearValidate('prefix')
-  state.dialogFormVisible = false
 }
 
 /**

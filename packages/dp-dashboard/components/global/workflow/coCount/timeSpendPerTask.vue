@@ -101,7 +101,7 @@ async function getData(workflow: string) {
       return prev
     }, [])
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     return resultData
   }

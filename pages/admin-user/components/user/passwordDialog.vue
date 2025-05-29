@@ -30,9 +30,9 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
     const param = {
       password: data.password,
       userId: props.user.userId

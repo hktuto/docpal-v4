@@ -1,27 +1,23 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('accessControl_add')"
-             :close-on-click-modal="false">
-    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
+  <el-dialog v-model="state.visible" :title="$t('accessControl_add')" :close-on-click-modal="false">
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button id="AccessControlList__LocalPermission__AddLocalPermission__Submit" type="primary"
-                 :loading="state.loading" @click="handleSubmit">
+      <el-button id="AccessControlList__LocalPermission__AddLocalPermission__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 import formJson from './acl.vform.json'
-import {ElMessage} from "element-plus";
+import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  doc: any,
-  exitList: any[],
+  doc: any
+  exitList: any[]
 }>()
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const state = reactive({
   loading: false,
   visible: false,
@@ -30,28 +26,26 @@ const state = reactive({
   groupList: []
 })
 const FormRendererRef = ref()
-const {t} = useI18n()
+const { t } = useI18n()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  const params: any = {
-    idOrPath: props.doc.id,
-    userId: data.userId,
-    permission: data.permission
-  }
-  if (data.time === 'dateBase') {
-    params.startDate = data.dateRange[0]
-    params.endDate = data.dateRange[1]
-  }
   state.loading = true
-
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const params: any = {
+      idOrPath: props.doc.id,
+      userId: data.userId,
+      permission: data.permission
+    }
+    if (data.time === 'dateBase') {
+      params.startDate = data.dateRange[0]
+      params.endDate = data.dateRange[1]
+    }
     await adminApi.api.postNuxeoDocumentAclAdd(params)
-    ElMessage.success(t('tip_createdSuccessMsg', {modelName: t('accessControl_Local'), name: null}))
+    ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('accessControl_Local'), name: null }))
     state.visible = false
     emits('refresh')
-  } catch (error) {
-  }
+  } catch (error) {}
   state.loading = false
 }
 
@@ -66,38 +60,34 @@ function handleOpen() {
 function handleOptions() {
   const userIdRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('userId')
   const options = [
-    {value: 'user_groups', label: t('user_groups'), options: groupListFilter()},
-    {value: 'user_users', label: t('user_users'), options: userListFilter()}
+    { value: 'user_groups', label: t('user_groups'), options: groupListFilter() },
+    { value: 'user_users', label: t('user_users'), options: userListFilter() }
   ]
   userIdRef.loadOptions(options)
 
   function userListFilter() {
-    return state.userList.filter((allItem: any) =>
-      !props.exitList.some((exitItem: any) => exitItem.userId === allItem.userId))
+    return state.userList.filter((allItem: any) => !props.exitList.some((exitItem: any) => exitItem.userId === allItem.userId))
   }
 
   function groupListFilter() {
-    return state.groupList.filter((allItem: any) =>
-      !props.exitList.some((exitItem: any) => exitItem.userId === allItem.id))
+    return state.groupList.filter((allItem: any) => !props.exitList.some((exitItem: any) => exitItem.userId === allItem.id))
   }
 }
 
 onMounted(async () => {
-  const {data} = await adminApi.api.postNuxeoIdentityUsers({})
-  state.userList = data || [] as any
+  const { data } = await adminApi.api.postNuxeoIdentityUsers({})
+  state.userList = data || ([] as any)
   state.userList.forEach((item: any) => {
     item.value = item.userId
     item.label = item.username
-  });
+  })
   const groupResponse = await adminApi.api.postNuxeoIdentityGroups({})
-  state.groupList = groupResponse.data || [] as any
+  state.groupList = groupResponse.data || ([] as any)
   state.groupList.forEach((item: any) => {
     item.value = item.id
     item.label = item.name
-  });
+  })
 })
-defineExpose({handleOpen})
+defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

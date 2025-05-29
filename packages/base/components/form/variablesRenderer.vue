@@ -115,8 +115,11 @@ function handleEmit (funName, newValue, oldValue) {
     emits(funName, newValue, oldValue)
 }
 async function getData () {
+  try {
     const data = await FormRendererRef.value.getFormData()
     return data
+  } catch (error) {
+  }
 }
 async function setFormJson (formJson) {
     await FormRendererRef.value.vFormRenderRef.setFormJson(formJson)

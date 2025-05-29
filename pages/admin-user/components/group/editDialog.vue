@@ -30,23 +30,23 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  if (!data.groupName) {
-    ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
-    return
-  }
-  if (props.group.name === data.groupName) {
-    state.visible = false
-    return
-  }
-  const groupList: any = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
-  // check group name exist
-  if (groupList.some((g: any) => g.name === data.groupName)) {
-    ElMessage.error(t('user_userGroupsIsExistsMsg'))
-    return
-  }
-
+  
   try {
+    const data = await FormRendererRef.value.getFormData()
+    if (!data.groupName) {
+      ElMessage.error(t('user_userGroupName') + t('render.hint.fieldRequired'))
+      return
+    }
+    if (props.group.name === data.groupName) {
+      state.visible = false
+      return
+    }
+    const groupList: any = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
+    // check group name exist
+    if (groupList.some((g: any) => g.name === data.groupName)) {
+      ElMessage.error(t('user_userGroupsIsExistsMsg'))
+      return
+    }
     data.groupId = props.group.id
     const res = await groupProviderDetail?.PatchGroupApi(data)
     ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('user_UserGroup'), name: null }))
