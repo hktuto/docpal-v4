@@ -104,7 +104,7 @@ async function handleDblclick(row: any) {
     routerProvider?.navigateTo(newItem)
     // router.push(`/caseManage/dashboard?id=${row.id}&instanceId=${instance.businessKey}&caseId=${route.params.id}`)
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     setTimeout(() => {
       state.loading = false

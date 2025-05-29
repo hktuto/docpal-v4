@@ -35,10 +35,10 @@ const state = reactive<any>({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
-  delete data.isEdit
   try {
+    state.loading = true
+    const data = await FormRendererRef.value.getFormData()
+    delete data.isEdit
     let msg;
     if (state.isEdit) {
       await adminApi.api.patchDocpaltypeSettingsNameNameRelated(props.docType.name, {

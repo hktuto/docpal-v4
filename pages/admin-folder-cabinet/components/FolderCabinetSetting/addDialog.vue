@@ -34,27 +34,26 @@ const state = reactive<any>({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  if (!data) return
-  if (state.oldName != data.name) {
-    const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
-    if (checkName) {
-      ElMessage.error(t('common_nameExists'))
-      return
-    }
-  }
-
-  const params = {
-    ...data,
-    binds: data.userGroups.map((value: string) => {
-      const values = value.split('&&&&')
-      return {
-        bindId: values[1],
-        type: values[0]
-      }
-    })
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    if (state.oldName != data.name) {
+      const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+      if (checkName) {
+        ElMessage.error(t('common_nameExists'))
+        return
+      }
+    }
+  
+    const params = {
+      ...data,
+      binds: data.userGroups.map((value: string) => {
+        const values = value.split('&&&&')
+        return {
+          bindId: values[1],
+          type: values[0]
+        }
+      })
+    }
     state.loading = true
     let response
     if (state.isEdit) {

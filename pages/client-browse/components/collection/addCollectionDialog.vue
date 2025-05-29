@@ -34,14 +34,14 @@ const emits = defineEmits([
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  if(!data) return
-  state.loading = true
-  let params = {
-    name: data.name,
-    description: null
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    if(!data) return
+    state.loading = true
+    let params = {
+      name: data.name,
+      description: null
+    }
     const data = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
     ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('collection_collection'),
