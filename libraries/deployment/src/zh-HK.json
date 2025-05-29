@@ -1007,6 +1007,9 @@
     "paragraph": {
       "bulletList": "清單",
       "center": "居中對齊",
+      "indentation": "縮進",
+      "indentationDecrease": "減少縮進",
+      "indentationIncrease": "增加縮進",
       "justify": "兩端對齊",
       "left": "左對齊",
       "liftListItem": "提升列表項目",
@@ -1055,6 +1058,7 @@
       "add": "新增",
       "addColumn": "新增欄位",
       "addErrorKeyExists": "變數鍵已存在",
+      "addErrorKeyInvalid": "变量键無效",
       "addErrorKeyRequired": "變數鍵是必需的",
       "addListItem": "新增項目",
       "addRow": "新增列",

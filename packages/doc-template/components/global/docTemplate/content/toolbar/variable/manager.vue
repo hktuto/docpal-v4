@@ -91,6 +91,10 @@ function confirmAdd() {
     addError.value = t('docTemplate.variable.addErrorKeyRequired')
     return
   }
+  if (!/^[A-Za-z0-9_]+$/.test(newVariable.value.key)) {
+    addError.value = t('docTemplate.variable.addErrorKeyInvalid')
+    return
+  }
   if (variables.value.some((v: VariableItem) => v.key === newVariable.value.key)) {
     addError.value = t('docTemplate.variable.addErrorKeyExists')
     return
@@ -135,6 +139,10 @@ function confirmEdit() {
   editError.value = ''
   if (!editVariable.value) return
   
+  if (!/^[A-Za-z0-9_]+$/.test(editVariable.value.key)) {
+    editError.value = t('docTemplate.variable.addErrorKeyInvalid')
+    return
+  }
   if (editVariable.value.type !== 'Table' && editVariable.value.type !== 'List' && !editVariable.value.displayValue) {
     editError.value = t('docTemplate.variable.editErrorDisplayValueRequired')
     return
