@@ -92,8 +92,12 @@ async function save() {
   // check form valid
   if (id === "new") {
     if (infoFormEl.value) {
-      const valid = await infoFormEl.value.validate();
-      if (!valid) return;
+      try {
+        await infoFormEl.value.validate()
+      } catch (e) {
+        logger.error(e)
+        return
+      }
     }
     const result = await adminApi.api.postTemplateEmailTemplate({
       ...data.value,
