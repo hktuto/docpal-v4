@@ -2,7 +2,7 @@
   <div class="sidebar-overlay" v-if="visible" @click.self="$emit('close')">
     <div class="sidebar">
       <div class="sidebar-header">
-        <h3>{{ isAdd ? '添加角色' : '编辑角色' }}</h3>
+        <h3>{{ isAdd ? $t('orgChart.editSidebar.addRole') : $t('orgChart.editSidebar.editRole') }}</h3>
         <el-button class="close-btn" link @click="$emit('close')">×</el-button>
       </div>
       <div class="sidebar-content">
@@ -13,17 +13,17 @@
           label-position="top"
         >
           <el-form-item 
-            label="Role Label" 
+            :label="$t('orgChart.editSidebar.roleLabel')"
             prop="name"
             required
           >
-            <el-input v-model="formData.name" placeholder="请输入角色名称" />
+            <el-input v-model="formData.name" :placeholder="$t('orgChart.editSidebar.rolePlaceholder')" />
           </el-form-item>
-          <el-form-item  v-if="nodeData?.parentName"
-            label="Parent Role" 
+          <el-form-item v-if="nodeData?.parentName"
+            :label="$t('orgChart.editSidebar.parentRole')"
             prop="parentName" 
           >
-            <el-input v-model="nodeData.parentName" :disabled="true" placeholder="请输入父级角色" />
+            <el-input v-model="nodeData.parentName" :disabled="true" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" />
           </el-form-item>
         </el-form>
         
@@ -34,8 +34,8 @@
         />
       </div>
       <div class="sidebar-footer">
-        <el-button @click="$emit('close')">取消</el-button>
-        <el-button type="primary" @click="handleSave">保存</el-button>
+        <el-button @click="$emit('close')">{{ $t('orgChart.editSidebar.cancel') }}</el-button>
+        <el-button type="primary" @click="handleSave">{{ $t('orgChart.editSidebar.save') }}</el-button>
       </div>
     </div>
   </div>
@@ -46,6 +46,9 @@ import { ref, watch } from 'vue'
 import type { OrgNode } from '../types'
 import type { FormInstance, FormRules } from 'element-plus'
 import UserTable from './userTable.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps<{
   visible: boolean
@@ -68,14 +71,14 @@ const rules = ref<FormRules>({
     { 
       validator: (rule, value: string, callback) => {
         if (!value || value.trim() === '') {
-          callback(new Error('请输入角色名称'))
+          callback(new Error(t('orgChart.editSidebar.validation.roleRequired')))
         } else {
           callback()
         }
       },
       trigger: 'blur'
     },
-    { min: 2, message: '长度至少为2个字符', trigger: 'blur' }
+    { min: 2, message: t('orgChart.editSidebar.validation.minLength'), trigger: 'blur' }
   ]
 })
 

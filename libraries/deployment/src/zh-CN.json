@@ -3567,5 +3567,40 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容"
+  "檔案內容": "檔案內容",
+  "orgChart": {
+    "add": "添加",
+    "noData": "暂无数据",
+    "contextMenu": {
+      "edit": "编辑",
+      "addChild": "添加子节点",
+      "delete": "删除"
+    },
+    "editSidebar": {
+      "addRole": "添加角色",
+      "editRole": "编辑角色",
+      "roleLabel": "角色名称",
+      "rolePlaceholder": "请输入角色名称",
+      "parentRole": "父级角色",
+      "parentRolePlaceholder": "请输入父级角色",
+      "cancel": "取消",
+      "save": "保存",
+      "validation": {
+        "roleRequired": "请输入角色名称",
+        "minLength": "长度至少为2个字符"
+      }
+    },
+    "userTable": {
+      "title": "用户",
+      "filterPlaceholder": "筛选名称",
+      "addUserButton": "添加用户到角色",
+      "columns": {
+        "username": "用户名",
+        "email": "邮箱"
+      },
+      "actions": {
+        "remove": "移除"
+      }
+    }
+  }
 }

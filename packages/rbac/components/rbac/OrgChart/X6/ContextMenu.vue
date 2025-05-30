@@ -1,13 +1,13 @@
 <template>
   <div v-if="visible" class="context-menu" :style="position">
     <div class="menu-item" @click="$emit('edit')">
-      <i class="fas fa-edit"></i> 编辑
+      <i class="fas fa-edit"></i> {{ $t('orgChart.contextMenu.edit') }}
     </div>
     <div class="menu-item" @click="$emit('add')">
-      <i class="fas fa-plus"></i> 添加子节点
+      <i class="fas fa-plus"></i> {{ $t('orgChart.contextMenu.addChild') }}
     </div>
     <div class="menu-item delete" @click="$emit('delete')">
-      <i class="fas fa-trash"></i> 删除
+      <i class="fas fa-trash"></i> {{ $t('orgChart.contextMenu.delete') }}
     </div>
   </div>
 </template>

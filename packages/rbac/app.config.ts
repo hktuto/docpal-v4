@@ -7,7 +7,7 @@ export default defineAppConfig({
       label: "ROLE-Editor",
       icon: "lucide:file-cog",
       hoverIcon: "lucide:file-cog",
-      component: "LazyRbacPage",
+      component: "LazyRbacPage2",
       feature: "CORE",
     },
     

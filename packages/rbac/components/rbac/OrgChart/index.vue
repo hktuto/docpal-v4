@@ -1,8 +1,8 @@
 <template>
   <div class="chart-container">
     <template v-if="orgDatas.length === 0">
-      <el-empty :description="$t('noData')"></el-empty>
-      <div class="flex-x-center"><el-button type="primary" @click="sidebarVisible = true">添加</el-button></div>
+      <el-empty :description="$t('orgChart.noData')"></el-empty>
+      <div class="flex-x-center"><el-button type="primary" @click="sidebarVisible = true">{{ $t('orgChart.add') }}</el-button></div>
       <RbacOrgChartX6EditSidebar :visible="sidebarVisible" :is-add="true" @close="sidebarVisible = false" @save="handleAdd" />
     </template>
     <RbacOrgChartX6
@@ -30,14 +30,14 @@ const orgDatas = ref<OrgNode[]>([
   {
     id: '1',
     name: 'John Doe',
-    title: 'CEO',
+    title: $t('orgChart.defaultTitles.ceo'),
     avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
     style: { background: '#e6f7ff' },
     children: [
       {
         id: '2',
         name: 'Sarah Smith',
-        title: 'CTO',
+        title: $t('orgChart.defaultTitles.cto'),
         avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
         style: { background: '#f6ffed' },
         parentId: '1',
@@ -45,21 +45,21 @@ const orgDatas = ref<OrgNode[]>([
           {
             id: '4',
             name: 'Michael Johnson',
-            title: 'Tech Lead',
+            title: $t('orgChart.defaultTitles.techLead'),
             avatar: 'https://randomuser.me/api/portraits/men/3.jpg',
             parentId: '2',
             children: [
               {
                 id: '7',
                 name: 'Emma Davis',
-                title: 'Senior Developer',
+                title: $t('orgChart.defaultTitles.seniorDev'),
                 avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
                 parentId: '4'
               },
               {
                 id: '8',
                 name: 'James Wilson',
-                title: 'Senior Developer',
+                title: $t('orgChart.defaultTitles.seniorDev'),
                 avatar: 'https://randomuser.me/api/portraits/men/5.jpg',
                 parentId: '4'
               }
@@ -68,21 +68,21 @@ const orgDatas = ref<OrgNode[]>([
           {
             id: '5',
             name: 'Lisa Anderson',
-            title: 'Product Manager',
+            title: $t('orgChart.defaultTitles.productManager'),
             avatar: 'https://randomuser.me/api/portraits/women/6.jpg',
             parentId: '2'
           },
           {
             id: '56',
             name: 'Lisa Anderson1',
-            title: 'Product Manager',
+            title: $t('orgChart.defaultTitles.productManager'),
             avatar: 'https://randomuser.me/api/portraits/women/6.jpg',
             parentId: '2'
           },
           {
             id: '57',
             name: 'Lisa Anderson1',
-            title: 'Product Manager',
+            title: $t('orgChart.defaultTitles.productManager'),
             avatar: 'https://randomuser.me/api/portraits/women/6.jpg',
             parentId: '2'
           }
@@ -91,7 +91,7 @@ const orgDatas = ref<OrgNode[]>([
       {
         id: '3',
         name: 'Robert Brown',
-        title: 'CFO',
+        title: $t('orgChart.defaultTitles.cfo'),
         avatar: 'https://randomuser.me/api/portraits/men/7.jpg',
         style: { background: '#fff7e6' },
         parentId: '1',
@@ -99,7 +99,7 @@ const orgDatas = ref<OrgNode[]>([
           {
             id: '6',
             name: 'David Miller',
-            title: 'Financial Analyst',
+            title: $t('orgChart.defaultTitles.financialAnalyst'),
             parentId: '3',
             avatar: 'https://randomuser.me/api/portraits/men/8.jpg'
           }
@@ -109,8 +109,8 @@ const orgDatas = ref<OrgNode[]>([
   },
   {
     id: '1123142134',
-    name: 'David Mssiller',
-    title: 'Financial Analyst',
+    name: 'David Miller',
+    title: $t('orgChart.defaultTitles.financialAnalyst'),
     avatar: 'https://randomuser.me/api/portraits/men/8.jpg',
   }
 ])

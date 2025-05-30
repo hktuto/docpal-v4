@@ -3569,5 +3569,40 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content"
+  "檔案內容": "Content",
+  "orgChart": {
+    "add": "Add",
+    "noData": "No Data",
+    "contextMenu": {
+      "edit": "Edit",
+      "addChild": "Add Child Node",
+      "delete": "Delete"
+    },
+    "editSidebar": {
+      "addRole": "Add Role",
+      "editRole": "Edit Role",
+      "roleLabel": "Role Label",
+      "rolePlaceholder": "Please enter role name",
+      "parentRole": "Parent Role",
+      "parentRolePlaceholder": "Please enter parent role",
+      "cancel": "Cancel",
+      "save": "Save",
+      "validation": {
+        "roleRequired": "Please enter role name",
+        "minLength": "Length must be at least 2 characters"
+      }
+    },
+    "userTable": {
+      "title": "Users",
+      "filterPlaceholder": "Filter Name",
+      "addUserButton": "Add User to Role",
+      "columns": {
+        "username": "Username",
+        "email": "Email"
+      },
+      "actions": {
+        "remove": "Remove"
+      }
+    }
+  }
 }
