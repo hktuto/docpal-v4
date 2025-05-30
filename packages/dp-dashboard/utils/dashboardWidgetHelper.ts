@@ -20,7 +20,8 @@ export type DashboardWidget = "DocTypeCoCount" |
     "PersonalSearchRecentDoc" |
     "PersonalSearchSubscribed" |
     "PersonalCaseCreate" |
-    "PersonalCase"
+    "PersonalCase"|
+    "Browse"
 export type WorkflowCoCountWidget = "WorkflowActiveCount" | "WorkflowApproveRate" | "WorkflowNewCount"  | "WorkflowTimeSpendPerTask" | "WorkflowTimeSpendPerWorkflow"  
 import DocTypeCoCount from  '../components/global/doc/coCount/index.vue'
 import DocTypeCount from  '../components/global/doc/count.vue'
@@ -59,6 +60,7 @@ import CalendarWidget from '../components/global/calendar/widget/index.vue'
 import PersonalWorkflowSingle from '../components/global/personal/workflow/single/index.vue'
 // import PersonalWorkflowSingleFilter from '../components/global/personal/workflow/singleFilter/index.vue'
 import  '../assets/dashboard.scss'
+import Browse from '../components/global/personal/browse/index.vue'
 
 export type DashboardWidgetSetting = {
     x?: number,
@@ -79,7 +81,6 @@ export type DashboardWidgetSetting = {
     feature?: string,
     type ?: 'personal' | 'document' | 'workflow' | 'azure' | 'default'
 }
-
 
 export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting } = {
     DocSizeStatistics: {
@@ -470,8 +471,23 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         setting : {
             editable: true,
         }
-
+    },
+    Browse:{
+        type: 'personal',
+        label: 'Browse',
+        minW: 4,
+        minH: 4,
+        maxW: 12,
+        maxH: 6,
+        w: 3,
+        h: 3,
+        component : 'Browse',
+        setting : {
+          home: [],
+          hideSetting: []
+        }
     }
+
 }
 
 export const  getWidgetSetting = (widget: DashboardWidget) => {
@@ -524,5 +540,7 @@ export const widgetComponent = {
     "PersonalCase": PersonalCase,
     "PersonalWorkflowSingle": PersonalWorkflowSingle,
     "PersonalCaseSingle": PersonalCaseSingle,
-    "CalendarWidget": CalendarWidget
+    "CalendarWidget": CalendarWidget,
+
+    "Browse":Browse
 }
