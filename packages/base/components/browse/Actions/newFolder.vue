@@ -11,7 +11,7 @@
         {{ 'in /' + state.doc.name }}
       </template>
       <FormRenderer :ref="(el) => FormRendererRef = el" :form-json="formJson"
-                    @formChange="formChange"/>
+                    @formChange="formChange" />
       <MetaRenderForm2 ref="MetaFormRef"></MetaRenderForm2>
       <template #footer>
         <el-button id="Browse__NewFolder__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
@@ -24,14 +24,14 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage} from 'element-plus'
-import {useEventListener} from '@vueuse/core'
-import {emitBus, EventType} from 'eventbus'
-import {clientApi} from 'api'
-import {duplicateNameFilter} from '../../../../packages/base/utils/browseHelper'
+import { ElMessage } from 'element-plus'
+import { useEventListener } from '@vueuse/core'
+import { emitBus, EventType } from 'eventbus'
+import { clientApi } from 'api'
+import { duplicateNameFilter } from '../../../../packages/base/utils/browseHelper'
 
 const dialogOpened = ref(false)
-const {t} = useI18n()
+const { t } = useI18n()
 const props = defineProps<{
   doc?: any,
   selected?: any[]
@@ -40,7 +40,7 @@ const emits = defineEmits(['success'])
 const state = reactive<any>({
   loading: false,
   docPath: '',
-  doc: {},
+  doc: {}
 })
 const FormRendererRef = ref()
 const MetaFormRef = ref()
@@ -59,7 +59,7 @@ function iconClickHandler(doc: any) {
 
 import formJson from './form/fileNewFolder.vform.json'
 
-function formChange({fieldName, newValue, oldValue, formModel}) {
+function formChange({ fieldName, newValue, oldValue, formModel }) {
   if (fieldName === 'type') MetaFormRef.value.init(newValue)
   // if(fieldName === 'type') MetaFormRef.value.initMeta(newValue)
 }
@@ -70,20 +70,26 @@ async function handleSubmit() {
     const metaFormData = await MetaFormRef.value.getData()
     if (!metaFormData) return
     const data = await FormRendererRef.value.getFormData()
+    data.name = data.name.trim()
+    if (!data.name) {
+      ElMessage.error(t('render.hint.fieldRequired', { name: t('related_name') }))
+      return
+    }
+
     const parentPath = state.docPath === '/' ? '' : state.docPath
     state.loading = true
     const params = {
       ...data,
       properties: metaFormData,
       // idOrPath: `${parentPath}/new Folder${timestamp}`,
-      idOrPath: `${parentPath}/${data.name}`,
+      idOrPath: `${parentPath}/${data.name}`
     }
 
-    const {isDuplicate} = await duplicateNameFilter(state.doc.path, [data]);
+    const { isDuplicate } = await duplicateNameFilter(state.doc.path, [data])
     if (isDuplicate) {
-      throw new Error("dpTip.newFolderDuplicateName");
+      throw new Error('dpTip.newFolderDuplicateName')
     }
-    const {data: newDoc} = await clientApi.api.postNuxeoDocumentCreatefolders(params) as any
+    const { data: newDoc } = await clientApi.api.postNuxeoDocumentCreatefolders(params) as any
     dialogOpened.value = false
     emitBus(EventType.FILE_NEED_REFRESH, {
       relatedIdOrPath: newDoc.parentRef,
@@ -112,7 +118,7 @@ async function handleSubmit() {
         type: 'error'
       })
     }
-    console.log("error", error)
+    console.log('error', error)
     state.loading = false
   }
 
@@ -130,5 +136,5 @@ function handleReset() {
 onMounted(() => {
   useEventListener(document, 'docActionAddFolder', (event) => iconClickHandler(event.detail))
 })
-defineExpose({iconClickHandler})
+defineExpose({ iconClickHandler })
 </script>
