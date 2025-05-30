@@ -127,9 +127,14 @@ async function submit() {
 
   // check location and user
   try {
-    const valid = await formRef.value.validate()
+    try {
+      await formRef.value.validate()
+    } catch (e) {
+      console.error(e)
+      return
+    }
     // const okToSubmit = checkValid(form.value)
-    if (!valid) return
+
     const data = {
       id: newEventId.value,
       eventId: form.value?.detail?.eventId,
