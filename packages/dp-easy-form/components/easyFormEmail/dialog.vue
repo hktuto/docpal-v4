@@ -183,8 +183,12 @@ async function handleOpen(easyFormId: string = "", userEmail: string = "") {
 const formRef = ref<FormInstance>();
 
 async function handleSubmit() {
-  const valid = await formRef.value.validate();
-  if (!valid) return;
+  try {
+    await FormRef.value.validate()
+  } catch (e) {
+    logger.error(e)
+    return
+  }
   const params = {
     easyFormId: state.easyFormId,
     formLink: getFormLink(false),
