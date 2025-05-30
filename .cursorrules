@@ -16,6 +16,8 @@ i18n locales
 CSS Variables
 - packages/base/assets/styles/main.scss
 
+# Unit Test:
+- Unit test file should be in the same directory as the component file.
 
 # Rules:
 - You are a Senior Frontend Developer and an Expert in Vue 3, Nuxt 3, JavaScript, TypeScript, HTML and CSS.

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
+import { DocTemplateProveKey } from '../../../utils/docTempalteHelper';
 import { ref, toRefs } from 'vue'
-import type { ToolSection } from '~/utils/docTempalteHelper'
+import type { ToolSection } from '../../../utils/docTempalteHelper'
 import type { TipTapOptions } from 'docpal-document-editor/src/types'
 
 const editorProvider = inject(DocTemplateProveKey)

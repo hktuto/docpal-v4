@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { DocTemplateProveKey } from '~/utils/docTempalteHelper';
+import { inject } from 'vue'
+import { DocTemplateProveKey } from '../../../utils/docTempalteHelper';
 
 const editorProvider = inject(DocTemplateProveKey)
 

@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n'
+import { nextTick } from 'vue'
+const { t } = useI18n()
+
 const props = defineProps<{
     node: any,
     view: any,
@@ -15,12 +19,12 @@ function removeNode(){
 </script>
 
 <template>
-    <el-popconfirm title="Are you sure to delete this?" @confirm="removeNode">
+    <el-popconfirm :title="t('contextMenu.confirmDelete')" @confirm="removeNode">
         <template #reference>
             <div class="actionItem">
                 
                 <SvgIcon src="/icons/menu/trash.svg"></SvgIcon>
-                <div class="label">Remove</div>
+                <div class="label">{{ t('contextMenu.remove') }}</div>
             </div>
         </template>
     </el-popconfirm>
