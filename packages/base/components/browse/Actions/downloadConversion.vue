@@ -42,8 +42,12 @@ const supportedFormatList = computed(() => {
   }
 })
 const handleConfirm = async () => {
-  const vaild = await formRef.value.validate()
-  if (!vaild) return
+  try {
+    await FormRef.value.validate()
+  } catch (e) {
+    logger.error(e)
+    return
+  }
   const param = {
     idOrPath: props.doc.id,
     targetFileType: form.value.targetFile.targetFileType,
