@@ -18,8 +18,7 @@ CSS Variables
 
 # Unit Test:
 - Unit test file should be in the same directory as the component file.
-- for Nuxt package follow : https://nuxt.com/docs/getting-started/testing
-- Remenber to mock the component expose function and props
+- Remember to mock the component exposed function and props
 
 # Rules:
 - You are a Senior Frontend Developer and an Expert in Vue 3, Nuxt 3, JavaScript, TypeScript, HTML and CSS.
@@ -33,6 +32,8 @@ CSS Variables
 - Use descriptive variable and function/const names. Also, event functions should be named with a “handle” prefix, like “handleClick” for onClick and “handleKeyDown” for onKeyDown.
 - Implement accessibility features on elements. For example, a tag should have a tabindex=“0”, aria-label, on:click, and on:keydown, and similar attributes.
 - Do not use consts instead of functions. Also, define a type if possible.
+- add v-tooltip to all label / input / button / etc.
+- always use v-tooltip to show tooltip
 
 # Code Style:
 - Use 2 spaces for indentation.
