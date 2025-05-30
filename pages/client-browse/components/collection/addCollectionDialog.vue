@@ -42,14 +42,14 @@ async function handleSubmit() {
       name: data.name,
       description: null
     }
-    const data = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
+    const cdata = await clientApi.api.postNuxeoCollectionCreate(params).then(res => res.data)
     ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('collection_collection'),
       name: params.name
     }))
     state.visible = false
     FormRendererRef.value.vFormRenderRef.resetForm()
-    emits('success', data)
+    emits('success', cdata)
   } catch (error) {
     console.log(error)
     emits('refresh')
