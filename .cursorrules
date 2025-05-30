@@ -18,6 +18,8 @@ CSS Variables
 
 # Unit Test:
 - Unit test file should be in the same directory as the component file.
+- for Nuxt package follow : https://nuxt.com/docs/getting-started/testing
+- Remenber to mock the component expose function and props
 
 # Rules:
 - You are a Senior Frontend Developer and an Expert in Vue 3, Nuxt 3, JavaScript, TypeScript, HTML and CSS.

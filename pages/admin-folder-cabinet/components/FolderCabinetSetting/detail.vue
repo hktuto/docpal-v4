@@ -215,9 +215,14 @@ const WorkflowDialogRef = ref()
 
 async function handleSave() {
   try {
-    const valid = await FormRef.value.validate()
+    try {
+      await FormRef.value.validate()
+    } catch (e) {
+      logger.error(e)
+      return
+    }
     const data = await FormRendererRef.value.getFormData()
-    if (!valid || !data) return
+    if (!data) return
 
     if (props.isRoot) {
       if (state.setting.label != data.label) {
