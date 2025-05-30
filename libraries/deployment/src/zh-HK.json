@@ -3568,6 +3568,12 @@
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
   "檔案內容": "檔案內容",
+  "contextMenu": {
+    "connection": "連接",
+    "remove": "移除",
+    "case": "個案",
+    "confirmDelete": "確定要刪除此項目嗎？"
+  },
   "orgChart": {
     "add": "添加",
     "noData": "暫無數據",

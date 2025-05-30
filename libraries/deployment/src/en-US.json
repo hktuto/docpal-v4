@@ -3570,6 +3570,12 @@
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
   "檔案內容": "Content",
+  "contextMenu": {
+    "connection": "Connection",
+    "remove": "Remove",
+    "case": "Case",
+    "confirmDelete": "Are you sure to delete this?"
+  },
   "orgChart": {
     "add": "Add",
     "noData": "No Data",

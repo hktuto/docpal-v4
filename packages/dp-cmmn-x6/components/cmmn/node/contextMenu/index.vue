@@ -2,6 +2,7 @@
 
 import {Graph, Cell, View} from "@antv/x6";
 import {useEventListener} from "@vueuse/core";
+import { reactive } from 'vue'
 
 const state = reactive<{
     loading: boolean
@@ -52,7 +53,7 @@ useEventListener(window, 'cmmn-node-contextMenu-close', () => {
 </script>
 
 <template>
-    <div :class="{contextMenuContainer:true, opened:state.opened}" :style="`--x:${state.position.x}px;--y:${state.position.y}px`" v-loading="state.loading">
+    <div :class="{contextMenuContainer:true, opened:state.opened}" :style="`--x:${state.position.x}px;--y:${state.position.y}px`" v-loading="state.loading" tabindex="0" aria-label="Context menu" role="menu">
         <template v-if="state.opened">
             
             <div class="nodeName" v-if="state.opened">
