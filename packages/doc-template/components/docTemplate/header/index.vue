@@ -55,7 +55,7 @@ defineExpose({
         :label="header.name"
         :name="header.name"
       >
-      <div class="tooleContainer">
+      <div class="toolContainer">
         <div v-for="tool in header.tools" :key="tool.name" class="tool">
           <component  :is="tool.components" />
         </div>
@@ -76,10 +76,10 @@ defineExpose({
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
   border-bottom: 1px solid var(--app-grey-800);
+  overflow: auto;
 }
 
-.tooleContainer{
-
+.toolContainer{
   --gap: var(--app-space-s);
   display: flex;
   flex-flow: row nowrap;

@@ -1,14 +1,19 @@
 <script setup lang="ts">
 import { DocTemplateProveKey } from '~/utils/docTempalteHelper'
 import { defaultAvailableFonts } from 'docpal-document-editor/src/utils/fontHelper'
+import { useI18n } from 'vue-i18n'
+import { inject } from 'vue'
 
-const { editor, options, initEditor } = inject(DocTemplateProveKey)
+const provider = inject(DocTemplateProveKey)
+if (!provider) throw new Error('DocTemplateProvider not found')
+const { editor, options, initEditor } = provider
 const { t } = useI18n()
 
 const fontPredefineFamily = [...defaultAvailableFonts]
 const fontPredefineSize = [8, 9, 10, 11, 12, 14, 15, 18, 20, 22, 24, 26, 28, 36, 48]
 const fontPredefineColors = ref(['#000000'])
 const fontPredefineHighlightColors = ref(['#FFFFFF', '#ffff00', '#00ff00', '#007FFF', '#FF0000', '#FF00FF', '#00FFFF'])
+
 
 const state = reactive({
   fontFamily: 'Inter',
@@ -207,36 +212,26 @@ function handleSuperscript() {
 </script>
 
 <template>
-  <el-row>
-    <el-col :span="24">
-      <!-- font family -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.family')"
-        placement="bottom"
-      >
-        <el-dropdown trigger="click" split-button @click="handleFontFamilyChange(state.fontFamily)">
-          {{ state.fontFamily }}
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
-                                @click="handleFontSizeChangeOnDown(item)">
-                {{ item }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </el-tooltip>
-
-      <el-divider direction="vertical" />
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.size')"
-        placement="bottom"
-      >
+  <div class="toolsContainer">
+    <el-row>
+      <el-col :span="24" :gutter="0">
+        <el-span :span="18">
+          <el-dropdown v-tooltip="t('docTemplate.font.family')" trigger="click" split-button @click="handleFontFamilyChange(state.fontFamily)">
+              {{ state.fontFamily }}
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
+                                    @click="handleFontSizeChangeOnDown(item)">
+                    {{ item }}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+        </el-span>
+        <el-span :span="6">
+        <!-- font family -->
         <el-select
+          v-tooltip="t('docTemplate.font.size')"
           v-model="state.fontSize"
           allow-create
           filterable
@@ -248,44 +243,27 @@ function handleSuperscript() {
         >
           <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
-      </el-tooltip>
-
-      <el-divider direction="vertical" />
-
-      <el-button-group>
-        <el-tooltip
-          class="box-item"
-          effect="dark"
-          :content="t('docTemplate.font.increaseSize')"
-          placement="bottom"
-        >
-          <el-button style="width: 41px" @click="handlerFontSizeResize(true)">
+      </el-span>
+        <el-button-group>
+          <el-button
+            v-tooltip="t('docTemplate.font.increaseSize')"
+            style="width: 41px"
+            @click="handlerFontSizeResize(true)"
+          >
             <p>A<sup>+</sup></p>
           </el-button>
-        </el-tooltip>
-        <el-tooltip
-          class="box-item"
-          effect="dark"
-          :content="t('docTemplate.font.reduceSize')"
-          placement="bottom"
-        >
-          <el-button style="width: 41px" @click="handlerFontSizeResize(false)">
+          <el-button
+            v-tooltip="t('docTemplate.font.reduceSize')"
+            style="width: 41px"
+            @click="handlerFontSizeResize(false)"
+          >
             <p>A<sup>-</sup></p>
           </el-button>
-        </el-tooltip>
-      </el-button-group>
+        </el-button-group>
 
-      <el-divider direction="vertical" />
-
-      <!-- font color   -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.color')"
-        placement="bottom"
-      >
+        <!-- font color   -->
         <el-button-group>
-          <el-button @click="handleSetFontColor(state.fontColor)">
+          <el-button v-tooltip="t('docTemplate.font.color')" @click="handleSetFontColor(state.fontColor)">
             A
           </el-button>
           <el-button style="width: 22px">
@@ -293,108 +271,80 @@ function handleSuperscript() {
                              @focus="handleFontColorFocus" />
           </el-button>
         </el-button-group>
-      </el-tooltip>
-
-      <el-divider direction="vertical" />
-
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.deleteStyle')"
-        placement="bottom"
-      >
-        <el-button style="width: 38px" @click="handleFontStyleClear">
+        <el-button
+          v-tooltip="t('docTemplate.font.deleteStyle')"
+          style="width: 38px"
+          @click="handleFontStyleClear"
+        >
           🗑️
         </el-button>
-      </el-tooltip>
-    </el-col>
-  </el-row>
-  <el-row>
-    <el-col :span="24">
-      <!-- font bold  -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.bold')"
-        placement="bottom"
-      >
-        <el-button style="width: 36px" @click="handleFontBoldChange" :class="{ 'is-active': editor.isActive('bold') }">
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <!-- font bold  -->
+        <el-button
+          v-tooltip="t('docTemplate.font.bold')"
+          style="width: 36px"
+          @click="handleFontBoldChange"
+          :class="{ 'is-active': editor.isActive('bold') }"
+        >
           <p style="font-weight: bold">B</p>
         </el-button>
-      </el-tooltip>
 
-      <!--  font italic  -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.italic')"
-        placement="bottom"
-      >
-        <el-button @click="handleFontItalicChange" :class="{ 'is-active': editor.isActive('italic') }">
+        <!--  font italic  -->
+        <el-button
+          v-tooltip="t('docTemplate.font.italic')"
+          @click="handleFontItalicChange"
+          :class="{ 'is-active': editor.isActive('italic') }"
+        >
           <p><em>I</em></p>
         </el-button>
-      </el-tooltip>
 
-      <!--  font Underline  -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.underline')"
-        placement="bottom"
-      >
-        <el-button style="width: 36px" @click="handleUnderline" :class="{ 'is-active': editor.isActive('underline') }">
+        <!--  font Underline  -->
+        <el-button
+          v-tooltip="t('docTemplate.font.underline')"
+          style="width: 36px"
+          @click="handleUnderline"
+          :class="{ 'is-active': editor.isActive('underline') }"
+        >
           <p><u>U</u></p>
         </el-button>
-      </el-tooltip>
 
-      <!--  font Strike  -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.delineate')"
-        placement="bottom"
-      >
-        <el-button @click="handleStrike" :class="{ 'is-active': editor.isActive('strike') }">
+        <!--  font Strike  -->
+        <el-button
+          v-tooltip="t('docTemplate.font.delineate')"
+          @click="handleStrike"
+          :class="{ 'is-active': editor.isActive('strike') }"
+        >
           <p><s>abc</s></p>
         </el-button>
-      </el-tooltip>
 
-      <!--  font Subscript  -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.subscript')"
-        placement="bottom"
-      >
-        <el-button style="width: 36px" @click="handleSubscript" :class="{ 'is-active': editor.isActive('subscript') }">
+        <!--  font Subscript  -->
+        <el-button
+          v-tooltip="t('docTemplate.font.subscript')"
+          style="width: 36px"
+          @click="handleSubscript"
+          :class="{ 'is-active': editor.isActive('subscript') }"
+        >
           <p>X<sub>2</sub></p>
         </el-button>
-      </el-tooltip>
 
-      <!--  font Superscript  -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.superscript')"
-        placement="bottom"
-      >
-        <el-button style="width: 36px" @click="handleSuperscript"
-                   :class="{ 'is-active': editor.isActive('superscript') }">
+        <!--  font Superscript  -->
+        <el-button
+          v-tooltip="t('docTemplate.font.superscript')"
+          style="width: 36px"
+          @click="handleSuperscript"
+          :class="{ 'is-active': editor.isActive('superscript') }"
+        >
           <p>X<sup>2</sup></p>
         </el-button>
-      </el-tooltip>
 
-      <el-divider direction="vertical" />
+        <el-divider direction="vertical" />
 
-      <!-- font highlight -->
-      <el-tooltip
-        class="box-item"
-        effect="dark"
-        :content="t('docTemplate.font.highlight')"
-        placement="bottom"
-      >
+        <!-- font highlight -->
         <el-button-group>
-          <el-button @click="handleFontHighlight(state.fontHighlightColor)">
+          <el-button v-tooltip="t('docTemplate.font.highlight')" @click="handleFontHighlight(state.fontHighlightColor)">
             <p>Highlight</p>
           </el-button>
           <el-button style="width: 22px;">
@@ -402,16 +352,15 @@ function handleSuperscript() {
                              @blur="handleFontHighlight(state.fontHighlightColor)" />
           </el-button>
         </el-button-group>
-      </el-tooltip>
-    </el-col>
-  </el-row>
-
-  <div style="text-align: center; margin-top: 9px;">
-    {{ $t('docTemplate.font.font') }}
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <style scoped lang="scss">
+.toolsContainer{
+  min-width: 240px;
+}
 .el-row {
   margin-bottom: 5px;
 }

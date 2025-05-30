@@ -11,11 +11,6 @@ export const useDocHeader = () => useState<ToolSection[]>('docHeader', () => (
           components: 'lazyDocTemplateSettingUndo'
         },
         {
-          name: 'Text Setting',
-          components: 'lazyDocTemplateSettingText'
-        },
-        
-        {
           name: 'font',
           components: 'lazyDocTemplateContentToolbarFont'
         },
