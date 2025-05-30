@@ -17,7 +17,7 @@ export default defineAppConfig({
                   name: "RBAC-editor"
                 },
                 {
-                  name: "RBAC-editor2"
+                  name: "RBAC-page"
                 }
             ]
         },
