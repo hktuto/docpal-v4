@@ -1,9 +1,9 @@
 <template>
   <div class="user-section">
-    <h4>Users</h4>
+    <h4>{{ $t('orgChart.userTable.title') }}</h4>
     <div class="user-header">
-      <el-select-v2 v-model="selectedUser" :options="userList" placeholder="Filter Name" filterable class="filter-input" @change="handleFilter" />
-      <el-button type="primary" @click="handleAddUser" :disabled="userTotalSize !== 0 || !selectedUser">Add User to Role</el-button>
+      <el-select-v2 v-model="selectedUser" :options="userList" :placeholder="$t('orgChart.userTable.filterPlaceholder')" filterable class="filter-input" @change="handleFilter" />
+      <el-button type="primary" @click="handleAddUser" :disabled="userTotalSize !== 0 || !selectedUser">{{ $t('orgChart.userTable.addUserButton') }}</el-button>
     </div>
 
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
@@ -13,6 +13,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import { clientApi } from 'api'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
 const props = defineProps<{
   roleId?: string
   isAdd?: boolean
@@ -50,10 +54,10 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   },
   virtualScroll: props.isAdd,
   columns: [
-    { field: 'username', title: 'Username', width: 120 },
+    { field: 'username', title: t('orgChart.userTable.columns.username'), width: 120 },
     {
       field: 'email',
-      title: 'Email',
+      title: t('orgChart.userTable.columns.email'),
       slots: {
         default: 'email'
       }
@@ -63,7 +67,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     [
       {
         code: 'remove_user',
-        name: '移除',
+        name: t('orgChart.userTable.actions.remove'),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {

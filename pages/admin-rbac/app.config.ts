@@ -4,13 +4,13 @@ import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
   menu:{
-   "RBAC-editor2":{
-      id:"RBAC-editor2",
-      name: 'rgac2',
-      label: "ROLE-Editor2",
+   "RBAC-page":{
+      id:"RBAC-page",
+      name: 'rgac-page',
+      label: "ROLE-Page",
       icon: "lucide:file-cog",
       hoverIcon: "lucide:file-cog",
-      component: "LazyRbacPage2",
+      component: "LazyRbacPage",
       feature: "CORE",
     },
   }
