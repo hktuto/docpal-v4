@@ -429,7 +429,12 @@ const emits = defineEmits([
 
 async function handleSubmit() {
   try {
-    await formRef.value.validate()
+    try {
+      await formRef.value.validate()
+    } catch (e) {
+      logger.error(e)
+      return
+    }
     state.loading = true
 
     if (id == '') {

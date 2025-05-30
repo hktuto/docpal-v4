@@ -113,9 +113,13 @@ const form = ref<any>({
 const FormRef = ref()
 
 async function handleSubmit() {
-  // try {
-  const valid = FormRef.value.validate()
-  if (!valid) return
+  try {
+    await FormRef.value.validate()
+  } catch (e) {
+    console.error(e)
+    return
+  }
+
   state.visible = false
   let permission: any = {
     group: form.value.name,
