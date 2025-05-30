@@ -279,7 +279,7 @@ async function handleEditVariable(status: boolean, value: string, index: number)
       }
   }
   if (!json || !data) {
-    throw new Error('no json or data')
+    console.error('no json or data')
   }
   setTimeout(() => {
     editFormRendererRef.value.setFormJson(json)
@@ -339,7 +339,7 @@ async function handleEditItemTag() {
     }
     state.editVisible = false
   } catch (error: any) {
-    console.error(error)
+    throw new Error(error)
   }
 }
 
@@ -374,7 +374,7 @@ async function handleAddItemTag() {
     formRef.value.clearValidate('prefix')
     state.dialogFormVisible = false
   } catch (error: any) {
-    console.error(error)
+    throw new Error(error)
   }
 }
 
@@ -474,7 +474,7 @@ function setTag(status: boolean, list: any) {
   }
 }
 
-onMounted(async () => {
+onActivated(async () => {
   await init()
 })
 
