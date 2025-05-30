@@ -28,7 +28,7 @@
         </el-form>
         
         <UserTable 
-          :role-id="props.nodeData?.id"
+          :role-id="props.nodeData?.id" v-if="!props.isAdd"
           :isAdd="props.isAdd"
           @update:users="handleUsersUpdate"
         />

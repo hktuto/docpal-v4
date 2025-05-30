@@ -2,8 +2,8 @@
   <div class="user-section">
     <h4>{{ $t('orgChart.userTable.title') }}</h4>
     <div class="user-header">
-      <el-select-v2 v-model="selectedUser" :options="userList" :placeholder="$t('orgChart.userTable.filterPlaceholder')" filterable class="filter-input" @change="handleFilter" />
-      <el-button type="primary" @click="handleAddUser" :disabled="userTotalSize !== 0 || !selectedUser">{{ $t('orgChart.userTable.addUserButton') }}</el-button>
+      <el-select-v2 v-model="selectedUser" :options="userList" :placeholder="$t('orgChart.userTable.addUser')" filterable class="filter-input" />
+      <el-button type="primary" :disabled="!selectedUser" @click="handleAddUser">{{ $t('orgChart.userTable.addUserButton') }}</el-button>
     </div>
 
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
@@ -14,7 +14,7 @@
 import { ref, watch } from 'vue'
 import { clientApi } from 'api'
 import { useI18n } from 'vue-i18n'
-
+import { adminApi } from 'api'
 const { t } = useI18n()
 
 const props = defineProps<{
@@ -41,12 +41,11 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
       userName: selectedUser.value,
       roleId: props.roleId
     }
-    // TODO: api,这里需要替换为实际的用户查询API
+    // TODO: api,这里需要替换为实际的用户查询API，royhoo已经在做了，6月4号可以催一下
     const data = await Promise.resolve({
       data: {
-        entryList: [
-        ],
-        totalSize: 0
+        entryList: [{ username: 'jack_li2' }],
+        totalSize: 1
       }
     })
     userTotalSize.value = data.data.totalSize
@@ -77,28 +76,33 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     ]
   ]
 })
-const handleFilter = (query: string) => {
-  reload()
-}
-const handleAddUser = () => {
+
+const handleAddUser = async () => {
   if (props.isAdd) {
+    // 新增角色的接口不支持用户列表，暂时没有用
     addTableData.value.push({
       username: selectedUser.value,
       email: ''
     })
     userList.value = userList.value.filter((item) => item.value !== selectedUser.value)
     emit('update:users', addTableData.value)
-    
   } else {
-    // TODO: api,实现添加用户的逻辑
+    try {
+      await adminApi.api.postAclRoleUsers({
+        roleId: props.roleId,
+        userIds: [selectedUser.value]
+      })
+      query({})
+    } catch (error) {
+      console.error(error)
+    }
   }
   selectedUser.value = ''
-
 }
 const sortUserList = () => {
   userList.value = userList.value.sort((a, b) => a.label.localeCompare(b.label))
 }
-const handleRemoveUser = (row: any) => {
+const handleRemoveUser = async (row: any) => {
   if (props.isAdd) {
     addTableData.value = addTableData.value.filter((item) => item.username !== row.username)
     userList.value.push({
@@ -107,12 +111,18 @@ const handleRemoveUser = (row: any) => {
     })
     emit('update:users', addTableData.value)
     sortUserList()
-    reload()
+    query({})
   } else {
-    // TODO: api,实现移除用户的逻辑
+    // TODO: api, 删除角色中的用户，有报错
+    await adminApi.api.deleteAclRoleUsers({
+      roleId: props.roleId,
+      userIds: [row.username]
+    })
+    query({})
   }
 }
 onMounted(async () => {
+  // TODO: api,获取无角色用户列表，接口需求已经跟royhoo提了，6月4号可以催一下
   const userdata = await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)
   userList.value = userdata.map((item: any) => ({
     label: item.username,
@@ -120,7 +130,6 @@ onMounted(async () => {
   }))
   sortUserList()
 })
-// 监听roleId变化，重新加载用户数据
 watch(
   () => props.roleId,
   (newVal) => {

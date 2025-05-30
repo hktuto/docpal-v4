@@ -40,7 +40,8 @@ export default defineNuxtConfig({
     "../../pages/admin-watermark",
     "../../pages/admin-message-template",
     "../../pages/admin-unique-id-generator",
-    // "../../pages/admin-share"
+    // "../../pages/admin-share",
+    "../../pages/admin-rbac"
   ],
   features:{
     inlineStyles: true,

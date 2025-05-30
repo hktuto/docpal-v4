@@ -124,7 +124,7 @@ function handleClick() {
 
 .person-name {
   font-weight: bold;
-  font-size: 14px;
+  font-size: 1.2rem;
   color: #333;
   margin-bottom: 4px;
   white-space: nowrap;
@@ -134,7 +134,7 @@ function handleClick() {
 }
 
 .person-title {
-  font-size: 12px;
+  font-size: 1rem;
   color: #666;
   white-space: nowrap;
   overflow: hidden;
@@ -143,7 +143,7 @@ function handleClick() {
 }
 
 .person-tag {
-  font-size: 12px;
+  font-size: 1rem;
   color: #666;
   margin-top: 4px;
   padding: 2px 6px;
@@ -153,7 +153,7 @@ function handleClick() {
 }
 
 .person-count {
-  font-size: 12px;
+  font-size: 1rem;
   color: #666;
   margin-top: 4px;
 }
