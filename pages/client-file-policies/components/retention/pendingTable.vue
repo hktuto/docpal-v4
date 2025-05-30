@@ -68,6 +68,7 @@
 import { MoreFilled } from '@element-plus/icons-vue'
 import { clientApi } from 'api'
 import { MenuRouterKey } from '#imports'
+import { ElMessageBox } from 'element-plus'
 
 const routerProvider = inject(MenuRouterKey)
 let extraParams = {}
@@ -184,6 +185,15 @@ async function handleRefresh() {
   await clientApi.api.getPolicyRetentionsScanDocument()
   refreshLoading.value = false
   reload()
+}
+
+async function handleApprove(state:any, row:any) {
+    let msg = t('msg_confirmWhetherToExecuteCommand')
+    const command = state ? t('workflow_startAdhocWorkflow_approve') :t('workflow_startAdhocWorkflow_reject')
+    const action = await ElMessageBox.confirm(`${msg}: ${command}`)
+    if(action !== 'confirm') return
+    await clientApi.api.patchPolicyRetentionsIdStatusStatus(row.id, state)
+    reload()
 }
 
 function handleDblclick(row: any) {
