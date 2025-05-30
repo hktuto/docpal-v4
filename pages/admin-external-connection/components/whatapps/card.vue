@@ -98,8 +98,12 @@ async function handleSave(val) {
   // state.setting.whatsAppSetting.whatsAppSwitch = val
   try {
     state.saveLoading = true
-    const valid = formRef.value.validate()
-    if (!valid) return
+    try {
+       await formRef.value.validate()
+    } catch (e) {
+      logger.error(e)
+      return
+    }
     const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({
       whatsAppSwitch: state.setting.whatsAppSetting.whatsAppSwitch,
       accessToken: form.value.accessToken,
