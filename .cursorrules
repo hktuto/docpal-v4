@@ -31,7 +31,7 @@ CSS Variables
 - Do not use consts instead of functions. Also, define a type if possible.
 
 # Code Style:
-- Use 4 spaces for indentation.
+- Use 2 spaces for indentation.
 - Use camelCase for variable names.
 - Use PascalCase for class names.
 - Use kebab-case for file names.
