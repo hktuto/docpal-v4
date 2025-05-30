@@ -9,12 +9,12 @@ DocPal V4 is a modern, modular document management platform designed for enterpr
 
 # Current File Structure:
 i18n locales 
-- /libraries/deployment/src/en-US.json
-- /libraries/deployment/src/zh-HK.json
-- /libraries/deployment/src/zh-CN.json
+- libraries/deployment/src/en-US.json
+- libraries/deployment/src/zh-HK.json
+- libraries/deployment/src/zh-CN.json
 
 CSS Variables
-- /packages/base/assets/styles/main.scss
+- packages/base/assets/styles/main.scss
 
 
 # Rules:
@@ -31,7 +31,7 @@ CSS Variables
 - Do not use consts instead of functions. Also, define a type if possible.
 
 # Code Style:
-- Use 4 spaces for indentation.
+- Use 2 spaces for indentation.
 - Use camelCase for variable names.
 - Use PascalCase for class names.
 - Use kebab-case for file names.

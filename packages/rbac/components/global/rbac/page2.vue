@@ -1,25 +1,36 @@
-<template>
-  <div class="pageContainer--padding">
-    <el-tabs class="dp-tabs--auto" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="chart" name="chart">
+<script lang="ts" setup>
 
-        <RbacOrgChart />
-      </el-tab-pane>
-      <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
-    </el-tabs>
+const { t } = useI18n()
+const {init} = useRBAC()
+const users = useUserList()
+const graphRef = ref()
+onMounted(async () => {
+  await init()
+  console.log('graphRef', graphRef.value)
+  graphRef.value.initGraph()
+})
+
+const nodeEditorEl = ref()
+
+function graphReadyHandler(){
+  console.log('graphReadyHandler', nodeEditorEl.value)
+  nodeEditorEl.value.setupListeners()
+}
+</script>
+
+<template>
+  <div class="pageContainer">
+    <RbacRoleGraph ref="graphRef" @graphReady="graphReadyHandler">
+        <RbacNode ref="nodeEditorEl" />
+      </RbacRoleGraph>
   </div>
 </template>
 
-<script lang="ts" setup>
-const activeName = ref('chart')
-</script>
 
 <style lang="scss" scoped>
-.dp-tabs--auto {
+.pageContainer {
+  width: 100%;
   height: 100%;
-  overflow: hidden;
-  .el-tab-pane {
-    height: 100%;
-  }
+  padding: var(--app-space-s);
 }
 </style>
