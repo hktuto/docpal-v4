@@ -1213,6 +1213,9 @@
     "filterBy": "Filter By {name}",
     "filterByBusinessName": "Filter By Bussiness Name",
     "filterByBussinessName": "Filter By Bussiness Name",
+    "folderCabinet": {
+      "duplicateRootFolder": "Same folder name is already exist"
+    },
     "formatError": "Format Error",
     "jumpToView": "Jump To View",
     "loading": "Loading...",

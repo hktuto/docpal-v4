@@ -1212,6 +1212,9 @@
     "filterBy": "按{name}過濾",
     "filterByBusinessName": "按公司名稱過濾",
     "filterByBussinessName": "按公司名稱過濾",
+    "folderCabinet": {
+      "duplicateRootFolder": "相同名稱的資料夾已存在"
+    },
     "formatError": "格式錯誤",
     "jumpToView": "跳轉查看",
     "loading": "載入中...",
