@@ -530,6 +530,12 @@
   "conjunction": {
     "to": "to"
   },
+  "contextMenu": {
+    "case": "Case",
+    "confirmDelete": "Are you sure to delete this?",
+    "connection": "Connection",
+    "remove": "Remove"
+  },
   "convert_convert": "Convert",
   "convert_documentFormat": "Convert to Other Format:",
   "convert_transferring": "Transferring...",
@@ -1354,6 +1360,9 @@
     "filterBy": "Filter By {name}",
     "filterByBusinessName": "Filter By Bussiness Name",
     "filterByBussinessName": "Filter By Bussiness Name",
+    "folderCabinet": {
+      "duplicateRootFolder": "Same folder name is already exist"
+    },
     "formatError": "Format Error",
     "jumpToView": "Jump To View",
     "loading": "Loading...",
@@ -2123,6 +2132,41 @@
   "options_size_small": "Small",
   "order": "Order",
   "orderColumn": "Order Column",
+  "orgChart": {
+    "add": "Add",
+    "contextMenu": {
+      "addChild": "Add Child Node",
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "editSidebar": {
+      "addRole": "Add Role",
+      "cancel": "Cancel",
+      "editRole": "Edit Role",
+      "parentRole": "Parent Role",
+      "parentRolePlaceholder": "Please enter parent role",
+      "roleLabel": "Role Label",
+      "rolePlaceholder": "Please enter role name",
+      "save": "Save",
+      "validation": {
+        "minLength": "Length must be at least 2 characters",
+        "roleRequired": "Please enter role name"
+      }
+    },
+    "noData": "No Data",
+    "userTable": {
+      "actions": {
+        "remove": "Remove"
+      },
+      "addUserButton": "Add User to Role",
+      "columns": {
+        "email": "Email",
+        "username": "Username"
+      },
+      "filterPlaceholder": "Filter Name",
+      "title": "Users"
+    }
+  },
   "pending_approval": "Pending Approval",
   "pending_completed": "Completed",
   "pending_upload": "Pending Upload",
@@ -3569,46 +3613,5 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content",
-  "contextMenu": {
-    "connection": "Connection",
-    "remove": "Remove",
-    "case": "Case",
-    "confirmDelete": "Are you sure to delete this?"
-  },
-  "orgChart": {
-    "add": "Add",
-    "noData": "No Data",
-    "contextMenu": {
-      "edit": "Edit",
-      "addChild": "Add Child Node",
-      "delete": "Delete"
-    },
-    "editSidebar": {
-      "addRole": "Add Role",
-      "editRole": "Edit Role",
-      "roleLabel": "Role Label",
-      "rolePlaceholder": "Please enter role name",
-      "parentRole": "Parent Role",
-      "parentRolePlaceholder": "Please enter parent role",
-      "cancel": "Cancel",
-      "save": "Save",
-      "validation": {
-        "roleRequired": "Please enter role name",
-        "minLength": "Length must be at least 2 characters"
-      }
-    },
-    "userTable": {
-      "title": "Users",
-      "filterPlaceholder": "Filter Name",
-      "addUserButton": "Add User to Role",
-      "columns": {
-        "username": "Username",
-        "email": "Email"
-      },
-      "actions": {
-        "remove": "Remove"
-      }
-    }
-  }
+  "檔案內容": "Content"
 }
