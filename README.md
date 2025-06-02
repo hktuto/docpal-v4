@@ -25,8 +25,6 @@ pnpm install
 
 注意：本項目使用 pnpm 作為包管理器，並已配置為自動處理遞迴安裝。
 
-# 開發計劃
-這項目還在進中行，計劃分成 3 部份, 目標 1 月低前完成。
 
 ## 🚀 Features
 
@@ -95,6 +93,15 @@ docpal-v4/
 
 ### Development
 
+Before starting the development server, copy the environment files for your server:
+
+```bash
+cp env/.env.{serverName}.client env/.env.dev.client
+cp env/.env.{serverName}.admin env/.env.dev.admin
+```
+
+Replace `{serverName}` with your actual server name (e.g., `local`, `staging`, `prod`).
+
 To start the development server:
 
 ```bash
@@ -124,16 +131,5 @@ Additional documentation can be found in the following locations:
 - Apps
 	- Web <- 網頁客氣端
 	- Packages <- 所有功能
-		- [[apps/packages/base/README|Base]] <- 所有不用Auth 的基本模組
-			- [x] i18n
-			- [ ] colorMode
-			- [x] element-plus
-			- [x] css variable
-			- [ ] basic component
-		- [[Authapp/README|AuthApp]] <- 所有需要 Auth 的基本模組
-			- [ ] global keycloak
-			- [ ] get user
-			- [ ] refresh token
-			- [ ] 403 logou
 - Library 
 	- [[libraries/api/README|API]] <- 從 Swagger 生成來的 Axios 客戶
