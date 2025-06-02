@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer--padding">
-    <el-tabs class="dp-tabs--auto" v-model="activeName" @tab-click="handleClick">
+    <el-tabs class="dp-tabs--auto" v-model="activeName">
       <el-tab-pane label="Graph" name="chart">
         <RbacOrgChart />
       </el-tab-pane>

@@ -10,6 +10,7 @@
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { Graph } from '@antv/x6'
 import { register } from '@antv/x6-vue-shape'
+import { DagreLayout } from '@antv/layout'
 import type { PropType } from 'vue'
 import OrgChartNodePerson from './nodes/person.vue'
 import './styles.css'
@@ -101,24 +102,13 @@ const createGraph = () => {
       zoomAtMousePosition: true,
       modifiers: ['ctrl', 'meta']
     },
-    connecting: {
-      enabled: false
-    },
+    scaling:{
+            min: 0.2, max: 1.2
+        },
     panning: true,
     interacting: {
-      nodeMovable: true
+      nodeMovable: false
     }
-  })
-
-  // 添加节点拖动结束事件
-  graph.on('node:moved', ({ node }) => {
-    const edges = graph.getConnectedEdges(node)
-    edges.forEach((edge) => {
-      const source = edge.getSource()
-      const target = edge.getTarget()
-      edge.setSource(source)
-      edge.setTarget(target)
-    })
   })
 
   // 添加右键菜单事件
@@ -142,57 +132,62 @@ const createGraph = () => {
   return graph
 }
 
-const renderTree = (graph: Graph, nodeData: OrgNode, parentNode?: any, x = 300, y = 50) => {
-  // 找到可用位置
-  const { x: availableX, y: availableY } = findAvailablePosition(graph, x, y, null)
+/**
+ * @deprecated
+ * old logic for reference, should remove it after new logic is verified
+ *
+ */
+// const renderTree = (graph: Graph, nodeData: OrgNode, parentNode?: any, x = 300, y = 50) => {
+//   // 找到可用位置
+//   const { x: availableX, y: availableY } = findAvailablePosition(graph, x, y, null)
 
-  const node = graph.addNode({
-    x: availableX,
-    y: availableY,
-    shape: 'org-node-person',
-    data: {
-      ...nodeData,
-      style: { ...props.nodeStyle, ...nodeData.style },
-      collapsed: nodeData.collapsed || false
-    }
-  })
+//   const node = graph.addNode({
+//     x: availableX,
+//     y: availableY,
+//     shape: 'org-node-person',
+//     data: {
+//       ...nodeData,
+//       style: { ...props.nodeStyle, ...nodeData.style },
+//       collapsed: nodeData.collapsed || false
+//     }
+//   })
 
-  if (parentNode) {
-    graph.addEdge({
-      source: parentNode,
-      target: node,
-      connector: {
-        name: 'rounded'
-      },
-      attrs: {
-        line: {
-          stroke: '#8f8f8f',
-          strokeWidth: 1,
-          targetMarker: null,
-          sourceMarker: null
-        }
-      },
-      router: {
-        name: 'er',
-        args: {
-          direction: 'V'
-        }
-      }
-    })
-  }
+//   if (parentNode) {
+//     graph.addEdge({
+//       source: parentNode,
+//       target: node,
+//       connector: {
+//         name: 'rounded'
+//       },
+//       attrs: {
+//         line: {
+//           stroke: '#8f8f8f',
+//           strokeWidth: 1,
+//           targetMarker: null,
+//           sourceMarker: null
+//         }
+//       },
+//       router: {
+//         name: 'er',
+//         args: {
+//           direction: 'V'
+//         }
+//       }
+//     })
+//   }
 
-  if (nodeData.children && !nodeData.collapsed) {
-    const childWidth = NODE_WIDTH + VERTICAL_GAP // 节点宽度 + 间距
-    const startX = availableX - ((nodeData.children.length - 1) * childWidth) / 2
+//   if (nodeData.children && !nodeData.collapsed) {
+//     const childWidth = NODE_WIDTH + VERTICAL_GAP // 节点宽度 + 间距
+//     const startX = availableX - ((nodeData.children.length - 1) * childWidth) / 2
 
-    nodeData.children.forEach((child, index) => {
-      const baseChildX = startX + index * childWidth
-      renderTree(graph, child, node, baseChildX, availableY + NODE_HEIGHT + VERTICAL_GAP)
-    })
-  }
+//     nodeData.children.forEach((child, index) => {
+//       const baseChildX = startX + index * childWidth
+//       renderTree(graph, child, node, baseChildX, availableY + NODE_HEIGHT + VERTICAL_GAP)
+//     })
+//   }
 
-  return node
-}
+//   return node
+// }
 
 const initGraph = () => {
   const graph = graphRef.value ? graphRef.value : createGraph()
@@ -201,10 +196,84 @@ const initGraph = () => {
   graph.clearCells()
 
   // 渲染每个根节点
-  props.data.forEach((rootNode, index) => {
-    const startX = 300 + index * (NODE_WIDTH + VERTICAL_GAP)
-    renderTree(graph, rootNode, undefined, startX, 50)
+  // convert data to antx6 data
+  const graphData = {
+    nodes: [],
+    edges: []
+  } as {
+    nodes: any[],
+    edges: any[]
+  }
+  // Convert hierarchical data to flat arrays of nodes and edges
+  const processNode = (node: OrgNode, parentId?: string) => {
+    // Create node
+    graphData.nodes.push({
+      id: node.id,
+      shape: 'org-node-person',
+      data: node,
+      position: { x: 0, y: 0 }, // Position will be set by layout
+      attrs: {
+        body: {
+          ...props.nodeStyle
+        }
+      }
+    })
+
+    // Create edge if there's a parent
+    if (parentId) {
+      graphData.edges.push({
+        source: parentId,
+        target: node.id,
+        connector: {
+          name: 'rounded'
+        },
+        attrs: {
+          line: {
+            stroke: '#8f8f8f',
+            strokeWidth: 1,
+            targetMarker: null,
+            sourceMarker: null
+          }
+        },
+        router: {
+          name: 'er',
+          args: {
+            direction: 'V'
+          }
+        }
+      })
+    }
+
+    // Process children recursively
+    if (node.children && !node.collapsed) {
+      node.children.forEach(child => processNode(child, node.id))
+    }
+  }
+
+  // Process each root node
+  props.data.forEach(rootNode => processNode(rootNode))
+
+  // Apply layout
+  const layout = new DagreLayout({
+    type: 'dagre',
+    rankdir: 'TB',
+    align: undefined,
+    ranksep: 50,
+    nodesep: 50,
+    controlPoints: true
   })
+
+  const layoutData = layout.layout(graphData)
+  
+  // Update node positions from layout
+  
+  
+  graph.fromJSON(layoutData);
+  // Keep old logic for reference
+  // props.data.forEach((rootNode, index) => {
+  //   const startX = 300 + index * (NODE_WIDTH + VERTICAL_GAP)
+  //   renderTree(graph, rootNode, undefined, startX, 50)
+  // })
 
   // Center and fit content
   graph.centerContent()
