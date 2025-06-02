@@ -76,18 +76,17 @@ async function handleSubmit() {
       ElMessage.error($t('dpTip.noValidName'))
       throw new Error('dpTip.noValidName')
     }
-    const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName })
-    if (fileName !== _fileName) {
-      const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => {
-        return action
-      })
-      if (check !== 'confirm') {
-        state.loading = false
-        return
-      } else {
-        fileName = _fileName
-      }
+    // getUniqueName has bug, will return same name,
+    // we need to implement inline function to check if the name is unique
+    const hasSameName = await clientApi.api.postNuxeoDocumentIsduplicatename({
+      path: state.cabinetTemplate.documentPath,
+      titles: [fileName]
+    }).then(res => !!res.data.hasDuplicateTitle)
+    if(hasSameName) {
+      ElMessage.error($t('dpTip.folderCabinet.duplicateRootFolder'))
+      throw new Error('dpTip.folderCabinet.duplicateRootFolder')
     }
+    
     const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
     // 上传最上层数据
     const res = await clientApi.api.postCabinetCreate({
