@@ -2,6 +2,12 @@
 import { DocTemplateProveKey } from '../../../../utils/docTemplateHelper'
 import formJson from './docJson.json'
 import { useI18n } from 'vue-i18n'
+import cloneDeep from 'lodash/cloneDeep'
+import VariableValueText from './variable/VariableValueText.vue'
+import VariableValueList from './variable/VariableValueList.vue'
+import VariableValueTable from './variable/VariableValueTable.vue'
+import VariableValueLink from './variable/VariableValueLink.vue'
+import VariableValueImage from './variable/VariableValueImage.vue'
 
 const docTempalteProvider = inject(DocTemplateProveKey)
 const { t } = useI18n()
@@ -12,8 +18,11 @@ const state = reactive({
   visible: false,
   textContent: '',
   sidebarVisible: false,
-  exportType: 'html' as 'html' | 'docx' | 'pdf'
+  exportType: 'html' as 'html' | 'docx' | 'pdf',
+  exportVariableDrawerVisible: false
 })
+
+const exportVariables = ref<any[]>([])
 
 const FormRendererRef = ref()
 // TODO : the server should add to nuxtConfig runtime
@@ -70,10 +79,10 @@ function handleExportDropdown(command: 'html' | 'pdf' | 'docx' | 'json') {
     openDialog()
     return
   }
-  // TODO : update variables before export
-  performExport(command, [])
+  // Open variable edit drawer before export
+  state.exportType = command
+  openExportVariableDrawer()
 }
-
 
 function openDialog() {
   const json = getJsonConfig([])
@@ -87,7 +96,7 @@ function openDialog() {
   })
 }
 
-function getJsonConfig(configuredVariables: VariableItem[] = []) {
+function getJsonConfig(configuredVariables: any[] = []) {
   const data = {
     json: {
       options: '',
@@ -95,11 +104,31 @@ function getJsonConfig(configuredVariables: VariableItem[] = []) {
     },
     variables: configuredVariables
   }
-  data.json.options = options.value
+  data.json.options = JSON.stringify(options.value)
   data.json.content = editor.value.getJSON()
   return data
 }
 
+function openExportVariableDrawer() {
+  exportVariables.value = cloneDeep(variables.value)
+  state.exportVariableDrawerVisible = true
+}
+
+function getValueEditorComponent(type: string) {
+  switch (type) {
+    case 'text': return VariableValueText
+    case 'list': return VariableValueList
+    case 'table': return VariableValueTable
+    case 'link': return VariableValueLink
+    case 'image': return VariableValueImage
+    default: return VariableValueText
+  }
+}
+
+function handleExportWithVariables() {
+  performExport(state.exportType, exportVariables.value)
+  state.exportVariableDrawerVisible = false
+}
 </script>
 
 <template>
@@ -116,10 +145,18 @@ function getJsonConfig(configuredVariables: VariableItem[] = []) {
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  
+  <el-drawer v-model="state.exportVariableDrawerVisible" title="Edit Variables Before Export" size="40%">
+    <div v-for="(variable, idx) in exportVariables" :key="variable.key" style="margin-bottom: 1.5rem;">
+      <div style="font-weight: 600; margin-bottom: 0.5rem;">{{ variable.name }}</div>
+      <component
+        :is="getValueEditorComponent(variable.type)"
+        v-model="exportVariables[idx].value"
+      />
+    </div>
+    <el-button type="primary" @click="handleExportWithVariables">Save & Export</el-button>
+    <el-button @click="state.exportVariableDrawerVisible = false">Cancel</el-button>
+  </el-drawer>
   <el-dialog v-model="state.visible" :title="t('Export')">
     <FormRenderer ref="FormRendererRef" v-loading="state.loading" :form-json="formJson" />
   </el-dialog>
-  
-
 </template>

@@ -8,7 +8,7 @@
     v-tooltip="`Insert list variable: ${variable.name}`"
   >
     <span class="icon-list" aria-hidden="true"></span>
-    <span class="variable-name">{{ variable.displayValue }}</span>
+    <span class="variable-name">{{ variable.name }}</span>
   </button>
 </template>
 

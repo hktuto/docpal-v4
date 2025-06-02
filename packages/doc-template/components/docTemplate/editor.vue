@@ -118,7 +118,8 @@ function addVariable(variable: DocTemplateVariable) {
   console.log('variables', variables.value)
 }
 function updateVariable(updateVariable: DocTemplateVariable) {
-  const index = variables.value.findIndex(v => v.key === updateVariable.key)
+  // TODO: check if variable is in use, if in use, update node content
+  const index = variables.value.findIndex(v => v.name === updateVariable.name)
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
   } else {
@@ -127,7 +128,7 @@ function updateVariable(updateVariable: DocTemplateVariable) {
   }
 }
 function removeVariable(variable: DocTemplateVariable) {
-  const index = variables.value.findIndex(v => v.key === variable.key)
+  const index = variables.value.findIndex(v => v.name === variable.name)
   if (index !== -1) {
     variables.value.splice(index, 1)
   }
