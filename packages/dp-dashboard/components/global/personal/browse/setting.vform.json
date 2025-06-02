@@ -6,7 +6,7 @@
       "icon": "text-field",
       "formItemFlag": true,
       "options": {
-        "name": "input65523",
+        "name": "path",
         "label": "Path",
         "labelAlign": "",
         "type": "text",
