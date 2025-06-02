@@ -1,6 +1,6 @@
 <template>
   <div class="chart-container">
-    <template v-if="orgDatas.length === 0">
+    <template v-if="roleData.length === 0">
       <el-empty :description="$t('orgChart.noData')"></el-empty>
       <div class="flex-x-center">
         <el-button type="primary" @click="sidebarVisible = true">{{ $t('orgChart.add') }}</el-button>
@@ -9,7 +9,7 @@
     </template>
     <RbacOrgChartX6
       v-else
-      :data="orgDatas"
+      :data="roleData"
       :node-style="defaultNodeStyle"
       @node-click="handleNodeClick"
       @delete="handleDelete"
@@ -31,13 +31,10 @@ const defaultNodeStyle = {
   boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
 }
 const sidebarVisible = ref(false)
-const orgDatas = ref<OrgNode[]>([])
+const roleData = ref<OrgNode[]>([])
 let uuid = 0
-function getUuid() {
-  const randomNumber = Math.floor(100000 + Math.random() * 900000)
-  uuid++
-  return new Date().toISOString() + randomNumber + uuid
-}
+
+
 function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
   for (const node of nodes) {
     if (node.id === targetId) {
@@ -53,47 +50,54 @@ function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
   return null
 }
 
-function handleOpen() {
-  console.log('打开')
-}
 async function handleDelete(deleteId: string, newNodes: OrgNode[]) {
   // status:3-逻辑删除
-  const data = await adminApi.api
+  await adminApi.api
     .postAclRole({
       id: deleteId,
       status: 3
     })
     .then((res) => res.data)
-  orgDatas.value = newNodes
+    .catch((err) => {
+      throw new Error('Failed to delete role: ' + err)
+    })
+  roleData.value = newNodes
 }
 async function handleEdit(formData: OrgNode, selectedNodeId: string) {
   console.log('handleEdit', formData)
-  try {
-    const data = await adminApi.api
-      .putAclRole({
-        id: selectedNodeId,
-        ...formData
-      })
-      .then((res) => res.data)
-    const dataNode = findNodeById(orgDatas.value, selectedNodeId)
-    if (!dataNode) return
-    Object.assign(dataNode, formData)
-  } catch (error) {
-    console.error(error)
+  const dataNode = findNodeById(roleData.value, selectedNodeId)
+  if (!dataNode) {
+    throw new Error('Node not found : ' + selectedNodeId)
   }
+  await adminApi.api
+    .putAclRole({
+      ...formData,
+      id: selectedNodeId, // if id need to be override, then append it to the formData
+    })
+    .then((res) => res.data)
+    .catch((err) => {
+      throw new Error('Failed to update role: ' + err)
+    })
+  
+  Object.assign(dataNode, formData)
 }
 async function handleAdd(formData: OrgNode, selectedNodeId: string) {
+  console.log('handleAdd', formData, selectedNodeId)
   const newNode: OrgNode = {
     name: formData.name || '',
     status: 1
   }
   if (selectedNodeId) {
     try {
-      const newNodeData = await adminApi.api.postAclRole(newNode).then((res) => res.data)
+      await adminApi.api.postAclRole({...newNode, parentId: selectedNodeId})
+        .then((res) => res.data)
+        .catch((e) => {
+          throw new Error('Failed to add role: ' + e)
+        })
 
       // TODO: 由于api仅返回true，所以需要重新获取全部数据刷新页面
       initData()
-      // const dataNode = findNodeById(orgDatas.value, selectedNodeId)
+      // const dataNode = findNodeById(roleData.value, selectedNodeId)
       // if (!dataNode) return
       // if (!dataNode.children) dataNode.children = []
       // dataNode.children.push(newNodeData)
@@ -102,11 +106,11 @@ async function handleAdd(formData: OrgNode, selectedNodeId: string) {
       console.error(error)
     }
   } else {
-    if (!orgDatas.value) orgDatas.value = []
+    if (!roleData.value) roleData.value = []
     try {
       const newNodeData = await adminApi.api.postAclRole(newNode).then((res) => res.data)
       // TODO: 由于api仅返回true，所以需要重新获取全部数据刷新页面
-      // orgDatas.value.push(newNodeData)
+      // roleData.value.push(newNodeData)
       initData()
       sidebarVisible.value = false
     } catch (error) {
@@ -119,17 +123,26 @@ const handleNodeClick = (node: OrgNode) => {
 }
 
 const handleDataUpdate = (newData: OrgNode[]) => {
-  orgDatas.value = newData
+  roleData.value = newData
 }
 async function initData() {
+  // if roleIds is provided , that means the data return is a list of roleIds
   if (props.roleIds) {
-    const { data } = await adminApi.api.postAclRoleHierarchy(props.roleIds)
-    orgDatas.value = data
+    const data = await adminApi.api.postAclRoleHierarchy(props.roleIds)
+    .then((res) => res.data)
+    .catch((err) => {
+      throw new Error('Failed to get role hierarchy: ' + err)
+    }) as OrgNode[]
+    roleData.value = data
     return
   } else {
-    let { data } = await adminApi.api.getAclRoleRoot()
-    if(!data) orgDatas.value = []
-    else orgDatas.value = [data]
+    let data = await adminApi.api.getAclRoleRoot()
+    .then((res) => res.data)
+    .catch((err) => {
+      throw new Error('Failed to get role hierarchy: ' + err)
+    })
+    if(!data) roleData.value = []
+    else roleData.value = [data]
   }
 }
 onMounted(async () => {

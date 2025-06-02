@@ -144,6 +144,8 @@ export const getUniqueName = async (file: any) => {
       path: file.goPath,
       titles: [fileName]
     }).then(res => res.data)
+    console.log('getUniqueName', res)
+    // TODO : the uniqueName has bug, will return same name
     const name = res[fileName]?.uniqueName || fileName
     return name
   } catch (error) {
