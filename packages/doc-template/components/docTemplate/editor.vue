@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, toRefs, onMounted, onUnmounted, provide } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
-import { DocTemplateProveKey } from '../../utils/docTempalteHelper'
+import { DocTemplateProveKey } from '../../utils/docTemplateHelper'
 import {type TipTapOptions} from 'docpal-document-editor/src/types' 
 import { defaultPageSetting} from 'docpal-document-editor/src/utils'
 import { normalizeTipTapOptions, clientEditorExtensions  } from 'docpal-document-editor/src/client'
@@ -9,21 +9,13 @@ import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import * as Y from 'yjs'
 import { HocuspocusProvider } from '@hocuspocus/provider'
-
-
-export type VariableItem = {
-  type: 'Text' | 'Paragraph' | 'documentId' | 'CaseId' | 'WorkflowId' | 'Email' | 'Website' | 'Table'
-  key: string
-  value: any
-  isMultiple?: boolean
-  update?: boolean // or the correct type
-}
+import { validateVariable, type DocTemplateVariable } from '../../utils/docTemplateHelper'
 
 const props = defineProps<{
     editorOptions: TipTapOptions
     json?: any
     user?: any
-    variables: any[],
+    variables: DocTemplateVariable[],
   }>()
 const { variables } = toRefs(props)
 
@@ -45,7 +37,6 @@ const options = ref<TipTapOptions>({
 })
 const editor = ref()
 const room = ref("12345")
-
 
 export type LastSelection = {
   type: 'text' | 'textRange' | 'image' | 'cell'
@@ -119,22 +110,44 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   headerRef.value.init(normlizeOption)
 }
 
-function addVariable(variable: VariableItem) {
+function addVariable(variable: DocTemplateVariable) {
+  if (!validateVariable(variable)) {
+    throw new Error('Invalid variable', variable)
+  }
   variables.value.push(variable)
+  console.log('variables', variables.value)
 }
-function updateVariable(updateVariable: VariableItem) {
-  console.log('updateVariable', updateVariable)
+function updateVariable(updateVariable: DocTemplateVariable) {
   const index = variables.value.findIndex(v => v.key === updateVariable.key)
-  if (index !== -1) {
+  if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
+  } else {
+    // Show error to user
+    console.error('Invalid update or variable not found:', updateVariable)
   }
 }
-function removeVariable(variable: VariableItem) {
-  // find index of variable
+function removeVariable(variable: DocTemplateVariable) {
   const index = variables.value.findIndex(v => v.key === variable.key)
   if (index !== -1) {
     variables.value.splice(index, 1)
   }
+}
+
+function handleInsertVariable(variable: any) {
+  if (!editor.value) return
+  let nodeType = ''
+  switch (variable.type) {
+    case 'text': nodeType = 'variableText'; break
+    case 'list': nodeType = 'variableList'; break
+    case 'table': nodeType = 'variableTable'; break
+    case 'link': nodeType = 'variableLink'; break
+    case 'image': nodeType = 'image'; break // or your custom variableImage
+    default: return
+  }
+  editor.value.commands.insertContent({
+    type: nodeType,
+    attrs: { ...variable }
+  })
 }
 
 onMounted(() => {
@@ -142,7 +155,9 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  editor.value.destroy()
+  if(editor.value) {
+    editor.value.destroy()
+  }
 })
 
 provide(DocTemplateProveKey, {
@@ -162,6 +177,7 @@ provide(DocTemplateProveKey, {
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
       <EditorContent :editor="editor" />
+      <DocTemplateContentSettingBubbleMenu />
     </div>
     <DocTemplateFooter />
   </div>

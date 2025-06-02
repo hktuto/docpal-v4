@@ -1,69 +1,55 @@
 <script lang="ts" setup>
-import { DocTemplateProveKey } from '../../../utils/docTempalteHelper';
-import { ref, toRefs } from 'vue'
-import type { ToolSection } from '../../../utils/docTempalteHelper'
-import type { TipTapOptions } from 'docpal-document-editor/src/types'
+import { DocTemplateProveKey } from "../../../utils/docTemplateHelper";
+import { ref, inject } from 'vue'
 
 const editorProvider = inject(DocTemplateProveKey)
 if(!editorProvider) {
   throw createError('editorProvider not found')
 }
 const { editor } = editorProvider
-const headers = useDocHeader()
-const activeName = ref(headers.value[0].name);
-const extendElement = useDocExtendElement()
 
-const displayHeader = ref<ToolSection[]>([])
-const showVarManager = ref(false)
-const { variables } = editorProvider
+const activeName = ref('Home')
 
-function init(options: TipTapOptions) {
-  displayHeader.value = headers.value.reduce((acc: ToolSection[], cur) => {
-    if (cur.requiredOptions && cur.requiredOptions.length > 0) {
-      const isAllRequiredOptionsFilled = cur.requiredOptions.every(requiredOption => (options as any)[requiredOption])
-      if (isAllRequiredOptionsFilled) {
-        // loop through tools
-        const tools = cur.tools.filter(tool => !tool.requiredOptions || tool.requiredOptions.length === 0 || tool.requiredOptions?.every(requiredOption => (options as any)[requiredOption]))
-        if (tools.length > 0) {
-          acc.push(cur)
-        }
-      }
-    } else {
-      const tools = cur.tools.filter(tool => !tool.requiredOptions || tool.requiredOptions.length === 0 || tool.requiredOptions?.every(requiredOption => (options as any)[requiredOption]))
-      if (tools.length > 0) {
-        acc.push(cur)
-      }
-    }
-    return acc
-  }, [])
+function init() {
+  // do nothing
 }
 
 defineExpose({
   init
 })
-
 </script>
-
 
 <template>
 <div class="headerContainer">
   <template v-if="editor">
     <el-tabs v-model="activeName" class="demo-tabs" >
-      <el-tab-pane
-        v-for="header in displayHeader"
-        :key="header.name"
-        :label="header.name"
-        :name="header.name"
-      >
-      <div class="toolContainer">
-        <div v-for="tool in header.tools" :key="tool.name" class="tool">
-          <component  :is="tool.components" />
+      <el-tab-pane label="Home" name="Home">
+        <div class="toolContainer">
+            <LazyDocTemplateContentSettingUndo />
+            <LazyDocTemplateContentToolbarFont />
+            <LazyDocTemplateContentToolbarParagraph />
+            <LazyDocTemplateContentToolbarFontStyle />
+            <LazyDocTemplateContentToolbarAuxiliary />
         </div>
-      </div>
+      </el-tab-pane>
+      <el-tab-pane label="Table" name="Table">
+        <div class="toolContainer">
+          <LazyDocTemplateContentToolbarTable />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="Data" name="Data">
+        <div class="toolContainer">
+            <LazyDocTemplateContentToolbarVariable />
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="Setting" name="Setting">
+        <div class="toolContainer">
+          <LazyDocTemplateContentSettingPage />
+          <LazyDocTemplateContentSettingImport />
+          <LazyDocTemplateContentSettingExport />
+        </div>
       </el-tab-pane>
     </el-tabs>
-    <!-- extend Element -->
-    <component v-for="elemeent in extendElement" :key="elemeent.name" :is="elemeent.components" />
   </template>
 </div>
 </template>
@@ -89,9 +75,7 @@ defineExpose({
   overflow: auto;
   padding-bottom: var(--app-space-s);
 }
-.tool {
-  position: relative;
-}
+
 .tool + .tool {
   &::after {
     content: "";

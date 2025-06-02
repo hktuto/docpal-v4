@@ -1,0 +1,125 @@
+<script lang="ts" setup>
+import { DocTemplateProveKey } from '../../../../utils/docTemplateHelper'
+import formJson from './docJson.json'
+import { useI18n } from 'vue-i18n'
+
+const docTempalteProvider = inject(DocTemplateProveKey)
+const { t } = useI18n()
+const { editor, options, variables } = docTempalteProvider!
+
+const state = reactive({
+  loading: false,
+  visible: false,
+  textContent: '',
+  sidebarVisible: false,
+  exportType: 'html' as 'html' | 'docx' | 'pdf'
+})
+
+const FormRendererRef = ref()
+// TODO : the server should add to nuxtConfig runtime
+const nodeBackendEndpoint = 'http://localhost:3333'
+
+async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
+  const res = await fetch(nodeBackendEndpoint + endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  return await res.blob()
+}
+
+async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: any[]) {
+  const data = getJsonConfig(configuredVariables)
+  let endpoint = ''
+  let filename = ''
+  let mime = ''
+  if (exportType === 'docx') {
+    endpoint = '/convert/docx'
+    filename = 'test.docx'
+    mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  } else if (exportType === 'pdf') {
+    endpoint = '/convert/pdf'
+    filename = 'test.pdf'
+    mime = 'application/pdf'
+  } else {
+    endpoint = '/convert/html'
+    filename = 'test.html'
+    mime = 'text/html'
+  }
+  const blob = await fetchExportBlob(endpoint, data)
+  // For HTML, the server may return text, so we need to handle it as text
+  let finalBlob = blob
+  if (exportType === 'html') {
+    // Try to convert blob to text and back to blob for correct encoding
+    const text = await blob.text()
+    finalBlob = new Blob([text], { type: mime })
+  }
+  const url = URL.createObjectURL(finalBlob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+}
+
+function handleExportDropdown(command: 'html' | 'pdf' | 'docx' | 'json') {
+  if(command === 'json') {
+    openDialog()
+    return
+  }
+  // TODO : update variables before export
+  performExport(command, [])
+}
+
+
+function openDialog() {
+  const json = getJsonConfig([])
+  const textContent = JSON.stringify(json)
+  state.visible = true
+  state.loading = true
+  navigator.clipboard.writeText(textContent)
+  nextTick(async () => {
+    await FormRendererRef.value.vFormRenderRef.setFormData({ textContent, isExport: true })
+    state.loading = false
+  })
+}
+
+function getJsonConfig(configuredVariables: VariableItem[] = []) {
+  const data = {
+    json: {
+      options: '',
+      content: '',
+    },
+    variables: configuredVariables
+  }
+  data.json.options = options.value
+  data.json.content = editor.value.getJSON()
+  return data
+}
+
+</script>
+
+<template>
+  <el-dropdown @command="handleExportDropdown">
+    <ElButton >
+      {{ t('docTemplate.export.export') }} <i class="el-icon-arrow-down el-icon--right"></i>
+    </ElButton>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item command="json">{{ t('docTemplate.export.exportJSON') }}</el-dropdown-item>
+      <el-dropdown-item command="html">{{ t('docTemplate.export.exportHTML') }}</el-dropdown-item>
+      <el-dropdown-item command="pdf">{{ t('docTemplate.export.exportPDF') }}</el-dropdown-item>
+      <el-dropdown-item command="docx">{{ t('docTemplate.export.exportDOCX') }}</el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+  
+  <el-dialog v-model="state.visible" :title="t('Export')">
+    <FormRenderer ref="FormRendererRef" v-loading="state.loading" :form-json="formJson" />
+  </el-dialog>
+  
+
+</template>

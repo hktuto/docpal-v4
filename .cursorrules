@@ -32,8 +32,11 @@ CSS Variables
 - Use descriptive variable and function/const names. Also, event functions should be named with a “handle” prefix, like “handleClick” for onClick and “handleKeyDown” for onKeyDown.
 - Implement accessibility features on elements. For example, a tag should have a tabindex=“0”, aria-label, on:click, and on:keydown, and similar attributes.
 - Do not use consts instead of functions. Also, define a type if possible.
-- add v-tooltip to all label / input / button / etc.
 - always use v-tooltip to show tooltip
+
+# Forms:
+- use element-plus form component for forms.
+- if the form is using FormRenderer, the form is using this package https://www.yuque.com/visualdev/vform3 to generate the form. 
 
 # Code Style:
 - Use 2 spaces for indentation.
