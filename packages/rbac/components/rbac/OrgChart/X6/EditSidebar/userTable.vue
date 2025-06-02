@@ -42,13 +42,20 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
       roleId: props.roleId
     }
     // TODO: api,这里需要替换为实际的用户查询API，royhoo已经在做了，6月4号可以催一下
-    const data = await Promise.resolve({
-      data: {
-        entryList: [{ username: 'jack_li2' }],
-        totalSize: 1
-      }
+    const data = await adminApi.api.postAclRoleUsersPage({
+        ...pageParams,
+        conditions:[
+          {
+            field: 'acRoleId',
+            operator: 'eq',
+            value: props.roleId
+          }
+        ]
+      })
+    .catch((err) => {
+      throw new Error('Failed to get role users: ' + err)
     })
-    userTotalSize.value = data.data.totalSize
+    // userTotalSize.value = data.data.totalSize
     return data
   },
   virtualScroll: props.isAdd,
@@ -92,7 +99,7 @@ const handleAddUser = async () => {
         roleId: props.roleId,
         userIds: [selectedUser.value]
       })
-      query({})
+      reload()
     } catch (error) {
       console.error(error)
     }
