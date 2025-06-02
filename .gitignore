@@ -13,3 +13,5 @@ node_modules
 **/oldSrc/**
 **/report_unitTest/**
 **/report_languageChange/**
+env/.env.dev.admin
+env/.env.dev.client
