@@ -4,16 +4,18 @@ const emits = defineEmits(['delete', 'refreshSetting', 'openSetting', 'refresh']
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
-    showSkeleton?: boolean
-    hideSetting?: boolean
-    title?: string
-    settingRef?: any
-    setting?: any
+    showSkeleton?: boolean,
+    hideSetting?: boolean,
+    title?: string,
+    settingRef?: any,
+    setting?: any,
+    extraParams?: any[] // add extra params to setting handleOpen function, and it use spread operator
   }>(),
   {
     showSkeleton: false,
     hideSetting: false,
-    title: ''
+    title: '',
+    extraParams: []
   }
 )
 
@@ -22,7 +24,7 @@ function resize() {}
 function openSetting() {
   console.log(props.settingRef, props.setting)
 
-  if (!!props.settingRef) props.settingRef.handleOpen(props.setting)
+  if (!!props.settingRef) props.settingRef.handleOpen(props.setting, ...props.extraParams)
   else emits('openSetting', props.setting)
 }
 function handleRefresh() {
