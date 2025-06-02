@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { clientApi, adminApi } from 'api'
+import { CaseManagementDashboardKey } from '../../utils/caseProvider'
+import { inject, provide, ref } from 'vue';
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -97,6 +99,7 @@ provide(BrowseListProviderKey, {
     :hideSetting="hideSetting"
     :setting="setting"
     :settingRef="settingRef"
+    :extraParams="[caseDetail? caseDetail.fields : null]"
     @delete="handleDelete"
     @refresh="refresh"
   >
