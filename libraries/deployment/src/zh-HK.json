@@ -530,6 +530,12 @@
   "conjunction": {
     "to": "到"
   },
+  "contextMenu": {
+    "case": "個案",
+    "confirmDelete": "確定要刪除此項目嗎？",
+    "connection": "連接",
+    "remove": "移除"
+  },
   "convert_convert": "轉檔",
   "convert_documentFormat": "轉換為其他格式：",
   "convert_transferring": "轉檔中...",
@@ -1353,6 +1359,9 @@
     "filterBy": "按{name}過濾",
     "filterByBusinessName": "按公司名稱過濾",
     "filterByBussinessName": "按公司名稱過濾",
+    "folderCabinet": {
+      "duplicateRootFolder": "相同名稱的資料夾已存在"
+    },
     "formatError": "格式錯誤",
     "jumpToView": "跳轉查看",
     "loading": "載入中...",
@@ -2121,6 +2130,41 @@
   "options_size_small": "小",
   "order": "顺序",
   "orderColumn": "列排序",
+  "orgChart": {
+    "add": "添加",
+    "contextMenu": {
+      "addChild": "添加子節點",
+      "delete": "刪除",
+      "edit": "編輯"
+    },
+    "editSidebar": {
+      "addRole": "添加角色",
+      "cancel": "取消",
+      "editRole": "編輯角色",
+      "parentRole": "父級角色",
+      "parentRolePlaceholder": "請輸入父級角色",
+      "roleLabel": "角色名稱",
+      "rolePlaceholder": "請輸入角色名稱",
+      "save": "保存",
+      "validation": {
+        "minLength": "長度至少為2個字符",
+        "roleRequired": "請輸入角色名稱"
+      }
+    },
+    "noData": "暫無數據",
+    "userTable": {
+      "actions": {
+        "remove": "移除"
+      },
+      "addUserButton": "添加用戶到角色",
+      "columns": {
+        "email": "電郵",
+        "username": "用戶名"
+      },
+      "filterPlaceholder": "篩選名稱",
+      "title": "用戶"
+    }
+  },
   "pending_approval": "待批准",
   "pending_completed": "已完成",
   "pending_upload": "等待上传",
@@ -3567,46 +3611,5 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容",
-  "contextMenu": {
-    "connection": "連接",
-    "remove": "移除",
-    "case": "個案",
-    "confirmDelete": "確定要刪除此項目嗎？"
-  },
-  "orgChart": {
-    "add": "添加",
-    "noData": "暫無數據",
-    "contextMenu": {
-      "edit": "編輯",
-      "addChild": "添加子節點",
-      "delete": "刪除"
-    },
-    "editSidebar": {
-      "addRole": "添加角色",
-      "editRole": "編輯角色",
-      "roleLabel": "角色名稱",
-      "rolePlaceholder": "請輸入角色名稱",
-      "parentRole": "父級角色",
-      "parentRolePlaceholder": "請輸入父級角色",
-      "cancel": "取消",
-      "save": "保存",
-      "validation": {
-        "roleRequired": "請輸入角色名稱",
-        "minLength": "長度至少為2個字符"
-      }
-    },
-    "userTable": {
-      "title": "用戶",
-      "filterPlaceholder": "篩選名稱",
-      "addUserButton": "添加用戶到角色",
-      "columns": {
-        "username": "用戶名",
-        "email": "電郵"
-      },
-      "actions": {
-        "remove": "移除"
-      }
-    }
-  }
+  "檔案內容": "檔案內容"
 }
