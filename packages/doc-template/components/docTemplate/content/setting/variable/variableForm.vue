@@ -131,7 +131,7 @@ function isDocTemplateVariable(obj: any): obj is DocTemplateVariable {
 }
 
 watch(() => props.variable, (val) => {
-  if (props.mode === 'edit' && val && isDocTemplateVariable(val)) {
+  if (props.mode === 'edit' && val ) {
     form.value = { ...val, name: val.name ?? '', value: val.value ?? '' }
   } else {
     form.value = {

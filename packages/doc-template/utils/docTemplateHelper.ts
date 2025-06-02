@@ -73,7 +73,7 @@ export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('Do
 export interface DocTemplateVariable {
   name: string;
   type: any; // You may want to refine this type based on your BaseType
-  value: string;
+  value: any;
 }
 
 export function validateVariable(variable: DocTemplateVariable): boolean {
