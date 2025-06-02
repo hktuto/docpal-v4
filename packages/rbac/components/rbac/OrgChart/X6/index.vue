@@ -116,6 +116,12 @@ const createGraph = () => {
     handleContextMenu(e, cell)
   })
 
+  graph.on('cell:dblclick', ({ cell }) => {
+    selectedCell.value = cell
+    selectedNode.value = cell.getData()
+    handleEdit()
+  })
+
   // 点击空白处关闭右键菜单
   graph.on('blank:click', () => {
     closeContextMenu()
