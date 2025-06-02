@@ -227,7 +227,6 @@ onUnmounted(() => {
 watch(
   () => props.data,
   () => {
-    console.log('data changed')
     initGraph()
   },
   { deep: true, immediate: true }
@@ -333,6 +332,7 @@ const closeSidebar = () => {
 const handleSave = (formData: Partial<OrgNode>) => {
   if (!selectedNode.value || !selectedCell.value) return
   if (isAddingNode.value) {
+    console.log('add', formData, selectedNode.value.parentId)
     emit('add', formData, selectedNode.value.parentId)
   } else {
     // 更新现有节点

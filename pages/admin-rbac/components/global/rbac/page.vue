@@ -1,8 +1,7 @@
 <template>
   <div class="pageContainer--padding">
     <el-tabs class="dp-tabs--auto" v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="chart" name="chart">
-
+      <el-tab-pane label="Graph" name="chart">
         <RbacOrgChart />
       </el-tab-pane>
       <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
