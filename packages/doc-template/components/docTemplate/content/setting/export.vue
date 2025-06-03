@@ -99,12 +99,12 @@ function openDialog() {
 function getJsonConfig(configuredVariables: any[] = []) {
   const data = {
     json: {
-      options: '',
-      content: '',
+      options: {},
+      content: {},
     },
     variables: configuredVariables
   }
-  data.json.options = JSON.stringify(options.value)
+  data.json.options = options.value
   data.json.content = editor.value.getJSON()
   return data
 }
