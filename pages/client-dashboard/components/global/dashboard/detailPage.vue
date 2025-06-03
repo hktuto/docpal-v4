@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import dayjs from "dayjs";
-import { DashboardWidgetSetting, getNormalizeSetting } from "../../../../../packages/dp-dashboard/utils/dashboardWidgetHelper";
+import { type DashboardWidgetSetting, getNormalizeSetting } from "../../../../../packages/dp-dashboard/utils/dashboardWidgetHelper";
 import { publicApi } from "api";
 const { id } = defineProps<{
   id: number;
