@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-container">
+  <div class="chart-container" :style="{ '--node-width': `${NODE_WIDTH}px`, '--node-height': `${NODE_HEIGHT}px` }">
     <div ref="containerRef" style="width: 100%; height: 100%" @contextmenu.prevent />
     <RbacOrgChartX6ContextMenu :visible="contextMenuVisible" :position="contextMenuPosition" @edit="handleEdit" @add="handleAdd" @delete="handleDelete" />
     <RbacOrgChartX6EditSidebar :visible="sidebarVisible" :node-data="selectedNode" :is-add="isAddingNode" @close="closeSidebar" @save="handleSave" />
@@ -51,20 +51,22 @@ const selectedNode = ref<OrgNode | null>(null)
 const isAddingNode = ref(false)
 const selectedCell = ref<any>(null)
 
-// Register custom Vue shape
-register({
-  shape: 'org-node-person',
-  width: 180,
-  height: 100,
-  component: OrgChartNodePerson
-})
+
 
 const containerRef = ref<HTMLDivElement | null>(null)
 const graphRef = ref<Graph | null>(null)
 
-const NODE_WIDTH = 180 // 节点宽度
-const NODE_HEIGHT = 100 // 节点高度
+const NODE_WIDTH = 120 // 节点宽度
+const NODE_HEIGHT = 50 // 节点高度
 const VERTICAL_GAP = 50 // 垂直间距
+
+// Register custom Vue shape
+register({
+  shape: 'org-node-person',
+  width: NODE_WIDTH,
+  height: NODE_HEIGHT,
+  component: OrgChartNodePerson
+})
 
 // 检查位置是否有碰撞
 const hasCollision = (graph: Graph, x: number, y: number, excludeNode?: any) => {
@@ -96,15 +98,29 @@ const createGraph = () => {
 
   const graph = new Graph({
     container: containerRef.value,
-    grid: true,
+    grid: {
+      visible: true,
+      type: 'mesh',
+      args: {
+          color: '#eee',
+          thickness: 1
+      }
+    },
+    background: {
+        color: 'var(--app-grey-9000)',
+    },
     mousewheel: {
       enabled: true,
       zoomAtMousePosition: true,
       modifiers: ['ctrl', 'meta']
     },
+    connecting:{
+        connector: 'rounded',
+        allowMulti: true,
+    },
     scaling:{
-            min: 0.2, max: 1.2
-        },
+        min: 0.2, max: 1.2
+    },
     panning: true,
     interacting: {
       nodeMovable: false
@@ -112,7 +128,7 @@ const createGraph = () => {
   })
 
   // 添加右键菜单事件
-  graph.on('cell:contextmenu', ({ cell, e }) => {
+  graph.on('cell:contextmenu', ({ cell, e }: { cell: any, e: MouseEvent }) => {
     handleContextMenu(e, cell)
   })
 
@@ -194,7 +210,12 @@ const createGraph = () => {
 
 //   return node
 // }
+// end of old logic
 
+/**
+ *  init graph
+ *  use to render data to graph
+ */
 const initGraph = () => {
   const graph = graphRef.value ? graphRef.value : createGraph()
   if (!graph) return
@@ -218,11 +239,6 @@ const initGraph = () => {
       shape: 'org-node-person',
       data: node,
       position: { x: 0, y: 0 }, // Position will be set by layout
-      attrs: {
-        body: {
-          ...props.nodeStyle
-        }
-      }
     })
 
     // Create edge if there's a parent

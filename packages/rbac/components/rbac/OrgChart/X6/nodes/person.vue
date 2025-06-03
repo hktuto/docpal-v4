@@ -1,14 +1,7 @@
 <template>
   <div ref="nodeWrapper" class="org-chart-node-wrapper">
-    <div class="org-chart-node-person" :style="nodeStyle">
-
-      <div class="person-info">
-        <div class="person-name">{{ data.name }}</div>
-        <div class="person-title" v-if="data.grade">{{ data.grade }}</div>
-        <div class="person-tag" v-if="data.tag">{{ data.tag }}</div>
-        <div class="person-count" v-if="data.userCount">人数: {{ data.userCount }}</div>
-      </div>
-    </div>
+    <div class="person-name">{{ data.name }}</div>
+      <div class="person-count" v-if="data.count">人数: {{ data.count }}</div>
   </div>
 </template>
 
@@ -23,7 +16,7 @@ interface NodeData {
   style?: Record<string, string | number>
   children?: any[]
   parentId?: string
-  userCount?: number
+  count?: number
 }
 
 const props = defineProps<{
@@ -40,19 +33,6 @@ const emit = defineEmits<{
 const data = computed(() => props.node.getData() || {})
 const hasChildren = computed(() => data.value.children?.length > 0)
 const nodeWrapper = ref<HTMLDivElement>()
-const nodeStyle = computed(() => ({
-  background: '#fff',
-  border: '1px solid #ddd',
-  borderRadius: '4px',
-  padding: '10px',
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  ...data.value.style
-}))
 // 动态更新节点内容
 function updateNodeContent() {
   length.value = length.value === 1 ? 4 : 1
@@ -71,90 +51,27 @@ function handleClick() {
 
 <style scoped>
 .org-chart-node-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  height: 100%;
-}
-
-.org-chart-node-person {
   transition: all 0.3s;
   cursor: pointer;
   position: relative;
   z-index: 2;
   pointer-events: all;
-  background: #fff !important;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 10px;
-  min-width: 150px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  background: var(--app-grey-1000);
+  border-radius: var(--app-border-radius-m);
+  padding: var(--app-space-s);
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: var(--node-height);
+  min-width: var(--node-width);
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    z-index: 10;
+  }
 }
 
-.org-chart-node-person:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
-  z-index: 10;
-  background: #f0f0f0 !important;
-}
 
-.person-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin: 0 auto 8px;
-  position: relative;
-  background: #fff;
-}
 
-.person-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: #fff;
-}
-
-.person-info {
-  text-align: center;
-  position: relative;
-  background: transparent;
-}
-
-.person-name {
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: transparent;
-}
-
-.person-title {
-  font-size: 1rem;
-  color: #666;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background: transparent;
-}
-
-.person-tag {
-  font-size: 1rem;
-  color: #666;
-  margin-top: 4px;
-  padding: 2px 6px;
-  background: #f5f5f5;
-  border-radius: 4px;
-  display: inline-block;
-}
-
-.person-count {
-  font-size: 1rem;
-  color: #666;
-  margin-top: 4px;
-}
 </style>
