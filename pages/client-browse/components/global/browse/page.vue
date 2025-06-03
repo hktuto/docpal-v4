@@ -14,8 +14,8 @@ const props = defineProps<{
 
 <template>
     <div class="pageContainer" >
-        <BrowsePageComponent v-bind="props" >
-        </BrowsePageComponent>
+        <BrowseTablePage v-bind="props" :isReload="true">
+        </BrowseTablePage>
     </div>
 </template>
 

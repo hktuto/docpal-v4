@@ -26,6 +26,8 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
     if (params.initStyleAction) {
       params.initStyleAction(cardRef, chartRef)
     } else {
+      // TODO: cardRef 可能为空
+      if(!cardRef.value) return
       const pHeight = cardRef.value.$el.offsetHeight - 36 // - header
       const pWidth = cardRef.value.$el.offsetWidth - 20
       if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
@@ -43,7 +45,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   }
 
   // refresh: handleRefreshAction || handleInitCard
-  const refresh = async (chartSetting) => {
+  const refresh = async (chartSetting ?:any) => {
     if (params.handleRefreshAction) {
       try {
         loading.value = true
@@ -56,7 +58,7 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
       }
     } else handleInitCard(chartSetting)
   }
-  const handleInitCard = async (chartSetting) => {
+  const handleInitCard = async (chartSetting?:any) => {
     try {
       loading.value = true
       if (!params.handleInitCardAction) {

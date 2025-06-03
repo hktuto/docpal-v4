@@ -3,10 +3,12 @@ import { useDebounceFn } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
 import { createDropableFolder, createDropableFile } from '#imports'
 import { useMagicKeys } from '@vueuse/core'
+
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
+import { log } from 'vxe-pc-ui'
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
@@ -17,7 +19,7 @@ const { selectedRows, expandedItems } = defineProps<{
 }>()
 const copyDocumentList = useCopyDocumnetList()
 const tableContainer = ref<HTMLElement>()
-const emits = defineEmits(['selectedChange'])
+const emits = defineEmits(['selectedChange','expandedItemsChange'])
 const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
@@ -55,6 +57,7 @@ function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
   })
   return result
 }
+
 const reopenFolder = useDebounceFn(() => {
   if (!tableRef.value || expandedItems.length === 0) return
   const tableData = tableRef.value.getData()
@@ -65,7 +68,7 @@ const reopenFolder = useDebounceFn(() => {
 }, 300)
 
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
-  id: 'browseTableSetting',
+  id: 'tableSetting',
   api: async (pageParams: any) => {
     cleanSelectedRows()
     const data = await loadData([], listProvider.idOrPath?.value || '/')
@@ -365,14 +368,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     const permission = await getPermission(row.id, userId.value)
     return permission
   },
-  permissionMethod: ({
-    options,
-    code,
-    column,
-    row,
-    rowIndex,
-    additionalData
-  }: any): {
+  permissionMethod: ({ options, code, column, row, rowIndex, additionalData }: any): {
     visible: boolean
     disabled: boolean
   } => {
@@ -523,15 +519,12 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         // check if item exist in expandedItems
         if (expandedItems.includes(row.id)) return
         expandedItems.push(row.id)
-        routerProvider?.updateProps({
-          expandedItems
-        })
+
+        emits('expandedItemsChange', expandedItems)
       } else {
         const index = expandedItems.findIndex((ex) => ex === row.id)
         if (index !== -1) expandedItems.splice(index, 1)
-        routerProvider?.updateProps({
-          expandedItems
-        })
+        emits('expandedItemsChange', expandedItems)
       }
     },
     cellMouseleave: ({ row, column, rowIndex }) => {
@@ -600,10 +593,8 @@ function dblClickHandler(row: any) {
     return
   }
   if (row.isFolder) {
-    routerProvider?.updateProps({
-      expandedItems: []
-    })
     listProvider?.changeRoute(row.path)
+    // emits('refresh')
   } else {
     const params = createDetailPageParams({
       idOrPath: row.id,
@@ -645,7 +636,8 @@ function cleanSelected() {
   }
 }
 
-onMounted(() => {})
+onMounted(() => {
+})
 
 onDeactivated(() => {
   if (tableDropZone) {
@@ -664,9 +656,8 @@ onDeactivated(() => {
   cleanSelectedRowsBus.off(cleanSelectedRows)
 })
 
-watch(
-  () => listProvider.idOrPath,
-  () => {
+watch(() => listProvider.idOrPath, () => {
+  console.log("listProvider.idOrPath",listProvider.idOrPath)
     if (listProvider?.idOrPath?.value) {
       changeRoute()
     }
@@ -701,20 +692,21 @@ function handleCheckboxChange(rows: any, selectedRow: any) {
   lastSelectedRow.value = selectedRow.row
   const selectedRows = tableRef.value?.getCheckboxRecords() || []
   return selectedRows
+
   function findNodeById(node: any, targetId) {
     if (node.id === targetId) {
       return node
     }
-    
+
     if (node.children && node.children.length > 0) {
       for (const child of node.children) {
         const found = findNodeById(child, targetId)
         if (found) {
-          return found 
+          return found
         }
       }
     }
-    return null 
+    return null
   }
 }
 
@@ -751,15 +743,18 @@ defineExpose({
   width: 100%;
   height: 100%;
   position: relative;
+
   :deep(.is-dragging) {
     background: var(--app-grey-900);
     opacity: 0.5;
   }
+
   :deep(.dropOver) {
     // overflow: hidden;
     background: var(--app-grey-900);
     --vxe-ui-layout-background-color: var(--app-grey-900);
   }
+
   &.selected {
     :deep(.vxe-buttons--wrapper) {
       border-radius: var(--app-border-radius-m);
