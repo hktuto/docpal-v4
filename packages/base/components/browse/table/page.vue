@@ -146,6 +146,7 @@ watch(
   [idOrPath, commentId],
   (newVal, oldVal) => {
     getDoc()
+    currentIdOrPath.value = newVal[0]
     if (newVal && newVal[1]) {
       infoOpened.value = true
     } else if (oldVal && oldVal[1]) {

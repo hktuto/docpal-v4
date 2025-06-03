@@ -1,28 +1,27 @@
 <script lang="ts" setup>
-import { BrowseTablePage, PersonalBrowseSetting } from '#components'
-import { onActivated } from 'vue'
+
 
 const emits = defineEmits(['delete', 'refreshSetting'])
 const { t } = useI18n()
 
 const props = withDefaults(defineProps<{
-  idOrPath: string
-  home?: any
-  commentId?: string
   setting?: any
   hideSetting?: boolean
 }>(), {
-  idOrPath: '/',
-  home: {},
-  commentId: '',
-  setting: {},
+  setting: {
+    path: '/',
+    home: {
+      homeRouteItem: '/',
+      secondId: '/'
+    }
+  },
   hideSetting: true
 })
 
 const tableRef = ref()
 
 const { cardRef, settingRef, refresh, loading } = useDashboardCard({
-  props
+  props,
 })
 
 async function handleDelete() {
@@ -30,11 +29,8 @@ async function handleDelete() {
 }
 
 function handleRefresh(data: any) {
-  props.setting.path = data.path
-  props.setting.home = data.home
-  
-  refresh()
-  emits('refreshSetting', props.setting)
+  emits('refreshSetting', data)
+  console.log('handleRefresh222', JSON.stringify(props.setting))
 }
 </script>
 
