@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { BrowseTablePage, PersonalBrowseSetting } from '#components'
+import { onActivated } from 'vue'
 
 const emits = defineEmits(['delete', 'refreshSetting'])
 const { t } = useI18n()
@@ -18,21 +19,10 @@ const props = withDefaults(defineProps<{
   hideSetting: true
 })
 
-const state = reactive({
-  path: '/',
-  home:{
-    homeRouteItem: '/',
-    secondId: '/'
-  }
-})
-
 const tableRef = ref()
 
 const { cardRef, settingRef, refresh, loading } = useDashboardCard({
-  props,
-  // handleRefreshAction: (setting: any) => {
-  //   // tableRef.value.query({})
-  // }
+  props
 })
 
 async function handleDelete() {
@@ -40,11 +30,12 @@ async function handleDelete() {
 }
 
 function handleRefresh(data: any) {
-  state.path = data.path
-  state.home = data.home
+  props.setting.path = data.path
+  props.setting.home = data.home
+  
   refresh()
+  emits('refreshSetting', props.setting)
 }
-
 </script>
 
 <template>
@@ -59,8 +50,8 @@ function handleRefresh(data: any) {
     @delete="handleDelete"
     @refresh="refresh"
   >
-    <BrowseTablePage ref="tableRef" :idOrPath="state.path" :home="state.home" />
-    <PersonalBrowseSetting ref="settingRef" :path="state.path" @refresh="handleRefresh" />
+    <BrowseTablePage ref="tableRef" :idOrPath="props.setting.path" :home="props.setting.home" />
+    <PersonalBrowseSetting ref="settingRef" :path="props.setting.path" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
 
