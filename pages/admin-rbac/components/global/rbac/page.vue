@@ -4,7 +4,9 @@
       <el-tab-pane label="Graph" name="chart">
         <RbacOrgChart />
       </el-tab-pane>
-      <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+      <el-tab-pane label="Group" name="Group">
+        <UserGroupList />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
