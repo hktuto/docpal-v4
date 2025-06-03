@@ -2,9 +2,11 @@
   <div class="template-container">
     <div class="template-container--header">
       <el-dropdown class="template-container--header__title" trigger="click" @command="handleCheckout">
-        <div>{{ state.curDashboard.name }} <ArrowDown class="el-icon--left" /></div>
+        <div>{{ state.curDashboard.name }}
+          <ArrowDown class="el-icon--left" />
+        </div>
         <template #dropdown>
-          <el-dropdown-menu >
+          <el-dropdown-menu>
             <template v-for="item in state.dashboardList" :key="item.id">
               <el-dropdown-item :disabled="item.id === state.curDashboard.id" :command="item.id">
                 {{ item.name }}
@@ -14,15 +16,17 @@
         </template>
       </el-dropdown>
       <template v-if="!state.editMode && state.curDashboard.name === 'PERSONAL'">
-        <el-button @click="handleEdit" type="primary" :icon="Edit" circle />
+        <el-button id="Dashboard__Home__Edit" @click="handleEdit" type="primary" :icon="Edit" circle />
       </template>
       <template v-else-if="state.editMode">
-        <el-dropdown trigger="click" @command="handleAdd">
+        <el-dropdown id="Dashboard__Home__Add" trigger="click" @command="handleAdd">
           <el-button type="primary" :icon="Plus" circle />
           <template #dropdown>
             <el-dropdown-menu>
               <template v-for="(item, key) in dashboardWidgetSetting" :key="key">
-                <el-dropdown-item v-if="(!item.feature || checkLicenseFeatures(item.feature)) && item.type === 'personal'" :command="key">
+                <el-dropdown-item
+                  v-if="(!item.feature || checkLicenseFeatures(item.feature)) && item.type === 'personal'"
+                  :command="key">
                   {{ $t(`dashboard.${item.label}`) }}
                 </el-dropdown-item>
               </template>
@@ -30,24 +34,24 @@
           </template>
         </el-dropdown>
         <!-- <el-button @click="handleClear">handleClear</el-button> -->
-        <el-button class="el-icon--right" type="primary" @click="handleFinish">
+        <el-button id="Dashboard__Home__Finish" class="el-icon--right" type="primary" @click="handleFinish">
           {{ $t('dpButtom_finish') }}
         </el-button>
       </template>
     </div>
     <DashboardDetail class="template-container--main"
-        v-if="state.curDashboard && state.curDashboard.layout"
-        ref="DashboardDetailRef"
-        :id="state.curDashboard.id"
-        v-model:layout="state.curDashboard.layout"
-        :dates="state.dates"
-        :hideSetting="!state.editMode"
-        :resizable="state.editMode"
-        :draggable="state.editMode"
-        :editMode="state.editMode"
-        @delete="handleDelete"
-        @refreshSetting="handleRefresh"
-      ></DashboardDetail>
+                     v-if="state.curDashboard && state.curDashboard.layout"
+                     ref="DashboardDetailRef"
+                     :id="state.curDashboard.id"
+                     v-model:layout="state.curDashboard.layout"
+                     :dates="state.dates"
+                     :hideSetting="!state.editMode"
+                     :resizable="state.editMode"
+                     :draggable="state.editMode"
+                     :editMode="state.editMode"
+                     @delete="handleDelete"
+                     @refreshSetting="handleRefresh"
+    ></DashboardDetail>
   </div>
 </template>
 
@@ -91,10 +95,12 @@ function handleAdd(command: DashboardWidget) {
     state.editMode = true
   })
 }
+
 function handleEdit() {
   state.editMode = true
   state.editCount = 0
 }
+
 function handleRefresh(layoutSetting: any, id: any) {
   state.editCount++
   const index = state.curDashboard.layout.findIndex((item) => item.i === layoutSetting.i)
@@ -138,8 +144,9 @@ async function handleClear() {
     state.loading = false
   }
 }
+
 async function getDashboardList() {
-  console.log("getDashboardList")
+  console.log('getDashboardList')
   let personal: any = await clientApi.api.getPersonalLanding().then((res) => res.data)
   let dashboardList: any = await clientApi.api.getPersonalLandingDashboardList().then((res: any) => res.data)
   if (!personal) personal = {}
@@ -149,12 +156,14 @@ async function getDashboardList() {
   state.dashboardList = [personal, ...dashboardList]
   checkoutDashboard(personal)
 }
+
 async function handleCheckout(id: any) {
-  if(id === state.curDashboard.id) return
+  if (id === state.curDashboard.id) return
   if (id !== 'PERSONAL' && state.editMode) handleFinish()
   const cur = state.dashboardList.find((item: any) => item.id === id)
   checkoutDashboard(cur)
 }
+
 async function checkoutDashboard(detail: any) {
   state.loading = true
   state.curDashboard = deepCopy(detail)
@@ -192,23 +201,28 @@ onMounted(async () => {
   height: 100%;
 
   &--main {
-    overflow:auto
+    overflow: auto
   }
+
   :deep(.splitpanes__pane) {
     box-shadow: unset !important;
   }
+
   &--header {
     padding: var(--app-space-s);
     text-align: left;
     line-height: 30px;
+
     &__title {
       height: 100%;
       line-height: 30px;
+
       title {
         display: flex;
         align-items: center;
         text-align: left;
       }
+
       svg {
         width: 1rem;
         height: 1rem;

@@ -2,21 +2,24 @@
 import { Pane, Splitpanes } from 'splitpanes'
 
 import { clientApi } from 'api'
-import { BrowseListTable } from '#components'
+import { BrowseTable } from '#components'
 import { EventType, useEventBus, emitBus } from 'eventbus'
-import { actions, ActionsFilter } from '../../../../packages/base/utils/browseActions'
+import { actions, ActionsFilter } from '~/../base/utils/browseActions'
 
 const props = withDefaults(defineProps<{
   idOrPath: string
   home?: any
   commentId?: string
   expandedItems: any[]
+  isReload?: boolean
 }>(), {
   idOrPath: '/',
-  expandedItems: []
+  expandedItems: [],
+  isReload: false
 })
 
 const { idOrPath, commentId, expandedItems } = toRefs(props)
+const currentIdOrPath = ref(idOrPath.value)
 const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 const selectedItem = ref<any[]>([])
@@ -24,7 +27,7 @@ const infoOpened = ref(false)
 if (!tabProvider || !routerProvider) {
   throw createError('provider not found')
 }
-const tableRef = ref<InstanceType<typeof BrowseListTable>>()
+const tableRef = ref<InstanceType<typeof BrowseTable>>()
 const browswInfoRef = ref()
 
 function addToSelection(items: any[]) {
@@ -36,11 +39,7 @@ function removeFromSelection(items: any[]) {
 }
 
 function changeRoute(path: string) {
-  // change route, update tab
-  // clean filter
-  routerProvider?.updateProps({
-    idOrPath: path,
-  })
+  currentIdOrPath.value = path
 }
 
 const docDetail = ref()
@@ -147,6 +146,7 @@ watch(
   [idOrPath, commentId],
   (newVal, oldVal) => {
     getDoc()
+    currentIdOrPath.value = newVal[0]
     if (newVal && newVal[1]) {
       infoOpened.value = true
     } else if (oldVal && oldVal[1]) {
@@ -168,13 +168,16 @@ provide(BrowseListProviderKey, {
   getchildApi: (pageParams: any) => {
     return clientApi.api.postNuxeoDocumentChildrenThumbnailV2(pageParams)
   },
-  idOrPath,
+  idOrPath : currentIdOrPath,
   docDetail,
   docPermission,
   changeRoute,
   addToSelection,
   removeFromSelection
 })
+
+
+
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on((ids: any) => {
@@ -203,6 +206,13 @@ function calMinWidth() {
   if(!containerSize) return;
   minSize.value = Number(((400 / containerSize.width) * 100).toFixed(0))
 }
+function expandedItemsChangeHandler(updateEexpandedItems: any[]) {
+  if(props.isReload) {
+    routerProvider?.updateProps({
+        expandedItems: updateEexpandedItems
+    })
+  }
+}
 
 useEventListener(window, 'resize', calMinWidth)
 
@@ -213,16 +223,17 @@ useEventListener(document, 'closeFilePreview', closePreview)
   <div ref="browseContainer" class="browseContainer">
     <splitpanes>
       <Pane>
-        <BrowseListTable ref="tableRef" 
+        <BrowseTable ref="tableRef"
           :class="{ selected: selectedList.length > 0 }" 
           :selectedRows="selectedItem" 
           :expandedItems="expandedItems"
-          @selectedChange="selectedChangeHandler" >
+          @selectedChange="selectedChangeHandler"
+          @expandedItemsChange="expandedItemsChangeHandler" >
           <template #toolbar_buttons>
             <slot name="toolbar_buttons">
               <div class="toolsBarContainer">
                 <template v-if="selectedList.length === 0">
-                  <BrowseBreadcrumb :idOrPath="idOrPath" :home="home" />
+                  <BrowseBreadcrumb :idOrPath="currentIdOrPath" :home="home" />
                 </template>
                 <template v-else>
                   <div class="selectedNoteContainer">
@@ -254,7 +265,7 @@ useEventListener(document, 'closeFilePreview', closePreview)
               <BrowseActionsInfo v-if="idOrPath !== '/'" :doc="docDetail" :permission="docPermission" @itemClicked="infoOpened = !infoOpened" />
             </slot>
           </template>
-        </BrowseListTable>
+        </BrowseTable>
       </Pane>
       <Pane v-if="idOrPath !== '/' && infoOpened" :min-size="minSize" :size="minSize">
         <BrowseInfo
