@@ -30,9 +30,9 @@ const tableRef = ref()
 
 const { cardRef, settingRef, refresh, loading } = useDashboardCard({
   props,
-  handleRefreshAction: (setting: any) => {
-    // tableRef.value.query({})
-  }
+  // handleRefreshAction: (setting: any) => {
+  //   // tableRef.value.query({})
+  // }
 })
 
 async function handleDelete() {
