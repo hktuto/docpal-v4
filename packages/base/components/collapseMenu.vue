@@ -1,14 +1,11 @@
 <script setup lang="ts">
-
 import { onClickOutside } from '@vueuse/core'
 const opened = ref(false);
-const viewport = useViewport()
-const isMobile = computed(() =>  viewport.isLessThan('tablet'))
 const emits = defineEmits(['openedChange'])
 const outsideTarget = ref()
 
 onClickOutside(outsideTarget, (event) => {
-  if(isMobile.value && opened.value){
+  if(opened.value){
     opened.value = false
   }
 })
@@ -19,23 +16,35 @@ watch(opened,(bool) => {
 </script>
 
 <template>
-  <div class="collapseContainer">
-    <template v-if="!isMobile">
+  <!-- <div class="collapseContainer">
+    <div class="collapseWrapper desktop">
       <slot :collapse="false" />
-    </template>
-    <template v-else>
+    </div>
+    <div class="collapseWrapper mobile">
       <div class="mobileCollapse" @click.stop="() => {}">
+          <SvgIcon src="/icons/menu.svg" round @click="opened = true"/>
+          <div ref="outsideTarget" :class="{listContainer:true, opened}">
+            <slot :collapse="true" />
+          </div>
+        </div>
+    </div>
+  </div> -->
+  <div class="collapseWrapper desktop">
+    <slot :collapse="false" />
+  </div>
+  <div class="collapseWrapper mobile">
+    <div class="mobileCollapse" @click.stop="() => {}">
         <SvgIcon src="/icons/menu.svg" round @click="opened = true"/>
         <div ref="outsideTarget" :class="{listContainer:true, opened}">
           <slot :collapse="true" />
         </div>
       </div>
-    </template>
   </div>
 </template>
 
 <style scoped lang="scss">
-.collapseContainer{
+
+.collapseWrapper{
   display: flex;
   flex-flow: row nowrap;
   gap: var(--app-space-xs);
@@ -46,6 +55,19 @@ watch(opened,(bool) => {
   color: var(--app-grey-300);
   :deep .el-dropdown {
     font-size: var(--app-font-size-m);
+  }
+  
+  @container (min-width: 768px) {
+    &.mobile{
+      display: none;
+    }
+  }
+
+  @container (max-width: 768px) {
+    // set somthin
+    &.desktop{
+      display: none;
+    }
   }
 }
 .mobileCollapse{

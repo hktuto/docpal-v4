@@ -12,6 +12,7 @@ const props = defineProps<{
 </template>
 
 <style scoped lang="scss">
+$label-show-size: 1920px;
 .buttonContainer{
   display: flex;
   flex-flow: row nowrap;
@@ -19,7 +20,7 @@ const props = defineProps<{
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  @media (max-width: 1024px) {
+  @container (min-width: #{$label-show-size}) {
     &:hover {
       background: var(--app-primary-color-02);
     }
@@ -27,7 +28,7 @@ const props = defineProps<{
   .label {
     display: none;
     color: var(--app-grey-200);
-    @media (max-width: 1024px) {
+    @container (min-width: #{$label-show-size}) {
       display: block;
     }
   }

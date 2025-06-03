@@ -71,6 +71,7 @@ defineExpose({
   display: grid;
   grid-template-rows: min-content 1fr;
   overflow: hidden;
+  container-type: inline-size;
 }
 :deep .el-card__header {
   margin: 0;
