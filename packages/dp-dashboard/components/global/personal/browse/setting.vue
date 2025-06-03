@@ -24,12 +24,29 @@ const FormRendererRef = ref()
 
 async function handleSubmit() {
   state.loading = true
+  let result = {
+    path: '/',
+    home:{
+      homeRouteItem: '/',
+      secondId: '/'
+    }
+  }
   try {
     const data = await FormRendererRef.value.getFormData()
-    if (!data.path) {
-      data.path = '/'
+    if (!data.path || data.path.length < 1) {
+      emits('refresh', result)
+
+      state.loading = false
+      state.visible = false
+      return
     }
-    emits('refresh', data)
+
+    const path = data.path[data.path.length - 1]
+    result.path = path
+    result.home.homeRouteItem = path
+    result.home.secondId = path
+
+    emits('refresh', result)
   } catch (error) {
     state.loading = false
   }

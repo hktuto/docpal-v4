@@ -12,14 +12,18 @@ const props = withDefaults(defineProps<{
   hideSetting?: boolean
 }>(), {
   idOrPath: '/',
-  home: [],
+  home: {},
   commentId: '',
   setting: {},
-  hideSetting: true,
+  hideSetting: true
 })
 
 const state = reactive({
-  path: '/Domain'
+  path: '/',
+  home:{
+    homeRouteItem: '/',
+    secondId: '/'
+  }
 })
 
 const tableRef = ref()
@@ -37,6 +41,7 @@ async function handleDelete() {
 
 function handleRefresh(data: any) {
   state.path = data.path
+  state.home = data.home
   refresh()
 }
 
@@ -54,7 +59,7 @@ function handleRefresh(data: any) {
     @delete="handleDelete"
     @refresh="refresh"
   >
-    <BrowseTablePage ref="tableRef" :idOrPath="state.path" />
+    <BrowseTablePage ref="tableRef" :idOrPath="state.path" :home="state.home" />
     <PersonalBrowseSetting ref="settingRef" :path="state.path" @refresh="handleRefresh" />
   </DashboardCard>
 </template>
