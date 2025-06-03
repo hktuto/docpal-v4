@@ -483,11 +483,10 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         h: 3,
         component : 'Browse',
         setting : {
-          home: [],
+          home: {},
           hideSetting: []
         }
     }
-
 }
 
 export const  getWidgetSetting = (widget: DashboardWidget) => {
