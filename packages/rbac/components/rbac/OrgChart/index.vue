@@ -53,7 +53,7 @@ function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
 async function handleDelete(deleteId: string, newNodes: OrgNode[]) {
   // status:3-逻辑删除
   await adminApi.api
-    .postAclRole({
+    .putAclRole({
       id: deleteId,
       status: 3
     })
