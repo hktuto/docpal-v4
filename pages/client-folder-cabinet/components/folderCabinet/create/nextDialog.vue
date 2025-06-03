@@ -62,8 +62,18 @@ async function handleSubmit() {
   async function uploadFiles(fileTree: any, parentPath: string) {
     const uploadPromises = fileTree.map((item: any) => {
       if (item.folder) {
-        item.path = parentPath + '/' + item.label
+        item.parentPath = parentPath
+        let defaultValue = {}
+        if (item.metadataValue) defaultValue = JSON.parse(item.metadataValue)
+        const name = item.previewName || getMetaName({
+            label: item.label,
+            ...defaultValue
+          },
+          item)
+        item.name = name
+        item.path = parentPath + '/' + item.name
         return createDirectory(item).then((dir: any) => {
+          
           if (dir?.id && item.children) uploadFiles(item.children, item.path)
         })
       } else {
