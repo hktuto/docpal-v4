@@ -82,6 +82,10 @@ async function setForm(json: string | object, data?: object, properties: any[] =
   FormRendererRef.value.setFormJson(json)
   if (data && properties) {
     const _data = await handleData(data)
+    // check if value in _data is undefine or null , if so remove it
+    Object.keys(_data).forEach((key) => {
+      if (_data[key] === undefined || _data[key] === null) delete _data[key]
+    })
     state.formData = { ..._data }
 
     FormRendererRef.value.setFormData(_data)
