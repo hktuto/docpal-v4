@@ -15,6 +15,7 @@ import type { PropType } from 'vue'
 import OrgChartNodePerson from './nodes/person.vue'
 import './styles.css'
 
+
 interface OrgNode {
   id: string
   name: string
