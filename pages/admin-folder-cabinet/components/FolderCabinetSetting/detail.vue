@@ -218,7 +218,7 @@ async function handleSave() {
     try {
       await FormRef.value.validate()
     } catch (e) {
-      logger.error(e)
+      console.error(e)
       return
     }
     const data = await FormRendererRef.value.getFormData()

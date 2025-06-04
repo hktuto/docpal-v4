@@ -45,7 +45,7 @@ const handleConfirm = async () => {
   try {
     await FormRef.value.validate()
   } catch (e) {
-    logger.error(e)
+    console.error(e)
     return
   }
   const param = {

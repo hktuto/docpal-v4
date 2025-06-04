@@ -101,7 +101,7 @@ async function handleSave(val) {
     try {
        await formRef.value.validate()
     } catch (e) {
-      logger.error(e)
+      console.error(e)
       return
     }
     const res = await adminApi.api.putWhatsappUpdateWhatsappSetting({

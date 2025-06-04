@@ -38,7 +38,7 @@ async function handleSubmit() {
   try {
     await formRef.value.validate()
   } catch (e) {
-    logger.error(e)
+    console.error(e)
     return
   }
   // router.push(`/workflowEditor/new?template=${state.form.template}&name=${state.form.name}`)
