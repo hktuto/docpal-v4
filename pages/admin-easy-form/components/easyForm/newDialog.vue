@@ -42,7 +42,7 @@ async function handleSubmit() {
     ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('workflow_form'), name: null }))
     emits('refresh')
   } catch (error) {
-    console.log(error)
+    throw error
   } finally {
     state.visible = false
     state.loading = false
