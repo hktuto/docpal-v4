@@ -9,8 +9,7 @@
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
         <el-form label-position="top" ref="FormRef" :model="form">
-          <el-form-item prop="labelRule" class="intro"
-                        :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
+          <el-form-item prop="labelRule" class="intro" :rules="[{ required: true, message: $t('tableHeader_labelRule') + $t('render.hint.fieldRequired') }]">
             <template #label>
               {{ $t('tableHeader_labelRule') }}
               <!-- <span
@@ -164,7 +163,7 @@ function getReminder(data: any, revertList: any) {
   }, {})
 }
 
-const showNotification = ref(props.isRoot);
+const showNotification = ref(props.isRoot)
 // #endregion
 function init(row: any) {
   if (!row) return
@@ -183,7 +182,7 @@ function init(row: any) {
       labelRule.forEach((item: any) => {
         if (item.metaData) {
           item.metadata = item.metaData
-          if(item.metadata === 'fc:docTitle'){
+          if (item.metadata === 'fc:docTitle') {
             item.noDelete = false
           }
         }
@@ -198,15 +197,15 @@ function init(row: any) {
     if (row.acls) state.acls = row.acls
     if (row.metadataValue) state.defaultValue = JSON.parse(row.metadataValue)
     else state.defaultValue = {}
-    
+
     const reminder = getReminder(row, ['notificationReminder', 'emailReminder', 'emailReport'])
-    console.log("reminder", reminder)
+    console.log('reminder', reminder)
     FormRendererRef.value.vFormRenderRef.setFormData({
       ...row,
       ..._row,
       ...getReminder(row, ['notificationReminder', 'emailReminder', 'emailReport']),
       showNotification: props.isRoot,
-      useNotification : reminder?.['notificationReminder.tos']?.length > 1
+      useNotification: reminder?.['notificationReminder.tos']?.length > 1
     })
     state.loading = false
   })
@@ -215,68 +214,71 @@ function init(row: any) {
 const WorkflowDialogRef = ref()
 
 async function handleSave() {
-  console.log("handleSave")
-  const valid = await FormRef.value.validate()
-  const data = await FormRendererRef.value.getFormData()
-  if (!valid || !data) return
+  try {
+    try {
+      await FormRef.value.validate()
+    } catch (e) {
+      logger.error(e)
+      return
+    }
+    const data = await FormRendererRef.value.getFormData()
+    if (!data) return
 
-  if (props.isRoot) {
-    if (state.setting.label != data.label) {
-      const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
-      if (checkName) {
+    if (props.isRoot) {
+      if (state.setting.label != data.label) {
+        const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+        if (checkName) {
+          routerProvider?.message.error(t('common_nameExists'))
+          return
+        }
+      }
+    } else {
+      if (checkDuplicateLabel(state.setting.parentId, state.setting.id, data.label, props.tree.children)) {
         routerProvider?.message.error(t('common_nameExists'))
         return
       }
     }
-  } else {
-    if (checkDuplicateLabel(state.setting.parentId, state.setting.id, data.label, props.tree.children)) {
-      routerProvider?.message.error(t('common_nameExists'))
-      return
+    const params = {
+      ...data,
+      allow: form.allow,
+      multiple: form.multiple,
+      repeatName: form.repeatName,
+      labelRule: JSON.stringify(form.labelRule),
+      id: state.setting.id,
+      // folder: true
+      folder: state.setting.folder
     }
-  }
-  const params = {
-    ...data,
-    allow: form.allow,
-    multiple: form.multiple,
-    repeatName: form.repeatName,
-    labelRule: JSON.stringify(form.labelRule),
-    id: state.setting.id,
-    // folder: true
-    folder: state.setting.folder
-  }
-  
-  if (props.isRoot) {
-    const arr = ['notificationReminder', 'emailReminder', 'emailReport']
-    arr.forEach((key) => {
-      params[key] = {}
-      params[key].intervalTime = params[`${key}.intervalTime`]
 
-      if (params[`${key}.tos`]) params[key].tos = data.useNotification ? params[`${key}.tos`] : ['createBy']
-      if (params[`${key}.ccs`]) params[key].ccs = params[`${key}.ccs`]
-      delete params[`${key}.intervalTime`]
-      delete params[`${key}.tos`]
-      delete params[`${key}.ccs`]
-    })
-    
-  }
-  if (params.metadata && params.metadata.length > 0) {
-    const metaRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metadata')
-    const options = metaRef.getOptionItems()
-    params.metadata = params.metadata.reduce((prev: any, key: string) => {
-      const item = options.find((t: any) => t.value === key)
-      if (!!item) {
-        prev.push({
-          type: item.dataType,
-          name: key
-        })
-      }
-      return prev
-    }, [])
-  }
-  const metadataDefault = await FormVariablesRendererRef.value.getData(false)
-  if (metadataDefault) params.metadataValue = JSON.stringify(metadataDefault)
+    if (props.isRoot) {
+      const arr = ['notificationReminder', 'emailReminder', 'emailReport']
+      arr.forEach((key) => {
+        params[key] = {}
+        params[key].intervalTime = params[`${key}.intervalTime`]
 
-  try {
+        if (params[`${key}.tos`]) params[key].tos = data.useNotification ? params[`${key}.tos`] : ['createBy']
+        if (params[`${key}.ccs`]) params[key].ccs = params[`${key}.ccs`]
+        delete params[`${key}.intervalTime`]
+        delete params[`${key}.tos`]
+        delete params[`${key}.ccs`]
+      })
+    }
+    if (params.metadata && params.metadata.length > 0) {
+      const metaRef = FormRendererRef.value.vFormRenderRef.getWidgetRef('metadata')
+      const options = metaRef.getOptionItems()
+      params.metadata = params.metadata.reduce((prev: any, key: string) => {
+        const item = options.find((t: any) => t.value === key)
+        if (!!item) {
+          prev.push({
+            type: item.dataType,
+            name: key
+          })
+        }
+        return prev
+      }, [])
+    }
+    const metadataDefault = await FormVariablesRendererRef.value.getData(false)
+    if (metadataDefault) params.metadataValue = JSON.stringify(metadataDefault)
+
     state.loading = true
     await adminApi.api.patchCabinetTemplate(params)
     routerProvider?.message.success(

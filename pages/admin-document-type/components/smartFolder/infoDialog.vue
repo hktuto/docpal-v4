@@ -34,13 +34,13 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
-  const _data = {
-    name: data.name,
-    bind: data.access.join(',')
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
+    const _data = {
+      name: data.name,
+      bind: data.access.join(',')
+    }
     let msg
     const res = await adminApi.api.patchNuxeoSfolder({
       ...state.setting,

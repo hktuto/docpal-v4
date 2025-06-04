@@ -73,6 +73,7 @@ const defaultFormJson = {
 const FormRendererRef = ref()
 // #region module: set
 async function setForm(json: string | object, data?: object, properties: any[] = [], xml?: string) {
+  console.log('setForm', json, data, properties, xml)
   if (JSON.stringify(json) === '{}') {
     FormRendererRef.value.setFormJson(defaultFormJson)
     return
@@ -81,11 +82,8 @@ async function setForm(json: string | object, data?: object, properties: any[] =
   FormRendererRef.value.setFormJson(json)
   if (data && properties) {
     const _data = await handleData(data)
-    // remove all undefined and null on _data
-    Object.keys(_data).forEach((key) => {
-      if (_data[key] === undefined || _data[key] === null) delete _data[key]
-    })
     state.formData = { ..._data }
+
     FormRendererRef.value.setFormData(_data)
     handleTypeIds(properties)
   } else {
@@ -146,28 +144,32 @@ function handleTypeIds(properties: any) {
 // #region module: get
 const formRenderSlotsRef = ref<any>({})
 async function getFormData(needValidation = true, onlyWritable = false) {
-  let formData = {}
-  if (!needValidation) formData = await FormRendererRef.value.getFormData(false)
-  else {
-    formData = await FormRendererRef.value
-      .getFormData()
-      .then((res: any) => {
-        return res
-      })
-      .catch((error: any) => {
-        return false
-      })
+  try {
+    let formData = {}
+    if (!needValidation) formData = await FormRendererRef.value.getFormData(false)
+    else {
+      formData = await FormRendererRef.value
+        .getFormData()
+        .then((res: any) => {
+          return res
+        })
+        .catch((error: any) => {
+          return false
+        })
+    }
+    if (!formData) return false
+    let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
+    const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
+    const result = {
+      ...resultFormData,
+      ...slotData
+    }
+  
+    // throw new Error("slotData", result)
+    return result
+  } catch (error) {
+    console.log(error)
   }
-  if (!formData) return false
-  let resultFormData = onlyWritable ? writableDataDeArray(deepCopy(formData)) : dataDeArray(deepCopy(formData))
-  const slotData = await getSlotData(formRenderSlotsRef.value, needValidation)
-  const result = {
-    ...resultFormData,
-    ...slotData
-  }
-
-  // throw new Error("slotData", result)
-  return result
 }
 async function getSlotData(refList: any, needValidation: boolean) {
   let pList: any = []

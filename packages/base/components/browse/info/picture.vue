@@ -102,7 +102,7 @@ async function handleDownload (row: any) {
     })
     downloadBlob(response, name)
   } catch (error: any) {
-    throw new Error(error);
+    console.error(error)
   } finally {
     noti.close()
   }

@@ -31,7 +31,7 @@ async function handleExport() {
     )
     downloadBlob(data, props.exportName + '.zip', 'application/zip')
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     noti.close()
   }

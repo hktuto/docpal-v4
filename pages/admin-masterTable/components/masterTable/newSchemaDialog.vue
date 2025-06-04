@@ -192,20 +192,24 @@ async function handleOpen(row: any = {}, options: any = {}) {
 }
 
 async function handleConfirm() {
-  let data = await FormRendererRef.value.getFormData();
-  data = Object.keys(data).reduce((prev: any , key) => {
-    if (data[key]) prev[key] = data[key];
-    return prev;
-  }, {});
-  if (props.type === "again") {
-    const defaultForm = await FormVariablesRendererRef.value.getData();
-    if (defaultForm.defaultValue || defaultForm.defaultValue === 0) {
-      data.defaultValue = defaultForm.defaultValue;
+  try {
+    let data = await FormRendererRef.value.getFormData();
+    data = Object.keys(data).reduce((prev: any , key) => {
+      if (data[key]) prev[key] = data[key];
+      return prev;
+    }, {});
+    if (props.type === "again") {
+      const defaultForm = await FormVariablesRendererRef.value.getData();
+      if (defaultForm.defaultValue || defaultForm.defaultValue === 0) {
+        data.defaultValue = defaultForm.defaultValue;
+      }
     }
+    if (state.options.edit) emits("update", {...data, ...state.form});
+    else emits("add", {...data, ...state.form});
+    state.visible = false;
+  } catch (error: any) {
+    console.error(error)
   }
-  if (state.options.edit) emits("update", {...data, ...state.form});
-  else emits("add", {...data, ...state.form});
-  state.visible = false;
 }
 
 defineExpose({handleOpen});

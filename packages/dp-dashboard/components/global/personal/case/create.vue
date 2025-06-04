@@ -51,7 +51,7 @@ function handleClick(item: any) {
   try {
     dialogRef.value.handleOpen(item.id, item)
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 

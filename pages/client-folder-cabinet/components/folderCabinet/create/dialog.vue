@@ -53,41 +53,40 @@ const FormRendererRef = ref()
 const MetaFormRef = ref()
 
 async function handleSubmit() {
-  // 获取 v-form 数据
-  const formData = await FormRendererRef.value.getFormData()
-  const arr = ['notificationReminder', 'emailReminder', 'emailReport']
-  arr.forEach(key => {
-    formData[key] = {}
-    formData[key].intervalTime = formData[`${key}.intervalTime`]
-    if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
-    if (formData[`${key}.ccs`]) formData[key].ccs = formData[`${key}.ccs`]
-    delete formData[`${key}.intervalTime`]
-    delete formData[`${key}.tos`]
-    delete formData[`${key}.ccs`]
-  })
-  // 获取 metaForm 数据
-  const metaFormData = await MetaFormRef.value.getData()
-
-  if (!formData) return
-  state.loading = true
   try {
+    // 获取 v-form 数据
+    const formData = await FormRendererRef.value.getFormData()
+    const arr = ['notificationReminder', 'emailReminder', 'emailReport']
+    arr.forEach(key => {
+      formData[key] = {}
+      formData[key].intervalTime = formData[`${key}.intervalTime`]
+      if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
+      if (formData[`${key}.ccs`]) formData[key].ccs = formData[`${key}.ccs`]
+      delete formData[`${key}.intervalTime`]
+      delete formData[`${key}.tos`]
+      delete formData[`${key}.ccs`]
+    })
+    // 获取 metaForm 数据
+    const metaFormData = await MetaFormRef.value.getData()
+  
+    if (!formData) return
+    state.loading = true
     let fileName = await getMetaName()
     if(!fileName) {
       ElMessage.error($t('dpTip.noValidName'))
       throw new Error('dpTip.noValidName')
     }
-    const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName })
-    if (fileName !== _fileName) {
-      const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => {
-        return action
-      })
-      if (check !== 'confirm') {
-        state.loading = false
-        return
-      } else {
-        fileName = _fileName
-      }
-    }
+    // getUniqueName has bug, will return same name,
+    // we need to implement inline function to check if the name is unique
+    // const hasSameName = await clientApi.api.postNuxeoDocumentIsduplicatename({
+    //   path: state.cabinetTemplate.documentPath,
+    //   titles: [fileName]
+    // }).then(res => !!res.data.hasDuplicateTitle)
+    // if(hasSameName) {
+    //   ElMessage.error($t('dpTip.folderCabinet.duplicateRootFolder'))
+    //   throw new Error('dpTip.folderCabinet.duplicateRootFolder')
+    // }
+    
     const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
     // 上传最上层数据
     const res = await clientApi.api.postCabinetCreate({
