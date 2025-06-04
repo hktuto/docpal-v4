@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { MenuRouterKey } from '#imports'
 import { DocTemplateProveKey } from '~/utils/docTemplateHelper';
-import {paperSizes} from "tiptap-extension-pagination"
+import {paperSizes} from "tiptap-extension-pagination/src"
 import type { pageSettingOptions } from '~/utils/tiptapHelper';
 
 const routerProvider = inject(MenuRouterKey)

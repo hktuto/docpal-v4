@@ -15,3 +15,6 @@ node_modules
 **/report_languageChange/**
 env/.env.dev.admin
 env/.env.dev.client
+
+# remove all build files
+apps/*/dist
