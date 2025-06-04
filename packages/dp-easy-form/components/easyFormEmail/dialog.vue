@@ -184,9 +184,9 @@ const formRef = ref<FormInstance>();
 
 async function handleSubmit() {
   try {
-    await FormRef.value.validate()
+    await FormRef.value?.validate()
   } catch (e) {
-    logger.error(e)
+    console.error(e)
     return
   }
   const params = {
