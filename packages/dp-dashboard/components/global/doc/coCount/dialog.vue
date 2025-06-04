@@ -44,7 +44,7 @@ async function handleSubmit() {
   state.visible = false
   state.loading = false
 }
-function handleOpen(setting) {
+function handleOpen(setting: any) {
   state.visible = true
   setTimeout(async () => {
     state.setting = setting
