@@ -19,6 +19,13 @@
   "DAM_operation": "Operation",
   "DAM_setupFileExtension": "Setup file extension",
   "DAM_targetFormat": "Target Format",
+  "Dashboard": {
+    "Home": {
+      "card": {
+        "error": "The component cannot be displayed, please check the permissions. Whether to delete this component."
+      }
+    }
+  },
   "Deactivated": "Inactive",
   "ERROR": "ERROR",
   "Email": {
@@ -544,6 +551,7 @@
     "angleTip": "Positive or negative integer"
   },
   "dashboard": {
+    "Browse": "Browse",
     "CalendarWidget": "Calendar",
     "PersonalCase": "Case",
     "PersonalCaseCreate": "New Case",
