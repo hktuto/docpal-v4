@@ -197,7 +197,7 @@ function getFormLink(initBodyField = true) {
 async function handleSubmit() {
 
   try {
-
+    console.log("handleSubmit", formRef.value);
     await formRef.value?.validate();
 
     const userEmails = form.value.emails.reduce((prev:any, email: string) => {
@@ -232,7 +232,7 @@ async function handleSubmit() {
     ElMessage.success(t("dpMsg_success"));
     state.visible = false;
   } catch (error) {
-    console.log(error);
+    throw error
   }
 }
 
