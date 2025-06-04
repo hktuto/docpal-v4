@@ -85,7 +85,7 @@
         id="EasyForm__Detail__FormPreview__SendEmail__Submit"
         type="primary"
         :loading="state.loading"
-        @click="handleSubmit()"
+        @click="handleSubmit"
       >
         {{ $t("common_submit") }}
       </el-button>
@@ -143,7 +143,7 @@ const emailValidate = (rule: any, value: any, callback: any) => {
   value.forEach((item) => {
     if (!emailPattern.test(item)) {
       emailCheck = true;
-      callback(new Error($t("tip.enterValidEmail")));
+      callback(new Error(t("tip.enterValidEmail")));
     }
   });
   callback();
@@ -163,7 +163,7 @@ async function handleOpen(easyFormId: string = "", userEmail: string = "") {
   form.value.emails = [];
   if (userEmail) form.value.emails.push(userEmail);
   setTimeout(() => {
-    formRef.value.clearValidate();
+    formRef.value?.clearValidate();
   });
 
   // form.value.emails = email.userEmails.map(item => (item.email))
@@ -182,46 +182,8 @@ async function handleOpen(easyFormId: string = "", userEmail: string = "") {
 
 const formRef = ref<FormInstance>();
 
-async function handleSubmit() {
-  const valid = await formRef.value.validate();
-  if (!valid) return;
-  const params = {
-    easyFormId: state.easyFormId,
-    formLink: getFormLink(false),
-    subject: form.value.subject,
-    userEmails: getEmail(),
-    body: getBody(form.value.body),
-  };
-  await adminApi.api.postFormDesignSendEmail(params);
-  emits("email-update");
-  ElMessage.success(t("dpMsg_success"));
-  state.visible = false;
 
-  function getBody(str) {
-    const list = [...bodyFieldList.value, ...bodyFieldExtraList];
-    const body = list.reduce((prev: string, item: any) => {
-      const regexStr = item.value.replace(/[${}/?\\<>]/g, "\\$&");
-
-      const regex = new RegExp(item.value.replace(/[${}/?\\<>]/g, "\\$&"), "g");
-      prev = prev.replace(regex, item.templateValue);
-      return prev;
-    }, str);
-    return `<html><body><p>${body}</p></body></html>`;
-  }
-
-  function getEmail() {
-    return form.value.emails.reduce((prev, email: string) => {
-      const user = state.userList.find((item) => item.email === email);
-      console.log(user);
-      prev.push({
-        username: user ? user.firstName + user.lastName : "",
-        email: user ? user.email : email,
-      });
-      return prev;
-    }, []);
-  }
-
-  function getFormLink(initBodyField = true) {
+function getFormLink(initBodyField = true) {
     const fItem = bodyFieldList.value.find((item) => item.label === "Form Link");
     const origin = endPoint?.upload;
     const href = `https://${origin}/public-form?id=${state.easyFormId}`;
@@ -230,6 +192,47 @@ async function handleSubmit() {
     //   fItem.templateValue = `<a href="${href}">${href}</a>`;
     // }
     return href;
+  }
+
+async function handleSubmit() {
+
+  try {
+
+    await formRef.value?.validate();
+
+    const userEmails = form.value.emails.reduce((prev:any, email: string) => {
+        const user = state.userList.find((item:any) => item.email === email);
+        console.log(user);
+        prev.push({
+          username: user ? user.firstName + user.lastName : "",
+          email: user ? user.email : email,
+        });
+        return prev;
+      }, []);
+    
+    let body = [...bodyFieldList.value, ...bodyFieldExtraList].reduce((prev: string, item: any) => {
+        const regexStr = item.value.replace(/[${}/?\\<>]/g, "\\$&");
+
+        const regex = new RegExp(item.value.replace(/[${}/?\\<>]/g, "\\$&"), "g");
+        prev = prev.replace(regex, item.templateValue);
+        return prev;
+      }, form.value.body);
+      body = `<html><body><p>${body}</p></body></html>`;
+
+    
+    const params = {
+      easyFormId: state.easyFormId,
+      formLink: getFormLink(false),
+      subject: form.value.subject,
+      userEmails,
+      body
+    };
+    await adminApi.api.postFormDesignSendEmail(params);
+    emits("email-update");
+    ElMessage.success(t("dpMsg_success"));
+    state.visible = false;
+  } catch (error) {
+    console.log(error);
   }
 }
 
