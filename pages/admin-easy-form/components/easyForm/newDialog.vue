@@ -34,18 +34,19 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
     data.permission = 'members'
-    const result = await adminApi.api.postFormDesign(data)
+    await adminApi.api.postFormDesign(data)
     ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('workflow_form'), name: null }))
     emits('refresh')
   } catch (error) {
+    console.log(error)
+  } finally {
+    state.visible = false
     state.loading = false
   }
-  state.visible = false
-  state.loading = false
 }
 
 function handleOpen() {
