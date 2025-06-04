@@ -19,6 +19,13 @@
   "DAM_operation": "操作",
   "DAM_setupFileExtension": "設定檔案後綴",
   "DAM_targetFormat": "目標格式",
+  "Dashboard": {
+    "Home": {
+      "card": {
+        "error": "該組件無法顯示，請檢查是否有權限.  是否刪除該組件"
+      }
+    }
+  },
   "Deactivated": "停用",
   "ERROR": "錯誤",
   "Email": {
@@ -544,6 +551,7 @@
     "angleTip": "正整數或負整數"
   },
   "dashboard": {
+    "Browse": "瀏覽",
     "CalendarWidget": "日歷",
     "PersonalCase": "案例",
     "PersonalCaseCreate": "新案例",
