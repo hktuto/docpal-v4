@@ -91,8 +91,8 @@ onMounted(() => {
               class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
       <div>
-        <el-dropdown trigger="click" @command="handleAdd">
-          <el-button id="Dashboard__EditDashboardContent__Add" type="primary">
+        <el-dropdown id="Dashboard__EditDashboardContent__Add" trigger="click" @command="handleAdd">
+          <el-button type="primary">
             {{ $t('common_add') }}
           </el-button>
           <template #dropdown>

@@ -130,7 +130,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
             showCount: true,
             showSize: true,
             displayList: [
-                { meta: 'dc:creator' }
+                { meta: 'create_by' }
             ],
             showUserFilter: true
         }
