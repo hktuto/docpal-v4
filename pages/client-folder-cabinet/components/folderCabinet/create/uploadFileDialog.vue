@@ -42,7 +42,8 @@ function getMetaName(formData: any = {}) {
   try {
     if (!!state.metaFormData) formData = {
       ...formData,
-      ...state.metaFormData
+      ...state.metaFormData,
+      label: state.setting.label
     }
   } catch (error) {
 

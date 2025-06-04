@@ -1,12 +1,6 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('easyForm_createForm')"
-             class="scroll-dialog"
-             append-to-body
-             :close-on-click-modal="false"
-             destroy-on-close
-  >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson">
-    </FormRenderer>
+  <el-dialog v-model="state.visible" :title="$t('easyForm_createForm')" class="scroll-dialog" append-to-body :close-on-click-modal="false" destroy-on-close>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"> </FormRenderer>
     <template #footer>
       <div class="footer-grid">
         <el-button id="EasyForm__CreateNewForm__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
@@ -22,9 +16,7 @@ import { adminApi } from 'api'
 import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const state = reactive({
   loading: false,
   visible: false,
@@ -38,13 +30,12 @@ async function handleSubmit() {
     const data = await FormRendererRef.value.getFormData()
     state.loading = true
     data.permission = 'members'
-    await adminApi.api.postFormDesign(data)
+    const result = await adminApi.api.postFormDesign(data)
     ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('workflow_form'), name: null }))
+    state.visible = false
     emits('refresh')
   } catch (error) {
-    throw error
   } finally {
-    state.visible = false
     state.loading = false
   }
 }
@@ -59,7 +50,4 @@ function handleOpen() {
 
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
-</style>
-    
+<style lang="scss" scoped></style>

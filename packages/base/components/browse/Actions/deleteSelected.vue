@@ -39,7 +39,7 @@ async function deleteSelected() {
       duration: 2000
     })
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   } finally {
     noti.close()
   }

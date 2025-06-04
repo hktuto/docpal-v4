@@ -16,15 +16,14 @@ const state = reactive<any>({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.getFormData()
-  if (!data) return
-  const params = {
-    ...state.setting,
-    ...data,
-    actionType: data.actionType ? 'D' : 'A',
-    status: state.setting.status
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const params = {
+      ...state.setting,
+      ...data,
+      actionType: data.actionType ? 'D' : 'A',
+      status: state.setting.status
+    }
     state.loading = true
     await adminApi.api.putPolicyRetentions(params)
     routerProvider?.message.success(t('tip_updateSuccessMsg', {

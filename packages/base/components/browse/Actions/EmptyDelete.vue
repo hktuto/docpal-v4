@@ -68,7 +68,7 @@ async function deleteItem(doc: any, deleteType?: 'folder' | 'file') {
       relatedIdOrPath: doc.parentRef
     })
   } catch (error: any) {
-    throw new Error(error);
+    console.error(error)
   } finally {
     noti.close()
   }

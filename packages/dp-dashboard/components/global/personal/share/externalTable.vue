@@ -69,7 +69,7 @@ function handleDblclick(row: any) {
   try {
     shareInfoDialogRef.value.handleOpen(row);
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 async function handleSubmit(shareInfo: any) {
