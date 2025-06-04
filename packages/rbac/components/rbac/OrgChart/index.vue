@@ -1,6 +1,6 @@
 <template>
-  <div class="chart-container">
-    <template v-if="roleData.length === 0">
+  <div class="chart-container" v-loading="loading">
+    <template v-if="!loading && roleData.length === 0">
       <el-empty :description="$t('orgChart.noData')"></el-empty>
       <div class="flex-x-center">
         <el-button type="primary" @click="sidebarVisible = true">{{ $t('orgChart.add') }}</el-button>
@@ -125,25 +125,28 @@ const handleNodeClick = (node: OrgNode) => {
 const handleDataUpdate = (newData: OrgNode[]) => {
   roleData.value = newData
 }
+const loading = ref(false)
 async function initData() {
-  // if roleIds is provided , that means the data return is a list of roleIds
-  if (props.roleIds) {
-    const data = await adminApi.api.postAclRoleHierarchy(props.roleIds)
-    .then((res) => res.data)
-    .catch((err) => {
-      throw new Error('Failed to get role hierarchy: ' + err)
-    }) as OrgNode[]
-    roleData.value = data
-    return
-  } else {
-    let data = await adminApi.api.getAclRoleRoot()
-    .then((res) => res.data)
-    .catch((err) => {
-      throw new Error('Failed to get role hierarchy: ' + err)
-    })
-    if(!data) roleData.value = []
-    else roleData.value = [data]
+  try{
+    loading.value = true
+    if (props.roleIds) {
+      const data = await adminApi.api.postAclRoleHierarchy(props.roleIds)
+      .then((res) => res.data) as OrgNode[]
+      roleData.value = data
+      return
+    } else {
+      let data = await adminApi.api.getAclRoleRoot()
+      .then((res) => res.data)
+      if(!data) roleData.value = []
+      else roleData.value = [data]
+    }
+  } catch (error) {
+    throw new Error('Failed to get role hierarchy: ' + error)
+  } finally {
+    loading.value = false
   }
+  // if roleIds is provided , that means the data return is a list of roleIds
+  
 }
 onMounted(async () => {
   initData()

@@ -48,9 +48,9 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
           ...pageParams,
           conditions:[
             {
-              field: 'acRoldId',
-              operator: 'EQ',
-              value: props.roleId
+              column: 'acRoleId',
+              type: 'EQ',
+              values: props.roleId
             }
           ]
         }
@@ -63,13 +63,10 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   },
   virtualScroll: props.isAdd,
   columns: [
-    { field: 'username', title: t('orgChart.userTable.columns.username'), width: 120 },
+    { field: 'userName', title: t('orgChart.userTable.columns.username'), width: 120 },
     {
       field: 'email',
       title: t('orgChart.userTable.columns.email'),
-      slots: {
-        default: 'email'
-      }
     }
   ],
   bodyActions: [
