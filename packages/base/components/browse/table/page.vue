@@ -2,7 +2,6 @@
 import { Pane, Splitpanes } from 'splitpanes'
 
 import { clientApi } from 'api'
-import { BrowseTable } from '#components'
 import { EventType, useEventBus, emitBus } from 'eventbus'
 import { actions, ActionsFilter } from '~/../base/utils/browseActions'
 
@@ -40,6 +39,11 @@ function removeFromSelection(items: any[]) {
 
 function changeRoute(path: string) {
   currentIdOrPath.value = path
+  if(props.isReload) {
+    routerProvider?.updateProps({
+        idOrPath: path
+    })
+  }
 }
 
 const docDetail = ref()

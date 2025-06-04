@@ -594,7 +594,6 @@ function dblClickHandler(row: any) {
   }
   if (row.isFolder) {
     listProvider?.changeRoute(row.path)
-    // emits('refresh')
   } else {
     const params = createDetailPageParams({
       idOrPath: row.id,
