@@ -88,7 +88,7 @@ async function handleSubmit() {
   try {
     await formRef.value.validate()
   } catch (e) {
-    logger.error(e)
+    console.error(e)
     return
   }
   const metaValid = await MetaFormRef.value.checkMetaValidate(state.tableData);
