@@ -24,7 +24,7 @@ async function nameChange(newName: string) {
   try {
     await FormRef.value.validate()
   } catch (e) {
-    logger.error(e)
+    console.error(e)
     return
   }
   node.value.prop('label', newName)
