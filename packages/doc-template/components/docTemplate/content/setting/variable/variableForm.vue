@@ -88,8 +88,9 @@ function isNameValid(name: string) {
 function isNameUnique(name: string) {
   const arr = Array.isArray(variables) ? variables : variables?.value || []
 
-  // TODO: 需要一個唯一id作爲檢測原本的名稱時候被修改
-  if (props.mode === 'edit') {
+  // check if the name is the same as the original name
+  if (props.mode === 'edit' && props.variable.name.toLowerCase() === name.toLowerCase()) {
+    return true
   }
 
   return !arr.some((v: any) => {
