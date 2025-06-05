@@ -112,13 +112,14 @@ const config = {
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern-compiler"
+          api: "modern-compiler",
+          quietDeps: true,
         },
       },
     },
     esbuild: {
-      // drop: ['debugger'],
-      // pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
+      drop: ['debugger'],
+      pure: ['console.error', 'console.warn', 'console.debug', 'console.trace'],
     },
     vue: {
       features: {
