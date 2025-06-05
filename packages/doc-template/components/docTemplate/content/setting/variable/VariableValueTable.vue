@@ -1,10 +1,23 @@
 <template>
   <div class="table-editor">
     <el-table :data="rows" style="width: 100%">
-      <el-table-column v-for="(col, colIdx) in columns" :key="colIdx" width="200px">
+      <el-table-column v-for="(col, colIdx) in columns" :key="colIdx" width="300px">
         <template #header>
           <div class="col-header">
-            <el-input v-model="columns[colIdx]" @input="emitValue" size="small" width="100px" />
+            <el-input v-model="columns[colIdx].name" @input="emitValue" size="small" width="100px" />
+            <el-select
+              v-model="columns[colIdx].align"
+              placeholder="Select"
+              size="small"
+              style="width: 220px"
+            >
+              <el-option
+                v-for="(item,index) in alignOptions"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
             <el-button
               icon="el-icon-arrow-left"
               @click="moveColumn(colIdx, -1)"
@@ -46,16 +59,18 @@
 </template>
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue'
-const props = defineProps<{ modelValue: { columns: string[], rows: string[][] } }>()
+const props = defineProps<{ modelValue: { columns: any[], rows: string[][] } }>()
 const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: string[], rows: string[][] }): void }>()
-const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : ['Column 1'])
+const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : [{name: 'Column 1', align: 'left'}])
 const rows = ref(props.modelValue?.rows ? props.modelValue.rows.map(r => [...r]) : [[]])
+const alignOptions =ref(['left','center','right'])
 watch(() => props.modelValue, v => {
-  columns.value = v?.columns ? [...v.columns] : ['Column 1']
+  columns.value = v?.columns ? [...v.columns] : [{name: 'Column 1', align: 'left'}]
   rows.value = v?.rows ? v.rows.map(r => [...r]) : [[]]
 })
 function addColumn() {
-  columns.value.push(`Column ${columns.value.length + 1}`)
+  const newCol = {name: `Column ${columns.value.length + 1}`, align: 'left'}
+  columns.value.push(newCol)
   rows.value.forEach(row => row.push(''))
   emitValue()
 }
