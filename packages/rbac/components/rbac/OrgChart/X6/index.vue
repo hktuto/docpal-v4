@@ -108,8 +108,9 @@ const createGraph = () => {
       }
     },
     background: {
-        color: 'var(--app-grey-9000)',
+        color: 'var(--app-grey-900)',
     },
+    autoResize: true,
     mousewheel: {
       enabled: true,
       zoomAtMousePosition: true,
@@ -437,8 +438,11 @@ const handleSave = (formData: Partial<OrgNode>) => {
 <style scoped>
 .chart-container {
   height: 100%;
+  width: 100%;
   border: 1px solid #ddd;
   border-radius: 4px;
+  position: relative;
+  overflow: hidden;
 }
 .container {
   position: relative;
