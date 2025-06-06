@@ -276,6 +276,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
       margin: 0;
       text-align: left;
       border-radius: var(--app-border-radius-m);
+      white-space: normal;
     }
   }
 }

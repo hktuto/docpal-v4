@@ -3,9 +3,9 @@
     <template v-if="!loading && roleData.length === 0">
       <el-empty :description="$t('orgChart.noData')"></el-empty>
       <div class="flex-x-center">
-        <el-button type="primary" @click="sidebarVisible = true">{{ $t('orgChart.add') }}</el-button>
+        <el-button type="primary" @click="sidebarVisibleChange(true)">{{ $t('orgChart.add') }}</el-button>
       </div>
-      <RbacOrgChartX6EditSidebar :visible="sidebarVisible" :is-add="true" @close="sidebarVisible = false" @save="handleAdd" />
+      <RbacOrgChartX6EditSidebar :visible="sidebarVisible" :is-add="true" @close="sidebarVisibleChange(false)" @save="handleAdd" />
     </template>
     <RbacOrgChartX6
       v-else
@@ -16,6 +16,7 @@
       @add="handleAdd"
       @edit="handleEdit"
       @update:data="handleDataUpdate"
+      @reload="initData"
     />
   </div>
 </template>
@@ -34,6 +35,13 @@ const sidebarVisible = ref(false)
 const roleData = ref<OrgNode[]>([])
 let uuid = 0
 
+
+function sidebarVisibleChange(visible: boolean) {
+  sidebarVisible.value = visible
+  if (!visible) {
+    initData()
+  }
+}
 
 function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
   for (const node of nodes) {
@@ -121,7 +129,16 @@ async function handleAdd(formData: OrgNode, selectedNodeId: string) {
 const handleNodeClick = (node: OrgNode) => {
   console.log('Clicked node:', node)
 }
-
+const flapRoleList = ref([])
+function makeFlapRoleList(data: OrgNode[], roleList= []) {
+  data.forEach(node => {
+    roleList.push(node)
+    if (node.children) {
+      makeFlapRoleList(node.children, roleList)
+    }
+  })
+  return roleList
+}
 const handleDataUpdate = (newData: OrgNode[]) => {
   roleData.value = newData
 }
@@ -143,6 +160,7 @@ async function initData() {
   } catch (error) {
     throw new Error('Failed to get role hierarchy: ' + error)
   } finally {
+    flapRoleList.value = makeFlapRoleList(roleData.value)
     loading.value = false
   }
   // if roleIds is provided , that means the data return is a list of roleIds
@@ -151,6 +169,12 @@ async function initData() {
 onMounted(async () => {
   initData()
 })
+
+provide('roleEditor', {
+  flapRoleList
+})
+
+
 </script>
 
 <style scoped>

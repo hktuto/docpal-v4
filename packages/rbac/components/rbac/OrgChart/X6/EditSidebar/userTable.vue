@@ -5,7 +5,6 @@
       <el-select-v2 v-model="selectedUser" :options="userList" :placeholder="$t('orgChart.userTable.addUser')" filterable class="filter-input" />
       <el-button type="primary" :disabled="!selectedUser" @click="handleAddUser">{{ $t('orgChart.userTable.addUserButton') }}</el-button>
     </div>
-
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   </div>
 </template>
@@ -24,6 +23,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:users', users: any[]): void
+  (e: 'updated'): void
 }>()
 
 const selectedUser = ref('')
@@ -86,7 +86,6 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
 
 const handleAddUser = async () => {
   if (props.isAdd) {
-    // 新增角色的接口不支持用户列表，暂时没有用
     addTableData.value.push({
       username: selectedUser.value,
       email: ''
@@ -120,11 +119,8 @@ const handleRemoveUser = async (row: any) => {
     sortUserList()
     query({})
   } else {
-    // TODO: api, 删除角色中的用户，有报错
-    await adminApi.api.deleteAclRoleUsers({
-      roleId: props.roleId,
-      userIds: [row.username]
-    })
+    await adminApi.api.deleteAclRoleUsers([row.id])
+    emit('updated')
     query({})
   }
 }

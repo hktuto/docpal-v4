@@ -19,11 +19,14 @@
           >
             <el-input v-model="formData.name" :placeholder="$t('orgChart.editSidebar.rolePlaceholder')" />
           </el-form-item>
-          <el-form-item v-if="nodeData?.parentName"
+          <el-form-item v-if="nodeData?.parentId"
             :label="$t('orgChart.editSidebar.parentRole')"
-            prop="parentName" 
+            prop="parentId" 
           >
-            <el-input v-model="nodeData.parentName" :disabled="true" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" />
+            <el-select v-model="formData.parentId" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" filterable >
+              <el-option v-for="item in flapRoleList" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+            <!-- <el-input v-model="nodeData.parentName" :disabled="true" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" /> -->
           </el-form-item>
         </el-form>
         
@@ -49,6 +52,9 @@ import UserTable from './userTable.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+const roleEditor = inject('roleEditor') as { flapRoleList: string[] }
+const { flapRoleList } = roleEditor
 
 const props = defineProps<{
   visible: boolean
@@ -84,8 +90,10 @@ const rules = ref<FormRules>({
 
 watch(() => props.visible, () => {
   if (!props.isAdd && props.nodeData) {
+    console.log(props.nodeData)
     formData.value = {
       name: props.nodeData.name || '',
+      parentId: props.nodeData.parentId || ''
     }
   } else {
     formData.value = {
@@ -113,9 +121,9 @@ const handleSave = async () => {
   }
 }
 
+
 const handleUsersUpdate = (users: any[]) => {
   // 处理用户更新
-  console.log('Users updated:', users)
   if(props.isAdd) {
     formData.value.users = users
   }
