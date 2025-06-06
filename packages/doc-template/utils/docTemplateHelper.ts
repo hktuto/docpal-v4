@@ -71,6 +71,7 @@ export const DocTemplateProveKey: InjectionKey<DocTemplateProvider> = Symbol('Do
 
 // DocTemplateVariable type and validateVariable function migrated from useDocTemplateVariable.ts
 export interface DocTemplateVariable {
+  id: string;
   name: string;
   type: any; // You may want to refine this type based on your BaseType
   value: any;

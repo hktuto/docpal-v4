@@ -2,9 +2,9 @@
 import { ref, toRefs, onMounted, onUnmounted, provide } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey } from '../../utils/docTemplateHelper'
-import {type TipTapOptions} from 'docpal-document-editor/src/types' 
-import { defaultPageSetting} from 'docpal-document-editor/src/utils'
-import { normalizeTipTapOptions, clientEditorExtensions  } from 'docpal-document-editor/src/client'
+import { type TipTapOptions } from 'docpal-document-editor/src/types'
+import { defaultPageSetting } from 'docpal-document-editor/src/utils'
+import { normalizeTipTapOptions, clientEditorExtensions } from 'docpal-document-editor/src/client'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import * as Y from 'yjs'
@@ -12,18 +12,18 @@ import { HocuspocusProvider } from '@hocuspocus/provider'
 import { validateVariable, type DocTemplateVariable } from '../../utils/docTemplateHelper'
 
 const props = defineProps<{
-    editorOptions: TipTapOptions
-    json?: any
-    user?: any
-    variables: DocTemplateVariable[],
-  }>()
+  editorOptions: TipTapOptions
+  json?: any
+  user?: any
+  variables: DocTemplateVariable[],
+}>()
 const { variables } = toRefs(props)
 
 const options = ref<TipTapOptions>({
   mode: 'PAGE',
-  pageSetting : {...defaultPageSetting},
-  title: "Editor",
-  creator: "",
+  pageSetting: { ...defaultPageSetting },
+  title: 'Editor',
+  creator: '',
   editable: false,
   theme: {
     fontSize: 12,
@@ -36,7 +36,7 @@ const options = ref<TipTapOptions>({
   }
 })
 const editor = ref()
-const room = ref("12345")
+const room = ref('12345')
 
 export type LastSelection = {
   type: 'text' | 'textRange' | 'image' | 'cell'
@@ -45,27 +45,28 @@ export type LastSelection = {
 
 const lastSelection = ref<LastSelection | null>()
 
-const ydoc = new Y.Doc();
+const ydoc = new Y.Doc()
 
 const provider = new HocuspocusProvider({
-  url: "ws://localhost:3333/ws",
-  name: "docpal-doc-editor",
-  document: ydoc,
-});
+  url: 'ws://localhost:3333/ws',
+  name: 'docpal-doc-editor',
+  document: ydoc
+})
 
 const headerRef = ref<any>(null)
+
 function initEditor(initOptions: TipTapOptions, json?: any) {
   if (editor.value) {
     editor.value.destroy()
   }
   const normlizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normlizeOption)
-  if(initOptions.editable) {
+  if (initOptions.editable) {
   }
   editor.value = new Editor({
-    content: json || "",
-    extensions:[
-      ...extensions,
+    content: json || '',
+    extensions: [
+      ...extensions
     ],
     onSelectionUpdate({ editor }) {
       const selection = editor.state.selection as any
@@ -98,10 +99,10 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
       }
       lastSelection.value = newSelectionData
     },
-    onCreate({editor}) {
+    onCreate({ editor }) {
       // update page setting base on normlizeOption
       console.log(editor)
-      if(normlizeOption.mode === 'PAGE' && normlizeOption?.pageSetting?.defaultMarginConfig) {
+      if (normlizeOption.mode === 'PAGE' && normlizeOption?.pageSetting?.defaultMarginConfig) {
         editor.commands.setDocumentPageMargins(normlizeOption?.pageSetting?.defaultMarginConfig)
       }
     }
@@ -121,15 +122,15 @@ function addVariable(variable: DocTemplateVariable) {
 function updateVariableNode(updateVariable: DocTemplateVariable) {
   switch (updateVariable.type) {
     case 'text':
-      return "variableText"
+      return 'variableText'
     case 'table':
-      return "variableTable"
+      return 'variableTable'
     case 'link':
-      return "variableLink"
+      return 'variableLink'
     case 'list':
-      return "variableList"
+      return 'variableList'
     case 'image':
-      return "image"
+      return 'image'
     default:
       throw new Error('Invalid variable type')
   }
@@ -137,11 +138,11 @@ function updateVariableNode(updateVariable: DocTemplateVariable) {
 
 function updateVariable(updateVariable: DocTemplateVariable) {
   // TODO: check if variable is in use, if in use, update node content
-  const index = variables.value.findIndex(v => v.name === updateVariable.name)
+  const index = variables.value.findIndex(v => v.id === updateVariable.id)
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
     const componentName = updateVariableNode(updateVariable)
-    if(componentName) {
+    if (componentName) {
       editor.value.commands.updateAttributes(componentName, updateVariable)
     }
     // TODO : get all node that type uis match with the variable type
@@ -151,6 +152,7 @@ function updateVariable(updateVariable: DocTemplateVariable) {
     console.error('Invalid update or variable not found:', updateVariable)
   }
 }
+
 function removeVariable(variable: DocTemplateVariable) {
   const index = variables.value.findIndex(v => v.name === variable.name)
   if (index !== -1) {
@@ -162,12 +164,23 @@ function handleInsertVariable(variable: any) {
   if (!editor.value) return
   let nodeType = ''
   switch (variable.type) {
-    case 'text': nodeType = 'variableText'; break
-    case 'list': nodeType = 'variableList'; break
-    case 'table': nodeType = 'variableTable'; break
-    case 'link': nodeType = 'variableLink'; break
-    case 'image': nodeType = 'image'; break // or your custom variableImage
-    default: return
+    case 'text':
+      nodeType = 'variableText'
+      break
+    case 'list':
+      nodeType = 'variableList'
+      break
+    case 'table':
+      nodeType = 'variableTable'
+      break
+    case 'link':
+      nodeType = 'variableLink'
+      break
+    case 'image':
+      nodeType = 'image'
+      break // or your custom variableImage
+    default:
+      return
   }
   editor.value.commands.insertContent({
     type: nodeType,
@@ -180,7 +193,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if(editor.value) {
+  if (editor.value) {
     editor.value.destroy()
   }
 })
@@ -215,10 +228,12 @@ provide(DocTemplateProveKey, {
   display: grid;
   grid-template-rows: min-content 1fr min-content;
 }
+
 .editorBody {
   flex: 1 0 auto;
   padding: var(--app-space-m);
   overflow: auto;
+
   :deep(.tiptap) {
     outline: none;
   }
@@ -232,6 +247,7 @@ provide(DocTemplateProveKey, {
   }
 
   /* Table-specific styling */
+
   table {
     border-collapse: collapse;
     margin: 0;
@@ -291,9 +307,11 @@ provide(DocTemplateProveKey, {
     cursor: ew-resize;
     cursor: col-resize;
   }
+
   [data-type='taskList'] {
     list-style: none;
     padding-inline-start: 0;
+
     li {
       > * {
         display: inline-block;

@@ -42,6 +42,7 @@ import VariableValueLink from './VariableValueLink.vue'
 import VariableValueImage from './VariableValueImage.vue'
 
 interface CreateVariableInput {
+  id: string
   name: string
   type: VariableType
   value: any
@@ -61,6 +62,7 @@ const variables = docTemplateCtx?.variables || []
 
 const formRef = ref<FormInstance>()
 const form = ref<CreateVariableInput | DocTemplateVariable>({
+  id: '',
   name: '',
   type: 'text',
   value: ''
@@ -89,7 +91,7 @@ function isNameUnique(name: string) {
   const arr = Array.isArray(variables) ? variables : variables?.value || []
 
   // check if the name is the same as the original name
-  if (props.mode === 'edit' && props.variable.name.toLowerCase() === name.toLowerCase()) {
+  if (props.mode === 'edit' && props.variable?.name?.toLowerCase() === name.toLowerCase()) {
     return true
   }
 
@@ -149,8 +151,9 @@ watch(() => props.variable, (val) => {
     form.value = { ...val, name: val.name ?? '', value: val.value ?? '' }
   } else {
     form.value = {
+      id: new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15),
       name: '',
-      type: 'text',
+      type: 'text' as VariableType,
       value: ''
     }
   }
