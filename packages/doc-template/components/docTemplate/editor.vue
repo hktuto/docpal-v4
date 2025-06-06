@@ -117,11 +117,37 @@ function addVariable(variable: DocTemplateVariable) {
   variables.value.push(variable)
   console.log('variables', variables.value)
 }
+
+function updateVariableNode(updateVariable: DocTemplateVariable) {
+  switch (updateVariable.type) {
+    case 'text':
+      return "variableText"
+    case 'table':
+      return "variableTable"
+    case 'link':
+      return "variableLink"
+    case 'list':
+      return "variableList"
+    case 'image':
+      return "image"
+    default:
+      throw new Error('Invalid variable type')
+  }
+}
+
 function updateVariable(updateVariable: DocTemplateVariable) {
   // TODO: check if variable is in use, if in use, update node content
   const index = variables.value.findIndex(v => v.name === updateVariable.name)
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
+
+    console.log("variables",variables.value)
+    const componentName = updateVariableNode(updateVariable)
+    if(componentName) {
+      editor.value.commands.updateAttributes(componentName, updateVariable)
+    }
+    // TODO : get all node that type uis match with the variable type
+    // and update the node content
   } else {
     // Show error to user
     console.error('Invalid update or variable not found:', updateVariable)
