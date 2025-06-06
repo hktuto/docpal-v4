@@ -23,8 +23,8 @@
       />
     </el-form-item>
     <div class="actions">
-      <el-button type="primary" @click="handleSubmit">{{ mode === 'create' ? 'Create' : 'Update' }}</el-button>
-      <el-button @click="handleCancel">Cancel</el-button>
+      <el-button id="Variable__Manage__Form__Submit" type="primary" @click="handleSubmit">{{ mode === 'create' ? 'Create' : 'Update' }}</el-button>
+      <el-button id="Variable__Manage__Form__Cancel" @click="handleCancel">Cancel</el-button>
     </div>
   </el-form>
 </template>
