@@ -2166,6 +2166,7 @@
       "actions": {
         "remove": "Remove"
       },
+      "addUser": "Select user to add to role",
       "addUserButton": "Add User to Role",
       "columns": {
         "email": "Email",

@@ -43,6 +43,7 @@ const emit = defineEmits<{
   (e: 'delete', id: string, data: OrgNode[]): void
   (e: 'add', formData: OrgNode, selectedNodeId: string): void
   (e: 'edit', formData: OrgNode, selectedNodeId: string): void
+  (e: 'reload'): void
 }>()
 
 const contextMenuVisible = ref(false)
@@ -51,8 +52,6 @@ const sidebarVisible = ref(false)
 const selectedNode = ref<OrgNode | null>(null)
 const isAddingNode = ref(false)
 const selectedCell = ref<any>(null)
-
-
 
 const containerRef = ref<HTMLDivElement | null>(null)
 const graphRef = ref<Graph | null>(null)
@@ -82,17 +81,17 @@ const hasCollision = (graph: Graph, x: number, y: number, excludeNode?: any) => 
 }
 
 // 找到可用的位置
-const findAvailablePosition = (graph: Graph, baseX: number, baseY: number, node: any) => {
-  let x = baseX
-  let y = baseY
+// const findAvailablePosition = (graph: Graph, baseX: number, baseY: number, node: any) => {
+//   let x = baseX
+//   let y = baseY
 
-  // 如果当前位置有碰撞，向右偏移直到找到可用位置
-  while (hasCollision(graph, x, y, node)) {
-    x += NODE_WIDTH + 20
-  }
+//   // 如果当前位置有碰撞，向右偏移直到找到可用位置
+//   while (hasCollision(graph, x, y, node)) {
+//     x += NODE_WIDTH + 20
+//   }
 
-  return { x, y }
-}
+//   return { x, y }
+// }
 
 const createGraph = () => {
   if (!containerRef.value) return
@@ -419,6 +418,7 @@ const handleDelete = () => {
 const closeSidebar = () => {
   sidebarVisible.value = false
   selectedNode.value = null
+  emit('reload')
 }
 
 // 处理保存
@@ -431,6 +431,7 @@ const handleSave = (formData: Partial<OrgNode>) => {
     // 更新现有节点
     emit('edit', formData, selectedNode.value.id)
   }
+  
   closeSidebar()
 }
 </script>

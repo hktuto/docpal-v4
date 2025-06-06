@@ -2164,6 +2164,7 @@
       "actions": {
         "remove": "移除"
       },
+      "addUser": "選擇要添加到角色的用戶",
       "addUserButton": "添加用戶到角色",
       "columns": {
         "email": "電郵",
