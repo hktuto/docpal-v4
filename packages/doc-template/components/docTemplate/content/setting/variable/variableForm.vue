@@ -63,7 +63,7 @@ const formRef = ref<FormInstance>()
 const form = ref<CreateVariableInput | DocTemplateVariable>({
   name: '',
   type: 'text',
-  value: '',
+  value: ''
 })
 
 const variableTypes: VariableType[] = ['text', 'list', 'table', 'link', 'image']
@@ -87,6 +87,12 @@ function isNameValid(name: string) {
 
 function isNameUnique(name: string) {
   const arr = Array.isArray(variables) ? variables : variables?.value || []
+
+  // check if the name is the same as the original name
+  if (props.mode === 'edit' && props.variable.name.toLowerCase() === name.toLowerCase()) {
+    return true
+  }
+
   return !arr.some((v: any) => {
     const vName = v.name ?? ''
     const vKey = v.key ?? ''
@@ -96,34 +102,42 @@ function isNameUnique(name: string) {
 
 const valueEditorComponent = computed(() => {
   switch (form.value.type) {
-    case 'text': return VariableValueText
-    case 'list': return VariableValueList
-    case 'table': return VariableValueTable
-    case 'link': return VariableValueLink
-    case 'image': return VariableValueImage
-    default: return VariableValueText
+    case 'text':
+      return VariableValueText
+    case 'list':
+      return VariableValueList
+    case 'table':
+      return VariableValueTable
+    case 'link':
+      return VariableValueLink
+    case 'image':
+      return VariableValueImage
+    default:
+      return VariableValueText
   }
 })
 
 const rules = computed<FormRules>(() => ({
   name: [
     { required: true, message: 'Name is required', trigger: 'blur' },
-    { validator: (_rule: any, value: string, callback: any) => {
-      if (!isNameValid(value)) {
-        callback(new Error('Name can only contain letters, numbers, and underscores'))
-      } else if (!isNameUnique(value)) {
-        callback(new Error('Name must be unique'))
-      } else {
-        callback()
-      }
-    }, trigger: 'blur' },
+    {
+      validator: (_rule: any, value: string, callback: any) => {
+        if (!isNameValid(value)) {
+          callback(new Error('Name can only contain letters, numbers, and underscores'))
+        } else if (!isNameUnique(value)) {
+          callback(new Error('Name must be unique'))
+        } else {
+          callback()
+        }
+      }, trigger: 'blur'
+    }
   ],
   type: [
-    { required: true, message: 'Type is required', trigger: 'change' },
+    { required: true, message: 'Type is required', trigger: 'change' }
   ],
   value: [
-    { required: true, message: 'Value is required', trigger: 'blur' },
-  ],
+    { required: true, message: 'Value is required', trigger: 'blur' }
+  ]
 }))
 
 function isDocTemplateVariable(obj: any): obj is DocTemplateVariable {
@@ -131,13 +145,13 @@ function isDocTemplateVariable(obj: any): obj is DocTemplateVariable {
 }
 
 watch(() => props.variable, (val) => {
-  if (props.mode === 'edit' && val ) {
+  if (props.mode === 'edit' && val) {
     form.value = { ...val, name: val.name ?? '', value: val.value ?? '' }
   } else {
     form.value = {
       name: '',
       type: 'text',
-      value: '',
+      value: ''
     }
   }
 }, { immediate: true })
@@ -154,6 +168,7 @@ async function handleSubmit() {
     console.error(error)
   }
 }
+
 function handleCancel() {
   emit('cancel')
 }
