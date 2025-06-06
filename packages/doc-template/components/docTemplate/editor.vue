@@ -140,8 +140,6 @@ function updateVariable(updateVariable: DocTemplateVariable) {
   const index = variables.value.findIndex(v => v.name === updateVariable.name)
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
-
-    console.log("variables",variables.value)
     const componentName = updateVariableNode(updateVariable)
     if(componentName) {
       editor.value.commands.updateAttributes(componentName, updateVariable)
