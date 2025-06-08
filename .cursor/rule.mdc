@@ -1,5 +1,5 @@
 ---
-description: 
+description: DocPal Best partices
 globs: 
 alwaysApply: false
 ---
@@ -83,6 +83,8 @@ DocPal V5 is a modern, modular document management platform designed for enterpr
 - Prefer function declarations over arrow function consts for top-level functions.
 - Always use `v-tooltip` for tooltips when a tooltip is needed.
 - Always review i18n option in page if any thing updated.
+- in .vue file always keep in these order script -> template -> style
+- Always use the `useVxeTable` composable for all table/grid implementations. Do not use Element Plus or other table components directly; wrap all table logic and configuration in `useVxeTable` for consistency, maintainability, and access to advanced features.
 
 ---
 
@@ -103,4 +105,72 @@ DocPal V5 is a modern, modular document management platform designed for enterpr
 - Use camelCase for variable and function names.
 - Use PascalCase for component and class names.
 - Use kebab-case for file names.
+
+## Table Filtering
+Always use the ResponsiveFilter component for table filtering functionality. This ensures consistent UI/UX and responsive behavior across the application.
+
+### Example Implementation:
+  ```vue
+  <template>
+    <vxe-grid>
+      <template #toolbar_buttons>
+        <ResponsiveFilter 
+          ref="filterRef" 
+          inputKey="q" 
+          @form-change="handleFilterFormChange" 
+        />
+      </template>
+    </vxe-grid>
+  </template>
+
+  <script setup>
+  import { ResponsiveFilter } from '#components'
+
+  const filterRef = ref()
+
+  // Initialize filters in onMounted
+  onMounted(() => {
+    filterRef.value.init([
+      {
+        label: "Status",
+        key: "status",
+        isMultiple: false,
+        options: [
+          { label: "Active", value: 1 },
+          { label: "Inactive", value: 3 }
+        ]
+      },
+      {
+        label: "Parent Role",
+        key: "parentRoleName",
+        isMultiple: true,
+        options: [
+          { label: "No Parent", value: "noParent" },
+          { label: "Has Parent", value: "hasParent" }
+        ]
+      }
+    ])
+  })
+
+  // Handle filter changes
+  function handleFilterFormChange(form: any) {
+    searchQuery.value = form
+    debouncedReload()
+  }
+  </script>
+  ```
+### Key Points:
+1. Use ResponsiveFilter component for all table filtering
+2. Initialize filters in onMounted hook
+3. Handle filter changes through form-change event
+4. Use proper filter configuration with labels, keys, and options
+5. Support both single and multiple select filters
+6. Include search functionality with inputKey
+
+### Benefits:
+- Consistent UI/UX across the application
+- Responsive design that adapts to available space
+- Built-in support for multiple filter types
+- Automatic handling of filter overflow
+- Integrated search functionality
 
