@@ -4,32 +4,65 @@ import { adminApi } from 'api'
 import { useVxeTable } from '#imports'
 import { useDebounceFn } from '@vueuse/core'
 import {ResponsiveFilter} from '#components'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
+
+interface Role {
+  id: number
+  name: string
+  parentRoleId?: number
+  status: number
+}
 
 // default search value
-const searchQuery = ref({
+const searchQuery = ref<{
+  q?: string
+  sort_by?: string
+  sort_type?: string
+  status?: number
+  parentRoleName?: string
+}>({
   sort_by: "updateTime",
-  sort_type: "DESC"
+  sort_type: "DESC",
+  status: 1,
 })
 const ResponsiveFilterRef = ref()
 
+function handleEdit(row: Role) {
+  editDialogRef.value.open({
+    id: row.id,
+    name: row.name,
+    parentId: row.parentId,
+    status: row.status
+  })
+}
 // Define table actions
 const bodyActions: TableMenuActions[][] = [
   [
     {
       code: 'edit',
-      name: 'Edit',
-      action: ({ row }) => {
-        // Handle edit action
-        console.log('Edit role:', row)
+      name: t('actions.edit'),
+      action: ({ row }: { row: Role }) => {
+        handleEdit(row)
       }
     },
     {
-      code: 'delete',
-      name: 'Delete',
-      action: ({ row }) => {
-        // Handle delete action
-        console.log('Delete role:', row)
+      code: 'toggle-status',
+      name: t('actions.active') + '/' + t('actions.inactive'),
+      action: async ({ row }: { row: Role }) => {
+        try {
+          await adminApi.api.putAclRole({
+            id: String(row.id),
+            name: row.name,
+            parentId: row.parentRoleId ? String(row.parentRoleId) : undefined,
+            status: row.status === 1 ? 3 : 1,
+            type: 1
+          })
+          reload()
+        } catch (error) {
+          console.error('Failed to toggle role status:', error)
+        }
       }
     }
   ]
@@ -65,7 +98,7 @@ const {
       conditions.push({
         column: 'status',
         type: "EQ",
-        values: searchQuery.value.status
+        values: String(searchQuery.value.status)
       })
     }
 
@@ -92,27 +125,30 @@ const {
   columns: [
     {
       field: 'name',
-      title: 'Name'
+      title: 'tableHeader_name'
     },
     {
       field: 'parentRoleName',
-      title: 'Parent'
+      title: 'orgChart.editSidebar.parentRole'
     },
     {
       field: 'status',
-      title: 'Status',
+      title: 'tableHeader_status',
       formatter: ({ cellValue }) => {
-        return cellValue === 1 ? 'Active' : 'Inactive'
+        return cellValue === 1 ? t('actions.active') : t('actions.inactive')
       }
     },
     {
       field: 'updateTime',
-      title: 'Modify Date',
+      title: 'tableHeader_lastModified',
       formatter: ({ cellValue }) => {
         return formatDate(cellValue)
       }
     }
   ],
+  dblClickAction({ row, column, event }) {
+    handleEdit(row)
+  },
   bodyActions,
   saveColumnOrder: true,
   zoom: true,
@@ -128,75 +164,73 @@ const {
   }
 })
 
-
+const { flatRole } = useRBAC()
 async function initFilter() {
+  
   ResponsiveFilterRef.value.init([
     {
-      label: "Status",
+      label: t('tableHeader_status'),
       key: "status",
       isMultiple: false,
+      value: [1],
       options: [
         {
-          label: "Active",
+          label: t('actions.active'),
           value: 1
         },
         {
-          label: "Inactive",
+          label: t('actions.inactive'),
           value: 3
         }
       ]
     },
     {
-      label: "Parent Role",
+      label: t('orgChart.editSidebar.parentRole'),
       key: "parentRoleName",
       isMultiple: false,
       options: [
-        {
-          label: "CEO",
-          value: "CEO"
-        },
-        {
-          label: "CTO",
-          value: "CTO"
-        }
+        ...flatRole.value.map((role) => ({
+          label: role.name,
+          value: role.id
+        }))
       ]
     },
     {
-      label:"sort_by",
+      label: t('tableHeader.sortBy'),
       key: "sort_by",
       isMultiple: false,
       value: ["updateTime"],
       options: [
         {
-          label: "Name",
+          label: t('tableHeader_name'),
           value: "name"
         },
         {
-          label: "Modify Date",
+          label: t('tableHeader_lastModified'),
           value: "updateTime"
         },
         {
-          label: "Parent",
+          label: t('orgChart.editSidebar.parentRole'),
           value: "parentRoleName"
         },
         {
-          label: "Status",
+          label: t('tableHeader_status'),
           value: "status"
         }
       ]
     },
     {
-      label:"sort_type",
+      label: t('tableHeader.sortOrder'),
       key: "sort_type",
       isMultiple: false,
       value: ["DESC"],
       options: [
         {
-          label: "Asc",
+          label: t('tableHeader.asc'),
           value: "ASC",
         },
         {
-          label: "Desc",
+          label: t('tableHeader.desc'),
           value: "DESC",
         }
       ]
@@ -218,8 +252,11 @@ onMounted(async () => {
   await initFilter()
 })
 
+// open create dialog
+const createDialogRef = ref()
+const editDialogRef = ref()
 function handleAddRole() {
-  console.log("add role")
+  createDialogRef.value.open()
 }
 </script>
 
@@ -232,12 +269,13 @@ function handleAddRole() {
     >
       <template #toolbar_buttons>
         <div class="tableActions">
-
           <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" />
-          <ElButton type="primary" @click="handleAddRole">Add Role</ElButton>
+          <ElButton type="primary" @click="handleAddRole">{{ t('common_add') }}</ElButton>
         </div>
       </template>
     </vxe-grid>
+    <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="reload" />
+    <RbacEditRoleSidebar ref="editDialogRef" :roleOptions="flatRole" @success="reload" />
   </div>
 </template>
 

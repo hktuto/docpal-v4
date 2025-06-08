@@ -1,83 +1,60 @@
-
-type User = {
-  username: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  role: string,
-}
-
-export const useUserList = () => useState<User[]>('userList', () => ([
-]))
-
-type Role = {
-  label: string,
-  category?: string,
-  child: Role[]
-}
+import { adminApi } from "api";
+import type { OrgNode } from '../components/rbac/OrgChart/X6/types'
+const useRoleTree = () => useState<OrgNode[]>('role-tree', () => ([]))
+const useFlatRole = () => useState<any[]>('flat-role', () => ([]))
+export const useRBAC = (roleIds?: string | string[]) => {
 
 
-export const useRoleList = () => useState<Role[]>('userRole', () => ([]))
+  const loading = ref(false)
+  const roleTree = useRoleTree()
+  const flatRole = useFlatRole()
 
 
-export const useRBAC = () => {
-
-  const roles = useRoleList()
-  const users = useUserList()
-
-  const flatRole = useState<string[]>('flatRole', () => ([]))
-  const right = [
-    {
-      title: "Read",
-      field: "permission.read",
-      slots:{
-        default:"read"
+  async function getRoleTree() {
+    loading.value = true
+    try{
+      if(roleIds) {
+        const roleIdArray = Array.isArray(roleIds) ? roleIds : [roleIds]
+        // normalize roleIds to array
+        const data = await adminApi.api.postAclRoleHierarchy(roleIdArray)
+        .then((res) => res.data) as OrgNode[]
+        roleTree.value = data
+      }else{
+        const data = await adminApi.api.getAclRoleRoot()
+        .then((res) => res.data) as OrgNode[]
+        roleTree.value = [data]
       }
-    },
-    {
-      title: "ReadWrite",
-      field: "permission.readWrite",
-      slots:{
-        default:"readWrite"
-      }
-    },
-    {
-      title: "Manage",
-      field: "permission.manage",
-      slots:{
-        default:"manage"
-      }
+      flatRole.value = makeFlapRoleList([...roleTree.value])
+    }catch(error){
+      console.error(error)
+    }finally{
+      loading.value = false
     }
-  ]
-  function init(){
-    const localRole = localStorage.getItem('demo_role')
-    if(localRole){
-      roles.value = JSON.parse(localRole)
-    }else{
-      seedRole()
-    }
-    const localUser = localStorage.getItem('demo_user')
-    if(localUser){
-      users.value = JSON.parse(localUser)
-    }else{
-      seedUser()
-    }
-    flatRole.value = flatMap(roles.value)
-    save();
   }
 
-  
-
-  function save(){
-    localStorage.setItem('demo_role', JSON.stringify(roles.value))
-    localStorage.setItem('demo_user', JSON.stringify(users.value))
+  function makeFlapRoleList(data: OrgNode[], roleList: any[] = []) {
+    console.log(data)
+    data.forEach(node => {
+      roleList.push(node)
+      if (node.children) {
+        makeFlapRoleList(node.children, roleList)
+      }
+    })
+    return roleList
   }
+
+  onMounted(async () => {
+    if(roleTree.value.length === 0) {
+      await getRoleTree()
+    }
+  })
+
 
   return {
-    save,
-    init,
-    right,
-    flatRole
+    getRoleTree,
+    roleTree,
+    flatRole,
+    loading
   }
 
 }
