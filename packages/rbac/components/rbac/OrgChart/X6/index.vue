@@ -2,7 +2,8 @@
   <div class="chart-container" :style="{ '--node-width': `${NODE_WIDTH}px`, '--node-height': `${NODE_HEIGHT}px` }">
     <div ref="containerRef" style="width: 100%; height: 100%" @contextmenu.prevent />
     <RbacOrgChartX6ContextMenu :visible="contextMenuVisible" :position="contextMenuPosition" @edit="handleEdit" @add="handleAdd" @delete="handleDelete" />
-    <RbacOrgChartX6EditSidebar :visible="sidebarVisible" :node-data="selectedNode" :is-add="isAddingNode" @close="closeSidebar" @save="handleSave" />
+    <RbacEditRoleSidebar ref="editRoleSidebarRef" :roleOptions="flatRole"   @close="closeSidebar" @save="handleSave" />
+    <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="closeSidebar" />
   </div>
 </template>
 
@@ -15,6 +16,9 @@ import type { PropType } from 'vue'
 import OrgChartNodePerson from './nodes/person.vue'
 import './styles.css'
 
+const { flatRole } = useRBAC()
+const createDialogRef = ref()
+const editRoleSidebarRef = ref()
 
 interface OrgNode {
   id: string
@@ -97,7 +101,7 @@ const createGraph = () => {
   if (!containerRef.value) return
 
   const graph = new Graph({
-    container: containerRef.value,
+    container: containerRef.value as HTMLElement,
     grid: {
       visible: true,
       type: 'mesh',
@@ -154,64 +158,6 @@ const createGraph = () => {
   graphRef.value = graph
   return graph
 }
-
-/**
- * @deprecated
- * old logic for reference, should remove it after new logic is verified
- *
- */
-// const renderTree = (graph: Graph, nodeData: OrgNode, parentNode?: any, x = 300, y = 50) => {
-//   // 找到可用位置
-//   const { x: availableX, y: availableY } = findAvailablePosition(graph, x, y, null)
-
-//   const node = graph.addNode({
-//     x: availableX,
-//     y: availableY,
-//     shape: 'org-node-person',
-//     data: {
-//       ...nodeData,
-//       style: { ...props.nodeStyle, ...nodeData.style },
-//       collapsed: nodeData.collapsed || false
-//     }
-//   })
-
-//   if (parentNode) {
-//     graph.addEdge({
-//       source: parentNode,
-//       target: node,
-//       connector: {
-//         name: 'rounded'
-//       },
-//       attrs: {
-//         line: {
-//           stroke: '#8f8f8f',
-//           strokeWidth: 1,
-//           targetMarker: null,
-//           sourceMarker: null
-//         }
-//       },
-//       router: {
-//         name: 'er',
-//         args: {
-//           direction: 'V'
-//         }
-//       }
-//     })
-//   }
-
-//   if (nodeData.children && !nodeData.collapsed) {
-//     const childWidth = NODE_WIDTH + VERTICAL_GAP // 节点宽度 + 间距
-//     const startX = availableX - ((nodeData.children.length - 1) * childWidth) / 2
-
-//     nodeData.children.forEach((child, index) => {
-//       const baseChildX = startX + index * childWidth
-//       renderTree(graph, child, node, baseChildX, availableY + NODE_HEIGHT + VERTICAL_GAP)
-//     })
-//   }
-
-//   return node
-// }
-// end of old logic
 
 /**
  *  init graph
@@ -292,11 +238,6 @@ const initGraph = () => {
   
   
   graph.fromJSON(layoutData);
-  // Keep old logic for reference
-  // props.data.forEach((rootNode, index) => {
-  //   const startX = 300 + index * (NODE_WIDTH + VERTICAL_GAP)
-  //   renderTree(graph, rootNode, undefined, startX, 50)
-  // })
 
   // Center and fit content
   graph.centerContent()
@@ -322,15 +263,6 @@ watch(
     initGraph()
   },
   { deep: true, immediate: true }
-)
-
-// Watch for nodeStyle changes
-watch(
-  () => props.nodeStyle,
-  () => {
-    initGraph()
-  },
-  { deep: true }
 )
 
 // 处理右键菜单
@@ -367,11 +299,13 @@ const closeContextMenu = () => {
 // 处理编辑
 const handleEdit = () => {
   isAddingNode.value = false
-  sidebarVisible.value = true
   const parentNode = findNodeById(props.data, selectedNode.value.parentId)
   if (!!parentNode) {
     selectedNode.value.parentName = parentNode.name
   }
+  editRoleSidebarRef.value.open({
+    ...selectedNode.value
+  })
   closeContextMenu()
 }
 
@@ -379,10 +313,10 @@ const handleEdit = () => {
 const handleAdd = () => {
   isAddingNode.value = true
   sidebarVisible.value = true
-  selectedNode.value = {
+  createDialogRef.value.open({
     parentName: selectedNode.value.name,
     parentId: selectedNode.value.id,
-  }
+  })
   closeContextMenu()
 }
 
@@ -424,14 +358,7 @@ const closeSidebar = () => {
 // 处理保存
 const handleSave = (formData: Partial<OrgNode>) => {
   if (!selectedNode.value || !selectedCell.value) return
-  if (isAddingNode.value) {
-    console.log('add', formData, selectedNode.value.parentId)
-    emit('add', formData, selectedNode.value.parentId)
-  } else {
-    // 更新现有节点
-    emit('edit', formData, selectedNode.value.id)
-  }
-  
+ 
   closeSidebar()
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="pageContainer--padding">
     <el-tabs class="dp-tabs--auto" v-model="activeName">
       <el-tab-pane label="Graph" name="graph">
-        <RbacOrgChart v-if="activeName === 'Graph'" />
+        <RbacOrgChart v-if="activeName === 'graph'" />
       </el-tab-pane>
       <el-tab-pane label="Table" name="table">
         <RbacTable v-if="activeName === 'table'" />
@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-const activeName = ref('Graph')
+const activeName = ref('graph')
 </script>
 
 <style lang="scss" scoped>

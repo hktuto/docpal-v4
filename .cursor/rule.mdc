@@ -28,7 +28,7 @@ DocPal V5 is a modern, modular document management platform designed for enterpr
 - Example:
   ```scss
   // Primary brand color
-  --dp-primary-color: #409eff;
+  --app-primary-color: #409eff;
   ```
 
 ---
@@ -96,6 +96,7 @@ DocPal V5 is a modern, modular document management platform designed for enterpr
 
 ## Forms
 - Use Element Plus form components for all forms unless using FormRenderer.
+- Always set label position to top in ElForm /el-form.
 - If using FormRenderer, refer to [vform3 documentation](mdc:https:/www.yuque.com/visualdev/vform3).
 
 ---

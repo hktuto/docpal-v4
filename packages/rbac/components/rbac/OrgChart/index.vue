@@ -129,42 +129,20 @@ async function handleAdd(formData: OrgNode, selectedNodeId: string) {
 const handleNodeClick = (node: OrgNode) => {
   console.log('Clicked node:', node)
 }
-const flapRoleList = ref([])
-function makeFlapRoleList(data: OrgNode[], roleList= []) {
-  data.forEach(node => {
-    roleList.push(node)
-    if (node.children) {
-      makeFlapRoleList(node.children, roleList)
-    }
-  })
-  return roleList
-}
+
 const handleDataUpdate = (newData: OrgNode[]) => {
   roleData.value = newData
 }
 const loading = ref(false)
+const flapRoleList = ref<any[]>([])
 async function initData() {
-  try{
-    loading.value = true
-    if (props.roleIds) {
-      const data = await adminApi.api.postAclRoleHierarchy(props.roleIds)
-      .then((res) => res.data) as OrgNode[]
-      roleData.value = data
-      return
-    } else {
-      let data = await adminApi.api.getAclRoleRoot()
-      .then((res) => res.data)
-      if(!data) roleData.value = []
-      else roleData.value = [data]
-    }
-  } catch (error) {
-    throw new Error('Failed to get role hierarchy: ' + error)
-  } finally {
-    flapRoleList.value = makeFlapRoleList(roleData.value)
-    loading.value = false
-  }
-  // if roleIds is provided , that means the data return is a list of roleIds
+  const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleIds)
+  loading.value = true
+  await getRoleTree()
   
+  roleData.value = roleTree.value
+  flapRoleList.value = flatRole.value
+  loading.value = false
 }
 onMounted(async () => {
   initData()
