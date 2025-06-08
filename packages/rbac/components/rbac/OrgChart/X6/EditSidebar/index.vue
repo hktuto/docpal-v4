@@ -23,7 +23,7 @@
             :label="$t('orgChart.editSidebar.parentRole')"
             prop="parentId" 
           >
-            <el-select v-model="formData.parentId" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" filterable >
+            <el-select v-model="formData.parentId" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" disabled>
               <el-option v-for="item in flapRoleList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
             <!-- <el-input v-model="nodeData.parentName" :disabled="true" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" /> -->
@@ -112,7 +112,7 @@ const handleSave = async () => {
   try {
     await formRef.value.validate()
     emit('save', {
-      ...formData.value,
+      id: props.nodeData?.id,
       name: formData.value.name.trim()
     })
   } catch (error) {
