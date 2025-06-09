@@ -62,6 +62,7 @@ export interface DocTemplateProvider {
   initEditor: (options: TipTapOptions) => void,
   lastSelection: Ref<LastSelection | null | undefined>,
   variables: Ref<DocTemplateVariable[]>,
+  setVariables: (variables: DocTemplateVariable[]) => void,
   addVariable: (variable: DocTemplateVariable) => void,
   removeVariable: (variable: DocTemplateVariable) => void,
   updateVariable?: (variable: DocTemplateVariable) => void

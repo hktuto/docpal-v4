@@ -85,7 +85,7 @@ function handleExportDropdown(command: 'html' | 'pdf' | 'docx' | 'json') {
 }
 
 function openDialog() {
-  const json = getJsonConfig([])
+  const json = getJsonConfig([...variables.value])
   const textContent = JSON.stringify(json)
   state.visible = true
   state.loading = true

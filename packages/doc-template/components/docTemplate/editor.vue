@@ -19,6 +19,8 @@ const props = defineProps<{
 }>()
 const { variables } = toRefs(props)
 
+const emit = defineEmits(['update:variables'])
+
 const options = ref<TipTapOptions>({
   mode: 'PAGE',
   pageSetting: { ...defaultPageSetting },
@@ -61,6 +63,10 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   }
   const normlizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normlizeOption)
+  if(variables.value.length > 0) {
+    // TODO : set Variables to json
+
+  }
   if (initOptions.editable) {
   }
   editor.value = new Editor({
@@ -114,8 +120,7 @@ function addVariable(variable: DocTemplateVariable) {
   if (!validateVariable(variable)) {
     throw new Error('Invalid variable', variable)
   }
-  variables.value.push(variable)
-  console.log('variables', variables.value)
+  emit('update:variables', [...variables.value, variable])
 }
 
 function updateVariable(updateVariable: DocTemplateVariable) {
@@ -124,6 +129,7 @@ function updateVariable(updateVariable: DocTemplateVariable) {
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
     const editorJson = editor.value.getJSON()
+    setVariables(variables.value)
     editorJson.content = replaceVariables(editorJson.content, variables.value)
     initEditor(options.value, editorJson)
   } else {
@@ -131,12 +137,13 @@ function updateVariable(updateVariable: DocTemplateVariable) {
     console.error('Invalid update or variable not found:', updateVariable)
   }
 }
+function setVariables(newVariables: DocTemplateVariable[]) {
+  emit('update:variables', newVariables)
+}
 
 function removeVariable(variable: DocTemplateVariable) {
-  const index = variables.value.findIndex(v => v.name === variable.name)
-  if (index !== -1) {
-    variables.value.splice(index, 1)
-  }
+  const newVariables = variables.value.filter(v => v.name !== variable.name)
+  setVariables(newVariables)
 }
 
 function handleInsertVariable(variable: any) {
@@ -182,6 +189,7 @@ provide(DocTemplateProveKey, {
   options,
   initEditor,
   variables,
+  setVariables,
   addVariable,
   removeVariable,
   lastSelection,
