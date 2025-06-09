@@ -2,7 +2,7 @@
   <div class="sidebar-overlay" v-if="dialogVisible" @click.self="handleCancel">
     <div class="sidebar">
       <div class="sidebar-header">
-        <h3>{{ $t('orgChart.editSidebar.editRole') }}</h3>
+        <h3>{{ formData.type === 1 ? $t('orgChart.editSidebar.editRole') : $t('orgChart.editSidebar.editGroup') }}</h3>
         <el-button class="close-btn" link @click="handleCancel">×</el-button>
       </div>
       <div class="sidebar-content">
@@ -17,7 +17,11 @@
             <el-input v-model="formData.name" :placeholder="$t('orgChart.editSidebar.rolePlaceholder')" />
           </el-form-item>
 
-          <el-form-item :label="$t('orgChart.editSidebar.parentRole')" prop="parentId">
+          <el-form-item 
+            v-if="formData.type === 1"
+            :label="$t('orgChart.editSidebar.parentRole')" 
+            prop="parentId"
+          >
             <el-select
               v-model="formData.parentId"
               :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')"
@@ -44,6 +48,7 @@
           :role-id="String(formData.id)" 
           v-if="dialogVisible"
           :isAdd="false"
+          :type="formData.type"
           @update="handleUsersUpdate"
         />
       </div>
@@ -72,6 +77,7 @@ interface RoleFormData {
   parentId?: number
   status: number
   users?: any[]
+  type: number
 }
 
 const props = defineProps<{
@@ -91,7 +97,8 @@ const formData = reactive<RoleFormData>({
   id: 0,
   name: '',
   parentId: undefined,
-  status: 1
+  status: 1,
+  type: 1
 })
 
 const rules = {
@@ -115,6 +122,7 @@ function resetForm() {
   formData.parentId = undefined
   formData.status = 1
   formData.users = undefined
+  formData.type = 1
 }
 
 function open(role: RoleFormData) {
@@ -135,7 +143,7 @@ async function handleSubmit() {
       ...formData,
       id: String(formData.id),
       parentId: formData.parentId ? String(formData.parentId) : undefined,
-      type: 1 // Assuming 1 is the type for regular roles
+      type: formData.type
     })
     
     dialogVisible.value = false

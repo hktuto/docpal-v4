@@ -1,0 +1,36 @@
+---
+description: clean up compent and ensure code quatily
+globs: 
+alwaysApply: false
+---
+## Code Style
+- Use 2 spaces for indentation.
+- Use camelCase for variable and function names.
+- Use PascalCase for component and class names.
+- Use kebab-case for file names.
+
+## review rule
+
+- Always write correct, best practice, DRY, bug-free, fully functional, and working code.
+- Prioritize easy-to-read code over performance.
+- Use early returns for readability.
+- Always use SCSS for styling.
+- Always use `<script setup lang="ts">` for Vue components.
+- Use descriptive variable and function names. Event handlers should be prefixed with `handle`, e.g., `handleClick`.
+- Implement accessibility features (e.g., `tabindex="0"`, `aria-label`, `@click`, `@keydown`). Example:
+  ```vue
+  <a
+    tabindex="0"
+    aria-label="Open document"
+    @click="handleClick"
+    @keydown.enter="handleClick"
+  >Open</a>
+  ```
+- Prefer function declarations over arrow function consts for top-level functions.
+- Always use `v-tooltip` for tooltips when a tooltip is needed.
+- Always review i18n option in page if any thing updated.
+- in .vue file always keep in these order script -> template -> style
+- Always use the `useVxeTable` composable for all table/grid implementations. Do not use Element Plus or other table components directly; wrap all table logic and configuration in `useVxeTable` for consistency, maintainability, and access to advanced features.
+- Make sure all i18n key are collect and exsit, if not update i18n file in /libraries/deployment/src/
+
+- ALways create new git commit after i18n file change

@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    :title="$t('orgChart.userTable.addUser')"
+    :title="type === 1 ? $t('orgChart.userTable.addUserToRole') : $t('orgChart.userTable.addUserToGroup')"
     width="500px"
     @close="handleClose"
   >
@@ -9,7 +9,7 @@
       <el-select-v2
         v-model="selectedUsers"
         :options="users"
-        :placeholder="$t('orgChart.userTable.addUser')"
+        :placeholder="type === 1 ? $t('orgChart.userTable.addUserToRole') : $t('orgChart.userTable.addUserToGroup')"
         filterable
         multiple
         class="filter-input"
@@ -30,10 +30,17 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { adminApi } from 'api'
+import { ElNotification } from 'element-plus'
+
+interface UserOption {
+  label: string
+  value: string
+}
 
 const props = defineProps<{
   modelValue: boolean
   roleId: string
+  type: number
 }>()
 
 const emit = defineEmits<{
@@ -44,11 +51,10 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const dialogVisible = ref(props.modelValue)
 const selectedUsers = ref<string[]>([])
-const users = ref<any[]>([])
+const users = ref<UserOption[]>([])
 
 watch(() => props.modelValue, async(newVal) => {
   dialogVisible.value = newVal
-  console.log('newVal', newVal)
   if (newVal) {
     await loadUsers()
   }
@@ -60,15 +66,27 @@ watch(dialogVisible, (newVal) => {
 
 const loadUsers = async () => {
   try {
-    const data = await adminApi.api.getAclRoleUsersDropdown({
-      roleId: props.roleId
-    }).then(res => res.data)
-    users.value = data.map((item: any) => ({
-      label: item.username,
-      value: item.id
-    }))
-  } catch(error) {
+    const response = await adminApi.api.getAclRoleUsersDropdown({
+      params: {
+        roleId: props.roleId
+      } 
+    } as any)
+    
+    if (response && Array.isArray(response)) {
+      users.value = response.map((item) => ({
+        label: item.username || '',
+        value: item.id || ''
+      }))
+    } else {
+      throw new Error('Invalid response format')
+    }
+  } catch (error) {
     console.error('Failed to fetch role users:', error)
+    ElNotification({
+      title: t('commons_error'),
+      message: t('common_fetchFail'),
+      type: 'error'
+    })
   }
 }
 

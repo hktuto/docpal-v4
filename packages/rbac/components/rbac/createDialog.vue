@@ -17,7 +17,11 @@
         <el-input v-model="formData.name" :placeholder="$t('orgChart.editSidebar.rolePlaceholder')" />
       </el-form-item>
 
-      <el-form-item :label="$t('orgChart.editSidebar.parentRole')" prop="parentRoleId">
+      <el-form-item 
+        v-if="formData.type === 1"
+        :label="$t('orgChart.editSidebar.parentRole')" 
+        prop="parentRoleId"
+      >
         <el-select
           v-model="formData.parentId"
           :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')"
@@ -56,6 +60,7 @@ interface RoleFormData {
   name: string
   parentId?: number
   status: number
+  type: number
 }
 
 const props = defineProps<{
@@ -73,7 +78,8 @@ const formRef = ref<FormInstance>()
 const formData = reactive<RoleFormData>({
   name: '',
   parentId: undefined,
-  status: 1 // Always active for new roles
+  status: 1, // Always active for new roles
+  type: 1 // Default type is 1
 })
 
 const rules = {
@@ -90,13 +96,15 @@ function resetForm() {
   formData.name = ''
   formData.parentId = undefined
   formData.status = 1 // Reset to active
+  formData.type = 1 // Reset to default type
 }
 
 function open(defaultValues?: Partial<RoleFormData>) {
   resetForm()
   if (defaultValues) {
     formData.parentId = defaultValues.parentId
-    formData.status = 1;
+    formData.status = 1
+    formData.type = defaultValues.type ?? 1
   }
   dialogVisible.value = true
 }
@@ -112,7 +120,7 @@ async function handleSubmit() {
       name: formData.name,
       parentId: formData.parentId?.toString(),
       status: formData.status,
-      type: 1 // Assuming 1 is the type for regular roles
+      type: formData.type
     })
     
     dialogVisible.value = false

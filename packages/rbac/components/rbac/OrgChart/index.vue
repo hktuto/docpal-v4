@@ -5,7 +5,12 @@
       <div class="flex-x-center">
         <el-button type="primary" @click="sidebarVisibleChange(true)">{{ $t('orgChart.add') }}</el-button>
       </div>
-      <RbacOrgChartX6EditSidebar :visible="sidebarVisible" :is-add="true" @close="sidebarVisibleChange(false)" @save="handleAdd" />
+      <RbacOrgChartX6EditSidebar 
+        :visible="sidebarVisible" 
+        :is-add="true" 
+        @close="sidebarVisibleChange(false)" 
+        @save="handleAdd" 
+      />
     </template>
     <RbacOrgChartX6
       v-else
@@ -22,19 +27,29 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, onMounted, provide } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { ElNotification } from 'element-plus'
 import type { OrgNode } from './X6/types'
 import { adminApi } from 'api'
-const props = defineProps<{
+import { useRBAC } from '../../../composables/useRBAC'
+
+interface Props {
   roleIds?: string[]
-}>()
+}
+
+const props = defineProps<Props>()
+
+const { t } = useI18n()
+
 const defaultNodeStyle = {
   boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
 }
+
 const sidebarVisible = ref(false)
 const roleData = ref<OrgNode[]>([])
-let uuid = 0
-
+const loading = ref(false)
+const flapRoleList = ref<any[]>([])
 
 function sidebarVisibleChange(visible: boolean) {
   sidebarVisible.value = visible
@@ -59,100 +74,129 @@ function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
 }
 
 async function handleDelete(deleteId: string, newNodes: OrgNode[]) {
-  // status:3-逻辑删除
-  await adminApi.api
-    .putAclRole({
+  try {
+    await adminApi.api.putAclRole({
       id: deleteId,
-      status: 3
+      status: 3 // status:3-逻辑删除
     })
-    .then((res) => res.data)
-    .catch((err) => {
-      throw new Error('Failed to delete role: ' + err)
+    
+    roleData.value = newNodes
+    ElNotification({
+      title: t('commons_success'),
+      message: t('common_deleteSuccess'),
+      type: 'success'
     })
-  roleData.value = newNodes
-}
-async function handleEdit(formData: OrgNode, selectedNodeId: string) {
-  console.log('handleEdit', formData)
-  const dataNode = findNodeById(roleData.value, selectedNodeId)
-  if (!dataNode) {
-    throw new Error('Node not found : ' + selectedNodeId)
+  } catch (error) {
+    console.error('Failed to delete role:', error)
+    ElNotification({
+      title: t('commons_error'),
+      message: t('common_deleteFail'),
+      type: 'error'
+    })
   }
-  await adminApi.api
-    .putAclRole({
-      ...formData,
-      id: selectedNodeId, // if id need to be override, then append it to the formData
-    })
-    .then((res) => res.data)
-    .catch((err) => {
-      throw new Error('Failed to update role: ' + err)
-    })
-  
-  Object.assign(dataNode, formData)
 }
-async function handleAdd(formData: OrgNode, selectedNodeId: string) {
-  console.log('handleAdd', formData, selectedNodeId)
-  const newNode: OrgNode = {
-    name: formData.name || '',
-    status: 1
-  }
-  if (selectedNodeId) {
-    try {
-      await adminApi.api.postAclRole({...newNode, parentId: selectedNodeId})
-        .then((res) => res.data)
-        .catch((e) => {
-          throw new Error('Failed to add role: ' + e)
-        })
 
-      // TODO: 由于api仅返回true，所以需要重新获取全部数据刷新页面
-      initData()
-      // const dataNode = findNodeById(roleData.value, selectedNodeId)
-      // if (!dataNode) return
-      // if (!dataNode.children) dataNode.children = []
-      // dataNode.children.push(newNodeData)
-      sidebarVisible.value = false
-    } catch (error) {
-      console.error(error)
+async function handleEdit(formData: OrgNode, selectedNodeId: string) {
+  try {
+    const dataNode = findNodeById(roleData.value, selectedNodeId)
+    if (!dataNode) {
+      throw new Error('Node not found: ' + selectedNodeId)
     }
-  } else {
-    if (!roleData.value) roleData.value = []
-    try {
-      const newNodeData = await adminApi.api.postAclRole(newNode).then((res) => res.data)
-      // TODO: 由于api仅返回true，所以需要重新获取全部数据刷新页面
-      // roleData.value.push(newNodeData)
-      initData()
-      sidebarVisible.value = false
-    } catch (error) {
-      console.error(error)
-    }
+
+    await adminApi.api.putAclRole({
+      ...formData,
+      id: selectedNodeId
+    })
+    
+    Object.assign(dataNode, formData)
+    ElNotification({
+      title: t('commons_success'),
+      message: t('common_updateSuccess'),
+      type: 'success'
+    })
+  } catch (error) {
+    console.error('Failed to update role:', error)
+    ElNotification({
+      title: t('commons_error'),
+      message: t('common_updateFail'),
+      type: 'error'
+    })
   }
 }
-const handleNodeClick = (node: OrgNode) => {
+
+async function handleAdd(formData: OrgNode, selectedNodeId?: string) {
+  try {
+    const newNode: OrgNode = {
+      id: '', // Will be set by the server
+      name: formData.name || ''
+    }
+
+    const roleData = {
+      ...newNode,
+      type: (formData as any).type || 1
+    }
+
+    if (selectedNodeId) {
+      await adminApi.api.postAclRole({
+        ...roleData,
+        parentId: selectedNodeId
+      })
+    } else {
+      await adminApi.api.postAclRole(roleData)
+    }
+
+    await initData()
+    sidebarVisible.value = false
+    ElNotification({
+      title: t('commons_success'),
+      message: t('common_addSuccess'),
+      type: 'success'
+    })
+  } catch (error) {
+    console.error('Failed to add role:', error)
+    ElNotification({
+      title: t('commons_error'),
+      message: t('common_addFail'),
+      type: 'error'
+    })
+  }
+}
+
+function handleNodeClick(node: OrgNode) {
   console.log('Clicked node:', node)
 }
 
-const handleDataUpdate = (newData: OrgNode[]) => {
+function handleDataUpdate(newData: OrgNode[]) {
   roleData.value = newData
 }
-const loading = ref(false)
-const flapRoleList = ref<any[]>([])
+
 async function initData() {
   const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleIds)
   loading.value = true
-  await getRoleTree()
   
-  roleData.value = roleTree.value
-  flapRoleList.value = flatRole.value
-  loading.value = false
+  try {
+    await getRoleTree()
+    roleData.value = roleTree.value
+    flapRoleList.value = flatRole.value
+  } catch (error) {
+    console.error('Failed to initialize data:', error)
+    ElNotification({
+      title: t('commons_error'),
+      message: t('common_loadFail'),
+      type: 'error'
+    })
+  } finally {
+    loading.value = false
+  }
 }
-onMounted(async () => {
+
+onMounted(() => {
   initData()
 })
 
 provide('roleEditor', {
   flapRoleList
 })
-
-
 </script>
 
 <style scoped>
@@ -161,5 +205,11 @@ provide('roleEditor', {
   height: 100%;
   overflow: hidden;
   position: relative;
+}
+
+.flex-x-center {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
 }
 </style>
