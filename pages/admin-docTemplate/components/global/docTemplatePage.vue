@@ -8,7 +8,7 @@ if(!routerProvider) {
 }
 const json = ref({})
 const documentOptions = ref<TipTapOptions>()
-
+const variables = ref([])
 const user = useUserState()
 
 function newSetting(newData:TipTapOptions) {
@@ -20,15 +20,16 @@ function newSetting(newData:TipTapOptions) {
   }
   pageReady.value = true
 }
-
-
+function updateVariables(newData:TipTapOptions) {
+  variables.value = newData
+}
 </script>
 
 
 <template>
   <div class="pageContainer">
     <template v-if="pageReady">
-      <DocTemplateEditor :editorOptions="documentOptions" :user="user" :variables="[]" :json="json" />
+      <DocTemplateEditor :editorOptions="documentOptions" :user="user" :variables="variables" :json="json" @update:variables="updateVariables($event)" />
     </template>
     <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="true" @submit="newSetting" />
   </div>

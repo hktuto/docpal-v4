@@ -2,7 +2,7 @@
 import { DocTemplateProveKey } from '~/utils/docTemplateHelper'
 import formJson from './docJson.json'
 
-const { editor, options, initEditor } = inject(DocTemplateProveKey)
+const { editor, options, initEditor, setVariables } = inject(DocTemplateProveKey)
 const { t } = useI18n()
 
 const state = reactive({
@@ -26,6 +26,7 @@ async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     if (!data) return
     const json = JSON.parse(data.textContent)
+    setVariables(json.variables)
     initEditor(json.json.options, json.json.content)
     state.visible = false
   } catch (e) {
