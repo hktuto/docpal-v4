@@ -1,6 +1,6 @@
 ---
-description: DocPal Best partices
-globs: 
+description: 
+globs: *.vue,*.ts
 alwaysApply: false
 ---
 # DocPal V5 Project Rules & Conventions
