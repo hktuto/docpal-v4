@@ -2167,6 +2167,8 @@
         "remove": "Remove"
       },
       "addUser": "Select user to add to role",
+      "addUserToRole": "Select users to add to role",
+      "addUserToGroup": "Select users to add to group",
       "addUserButton": "Add User to Role",
       "columns": {
         "email": "Email",
@@ -3622,5 +3624,15 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content"
+  "檔案內容": "Content",
+  "common_deleteSuccess": "Successfully deleted",
+  "common_deleteFail": "Failed to delete",
+  "common_addSuccess": "Successfully added",
+  "common_addFail": "Failed to add",
+  "orgChart": {
+    "editSidebar": {
+      "editRole": "Edit Role",
+      "editGroup": "Edit Group"
+    }
+  }
 }

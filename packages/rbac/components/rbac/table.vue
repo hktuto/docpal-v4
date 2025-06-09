@@ -12,6 +12,7 @@ interface Role {
   id: number
   name: string
   parentRoleId?: number
+  parentId?: number
   status: number
 }
 
@@ -48,20 +49,38 @@ const bodyActions: TableMenuActions[][] = [
       }
     },
     {
-      code: 'toggle-status',
-      name: t('actions.active') + '/' + t('actions.inactive'),
+      code: 'activate',
+      name: t('actions.active'),
       action: async ({ row }: { row: Role }) => {
         try {
           await adminApi.api.putAclRole({
             id: String(row.id),
             name: row.name,
             parentId: row.parentRoleId ? String(row.parentRoleId) : undefined,
-            status: row.status === 1 ? 3 : 1,
+            status: 1,
             type: 1
           })
           reload()
         } catch (error) {
-          console.error('Failed to toggle role status:', error)
+          console.error('Failed to activate role:', error)
+        }
+      }
+    },
+    {
+      code: 'deactivate',
+      name: t('actions.inactive'),
+      action: async ({ row }: { row: Role }) => {
+        try {
+          await adminApi.api.putAclRole({
+            id: String(row.id),
+            name: row.name,
+            parentId: row.parentRoleId ? String(row.parentRoleId) : undefined,
+            status: 3,
+            type: 1
+          })
+          reload()
+        } catch (error) {
+          console.error('Failed to deactivate role:', error)
         }
       }
     }
@@ -160,10 +179,33 @@ const {
   remoteSort: true,
   remoteFilter: true,
   permissionMethod: ({ row, code }) => {
-    // Implement permission logic here
+    // Show edit action for all roles
+    if (code === 'edit') {
+      return {
+        visible: true,
+        disabled: false
+      }
+    }
+    
+    // Show activate action only for inactive roles
+    if (code === 'activate') {
+      return {
+        visible: row.status === 3,
+        disabled: false
+      }
+    }
+    
+    // Show deactivate action only for active roles
+    if (code === 'deactivate') {
+      return {
+        visible: row.status === 1,
+        disabled: false
+      }
+    }
+
     return {
-      visible: true,
-      disabled: false
+      visible: false,
+      disabled: true
     }
   }
 })
