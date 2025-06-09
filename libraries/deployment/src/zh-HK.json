@@ -460,7 +460,9 @@
   "comments_placeholder": "在此輸入您的評論",
   "comments_reply": "回復",
   "common_add": "新建",
+  "common_addFail": "添加失敗",
   "common_addMore": "提交並添加更多",
+  "common_addSuccess": "添加成功",
   "common_all": "全部",
   "common_back": "返回",
   "common_canNotEmpty": "必填",
@@ -476,6 +478,8 @@
   "common_day": "天",
   "common_days": "天",
   "common_delete": "刪除",
+  "common_deleteFail": "刪除失敗",
+  "common_deleteSuccess": "刪除成功",
   "common_discussionChannel": "討論",
   "common_download": "下載",
   "common_dragFileHere": "拖放到此處",
@@ -1116,6 +1120,7 @@
       "listStyleNumbered": "編號",
       "manager": "變數管理器",
       "managerTitle": "變數管理器",
+      "name": "名稱",
       "save": "儲存",
       "selectListVariable": "選擇清單變數",
       "selectTableVariable": "選擇表格變數",
@@ -2148,6 +2153,7 @@
     "editSidebar": {
       "addRole": "添加角色",
       "cancel": "取消",
+      "editGroup": "編輯用戶組",
       "editRole": "編輯角色",
       "parentRole": "父級角色",
       "parentRolePlaceholder": "請輸入父級角色",
@@ -2157,8 +2163,7 @@
       "validation": {
         "minLength": "長度至少為2個字符",
         "roleRequired": "請輸入角色名稱"
-      },
-      "editGroup": "編輯用戶組"
+      }
     },
     "noData": "暫無數據",
     "userTable": {
@@ -2166,9 +2171,9 @@
         "remove": "移除"
       },
       "addUser": "選擇要添加到角色的用戶",
-      "addUserToRole": "選擇要添加到角色的用戶",
-      "addUserToGroup": "選擇要添加到用戶組的用戶",
       "addUserButton": "添加用戶到角色",
+      "addUserToGroup": "選擇要添加到用戶組的用戶",
+      "addUserToRole": "選擇要添加到角色的用戶",
       "columns": {
         "email": "電子郵件",
         "username": "用戶名"
@@ -3623,9 +3628,5 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容",
-  "common_deleteSuccess": "刪除成功",
-  "common_deleteFail": "刪除失敗",
-  "common_addSuccess": "添加成功",
-  "common_addFail": "添加失敗"
+  "檔案內容": "檔案內容"
 }
