@@ -111,7 +111,7 @@ const {
       conditions.push({
           column: 'parentId',
           type: "IN",
-          values: searchQuery.value.parentId
+          values: searchQuery.value.parentId.join(',')
         })
     }
 
