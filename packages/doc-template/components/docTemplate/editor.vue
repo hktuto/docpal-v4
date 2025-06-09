@@ -101,7 +101,6 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
     },
     onCreate({ editor }) {
       // update page setting base on normlizeOption
-      console.log(editor)
       if (normlizeOption.mode === 'PAGE' && normlizeOption?.pageSetting?.defaultMarginConfig) {
         editor.commands.setDocumentPageMargins(normlizeOption?.pageSetting?.defaultMarginConfig)
       }
@@ -125,7 +124,7 @@ function updateVariable(updateVariable: DocTemplateVariable) {
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
     const editorJson = editor.value.getJSON()
-    editorJson.content =  replaceVariables(editorJson.content, variables.value)
+    editorJson.content = replaceVariables(editorJson.content, variables.value)
     initEditor(options.value, editorJson)
   } else {
     // Show error to user
