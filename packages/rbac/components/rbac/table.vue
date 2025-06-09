@@ -21,7 +21,7 @@ const searchQuery = ref<{
   sort_by?: string
   sort_type?: string
   status?: number
-  parentRoleName?: string
+  parentId?: string[]
 }>({
   sort_by: "updateTime",
   sort_type: "DESC",
@@ -42,7 +42,7 @@ const bodyActions: TableMenuActions[][] = [
   [
     {
       code: 'edit',
-      name: t('actions.edit'),
+      name: t('common_edit'),
       action: ({ row }: { row: Role }) => {
         handleEdit(row)
       }
@@ -82,7 +82,11 @@ const {
       type: "EQ",
       values: "1"
     }
-    const conditions = [defaultCondition]
+    const conditions:{
+      column: string
+      type: string
+      values: any
+    }[] = [defaultCondition]
 
     // Add search condition if exists
     if (searchQuery.value?.q) {
@@ -103,11 +107,11 @@ const {
     }
 
     // Add parent role filter if selected
-    if (searchQuery.value?.parentRoleName) {
+    if (searchQuery.value?.parentId && searchQuery.value.parentId.length > 0) {
       conditions.push({
-          column: 'parentRoleName',
-          type: "EQ",
-          values: searchQuery.value.parentRoleName
+          column: 'parentId',
+          type: "IN",
+          values: searchQuery.value.parentId
         })
     }
 
@@ -186,8 +190,8 @@ async function initFilter() {
     },
     {
       label: t('orgChart.editSidebar.parentRole'),
-      key: "parentRoleName",
-      isMultiple: false,
+      key: "parentId",
+      isMultiple: true,
       options: [
         ...flatRole.value.map((role) => ({
           label: role.name,

@@ -19,7 +19,7 @@
 
       <el-form-item :label="$t('orgChart.editSidebar.parentRole')" prop="parentRoleId">
         <el-select
-          v-model="formData.parentRoleId"
+          v-model="formData.parentId"
           :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')"
           clearable
         >
@@ -54,7 +54,7 @@ const { t } = useI18n()
 
 interface RoleFormData {
   name: string
-  parentRoleId?: number
+  parentId?: number
   status: number
 }
 
@@ -72,7 +72,7 @@ const formRef = ref<FormInstance>()
 
 const formData = reactive<RoleFormData>({
   name: '',
-  parentRoleId: undefined,
+  parentId: undefined,
   status: 1 // Always active for new roles
 })
 
@@ -88,15 +88,15 @@ function resetForm() {
     formRef.value.resetFields()
   }
   formData.name = ''
-  formData.parentRoleId = undefined
+  formData.parentId = undefined
   formData.status = 1 // Reset to active
 }
 
 function open(defaultValues?: Partial<RoleFormData>) {
   resetForm()
   if (defaultValues) {
-    // Ensure status is always 1 (active) even if provided in defaultValues
-    Object.assign(formData, { ...defaultValues, status: 1 })
+    formData.parentId = defaultValues.parentId
+    formData.status = 1;
   }
   dialogVisible.value = true
 }
@@ -109,7 +109,9 @@ async function handleSubmit() {
     loading.value = true
     
     await adminApi.api.postAclRole({
-      ...formData,
+      name: formData.name,
+      parentId: formData.parentId?.toString(),
+      status: formData.status,
       type: 1 // Assuming 1 is the type for regular roles
     })
     

@@ -54,7 +54,6 @@ const contextMenuVisible = ref(false)
 const contextMenuPosition = ref({ left: '0px', top: '0px' })
 const sidebarVisible = ref(false)
 const selectedNode = ref<OrgNode | null>(null)
-const isAddingNode = ref(false)
 const selectedCell = ref<any>(null)
 
 const containerRef = ref<HTMLDivElement | null>(null)
@@ -72,30 +71,6 @@ register({
   component: OrgChartNodePerson
 })
 
-// 检查位置是否有碰撞
-const hasCollision = (graph: Graph, x: number, y: number, excludeNode?: any) => {
-  const nodes = graph.getNodes()
-  const buffer = 10 // 额外的碰撞检测缓冲区
-
-  return nodes.some((node) => {
-    if (node === excludeNode) return false
-    const pos = node.position()
-    return x < pos.x + NODE_WIDTH + buffer && x + NODE_WIDTH + buffer > pos.x && y < pos.y + NODE_HEIGHT + buffer && y + NODE_HEIGHT + buffer > pos.y
-  })
-}
-
-// 找到可用的位置
-// const findAvailablePosition = (graph: Graph, baseX: number, baseY: number, node: any) => {
-//   let x = baseX
-//   let y = baseY
-
-//   // 如果当前位置有碰撞，向右偏移直到找到可用位置
-//   while (hasCollision(graph, x, y, node)) {
-//     x += NODE_WIDTH + 20
-//   }
-
-//   return { x, y }
-// }
 
 const createGraph = () => {
   if (!containerRef.value) return
@@ -298,7 +273,6 @@ const closeContextMenu = () => {
 
 // 处理编辑
 const handleEdit = () => {
-  isAddingNode.value = false
   const parentNode = findNodeById(props.data, selectedNode.value.parentId)
   if (!!parentNode) {
     selectedNode.value.parentName = parentNode.name
@@ -311,8 +285,7 @@ const handleEdit = () => {
 
 // 处理添加子节点
 const handleAdd = () => {
-  isAddingNode.value = true
-  sidebarVisible.value = true
+  console.log('handleAdd, selectedNode.value', selectedNode.value)
   createDialogRef.value.open({
     parentName: selectedNode.value.name,
     parentId: selectedNode.value.id,
