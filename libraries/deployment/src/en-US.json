@@ -460,7 +460,9 @@
   "comments_placeholder": "Enter your comment here",
   "comments_reply": "to",
   "common_add": "Add",
+  "common_addFail": "Failed to add",
   "common_addMore": "Submit And Add More",
+  "common_addSuccess": "Successfully added",
   "common_all": "All",
   "common_back": "Back",
   "common_canNotEmpty": "Required field",
@@ -476,6 +478,8 @@
   "common_day": "Day",
   "common_days": "Days",
   "common_delete": "Delete",
+  "common_deleteFail": "Failed to delete",
+  "common_deleteSuccess": "Successfully deleted",
   "common_discussionChannel": "Discussion Channel",
   "common_download": "Download",
   "common_dragFileHere": "Drag and drop here",
@@ -1116,6 +1120,7 @@
       "listStyleNumbered": "Numbered",
       "manager": "Variable Manager",
       "managerTitle": "Variable Manager",
+      "name": "Name",
       "save": "Save",
       "selectListVariable": "Select list variable",
       "selectTableVariable": "Select table variable",
@@ -2141,41 +2146,9 @@
   "order": "Order",
   "orderColumn": "Order Column",
   "orgChart": {
-    "add": "Add",
-    "contextMenu": {
-      "addChild": "Add Child Node",
-      "delete": "Delete",
-      "edit": "Edit"
-    },
     "editSidebar": {
-      "addRole": "Add Role",
-      "cancel": "Cancel",
-      "editRole": "Edit Role",
-      "parentRole": "Parent Role",
-      "parentRolePlaceholder": "Please enter parent role",
-      "roleLabel": "Role Label",
-      "rolePlaceholder": "Please enter role name",
-      "save": "Save",
-      "validation": {
-        "minLength": "Length must be at least 2 characters",
-        "roleRequired": "Please enter role name"
-      }
-    },
-    "noData": "No Data",
-    "userTable": {
-      "actions": {
-        "remove": "Remove"
-      },
-      "addUser": "Select user to add to role",
-      "addUserToRole": "Select users to add to role",
-      "addUserToGroup": "Select users to add to group",
-      "addUserButton": "Add User to Role",
-      "columns": {
-        "email": "Email",
-        "username": "Username"
-      },
-      "filterPlaceholder": "Filter Name",
-      "title": "Users"
+      "editGroup": "Edit Group",
+      "editRole": "Edit Role"
     }
   },
   "pending_approval": "Pending Approval",
@@ -3624,15 +3597,5 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content",
-  "common_deleteSuccess": "Successfully deleted",
-  "common_deleteFail": "Failed to delete",
-  "common_addSuccess": "Successfully added",
-  "common_addFail": "Failed to add",
-  "orgChart": {
-    "editSidebar": {
-      "editRole": "Edit Role",
-      "editGroup": "Edit Group"
-    }
-  }
+  "檔案內容": "Content"
 }
