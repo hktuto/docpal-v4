@@ -3,7 +3,7 @@ import { ref, toRefs, onMounted, onUnmounted, provide } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
-import { defaultPageSetting } from 'docpal-document-editor/src/utils'
+import { defaultPageSetting, replaceVariables } from 'docpal-document-editor/src/utils'
 import { normalizeTipTapOptions, clientEditorExtensions } from 'docpal-document-editor/src/client'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
@@ -119,34 +119,14 @@ function addVariable(variable: DocTemplateVariable) {
   console.log('variables', variables.value)
 }
 
-function updateVariableNode(updateVariable: DocTemplateVariable) {
-  switch (updateVariable.type) {
-    case 'text':
-      return 'variableText'
-    case 'table':
-      return 'variableTable'
-    case 'link':
-      return 'variableLink'
-    case 'list':
-      return 'variableList'
-    case 'image':
-      return 'image'
-    default:
-      throw new Error('Invalid variable type')
-  }
-}
-
 function updateVariable(updateVariable: DocTemplateVariable) {
   // TODO: check if variable is in use, if in use, update node content
   const index = variables.value.findIndex(v => v.id === updateVariable.id)
   if (index !== -1 && validateVariable(updateVariable)) {
     variables.value[index] = updateVariable
-    const componentName = updateVariableNode(updateVariable)
-    if (componentName) {
-      editor.value.commands.updateAttributes(componentName, updateVariable)
-    }
-    // TODO : get all node that type uis match with the variable type
-    // and update the node content
+    const editorJson = editor.value.getJSON()
+    editorJson.content =  replaceVariables(editorJson.content, variables.value)
+    initEditor(options.value, editorJson)
   } else {
     // Show error to user
     console.error('Invalid update or variable not found:', updateVariable)
