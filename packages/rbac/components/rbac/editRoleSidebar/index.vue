@@ -44,6 +44,13 @@
           </el-form-item>
         </el-form>
 
+        <div class="form-actions">
+          <el-button @click="handleCancel">{{ $t('orgChart.editSidebar.cancel') }}</el-button>
+          <el-button type="primary" :loading="loading" @click="handleSubmit">
+            {{ $t('orgChart.editSidebar.save') }}
+          </el-button>
+        </div>
+
         <RbacEditRoleSidebarUserTable 
           :role-id="String(formData.id)" 
           v-if="dialogVisible"
@@ -53,10 +60,6 @@
         />
       </div>
       <div class="sidebar-footer">
-        <el-button @click="handleCancel">{{ $t('orgChart.editSidebar.cancel') }}</el-button>
-        <el-button type="primary" :loading="loading" @click="handleSubmit">
-          {{ $t('orgChart.editSidebar.save') }}
-        </el-button>
       </div>
     </div>
   </div>
@@ -209,11 +212,15 @@ defineExpose({
   overflow-y: auto;
 }
 
-.sidebar-footer {
-  padding: 1rem;
-  border-top: 1px solid #eee;
+.form-actions {
+  margin: 20px 0;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid #eee;
 }
 </style> 

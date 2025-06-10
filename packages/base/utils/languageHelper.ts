@@ -8,7 +8,6 @@ export async function getLocale(){
     // if app is not public, then get user preference language
     
     const config = useRuntimeConfig()
-    console.log("locale when getLocale", locale.value, config)
     if(config.public.platform === 'admin' || config.public.platform === 'client'){
       const perference = useUserPreference()
       // check if perference is value and language is not equal to locale

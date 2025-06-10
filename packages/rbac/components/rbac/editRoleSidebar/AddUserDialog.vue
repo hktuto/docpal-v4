@@ -5,7 +5,7 @@
     width="500px"
     @close="handleClose"
   >
-    <div class="dialog-content">
+    <div v-loading="loading" class="dialog-content">
       <el-select-v2
         v-model="selectedUsers"
         :options="users"
@@ -63,23 +63,39 @@ watch(() => props.modelValue, async(newVal) => {
 watch(dialogVisible, (newVal) => {
   emit('update:modelValue', newVal)
 })
-
+const loading = ref(false)
 const loadUsers = async () => {
   try {
-    const response = await adminApi.api.getAclRoleUsersDropdown({
-      params: {
-        roleId: props.roleId
-      } 
-    } as any).then((res) => res.data)
-    
-    if (response && Array.isArray(response)) {
-      users.value = response.map((item) => ({
+    loading.value = true
+    // type 1 = role
+    // type 2 = group
+    // need to check type if type is 1 , use role user dropdown 
+    let allUsers = []
+    if(props.type === 1) {
+      const response = await adminApi.api.getAclRoleUsersDropdown({
+        params: {
+          roleId: props.roleId
+        } 
+      } as any).then((res) => res.data)
+      if(!response) {
+        throw new Error(t('common.invalidResponseFormat'))
+      }
+      allUsers = response.map((item) => ({
         label: item.username || '',
         value: item.id || ''
       }))
-    } else {
-      throw new Error(t('common.invalidResponseFormat'))
+    } else if(props.type === 2) {
+      const groupUserResponse = await adminApi.api.postNuxeoIdentityUsers({}).then((res) => res.data)
+      if(!groupUserResponse) {
+        throw new Error(t('common.invalidResponseFormat'))
+      }
+      allUsers = groupUserResponse.map((item) => ({
+        label: item.username || '',
+        value: item.userId || ''
+      }))
     }
+    users.value = allUsers
+    
   } catch (error) {
     console.error(t('rbac.role.fetchUsersError'), error)
     ElNotification({
@@ -87,6 +103,8 @@ const loadUsers = async () => {
       message: t('common_fetchFail'),
       type: 'error'
     })
+  } finally {
+    loading.value = false
   }
 }
 

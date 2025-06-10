@@ -1,0 +1,41 @@
+{
+  "orgChart": {
+    "add": "添加",
+    "contextMenu": {
+      "addChild": "添加子节点",
+      "delete": "删除",
+      "edit": "编辑"
+    },
+    "editSidebar": {
+      "addRole": "添加角色",
+      "cancel": "取消",
+      "editGroup": "编辑用户组",
+      "editRole": "编辑角色",
+      "parentRole": "父级角色",
+      "parentRolePlaceholder": "请输入父级角色",
+      "roleLabel": "角色名称",
+      "rolePlaceholder": "请输入角色名称",
+      "save": "保存",
+      "validation": {
+        "minLength": "长度至少为2个字符",
+        "roleRequired": "请输入角色名称"
+      }
+    },
+    "noData": "暂无数据",
+    "userTable": {
+      "actions": {
+        "remove": "移除"
+      },
+      "addUser": "选择要添加到角色的用户",
+      "addUserButton": "添加用户到角色",
+      "addUserToGroup": "选择要添加到用户组的用户",
+      "addUserToRole": "选择要添加到角色的用户",
+      "columns": {
+        "email": "电子邮件",
+        "username": "用户名"
+      },
+      "filterPlaceholder": "过滤名称",
+      "title": "用户"
+    }
+  }
+}

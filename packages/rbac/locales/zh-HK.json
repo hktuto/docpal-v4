@@ -1,0 +1,40 @@
+{
+  "orgChart": {
+    "add": "添加",
+    "contextMenu": {
+      "addChild": "添加子節點",
+      "delete": "刪除",
+      "edit": "編輯"
+    },
+    "editSidebar": {
+      "addRole": "添加角色",
+      "cancel": "取消",
+      "editGroup": "編輯用戶組",
+      "editRole": "編輯角色",
+      "parentRole": "父級角色",
+      "parentRolePlaceholder": "請輸入父級角色",
+      "roleLabel": "角色名稱",
+      "rolePlaceholder": "請輸入角色名稱",
+      "save": "保存",
+      "validation": {
+        "minLength": "長度至少為2個字符",
+        "roleRequired": "請輸入角色名稱"
+      }
+    },
+    "userTable": {
+      "actions": {
+        "remove": "移除"
+      },
+      "addUser": "選擇要添加到角色的用戶",
+      "addUserButton": "添加用戶到角色",
+      "addUserToGroup": "選擇要添加到用戶組的用戶",
+      "addUserToRole": "選擇要添加到角色的用戶",
+      "columns": {
+        "email": "電子郵件",
+        "username": "用戶名"
+      },
+      "filterPlaceholder": "過濾名稱",
+      "title": "用戶"
+    }
+  }
+}
