@@ -70,7 +70,7 @@ const loadUsers = async () => {
       params: {
         roleId: props.roleId
       } 
-    } as any)
+    } as any).then((res) => res.data)
     
     if (response && Array.isArray(response)) {
       users.value = response.map((item) => ({
@@ -78,10 +78,10 @@ const loadUsers = async () => {
         value: item.id || ''
       }))
     } else {
-      throw new Error('Invalid response format')
+      throw new Error(t('common.invalidResponseFormat'))
     }
   } catch (error) {
-    console.error('Failed to fetch role users:', error)
+    console.error(t('rbac.role.fetchUsersError'), error)
     ElNotification({
       title: t('commons_error'),
       message: t('common_fetchFail'),

@@ -2147,8 +2147,29 @@
   "orderColumn": "Order Column",
   "orgChart": {
     "editSidebar": {
+      "editRole": "Edit Role",
       "editGroup": "Edit Group",
-      "editRole": "Edit Role"
+      "roleLabel": "Role Name",
+      "rolePlaceholder": "Please enter role name",
+      "parentRole": "Parent Role",
+      "parentRolePlaceholder": "Please select parent role",
+      "cancel": "Cancel",
+      "save": "Save",
+      "validation": {
+        "roleRequired": "Role name is required",
+        "minLength": "Length should be 2 to 50 characters"
+      }
+    },
+    "userTable": {
+      "title": "Users",
+      "addUserButton": "Add User",
+      "columns": {
+        "username": "Username",
+        "email": "Email"
+      },
+      "actions": {
+        "remove": "Remove"
+      }
     }
   },
   "pending_approval": "Pending Approval",
@@ -3597,5 +3618,6 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content"
+  "檔案內容": "Content",
+  "common_fetchFail": "Failed to fetch data"
 }
