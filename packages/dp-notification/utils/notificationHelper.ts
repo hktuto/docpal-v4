@@ -1,4 +1,5 @@
-import { clientApi } from "api";
+import { clientApi } from 'api'
+
 export function notiShowView(row: any) {
   const isCancel = row.operate === 'TRASH' ||
     row.operate === 'DELETE' ||
@@ -9,28 +10,27 @@ export function notiShowView(row: any) {
     row.content.processInstanceId
   return !isCancel && showView
 }
+
 export async function notiHandleView(row: any, tabProvider: any) {
   // const router = useRouter()
   if (row.content.processInstanceId) {
     if (row.type === 'Upload-Request') {
       // router.push(`/fileRequest/${row.content.processInstanceId}`)
       const newItem = createUploadRequestDetailParams({
-        taskId: row.content.processInstanceId,
+        taskId: row.content.processInstanceId
       })
       tabProvider?.openTab(newItem, true)
     } else {
       const newItem = await getWorkflowRoute(row.content.processInstanceId)
       if (!!newItem) tabProvider?.openTab(newItem, true)
     }
-  }
-  else if (row.content.documentId) {
+  } else if (row.content.documentId) {
     const newItem = createBrowseListPageParams({
       idOrPath: row.content.documentId,
       commentId: row.content.commentId
     })
     tabProvider?.openTab(newItem, true)
-  }
-  else if (row.content.uploadId) {
+  } else if (row.content.uploadId) {
     const status = row.content.notiStatus === 'FAIL' ? 'Error' : 'Ready'
     // router.push(`/AIUpload/${row.content.uploadId}?status=${status}`)
     const newItem = createAiUploadDetail({
@@ -46,7 +46,7 @@ export const getWorkflowRoute = async (processInstanceId: string) => {
   try {
     const taskList: any = await clientApi.api.getWorkflowTasks({ processInstanceId }).then(res => res.data)
     let newTab = {}
-    if(taskList && taskList.length > 0) {
+    if (taskList && taskList.length > 0) {
       newTab = routeWorkflowDetail({
         id: taskList[0].id,
         name: taskList[0].name
@@ -60,6 +60,26 @@ export const getWorkflowRoute = async (processInstanceId: string) => {
     }
     return newTab
   } catch (error) {
+    return null
+  }
+}
+
+export const getCaseRecord = async (id: string) => {
+  try {
+    let newTab = {}
+    if (!id) {
+      // TODO 因爲AddCaseDialog需要caseDetail.caseDefinitionKey與caseDetail.productionVersionId。無法在caseDetail中取到。
+      // TODO 需要在AddCaseDialog頁面補充接口獲取這兩個數據
+      newTab = caseManageDetailPage({
+        name: 'case',
+        id: id,
+        data: {}
+      })
+    } else {
+      newTab = caseManagePage()
+    }
+    return newTab
+  } catch (e) {
     return null
   }
 }

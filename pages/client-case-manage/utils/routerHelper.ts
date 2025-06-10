@@ -1,5 +1,19 @@
 import { version } from "vue";
 
+export const caseManagePage  = function(){
+  return {
+    id: 'client-case-manage',
+    name: 'client-case-manage',
+    icon: 'dp-icon:case-outline',
+    label: "adminMenu.caseManagement",
+    component: 'LazyCasePage',
+    props: {
+      idOrPath: "/",
+      filter: {}
+    }
+  } as TabItem
+}
+
 export const caseManageDetailPage  = function(params: any){
   return {
     id: "client-case-manage-detail" + new Date().getTime(),
