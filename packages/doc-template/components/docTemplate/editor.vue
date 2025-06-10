@@ -62,9 +62,8 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   }
   const normlizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normlizeOption)
-  if (variables.value.length > 0) {
-    // TODO : set Variables to json
-    // json = replaceVariables(json, [...variables.value])
+  if (variables.value.length > 0 && json && json.content) {
+    json.content = replaceVariables(json.content, [...variables.value])
   }
   if (initOptions.editable) {
   }
