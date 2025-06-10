@@ -3628,5 +3628,33 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容"
+  "檔案內容": "檔案內容",
+  "orgChart": {
+    "editSidebar": {
+      "editRole": "编辑角色",
+      "editGroup": "编辑组",
+      "roleLabel": "角色名称",
+      "rolePlaceholder": "请输入角色名称",
+      "parentRole": "父级角色",
+      "parentRolePlaceholder": "请选择父级角色",
+      "cancel": "取消",
+      "save": "保存",
+      "validation": {
+        "roleRequired": "角色名称为必填项",
+        "minLength": "长度应为2到50个字符"
+      }
+    },
+    "userTable": {
+      "title": "用户",
+      "addUserButton": "添加用户",
+      "columns": {
+        "username": "用户名",
+        "email": "邮箱"
+      },
+      "actions": {
+        "remove": "移除"
+      }
+    }
+  },
+  "common_fetchFail": "获取数据失败"
 }
