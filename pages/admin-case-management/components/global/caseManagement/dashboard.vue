@@ -8,15 +8,19 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item v-for="(item, key) in CmmnDashboardWidgetSetting" :key="key" :command="key"
-                                :divided="item.divided">
+              <el-dropdown-item v-for="(item, key) in CmmnDashboardWidgetSetting" :key="key" :command="key" :divided="item.divided">
                 {{ $t(`dashboard.${item.label}`) }}
               </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
-        <el-button id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Save" class="el-icon--right"
-                   type="primary" :loading="state.saveLoading" @click="handleSave">
+        <el-button
+          id="CaseManagement__Detail__CaseDashboardView__ViewLayout__Save"
+          class="el-icon--right"
+          type="primary"
+          :loading="state.saveLoading"
+          @click="handleSave"
+        >
           {{ $t('common_save') }}
         </el-button>
       </div>
@@ -29,21 +33,21 @@
           :resizable="true"
           :draggable="true"
           @delete="handleDelete"
-          @refreshSetting="handleRefresh"></DashboardDetail>
+          @refreshSetting="handleRefresh"
+        ></DashboardDetail>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-
-import {adminApi} from 'api'
+import { adminApi } from 'api'
 
 const props = defineProps<{
-  id: string,
-  caseTypeId: string,
-  name: string,
+  id: string
+  caseTypeId: string
+  name: string
 }>()
-const {caseTypeId, name} = toRefs(props)
+const { caseTypeId, name } = toRefs(props)
 const routerProvider = inject(MenuRouterKey)
 const state = reactive({
   info: {
@@ -53,7 +57,6 @@ const state = reactive({
   saveLoading: false,
   detail: {}
 })
-
 
 function createDashboard(command: CmmnDashboardWidget) {
   const item = getCmmnWidgetSetting(command)
@@ -89,19 +92,27 @@ async function handleSave() {
 }
 
 const caseVersionId = ref()
-
-onActivated(async () => {
-  const {data} = await adminApi.api.getCaseDashboardId(props.id)
-  caseVersionId.value = data.cmmnVersionId;
-  state.detail = data
-  const temLayout = JSON.parse(data.styleJson)
-  if (Array.isArray(temLayout)) {
-    state.layout = temLayout.map(item => {
-      return Object.assign(item, getCmmnNormalizeSetting(item.component))
-    })
+async function init() {
+  try {
+    const { data } = await adminApi.api.getCaseDashboardId(props.id)
+    caseVersionId.value = data.cmmnVersionId
+    state.detail = data
+    name.value = data.label
+    routerProvider?.updateTabName(data.label)
+    const temLayout = JSON.parse(data.styleJson)
+    if (Array.isArray(temLayout)) {
+      state.layout = temLayout.map((item) => {
+        return Object.assign(item, getCmmnNormalizeSetting(item.component))
+      })
+    } else {
+      state.layout = []
+    }
+  } catch {
+    state.layout = []
   }
-  name.value = data.label
-  routerProvider?.updateTabName(data.label)
+}
+onActivated(async () => {
+  init()
 })
 
 provide(CaseManagementDashboardKey, {
