@@ -95,7 +95,7 @@ async function save() {
       try {
         await infoFormEl.value.validate()
       } catch (e) {
-        logger.error(e)
+        console.error(e)
         return
       }
     }
