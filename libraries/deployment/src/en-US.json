@@ -3352,7 +3352,8 @@
       "draft": "Draft version",
       "latest": "Latest version",
       "production": "Current version"
-    }
+    },
+    "workflowInfoIgnored": "Workflow Info with id name with case info will be ignored"
   },
   "workflowEditor_promoteToProduction": "Promote To Production : {currentVersion}",
   "workflowEditor_saveAsNewVersion": "Save As New Version",
