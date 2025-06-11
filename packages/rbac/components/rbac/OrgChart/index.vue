@@ -185,6 +185,7 @@ async function initData() {
       message: t('common_loadFail'),
       type: 'error'
     })
+    throw error;
   } finally {
     loading.value = false
   }
