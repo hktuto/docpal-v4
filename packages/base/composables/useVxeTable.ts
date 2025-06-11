@@ -49,7 +49,7 @@ export interface UseVxeTableParams<R = any> {
     optionalConfig?: VxeGridProps<R>,
     selectChangeHander?:(selectedRows:any[], selectedRow:any) => void,
     optionalEvent?: VxeGridListeners<R>,
-    childChangeHander?: (childRows: any[]) => void,
+    childChangeHandler?: (childRows: any[]) => void,
     additionalPermission?: (params:any) => Promise<any>
 }
 
@@ -486,18 +486,18 @@ export const useVxeTable = (params: UseVxeTableParams) => {
       if(init.value) {
             reload()
         }
-        if(params.childChangeHander) {
+        if(params.childChangeHandler) {
             if(observer && observer.disconnect){
                 observer.disconnect()
             }
-            observer = new MutationObserver(params.childChangeHander)
+            observer = new MutationObserver(params.childChangeHandler)
             observer.observe(tableRef.value.$el, {
                 childList: true,
                 subtree: true
             })
             nextTick(() => {
                 console.log('init table observer')
-                params.childChangeHander()
+                params.childChangeHandler()
             })
         }
     }
