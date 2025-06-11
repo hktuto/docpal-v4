@@ -38,7 +38,6 @@ const options = ref<TipTapOptions>({
   }
 })
 const editor = ref()
-const room = ref('12345')
 
 export type LastSelection = {
   type: 'text' | 'textRange' | 'image' | 'cell'
@@ -63,9 +62,8 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   }
   const normlizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normlizeOption)
-  if(variables.value.length > 0) {
-    // TODO : set Variables to json
-
+  if (variables.value.length > 0 && json && json.content) {
+    json.content = replaceVariables(json.content, [...variables.value])
   }
   if (initOptions.editable) {
   }
@@ -137,6 +135,7 @@ function updateVariable(updateVariable: DocTemplateVariable) {
     console.error('Invalid update or variable not found:', updateVariable)
   }
 }
+
 function setVariables(newVariables: DocTemplateVariable[]) {
   emit('update:variables', newVariables)
 }
