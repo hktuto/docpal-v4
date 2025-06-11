@@ -23,8 +23,19 @@ function handlePopoverCreateTable() {
   state.withHeaderRow = true
 }
 
-function handleCreateTable(row: number, col: number, withHeaderRow: boolean) {
-  editor.value.chain().focus().insertTable({ rows: row, cols: col, withHeaderRow: withHeaderRow }).run()
+function handleCreateTable(columns: any, rows: any, bordered: boolean, striped: boolean) {
+  editor.value.commands.insertContent({
+    type: 'variableTable',
+    attrs: {
+      type: 'table',
+      value: {
+        columns: columns,
+        rows: rows,
+        bordered: bordered,
+        striped: striped
+      }
+    }
+  })
 }
 
 function handleDeleteTable() {
@@ -203,7 +214,6 @@ function handleBackgroundColor(backgroundColor: string) {
           {{ $t('docTemplate.table.SplitCell') }}
         </el-button>
       </el-button-group>
-
 
       <el-divider direction="vertical" />
       <el-button-group>

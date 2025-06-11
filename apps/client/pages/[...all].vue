@@ -61,6 +61,12 @@ onMounted(async () => {
       );
       openTab(workflowItem);
       break;
+    case "/case":
+      const caseItem = await getCaseRoute(
+        route.query.caseId as string
+      );
+      openTab(caseItem);
+      break;
     default:
       router.push("/");
   }
