@@ -1,16 +1,11 @@
 <template>
   <div class="chart-container" v-loading="loading">
-    <template v-if="!loading && roleData.length === 0">
+    <template v-if="roleData.length === 0">
       <el-empty :description="$t('orgChart.noData')"></el-empty>
       <div class="flex-x-center">
-        <el-button type="primary" @click="sidebarVisibleChange(true)">{{ $t('orgChart.add') }}</el-button>
+        <el-button type="primary" @click="openCreateDialog">{{ $t('orgChart.add') }}</el-button>
       </div>
-      <RbacOrgChartX6EditSidebar 
-        :visible="sidebarVisible" 
-        :is-add="true" 
-        @close="sidebarVisibleChange(false)" 
-        @save="handleAdd" 
-      />
+      <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="initData" />
     </template>
     <RbacOrgChartX6
       v-else
@@ -41,6 +36,11 @@ interface Props {
 const props = defineProps<Props>()
 
 const { t } = useI18n()
+
+const createDialogRef = ref()
+function openCreateDialog() {
+  createDialogRef.value?.open()
+}
 
 const defaultNodeStyle = {
   boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
@@ -169,14 +169,14 @@ function handleNodeClick(node: OrgNode) {
 function handleDataUpdate(newData: OrgNode[]) {
   roleData.value = newData
 }
-
+const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleIds)
 async function initData() {
-  const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleIds)
-  loading.value = true
   
   try {
+    
+    loading.value = true
     await getRoleTree()
-    roleData.value = roleTree.value
+    roleData.value = roleTree.value || []
     flapRoleList.value = flatRole.value
   } catch (error) {
     console.error('Failed to initialize data on RBAC org chart:', error)

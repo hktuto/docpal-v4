@@ -6,7 +6,6 @@
       </el-tab-pane>
       <el-tab-pane label="Table" name="table">
         <RbacTable v-if="activeName === 'table'" />
-        <!-- <UserGroupList v-if="activeName === 'Group'" /> -->
       </el-tab-pane>
     </el-tabs>
   </div>
