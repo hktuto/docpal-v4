@@ -82,7 +82,8 @@ function addColumn() {
   const newCol = {
     name: `Column ${columns.value.length + 1}`,
     align: 'left',
-    color: '#d3dbde'
+    color: '#d3dbde',
+    width: ''
   }
   columns.value.push(newCol)
   rows.value.forEach(row => row.push(''))
