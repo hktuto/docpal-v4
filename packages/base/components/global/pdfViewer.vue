@@ -69,7 +69,7 @@ async function sendPdfAndAnnotation() {
             loading.value = false;
             return
         }
-        const {data:annotations} = await clientApi.api.getNuxeoAnnotation({idOrPath: props.doc.id});
+        const annotations = await getAnnotation();
         const frame = iframe.value?.contentWindow;
         frame?.postMessage({blob:blob.value, filename: props.doc.name, annotations, locale: locale.value, options: props.options }, '*');
     } catch (error) {
