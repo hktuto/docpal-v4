@@ -18,7 +18,7 @@
       </el-form-item>
 
       <el-form-item 
-        v-if="formData.type === 1"
+        v-if="formData.type === 1 && roleOptions.length > 0"
         :label="$t('orgChart.editSidebar.parentRole')" 
         prop="parentRoleId"
       >

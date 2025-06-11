@@ -18,11 +18,11 @@ export const useRBAC = (roleIds?: string | string[]) => {
         // normalize roleIds to array
         const data = await adminApi.api.postAclRoleHierarchy(roleIdArray)
         .then((res) => res.data) as OrgNode[]
-        roleTree.value = data
+        roleTree.value = data || []
       }else{
         const data = await adminApi.api.getAclRoleRoot()
-        .then((res) => res.data) as OrgNode[]
-        roleTree.value = [data]
+        .then((res) => res.data) as OrgNode
+        roleTree.value = data ? [data] : []
       }
       flatRole.value = makeFlapRoleList([...roleTree.value])
     }catch(error){
@@ -33,7 +33,6 @@ export const useRBAC = (roleIds?: string | string[]) => {
   }
 
   function makeFlapRoleList(data: OrgNode[], roleList: any[] = []) {
-    console.log(data)
     data.forEach(node => {
       roleList.push(node)
       if (node.children) {
