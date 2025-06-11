@@ -24,7 +24,7 @@ function expandedItemsChange(expandedItems: any[]) {
     <div class="pageContainer">
       <ResourceDocumentTable 
         :id="id" 
-        :expandedItems="expandedItems" 
+        :expandedItems="expandedItems || []" 
         @idChange="idChange" 
         @expandedItemsChange="expandedItemsChange" 
       />
