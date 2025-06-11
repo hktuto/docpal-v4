@@ -179,7 +179,7 @@ async function initData() {
     roleData.value = roleTree.value
     flapRoleList.value = flatRole.value
   } catch (error) {
-    console.error('Failed to initialize data:', error)
+    console.error('Failed to initialize data on RBAC org chart:', error)
     ElNotification({
       title: t('commons_error'),
       message: t('common_loadFail'),
