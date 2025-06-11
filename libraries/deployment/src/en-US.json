@@ -2146,30 +2146,42 @@
   "order": "Order",
   "orderColumn": "Order Column",
   "orgChart": {
+    "add": "Add",
+    "contextMenu": {
+      "addChild": "Add Child Node",
+      "delete": "Delete",
+      "edit": "Edit"
+    },
     "editSidebar": {
+      "addRole": "Add Role",
+      "cancel": "Cancel",
+      "editGroup": "Edit User Group",
       "editRole": "Edit Role",
-      "editGroup": "Edit Group",
+      "parentRole": "Parent Role",
+      "parentRolePlaceholder": "Please enter parent role",
       "roleLabel": "Role Name",
       "rolePlaceholder": "Please enter role name",
-      "parentRole": "Parent Role",
-      "parentRolePlaceholder": "Please select parent role",
-      "cancel": "Cancel",
       "save": "Save",
       "validation": {
-        "roleRequired": "Role name is required",
-        "minLength": "Length should be 2 to 50 characters"
+        "minLength": "Length must be at least 2 characters",
+        "roleRequired": "Please enter role name"
       }
     },
+    "noData": "No Data",
     "userTable": {
-      "title": "Users",
-      "addUserButton": "Add User",
-      "columns": {
-        "username": "Username",
-        "email": "Email"
-      },
       "actions": {
         "remove": "Remove"
-      }
+      },
+      "addUser": "Select users to add to role",
+      "addUserButton": "Add users to role",
+      "addUserToGroup": "Select users to add to user group",
+      "addUserToRole": "Select users to add to role",
+      "columns": {
+        "email": "Email",
+        "username": "Username"
+      },
+      "filterPlaceholder": "Filter by name",
+      "title": "Users"
     }
   },
   "pending_approval": "Pending Approval",
