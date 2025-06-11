@@ -4,7 +4,7 @@
 
 <template>
   <div class="pageContainer">
-    <UserGroupList />
+    <RbacUserGroupList />
   </div>
 </template>
 <style lang="scss" scoped>

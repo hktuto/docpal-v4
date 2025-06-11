@@ -44,14 +44,14 @@ function sortEntry(a: any, b: any) {
   return b.isFolder ? 1 : -1
 }
 
-function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
+function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
   checkList.forEach((row, index) => {
     const rowData = treeData.find((el) => el.id === row)
     if (rowData) {
       if (!tableRef.value?.isTreeExpandByRow(rowData)) {
         result.push(rowData)
       } else {
-        result = resursiveLoadChild(checkList, rowData.children, result)
+        result = recursiveLoadChild(checkList, rowData.children, result)
       }
     }
   })
@@ -61,7 +61,7 @@ function resursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
 const reopenFolder = useDebounceFn(() => {
   if (!tableRef.value || expandedItems.length === 0) return
   const tableData = tableRef.value.getData()
-  let needExpandList: any[] = resursiveLoadChild(expandedItems, tableData, [])
+  let needExpandList: any[] = recursiveLoadChild(expandedItems, tableData, [])
 
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
@@ -76,7 +76,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     emits('selectedChange', [])
     return data
   },
-  childChangeHander: () => {
+  childChangeHandler: () => {
     tableChildChangeHandler()
     reopenFolder()
   },
