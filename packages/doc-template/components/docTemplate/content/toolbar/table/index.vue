@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { DocTemplateProveKey } from '~/utils/docTemplateHelper'
+import VariableValueTable from '../../setting/variable/VariableValueTable.vue'
 
 const { editor, options } = inject(DocTemplateProveKey)
 const { t } = useI18n()
@@ -8,34 +9,28 @@ const fontPredefineThBackgroundColors = ref(['#ADADAD', '#fc8f00', '#00b2ff'])
 
 const state = reactive({
   createTablePopoverVisible: false,
-  tableRow: 3,
-  tableCol: 3,
-  withHeaderRow: ref(true),
   tableBackgroundColor: '#FFFFFF',
   tableThBackgroundColor: '#ADADAD'
 })
 
-function handlePopoverCreateTable() {
-  handleCreateTable(state.tableRow, state.tableCol, state.withHeaderRow)
-  state.createTablePopoverVisible = false
-  state.tableRow = 3
-  state.tableCol = 3
-  state.withHeaderRow = true
-}
+const tableForm = reactive({
+  value: {
+    columns: [{"name":"Column 1","align":"left"}],
+    rows: [[""]],
+    bordered: true,
+    striped: false
+  }
+})
 
-function handleCreateTable(columns: any, rows: any, bordered: boolean, striped: boolean) {
+function handleCreateTable() {
   editor.value.commands.insertContent({
     type: 'variableTable',
     attrs: {
       type: 'table',
-      value: {
-        columns: columns,
-        rows: rows,
-        bordered: bordered,
-        striped: striped
-      }
+      value: tableForm.value
     }
   })
+  state.createTablePopoverVisible = false
 }
 
 function handleDeleteTable() {
@@ -140,33 +135,9 @@ function handleBackgroundColor(backgroundColor: string) {
 <template>
   <el-row>
     <el-col :span="24">
-      <el-popover :visible="state.createTablePopoverVisible" placement="bottom" :width="300" :title="t('Create Table')"
-                  trigger="click">
-        <template #reference>
-          <el-button @click="state.createTablePopoverVisible = true">
-            {{ $t('docTemplate.table.createTable') }}
-          </el-button>
-        </template>
-        <el-form ref="createTableFormRef" label-position="left" label-width="auto">
-          <el-form-item label="Row" prop="desc">
-            <el-input v-model="state.tableRow" />
-          </el-form-item>
-          <el-form-item label="Col" prop="desc">
-            <el-input v-model="state.tableCol" />
-          </el-form-item>
-          <el-form-item label="With Header Row" prop="delivery">
-            <el-switch v-model="state.withHeaderRow" />
-          </el-form-item>
-          <div style="display: flex; justify-content: flex-end; margin: 0">
-            <el-button @click="state.createTablePopoverVisible = false">
-              {{ $t('vxe.button.cancel') }}
-            </el-button>
-            <el-button type="primary" @click="handlePopoverCreateTable">
-              {{ $t('docTemplate.table.create') }}
-            </el-button>
-          </div>
-        </el-form>
-      </el-popover>
+      <el-button @click="state.createTablePopoverVisible = true">
+        {{ $t('docTemplate.table.createTable') }}
+      </el-button>
 
       <el-divider direction="vertical" />
 
@@ -275,17 +246,27 @@ function handleBackgroundColor(backgroundColor: string) {
         </el-button>
       </el-button-group>
     </el-col>
-
-    <el-col :span="24">
-      <!--    <el-button @click="handleFixTables">-->
-      <!--      Fix-->
-      <!--    </el-button>-->
-    </el-col>
   </el-row>
 
   <div style="text-align: center; margin-top: 9px;">
     {{ $t('Table') }}
   </div>
+
+  <!-- Create table dialog -->
+  <el-dialog v-model="state.createTablePopoverVisible" :title="t('Create Table')">
+    <VariableValueTable v-model="tableForm.value" >
+      {{tableForm.value}}
+    </VariableValueTable>
+    <template #footer>
+      <el-button @click="state.createTablePopoverVisible = false">
+        {{ $t('vxe.button.cancel') }}
+      </el-button>
+      <el-button type="primary" @click="handleCreateTable">
+        {{ $t('docTemplate.table.create') }}
+      </el-button>
+    </template>
+  </el-dialog>
+
 </template>
 
 <style scoped lang="scss">
