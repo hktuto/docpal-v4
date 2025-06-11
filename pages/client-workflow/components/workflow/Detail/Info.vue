@@ -33,33 +33,43 @@
       </div>
     </div>
     <div class="flex-x-start">
-      <el-button id="Workflow__AvailableTask__Detail__JobInfo__UnclaimTask" class="f-g" v-if="isAssigneeUser"
-                 type="primary" :loading="state.loading" @click="handleUnclaim">
+      <el-button
+        id="Workflow__AvailableTask__Detail__JobInfo__UnclaimTask"
+        class="f-g"
+        v-if="isAssigneeUser"
+        type="primary"
+        :loading="state.loading"
+        @click="handleUnclaim"
+      >
         {{ $t('workflow_Unclaim') }}
       </el-button>
-      <el-button id="Workflow__AvailableTask__Detail__JobInfo__ClaimTask" class="f-g"
-                 v-else-if="!props.taskDetail.assignee" type="primary" :loading="state.loading"
-                 @click="handleClaim">
+      <el-button
+        id="Workflow__AvailableTask__Detail__JobInfo__ClaimTask"
+        class="f-g"
+        v-else-if="!props.taskDetail.assignee"
+        type="primary"
+        :loading="state.loading"
+        @click="handleClaim"
+      >
         {{ $t('workflow_claim') }}
       </el-button>
-      <el-popover :visible="state.deletePopoverShow" placement="top" :width="160">
+      <el-popover v-if="isStartedUser" ref="deletePopoverRef" trigger="click" placement="top" :width="200">
         <p>{{ $t('workflow_delete') }}</p>
         <div class="flex-x-end" style="text-align: right; margin: 0">
-          <el-button size="small" text @click="state.deletePopoverShow = false">
+          <el-button size="small" text @click="handleDeletePopoverHide">
             {{ $t('cancelText') }}
           </el-button>
-          <el-button size="small" type="warning" @click="handelDelete">
+          <el-button size="small" type="warning" :loading="state.loading" @click="handelDelete">
             {{ $t('common_confirmDelete') }}
           </el-button>
         </div>
         <template #reference>
-          <el-button v-if="isStartedUser" id="Workflow__AvailableTask__Detail__JobInfo__Delete" @click="state.deletePopoverShow = true">
+          <el-button id="Workflow__AvailableTask__Detail__JobInfo__Delete">
             {{ $t('common_delete') }}
           </el-button>
         </template>
       </el-popover>
     </div>
-
   </div>
 </template>
 <script lang="ts" setup>
@@ -68,16 +78,16 @@ import { ElMessage } from 'element-plus'
 
 const emits = defineEmits(['change'])
 const props = defineProps<{
-  taskDetail: any,
+  taskDetail: any
   id: string
 }>()
 const { t } = useI18n()
 const userId: string = useUserId().value
 const routerProvider = inject(MenuRouterKey)
 const state = reactive({
-  deletePopoverShow: false,
   loading: false
 })
+
 const isStartedUser = computed(() => {
   const id = props.taskDetail.taskInstance.startUserId
   return id === userId
@@ -104,7 +114,7 @@ async function handleUnclaim() {
 async function handleClaim() {
   try {
     state.loading = true
-    const response: any = await clientApi.api.postWorkflowTaskClaim({ taskId: props.id, userId }).then(res => res.data)
+    const response: any = await clientApi.api.postWorkflowTaskClaim({ taskId: props.id, userId }).then((res) => res.data)
     if (!response.errorCode) {
       emits('change', response, true)
     }
@@ -117,15 +127,24 @@ async function handleClaim() {
 }
 
 async function handelDelete() {
-  const processInstanceId = props.taskDetail.taskInstance.processInstanceId
-  const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({
-    processInstanceId, userId
-  })
-  if (!!response) {
-  } else {
+  try {
+    state.loading = true
+    const processInstanceId = props.taskDetail.taskInstance.processInstanceId
+    const response = await clientApi.api.deleteWorkflowProcessDeleteprocessinstancebycreator({
+      processInstanceId,
+      userId
+    })
     routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('common_item'), name: null }))
+    routerProvider?.back()
+  } catch {
+  } finally {
+    state.loading = false
+    deletePopoverRef.value.hide()
   }
-  routerProvider?.back()
+}
+const deletePopoverRef = ref()
+function handleDeletePopoverHide() {
+  deletePopoverRef.value.hide()
 }
 </script>
 <style lang="scss" scoped>
