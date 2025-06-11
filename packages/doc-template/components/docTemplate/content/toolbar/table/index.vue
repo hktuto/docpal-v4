@@ -15,8 +15,8 @@ const state = reactive({
 
 const tableForm = reactive({
   value: {
-    columns: [{"name":"Column 1","align":"left"}],
-    rows: [[""]],
+    columns: [{ 'name': 'Column 1', 'align': 'left', 'color': '#d3dbde' }],
+    rows: [['']],
     bordered: true,
     striped: false
   }
@@ -254,8 +254,8 @@ function handleBackgroundColor(backgroundColor: string) {
 
   <!-- Create table dialog -->
   <el-dialog v-model="state.createTablePopoverVisible" :title="t('Create Table')">
-    <VariableValueTable v-model="tableForm.value" >
-      {{tableForm.value}}
+    <VariableValueTable v-model="tableForm.value">
+      {{ tableForm.value }}
     </VariableValueTable>
     <template #footer>
       <el-button @click="state.createTablePopoverVisible = false">

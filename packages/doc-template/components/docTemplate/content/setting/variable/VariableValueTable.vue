@@ -74,12 +74,16 @@ const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : 
 const rows = ref(props.modelValue?.rows ? props.modelValue.rows.map(r => [...r]) : [[]])
 const alignOptions = ref(['left', 'center', 'right'])
 watch(() => props.modelValue, v => {
-  columns.value = v?.columns ? [...v.columns] : [{ name: 'Column 1', align: 'left' }]
+  columns.value = v?.columns ? [...v.columns] : [{ name: 'Column 1', align: 'left',color: '#d3dbde' }]
   rows.value = v?.rows ? v.rows.map(r => [...r]) : [[]]
 })
 
 function addColumn() {
-  const newCol = { name: `Column ${columns.value.length + 1}`, align: 'left' }
+  const newCol = {
+    name: `Column ${columns.value.length + 1}`,
+    align: 'left',
+    color: '#d3dbde'
+  }
   columns.value.push(newCol)
   rows.value.forEach(row => row.push(''))
   emitValue()
