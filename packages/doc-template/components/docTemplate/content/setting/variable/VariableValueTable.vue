@@ -3,6 +3,7 @@
     <div class="switch-container">
       <el-switch v-model="bordered" active-text="Bordered" inactive-text="Borderless" @change="emitValue" />
       <el-switch v-model="striped" active-text="Striped" inactive-text="Not Striped" @change="emitValue" />
+      <el-color-picker v-if="striped" v-model="stripedColor" color-format="hex" />
     </div>
 
     <el-table :data="rows" style="width: 100%">
@@ -70,11 +71,12 @@ const props = defineProps<{ modelValue: { columns: any[], rows: string[][] } }>(
 const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: any[], rows: string[][] }): void }>()
 const bordered = ref(props.modelValue?.bordered ?? true)
 const striped = ref(props.modelValue?.striped ?? false)
+const stripedColor = ref(props.modelValue?.StripedColor ?? '#C0C6C8')
 const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : [{ name: 'Column 1', align: 'left' }])
 const rows = ref(props.modelValue?.rows ? props.modelValue.rows.map(r => [...r]) : [[]])
 const alignOptions = ref(['left', 'center', 'right'])
 watch(() => props.modelValue, v => {
-  columns.value = v?.columns ? [...v.columns] : [{ name: 'Column 1', align: 'left',color: '#d3dbde' }]
+  columns.value = v?.columns ? [...v.columns] : [{ name: 'Column 1', align: 'left', color: '#d3dbde' }]
   rows.value = v?.rows ? v.rows.map(r => [...r]) : [[]]
 })
 
@@ -127,7 +129,8 @@ function emitValue() {
     columns: columns.value,
     rows: rows.value,
     bordered: bordered.value,
-    striped: striped.value
+    striped: striped.value,
+    stripedColor: stripedColor.value
   })
 }
 </script>
