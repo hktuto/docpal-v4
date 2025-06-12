@@ -9,12 +9,11 @@ const props = defineProps<{
 
 const { id, expandedItems = [] } = toRefs(props)
 
-
-const emits = defineEmits(['idChange','expandedItemsChange'])
+const emits = defineEmits(['idChange', 'expandedItemsChange'])
 
 const selectedRow = ref<any>(null)
 
-async function getChildApi(id:string = 'root'){
+async function getChildApi(id: string = 'root') {
   return adminApi.api.getAclDocumentDocumentid(id).then((res) => res.data)
 }
 
@@ -33,13 +32,12 @@ function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[
 }
 const tableDialogRef = ref<any>(null)
 function dblClickHandler(row: any) {
-  if(!row.isFolder){
-    tableDialogRef.value.open({...row})
-  }else{
+  if (!row.isFolder) {
+    tableDialogRef.value.open({ ...row })
+  } else {
     emits('idChange', row.id)
   }
 }
-
 
 const reopenFolder = useDebounceFn(() => {
   if (!tableRef.value || expandedItems.value.length === 0) return
@@ -50,7 +48,7 @@ const reopenFolder = useDebounceFn(() => {
   // get table opened row
 }, 300)
 
-const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'rbac-resource-document-table',
   api: async (pageParams: any) => {
     const data = await getChildApi(id.value || 'root')
@@ -65,7 +63,7 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
   dblClickAction: ({ row, column, event }) => {
     dblClickHandler(row)
   },
-  columns:[
+  columns: [
     {
       field: 'name',
       title: 'document_name',
@@ -74,60 +72,72 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
       type: 'html',
       formatter: ({ cellValue, row }: any) => {
         let icon = '/icons/doc/file.svg'
-        const mimeType = row.fileContent?.mime_type || ""
+        const mimeType = row.fileContent?.mime_type || ''
         // logic to get icon
         if (row.isFolder) {
           icon = '/icons/doc/folder.svg'
         }
         if (mimeType?.startsWith('image')) {
           icon = '/icons/doc/image.svg'
-        }else if (mimeType?.startsWith('video')) {
+        } else if (mimeType?.startsWith('video')) {
           icon = '/icons/doc/video.svg'
-        }else if (mimeType?.startsWith('audio')) {
+        } else if (mimeType?.startsWith('audio')) {
           icon = '/icons/doc/audio.svg'
-        }else if (mimeType?.startsWith('application/pdf')) {
+        } else if (mimeType?.startsWith('application/pdf')) {
           icon = '/icons/doc/pdf.svg'
-        }else if (mimeType?.startsWith('application/zip')) {
+        } else if (mimeType?.startsWith('application/zip')) {
           icon = '/icons/doc/zip.svg'
-        }else if (mimeType?.startsWith('application/msword') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+        } else if (
+          mimeType?.startsWith('application/msword') ||
+          mimeType?.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+        ) {
           icon = `/icons/doc/word.svg`
-        }else if (mimeType?.startsWith('application/vnd.ms-powerpoint') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+        } else if (
+          mimeType?.startsWith('application/vnd.ms-powerpoint') ||
+          mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+        ) {
           icon = `/icons/doc/ppt.svg`
         }
         return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue} </span> `
-        
       }
     },
     {
       field: 'type',
       title: 'docType_documentType'
-    },
+    }
   ],
   bodyActions: [
     [
       {
-        code:'detail',
-        name:'view detail',
-        action:({row}:any)=>{
+        code: 'detail',
+        name: 'view detail',
+        action: ({ row }: any) => {
           console.log(row)
-          tableDialogRef.value.open({...row})
+          tableDialogRef.value.open({ ...row })
         }
       },
       {
         code: 'toggleExpand',
         name: 'toggleExpand',
-        action:({row}:any)=>{
+        action: ({ row }: any) => {
           // TODO : toggle expand
-          // tableRef.value.toggleTreeExpand(row)
+          tableRef.value.toggleTreeExpand(row)
         }
       }
     ]
   ],
-  permissionMethod: ({ options, code, column, row, rowIndex, additionalData }: any): {
+  permissionMethod: ({
+    options,
+    code,
+    column,
+    row,
+    rowIndex,
+    additionalData
+  }: any): {
     visible: boolean
     disabled: boolean
   } => {
-    if(code === 'toggleExpand'){
+    if (code === 'toggleExpand') {
       return {
         visible: row.isFolder,
         disabled: false
@@ -189,11 +199,15 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
   }
 })
 
-watch(id, () => {
-  reload()
-},{
-  immediate: true
-})
+watch(
+  id,
+  () => {
+    reload()
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <template>
@@ -205,10 +219,9 @@ watch(id, () => {
   <ResourceDocumentPermissionDialog ref="tableDialogRef" />
 </template>
 
-
 <style lang="scss" scoped>
 .vxe-grid {
-  :deep(.browseFileIcon){
+  :deep(.browseFileIcon) {
     width: calc(var(--app-space-m) * 1.5);
     height: calc(var(--app-space-m) * 1.5);
   }

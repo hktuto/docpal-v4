@@ -2,12 +2,7 @@
   <el-form ref="formRef" :model="formData" label-position="top">
     <el-form-item label="用户角色">
       <el-select v-model="formData.targetId" placeholder="请选择用户角色">
-        <el-option
-          v-for="role in flatRole"
-          :key="role.id"
-          :label="role.name"
-          :value="role.id"
-        />
+        <el-option v-for="role in flatRole" :key="role.id" :label="role.name" :value="role.id" />
       </el-select>
     </el-form-item>
 
@@ -29,21 +24,19 @@
 
     <el-divider>读写权限</el-divider>
     <ResourceDocumentPermissionDetailCheckbox
-        :checkAllLabel="`ReadWrite`"
-        v-model:checkAll="formData.allReadWrite"
-        :options="[
-          { label: '编辑文件夹', value: 6 },
-          { label: '编辑子内容', value: 7 },
-          { label: '编辑元数据', value: 8 },
-          { label: '分享', value: 9 },
-          { label: '创建子文件夹', value: 10 },
-          { label: '创建文件', value: 11 }
-        ]"
-        v-model="formData.readWritePermissions"
-      />
-    <el-form-item>
-    
-    </el-form-item>
+      :checkAllLabel="`ReadWrite`"
+      v-model:checkAll="formData.allReadWrite"
+      :options="[
+        { label: '编辑文件夹', value: 6 },
+        { label: '编辑子内容', value: 7 },
+        { label: '编辑元数据', value: 8 },
+        { label: '分享', value: 9 },
+        { label: '创建子文件夹', value: 10 },
+        { label: '创建文件', value: 11 }
+      ]"
+      v-model="formData.readWritePermissions"
+    />
+    <el-form-item> </el-form-item>
 
     <el-divider>管理权限</el-divider>
     <el-form-item>
@@ -55,9 +48,9 @@
           { label: '删除子内容', value: 13 },
           { label: '分配权限', value: 14 },
           { label: '添加用户集', value: 15 }
-        ]"  
+        ]"
         v-model="formData.managePermissions"
-      />  
+      />
     </el-form-item>
   </el-form>
 </template>
@@ -73,25 +66,25 @@ const formRef = ref()
 const roleOptions = ref([])
 
 type SaveData = {
-  resourceId: string,
-  resourceType: number, // (1=Document)
-  targetType: number, // (1=User, 2=Role, 3=Group, 4=User Set)
-  targetId: string, 
-  permissionLevel: number, //(1=Read, 2=ReadWrite, 3=Manage, 4=Custom, 5=Configuration Set)
-  permissionIds: number[],
-  configurationRuleName: string,
-  members: any[], //TODO : create type
+  resourceId: string
+  resourceType: number // (1=Document)
+  targetType: number // (1=User, 2=Role, 3=Group, 4=User Set)
+  targetId: string
+  permissionLevel: number //(1=Read, 2=ReadWrite, 3=Manage, 4=Custom, 5=Configuration Set)
+  permissionIds: number[]
+  configurationRuleName: string
+  members: any[] //TODO : create type
   rules: any[] //TODO : create type
 }
 type FormData = {
-  resourceId: string,
-  targetType: number,
-  targetId: string,
-  allRead: boolean,
-  allReadWrite: boolean,
-  allManage: boolean,
-  readPermissions: number[],
-  readWritePermissions: number[],
+  resourceId: string
+  targetType: number
+  targetId: string
+  allRead: boolean
+  allReadWrite: boolean
+  allManage: boolean
+  readPermissions: number[]
+  readWritePermissions: number[]
   managePermissions: number[]
 }
 const formData = ref<FormData>({
@@ -107,30 +100,28 @@ const formData = ref<FormData>({
 })
 
 function getReadPermissions(permissionLevels: number[]) {
-  return permissionLevels.filter(level => level <= 5)
+  return permissionLevels.filter((level) => level <= 5)
 }
 function getReadWritePermissions(permissionLevels: number[]) {
-  return permissionLevels.filter(level => level >= 6 && level <= 11)
+  return permissionLevels.filter((level) => level >= 6 && level <= 11)
 }
 function getManagePermissions(permissionLevels: number[]) {
-  return permissionLevels.filter(level => level >= 12 && level <= 15)
+  return permissionLevels.filter((level) => level >= 12 && level <= 15)
 }
 
-
-function saveDataConvertToFormData(data: SaveData) : FormData {
+function saveDataConvertToFormData(data: SaveData): FormData {
   const newFormData = {
     resourceId: data.resourceId,
     targetType: data.targetType,
     targetId: data.targetId,
-    readPermissions: data.permissionLevel === 1 ? [1,2,3,4,5] : getReadPermissions(data.permissionIds),
-    readWritePermissions: data.permissionLevel === 2 ? [6,7,8,9,10,11] : getReadWritePermissions(data.permissionIds),
-    managePermissions: data.permissionLevel === 3 ? [12,13,14,15] : getManagePermissions(data.permissionIds)
+    readPermissions: data.permissionLevel === 1 ? [1, 2, 3, 4, 5] : getReadPermissions(data.permissionIds),
+    readWritePermissions: data.permissionLevel === 2 ? [6, 7, 8, 9, 10, 11] : getReadWritePermissions(data.permissionIds),
+    managePermissions: data.permissionLevel === 3 ? [12, 13, 14, 15] : getManagePermissions(data.permissionIds)
   }
   return newFormData
 }
 
-
-function formDataConvertToSaveData(formData: FormData) : SaveData {
+function formDataConvertToSaveData(formData: FormData): SaveData {
   const newSaveData = {
     resourceId: formData.resourceId,
     resourceType: 1,
