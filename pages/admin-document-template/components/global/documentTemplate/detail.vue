@@ -107,6 +107,8 @@ async function handleTest() {
       id: state.info.id,
       variables: data
     }, {
+      format: 'blob',
+      timeout: 0,
       onDownloadProgress: (e: any) => {
         const el = document.getElementById(id)
         if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'

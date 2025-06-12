@@ -78,7 +78,7 @@ const filterText = ref("");
 const filterList = computed(() => {
   return state.allList.filter((item: any) => {
     return !filterText.value || item.name.toLowerCase().includes(filterText.value.toLowerCase());
-  });
+  }).filter(item => !state.setting.layout.find(l => item.id === l.id))
 });
 
 const widthList = [
