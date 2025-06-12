@@ -35,18 +35,22 @@ async function handleSubmit() {
     }
     state.loading = true
     await adminApi.api.postNuxeoIdentityUser(data)
-    state.visible = false
-    await adminApi.api.postNuxeoIdentityUserBatchAddGroups({
-      userId: data.userId,
-      groupIds: data.groupList
-    })
+    if (data.groupList.length > 0) {
+      await adminApi.api.postNuxeoIdentityUserBatchAddGroups({
+        userId: data.userId,
+        groupIds: data.groupList
+      })
+    }
     ElMessage.success(t('tip_createdSuccessMsg', { modelName: t('User'), name: data.userId }))
-    FormRendererRef.value.vFormRenderRef.resetForm()
     emits('refresh')
+    console.log('resetFormFormRendererRef', FormRendererRef.value.vFormRenderRef)
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    state.visible = false
   } catch (error) {
-    console.log(error)
+    console.error(error)
+  } finally {
+    state.loading = false
   }
-  state.loading = false
 }
 
 function handleOpen() {

@@ -42,7 +42,9 @@ const { formRenderSlots } = useWorkflow()
 const WidgetNames = {
   arr: ['sub-form'],
   upload: ['file-upload'],
-  select: ['select', 'async-select', 'ug-select', 'select-group']
+  number: ['number', 'slider'],
+  select: ['select', 'async-select', 'ug-select', 'select-group'],
+  arrSelect: ['time-range', 'date-range', 'checkbox']
 }
 const defaultFormJson = {
   widgetList: [],
@@ -73,7 +75,6 @@ const defaultFormJson = {
 const FormRendererRef = ref()
 // #region module: set
 async function setForm(json: string | object, data?: object, properties: any[] = [], xml?: string) {
-  console.log('setForm', json, data, properties, xml)
   if (JSON.stringify(json) === '{}') {
     FormRendererRef.value.setFormJson(defaultFormJson)
     return
@@ -82,6 +83,10 @@ async function setForm(json: string | object, data?: object, properties: any[] =
   FormRendererRef.value.setFormJson(json)
   if (data && properties) {
     const _data = await handleData(data)
+    // check if value in _data is undefine or null , if so remove it
+    Object.keys(_data).forEach((key) => {
+      if (_data[key] === undefined || _data[key] === null) delete _data[key]
+    })
     state.formData = { ..._data }
 
     FormRendererRef.value.setFormData(_data)
@@ -94,7 +99,9 @@ async function handleData(data: any) {
   // 处理sub-form
   const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
   const uploadWidgetKeys = getWidgetNames(WidgetNames.upload)
+  const numberWidgetKeys = getWidgetNames(WidgetNames.number)
   const selectWidgetKeys = getWidgetNames(WidgetNames.select, true)
+  selectWidgetKeys.push(...getWidgetNames(WidgetNames.arrSelect))
   const result: any = {}
   const pList: any = []
   Object.keys(data).forEach((key) => {
@@ -109,6 +116,7 @@ async function handleData(data: any) {
       const mode = uploadWidget.uploadName === 'file' ? 'nuxeo' : 'workflow'
       result[key] = await revertUploadFile(value, mode)
     } else if (selectWidgetKeys.find((item: any) => item.name === key)) result[key] = value ? value.split(',') : ''
+    else if (numberWidgetKeys.find((item: any) => item.name === key)) result[key] = value || value === 0 ? Number(value) : value
     else if (value !== null) result[key] = value
   }
 }
@@ -164,11 +172,10 @@ async function getFormData(needValidation = true, onlyWritable = false) {
       ...resultFormData,
       ...slotData
     }
-  
     // throw new Error("slotData", result)
     return result
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 async function getSlotData(refList: any, needValidation: boolean) {
@@ -193,8 +200,6 @@ function writableDataDeArray(formDatas: any) {
   return dataDeArray(data)
 }
 function dataDeArray(formDatas: any) {
-  console.log('init data', formDatas, WidgetNames)
-
   const arrWidgetKeys = getWidgetNames(WidgetNames.arr)
   // TODO : remove later
   const data = Object.keys(formDatas).reduce((prev: any, key: string) => {
