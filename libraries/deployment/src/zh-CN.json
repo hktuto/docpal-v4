@@ -484,6 +484,7 @@
   "common_download": "下载",
   "common_dragFileHere": "拖放到此处",
   "common_edit": "编辑",
+  "common_fetchFail": "获取数据失败",
   "common_file": "文件",
   "common_filter": "过滤",
   "common_folder": "文件夹",
@@ -1126,6 +1127,10 @@
       "selectTableVariable": "选择表格变量",
       "selectTargetVariable": "选择目标变量",
       "selectVariable": "选择变量",
+      "setCellWidth": {
+        "warning": "至少有一列的宽度是默认值"
+      },
+      "setHeaderColor": "设置标题颜色",
       "tableBordered": "显示边框",
       "tableContent": "表格内容",
       "tableData": "表格数据",
@@ -3629,6 +3634,5 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容",
-  "common_fetchFail": "获取数据失败"
+  "檔案內容": "檔案內容"
 }

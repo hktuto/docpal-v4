@@ -484,6 +484,7 @@
   "common_download": "Download",
   "common_dragFileHere": "Drag and drop here",
   "common_edit": "Edit",
+  "common_fetchFail": "Failed to fetch data",
   "common_file": "File",
   "common_filter": "Filter",
   "common_folder": "Folder",
@@ -1126,6 +1127,10 @@
       "selectTableVariable": "Select table variable",
       "selectTargetVariable": "Select target variable",
       "selectVariable": "Select Variable",
+      "setCellWidth": {
+        "warning": "The width of at least one column is the default"
+      },
+      "setHeaderColor": "Set Header Color",
       "tableBordered": "Show Borders",
       "tableContent": "Table Content",
       "tableData": "Table Data",
@@ -3631,6 +3636,5 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content",
-  "common_fetchFail": "Failed to fetch data"
+  "檔案內容": "Content"
 }
