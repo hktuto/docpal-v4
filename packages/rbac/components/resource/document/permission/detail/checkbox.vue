@@ -1,21 +1,10 @@
 <template>
   <div class="checkbox-group-container">
-    <el-checkbox
-      v-model="checkAll"
-      :indeterminate="isIndeterminate"
-      @change="handleCheckAllChange"
-    >
+    <el-checkbox v-model="checkAll" :indeterminate="isIndeterminate" @change="handleCheckAllChange">
       {{ checkAllLabel }}
     </el-checkbox>
-    <el-checkbox-group 
-      v-model="checkedList"
-      @change="handleCheckedChange"
-    >
-      <el-checkbox
-        v-for="option in options"
-        :key="option.value"
-        :label="option.value"
-      >
+    <el-checkbox-group v-model="checkedList" @change="handleCheckedChange">
+      <el-checkbox v-for="option in options" :key="option.value" :label="option.value">
         {{ option.label }}
       </el-checkbox>
     </el-checkbox-group>
@@ -45,13 +34,16 @@ const emit = defineEmits<{
 const isIndeterminate = ref(false)
 const checkedList = ref<(string | number)[]>(props.modelValue)
 
-watch(() => props.modelValue, (newVal) => {
-  checkedList.value = newVal
-  updateCheckAllState()
-})
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    checkedList.value = newVal
+    updateCheckAllState()
+  }
+)
 
 function handleCheckAllChange(val: boolean) {
-  checkedList.value = val ? props.options.map(option => option.value) : []
+  checkedList.value = val ? props.options.map((option) => option.value) : []
   isIndeterminate.value = false
   emit('update:modelValue', checkedList.value)
 }
