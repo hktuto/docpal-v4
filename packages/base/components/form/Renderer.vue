@@ -98,8 +98,12 @@ function setFormData(data: any) {
     else if (widgetRef.field) {
       const widget = widgetRef.field
       if (widget.type === 'date') {
-        if (widget.options.valueFormat && data[widget.id]) {
-          data[widget.id] = formatDate(data[widget.id], widget.options.valueFormat)
+        if (widget.options.valueFormat && data[widget.options.name]) {
+          data[widget.options.name] = formatDate(data[widget.options.name], widget.options.valueFormat)
+        }
+      } else if (widget.type === 'checkbox') {
+        if (!data[widget.options.name]) {
+          data[widget.options.name] = []
         }
       }
     }

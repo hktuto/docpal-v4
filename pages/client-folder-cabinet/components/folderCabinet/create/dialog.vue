@@ -78,14 +78,15 @@ async function handleSubmit() {
     }
     // getUniqueName has bug, will return same name,
     // we need to implement inline function to check if the name is unique
-    const hasSameName = await clientApi.api.postNuxeoDocumentIsduplicatename({
-      path: state.cabinetTemplate.documentPath,
-      titles: [fileName]
-    }).then(res => !!res.data.hasDuplicateTitle)
-    if(hasSameName) {
-      ElMessage.error($t('dpTip.folderCabinet.duplicateRootFolder'))
-      throw new Error('dpTip.folderCabinet.duplicateRootFolder')
-    }
+
+    // const hasSameName = await clientApi.api.postNuxeoDocumentIsduplicatename({
+    //   path: state.cabinetTemplate.documentPath,
+    //   titles: [fileName]
+    // }).then(res => !!res.data.hasDuplicateTitle)
+    // if(hasSameName) {
+    //   ElMessage.error($t('dpTip.folderCabinet.duplicateRootFolder'))
+    //   throw new Error('dpTip.folderCabinet.duplicateRootFolder')
+    // }
     
     const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
     // 上传最上层数据
