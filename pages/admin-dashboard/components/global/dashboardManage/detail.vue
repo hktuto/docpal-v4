@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import type { DashboardWidget, DashboardWidgetSetting } from '#imports'
 import { dashboardWidgetSetting, getNormalizeSetting, getWidgetSetting } from '#imports'
 import { publicApi } from 'api'
-import { onActivated } from 'vue'
+
 const routerProvider = inject(MenuRouterKey)
 const { id } = defineProps<{
   id: number;
@@ -78,7 +78,7 @@ async function getInfo() {
   }
 }
 
-onActivated(() => {
+onMounted(() => {
   getInfo()
 })
 </script>
@@ -91,8 +91,8 @@ onActivated(() => {
               class="normal cursor-pointer" @click="handleEdit"></Icon>
       </div>
       <div>
-        <el-dropdown trigger="click" @command="handleAdd">
-          <el-button id="Dashboard__EditDashboardContent__Add" type="primary">
+        <el-dropdown id="Dashboard__EditDashboardContent__Add" trigger="click" @command="handleAdd">
+          <el-button type="primary">
             {{ $t('common_add') }}
           </el-button>
           <template #dropdown>

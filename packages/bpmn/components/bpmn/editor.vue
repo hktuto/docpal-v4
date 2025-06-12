@@ -7,9 +7,10 @@ import { History } from '@antv/x6-plugin-history'
 import { graphToBpmnJson } from '~/utils/bpmnConverter'
 import { adminApi } from 'api'
 import { bpmnElement } from '~/utils/bpmnElement'
-import { ElMessage, ElNotification } from 'element-plus'
-import { EDITOR_PROVIDER, conditionOptions } from '#imports'
-import { vi } from 'vitest'
+
+import { ElMessage } from 'element-plus'
+import { EDITOR_PROVIDER, conditionOptions, MenuRouterKey } from '#imports'
+
 /**
  *  options: bpmn viewer options
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
@@ -29,6 +30,7 @@ const { options = {}, workflowData, currentVersion, readonly } = toRefs(props)
 
 const graphOptions = ref({})
 function init(bpmnXml: string, x6Json?: any) {
+  console.log('init editor')
   // check if ready
   if (ready.value && graph.value) {
     // reset graph
@@ -321,7 +323,7 @@ async function pasteForm(node: Node) {
   }
 
   // notify user
-  routerProvider.message.success(`${node.data.name || node.data.id} has paste the copied content`)
+  routerProvider?.message?.success(`${node.data.name || node.data.id} has paste the copied content`)
   // reset copyObj
 }
 

@@ -12,6 +12,12 @@ export default defineAppConfig({
                 },
                 {
                     name:"admin-group"
+                },
+                {
+                  name: "RBAC-editor"
+                },
+                {
+                  name: "RBAC-page"
                 }
             ]
         },
@@ -93,6 +99,9 @@ export default defineAppConfig({
             children:[
                 {
                     name: "admin-document-template"
+                },
+                {
+                  name : "admin-doc-template-collaboration"
                 },
                 {
                     name: "admin-email-template"

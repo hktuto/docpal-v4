@@ -20,7 +20,8 @@ export type DashboardWidget = "DocTypeCoCount" |
     "PersonalSearchRecentDoc" |
     "PersonalSearchSubscribed" |
     "PersonalCaseCreate" |
-    "PersonalCase"
+    "PersonalCase"|
+    "Browse"
 export type WorkflowCoCountWidget = "WorkflowActiveCount" | "WorkflowApproveRate" | "WorkflowNewCount"  | "WorkflowTimeSpendPerTask" | "WorkflowTimeSpendPerWorkflow"  
 import DocTypeCoCount from  '../components/global/doc/coCount/index.vue'
 import DocTypeCount from  '../components/global/doc/count.vue'
@@ -59,6 +60,7 @@ import CalendarWidget from '../components/global/calendar/widget/index.vue'
 import PersonalWorkflowSingle from '../components/global/personal/workflow/single/index.vue'
 // import PersonalWorkflowSingleFilter from '../components/global/personal/workflow/singleFilter/index.vue'
 import  '../assets/dashboard.scss'
+import Browse from '../components/global/personal/browse/index.vue'
 
 export type DashboardWidgetSetting = {
     x?: number,
@@ -79,7 +81,6 @@ export type DashboardWidgetSetting = {
     feature?: string,
     type ?: 'personal' | 'document' | 'workflow' | 'azure' | 'default'
 }
-
 
 export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting } = {
     DocSizeStatistics: {
@@ -129,7 +130,7 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
             showCount: true,
             showSize: true,
             displayList: [
-                { meta: 'dc:creator' }
+                { meta: 'create_by' }
             ],
             showUserFilter: true
         }
@@ -171,47 +172,48 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         }
     },
     // azure
-    AzureThreshold: {
-        feature: 'AZURE_OCR',
-        divided: true,
-        label: 'azureThreshold',
-        minW: 1,
-        minH: 1,
-        maxW: 4,
-        maxH: 1,
-        w: 1,
-        h: 1,
-        component : 'AzureThreshold',
-        setting : {
-            scanType: 'Pre-Build',
-        }
-    },
-    AzureOcrProcessed: {
-        feature: 'AZURE_OCR',
-        label: 'azureOcrProcessed',
-        minW: 4,
-        minH: 2,
-        maxW: 12,
-        maxH: 8,
-        w: 12,
-        h: 5,
-        component : 'AzureOcrProcessed',
-        setting : {
-            dataType: 'workflow'
-        }
-    },
-    AzureOcrProcessedHistory: {
-        feature: 'AZURE_OCR',
-        label: 'azureOcrProcessedHistory',
-        minW: 4,
-        minH: 2,
-        maxW: 12,
-        maxH: 6,
-        w: 12,
-        h: 4,
-        component : 'AzureOcrProcessedHistory',
-        setting: {}
-    },
+    // 屏蔽Azure
+    // AzureThreshold: {
+    //     feature: 'AZURE_OCR',
+    //     divided: true,
+    //     label: 'azureThreshold',
+    //     minW: 1,
+    //     minH: 1,
+    //     maxW: 4,
+    //     maxH: 1,
+    //     w: 1,
+    //     h: 1,
+    //     component : 'AzureThreshold',
+    //     setting : {
+    //         scanType: 'Pre-Build',
+    //     }
+    // },
+    // AzureOcrProcessed: {
+    //     feature: 'AZURE_OCR',
+    //     label: 'azureOcrProcessed',
+    //     minW: 4,
+    //     minH: 2,
+    //     maxW: 12,
+    //     maxH: 8,
+    //     w: 12,
+    //     h: 5,
+    //     component : 'AzureOcrProcessed',
+    //     setting : {
+    //         dataType: 'workflow'
+    //     }
+    // },
+    // AzureOcrProcessedHistory: {
+    //     feature: 'AZURE_OCR',
+    //     label: 'azureOcrProcessedHistory',
+    //     minW: 4,
+    //     minH: 2,
+    //     maxW: 12,
+    //     maxH: 6,
+    //     w: 12,
+    //     h: 4,
+    //     component : 'AzureOcrProcessedHistory',
+    //     setting: {}
+    // },
     PersonalDashboard: {
         type: 'personal',
         feature: 'DASHBOARD',
@@ -470,7 +472,21 @@ export const dashboardWidgetSetting: { [key in string] : DashboardWidgetSetting 
         setting : {
             editable: true,
         }
-
+    },
+    Browse:{
+        type: 'personal',
+        label: 'Browse',
+        minW: 4,
+        minH: 4,
+        maxW: 12,
+        maxH: 6,
+        w: 3,
+        h: 3,
+        component : 'Browse',
+        setting : {
+          home: {},
+          hideSetting: []
+        }
     }
 }
 
@@ -524,5 +540,7 @@ export const widgetComponent = {
     "PersonalCase": PersonalCase,
     "PersonalWorkflowSingle": PersonalWorkflowSingle,
     "PersonalCaseSingle": PersonalCaseSingle,
-    "CalendarWidget": CalendarWidget
+    "CalendarWidget": CalendarWidget,
+
+    "Browse":Browse
 }

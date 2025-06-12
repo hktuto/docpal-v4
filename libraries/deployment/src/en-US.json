@@ -19,6 +19,13 @@
   "DAM_operation": "Operation",
   "DAM_setupFileExtension": "Setup file extension",
   "DAM_targetFormat": "Target Format",
+  "Dashboard": {
+    "Home": {
+      "card": {
+        "error": "The component cannot be displayed, please check the permissions. Whether to delete this component."
+      }
+    }
+  },
   "Deactivated": "Inactive",
   "ERROR": "ERROR",
   "Email": {
@@ -453,7 +460,9 @@
   "comments_placeholder": "Enter your comment here",
   "comments_reply": "to",
   "common_add": "Add",
+  "common_addFail": "Failed to add",
   "common_addMore": "Submit And Add More",
+  "common_addSuccess": "Successfully added",
   "common_all": "All",
   "common_back": "Back",
   "common_canNotEmpty": "Required field",
@@ -469,6 +478,8 @@
   "common_day": "Day",
   "common_days": "Days",
   "common_delete": "Delete",
+  "common_deleteFail": "Failed to delete",
+  "common_deleteSuccess": "Successfully deleted",
   "common_discussionChannel": "Discussion Channel",
   "common_download": "Download",
   "common_dragFileHere": "Drag and drop here",
@@ -530,6 +541,12 @@
   "conjunction": {
     "to": "to"
   },
+  "contextMenu": {
+    "case": "Case",
+    "confirmDelete": "Are you sure to delete this?",
+    "connection": "Connection",
+    "remove": "Remove"
+  },
   "convert_convert": "Convert",
   "convert_documentFormat": "Convert to Other Format:",
   "convert_transferring": "Transferring...",
@@ -538,6 +555,7 @@
     "angleTip": "Positive or negative integer"
   },
   "dashboard": {
+    "Browse": "Browse",
     "CalendarWidget": "Calendar",
     "PersonalCase": "Case",
     "PersonalCaseCreate": "New Case",
@@ -978,6 +996,148 @@
   "docInfo": {
     "fileExtension": "File Extension"
   },
+  "docTemplate": {
+    "export": {
+      "configureVariables": "Configure Variables",
+      "export": "Export",
+      "exportDOCX": "Export DOCX",
+      "exportHTML": "Export HTML",
+      "exportJSON": "Export JSON",
+      "exportPDF": "Export PDF",
+      "noVariables": "No variables to configure."
+    },
+    "font": {
+      "bold": "Bold",
+      "color": "Font Color",
+      "deleteStyle": "Delete Font Style",
+      "delineate": "Delineate",
+      "family": "Font Family",
+      "font": "Font",
+      "highlight": "Highlight",
+      "increaseSize": "Increase Font Size",
+      "italic": "Italic",
+      "reduceSize": "Reduce Font Size",
+      "size": "Font Size",
+      "subscript": "Subscript",
+      "superscript": "Superscript",
+      "underline": "Underline"
+    },
+    "paragraph": {
+      "bulletList": "Bullet List",
+      "center": "Center",
+      "indentation": "Indentation",
+      "indentationDecrease": "Decrease Indentation",
+      "indentationIncrease": "Increase Indentation",
+      "justify": "Justify",
+      "left": "Left",
+      "liftListItem": "Lift List Item",
+      "orderedList": "Ordered List",
+      "paragraph": "Paragraph",
+      "right": "Right",
+      "sinkListItem": "Sink List Item",
+      "splitListItem": "Split List Item",
+      "textAlign": "Text Align"
+    },
+    "style": {
+      "style": "Style",
+      "titleTags": "Title Tags"
+    },
+    "table": {
+      "MergeCells": "Merge Cells",
+      "SplitCell": "Split Cell",
+      "addColLeft": "Add Col Left",
+      "addColRight": "Add Col Right",
+      "addRowDown": "Add Row Down",
+      "addRowUp": "Add Row Up",
+      "cellBackgroundColor": "Set Cell Background Color",
+      "clearingInnerBoundaries": "Clearing Inner Boundaries",
+      "clearingOuterBoundaries": "Clearing Outer Boundaries",
+      "create": "Create",
+      "createTable": "Create Table",
+      "delete": "Delete Table",
+      "deleteCol": "Delete Col",
+      "deleteRow": "Delete Row",
+      "setHeaderBackgroundColor": "Set Header Background Color",
+      "showInnerBoundaries": "Show Inner Boundaries",
+      "showOuterBoundaries": "Show Outer Boundaries",
+      "toggleHeaderColumn": "Toggle Header Column",
+      "toggleHeaderRow": "Toggle Header Row"
+    },
+    "utils": {
+      "HorizontalLine": "Horizontal Line",
+      "TaskList": "Task List",
+      "image": "Image",
+      "link": "Hyper Link",
+      "toggleTaskList": "Task List",
+      "utils": "Utils"
+    },
+    "variable": {
+      "actions": "Actions",
+      "add": "Add",
+      "addColumn": "Add Column",
+      "addErrorKeyExists": "Variable key already exists",
+      "addErrorKeyInvalid": "Variable key is invalid",
+      "addErrorKeyRequired": "Variable key is required",
+      "addListItem": "Add Item",
+      "addRow": "Add Row",
+      "addSuccess": "Variable added successfully",
+      "addVariable": "Add Variable",
+      "cancel": "Cancel",
+      "columnAlign": "Alignment",
+      "columnHeader": "Column Header",
+      "columnKey": "Column Key",
+      "columnName": "Column Name",
+      "confirmDelete": "Are you sure you want to delete this variable?",
+      "createLink": "Create Link",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this variable?",
+      "deleteSuccess": "Variable deleted successfully",
+      "deleteVariable": "Delete Variable",
+      "displayValue": "Display Value",
+      "edit": "Edit",
+      "editErrorDisplayValueRequired": "Display value is required",
+      "editLink": "Edit Link",
+      "editList": "Edit List",
+      "editSuccess": "Variable updated successfully",
+      "editTable": "Edit Table",
+      "editVariable": "Edit Variable",
+      "insertLink": "Insert Link",
+      "insertList": "Insert List",
+      "insertListVariable": "Insert List Variable",
+      "insertTable": "Insert Table",
+      "insertTableVariable": "Insert Table Variable",
+      "insertVariable": "Insert Variable",
+      "key": "Key",
+      "linkLabel": "Label",
+      "linkLabelPlaceholder": "Enter link label (optional)",
+      "linkTarget": "Target",
+      "listContent": "List Content",
+      "listItemPlaceholder": "Enter list item...",
+      "listItems": "List Items",
+      "listStyle": "List Style",
+      "listStyleBullet": "Bullet Points",
+      "listStyleNone": "No Style",
+      "listStyleNumbered": "Numbered",
+      "manager": "Variable Manager",
+      "managerTitle": "Variable Manager",
+      "name": "Name",
+      "save": "Save",
+      "selectListVariable": "Select list variable",
+      "selectTableVariable": "Select table variable",
+      "selectTargetVariable": "Select target variable",
+      "selectVariable": "Select Variable",
+      "tableBordered": "Show Borders",
+      "tableContent": "Table Content",
+      "tableData": "Table Data",
+      "tableRows": "Table Rows",
+      "tableStriped": "Striped Rows",
+      "tableStyle": "Table Style",
+      "type": "Type",
+      "variableName": "Variable Name",
+      "variableType": "Variable Type",
+      "variableValue": "Variable Value"
+    }
+  },
   "docType": {
     "Audio": "Audio",
     "File": "File",
@@ -1213,11 +1373,15 @@
     "filterBy": "Filter By {name}",
     "filterByBusinessName": "Filter By Bussiness Name",
     "filterByBussinessName": "Filter By Bussiness Name",
+    "folderCabinet": {
+      "duplicateRootFolder": "Same folder name is already exist"
+    },
     "formatError": "Format Error",
     "jumpToView": "Jump To View",
     "loading": "Loading...",
     "newFolderDuplicateName": "The system detected a duplicate folder name, please refill the folder name",
     "noMore": "No more",
+    "noValidName": "The system detected that no valid name was generated",
     "pleaseSelectApprovalStatus": "Please select approval status",
     "resetWarning": "After submission, the groups of all selected users will be reset",
     "stopShareConfirm": "Are you sure you want to stop sharing?",
@@ -1981,6 +2145,45 @@
   "options_size_small": "Small",
   "order": "Order",
   "orderColumn": "Order Column",
+  "orgChart": {
+    "add": "Add",
+    "contextMenu": {
+      "addChild": "Add Child Node",
+      "delete": "Delete",
+      "edit": "Edit"
+    },
+    "editSidebar": {
+      "addRole": "Add Role",
+      "cancel": "Cancel",
+      "editGroup": "Edit User Group",
+      "editRole": "Edit Role",
+      "parentRole": "Parent Role",
+      "parentRolePlaceholder": "Please enter parent role",
+      "roleLabel": "Role Name",
+      "rolePlaceholder": "Please enter role name",
+      "save": "Save",
+      "validation": {
+        "minLength": "Length must be at least 2 characters",
+        "roleRequired": "Please enter role name"
+      }
+    },
+    "noData": "No Data",
+    "userTable": {
+      "actions": {
+        "remove": "Remove"
+      },
+      "addUser": "Select users to add to role",
+      "addUserButton": "Add users to role",
+      "addUserToGroup": "Select users to add to user group",
+      "addUserToRole": "Select users to add to role",
+      "columns": {
+        "email": "Email",
+        "username": "Username"
+      },
+      "filterPlaceholder": "Filter by name",
+      "title": "Users"
+    }
+  },
   "pending_approval": "Pending Approval",
   "pending_completed": "Completed",
   "pending_upload": "Pending Upload",
@@ -2024,6 +2227,7 @@
       "endDatePlaceholder": "End date",
       "endTimePlaceholder": "End time",
       "fieldRequired": "{name} cannot be empty.",
+      "fileLoading": "The file is being uploaded, please try again later",
       "fileSizeExceed": "File size out of limit: ",
       "insertSubFormRow": "insert new row",
       "invalidNumber": "Invalid number format",
@@ -3352,7 +3556,6 @@
   "workflowEditor_promoteToProduction": "Promote To Production : {currentVersion}",
   "workflowEditor_saveAsNewVersion": "Save As New Version",
   "workflowEditor_versionList": "Version List",
-  "workflow_activeTask": "Active Task",
   "workflow_GenerateDocument": "Generate Document",
   "workflow_ManageDeleteTask": "Delete Task",
   "workflow_ManageDeleteWorkflowMsg": "Are you sure you want to delete the selected workflow task(s)?<br>This action cannot be undone.",
@@ -3365,6 +3568,7 @@
   "workflow_TAT": "TAT",
   "workflow_Unclaim": "Unclaim Task",
   "workflow_WorkflowTasks": "workflow tasks",
+  "workflow_activeTask": "Active Task",
   "workflow_activity": "Activity",
   "workflow_adhocTask": "Adhoc Task",
   "workflow_allTask": "Avalible Task",
@@ -3426,5 +3630,6 @@
   "所有內容": "Everything",
   "收藏夹": "Collection",
   "文件Keywords": "Keywords",
-  "檔案內容": "Content"
+  "檔案內容": "Content",
+  "common_fetchFail": "Failed to fetch data"
 }

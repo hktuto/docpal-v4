@@ -3,11 +3,12 @@ import * as echarts from 'echarts'
 export type useDashboardCardParams = {
   initStyleAction?: (cardRef, chartRef) => void
   initStyleActionExtend?: (pHeight: number, pWidth: number) => void
-  resizeAction?: () => void
+  resizeAction?: (instance) => void
   resizeActionExtend?: () => void
   onClick?: (instance) => void
 
   handleInitCardAction?: (chartSetting) => void
+  handleRefreshAction?: (chartSetting) => void
   getOptions?: (chartSetting) => any
   options?: any
 
@@ -15,15 +16,18 @@ export type useDashboardCardParams = {
 }
 export const useDashboardCard = (params: useDashboardCardParams) => {
   const props = params.props
-  let echartInstance 
+  let echartInstance
   const chartRef = ref()
   const cardRef = ref()
   const settingRef = ref()
+  const loading = ref(false)
 
   const initStyle = () => {
     if (params.initStyleAction) {
       params.initStyleAction(cardRef, chartRef)
     } else {
+      // TODO: cardRef 可能为空
+      if(!cardRef.value) return
       const pHeight = cardRef.value.$el.offsetHeight - 36 // - header
       const pWidth = cardRef.value.$el.offsetWidth - 20
       if (chartRef.value) chartRef.value.style = `height: ${pHeight}px; width: ${pWidth}px`
@@ -33,16 +37,41 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
 
   const initChart = (_options) => {
     if (echartInstance) echartInstance.clear()
-    echartInstance = echarts.init(chartRef.value)
-    echartInstance.setOption(_options)
-    echartInstance.resize()
+    if (chartRef.value && _options) {
+      echartInstance = echarts.init(chartRef.value)
+      echartInstance.setOption(_options)
+      echartInstance.resize()
+    }
   }
-  const handleInitCard = async (chartSetting) => {
-    if (!params.handleInitCardAction) {
-      const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : {}
-      initChart(options)
-    } else {
-      params.handleInitCardAction(chartSetting)
+
+  // refresh: handleRefreshAction || handleInitCard
+  const refresh = async (chartSetting ?:any) => {
+    if (params.handleRefreshAction) {
+      try {
+        loading.value = true
+        await params.handleRefreshAction(chartSetting)
+      } catch (error: any) {
+        console.error(error)
+      } finally {
+        await new Promise((resolve) => setTimeout(resolve, 300))
+        loading.value = false
+      }
+    } else handleInitCard(chartSetting)
+  }
+  const handleInitCard = async (chartSetting?:any) => {
+    try {
+      loading.value = true
+      if (!params.handleInitCardAction) {
+        const options = params.getOptions ? await params.getOptions(chartSetting) : params.options ? params.options : null
+        initChart(options)
+      } else {
+        params.handleInitCardAction(chartSetting)
+      }
+    } catch (error: any) {
+      console.error(error)
+    } finally {
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      loading.value = false
     }
     if (params.onClick) params.onClick(echartInstance)
   }
@@ -51,8 +80,12 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   }
   const resize = () => {
     setTimeout(() => {
-      initStyle()
-      if (echartInstance) echartInstance.resize()
+      if (params.resizeAction) {
+        params.resizeAction(echartInstance)
+      } else {
+        initStyle()
+        if (echartInstance) echartInstance.resize()
+      }
     })
   }
 
@@ -81,11 +114,13 @@ export const useDashboardCard = (params: useDashboardCardParams) => {
   )
 
   return {
+    loading,
     chartRef,
     cardRef,
     settingRef,
     initChart,
     resize,
+    refresh,
     handleInitCard,
     getInstance
   }

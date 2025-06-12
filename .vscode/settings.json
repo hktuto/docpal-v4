@@ -1,6 +1,8 @@
 {
   // "i18n-ally.enabledFrameworks": ["vue"],
-  "i18n-ally.localesPaths": "libraries/deployment/src",
+  "i18n-ally.localesPaths": [
+    "libraries/deployment/src",
+  ],
   "i18n-ally.sourceLanguage": "en",
   "i18n-ally.displayLanguage": "en-US",
   "i18n-ally.keystyle": "nested",
@@ -30,5 +32,6 @@
   "[less]": {
     "editor.defaultFormatter": "vscode.css-language-features" // less文件，同上
   },
+  "editor.gotoLocation.multipleDefinitions": "goto",
   "vue3snippets.enable-compile-vue-file-on-did-save-code": false
 }

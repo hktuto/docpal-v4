@@ -27,7 +27,7 @@ const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData()
     if (!data) return
     emits('save', data)
     state.dialogVisible = false
@@ -47,7 +47,7 @@ function handleOpen() {
 defineExpose({
   handleOpen
 })
-onActivated(async () => {
+onMounted(async () => {
 })
 </script>
 

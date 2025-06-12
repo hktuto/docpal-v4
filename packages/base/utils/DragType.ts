@@ -10,6 +10,7 @@ export interface DroppableItem {
     icon?:string,
     label:string,
     component: string,
+    handleError?: boolean, // is true page not handout error
     props?: Record<string, any>
 }
 

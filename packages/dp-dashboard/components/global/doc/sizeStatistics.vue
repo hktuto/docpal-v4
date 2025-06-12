@@ -1,5 +1,14 @@
 <template>
-  <DashboardCard ref="cardRef" :hideSetting="hideSetting" :title="$t(title)" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard
+    v-loading="loading"
+    ref="cardRef"
+    :hideSetting="hideSetting"
+    :title="$t(title)"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+    @refresh="handleInitCard"
+  >
     <div id="myEcharts" ref="chartRef" class="echart"></div>
     <DocSizeStatisticsSetting ref="settingRef" @refresh="handleRefresh" />
   </DashboardCard>
@@ -240,7 +249,7 @@ const dbSetting = {
   defaultSetting: {}
 }
 const emits = defineEmits(['refreshSetting', 'delete'])
-const { chartRef, cardRef, settingRef, resize } = useDashboardCard({
+const { chartRef, cardRef, settingRef, resize, handleInitCard, loading } = useDashboardCard({
   props,
   initStyleActionExtend: (pHeight, pWidth) => {
     chartWidth = Math.min(pWidth, pHeight)

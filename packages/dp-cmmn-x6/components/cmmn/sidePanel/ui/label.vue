@@ -21,8 +21,12 @@ const form = ref({
 const FormRef = ref()
 
 async function nameChange(newName: string) {
-  const valid = await FormRef.value.validate()
-  if (!valid) return
+  try {
+    await FormRef.value.validate()
+  } catch (e) {
+    console.error(e)
+    return
+  }
   node.value.prop('label', newName)
   node.value.attr('text/text', newName)
   const nodeData = node.value.data

@@ -92,8 +92,12 @@ async function save() {
   // check form valid
   if (id === "new") {
     if (infoFormEl.value) {
-      const valid = await infoFormEl.value.validate();
-      if (!valid) return;
+      try {
+        await infoFormEl.value.validate()
+      } catch (e) {
+        console.error(e)
+        return
+      }
     }
     const result = await adminApi.api.postTemplateEmailTemplate({
       ...data.value,
@@ -152,7 +156,7 @@ async function sendTest() {
   // TODO : add notification
 }
 
-onActivated(async () => {
+onMounted(async () => {
   data.value = await handleInit()
 })
 </script>

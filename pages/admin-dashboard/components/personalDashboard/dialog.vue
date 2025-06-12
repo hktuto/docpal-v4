@@ -32,13 +32,13 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  state.loading = true
-  const _data = {
-    name: data.name,
-    groupId: data.groupId.join(',')
-  }
   try {
+    state.loading = true
+    const data = await FormRendererRef.value.getFormData()
+    const _data = {
+      name: data.name,
+      groupId: data.groupId.join(',')
+    }
     if (state.edit) {
       const res = await adminApi.api.putPersonalDashboardUpdate({
         ...state.setting,

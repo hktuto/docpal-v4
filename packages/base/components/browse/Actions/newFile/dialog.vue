@@ -43,8 +43,8 @@ function formChange({fieldName, newValue, oldValue, formModel}) {
 }
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   try {
+    const data = await FormRendererRef.value.getFormData()
     data.path = state.setting.path
     const _fileName = await getUniqueName({goPath: data.path, fileName: data.fileName})
     if (data.fileName !== _fileName) {

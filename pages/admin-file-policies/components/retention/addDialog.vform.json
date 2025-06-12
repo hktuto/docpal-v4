@@ -392,7 +392,208 @@
                 "automaticDropdown": false,
                 "multiple": false,
                 "multipleLimit": 0,
-                "optionItems": [],
+                "optionItems": [
+                  {
+                    "label": "Chris10000",
+                    "value": "Chris10000"
+                  },
+                  {
+                    "label": "ChrisLuAdmin",
+                    "value": "ChrisLuAdmin"
+                  },
+                  {
+                    "label": "CPAAcct1",
+                    "value": "CPAAcct1"
+                  },
+                  {
+                    "label": "CPAAdm1",
+                    "value": "CPAAdm1"
+                  },
+                  {
+                    "label": "CPAAud1",
+                    "value": "CPAAud1"
+                  },
+                  {
+                    "label": "CPACos1",
+                    "value": "CPACos1"
+                  },
+                  {
+                    "label": "CPAMgr1",
+                    "value": "CPAMgr1"
+                  },
+                  {
+                    "label": "CrystalChiu",
+                    "value": "CrystalChiu"
+                  },
+                  {
+                    "label": "CrystalChiuAdmin",
+                    "value": "CrystalChiuAdmin"
+                  },
+                  {
+                    "label": "Doctor",
+                    "value": "Doctor"
+                  },
+                  {
+                    "label": "EdwardKong",
+                    "value": "EdwardKong"
+                  },
+                  {
+                    "label": "EdwardKongAdmin",
+                    "value": "EdwardKongAdmin"
+                  },
+                  {
+                    "label": "hankhongadmin",
+                    "value": "hankhongadmin"
+                  },
+                  {
+                    "label": "henrypoon",
+                    "value": "henrypoon"
+                  },
+                  {
+                    "label": "henrypoonadmin",
+                    "value": "henrypoonadmin"
+                  },
+                  {
+                    "label": "jack_li",
+                    "value": "jack_li"
+                  },
+                  {
+                    "label": "jack_li2",
+                    "value": "jack_li2"
+                  },
+                  {
+                    "label": "JackalLeung",
+                    "value": "JackalLeung"
+                  },
+                  {
+                    "label": "JackalLeungAdmin",
+                    "value": "JackalLeungAdmin"
+                  },
+                  {
+                    "label": "jay",
+                    "value": "jay"
+                  },
+                  {
+                    "label": "Joshua",
+                    "value": "Joshua"
+                  },
+                  {
+                    "label": "KarenKwong",
+                    "value": "KarenKwong"
+                  },
+                  {
+                    "label": "leo",
+                    "value": "leo"
+                  },
+                  {
+                    "label": "leo2",
+                    "value": "leo2"
+                  },
+                  {
+                    "label": "leo3",
+                    "value": "leo3"
+                  },
+                  {
+                    "label": "LeoA",
+                    "value": "LeoA"
+                  },
+                  {
+                    "label": "Lyle",
+                    "value": "Lyle"
+                  },
+                  {
+                    "label": "NGOAdmin1",
+                    "value": "NGOAdmin1"
+                  },
+                  {
+                    "label": "NGOFinance1",
+                    "value": "NGOFinance1"
+                  },
+                  {
+                    "label": "NGOManagement1",
+                    "value": "NGOManagement1"
+                  },
+                  {
+                    "label": "NGOMarketing1",
+                    "value": "NGOMarketing1"
+                  },
+                  {
+                    "label": "NGOMarketing2",
+                    "value": "NGOMarketing2"
+                  },
+                  {
+                    "label": "NGOProject1",
+                    "value": "NGOProject1"
+                  },
+                  {
+                    "label": "NGOProject2",
+                    "value": "NGOProject2"
+                  },
+                  {
+                    "label": "NGOService1",
+                    "value": "NGOService1"
+                  },
+                  {
+                    "label": "NGOService2",
+                    "value": "NGOService2"
+                  },
+                  {
+                    "label": "nurse1",
+                    "value": "nurse1"
+                  },
+                  {
+                    "label": "nurse2",
+                    "value": "nurse2"
+                  },
+                  {
+                    "label": "nurse3",
+                    "value": "nurse3"
+                  },
+                  {
+                    "label": "ooyy",
+                    "value": "ooyy"
+                  },
+                  {
+                    "label": "Royhoo",
+                    "value": "Royhoo"
+                  },
+                  {
+                    "label": "sampson",
+                    "value": "sampson"
+                  },
+                  {
+                    "label": "seantsang",
+                    "value": "seantsang"
+                  },
+                  {
+                    "label": "ValerieWongAdmin",
+                    "value": "ValerieWongAdmin"
+                  },
+                  {
+                    "label": "WCL_LeoLee",
+                    "value": "WCL_LeoLee"
+                  },
+                  {
+                    "label": "WilfredChung",
+                    "value": "WilfredChung"
+                  },
+                  {
+                    "label": "WilfredChungAdmin",
+                    "value": "WilfredChungAdmin"
+                  },
+                  {
+                    "label": "will_du",
+                    "value": "will_du"
+                  },
+                  {
+                    "label": "will1",
+                    "value": "will1"
+                  },
+                  {
+                    "label": "will2",
+                    "value": "will2"
+                  }
+                ],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -893,8 +1094,9 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
-    "onFormMounted": "const _this = this\nif(!this.globalOptionData) this.globalOptionData = {}\nthis.globalOptionData.fileList = []\nthis.globalOptionData.ready = false\nconst defaultKeywords = [\n  {\n    \"name\": \"dc:created\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n  },\n  {\n    \"name\": \"dc:modified\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n}\n]\ngetDocTypeList()\nasync function getDocTypeList() {\n  const typeList = await $api.get('/docpal/types/active', {}).then(res => res.data.data)\n  typeList.forEach((item) => {\n    const _item = {\n      keywords: [...defaultKeywords, ...item.keywords],\n      value: item.name,\n      label: $t(item.name)\n    }\n    if(!item.isFolder) {\n      _this.globalOptionData.fileList.push(_item)\n    }\n  })\n  setTimeout(() => {\n    _this.globalOptionData.ready = true\n  }, 1000);\n}\n",
+    "onFormMounted": "const _this = this\nif(!this.globalOptionData) this.globalOptionData = {}\nthis.globalOptionData.fileList = []\nthis.globalOptionData.ready = false\nconst defaultKeywords = [\n  {\n    \"name\": \"create_date\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n  },\n  {\n    \"name\": \"modify_date\",\n    \"type\": \"date\",\n    \"value\": \"date\",\n    \"schema\": \"dublincore\",\n    \"isMultiValue\": null,\n    \"defaultValue\": null,\n    \"valueScope\": null\n}\n]\ngetDocTypeList()\nasync function getDocTypeList() {\n  const typeList = await $api.get('/docpal/types/active', {}).then(res => res.data.data)\n  typeList.forEach((item) => {\n    const _item = {\n      keywords: [...defaultKeywords, ...item.keywords],\n      value: item.name,\n      label: $t(item.name)\n    }\n    if(!item.isFolder) {\n      _this.globalOptionData.fileList.push(_item)\n    }\n  })\n  setTimeout(() => {\n    _this.globalOptionData.ready = true\n  }, 1000);\n}\n",
     "onFormDataChange": "",
     "dhList": [],
     "saveRemoteOptions": "never",

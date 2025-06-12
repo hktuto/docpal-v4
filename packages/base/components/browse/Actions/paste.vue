@@ -105,9 +105,10 @@ async function pasteItem(doc) {
     emitBus(EventType.FILE_NEED_REFRESH, {
       relatedIdOrPath: doc.id
     })
-    noti.close()
   } catch (error) {
     console.log(error)
+  } finally {
+    noti.close()
   }
 }
 

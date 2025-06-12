@@ -1,12 +1,12 @@
-import { en } from 'element-plus/es/locales.mjs';
+
 import { useEventBus, EventType, emitBus } from 'eventbus'
 
 import { clientApi } from "api"
 import { useViewport } from '#imports';
 import type {TABLE_CONTEXT_PARAMS} from '#imports';
 import type {  VxeGridProps, VxeGridListeners, VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes, VxeGridInstance, VxeGridDefines  } from 'vxe-table'
-import { permission } from 'vxe-pc-ui';
-import { table } from 'console';
+import { useUserPreference } from '../../authApp/composables/useAuth';
+
 
 export type TableActionsParams = {
     row:any,
@@ -47,9 +47,9 @@ export interface UseVxeTableParams<R = any> {
     bodyActions?:TableMenuActions[][],
     permissionMethod?: (params:PermissionMethodParams) => {visible:boolean, disabled:boolean},
     optionalConfig?: VxeGridProps<R>,
-    selectChangeHander?:(selectedRows:any[]) => void,
+    selectChangeHander?:(selectedRows:any[], selectedRow:any) => void,
     optionalEvent?: VxeGridListeners<R>,
-    childChangeHander?: (childRows: any[]) => void,
+    childChangeHandler?: (childRows: any[]) => void,
     additionalPermission?: (params:any) => Promise<any>
 }
 
@@ -337,7 +337,7 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableEvent.checkboxChange = ({ checked, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
             console.log("checkboxChange", selectedRows)
-            selectChangeHander(selectedRows)
+            selectChangeHander(selectedRows, {checked, row, rowIndex})
         }
         tableEvent.checkboxRangeChange = ({ $event }:any) => {
             const selectedRows = tableRef.value?.getCheckboxRecords() || []
@@ -482,44 +482,56 @@ export const useVxeTable = (params: UseVxeTableParams) => {
         tableRef.value?.commitProxy('query', params)
     }
     let observer:any ;
-    onActivated(() => {
-        console.log("table onActivated")
-        if(init.value) {
+    function tableActivated(){
+      if(init.value) {
             reload()
         }
-        if(params.childChangeHander) {
+        if(params.childChangeHandler) {
             if(observer && observer.disconnect){
                 observer.disconnect()
             }
-            observer = new MutationObserver(params.childChangeHander)
+            observer = new MutationObserver(params.childChangeHandler)
             observer.observe(tableRef.value.$el, {
                 childList: true,
                 subtree: true
             })
             nextTick(() => {
                 console.log('init table observer')
-                params.childChangeHander()
+                params.childChangeHandler()
             })
         }
+    }
+    onMounted(tableActivated)
+    onActivated(tableActivated)
+    onUnmounted(() => { 
+        if(observer && observer.disconnect){
+            observer.disconnect()
+        }
     })
-
     onDeactivated(() => {
         if(observer && observer.disconnect){
             observer.disconnect()
         }
     })
-
-    tableEvent.pageChange = ({ pageSize })=>{
-      if(!params.id){
-        throw new Error("table Id is null");
+    // 
+    if(!params.virtualScroll) {
+      tableEvent.pageChange = ({ pageSize })=>{
+        try{
+          if(!params.id){
+            throw new Error("table Id is null");
+          }
+          const tableSetting = useUserPreference().value.tableSettings[params.id] ||= {}
+          tableSetting.tablePageSize = pageSize
+          const data = {
+            id:params.id,
+            storeData: tableSetting
+          }
+          tableConfig.customConfig.updateStore(data)
+        }catch(e) {
+          console.error(e);
+          
+        }
       }
-      const tableSetting = useUserPreference().value.tableSettings[params.id] ||= {}
-      tableSetting.tablePageSize = pageSize
-      const data = {
-        id:params.id,
-        storeData: tableSetting
-      }
-      tableConfig.customConfig.updateStore(data)
     }
 
     return {
@@ -533,5 +545,10 @@ export const useVxeTable = (params: UseVxeTableParams) => {
 }
 
 function getPageSize(id: string){
-  return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
+  try {
+    return  useUserPreference()?.value?.tableSettings[id]?.tablePageSize || 20
+  } catch (error) {
+    console.error(error)
+    return 20
+  }
 }

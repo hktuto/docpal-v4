@@ -13,24 +13,16 @@ import {
   bindResizeEvents,
 } from "./event";
 import interact from "interactjs";
-import {
-  DraggableOptions,
-  DropzoneOptions,
-  GesturableOptions,
-  Interactable,
-  InteractStatic,
-  ResizableOptions,
-  Target,
-} from "@interactjs/types";
+
 type Props = {
   draggable?: boolean;
-  dragOption?: DraggableOptions;
+  dragOption?: any;
   resizable?: boolean;
-  resizeOption?: ResizableOptions;
+  resizeOption?: any;
   droppable?: boolean;
-  dropOption?: DropzoneOptions;
+  dropOption?: any;
   gesturable?: boolean;
-  gestureOption?: GesturableOptions;
+  gestureOption?: any;
 };
 const props = withDefaults(defineProps<Props>(), {
   draggable: false,
@@ -85,7 +77,7 @@ const interactInstance = ref();
 //     }
 // })
 function initInteract() {
-  interactInstance.value = interact(el.value as Target);
+  interactInstance.value = interact(el.value as any);
   bindPointerEvents(interactInstance.value, emit.bind(this));
   emit("ready", interactInstance.value);
 }

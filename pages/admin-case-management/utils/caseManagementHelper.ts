@@ -1,6 +1,5 @@
 import { Graph } from '@antv/x6';
 
-import { CaseManagementDetail } from './../../../apps/admin/.nuxt/components.d';
 import type {PermissionMethodParams} from '#imports';
 export interface CaseManagementListProvider {
     getListApi: (params:any) => Promise<any>

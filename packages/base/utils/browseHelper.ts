@@ -20,15 +20,20 @@ export async function downloadFolderHandler(doc: any) {
     duration: 0,
     position: 'bottom-right'
   })
-  const blob = await adminApi.api.postNuxeoFolderstructureExport({
-    idOrPath: doc.id
-  }, {
-    format: 'blob',
-    timeout: 0,
-    headers: { 'white': 'true' }
-  })
-  downloadBlob(blob, doc.name + '.zip', 'application/zip')
-  noti.close()
+  try {
+    const blob = await adminApi.api.postNuxeoFolderstructureExport({
+      idOrPath: doc.id
+    }, {
+      format: 'blob',
+      timeout: 0,
+      headers: { 'white': 'true' }
+    })
+    downloadBlob(blob, doc.name + '.zip', 'application/zip')
+  } catch (error: any) {
+    console.error(error)
+  } finally {
+    noti.close()
+  }
 }
 
 export function canCollaboraEdit(mimeType: string) {
@@ -139,6 +144,8 @@ export const getUniqueName = async (file: any) => {
       path: file.goPath,
       titles: [fileName]
     }).then(res => res.data)
+    console.log('getUniqueName', res)
+    // TODO : the uniqueName has bug, will return same name
     const name = res[fileName]?.uniqueName || fileName
     return name
   } catch (error) {

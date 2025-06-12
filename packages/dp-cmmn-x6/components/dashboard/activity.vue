@@ -1,11 +1,13 @@
 <template>
   <DashboardCard
+    v-loading="loading"
     class="o-auto dp-dashboard--card__padding dp-dashboard--card__scroll"
     ref="cardRef"
     :hideSetting="hideSetting"
     :title="$t('dashboard.cmmnActivity')"
     :setting="setting"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <el-timeline>
       <el-timeline-item
@@ -79,6 +81,12 @@ async function init() {
     state.activityList = data
   }
 }
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    await init()
+  }
+})
 onMounted(() => {
   init()
 })

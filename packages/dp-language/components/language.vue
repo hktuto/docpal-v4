@@ -81,8 +81,9 @@ function flattenJSON(obj = {}, locale, res = {}, extraKey = '') {
   return res
 }
 
-function jsonToArray(obj = {}) {
-  const result = []
+function jsonToArray(obj:any) {
+  const result:any[] = []
+  if(!obj) return result
   Object.keys(obj).forEach(key => {
     result.push({
       key: key,

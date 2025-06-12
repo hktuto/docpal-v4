@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n'
+import { ref, onMounted } from 'vue'
+import { useCmmnGraph } from '../../../../composables/useCmmnGraph'
+const { t } = useI18n()
 const props = defineProps<{
     node: any,
     view: any,
@@ -69,13 +73,13 @@ onMounted(() => {
     <div class="actionItemGroup">
         
         <div class="connectionList">
-            <div class="groupTitle">Connection</div>
+            <div class="groupTitle">{{ t('contextMenu.connection') }}</div>
             <div v-for="item in connectionItem" :key="item.id" class="item" @click="addConnection(item)">
                 <template v-if="item.data && item.data.data && item.data.data.attr_name">
 
                     <SvgIcon :src="item.data.type === 'entryCriterion' ? '/cmmn/icon/entry-icon.svg' : '/cmmn/icon/exit-icon.svg'"></SvgIcon>
                     <div class="label">
-                        {{item.data.data.attr_name}} on {{ item.data.planItem ?  item.data.planItem.attr_name : "Case" }}
+                        {{item.data.data.attr_name}} on {{ item.data.planItem ?  item.data.planItem.attr_name : t('contextMenu.case') }}
                     </div>
                 </template>
             </div>

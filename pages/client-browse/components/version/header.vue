@@ -2,11 +2,11 @@
     <div v-if="doc" class="version-display">
     <div class="flex">
       <slot />
-      v{{version}}<template v-if="doc.isCheckedOut">+ </template>
+      v{{doc.version}}<template v-if="doc.isCheckedOut">+ </template>
        - {{displayTime(doc.modifiedDate)}}
        <el-popover v-if="canRestore" v-model="popoverShow" placement="top" width="200">
          <div v-loading="loading">
-            <p>{{$t('file_resetVersionTip')}} v{{version}}</p>
+            <p>{{$t('file_resetVersionTip')}} v{{doc.version}}</p>
             <div class="flex-x-end">
               <!-- <el-button size="small" type="text" @click="popoverShow = false">{{$t('cancelText')}}</el-button> -->
               <el-button type="primary" size="small" @click="handleRestore()">{{$t('dpButtom_confirm')}}</el-button>
@@ -31,11 +31,6 @@ const props = defineProps<{
     const popoverShow = ref(false)
     const loading = ref(false)
     const routerProvider = inject(MenuRouterKey)
-    const version = computed(() => {
-      const major_version = props.doc?.properties?.['uid:major_version'] || 0
-      const minor_version = props.doc?.properties?.['uid:minor_version'] || 0
-      return major_version + '.' + minor_version
-    })
 
     function handleUpdate (handleType?: String) {
       const ev = new CustomEvent('tree-node-update', {
@@ -51,7 +46,7 @@ const props = defineProps<{
           increment: "MAJOR"
         }).then(res => res.data)
         const newItem = createDetailPageParams({
-          idOrPath: props.doc.path,
+          idOrPath: props.doc.id,
           docName: props.doc.name,
           showHeaderAction: true
         })

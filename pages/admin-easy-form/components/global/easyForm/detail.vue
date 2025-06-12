@@ -51,7 +51,7 @@ function handleEmailUpdate() {
     logRef.value.tableRef.reload();
   }, 1000);
 }
-onActivated(async() => {
+onMounted(async() => {
   await getDetail();
 });
 onDeactivated(() => {

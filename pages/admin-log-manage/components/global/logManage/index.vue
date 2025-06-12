@@ -70,7 +70,7 @@ async function handleLevelChange(level: any, row: any) {
 
 // async function handleSubmit (shareInfo) {
 // }
-onActivated(async () => {
+onMounted(async () => {
   reload()
 })
 </script>

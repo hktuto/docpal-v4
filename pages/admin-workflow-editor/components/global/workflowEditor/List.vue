@@ -147,7 +147,9 @@ function getFilter() {
       ]
     }
   ]
-  ResponsiveFilterRef.value.init(data)
+  if(ResponsiveFilterRef.value) {
+    ResponsiveFilterRef.value?.init(data)
+  }
 }
 
 onMounted(() => {

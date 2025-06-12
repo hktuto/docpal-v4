@@ -5,6 +5,7 @@ const props = defineProps<{
     filter: any,
     home: any,
     commentId: string
+    expandedItems: any[]
 }>();
 
 
@@ -13,8 +14,8 @@ const props = defineProps<{
 
 <template>
     <div class="pageContainer" >
-        <BrowsePageComponent v-bind="props" >
-        </BrowsePageComponent>
+        <BrowseTablePage v-bind="props" :isReload="true">
+        </BrowseTablePage>
     </div>
 </template>
 

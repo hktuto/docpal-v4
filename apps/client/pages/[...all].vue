@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-// TODO : add custom router control
+
 let index = 0;
 const route = useRoute();
 const router = useRouter();
@@ -60,6 +60,12 @@ onMounted(async () => {
         route.query.processInstanceId as string
       );
       openTab(workflowItem);
+      break;
+    case "/case":
+      const caseItem = await getCaseRoute(
+        route.query.caseId as string
+      );
+      openTab(caseItem);
       break;
     default:
       router.push("/");

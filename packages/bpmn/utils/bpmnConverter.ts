@@ -2,7 +2,6 @@ import {XMLParser, XMLBuilder} from "fast-xml-parser";
 import type {Cell, Graph} from '@antv/x6'
 import type { BPMNJSON } from "./bpmnType";
 import { BpmnElementType, bpmnElement } from "./bpmnElement";
-import { at } from "vitest/dist/chunks/reporters.WnPwkmgA.js";
 
 
 export const nodeXmltoJson = function(nodeXml: string) {

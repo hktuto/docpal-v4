@@ -1,10 +1,9 @@
 import { app, BrowserWindow, ipcMain, shell, dialog, ipcRenderer, Menu } from 'electron';
 import path from 'path';
-import log from 'electron-log/main';
 import { createSetPrefFrontend, havePrefs, setPrefs, removePrefs } from './pref'
 import { createAppClient } from './app';
 
-export const MAIN_DIST = path.join(__dirname, '../dist-electron');
+export const MAIN_DIST = path.join(__dirname, '../dist');
 
 // set up env
 
@@ -27,7 +26,6 @@ app.whenReady().then( async() => {
       mainWindow = createAppClient(mainWindow)
 
     }else{
-      log.log("no pref")
       mainWindow = createSetPrefFrontend(mainWindow)
 
     }
@@ -39,7 +37,6 @@ app.on('window-all-closed', function () {
 
 
 ipcMain.handle('setBaseUrl',(event,url) => {
-  log.log('setBaseUrl',url);
   mainWindow.close()
   const setting = {
     "pdfReaderUrl": `https://${url}/resources/pdfjs/web/viewer.html`,
@@ -89,3 +86,52 @@ ipcMain.handle('removeBaseUrl',() => {
 //         newWindow = null
 //     })
 // })
+
+export function createMenu() {
+  const isMac = process.platform === 'darwin'
+  const template: any[] = [
+    ...(isMac ? [{
+      label: app.name,
+      submenu: [
+        { role: 'about' },
+        { type: 'separator' },
+        { role: 'services' },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'hideOthers' },
+        { role: 'unhide' },
+        { type: 'separator' },
+        { role: 'quit' }
+      ]
+    }] : []),
+    {
+      label: 'File',
+      submenu: [
+        isMac ? { role: 'close' } : { role: 'quit' }
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'reset',
+          click: async () => {
+            removePrefs()
+            console.log('removeBaseUrl');
+            mainWindow.close();
+            mainWindow = createSetPrefFrontend(mainWindow)
+          }
+        },
+        {
+          label:'debug',
+          click: async () => {
+            mainWindow.webContents.openDevTools()
+          }
+        }
+      ]
+    }
+  ];
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+}

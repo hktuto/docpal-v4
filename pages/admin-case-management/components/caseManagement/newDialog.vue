@@ -26,9 +26,9 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
     state.visible = false
     const res = await adminApi.api.postCaseTypes(data).then(res => res.data)
     ElMessage.success(t('tip_createdSuccessMsg', {

@@ -89,7 +89,7 @@ function setupTable() {
 }
 
 function openDetail(row: any) {
-  if(!routeWorkflowDetail) return
+  if (!routeWorkflowDetail) return
   try {
     routerProvider?.navigateTo(
       routeWorkflowDetail({
@@ -100,7 +100,7 @@ function openDetail(row: any) {
       false
     )
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 
@@ -234,6 +234,7 @@ watch(
     immediate: true
   }
 )
+defineExpose({ query, reload })
 </script>
 
 <template>

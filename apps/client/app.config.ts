@@ -94,6 +94,12 @@ export default defineAppConfig({
     },
     {
       name: "client-easy-form"
+    },
+    {
+      name :"user-role-file-action"
+    },
+    {
+      name: "RBAC-page"
     }
   ]
 });

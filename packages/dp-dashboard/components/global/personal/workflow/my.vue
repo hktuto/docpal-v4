@@ -45,8 +45,10 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  const { public: { platform } } = useRuntimeConfig();
-  if(platform === 'admin') return
+  const {
+    public: { platform }
+  } = useRuntimeConfig()
+  if (platform === 'admin') return
   try {
     routerProvider?.navigateTo(
       routeWorkflowDetail({
@@ -57,7 +59,7 @@ function handleDblclick(row: any) {
       false
     )
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 watchDebounced(
@@ -69,6 +71,7 @@ watchDebounced(
   },
   { debounce: 200, maxWait: 500, immediate: true }
 )
+defineExpose({ query, reload })
 </script>
 <style lang="scss" scoped>
 .pageContainer {

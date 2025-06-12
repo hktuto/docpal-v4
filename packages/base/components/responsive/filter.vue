@@ -1,3 +1,147 @@
+<!--
+ResponsiveFilter Component Documentation
+
+A responsive filter component that automatically adjusts its layout based on available space.
+It supports multiple filter types including text input and select dropdowns.
+
+Props:
+- inputKey: string (optional) - Key for the text input filter
+- inputPlaceHolder: string (optional, default: 'tip.filterByName') - Placeholder text for the input field
+
+Events:
+- form-change: Emitted when any filter value changes
+  - Parameters: (formData: object, fieldData: { fieldName: string, value: any })
+- clear-filter: Emitted when filters are cleared
+
+Methods (via ref):
+- init(list: ResSelectData[], initParams?: object): void
+  - Initializes the filter with select options and initial values
+  - list: Array of filter configurations
+  - initParams: Initial values for filters
+- setValue(key: string, value: string): void
+  - Sets a specific filter value
+- handleFilter(): void
+  - Clears all filter values
+
+Types:
+interface ResSelectData {
+  label: string        // Display label for the filter
+  key: string         // Unique identifier for the filter
+  options: {          // Available options for select
+    label: string
+    value: any
+  }[]
+  value?: string[]    // Selected values
+  isMultiple?: boolean // Whether multiple selections are allowed
+  belong?: string     // Group this filter belongs to (optional)
+}
+
+Example Usage:
+```vue
+<script setup>
+const filterRef = ref()
+function initFilter(){
+  filterRef.value.init({
+    list:[
+      {
+        label: "Status",
+        key: "status",
+        isMultiple: false,
+        options: [
+          {
+            label: "Active",
+            value: 1
+          },
+          {
+            label: "Inactive",
+            value: 3
+          }
+        ]
+      }
+    ]
+  })
+}
+initFilter() // call on Mounted or before use
+</script>
+<template>
+  <ResponsiveFilter
+    ref="filterRef"
+    inputKey="search"
+    inputPlaceHolder="Search..."
+    @form-change="handleFilterChange"
+    @clear-filter="handleClearFilter"
+  />
+</template>
+
+<script setup>
+const filterRef = ref()
+
+// Initialize filters
+filterRef.value.init([
+  {
+    label: 'Status',
+    key: 'status',
+    options: [
+      { label: 'Active', value: 1 },
+      { label: 'Inactive', value: 0 }
+    ],
+    isMultiple: true
+  },
+  {
+    label: 'Category',
+    key: 'category',
+    options: [
+      { label: 'A', value: 'a' },
+      { label: 'B', value: 'b' }
+    ]
+  }
+], {
+  status: [1],
+  search: 'initial search'
+})
+
+// Handle filter changes
+function handleFilterChange(formData, fieldData) {
+  console.log('Filter changed:', formData)
+  console.log('Changed field:', fieldData)
+}
+
+// Handle filter clear
+function handleClearFilter() {
+  console.log('Filters cleared')
+}
+</script>
+```
+
+Features:
+1. Responsive Layout:
+   - Automatically adjusts filter positions based on available space
+   - Moves overflow filters to a "More" dropdown
+   - Maintains filter state and visibility
+
+2. Filter Types:
+   - Text input (optional)
+   - Single select
+   - Multiple select
+   - Grouped filters (using belong property)
+
+3. State Management:
+   - Tracks selected filters
+   - Shows count of selected filters
+   - Provides clear filter functionality
+
+4. Accessibility:
+   - Keyboard navigation support
+   - Clear visual feedback
+   - Proper ARIA attributes
+
+5. Internationalization:
+   - Supports i18n for labels and placeholders
+   - Uses translation keys for text
+
+Note: The component requires Element Plus and VueUse for full functionality.
+-->
+
 <template>
   <div ref="responsiveRef" class="responsive-container" v-element-size="onResize">
     <div class="flex-x-start">

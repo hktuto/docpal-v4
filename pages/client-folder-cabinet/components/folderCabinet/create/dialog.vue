@@ -10,14 +10,14 @@
       </template>
       <template v-slot:namingRule>
         <div>{{ $t('tableHeader_labelRule') }}：
-          <template v-for="(item, index) in getLabelList()" :key="index">
-            <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
-            <template v-if="index !== getLabelList().length - 1"> -</template>
+          <template v-for="(item, index) in getLabelList(state.cabinetTemplate.labelRule)" :key="index">
+            <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
+            <template v-if="index !== getLabelList(state.cabinetTemplate.labelRule).length - 1"> -</template>
           </template>
         </div>
       </template>
       <template v-slot:previewName>
-        <div>{{ $t('folderCabinet.previewName') }}： {{ state.previewName }}</div>
+        <el-text :type="hasPreviewName(state.previewName) ? '': 'danger'">{{ $t('folderCabinet.previewName') }}：{{ state.previewName }}</el-text>
       </template>
     </FormRenderer>
     <template #footer>
@@ -28,7 +28,7 @@
       </el-button>
     </template>
   </el-dialog>
-  <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="(loading: boolean)=>emits('refresh', loading)" />
+  <FolderCabinetCreateNextDialog ref="NextDialogRef" @refresh="emits('refresh')" />
 </template>
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -53,37 +53,40 @@ const FormRendererRef = ref()
 const MetaFormRef = ref()
 
 async function handleSubmit() {
-  // 获取 v-form 数据
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
-  const arr = ['notificationReminder', 'emailReminder', 'emailReport']
-  arr.forEach(key => {
-    formData[key] = {}
-    formData[key].intervalTime = formData[`${key}.intervalTime`]
-    if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
-    if (formData[`${key}.ccs`]) formData[key].ccs = formData[`${key}.ccs`]
-    delete formData[`${key}.intervalTime`]
-    delete formData[`${key}.tos`]
-    delete formData[`${key}.ccs`]
-  })
-  // 获取 metaForm 数据
-  const metaFormData = await MetaFormRef.value.getData()
-
-  if (!formData) return
-  state.loading = true
   try {
+    // 获取 v-form 数据
+    const formData = await FormRendererRef.value.getFormData()
+    const arr = ['notificationReminder', 'emailReminder', 'emailReport']
+    arr.forEach(key => {
+      formData[key] = {}
+      formData[key].intervalTime = formData[`${key}.intervalTime`]
+      if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
+      if (formData[`${key}.ccs`]) formData[key].ccs = formData[`${key}.ccs`]
+      delete formData[`${key}.intervalTime`]
+      delete formData[`${key}.tos`]
+      delete formData[`${key}.ccs`]
+    })
+    // 获取 metaForm 数据
+    const metaFormData = await MetaFormRef.value.getData()
+  
+    if (!formData) return
+    state.loading = true
     let fileName = await getMetaName()
-    const _fileName = await getUniqueName({ goPath: state.cabinetTemplate.documentPath, fileName })
-    if (fileName !== _fileName) {
-      const check = await ElMessageBox.confirm(`${t('dpTip_duplicateFileNameNext')}`).catch((action) => {
-        return action
-      })
-      if (check !== 'confirm') {
-        state.loading = false
-        return
-      } else {
-        fileName = _fileName
-      }
+    if(!fileName) {
+      ElMessage.error($t('dpTip.noValidName'))
+      throw new Error('dpTip.noValidName')
     }
+    // getUniqueName has bug, will return same name,
+    // we need to implement inline function to check if the name is unique
+    const hasSameName = await clientApi.api.postNuxeoDocumentIsduplicatename({
+      path: state.cabinetTemplate.documentPath,
+      titles: [fileName]
+    }).then(res => !!res.data.hasDuplicateTitle)
+    if(hasSameName) {
+      ElMessage.error($t('dpTip.folderCabinet.duplicateRootFolder'))
+      throw new Error('dpTip.folderCabinet.duplicateRootFolder')
+    }
+    
     const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
     // 上传最上层数据
     const res = await clientApi.api.postCabinetCreate({
@@ -104,49 +107,24 @@ async function handleSubmit() {
       resolve
     }, 1000))
   } catch (error) {
-
+    console.error(error)
   }
   state.loading = false
 }
 
 async function getMetaName() {
-  const date = new Date()
   let formData: any = {}
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData(false)
     const metadataForm = await MetaFormRef.value.getData()
-    if (data) formData = { ...formData, ...data, ...metadataForm }
+    if (data) formData = { ...formData, ...data, ...metadataForm,  }
+    formData.docName = formData.title
+    formData.label = state.setting.label || state.setting.docName || ""
   } catch (error) {
+    console.error(error)
   }
-  const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
-
-  if (!labelRule || labelRule.length === 0) throw new Error('no labelRule')
-  else {
-    return labelRule.reduce((prev: any, rule: any, index: number) => {
-      if (!rule.metadata) rule.metadata = rule.metaData
-      const joiner = index === 0 ? '' : '-'
-      if (rule.metadata === 'fc:createDate') {
-        prev += joiner + formatDate(date, 'YYYY-MM-DD')
-      } else if (rule.metadata === 'fc:label') {
-        prev += joiner + state.cabinetTemplate.label
-      } else if (rule.metadata === 'fc:creator') {
-        prev += joiner + userId
-      } else if (rule.metadata === 'fc:docTitle') {
-        prev += formData.title ? joiner + formData.title : ''
-      } else if (rule.dataType === 'date') {
-        prev += formData[rule.metadata] ? joiner + formatDate(formData[rule.metadata], 'YYYY-MM-DD') : ''
-      } else {
-        prev += formData[rule.metadata] ? joiner + formData[rule.metadata] : ''
-      }
-      return prev
-    }, '')
-  }
-  // return state.cabinetTemplate.label + '-' + formatDate(date,'YYYY-MM-DD')
-}
-
-function getLabelList() {
-  const labelRule = state.cabinetTemplate.labelRule ? JSON.parse(state.cabinetTemplate.labelRule) : []
-  return labelRule
+  const labelRules = getLabelList(state.cabinetTemplate.labelRule)
+  return getNameByLabelRule(labelRules, formData)
 }
 
 // #endregion

@@ -15,13 +15,17 @@ async function handleGet() {
 }
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  const res = await adminApi.api.postOauth2Setting(data)
-  if (data.authenticationMethod === 'DEFAULT') {
-    routerProvider?.message.success(t('msg_successfullyModified'))
-  } else {
-    const url: any = res
-    window.open(url, '_blank')
+  try {
+    const data = await FormRendererRef.value.getFormData()
+    const res = await adminApi.api.postOauth2Setting(data)
+    if (data.authenticationMethod === 'DEFAULT') {
+      routerProvider?.message.success(t('msg_successfullyModified'))
+    } else {
+      const url: any = res
+      window.open(url, '_blank')
+    }
+  } catch (error: any) {
+    console.error(error)
   }
 }
 
