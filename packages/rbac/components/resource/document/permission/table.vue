@@ -6,7 +6,7 @@ const props = defineProps<{
 
 const { document } = toRefs(props)
 
-const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'rbac-resource-document-permission-table',
   api: async (pageParams: any) => {
     const data = await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res)
@@ -14,9 +14,7 @@ const { tableConfig, tableEvent, tableRef, reload} = useVxeTable({
     // const data = await getChildApi(id.value || 'root')
     return data
   },
-  columns:[
-
-  ]
+  columns: []
 })
 
 const detailDialogRef = ref()
@@ -25,19 +23,21 @@ function handleAdd() {
   detailDialogRef.value?.open(null, document.value.id)
 }
 
-watch(document, async() => {
-  reload()
-}, {
-  immediate: true
-})
-
-
+watch(
+  document,
+  async () => {
+    reload()
+  },
+  {
+    immediate: true
+  }
+)
 </script>
 
 <template>
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-        <el-button type="primary" @click="handleAdd">添加</el-button>
+      <el-button type="primary" @click="handleAdd">添加</el-button>
     </template>
   </VxeGrid>
   <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" />

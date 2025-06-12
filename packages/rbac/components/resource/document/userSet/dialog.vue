@@ -1,11 +1,5 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    title="用户权限设置"
-    width="80%"
-    :close-on-click-modal="false"
-    @close="handleClose"
-  >
+  <el-dialog v-model="dialogVisible" title="用户权限设置" width="80%" :close-on-click-modal="false" @close="handleClose">
     <div class="user-set-content">
       <!-- 用户权限设置内容 -->
     </div>
