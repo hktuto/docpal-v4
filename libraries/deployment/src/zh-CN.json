@@ -3549,7 +3549,8 @@
       "draft": "草稿版本",
       "latest": "最新版本",
       "production": "当前版本"
-    }
+    },
+    "workflowInfoIgnored": "带有案例信息的 ID 名称的工作流信息将被忽略"
   },
   "workflowEditor_promoteToProduction": "推送至生产：{currentVersion}",
   "workflowEditor_saveAsNewVersion": "另存为新版本",
