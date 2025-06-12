@@ -33,9 +33,9 @@ const FormRendererRef = ref()
 const { t } = useI18n()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
     const result = await adminApi.api.postDocpaltypeSettings(data)
     ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('docType_documentType'),

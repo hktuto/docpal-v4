@@ -257,9 +257,7 @@ function calDate(unit: string) {
 onMounted(() => {
   getFilter()
 })
-onActivated(async () => {
-  query({})
-})
+
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

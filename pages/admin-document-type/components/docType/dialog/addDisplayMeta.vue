@@ -44,17 +44,17 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit(addMore: boolean = false) {
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
-  state.loading = true
-  const param: any = {
-    metaData: formData.metadata,
-    isRequire: formData.isRequire,
-    display: formData.display,
-    dataType: formData.dataType,
-    options: getFormOptions(formData),
-    docType: props.docTypeDetail.name
-  }
   try {
+    state.loading = true
+    const formData = await FormRendererRef.value.getFormData()
+    const param: any = {
+      metaData: formData.metadata,
+      isRequire: formData.isRequire,
+      display: formData.display,
+      dataType: formData.dataType,
+      options: getFormOptions(formData),
+      docType: props.docTypeDetail.name
+    }
     let msg
     if (state.isEdit) {
       param.id = state.setting.id

@@ -35,8 +35,12 @@ const formRef = ref()
 
 async function handleSubmit() {
   // TODO : validate form
-  const vaild = await formRef.value.validate()
-  if (!vaild) return
+  try {
+    await formRef.value.validate()
+  } catch (e) {
+    console.error(e)
+    return
+  }
   // router.push(`/workflowEditor/new?template=${state.form.template}&name=${state.form.name}`)
   const text = await getXMLFileTemplate(state.form.template)
   let name = state.form.name

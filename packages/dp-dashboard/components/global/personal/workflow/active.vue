@@ -47,7 +47,7 @@ function handleDblclick(row: any) {
   try {
     routerProvider?.navigateTo(routeWorkflowDetail({ ...row, name: row.taskInstance.businessKey, workflowType: 'activeTask' }), false)
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 watchDebounced(
@@ -59,6 +59,7 @@ watchDebounced(
   },
   { debounce: 200, maxWait: 500, immediate: true }
 )
+defineExpose({ query, reload })
 </script>
 <style lang="scss" scoped>
 .pageContainer {

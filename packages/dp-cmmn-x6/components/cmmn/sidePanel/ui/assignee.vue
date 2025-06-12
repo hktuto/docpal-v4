@@ -34,8 +34,13 @@ const form = ref({
 });
 const FormRef = ref();
 async function handleChange(newAssignee: string) {
-  const valid = await FormRef.value.validate();
-  if (!valid) return;
+  try {
+    await FormRef.value.validate()
+  } catch (e) {
+    console.error(e)
+    return
+  }
+
   const nodeData = node.value.data
   nodeData.data['attr_flowable:assignee'] = newAssignee
 }

@@ -29,13 +29,13 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  state.loading = true
-  const params = {
-    groupIds: data.id,
-    ...state.setting
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
+    const params = {
+      groupIds: data.id,
+      ...state.setting
+    }
     await userProvider?.BatchUsersToGroupsApi(params)
     ElMessage.success(t('dpMsg_success'))
     state.visible = false

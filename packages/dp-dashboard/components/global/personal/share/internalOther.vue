@@ -1,17 +1,17 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     :title="$t('dashboard.PersonalShareInternalOther')"
     @delete="handleDelete"
+    @refresh="refresh"
   >
-    <PersonalShareInternalOtherTable />
+    <PersonalShareInternalOtherTable ref="tableRef" />
   </DashboardCard>
 </template>
 <script lang="ts" setup>
-import { ElMessageBox } from 'element-plus'
-
 const emits = defineEmits(['delete'])
 const { t } = useI18n()
 
@@ -27,6 +27,13 @@ const props = withDefaults(
   }
 )
 
+const tableRef = ref()
+const { cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: (setting: any) => {
+    tableRef.value.query({})
+  }
+})
 async function handleDelete() {
   emits('delete')
 }

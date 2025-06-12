@@ -19,6 +19,13 @@
   "DAM_operation": "操作",
   "DAM_setupFileExtension": "設定檔案後綴",
   "DAM_targetFormat": "目標格式",
+  "Dashboard": {
+    "Home": {
+      "card": {
+        "error": "該組件無法顯示，請檢查是否有權限.  是否刪除該組件"
+      }
+    }
+  },
   "Deactivated": "停用",
   "ERROR": "錯誤",
   "Email": {
@@ -345,7 +352,7 @@
     "condition": "條件",
     "groupName": "群組名稱",
     "value": "填值",
-    "value_tip": "使用“currentUser”可當用戶ID為值"
+    "value_tip": "使用'currentUser'可當用戶ID為值"
   },
   "caseManage": {
     "avalibleFields": "可用字段",
@@ -453,7 +460,9 @@
   "comments_placeholder": "在此輸入您的評論",
   "comments_reply": "回復",
   "common_add": "新建",
+  "common_addFail": "添加失敗",
   "common_addMore": "提交並添加更多",
+  "common_addSuccess": "添加成功",
   "common_all": "全部",
   "common_back": "返回",
   "common_canNotEmpty": "必填",
@@ -469,6 +478,8 @@
   "common_day": "天",
   "common_days": "天",
   "common_delete": "刪除",
+  "common_deleteFail": "刪除失敗",
+  "common_deleteSuccess": "刪除成功",
   "common_discussionChannel": "討論",
   "common_download": "下載",
   "common_dragFileHere": "拖放到此處",
@@ -530,6 +541,12 @@
   "conjunction": {
     "to": "到"
   },
+  "contextMenu": {
+    "case": "個案",
+    "confirmDelete": "確定要刪除此項目嗎？",
+    "connection": "連接",
+    "remove": "移除"
+  },
   "convert_convert": "轉檔",
   "convert_documentFormat": "轉換為其他格式：",
   "convert_transferring": "轉檔中...",
@@ -538,6 +555,7 @@
     "angleTip": "正整數或負整數"
   },
   "dashboard": {
+    "Browse": "瀏覽",
     "CalendarWidget": "日歷",
     "PersonalCase": "案例",
     "PersonalCaseCreate": "新案例",
@@ -704,7 +722,7 @@
       "letterValidator": "字母",
       "loadFormTemplate": "加载此模板",
       "loadFormTemplateFailed": "表单模板加载失败",
-      "loadFormTemplateHint": "是否加载这个模板？加载后会覆盖设计器当前表单，你可以使用“撤销”功能恢复。",
+      "loadFormTemplateHint": "是否加载这个模板？加载后会覆盖设计器当前表单，你可以使用'撤销'功能恢复。",
       "loadFormTemplateSuccess": "表单模板加载成功",
       "mobilePhoneValidator": "手机号码",
       "moveDownLastChildHint": "已经移动到最下面",
@@ -978,6 +996,148 @@
   "docInfo": {
     "fileExtension": "檔案副檔名"
   },
+  "docTemplate": {
+    "export": {
+      "configureVariables": "設定變數",
+      "export": "匯出",
+      "exportDOCX": "匯出 DOCX",
+      "exportHTML": "匯出 HTML",
+      "exportJSON": "匯出 JSON",
+      "exportPDF": "匯出 PDF",
+      "noVariables": "沒有可設定的變數。"
+    },
+    "font": {
+      "bold": "粗體",
+      "color": "字體顔色",
+      "deleteStyle": "刪除字體樣式",
+      "delineate": "划線",
+      "family": "字體風格",
+      "font": "字體",
+      "highlight": "高亮",
+      "increaseSize": "增大字號",
+      "italic": "斜體",
+      "reduceSize": "縮小字號",
+      "size": "字體大小",
+      "subscript": "下標",
+      "superscript": "上標",
+      "underline": "下划線"
+    },
+    "paragraph": {
+      "bulletList": "清單",
+      "center": "居中對齊",
+      "indentation": "縮進",
+      "indentationDecrease": "減少縮進",
+      "indentationIncrease": "增加縮進",
+      "justify": "兩端對齊",
+      "left": "左對齊",
+      "liftListItem": "提升列表項目",
+      "orderedList": "有序清單",
+      "paragraph": "段落",
+      "right": "右對齊",
+      "sinkListItem": "下移清單項目",
+      "splitListItem": "拆分列表項目",
+      "textAlign": "文本對齊"
+    },
+    "style": {
+      "style": "樣式",
+      "titleTags": "標題標籤"
+    },
+    "table": {
+      "MergeCells": "合并單元格",
+      "SplitCell": "拆分單元格",
+      "addColLeft": "向左新增列",
+      "addColRight": "向右新增列",
+      "addRowDown": "向下新增行",
+      "addRowUp": "向上增加行",
+      "cellBackgroundColor": "設置單元格背景顏色",
+      "clearingInnerBoundaries": "清除内邊界",
+      "clearingOuterBoundaries": "清除外邊界",
+      "create": "創建",
+      "createTable": "建立表格",
+      "delete": "刪除表格",
+      "deleteCol": "刪除列",
+      "deleteRow": "刪除行",
+      "setHeaderBackgroundColor": "設置標題背景顏色",
+      "showInnerBoundaries": "顯示内邊界",
+      "showOuterBoundaries": "顯示外邊界",
+      "toggleHeaderColumn": "切換標題列",
+      "toggleHeaderRow": "切換標題行"
+    },
+    "utils": {
+      "HorizontalLine": "水平線",
+      "TaskList": "工作清單",
+      "image": "圖片",
+      "link": "超鏈結",
+      "toggleTaskList": "切換工作清單",
+      "utils": "工具"
+    },
+    "variable": {
+      "actions": "操作",
+      "add": "新增",
+      "addColumn": "新增欄位",
+      "addErrorKeyExists": "變數鍵已存在",
+      "addErrorKeyInvalid": "变量键無效",
+      "addErrorKeyRequired": "變數鍵是必需的",
+      "addListItem": "新增項目",
+      "addRow": "新增列",
+      "addSuccess": "變數新增成功",
+      "addVariable": "新增變數",
+      "cancel": "取消",
+      "columnAlign": "對齊方式",
+      "columnHeader": "欄標題",
+      "columnKey": "欄鍵",
+      "columnName": "欄位名稱",
+      "confirmDelete": "您確定要刪除此變數嗎？",
+      "createLink": "建立連結",
+      "delete": "刪除",
+      "deleteConfirm": "您確定要刪除此變數嗎？",
+      "deleteSuccess": "變數刪除成功",
+      "deleteVariable": "刪除變數",
+      "displayValue": "顯示值",
+      "edit": "編輯",
+      "editErrorDisplayValueRequired": "顯示值是必需的",
+      "editLink": "編輯連結",
+      "editList": "編輯清單",
+      "editSuccess": "變數更新成功",
+      "editTable": "編輯表格",
+      "editVariable": "編輯變數",
+      "insertLink": "插入連結",
+      "insertList": "插入清單",
+      "insertListVariable": "插入清單變數",
+      "insertTable": "插入表格",
+      "insertTableVariable": "插入表格變數",
+      "insertVariable": "插入變數",
+      "key": "鍵",
+      "linkLabel": "標籤",
+      "linkLabelPlaceholder": "輸入連結標籤（可選）",
+      "linkTarget": "目標",
+      "listContent": "清單內容",
+      "listItemPlaceholder": "輸入清單項目...",
+      "listItems": "清單項目",
+      "listStyle": "清單樣式",
+      "listStyleBullet": "項目符號",
+      "listStyleNone": "無樣式",
+      "listStyleNumbered": "編號",
+      "manager": "變數管理器",
+      "managerTitle": "變數管理器",
+      "name": "名稱",
+      "save": "儲存",
+      "selectListVariable": "選擇清單變數",
+      "selectTableVariable": "選擇表格變數",
+      "selectTargetVariable": "選擇目標變數",
+      "selectVariable": "選擇變數",
+      "tableBordered": "顯示邊框",
+      "tableContent": "表格內容",
+      "tableData": "表格資料",
+      "tableRows": "表格列",
+      "tableStriped": "斑馬條紋",
+      "tableStyle": "表格樣式",
+      "type": "類型",
+      "variableName": "變數名稱",
+      "variableType": "變數類型",
+      "variableValue": "變數值"
+    }
+  },
   "docType": {
     "Audio": "音频",
     "File": "文件",
@@ -1212,11 +1372,15 @@
     "filterBy": "按{name}過濾",
     "filterByBusinessName": "按公司名稱過濾",
     "filterByBussinessName": "按公司名稱過濾",
+    "folderCabinet": {
+      "duplicateRootFolder": "相同名稱的資料夾已存在"
+    },
     "formatError": "格式錯誤",
     "jumpToView": "跳轉查看",
     "loading": "載入中...",
     "newFolderDuplicateName": "系統偵測到重複的資料夾名稱，請重新填寫資料夾名稱",
     "noMore": "沒有更多數據了",
+    "noValidName": "系統偵測到未產生有效名稱",
     "pleaseSelectApprovalStatus": "請選擇審核狀態",
     "resetWarning": "提交後，所有選定使用者的群組將被重置",
     "stopShareConfirm": "確認是否停止分享？",
@@ -1625,7 +1789,7 @@
     "notFound": "找不到文件夾模板",
     "previewName": "預覽文件櫃名稱",
     "repeatName": "如果檔案名稱存在則替換",
-    "repeatNameTip": "如果替換為“否”，則將向檔案新增增量編號",
+    "repeatNameTip": "如果替換為\"否\"，則將向檔案新增增量編號",
     "uploadList": "上傳列表",
     "workflowTip": "以下工作流程使用此櫃體，請確保設定正確。"
   },
@@ -1979,6 +2143,45 @@
   "options_size_small": "小",
   "order": "顺序",
   "orderColumn": "列排序",
+  "orgChart": {
+    "add": "添加",
+    "contextMenu": {
+      "addChild": "添加子節點",
+      "delete": "刪除",
+      "edit": "編輯"
+    },
+    "editSidebar": {
+      "addRole": "添加角色",
+      "cancel": "取消",
+      "editGroup": "編輯用戶組",
+      "editRole": "編輯角色",
+      "parentRole": "父級角色",
+      "parentRolePlaceholder": "請輸入父級角色",
+      "roleLabel": "角色名稱",
+      "rolePlaceholder": "請輸入角色名稱",
+      "save": "保存",
+      "validation": {
+        "minLength": "長度至少為2個字符",
+        "roleRequired": "請輸入角色名稱"
+      }
+    },
+    "noData": "暫無數據",
+    "userTable": {
+      "actions": {
+        "remove": "移除"
+      },
+      "addUser": "選擇要添加到角色的用戶",
+      "addUserButton": "添加用戶到角色",
+      "addUserToGroup": "選擇要添加到用戶組的用戶",
+      "addUserToRole": "選擇要添加到角色的用戶",
+      "columns": {
+        "email": "電子郵件",
+        "username": "用戶名"
+      },
+      "filterPlaceholder": "過濾名稱",
+      "title": "用戶"
+    }
+  },
   "pending_approval": "待批准",
   "pending_completed": "已完成",
   "pending_upload": "等待上传",
@@ -2022,6 +2225,7 @@
       "endDatePlaceholder": "結束日期",
       "endTimePlaceholder": "截止时间",
       "fieldRequired": "{name} 不能為空",
+      "fileLoading": "文件正在上传，请稍后再试",
       "fileSizeExceed": "文件大小已超出: ",
       "insertSubFormRow": "插入行",
       "invalidNumber": "数据格式错误",
@@ -2406,7 +2610,7 @@
     "addToCollection": "添加到收藏夾",
     "addToShare": "添加到分享隊列",
     "adhocHistory": "Adhoc 任務記錄",
-    "attributeNameFillingRule": "必須以字母或底線開頭、可帶數字、“_”",
+    "attributeNameFillingRule": "必須以字母或底線開頭、可帶數字、\"_\"",
     "attributeNameFillingRuleDisabled": "含禁用字段",
     "beforeunload": "系統可能不會保存您所做的更改。",
     "cabinetNotFound": "文件櫃異常，請聯絡管理員",
@@ -3350,7 +3554,6 @@
   "workflowEditor_promoteToProduction": "推送至生產：{currentVersion}",
   "workflowEditor_saveAsNewVersion": "另存為新版本",
   "workflowEditor_versionList": "版本清單",
-  "workflow_activeTask": "進行中任務",
   "workflow_GenerateDocument": "生成文檔",
   "workflow_ManageDeleteTask": "刪除任務",
   "workflow_ManageDeleteWorkflowMsg": "Are you sure you want to delete the selected workflow task(s)?<br>This action cannot be undone.",
@@ -3363,6 +3566,7 @@
   "workflow_TAT": "工期",
   "workflow_Unclaim": "取消認領",
   "workflow_WorkflowTasks": "工作流程任務",
+  "workflow_activeTask": "進行中任務",
   "workflow_activity": "日誌",
   "workflow_adhocTask": "AdHoc 任務",
   "workflow_allTask": "可領任務",
@@ -3424,5 +3628,7 @@
   "所有內容": "所有內容",
   "收藏夹": "收藏夹",
   "文件Keywords": "文件Keywords",
-  "檔案內容": "檔案內容"
+  "檔案內容": "檔案內容",
+
+  "common_fetchFail": "獲取數據失敗"
 }

@@ -1,0 +1,6 @@
+[submodule "libraries/docpal-document-editor"]
+	path = libraries/docpal-document-editor
+	url = https://gitea.wclsolution.com/DocPal/docpal-document-editor.git
+[submodule "libraries/tiptap-extension-pagination"]
+	path = libraries/tiptap-extension-pagination
+	url = https://gitea.wclsolution.com/DocPal/ui-tiptap-extension-pagination.git

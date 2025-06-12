@@ -34,23 +34,22 @@ const state = reactive<any>({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  const params: any = {
-    id: props.id,
-    userId: data.userId
-  }
-  if (data.permission === 'Print') {
-    params.print = true
-  } else {
-    params.permission = data.permission
-  }
-  if (data.time === 'dateBase') {
-    params.startDate = data.dateRange[0]
-    params.endDate = data.dateRange[1]
-  }
-  state.loading = true
-
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const params: any = {
+      id: props.id,
+      userId: data.userId
+    }
+    if (data.permission === 'Print') {
+      params.print = true
+    } else {
+      params.permission = data.permission
+    }
+    if (data.time === 'dateBase') {
+      params.startDate = data.dateRange[0]
+      params.endDate = data.dateRange[1]
+    }
+    state.loading = true
     await adminApi.api.postCabinetTemplatePermission(params)
     state.visible = false
     ElMessage.success(t('tip_createdSuccessMsg', {

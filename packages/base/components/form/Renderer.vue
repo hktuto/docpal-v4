@@ -21,8 +21,9 @@
 
 <script lang="ts" setup>
 import { clientApi } from 'api'
-
+import { ElMessage } from 'element-plus'
 const emits = defineEmits(['submit', 'clean', 'fail', 'formChange', 'emit'])
+const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
     data?: Object
@@ -77,14 +78,15 @@ function setFormData(data: any) {
   Object.keys(vFormRenderRef.value.widgetRefList).forEach((key: string) => {
     const widgetRef = vFormRenderRef.value.widgetRefList[key]
     // widget：仅容器含有；设置容器变量
-    if(widgetRef.widget) {
+    if (widgetRef.widget) {
       const widget = widgetRef.widget
-      if(widget.type === 'sub-form') {
-        if(!data[widget.id]) delete data[widget.id] // 删除 sub-form data,将按照默认设置渲染表单
+      if (widget.type === 'sub-form') {
+        if (!data[widget.id])
+          delete data[widget.id] // 删除 sub-form data,将按照默认设置渲染表单
         else {
-          widget.widgetList.forEach(widgetItem => {
-            if(widgetItem.type === 'date' && widgetItem.options.valueFormat) {
-              data[widget.id].forEach(dataItem => {
+          widget.widgetList.forEach((widgetItem) => {
+            if (widgetItem.type === 'date' && widgetItem.options.valueFormat) {
+              data[widget.id].forEach((dataItem) => {
                 dataItem[widget.id] = formatDate(dataItem[widget.id], widgetItem.options.valueFormat)
               })
             }
@@ -92,11 +94,11 @@ function setFormData(data: any) {
         }
       }
     }
-    // field：仅字段含有；设置字段变量 
-    else if(widgetRef.field) {
+    // field：仅字段含有；设置字段变量
+    else if (widgetRef.field) {
       const widget = widgetRef.field
-      if(widget.type === 'date') {
-        if(widget.options.valueFormat && data[widget.id]) {
+      if (widget.type === 'date') {
+        if (widget.options.valueFormat && data[widget.id]) {
           data[widget.id] = formatDate(data[widget.id], widget.options.valueFormat)
         }
       }
@@ -152,7 +154,19 @@ async function handleFilePreview({ file, options }) {
   } catch (error) {}
   previewFile.loading = false
 }
-defineExpose({ vFormRenderRef, setFormJson, setFormData })
+async function getFormData(needValidation: boolean = true) {
+  let data = null
+  try {
+    data = await vFormRenderRef.value.getFormData(needValidation)
+  } catch (error: any) {
+    console.log(error)
+    ElMessage.error(error)
+  } finally {
+    if (!data) throw new Error(t('render.hint.validationFailed'))
+    return data
+  }
+}
+defineExpose({ vFormRenderRef, setFormJson, setFormData, getFormData })
 </script>
 
 <style lang="scss" scoped>

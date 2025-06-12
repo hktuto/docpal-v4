@@ -1,7 +1,6 @@
 <template>
   <div class="table-container">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
-    </VxeGrid>
+    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent"> </VxeGrid>
   </div>
 </template>
 <script lang="ts" setup>
@@ -9,22 +8,14 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { publicApi } from 'api'
 import { routeDashboardDetail } from '~/utils/routerHelper'
 
-const userId:string = useUserId().value
+const userId: string = useUserId().value
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 let extraParams: any = {}
-const {
-  tableConfig,
-  tableEvent,
-  tableRef,
-  query,
-  reload,
-  cleanSelectedRows
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'd-dashboard',
   zoom: false,
-  api: (pageParams: any) =>
-    publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams, userId }),
+  api: (pageParams: any) => publicApi.api.postUserDashboardPage({ ...pageParams, ...extraParams, userId }),
   columns: [
     { field: 'name', title: 'tableHeader_name', fixed: 'left' },
     {
@@ -50,7 +41,10 @@ function handleDblclick(row: any) {
 async function getFilter() {
   const data = [
     {
-      key: 'orderBy', label: 'tableHeader.sortBy', type: 'string', isMultiple: false,
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'tableHeader_access', value: 'access' },
         { label: 'table_name', value: 'name' },
@@ -58,7 +52,10 @@ async function getFilter() {
       ]
     },
     {
-      key: 'isDesc', label: 'tableHeader.sortOrder', type: 'string', isMultiple: false,
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
       options: [
         { label: 'tableHeader.asc', value: false },
         { label: 'tableHeader.desc', value: true }
@@ -72,7 +69,6 @@ onMounted(() => {
   // 因爲頁面不存在“ResponsiveFilterRef”屏蔽下面一句
   // getFilter()
 })
+defineExpose({ query, reload })
 </script>
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

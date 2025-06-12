@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends TabItem, B extends boolean, I extends number">
-import { useEventBus, EventType, GlobalPasteItem, GlobalPasteEvent  } from 'eventbus'
+import { useEventBus, EventType, type GlobalPasteItem, GlobalPasteEvent  } from 'eventbus'
 import { extractClosestEdge } from '@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge';
 
 import type { TabItem, TabPanel } from '#imports';

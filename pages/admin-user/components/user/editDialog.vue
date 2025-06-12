@@ -25,9 +25,9 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
     await adminApi.api.patchNuxeoIdentityUser({ ...props.user, properties: null, ...data })
     ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: data.firstName }))
     state.visible = false

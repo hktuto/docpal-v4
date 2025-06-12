@@ -202,8 +202,12 @@ const FormRef = ref()
 
 // #region module: action
 async function handleSubmit() {
-  const validate = await FormRef.value.validate()
-  if (!validate) return
+  try {
+    await FormRef.value.validate()
+  } catch (e) {
+    console.error(e)
+    return
+  }
   const params = {
     id: props.detail.id,
     formResult: {

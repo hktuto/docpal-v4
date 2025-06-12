@@ -6,12 +6,12 @@
       {{ 'in ' + state.setting.documentPath }}
     </template>
     <div>{{ $t('tableHeader_labelRule') }}：
-      <template v-for="(item, index) in getLabelList()" :key="index">
-        <el-tag>{{ $t(item.metadata || item.metaData) }}</el-tag>
-        <template v-if="index !== getLabelList().length - 1"> -</template>
+      <template v-for="(item, index) in getLabelList(state.setting.labelRule)" :key="index">
+        <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
+        <template v-if="index !== getLabelList(state.setting.labelRule).length - 1"> -</template>
       </template>
     </div>
-    <div style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.setting.previewName }}</div>
+    <el-text :type="hasPreviewName(state.setting.previewName) ? '': 'danger'" style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.setting.previewName }}</el-text>
     <BrowseActionsReplaceUpload v-model="state.fileList" :limit="1" @change="handleChange"></BrowseActionsReplaceUpload>
     <MetaRenderForm ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
     <template #footer>
@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import { clientApi } from 'api'
-
+import { ElMessage } from 'element-plus'
 const emits = defineEmits(['success'])
 const route = useRoute()
 const state = reactive<any>({
@@ -39,43 +39,18 @@ const MetaFormRef = ref()
 const userId: string = useUserId().value
 
 function getMetaName(formData: any = {}) {
-  const date = new Date()
-  const labelRule = getLabelList()
   try {
     if (!!state.metaFormData) formData = {
       ...formData,
-      ...state.metaFormData
+      ...state.metaFormData,
+      label: state.setting.label
     }
   } catch (error) {
 
   }
-  formData.label = state.setting.label
-  return labelRule.reduce((prev: any, rule: any, index: number) => {
-    const joiner = index === 0 ? '' : '-'
-    if (!rule.metadata) rule.metadata = rule.metaData
-    if (rule.metadata === 'fc:createDate') {
-      prev += joiner + formatDate(date)
-    } else if (rule.metadata === 'fc:label') {
-      prev += joiner + formData.label
-    } else if (rule.metadata === 'fc:creator') {
-      prev += joiner + userId
-    } else if (rule.metadata === 'fc:docTitle') {
-      if (!formData.docName) prev += joiner + ''
-      else prev += joiner + formData.docName
-    } else if (rule.dataType === 'date') {
-      if (!formData[rule.metadata]) prev += joiner + ''
-      else prev += joiner + formatDate(formData[rule.metadata])
-    } else {
-      if (!formData[rule.metadata]) prev += joiner + ''
-      else prev += joiner + formData[rule.metadata]
-    }
-    return prev
-  }, '')
-}
-
-function getLabelList() {
-  return state.setting.labelRule ? JSON.parse(state.setting.labelRule)
-    : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
+  console.log('getMetaName', formData)
+  const labelRules = getLabelList(state.setting.labelRule)
+  return getNameByLabelRule(labelRules, formData)
 }
 
 async function handleChange() {
@@ -106,9 +81,15 @@ async function handleSubmit() {
   try {
     const metaFormData = await MetaFormRef.value.getData()
     if (!metaFormData) return
+    if(!state.setting.previewName) {
+      ElMessage.error($t('dpTip.noValidName'))
+      throw new Error('dpTip.noValidName')
+    }
     if (!state.fileList || state.fileList.length === 0) {
+      ElMessage.error($t('msg_fileFetchFailed'))
       throw new Error('msg_fileFetchFailed')
     }
+    
     const file = state.fileList[0]
     state.loading = true
     const inputFile: any = {
@@ -143,6 +124,7 @@ async function handleSubmit() {
     emits('success', inputFile)
     state.dialogOpened = false
   } catch (error) {
+    console.error(error)
   } finally {
     state.loading = false
   }

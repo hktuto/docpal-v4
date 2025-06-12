@@ -13,11 +13,16 @@ const props = withDefaults(
   }
 )
 
-const settingRef = ref()
 async function handleDelete() {
   emits('delete')
 }
-
+const CalendarRef = ref()
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async (setting: any) => {
+    if (CalendarRef.value?.refresh) CalendarRef.value.refresh()
+  }
+})
 onDeactivated(() => {
   if (!props.hideSetting) {
     showPreview.value = false
@@ -28,12 +33,14 @@ onDeactivated(() => {
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding"
     :hideSetting="hideSetting"
     title="Calendar"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <template #action_prefix>
       <Icon
@@ -44,10 +51,10 @@ onDeactivated(() => {
       />
     </template>
     <el-skeleton v-if="!hideSetting && !showPreview" :rows="5"> </el-skeleton>
-    <Calendar v-else :options="setting" />
+    <Calendar v-else ref="CalendarRef" :options="setting" />
+    <CalendarWidgetCreateDialog ref="createDialogRef" />
+    <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
   </DashboardCard>
-  <CalendarWidgetCreateDialog ref="createDialogRef" />
-  <CalendarWidgetSetting ref="settingRef" :setting="setting" @submit="(setting) => $emit('refreshSetting', setting)" @delete="handleDelete" />
 </template>
 
 <style lang="scss" scoped></style>

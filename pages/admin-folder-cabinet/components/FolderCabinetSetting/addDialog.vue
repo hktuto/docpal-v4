@@ -9,7 +9,8 @@
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson"></FormRenderer>
     <template #footer>
-      <el-button id="FolderCabinetSetting__CreateNewFolderCabinet__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="FolderCabinetSetting__CreateNewFolderCabinet__Submit" type="primary" :loading="state.loading"
+                 @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
@@ -26,30 +27,33 @@ const state = reactive<any>({
   loading: false,
   visible: false,
   setting: null,
-  isEdit: false
+  isEdit: false,
+  oldName: ''
 })
 
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  if (!data) return
-  const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
-  if (checkName) {
-    ElMessage.error(t('common_nameExists'))
-    return
-  }
-  const params = {
-    ...data,
-    binds: data.userGroups.map((value: string) => {
-      const values = value.split('&&&&')
-      return {
-        bindId: values[1],
-        type: values[0]
-      }
-    })
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    if (state.oldName != data.name) {
+      const { data: checkName } = await adminApi.api.postCabinetTemplateDuplicateName({ label: data.label })
+      if (checkName) {
+        ElMessage.error(t('common_nameExists'))
+        return
+      }
+    }
+  
+    const params = {
+      ...data,
+      binds: data.userGroups.map((value: string) => {
+        const values = value.split('&&&&')
+        return {
+          bindId: values[1],
+          type: values[0]
+        }
+      })
+    }
     state.loading = true
     let response
     if (state.isEdit) {
@@ -58,6 +62,7 @@ async function handleSubmit() {
         ...params,
         rootId: data.cabinetRoot.pop()
       })
+
       response = patchData
     } else {
       const { data: createData } = await adminApi.api.postCabinetTemplate({
@@ -91,6 +96,7 @@ function handleOpen(setting: any) {
   if (setting) {
     state.isEdit = true
     state.setting = setting
+    state.oldName = setting.name
     // try {
     setTimeout(async () => {
       await FormRendererRef.value.vFormRenderRef.resetForm()

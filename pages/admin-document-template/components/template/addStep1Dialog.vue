@@ -39,9 +39,9 @@ const FormRendererRef = ref()
 const TemplateAddStep2DialogRef = ref()
 
 async function handleSubmit() {
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
-  if (!formData) return
   try {
+    const formData = await FormRendererRef.value.getFormData()
+    if (!formData) return
     state.loading = true
     if (state.isEdit) {
       await adminApi.api.putTemplateDocument({

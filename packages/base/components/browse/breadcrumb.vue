@@ -24,17 +24,23 @@ const breadcrumbList = ref<any[]>([])
 const loading = ref(false)
 const dropItems = []
 
+
 async function getBreadcrumb() {
     loading.value = true
     try {
-        const {data}: any = await clientApi.api.postNuxeoDocumentBreadcrumb({idOrPath: idOrPath.value})
+        // if idOrPath === home.secondId, then data = []
+        let data = []
+        data = await clientApi.api.postNuxeoDocumentBreadcrumb({idOrPath: idOrPath.value}).then((res: any) => {
+          return res.data
+        })
         if (props.home) {
-            const index = data?.findIndex((item: any) => item.id === props.home.secondId)
-            if (index > 0) {
-                data.splice(0, index)
-            }
+          const index = data?.findIndex((item: any) => item.id === props.home.secondId)
+          if (index > 0) {
+              data.splice(0, index)
+          }
         }
-        breadcrumbList.value = data || []
+        
+        breadcrumbList.value = data
     } catch (e) {
     }
     loading.value = false
@@ -81,7 +87,7 @@ watch(idOrPath, () => {
     immediate: true
 })
 
-onActivated(() => {
+onMounted(() => {
     bus.on(fileRefreshHandler)
 })
 

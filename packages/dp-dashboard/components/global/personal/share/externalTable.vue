@@ -69,14 +69,14 @@ function handleDblclick(row: any) {
   try {
     shareInfoDialogRef.value.handleOpen(row);
   } catch (error: any) {
-    throw new Error(error)
+    console.error(error)
   }
 }
 async function handleSubmit(shareInfo: any) {
   await clientApi.api.patchNuxeoShare(shareInfo);
   query({});
 }
-onMounted(() => {});
+defineExpose({ query, reload })
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

@@ -1,8 +1,10 @@
 <template>
-  <el-dialog v-model="state.visible" :title="state.setting ? $t('common_edit') : $t('azureSettingMapping.add')"
-             :close-on-click-modal="false"
-             class="scroll-dialog"
-             append-to-body
+  <el-dialog
+    v-model="state.visible"
+    :title="state.setting ? $t('common_edit') : $t('azureSettingMapping.add')"
+    :close-on-click-modal="false"
+    class="scroll-dialog"
+    append-to-body
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
@@ -16,9 +18,7 @@ import formJson from './mappingDialog.vform.json'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps(['exitList'])
 const azureProvider = inject(AzureProviderKey)
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const state = reactive<any>({
   loading: false,
   visible: false,
@@ -26,13 +26,13 @@ const state = reactive<any>({
 })
 const route = useRoute()
 const FormRendererRef = ref()
-
+const { t } = useI18n()
 // #region module: handleSubmit
 async function handleSubmit() {
   // 获取 v-form 数据
-  const formData = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
+    const formData = await FormRendererRef.value.getFormData()
     let result = false
     if (!!state.setting) {
       result = await azureProvider?.UpdateAzureOcrMappingApi({
@@ -42,12 +42,10 @@ async function handleSubmit() {
     } else {
       result = await azureProvider?.CreateAzureOcrMappingApi(formData)
     }
-    if (result) ElMessage.success($i18n.t('dpMsg_success'))
+    if (result) ElMessage.success(t('dpMsg_success'))
     emits('refresh')
     state.visible = false
-  } catch (error) {
-
-  }
+  } catch (error) {}
   state.loading = false
 }
 
@@ -94,14 +92,10 @@ async function initOptions(setting: any) {
     }, [])
     const namesRef = await FormRendererRef.value.vFormRenderRef.getWidgetRef('names')
     namesRef.loadOptions(options)
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 // #endregion
 defineExpose({ handleOpen })
 </script>
-<style lang="scss" scoped>
-
-</style>
-    
+<style lang="scss" scoped></style>

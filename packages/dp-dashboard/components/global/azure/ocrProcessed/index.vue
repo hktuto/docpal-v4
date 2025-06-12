@@ -1,12 +1,13 @@
 <template>
   <DashboardCard
-    ref="cardRef"
+    ref="cardRef" v-loading="loading"
     :class="{ 'dashboard-item-drillDown': state.showDrillDown }"
     :title="$t('dashboard.azure.ocrProcessPage') + '(' + $t(`azureDashboard.${setting.dataType}`) + ')'"
     :setting="setting"
     :hideSetting="hideSetting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <AzureOcrProcessedChart ref="chartRef" :setting="setting" :dates="dates" @drillDown="handleDrillDown" />
     <div v-if="state.showDrillDown" class="dashboard-item-drillDown--table">
@@ -34,7 +35,7 @@ const props = withDefaults(
   }
 )
 const emits = defineEmits(['refreshSetting', 'delete'])
-const state = reactive({
+const state = reactive<any>({
   dashboardParams: {
     startDate: '',
     endDate: '',
@@ -44,7 +45,7 @@ const state = reactive({
 })
 // #region module: handleDrillDown
 const tableRef = ref()
-function handleDrillDown(params) {
+function handleDrillDown(params: any) {
   state.showDrillDown = true
   state.dashboardParams = params
   setTimeout(() => {
@@ -62,19 +63,23 @@ function closeDrillDown() {
 // #endregion
 
 // #region module: setting
-const settingRef = ref()
-
 function handleDelete() {
   emits('delete')
 }
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
-
-const chartRef = ref()
-function resize() {
-  if (chartRef.value) chartRef.value.resize()
-}
+const { chartRef, settingRef, cardRef, resize, refresh, loading } = useDashboardCard({
+  props,
+  resizeAction:() => {
+    if (chartRef.value) chartRef.value.resize()
+  },
+  handleRefreshAction: (setting: any) => {
+    if (chartRef.value) chartRef.value.refresh(setting)
+  },
+  handleInitCardAction: (setting: any) => {
+  },
+})
 // #endregion
 
 defineExpose({

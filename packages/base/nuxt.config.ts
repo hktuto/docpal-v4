@@ -26,7 +26,6 @@ const config = {
   
   runtimeConfig:{
     public:{
-
       isProduction: process.env.NODE_ENV === 'production',
       pdfReaderUrl: process.env.pdfReaderUrl,
       NODE_ENV: process.env.NODE_ENV,
@@ -113,13 +112,14 @@ const config = {
     css: {
       preprocessorOptions: {
         scss: {
-          api: "modern-compiler"
+          api: "modern-compiler",
+          quietDeps: true,
         },
       },
     },
     esbuild: {
-      // drop: ['debugger'],
-      // pure: ['console.log', 'console.error', 'console.warn', 'console.debug', 'console.trace'],
+      drop: ['debugger'],
+      pure: ['console.error', 'console.warn', 'console.debug', 'console.trace'],
     },
     vue: {
       features: {

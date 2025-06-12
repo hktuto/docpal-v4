@@ -9,6 +9,7 @@ export default defineNuxtConfig({
   extends:[
     "../../packages/icon",
     '../../packages/authApp',
+    "../../packages/rbac",
     "../../pages/admin-workflow-editor",
     "../../pages/admin-user",
     "../../pages/admin-acl",
@@ -21,6 +22,7 @@ export default defineNuxtConfig({
     "../../pages/admin-bulk-import",
     "../../pages/admin-dam",
     "../../pages/admin-document-template",
+    "../../pages/admin-docTemplate",
     "../../pages/admin-case-management",
     "../../pages/admin-file-policies",
     "../../pages/admin-docker-log",
@@ -37,8 +39,9 @@ export default defineNuxtConfig({
     "../../pages/admin-email-template",
     "../../pages/admin-watermark",
     "../../pages/admin-message-template",
-    "../../pages/admin-unique-id-generator"
+    "../../pages/admin-unique-id-generator",
     // "../../pages/admin-share",
+    "../../pages/admin-rbac"
   ],
   features:{
     inlineStyles: true,

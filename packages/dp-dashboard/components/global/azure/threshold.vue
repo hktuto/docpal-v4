@@ -1,12 +1,13 @@
 <template>
   <DashboardCard
-    ref="cardRef"
+    ref="cardRef" v-loading="loading"
     class="dp-dashboard--card__padding"
     :title="props.setting.scanType + ' ' + $t('dashboard.threshold')"
     :hideSetting="hideSetting"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <el-progress
       :percentage="state.percentage"
@@ -27,9 +28,7 @@
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 import { publicApi } from 'api'
-import { watchDebounced } from '@vueuse/core'
 import formJson from './threshold.vform.json'
-
 dayjs.extend(isBetween)
 const props = defineProps(['setting', 'dates', 'hideSetting'])
 const emits = defineEmits(['refreshSetting', 'delete'])
@@ -39,7 +38,6 @@ const state = reactive<any>({
   cutOffTime: null,
   cutOffDates: {}
 })
-function resize() {}
 async function getData(scanType: string) {
   try {
     let params: any = { scanType }
@@ -57,18 +55,6 @@ async function getDates() {
     const currentDate = new Date()
     const setting: any = await publicApi.api.getAzureOcrQueryazureocrsetting().then((res) => res.data)
     state.cutOffTime = setting.cutOffTime
-    // state.cutOffTime = '2023-05-10'
-    // state.cutOffTime = '2024-05-10'
-    // state.cutOffTime = '2025-05-10'
-    // state.cutOffTime = '2023-05-11'
-    // state.cutOffTime = '2024-05-11'
-    // state.cutOffTime = '2025-05-11'
-    // state.cutOffTime = '2023-05-12'
-    // state.cutOffTime = '2024-05-12'
-    // state.cutOffTime = '2025-05-12'
-    // state.cutOffTime = '2023-05-13'
-    // state.cutOffTime = '2024-05-13'
-    // state.cutOffTime = '2025-05-13'
     const diffYear = dayjs(currentDate).diff(state.cutOffTime, 'year')
     let base = getBaseDiffYear(state.cutOffTime, currentDate)
     let startDate = dayjs(state.cutOffTime)
@@ -104,27 +90,21 @@ async function getDates() {
   }
 }
 // #region module: setting
-const settingRef = ref()
-
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleInitCardAction: (setting: any) => {
+    getData(setting.scanType)
+  },
+})
 function handleDelete() {
   emits('delete')
 }
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
 // #endregion
-watchDebounced(
-  () => [props.setting, props.dates],
-  (newValue, oldValue) => {
-    if (!props.setting) return
-    if (!oldValue || JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-      getData(props.setting.scanType)
-    }
-  },
-  { debounce: 200, maxWait: 500, immediate: true, deep: true }
-)
+
 defineExpose({
-  resize
 })
 </script>
 <style lang="scss" scoped>

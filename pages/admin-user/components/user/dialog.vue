@@ -27,13 +27,13 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  if (!data.userId || !data.username) {
-    ElMessage.error(t('user_username') + t('render.hint.fieldRequired'))
-    return
-  }
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    if (!data.userId || !data.username) {
+      ElMessage.error(t('user_username') + t('render.hint.fieldRequired'))
+      return
+    }
+    state.loading = true
     await adminApi.api.postNuxeoIdentityUser(data)
     state.visible = false
     await adminApi.api.postNuxeoIdentityUserBatchAddGroups({

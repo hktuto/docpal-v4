@@ -420,7 +420,7 @@ async function init() {
   }
 }
 
-onActivated(async () => {
+onMounted(async () => {
   init()
   leftMin.value = CalMax()
   rightMin.value = CalMax()

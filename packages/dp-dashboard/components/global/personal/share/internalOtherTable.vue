@@ -58,7 +58,7 @@ function handleDblclick(row: any) {
     )
   }
 }
-onMounted(() => {})
+defineExpose({ query, reload })
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

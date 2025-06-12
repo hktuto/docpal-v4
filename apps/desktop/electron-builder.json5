@@ -7,18 +7,18 @@
   },
   "files": [
     "pref/**/*",
-    ".output/**/*",
-    "dist-electron"
+    "dist/**/*",
+    "images/**/*"
   ],
   "mac": {
     "artifactName": "${productName}_${version}.${ext}",
-    icon: ".output/public/icon.png",
+    icon: "images/icon.png",
     "target": [
       "dmg"
     ]
   },
   "win": {
-    icon: ".output/public/icon.png",
+    icon: "images/icon.png",
     "signAndEditExecutable": false,
     "target": [
       {

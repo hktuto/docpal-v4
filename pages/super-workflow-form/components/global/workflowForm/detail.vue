@@ -91,7 +91,7 @@ async function handleSubmit() {
   state.submitLoading = false
 }
 
-onActivated(async () => {
+onMounted(async () => {
   init(taskId)
 })
 

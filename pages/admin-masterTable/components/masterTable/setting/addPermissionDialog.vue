@@ -30,14 +30,14 @@ let groupList:GroupDTO[] | any = []
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  const params = {
-    masterTableId: props.tableId,
-    userId: data.userId,
-    ...data
-  }
-  state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const params = {
+      masterTableId: props.tableId,
+      userId: data.userId,
+      ...data
+    }
+    state.loading = true
     await adminApi.api.postMasterTablesAclsAdd(params)
     ElMessage.success(
       t('tip_createdSuccessMsg', {

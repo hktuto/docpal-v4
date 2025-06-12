@@ -8,7 +8,7 @@
           <BrowseActionsChangeDocType v-if="AllowTo({ feature: 'ReadWrite', permission })" class="el-icon--right" :doc="doc" @success="$emit('refresh')" />
         </div>
       </div>
-      <div v-show="!info.isFolder && (info.isCheckedOut || version !== '0.0')" class="infoSection">
+      <div v-show="!info.isFolder" class="infoSection">
         <div class="infoTitle">{{ $t('info_version') }}</div>
         <div class="infoContent"><BrowseInfoVersionPopover v-if="info.id" :doc="info"></BrowseInfoVersionPopover></div>
       </div>
@@ -39,7 +39,7 @@
       <div class="infoSection">
         <div class="infoTitle">{{ $t('info_contributors') }}</div>
         <div class="infoContent tagList">
-          <div v-for="(contributor, index) in contributors" :key="index" class="tag tableItemTags">
+          <div v-for="(contributor, index) in info.contributors" :key="index" class="tag tableItemTags">
             {{ contributor }}
           </div>
         </div>
@@ -94,12 +94,8 @@ function fileSizeCalc(bytesLength: number) {
 function getFileExtension(mimeType) {
   return mime.extension(mimeType)
 }
-const version = computed(() => {
-  const majorVersion = props.doc?.properties?.['uid:major_version'] || 0
-  const minorVersion = props.doc?.properties?.['uid:minor_version'] || 0
-  return majorVersion + '.' + minorVersion
-})
-const contributors = computed(() => props.doc?.properties?.['dc:contributors'] || [])
+
+// const contributors = computed(() => props.doc?.properties?.['dc:contributors'] || [])
 </script>
 
 <style lang="scss" scoped>

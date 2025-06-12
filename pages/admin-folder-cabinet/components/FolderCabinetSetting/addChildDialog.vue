@@ -31,7 +31,8 @@ const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData()
+    if(!data) return
     const params = {
       ...data,
     }

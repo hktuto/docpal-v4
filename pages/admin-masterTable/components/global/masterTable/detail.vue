@@ -3,7 +3,7 @@ import { ElNotification } from 'element-plus'
 import { adminApi } from 'api'
 import type { MasterTableResponseDTO } from 'api/src/generate/admin'
 import { getIgnoreSchemas } from '~/utils/masterTableProvider'
-import { onActivated } from 'vue'
+import { onMounted } from 'vue'
 
 const { t } = useI18n()
 const { id } = defineProps<{
@@ -140,7 +140,7 @@ function handleRefresh() {
   MasterTableTabRecordsRef.value.query()
 }
 
-onActivated(() => {
+onMounted(() => {
   init()
 })
 </script>

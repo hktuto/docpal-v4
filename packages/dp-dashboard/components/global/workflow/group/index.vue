@@ -1,5 +1,15 @@
 <template>
-  <DashboardCard ref="cardRef" :hideSetting="hideSetting" class="dp-dashboard--card__padding" :title="$t('dashboard.workflowGroup')" :setting="setting" :settingRef="settingRef" @delete="handleDelete">
+  <DashboardCard
+    ref="cardRef"
+    v-loading="loading"
+    :hideSetting="hideSetting"
+    class="dp-dashboard--card__padding"
+    :title="$t('dashboard.workflowGroup')"
+    :setting="setting"
+    :settingRef="settingRef"
+    @delete="handleDelete"
+    @refresh="refresh"
+  >
     <div class="chartContainer">
       <WorkflowGroupDetailFilter :filterList="setting.filterHeaderList" @change="handleChange" />
       <!-- <el-divider /> -->
@@ -26,21 +36,27 @@ const state = reactive({
   data: [],
   isLoad: false
 })
-const WorkflowGroupDetailListRef = ref({})
-function resize() {}
-const settingRef = ref()
+const WorkflowGroupDetailListRef = ref<any>({})
 function handleDelete() {
   emits('delete')
 }
-function handleRefresh(chartSetting) {
+function handleRefresh(chartSetting: any) {
   emits('refreshSetting', chartSetting)
 }
-function handleChange(form) {
+function handleChange(form: any) {
   WorkflowGroupDetailListRef.value.handleCommonFilterChange(form)
 }
-defineExpose({
-  resize
+
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleInitCardAction: (setting: any) => {
+    // console.log(setting)
+  },
+  handleRefreshAction: (setting: any) => {
+    WorkflowGroupDetailListRef.value.getData()
+  }
 })
+defineExpose({})
 </script>
 
 <style lang="scss" scoped>

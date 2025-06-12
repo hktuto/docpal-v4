@@ -12,6 +12,7 @@ const config = {
     public: {
       needAuth: true,
       endPoint: {
+        clientUrl : process.env.CLIENTURL,
         admin : process.env.ADMIN_END_POINT,
         docpal : process.env.DOCPAL_END_POINT,
         office  : process.env.OFFICE_END_POINT,

@@ -29,8 +29,8 @@ const state = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   try {
+    const data = await FormRendererRef.value.getFormData()
     state.visible = false
     emits('confirm', {...data})
   } catch (error) {

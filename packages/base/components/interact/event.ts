@@ -28,10 +28,9 @@ export const dragEvents = [
     "doubletap",
     "hold"
   ];
-  import { Interactable } from "@interactjs/types";
   
   const bindEvents = (events: string[]) => (
-    interact: Interactable,
+    interact: any,
     emit:any
   ): void => {
     events.forEach(eventName => {

@@ -56,7 +56,7 @@ async function saveData() {
   }
 }
 
-onActivated(async () => {
+onMounted(async () => {
   await init()
 })
 

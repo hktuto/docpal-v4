@@ -1,0 +1,134 @@
+---
+description: create table and filter in this package
+globs: 
+alwaysApply: false
+---
+## Table 
+Always use useVxeTable composable located in /packages/base/componsable and VxeGrid to create table.
+
+### Example Implementation of VxeGrid and useVxeTable
+
+```vue
+<script lang="ts" setup>
+
+const { tableConfig, tableEvent, tableRef, reload, query} = useVxeTable({
+  id:'tableid',
+  api:(params) => {
+    // addtion params logic here
+    return api.endport(params)
+  }
+  columns: [
+    {
+      field: 'key in api result',
+      title: 'i18n translate key',
+      formatter: ({cellValue}) => return cellValue // option to parse cell value, always use fotmatDate function to parse datetime value
+    }
+  ],
+  bodyActions:[
+    [
+      {
+        code: "code key",
+        label: 'label of the action',
+        action: ({row}:any) => {
+            // do somthing
+        }
+      }
+    ]
+  ],
+  permissionMethod:({options, column, row, rowIndex}:any){
+    // define which bodyAction can be visible or disabled
+    return {
+      visible: true,
+      disabled: false
+    }
+  },
+  dblClickAction:({ row, column, event }){
+    // do somthing when user double click on row
+  }
+})
+</script>
+
+<template>
+  <VxeGrid v-bind="tableConfig" v-on="tableEvent" ref="tableRef" >
+    <template #toolbar_buttons>
+    </template>
+  </VxeGrid>
+</template>
+
+<style scoped>
+</style>
+```
+for more detail plase see /packages/base/composables/useVxeTable.ts
+
+
+## Table Filtering
+Always use the ResponsiveFilter component for table filtering functionality. This ensures consistent UI/UX and responsive behavior across the application.
+
+### Example Implementation of ResponsiveFilter:
+  ```vue
+  <template>
+    <vxe-grid>
+      <template #toolbar_buttons>
+        <div class="actionContainer">
+        <ResponsiveFilter 
+          ref="filterRef" 
+          inputKey="q" 
+          @form-change="handleFilterFormChange" 
+        />
+        </div>
+      </template>
+    </vxe-grid>
+  </template>
+
+  <script lang="ts" setup>
+  import { ResponsiveFilter } from '#components'
+
+  const filterRef = ref()
+
+  // Initialize filters in onMounted
+  onMounted(() => {
+    filterRef.value.init([
+      {
+        label: "Status",
+        key: "status",
+        isMultiple: false,
+        options: [
+          { label: "Active", value: 1 },
+          { label: "Inactive", value: 3 }
+        ]
+      },
+      {
+        label: "Parent Role",
+        key: "parentRoleName",
+        isMultiple: true,
+        options: [
+          { label: "No Parent", value: "noParent" },
+          { label: "Has Parent", value: "hasParent" }
+        ]
+      }
+    ])
+  })
+
+  const debouncedReload = useDebounceFn(reload, 300)
+  const searchQuery = ref()
+  // Handle filter changes
+  function handleFilterFormChange(form: any) {
+    searchQuery.value = form
+  }
+
+  watch(searchQuery, () => debouncedReload, {
+    deep:true
+  })
+  </script>
+
+  <style lang="scss" scoped>
+  .actionContainer{
+    width:100%:
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    container-type: inline-size;
+  }
+  </style>
+  ```

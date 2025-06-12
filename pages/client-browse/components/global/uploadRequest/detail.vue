@@ -85,7 +85,12 @@ async function getData() {
 const formRef = ref();
 
 async function handleSubmit() {
-  const valid = await formRef.value.validate();
+  try {
+    await formRef.value.validate()
+  } catch (e) {
+    console.error(e)
+    return
+  }
   const metaValid = await MetaFormRef.value.checkMetaValidate(state.tableData);
   if (!valid || !metaValid) return;
   state.submitLoading = true;
@@ -231,7 +236,7 @@ function handleCheckChange() {
 }
 
 // #endregion
-onActivated(() => {
+onMounted(() => {
   getData();
 });
 onMounted(async () => {

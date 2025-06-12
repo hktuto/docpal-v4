@@ -26,16 +26,18 @@ const { t } = useI18n()
 const FormRendererRef = ref()
 
 async function handleSave() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
     const result = await azureProvider?.UpdateAzureOcrSettingApi({
       ...data,
       alertEmail: data.alertEmail.join(',')
     })
     if (result) routerProvider?.message.success(t('dpMsg_success'))
-  } catch (error) {}
-  setTimeout(() => (state.loading = false), 500)
+  } catch (error) {
+  } finally {
+    setTimeout(() => (state.loading = false), 500)
+  }
 }
 
 function initForm(setting: any) {
@@ -49,7 +51,7 @@ const emailTemplateEditor = ref()
 
 async function handleEditEmailTemplate() {
   try {
-    const data = await FormRendererRef.value.vFormRenderRef.getFormData(false)
+    const data = await FormRendererRef.value.getFormData(false)
     if (!data.emailTemplate) throw new Error('')
     emailTemplateEditor.value.handleOpen(data.emailTemplate, true)
   } catch (error) {

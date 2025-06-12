@@ -159,11 +159,8 @@ async function getOptions() {
   searchOptions.value.sizes = sizes
 }
 provide('searchOptions', searchOptions)
-    
-onMounted(() => {
-  getOptions()
-})
-onActivated(() => {
+
+function getSearchParams(){
   const searchParams = sessionStorage.getItem('searchParams')
   if(!!searchParams) {
     initForm(JSON.parse(searchParams))
@@ -175,7 +172,13 @@ onActivated(() => {
   else if(filters.value?.query?.length === 0){
     handleAddFilter()
   }
+}
+
+onMounted(async () => {
+  await getOptions()
+  getSearchParams()
 })
+
 defineExpose({
   getData, initForm, clear
 })

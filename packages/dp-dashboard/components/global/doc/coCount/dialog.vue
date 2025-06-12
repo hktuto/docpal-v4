@@ -34,9 +34,9 @@ const state = reactive({
 })
 const FormRendererRef = ref()
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
   state.loading = true
   try {
+    const data = await FormRendererRef.value.getFormData()
     emits('refresh', { ...data, icon: state.icon })
   } catch (error) {
     state.loading = false
@@ -44,7 +44,7 @@ async function handleSubmit() {
   state.visible = false
   state.loading = false
 }
-function handleOpen(setting) {
+function handleOpen(setting: any) {
   state.visible = true
   setTimeout(async () => {
     state.setting = setting

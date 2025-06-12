@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     extends: [
         "../../packages/icon",
         '../../packages/authApp',
+        '../../packages/rbac',
         "../../pages/client-browse",
         "../../pages/client-search",
         "../../pages/client-master-table",
@@ -20,7 +21,8 @@ export default defineNuxtConfig({
         "../../pages/client-file-policies",
         "../../packages/dp-cmmn-x6",
         "../../pages/client-case-manage",
-        "../../pages/client-easy-form"
+        "../../pages/client-easy-form",
+        "../../pages/client-rbac"
     ],
     features: {
         inlineStyles: true,

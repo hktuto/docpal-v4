@@ -36,13 +36,12 @@ const form = reactive({
 const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const data = await FormRendererRef.value.vFormRenderRef.getFormData()
-  if (!data) return
-  const params = {
-    ...state.setting,
-    ...data
-  }
   try {
+    const data = await FormRendererRef.value.getFormData()
+    const params = {
+      ...state.setting,
+      ...data
+    }
     state.loading = true
     let msg
     if (state.isEdit) {

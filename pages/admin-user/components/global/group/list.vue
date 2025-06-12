@@ -1,45 +1,10 @@
 <script lang="ts" setup>
-import { adminApi } from "api";
-import { groupProviderKey } from "~/util/userProvider";
-const routerProvider = inject(MenuRouterKey);
-if (!routerProvider) {
-  throw new Error("MenuRouterKey is not provided");
-}
-function openGroupDetail(data: any, openInNewTab = false) {
-  // TODO: open detail page
-  const newItem: any = {
-    id: "group-detail-" + new Date().getTime(),
-    name: "group-detail-" + data.id,
-    icon: "lucide:user",
-    label: data.name,
-    component: "LazyGroupDetail",
-    props: {
-      id: data.id,
-      name: data.name,
-      isCanModified: data.isCanModified,
-    },
-  };
-  routerProvider?.navigateTo({ ...newItem }, openInNewTab);
-}
 
-provide(groupProviderKey, {
-  openGroupDetail,
-  GetGroupListApi: async () => {
-    const res = await adminApi.api.postNuxeoIdentityGroups();
-    return res.data;
-  },
-  DeleteGroupApi: (params: any) => {
-    return adminApi.api.deleteNuxeoIdentityGroup(params);
-  },
-  CreateGroupApi: (params: any) => {
-    return adminApi.api.postNuxeoIdentityGroup(params);
-  },
-});
 </script>
 
 <template>
   <div class="pageContainer">
-    <GroupTable ref="tableRef"></GroupTable>
+    <RbacUserGroupList />
   </div>
 </template>
 <style lang="scss" scoped>

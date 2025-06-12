@@ -1,6 +1,5 @@
 import {BrowserWindow} from "electron";
 import path from "path";
-import log from 'electron-log/main';
 import {havePrefs} from './pref'
 
 export const createWindow = (mainWindow:BrowserWindow) =>{

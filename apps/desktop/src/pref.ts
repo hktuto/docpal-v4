@@ -1,7 +1,6 @@
 import { BrowserWindow, app } from 'electron';
 import path from 'path';
 import fs from 'fs'
-import log from 'electron-log/main';
 
 export const havePrefs = () => {
     const prefsPath = path.resolve(app.getPath('userData'), 'prefs.json');
@@ -26,7 +25,6 @@ export const removePrefs = () => {
 
 export const setPrefs = (jsonData:any) => {
     const prefsPath = path.resolve(app.getPath('userData'), 'prefs.json');
-    log.log(prefsPath)
     fs.writeFileSync(prefsPath, JSON.stringify(jsonData));
 }
 

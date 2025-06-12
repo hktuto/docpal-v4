@@ -4,3 +4,4 @@ packages:
   - 'pages/*'
   - 'libraries/*'
   - 'dev-tools/*'
+  - 'demo/*'

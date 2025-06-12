@@ -1,12 +1,14 @@
 <template>
   <DashboardCard
     ref="cardRef"
+    v-loading="loading"
     class="dp-dashboard--card__padding dp-dashboard--card__scroll"
     :hideSetting="hideSetting"
     :title="$t('dashboard.PersonalWorkflowCreate')"
     :setting="setting"
     :settingRef="settingRef"
     @delete="handleDelete"
+    @refresh="refresh"
   >
     <div class="workflow-create-content">
       <el-button v-for="item in state.workflowList" type="primary" :key="item.id" @click="handleClick(item)">{{item.name}}</el-button>
@@ -35,8 +37,6 @@ const state = reactive<any>({
 async function handleDelete() {
   emits("delete");
 }
-const settingRef = ref();
-
 const newTaskRef = ref()
 function handleClick (item: any) {
   newTaskRef.value.workflowClickHandler(item)
@@ -45,7 +45,7 @@ function handleRefresh(chartSetting: any, workflowList: any) {
   state.workflowList = workflowList
   emits('refreshSetting', chartSetting)
 }
-onMounted(async() => {
+async function getWorkflowId() {
   state.workflowAList = await clientApi.api.postWorkflowProcessList({}).then(res => res.data);
   if(props.setting.workflowKeys && props.setting.workflowKeys.length > 0) {
     state.workflowList = props.setting.workflowKeys.reduce((prev: any, key: any) => {
@@ -54,6 +54,15 @@ onMounted(async() => {
       return prev
     }, [])
   }
+}
+const { settingRef, cardRef, refresh, loading } = useDashboardCard({
+  props,
+  handleRefreshAction: async(setting: any) => {
+    await getWorkflowId()
+  }
+})
+onMounted(async() => {
+  getWorkflowId()
 })
 </script>
 <style lang="scss" scoped>
