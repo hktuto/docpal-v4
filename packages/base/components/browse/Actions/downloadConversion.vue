@@ -43,7 +43,7 @@ const supportedFormatList = computed(() => {
 })
 const handleConfirm = async () => {
   try {
-    await FormRef.value.validate()
+    await formRef.value.validate()
   } catch (e) {
     console.error(e)
     return
