@@ -372,6 +372,12 @@ $colors:
 }
 
 // Element UI
+
+
+.field-wrapper pre{
+  font-family: var(--app-font-family) !important;
+}
+
 .el-dialog__header {
   text-align: left;
 }
