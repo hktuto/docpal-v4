@@ -15,12 +15,7 @@ defineExpose({
 <template>
   <ElDialog v-model="dialogVisible" class="scroll-dialog" :title="currentRow?.name || 'Permission'" width="80%" append-to-body destroy-on-close center>
     <div v-if="currentRow" class="permission-dialog-content-container">
-      <ElTabs class="dp-tabs--auto" v-model="activeTab" type="card">
-        <ElTabPane label="Permission" name="permission">
-          <ResourceDocumentPermissionTable :document="currentRow" />
-        </ElTabPane>
-        <ElTabPane label="User Set" name="UserSet"> user set </ElTabPane>
-      </ElTabs>
+      <ResourceDocumentPermissionTable  :document="currentRow" />
     </div>
   </ElDialog>
 </template>

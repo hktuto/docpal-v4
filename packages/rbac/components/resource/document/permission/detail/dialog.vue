@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="权限详情" width="80%" :close-on-click-modal="false" @close="handleClose">
+  <el-dialog v-model="dialogVisible" title="权限详情" width="80%" append-to-body :close-on-click-modal="false" @close="handleClose">
     <div class="permission-detail-content">
       <!-- 权限详情内容 -->
       <ResourceDocumentPermissionDetailForm ref="formRef" />
