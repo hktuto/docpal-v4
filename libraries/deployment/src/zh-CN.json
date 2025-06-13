@@ -2791,6 +2791,7 @@
   "user_groupName": "分组名称",
   "user_groupNameCanNotBeNull": "分组名称不能为空",
   "user_groups": "分组",
+  "user_role": "角色",
   "user_info": "用戶信息",
   "user_lastName": "姓",
   "user_newGroup": "新建分组",
