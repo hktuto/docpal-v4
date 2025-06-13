@@ -5,8 +5,10 @@
       prop="targetId"
       :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: '用户角色' }), trigger: 'change' }]"
     >
-      <el-select v-model="formData.targetId" placeholder="请选择用户角色">
-        <el-option v-for="role in flatRole" :key="role.id" :label="role.name" :value="role.id" />
+      <el-select v-model="formData.targetId" :disabled="isEdit" placeholder="请选择用户角色">
+        <el-option-group v-for="options in targetOptions" :key="options.label" :label="options.label">
+          <el-option v-for="item in options.options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-option-group>
       </el-select>
     </el-form-item>
 
@@ -16,14 +18,15 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-
+import { adminApi } from 'api'
 const props = defineProps<{
-  isFolder: boolean
+  isFolder: boolean,
+  isEdit: boolean
 }>()
 
 const formRef = ref()
-const roleOptions = ref([])
 const checkboxFormRef = ref({})
+const targetOptions = ref([])
 type SaveData = {
   resourceId: string
   resourceType: number // (1=Document)
@@ -37,14 +40,9 @@ type SaveData = {
 }
 type FormData = {
   resourceId: string
+  resourceType: number
   targetType: number
   targetId: string
-  allRead: boolean
-  allReadWrite: boolean
-  allManage: boolean
-  readPermissions: number[]
-  readWritePermissions: number[]
-  managePermissions: number[]
 }
 const formData = ref<FormData>({
   resourceId: '',
@@ -52,20 +50,19 @@ const formData = ref<FormData>({
   targetType: 2,
   targetId: '',
   permissionLevel: 0,
-  permissionIds: [],
+  permissionIds: []
 })
 function setFormData(data: SaveData) {
   formData.value.resourceId = data.resourceId
   formData.value.resourceType = data.resourceType
   formData.value.targetType = data.targetType
-  formData.value.targetId = data.targetId
+  formData.value.targetId = data.targetId ? '&&' + data.targetType + '&&' + data.targetId : ''
   // formData.value.permissionLevel = data.permissionLevel
   // formData.value.permissionIds = data.permissionIds
   checkboxFormRef.value.setData({
     permissionLevel: data.permissionLevel,
     permissionIds: data.permissionIds
   })
-  console.log(formData.value)
 }
 
 async function getFormData() {
@@ -75,18 +72,55 @@ async function getFormData() {
     const data: any = {
       resourceType: formData.value.resourceType || 1,
       resourceId: formData.value.resourceId,
-      targetType: formData.value.targetType,
-      targetId: formData.value.targetId,
+      targetType: getTargetType(formData.value.targetId),
+      targetId: getTargetId(formData.value.targetId),
       ...permissondata
     }
     return data
   } catch (e) {
     console.error(e)
   }
+  function getTargetType(targetId: string) {
+    return targetId.split('&&')[1]
+  }
+  function getTargetId(targetId: string) {
+    return targetId.split('&&')[2]
+  }
 }
 
 const { flatRole } = useRBAC()
-
+async function getTargetOptions() {
+  const groupList = await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
+  const userList = await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
+  targetOptions.value.push(
+    {
+      label: 'user_role',
+      options: flatRole.value.map((item) => ({
+        label: item.name,
+        value: '&&2&&' +item.id
+      }))
+    },
+    {
+      label: 'user_groups',
+      options: groupList
+        .map((item) => ({
+          label: item.name,
+          value: '&&3&&' + item.id
+        }))
+        .filter((item: any) => !item.id)
+    },
+    {
+      label: 'user_users',
+      options: userList.map((item: any) => ({
+        label: item.username,
+        value: '&&1&&' + item.userId
+      }))
+    }
+  )
+}
+onMounted(() => {
+  getTargetOptions()
+})
 // 暴露方法给父组件
 defineExpose({
   formRef,

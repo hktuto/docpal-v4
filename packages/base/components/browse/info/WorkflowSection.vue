@@ -5,11 +5,13 @@
     </div>
     <div class="infoContetn">
       <div class="block">
-        <el-button v-if="canAdhoc" type="primary" size="small" :loading="checkLoading || loading" @click="dialogShow = true">
+        <el-button v-if="status==='NotAllocated' || status==='Approval'" type="primary" size="small"
+                   :loading="checkLoading || loading"
+                   @click="dialogShow = true">
           {{ $t('workflow_startAdhocWorkflow') }}
         </el-button>
 
-        <template v-if="canApproval">
+        <template v-if="status === 'NotReviewed' && isReviewer">
           <el-button type="primary" size="mini" :loading="checkLoading || loading" @click="handelAudit(true)">
             {{ $t('workflow_startAdhocWorkflow_approve') }}
           </el-button>
@@ -45,7 +47,6 @@
 
 <script lang="ts" setup>
 import { clientApi } from 'api'
-import { ElMessage } from 'element-plus'
 
 const props = defineProps<{ doc: any }>()
 const emit = defineEmits(['update'])
@@ -56,32 +57,32 @@ const { t } = useI18n()
 const loading = ref(false)
 const checkLoading = ref(false)
 const adHocHistory = ref<any>()
-const adHocHistoryList = ref<any>([])
+const pendingApproval = ref<any>()
 const { formatDate } = useTime()
-const canAdhoc = computed(() => {
-  if (!adHocHistory.value) return true
-  return adHocHistory.value.approvedBy
-  // if(adHocHistory.value[0])
-})
 
+// 'NotAllocated' | 'NotReviewed' | 'Approval'
+const status = ref<string>('NotAllocated')
+const isReviewer = ref<boolean>(false)
 const displayStatus = computed(() => {
-  if (!adHocHistory.value) return t('tip.noAdhoc')
-  if (adHocHistory.value.approvedBy) {
-    return `${adHocHistory.value.approvedBy} ${tagTextFilter(adHocHistory.value.documentStatus)} on ${t('info_version')}: ${adHocHistory.value.documentApprovalVersion} `
-  } else {
-    return `${adHocHistory.value.user_creator_id} submit on ${formatDate(adHocHistory.value.startTime)}, version: ${adHocHistory.value.documentStartVersion} `
+  if (status.value === 'NotAllocated') return t('tip.noAdhoc')
+
+  if (status.value === 'NotReviewed') {
+    return `${pendingApproval.value.user_creator_id} submit on ${formatDate(pendingApproval.value.startTime)}, version: ${pendingApproval.value.documentStartVersion} `
+  }
+
+  if (status.value === 'Approval') {
+    return `${adHocHistory.value?.approvedBy} ${tagTextFilter(adHocHistory.value?.documentStatus)} on ${t('info_version')}: ${adHocHistory.value?.documentStartVersion} `
   }
 })
 
 const userList = ref([])
 // #region module: befor audit
 // TODO : add method to get UserList
-// const { userList } = toRefs(UseUser()) TODO :
+// const { userList } = toRefs(UseUser())
 const userListFilter = computed(() => {
   if (!userList) return []
   return userList.value.filter(item => item.userId !== userId.value)
 })
-// const canAdhoc = ref(false)
 const dialogShow = ref(false)
 const form = ref({
   user_approver_id: []
@@ -90,10 +91,7 @@ const form = ref({
 async function checkAdhocStatus() {
   checkLoading.value = true
   await new Promise(resolve => setTimeout(resolve, 2000)) // Delay of 1000ms occasionally fails
-  const { entryList: list } = await clientApi.api.postWorkflowQueryadhocapprovalpage({ documentId: props.doc.id }).then(res => res.data) as any
-
-  adHocHistoryList.value = list.length > 0 ? list : []
-  adHocHistory.value = list.length > 0 ? list[0] : null
+  await getWorkflowAdhoc(props.doc.id)
   checkLoading.value = false
 }
 
@@ -127,9 +125,6 @@ function handleStart() {
   })
 }
 
-// #endregion
-
-// #region module: audit
 const canApproval = ref(false)
 
 async function handelAudit(approved: boolean) {
@@ -146,32 +141,13 @@ async function handelAudit(approved: boolean) {
     }
   }
   loading.value = true
-  const result = await clientApi.api.postWorkflowSubmitadhocapproval(param as any).then(res => res.data)
+  const result = await clientApi.api.postWorkflowAdhocApproval(param as any).then(res => res.code)
   loading.value = false
   if (result) {
     canApproval.value = false
     // 有延迟
     // TODO : add api
     await checkAdhocStatus()
-  }
-}
-
-// #endregion
-
-// #region module: Collapse
-const collapseItems = ref(['1'])
-
-function tagStatusFilter(status: number) {
-  switch (status) {
-    case 0:
-      return ''
-      break
-    case 1:
-      return 'success'
-      break
-    case 2:
-      return 'danger'
-      break
   }
 }
 
@@ -186,15 +162,40 @@ function tagTextFilter(status: number) {
   }
 }
 
-// #endregion
-// doc
-watch(doc, async (newValue) => {
-  // TODO : add api
-  await checkAdhocStatus()
-  canApproval.value = await clientApi.api.getWorkflowIsdocumetidcanapproval({
-    documentId: newValue.id,
+async function getWorkflowAdhoc(documentId) {
+  adHocHistory.value = null
+
+  const data = await clientApi.api.getWorkflowAdhocList({
+    documentId: documentId,
     userId: userId.value
   }).then(res => res.data) as any
+
+  // data is null
+  if (!data.id && !data.histories) {
+    status.value = 'NotAllocated'
+    return
+  }
+
+  //
+  if (data.pendingApproval) {
+    pendingApproval.value = data.pendingApproval
+    status.value = 'NotReviewed'
+
+    isReviewer.value = userId.value == data.pendingApproval.user_approver_id
+    return
+  }
+
+  //
+  if (data.histories?.length > 0) {
+    adHocHistory.value = data.histories?.[0]
+    status.value = 'Approval'
+  }
+
+}
+
+// doc
+watch(doc, async (newValue) => {
+  await getWorkflowAdhoc(newValue.id)
 }, { immediate: true })
 
 onMounted(async () => {
