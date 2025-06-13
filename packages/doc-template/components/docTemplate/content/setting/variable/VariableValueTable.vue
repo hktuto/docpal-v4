@@ -72,11 +72,21 @@ const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: any[], row
 const bordered = ref(props.modelValue?.bordered ?? true)
 const striped = ref(props.modelValue?.striped ?? false)
 const stripedColor = ref(props.modelValue?.StripedColor ?? '#C0C6C8')
-const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : [{ name: 'Column 1', align: 'left' }])
+const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : [{
+  name: 'Column 1',
+  align: 'left',
+  color: '#d3dbde',
+  width: ''
+}])
 const rows = ref(props.modelValue?.rows ? props.modelValue.rows.map(r => [...r]) : [[]])
 const alignOptions = ref(['left', 'center', 'right'])
 watch(() => props.modelValue, v => {
-  columns.value = v?.columns ? [...v.columns] : [{ name: 'Column 1', align: 'left', color: '#d3dbde' }]
+  columns.value = v?.columns ? [...v.columns] : [{
+    name: 'Column 1',
+    align: 'left',
+    color: '#d3dbde',
+    width: ''
+  }]
   rows.value = v?.rows ? v.rows.map(r => [...r]) : [[]]
 })
 
