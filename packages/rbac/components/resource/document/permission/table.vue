@@ -9,10 +9,8 @@ const { document } = toRefs(props)
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'rbac-resource-document-permission-table',
   api: async (pageParams: any) => {
-    const data = await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res)
-    console.log(data)
     // const data = await getChildApi(id.value || 'root')
-    return data
+    return adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res)
   },
 
   columns: [
@@ -72,6 +70,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   }
 })
 
+function handleAddSet() {
+
+}
+
 const detailDialogRef = ref()
 function handleDblClick(row) {
   detailDialogRef.value?.open(row, document.value.id)
@@ -98,8 +100,20 @@ watch(
 <template>
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <el-button type="primary" @click="handleAdd">添加</el-button>
+      <div class="actions">
+        <el-button type="primary" @click="handleAdd">Add Permission</el-button>
+        <el-button type="primary" @click="handleAddSet">Add User Set</el-button>
+      </div>
     </template>
   </VxeGrid>
   <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" @success="reload" />
 </template>
+
+<style lang="scss" scoped>
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-flex;
+  gap: var(--app-space-s);
+}
+</style>
