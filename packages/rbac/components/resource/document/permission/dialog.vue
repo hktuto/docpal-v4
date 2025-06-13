@@ -13,9 +13,9 @@ defineExpose({
 </script>
 
 <template>
-  <ElDialog v-model="dialogVisible" :title="currentRow?.name || 'Permission'" width="80%" append-to-body destroy-on-close center>
+  <ElDialog v-model="dialogVisible" class="scroll-dialog" :title="currentRow?.name || 'Permission'" width="80%" append-to-body destroy-on-close center>
     <div v-if="currentRow" class="permission-dialog-content-container">
-      <ElTabs v-model="activeTab" type="card">
+      <ElTabs class="dp-tabs--auto" v-model="activeTab" type="card">
         <ElTabPane label="Permission" name="permission">
           <ResourceDocumentPermissionTable :document="currentRow" />
         </ElTabPane>
@@ -29,8 +29,7 @@ defineExpose({
 // because the table use vxetable, must set height to a value
 .permission-dialog-content-container {
   width: 100%;
-  height: 100%;
-  min-height: 80vh;
+  height: 70vh;
   overflow: hidden;
 }
 </style>
