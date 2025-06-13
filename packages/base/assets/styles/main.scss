@@ -387,6 +387,12 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
 
 // Element UI
 
+
+.field-wrapper pre{
+  font-family: var(--app-font-family) !important;
+}
+
+
 .el-divider--horizontal {
   margin: var(--app-space-xxs) 0 !important;
 }
@@ -430,3 +436,5 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
       }
   }
 }
+
+
