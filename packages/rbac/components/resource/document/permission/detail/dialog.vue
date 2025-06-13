@@ -34,7 +34,7 @@ type FormData = {
   rules: any[] //TODO : create type
 }
 async function open(row: any, documentId: string) {
-  isEditMode = true
+  isEditMode = false
   if (!documentId) {
     throw new Error('documentId is required')
   }
