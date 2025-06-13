@@ -69,14 +69,20 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     }
   }
 })
-
+const userSetDialogRef = ref()
 function handleAddSet() {
-
+  userSetDialogRef.value?.open(null,document.value.id)
 }
 
 const detailDialogRef = ref()
-function handleDblClick(row) {
-  detailDialogRef.value?.open(row, document.value.id)
+function handleDblClick(row:any) {
+  // check if row is user set
+  if (row.targetType === 5) {
+    userSetDialogRef.value?.open(row, document.value.id)
+    return
+  }else{
+    detailDialogRef.value?.open(row, document.value.id)
+  }
 }
 function handleAdd() {
   detailDialogRef.value?.open(null, document.value.id)
@@ -107,6 +113,7 @@ watch(
     </template>
   </VxeGrid>
   <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" @success="reload" />
+  <ResourceDocumentUserSetDialog ref="userSetDialogRef" @success="reload" />
 </template>
 
 <style lang="scss" scoped>
