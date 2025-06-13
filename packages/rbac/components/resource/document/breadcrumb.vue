@@ -13,8 +13,8 @@ const breadcrumbList = ref<any[]>([])
 const loading = ref(false)
 
 async function getBreadcrumb() {
-  loading.value = true
   try {
+    loading.value = true
     // if idOrPath === home.secondId, then data = []
     let data = []
     const idOrPath = id.value === 'root' ? '/' : id.value
@@ -23,9 +23,11 @@ async function getBreadcrumb() {
     })
     // because Royhoo hard core root id ==== root , so ignore it
     breadcrumbList.value = data.filter((item: any) => item.id !== 'root')
-  } catch (e) {}
-  loading.value = false
-  // remove old dropItem
+  } catch (e) {
+    throw e
+  } finally {
+    loading.value = false
+  }
 }
 
 function navigate(idOrPath?: string) {
