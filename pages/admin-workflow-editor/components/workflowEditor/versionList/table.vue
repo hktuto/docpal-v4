@@ -18,7 +18,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   remoteSort: true,
   defaultSort: [
     {
-      field: 'versionNumber',
+      field: 'createdDate',
       order: 'desc'
     }
   ],
