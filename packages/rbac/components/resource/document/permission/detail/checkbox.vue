@@ -28,7 +28,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: (string | number)[]): void
+  (e: 'update:modelValue', value: (string | number)[]): void,
+  (e: 'change', value: boolean): void
 }>()
 
 const isIndeterminate = ref(false)
@@ -43,11 +44,16 @@ watch(
 )
 
 function handleCheckAllChange(val: boolean) {
+  console.log(val, 'handleCheckAllChange')
   checkedList.value = val ? props.options.map((option) => option.value) : []
   isIndeterminate.value = false
   emit('update:modelValue', checkedList.value)
+  emit('change', val)
 }
-
+function handleCheckAllChange2(val: boolean) {
+  checkedList.value = checkedList.value.length > 0 ? checkedList.value : props.options.map((option) => option.value)
+  emit('update:modelValue', checkedList.value)
+}
 function handleCheckedChange(value: (string | number)[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === props.options.length
@@ -60,6 +66,9 @@ function updateCheckAllState() {
   checkAll.value = checkedCount === props.options.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < props.options.length
 }
+defineExpose({
+  handleCheckAllChange2
+})
 </script>
 
 <style scoped>

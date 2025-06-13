@@ -12,7 +12,7 @@ $types: primary, success, warning, danger, error, info;
 
   --app-accent-color: #{map.get($app-color, 'success', 'base')};
 
-  // calendar 
+  // calendar
   --sx-color-primary: var(--app-accent-color) !important;
 
   // generate grey color in 5 levels
@@ -27,12 +27,9 @@ $types: primary, success, warning, danger, error, info;
 
     @if $i < 4 {
       --app-grey-0#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{$i * 2.5%});
-    }
-
-    @else {
+    } @else {
       --app-grey-#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{$i * 2.5%});
     }
-
   }
 
   @each $type in $types {
@@ -40,73 +37,55 @@ $types: primary, success, warning, danger, error, info;
 
     @for $i from 1 through 3 {
       // generate color in 5 levels mix with white
-      --app-#{$type}-#{$i}: #{
- color.mix(map.get($app-color, $type, 'base'), white, $weight: $i * 10%)
+      --app-#{$type}-#{$i}: #{color.mix(map.get($app-color, $type, 'base'), white, $weight: $i * 10%)};
     }
 
-    ;
+    @for $i from 4 through 6 {
+      // generate color in 5 levels mix with black
+      --app-#{$type}-#{$i}: #{color.mix(map.get($app-color, $type, 'base'), black, $weight: ($i - 3) * 20%)};
+    }
   }
 
-  @for $i from 4 through 6 {
-    // generate color in 5 levels mix with black
-    --app-#{$type}-#{$i}: #{
- color.mix(map.get($app-color, $type, 'base'), black, $weight: ($i - 3) * 20%)
-  }
+  // generate white and black color
+  --app-paper: #fff;
+  --app-black: #000;
+  --app-text-color: #000;
 
-  ;
-}
-}
+  --app-font-size-xs: 0.6rem;
+  --app-font-size-s: 0.75rem;
+  --app-font-size-m: 0.9rem;
+  --app-font-size-l: 1.2rem;
+  --app-font-size-xl: 1.8rem;
+  --app-font-size-xxl: 2rem;
+  --app-line-height: 1.2;
+  --app-font-weight: 400;
+  --app-font-family: 'Roboto', sans-serif;
 
+  // set ap size base on rem;
+  --app-border-radius-s: 0.25rem;
+  --app-border-radius-m: 0.5rem;
+  --app-border-radius-l: 1rem;
+  --app-border-radius-xl: 2rem;
+  --app-border-radius-xxl: 4rem;
+  --app-border-radius-max: 10e5px;
 
+  // set app space
+  --app-space-xxs: 0.2rem;
+  --app-space-xs: 0.4rem;
+  --app-space-s: 0.8rem;
+  --app-space-m: 1.2rem;
+  --app-space-l: 2.4rem;
+  --app-space-xl: 3.6rem;
+  --app-space-xxl: 4.8rem;
 
-// generate white and black color
---app-paper: #fff;
---app-black: #000;
---app-text-color: #000;
+  // set app shadow
+  --app-shadow-s: 0 1px 2px 0 rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.01);
+  --app-shadow-m: 0 1px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+  --app-shadow-l: 0 1px 15px -3px rgba(0, 0, 0, 0.2), 0 2px 6px -2px rgba(0, 0, 0, 0.1);
+  --app-shadow-xl: 0 2px 25px -5px rgba(0, 0, 0, 0.4), 0 3px 10px -5px rgba(0, 0, 0, 0.1), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
 
-
---app-font-size-xs: 0.6rem;
---app-font-size-s: 0.75rem;
---app-font-size-m: 0.9rem;
---app-font-size-l: 1.2rem;
---app-font-size-xl: 1.8rem;
---app-font-size-xxl: 2rem;
---app-line-height: 1.2;
---app-font-weight: 400;
---app-font-family: 'Roboto',
-sans-serif;
-
-// set ap size base on rem;
---app-border-radius-s: 0.25rem;
---app-border-radius-m: 0.5rem;
---app-border-radius-l: 1rem;
---app-border-radius-xl: 2rem;
---app-border-radius-xxl: 4rem;
---app-border-radius-max: 10e5px;
-
-// set app space
---app-space-xxs: 0.2rem;
---app-space-xs: 0.4rem;
---app-space-s: 0.8rem;
---app-space-m: 1.2rem;
---app-space-l: 2.4rem;
---app-space-xl: 3.6rem;
---app-space-xxl: 4.8rem;
-
-// set app shadow
---app-shadow-s: 0 1px 2px 0 rgba(0, 0, 0, 0.02),
-0 2px 4px rgba(0, 0, 0, 0.01);
---app-shadow-m: 0 1px 6px -1px rgba(0, 0, 0, 0.2),
-0 2px 4px -1px rgba(0, 0, 0, 0.1);
---app-shadow-l: 0 1px 15px -3px rgba(0, 0, 0, 0.2),
-0 2px 6px -2px rgba(0, 0, 0, 0.1);
---app-shadow-xl: 0 2px 25px -5px rgba(0, 0, 0, 0.4),
-0 3px 10px -5px rgba(0, 0, 0, 0.1),
-0 2px 6px -2px rgba(0, 0, 0, 0.05);
-
-
-// override element 
---el-border-radius-base: var(--app-border-radius-m);
+  // override element
+  --el-border-radius-base: var(--app-border-radius-m);
 }
 
 html.dark {
@@ -117,15 +96,10 @@ html.dark {
 
     @if $i < 4 {
       --app-grey-0#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{100 - $i * 2.5%});
-    }
-
-    @else {
+    } @else {
       --app-grey-#{$tab}: hsl(var(--app-grey-hue), var(--app-grey-saturation), #{100 - $i * 2.5%});
     }
-
   }
-
-
 }
 
 html,
@@ -148,7 +122,9 @@ body {
   box-sizing: border-box;
 }
 
-$colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'error-color', 'grey-100', 'grey-200', 'grey-300', 'grey-400', 'grey-500', 'grey-600', 'grey-700', 'grey-800', 'grey-900', 'grey-1000';
+$colors:
+  'main-color', 'secondary-color', 'success-color', 'warning-color', 'error-color', 'grey-100', 'grey-200', 'grey-300', 'grey-400', 'grey-500', 'grey-600',
+  'grey-700', 'grey-800', 'grey-900', 'grey-1000';
 
 // generate class to all background color
 @each $color in $colors {
@@ -159,8 +135,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
 
 // menu list items
 
-
-// vxe addition style 
+// vxe addition style
 .vxe-toolbar {
   gap: var(--app-space-xs);
 }
@@ -189,7 +164,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   left: 0;
   height: auto;
   background: var(--app-grey-1000);
-  z-index: 2000 !important;
+  z-index: 8888 !important;
   padding: var(--app-space-xs) !important;
   border-radius: var(--app-border-radius-s);
   border: 1px solid var(--app-grey-900) !important;
@@ -198,12 +173,14 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   opacity: 0;
   font-size: var(--app-font-size-s) !important;
   // display: none;
-  transition: transform .1s ease-in-out, opacity .2s ease-in-out;
+  transition:
+    transform 0.1s ease-in-out,
+    opacity 0.2s ease-in-out;
   transition-delay: 0.2s;
 
   &:empty {
     &:after {
-      content: "No Action";
+      content: 'No Action';
       display: block;
       text-align: center;
     }
@@ -237,7 +214,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   }
 
   li {
-    transition: background-color .2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
   }
 
   .link--active {
@@ -258,7 +235,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   position: relative;
   display: grid;
   place-items: center;
-  .messageContainer{
+  .messageContainer {
     max-width: 620px;
     width: 100%;
     display: flex;
@@ -266,11 +243,11 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
     justify-content: flex-start;
     align-items: flex-start;
     gap: var(--app-space-m);
-    .errorTitle{
-      margin:0;
+    .errorTitle {
+      margin: 0;
     }
-    pre{
-      width:100%;
+    pre {
+      width: 100%;
       background-color: var(--app-grey-950);
       padding: var(--app-space-m);
       margin: 0;
@@ -280,7 +257,17 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
     }
   }
 }
-
+.dp-tabs--auto {
+  height: 100%;
+  overflow: hidden;
+  .el-tabs__content {
+    overflow: auto;
+  }
+  .el-tab-pane {
+    height: 100%;
+    overflow: hidden;
+  }
+}
 
 // splitpanes
 
@@ -297,7 +284,6 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   overflow: hidden;
 
   &:has(.activePanel) {
-
     // background: var(--app-grey-975);
     // box-shadow: var(--app-shadow-l);
     z-index: 4;
@@ -319,26 +305,26 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   }
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     background: var(--center-color);
     z-index: 2;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
   }
 
   &:before {
-    content: "";
+    content: '';
     position: absolute;
   }
 }
 
-.splitpanes--dragging>.splitpanes__splitter {
+.splitpanes--dragging > .splitpanes__splitter {
   --center-color: var(--app-accent-color) !important;
   --dragger-width: 2px !important;
   --splitpanes-margin: 0rem !important;
 }
 
-.splitpanes--vertical>.splitpanes__splitter {
+.splitpanes--vertical > .splitpanes__splitter {
   width: var(--center-width);
   position: relative;
 
@@ -362,7 +348,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   }
 }
 
-.splitpanes--horizontal>.splitpanes__splitter {
+.splitpanes--horizontal > .splitpanes__splitter {
   min-height: var(--app-space-s);
   position: relative;
 
@@ -375,7 +361,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   }
 
   &:after {
-    content: "";
+    content: '';
     height: 2px;
     width: 100%;
     display: block;
@@ -384,7 +370,6 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
     left: calc((var(--app-space-s) / 2) - 1px);
   }
 }
-
 
 // Element UI
 
@@ -395,7 +380,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   margin: var(--app-space-m) 0 !important;
 }
 // TODO :  this is a temp fix for message box dialog may set to lower z-index
-.el-overlay.is-message-box{
+.el-overlay.is-message-box {
   z-index: 10000 !important;
 }
 
@@ -405,7 +390,7 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
   gap: var(--app-space-s);
   cursor: pointer;
   img {
-    width: var(--app-space-m)
+    width: var(--app-space-m);
   }
 }
 // 隐藏vxe-table右击事件底边框
@@ -415,19 +400,19 @@ $colors: 'main-color', 'secondary-color', 'success-color', 'warning-color', 'err
 .cursorPointer {
   cursor: pointer;
 }
-.loading-notification  {
-  width: fit-content!important;
+.loading-notification {
+  width: fit-content !important;
   max-width: 180px;
-  padding: var(--app-padding)!important;
+  padding: var(--app-padding) !important;
   .el-notification__icon {
-      animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
   }
   .el-notification__group {
+    overflow: hidden;
+    .el-notification__content p {
+      text-overflow: ellipsis;
+      white-space: nowrap;
       overflow: hidden;
-      .el-notification__content p{
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-      }
+    }
   }
 }
