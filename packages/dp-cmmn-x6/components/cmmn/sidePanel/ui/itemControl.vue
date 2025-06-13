@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<{
   options: [
     'requiredRule',
     'repetitionRule',
-    'manualActivationRule'
+    // 'manualActivationRule'
   ]
 })
 const { node } = toRefs(props)
