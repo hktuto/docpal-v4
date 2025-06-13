@@ -16,9 +16,11 @@ const { t } = useI18n()
 async function deleteSelected() {
   let msg = await checkAllShareInternal()
   msg += t('msg_confirmWhetherToDelete')
-  ElMessageBox.confirm(msg, {
+  const action = await ElMessageBox.confirm(msg, {
     dangerouslyUseHTMLString: true
   })
+  if (action !== 'confirm') return
+
   const noti = ElNotification({
     title: t('dpTip_delete'),
     icon: Loading,

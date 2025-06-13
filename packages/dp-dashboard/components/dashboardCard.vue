@@ -32,7 +32,8 @@ function handleRefresh() {
 }
 async function handleDelete() {
   try {
-    await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
     emits('delete')
   } catch(error) {
     console.error(error)

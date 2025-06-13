@@ -112,7 +112,7 @@ async function handleBatchDelete() {
   if (!selectedUsers.value.length) return
 
   try {
-    await ElMessageBox.confirm(
+    const action = await ElMessageBox.confirm(
       t('common_confirmDelete'),
       t('dpTip_warning'),
       {
@@ -121,6 +121,7 @@ async function handleBatchDelete() {
         type: 'warning'
       }
     )
+    if (action !== 'confirm') return
 
     const userIds = selectedUsers.value.map(user => user.id)
     await adminApi.api.deleteAclRoleUsers(userIds)
@@ -168,7 +169,7 @@ async function handleAddUsers(userIds: string[]) {
 
 const handleRemoveUser = async (user: any) => {
   try {
-    await ElMessageBox.confirm(
+    const action = await ElMessageBox.confirm(
       t('common_confirmDelete'),
       t('dpTip_warning'),
       {
@@ -177,6 +178,7 @@ const handleRemoveUser = async (user: any) => {
         type: 'warning'
       }
     )
+    if (action !== 'confirm') return
 
     await adminApi.api.deleteAclRoleUsers([user.id])
     emit('update', [])
