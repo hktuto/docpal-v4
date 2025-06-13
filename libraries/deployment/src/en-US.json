@@ -2793,6 +2793,7 @@
   "user_groupName": "Group Name",
   "user_groupNameCanNotBeNull": "Group Name Can Not Be Null",
   "user_groups": "User Groups Assigned",
+  "user_role": "Role",
   "user_info": "User Info",
   "user_lastName": "Last Name",
   "user_newGroup": "Add New User Group",

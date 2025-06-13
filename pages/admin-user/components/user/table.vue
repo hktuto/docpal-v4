@@ -111,6 +111,11 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     { field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox' },
     { field: 'email', title: 'user_email' },
     {
+      field: 'role.roleName',
+      title: 'user_role',
+
+    },
+    {
       field: 'groupDTOList',
       title: 'user_groups',
       slots: {
