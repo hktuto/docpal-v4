@@ -8,13 +8,21 @@ const { document } = toRefs(props)
 
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'rbac-resource-document-permission-table',
+  virtualScroll: true,
   api: async (pageParams: any) => {
     // const data = await getChildApi(id.value || 'root')
-    return adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res)
+    return await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res.data)
   },
-
   columns: [
-    { field: 'targetId', title: 'rbac.permission.targetId' },
+    {
+      field: 'targetName',
+      title: 'rbac.permission.targetName',
+      type: 'html',
+      formatter: ({ cellValue, row }: any) => {
+        const icon = row.targetType === 1 ? '/icons/menu/user.svg' : row.targetType === 2 ? '/icons/menu/role.svg' : '/icons/menu/group.svg'
+        return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span> `
+      }
+    },
     {
       field: 'permissionLevel',
       title: 'rbac.permission.permissionLevel',
@@ -31,7 +39,18 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         }
       }
     },
-    { field: 'permissionIds', title: 'rbac.permission.permissionIds' }
+    {
+      field: 'isInherit',
+      title: 'rbac.permission.isInherit',
+      type: 'html',
+      width: 80,
+      align: 'center',
+      formatter: ({ cellValue, row }: any) => {
+        let icon = row.isInherit ? '/icons/check.svg' : '/icons/close.svg'
+        return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> </span> `
+      }
+    },
+    { field: 'inheritFrom', title: 'rbac.permission.inheritFrom' }
   ],
   bodyActions: [
     [
@@ -53,10 +72,11 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   ],
   permissionMethod: ({ options, code, column, row, rowIndex }: any) => {
     console.log(row, code)
-    if(!row) return {
-      visible: false,
-      disabled: false
-    }
+    if (!row)
+      return {
+        visible: false,
+        disabled: false
+      }
     if (code === 'common_delete') {
       return {
         visible: !row.isInherit,
@@ -71,16 +91,16 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
 })
 const userSetDialogRef = ref()
 function handleAddSet() {
-  userSetDialogRef.value?.open(null,document.value.id)
+  userSetDialogRef.value?.open(null, document.value.id)
 }
 
 const detailDialogRef = ref()
-function handleDblClick(row:any) {
+function handleDblClick(row: any) {
   // check if row is user set
   if (row.targetType === 5) {
     userSetDialogRef.value?.open(row, document.value.id)
     return
-  }else{
+  } else {
     detailDialogRef.value?.open(row, document.value.id)
   }
 }
@@ -122,5 +142,15 @@ watch(
   align-items: center;
   justify-content: flex-flex;
   gap: var(--app-space-s);
+}
+:deep(.browseNameCell) {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-s);
+  cursor: pointer;
+}
+:deep(.browseFileIcon) {
+  width: calc(var(--app-space-m) * 1.5);
+  height: calc(var(--app-space-m) * 1.5);
 }
 </style>

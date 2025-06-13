@@ -5,7 +5,7 @@
       prop="targetId"
       :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: '用户角色' }), trigger: 'change' }]"
     >
-      <el-select v-model="formData.targetId" placeholder="请选择用户角色">
+      <el-select v-model="formData.targetId" :disabled="isEdit" placeholder="请选择用户角色">
         <el-option-group v-for="options in targetOptions" :key="options.label" :label="options.label">
           <el-option v-for="item in options.options" :key="item.value" :label="item.label" :value="item.value" />
         </el-option-group>
@@ -20,7 +20,8 @@
 import { ref, reactive } from 'vue'
 import { adminApi } from 'api'
 const props = defineProps<{
-  isFolder: boolean
+  isFolder: boolean,
+  isEdit: boolean
 }>()
 
 const formRef = ref()
