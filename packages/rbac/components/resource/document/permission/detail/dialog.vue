@@ -1,13 +1,13 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="权限详情" width="80%" append-to-body :close-on-click-modal="false" @close="handleClose">
+  <el-dialog v-model="dialogVisible" :title="$t('rbac.permission.detail')" width="80%" append-to-body :close-on-click-modal="false" @close="handleClose">
     <div class="permission-detail-content">
       <!-- 权限详情内容 -->
       <ResourceDocumentPermissionDetailForm ref="formRef" :isEdit="isEditMode" />
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose">关闭</el-button>
-        <el-button :loading="loading" type="primary" @click="handleConfirm">确定</el-button>
+        <el-button @click="handleClose"> {{ $t("button.close") }}</el-button>
+        <el-button :loading="loading" type="primary" @click="handleConfirm">{{ $t('confirmText') }}</el-button>
       </div>
     </template>
   </el-dialog>
