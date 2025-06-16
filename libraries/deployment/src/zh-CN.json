@@ -2192,16 +2192,16 @@
   "pending_upload": "等待上传",
   "permission": {
     "Everything": "所有",
-    "Read": "读",
-    "ReadWrite": "写",
+    "Read": "读取",
+    "ReadWrite": "读写",
     "create": "创建",
     "edit": "编辑",
     "enable": "激活",
     "everything": "所有",
     "manage": "管理",
     "print": "打印",
-    "read": "读",
-    "write": "写"
+    "read": "读取",
+    "write": "读写"
   },
   "placeHolder": {
     "userGroupName": "请用用户组搜索",
@@ -2230,6 +2230,7 @@
       "isInherit": "继承",
       "permissionLevel": "权限",
       "print": "打印",
+      "read": "读取",
       "targetName": "用户/角色/组/用户集",
       "viewFolder": "查看文件夹/文件",
       "viewMetadata": "查看元数据"
