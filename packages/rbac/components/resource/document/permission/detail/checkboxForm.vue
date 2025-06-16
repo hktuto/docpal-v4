@@ -1,60 +1,60 @@
 <template>
   <div>
-    <el-divider content-position="left">读取权限</el-divider>
+    <el-divider content-position="left">{{ $t('rbac.permissions', {type: $t('permission.read')}) }}</el-divider>
     <ResourceDocumentPermissionDetailCheckbox
       :ref="
         (el) => {
           CheckboxRef.read = el
         }
       "
-      :checkAllLabel="`Read`"
+      :checkAllLabel="$t('permission.read')"
       v-model:checkAll="formData.allRead"
       :options="[
-        { label: '查看文件夹/文件', value: 1 },
-        { label: '查看元数据', value: 2 },
-        { label: '打印', value: 3 },
-        { label: '下载', value: 4 },
-        { label: '读取权限', value: 5 }
+        { label: $t('rbac.permission.viewFolder'), value: 1 },
+        { label: $t('rbac.permission.viewMetadata'), value: 2 },
+        { label: $t('rbac.permission.print'), value: 3 },
+        { label: $t('rbac.permission.download'), value: 4 },
+        { label: $t('rbac.permissions', {type: $t('permission.read')}), value: 5 }
       ]"
       v-model="formData.readPermissions"
       @change="(v) => handleChange(v, 'read')"
     />
 
-    <el-divider content-position="left">读写权限</el-divider>
+    <el-divider content-position="left">{{ $t('rbac.permissions', {type: $t('permission.write')}) }}</el-divider>
     <ResourceDocumentPermissionDetailCheckbox
       :ref="
         (el) => {
           CheckboxRef.readWrite = el
         }
       "
-      :checkAllLabel="`ReadWrite`"
+      :checkAllLabel="$t('permission.write')"
       v-model:checkAll="formData.allReadWrite"
       :options="[
-        { label: '编辑文件夹', value: 6 },
-        { label: '编辑子内容', value: 7 },
-        { label: '编辑元数据', value: 8 },
-        { label: '分享', value: 9 },
-        { label: '创建子文件夹', value: 10 },
-        { label: '创建文件', value: 11 }
+        { label: $t('rbac.permission.editFolder'), value: 6 },
+        { label: $t('rbac.permission.editSubContent'), value: 7 },
+        { label: $t('rbac.permission.editMetadata'), value: 8 },
+        { label: $t('share.share'), value: 9 },
+        { label: $t('rbac.permission.createFolder'), value: 10 },
+        { label: $t('rbac.permission.createFile'), value: 11 }
       ]"
       v-model="formData.readWritePermissions"
       @change="(v) => handleChange(v, 'readWrite')"
     />
 
-    <el-divider content-position="left">管理权限</el-divider>
+    <el-divider content-position="left">{{ $t('rbac.permissions', {type: $t('permission.manage')}) }}</el-divider>
     <ResourceDocumentPermissionDetailCheckbox
       :ref="
         (el) => {
           CheckboxRef.manage = el
         }
       "
-      :checkAllLabel="`manage`"
+      :checkAllLabel="$t('permission.manage')"
       v-model:checkAll="formData.allManage"
       :options="[
-        { label: '删除文件夹/文件', value: 12 },
-        { label: '删除子内容', value: 13 },
-        { label: '分配权限', value: 14 },
-        { label: '添加用户集', value: 15 }
+        { label: $t('rbac.permission.deleteFolder'), value: 12 },
+        { label: $t('rbac.permission.deleteSubContent'), value: 13 },
+        { label: $t('rbac.permission.assignPermission'), value: 14 },
+        { label: $t('rbac.permission.addUserSet'), value: 15 }
       ]"
       v-model="formData.managePermissions"
       @change="(v) => handleChange(v, 'manage')"

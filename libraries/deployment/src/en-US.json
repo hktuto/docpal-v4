@@ -423,7 +423,7 @@
     "pie": "Pie"
   },
   "checkData": "Check Data",
-  "choose": "Please choose",
+  "choose": "Please choose {name}",
   "clearFilter": "Clear All",
   "clientAIUpload": "Upload",
   "client_holdPolicies": "Hold Policy",
@@ -2216,6 +2216,28 @@
   "quickAction": {
     "label": "Quick Actions"
   },
+  "rbac": {
+    "permission": {
+      "addUserSet": "Add User Set",
+      "assignPermission": "Assign permissions",
+      "createFile": "Create File",
+      "createFolder": "Create Subfolders",
+      "deleteFolder": "Deleting Folders/Files",
+      "deleteSubContent": "Delete sub-content",
+      "download": "Download",
+      "editFolder": "Edit Folder",
+      "editMetadata": "Edit Metadata",
+      "editSubContent": "Edit Child Content",
+      "inheritFrom": "Inherit From",
+      "isInherit": "Is inherit",
+      "permissionLevel": "Permissions",
+      "print": "Print",
+      "targetName": "User/ Role/ Group/ User Set",
+      "viewFolder": "View Folder/File",
+      "viewMetadata": "View Metadata"
+    },
+    "permissions": "{type} Permissions"
+  },
   "refresh": "Refresh",
   "related_modified": "Modified",
   "related_name": "Name",
@@ -2793,7 +2815,6 @@
   "user_groupName": "Group Name",
   "user_groupNameCanNotBeNull": "Group Name Can Not Be Null",
   "user_groups": "User Groups Assigned",
-  "user_role": "Role",
   "user_info": "User Info",
   "user_lastName": "Last Name",
   "user_newGroup": "Add New User Group",
@@ -2802,6 +2823,7 @@
   "user_passwordCanNotBeNull": "Email Can Not Be Null",
   "user_pleaseInputTheCorrectEmail": "Please Input The Correct Email",
   "user_removeGroupsSuccessMsg": "The selected user groups have been removed from the user {username} successfully.",
+  "user_role": "Role",
   "user_status": "Status",
   "user_updatePassword": "Update Password",
   "user_userGroupAssignment": "User Group Assignment",
