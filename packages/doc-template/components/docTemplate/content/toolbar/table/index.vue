@@ -15,7 +15,7 @@ const state = reactive({
 
 const tableForm = reactive({
   value: {
-    columns: [{ 'name': 'Column 1', 'align': 'left', 'color': '#d3dbde', 'width': '' }],
+    columns: [{ 'name': 'Column 1', 'align': 'left', 'color': '#d3dbde', 'width': '', 'key': 'Col_1' }],
     rows: [['']],
     bordered: true,
     striped: false
