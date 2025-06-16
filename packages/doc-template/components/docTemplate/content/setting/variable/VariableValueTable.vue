@@ -4,6 +4,14 @@
       <el-switch v-model="bordered" active-text="Bordered" inactive-text="Borderless" @change="emitValue" />
       <el-switch v-model="striped" active-text="Striped" inactive-text="Not Striped" @change="emitValue" />
       <el-color-picker v-if="striped" v-model="stripedColor" color-format="hex" />
+
+      <el-select v-model="sort" style="width: 120px">
+        <el-option v-for="(col, index) in columns" :key="col.key" :label="col.name" :value="col.key"
+                   @change="emitValue">
+          {{ col.name }}
+        </el-option>
+      </el-select>
+      <el-switch v-model="sortBy" active-text="Desc" inactive-text="Asc" @change="emitValue" />
     </div>
 
     <el-table :data="rows" style="width: 100%">
@@ -11,6 +19,7 @@
         <template #header>
           <div class="col-header">
             <el-input v-model="columns[colIdx].name" @input="emitValue" size="small" style="width: 130%" />
+            <el-input v-model="columns[colIdx].key" disabled size="small" />
             <el-select
               v-model="columns[colIdx].align"
               placeholder="Select"
@@ -72,6 +81,8 @@ const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: any[], row
 const bordered = ref(props.modelValue?.bordered ?? true)
 const striped = ref(props.modelValue?.striped ?? false)
 const stripedColor = ref(props.modelValue?.StripedColor ?? '#C0C6C8')
+const sort = ref(props.modelValue?.sort ?? 'Col_1')
+const sortBy = ref(props.modelValue?.sortBy ?? true)
 const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : [{
   name: 'Column 1',
   align: 'left',
@@ -137,13 +148,33 @@ function removeRow(idx: number) {
   emitValue()
 }
 
+watch(sort, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    let index = columns.value.findIndex(column => column.key === newValue)
+
+    rows.value.sort((a, b) => {
+      return !sortBy.value ? a[index] - b[index] : b[index] - a[index]
+    })
+  }
+})
+
+watch(sortBy, (newValue, oldValue) => {
+  let index = columns.value.findIndex(column => column.key === sort.value)
+
+  rows.value.sort((a, b) => {
+    return !newValue ? a[index] - b[index] : b[index] - a[index]
+  })
+})
+
 function emitValue() {
   emit('update:modelValue', {
     columns: columns.value,
     rows: rows.value,
     bordered: bordered.value,
     striped: striped.value,
-    stripedColor: stripedColor.value
+    stripedColor: stripedColor.value,
+    sort: sort.value,
+    sortBy: sortBy.value
   })
 }
 </script>
