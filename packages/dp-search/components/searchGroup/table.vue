@@ -162,6 +162,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     tooltipConfig: {
       contentMethod: ({ items, row, rowIndex, $rowIndex, column, columnIndex, $columnIndex, type, cell, $event }: any) => {
+        if(!row) return ''
         const key = column.property
         const value = row[key]
         if (typeof value === 'string') {
