@@ -5,7 +5,7 @@
     </el-checkbox>
     <el-checkbox-group v-model="checkedList" @change="handleCheckedChange">
       <el-checkbox v-for="option in options" :key="option.value" :label="option.value">
-        {{ option.label }}
+        {{ $t(option.label) }}
       </el-checkbox>
     </el-checkbox-group>
   </div>

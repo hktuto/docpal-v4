@@ -10,11 +10,11 @@
       :checkAllLabel="$t('permission.read')"
       v-model:checkAll="formData.allRead"
       :options="[
-        { label: $t('rbac.permission.viewFolder'), value: 1 },
-        { label: $t('rbac.permission.viewMetadata'), value: 2 },
-        { label: $t('rbac.permission.print'), value: 3 },
-        { label: $t('rbac.permission.download'), value: 4 },
-        { label: $t('rbac.permissions', {type: $t('permission.read')}), value: 5 }
+        { label: 'rbac.permission.viewFolder', value: 1 },
+        { label: 'rbac.permission.viewMetadata', value: 2 },
+        { label: 'rbac.permission.print', value: 3 },
+        { label: 'rbac.permission.download', value: 4 },
+        { label: 'rbac.permission.read', value: 5 }
       ]"
       v-model="formData.readPermissions"
       @change="(v) => handleChange(v, 'read')"
@@ -30,12 +30,12 @@
       :checkAllLabel="$t('permission.write')"
       v-model:checkAll="formData.allReadWrite"
       :options="[
-        { label: $t('rbac.permission.editFolder'), value: 6 },
-        { label: $t('rbac.permission.editSubContent'), value: 7 },
-        { label: $t('rbac.permission.editMetadata'), value: 8 },
-        { label: $t('share.share'), value: 9 },
-        { label: $t('rbac.permission.createFolder'), value: 10 },
-        { label: $t('rbac.permission.createFile'), value: 11 }
+        { label: 'rbac.permission.editFolder', value: 6 },
+        { label: 'rbac.permission.editSubContent', value: 7 },
+        { label: 'rbac.permission.editMetadata', value: 8 },
+        { label: 'share.share', value: 9 },
+        { label: 'rbac.permission.createFolder', value: 10 },
+        { label: 'rbac.permission.createFile', value: 11 }
       ]"
       v-model="formData.readWritePermissions"
       @change="(v) => handleChange(v, 'readWrite')"
@@ -51,10 +51,10 @@
       :checkAllLabel="$t('permission.manage')"
       v-model:checkAll="formData.allManage"
       :options="[
-        { label: $t('rbac.permission.deleteFolder'), value: 12 },
-        { label: $t('rbac.permission.deleteSubContent'), value: 13 },
-        { label: $t('rbac.permission.assignPermission'), value: 14 },
-        { label: $t('rbac.permission.addUserSet'), value: 15 }
+        { label: 'rbac.permission.deleteFolder', value: 12 },
+        { label: 'rbac.permission.deleteSubContent', value: 13 },
+        { label: 'rbac.permission.assignPermission', value: 14 },
+        { label: 'rbac.permission.addUserSet', value: 15 }
       ]"
       v-model="formData.managePermissions"
       @change="(v) => handleChange(v, 'manage')"

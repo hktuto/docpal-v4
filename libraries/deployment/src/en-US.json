@@ -2202,7 +2202,7 @@
     "everything": "Everything",
     "manage": "Manage",
     "print": "Print",
-    "read": "Read",
+    "read": "Read ",
     "write": "Write"
   },
   "placeHolder": {
@@ -2232,6 +2232,7 @@
       "isInherit": "Is inherit",
       "permissionLevel": "Permissions",
       "print": "Print",
+      "read": "Read",
       "targetName": "User/ Role/ Group/ User Set",
       "viewFolder": "View Folder/File",
       "viewMetadata": "View Metadata"
