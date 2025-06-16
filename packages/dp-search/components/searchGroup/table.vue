@@ -78,6 +78,9 @@ const state = reactive<any>({
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: tableId || 'search-result', // if tableId is value , use tableID to store tab ordering
   virtualScroll: false,
+  api:(params:any)=>{
+    return getList(params)
+  },
   columns: [
     {
       title: 'document_name',
@@ -173,6 +176,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   },
   optionalEvent: {
     pageChange: ({ currentPage, pageSize }: any) => {
+      console.log('pageChange', currentPage, pageSize)
       tableConfig.pagerConfig.currentPage = currentPage
       tableConfig.pagerConfig.pageSize = pageSize
       getList({ pageNum: currentPage - 1, pageSize })
@@ -185,17 +189,20 @@ async function getList(param: any) {
     if (!state.barParams.docId && (!state.barParams.query || state.barParams.query.length === 0)) {
       state.tableData = []
       state.aggregation = {}
-      tableConfig.pagerConfig.total = 0
-      tableConfig.pagerConfig.pageSize = 20
-      tableConfig.pagerConfig.currentPage = 1
-      return
+      return {
+        entryList: [],
+        totalSize: 0
+      }
     }
     tableConfig.loading = true
     const { data: res } = (await clientApi.api.postNuxeoSearchOpenSearch({ ...state.barParams, ...state.aggParams, ...param })) as any
     if (!res.page)
       res.page = {
-        entryList: [],
-        totalSize: 0
+        data:{
+
+          entryList: [],
+          totalSize: 0
+        }
       }
     // const res = await SearchGroupGetApi({ ...state.barParams, ...state.aggParams, ...param })
     const list = res.page.entryList.map((item: any) => {
@@ -206,46 +213,54 @@ async function getList(param: any) {
       }
       return _item
     })
+    console.log('list', list)
     state.aggregation = res.aggregation
     state.options.paginationConfig.total = res.page.totalSize
-    tableConfig.pagerConfig.total = state.options.paginationConfig.total
-    tableConfig.pagerConfig.pageSize = param.pageSize
-    tableConfig.pagerConfig.currentPage = param.pageNum + 1
+    // tableConfig.pagerConfig.total = state.options.paginationConfig.total
+    // tableConfig.pagerConfig.pageSize = param.pageSize
+    // tableConfig.pagerConfig.currentPage = param.pageNum + 1
 
     // tableRef.value?.loadData(list)
     state.tableData = list
-    // tableRef.value?.loadData(state.tableData)
-  } catch (error) {
-    state.tableData = []
-    state.aggregation = {}
-    tableConfig.pagerConfig.total = 0
-    tableConfig.pagerConfig.pageSize = 1
-    tableConfig.pagerConfig.currentPage = 1
-  } finally {
-    tableConfig.loading = false
-    tableRef.value?.loadData(state.tableData)
     let agg = { ...state.aggParams }
     if (state.barParams.filter) agg = { filter: { ...agg.filter, ...state.barParams.filter } }
     emits('updateAgg', state.aggregation, agg)
+    return {
+      data:{
+        entryList: list,
+        totalSize: res.page.totalSize
+      }
+    }
+    // tableRef.value?.loadData(state.tableData)
+  } catch (error) {
+    console.log('getList error', error)
+    state.tableData = []
+    state.aggregation = {}
+    return {
+      data:{
+        entryList: [],
+        totalSize: 0
+      }
+    }
   }
 }
 
-function handlePaginationChange(page: number, pageSize?: number) {
-  if (!pageSize) pageSize = pageParams.pageSize
-  const time = new Date().valueOf().toString()
-  routerProvider?.updateProps({
-    query: {
-      ...routerProvider?.tabData.value.props?.query,
-      ...pageParams,
-      pageNum: page,
-      pageSize,
-      time
-    }
-  })
-  // router.push({
-  //     query: { ...route.query, ...pageParams, pageNum:page, pageSize, time }
-  // })
-}
+// function handlePaginationChange(page: number, pageSize?: number) {
+//   if (!pageSize) pageSize = pageParams.pageSize
+//   const time = new Date().valueOf().toString()
+//   routerProvider?.updateProps({
+//     query: {
+//       ...routerProvider?.tabData.value.props?.query,
+//       ...pageParams,
+//       pageNum: page,
+//       pageSize,
+//       time
+//     }
+//   })
+//   // router.push({
+//   //     query: { ...route.query, ...pageParams, pageNum:page, pageSize, time }
+//   // })
+// }
 
 watchDebounced(
   () => routerProvider?.tabData,
@@ -288,18 +303,21 @@ async function handleDblclick(row: any) {
 function initBar(searchParams: any) {
   state.barParams = searchParams
   state.aggParams = {}
-  handlePaginationChange(1)
+  // handlePaginationChange(1)
+  reload()
 }
 
 function initAgg(searchParams: any, isSearch: boolean = true) {
   state.aggParams = searchParams
-  if (isSearch) handlePaginationChange(1)
+  if (isSearch)   reload()
+
 }
 
 function initSearch(searchParams: any) {
   console.log(searchParams)
   state.barParams = searchParams
-  handlePaginationChange(1)
+  reload()
+
 }
 
 defineExpose({ initBar, initAgg, initSearch })
