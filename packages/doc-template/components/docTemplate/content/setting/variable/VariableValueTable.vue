@@ -7,15 +7,15 @@
     </div>
 
     <el-table :data="rows" style="width: 100%">
-      <el-table-column v-for="(col, colIdx) in columns" :key="colIdx" width="300px">
+      <el-table-column v-for="(col, colIdx) in columns" :key="colIdx" width="350px">
         <template #header>
           <div class="col-header">
-            <el-input v-model="columns[colIdx].name" @input="emitValue" size="small" width="100px" />
+            <el-input v-model="columns[colIdx].name" @input="emitValue" size="small" style="width: 130%" />
             <el-select
               v-model="columns[colIdx].align"
               placeholder="Select"
               size="small"
-              style="width: 220px"
+              style="width: 120%"
             >
               <el-option
                 v-for="(item,index) in alignOptions"
@@ -65,7 +65,7 @@
 </template>
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from 'vue'
-import { ElFormItem, ElSwitch } from 'element-plus'
+import { ElSwitch } from 'element-plus'
 
 const props = defineProps<{ modelValue: { columns: any[], rows: string[][] } }>()
 const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: any[], rows: string[][] }): void }>()
@@ -76,7 +76,8 @@ const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : 
   name: 'Column 1',
   align: 'left',
   color: '#d3dbde',
-  width: ''
+  width: '',
+  key: 'Col_1'
 }])
 const rows = ref(props.modelValue?.rows ? props.modelValue.rows.map(r => [...r]) : [[]])
 const alignOptions = ref(['left', 'center', 'right'])
@@ -85,7 +86,8 @@ watch(() => props.modelValue, v => {
     name: 'Column 1',
     align: 'left',
     color: '#d3dbde',
-    width: ''
+    width: '',
+    key: 'Col_1'
   }]
   rows.value = v?.rows ? v.rows.map(r => [...r]) : [[]]
 })
@@ -95,7 +97,8 @@ function addColumn() {
     name: `Column ${columns.value.length + 1}`,
     align: 'left',
     color: '#d3dbde',
-    width: ''
+    width: '',
+    key: `Col_${columns.value.length + 1}`
   }
   columns.value.push(newCol)
   rows.value.forEach(row => row.push(''))
