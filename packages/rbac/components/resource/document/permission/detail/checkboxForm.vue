@@ -1,65 +1,65 @@
 <template>
-<div>
-  <el-divider content-position="left">读取权限</el-divider>
-  <ResourceDocumentPermissionDetailCheckbox
-    :ref="
-      (el) => {
-        CheckboxRef.read = el
-      }
-    "
-    :checkAllLabel="`Read`"
-    v-model:checkAll="formData.allRead"
-    :options="[
-      { label: '查看文件夹/文件', value: 1 },
-      { label: '查看元数据', value: 2 },
-      { label: '打印', value: 3 },
-      { label: '下载', value: 4 },
-      { label: '读取权限', value: 5 }
-    ]"
-    v-model="formData.readPermissions"
-    @change="(v) => handleChange(v, 'read')"
-  />
+  <div>
+    <el-divider content-position="left">读取权限</el-divider>
+    <ResourceDocumentPermissionDetailCheckbox
+      :ref="
+        (el) => {
+          CheckboxRef.read = el
+        }
+      "
+      :checkAllLabel="`Read`"
+      v-model:checkAll="formData.allRead"
+      :options="[
+        { label: '查看文件夹/文件', value: 1 },
+        { label: '查看元数据', value: 2 },
+        { label: '打印', value: 3 },
+        { label: '下载', value: 4 },
+        { label: '读取权限', value: 5 }
+      ]"
+      v-model="formData.readPermissions"
+      @change="(v) => handleChange(v, 'read')"
+    />
 
-  <el-divider content-position="left">读写权限</el-divider>
-  <ResourceDocumentPermissionDetailCheckbox
-    :ref="
-      (el) => {
-        CheckboxRef.readWrite = el
-      }
-    "
-    :checkAllLabel="`ReadWrite`"
-    v-model:checkAll="formData.allReadWrite"
-    :options="[
-      { label: '编辑文件夹', value: 6 },
-      { label: '编辑子内容', value: 7 },
-      { label: '编辑元数据', value: 8 },
-      { label: '分享', value: 9 },
-      { label: '创建子文件夹', value: 10 },
-      { label: '创建文件', value: 11 }
-    ]"
-    v-model="formData.readWritePermissions"
-    @change="(v) => handleChange(v, 'readWrite')"
-  />
+    <el-divider content-position="left">读写权限</el-divider>
+    <ResourceDocumentPermissionDetailCheckbox
+      :ref="
+        (el) => {
+          CheckboxRef.readWrite = el
+        }
+      "
+      :checkAllLabel="`ReadWrite`"
+      v-model:checkAll="formData.allReadWrite"
+      :options="[
+        { label: '编辑文件夹', value: 6 },
+        { label: '编辑子内容', value: 7 },
+        { label: '编辑元数据', value: 8 },
+        { label: '分享', value: 9 },
+        { label: '创建子文件夹', value: 10 },
+        { label: '创建文件', value: 11 }
+      ]"
+      v-model="formData.readWritePermissions"
+      @change="(v) => handleChange(v, 'readWrite')"
+    />
 
-  <el-divider content-position="left">管理权限</el-divider>
-  <ResourceDocumentPermissionDetailCheckbox
-    :ref="
-      (el) => {
-        CheckboxRef.manage = el
-      }
-    "
-    :checkAllLabel="`manage`"
-    v-model:checkAll="formData.allManage"
-    :options="[
-      { label: '删除文件夹/文件', value: 12 },
-      { label: '删除子内容', value: 13 },
-      { label: '分配权限', value: 14 },
-      { label: '添加用户集', value: 15 }
-    ]"
-    v-model="formData.managePermissions"
-    @change="(v) => handleChange(v, 'manage')"
-  />
-</div>
+    <el-divider content-position="left">管理权限</el-divider>
+    <ResourceDocumentPermissionDetailCheckbox
+      :ref="
+        (el) => {
+          CheckboxRef.manage = el
+        }
+      "
+      :checkAllLabel="`manage`"
+      v-model:checkAll="formData.allManage"
+      :options="[
+        { label: '删除文件夹/文件', value: 12 },
+        { label: '删除子内容', value: 13 },
+        { label: '分配权限', value: 14 },
+        { label: '添加用户集', value: 15 }
+      ]"
+      v-model="formData.managePermissions"
+      @change="(v) => handleChange(v, 'manage')"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -95,24 +95,17 @@ function handleChange(value, type) {
 }
 
 function convertToFormData(data: SaveData) {
-  const newFormData = {
-    readPermissions: data.permissionLevel === 1 ? [1, 2, 3, 4, 5] : getReadPermissions(data.permissionIds),
-    readWritePermissions: data.permissionLevel === 2 ? [6, 7, 8, 9, 10, 11] : getReadWritePermissions(data.permissionIds),
-    managePermissions: data.permissionLevel === 3 ? [12, 13, 14, 15] : getManagePermissions(data.permissionIds)
-  }
+  const newFormData: any = {}
+  if (!data.permissionIds) return newFormData
+  const arr = ['read', 'readWrite', 'manage']
+  arr.forEach((type) => {
+    newFormData[type + 'Permissions'] = CheckboxRef.value[type].filterPermission(data.permissionIds)
+  })
   console.log(newFormData)
   // postAclResourcePermissions
   return newFormData
 }
-function getReadPermissions(permissionLevels: number[]) {
-  return permissionLevels.filter((level) => level <= 5)
-}
-function getReadWritePermissions(permissionLevels: number[]) {
-  return permissionLevels.filter((level) => level >= 6 && level <= 11)
-}
-function getManagePermissions(permissionLevels: number[]) {
-  return permissionLevels.filter((level) => level >= 12 && level <= 15)
-}
+
 function getData() {
   const data = {
     permissionLevel: 0,

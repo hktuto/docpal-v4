@@ -28,7 +28,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: (string | number)[]): void,
+  (e: 'update:modelValue', value: (string | number)[]): void
   (e: 'change', value: boolean): void
 }>()
 
@@ -54,6 +54,9 @@ function handleCheckAllChange2(val: boolean) {
   checkedList.value = checkedList.value.length > 0 ? checkedList.value : props.options.map((option) => option.value)
   emit('update:modelValue', checkedList.value)
 }
+function filterPermission(permissionLevels: (string | number)[]) {
+  return permissionLevels.filter((level) => props.options.some((item) => item.value === level))
+}
 function handleCheckedChange(value: (string | number)[]) {
   const checkedCount = value.length
   checkAll.value = checkedCount === props.options.length
@@ -67,7 +70,8 @@ function updateCheckAllState() {
   isIndeterminate.value = checkedCount > 0 && checkedCount < props.options.length
 }
 defineExpose({
-  handleCheckAllChange2
+  handleCheckAllChange2,
+  filterPermission
 })
 </script>
 
