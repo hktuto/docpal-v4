@@ -1,7 +1,13 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="用户权限设置" width="80%" :close-on-click-modal="false" @close="handleClose">
+  <el-dialog v-model="dialogVisible" title="用户权限设置" width="80%" append-to-body destroy-on-close center :close-on-click-modal="false" @close="handleClose">
     <div class="user-set-content">
       <!-- 用户权限设置内容 -->
+      <div class="left">
+        <ResourceDocumentUserSetForm ref="userSetFormRef" />
+      </div>
+      <div class="right">
+        <ResourceDocumentPermissionDetailCheckboxForm ref="checkboxFormRef" />
+      </div>
     </div>
     <template #footer>
       <div class="dialog-footer">
@@ -17,8 +23,11 @@ import { ref } from 'vue'
 
 const dialogVisible = ref(false)
 const permissionId = ref('')
+const checkboxFormRef = ref()
+const userSetFormRef = ref()
+const emits = defineEmits(['success'])
 
-const open = (id: string) => {
+const open = (id: string, documentId: string) => {
   permissionId.value = id
   dialogVisible.value = true
 }
@@ -40,7 +49,13 @@ defineExpose({
 
 <style scoped>
 .user-set-content {
-  min-height: 200px;
+  width:100%;
+  /*  left and right panel */
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--app-space-s);
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 .dialog-footer {
   display: flex;
