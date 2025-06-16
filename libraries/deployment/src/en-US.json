@@ -2224,6 +2224,7 @@
       "createFolder": "Create Subfolders",
       "deleteFolder": "Deleting Folders/Files",
       "deleteSubContent": "Delete sub-content",
+      "detail": "Permission Details",
       "download": "Download",
       "editFolder": "Edit Folder",
       "editMetadata": "Edit Metadata",

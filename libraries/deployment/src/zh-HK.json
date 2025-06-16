@@ -2222,6 +2222,7 @@
       "createFolder": "建立子資料夾",
       "deleteFolder": "刪除資料夾/文件",
       "deleteSubContent": "刪除子內容",
+      "detail": "權限詳情",
       "download": "下載",
       "editFolder": "編輯資料夾",
       "editMetadata": "編輯元數據",
