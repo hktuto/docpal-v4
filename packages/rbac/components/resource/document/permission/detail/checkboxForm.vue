@@ -86,22 +86,30 @@ const formData = ref<FormData>({
 
 function handleChange(value, type) {
   if (!value) return
+  if (type === 'read') {
+    CheckboxRef.value.read.handleCheckAllChange2(value)
+  }
   if (type === 'readWrite') {
     CheckboxRef.value.read.handleCheckAllChange2(value)
+    CheckboxRef.value.readWrite.handleCheckAllChange2(value)
   } else if (type === 'manage') {
     CheckboxRef.value.read.handleCheckAllChange2(value)
     CheckboxRef.value.readWrite.handleCheckAllChange2(value)
+    CheckboxRef.value.manage.handleCheckAllChange2(value)
   }
 }
 
 function convertToFormData(data: SaveData) {
-  const newFormData: any = {}
+  const newFormData: any = {
+    readPermissions: [],
+    readWritePermissions: [],
+    managePermissions: []
+  }
   if (!data.permissionIds) return newFormData
   const arr = ['read', 'readWrite', 'manage']
   arr.forEach((type) => {
     newFormData[type + 'Permissions'] = CheckboxRef.value[type].filterPermission(data.permissionIds)
   })
-  console.log(newFormData)
   // postAclResourcePermissions
   return newFormData
 }
@@ -125,19 +133,21 @@ function getData() {
 }
 function setData(data: FormData) {
   formData.value = convertToFormData(data)
-  if (data.permissionLevel === 1) {
-    formData.value.allRead = true
-    handleChange(true, 'read')
-  } else if (data.permissionLevel === 2) {
-    formData.value.allRead = true
-    formData.value.allReadWrite = true
-    handleChange(true, 'readWrite')
-  } else if (data.permissionLevel === 3) {
-    formData.value.allRead = true
-    formData.value.allReadWrite = true
-    formData.value.allManage = true
-    handleChange(true, 'manage')
-  }
+  setTimeout(() => {
+    if (data.permissionLevel === 1) {
+      formData.value.allRead = true
+      handleChange(true, 'read')
+    } else if (data.permissionLevel === 2) {
+      formData.value.allRead = true
+      formData.value.allReadWrite = true
+      handleChange(true, 'readWrite')
+    } else if (data.permissionLevel === 3) {
+      formData.value.allRead = true
+      formData.value.allReadWrite = true
+      formData.value.allManage = true
+      handleChange(true, 'manage')
+    }
+  })
 }
 defineExpose({
   getData,
