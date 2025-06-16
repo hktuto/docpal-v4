@@ -175,7 +175,7 @@ function isQuertType(value: string) {
 }
 
 async function handleMetaChange(value: string) {
-  state.metadataType = options.metadata.find((item: any) => item.value === value)
+  state.metadataType = options.value.metadata.find((item: any) => item.value === value)
 }
 
 async function handleMetaEcho(q: any) {
