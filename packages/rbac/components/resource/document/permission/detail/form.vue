@@ -1,12 +1,12 @@
 <template>
   <el-form ref="formRef" :model="formData" label-position="top">
     <el-form-item
-      label="用户角色"
+      :label="$t('user_role')"
       prop="targetId"
-      :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: '用户角色' }), trigger: 'change' }]"
+      :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: $t('user_role') }), trigger: 'change' }]"
     >
-      <el-select v-model="formData.targetId" :disabled="isEdit" placeholder="请选择用户角色">
-        <el-option-group v-for="options in targetOptions" :key="options.label" :label="options.label">
+      <el-select v-model="formData.targetId" :disabled="isEdit" :placeholder="$t('choose', { name: $t('user_role') })">
+        <el-option-group v-for="options in targetOptions" :key="options.label" :label="$t(options.label)">
           <el-option v-for="item in options.options" :key="item.value" :label="item.label" :value="item.value" />
         </el-option-group>
       </el-select>
@@ -20,7 +20,7 @@
 import { ref, reactive } from 'vue'
 import { adminApi } from 'api'
 const props = defineProps<{
-  isFolder: boolean,
+  isFolder: boolean
   isEdit: boolean
 }>()
 
@@ -97,7 +97,7 @@ async function getTargetOptions() {
       label: 'user_role',
       options: flatRole.value.map((item) => ({
         label: item.name,
-        value: '&&2&&' +item.id
+        value: '&&2&&' + item.id
       }))
     },
     {

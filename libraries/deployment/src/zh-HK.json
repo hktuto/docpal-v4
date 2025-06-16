@@ -2214,6 +2214,28 @@
   "quickAction": {
     "label": "快速操作"
   },
+  "rbac": {
+    "permission": {
+      "addUserSet": "新增用戶集",
+      "assignPermission": "分配權限",
+      "createFile": "建立文件",
+      "createFolder": "建立子資料夾",
+      "deleteFolder": "刪除資料夾/文件",
+      "deleteSubContent": "刪除子內容",
+      "download": "下載",
+      "editFolder": "編輯資料夾",
+      "editMetadata": "編輯元數據",
+      "editSubContent": "編輯子內容",
+      "inheritFrom": "繼承自",
+      "isInherit": "繼承",
+      "permissionLevel": "權限",
+      "print": "打印",
+      "targetName": "使用者/角色/群組/使用者集",
+      "viewFolder": "查看資料夾/文件",
+      "viewMetadata": "查看元數據"
+    },
+    "permissions": "{type}權限"
+  },
   "refresh": "刷新",
   "related_modified": "修改日期",
   "related_name": "名稱",
@@ -2791,7 +2813,6 @@
   "user_groupName": "分組名稱",
   "user_groupNameCanNotBeNull": "分組名稱不能為空",
   "user_groups": "分組",
-  "user_role": "角色",
   "user_info": "使用者資訊",
   "user_lastName": "姓",
   "user_newGroup": "新增使用者群組",
@@ -2800,6 +2821,7 @@
   "user_passwordCanNotBeNull": "密碼不能為空",
   "user_pleaseInputTheCorrectEmail": "請輸入正確的郵箱地址",
   "user_removeGroupsSuccessMsg": "The selected user groups have been removed from the user {username} successfully.",
+  "user_role": "角色",
   "user_status": "使用者狀態",
   "user_updatePassword": "修改密碼",
   "user_userGroupAssignment": "使用者群組指派",
