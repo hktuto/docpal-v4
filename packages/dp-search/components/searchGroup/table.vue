@@ -194,7 +194,6 @@ async function getList(param: any) {
         totalSize: 0
       }
     }
-    tableConfig.loading = true
     const { data: res } = (await clientApi.api.postNuxeoSearchOpenSearch({ ...state.barParams, ...state.aggParams, ...param })) as any
     if (!res.page)
       res.page = {
