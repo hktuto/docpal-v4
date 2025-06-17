@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { DocTemplateProveKey } from '~/utils/docTemplateHelper'
+import { DocTemplateProveKey, type DocTemplateVariable } from '~/utils/docTemplateHelper'
 import { defaultAvailableFonts } from 'docpal-document-editor/src/utils/fontHelper'
 import { useI18n } from 'vue-i18n'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
+import { ElMessage, type UploadFile } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
+import VariableValueTable from '../../setting/variable/VariableValueTable.vue'
+import VariableForm from '../../setting/variable/variableForm.vue'
+import Manager from '../../setting/variable/manager.vue'
+import VariablePicker from '../../toolbar/variable/VariablePicker.vue'
 
 const provider = inject(DocTemplateProveKey)
 if (!provider) throw new Error('DocTemplateProvider not found')
-const { editor, options, initEditor } = provider
+const { editor, options, initEditor, setVariables, variables } = provider
 const { t } = useI18n()
 
+const titlePredefine = ref([
+  { name: 'Default', key: 0 },
+  { name: 'H1', key: 1 },
+  { name: 'H2', key: 2 },
+  { name: 'H3', key: 3 },
+  { name: 'H4', key: 4 },
+  { name: 'H5', key: 5 }
+])
 const fontPredefineFamily = [...defaultAvailableFonts]
 const fontPredefineSize = [8, 9, 10, 11, 12, 14, 15, 18, 20, 22, 24, 26, 28, 36, 48]
 const fontPredefineColors = ref(['#000000'])
 const fontPredefineHighlightColors = ref(['#FFFFFF', '#ffff00', '#00ff00', '#007FFF', '#FF0000', '#FF00FF', '#00FFFF'])
-
 
 const state = reactive({
   fontFamily: 'Inter',
@@ -22,12 +35,25 @@ const state = reactive({
     label: fontPredefineSize[idx]
   })),
   fontSize: 12,
+  titleTags: 'Default',
+  defaultTitleTags: '',
   fontColor: '#000000',
-  fontHighlightColor: '#ffff00'
+  fontHighlightColor: '#ffff00',
+  fontLinkDialogVisible: false,
+  imageDialogVisible: false,
+  isImageUrl: true,
+  imageLink: '',
+  imageUrl: '',
+  previewDialogVisible: false,
+  previewDialogImage: '',
+  link: '',
+  createTablePopoverVisible: false,
+  addVisible: false,
+  mangerVisible: false,
+  insertVariableVisible: false
 })
 
 function checkFontSizeIsNumber() {
-
   // Regular expressions that allow integers and up to one decimals
   const regex = /^\d+(\.\d{1})?$/
   if (!regex.test(state.fontSize.toString())) {
@@ -43,89 +69,6 @@ function checkFontSizeIsNumber() {
     state.fontSize = fontSize
   }
   handleFontSizeChange(state.fontSize)
-}
-
-function handlerFontSizeNumber(status: boolean) {
-  console.log(state.fontSize)
-  let down = 8
-  let up = 48
-
-  if (state.fontSize < fontPredefineSize[0]) {
-    console.log('--1')
-    if (state.fontSize <= 1) {
-      down = 1
-      up = 2
-    } else {
-      down = state.fontSize - 1
-      up = state.fontSize + 1
-    }
-  } else {
-    const lastNumber = fontPredefineSize[fontPredefineSize.length - 1]
-    if (fontPredefineSize[0] <= state.fontSize && state.fontSize <= lastNumber) {
-      console.log('--2')
-      if (state.fontSize == lastNumber) {
-        down = fontPredefineSize[fontPredefineSize.length - 2]
-        up = Math.ceil(state.fontSize / 10) * 10
-        return status ? up : down
-      }
-
-      // 數組包含的數據
-      for (let i = 0; i < fontPredefineSize.length; i++) {
-        if (fontPredefineSize[i] === state.fontSize) {
-          down = fontPredefineSize[i - 1]
-          up = fontPredefineSize[i + 1]
-          break
-        } else if (fontPredefineSize[i] > state.fontSize) {
-          down = fontPredefineSize[i - 1]
-          up = fontPredefineSize[i + 1]
-          break
-        }
-      }
-    } else if (state.fontSize > lastNumber) {
-      // 大於最後的值
-      console.log('--3')
-      if (state.fontSize <= Math.ceil(lastNumber / 10) * 10) {
-        down = lastNumber
-        up = (Math.ceil(lastNumber / 10) + 1) * 10
-      } else {
-        down = (Math.ceil(state.fontSize / 10) - 1) * 10
-        up = (Math.ceil(state.fontSize / 10) + 1) * 10
-      }
-    }
-  }
-  return status ? up : down
-}
-
-/**
- * Resize font size
- * @param status (true: down, false: up)
- */
-function handlerFontSizeResize(status: boolean) {
-  // TODO 需要考慮當前選中的數據的大小，動態變更字體的大小時，需要先獲取當前選中的數據的字體大小
-  // TODO 如果存在多個字體大小格式，需要分別處理
-  state.fontSize = handlerFontSizeNumber(status)
-  handleFontSizeChange(state.fontSize)
-}
-
-/**
- * Set the selected string Bold
- */
-function handleFontBoldChange() {
-  editor.value.chain().focus().toggleBold().run()
-}
-
-/**
- * Set the selected string Italic
- */
-function handleFontItalicChange() {
-  editor.value.chain().focus().toggleItalic().run()
-}
-
-/**
- * Set the selected string Underline
- */
-function handleUnderline() {
-  editor.value.chain().focus().toggleUnderline().run()
 }
 
 /**
@@ -155,24 +98,6 @@ function handleFontSizeChange(size: Number) {
   editor.value.chain().focus().setFontSize(size + 'px').run()
 }
 
-/**
- * Set the selected string to highlight
- * @param highlightColor The HEX value of the color
- * default color [Yellow :String]
- */
-function handleFontHighlight(highlightColor: string) {
-  editor.value.chain().focus().toggleHighlight({ color: highlightColor }).run()
-}
-
-/**
- * Set the selected string to font color
- * @param fontColor
- * default color [black]
- */
-async function handleSetFontColor(fontColor: string) {
-  editor.value.chain().focus().setColor(fontColor).run()
-}
-
 function handleFontColorFocus() {
   const color = editor.value.getAttributes('textStyle').color
   if (color) {
@@ -182,32 +107,191 @@ function handleFontColorFocus() {
   }
 }
 
-/**
- * Set the selected string to unset all font style
- */
-function handleFontStyleClear() {
-  editor.value.chain().focus().unsetAllMarks().run()
+function handleTitle() {
+  if (state.titleTags === 0) {
+    editor.value.chain().focus().toggleHeading({ level: state.defaultTitleTags }).run()
+    return
+  }
+  state.defaultTitleTags = state.titleTags
+  editor.value.chain().focus().toggleHeading({ level: state.titleTags }).run()
 }
 
 /**
- * Set the selected string to Strike
+ * Set the selected string to align
+ * @param align string('left','center','right','justify')
  */
-function handleStrike() {
-  editor.value.chain().focus().toggleStrike().run()
+function handleTextAlign(align: string) {
+  editor.value.chain().focus().toggleTextAlign(align).run()
 }
 
 /**
- * Set the selected string to Subscript
+ * @param state boolean(true:indent,false:outdent)
  */
-function handleSubscript() {
-  editor.value.chain().focus().toggleSubscript().run()
+function handleIndent(state: boolean) {
+  if (state) {
+    editor.value.chain().focus().indent().run()
+  } else {
+    editor.value.chain().focus().outdent().run()
+  }
+}
+
+function openSetLinkDialog() {
+  state.fontLinkDialogVisible = true
+  const href = editor.value.getAttributes('link').href
+  if (href) {
+    state.link = href
+  } else {
+    state.link = ''
+  }
 }
 
 /**
- * Set the selected string to Superscript
+ * Set the selected string to unset link
  */
-function handleSuperscript() {
-  editor.value.chain().focus().toggleSuperscript().run()
+function handleResetLink() {
+  editor.value.chain().focus().extendMarkRange('link').unsetLink().run()
+  state.fontLinkDialogVisible = false
+}
+
+/**
+ * Set the selected string to link
+ */
+function handleSetLink() {
+  editor.value.chain().focus().extendMarkRange('link').setLink({ href: state.link }).run()
+  state.fontLinkDialogVisible = false
+}
+
+function openSetImageDialog() {
+  state.imageDialogVisible = true
+  state.isImageUrl = true
+  state.imageLink = ''
+  state.imageUrl = ''
+}
+
+const uploadRef = ref()
+
+function handleImage() {
+  let url
+
+  if (!state.isImageUrl) {
+    url = state.imageLink
+    state.imageLink = ''
+  } else {
+    url = state.imageUrl
+    state.imageUrl = ''
+  }
+
+  if (url) {
+    editor.value.commands.setImage({ src: url })
+  }
+
+  uploadRef.value.clearFiles()
+  state.isImageUrl = true
+  state.imageDialogVisible = false
+}
+
+function handleBeforeUpload(file: File) {
+  const isLt1m = file.size / 1024 / 2048 < 1
+  if (!isLt1m) {
+    ElMessage.error('上传头像图片大小不得超过 1M!')
+  }
+  return isLt1m
+}
+
+function handlePictureCardPreview(file: UploadFile) {
+  state.previewDialogImage = file.url!
+  state.previewDialogVisible = true
+}
+
+const toBase64 = (file: any) => new Promise((resolve, reject) => {
+  const reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onload = () => resolve(reader.result)
+  reader.onerror = reject
+})
+
+async function handleImageSuccess(uploadFile: any, uploadFiles: any) {
+  state.imageUrl = await toBase64(uploadFiles.raw)
+}
+
+const tableForm = reactive({
+  value: {
+    columns: [{ 'name': 'Column 1', 'align': 'left', 'color': '#d3dbde', 'width': '', 'key': 'Col_1' }],
+    rows: [['']],
+    bordered: true,
+    striped: false,
+    sort: 'Col_1',
+    sortBy: true
+  }
+})
+
+function handleCreateTable() {
+  editor.value.commands.insertContent({
+    type: 'variableTable',
+    attrs: {
+      type: 'table',
+      value: tableForm.value
+    }
+  })
+  state.createTablePopoverVisible = false
+}
+
+const formMode = ref<'create' | 'edit'>('create')
+const selectedVariable = ref<DocTemplateVariable | null>(null)
+const renderKey = ref(0)
+
+function handleOpenManagerCreate() {
+  formMode.value = 'create'
+  selectedVariable.value = null
+  state.addVisible = true
+}
+
+function handleFormSubmit(payload: { mode: 'create' | 'edit'; variable: any }) {
+  if (payload.mode === 'create') {
+    provider?.addVariable?.({ ...payload.variable })
+  } else {
+    provider?.updateVariable?.({ ...payload.variable })
+  }
+  renderKey.value++
+  state.addVisible = false
+}
+
+function handleFormCancel() {
+  state.addVisible = false
+}
+
+function handlePickerSelect(variable: DocTemplateVariable) {
+  if (!editor) {
+    state.insertVariableVisible = false
+    return
+  }
+  let nodeType = ''
+  switch (variable.type) {
+    case 'text':
+      nodeType = 'variableText'
+      break
+    case 'list':
+      nodeType = 'variableList'
+      break
+    case 'table':
+      nodeType = 'variableTable'
+      break
+    case 'link':
+      nodeType = 'variableLink'
+      break
+    default:
+      state.insertVariableVisible = false
+      return
+  }
+  editor.value.commands.insertContent({
+    type: nodeType,
+    attrs: { ...variable }
+  })
+  state.insertVariableVisible = false
+}
+
+function handlePickerClose() {
+  state.insertVariableVisible = false
 }
 </script>
 
@@ -215,152 +299,344 @@ function handleSuperscript() {
   <div class="toolsContainer">
     <el-row>
       <el-col :span="24" :gutter="0">
-        <el-span :span="18">
-          <el-dropdown v-tooltip="t('docTemplate.font.family')" trigger="click" split-button @click="handleFontFamilyChange(state.fontFamily)">
-              {{ state.fontFamily }}
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
-                                    @click="handleFontSizeChangeOnDown(item)">
-                    {{ item }}
-                  </el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-        </el-span>
-        <el-span :span="6">
-        <!-- font family -->
-        <el-select
-          v-tooltip="t('docTemplate.font.size')"
-          v-model="state.fontSize"
-          allow-create
-          filterable
-          default-first-option
-          :reserve-keyword="false"
-          placeholder="please select"
-          style="width: 16%"
-          @change="checkFontSizeIsNumber"
-        >
-          <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-span>
-        <el-button-group>
-          <el-button
-            v-tooltip="t('docTemplate.font.increaseSize')"
-            style="width: 41px"
-            @click="handlerFontSizeResize(true)"
-          >
-            <p>A<sup>+</sup></p>
-          </el-button>
-          <el-button
-            v-tooltip="t('docTemplate.font.reduceSize')"
-            style="width: 41px"
-            @click="handlerFontSizeResize(false)"
-          >
-            <p>A<sup>-</sup></p>
-          </el-button>
-        </el-button-group>
+        <!-- Undo -->
+        <LazyDocTemplateContentSettingUndo />
 
-        <!-- font color   -->
-        <el-button-group>
-          <el-button v-tooltip="t('docTemplate.font.color')" @click="handleSetFontColor(state.fontColor)">
-            A
+        <!-- font family -->
+        <el-span :span="18">
+          <el-dropdown v-tooltip="t('docTemplate.font.family')" trigger="click" split-button
+                       @click="handleFontFamilyChange(state.fontFamily)">
+            {{ state.fontFamily }}
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
+                                  @click="handleFontSizeChangeOnDown(item)">
+                  {{ item }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-span>
+
+        <!-- font size -->
+        <el-span :span="6">
+          <el-select
+            v-tooltip="t('docTemplate.font.size')"
+            v-model="state.fontSize"
+            allow-create
+            filterable
+            default-first-option
+            :reserve-keyword="false"
+            placeholder="please select"
+            style="width: 80px"
+            @change="checkFontSizeIsNumber"
+          >
+            <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label"
+                       :value="item.value" />
+          </el-select>
+        </el-span>
+
+        <!-- title Tags -->
+        <el-span :span="6">
+          <el-select
+            v-tooltip="t('docTemplate.style.titleTags')"
+            v-model="state.titleTags"
+            allow-create
+            default-first-option
+            :reserve-keyword="false"
+            style="width: 80px"
+            @change="handleTitle"
+          >
+            <el-option v-for="(item,index) in titlePredefine" :key="index" :label="item.name"
+                       :value="item.key" />
+          </el-select>
+        </el-span>
+
+        <!-- font color -->
+        <el-button-group v-tooltip="t('docTemplate.font.color')">
+          <el-button style="width: 34px" @click="editor.chain().focus().setColor(state.fontColor).run()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+              <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                    d="m6.5 12.5l3.14-7.33a.39.39 0 0 1 .72 0l3.14 7.33M7.91 9.21h4.18M.5 12.5L5.07 1.84a.57.57 0 0 1 1 0L7 3.94M2.55 7.72H5" />
+            </svg>
           </el-button>
-          <el-button style="width: 22px">
-            <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors" @change="handleSetFontColor"
+          <el-button style="width: 34px">
+            <el-color-picker v-model="state.fontColor" :predefine="fontPredefineColors"
+                             @change="editor.chain().focus().setColor(state.fontColor).run()"
                              @focus="handleFontColorFocus" />
           </el-button>
         </el-button-group>
-        <el-button
-          v-tooltip="t('docTemplate.font.deleteStyle')"
-          style="width: 38px"
-          @click="handleFontStyleClear"
-        >
-          🗑️
-        </el-button>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <!-- font bold  -->
-        <el-button
-          v-tooltip="t('docTemplate.font.bold')"
-          style="width: 36px"
-          @click="handleFontBoldChange"
-          :class="{ 'is-active': editor.isActive('bold') }"
-        >
-          <p style="font-weight: bold">B</p>
-        </el-button>
 
-        <!--  font italic  -->
-        <el-button
-          v-tooltip="t('docTemplate.font.italic')"
-          @click="handleFontItalicChange"
-          :class="{ 'is-active': editor.isActive('italic') }"
-        >
-          <p><em>I</em></p>
-        </el-button>
-
-        <!--  font Underline  -->
-        <el-button
-          v-tooltip="t('docTemplate.font.underline')"
-          style="width: 36px"
-          @click="handleUnderline"
-          :class="{ 'is-active': editor.isActive('underline') }"
-        >
-          <p><u>U</u></p>
-        </el-button>
-
-        <!--  font Strike  -->
-        <el-button
-          v-tooltip="t('docTemplate.font.delineate')"
-          @click="handleStrike"
-          :class="{ 'is-active': editor.isActive('strike') }"
-        >
-          <p><s>abc</s></p>
-        </el-button>
-
-        <!--  font Subscript  -->
-        <el-button
-          v-tooltip="t('docTemplate.font.subscript')"
-          style="width: 36px"
-          @click="handleSubscript"
-          :class="{ 'is-active': editor.isActive('subscript') }"
-        >
-          <p>X<sub>2</sub></p>
-        </el-button>
-
-        <!--  font Superscript  -->
-        <el-button
-          v-tooltip="t('docTemplate.font.superscript')"
-          style="width: 36px"
-          @click="handleSuperscript"
-          :class="{ 'is-active': editor.isActive('superscript') }"
-        >
-          <p>X<sup>2</sup></p>
-        </el-button>
-
-        <el-divider direction="vertical" />
-
-        <!-- font highlight -->
-        <el-button-group>
-          <el-button v-tooltip="t('docTemplate.font.highlight')" @click="handleFontHighlight(state.fontHighlightColor)">
-            <p>Highlight</p>
+        <!-- highlight -->
+        <el-button-group v-tooltip="t('docTemplate.font.highlight')">
+          <el-button style="width: 34px"
+                     @click="editor.chain().focus().toggleHighlight({ color: state.fontHighlightColor }).run()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="5.66" height="9.66" x="5.67" y=".67" rx="1" transform="rotate(-45 8.498 5.5)" />
+                <path d="M.91 11.09a1.41 1.41 0 0 0 2 2L7.5 8.5l-2-2Z" />
+              </g>
+            </svg>
           </el-button>
           <el-button style="width: 22px;">
             <el-color-picker v-model="state.fontHighlightColor" :predefine="fontPredefineHighlightColors"
-                             @blur="handleFontHighlight(state.fontHighlightColor)" />
+                             @blur="editor.chain().focus().toggleHighlight({ color: state.fontHighlightColor }).run()" />
           </el-button>
         </el-button-group>
+
+        <!-- bold -->
+        <el-button style="width: 34px" v-tooltip="t('docTemplate.font.bold')"
+                   @click="editor.chain().focus().toggleBold().run()"
+                   :class="{ 'is-active': editor.isActive('bold') }"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  d="M11 3.5a3 3 0 0 0-3-3H4a1 1 0 0 0-1 1v5h5a3 3 0 0 0 3-3Zm1 6.5a3.5 3.5 0 0 1-3.5 3.5H4a1 1 0 0 1-1-1v-6h5.5A3.5 3.5 0 0 1 12 10Z" />
+          </svg>
+        </el-button>
+
+        <!-- italic -->
+        <el-button style="width: 34px" v-tooltip="t('docTemplate.font.italic')"
+                   @click="editor.chain().focus().toggleItalic().run()"
+                   :class="{ 'is-active': editor.isActive('italic') }"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  d="m4.5 13.5l5-13m-4 0H13m-12 13h7.5" />
+          </svg>
+        </el-button>
+
+        <!-- Align-left -->
+        <el-button style="width:34px" @click="handleTextAlign('left')" v-tooltip="t('docTemplate.font.alignLeft')"
+                   :class="{ 'is-active': editor.isActive({ textAlign: 'left' }) }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h10M4 18h14" />
+          </svg>
+        </el-button>
+        <!-- Align-center -->
+        <el-button style="width:34px" @click="handleTextAlign('center')" v-tooltip="t('docTemplate.font.alignCenter')"
+                   :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M8 12h8M6 18h12" />
+          </svg>
+        </el-button>
+        <!-- Align-right -->
+        <el-button style="width:34px" @click="handleTextAlign('right')" v-tooltip="t('docTemplate.font.alignRight')"
+                   :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
+          <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16m-10 6h10M6 18h14" />
+          </svg>
+        </el-button>
+
+        <!-- bulletList -->
+        <el-button style="width:34px" v-tooltip="t('docTemplate.paragraph.bulletList')"
+                   @click="editor.chain().focus().toggleBulletList().run()"
+                   :class="{ 'is-active': editor.isActive('bulletList') }"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="1" cy="2.5" r=".5" />
+              <path d="M4.5 2.5h9" />
+              <circle cx="1" cy="7" r=".5" />
+              <path d="M4.5 7h9" />
+              <circle cx="1" cy="11.5" r=".5" />
+              <path d="M4.5 11.5h9" />
+            </g>
+          </svg>
+        </el-button>
+
+        <!-- orderedList -->
+        <el-button style="width:34px" v-tooltip="t('docTemplate.paragraph.orderedList')"
+                   @click="editor.chain().focus().toggleOrderedList().run()"
+                   :class="{ 'is-active': editor.isActive('orderedList') }"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  d="M13.5 1H8m5.5 3H8m5.5 3H8m5.5 6H8m5.5-3H8M.5 1.5v4A.5.5 0 0 0 1 6h4a.5.5 0 0 0 .5-.5v-4A.5.5 0 0 0 5 1H1a.5.5 0 0 0-.5.5m0 7v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-4A.5.5 0 0 0 5 8H1a.5.5 0 0 0-.5.5" />
+          </svg>
+        </el-button>
+
+        <!-- set link -->
+        <el-button v-tooltip="t('docTemplate.utils.link')" style="width:34px" @click="openSetLinkDialog">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="currentColor" fillRule="evenodd"
+                  d="m7.671 2.743l-.964.964a1 1 0 0 1-1.414-1.414l.964-.965a4.536 4.536 0 0 1 6.415 6.415l-.965.964a1 1 0 1 1-1.414-1.414l.964-.965a2.536 2.536 0 0 0-3.585-3.585Zm-3.964 2.55a1 1 0 0 1 0 1.414l-.964.965a2.536 2.536 0 0 0 3.585 3.585l.965-.964a1 1 0 0 1 1.414 1.414l-.964.964a4.536 4.536 0 0 1-6.415-6.414l.965-.964a1 1 0 0 1 1.414 0m5.5.914a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 1.414 1.414z"
+                  clipRule="evenodd" />
+          </svg>
+        </el-button>
+
+        <!-- set image -->
+        <el-button v-tooltip="t('docTemplate.utils.image')" @click="openSetImageDialog" style="width:34px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="currentColor" fillRule="evenodd"
+                  d="M14 12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 0 12.5v-11A1.5 1.5 0 0 1 1.5 0h11A1.5 1.5 0 0 1 14 1.5zM3.75 2a1.75 1.75 0 1 0 0 3.5a1.75 1.75 0 0 0 0-3.5m4.651 4.599L2.5 12.5h10v-4L9.69 6.492A1 1 0 0 0 8.4 6.6Z"
+                  clipRule="evenodd" />
+          </svg>
+        </el-button>
+
+        <!-- table -->
+        <el-button v-tooltip="t('docTemplate.utils.table')" @click="state.createTablePopoverVisible = true"
+                   style="width:34px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="currentColor" fillRule="evenodd"
+                  d="M1.5 0A1.5 1.5 0 0 0 0 1.5v1.375h14V1.5A1.5 1.5 0 0 0 12.5 0zM0 8.375v-4.25h6.375v4.25zm0 1.25V12.5A1.5 1.5 0 0 0 1.5 14h4.875V9.625zm7.625 0V14H12.5a1.5 1.5 0 0 0 1.5-1.5V9.625zM14 8.375v-4.25H7.625v4.25z"
+                  clipRule="evenodd" />
+          </svg>
+        </el-button>
+
+        <!--  Increase  -->
+        <el-button v-tooltip="t('docTemplate.utils.increaseRight')" @click="handleIndent(true)" style="width:34px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  d="M13.5 1H.5m13 4H6m7.5 4H6m7.5 4H.5M2 5l2 2l-2 2" />
+          </svg>
+        </el-button>
+
+        <el-button v-tooltip="t('docTemplate.utils.increaseLeft')" @click="handleIndent(false)" style="width:34px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                  d="M13.5 1H.5m13 4H6m7.5 4H6m7.5 4H.5m2-8L1 7l1.5 2" />
+          </svg>
+        </el-button>
+
+        <!-- Import -->
+        <LazyDocTemplateContentSettingImport />
+
+        <!-- Export -->
+        <LazyDocTemplateContentSettingExport />
+
+        <!-- Page Setting -->
+        <LazyDocTemplateContentSettingPage />
+
+        <!-- Variable Manager -->
+        <el-dropdown>
+          <el-button v-tooltip="t('docTemplate.utils.variableManager')">
+            {{ t('VariableManager') }}
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleOpenManagerCreate">{{ t('Add Variable') }}</el-dropdown-item>
+              <el-dropdown-item @click="state.mangerVisible = true">{{ t('Edit Variable') }}</el-dropdown-item>
+              <el-dropdown-item @click="state.insertVariableVisible=true">{{ t('Insert Variable') }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </el-col>
     </el-row>
   </div>
+
+  <!-- Set link dialog -->
+  <el-dialog v-model="state.fontLinkDialogVisible" title="Set Link" width="500">
+    <el-form>
+      <el-form-item label="Link">
+        <el-input v-model="state.link" />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="handleResetLink">Reset</el-button>
+        <el-button type="primary" @click="handleSetLink">
+          Confirm
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+  <!-- Set image dialog -->
+  <el-dialog v-model="state.imageDialogVisible" title="Set Image" width="500">
+    <el-form>
+      <el-switch
+        v-model="state.isImageUrl"
+        size="large"
+        active-text="Image"
+        inactive-text="Link(Base64)"
+      />
+
+      <el-form-item v-if="!state.isImageUrl" label="Image link(Base64)">
+        <el-input v-model="state.imageLink" />
+      </el-form-item>
+
+      <el-form-item v-else label="Image" lable="Update Image">
+        <el-upload
+          ref="uploadRef"
+          action="#"
+          list-type="picture-card"
+          accept="image/jpeg,image/png,image/jpg"
+          limit="1"
+          :on-success="handleImageSuccess"
+          :before-upload="handleBeforeUpload"
+          :on-preview="handlePictureCardPreview"
+        >
+          <el-icon>
+            <Plus />
+          </el-icon>
+        </el-upload>
+        <el-dialog v-model="state.previewDialogVisible">
+          <img w-full style="width: 100%; height: 100%" :src="state.previewDialogImage" alt="Preview Image" />
+        </el-dialog>
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="handleImage">
+          Confirm
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+
+  <!-- Create table dialog -->
+  <el-dialog v-model="state.createTablePopoverVisible" :title="t('Create Table')">
+    <VariableValueTable v-model="tableForm.value">
+      {{ tableForm.value }}
+    </VariableValueTable>
+    <template #footer>
+      <el-button @click="state.createTablePopoverVisible = false">
+        {{ $t('vxe.button.cancel') }}
+      </el-button>
+      <el-button type="primary" @click="handleCreateTable">
+        {{ $t('docTemplate.table.create') }}
+      </el-button>
+    </template>
+  </el-dialog>
+
+  <!-- add visible -->
+  <el-dialog v-model="state.addVisible" :title="formMode === 'create' ? 'Create Variable' : 'Edit Variable'" width="80%"
+             destroy-on-close>
+    <VariableForm
+      v-if="state.addVisible"
+      :mode="formMode"
+      :variable="selectedVariable"
+      :variables="provider.variables"
+      @submit="handleFormSubmit"
+      @cancel="handleFormCancel"
+    />
+  </el-dialog>
+
+  <!-- edit visible-->
+  <el-dialog v-model="state.mangerVisible">
+    <Manager />
+  </el-dialog>
+
+  <!-- insert visible -->
+  <VariablePicker
+    :variables="variables"
+    :visible="state.insertVariableVisible"
+    @select="handlePickerSelect"
+    @close="handlePickerClose"
+  />
+
 </template>
 
 <style scoped lang="scss">
-.toolsContainer{
+.toolsContainer {
   min-width: 240px;
 }
+
 .el-row {
   margin-bottom: 5px;
 }
@@ -372,4 +648,20 @@ function handleSuperscript() {
 .el-col {
   border-radius: 2px;
 }
+
+//button {
+//  border: none;
+//  background: var(--app-grey-950);
+//  padding: var(--app-space-xs);
+//  border-radius: var(--app-border-radius-s);
+//
+//  &:hover {
+//    background: var(--app-success-3);
+//  }
+//
+//  &.is-active {
+//    background: var(--app-accent-color);
+//    color: #fff;
+//  }
+//}
 </style>
