@@ -21,7 +21,7 @@ import { ref, reactive } from 'vue'
 import { adminApi } from 'api'
 const props = defineProps<{
   isFolder: boolean
-  isEdit: boolean,
+  isEdit: boolean
   filterList: any[]
 }>()
 
@@ -92,8 +92,24 @@ async function getFormData() {
 const { flatRole } = useRBAC()
 async function getTargetOptions() {
   console.log(props.filterList)
-  const groupList = await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
-  const userList = await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
+  async function getUserList() {
+    try {
+      return await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  }
+  async function getGroupList() {
+    try {
+      return await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+  }
+  const groupList = await getGroupList()
+  const userList = await getUserList()
   targetOptions.value.push(
     {
       label: 'user_role',
@@ -120,6 +136,20 @@ async function getTargetOptions() {
     }
   )
 }
+watch(props.filterList, async (newVal) => {
+  console.log(newVal)
+  if (newVal.length > 0) {
+    const targetIds = newVal.map((item: any) => '&&' + item.targetType + '&&' + item.targetId)
+    while (targetOptions.value.length === 0) {
+      console.log('=========targetOptionstargetOptions')
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    console.log(targetOptions.value)
+    targetOptions.value.forEach((item: any) => {
+      item.options = item.options.filter((option: any) => !targetIds.includes(option.value))
+    })
+  }
+}, { immediate: true })
 onMounted(() => {
   getTargetOptions()
 })

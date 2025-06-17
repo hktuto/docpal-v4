@@ -21,44 +21,59 @@ function setFormData(data) {
   if (!data) {
     formData.value = {
       condition: 'or',
-      resourceRules: []
+      resourceRules: [
+        {
+          attribute: '',
+          value: [],
+          condition: 'eq',
+          type: 'string'
+        }
+      ]
     }
     return
   }
-  formData.value = data
+  console.log('=========')
+  console.log(data)
+  formData.value = {
+    condition: 'or',
+    resourceRules: data.rules.map((item: any) => {
+      return {
+        attribute: item.attributeName,
+        value: Array.isArray(item.attributeValue) ? item.attributeValue : [item.attributeValue],
+        condition: item.operator,
+        type: resourceAttributes.find((attr) => attr.value === item.attributeName)?.type
+      }
+    })
+  }
 }
 function getFormData() {
   const params = {
     operator: formData.value.condition === 'or' ? 'OR' : 'AND',
     rules: formData.value.resourceRules.map((item: any) => {
-      const attrItem = resourceAttributes.find((attr) => attr.value === item.attribute)
       return {
-        attribute: item.attribute,
-        attributeName: attrItem?.label,
-        condition: item.condition,
-        value: item.value[0].length > 1 ? item.value : item.value[0]
+        attributeType: 1,
+        attributeName: item.attribute,
+        operator: item.condition,
+        attributeValue: item.value.length > 1 ? item.value : item.value[0]
       }
     })
   }
   return params
 }
-const SelectorDocTypeRef = ref()
-onMounted(() => {
-  setTimeout(() => {
-    SelectorDocTypeRef.value.addResourceRule()
-  }, 100)
-})
+
 defineExpose({
   setFormData,
   getFormData
 })
 </script>
 <template>
+  <h3 class="mb-2">
+    {{ $t('rbac.permission.resource_rules') }}
+  </h3>
   <FormLogicalSelector
     ref="SelectorDocTypeRef"
     v-model:form-data="formData"
     :resource-attributes="resourceAttributes"
     :is-or="true"
-    @update:form-data="setFormData"
   />
 </template>

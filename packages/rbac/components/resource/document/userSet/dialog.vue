@@ -1,6 +1,16 @@
 <template>
-  <el-dialog v-model="dialogVisible" title="用户权限设置" width="80%" append-to-body destroy-on-close center :close-on-click-modal="false" @close="handleClose">
-    <div class="user-set-content">
+  <el-dialog
+    v-loading="loading"
+    v-model="dialogVisible"
+    :title="$t('rbac.permission.addUserSet')"
+    width="80%"
+    append-to-body
+    destroy-on-close
+    center
+    :close-on-click-modal="false"
+    @close="handleClose"
+  >
+    <div class="user-set-content" v-loading="loading">
       <!-- 用户权限设置内容 -->
       <div class="left">
         <ElForm ref="formRef" :model="formData" label-position="top">
@@ -21,8 +31,8 @@
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose">{{ $t('cancelText') }}</el-button>
-        <el-button type="primary" @click="handleConfirm">{{ $t('confirmText') }}</el-button>
+        <el-button  @click="handleClose">{{ $t('button.close') }}</el-button>
+        <el-button type="primary" :loading="confirmLoading" @click="handleConfirm">{{ $t('confirmText') }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -35,6 +45,8 @@ const props = defineProps<{
   filterList: any[]
 }>()
 const dialogVisible = ref(false)
+const loading = ref(false)
+const confirmLoading = ref(false)
 const permissionId = ref('')
 const resourceId = ref('') // documentId
 const checkboxFormRef = ref()
@@ -45,20 +57,32 @@ const formRef = ref()
 const formData = ref({
   configurationRuleName: ''
 })
-const open = (row: any, documentId: string) => {
-  resourceId.value = documentId
-  permissionId.value = row?.id || ''
-  dialogVisible.value = true
-  setTimeout(() => {
-    userSetFormRef.value.setFormData(row)
-    userSetDocFormRef.value.setFormData(row)
-    if (!!row) {
+const open = async (row: any, documentId: string) => {
+  try {
+    permissionId.value = row?.id || ''
+    resourceId.value = documentId
+    dialogVisible.value = true
+    if (row?.id) {
+      loading.value = true
+      const aclPermission = await adminApi.api.getAclResourcePermissionsId(row.id).then((res) => res.data)
+      userSetFormRef.value.setFormData(aclPermission.members)
+      userSetDocFormRef.value.setFormData(aclPermission.rules[0])
       checkboxFormRef.value.setData({
         permissionLevel: 5,
-        permissionIds: row.permissionIds
+        permissionIds: aclPermission.permissionIds
+      })
+      formData.value.configurationRuleName = row.configurationRuleName
+    } else {
+      setTimeout(() => {
+        userSetFormRef.value.setFormData()
+        userSetDocFormRef.value.setFormData()
       })
     }
-  }, 100)
+  } catch (e) {
+    throw new Error(e)
+  } finally {
+    loading.value = false
+  }
 }
 
 const handleClose = () => {
@@ -68,11 +92,11 @@ const handleClose = () => {
 
 const handleConfirm = async () => {
   try {
+    confirmLoading.value = true
     await formRef.value.validate()
     const userformData = userSetFormRef.value.getFormData()
     const docData = userSetDocFormRef.value.getFormData()
     const permissondata = checkboxFormRef.value.getData()
-    console.log(formData, docData, permissondata, userformData)
     const params = {
       permissionLevel: 5,
       permissionIds: permissondata.permissionIds,
@@ -88,10 +112,12 @@ const handleConfirm = async () => {
     } else {
       await adminApi.api.postAclResourcePermissions(params)
     }
-    console.log(params)
+    emits('success')
   } catch (e) {
     console.error(e)
     return
+  } finally {
+    confirmLoading.value = false
   }
   handleClose()
 }
@@ -114,6 +140,7 @@ defineExpose({
     flex: 1;
   }
   .right {
+    padding-top: 10px;
   }
 }
 .dialog-footer {
