@@ -23,7 +23,9 @@
       />
     </el-form-item>
     <div class="actions">
-      <el-button id="Variable__Manage__Form__Submit" type="primary" @click="handleSubmit">{{ mode === 'create' ? 'Create' : 'Update' }}</el-button>
+      <el-button id="Variable__Manage__Form__Submit" type="primary" @click="handleSubmit">
+        {{ mode === 'create' ? 'Create' : 'Update' }}
+      </el-button>
       <el-button id="Variable__Manage__Form__Cancel" @click="handleCancel">Cancel</el-button>
     </div>
   </el-form>
@@ -68,7 +70,7 @@ const form = ref<CreateVariableInput | DocTemplateVariable>({
   value: ''
 })
 
-const variableTypes: VariableType[] = ['text', 'list', 'table', 'link', 'image']
+const variableTypes: VariableType[] = ['text', 'list', 'table', 'link']
 
 const namePattern = /^[A-Za-z0-9_]+$/
 
