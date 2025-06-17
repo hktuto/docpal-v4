@@ -194,7 +194,7 @@ provide(DocTemplateProveKey, {
 </script>
 
 <template>
-  <div class="editorContainer">
+  <div class="editorContainer" style="--margin-top: 20px;--margin-bottom:20px;">
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
       <EditorContent :editor="editor" />
@@ -221,6 +221,7 @@ provide(DocTemplateProveKey, {
     outline: none;
   }
 }
+
 </style>
 
 <style>
@@ -299,6 +300,58 @@ provide(DocTemplateProveKey, {
       > * {
         display: inline-block;
       }
+    }
+  }
+  .page{
+    --border-color: #888;
+
+    &:before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: var(--margin-top);
+      right: var(--margin-top);
+      display: block;
+      border-bottom: 1px solid var(--border-color);
+      border-left: 1px solid var(--border-color);
+    }
+    &:after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      bottom: var(--margin-bottom);
+      right: var(--margin-bottom);
+      display: block;
+      border-top: 1px solid var(--border-color);
+      border-left: 1px solid var(--border-color);
+    }
+  }
+  .body{
+    position: relative;
+    overflow: visible!important;
+    &:before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      display: block;
+      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+    &:after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      display: block;
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
     }
   }
 }

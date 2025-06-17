@@ -303,58 +303,53 @@ function handlePickerClose() {
         <LazyDocTemplateContentSettingUndo />
 
         <!-- font family -->
-        <el-span :span="18">
-          <el-dropdown v-tooltip="t('docTemplate.font.family')" trigger="click" split-button
-                       @click="handleFontFamilyChange(state.fontFamily)">
-            {{ state.fontFamily }}
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
-                                  @click="handleFontSizeChangeOnDown(item)">
-                  {{ item }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </el-span>
+        <el-dropdown v-tooltip="t('docTemplate.font.family')" trigger="click" split-button
+                     @click="handleFontFamilyChange(state.fontFamily)" class="ordinary-button">
+          {{ state.fontFamily }}
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-for="(item,index) in fontPredefineFamily" :key="index"
+                                @click="handleFontSizeChangeOnDown(item)">
+                {{ item }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
 
         <!-- font size -->
-        <el-span :span="6">
-          <el-select
-            v-tooltip="t('docTemplate.font.size')"
-            v-model="state.fontSize"
-            allow-create
-            filterable
-            default-first-option
-            :reserve-keyword="false"
-            placeholder="please select"
-            style="width: 80px"
-            @change="checkFontSizeIsNumber"
-          >
-            <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label"
-                       :value="item.value" />
-          </el-select>
-        </el-span>
+        <el-select
+          v-tooltip="t('docTemplate.font.size')"
+          v-model="state.fontSize"
+          allow-create
+          filterable
+          default-first-option
+          :reserve-keyword="false"
+          placeholder="please select"
+          style="width: 80px;"
+          @change="checkFontSizeIsNumber"
+        >
+          <el-option v-for="item in state.fontDataOptions" :key="item.value" :label="item.label"
+                     :value="item.value" />
+        </el-select>
 
         <!-- title Tags -->
-        <el-span :span="6">
-          <el-select
-            v-tooltip="t('docTemplate.style.titleTags')"
-            v-model="state.titleTags"
-            allow-create
-            default-first-option
-            :reserve-keyword="false"
-            style="width: 80px"
-            @change="handleTitle"
-          >
-            <el-option v-for="(item,index) in titlePredefine" :key="index" :label="item.name"
-                       :value="item.key" />
-          </el-select>
-        </el-span>
+        <el-select
+          v-tooltip="t('docTemplate.style.titleTags')"
+          v-model="state.titleTags"
+          allow-create
+          default-first-option
+          :reserve-keyword="false"
+          style="width: 100px;"
+          @change="handleTitle"
+        >
+          <el-option v-for="(item,index) in titlePredefine" :key="index" :label="item.name"
+                     :value="item.key" />
+        </el-select>
 
         <!-- font color -->
         <el-button-group v-tooltip="t('docTemplate.font.color')">
-          <el-button style="width: 34px" @click="editor.chain().focus().setColor(state.fontColor).run()">
+          <el-button class="ordinary-button" style="width: 34px"
+                     @click="editor.chain().focus().setColor(state.fontColor).run()">
             <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
               <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                     d="m6.5 12.5l3.14-7.33a.39.39 0 0 1 .72 0l3.14 7.33M7.91 9.21h4.18M.5 12.5L5.07 1.84a.57.57 0 0 1 1 0L7 3.94M2.55 7.72H5" />
@@ -369,7 +364,7 @@ function handlePickerClose() {
 
         <!-- highlight -->
         <el-button-group v-tooltip="t('docTemplate.font.highlight')">
-          <el-button style="width: 34px"
+          <el-button class="ordinary-button" style="width: 34px"
                      @click="editor.chain().focus().toggleHighlight({ color: state.fontHighlightColor }).run()">
             <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
               <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -385,7 +380,7 @@ function handlePickerClose() {
         </el-button-group>
 
         <!-- bold -->
-        <el-button style="width: 34px" v-tooltip="t('docTemplate.font.bold')"
+        <el-button class="ordinary-button" style="width: 34px" v-tooltip="t('docTemplate.font.bold')"
                    @click="editor.chain().focus().toggleBold().run()"
                    :class="{ 'is-active': editor.isActive('bold') }"
         >
@@ -396,7 +391,7 @@ function handlePickerClose() {
         </el-button>
 
         <!-- italic -->
-        <el-button style="width: 34px" v-tooltip="t('docTemplate.font.italic')"
+        <el-button style="width: 34px; margin-left: -6px" v-tooltip="t('docTemplate.font.italic')"
                    @click="editor.chain().focus().toggleItalic().run()"
                    :class="{ 'is-active': editor.isActive('italic') }"
         >
@@ -415,7 +410,8 @@ function handlePickerClose() {
           </svg>
         </el-button>
         <!-- Align-center -->
-        <el-button style="width:34px" @click="handleTextAlign('center')" v-tooltip="t('docTemplate.font.alignCenter')"
+        <el-button style="width:34px; margin-left: -6px" @click="handleTextAlign('center')"
+                   v-tooltip="t('docTemplate.font.alignCenter')"
                    :class="{ 'is-active': editor.isActive({ textAlign: 'center' }) }">
           <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -423,7 +419,8 @@ function handlePickerClose() {
           </svg>
         </el-button>
         <!-- Align-right -->
-        <el-button style="width:34px" @click="handleTextAlign('right')" v-tooltip="t('docTemplate.font.alignRight')"
+        <el-button style="width:34px; margin-left: -6px " @click="handleTextAlign('right')"
+                   v-tooltip="t('docTemplate.font.alignRight')"
                    :class="{ 'is-active': editor.isActive({ textAlign: 'right' }) }">
           <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -449,7 +446,7 @@ function handlePickerClose() {
         </el-button>
 
         <!-- orderedList -->
-        <el-button style="width:34px" v-tooltip="t('docTemplate.paragraph.orderedList')"
+        <el-button style="width:34px; margin-left: -6px" v-tooltip="t('docTemplate.paragraph.orderedList')"
                    @click="editor.chain().focus().toggleOrderedList().run()"
                    :class="{ 'is-active': editor.isActive('orderedList') }"
         >
@@ -469,7 +466,8 @@ function handlePickerClose() {
         </el-button>
 
         <!-- set image -->
-        <el-button v-tooltip="t('docTemplate.utils.image')" @click="openSetImageDialog" style="width:34px">
+        <el-button v-tooltip="t('docTemplate.utils.image')" @click="openSetImageDialog"
+                   style="width:34px; margin-left: -6px">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
             <path fill="currentColor" fillRule="evenodd"
                   d="M14 12.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 0 12.5v-11A1.5 1.5 0 0 1 1.5 0h11A1.5 1.5 0 0 1 14 1.5zM3.75 2a1.75 1.75 0 1 0 0 3.5a1.75 1.75 0 0 0 0-3.5m4.651 4.599L2.5 12.5h10v-4L9.69 6.492A1 1 0 0 0 8.4 6.6Z"
@@ -479,7 +477,7 @@ function handlePickerClose() {
 
         <!-- table -->
         <el-button v-tooltip="t('docTemplate.utils.table')" @click="state.createTablePopoverVisible = true"
-                   style="width:34px">
+                   style="width:34px; margin-left: -6px">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
             <path fill="currentColor" fillRule="evenodd"
                   d="M1.5 0A1.5 1.5 0 0 0 0 1.5v1.375h14V1.5A1.5 1.5 0 0 0 12.5 0zM0 8.375v-4.25h6.375v4.25zm0 1.25V12.5A1.5 1.5 0 0 0 1.5 14h4.875V9.625zm7.625 0V14H12.5a1.5 1.5 0 0 0 1.5-1.5V9.625zM14 8.375v-4.25H7.625v4.25z"
@@ -495,35 +493,40 @@ function handlePickerClose() {
           </svg>
         </el-button>
 
-        <el-button v-tooltip="t('docTemplate.utils.increaseLeft')" @click="handleIndent(false)" style="width:34px">
+        <el-button v-tooltip="t('docTemplate.utils.increaseLeft')" @click="handleIndent(false)"
+                   style="width:34px; margin-left: -6px">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
             <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                   d="M13.5 1H.5m13 4H6m7.5 4H6m7.5 4H.5m2-8L1 7l1.5 2" />
           </svg>
         </el-button>
 
-        <!-- Import -->
-        <LazyDocTemplateContentSettingImport />
+        <div class="setting-button">
+          <!-- Import -->
+          <LazyDocTemplateContentSettingImport />
 
-        <!-- Export -->
-        <LazyDocTemplateContentSettingExport />
+          <!-- Export -->
+          <LazyDocTemplateContentSettingExport />
 
-        <!-- Page Setting -->
-        <LazyDocTemplateContentSettingPage />
+          <!-- Variable Manager -->
+          <el-dropdown class="ordinary-button">
+            <el-button v-tooltip="t('docTemplate.utils.variableManager')">
+              {{ t('Variable Manager') }}
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="handleOpenManagerCreate">{{ t('Add Variable') }}</el-dropdown-item>
+                <el-dropdown-item @click="state.mangerVisible = true">{{ t('Edit Variable') }}</el-dropdown-item>
+                <el-dropdown-item @click="state.insertVariableVisible=true">{{ t('Insert Variable') }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
 
-        <!-- Variable Manager -->
-        <el-dropdown>
-          <el-button v-tooltip="t('docTemplate.utils.variableManager')">
-            {{ t('VariableManager') }}
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item @click="handleOpenManagerCreate">{{ t('Add Variable') }}</el-dropdown-item>
-              <el-dropdown-item @click="state.mangerVisible = true">{{ t('Edit Variable') }}</el-dropdown-item>
-              <el-dropdown-item @click="state.insertVariableVisible=true">{{ t('Insert Variable') }}</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+          <!-- Page Setting -->
+          <LazyDocTemplateContentSettingPage />
+        </div>
+
       </el-col>
     </el-row>
   </div>
@@ -635,33 +638,71 @@ function handlePickerClose() {
 <style scoped lang="scss">
 .toolsContainer {
   min-width: 240px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.toolsContainer::-webkit-scrollbar {
+  height: 4px;
+}
+
+.toolsContainer::-webkit-scrollbar-thumb {
+  background-color: #dcdfe6;
+  border-radius: 2px;
+}
+
+.toolsContainer::-webkit-scrollbar-track {
+  background-color: #f5f7fa;
 }
 
 .el-row {
-  margin-bottom: 5px;
-}
-
-.el-row:last-child {
   margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: max-content;
 }
 
 .el-col {
   border-radius: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: max-content;
 }
 
-//button {
-//  border: none;
-//  background: var(--app-grey-950);
-//  padding: var(--app-space-xs);
-//  border-radius: var(--app-border-radius-s);
-//
-//  &:hover {
-//    background: var(--app-success-3);
-//  }
-//
-//  &.is-active {
-//    background: var(--app-accent-color);
-//    color: #fff;
-//  }
-//}
+.ordinary-button {
+  margin-left: 0;
+  flex-shrink: 0;
+}
+
+.setting-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.el-dropdown {
+  :deep(.el-button-group > .el-button:first-child) {
+    width: 120px;
+    text-align: left;
+    position: relative;
+    span{
+      width:100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display:block;
+    }
+
+
+  }
+}
 </style>
