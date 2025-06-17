@@ -241,7 +241,7 @@ async function restore(idOrPath: string, name: string) {
   }
 }
 
-onActivated(() => {
+onMounted(() => {
   state.selectList = []
 })
 

@@ -1,3 +1,5 @@
+
+
 <template>
   <div>
     <el-divider content-position="left">{{ $t('rbac.permissions', {type: $t('permission.read')}) }}</el-divider>
@@ -64,6 +66,9 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+const props = defineProps<{
+    isUserSet: boolean,
+}>();
 const CheckboxRef = ref({})
 
 type FormData = {
@@ -119,14 +124,14 @@ function getData() {
     permissionLevel: 0,
     permissionIds: []
   }
-  if (formData.value.allRead && formData.value.readWritePermissions.length === 0 && formData.value.managePermissions.length === 0) {
+  if (!props.isUserSet && formData.value.allRead && formData.value.readWritePermissions.length === 0 && formData.value.managePermissions.length === 0) {
     data.permissionLevel = 1 // Read
-  } else if (formData.value.allRead && formData.value.allReadWrite && formData.value.managePermissions.length === 0) {
+  } else if (!props.isUserSet && formData.value.allRead && formData.value.allReadWrite && formData.value.managePermissions.length === 0) {
     data.permissionLevel = 2 // ReadWrite
-  } else if (formData.value.allRead && formData.value.allReadWrite && formData.value.allManage) {
+  } else if (!props.isUserSet && formData.value.allRead && formData.value.allReadWrite && formData.value.allManage) {
     data.permissionLevel = 3 // Manage
   } else {
-    data.permissionLevel = 4 // Custom
+    data.permissionLevel = props.isUserSet ? 5 : 4 // Custom
     data.permissionIds = [...formData.value.readPermissions, ...formData.value.readWritePermissions, ...formData.value.managePermissions]
   }
   return data
