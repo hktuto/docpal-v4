@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { adminApi } from 'api'
+const props = defineProps<{
+  filterList: any[]
+}>()
 const formData = ref({
   condition: 'or',
   resourceRules: []
