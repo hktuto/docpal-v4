@@ -47,26 +47,6 @@ function handleTableCellsMergeOrSplit(state: boolean) {
               :class="{ 'is-active': editor.isActive('italic') }">
         {{ $t('Italic') }}
       </button>
-      <!--  font Underline  -->
-      <button @click="editor.chain().focus().toggleUnderline().run()"
-              :class="{ 'is-active': editor.isActive('underline') }">
-        {{ $t('Underline') }}
-      </button>
-      <!--  font Strike  -->
-      <button @click="editor.chain().focus().toggleStrike().run()"
-              :class="{ 'is-active': editor.isActive('strike') }">
-        {{ $t('Strike') }}
-      </button>
-      <!--  font Subscript  -->
-      <button @click="editor.chain().focus().toggleSubscript().run()"
-              :class="{ 'is-active': editor.isActive('subscript') }">
-        {{ $t('Subscript') }}
-      </button>
-      <!--  font Superscript  -->
-      <button @click="editor.chain().focus().toggleSuperscript().run()"
-              :class="{ 'is-active': editor.isActive('superscript') }">
-        {{ $t('Superscript') }}
-      </button>
       <button @click="editor.chain().focus().unsetAllMarks().run()">
         {{ $t('Clear') }}
       </button>
