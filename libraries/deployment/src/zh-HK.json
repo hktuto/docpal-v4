@@ -2232,6 +2232,7 @@
       "permissionLevel": "權限",
       "print": "打印",
       "read": "讀取",
+      "resource_rules": "資源規則",
       "targetName": "使用者/角色/群組/使用者集",
       "viewFolder": "查看資料夾/文件",
       "viewMetadata": "查看元數據"

@@ -20,7 +20,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       type: 'html',
       formatter: ({ cellValue, row }: any) => {
         const icon = row.targetType === 1 ? '/icons/menu/user.svg' : row.targetType === 2 ? '/icons/menu/role.svg' : '/icons/menu/group.svg'
-        return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span> `
+        return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue || row.configurationRuleName}</span> `
       }
     },
     {
@@ -34,6 +34,8 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
             return 'ReadWrite'
           case 3:
             return 'Manage'
+          case 5:
+            return 'User Set'
           default:
             return 'Custom'
         }
@@ -97,7 +99,7 @@ function handleAddSet() {
 const detailDialogRef = ref()
 function handleDblClick(row: any) {
   // check if row is user set
-  if (row.targetType === 5) {
+  if (row.permissionLevel === 5) {
     userSetDialogRef.value?.open(row, document.value.id)
     return
   } else {

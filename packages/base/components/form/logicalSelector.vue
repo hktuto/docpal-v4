@@ -96,14 +96,14 @@ const selectConditions = stringConditions
 function onResourceAttributeChange(rule, attrValue) {
   const attr = props.resourceAttributes.find((a) => a.value === attrValue)
   rule.type = attr?.type || ''
-  rule.condition = ''
+  rule.condition = 'eq'
   rule.value = []
   emits('update:formData', props.formData)
 }
 
 // 添加/删除规则
 function addResourceRule() {
-  const newRules = [...props.formData.resourceRules, { attribute: '', type: '', condition: '', value: [] }]
+  const newRules = [...props.formData.resourceRules, { attribute: '', type: 'string', condition: 'eq', value: [] }]
   const newFormData = { ...props.formData, resourceRules: newRules }
   emits('update:formData', newFormData)
 }

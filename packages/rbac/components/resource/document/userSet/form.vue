@@ -8,15 +8,39 @@ const formData = ref({
   resourceRules: []
 })
 
-function setFormData(data) {
+async function setFormData(data) {
+  console.log(JSON.stringify(data))
   if (!data) {
     formData.value = {
       condition: 'or',
-      resourceRules: []
+      resourceRules: [
+        {
+          attribute: '',
+          value: [],
+          condition: 'eq',
+          type: 'string'
+        }
+      ]
     }
     return
   }
-  formData.value = data
+  while (targetOptions.value.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 100))
+  }
+  
+  console.log('=========data?.map')
+  formData.value = {
+    condition: 'or',
+    resourceRules: data?.map((item: any) => {
+      return {
+        attribute: item.memberType,
+        value: [item.memberId],
+        condition: item.operator === 1 ? 'eq' : 'neq',
+        type: targetOptions.value.find((attr) => attr.value === item.memberType)?.type
+      }
+    }) || []
+  }
+  console.log(formData.value)
 }
 function getFormData() {
   return formData.value.resourceRules.map((item: any) => {
@@ -89,14 +113,13 @@ watch(props.filterList, async(newVal) => {
     while (targetOptions.value.length === 0) {
       await new Promise((resolve) => setTimeout(resolve, 100))
     }
-    targetOptions.value = targetOptions.value.forEach((item: any) => {
+    targetOptions.value.forEach((item: any) => {
       item.options = item.options.filter((option: any) => !targetIds.includes(option.value))
     })
   }
 })
 onMounted(async () => {
   setTimeout(() => {
-    SelectorRoleRef.value.addResourceRule()
     getTargetOptions()
   }, 100)
 })
@@ -106,5 +129,8 @@ defineExpose({
 })
 </script>
 <template>
-  <FormLogicalSelector ref="SelectorRoleRef" v-model:form-data="formData" :resource-attributes="targetOptions" :is-or="true" @update:form-data="setFormData" />
+  <h3>
+    {{ $t('user_role') }}
+  </h3>
+  <FormLogicalSelector ref="SelectorRoleRef" v-model:form-data="formData" :resource-attributes="targetOptions" :is-or="true" />
 </template>

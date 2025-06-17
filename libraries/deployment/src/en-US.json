@@ -2234,6 +2234,7 @@
       "permissionLevel": "Permissions",
       "print": "Print",
       "read": "Read",
+      "resource_rules": "Resource Rules",
       "targetName": "User/ Role/ Group/ User Set",
       "viewFolder": "View Folder/File",
       "viewMetadata": "View Metadata"
