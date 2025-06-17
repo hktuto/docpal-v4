@@ -21,7 +21,8 @@ import { ref, reactive } from 'vue'
 import { adminApi } from 'api'
 const props = defineProps<{
   isFolder: boolean
-  isEdit: boolean
+  isEdit: boolean,
+  filterList: any[]
 }>()
 
 const formRef = ref()
@@ -90,6 +91,7 @@ async function getFormData() {
 
 const { flatRole } = useRBAC()
 async function getTargetOptions() {
+  console.log(props.filterList)
   const groupList = await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
   const userList = await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
   targetOptions.value.push(

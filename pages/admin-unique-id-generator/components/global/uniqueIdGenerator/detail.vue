@@ -479,7 +479,7 @@ function setTag(status: boolean, list: any) {
   }
 }
 
-onActivated(async () => {
+onMounted(async () => {
   await init()
 })
 

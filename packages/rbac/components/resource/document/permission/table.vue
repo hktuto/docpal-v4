@@ -132,8 +132,8 @@ watch(
       </div>
     </template>
   </VxeGrid>
-  <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" @success="reload" />
-  <ResourceDocumentUserSetDialog ref="userSetDialogRef" @success="reload" />
+  <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" :filterList="tableRef?.getTableData().tableData" @success="reload" />
+  <ResourceDocumentUserSetDialog ref="userSetDialogRef" :filterList="tableRef?.getTableData().tableData" @success="reload" />
 </template>
 
 <style lang="scss" scoped>

@@ -1,0 +1,173 @@
+<template>
+  <div class="search-group-bar-filter" v-if="formData && formData.resourceRules">
+    <div v-for="(rule, index) in formData.resourceRules" :key="'rule' + index">
+      <ElSelect class="attribute-row" v-model="rule.attribute" placeholder="Attribute" @change="(val) => onResourceAttributeChange(rule, val)">
+        <ElOption v-for="attr in resourceAttributes" :key="attr.value" :label="attr.label" :value="attr.value" />
+      </ElSelect>
+      <div v-if="rule.type === 'number'" class="filter-row">
+        <ElSelect v-model="rule.condition" placeholder="Condition">
+          <ElOption v-for="cond in numberConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
+        </ElSelect>
+        <template v-if="rule.condition === 'between'">
+          <ElInput v-model.number="rule.value[0]" placeholder="最小值" />
+          <span> - </span>
+          <ElInput v-model.number="rule.value[1]" placeholder="最大值" />
+        </template>
+        <template v-else>
+          <ElInput v-model.number="rule.value[0]" placeholder="值" />
+        </template>
+      </div>
+      <div v-else-if="rule.type === 'string'" class="filter-row">
+        <ElSelect v-model="rule.condition" placeholder="Condition">
+          <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
+        </ElSelect>
+        <ElInput v-model="rule.value[0]" placeholder="值" />
+      </div>
+      <div v-else-if="rule.type === 'select'" class="filter-row">
+        <ElSelect v-model="rule.condition" placeholder="Condition">
+          <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
+        </ElSelect>
+        <ElSelect v-model="rule.value[0]" placeholder="值">
+          <ElOption
+            v-for="opt in resourceAttributes.find((a) => a.value === rule.attribute)?.options || []"
+            :key="opt.value"
+            :label="opt.label"
+            :value="opt.value"
+          />
+        </ElSelect>
+      </div>
+      <el-divider  v-if="index !== formData.resourceRules.length - 1 || formData.resourceRules.length > 1" content-position="left">
+        <template v-if="index !== formData.resourceRules.length - 1">
+          {{ $t(`logic.${formData.condition}`) }}
+        </template>
+        <ElButton class="delete-button" type="text" icon="el-icon-delete" @click="removeResourceRule(index)" v-if="formData.resourceRules.length > 1" circle />
+      </el-divider>
+    </div>
+    <div class="flex-x-start">
+      <el-dropdown v-if="!isOr" type="primary" size="small" split-button @click="addResourceRule" @command="handleCommand">
+        {{ $t(`logic.${formData.condition}`) }}
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="and">{{ $t('logic.and') }}</el-dropdown-item>
+            <el-dropdown-item command="or">{{ $t('logic.or') }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <el-button v-else type="primary" size="small" @click="addResourceRule">
+        {{ $t('button.add') }}
+      </el-button>
+    </div>
+  </div>
+</template>
+<script lang="ts" setup>
+import { ArrowUp } from '@element-plus/icons-vue'
+const props = defineProps({
+  isOr: {
+    type: Boolean,
+    default: false
+  },
+  formData: {
+    type: Object,
+    required: true
+  },
+  resourceAttributes: {
+    type: Array,
+    required: true
+  }
+})
+const emits = defineEmits(['update:formData'])
+
+function handleCommand(command: string) {
+  const newFormData = { ...props.formData, condition: command }
+  emits('update:formData', newFormData)
+}
+const numberConditions = [
+  { label: '大于', value: 'gt' },
+  { label: '等于', value: 'eq' },
+  { label: '小于', value: 'lt' },
+  { label: '在...之间', value: 'between' }
+]
+const stringConditions = [
+  { label: '等于', value: 'eq' },
+  { label: '不等于', value: 'neq' }
+]
+const selectConditions = stringConditions
+// 监听 attribute 变化，自动设置 type
+function onResourceAttributeChange(rule, attrValue) {
+  const attr = props.resourceAttributes.find((a) => a.value === attrValue)
+  rule.type = attr?.type || ''
+  rule.condition = ''
+  rule.value = []
+  emits('update:formData', props.formData)
+}
+
+// 添加/删除规则
+function addResourceRule() {
+  const newRules = [...props.formData.resourceRules, { attribute: '', type: '', condition: '', value: [] }]
+  const newFormData = { ...props.formData, resourceRules: newRules }
+  emits('update:formData', newFormData)
+}
+function removeResourceRule(index) {
+  const newRules = [...props.formData.resourceRules]
+  newRules.splice(index, 1)
+  const newFormData = { ...props.formData, resourceRules: newRules }
+  emits('update:formData', newFormData)
+}
+defineExpose({
+  addResourceRule
+})
+</script>
+<style lang="scss" scoped>
+.search-group-bar-filter {
+  // border: 1px solid var(--el-border-color);
+  border-radius: 4px;
+  padding: var(--app-space-xs);
+
+  :deep(.container-wrapper) {
+    min-width: unset;
+  }
+
+  :deep(.static-content-item) {
+    min-height: unset;
+  }
+
+  :deep(.el-form .el-row) {
+    padding: unset;
+  }
+}
+
+.rotateFirst {
+  transform: rotate(180deg);
+  transition: all 0.5s;
+}
+
+.rotateLast {
+  transition: all 0.5s;
+}
+.el-divider--horizontal {
+  margin: var(--app-space-s) 0 !important;
+}
+.el-tag {
+  margin-right: var(--app-space-xs);
+  margin-bottom: var(--app-space-xs);
+}
+.filter-row {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: var(--app-space-xs);
+  align-items: center;
+  justify-content: flex-start;
+  .el-select:first-child {
+    width: 30rem;
+  }
+}
+.attribute-row {
+  margin-bottom: var(--app-space-xs);
+}
+.delete-button {
+  height: 1rem;
+}
+.flex-x-start {
+  margin-top: var(--app-space-xs);
+}
+</style>
