@@ -12,7 +12,7 @@
       <el-input v-model="form.name" autocomplete="off" v-tooltip="nameTooltip" />
     </el-form-item>
     <el-form-item label="Type" prop="type">
-      <el-select v-model="form.type" placeholder="Select type">
+      <el-select v-model="form.type" placeholder="Select type" :disabled="props.mode==='edit'">
         <el-option v-for="type in variableTypes" :key="type" :label="typeLabel(type)" :value="type" />
       </el-select>
     </el-form-item>
