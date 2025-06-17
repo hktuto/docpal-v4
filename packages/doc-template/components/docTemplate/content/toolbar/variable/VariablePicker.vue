@@ -1,13 +1,14 @@
 <template>
-  <el-dialog :model-value="visible" @close="handleClose" title="Select Variable" width="400px">
+  <el-dialog :model-value="visible" @close="handleClose" title="Select Variable" width="500px">
     <el-table
-      :data="filteredVariables"
+      :data="variables"
       @row-click="handleSelect"
       highlight-current-row
       :row-class-name="rowClassName"
       style="margin-bottom: 1rem;"
     >
       <el-table-column prop="name" label="Name" />
+      <el-table-column prop="type" label="Type"/>
       <el-table-column prop="displayValue" label="Display Value" />
     </el-table>
     <div class="actions">
@@ -19,12 +20,10 @@
 
 <script setup lang="ts">
 import { ref, computed, defineProps, defineEmits, inject } from 'vue'
-import type { VariableType } from '../../../../../types/variable'
 import { DocTemplateProveKey } from '../../../../../utils/docTemplateHelper'
 import type { DocTemplateVariable } from '../../../../../utils/docTemplateHelper'
 
 const props = defineProps<{
-  type: VariableType
   visible: boolean
 }>()
 const emit = defineEmits<{
@@ -36,11 +35,6 @@ const docTemplateCtx = inject(DocTemplateProveKey)
 const variables = docTemplateCtx?.variables || []
 
 const selected = ref<DocTemplateVariable | null>(null)
-
-const filteredVariables = computed(() => {
-  const arr = Array.isArray(variables) ? variables : variables?.value || []
-  return arr.filter((v: DocTemplateVariable) => v.type === props.type)
-})
 
 function handleSelect(row: DocTemplateVariable) {
   selected.value = row
