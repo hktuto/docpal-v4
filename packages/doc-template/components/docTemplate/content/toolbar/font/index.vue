@@ -220,7 +220,7 @@ const tableForm = reactive({
     rows: [['']],
     bordered: true,
     striped: false,
-    sort: 'Col_1',
+    sort: 'Default',
     sortBy: true
   }
 })
@@ -694,12 +694,13 @@ function handlePickerClose() {
     width: 120px;
     text-align: left;
     position: relative;
-    span{
-      width:100%;
+
+    span {
+      width: 100%;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
-      display:block;
+      display: block;
     }
 
 

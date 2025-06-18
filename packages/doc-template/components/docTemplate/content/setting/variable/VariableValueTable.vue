@@ -6,7 +6,7 @@
       <el-color-picker v-if="striped" v-model="stripedColor" color-format="hex" />
 
       <el-select v-model="sort" style="width: 120px">
-        <el-option v-for="(col, index) in columns" :key="col.key" :label="col.name" :value="col.key"
+        <el-option v-for="(col, index) in sortColumns" :key="col.key" :label="col.name" :value="col.key"
                    @change="emitValue">
           {{ col.name }}
         </el-option>
@@ -81,7 +81,7 @@ const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: any[], row
 const bordered = ref(props.modelValue?.bordered ?? true)
 const striped = ref(props.modelValue?.striped ?? false)
 const stripedColor = ref(props.modelValue?.StripedColor ?? '#C0C6C8')
-const sort = ref(props.modelValue?.sort ?? 'Col_1')
+const sort = ref(props.modelValue?.sort ?? 'Default')
 const sortBy = ref(props.modelValue?.sortBy ?? true)
 const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : [{
   name: 'Column 1',
@@ -90,6 +90,15 @@ const columns = ref(props.modelValue?.columns ? [...props.modelValue.columns] : 
   width: '',
   key: 'Col_1'
 }])
+
+const sortColumns = ref(props.modelValue?.columns ?
+  [...[{ name: 'Default', key: 'Default' }], ...props.modelValue.columns] :
+  [
+    { name: 'Default', key: 'Default' },
+    { name: 'Column 1', key: 'Col_1' }
+  ]
+)
+
 const rows = ref(props.modelValue?.rows ? props.modelValue.rows.map(r => [...r]) : [[]])
 const alignOptions = ref(['left', 'center', 'right'])
 watch(() => props.modelValue, v => {
@@ -112,6 +121,7 @@ function addColumn() {
     key: `Col_${columns.value.length + 1}`
   }
   columns.value.push(newCol)
+  sortColumns.value.push(newCol)
   rows.value.forEach(row => row.push(''))
   emitValue()
 }
@@ -119,6 +129,7 @@ function addColumn() {
 function removeColumn(idx: number) {
   if (columns.value.length === 1) return
   columns.value.splice(idx, 1)
+  sortColumns.value.splice(idx, 1)
   rows.value.forEach(row => row.splice(idx, 1))
   emitValue()
 }
@@ -149,20 +160,50 @@ function removeRow(idx: number) {
 }
 
 watch(sort, (newValue, oldValue) => {
+  if (newValue === 'Default') {
+    return
+  }
+
   if (newValue !== oldValue) {
     let index = columns.value.findIndex(column => column.key === newValue)
 
     rows.value.sort((a, b) => {
-      return !sortBy.value ? a[index] - b[index] : b[index] - a[index]
+      const aValue = a[index];
+      const bValue = b[index];
+
+      // 檢查兩個值是否都是數字
+      const isANumber = typeof aValue === 'number';
+      const isBNumber = typeof bValue === 'number';
+
+      if (isANumber && isBNumber) {
+        return !sortBy.value ? aValue - bValue : bValue - aValue;
+      } else {
+        return !sortBy.value ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      }
     })
   }
 })
 
 watch(sortBy, (newValue, oldValue) => {
+  if (sort.value === 'Default') {
+    return
+  }
+
   let index = columns.value.findIndex(column => column.key === sort.value)
 
   rows.value.sort((a, b) => {
-    return !newValue ? a[index] - b[index] : b[index] - a[index]
+    const aValue = a[index];
+    const bValue = b[index];
+
+    // 檢查兩個值是否都是數字
+    const isANumber = typeof aValue === 'number';
+    const isBNumber = typeof bValue === 'number';
+
+    if (isANumber && isBNumber) {
+      return !newValue ? aValue - bValue : bValue - aValue;
+    } else {
+      return !newValue ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
   })
 })
 
