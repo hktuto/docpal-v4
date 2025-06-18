@@ -6,8 +6,8 @@
       :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: $t('user_role') }), trigger: 'change' }]"
     >
       <el-select v-model="formData.targetId" :disabled="isEdit" :placeholder="$t('choose', { name: $t('user_role') })">
-        <el-option-group v-for="options in targetOptions" :key="options.label" :label="$t(options.label)">
-          <el-option v-for="item in options.options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option-group v-for="options in _targetOptions" :key="options.label" :label="$t(options.label)">
+          <el-option v-for="item in options.options" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled" />
         </el-option-group>
       </el-select>
     </el-form-item>
@@ -22,12 +22,24 @@ import { adminApi } from 'api'
 const props = defineProps<{
   isFolder: boolean
   isEdit: boolean
-  filterList: any[]
+  targetOptions: any[]
 }>()
-
+const _targetOptions = computed(() => {
+  if (!props.targetOptions) return []
+  return props.targetOptions.map((item: any) => {
+    return {
+      ...item,
+      options: item.options.map((option: any) => {
+        return {
+          ...option,
+          value: '&&' + item.value + '&&' + option.value
+        }
+      })
+    }
+  })
+})
 const formRef = ref()
 const checkboxFormRef = ref({})
-const targetOptions = ref([])
 type SaveData = {
   resourceId: string
   resourceType: number // (1=Document)
@@ -82,77 +94,13 @@ async function getFormData() {
     console.error(e)
   }
   function getTargetType(targetId: string) {
-    return targetId.split('&&')[1]
+    return Number(targetId.split('&&')[1])
   }
   function getTargetId(targetId: string) {
-    return targetId.split('&&')[2]
+    return targetId.split('&&')[2] || ''
   }
 }
 
-const { flatRole } = useRBAC()
-async function getTargetOptions() {
-  console.log(props.filterList)
-  async function getUserList() {
-    try {
-      return await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
-    } catch (e) {
-      console.error(e)
-      return []
-    }
-  }
-  async function getGroupList() {
-    try {
-      return await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
-    } catch (e) {
-      console.error(e)
-      return []
-    }
-  }
-  const groupList = await getGroupList()
-  const userList = await getUserList()
-  targetOptions.value.push(
-    {
-      label: 'user_role',
-      options: flatRole.value.map((item) => ({
-        label: item.name,
-        value: '&&2&&' + item.id
-      }))
-    },
-    {
-      label: 'user_groups',
-      options: groupList
-        .map((item) => ({
-          label: item.name,
-          value: '&&3&&' + item.id
-        }))
-        .filter((item: any) => !item.id)
-    },
-    {
-      label: 'user_users',
-      options: userList.map((item: any) => ({
-        label: item.username,
-        value: '&&1&&' + item.userId
-      }))
-    }
-  )
-}
-watch(props.filterList, async (newVal) => {
-  console.log(newVal)
-  if (newVal.length > 0) {
-    const targetIds = newVal.map((item: any) => '&&' + item.targetType + '&&' + item.targetId)
-    while (targetOptions.value.length === 0) {
-      console.log('=========targetOptionstargetOptions')
-      await new Promise((resolve) => setTimeout(resolve, 100))
-    }
-    console.log(targetOptions.value)
-    targetOptions.value.forEach((item: any) => {
-      item.options = item.options.filter((option: any) => !targetIds.includes(option.value))
-    })
-  }
-}, { immediate: true })
-onMounted(() => {
-  getTargetOptions()
-})
 // 暴露方法给父组件
 defineExpose({
   formRef,

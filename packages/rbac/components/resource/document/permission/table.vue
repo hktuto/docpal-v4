@@ -8,6 +8,7 @@ const props = defineProps<{
 const { document } = toRefs(props)
 let tableData: any[] = []
 const ResponsiveFilterRef = ref()
+const targetOptions = ref([])
 let isFilter = ref(false)
 let extraParams = {}
 const isInherit = ref(false)
@@ -123,6 +124,9 @@ function handleAdd() {
 async function getList() {
   if (!isFilter.value) {
     tableData = await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res.data)
+    setTimeout(() => {
+      updateTargetOptions()
+    }, 100)
   }
   isInherit.value = false
   let filterData = tableData.filter((item: any) => {
@@ -148,14 +152,19 @@ async function getList() {
       if (extraParams.orderBy === 'targetName') {
         aName = a.targetName || a.configurationRuleName || ''
         bName = b.targetName || b.configurationRuleName || ''
+        if (extraParams.isDesc === 'desc') {
+          return bName.localeCompare(aName)
+        } else {
+          return aName.localeCompare(bName)
+        }
       } else {
         aName = a[extraParams.orderBy]
         bName = b[extraParams.orderBy]
-      }
-      if (extraParams.isDesc === 'desc') {
-        return bName.localeCompare(aName)
-      } else {
-        return aName.localeCompare(bName)
+        if (extraParams.isDesc === 'desc') {
+          return bName - aName
+        } else {
+          return aName - bName
+        }
       }
     })
   }
@@ -216,8 +225,74 @@ async function handleRemoveInherent() {
   await adminApi.api.postAclResourcePermissionsCopyInheritResourceid(document.value.id)
   reload()
 }
+
+const { flatRole } = useRBAC()
+async function getTargetOptions() {
+  async function getGroupList() {
+    try {
+      return await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
+    } catch (error) {
+      console.error(error)
+      return []
+    }
+  }
+  async function getUserList() {
+    try {
+      return await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
+    } catch (error) {
+      console.error(error)
+      return []
+    }
+  }
+  const groupList = await getGroupList()
+  const userList = await getUserList()
+  targetOptions.value.push(
+    {
+      label: 'user_role',
+      value: 3, // 1=User, 2=Group, 3=Role
+      type: 'select',
+      options: flatRole.value.map((item) => ({
+        label: item.name,
+        value: item.id
+      }))
+    },
+    {
+      label: 'user_groups',
+      value: 2,
+      type: 'select',
+      options: groupList.map((item) => ({
+        label: item.name,
+        value: item.id
+      }))
+    },
+    {
+      label: 'user_users',
+      value: 1,
+      type: 'select',
+      options: userList.map((item: any) => ({
+        label: item.username,
+        value: item.userId
+      }))
+    }
+  )
+}
+async function updateTargetOptions() {
+  while (targetOptions.value.length === 0) {
+    await new Promise((resolve) => setTimeout(resolve, 100))
+  }
+  if (tableData.length > 0) {
+    const targetIds = tableData.map((item: any) => item.targetId)
+    targetOptions.value.forEach((item: any) => {
+      item.options.forEach((option: any) => {
+        if (targetIds.includes(option.value)) option.disabled = true
+        else option.disabled = false
+      })
+    })
+  }
+}
 onMounted(() => {
   getFilter()
+  getTargetOptions()
 })
 watch(
   document,
@@ -251,8 +326,8 @@ watch(
       </div>
     </template>
   </VxeGrid>
-  <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" :filterList="tableRef?.getTableData().tableData" @success="reload" />
-  <ResourceDocumentUserSetDialog ref="userSetDialogRef" :filterList="tableRef?.getTableData().tableData" @success="reload" />
+  <ResourceDocumentPermissionDetailDialog ref="detailDialogRef" :targetOptions="targetOptions" @success="reload" />
+  <ResourceDocumentUserSetDialog ref="userSetDialogRef" :targetOptions="targetOptions" @success="reload" />
 </template>
 
 <style lang="scss" scoped>

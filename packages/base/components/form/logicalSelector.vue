@@ -33,6 +33,7 @@
             :key="opt.value"
             :label="opt.label"
             :value="opt.value"
+            :disabled="opt.disabled"
           />
         </ElSelect>
       </div>
