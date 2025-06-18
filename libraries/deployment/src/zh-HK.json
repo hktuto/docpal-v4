@@ -1008,6 +1008,9 @@
       "noVariables": "沒有可設定的變數。"
     },
     "font": {
+      "alignCenter": "居中對齊",
+      "alignLeft": "左對齊",
+      "alignRight": "右對齊",
       "bold": "粗體",
       "color": "字體顔色",
       "deleteStyle": "刪除字體樣式",
@@ -1023,18 +1026,19 @@
       "superscript": "上標",
       "underline": "下划線"
     },
+    "import": {
+      "import": "匯入",
+      "msg": "請注意，導入將清除原始數據"
+    },
     "paragraph": {
       "bulletList": "清單",
-      "center": "居中對齊",
       "indentation": "縮進",
       "indentationDecrease": "減少縮進",
       "indentationIncrease": "增加縮進",
       "justify": "兩端對齊",
-      "left": "左對齊",
       "liftListItem": "提升列表項目",
       "orderedList": "有序清單",
       "paragraph": "段落",
-      "right": "右對齊",
       "sinkListItem": "下移清單項目",
       "splitListItem": "拆分列表項目",
       "textAlign": "文本對齊"
@@ -1067,10 +1071,22 @@
     "utils": {
       "HorizontalLine": "水平線",
       "TaskList": "工作清單",
-      "image": "圖片",
-      "link": "超鏈結",
+      "image": {
+        "image": "圖片",
+        "link": "連結(Base64)",
+        "set": "設定影像"
+      },
+      "increaseLeft": "左縮進",
+      "increaseRight": "右縮進",
+      "link": {
+        "link": "連結",
+        "set": "設定連結"
+      },
       "toggleTaskList": "切換工作清單",
-      "utils": "工具"
+      "utils": "工具",
+      "variableManager": {
+        "add": "建立變數"
+      }
     },
     "variable": {
       "actions": "操作",
@@ -1088,7 +1104,6 @@
       "columnHeader": "欄標題",
       "columnKey": "欄鍵",
       "columnName": "欄位名稱",
-      "confirmDelete": "您確定要刪除此變數嗎？",
       "createLink": "建立連結",
       "delete": "刪除",
       "deleteConfirm": "您確定要刪除此變數嗎？",
@@ -1120,7 +1135,6 @@
       "listStyleNone": "無樣式",
       "listStyleNumbered": "編號",
       "manager": "變數管理器",
-      "managerTitle": "變數管理器",
       "name": "名稱",
       "save": "儲存",
       "selectListVariable": "選擇清單變數",
