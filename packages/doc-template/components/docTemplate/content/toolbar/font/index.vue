@@ -182,7 +182,9 @@ function handleImage() {
   }
 
   if (url) {
+    const { from, to } = editor.value.state.selection
     editor.value.commands.setImage({ src: url })
+    editor.value.commands.focus(to + 1)
   }
 
   uploadRef.value.clearFiles()
@@ -226,6 +228,7 @@ const tableForm = reactive({
 })
 
 function handleCreateTable() {
+  const { to } = editor.value.state.selection
   editor.value.commands.insertContent({
     type: 'variableTable',
     attrs: {
@@ -233,6 +236,7 @@ function handleCreateTable() {
       value: tableForm.value
     }
   })
+  editor.value.commands.focus(to + 1)
   state.createTablePopoverVisible = false
 }
 
@@ -283,10 +287,12 @@ function handlePickerSelect(variable: DocTemplateVariable) {
       state.insertVariableVisible = false
       return
   }
+  const { to } = editor.value.state.selection
   editor.value.commands.insertContent({
     type: nodeType,
     attrs: { ...variable }
   })
+  editor.value.commands.focus(to + 1)
   state.insertVariableVisible = false
 }
 
@@ -457,7 +463,7 @@ function handlePickerClose() {
         </el-button>
 
         <!-- set link -->
-        <el-button v-tooltip="t('docTemplate.utils.link')" style="width:34px" @click="openSetLinkDialog">
+        <el-button v-tooltip="t('docTemplate.utils.link.link')" style="width:34px" @click="openSetLinkDialog">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
             <path fill="currentColor" fillRule="evenodd"
                   d="m7.671 2.743l-.964.964a1 1 0 0 1-1.414-1.414l.964-.965a4.536 4.536 0 0 1 6.415 6.415l-.965.964a1 1 0 1 1-1.414-1.414l.964-.965a2.536 2.536 0 0 0-3.585-3.585Zm-3.964 2.55a1 1 0 0 1 0 1.414l-.964.965a2.536 2.536 0 0 0 3.585 3.585l.965-.964a1 1 0 0 1 1.414 1.414l-.964.964a4.536 4.536 0 0 1-6.415-6.414l.965-.964a1 1 0 0 1 1.414 0m5.5.914a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 1.414 1.414z"
@@ -466,7 +472,7 @@ function handlePickerClose() {
         </el-button>
 
         <!-- set image -->
-        <el-button v-tooltip="t('docTemplate.utils.image')" @click="openSetImageDialog"
+        <el-button v-tooltip="t('docTemplate.utils.image.image')" @click="openSetImageDialog"
                    style="width:34px; margin-left: -6px">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
             <path fill="currentColor" fillRule="evenodd"
@@ -476,7 +482,7 @@ function handlePickerClose() {
         </el-button>
 
         <!-- table -->
-        <el-button v-tooltip="t('docTemplate.utils.table')" @click="state.createTablePopoverVisible = true"
+        <el-button v-tooltip="t('docTemplate.table.createTable')" @click="state.createTablePopoverVisible = true"
                    style="width:34px; margin-left: -6px">
           <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 14 14">
             <path fill="currentColor" fillRule="evenodd"
@@ -510,14 +516,19 @@ function handlePickerClose() {
 
           <!-- Variable Manager -->
           <el-dropdown class="ordinary-button">
-            <el-button v-tooltip="t('docTemplate.utils.variableManager')">
-              {{ t('Variable Manager') }}
+            <el-button>
+              {{ t('docTemplate.variable.manager') }}
             </el-button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click="handleOpenManagerCreate">{{ t('Add Variable') }}</el-dropdown-item>
-                <el-dropdown-item @click="state.mangerVisible = true">{{ t('Edit Variable') }}</el-dropdown-item>
-                <el-dropdown-item @click="state.insertVariableVisible=true">{{ t('Insert Variable') }}
+                <el-dropdown-item @click="handleOpenManagerCreate">
+                  {{ t('docTemplate.utils.variableManager.add') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click="state.mangerVisible = true">
+                  {{ t('docTemplate.variable.editVariable') }}
+                </el-dropdown-item>
+                <el-dropdown-item @click="state.insertVariableVisible=true">
+                  {{ t('docTemplate.variable.insertVariable') }}
                 </el-dropdown-item>
               </el-dropdown-menu>
             </template>
@@ -532,37 +543,37 @@ function handlePickerClose() {
   </div>
 
   <!-- Set link dialog -->
-  <el-dialog v-model="state.fontLinkDialogVisible" title="Set Link" width="500">
+  <el-dialog v-model="state.fontLinkDialogVisible" :title="t('docTemplate.utils.link.set')" width="500">
     <el-form>
-      <el-form-item label="Link">
+      <el-form-item :label="t('docTemplate.utils.link.link')">
         <el-input v-model="state.link" />
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleResetLink">Reset</el-button>
+        <el-button @click="handleResetLink">{{ $t('common_reset') }}</el-button>
         <el-button type="primary" @click="handleSetLink">
-          Confirm
+          {{ $t('dpButtom_confirm') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 
   <!-- Set image dialog -->
-  <el-dialog v-model="state.imageDialogVisible" title="Set Image" width="500">
+  <el-dialog v-model="state.imageDialogVisible" :title="t('docTemplate.utils.image.set')" width="500">
     <el-form>
       <el-switch
         v-model="state.isImageUrl"
         size="large"
-        active-text="Image"
-        inactive-text="Link(Base64)"
+        :active-text="t('docTemplate.utils.image.image')"
+        :inactive-text="t('docTemplate.utils.image.link')"
       />
 
-      <el-form-item v-if="!state.isImageUrl" label="Image link(Base64)">
+      <el-form-item v-if="!state.isImageUrl" :label="t('docTemplate.utils.image.link')">
         <el-input v-model="state.imageLink" />
       </el-form-item>
 
-      <el-form-item v-else label="Image" lable="Update Image">
+      <el-form-item v-else :label="t('docTemplate.utils.image.image')">
         <el-upload
           ref="uploadRef"
           action="#"
@@ -586,14 +597,14 @@ function handlePickerClose() {
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleImage">
-          Confirm
+          {{ $t('dpButtom_confirm') }}
         </el-button>
       </div>
     </template>
   </el-dialog>
 
   <!-- Create table dialog -->
-  <el-dialog v-model="state.createTablePopoverVisible" :title="t('Create Table')">
+  <el-dialog v-model="state.createTablePopoverVisible" :title="t(t('docTemplate.table.createTable'))">
     <VariableValueTable v-model="tableForm.value">
       {{ tableForm.value }}
     </VariableValueTable>
@@ -608,7 +619,8 @@ function handlePickerClose() {
   </el-dialog>
 
   <!-- add visible -->
-  <el-dialog v-model="state.addVisible" :title="formMode === 'create' ? 'Create Variable' : 'Edit Variable'" width="80%"
+  <el-dialog v-model="state.addVisible"
+             :title="formMode === 'create' ? t('docTemplate.utils.variableManager.add') : t('docTemplate.variable.editVariable')" width="80%"
              destroy-on-close>
     <VariableForm
       v-if="state.addVisible"
@@ -702,8 +714,6 @@ function handlePickerClose() {
       overflow: hidden;
       display: block;
     }
-
-
   }
 }
 </style>

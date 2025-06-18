@@ -66,6 +66,7 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   }
   editor.value = new Editor({
     content: json || '',
+    autofocus: true,
     extensions: [
       ...extensions
     ],
@@ -302,7 +303,8 @@ provide(DocTemplateProveKey, {
       }
     }
   }
-  .page{
+
+  .page {
     --border-color: #888;
 
     &:before {
@@ -316,6 +318,7 @@ provide(DocTemplateProveKey, {
       border-bottom: 1px solid var(--border-color);
       border-left: 1px solid var(--border-color);
     }
+
     &:after {
       content: "";
       width: 20px;
@@ -328,9 +331,11 @@ provide(DocTemplateProveKey, {
       border-left: 1px solid var(--border-color);
     }
   }
-  .body{
+
+  .body {
     position: relative;
-    overflow: visible!important;
+    overflow: visible !important;
+
     &:before {
       content: "";
       width: 20px;
@@ -342,6 +347,7 @@ provide(DocTemplateProveKey, {
       border-bottom: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
     }
+
     &:after {
       content: "";
       width: 20px;
