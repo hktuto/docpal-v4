@@ -90,7 +90,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         visible: false,
         disabled: false
       }
-    if (code === 'common_delete') {
+    if (code === 'common_delete' || code === 'edit') {
       return {
         visible: !row.isInherit,
         disabled: false
