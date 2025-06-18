@@ -2,7 +2,7 @@
   <el-dialog v-model="dialogVisible" :title="$t('rbac.permission.detail')" width="80%" append-to-body :close-on-click-modal="false" @close="handleClose">
     <div class="permission-detail-content">
       <!-- 权限详情内容 -->
-      <ResourceDocumentPermissionDetailForm ref="formRef" :filterList="filterList" :isEdit="isEditMode" />
+      <ResourceDocumentPermissionDetailForm ref="formRef" :targetOptions="targetOptions" :isEdit="isEditMode" />
     </div>
     <template #footer>
       <div class="dialog-footer">
@@ -17,7 +17,7 @@
 import { adminApi } from 'api'
 import { ref } from 'vue'
 const props = defineProps<{
-  filterList: any[]
+  targetOptions: any[]
 }>()
 const emits = defineEmits(['success'])
 const dialogVisible = ref(false)

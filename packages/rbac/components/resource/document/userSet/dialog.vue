@@ -3,7 +3,7 @@
     v-loading="loading"
     v-model="dialogVisible"
     class="scroll-dialog"
-    :title="$t('rbac.permission.addUserSet')"
+    :title="permissionId ? $t('rbac.permission.editUserSet') : $t('rbac.permission.addUserSet')"
     width="80%"
     append-to-body
     destroy-on-close
@@ -23,7 +23,7 @@
             <ElInput v-model="formData.configurationRuleName" />
           </ElFormItem>
         </ElForm>
-        <ResourceDocumentUserSetForm :filterList="filterList" ref="userSetFormRef" />
+        <ResourceDocumentUserSetForm :targetOptions="targetOptions" ref="userSetFormRef" />
         <ResourceDocumentUserSetDocForm ref="userSetDocFormRef" />
       </div>
       <div class="right">
@@ -43,7 +43,7 @@
 import { ref } from 'vue'
 import { adminApi } from 'api'
 const props = defineProps<{
-  filterList: any[]
+  targetOptions: any[]
 }>()
 const dialogVisible = ref(false)
 const loading = ref(false)
