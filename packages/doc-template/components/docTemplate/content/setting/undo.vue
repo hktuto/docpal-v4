@@ -28,14 +28,14 @@ const { editor } = editorProvider
 <style lang="scss" scoped>
 button {
   border: none;
-  background: var(--app-grey-950);
+  background: #f8f9fa;
   padding: var(--app-space-xs);
   border-radius: var(--app-border-radius-s);
   &:hover {
-    background: var(--app-success-3);
+    background: #17c2da;
   }
   &.is-active {
-    background: var(--app-accent-color);
+    background: #fc8f00;
     color : #fff;
   }
 }
