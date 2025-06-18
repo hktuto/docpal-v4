@@ -24,7 +24,14 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       title: 'rbac.permission.targetName',
       type: 'html',
       formatter: ({ cellValue, row }: any) => {
-        const icon = row.targetType === 1 ? '/icons/menu/user.svg' : row.targetType === 2 ? '/icons/menu/role.svg' : '/icons/menu/group.svg'
+        const icon =
+          row.targetType === 1
+            ? '/icons/menu/user2.svg'
+            : row.targetType === 2
+              ? '/icons/menu/user-role.svg'
+              : row.targetType === 3
+                ? '/icons/menu/group.svg'
+                : '/icons/menu/system.svg'
         return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue || row.configurationRuleName}</span> `
       }
     },
