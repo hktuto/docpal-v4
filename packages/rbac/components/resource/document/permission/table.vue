@@ -1,17 +1,22 @@
 <script lang="ts" setup>
+import { ArrowDown } from '@element-plus/icons-vue'
 import { adminApi } from 'api'
 const props = defineProps<{
   document: any
 }>()
 
 const { document } = toRefs(props)
-
+let tableData: any[] = []
+const ResponsiveFilterRef = ref()
+let isFilter = ref(false)
+let extraParams = {}
+const isInherit = ref(false)
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'rbac-resource-document-permission-table',
   virtualScroll: true,
   api: async (pageParams: any) => {
     // const data = await getChildApi(id.value || 'root')
-    return await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res.data)
+    return await getList()
   },
   columns: [
     {
@@ -29,15 +34,15 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       formatter: ({ cellValue }) => {
         switch (cellValue) {
           case 1:
-            return 'Read'
+            return $t('permission.read')
           case 2:
-            return 'ReadWrite'
+            return $t('permission.write')
           case 3:
-            return 'Manage'
+            return $t('permission.manage')
           case 5:
-            return 'User Set'
+            return $t('permission.userSet')
           default:
-            return 'Custom'
+            return $t('permission.custom')
         }
       }
     },
@@ -48,11 +53,11 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
       width: 80,
       align: 'center',
       formatter: ({ cellValue, row }: any) => {
-        let icon = row.isInherit ? '/icons/check.svg' : '/icons/close.svg'
+        let icon = row.isInherit ? '/icons/check2.svg' : '/icons/close.svg'
         return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> </span> `
       }
     },
-    { field: 'inheritFrom', title: 'rbac.permission.inheritFrom' }
+    { field: 'inheritFromPath', title: 'rbac.permission.inheritFrom' }
   ],
   bodyActions: [
     [
@@ -73,7 +78,6 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     ]
   ],
   permissionMethod: ({ options, code, column, row, rowIndex }: any) => {
-    console.log(row, code)
     if (!row)
       return {
         visible: false,
@@ -109,11 +113,105 @@ function handleDblClick(row: any) {
 function handleAdd() {
   detailDialogRef.value?.open(null, document.value.id)
 }
+async function getList() {
+  if (!isFilter.value) {
+    tableData = await adminApi.api.getAclResourcePermissionsResourceResourceid(document.value.id).then((res) => res.data)
+  }
+  isInherit.value = false
+  let filterData = tableData.filter((item: any) => {
+    if (item.isInherit) {
+      isInherit.value = true
+    }
+    return true
+  })
+  if (extraParams.q) {
+    filterData = filterData.filter((item: any) => {
+      const name = (item.targetName || item.configurationRuleName || '').toLowerCase()
+      return name.includes(extraParams.q.toLowerCase())
+    })
+  }
+  if (extraParams.permissionLevel) {
+    filterData = filterData.filter((item: any) => extraParams.permissionLevel.includes(item.permissionLevel))
+  }
+
+  if (extraParams.orderBy) {
+    filterData = filterData.sort((a: any, b: any) => {
+      let aName = ''
+      let bName = ''
+      if (extraParams.orderBy === 'targetName') {
+        aName = a.targetName || a.configurationRuleName || ''
+        bName = b.targetName || b.configurationRuleName || ''
+      } else {
+        aName = a[extraParams.orderBy]
+        bName = b[extraParams.orderBy]
+      }
+      if (extraParams.isDesc === 'desc') {
+        return bName.localeCompare(aName)
+      } else {
+        return aName.localeCompare(bName)
+      }
+    })
+  }
+  isFilter.value = false
+  return filterData
+}
 async function handleRemove(row) {
-  console.log(row)
   await adminApi.api.deleteAclResourcePermissionsId(row.id)
   reload()
 }
+function handleFilterFormChange(formData: any) {
+  isFilter.value = true
+  extraParams = formData
+  reload()
+}
+const filterSetting = [
+  {
+    key: 'permissionLevel',
+    label: 'rbac.permission.permissionLevel',
+    type: 'string',
+    isMultiple: true,
+    options: [
+      { label: 'permission.read', value: 1 },
+      { label: 'permission.write', value: 2 },
+      { label: 'permission.manage', value: 3 },
+      { label: 'permission.custom', value: 4 },
+      { label: 'permission.userSet', value: 5 }
+    ]
+  },
+  {
+    key: 'orderBy',
+    label: 'tableHeader.sortBy',
+    type: 'string',
+    isMultiple: false,
+    value: ['targetName'],
+    options: [
+      { label: 'rbac.permission.targetName', value: 'targetName' },
+      { label: 'rbac.permission.permissionLevel', value: 'permissionLevel' },
+      { label: 'rbac.permission.isInherit', value: 'isInherit' }
+    ]
+  },
+  {
+    key: 'isDesc',
+    label: 'tableHeader.sortOrder',
+    type: 'string',
+    isMultiple: false,
+    value: ['asc'],
+    options: [
+      { label: 'tableHeader.asc', value: 'asc' },
+      { label: 'tableHeader.desc', value: 'desc' }
+    ]
+  }
+]
+function getFilter() {
+  ResponsiveFilterRef.value.init(filterSetting)
+}
+async function handleRemoveInherent() {
+  await adminApi.api.postAclResourcePermissionsCopyInheritResourceid(document.value.id)
+  reload()
+}
+onMounted(() => {
+  getFilter()
+})
 watch(
   document,
   async () => {
@@ -128,9 +226,21 @@ watch(
 <template>
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
+      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" />
       <div class="actions">
-        <el-button type="primary" @click="handleAdd">Add Permission</el-button>
-        <el-button type="primary" @click="handleAddSet">Add User Set</el-button>
+        <el-button type="primary" @click="handleAdd">{{ $t('rbac.permission.addPermission') }}</el-button>
+        <el-button type="primary" @click="handleAddSet">{{ $t('rbac.permission.addUserSet') }}</el-button>
+        <el-dropdown v-if="isInherit">
+          <el-button type="primary">
+            {{ $t('button.more') }}
+            <el-icon class="el-icon--right"><arrow-down /></el-icon>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click="handleRemoveInherent">{{ $t('accessControl_removeInherent') }}</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </template>
   </VxeGrid>
@@ -154,5 +264,12 @@ watch(
 :deep(.browseFileIcon) {
   width: calc(var(--app-space-m) * 1.5);
   height: calc(var(--app-space-m) * 1.5);
+}
+:deep(.vxe-buttons--wrapper) {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  .el-input {
+    width: 200px;
+  }
 }
 </style>

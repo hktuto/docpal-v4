@@ -2,6 +2,7 @@
   <el-dialog
     v-loading="loading"
     v-model="dialogVisible"
+    class="scroll-dialog"
     :title="$t('rbac.permission.addUserSet')"
     width="80%"
     append-to-body
@@ -15,9 +16,9 @@
       <div class="left">
         <ElForm ref="formRef" :model="formData" label-position="top">
           <ElFormItem
-            label="User Set Name"
+            :label="$t('rbac.permission.userSetName')"
             prop="configurationRuleName"
-            :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: $t('user_role') }), trigger: 'change' }]"
+            :rules="[{ required: true, message: $t('render.hint.fieldRequired', { name: $t('rbac.permission.userSetName') }), trigger: 'change' }]"
           >
             <ElInput v-model="formData.configurationRuleName" />
           </ElFormItem>
@@ -31,7 +32,7 @@
     </div>
     <template #footer>
       <div class="dialog-footer">
-        <el-button  @click="handleClose">{{ $t('button.close') }}</el-button>
+        <el-button @click="handleClose">{{ $t('button.close') }}</el-button>
         <el-button type="primary" :loading="confirmLoading" @click="handleConfirm">{{ $t('confirmText') }}</el-button>
       </div>
     </template>
@@ -76,6 +77,10 @@ const open = async (row: any, documentId: string) => {
       setTimeout(() => {
         userSetFormRef.value.setFormData()
         userSetDocFormRef.value.setFormData()
+        checkboxFormRef.value.setData({
+          permissionLevel: 5,
+          permissionIds: [1, 2, 3, 4, 5]
+        })
       })
     }
   } catch (e) {
