@@ -2197,12 +2197,14 @@
     "Read": "Read",
     "ReadWrite": "Write",
     "create": "Create",
+    "custom": "Custom",
     "edit": "Edit",
     "enable": "Enable",
     "everything": "Everything",
     "manage": "Manage",
     "print": "Print",
     "read": "Read ",
+    "userSet": "User Set",
     "write": "Write"
   },
   "placeHolder": {
@@ -2218,6 +2220,7 @@
   },
   "rbac": {
     "permission": {
+      "addPermission": "Add Permission",
       "addUserSet": "Add User Set",
       "assignPermission": "Assign permissions",
       "createFile": "Create File",
@@ -2236,6 +2239,7 @@
       "read": "Read",
       "resource_rules": "Resource Rules",
       "targetName": "User/ Role/ Group/ User Set",
+      "userSetName": "User Set Name",
       "viewFolder": "View Folder/File",
       "viewMetadata": "View Metadata"
     },

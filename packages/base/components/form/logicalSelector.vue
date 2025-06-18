@@ -1,33 +1,33 @@
 <template>
   <div class="search-group-bar-filter" v-if="formData && formData.resourceRules">
     <div v-for="(rule, index) in formData.resourceRules" :key="'rule' + index">
-      <ElSelect class="attribute-row" v-model="rule.attribute" placeholder="Attribute" @change="(val) => onResourceAttributeChange(rule, val)">
+      <ElSelect class="attribute-row" v-model="rule.attribute" :placeholder="$t('render.hint.selectPlaceholder')" @change="(val) => onResourceAttributeChange(rule, val)">
         <ElOption v-for="attr in resourceAttributes" :key="attr.value" :label="attr.label" :value="attr.value" />
       </ElSelect>
       <div v-if="rule.type === 'number'" class="filter-row">
-        <ElSelect v-model="rule.condition" placeholder="Condition">
+        <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in numberConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
         <template v-if="rule.condition === 'between'">
-          <ElInput v-model.number="rule.value[0]" placeholder="最小值" />
+          <ElInput v-model.number="rule.value[0]" :placeholder="$t('designer.setting.minValue')" />
           <span> - </span>
-          <ElInput v-model.number="rule.value[1]" placeholder="最大值" />
+          <ElInput v-model.number="rule.value[1]" :placeholder="$t('designer.setting.maxValue')" />
         </template>
         <template v-else>
-          <ElInput v-model.number="rule.value[0]" placeholder="值" />
+          <ElInput v-model.number="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
         </template>
       </div>
       <div v-else-if="rule.type === 'string'" class="filter-row">
-        <ElSelect v-model="rule.condition" placeholder="Condition">
+        <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <ElInput v-model="rule.value[0]" placeholder="值" />
+        <ElInput v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" />
       </div>
       <div v-else-if="rule.type === 'select'" class="filter-row">
-        <ElSelect v-model="rule.condition" placeholder="Condition">
+        <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <ElSelect v-model="rule.value[0]" placeholder="值">
+        <ElSelect v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')">
           <ElOption
             v-for="opt in resourceAttributes.find((a) => a.value === rule.attribute)?.options || []"
             :key="opt.value"

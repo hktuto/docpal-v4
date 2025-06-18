@@ -151,7 +151,7 @@ function setData(data: FormData) {
       formData.value.allReadWrite = true
       formData.value.allManage = true
       handleChange(true, 'manage')
-    }
+    } 
   })
 }
 defineExpose({

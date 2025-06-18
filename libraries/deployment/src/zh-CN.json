@@ -2195,12 +2195,14 @@
     "Read": "读取",
     "ReadWrite": "读写",
     "create": "创建",
+    "custom": "自定义",
     "edit": "编辑",
     "enable": "激活",
     "everything": "所有",
     "manage": "管理",
     "print": "打印",
     "read": "读取",
+    "userSet": "用户集",
     "write": "读写"
   },
   "placeHolder": {
@@ -2216,6 +2218,7 @@
   },
   "rbac": {
     "permission": {
+      "addPermission": "添加权限",
       "addUserSet": "添加用户集",
       "assignPermission": "分配权限",
       "createFile": "创建文件",
@@ -2234,6 +2237,7 @@
       "read": "读取",
       "resource_rules": "资源规则",
       "targetName": "用户/角色/组/用户集",
+      "userSetName": "用户集名称",
       "viewFolder": "查看文件夹/文件",
       "viewMetadata": "查看元数据"
     },
