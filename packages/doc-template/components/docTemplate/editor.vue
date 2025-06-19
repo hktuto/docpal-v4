@@ -199,8 +199,14 @@ provide(DocTemplateProveKey, {
        :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}px; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}px; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}px; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}px;`">
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
-      <div class="linear">
+      <div class="topLinear">
         <EditorContent :editor="editor" />
+        <div class="leftTop"></div>
+        <div class="rightTop"></div>
+        <div class="leftBottom"></div>
+        <div class="rightBottom"></div>
+        <!-- <div class="bottomLinear" style="margin: 5mm; overflow: hidden; position: relative;"> -->
+        <!-- </div> -->
       </div>
       <DocTemplateContentSettingBubbleMenu />
     </div>
@@ -217,37 +223,77 @@ provide(DocTemplateProveKey, {
 }
 
 .editorBody {
-  flex: 1 0 auto;
+
   padding: var(--app-space-m);
   overflow: auto;
+
+  width: 100%;
 
   :deep(.tiptap) {
     outline: none;
   }
 }
 
+.topLinear {
+  margin: 0 auto;
+  position: relative;
+  width: fit-content;
+  --border-color: #888;
+}
+
+.leftTop {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: calc(var(--margin-left) - 3px);
+  top: calc(var(--margin-top) - 3px);
+  display: block;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.rightTop {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: calc(var(--margin-right) - 3px);
+  top: calc(var(--margin-top) - 3px);
+  display: block;
+  border-left: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.leftBottom {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: calc(var(--margin-left) - 3px);
+  bottom: calc(var(--margin-top) - 3px);
+  display: block;
+  border-right: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+}
+
+.rightBottom {
+  content: "";
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: calc(var(--margin-right) - 3px);
+  bottom: calc(var(--margin-bottom) - 3px);
+  display: block;
+  border-left: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-color);
+}
+
 </style>
 
 <style>
-.body {
-  --border-color: #888;
-  position: relative;
-  overflow: visible !important;
-  background-image: linear-gradient(to right, var(--border-color) 20px, transparent 0),
-  linear-gradient(to bottom, var(--border-color) 20px, transparent 0),
-  linear-gradient(to left, var(--border-color) 20px, transparent 0),
-  linear-gradient(to bottom, var(--border-color) 20px, transparent 0),
-  linear-gradient(to right, var(--border-color) 20px, transparent 0),
-  linear-gradient(to top, var(--border-color) 20px, transparent 0),
-  linear-gradient(to left, var(--border-color) 20px, transparent 0),
-  linear-gradient(to top, var(--border-color) 20px, transparent 0);
-  background-position: left top, left top,
-  right top, right top,
-  left bottom, left bottom,
-  right bottom, right bottom;
-  background-size: 20px 2px, 2px 20px, 20px 2px, 2px 20px,
-  20px 2px, 2px 20px, 20px 2px, 2px 20px;
-  background-repeat: no-repeat;
+.page {
+  margin: unset !important;
 }
 
 .tiptap {
