@@ -21,7 +21,7 @@
       <template #default>
         <el-checkbox-group
           v-if="selectData.options && selectData.options.length > 0"
-          :max="selectData.isMultiple ? 100 : 1"
+          :max="selectData.isMultiple ? 100 : 2"
           v-model="selectData.value"
           @change="handleChange(selectData)"
         >
@@ -61,6 +61,9 @@ const onClickOutside = () => {
   //   unref(popoverRef).popperRef?.delayHide?.()
 }
 function handleChange(data: typeof ResSelectData) {
+  if (!data.isMultiple) {
+    data.value = [data.value.pop()]
+  }
   emits('change', {
     fieldName: data.key,
     value: deepCopy(data.value)
