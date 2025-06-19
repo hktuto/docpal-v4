@@ -196,7 +196,7 @@ provide(DocTemplateProveKey, {
 
 <template>
   
-  <div class="editorContainer" :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}px; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}px; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}px; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}px;`">
+  <div class="editorContainer" :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}mm; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}mm; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}mm; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}mm;`">
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
       <EditorContent :editor="editor" />
@@ -312,8 +312,8 @@ provide(DocTemplateProveKey, {
       width: 20px;
       height: 20px;
       position: absolute;
-      top: var(--margin-top);
-      right: var(--margin-top);
+      top: calc(var(--margin-top) - 20px);
+      right: calc(var(--margin-right) - 20px);
       display: block;
       border-bottom: 1px solid var(--border-color);
       border-left: 1px solid var(--border-color);
@@ -324,8 +324,8 @@ provide(DocTemplateProveKey, {
       width: 20px;
       height: 20px;
       position: absolute;
-      bottom: var(--margin-bottom);
-      right: var(--margin-bottom);
+      bottom: calc(var(--margin-bottom) - 20px);
+      right: calc(var(--margin-right) - 20px);
       display: block;
       border-top: 1px solid var(--border-color);
       border-left: 1px solid var(--border-color);
