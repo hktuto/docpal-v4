@@ -229,7 +229,7 @@ provide(DocTemplateProveKey, {
 </style>
 
 <style>
-.linear {
+.body {
   --border-color: #888;
   position: relative;
   overflow: visible !important;
