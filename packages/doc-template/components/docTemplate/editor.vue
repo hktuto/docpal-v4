@@ -57,8 +57,8 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   if (editor.value) {
     editor.value.destroy()
   }
-  const normlizeOption = normalizeTipTapOptions(initOptions)
-  const extensions = clientEditorExtensions(normlizeOption)
+  const normalizeOption = normalizeTipTapOptions(initOptions)
+  const extensions = clientEditorExtensions(normalizeOption)
   if (variables.value.length > 0 && json && json.content) {
     json.content = replaceVariables(json.content, [...variables.value])
   }
@@ -102,14 +102,14 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
       lastSelection.value = newSelectionData
     },
     onCreate({ editor }) {
-      // update page setting base on normlizeOption
-      if (normlizeOption.mode === 'PAGE' && normlizeOption?.pageSetting?.defaultMarginConfig) {
-        editor.commands.setDocumentPageMargins(normlizeOption?.pageSetting?.defaultMarginConfig)
+      // update page setting base on normalizeOption
+      if (normalizeOption.mode === 'PAGE' && normalizeOption?.pageSetting?.defaultMarginConfig) {
+        editor.commands.setDocumentPageMargins(normalizeOption?.pageSetting?.defaultMarginConfig)
       }
     }
   })
-  options.value = { ...normlizeOption }
-  headerRef.value.init(normlizeOption)
+  options.value = { ...normalizeOption }
+  headerRef.value.init(normalizeOption)
 }
 
 function addVariable(variable: DocTemplateVariable) {
@@ -195,11 +195,13 @@ provide(DocTemplateProveKey, {
 </script>
 
 <template>
-  
-  <div class="editorContainer" :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}mm; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}mm; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}mm; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}mm;`">
+  <div class="editorContainer"
+       :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}px; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}px; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}px; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}px;`">
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
-      <EditorContent :editor="editor" />
+      <div class="linear">
+        <EditorContent :editor="editor" />
+      </div>
       <DocTemplateContentSettingBubbleMenu />
     </div>
     <DocTemplateFooter />
@@ -227,6 +229,27 @@ provide(DocTemplateProveKey, {
 </style>
 
 <style>
+.linear {
+  --border-color: #888;
+  position: relative;
+  overflow: visible !important;
+  background-image: linear-gradient(to right, var(--border-color) 20px, transparent 0),
+  linear-gradient(to bottom, var(--border-color) 20px, transparent 0),
+  linear-gradient(to left, var(--border-color) 20px, transparent 0),
+  linear-gradient(to bottom, var(--border-color) 20px, transparent 0),
+  linear-gradient(to right, var(--border-color) 20px, transparent 0),
+  linear-gradient(to top, var(--border-color) 20px, transparent 0),
+  linear-gradient(to left, var(--border-color) 20px, transparent 0),
+  linear-gradient(to top, var(--border-color) 20px, transparent 0);
+  background-position: left top, left top,
+  right top, right top,
+  left bottom, left bottom,
+  right bottom, right bottom;
+  background-size: 20px 2px, 2px 20px, 20px 2px, 2px 20px,
+  20px 2px, 2px 20px, 20px 2px, 2px 20px;
+  background-repeat: no-repeat;
+}
+
 .tiptap {
   :first-child {
     margin-top: 0;
@@ -305,61 +328,6 @@ provide(DocTemplateProveKey, {
     }
   }
 
-  .page {
-    --border-color: #888;
-    &:before {
-      content: "";
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      top: calc(var(--margin-top) - 20px);
-      right: calc(var(--margin-right) - 20px);
-      display: block;
-      border-bottom: 1px solid var(--border-color);
-      border-left: 1px solid var(--border-color);
-    }
-
-    &:after {
-      content: "";
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      bottom: calc(var(--margin-bottom) - 20px);
-      right: calc(var(--margin-right) - 20px);
-      display: block;
-      border-top: 1px solid var(--border-color);
-      border-left: 1px solid var(--border-color);
-    }
-  }
-
-  .body {
-    position: relative;
-    overflow: visible !important;
-
-    &:before {
-      content: "";
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      top: -20px;
-      left: -20px;
-      display: block;
-      border-bottom: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-    }
-
-    &:after {
-      content: "";
-      width: 20px;
-      height: 20px;
-      position: absolute;
-      bottom: -20px;
-      left: -20px;
-      display: block;
-      border-top: 1px solid var(--border-color);
-      border-right: 1px solid var(--border-color);
-    }
-  }
 }
 
 .collaboration-cursor__caret {
@@ -388,3 +356,4 @@ provide(DocTemplateProveKey, {
   white-space: nowrap;
 }
 </style>
+
