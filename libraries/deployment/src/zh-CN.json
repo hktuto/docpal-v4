@@ -1008,6 +1008,9 @@
       "noVariables": "没有可配置的变量。"
     },
     "font": {
+      "alignCenter": "居中对齐",
+      "alignLeft": "左对齐",
+      "alignRight": "右对齐",
       "bold": "加粗",
       "color": "字体颜色",
       "deleteStyle": "删除字体样式",
@@ -1023,18 +1026,19 @@
       "superscript": "上标",
       "underline": "下划线"
     },
+    "import": {
+      "import": "导入",
+      "msg": "请注意，导入将清除原始数据"
+    },
     "paragraph": {
       "bulletList": "列表",
-      "center": "居中对齐",
       "indentation": "缩进",
       "indentationDecrease": "减少缩进",
       "indentationIncrease": "增加缩进",
       "justify": "两端对齐",
-      "left": "左对齐",
       "liftListItem": "提升列表项目",
       "orderedList": "有序列表",
       "paragraph": "段落",
-      "right": "右对齐",
       "sinkListItem": "下移清单项目",
       "splitListItem": "拆分列表项目",
       "textAlign": "文本对齐"
@@ -1067,10 +1071,22 @@
     "utils": {
       "HorizontalLine": "水平线",
       "TaskList": "任务列表",
-      "image": "图片",
-      "link": "超链接",
+      "image": {
+        "image": "图片",
+        "link": "链接(Base64)",
+        "set": "设置图像"
+      },
+      "increaseLeft": "左缩进",
+      "increaseRight": "右缩进",
+      "link": {
+        "link": "链接",
+        "set": "设置链接"
+      },
       "toggleTaskList": "切换任务列表",
-      "utils": "工具"
+      "utils": "工具",
+      "variableManager": {
+        "add": "创建变量"
+      }
     },
     "variable": {
       "actions": "操作",
@@ -1088,7 +1104,6 @@
       "columnHeader": "列标题",
       "columnKey": "列键",
       "columnName": "列名称",
-      "confirmDelete": "您确定要删除此变量吗？",
       "createLink": "创建链接",
       "delete": "删除",
       "deleteConfirm": "您确定要删除此变量吗？",
@@ -1120,7 +1135,6 @@
       "listStyleNone": "无样式",
       "listStyleNumbered": "编号",
       "manager": "变量管理器",
-      "managerTitle": "变量管理器",
       "name": "名称",
       "save": "保存",
       "selectListVariable": "选择列表变量",

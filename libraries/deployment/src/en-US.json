@@ -1008,6 +1008,9 @@
       "noVariables": "No variables to configure."
     },
     "font": {
+      "alignCenter": "Center Align",
+      "alignLeft": "Left Align",
+      "alignRight": "Right Align",
       "bold": "Bold",
       "color": "Font Color",
       "deleteStyle": "Delete Font Style",
@@ -1023,18 +1026,19 @@
       "superscript": "Superscript",
       "underline": "Underline"
     },
+    "import": {
+      "import": "Import",
+      "msg": "Please note that import will clear the original data"
+    },
     "paragraph": {
       "bulletList": "Bullet List",
-      "center": "Center",
       "indentation": "Indentation",
       "indentationDecrease": "Decrease Indentation",
       "indentationIncrease": "Increase Indentation",
       "justify": "Justify",
-      "left": "Left",
       "liftListItem": "Lift List Item",
       "orderedList": "Ordered List",
       "paragraph": "Paragraph",
-      "right": "Right",
       "sinkListItem": "Sink List Item",
       "splitListItem": "Split List Item",
       "textAlign": "Text Align"
@@ -1067,10 +1071,22 @@
     "utils": {
       "HorizontalLine": "Horizontal Line",
       "TaskList": "Task List",
-      "image": "Image",
-      "link": "Hyper Link",
+      "image": {
+        "image": "Image",
+        "link": "Link(Base64)",
+        "set": "Set Image"
+      },
+      "increaseLeft": "Increase Left",
+      "increaseRight": "Increase Right",
+      "link": {
+        "link": "Link",
+        "set": "Set Link"
+      },
       "toggleTaskList": "Task List",
-      "utils": "Utils"
+      "utils": "Utils",
+      "variableManager": {
+        "add": "Create Variable"
+      }
     },
     "variable": {
       "actions": "Actions",
@@ -1088,7 +1104,6 @@
       "columnHeader": "Column Header",
       "columnKey": "Column Key",
       "columnName": "Column Name",
-      "confirmDelete": "Are you sure you want to delete this variable?",
       "createLink": "Create Link",
       "delete": "Delete",
       "deleteConfirm": "Are you sure you want to delete this variable?",
@@ -1120,7 +1135,6 @@
       "listStyleNone": "No Style",
       "listStyleNumbered": "Numbered",
       "manager": "Variable Manager",
-      "managerTitle": "Variable Manager",
       "name": "Name",
       "save": "Save",
       "selectListVariable": "Select list variable",

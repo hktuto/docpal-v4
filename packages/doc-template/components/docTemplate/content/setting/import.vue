@@ -28,6 +28,7 @@ async function handleSubmit() {
     const json = JSON.parse(data.textContent)
     setVariables(json.variables)
     initEditor(json.json.options, json.json.content)
+    editor.value.commands.focus('end')
     state.visible = false
   } catch (e) {
     console.log(e)
@@ -38,12 +39,20 @@ async function handleSubmit() {
 
 <template>
   <ElButton @click="handleOpen">Import</ElButton>
-  <el-dialog v-model="state.visible" :title="t('Import')">
+  <el-dialog v-model="state.visible" :title="t('docTemplate.import.import')">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-button type="primary" :loading="state.loading" @click="handleSubmit">
-        {{ $t('common_submit') }}
-      </el-button>
+      <el-popconfirm
+        class="box-item"
+        :title="t('docTemplate.import.msg')"
+        placement="top"
+      >
+        <template #reference>
+          <el-button type="primary" :loading="state.loading" @click="handleSubmit">
+            {{ $t('common_submit') }}
+          </el-button>
+        </template>
+      </el-popconfirm>
     </template>
   </el-dialog>
 </template>

@@ -22,13 +22,9 @@ defineExpose({
 <template>
   <div class="headerContainer">
     <template v-if="editor">
-      <el-tabs v-model="activeName" class="demo-tabs">
-        <el-tab-pane label="Home" name="Home">
-          <div class="toolContainer">
+      <div class="toolContainer">
             <LazyDocTemplateContentToolbarFont />
           </div>
-        </el-tab-pane>
-      </el-tabs>
     </template>
   </div>
 </template>
@@ -52,7 +48,8 @@ defineExpose({
   align-items: flex-start;
   gap: var(--gap);
   overflow: auto;
-  padding-bottom: var(--app-space-s);
+  width: 100%;
+  padding-block: var(--app-space-s);
 }
 
 .tool + .tool {

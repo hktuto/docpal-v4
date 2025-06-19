@@ -66,6 +66,7 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   }
   editor.value = new Editor({
     content: json || '',
+    autofocus: true,
     extensions: [
       ...extensions
     ],
@@ -194,7 +195,8 @@ provide(DocTemplateProveKey, {
 </script>
 
 <template>
-  <div class="editorContainer" style="--margin-top: 20px;--margin-bottom:20px;">
+  
+  <div class="editorContainer" :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}px; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}px; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}px; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}px;`">
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
       <EditorContent :editor="editor" />
@@ -302,9 +304,9 @@ provide(DocTemplateProveKey, {
       }
     }
   }
-  .page{
-    --border-color: #888;
 
+  .page {
+    --border-color: #888;
     &:before {
       content: "";
       width: 20px;
@@ -316,6 +318,7 @@ provide(DocTemplateProveKey, {
       border-bottom: 1px solid var(--border-color);
       border-left: 1px solid var(--border-color);
     }
+
     &:after {
       content: "";
       width: 20px;
@@ -328,9 +331,11 @@ provide(DocTemplateProveKey, {
       border-left: 1px solid var(--border-color);
     }
   }
-  .body{
+
+  .body {
     position: relative;
-    overflow: visible!important;
+    overflow: visible !important;
+
     &:before {
       content: "";
       width: 20px;
@@ -342,6 +347,7 @@ provide(DocTemplateProveKey, {
       border-bottom: 1px solid var(--border-color);
       border-right: 1px solid var(--border-color);
     }
+
     &:after {
       content: "";
       width: 20px;
