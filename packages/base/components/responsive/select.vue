@@ -61,7 +61,7 @@ const onClickOutside = () => {
   //   unref(popoverRef).popperRef?.delayHide?.()
 }
 function handleChange(data: typeof ResSelectData) {
-  if (!data.isMultiple) {
+  if (!data.isMultiple && data.value.length > 1) {
     data.value = [data.value.pop()]
   }
   emits('change', {
