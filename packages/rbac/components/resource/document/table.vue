@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useDebounceFn } from '@vueuse/core'
-
+import XEUtils from 'xe-utils'
 import { adminApi } from 'api'
 const props = defineProps<{
   id: string
@@ -12,9 +12,12 @@ const { id, expandedItems = [] } = toRefs(props)
 const emits = defineEmits(['idChange', 'expandedItemsChange'])
 
 const selectedRow = ref<any>(null)
-
+let extraParams = {
+  orderBy: 'name',
+  isDesc: 'asc'
+}
 async function getChildApi(id: string = 'root') {
-  return adminApi.api.getAclDocumentDocumentid(id).then((res) => res.data)
+  return adminApi.api.getAclDocumentDocumentid(id, extraParams).then((res) => res.data)
 }
 
 function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
@@ -43,12 +46,12 @@ const reopenFolder = useDebounceFn(() => {
   if (!tableRef.value || expandedItems.value.length === 0) return
   const tableData = tableRef.value.getData()
   let needExpandList: any[] = recursiveLoadChild(expandedItems.value, tableData, [])
-
+  console.log(needExpandList, 'needExpandList')
   tableRef.value?.setTreeExpand(needExpandList, true)
   // get table opened row
 }, 300)
 
-const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'rbac-resource-document-table',
   api: async (pageParams: any) => {
     const data = await getChildApi(id.value || 'root')
@@ -137,6 +140,12 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
     visible: boolean
     disabled: boolean
   } => {
+    if (!row) {
+      return {
+        visible: false,
+        disabled: false
+      }
+    }
     if (code === 'toggleExpand') {
       return {
         visible: row.isFolder,
@@ -199,6 +208,89 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   }
 })
 
+const ResponsiveFilterRef = ref()
+function handleFilterFormChange(formData: any) {
+  extraParams = formData
+  // setTimeout(() => {
+  //   reopenFolder()
+  // }, 2000)
+}
+let treeDataCopy = []
+
+const { flatRole } = useRBAC()
+async function getFilter() {
+  async function getGroupList() {
+    try {
+      return await adminApi.api.postNuxeoIdentityGroups({}).then((res) => res.data)
+    } catch (error) {
+      console.error(error)
+      return []
+    }
+  }
+  async function getUserList() {
+    try {
+      return await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
+    } catch (error) {
+      console.error(error)
+      return []
+    }
+  }
+  const userList = await getUserList()
+  const groupList = await getGroupList()
+  const filterSetting = [
+    {
+      key: 'user',
+      label: 'user_users',
+      type: 'string',
+      isMultiple: true,
+      options: userList.map((item: any) => ({
+        label: item.username,
+        value: item.userId
+      }))
+    },
+    {
+      key: 'group',
+      label: 'user_groups',
+      type: 'string',
+      isMultiple: true,
+      options: groupList.map((item: any) => ({
+        label: item.name,
+        value: item.id
+      }))
+    },
+    {
+      key: 'role',
+      label: 'user_role',
+      type: 'string',
+      isMultiple: true,
+      options: flatRole.value.map((item) => ({
+        label: item.name,
+        value: item.id
+      }))
+    },
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [{ label: 'document_name', value: 'name' }]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: 'asc' },
+        { label: 'tableHeader.desc', value: 'desc' }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value.init(filterSetting)
+}
+onMounted(() => {
+  getFilter()
+})
 watch(
   id,
   () => {
@@ -211,15 +303,26 @@ watch(
 </script>
 
 <template>
+  <!-- <div class="rbac-resource-document-table">
+    <div style="overflow: hidden"> -->
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
+      <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="q" @form-change="handleFilterFormChange" />
       <ResourceDocumentBreadcrumb :id="id" @idChange="emits('idChange', $event)" />
     </template>
   </VxeGrid>
+  <!-- </div> -->
   <ResourceDocumentPermissionDialog ref="tableDialogRef" />
+  <!-- </div> -->
 </template>
 
 <style lang="scss" scoped>
+.rbac-resource-document-table {
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+}
 .vxe-grid {
   :deep(.browseFileIcon) {
     width: calc(var(--app-space-m) * 1.5);
