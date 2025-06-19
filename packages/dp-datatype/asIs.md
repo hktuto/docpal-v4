@@ -1,43 +1,35 @@
 # As is data type for different system
 
 ## Document metadata
-- Text
-  - single line text
-  - multi line text
+- String
+- Boolean
 - Number
-  - integer
-  - float
 - Date
-  - date
 
 ## Workflow
-- string
-- number
-- date
-- boolean
-- json
+- String
+- Number
+- Boolean
+- Date
 
 ## Case Management
-- User Gruoup
 - String
 - Short Text
 - Long Text
 - Integer
-- Master Table
-- Json
 - Float
-- Folder Cabinet Id
+- Date
+- Json
 - Boolean
+- Master Table
+- Folder Cabinet Id
 
 
 ## EasyForm
 - String
-- Short Text
-- Long Text
-- Integer
-- Float
-- Json
 - Boolean
+- Number
+- Date
 
 ## Master Table
 - String
@@ -45,6 +37,7 @@
 - Long Text
 - Integer
 - Float
+- Date
 - Json
 - Boolean
 - Relation
