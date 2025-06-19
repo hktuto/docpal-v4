@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { useDebounceFn } from '@vueuse/core'
-import XEUtils from 'xe-utils'
 import { adminApi } from 'api'
 const props = defineProps<{
   id: string
@@ -262,7 +260,7 @@ async function getFilter() {
       key: 'role',
       label: 'user_role',
       type: 'string',
-      isMultiple: true,
+      isMultiple: false,
       options: flatRole.value.map((item) => ({
         label: item.name,
         value: item.id
@@ -307,7 +305,7 @@ watch(
     <div style="overflow: hidden"> -->
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="q" @form-change="handleFilterFormChange" />
+      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
       <ResourceDocumentBreadcrumb :id="id" @idChange="emits('idChange', $event)" />
     </template>
   </VxeGrid>
