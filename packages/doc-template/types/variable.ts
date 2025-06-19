@@ -1,4 +1,4 @@
-// TODO: Replace with import from '../../../dp-datatype/src/types' when type resolution is fixed
+
 export type BaseType =
   | { type: 'String' }
   | { type: 'Number' }
