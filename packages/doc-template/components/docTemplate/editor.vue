@@ -196,18 +196,10 @@ provide(DocTemplateProveKey, {
 
 <template>
   <div class="editorContainer"
-       :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}px; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}px; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}px; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}px;`">
+       :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}mm; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}mm; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}mm; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}mm;`">
     <DocTemplateHeader ref="headerRef" />
     <div class="editorBody">
-      <div class="topLinear">
-        <EditorContent :editor="editor" />
-        <div class="leftTop"></div>
-        <div class="rightTop"></div>
-        <div class="leftBottom"></div>
-        <div class="rightBottom"></div>
-        <!-- <div class="bottomLinear" style="margin: 5mm; overflow: hidden; position: relative;"> -->
-        <!-- </div> -->
-      </div>
+      <EditorContent :editor="editor" />
       <DocTemplateContentSettingBubbleMenu />
     </div>
     <DocTemplateFooter />
@@ -223,79 +215,18 @@ provide(DocTemplateProveKey, {
 }
 
 .editorBody {
-
+  flex: 1 0 auto;
   padding: var(--app-space-m);
   overflow: auto;
-
-  width: 100%;
 
   :deep(.tiptap) {
     outline: none;
   }
 }
 
-.topLinear {
-  margin: 0 auto;
-  position: relative;
-  width: fit-content;
-  --border-color: #888;
-}
-
-.leftTop {
-  content: "";
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: calc(var(--margin-left) - 3px);
-  top: calc(var(--margin-top) - 3px);
-  display: block;
-  border-right: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.rightTop {
-  content: "";
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  right: calc(var(--margin-right) - 3px);
-  top: calc(var(--margin-top) - 3px);
-  display: block;
-  border-left: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.leftBottom {
-  content: "";
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: calc(var(--margin-left) - 3px);
-  bottom: calc(var(--margin-top) - 3px);
-  display: block;
-  border-right: 1px solid var(--border-color);
-  border-top: 1px solid var(--border-color);
-}
-
-.rightBottom {
-  content: "";
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  right: calc(var(--margin-right) - 3px);
-  bottom: calc(var(--margin-bottom) - 3px);
-  display: block;
-  border-left: 1px solid var(--border-color);
-  border-top: 1px solid var(--border-color);
-}
-
 </style>
 
 <style>
-.page {
-  margin: unset !important;
-}
-
 .tiptap {
   :first-child {
     margin-top: 0;
@@ -374,6 +305,62 @@ provide(DocTemplateProveKey, {
     }
   }
 
+  .page {
+    --border-color: #888;
+
+    &:before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: calc(var(--margin-top) - 20px);
+      right: calc(var(--margin-right) - 20px);
+      display: block;
+      border-bottom: 1px solid var(--border-color);
+      border-left: 1px solid var(--border-color);
+    }
+
+    &:after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      bottom: calc(var(--margin-bottom) - 20px);
+      right: calc(var(--margin-right) - 20px);
+      display: block;
+      border-top: 1px solid var(--border-color);
+      border-left: 1px solid var(--border-color);
+    }
+  }
+
+  .body {
+    position: relative;
+    overflow: visible !important;
+
+    &:before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      display: block;
+      border-bottom: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+
+    &:after {
+      content: "";
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      display: block;
+      border-top: 1px solid var(--border-color);
+      border-right: 1px solid var(--border-color);
+    }
+  }
 }
 
 .collaboration-cursor__caret {
@@ -402,4 +389,3 @@ provide(DocTemplateProveKey, {
   white-space: nowrap;
 }
 </style>
-
