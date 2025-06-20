@@ -2,6 +2,7 @@
 import { DocTemplateProveKey } from '~/utils/docTemplateHelper'
 import formJson from './docJson.json'
 
+const routerProvider = inject(MenuRouterKey)
 const { editor, options, initEditor, setVariables } = inject(DocTemplateProveKey)
 const { t } = useI18n()
 
@@ -31,7 +32,7 @@ async function handleSubmit() {
     editor.value.commands.focus('end')
     state.visible = false
   } catch (e) {
-    console.log(e)
+    routerProvider?.message.error(t('docTemplate.import.import.error'))
   }
 }
 

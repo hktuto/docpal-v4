@@ -4,7 +4,7 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey, validateVariable, type DocTemplateVariable } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
 import { defaultPageSetting, replaceVariables } from 'docpal-document-editor/src/utils'
-import { normalizeTipTapOptions, clientEditorExtensions } from 'docpal-document-editor/src/client'
+import { normalizeTipTapOptions, clientEditorExtensions, generateHtml } from 'docpal-document-editor/src/client'
 import * as Y from 'yjs'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 
@@ -64,8 +64,12 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   }
   if (initOptions.editable) {
   }
+
+  let html= generateHtml(json, initOptions)
+
   editor.value = new Editor({
-    content: json || '',
+    // 如果導入的數據類型是json的情況，在首次進入頁面時uno按鈕允許點擊，會導致頁面樣式變動
+    content: html || '',
     autofocus: true,
     extensions: [
       ...extensions
@@ -102,10 +106,7 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
       lastSelection.value = newSelectionData
     },
     onCreate({ editor }) {
-      // update page setting base on normalizeOption
-      if (normalizeOption.mode === 'PAGE' && normalizeOption?.pageSetting?.defaultMarginConfig) {
-        editor.commands.setDocumentPageMargins(normalizeOption?.pageSetting?.defaultMarginConfig)
-      }
+
     }
   })
   options.value = { ...normalizeOption }
