@@ -36,7 +36,6 @@ const state = reactive({
   })),
   fontSize: 12,
   titleTags: 'Default',
-  defaultTitleTags: '',
   fontColor: '#000000',
   fontHighlightColor: '#ffff00',
   fontLinkDialogVisible: false,
@@ -107,13 +106,23 @@ function handleFontColorFocus() {
   }
 }
 
-function handleTitle() {
+function handleTitle(index) {
+  // 檢查當前的tag是當前的Key
   if (state.titleTags === 0) {
-    editor.value.chain().focus().toggleHeading({ level: state.defaultTitleTags }).run()
+    titlePredefine.value.forEach((v) => {
+      if (editor.value.isActive('heading', { level: v.key })) {
+        editor.value.chain().focus().toggleHeading({ level: v.key }).run()
+        return
+      }
+    })
     return
   }
-  state.defaultTitleTags = state.titleTags
-  editor.value.chain().focus().toggleHeading({ level: state.titleTags }).run()
+
+  // 防止重複設值
+  if (editor.value.isActive('heading', { level: index })) {
+    return
+  }
+  editor.value.chain().focus().setHeading({ level: state.titleTags }).run()
 }
 
 /**
@@ -346,10 +355,9 @@ function handlePickerClose() {
           default-first-option
           :reserve-keyword="false"
           style="width: 100px;"
-          @change="handleTitle"
         >
           <el-option v-for="(item,index) in titlePredefine" :key="index" :label="item.name"
-                     :value="item.key" />
+                     @click="handleTitle(index)" :value="item.key" />
         </el-select>
 
         <!-- font color -->
@@ -620,7 +628,8 @@ function handlePickerClose() {
 
   <!-- add visible -->
   <el-dialog v-model="state.addVisible"
-             :title="formMode === 'create' ? t('docTemplate.utils.variableManager.add') : t('docTemplate.variable.editVariable')" width="80%"
+             :title="formMode === 'create' ? t('docTemplate.utils.variableManager.add') : t('docTemplate.variable.editVariable')"
+             width="80%"
              destroy-on-close>
     <VariableForm
       v-if="state.addVisible"
