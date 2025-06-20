@@ -93,22 +93,22 @@ async function submit(){
           <ElRow :gutter="12">
             <ElCol :span="6">
               <ElFormItem label="Left">
-                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" />
+                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0"/>
                 </ElFormItem>
             </ElCol>
             <ElCol :span="6">
               <ElFormItem label="Top">
-                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" />
+                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0"/>
                 </ElFormItem>
             </ElCol>
             <ElCol :span="6">
               <ElFormItem label="Right">
-                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" />
+                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0"/>
                 </ElFormItem>
             </ElCol>
             <ElCol :span="6">
               <ElFormItem label="Bottom">
-                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" />
+                  <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0"/>
                 </ElFormItem>
             </ElCol>
           </ElRow>
