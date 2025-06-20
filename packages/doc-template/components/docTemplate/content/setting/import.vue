@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { DocTemplateProveKey } from '~/utils/docTemplateHelper'
 import formJson from './docJson.json'
+import { ElMessageBox } from 'element-plus'
 
 const routerProvider = inject(MenuRouterKey)
 const { editor, options, initEditor, setVariables } = inject(DocTemplateProveKey)
@@ -27,10 +28,20 @@ async function handleSubmit() {
     const data = await FormRendererRef.value.vFormRenderRef.getFormData()
     if (!data) return
     const json = JSON.parse(data.textContent)
-    setVariables(json.variables)
-    initEditor(json.json.options, json.json.content)
-    editor.value.commands.focus('end')
-    state.visible = false
+    ElMessageBox.confirm(
+      t('docTemplate.import.msg'),
+      'Warning',
+      {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }
+    ).then(() => {
+      setVariables(json.variables)
+      initEditor(json.json.options, json.json.content)
+      editor.value.commands.focus('end')
+      state.visible = false
+    })
   } catch (e) {
     routerProvider?.message.error(t('docTemplate.import.import.error'))
   }
@@ -43,17 +54,9 @@ async function handleSubmit() {
   <el-dialog v-model="state.visible" :title="t('docTemplate.import.import')">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
-      <el-popconfirm
-        class="box-item"
-        :title="t('docTemplate.import.msg')"
-        placement="top"
-      >
-        <template #reference>
-          <el-button type="primary" :loading="state.loading" @click="handleSubmit">
-            {{ $t('common_submit') }}
-          </el-button>
-        </template>
-      </el-popconfirm>
+      <el-button type="primary" :loading="state.loading" @click="handleSubmit">
+        {{ $t('common_submit') }}
+      </el-button>
     </template>
   </el-dialog>
 </template>
