@@ -1027,7 +1027,9 @@
       "underline": "Underline"
     },
     "import": {
-      "import": "Import",
+      "import": {
+        "error": "Json parsing failed"
+      },
       "msg": "Please note that import will clear the original data"
     },
     "paragraph": {

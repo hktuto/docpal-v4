@@ -1027,7 +1027,9 @@
       "underline": "下划线"
     },
     "import": {
-      "import": "导入",
+      "import": {
+        "error": "Json 解析失败"
+      },
       "msg": "请注意，导入将清除原始数据"
     },
     "paragraph": {
