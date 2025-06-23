@@ -67,14 +67,27 @@ const reopenFolder = useDebounceFn(() => {
   // get table opened row
 }, 300)
 
+async function searchData(entry: any[], path?: string, searchQuery?: string, pageNum: number = 0) {
+
+
+}
+
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'tableSetting',
   api: async (pageParams: any) => {
     cleanSelectedRows()
-    const data = await loadData([], listProvider.idOrPath?.value || '/')
-    data.sort(sortEntry)
-    emits('selectedChange', [])
-    return data
+    // if mode is browse, use loadData to get current path data
+    if(listProvider.mode.value === 'browse') {
+      const data = await loadData([], listProvider.idOrPath?.value || '/')
+      data.sort(sortEntry)
+      emits('selectedChange', [])
+      return data
+    }
+    // if mode is search, use searchData to get search data
+    if(listProvider.mode.value === 'search') {
+      // TODO : IMPLEMENT SEARCH DATA
+      return []
+    }
   },
   childChangeHandler: () => {
     tableChildChangeHandler()
@@ -666,6 +679,13 @@ watch(() => listProvider.idOrPath, () => {
     deep: true
   }
 )
+
+// watch mode in listProvider, if mode change then reload table
+watch(() => listProvider.mode, () => {
+  if (tableRef.value) {
+    tableRef.value.reload()
+  }
+})
 
 function handleCheckboxChange(rows: any, selectedRow: any) {
   if (
