@@ -2220,7 +2220,7 @@
     "manage": "Manage",
     "print": "Print",
     "read": "Read ",
-    "userSet": "User Set",
+    "userSet": "Attribute Set",
     "write": "Write"
   },
   "placeHolder": {
@@ -2237,7 +2237,7 @@
   "rbac": {
     "permission": {
       "addPermission": "Add Permission",
-      "addUserSet": "Add User Set",
+      "addUserSet": "Add Attribute Set",
       "assignPermission": "Assign permissions",
       "createFile": "Create File",
       "createFolder": "Create Subfolders",
@@ -2248,15 +2248,15 @@
       "editFolder": "Edit Folder",
       "editMetadata": "Edit Metadata",
       "editSubContent": "Edit Child Content",
-      "editUserSet": "Edit User Set",
+      "editUserSet": "Edit Attribute Set",
       "inheritFrom": "Inherit From",
       "isInherit": "Is inherit",
       "permissionLevel": "Permissions",
       "print": "Print",
       "read": "Read",
       "resource_rules": "Resource Rules",
-      "targetName": "User/ Role/ Group/ User Set",
-      "userSetName": "User Set Name",
+      "targetName": "User/ Role/ Group/ Attribute Set",
+      "userSetName": "Attribute Set Name",
       "viewFolder": "View Folder/File",
       "viewMetadata": "View Metadata"
     },
