@@ -65,7 +65,7 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   if (initOptions.editable) {
   }
 
-  let html= generateHtml(json, initOptions)
+  let html = generateHtml(json, initOptions)
 
   editor.value = new Editor({
     // 如果導入的數據類型是json的情況，在首次進入頁面時uno按鈕允許點擊，會導致頁面樣式變動
@@ -104,9 +104,6 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
           break
       }
       lastSelection.value = newSelectionData
-    },
-    onCreate({ editor }) {
-
     }
   })
   options.value = { ...normalizeOption }
