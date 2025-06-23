@@ -41,20 +41,20 @@ async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
 
 async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: any[]) {
   const data = getJsonConfig(configuredVariables)
-  let endpoint = ''
-  let filename = ''
-  let mime = ''
+  let endpoint
+  let filename
+  let mime
   if (exportType === 'docx') {
     endpoint = '/convert/docx'
-    filename = 'test.docx'
+    filename = `${options.value.title}.docx`
     mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   } else if (exportType === 'pdf') {
     endpoint = '/convert/pdf'
-    filename = 'test.pdf'
+    filename = `${options.value.title}.pdf`
     mime = 'application/pdf'
   } else {
     endpoint = '/convert/html'
-    filename = 'test.html'
+    filename = `${options.value.title}.html`
     mime = 'text/html'
   }
   const blob = await fetchExportBlob(endpoint, data)
@@ -75,7 +75,7 @@ async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVari
 }
 
 function handleExportDropdown(command: 'html' | 'pdf' | 'docx' | 'json') {
-  if(command === 'json') {
+  if (command === 'json') {
     openDialog()
     return
   }
@@ -100,7 +100,7 @@ function getJsonConfig(configuredVariables: any[] = []) {
   const data = {
     json: {
       options: {},
-      content: {},
+      content: {}
     },
     variables: configuredVariables
   }
@@ -116,12 +116,18 @@ function openExportVariableDrawer() {
 
 function getValueEditorComponent(type: string) {
   switch (type) {
-    case 'text': return VariableValueText
-    case 'list': return VariableValueList
-    case 'table': return VariableValueTable
-    case 'link': return VariableValueLink
-    case 'image': return VariableValueImage
-    default: return VariableValueText
+    case 'text':
+      return VariableValueText
+    case 'list':
+      return VariableValueList
+    case 'table':
+      return VariableValueTable
+    case 'link':
+      return VariableValueLink
+    case 'image':
+      return VariableValueImage
+    default:
+      return VariableValueText
   }
 }
 
@@ -133,15 +139,15 @@ function handleExportWithVariables() {
 
 <template>
   <el-dropdown @command="handleExportDropdown">
-    <ElButton >
+    <ElButton>
       {{ t('docTemplate.export.export') }} <i class="el-icon-arrow-down el-icon--right"></i>
     </ElButton>
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item command="json">{{ t('docTemplate.export.exportJSON') }}</el-dropdown-item>
-      <el-dropdown-item command="html">{{ t('docTemplate.export.exportHTML') }}</el-dropdown-item>
-      <el-dropdown-item command="pdf">{{ t('docTemplate.export.exportPDF') }}</el-dropdown-item>
-      <el-dropdown-item command="docx">{{ t('docTemplate.export.exportDOCX') }}</el-dropdown-item>
+        <el-dropdown-item command="html">{{ t('docTemplate.export.exportHTML') }}</el-dropdown-item>
+        <el-dropdown-item command="pdf">{{ t('docTemplate.export.exportPDF') }}</el-dropdown-item>
+        <el-dropdown-item command="docx">{{ t('docTemplate.export.exportDOCX') }}</el-dropdown-item>
       </el-dropdown-menu>
     </template>
   </el-dropdown>
