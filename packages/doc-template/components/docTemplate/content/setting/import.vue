@@ -32,8 +32,8 @@ async function handleSubmit() {
       t('docTemplate.import.msg'),
       'Warning',
       {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: t('dpButtom_confirm'),
+        cancelButtonText: t('dpButtom_cancel'),
         type: 'warning'
       }
     ).then(() => {
