@@ -2218,7 +2218,7 @@
     "manage": "管理",
     "print": "打印",
     "read": "讀取",
-    "userSet": "用戶集",
+    "userSet": "細控",
     "write": "讀寫"
   },
   "placeHolder": {
@@ -2235,7 +2235,7 @@
   "rbac": {
     "permission": {
       "addPermission": "新增權限",
-      "addUserSet": "新增用戶集",
+      "addUserSet": "新增細控",
       "assignPermission": "分配權限",
       "createFile": "建立文件",
       "createFolder": "建立子資料夾",
@@ -2246,15 +2246,15 @@
       "editFolder": "編輯資料夾",
       "editMetadata": "編輯元數據",
       "editSubContent": "編輯子內容",
-      "editUserSet": "編輯用戶集",
+      "editUserSet": "編輯細控",
       "inheritFrom": "繼承自",
       "isInherit": "繼承",
       "permissionLevel": "權限",
       "print": "打印",
       "read": "讀取",
       "resource_rules": "資源規則",
-      "targetName": "使用者/角色/群組/使用者集",
-      "userSetName": "用戶集名稱",
+      "targetName": "使用者/角色/群組/細控",
+      "userSetName": "細控名稱",
       "viewFolder": "查看資料夾/文件",
       "viewMetadata": "查看元數據"
     },
