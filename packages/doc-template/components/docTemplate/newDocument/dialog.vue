@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const {defaultOpened = false} = defineProps<{
+const { defaultOpened = false } = defineProps<{
   defaultOpened: boolean
 }>()
 
@@ -9,16 +9,17 @@ const formRef = ref()
 
 const emits = defineEmits(['submit'])
 
-function handleSubmit(newDoc:any){
-  emits('submit', newDoc);
-  opened.value = false;
+function handleSubmit(newDoc: any) {
+  emits('submit', newDoc)
+  opened.value = false
 }
 
+function handleClose() {
+}
 </script>
 
-
 <template>
-  <ElDialog v-model="opened" >
+  <ElDialog v-model="opened" :before-close="handleClose">
     <DocTemplateNewDocumentForm ref="formRef" @submit="handleSubmit" />
   </ElDialog>
 </template>
