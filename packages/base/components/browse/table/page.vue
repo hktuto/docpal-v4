@@ -23,6 +23,14 @@ const tabProvider = inject(TabManagerKey)
 const routerProvider = inject(MenuRouterKey)
 const selectedItem = ref<any[]>([])
 const infoOpened = ref(false)
+
+const mode = ref<'browse' | 'search'>('browse')
+
+// Add search-related reactive variables
+const isSearchExpanded = ref(false)
+const searchQuery = ref('')
+const searchInputRef = ref<HTMLInputElement>()
+
 if (!tabProvider || !routerProvider) {
   throw createError('provider not found')
 }
@@ -175,6 +183,8 @@ provide(BrowseListProviderKey, {
   idOrPath : currentIdOrPath,
   docDetail,
   docPermission,
+  mode,
+  searchQuery,
   changeRoute,
   addToSelection,
   removeFromSelection
@@ -221,6 +231,35 @@ function expandedItemsChangeHandler(updateEexpandedItems: any[]) {
 useEventListener(window, 'resize', calMinWidth)
 
 useEventListener(document, 'closeFilePreview', closePreview)
+
+// Add search-related functions
+function expandSearch() {
+  isSearchExpanded.value = true
+  nextTick(() => {
+    searchInputRef.value?.focus()
+  })
+}
+
+function collapseSearch() {
+  isSearchExpanded.value = false
+  searchQuery.value = ''
+  mode.value = 'browse'
+}
+
+function handleSearch() {
+  if (searchQuery.value.trim()) {
+    // Implement search logic here
+    console.log('Searching for:', searchQuery.value)
+    // You can emit an event or call a method to perform the search
+    mode.value = 'search'
+  }
+}
+
+function handleSearchBlur() {
+  // Optional: collapse search when input loses focus
+  // Uncomment the line below if you want this behavior
+  // setTimeout(() => collapseSearch(), 200)
+}
 </script>
 
 <template>
@@ -248,6 +287,34 @@ useEventListener(document, 'closeFilePreview', closePreview)
               </div>
             </slot>
             <slot name="toolbarTools">
+              <div class="searchContainer vxe-button type--button">
+                <div v-if="!isSearchExpanded" class="searchButton" @click="expandSearch">
+                  <Icon name="mdi:magnify" />
+                </div>
+                <div v-else class="searchInputContainer">
+                  <input 
+                    ref="searchInputRef"
+                    v-model="searchQuery" 
+                    type="text" 
+                    class="searchInput"
+                    placeholder="Search..."
+                    @keyup.enter="handleSearch"
+                    @blur="handleSearchBlur"
+                  />
+                  <div class="searchActions">
+                    <Icon 
+                      name="mdi:magnify" 
+                      class="searchIcon" 
+                      @click="handleSearch"
+                    />
+                    <Icon 
+                      name="mdi:close" 
+                      class="closeIcon" 
+                      @click="collapseSearch"
+                    />
+                  </div>
+                </div>
+              </div>
               <CollapseMenu v-if="idOrPath !== '/'">
                 <template #default="{ collapse }">
                   <template v-for="(group, key) in docActions" :key="key">
@@ -328,6 +395,56 @@ useEventListener(document, 'closeFilePreview', closePreview)
   &.collapse {
     width: 100%;
     height: 1px;
+  }
+}
+
+.searchContainer {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: var(--app-space-s);
+  border-radius: 18px;
+  cursor: pointer;
+}
+
+
+.searchInputContainer {
+  display: flex;
+  align-items: center;
+  background: var(--app-white);
+  border-color: transparent;
+  border-radius: var(--app-border-radius);
+  padding: var(--app-space-xs);
+  gap: var(--app-space-xs);
+}
+
+.searchInput {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.875rem;
+  min-width: 120px;
+
+  &::placeholder {
+    color: var(--app-grey-500);
+  }
+}
+
+.searchActions {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-xs);
+}
+
+.searchIcon,
+.closeIcon {
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 2px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--app-grey-100);
   }
 }
 </style>
