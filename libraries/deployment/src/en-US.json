@@ -1378,7 +1378,7 @@
   "dpTable_unique": "Unique",
   "dpTable_validityPeriod": "Validity Period",
   "dpTip": {
-    "choose": "Please choose",
+    "choose": "Please choose {name}",
     "configurePermission": "Permission verification failed, please contact the administrator to configure",
     "copyPathSuccess": "Path copied to clipboard",
     "deleteFailed": "Delete Failed",
@@ -2183,12 +2183,14 @@
       "roleLabel": "Role Name",
       "rolePlaceholder": "Please enter role name",
       "save": "Save",
+      "sharePermission": "Share Permission Assignment",
       "validation": {
         "minLength": "Length must be at least 2 characters",
         "roleRequired": "Please enter role name"
       }
     },
     "noData": "No Data",
+    "personCount": "Number of people：{count}",
     "userTable": {
       "actions": {
         "remove": "Remove"

@@ -1377,7 +1377,7 @@
   "dpTable_unique": "唯一",
   "dpTable_validityPeriod": "有效期",
   "dpTip": {
-    "choose": "請選擇",
+    "choose": "請選擇{name}",
     "configurePermission": "權限校驗失敗，請聯絡管理員配置",
     "copyPathSuccess": "路徑已複製到剪貼簿",
     "deleteFailed": "刪除失敗",
@@ -2181,12 +2181,14 @@
       "roleLabel": "角色名稱",
       "rolePlaceholder": "請輸入角色名稱",
       "save": "保存",
+      "sharePermission": "權限共享",
       "validation": {
         "minLength": "長度至少為2個字符",
         "roleRequired": "請輸入角色名稱"
       }
     },
     "noData": "暫無數據",
+    "personCount": "人數：{count}",
     "userTable": {
       "actions": {
         "remove": "移除"

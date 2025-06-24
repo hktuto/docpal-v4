@@ -17,6 +17,7 @@
       @edit="handleEdit"
       @update:data="handleDataUpdate"
       @reload="initData"
+      @setStatus="setStatus"
     />
   </div>
 </template>
@@ -73,19 +74,19 @@ function findNodeById(nodes: OrgNode[], targetId: string): OrgNode | null {
   return null
 }
 
-async function handleDelete(deleteId: string, newNodes: OrgNode[]) {
+async function handleDelete(selectedNode: any) {
   try {
     await adminApi.api.putAclRole({
-      id: deleteId,
+      id: selectedNode.value.id,
       status: 3 // status:3-逻辑删除
     })
     
-    roleData.value = newNodes
     ElNotification({
       title: t('commons_success'),
       message: t('common_deleteSuccess'),
       type: 'success'
     })
+    initData()
   } catch (error) {
     console.error('Failed to delete role:', error)
     ElNotification({
@@ -161,7 +162,19 @@ async function handleAdd(formData: OrgNode, selectedNodeId?: string) {
     })
   }
 }
+async function setStatus(selectedNode: string, status: number) {
+  try {
+    await adminApi.api.putAclRole({
+      id: selectedNode.value.id,
+      status: status 
+    })
 
+    initData()
+  } catch (error) {
+    console.error('Failed to delete role:', error)
+  }
+  console.log('setStatus', selectedNode.value, status)
+}
 function handleNodeClick(node: OrgNode) {
   console.log('Clicked node:', node)
 }
@@ -171,9 +184,7 @@ function handleDataUpdate(newData: OrgNode[]) {
 }
 const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleIds)
 async function initData() {
-  
   try {
-    
     loading.value = true
     await getRoleTree()
     roleData.value = roleTree.value || []
@@ -182,7 +193,6 @@ async function initData() {
     console.error('Failed to initialize data on RBAC org chart:', error)
     ElNotification({
       title: t('commons_error'),
-      message: t('common_loadFail'),
       type: 'error'
     })
     throw error;
