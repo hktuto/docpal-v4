@@ -6,40 +6,26 @@
         <el-button class="close-btn" link @click="handleCancel">×</el-button>
       </div>
       <div class="sidebar-content">
-        <el-form
-          ref="formRef"
-          :model="formData"
-          :rules="rules"
-          label-position="top"
-          @submit.prevent
-        >
+        <el-form ref="formRef" :model="formData" :rules="rules" label-position="top" @submit.prevent>
           <el-form-item :label="$t('orgChart.editSidebar.roleLabel')" prop="name" required>
             <el-input v-model="formData.name" :placeholder="$t('orgChart.editSidebar.rolePlaceholder')" />
           </el-form-item>
 
-          <el-form-item 
-            v-if="formData.type === 1"
-            :label="$t('orgChart.editSidebar.parentRole')" 
-            prop="parentId"
-          >
-            <el-select
-              v-model="formData.parentId"
-              :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')"
-              clearable
-            >
-              <el-option
-                v-for="role in filteredRoleOptions"
-                :key="role.id"
-                :label="role.name"
-                :value="role.id"
-              />
+          <el-form-item v-if="formData.type === 1" :label="$t('orgChart.editSidebar.parentRole')" prop="parentId">
+            <el-select v-model="formData.parentId" :placeholder="$t('orgChart.editSidebar.parentRolePlaceholder')" clearable>
+              <el-option v-for="role in optionalList" :key="role.id" :label="role.name" :value="role.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('orgChart.editSidebar.sharePermission')" prop="parentId">
+            <el-select v-model="formData.additionUsers" multiple :placeholder="$t('dpTip.choose')" clearable>
+              <el-option v-for="role in userList" :key="role.username" :label="role.username" :value="role.username" />
             </el-select>
           </el-form-item>
 
           <el-form-item v-if="formData.status" :label="$t('tableHeader_status')" prop="status">
             <el-select v-model="formData.status" :placeholder="$t('tableHeader_status')">
               <el-option :label="$t('actions.active')" :value="1" />
-              <el-option :label="$t('actions.inactive')" :value="3" />
+              <el-option :label="$t('actions.inactive')" :value="2" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -51,16 +37,9 @@
           </el-button>
         </div>
 
-        <RbacEditRoleSidebarUserTable 
-          :role-id="String(formData.id)" 
-          v-if="dialogVisible"
-          :isAdd="false"
-          :type="formData.type"
-          @update="handleUsersUpdate"
-        />
+        <RbacEditRoleSidebarUserTable :role-id="String(formData.id)" v-if="dialogVisible" :isAdd="false" :type="formData.type" @update="handleUsersUpdate" />
       </div>
-      <div class="sidebar-footer">
-      </div>
+      <div class="sidebar-footer"></div>
     </div>
   </div>
 </template>
@@ -71,7 +50,6 @@ import { useI18n } from 'vue-i18n'
 import { adminApi } from 'api'
 import type { FormInstance } from 'element-plus'
 
-
 const { t } = useI18n()
 
 interface RoleFormData {
@@ -81,6 +59,7 @@ interface RoleFormData {
   status: number
   users?: any[]
   type: number
+  additionUsers: string[]
 }
 
 const props = defineProps<{
@@ -95,13 +74,16 @@ const emit = defineEmits<{
 const dialogVisible = ref(false)
 const loading = ref(false)
 const formRef = ref<FormInstance>()
+const userList = ref([])
+const optionalList = ref([])
 
 const formData = reactive<RoleFormData>({
   id: 0,
   name: '',
   parentId: undefined,
   status: 1,
-  type: 1
+  type: 1,
+  additionUsers: []
 })
 
 const rules = {
@@ -112,9 +94,33 @@ const rules = {
 }
 
 // Filter out the current role and its children from parent role options
-const filteredRoleOptions = computed(() => {
-  return props.roleOptions.filter(role => role.id !== formData.id)
-})
+const getRoleList = () => {
+  const flatChildren = treeToArray(formData)
+  flatChildren.push(formData.id)
+  optionalList.value = props.roleOptions.filter((role) => !flatChildren.includes(role.id))
+}
+function treeToArray(root) {
+  let result = []
+  function traverse(node) {
+    result.push(node.id)
+    if (node.children) {
+      for (let child of node.children) {
+        traverse(child)
+      }
+    }
+  }
+  traverse(root)
+  return result
+}
+
+async function getUserList() {
+  try {
+    return await adminApi.api.postNuxeoIdentityGetkeycloakallusers({}).then((res) => res.data)
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
 
 function resetForm() {
   if (formRef.value) {
@@ -126,31 +132,33 @@ function resetForm() {
   formData.status = 1
   formData.users = undefined
   formData.type = 1
+  formData.additionUsers = []
 }
 
 function open(role: RoleFormData) {
   resetForm()
   Object.assign(formData, role)
-  console.log("formData", formData)
+  getRoleList()
+  console.log('formData', formData)
   dialogVisible.value = true
 }
 
 async function handleSubmit() {
   if (!formRef.value) return
-  
+
   try {
     await formRef.value.validate()
     loading.value = true
-    
+
     await adminApi.api.putAclRole({
       ...formData,
       id: String(formData.id),
       parentId: formData.parentId ? String(formData.parentId) : undefined,
       type: formData.type
     })
-    
+
     dialogVisible.value = false
-    emit('success')
+    emit('success', formData)
   } catch (error) {
     console.error('Failed to update role:', error)
   } finally {
@@ -167,7 +175,10 @@ const handleUsersUpdate = (users: any[]) => {
   // formData.users = users
   emit('success')
 }
-
+onMounted(async () => {
+  userList.value = await getUserList()
+  console.log('userList', userList)
+})
 defineExpose({
   open
 })
@@ -223,4 +234,4 @@ defineExpose({
   padding: 1rem;
   border-top: 1px solid #eee;
 }
-</style> 
+</style>

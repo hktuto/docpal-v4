@@ -14,8 +14,24 @@ let extraParams = {
   orderBy: 'name',
   isDesc: 'asc'
 }
+let isFilter = false
+let treeMap = {}
 async function getChildApi(id: string = 'root') {
-  return adminApi.api.getAclDocumentDocumentid(id, extraParams).then((res) => res.data)
+  console.log(extraParams, id, 'extraParams')
+
+  if (!isFilter || !treeMap[id]) {
+    treeMap[id] = await adminApi.api.getAclDocumentDocumentid(id, extraParams).then((res) => res.data)
+  }
+  let filterData = treeMap[id].filter((item: any) => true)
+  if (extraParams.q) {
+    const filterVal = extraParams.q.trim().toLowerCase()
+    const searchProps = ['name']
+    filterData = filterData.filter((item: any) => {
+      return searchProps.some((key) => String(item[key]).toLowerCase().indexOf(filterVal) > -1)
+    })
+  }
+  return filterData
+  // return adminApi.api.getAclDocumentDocumentid(id, extraParams).then((res) => res.data)
 }
 
 function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
@@ -59,7 +75,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   remoteSort: false,
   remoteFilter: false,
   childChangeHandler: () => {
-    reopenFolder()
+    // reopenFolder()
   },
   dblClickAction: ({ row, column, event }) => {
     dblClickHandler(row)
@@ -209,9 +225,11 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 const ResponsiveFilterRef = ref()
 function handleFilterFormChange(formData: any) {
   extraParams = formData
-  // setTimeout(() => {
-  //   reopenFolder()
-  // }, 2000)
+  isFilter = true
+  query()
+  setTimeout(() => {
+    isFilter = false
+  }, 2000)
 }
 let treeDataCopy = []
 
@@ -286,6 +304,11 @@ async function getFilter() {
   ]
   ResponsiveFilterRef.value.init(filterSetting)
 }
+function getTable() {
+  const tableData = tableRef.value.getData()
+  const row = tableData.find((item: any) => item.id === '77f07980-3d28-11f0-b669-c5677da71c82')
+  tableRef.value.toggleTreeExpand(row)
+}
 onMounted(() => {
   getFilter()
 })
@@ -305,7 +328,8 @@ watch(
     <div style="overflow: hidden"> -->
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+      <ResponsiveFilter inputKey="q" ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+      <el-button type="primary" @click="getTable()">Clear</el-button>
       <ResourceDocumentBreadcrumb :id="id" @idChange="emits('idChange', $event)" />
     </template>
   </VxeGrid>

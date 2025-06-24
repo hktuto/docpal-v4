@@ -3,9 +3,9 @@ import { ref, watch } from 'vue'
 import { adminApi } from 'api'
 import { useVxeTable } from '#imports'
 import { useDebounceFn } from '@vueuse/core'
-import {ResponsiveFilter} from '#components'
+import { ResponsiveFilter } from '#components'
 import { useI18n } from 'vue-i18n'
-
+import { ElMessageBox } from 'element-plus'
 const { t } = useI18n()
 
 interface Role {
@@ -24,9 +24,9 @@ const searchQuery = ref<{
   status?: number
   parentId?: string[]
 }>({
-  sort_by: "updateTime",
-  sort_type: "DESC",
-  status: 1,
+  sort_by: 'updateTime',
+  sort_type: 'DESC',
+  status: 1
 })
 const ResponsiveFilterRef = ref()
 
@@ -75,6 +75,26 @@ const bodyActions: TableMenuActions[][] = [
             id: String(row.id),
             name: row.name,
             parentId: row.parentRoleId ? String(row.parentRoleId) : undefined,
+            status: 2,
+            type: 1
+          })
+          reload()
+        } catch (error) {
+          console.error('Failed to deactivate role:', error)
+        }
+      }
+    },
+    {
+      code: 'delete',
+      name: t('common_delete'),
+      action: async ({ row }: { row: Role }) => {
+        try {
+          const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+          if (action !== 'confirm') return
+          await adminApi.api.putAclRole({
+            id: String(row.id),
+            name: row.name,
+            parentId: row.parentRoleId ? String(row.parentRoleId) : undefined,
             status: 3,
             type: 1
           })
@@ -87,21 +107,15 @@ const bodyActions: TableMenuActions[][] = [
   ]
 ]
 
-const { 
-  tableConfig,
-  tableEvent,
-  tableRef,
-  reload,
-  query
-} = useVxeTable({
+const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'admin-role-table',
   api: (pageParams: any) => {
     const defaultCondition = {
       column: 'type',
-      type: "EQ",
-      values: "1"
+      type: 'EQ',
+      values: '1'
     }
-    const conditions:{
+    const conditions: {
       column: string
       type: string
       values: any
@@ -111,7 +125,7 @@ const {
     if (searchQuery.value?.q) {
       conditions.push({
         column: 'name',
-        type: "LIKE",
+        type: 'LIKE',
         values: searchQuery.value.q
       })
     }
@@ -120,7 +134,7 @@ const {
     if (searchQuery.value?.status) {
       conditions.push({
         column: 'status',
-        type: "EQ",
+        type: 'EQ',
         values: String(searchQuery.value.status)
       })
     }
@@ -128,22 +142,22 @@ const {
     // Add parent role filter if selected
     if (searchQuery.value?.parentId && searchQuery.value.parentId.length > 0) {
       conditions.push({
-          column: 'parentId',
-          type: "IN",
-          values: searchQuery.value.parentId.join(',')
-        })
+        column: 'parentId',
+        type: 'IN',
+        values: searchQuery.value.parentId.join(',')
+      })
     }
 
     // Add sort by filter if selected
     if (searchQuery.value?.sort_by) {
       conditions.push({
         column: searchQuery.value.sort_by,
-        type: searchQuery.value.sort_type === "ASC" ? "ORDER_BY_ASC" : "ORDER_BY_DESC",
-        values: ""
+        type: searchQuery.value.sort_type === 'ASC' ? 'ORDER_BY_ASC' : 'ORDER_BY_DESC',
+        values: ''
       })
     }
 
-    return adminApi.api.postAclRolePage({...pageParams, conditions})
+    return adminApi.api.postAclRolePage({ ...pageParams, conditions })
   },
   columns: [
     {
@@ -186,15 +200,15 @@ const {
         disabled: false
       }
     }
-    
+
     // Show activate action only for inactive roles
     if (code === 'activate') {
       return {
-        visible: row.status === 3,
+        visible: row.status === 2,
         disabled: false
       }
     }
-    
+
     // Show deactivate action only for active roles
     if (code === 'deactivate') {
       return {
@@ -202,21 +216,25 @@ const {
         disabled: false
       }
     }
-
+    if (code === 'delete') {
+      return {
+        visible: !!row.parentId,
+        disabled: false
+      }
+    }
     return {
-      visible: false,
-      disabled: true
+      visible: true,
+      disabled: false
     }
   }
 })
 
 const { flatRole } = useRBAC()
 async function initFilter() {
-  
   ResponsiveFilterRef.value.init([
     {
       label: t('tableHeader_status'),
-      key: "status",
+      key: 'status',
       isMultiple: false,
       value: [1],
       options: [
@@ -226,13 +244,13 @@ async function initFilter() {
         },
         {
           label: t('actions.inactive'),
-          value: 3
+          value: 2
         }
       ]
     },
     {
       label: t('orgChart.editSidebar.parentRole'),
-      key: "parentId",
+      key: 'parentId',
       isMultiple: true,
       options: [
         ...flatRole.value.map((role) => ({
@@ -243,41 +261,41 @@ async function initFilter() {
     },
     {
       label: t('tableHeader.sortBy'),
-      key: "sort_by",
+      key: 'sort_by',
       isMultiple: false,
-      value: ["updateTime"],
+      value: ['updateTime'],
       options: [
         {
           label: t('tableHeader_name'),
-          value: "name"
+          value: 'name'
         },
         {
           label: t('tableHeader_lastModified'),
-          value: "updateTime"
+          value: 'updateTime'
         },
         {
           label: t('orgChart.editSidebar.parentRole'),
-          value: "parentRoleName"
+          value: 'parentRoleName'
         },
         {
           label: t('tableHeader_status'),
-          value: "status"
+          value: 'status'
         }
       ]
     },
     {
       label: t('tableHeader.sortOrder'),
-      key: "sort_type",
+      key: 'sort_type',
       isMultiple: false,
-      value: ["DESC"],
+      value: ['DESC'],
       options: [
         {
           label: t('tableHeader.asc'),
-          value: "ASC",
+          value: 'ASC'
         },
         {
           label: t('tableHeader.desc'),
-          value: "DESC",
+          value: 'DESC'
         }
       ]
     }
@@ -308,11 +326,7 @@ function handleAddRole() {
 
 <template>
   <div class="role-table-container">
-    <vxe-grid
-      ref="tableRef"
-      v-bind="tableConfig"
-      v-on="tableEvent"
-    >
+    <vxe-grid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="tableActions">
           <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" />
@@ -326,11 +340,11 @@ function handleAddRole() {
 </template>
 
 <style scoped>
-.role-table-container{
-   width: 100%;
-   height: 100%;
-   position: relative;
-   overflow: hidden;
+.role-table-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
 .search-bar {
@@ -342,7 +356,7 @@ function handleAddRole() {
 .search-input {
   width: 300px;
 }
-.tableActions{
+.tableActions {
   display: flex;
   gap: var(--app-space-s);
   align-items: center;

@@ -1,8 +1,16 @@
 <template>
   <div class="chart-container" :style="{ '--node-width': `${NODE_WIDTH}px`, '--node-height': `${NODE_HEIGHT}px` }">
     <div ref="containerRef" style="width: 100%; height: 100%" @contextmenu.prevent />
-    <RbacOrgChartX6ContextMenu :visible="contextMenuVisible" :position="contextMenuPosition" @edit="handleEdit" @add="handleAdd" @delete="handleDelete" />
-    <RbacEditRoleSidebar ref="editRoleSidebarRef" :roleOptions="flatRole"   @close="closeSidebar" @save="handleSave" />
+    <RbacOrgChartX6ContextMenu
+      :visible="contextMenuVisible"
+      :position="contextMenuPosition"
+      :data="selectedNode"
+      @edit="handleEdit"
+      @add="handleAdd"
+      @delete="handleDelete"
+      @setStatus="setStatus"
+    />
+    <RbacEditRoleSidebar ref="editRoleSidebarRef" :roleOptions="flatRole" @close="closeSidebar" @success="handleSave" />
     <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="closeSidebar" />
   </div>
 </template>
@@ -16,7 +24,9 @@ import type { PropType } from 'vue'
 import OrgChartNodePerson from './nodes/person.vue'
 import './styles.css'
 
+import { ElMessageBox } from 'element-plus'
 const { flatRole } = useRBAC()
+const { t } = useI18n()
 const createDialogRef = ref()
 const editRoleSidebarRef = ref()
 
@@ -48,6 +58,7 @@ const emit = defineEmits<{
   (e: 'add', formData: OrgNode, selectedNodeId: string): void
   (e: 'edit', formData: OrgNode, selectedNodeId: string): void
   (e: 'reload'): void
+  (e: 'setStatus', id: string): void
 }>()
 
 const contextMenuVisible = ref(false)
@@ -71,7 +82,6 @@ register({
   component: OrgChartNodePerson
 })
 
-
 const createGraph = () => {
   if (!containerRef.value) return
 
@@ -81,12 +91,12 @@ const createGraph = () => {
       visible: true,
       type: 'mesh',
       args: {
-          color: '#eee',
-          thickness: 1
+        color: '#eee',
+        thickness: 1
       }
     },
     background: {
-        color: 'var(--app-grey-900)',
+      color: 'var(--app-grey-900)'
     },
     autoResize: true,
     mousewheel: {
@@ -94,12 +104,13 @@ const createGraph = () => {
       zoomAtMousePosition: true,
       modifiers: ['ctrl', 'meta']
     },
-    connecting:{
-        connector: 'rounded',
-        allowMulti: true,
+    connecting: {
+      connector: 'rounded',
+      allowMulti: true
     },
-    scaling:{
-        min: 0.2, max: 1.2
+    scaling: {
+      min: 0.2,
+      max: 1.2
     },
     panning: true,
     interacting: {
@@ -108,7 +119,7 @@ const createGraph = () => {
   })
 
   // 添加右键菜单事件
-  graph.on('cell:contextmenu', ({ cell, e }: { cell: any, e: MouseEvent }) => {
+  graph.on('cell:contextmenu', ({ cell, e }: { cell: any; e: MouseEvent }) => {
     handleContextMenu(e, cell)
   })
 
@@ -150,7 +161,7 @@ const initGraph = () => {
     nodes: [],
     edges: []
   } as {
-    nodes: any[],
+    nodes: any[]
     edges: any[]
   }
   // Convert hierarchical data to flat arrays of nodes and edges
@@ -160,7 +171,7 @@ const initGraph = () => {
       id: node.id,
       shape: 'org-node-person',
       data: node,
-      position: { x: 0, y: 0 }, // Position will be set by layout
+      position: { x: 0, y: 0 } // Position will be set by layout
     })
 
     // Create edge if there's a parent
@@ -190,12 +201,12 @@ const initGraph = () => {
 
     // Process children recursively
     if (node.children && !node.collapsed) {
-      node.children.forEach(child => processNode(child, node.id))
+      node.children.forEach((child) => processNode(child, node.id))
     }
   }
 
   // Process each root node
-  props.data.forEach(rootNode => processNode(rootNode))
+  props.data.forEach((rootNode) => processNode(rootNode))
 
   // Apply layout
   const layout = new DagreLayout({
@@ -208,11 +219,10 @@ const initGraph = () => {
   })
 
   const layoutData = layout.layout(graphData)
-  
+
   // Update node positions from layout
-  
-  
-  graph.fromJSON(layoutData);
+
+  graph.fromJSON(layoutData)
 
   // Center and fit content
   graph.centerContent()
@@ -244,9 +254,16 @@ watch(
 const handleContextMenu = (e: MouseEvent, cell: any) => {
   e.preventDefault()
   contextMenuVisible.value = true
-  contextMenuPosition.value = {
-    left: `${e.clientX}px`,
-    top: `${e.clientY}px`
+  if (e.clientY + 120 > window.innerHeight) {
+    contextMenuPosition.value = {
+      left: `${e.clientX}px`,
+      top: `${e.clientY - 120}px`
+    }
+  } else {
+    contextMenuPosition.value = {
+      left: `${e.clientX}px`,
+      top: `${e.clientY}px`
+    }
   }
   selectedCell.value = cell
   selectedNode.value = cell.getData()
@@ -285,40 +302,29 @@ const handleEdit = () => {
 
 // 处理添加子节点
 const handleAdd = () => {
-  console.log('handleAdd, selectedNode.value', selectedNode.value)
   createDialogRef.value.open({
     parentName: selectedNode.value.name,
-    parentId: selectedNode.value.id,
+    parentId: selectedNode.value.id
   })
   closeContextMenu()
 }
-
-// 处理删除
-const handleDelete = () => {
+const setStatus = (status: number) => {
   if (!selectedNode.value || !selectedCell.value) return
-  const data = JSON.parse(JSON.stringify(props.data))
-  function deleteChildById(nodes: OrgNode[], childId: string): OrgNode[] {
-    return nodes
-      .map((node) => {
-        if (node.id === childId) {
-          return null
-        }
-        if (node.children) {
-          node.children = node.children.filter((child) => child.id !== childId)
-          node.children.forEach((child) => {
-            if (child.children) {
-              child.children = deleteChildById(child.children, childId)
-            }
-          })
-        }
-        return node
-      })
-      .filter(Boolean) as OrgNode[]
-  }
-
-  const newData = deleteChildById(data, selectedNode.value.id)
   closeContextMenu()
-  emit('delete', selectedNode.value.id, newData)
+  selectedNode.value.status = 2222
+  emit('setStatus', selectedNode, status)
+}
+// 处理删除
+const handleDelete = async () => {
+  try {
+    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
+    if (action !== 'confirm') return
+    if (!selectedNode.value || !selectedCell.value) return
+    closeContextMenu()
+    emit('delete', selectedNode)
+  } catch (error) {
+    closeContextMenu()
+  }
 }
 
 // 关闭侧边栏
@@ -331,7 +337,10 @@ const closeSidebar = () => {
 // 处理保存
 const handleSave = (formData: Partial<OrgNode>) => {
   if (!selectedNode.value || !selectedCell.value) return
- 
+  selectedNode.value = {
+    ...selectedNode.value,
+    ...formData
+  }
   closeSidebar()
 }
 </script>

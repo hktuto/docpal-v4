@@ -1,5 +1,5 @@
 <template>
-  <div ref="nodeWrapper" class="org-chart-node-wrapper">
+  <div ref="nodeWrapper" :class="['org-chart-node-wrapper',  `rbac-node-${data.status}`]">
     <div class="person-name">{{ data.name }}</div>
       <div class="person-count" v-if="data.count">人数: {{ data.count }}</div>
   </div>
@@ -71,7 +71,7 @@ function handleClick() {
     z-index: 10;
   }
 }
-
-
-
+.rbac-node-2 {
+  background: var(--app-grey-475);
+}
 </style>
