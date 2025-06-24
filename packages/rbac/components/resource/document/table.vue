@@ -15,23 +15,13 @@ let extraParams = {
   isDesc: 'asc'
 }
 let isFilter = false
-let treeMap = {}
 async function getChildApi(id: string = 'root') {
-  console.log(extraParams, id, 'extraParams')
-
-  if (!isFilter || !treeMap[id]) {
-    treeMap[id] = await adminApi.api.getAclDocumentDocumentid(id, extraParams).then((res) => res.data)
-  }
-  let filterData = treeMap[id].filter((item: any) => true)
-  if (extraParams.q) {
-    const filterVal = extraParams.q.trim().toLowerCase()
-    const searchProps = ['name']
-    filterData = filterData.filter((item: any) => {
-      return searchProps.some((key) => String(item[key]).toLowerCase().indexOf(filterVal) > -1)
+  return adminApi.api
+    .postAclDocumentList({
+      documentId: id,
+      ...extraParams
     })
-  }
-  return filterData
-  // return adminApi.api.getAclDocumentDocumentid(id, extraParams).then((res) => res.data)
+    .then((res: any) => res.data)
 }
 
 function recursiveLoadChild(checkList: any[] = [], treeData: any[], result: any[] = []) {
@@ -119,8 +109,24 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       }
     },
     {
-      field: 'type',
+      field: 'documentType',
       title: 'docType_documentType'
+    },
+    {
+      field: 'read',
+      title: 'permission.read'
+    },
+    {
+      field: 'readWrite',
+      title: 'permission.write'
+    },
+    {
+      field: 'manage',
+      title: 'permission.manage'
+    },
+    {
+      field: 'custom',
+      title: 'permission.custom'
     }
   ],
   bodyActions: [
@@ -328,8 +334,8 @@ watch(
     <div style="overflow: hidden"> -->
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <ResponsiveFilter inputKey="q" ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
-      <el-button type="primary" @click="getTable()">Clear</el-button>
+      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+      <!-- <el-button type="primary" @click="getTable()">Clear</el-button> -->
       <ResourceDocumentBreadcrumb :id="id" @idChange="emits('idChange', $event)" />
     </template>
   </VxeGrid>
