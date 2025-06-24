@@ -19,7 +19,7 @@ const { selectedRows, expandedItems } = defineProps<{
 }>()
 const copyDocumentList = useCopyDocumnetList()
 const tableContainer = ref<HTMLElement>()
-const emits = defineEmits(['selectedChange','expandedItemsChange'])
+const emits = defineEmits(['selectedChange', 'expandedItemsChange'])
 const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
@@ -67,24 +67,21 @@ const reopenFolder = useDebounceFn(() => {
   // get table opened row
 }, 300)
 
-async function searchData(entry: any[], path?: string, searchQuery?: string, pageNum: number = 0) {
-
-
-}
+async function searchData(entry: any[], path?: string, searchQuery?: string, pageNum: number = 0) {}
 
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'tableSetting',
   api: async (pageParams: any) => {
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
-    if(listProvider.mode.value === 'browse') {
+    if (listProvider.mode.value === 'browse') {
       const data = await loadData([], listProvider.idOrPath?.value || '/')
       data.sort(sortEntry)
       emits('selectedChange', [])
       return data
     }
     // if mode is search, use searchData to get search data
-    if(listProvider.mode.value === 'search') {
+    if (listProvider.mode.value === 'search') {
       // TODO : IMPLEMENT SEARCH DATA
       return []
     }
@@ -313,7 +310,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       },
       {
-        code: 'docActionInternalShare',
+        code: 'assignPermission',
         name: 'filePopover_internalShare',
         action: ({ row }) => {
           const ev = new CustomEvent('docActionInternalShare', { detail: row })
@@ -364,7 +361,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       },
       {
-        code: 'docActionDownload',
+        code: 'download',
         name: 'rightClick.download',
         action: ({ row }) => {
           downloadHandler(row)
@@ -381,103 +378,77 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     const permission = await getPermission(row.id, userId.value)
     return permission
   },
-  permissionMethod: ({ options, code, column, row, rowIndex, additionalData }: any): {
+  permissionMethod: ({
+    options,
+    code,
+    column,
+    row,
+    rowIndex,
+    additionalData
+  }: any): {
     visible: boolean
     disabled: boolean
   } => {
     // if click on empty row, return empty
-    if (!row) {
-      if (code === 'docActionRefresh') {
-        return {
-          visible: true,
-          disabled: false
+    console.log(row, code);
+    
+    if (!!row) {
+      console.log('????');
+      
+      // const docDetail = listProvider.docDetail?.value
+      // if (docDetail.path === '/') {
+      //   return {
+      //     visible: false,
+      //     disabled: false
+      //   }
+      // }
+      // hide all action when click on temp file
+      if (row.source === 'tempFile') {
+        return { visible: false, disabled: false }
+      }
+      
+      const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
+      const map: any = {
+        createSubFolder: ['docActionPaste'],
+        create: [],
+        write: [],
+        editMetadata: ['docActionChangeDocType', 'docActionRename'],
+        delete: [],
+        deleteSubContent: []
+      }
+      if (row.isFolder) {
+        map.create = ['docActionAddFolder', 'docActionUploadFolder', 'docActionNewFile', 'docActionUploadFile']
+        map.write = ['docActionCopy']
+        map.delete = []
+        map.deleteSubContent = ['docActionCut', 'docActionDelete']
+      } else {
+        map.create = []
+        map.write = ['docWatermark', 'docActionCopy']
+        map.delete = ['docActionCut', 'docActionDelete']
+        map.deleteSubContent = []
+      }
+      if (publicActionsCode.includes(code)) {
+        return { visible: true, disabled: false }
+      } else {
+        for (const key in map) {
+          if (map[key].includes(code)) {
+            const isPaste = code === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
+            return {
+              visible: RbacAllowTo(key, row.permissionIds, row.isFolder) && isPaste,
+              disabled: false
+            }
+          }
         }
       }
-      if (code === 'docActionPaste') {
-        return {
-          visible:
-            AllowTo({
-              feature: 'ReadWrite',
-              permission: additionalData
-            }) && copyDocumentList.value.length > 0,
-          disabled: false
-        }
-      }
-      const docDetail = listProvider.docDetail?.value
-      // check if docDetail path is home '/'
-      if (docDetail.path === '/') {
-        return {
-          visible: false,
-          disabled: false
-        }
-      }
-      // if(docDetail && docDetail.idOrPath === '/') {
-      const otherPublicAction = ['docActionAddFolder', 'docActionNewFile', 'docActionUploadFile', 'docActionUploadFolder']
-      if (otherPublicAction.includes(code)) {
-        return {
-          visible: AllowTo({ feature: 'ReadWrite', permission: additionalData }),
-          disabled: false
-        }
-      }
+
       return {
-        visible: false,
+        visible: RbacAllowTo(code, row.permissionIds, row.isFolder),
         disabled: false
       }
     }
-    const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
-    if (publicActionsCode.includes(code)) {
-      return { visible: true, disabled: false }
-    }
-    // hide all action when click on temp file
-    if (row.source === 'tempFile') {
-      return { visible: false, disabled: false }
-    }
-    // need other permissiion check list
-    if (code === 'docActionPaste') {
-      return {
-        visible:
-          AllowTo({
-            feature: 'ReadWrite',
-            permission: additionalData
-          }) && copyDocumentList.value.length > 0,
-        disabled: false
-      }
-    }
-    const actionThatFolderAndFileHave = [
-      'docActionRename',
-      'docActionInternalShare',
-      'docActionChangeDocType',
-      'docActionCopy',
-      'docActionCut',
-      'docActionPaste',
-      'docActionDelete'
-    ]
-    if (actionThatFolderAndFileHave.includes(code)) {
-      const ManageCode = ['docActionInternalShare']
-      if (ManageCode.includes(code)) {
-        return {
-          visible: AllowTo({ feature: 'ManageRecord', permission: additionalData }),
-          disabled: false
-        }
-      }
-      return {
-        visible: AllowTo({ feature: 'ReadWrite', permission: additionalData }),
-        disabled: false
-      }
-    }
-    // get permission
-    const folderActionsCode = ['docActionAddFolder', 'docActionNewFile', 'docActionUploadFile', 'docActionUploadFolder']
-    // handle folder actions
-    if (folderActionsCode.includes(code)) {
-      return {
-        visible: row.isFolder && AllowTo({ feature: 'ReadWrite', permission: additionalData }),
-        disabled: false
-      }
-    } else {
-      return {
-        visible: !row.isFolder && AllowTo({ feature: 'ReadWrite', permission: additionalData }),
-        disabled: false
-      }
+    return {
+      visible: false,
+      disabled: false
     }
   },
   selectChangeHander: (selectedRows: any[], selectedRow: any) => {
@@ -648,8 +619,6 @@ function cleanSelected() {
   }
 }
 
-onMounted(() => {
-})
 
 onDeactivated(() => {
   if (tableDropZone) {
@@ -668,8 +637,10 @@ onDeactivated(() => {
   cleanSelectedRowsBus.off(cleanSelectedRows)
 })
 
-watch(() => listProvider.idOrPath, () => {
-  console.log("listProvider.idOrPath",listProvider.idOrPath)
+watch(
+  () => listProvider.idOrPath,
+  () => {
+    console.log('listProvider.idOrPath', listProvider.idOrPath)
     if (listProvider?.idOrPath?.value) {
       changeRoute()
     }
@@ -681,11 +652,14 @@ watch(() => listProvider.idOrPath, () => {
 )
 
 // watch mode in listProvider, if mode change then reload table
-watch(() => listProvider.mode, () => {
-  if (tableRef.value) {
-    tableRef.value.reload()
+watch(
+  () => listProvider.mode,
+  () => {
+    if (tableRef.value) {
+      tableRef.value.reload()
+    }
   }
-})
+)
 
 function handleCheckboxChange(rows: any, selectedRow: any) {
   if (
