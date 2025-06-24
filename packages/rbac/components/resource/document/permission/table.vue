@@ -225,7 +225,10 @@ async function handleRemoveInherent() {
   await adminApi.api.postAclResourcePermissionsCopyInheritResourceid(document.value.id)
   reload()
 }
-
+async function handleInherent() {
+  await adminApi.api.postAclResourcePermissionsIncludeInheritResourceid(document.value.id)
+  reload()
+}
 const { flatRole } = useRBAC()
 async function getTargetOptions() {
   async function getGroupList() {
@@ -312,14 +315,15 @@ watch(
       <div class="actions">
         <el-button type="primary" @click="handleAdd">{{ $t('rbac.permission.addPermission') }}</el-button>
         <el-button type="primary" @click="handleAddSet">{{ $t('rbac.permission.addUserSet') }}</el-button>
-        <el-dropdown v-if="isInherit">
+        <el-dropdown>
           <el-button type="primary">
             {{ $t('button.more') }}
             <el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="handleRemoveInherent">{{ $t('accessControl_removeInherent') }}</el-dropdown-item>
+              <el-dropdown-item  v-if="isInherit" @click="handleRemoveInherent">{{ $t('accessControl_removeInherent') }}</el-dropdown-item>
+              <el-dropdown-item v-else @click="handleInherent">{{ $t('accessControl_inherent') }}</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
