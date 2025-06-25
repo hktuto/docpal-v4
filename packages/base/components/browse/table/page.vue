@@ -5,17 +5,22 @@ import { clientApi } from 'api'
 import { EventType, useEventBus, emitBus } from 'eventbus'
 import { actions, ActionsFilter } from '~/../base/utils/browseActions'
 
-const props = withDefaults(defineProps<{
-  idOrPath: string
-  home?: any
-  commentId?: string
-  expandedItems: any[]
-  isReload?: boolean
-}>(), {
-  idOrPath: '/',
-  expandedItems: [],
-  isReload: false
-})
+const props = withDefaults(
+  defineProps<{
+    idOrPath: string
+    home?: any
+    commentId?: string
+    expandedItems: any[]
+    isReload?: boolean
+    permissionIds?: any
+  }>(),
+  {
+    idOrPath: '/',
+    expandedItems: [],
+    isReload: false,
+    permissionIds: []
+  }
+)
 
 const { idOrPath, commentId, expandedItems } = toRefs(props)
 const currentIdOrPath = ref(idOrPath.value)
@@ -45,16 +50,18 @@ function removeFromSelection(items: any[]) {
   selectedItem.value = selectedItem.value.filter((item) => !items.includes(item))
 }
 
-function changeRoute(path: string) {
+function changeRoute(path: string, permissionIds: any) {
   currentIdOrPath.value = path
-  if(props.isReload) {
+  if (props.isReload) {
     routerProvider?.updateProps({
-        idOrPath: path
+      idOrPath: path,
+      permissionIds: permissionIds
     })
   }
 }
 
 const docDetail = ref()
+// TODO: rbac maybe can set this to _permissionIds
 const docPermission = ref()
 const selectedList = ref<any[]>([])
 
@@ -63,7 +70,7 @@ async function getDoc() {
   docPermission.value = null
   selectedList.value = []
   const userId = useUserId()
-  const { doc, permission } = await getDocDetail(idOrPath.value, userId.value)
+  const { doc } = await getDocDetail(idOrPath.value, userId.value)
   if (!doc.isFolder) {
     tabProvider?.openInCurrentTab(
       createDetailPageParams({
@@ -75,8 +82,7 @@ async function getDoc() {
     )
   } else {
     docDetail.value = doc
-    docPermission.value = permission
-    console.log("docDetail", docDetail.value)
+    console.log('docDetail', docDetail.value)
   }
 }
 
@@ -95,11 +101,11 @@ function closePreview({ detail }: any) {
 }
 
 const docActions = computed(() => {
-  if (!docDetail.value || !docPermission.value) return {}
+  if (!docDetail.value || !props.permissionIds) return {}
   if (selectedList.value.length > 0) {
-    return ActionsFilter(actions, docPermission.value, 'showInShare')
+    return ActionsFilter(actions, props.permissionIds, 'showInShare')
   }
-  return ActionsFilter(actions, docPermission.value, 'showInFolder')
+  return ActionsFilter(actions, props.permissionIds, 'showInFolder')
 })
 
 function handleSelectAll() {
@@ -119,21 +125,21 @@ async function handleRefresh() {
   if (tableRef.value) {
     tableRef.value.reload()
     setTimeout(() => {
-      if(tableRef.value) {
+      if (tableRef.value) {
         tableRef.value.tableConfig.loading = false
       }
-    },2000)
+    }, 2000)
   }
 }
 
 async function handleRefreshChild(childId: string) {
   if (tableRef.value) {
     const tableData: any = tableRef.value?.tableRef?.getData()
-    const cItem = findNodeById({children:tableData}, childId)
+    const cItem = findNodeById({ children: tableData }, childId)
     if (!!cItem) tableRef.value?.tableRef?.reloadTreeExpand(cItem)
-    console.log('handleRefreshChild', cItem);
+    console.log('handleRefreshChild', cItem)
   }
-  
+
   function findNodeById(node: any, targetId) {
     // 当前节点匹配时直接返回
     if (node.id === targetId) {
@@ -180,7 +186,8 @@ provide(BrowseListProviderKey, {
   getchildApi: (pageParams: any) => {
     return clientApi.api.postNuxeoDocumentChildrenThumbnailV2(pageParams)
   },
-  idOrPath : currentIdOrPath,
+  idOrPath: currentIdOrPath,
+  permissionIds: props.permissionIds,
   docDetail,
   docPermission,
   mode,
@@ -190,16 +197,13 @@ provide(BrowseListProviderKey, {
   removeFromSelection
 })
 
-
-
-
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
 bus.on((ids: any) => {
-  if(!ids) return
+  if (!ids) return
   const relatedIdOrPath = ids?.relatedIdOrPath
   emitBus(EventType.FILE_CLEAN_SELECTED_ROWS)
   // console.log(relatedIdOrPath, docDetail.value.id)
-  if(!relatedIdOrPath || !docDetail.value?.id) return
+  if (!relatedIdOrPath || !docDetail.value?.id) return
   if (relatedIdOrPath !== docDetail.value?.id) {
     handleRefreshChild(relatedIdOrPath)
   }
@@ -217,13 +221,13 @@ const browseContainer = ref()
 function calMinWidth() {
   // panel size is 280px, check the percentage of window width
   const containerSize = browseContainer.value?.getBoundingClientRect() as any
-  if(!containerSize) return;
+  if (!containerSize) return
   minSize.value = Number(((400 / containerSize.width) * 100).toFixed(0))
 }
 function expandedItemsChangeHandler(updateEexpandedItems: any[]) {
-  if(props.isReload) {
+  if (props.isReload) {
     routerProvider?.updateProps({
-        expandedItems: updateEexpandedItems
+      expandedItems: updateEexpandedItems
     })
   }
 }
@@ -266,12 +270,14 @@ function handleSearchBlur() {
   <div ref="browseContainer" class="browseContainer">
     <splitpanes>
       <Pane>
-        <BrowseTable ref="tableRef"
-          :class="{ selected: selectedList.length > 0 }" 
-          :selectedRows="selectedItem" 
+        <BrowseTable
+          ref="tableRef"
+          :class="{ selected: selectedList.length > 0 }"
+          :selectedRows="selectedItem"
           :expandedItems="expandedItems"
           @selectedChange="selectedChangeHandler"
-          @expandedItemsChange="expandedItemsChangeHandler" >
+          @expandedItemsChange="expandedItemsChangeHandler"
+        >
           <template #toolbar_buttons>
             <slot name="toolbar_buttons">
               <div class="toolsBarContainer">
@@ -292,37 +298,30 @@ function handleSearchBlur() {
                   <Icon name="mdi:magnify" />
                 </div>
                 <div v-else class="searchInputContainer">
-                  <input 
+                  <input
                     ref="searchInputRef"
-                    v-model="searchQuery" 
-                    type="text" 
+                    v-model="searchQuery"
+                    type="text"
                     class="searchInput"
                     placeholder="Search..."
                     @keyup.enter="handleSearch"
                     @blur="handleSearchBlur"
                   />
                   <div class="searchActions">
-                    <Icon 
-                      name="mdi:magnify" 
-                      class="searchIcon" 
-                      @click="handleSearch"
-                    />
-                    <Icon 
-                      name="mdi:close" 
-                      class="closeIcon" 
-                      @click="collapseSearch"
-                    />
+                    <Icon name="mdi:magnify" class="searchIcon" @click="handleSearch" />
+                    <Icon name="mdi:close" class="closeIcon" @click="collapseSearch" />
                   </div>
                 </div>
               </div>
               <CollapseMenu v-if="idOrPath !== '/'">
-                <template #default="{ collapse }">
+                <template #default="{ collapse }"
+                  >
                   <template v-for="(group, key) in docActions" :key="key">
                     <template v-for="item in group" :key="item.name">
                       <component
                         :is="item.component"
                         :doc="docDetail"
-                        :permission="docPermission"
+                        :permissionIds="permissionIds"
                         :selectedList="selectedList"
                         @clearSelected="handleClearSelected"
                         @success="handleRefresh"
@@ -333,7 +332,7 @@ function handleSearchBlur() {
                   </template>
                 </template>
               </CollapseMenu>
-              <BrowseActionsInfo v-if="idOrPath !== '/'" :doc="docDetail" :permission="docPermission" @itemClicked="infoOpened = !infoOpened" />
+              <BrowseActionsInfo v-if="idOrPath !== '/'" :doc="docDetail" :permissionIds="permissionIds" @itemClicked="infoOpened = !infoOpened" />
             </slot>
           </template>
         </BrowseTable>
@@ -341,7 +340,7 @@ function handleSearchBlur() {
       <Pane v-if="idOrPath !== '/' && infoOpened" :min-size="minSize" :size="minSize">
         <BrowseInfo
           :doc="docDetail"
-          :permission="docPermission"
+          :permissionIds="permissionIds"
           :infoOpened="infoOpened"
           :commentId="commentId"
           @close="infoOpened = false"
@@ -406,7 +405,6 @@ function handleSearchBlur() {
   border-radius: 18px;
   cursor: pointer;
 }
-
 
 .searchInputContainer {
   display: flex;

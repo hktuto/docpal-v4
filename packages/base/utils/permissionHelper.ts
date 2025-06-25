@@ -75,16 +75,19 @@ const permissionOptions = [
   { label: 'rbac.permission.assignPermission', value: 14, group: 'manage', name: 'assignPermission' },
   { label: 'rbac.permission.addUserSet', value: 15, group: 'manage', name: 'addUserSet' }
 ]
-export const RbacAllowTo = (rbacPermission: rbacPermission[] | rbacPermission, permissionIds: number[], isFolder: any = '') => {
-  // Check if any of the permissionIds correspond to the requested rbacPermissions
-  const p = Array.isArray(rbacPermission) ? rbacPermission : [rbacPermission]
-  return permissionIds.some((id) => {
-    const option = permissionOptions.find((option) => {
-      // for right click menu
-      const c = isFolder === '' ? 1 : String(isFolder) === option.isFolder || !option.isFolder
-      console.log( String(isFolder));
-      return option.value === id && c
+export const RbacAllowTo = (
+  rbacPermission: rbacPermission[] | rbacPermission,
+  permissionIds: number[],
+  isFolder: boolean | '' = ''
+): boolean => {
+  if (!permissionIds) return false
+  const permissions = Array.isArray(rbacPermission) ? rbacPermission : [rbacPermission]
+  return permissionIds.some(id => {
+    const option = permissionOptions.find(opt => {
+      const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
+      return opt.value === id && folderMatch
     })
-    return option && p.includes(option.name as rbacPermission)
+
+    return option && permissions.includes(option.name as rbacPermission)
   })
 }
