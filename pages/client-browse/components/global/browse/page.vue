@@ -5,7 +5,8 @@ const props = defineProps<{
     filter: any,
     home: any,
     commentId: string
-    expandedItems: any[]
+    expandedItems: any[],
+    permissionIds: any[]
 }>();
 
 

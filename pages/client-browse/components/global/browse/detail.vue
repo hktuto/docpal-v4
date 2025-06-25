@@ -10,14 +10,16 @@ const props = withDefaults(
     showHeaderAction?: boolean
     showInfo: boolean
     commentId: string
-    home: any
+    home: any,
+    permissionIds: any
   }>(),
   {
     idOrPath: '',
     showHeaderAction: true,
     showInfo: false,
     commentId: '',
-    home: ''
+    home: '',
+    permissionIds: []
   }
 )
 const { idOrPath, commentId } = toRefs(props)
@@ -141,8 +143,8 @@ function mobileActionsOpenedChanged(bool: boolean) {
 }
 
 const detailActions = computed(() => {
-  if (!docDetail.value || !docPermission.value) return {}
-  return ActionsFilter(actions, docPermission.value, 'showInDetail')
+  if (!docDetail.value) return {}
+  return ActionsFilter(actions, props.permissionIds, 'showInDetail')
 })
 
 function goParent() {
@@ -213,7 +215,7 @@ useEventListener(window, 'resize', calMinWidth)
             <div class="actions">
               <template v-if="showHeaderAction">
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
-                  <template #default="{ collapse }">
+                  <template #default="{ collapse }">sfd
                     <template v-for="(group, key) in detailActions" :key="key">
                       <template v-for="item in group" :key="item.name">
                         <component
@@ -233,7 +235,7 @@ useEventListener(window, 'resize', calMinWidth)
                   </template>
                 </CollapseMenu>
 
-                <BrowseActionsInfo :doc="docDetail" :permission="docPermission" @itemClicked="infoOpened = !infoOpened" />
+                <BrowseActionsInfo @itemClicked="infoOpened = !infoOpened" />
                 <div :class="{ actionDivider: true, collapse }"></div>
               </template>
             </div>
@@ -241,12 +243,11 @@ useEventListener(window, 'resize', calMinWidth)
           <div class="content">
             <BrowsePreview
               :docDetail="docDetail"
-              :docPermission="docPermission"
-              :editMode="editMode"
-              :editable="AllowTo({ feature: 'ReadWrite', permission: docPermission })"
+              :permissionIds="permissionIds"
+              :editable="RbacAllowTo('write', permissionIds)"
               :loadAnnotations="true && allowFeature('DOC_ANNOTATION')"
-              :print="docPermission.print && allowFeature('DOC_PRINT')"
-              :readOnly="!AllowTo({ feature: 'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')"
+              :print="RbacAllowTo('print', permissionIds) && allowFeature('DOC_PRINT')"
+              :readOnly="!RbacAllowTo('write', permissionIds) || !allowFeature('DOC_ANNOTATION')"
             />
             <!-- <div v-if="loading || !docDetail || !docDetail.properties" class="noSupportContainer" >
                         {{ $t('common_loading') }}
@@ -275,7 +276,7 @@ useEventListener(window, 'resize', calMinWidth)
                 v-if="showInfo"
                 :doc="docDetail"
                 :commentId="commentId"
-                :permission="docPermission"
+                :permissionIds="permissionIds"
                 :infoOpened="infoOpened"
                 :hidePreview="true"
                 @close="infoOpened = false"
@@ -288,7 +289,7 @@ useEventListener(window, 'resize', calMinWidth)
       <Pane v-if="infoOpened" :min-size="minSize" :size="minSize">
         <BrowseInfo
           :doc="docDetail"
-          :permission="docPermission"
+          :permissionIds="permissionIds"
           :infoOpened="infoOpened"
           :commentId="commentId"
           @close="infoOpened = false"

@@ -11,7 +11,7 @@ const props = withDefaults(defineProps<{
     draggable?:boolean,
     resizeOption?: any,
     listData?: any,
-    permission?: any,
+    permissionIds?: any,
     commentId?: string
 }>(),{
     doc: null,
@@ -21,22 +21,9 @@ const userId = useUserId()
 const { doc } = toRefs(props)
 const currentTab = ref('info')
 
-
-
-function checkPermission(permission) {
-    if(!!permission?.hold?.status) {
-        return ['A', 'L', 'P'].includes(permission.hold.status)
-    }
-    else if(!!permission?.retention?.status) {
-        return ['A', 'D', 'P'].includes(permission.retention.status)
-    }
-    else return false 
-}
-
-
 const loading = ref(false);
 const detail = ref<any>();
-const permission = ref<any>();
+const _permissionIds = ref<any>();
 
 
 function openEditInfo() {
@@ -62,7 +49,7 @@ async function docUpdated(forceRefresh?: boolean = false) {
 
     if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
         detail.value = deepCopy(props.listData.doc)
-        permission.value = props.permission;
+        _permissionIds.value = props.permissionIds;
         
         return
     }
@@ -78,7 +65,7 @@ async function docUpdated(forceRefresh?: boolean = false) {
         //   const response = await getDocumentDetail(doc.value.id, userId);
         const response = await getDocDetail(doc.value.id, userId.value);
         detail.value = response.doc;
-        permission.value = response.permission;
+        if(response.permissionIds) _permissionIds.value = response.permissionIds;
         //scroll to top
         const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
         if(tabContent) {
@@ -109,7 +96,7 @@ watch(() => props.commentId, async() => {
     <slot name="header" />
     <div class="headerTopRow">
         <div class="name"><div class="namespan" @dblclick="openEditInfo">{{ doc ? doc.name : '' }}</div> 
-            <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="AllowTo({feature:'ReadWrite', permission })" :doc="doc" @success="$emit('refresh')"/>
+            <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="RbacAllowTo('write', permissionIds)" :doc="doc" @success="$emit('refresh')"/>
         </div>
         
         <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
@@ -122,7 +109,7 @@ watch(() => props.commentId, async() => {
             <div v-if="!hidePreview" class="infoPreviewContainer">
                 <BrowseInfoPreview :doc="detail"  />
             </div>
-            <BrowseInfoDocInfo :doc="detail" :permission="permission" @update="docUpdated" @refresh="$emit('refresh')"/>
+            <BrowseInfoDocInfo :doc="detail" :permissionIds="permissionIds" @update="docUpdated" @refresh="$emit('refresh')"/>
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
@@ -132,14 +119,15 @@ watch(() => props.commentId, async() => {
         <BrowseInfoOcr v-if="currentTab === 'ocr'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-if="allowFeature('DOC_COMMENT')" class="pane--comment" :label="$t('rightDetail_comments')" name="comments">
-        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :commentId="commentId" :disabled="checkPermission(permission)"/>
+      <!-- TODO: rbac check permission :disabled="checkPermission(permission)" -->
+        <BrowseInfoComments v-if="currentTab === 'comments'" :doc="detail" :commentId="commentId" />
     </el-tab-pane>
     <el-tab-pane v-if="!detail.isFolder && allowFeature('DOCUMENT_CONVERSION')" :label="$t('convert_convert')" name="convert">
         <BrowseInfoPicture v-if="allowFeature('DAM_FILE_CONVERTION')" :doc="detail" />
         <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
-      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permission}" />
+      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permissionIds}" />
     </el-tab-pane> 
 </el-tabs>
   </template>

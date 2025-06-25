@@ -389,12 +389,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     visible: boolean
     disabled: boolean
   } => {
-    // if click on empty row, return empty
-    console.log(row, code);
-    
     if (!!row) {
-      console.log('????');
-      
+      // if click on empty row, return empty
       // const docDetail = listProvider.docDetail?.value
       // if (docDetail.path === '/') {
       //   return {
@@ -577,11 +573,12 @@ function dblClickHandler(row: any) {
     return
   }
   if (row.isFolder) {
-    listProvider?.changeRoute(row.path)
+    listProvider?.changeRoute(row.path, row.permissionIds)
   } else {
     const params = createDetailPageParams({
       idOrPath: row.id,
-      docName: row.name
+      docName: row.name,
+      permissionIds: row.permissionIds
     })
     routerProvider?.navigateTo(params)
   }

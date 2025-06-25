@@ -7,17 +7,6 @@
 
 <script lang="ts" setup>
 const props = defineProps<{ace:{userId: string, type:string},permission:any }>();
-const emit = defineEmits(['handleRemove', 'handleEdit']);
-function handleEdit(item:any) {
-    if (item.type === 'local' && AllowTo({feature:'ManageRecord', permission: props.permission })) {
-        emit('handleEdit', item);
-    }
-}
-function handleRemove(item:any) {
-    if (item.type === 'local' && AllowTo({feature:'ManageRecord', permission: props.permission })) {
-        emit('handleRemove', item);
-    }
-}
 </script>
 
 <style scoped lang="scss">
