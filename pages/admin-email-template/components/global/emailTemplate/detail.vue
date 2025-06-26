@@ -88,9 +88,10 @@ function handleClose() {
  */
 async function save() {
   const {html, json, variable} = await editorEl.value.getData();
+
   // if id is new , create new
   // check form valid
-  if (id === "new") {
+  // if (id === "new") {
     if (infoFormEl.value) {
       try {
         await infoFormEl.value.validate()
@@ -98,7 +99,7 @@ async function save() {
         console.error(e)
         return
       }
-    }
+    // }
     const result = await adminApi.api.postTemplateEmailTemplate({
       ...data.value,
       // TODO : send html to body
