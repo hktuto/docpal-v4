@@ -7,7 +7,7 @@ import './index.scss';
 import * as Dom from '../utils/dom';
 import { SelectionUtils } from '../utils/selection';
 import { Utils } from '../utils/utils';
-import { InlineTool, InlineToolConstructorOptions } from '@editorjs/editorjs';
+import type { InlineTool, InlineToolConstructorOptions } from '@editorjs/editorjs';
 import {IconCurlyBrackets, IconCross} from '@codexteam/icons'
 
 /**
