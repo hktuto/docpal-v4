@@ -16,7 +16,8 @@
           :ref="(el: any) => (formRenderSlotsRef[item.name] = el)"
           :disabled="state.readonly"
           :formData="state.formData"
-          :options="data.options.dynamicConfig"
+          :options="data.options?.dynamicConfig"
+          :vformOptions="data.options"
           :taskDetail="props.taskDetail"
         />
       </template>

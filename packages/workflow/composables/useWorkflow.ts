@@ -25,6 +25,10 @@ export const useWorkflow = () => {
     {
       name: 'updateDocument',
       component: 'formWidgetUpdateDocument'
+    },
+    {
+      name: 'uploadFromDocpal',
+      component: 'formWidgetUploadFromDocpal'
     }
   ]));
   const formStartHandle = useState<any>('formRenderSlots', () => ({}));
