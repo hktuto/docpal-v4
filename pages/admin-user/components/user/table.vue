@@ -163,8 +163,11 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         const key = column.property
         if(!key || !row) return ''
         const value = row[key] ?? ""
-        if (key === 'groupDTOList') {
-          return value.map((item: any) => item.name).join(', ')
+        if (key === 'groups') {
+          if (Array.isArray(value)) {
+            return value.map((item: any) => item.name).join(', ')
+          }
+          return value
         }
         if (typeof value === 'string') {
           return value
