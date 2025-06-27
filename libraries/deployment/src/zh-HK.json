@@ -2280,6 +2280,8 @@
       "fieldRequired": "{name} 不能為空",
       "fileLoading": "文件正在上传，请稍后再试",
       "fileSizeExceed": "文件大小已超出: ",
+      "fromComputer": "本地上傳",
+      "fromDocpal": "Docpal上傳",
       "insertSubFormRow": "插入行",
       "invalidNumber": "数据格式错误",
       "nonSubFormType": "组件类型不是子表单",
@@ -2297,6 +2299,7 @@
       "unsupportedFileType": "不支持格式: ",
       "uploadError": "上传错误: ",
       "uploadExceed": "最大上传数量({uploadLimit})已超出.",
+      "uploadFormDocpalSetting": "Docpal 上傳設定",
       "validationFailed": "表单数据校验失败"
     }
   },
@@ -2782,6 +2785,10 @@
   "upload": {
     "complete": "上傳完成",
     "upload": "上傳"
+  },
+  "uploadFromDocpal": {
+    "root": "根位置",
+    "type": "類型"
   },
   "upload_Status_error": "错误",
   "upload_Status_finish": "完成",

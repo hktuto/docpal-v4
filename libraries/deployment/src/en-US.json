@@ -2282,6 +2282,8 @@
       "fieldRequired": "{name} cannot be empty.",
       "fileLoading": "The file is being uploaded, please try again later",
       "fileSizeExceed": "File size out of limit: ",
+      "fromComputer": "From Computer",
+      "fromDocpal": "From Docpal",
       "insertSubFormRow": "insert new row",
       "invalidNumber": "Invalid number format",
       "nonSubFormType": "The type of widget don't match sub-form",
@@ -2299,6 +2301,7 @@
       "unsupportedFileType": "Unsupported format: ",
       "uploadError": "Upload error: ",
       "uploadExceed": "The maximum number({uploadLimit}) of file uploads has been exceeded.",
+      "uploadFormDocpalSetting": "Upload Form Docpal Setting",
       "validationFailed": "Form validation failed"
     }
   },
@@ -2784,6 +2787,10 @@
   "upload": {
     "complete": "Upload Complete",
     "upload": "Upload"
+  },
+  "uploadFromDocpal": {
+    "root": "Root Location",
+    "type": "Type"
   },
   "upload_Status_error": "Error",
   "upload_Status_finish": "Finish",

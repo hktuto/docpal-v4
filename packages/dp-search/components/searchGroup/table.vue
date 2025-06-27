@@ -44,12 +44,13 @@ import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
 import { clientApi } from 'api'
 
-const { tableId } = defineProps<{
-  tableId: string
+const { tableId, showCheckbox } = defineProps<{
+  tableId: string,
+  showCheckbox: boolean
 }>()
 
 const routerProvider = inject(MenuRouterKey)
-const emits = defineEmits(['updateAgg'])
+const emits = defineEmits(['updateAgg', 'selectChange'])
 // #region module: page
 const route = useRoute()
 const router = useRouter()
@@ -86,6 +87,8 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       title: 'document_name',
       field: 'name',
       width: 250,
+      type: showCheckbox ? 'checkbox' : '',
+      className: 'document_name',
       slots: {
         default: 'docIcon'
       }
@@ -152,6 +155,9 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   bodyActions: [],
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
+  },
+  selectChangeHander: (selectedRows: any[]) => {
+    emits('selectChange', selectedRows)
   },
   optionalConfig: {
     data: [],
@@ -244,6 +250,12 @@ async function getList(param: any) {
   }
 }
 
+function cleanSelected() {
+  if (tableRef.value) {
+    tableRef.value.setAllCheckboxRow(false)
+    emits('selectedChange', [])
+  }
+}
 // function handlePaginationChange(page: number, pageSize?: number) {
 //   if (!pageSize) pageSize = pageParams.pageSize
 //   const time = new Date().valueOf().toString()
@@ -319,7 +331,7 @@ function initSearch(searchParams: any) {
 
 }
 
-defineExpose({ initBar, initAgg, initSearch })
+defineExpose({ initBar, initAgg, initSearch, cleanSelected })
 </script>
 
 <style lang="scss" scoped>
@@ -351,5 +363,12 @@ defineExpose({ initBar, initAgg, initSearch })
   justify-content: flex-start;
   align-items: center;
   gap: var(--app-space-xs);
+}
+</style>
+<style lang="scss">
+.document_name {
+  .vxe-cell--checkbox {
+    display: flex;
+  }
 }
 </style>

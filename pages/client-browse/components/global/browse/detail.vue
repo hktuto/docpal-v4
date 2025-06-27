@@ -215,7 +215,7 @@ useEventListener(window, 'resize', calMinWidth)
             <div class="actions">
               <template v-if="showHeaderAction">
                 <CollapseMenu @openedChange="mobileActionsOpenedChanged">
-                  <template #default="{ collapse }">sfd
+                  <template #default="{ collapse }">
                     <template v-for="(group, key) in detailActions" :key="key">
                       <template v-for="item in group" :key="item.name">
                         <component
