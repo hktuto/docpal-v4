@@ -65,7 +65,8 @@ async function getTemplateLayout(templateId?: any) {
     .postTemplateEmailLayoutPage({pageNum: 0, pageSize: 1000})
     .then((res) => res.data);
   layouts.value = res?.entryList;
-  selectedLayout.value = templateId || layouts.value[0].id;
+  const layoutId = layouts.value.length > 0 ? layouts.value[0].id : ''
+  selectedLayout.value = templateId || layoutId;
   // selectedLayout.value = templateId || entryList[0].id;
 }
 
