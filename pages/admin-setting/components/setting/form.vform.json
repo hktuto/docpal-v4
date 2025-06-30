@@ -70,7 +70,7 @@
                 "onCreated": "",
                 "onMounted": "// /nuxeo/admin/setting/date_format\nconst _this = this\nasync function getFormat () {\n  const data = await $api.get('/nuxeo/admin/setting/system_default_setting').then(res => res.data.data)\n  // const json = JSON.parst(data)\n  return data.metaDateFormat\n}\nasync function getData() {\n  const format = await getFormat()\n  _this.setValue(format)\n  \n}\ngetData()",
                 "onRemoteQuery": "",
-                "onChange": "const _this = this\nasync function setFormat () {\n  const data = await $api.put('/nuxeo/admin/setting/system_default_setting', {\n    metaDateFormat: value\n  }).then(res => res.data.data)\n  return data\n}\nasync function setData() {\n  console.log(2,value)\n  console.log(3,oldValue)\n  if(oldValue!== \"\" && value!== oldValue){\n    const result = await setFormat()\n    if(result === 'true') {\n      const vform = _this.getFormRef()\n      vform.$emit('emit', 'success', value)\n    } else {\n      _this.setValue(oldValue)\n    }\n  }\n}\nsetData()\n\n",
+                "onChange": "const _this = this\nasync function setFormat () {\n  const data = await $api.put('/nuxeo/admin/setting/system_default_setting', {\n    metaDateFormat: value\n  }).then(res => res.data.data)\n  return data\n}\nasync function setData() {\n if(oldValue!== \"\" && value!== oldValue){\n    const result = await setFormat()\n    if(result === 'true') {\n      const vform = _this.getFormRef()\n      vform.$emit('emit', 'success', value)\n    } else {\n      _this.setValue(oldValue)\n    }\n  }\n}\nsetData()\n\n",
                 "onFocus": "",
                 "onBlur": "",
                 "onValidate": ""
