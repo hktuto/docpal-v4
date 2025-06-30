@@ -8,7 +8,7 @@
         <WatermarkList :list="list" :selected-id="props.id" @update="getList" @remove="deleteItem" />
         <WatermarkDetail v-if="detail" ref="watermarkDetail" :detail="detail">
           <template #footer>
-            <ElButton id="WatermarkSetting__Save" type="primary" @click="save">Save</ElButton>
+            <ElButton id="WatermarkSetting__Save" type="primary" :loading="loading" @click="save">Save</ElButton>
           </template>
         </WatermarkDetail>
       </div>
@@ -28,6 +28,7 @@ const props = defineProps<{
 
 const { id } = toRefs(props)
 const { t } = useI18n()
+const loading = ref(false)
 
 async function getList(dummy: boolean = false) {
   const { data } = await adminApi.api.getWatermarkTemplatesAll() as any
@@ -55,11 +56,15 @@ async function getDetail(id: string) {
 }
 
 async function save() {
+  loading.value = true
   const data = await watermarkDetail.value.save()
   if (!data) return
   const promise = []
   await updateWatermarkTemplateDetail(data.update)
   routerProvider?.message.success(t('admin_watermarkSavedSuccessMsg'))
+  setTimeout(() => {
+    loading.value = false
+  }, 100);
 }
 
 
