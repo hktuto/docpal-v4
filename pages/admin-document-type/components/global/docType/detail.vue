@@ -5,19 +5,22 @@
         <div class="meta-setting-info-title">
           <div class="meta-setting-info-title-header">{{ $t('docType_documentType') }}</div>
           <div class="meta-setting-info-title-main">
-            <BrowseItemIcon class="el-icon--left" :documentBasicType="state.docTypeDetail.dataType"/>
+            <BrowseItemIcon class="el-icon--left" :documentBasicType="state.docTypeDetail.dataType" />
             {{ state.docTypeDetail.name }}
           </div>
         </div>
-        <LanguageUnitForm ref="LanguageUnitFormRef" :lKey="state.docTypeDetail.name"/>
+        <LanguageUnitForm ref="LanguageUnitFormRef" :lKey="state.docTypeDetail.name" />
         <el-button id="DocumentType__Detail__Save" :loading="state.lanLoading" type="primary" @click="handleSave">
           {{ $t('common_save') }}
         </el-button>
       </div>
       <el-tabs v-model="state.activeTabName" class="dp-tabs--auto">
         <el-tab-pane :label="$t('docType_displayMeta')" name="metadata">
-          <DocTypeDisplayMetaTable :docTypeDetail="state.docTypeDetail" :metadata="state.docTypeDetail.metadata"
-                                   @refresh="initDocType"></DocTypeDisplayMetaTable>
+          <DocTypeDisplayMetaTable
+            :docTypeDetail="state.docTypeDetail"
+            :metadata="state.docTypeDetail.metadata"
+            @refresh="initDocType"
+          ></DocTypeDisplayMetaTable>
         </el-tab-pane>
         <el-tab-pane :label="$t('docType_relatedDocument')" name="related">
           <DocTypeRelatedTypeTable :docTypeDetail="state.docTypeDetail" :name="name"></DocTypeRelatedTypeTable>
@@ -29,12 +32,12 @@
 </template>
 
 <script lang="ts" setup>
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {adminApi} from 'api';
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { adminApi } from 'api'
 // const { getLanguageListStore } = useLanguage()
-const {name} = defineProps<{
-  name: string;
-}>();
+const { name } = defineProps<{
+  name: string
+}>()
 const state = reactive({
   docTypeDetail: {},
   lanLoading: false,
@@ -45,11 +48,13 @@ const LanguageUnitFormRef = ref()
 async function handleSave() {
   state.lanLoading = true
   await LanguageUnitFormRef.value.handleSubmit()
-  state.lanLoading = false
+  setTimeout(() => {
+    state.lanLoading = false
+  }, 100)
 }
 
 async function initDocType() {
-  state.docTypeDetail = await adminApi.api.getDocpaltypeSettingsNameName(name).then(res => res.data)
+  state.docTypeDetail = await adminApi.api.getDocpaltypeSettingsNameName(name).then((res) => res.data)
 }
 
 onMounted(async () => {
@@ -101,5 +106,4 @@ onMounted(async () => {
     }
   }
 }
-
 </style>
