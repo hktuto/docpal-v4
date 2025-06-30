@@ -19,7 +19,7 @@ function handleClose() {
 </script>
 
 <template>
-  <ElDialog v-model="opened" :before-close="handleClose">
+  <ElDialog v-model="opened">
     <DocTemplateNewDocumentForm ref="formRef" @submit="handleSubmit" />
   </ElDialog>
 </template>
