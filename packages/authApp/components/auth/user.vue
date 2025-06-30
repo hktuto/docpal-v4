@@ -2,6 +2,7 @@
 import {emitBus, EventType} from 'eventbus';
 import {clientApi} from 'api'
 import {logout} from '#imports'
+const routerProvider = inject(MenuRouterKey)
 const user = useUserState()
 const config = useRuntimeConfig()
 const { locales, locale, setLocale } = useI18n()
@@ -27,6 +28,17 @@ function openHelp(){
 }
 
 function openSetting(){
+// TODO: 根據不同的環境進入不同的頁面
+//   const newItem = {
+//     id: "user-profile-setting-" + new Date().getTime(),
+//     name: "user-profile-setting",
+//     icon: 'lucide:file-sliders',
+//     label: "user-profile-setting",
+//     component: 'LazySettingUserProfileSetting',
+//     props: {
+//     }
+//   }
+//   routerProvider?.navigateTo(newItem)
 
     emitBus(EventType.OPEN_SETTINGS, "");
 }
@@ -57,7 +69,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
                     <Language />
                     <ElDropdownItem @click="openHelp">{{ $t('adminMenu.help') }}</ElDropdownItem>
                     <ElDivider />
-                    <ElDropdownItem v-for="lang in locales" :key="lang.code" 
+                    <ElDropdownItem v-for="lang in locales" :key="lang.code"
                         :disabled="lang.code === locale" @click="changeLanguage(lang.code)">
                         {{$t(lang.code)}}
                     </ElDropdownItem>
@@ -81,7 +93,7 @@ function handleOpenUpload(show: boolean = false, action: 'upload' | 'ai' | '' = 
     gap: var(--app-space-s);
     line-height: 1;
     padding-right: var(--app-space-xs);
-    
+
 }
 .dropdownIcon{
     --icon-size: var(--app-font-size-m);
