@@ -6,7 +6,9 @@ const config = {
     '@nuxt/test-utils/module',
   ],
   extends:[
-    "../base"
+    "../base",
+    "../../pages/client-user-setting",
+    "../../pages/admin-setting",
   ],
   runtimeConfig:{
     public: {

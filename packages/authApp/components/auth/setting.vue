@@ -3,6 +3,7 @@ import { getUserPreference } from '#imports'
 import { EventType, useEventBus } from 'eventbus'
 import { clientApi } from 'api'
 
+const tabProvider = inject(TabManagerKey)
 const opened = ref(false)
 const userPreference = useUserPreference()
 const userId = useUserId()
@@ -27,36 +28,32 @@ const state = reactive({
       readyOnly: false
     }
   ],
-  notificationPreferenceList:[]
-})
-
-const NotificationPreference = reactive({
-  list: [
-    {
-      name: 'Document',
-      value: [
-        { key: 'Document:Trash', label: 'Trash', value: true },
-        { key: 'Document:Create', label: 'Create', value: true },
-        { key: 'Document:Convert', label: 'Convert', value: true },
-        { key: 'Document:Replace', label: 'Replace', value: true }
-      ]
-    },
-    {
-      name: 'Workflow',
-      value: [
-        { key: 'Workflow:Trash', label: 'Trash', value: true },
-        { key: 'Workflow:Create', label: 'Create', value: true },
-        { key: 'Workflow:Convert', label: 'Convert', value: true },
-        { key: 'Workflow:Replace', label: 'Replace', value: true }
-      ]
-    }
-  ]
+  notificationPreferenceList: []
 })
 
 function handleOpen() {
   console.log('handleOpen')
-  init()
-  opened.value = true
+  if (true){
+    const newItem: any = {
+      id: 'client-user-setting',
+      name: 'client-user-setting',
+      icon: 'lucide:user',
+      label: 'admin.setting.title',
+      component: 'Setting',
+      props: {}
+    }
+    tabProvider?.openInCurrentTab(newItem)
+  }else{
+    // const newItem: any = {
+    //   id: 'admin-setting',
+    //   name: 'admin-setting',
+    //   icon: 'lucide:user',
+    //   label: 'admin.setting.title',
+    //   component: 'SettingUserSetting',
+    //   props: {}
+    // }
+    // tabProvider?.openInCurrentTab(newItem)
+  }
 }
 
 async function reset() {
@@ -118,12 +115,6 @@ const colorMode = computed({
   }
 })
 
-function init() {
-  // let da:any = clientApi.api.getNotificationSettingUserUseridPreferences(userId.value).then(res => res.data)
-  // state.notificationPreferenceList = da
-  // console.log(22, state.notificationPreferenceList)
-}
-
 const bus = useEventBus(EventType.OPEN_SETTINGS)
 bus.on(handleOpen)
 const userLoginBus = useEventBus(EventType.USER_LOGIN__SUCCESS)
@@ -133,68 +124,11 @@ onUnmounted(() => {
   bus.off(updateStyle)
 })
 
-onMounted(() => {
-  init()
-})
-
 </script>
 
 
 <template>
   <ElDialog v-model="opened" draggable append-to-body destroy-on-close width="1500px">
-    <el-row :gutter="30">
-      <el-col :span="12">
-        <h3>User Profile</h3>
-        <el-form :model="form" label-position="top">
-          <el-form-item v-for="(item, index)  in state.list" :label="t(`${item.label}`)" :key="item.key">
-            <el-input v-model="item.value" :disabled="item.disabled" />
-          </el-form-item>
-        </el-form>
-
-        <el-divider />
-        <h3>Password</h3>
-        <el-button type="primary" @click="handleOpen">{{ t('Change Password') }}</el-button>
-        <el-divider />
-      </el-col>
-
-      <!--      <el-col :span="1">-->
-      <!--        <el-divider direction="vertical" />-->
-      <!--      </el-col>-->
-
-      <el-col :span="12">
-        <h3>Preference</h3>
-
-        <div class="colorSetting">
-          <div class="label">Color Mode</div>
-          <ElSwitch v-model="colorMode" active-text="Light" inactive-text="Dark" />
-        </div>
-        <div>
-          <div class="label">Font Size</div>
-          <el-slider v-model="fontSize" style="width: 50%" :min="10" :max="24" />
-        </div>
-
-        <el-divider />
-
-        <h3>Notification Preference</h3>
-        <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
-          <h4>{{ item.name }}</h4>
-          <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value" :key="ite.key" />
-        </div>
-
-
-      </el-col>
-
-      <el-col :span="12">
-        <setting-user-profile-setting />
-      </el-col>
-    </el-row>
-    <!--    <template #footer>-->
-    <!--      <div class="actions">-->
-    <!--        <ElButton @click="reset">Cancel</ElButton>-->
-    <!--        <ElButton @click="saveToServer">Save</ElButton>-->
-    <!--      </div>-->
-    <!--    </template>-->
-
-    <el-button type="primary">{{ $t('common_save') }}</el-button>
+    sss
   </ElDialog>
 </template>
