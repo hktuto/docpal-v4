@@ -6,7 +6,6 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module'
   ],
   extends:[
-    "../../packages/authApp",
     "../../packages/base",
   ]
 })
