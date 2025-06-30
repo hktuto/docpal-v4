@@ -62,14 +62,12 @@ async function saveField() {
 
 async function handleSubmit() {
   try {
-    console.log(11,state.displayFieldList)
     const newProperties = state.displayFieldList.reduce((acc, item, index) => {
       acc[item.key] = { ...item, sort: index }
       return acc
     }, {})
 
-    console.log(33,newProperties)
-    // await adminApi.api.putUserProfileSetting({ properties: newProperties })
+    await adminApi.api.putUserProfileSetting({ properties: newProperties })
   } catch (e) {
     console.error(e)
   }
@@ -147,9 +145,9 @@ onMounted(() => {
           :list="state.systemFieldList"
           :group="{ name: 'people', pull: 'clone', put: false }"
           :clone="cloneItem"
+          :sort="false"
           item-key="id"
         >
-          <!--  TODO 需要限制原本的順序列不允許排序 -->
           <template #item="{ element }">
             <div class="list-group-item">
               <div class="field-row">
@@ -171,7 +169,7 @@ onMounted(() => {
       </el-col>
     </el-row>
 
-    <el-button id="UserProfileView__Save" type="primary" @click="handleSubmit">{{ $t('common_save2') }}</el-button>
+    <el-button id="UserProfileView__Save" type="primary" @click="handleSubmit">{{ $t('common_save') }}</el-button>
   </div>
 
   <el-dialog v-model="state.visible" :title="t('Edit Field')" width="600px">
