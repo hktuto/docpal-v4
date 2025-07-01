@@ -146,6 +146,7 @@ export interface AuditTemplateDTO {
     pageSize?: number;
     orderBy?: string;
     isDesc?: boolean;
+    excludeUser?: string;
 }
 
 export interface PaginationDTOAuditTemplateDTO {
@@ -609,6 +610,12 @@ export interface ProcessDTO {
      * @format int32
      */
     version?: number;
+    /** Production Version Number */
+    versionNumber?: string;
+    /** Process Version ID */
+    versionId?: string;
+    /** Production Draft ID */
+    draftId?: string;
 }
 
 export interface ResultListProcessDTO {
@@ -1048,9 +1055,9 @@ export interface DashBoardRequestDTO {
     /** @format date-time */
     endDate?: string;
     /** @format int32 */
-    pageIndex?: number;
-    /** @format int32 */
     pageSize?: number;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface DateRangeDTO {
@@ -2876,6 +2883,20 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultBoolean, Result>({
                 path: `/docpal/user/dashboard/${id}/status/${status}`,
                 method: "PATCH",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags VerificationPermissionController
+         * @name GetVerificationPermissionEventTypes
+         * @request GET:/api/verification/permission/event/types
+         */
+        getVerificationPermissionEventTypes: (params: RequestParams = {}) =>
+            this.request<ResultObject, Result>({
+                path: `/verification/permission/event/types`,
+                method: "GET",
                 ...params,
             }),
 

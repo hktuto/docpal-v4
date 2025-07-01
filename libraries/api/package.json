@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "generate": " npx ts-node ./src/generator",
-    "generate2": " npx ts-node ./src/generator_old"
+    "generate2": " npx ts-node ./src/generator_old",
+    "backup": " npx ts-node ./src/backup-script"
   },
   "keywords": [],
   "author": "",
