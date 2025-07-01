@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
 import { More, Edit, Delete, DeleteFilled } from '@element-plus/icons-vue'
-import { reactive } from 'vue'
 import { adminApi } from 'api'
 
 const { t } = useI18n()
@@ -40,11 +39,11 @@ function openDialog(item: any) {
   editForm.key = item.key
   editForm.label = item.label
   editForm.allowUserEdit = item.allowUserEdit
+  editForm.type = item.type
   state.visible = true
 }
 
 async function saveField() {
-  // 檢查是否填寫數據
   try {
     await FormRef.value.validate()
   } catch (e) {
@@ -54,8 +53,8 @@ async function saveField() {
   const displayTarget = state.displayFieldList.find(item => item.key === editForm.key)
   if (displayTarget) Object.assign(displayTarget, editForm)
 
-  // const systemTarget = state.systemFieldList.find(item => item.key === editForm.key)
-  // if (systemTarget) Object.assign(systemTarget, editForm)
+  const systemTarget = state.systemFieldList.find(item => item.key === editForm.key)
+  if (systemTarget) Object.assign(systemTarget, editForm)
 
   state.visible = false
 }
@@ -77,11 +76,12 @@ async function init() {
   let { properties } = await adminApi.api.getUserProfileSetting().then(res => res.data)
   state.displayFieldList = Object.keys(properties)
     .map(key => ({
+      key,
+      type: properties[key].type,
       readyOnly: properties[key].readyOnly,
       allowUserEdit: properties[key].allowUserEdit,
       display: properties[key].display,
       label: properties[key].label,
-      key,
       sort: properties[key].sort ?? 0
     }))
     .sort((a, b) => a.sort - b.sort)
@@ -93,7 +93,6 @@ async function init() {
 onMounted(() => {
   init()
 })
-
 </script>
 
 <template>
@@ -110,7 +109,6 @@ onMounted(() => {
           class="dragArea list-group"
           :list="state.displayFieldList"
           group="people"
-          @change="log"
           item-key="id"
         >
           <template #item="{ element }">
@@ -123,7 +121,7 @@ onMounted(() => {
                 <span style="font-weight: bold;">{{ element.label }} </span>
 
                 <div class="icon-actions">
-                  <el-icon disabled="element.allowUserEdit">
+                  <el-icon disabled="element.allowUserEdit"  @click="openDialog(element)">
                     <Edit />
                   </el-icon>
                   <el-icon @click="removeItem(element)">

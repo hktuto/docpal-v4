@@ -6,34 +6,26 @@ import { clientApi } from 'api'
 const tabProvider = inject(TabManagerKey)
 const opened = ref(false)
 const userPreference = useUserPreference()
-const userId = useUserId()
+const { public: { platform } } = useRuntimeConfig()
 const { t } = useI18n()
-const form = reactive({})
 const state = reactive({
-  list: [
-    {
-      key: 'username',
-      type: 'string',
-      label: 'Username',
-      allowUserEdit: true,
-      disabled: true,
-      readyOnly: false
-    },
-    {
-      key: 'email',
-      type: 'string',
-      label: 'Email',
-      allowUserEdit: true,
-      disabled: false,
-      readyOnly: false
-    }
-  ],
-  notificationPreferenceList: []
+  visible: false
 })
 
 function handleOpen() {
   console.log('handleOpen')
-  if (true){
+  if (platform === 'admin') {
+    state.visible = true
+    const newItem: any = {
+      id: 'admin-user-setting',
+      name: 'admin-user-setting',
+      icon: 'lucide:user',
+      label: 'admin.setting.title',
+      component: 'SettingUserSetting',
+      props: {}
+    }
+    tabProvider?.openInCurrentTab(newItem)
+  } else {
     const newItem: any = {
       id: 'client-user-setting',
       name: 'client-user-setting',
@@ -43,16 +35,6 @@ function handleOpen() {
       props: {}
     }
     tabProvider?.openInCurrentTab(newItem)
-  }else{
-    // const newItem: any = {
-    //   id: 'admin-setting',
-    //   name: 'admin-setting',
-    //   icon: 'lucide:user',
-    //   label: 'admin.setting.title',
-    //   component: 'SettingUserSetting',
-    //   props: {}
-    // }
-    // tabProvider?.openInCurrentTab(newItem)
   }
 }
 
@@ -128,7 +110,7 @@ onUnmounted(() => {
 
 
 <template>
-  <ElDialog v-model="opened" draggable append-to-body destroy-on-close width="1500px">
-    sss
-  </ElDialog>
+  <el-dialog v-model="state.visible" :title="t('Edit Field')" width="1000px">
+    <SettingUserSetting />
+  </el-dialog>
 </template>

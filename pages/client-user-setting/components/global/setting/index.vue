@@ -1,34 +1,47 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
+import ChangePassword from '~/components/global/setting/changePassword.vue'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const userPreference = useUserPreference()
 const userId = useUserId()
+const ChangePasswordRef = ref()
+
 const state = reactive({
-  list: [
-    {
-      key: 'username',
-      type: 'string',
-      label: 'Username',
-      allowUserEdit: true,
-      disabled: true,
-      readyOnly: false
-    },
-    {
-      key: 'email',
-      type: 'string',
-      label: 'Email',
-      allowUserEdit: true,
-      disabled: false,
-      readyOnly: false
-    }
-  ],
+  form: {},
+  list: [],
   notificationPreferenceList: []
 })
-const form = reactive({})
 
 async function init() {
+  const { properties } = await clientApi.api.getUserProfileSetting().then((res: any) => res.data)
+  state.list = Object.entries(properties)
+    .sort(([, v1], [, v2]) => (v1.sort ?? 0) - (v2.sort ?? 0))
+    .map(([key, value]) => ({
+      key,
+      type: value.type,
+      label: value.label,
+      allowUserEdit: value.allowUserEdit,
+      disabled: value.display,
+      readyOnly: value.readyOnly
+    }))
+
+  if (state.list.length > 0) {
+    const data = await clientApi.api.getNuxeoUserGetapplication().then((res: any) => res.data)
+    state.form.id = data.id
+    state.list.forEach(item => {
+      state.form[item.key] = data[item.key]
+    })
+  }
+
+  if ('groups' in state.form) {
+    let groupList: any = await clientApi.api.postNuxeoIdentityMembergroup({ userId: userId.value }).then(res => res.data)
+    state.form.groups = groupList.map(item => item.name)
+  }
+
   state.notificationPreferenceList = await clientApi.api.getNotificationSettingUserUseridPreferences(userId.value).then(res => res.data)
+
 }
 
 const fontSize = computed({
@@ -57,7 +70,6 @@ const colorMode = computed({
   },
   set(value) {
     userPreference.value.color = value ? 'light' : 'dark'
-    console.log('udpate color', value, userPreference.value.color)
     updateStyle()
   }
 })
@@ -80,14 +92,28 @@ function updateStyle() {
 }
 
 function handleChangePasswordOpen() {
-
+  ChangePasswordRef.value.handleOpen()
 }
 
-function save() {
-  clientApi.api.putUserSetting(userPreference.value as any)
+async function save() {
+  let newUserInfo = {
+    id: state.form.id,
+    userId: userId.value
+  }
+  state.list.forEach((item: any) => {
+    if (item.allowUserEdit) {
+      newUserInfo[item.key] = state.form[item.key]
+    }
+  })
+  await clientApi.api.patchNuxeoIdentityUser(newUserInfo)
 
-  // TODO : update user profile
+  await clientApi.api.putUserSetting(userPreference.value as any)
 
+  await clientApi.api.postNotificationSettingUserUseridPreferences(userId.value, state.notificationPreferenceList)
+
+  routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: null }))
+
+  await init()
 }
 
 onMounted(() => {
@@ -102,17 +128,22 @@ onMounted(() => {
       <el-col :span="11">
         <h3>User Profile</h3>
         <div class="form-scroll-wrapper">
-          <el-form :model="form" label-position="top">
-            <el-form-item v-for="(item, index)  in state.list" :label="t(`${item.label}`)" :key="item.key">
-              <el-input v-model="item.value" :disabled="item.disabled" />
+          <el-form :model="state.form" label-position="top">
+            <el-form-item v-for="item in state.list" :label="t(`${item.label}`)" :key="item.key">
+              <el-input v-if="item.type === 'string'" v-model="state.form[item.key]" :disabled="!item.allowUserEdit" />
+              <el-input-tag
+                v-if="item.type === 'array'"
+                v-model="state.form[item.key]"
+                :disabled="!item.allowUserEdit"
+              />
             </el-form-item>
           </el-form>
         </div>
 
         <el-divider />
         <h3>Password</h3>
-        <el-button style="width: 150px" type="primary" @click="handleChangePasswordOpen">{{ t('Change Password') }}</el-button>
-        <el-divider />
+        <el-button style="width: 150px" type="primary" @click="handleChangePasswordOpen">{{ t('Change Password') }}
+        </el-button>
       </el-col>
 
       <div class="vertical-divider"></div>
@@ -132,16 +163,22 @@ onMounted(() => {
         <el-divider />
 
         <h3>Notification Preference</h3>
-         <div class="notification-scroll-wrapper">
+        <div class="notification-scroll-wrapper">
           <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
-          <h4>{{ item.name }}</h4>
-          <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value" :key="ite.key" />
+            <h4>{{ item.name }}</h4>
+            <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value" :key="ite.key" />
+          </div>
         </div>
-         </div>
       </el-col>
     </el-row>
+
+    <el-divider />
+
     <el-button class="fixed-save-btn" type="primary" @click="save">{{ $t('common_save') }}</el-button>
   </div>
+
+  <ChangePassword ref="ChangePasswordRef" />
+
 </template>
 
 <style scoped lang="scss">
@@ -168,16 +205,9 @@ onMounted(() => {
 }
 
 .notification-scroll-wrapper {
-  max-height: 300px;
+  max-height: 580px;
   overflow-y: auto;
   padding-right: 4px;
-}
-
-@media (max-width: 900px) {
-  .notification-scroll-wrapper {
-    max-height: 30vh;
-    min-height: 100px;
-  }
 }
 
 .form-scroll-wrapper {
