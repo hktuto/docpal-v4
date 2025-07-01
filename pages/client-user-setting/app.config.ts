@@ -8,8 +8,7 @@ export default defineAppConfig({
       name: 'client-user-setting',
       label: 'admin.setting.title',
       icon: 'lucide:user',
-      component: 'LazyUserSetting',
-      feature: 'USER_SETTING',
+      component: 'Setting',
       props: {}
     }
   }
