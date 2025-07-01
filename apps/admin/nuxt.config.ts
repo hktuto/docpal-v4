@@ -41,7 +41,8 @@ export default defineNuxtConfig({
     "../../pages/admin-message-template",
     "../../pages/admin-unique-id-generator",
     // "../../pages/admin-share",
-    "../../pages/admin-rbac"
+    "../../pages/admin-rbac",
+    "../../pages/admin-password-policy"
   ],
   features:{
     inlineStyles: true,
