@@ -15,33 +15,36 @@ const state = reactive({
 })
 
 async function init() {
-  const { properties } = await clientApi.api.getUserProfileSetting().then((res: any) => res.data)
-  state.list = Object.entries(properties)
-    .sort(([, v1], [, v2]) => (v1.sort ?? 0) - (v2.sort ?? 0))
-    .map(([key, value]) => ({
-      key,
-      type: value.type,
-      label: value.label,
-      allowUserEdit: value.allowUserEdit,
-      disabled: value.display,
-      readyOnly: value.readyOnly
-    }))
+  try {
+    const { properties } = await clientApi.api.getUserProfileSetting().then((res: any) => res.data)
+    state.list = Object.entries(properties)
+      .sort(([, v1], [, v2]) => (v1.sort ?? 0) - (v2.sort ?? 0))
+      .map(([key, value]) => ({
+        key,
+        type: value.type,
+        label: value.label,
+        allowUserEdit: value.allowUserEdit,
+        disabled: value.display,
+        readyOnly: value.readyOnly
+      }))
 
-  if (state.list.length > 0) {
-    const data = await clientApi.api.getNuxeoUserGetapplication().then((res: any) => res.data)
-    state.form.id = data.id
-    state.list.forEach(item => {
-      state.form[item.key] = data[item.key]
-    })
+    if (state.list.length > 0) {
+      const data = await clientApi.api.getNuxeoUserGetapplication().then((res: any) => res.data)
+      state.form.id = data.id
+      state.list.forEach(item => {
+        state.form[item.key] = data[item.key]
+      })
+    }
+
+    if ('groups' in state.form) {
+      let groupList: any = await clientApi.api.postNuxeoIdentityMembergroup({ userId: userId.value }).then(res => res.data)
+      state.form.groups = groupList.map(item => item.name)
+    }
+
+    state.notificationPreferenceList = await clientApi.api.getNotificationSettingUserUseridPreferences(userId.value).then(res => res.data)
+  } catch (e) {
+    throw createError(e)
   }
-
-  if ('groups' in state.form) {
-    let groupList: any = await clientApi.api.postNuxeoIdentityMembergroup({ userId: userId.value }).then(res => res.data)
-    state.form.groups = groupList.map(item => item.name)
-  }
-
-  state.notificationPreferenceList = await clientApi.api.getNotificationSettingUserUseridPreferences(userId.value).then(res => res.data)
-
 }
 
 const fontSize = computed({
@@ -96,24 +99,28 @@ function handleChangePasswordOpen() {
 }
 
 async function save() {
-  let newUserInfo = {
-    id: state.form.id,
-    userId: userId.value
-  }
-  state.list.forEach((item: any) => {
-    if (item.allowUserEdit) {
-      newUserInfo[item.key] = state.form[item.key]
+  try {
+    let newUserInfo = {
+      id: state.form.id,
+      userId: userId.value
     }
-  })
-  await clientApi.api.patchNuxeoIdentityUser(newUserInfo)
+    state.list.forEach((item: any) => {
+      if (item.allowUserEdit) {
+        newUserInfo[item.key] = state.form[item.key]
+      }
+    })
+    await clientApi.api.patchNuxeoIdentityUser(newUserInfo)
 
-  await clientApi.api.putUserSetting(userPreference.value as any)
+    await clientApi.api.putUserSetting(userPreference.value as any)
 
-  await clientApi.api.postNotificationSettingUserUseridPreferences(userId.value, state.notificationPreferenceList)
+    await clientApi.api.postNotificationSettingUserUseridPreferences(userId.value, state.notificationPreferenceList)
 
-  routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: null }))
+    routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: null }))
 
-  await init()
+    await init()
+  } catch (e) {
+    throw createError(e)
+  }
 }
 
 onMounted(() => {
