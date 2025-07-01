@@ -175,6 +175,7 @@ async function handleSave() {
   } catch (error) {
     console.error('保存密码策略失败:', error)
     ElMessage.error(t('passwordPolicy.saveError'))
+    init()
   } finally {
     setTimeout(() => {
       loading.value = false
