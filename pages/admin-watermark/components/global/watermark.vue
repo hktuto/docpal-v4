@@ -5,7 +5,7 @@
     </template>
     <template v-else>
       <div class="listContainer">
-        <WatermarkList :list="list" :selected-id="props.id" @update="getList" @remove="deleteItem" />
+        <WatermarkList :list="list" :selected-id="detail?.id" @update="getList" @remove="deleteItem" @switch="handleSwitch" />
         <WatermarkDetail v-if="detail" ref="watermarkDetail" :detail="detail">
           <template #footer>
             <ElButton id="WatermarkSetting__Save" type="primary" :loading="loading" @click="save">Save</ElButton>
@@ -26,12 +26,11 @@ const props = defineProps<{
   id: string
 }>()
 
-const { id } = toRefs(props)
 const { t } = useI18n()
 const loading = ref(false)
 
 async function getList(dummy: boolean = false) {
-  const { data } = await adminApi.api.getWatermarkTemplatesAll() as any
+  const { data } = (await adminApi.api.getWatermarkTemplatesAll()) as any
   list.value = data.sort((a, b) => a.name.localeCompare(b.name))
 }
 
@@ -44,7 +43,13 @@ async function deleteItem(id: string) {
     })
   }
 }
-
+async function handleSwitch(id: string) {
+  detail.value = {
+    id,
+    watermarkSettings: []
+  }
+  getDetail(id)
+}
 async function getDetail(id: string) {
   try {
     detail.value = await getWatermarkTemplateDetail(id)
@@ -59,35 +64,22 @@ async function save() {
   loading.value = true
   const data = await watermarkDetail.value.save()
   if (!data) return
-  const promise = []
   await updateWatermarkTemplateDetail(data.update)
   routerProvider?.message.success(t('admin_watermarkSavedSuccessMsg'))
   setTimeout(() => {
     loading.value = false
-  }, 100);
+  }, 100)
 }
 
-
-onMounted(() => {
-  console.log("watermark onMounted")
-})
-onUnmounted(() => {
-  detail.value = null
-})
-
-watch(() => props, (newId) => {
-  console.log('watch', props.id)
+onMounted(async() => {
+  await getList()
   if (props.id) {
-
     getDetail(props.id)
-  }else{
-    getList()
+  } else if(list.value.length > 0) {
+    getDetail(list.value[0].id)
   }
-
-}, {
-  immediate: true,
-  deep: true
 })
+
 </script>
 
 <style lang="scss" scoped>

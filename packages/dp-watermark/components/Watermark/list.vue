@@ -52,7 +52,7 @@ const props = defineProps<{
 }>()
 
 const routerProvider = inject(MenuRouterKey)
-const emit = defineEmits(['update', 'remove'])
+const emit = defineEmits(['update', 'remove', 'switch'])
 
 const editDialog = ref(false)
 const newDialog = ref(false)
@@ -86,9 +86,7 @@ function editItem(id: string) {
 }
 
 function switchDetail(id: string) {
-  routerProvider?.updateProps({
-    id
-  })
+  emit('switch', id)
 }
 
 </script>
@@ -129,8 +127,13 @@ function switchDetail(id: string) {
 
   &.selected, &:hover {
     --color: #fff;
-    --bg: #8796A4;
     cursor: default;
+  }
+  &:hover {
+    --bg: var(--app-grey-675);
+  }
+  &.selected {
+    --bg: var(--app-grey-500);
   }
 }
 
