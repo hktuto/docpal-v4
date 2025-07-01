@@ -82,7 +82,7 @@ const loadUsers = async () => {
       }
       allUsers = response.map((item) => ({
         label: item.username || '',
-        value: item.id || ''
+        value: item.userId || ''
       }))
     } else if(props.type === 2) {
       const groupUserResponse = await adminApi.api.postNuxeoIdentityUsers({}).then((res) => res.data)
