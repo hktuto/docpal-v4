@@ -33,6 +33,18 @@ export interface ResultObject {
     data?: object;
 }
 
+/** Group */
+export interface GroupDTO {
+    /** Group ID */
+    id?: string;
+    /** Group Name */
+    name?: string;
+    /** is Can Modified  */
+    isCanModified?: boolean;
+    /** Keycloak Group ID */
+    kcGroupId?: string;
+}
+
 export interface ResultUserDTO {
     result?: boolean;
     /** @format int32 */
@@ -65,6 +77,8 @@ export interface UserDTO {
     lastName?: string;
     /** User Email */
     email?: string;
+    /** MobilePhone */
+    phone?: string;
     /** User Password */
     password?: string;
     /** Datetime token expired at */
@@ -73,6 +87,10 @@ export interface UserDTO {
     properties?: Record<string, object>;
     /** active status , A = active , D = unActive */
     status?: string;
+    /** User groups */
+    groupDTOList?: GroupDTO[];
+    userName?: string;
+    kcUserId?: string;
 }
 
 export interface ResultListUserDTO {
@@ -136,6 +154,14 @@ export interface KeywordTypeGroupDTO {
     keywords?: KeywordDTO[];
 }
 
+export interface ResultListKeywordTypeGroupDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: KeywordTypeGroupDTO[];
+}
+
 export interface ResultKeywordTypeGroupDTO {
     result?: boolean;
     /** @format int32 */
@@ -145,14 +171,6 @@ export interface ResultKeywordTypeGroupDTO {
     data?: KeywordTypeGroupDTO;
 }
 
-export interface ResultListKeywordTypeGroupDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: KeywordTypeGroupDTO[];
-}
-
 export interface ResultSetString {
     result?: boolean;
     /** @format int32 */
@@ -160,6 +178,34 @@ export interface ResultSetString {
     message?: string;
     /** @uniqueItems true */
     data?: string[];
+}
+
+export interface BasePageRequest {
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    sort?: SortObject;
+    sortOrder?: string;
+    descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface SortObject {
+    sorted?: boolean;
+    empty?: boolean;
+    unsorted?: boolean;
 }
 
 /** Document */
@@ -176,6 +222,12 @@ export interface DocumentDTO {
     type?: string;
     /** Document Version */
     version?: string;
+    /**
+     * Document Status
+     * @format int32
+     */
+    status?: number;
+    statusName?: string;
     /** Document Creator */
     createdBy?: string;
     /**
@@ -194,14 +246,64 @@ export interface DocumentDTO {
     isCheckedOut?: boolean;
     /** Document Properties */
     properties?: Record<string, object>;
+    /** Document File Content */
+    fileContent?: FileContentDTO;
     /** parentRef */
     parentRef?: string;
     /** logicalPath */
     logicalPath?: string;
     auditComment?: string;
     auditName?: string;
-    /** permissionName */
+    /** Permission Name */
     permissionName?: string[];
+    /** Contributors */
+    contributors?: string[];
+    /** File Suffix */
+    fileSuffix?: string;
+    /** OCR State */
+    ocrState?: string;
+    fileContentName?: string;
+    fileContentMimeType?: string;
+    /** @format int64 */
+    fileContentLength?: number;
+    fileContentMinioFileVersion?: string;
+    fileContentDigestAlgorithm?: string;
+    fileContentDigest?: string;
+    fileContentData?: string;
+    fileContentExtension?: string;
+}
+
+/** Document File Content */
+export interface FileContentDTO {
+    digestAlgorithm?: string;
+    digest?: string;
+    data?: string;
+    name?: string;
+    mime_type?: string;
+    /** @format int64 */
+    length?: number;
+    minio_file_version?: string;
+}
+
+export interface PaginationDTODocumentDTO {
+    entryList?: DocumentDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTODocumentDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTODocumentDTO;
 }
 
 export interface PaginableEntityDTODocumentDTO {
@@ -223,14 +325,6 @@ export interface ResultPaginableEntityDTODocumentDTO {
     code?: number;
     message?: string;
     data?: PaginableEntityDTODocumentDTO;
-}
-
-export interface ResultListDocumentDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: DocumentDTO[];
 }
 
 export interface ResultSetUserDTO {
@@ -270,36 +364,39 @@ export interface ResultFileDTO {
     data?: FileDTO;
 }
 
-/** Access Control Entry (Request) */
-export interface AccessControlRequestDTO {
-    /** Document ID or Path */
-    idOrPath?: string;
-    /** ACE ID */
-    aceId?: string;
-    /** User ID */
-    userId?: string;
-    /** Permission */
-    permission?: string;
-    /** Is Block Inheritance */
-    blockInheritance?: boolean;
-    /**
-     * Start Date
-     * @format date-time
-     */
-    startDate?: string;
-    /**
-     * End Date
-     * @format date-time
-     */
-    endDate?: string;
-}
-
 /** Virtual Folder Setting (Request) */
 export interface VirtualFolderSettingRequestDTO {
     /** Virtual Folder ID */
     id?: string;
     /** Virtual Folder Setting in JSON format */
     jsonValue?: string;
+}
+
+export interface FieldProfile {
+    type?: string;
+    label?: string;
+    /** @format int32 */
+    sort?: number;
+    allowUserEdit?: boolean;
+    display?: boolean;
+    readyOnly?: boolean;
+    rules?: Record<string, object>;
+}
+
+/** User Profile Setting */
+export interface UserProfileSettingDTO {
+    schema?: string;
+    type?: string;
+    properties?: Record<string, FieldProfile>;
+}
+
+export interface ResultUserProfileSettingDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** User Profile Setting */
+    data?: UserProfileSettingDTO;
 }
 
 export interface PersonalLandingRequestDTO {
@@ -314,17 +411,17 @@ export interface ResultVoid {
     data?: object;
 }
 
-export interface NotificationRecordDTO {
-    ids?: number[];
-    status?: string;
-}
-
 export interface ResultBoolean {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
     data?: boolean;
+}
+
+export interface NotificationRecordDTO {
+    ids?: number[];
+    status?: string;
 }
 
 export interface NotificationSetting {
@@ -396,12 +493,8 @@ export interface MTRecordRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
-}
-
-export interface SortObject {
-    sorted?: boolean;
-    empty?: boolean;
-    unsorted?: boolean;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 /** Calendar (Request) */
@@ -556,15 +649,31 @@ export interface WhatsAppMessageRequestDTO {
     templateName?: string;
     languageCode?: string;
     components?: {
-        /** @deprecated */
-        relatedArray?: object;
+        empty?: boolean;
         /** @deprecated */
         componentType?: {
             typeName?: string;
         };
-        empty?: boolean;
+        /** @deprecated */
+        relatedArray?: object;
     };
     textParamDTOList?: ParamDTO[];
+}
+
+export interface WOPIFileDTO {
+    BaseFileName?: string;
+    /** @format int32 */
+    Size?: number;
+    OwnerId?: string;
+    UserId?: string;
+    UserFriendlyName?: string;
+    UserCanWrite?: boolean;
+    DisablePrint?: boolean;
+    HidePrintOption?: boolean;
+    DisableExport?: boolean;
+    IsUserLocked?: boolean;
+    IsUserRestricted?: boolean;
+    LastModifiedTime?: string;
 }
 
 export interface VerificationPermissionReq {
@@ -575,88 +684,31 @@ export interface VerificationPermissionReq {
     operation?: string;
 }
 
-export interface AuditLogRequestDTO {
-    collapseField?: string;
-    mustFilterMap?: Record<string, string>;
-    wildcardFilterMap?: Record<string, string>;
-    sourceIncludes?: string[];
-    sourceExcludes?: string[];
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageSize?: number;
-    orderBy?: string;
-    isDesc?: boolean;
-}
-
-/** Define audit template */
-export interface AuditTemplateDTO {
-    id?: string;
-    eventId?: string;
-    nuxeoEventId?: string;
-    documentId?: string;
-    comment?: string;
-    docPath?: string;
-    docType?: string;
-    eventType?: string;
-    eventCategory?: string;
-    /** @format date-time */
-    createTime?: string;
-    /** @format date-time */
-    updateTime?: string;
-    eventDateFrom?: string;
-    eventDateTo?: string;
-    principalName?: string;
-    creators?: string[];
-    businessNames?: string[];
-    collapseField?: string;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageSize?: number;
-    orderBy?: string;
-    isDesc?: boolean;
-    excludeUser?: string;
-}
-
-export interface PaginationDTOAuditTemplateDTO {
-    entryList?: AuditTemplateDTO[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTOAuditTemplateDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTOAuditTemplateDTO;
-}
-
-export interface AuditModel {
+/** Entity for storing user search history records */
+export interface SearchHistory {
     /** @format int64 */
     id?: number;
-    principalName?: string;
-    eventId?: string;
-    eventDate?: string;
-    logDate?: string;
-    docUUID?: string;
-    docType?: string;
-    docPath?: string;
-    category?: string;
-    comment?: string;
-    docLifeCycle?: string;
-    repositoryId?: string;
-    preprocessedComment?: string;
-    entity__type?: string;
-    extended?: Record<string, object>;
+    /** Search query string */
+    queryString: string;
+    /**
+     * Total number of search results
+     * @format int64
+     */
+    totalSize: number;
+    /** User identifier */
+    userId: string;
+    /** Tenant identifier */
+    tenantId: string;
+    /**
+     * Record creation timestamp
+     * @format date-time
+     */
+    createdDate: string;
+    /**
+     * Record last modification timestamp
+     * @format date-time
+     */
+    modifiedDate: string;
 }
 
 /** Define information of user related permission that access control permission */
@@ -852,10 +904,12 @@ export interface AclUserInformation {
     lastName: string;
     /** email */
     email?: string;
-    /** password */
+    /** Password */
     password: string;
-    /** tenant id */
+    /** Tenant ID */
     tenantId?: string;
+    /** MobilePhone */
+    phone?: string;
     /** source */
     source?: string;
     /** status */
@@ -918,6 +972,8 @@ export interface AclUserGroup {
      * @example "IT sale dept"
      */
     groupLabel?: string;
+    /** tenant id */
+    tenantId?: string;
     /**
      * Delete flag
      * @example "NO"
@@ -960,6 +1016,8 @@ export interface AclUserGroupDTO {
      * @example "IT sale dept"
      */
     groupLabel?: string;
+    /** tenant id */
+    tenantId?: string;
     /**
      * Delete flag
      * @example "NO"
@@ -980,6 +1038,14 @@ export interface AclUserGroupDTO {
      */
     modifiedDate: string;
     users?: AclUserInformation[];
+}
+
+export interface ResultListAclUserGroup {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: AclUserGroup[];
 }
 
 export interface ResultAccessControlEntry {
@@ -1012,6 +1078,14 @@ export interface ResultMapStringListString {
     code?: number;
     message?: string;
     data?: Record<string, string[]>;
+}
+
+export interface ResultListDocumentDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: DocumentDTO[];
 }
 
 /** Tag (Request) */
@@ -1131,8 +1205,126 @@ export interface ResultEasyShareDTO {
 }
 
 export interface NestedSearchLogRequestDTO {
+    /** @format int64 */
+    id?: number;
     label?: string;
     queryCondition?: string;
+}
+
+export interface ElasticSearchFilterDTO {
+    documentTypes?: string[];
+    collections?: string[];
+    tags?: string[];
+    creators?: string[];
+    authors?: string[];
+    createdDate?: string;
+    modified?: string;
+}
+
+export interface MatchDTO {
+    queryType?: string;
+    type?: string;
+    value?: object;
+    option?: OptionDTO;
+    extract?: MatchExtractDTO;
+}
+
+export interface MatchExtractDTO {
+    synonyms?: string[];
+}
+
+export interface OptionDTO {
+    matchCase?: boolean;
+    fullMatch?: boolean;
+    synonyms?: boolean;
+    includeLanguages?: string[];
+}
+
+export interface QueryConditionDTO {
+    condition?: string;
+    matchs?: MatchDTO[];
+}
+
+export interface SearchRequestDTO {
+    condition?: string;
+    docId?: string;
+    /** @format int32 */
+    pageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    isExport?: boolean;
+    filter?: ElasticSearchFilterDTO;
+    query?: QueryConditionDTO[];
+}
+
+export interface ResultMapStringObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: Record<string, object>;
+}
+
+export interface DocpalSearchRequest {
+    condition?: string;
+    docId?: string;
+    query?: QueryCondition[];
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageSize?: number;
+}
+
+export interface Match {
+    queryType?: string;
+    value?: object;
+    option?: Record<string, object>;
+}
+
+export interface QueryCondition {
+    condition?: string;
+    matchs?: Match[];
+}
+
+export interface HitsHits {
+    /** @format int64 */
+    _id?: number;
+    /** @format int32 */
+    _score?: number;
+    _source?: object;
+    _knn_dist?: number;
+    highlight?: object;
+    table?: string;
+    "_type:"?: string;
+    fields?: object;
+}
+
+export interface ResultSearchResponse {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: SearchResponse;
+}
+
+export interface SearchResponse {
+    /** @format int32 */
+    took?: number;
+    timed_out?: boolean;
+    aggregations?: object;
+    hits?: SearchResponseHits;
+    profile?: object;
+    scroll?: string;
+    warning?: object;
+}
+
+export interface SearchResponseHits {
+    /** @format int32 */
+    max_score?: number;
+    /** @format int32 */
+    total?: number;
+    total_relation?: string;
+    hits?: HitsHits[];
 }
 
 /** NestedSearch (Request) */
@@ -1194,73 +1386,54 @@ export interface NestedSearchRequestDTO {
     isDesc?: boolean;
 }
 
-export interface ResultListSearchHistory {
+export interface ResultListSearchDocumentVO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: SearchHistory[];
+    data?: SearchDocumentVO[];
 }
 
-export interface SearchHistory {
-    /** @format int64 */
-    id?: number;
-    username?: string;
-    keyword?: string;
-}
-
-export interface ElasticSearchFilterDTO {
-    documentTypes?: string[];
+export interface SearchDocumentVO {
+    acl?: string[];
     collections?: string[];
-    tags?: string[];
-    creators?: string[];
-    authors?: string[];
-    createdDate?: string;
-    modified?: string;
-}
-
-export interface MatchDTO {
-    queryType?: string;
+    content?: string;
+    contributors?: string[];
+    metadatas?: Record<string, object>;
+    name?: string;
+    path?: string;
+    /** @format int32 */
+    status?: number;
+    tags?: TagVO[];
     type?: string;
-    value?: object;
-    option?: OptionDTO;
-    extract?: MatchExtractDTO;
-}
-
-export interface MatchExtractDTO {
-    synonyms?: string[];
-}
-
-export interface OptionDTO {
-    matchCase?: boolean;
-    fullMatch?: boolean;
-    synonyms?: boolean;
-    includeLanguages?: string[];
-}
-
-export interface QueryConditionDTO {
-    condition?: string;
-    matchs?: MatchDTO[];
-}
-
-export interface SearchRequestDTO {
-    condition?: string;
-    docId?: string;
+    version?: Record<string, object>;
+    id?: string;
+    properties?: Record<string, object>;
+    be_index?: boolean;
+    create_by?: string;
+    /** @format date-time */
+    create_date?: string;
+    docpal_type?: string;
+    document_type?: string;
     /** @format int32 */
-    pageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    isExport?: boolean;
-    filter?: ElasticSearchFilterDTO;
-    query?: QueryConditionDTO[];
+    event_id?: number;
+    extend_datas?: Record<string, object>;
+    file_content?: Record<string, object>;
+    file_suffix?: string;
+    is_folder?: boolean;
+    is_ocr?: boolean;
+    is_update_child_name?: boolean;
+    last_modify_by?: string;
+    mixin_type?: string[];
+    /** @format date-time */
+    modify_date?: string;
+    parent_id?: string;
+    path_levels?: Record<string, object>;
 }
 
-export interface ResultMapStringObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: Record<string, object>;
+export interface TagVO {
+    username?: string;
+    label?: string;
 }
 
 /** Versioning (Request) */
@@ -1318,6 +1491,8 @@ export interface WhatsAppUsageDTO {
 export interface FormDesignDataDTO {
     /** Form Design ID */
     id?: string;
+    /** Email Business Log id */
+    emailBusinessLogId?: string;
     /** Form Data */
     data?: Record<string, object>;
     /** Business Number */
@@ -1327,12 +1502,22 @@ export interface FormDesignDataDTO {
     params?: Record<string, object>;
 }
 
+/** folder cabinet data mapping DTO */
+export interface FCDataMappingDTO {
+    folderCabinetId?: string;
+    folderCabinetName?: string;
+    formProperty?: string;
+    metadata?: string;
+}
+
 export interface FilingCreateDocRequestDTO {
     folderCabinetId?: string;
     documentContentId?: string;
     templateVariables?: Record<string, object>;
     watermarkTemplateId?: string;
     properties?: Record<string, string>;
+    folderCabinetDataMapping?: Record<string, FCDataMappingDTO[]>;
+    operator?: string;
 }
 
 /** Generate document mode */
@@ -1342,11 +1527,43 @@ export type GenerateDocumentMode = object;
 export interface GenerateDocumentRequestDTO {
     /** Generate document mode */
     mode?: GenerateDocumentMode;
+    /** Document ID */
+    id?: string;
+    /** Document Path */
+    path?: string;
+    /** Parent Document Path */
+    parentPath?: string;
+    /** Parent Document ID */
+    parentId?: string;
+    /** Document Name */
+    name?: string;
+    /** Document Creator */
+    creator?: string;
+    /** Document Type */
+    type?: string;
+    /** Document Properties */
+    properties?: Record<string, object>;
+    /** Document Language */
+    languages?: string[];
     /** Document Template ID */
     templateId?: string;
+    /** File Content Id */
+    fileContentId?: string;
+    /** Variables for generate document file */
+    variables?: Record<string, object>;
+    /** Watermark Template Id */
+    watermarkTemplateId?: string;
+}
+
+/** Generate Document (RequestDTO) */
+export interface WorkflowGenerateDocumentReq {
+    /** Document Template ID */
+    templateId?: string;
+    /** File Content Id */
+    fileContentId?: string;
     /** Folder Cabinet ID */
     folderCabinetId?: string;
-    /** Parent Document Path */
+    /** Nuxeo Parent Document Path */
     parentPath?: string;
     /** Document Name */
     name?: string;
@@ -1362,16 +1579,22 @@ export interface GenerateDocumentRequestDTO {
     variables?: Record<string, object>;
     /** Watermark Template Id */
     watermarkTemplateId?: string;
+    /** Folder cabinet data mapping structure */
+    dataMapping?: Record<string, FCDataMappingDTO[]>;
 }
 
 /** Document (Request) */
 export interface DocumentRequestDTO {
     /** Parent Document */
     parentDocPath?: string;
+    /** Parent ID */
+    parentId?: string;
     /** Document ID or Path */
     idOrPath?: string;
     /** Document Name */
     name?: string;
+    /** Document File Suffix */
+    fileSuffix?: string;
     /** Document Creator */
     creator?: string;
     /** Document Type */
@@ -1380,6 +1603,7 @@ export interface DocumentRequestDTO {
     properties?: Record<string, object>;
     /** Document Language */
     languages?: string[];
+    mixinType?: string[];
     /**
      * Page Number
      * @format int32
@@ -1399,7 +1623,9 @@ export interface DocumentRequestDTO {
     layoutId?: string;
     oldDocPalType?: string;
     watermarkTemplateId?: string;
+    version?: string;
     title?: string;
+    fileName?: string;
 }
 
 /** Document (Request) */
@@ -1448,25 +1674,31 @@ export interface DocStructureResponseDTO {
 }
 
 /** Copy Document RequestDTO */
-export interface CopyDocumentDTO {
+export interface DocumentCopyDTO {
     srcIdOrPath?: string;
     targetDirectory?: string;
 }
 
 /** Identity (Request) */
 export interface IdentityRequestDTO {
+    /** Id */
+    id?: string;
     /** Group Id */
     groupId?: string;
     /** Group Name */
     groupName?: string;
     /** User Id */
     userId?: string;
+    /** User Name */
+    username?: string;
     /** User First Name */
     firstName?: string;
     /** User Last Name */
     lastName?: string;
     /** User Email Address */
     email?: string;
+    /** Phone */
+    phone?: string;
     /** User Login Password */
     password?: string;
     /** Group Id List */
@@ -1475,16 +1707,13 @@ export interface IdentityRequestDTO {
     users?: string[];
     /** User Properties */
     properties?: Record<string, object>;
-}
-
-/** Group */
-export interface GroupDTO {
-    /** Group ID */
-    id?: string;
-    /** Group Name */
-    name?: string;
-    /** is Can Modified  */
-    isCanModified?: boolean;
+    /** User Status */
+    status?: string;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageSize?: number;
+    userNameOrEmail?: string;
 }
 
 export interface ResultListGroupDTO {
@@ -1510,78 +1739,6 @@ export interface ResultMapStringInstant {
     code?: number;
     message?: string;
     data?: Record<string, string>;
-}
-
-/** Workflow (Request) */
-export interface WorkflowRequestDTO {
-    /** ID */
-    versionId?: string;
-    /** Deployment ID */
-    deploymentId?: string;
-    /** Process Key */
-    processKey?: string;
-    /** Message Name */
-    messageName?: string;
-    /** Process Business Key */
-    businessKey?: string;
-    /** Fuzzy query process Business Key */
-    businessKeyLike?: string;
-    /** Process Definition Id */
-    processDefinitionId?: string;
-    /** Process Instance Id */
-    processInstanceId?: string;
-    /** creator */
-    creator?: string;
-    /** User ID */
-    userId?: string;
-    /** Task ID */
-    taskId?: string;
-    /** Task Delete Reason */
-    deleteReason?: string;
-    /**
-     * Task Due Date
-     * @format date-time
-     */
-    dueDate?: string;
-    /** process Category */
-    processCategory?: string;
-    /** Groups */
-    groups?: string[];
-    /** Form Properties */
-    properties?: Record<string, string>;
-    /** Variables */
-    variables?: Record<string, object>;
-    /** Form Attachments */
-    attachments?: Record<string, string>;
-    /**
-     * Page Index
-     * @deprecated
-     * @format int32
-     */
-    pageIndex?: number;
-    /**
-     * Page num
-     * @format int32
-     */
-    pageNum?: number;
-    /**
-     * Page Size
-     * @format int32
-     */
-    pageSize?: number;
-    /** processKeys */
-    processKeys?: string[];
-    /** Task Due Date */
-    dueDates?: string[];
-    /** createdDate */
-    createdDate?: string[];
-    involvedUser?: string;
-    assignedUser?: string;
-    candidateUser?: string;
-    candidateOrAssigned?: string;
-    interrelatedUserId?: string;
-    /** @uniqueItems true */
-    orderList?: string[];
 }
 
 export interface FileRequestUploadRequestDTO {
@@ -1634,6 +1791,80 @@ export interface ResultFileRequestUploadDTO {
     data?: FileRequestUploadDTO;
 }
 
+/** Workflow (Request) */
+export interface WorkflowRequestDTO {
+    /** ID */
+    versionId?: string;
+    /** Deployment ID */
+    deploymentId?: string;
+    /** Process Key */
+    processKey?: string;
+    /** Message Name */
+    messageName?: string;
+    /** Process Business Key */
+    businessKey?: string;
+    /** Fuzzy query process Business Key */
+    businessKeyLike?: string;
+    /** Process Definition Id */
+    processDefinitionId?: string;
+    /** Process Instance Id */
+    processInstanceId?: string;
+    /** creator */
+    creator?: string;
+    /** User ID */
+    userId?: string;
+    /** Task ID */
+    taskId?: string;
+    /** Task Delete Reason */
+    deleteReason?: string;
+    /**
+     * Task Due Date
+     * @format date-time
+     */
+    dueDate?: string;
+    /** process Category */
+    processCategory?: string;
+    /** Groups */
+    groups?: string[];
+    /** Form Properties */
+    properties?: Record<string, string>;
+    /** Variables */
+    variables?: Record<string, object>;
+    /** Display Columns For Show Extract Variables */
+    displayColumns?: string[];
+    /** Form Attachments */
+    attachments?: Record<string, string>;
+    /**
+     * Page Index
+     * @deprecated
+     * @format int32
+     */
+    pageIndex?: number;
+    /**
+     * Page num
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** processKeys */
+    processKeys?: string[];
+    /** Task Due Date */
+    dueDates?: string[];
+    /** createdDate */
+    createdDate?: string[];
+    involvedUser?: string;
+    assignedUser?: string;
+    candidateUser?: string;
+    candidateOrAssigned?: string;
+    interrelatedUserId?: string;
+    /** @uniqueItems true */
+    orderList?: string[];
+}
+
 export interface FileUploadRequestDetailDTO {
     email?: string;
     message?: string;
@@ -1677,115 +1908,56 @@ export interface UploadTempFileRequestDTO {
     fileModifiedTimestamp?: number;
 }
 
-export interface ESDocumentThumbnailDTO {
-    id?: string;
-    name?: string;
-    path?: string;
-    isFolder?: boolean;
-    modifiedDate?: string;
-    mimeType?: string;
+export interface FileCheckElementDTO {
+    /** @format int64 */
+    id?: number;
+    docName?: string;
 }
 
-export interface ResultListESDocumentThumbnailDTO {
+export interface FileCheckRequestDTO {
+    uploadId?: string;
+    fileCheckList?: FileCheckElementDTO[];
+}
+
+export interface FileCheckResultDTO {
+    checkSuccessList?: FileCheckElementDTO[];
+    checkFailedList?: FileCheckElementDTO[];
+}
+
+export interface ResultFileCheckResultDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: ESDocumentThumbnailDTO[];
+    data?: FileCheckResultDTO;
 }
 
-/** Document (Request) */
-export interface DocumentRequestForVirtureFolderDTO {
-    /** Document ID or Path */
-    idOrPath?: string;
-    /** Document Name */
-    name?: string;
-    /** Document Creator */
-    creator?: string;
-    /** Document Type */
-    type?: string;
-    /** Document Properties */
-    properties?: Record<string, object>[];
-    /** Document Language */
-    languages?: string[];
-    /** Page Number */
-    pageNumber?: string;
-    /** Page Size */
-    pageSize?: string;
-    /** File Type */
+export interface UploadFileDetailRecord {
+    /** @format int64 */
+    id?: number;
+    userId?: string;
+    uploadId?: string;
+    documentId?: string;
+    /** @format int64 */
+    aiAnalyzeId?: number;
+    metaDatas?: string;
+    documentType?: string;
+    fileName?: string;
     fileType?: string;
-}
-
-export interface PaginableEntityDTOVirtualFolderDocumentDTO {
-    entryList?: VirtualFolderDocumentDTO[];
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginableEntityDTOVirtualFolderDocumentDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginableEntityDTOVirtualFolderDocumentDTO;
-}
-
-/** Document */
-export interface VirtualFolderDocumentDTO {
-    /** Document ID */
-    id?: string;
-    /** Document Name */
-    name?: string;
-    /** Document Description */
-    description?: string;
-    /** Document Path */
-    path?: string;
-    /** Document Type */
-    type?: string;
-    /** Document Version */
-    version?: string;
-    /** Document Creator */
-    createdBy?: string;
-    /**
-     * Document Created Date
-     * @format date-time
-     */
+    /** @format int64 */
+    fileSize?: number;
+    fileTempPath?: string;
+    fileAbsolutePath?: string;
+    fileRelativePath?: string;
+    contentType?: string;
+    extractId?: string;
+    tempFileDeleted?: string;
+    display?: string;
+    fileModifiedDate?: string;
+    /** @format date-time */
     createdDate?: string;
-    /**
-     * Document Modification Date
-     * @format date-time
-     */
+    /** @format date-time */
     modifiedDate?: string;
-    /** Is Document Folder */
-    isFolder?: boolean;
-    /** Is Document Checked Out */
-    isCheckedOut?: boolean;
-    /** Document Properties */
-    properties?: Record<string, object>;
-    /** parentRef */
-    parentRef?: string;
-    /** logicalPath */
-    logicalPath?: string;
-    auditComment?: string;
-    auditName?: string;
-    /** permissionName */
-    permissionName?: string[];
-    vfConfigType?: object;
-}
-
-/** File (Request) */
-export interface FileRequestDTO {
-    /** Filename */
-    name?: string;
-    /** File mime-type */
-    mimeType?: string;
 }
 
 export interface SaveFileOverviewRequestDTO {
@@ -1847,6 +2019,8 @@ export interface QueryFileOverviewRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface PageUploadFileDTO {
@@ -1900,44 +2074,55 @@ export interface UploadFileDTO {
     createdDate?: string;
 }
 
-/** Preview Document (Request) */
-export interface PreviewDocumentReq {
-    /** Parent Document */
-    parentDocPath?: string;
-    /** Document ID or Path */
-    idOrPath?: string;
-    /** Document Name */
-    name?: string;
-    /** Document Creator */
-    creator?: string;
-    /** Document Type */
-    type?: string;
-    /** Document Properties */
-    properties?: Record<string, object>;
-    /** Document Language */
-    languages?: string[];
-    /**
-     * Page Number
-     * @format int32
-     */
-    pageNumber?: number;
-    /**
-     * Page Size
-     * @format int32
-     */
+/** Define audit template */
+export interface AuditTemplateDTO {
+    id?: string;
+    eventId?: string;
+    nuxeoEventId?: string;
+    documentId?: string;
+    comment?: string;
+    docPath?: string;
+    docType?: string;
+    eventType?: string;
+    eventCategory?: string;
+    /** @format date-time */
+    createTime?: string;
+    /** @format date-time */
+    updateTime?: string;
+    eventDateFrom?: string;
+    eventDateTo?: string;
+    principalName?: string;
+    creators?: string[];
+    businessNames?: string[];
+    collapseField?: string;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
     pageSize?: number;
-    /** File Type */
-    fileType?: string;
-    emailId?: string;
-    /** FolderCabinet Template Id */
-    templateId?: string;
-    /** Every level folder cabinet template Id */
-    layoutId?: string;
-    oldDocPalType?: string;
-    watermarkTemplateId?: string;
-    /** Document Template ID */
-    documentTemplateId?: string;
-    title?: string;
+    orderBy?: string;
+    isDesc?: boolean;
+    excludeUser?: string;
+}
+
+export interface PaginationDTOAuditTemplateDTO {
+    entryList?: AuditTemplateDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOAuditTemplateDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOAuditTemplateDTO;
 }
 
 /** Create office file request body */
@@ -1950,34 +2135,12 @@ export interface OfficeFileCreateDTO {
     metaData?: string;
 }
 
-/** Office RequestDTO */
-export interface OfficeRequestDTO {
-    /** Document ID or Path */
-    idOrPath?: string;
-    /** Version Number */
-    version?: string;
-}
-
-export interface ResultListFileDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: FileDTO[];
-}
-
 export interface DuplicateNameRequestDTO {
     /** @uniqueItems true */
     titles?: string[];
     path?: string;
-}
-
-export interface DuplicateNameDTO {
-    titles?: Record<string, DuplicateNameDetailDTO>;
-    path?: string;
-    /** @format int32 */
-    size?: number;
-    hasDuplicateTitle?: boolean;
+    names?: Record<string, string>;
+    documentFolderCabinetId?: string;
 }
 
 export interface DuplicateNameDetailDTO {
@@ -1985,22 +2148,26 @@ export interface DuplicateNameDetailDTO {
     uniqueName?: string;
 }
 
-export interface ResultDuplicateNameDTO {
+export interface DuplicateNameRespDTO {
+    titles?: Record<string, DuplicateNameDetailDTO>;
+    path?: string;
+    /** @format int32 */
+    size?: number;
+    hasDuplicateTitle?: boolean;
+}
+
+export interface ResultDuplicateNameRespDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: DuplicateNameDTO;
+    data?: DuplicateNameRespDTO;
 }
 
-/** Download File (Request) */
-export interface DownloadFileRequestDTO {
-    /** Document ID */
-    documentId?: string;
-    /** Intranet URI */
-    intranetUri?: string;
-    /** File Name */
+export interface CheckDuplicateNameReqDTO {
+    parentPath?: string;
     name?: string;
+    suffix?: string;
 }
 
 export interface ResultDocStructureResponseDTO {
@@ -2015,10 +2182,14 @@ export interface ResultDocStructureResponseDTO {
 export interface WatermarkDocumentRequestDTO {
     /** Parent Document */
     parentDocPath?: string;
+    /** Parent ID */
+    parentId?: string;
     /** Document ID or Path */
     idOrPath?: string;
     /** Document Name */
     name?: string;
+    /** Document File Suffix */
+    fileSuffix?: string;
     /** Document Creator */
     creator?: string;
     /** Document Type */
@@ -2027,6 +2198,7 @@ export interface WatermarkDocumentRequestDTO {
     properties?: Record<string, object>;
     /** Document Language */
     languages?: string[];
+    mixinType?: string[];
     /**
      * Page Number
      * @format int32
@@ -2047,9 +2219,11 @@ export interface WatermarkDocumentRequestDTO {
     oldDocPalType?: string;
     /** Watermark Template Id */
     watermarkTemplateId?: string;
+    version?: string;
     /** Origin Document Id */
     originDocumentId?: string;
     title?: string;
+    fileName?: string;
 }
 
 /** Document */
@@ -2081,52 +2255,32 @@ export interface DocumentThumbnailDTO {
     contributors?: string[];
     tags?: string[];
     version?: string;
+    /** @format int32 */
+    status?: number;
+    statusName?: string;
     collections?: Record<string, string>[];
+    permissionIds?: number[];
 }
 
-export interface PaginableEntityDTODocumentThumbnailDTO {
+export interface PaginationDTODocumentThumbnailDTO {
     entryList?: DocumentThumbnailDTO[];
+    /** @format int32 */
+    totalSize?: number;
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
+    pageNum?: number;
     /** @format int32 */
     pageCount?: number;
     isNextPageAvailable?: boolean;
 }
 
-export interface ResultPaginableEntityDTODocumentThumbnailDTO {
+export interface ResultPaginationDTODocumentThumbnailDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginableEntityDTODocumentThumbnailDTO;
-}
-
-export interface FileCheckElementDTO {
-    /** @format int64 */
-    id?: number;
-    docName?: string;
-}
-
-export interface FileCheckRequestDTO {
-    uploadId?: string;
-    fileCheckList?: FileCheckElementDTO[];
-}
-
-export interface FileCheckResultDTO {
-    checkSuccessList?: FileCheckElementDTO[];
-    checkFailedList?: FileCheckElementDTO[];
-}
-
-export interface ResultFileCheckResultDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: FileCheckResultDTO;
+    data?: PaginationDTODocumentThumbnailDTO;
 }
 
 export interface FileConfirmDTO {
@@ -2143,49 +2297,17 @@ export interface FileConfirmRequestDTO {
     fileConfirmDTOList?: FileConfirmDTO[];
 }
 
-/** Audit Trial Log Entry */
-export interface LogEntryDTO {
-    /**
-     * Log Entry ID
-     * @format int32
-     */
-    id?: number;
-    /**
-     * Log D
-     * @format date-time
-     */
-    logDate?: string;
-    /** Log Action */
-    action?: string;
-    /** Log Entry Log In */
-    username?: string;
-    /** Log Entry category */
-    cagetory?: string;
-    /** Log Entry Comment */
-    comment?: string;
-    /** Log Entry Item State */
-    state?: string;
+export interface FileConfirmResponseDTO {
+    parentId?: string;
+    uploadSuccess?: boolean;
 }
 
-export interface ResultListLogEntryDTO {
+export interface ResultFileConfirmResponseDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: LogEntryDTO[];
-}
-
-export interface AttachmentUpdateResponseDTO {
-    documentId?: string;
-    updateStatus?: string;
-}
-
-export interface ResultAttachmentUpdateResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: AttachmentUpdateResponseDTO;
+    data?: FileConfirmResponseDTO;
 }
 
 /** Access Control Entry */
@@ -2408,7 +2530,7 @@ export interface AnnotationObject {
      * @format double
      */
     opacity?: number;
-    /** Annotation objec type */
+    /** Annotation object type */
     type?: string;
     /** Annotation object color */
     color?: string;
@@ -2536,6 +2658,14 @@ export interface ResultPageBusinessResultRecord {
     data?: PageBusinessResultRecord;
 }
 
+export interface ResultUploadFileDetailRecord {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: UploadFileDetailRecord;
+}
+
 export interface DocumentTypeMetadataMapping {
     /** @format int64 */
     id?: number;
@@ -2617,25 +2747,12 @@ export interface InstanceDTO {
     isSuspended?: boolean;
 }
 
-export interface PaginableEntityDTOTaskDTO {
-    entryList?: TaskDTO[];
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginableEntityDTOTaskDTO {
+export interface ResultListTaskDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginableEntityDTOTaskDTO;
+    data?: TaskDTO[];
 }
 
 /** Task */
@@ -2685,12 +2802,25 @@ export interface TaskDTO {
     variables?: Record<string, object>;
 }
 
-export interface ResultListTaskDTO {
+export interface PaginationDTOTaskDTO {
+    entryList?: TaskDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOTaskDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: TaskDTO[];
+    data?: PaginationDTOTaskDTO;
 }
 
 export interface ResultTaskDTO {
@@ -2773,65 +2903,6 @@ export interface ResultDocumentTypeProfileSetting {
     data?: DocumentTypeProfileSetting;
 }
 
-export interface AdhocApprovalDTO {
-    /** @format int64 */
-    id?: number;
-    documentId?: string;
-    documentPath?: string;
-    documentStartVersion?: string;
-    documentApprovalVersion?: string;
-    /** @format int32 */
-    documentStatus?: number;
-    taskId?: string;
-    taskName?: string;
-    businessKey?: string;
-    processInstanceId?: string;
-    /** @format int32 */
-    processInstanceStatus?: number;
-    user_creator_id?: string;
-    /** @format date-time */
-    startTime?: string;
-    approvedBy?: string;
-    user_approver_id?: string;
-    /** @format date-time */
-    approvedDate?: string;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageSize?: number;
-    orderBy?: string;
-    isDesc?: boolean;
-    isComplete?: boolean;
-    participant?: string;
-    /**
-     * Page Index
-     * @deprecated
-     * @format int32
-     */
-    pageIndex?: number;
-}
-
-export interface PaginableEntityDTOObject {
-    entryList?: object[];
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginableEntityDTOObject {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginableEntityDTOObject;
-}
-
 /** Form Property */
 export interface FormPropertyDTO {
     /** Property Key */
@@ -2865,15 +2936,6 @@ export interface ResultListFormPropertyDTO {
     data?: FormPropertyDTO[];
 }
 
-export interface ResultInstanceDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Process Instance */
-    data?: InstanceDTO;
-}
-
 /** Process Definition */
 export interface ProcessDTO {
     /** Process ID */
@@ -2899,6 +2961,24 @@ export interface ProcessDTO {
     versionId?: string;
     /** Production Draft ID */
     draftId?: string;
+}
+
+export interface ResultProcessDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Process Definition */
+    data?: ProcessDTO;
+}
+
+export interface ResultInstanceDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Process Instance */
+    data?: InstanceDTO;
 }
 
 export interface ResultListProcessDTO {
@@ -2984,15 +3064,6 @@ export interface ResultPaginableEntityDTOInstanceDTO {
     data?: PaginableEntityDTOInstanceDTO;
 }
 
-export interface ResultProcessDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Process Definition */
-    data?: ProcessDTO;
-}
-
 export interface ResultListObject {
     result?: boolean;
     /** @format int32 */
@@ -3035,6 +3106,8 @@ export interface HistoricProcessInstanceEntityImpl {
     originalPersistentState?: object;
     /** @format date-time */
     endTime?: string;
+    /** @format date-time */
+    completeDate?: string;
     /** @format int64 */
     durationInMillis?: number;
     deleteReason?: string;
@@ -3050,6 +3123,7 @@ export interface HistoricProcessInstanceEntityImpl {
     durationInMillisStr?: string;
     startTimeStr?: string;
     endTimeStr?: string;
+    taskDefinitionKey?: string;
 }
 
 export interface PaginationDTOHistoricProcessInstanceEntityImpl {
@@ -3079,6 +3153,14 @@ export interface ResultMapStringString {
     code?: number;
     message?: string;
     data?: Record<string, string>;
+}
+
+export interface ResultListFileDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: FileDTO[];
 }
 
 export interface JSONObject {
@@ -3257,34 +3339,6 @@ export interface TemplateRequestDTO {
     variables?: Record<string, object>;
 }
 
-export interface FunctionListEntity {
-    restrictions?: Restrictions[];
-}
-
-export interface Restrictions {
-    name?: string;
-    url?: string;
-    params?: Record<string, string>;
-}
-
-export interface SystemFeatureRequestDTO {
-    /** @format int64 */
-    id?: number;
-    featureKey?: string;
-    featureName?: string;
-    featureDes?: string;
-    functionList?: FunctionListEntity;
-    mandatory?: boolean;
-    sign?: string;
-    status?: string;
-    site?: string;
-    createBy?: string;
-    /** @format date-time */
-    createTime?: string;
-    /** @format date-time */
-    modifiedTime?: string;
-}
-
 export interface LanguageEntity {
     /** @format int64 */
     id?: number;
@@ -3350,6 +3404,8 @@ export interface RetentionPolicyDocumentRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface ResultRetentionPolicyDocument {
@@ -3461,6 +3517,8 @@ export interface PolicyDocumentRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface PolicyDocument {
@@ -3543,6 +3601,14 @@ export interface NotificationRecord {
     sortBy?: string;
 }
 
+export interface ResultNotificationRecord {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: NotificationRecord;
+}
+
 export interface NotificationSubscriberRequestDTO {
     /** @format int64 */
     id?: number;
@@ -3562,6 +3628,28 @@ export interface NotificationSubscriber {
     businessPath?: string;
     /** @format date-time */
     createdDate?: string;
+}
+
+/** Notification Preference List */
+export interface FrontEndBaseDTOBoolean {
+    key?: string;
+    label?: string;
+    value?: boolean;
+}
+
+export interface UserNotifyPreference {
+    /** Name of the module */
+    name?: string;
+    /** Notification Preference List */
+    value?: FrontEndBaseDTOBoolean[];
+}
+
+export interface ResultListUserNotifyPreference {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: UserNotifyPreference[];
 }
 
 export interface QueryNotificationRequestDTO {
@@ -3587,6 +3675,8 @@ export interface QueryNotificationRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface NotificationInfoDTO {
@@ -3624,6 +3714,33 @@ export interface ResultPaginationDTONotificationInfoDTO {
     data?: PaginationDTONotificationInfoDTO;
 }
 
+export interface PageNotificationRecord {
+    /** @format int32 */
+    totalPages?: number;
+    /** @format int64 */
+    totalElements?: number;
+    /** @format int32 */
+    number?: number;
+    /** @format int32 */
+    size?: number;
+    /** @format int32 */
+    numberOfElements?: number;
+    content?: NotificationRecord[];
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    pageable?: PageableObject;
+    empty?: boolean;
+}
+
+export interface ResultPageNotificationRecord {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PageNotificationRecord;
+}
+
 /** Master Table RequestDTO */
 export interface MasterTableRequestDTO {
     /**
@@ -3653,6 +3770,8 @@ export interface MasterTableRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface ResultListMapStringObject {
@@ -3666,26 +3785,6 @@ export interface ResultListMapStringObject {
 export interface DeleteMTRecordRequestDTO {
     tableId?: string;
     recordIds?: string[];
-}
-
-export interface BasePageRequest {
-    /**
-     * Page Number
-     * @format int32
-     */
-    pageNum?: number;
-    /**
-     * Page Size
-     * @format int32
-     */
-    pageSize?: number;
-    /** The sortBy fields */
-    orderBy?: string;
-    /** The sort ASC or DESC */
-    isDesc?: boolean;
-    sort?: SortObject;
-    sortOrder?: string;
-    descSort?: SortObject;
 }
 
 export interface NestedSearchLogV2 {
@@ -3715,57 +3814,6 @@ export interface ResultPaginationDTONestedSearchLogV2 {
     code?: number;
     message?: string;
     data?: PaginationDTONestedSearchLogV2;
-}
-
-export interface NestedSearchLog {
-    /** NestedSearch (Request) */
-    searchRequestDTO?: NestedSearchRequestDTO;
-    /** @format int64 */
-    totalSize?: number;
-    /** @format int64 */
-    eventTimestamp?: number;
-}
-
-export interface PaginationDTONestedSearchLog {
-    entryList?: NestedSearchLog[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTONestedSearchLog {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTONestedSearchLog;
-}
-
-export interface PaginationDTOESDocumentThumbnailDTO {
-    entryList?: ESDocumentThumbnailDTO[];
-    /** @format int32 */
-    totalSize?: number;
-    /** @format int32 */
-    currentPageSize?: number;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageCount?: number;
-    isNextPageAvailable?: boolean;
-}
-
-export interface ResultPaginationDTOESDocumentThumbnailDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PaginationDTOESDocumentThumbnailDTO;
 }
 
 export interface InternalShareQueryDTO {
@@ -3821,6 +3869,27 @@ export interface InternalShareQueryDTO {
     status?: number;
     /** @format int64 */
     biggerThenId?: number;
+}
+
+export interface PaginableEntityDTOObject {
+    entryList?: object[];
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    currentPageIndex?: number;
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginableEntityDTOObject {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginableEntityDTOObject;
 }
 
 export interface InternalShareToMePageRequestDTO {
@@ -3942,6 +4011,18 @@ export interface ResultInternalShareAudit {
     data?: InternalShareAudit;
 }
 
+export interface EasyFormEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+    easyFormId?: string;
+}
+
+export interface UserEmailDTO {
+    username?: string;
+    email?: string;
+}
+
 /** form design request */
 export interface FormDesignRequestDTO {
     /**
@@ -3959,10 +4040,22 @@ export interface FormDesignRequestDTO {
     /** The sort ASC or DESC */
     isDesc?: boolean;
     id?: string;
+    /** Form Design Name */
+    name?: string;
+    /** Form Design Publish Status (value is A or D) */
+    publishStatus?: string;
+    /** Disable or Enable form design */
+    enable?: boolean;
     /** Table Name */
     tableName?: string;
     /** Status is Active or Disable (A or D) */
     status?: string;
+    /** Form Design Creator */
+    createdBy?: string;
+    /** Form Design Modifier */
+    modifiedBy?: string;
+    /** current user permissions, only for client site */
+    userPermissions?: string[];
     /** New Data List */
     data?: Record<string, object>[];
     /** Where Condition */
@@ -3976,6 +4069,8 @@ export interface FormDesignRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface ResultListLinkedHashMapStringObject {
@@ -3984,6 +4079,203 @@ export interface ResultListLinkedHashMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>[];
+}
+
+/** Easy Form Email RequestDTO */
+export interface EasyFormEmailQueryRequestDTO {
+    /**
+     * Page Number
+     * @format int32
+     */
+    pageNum?: number;
+    /**
+     * Page Size
+     * @format int32
+     */
+    pageSize?: number;
+    /** The sortBy fields */
+    orderBy?: string;
+    /** The sort ASC or DESC */
+    isDesc?: boolean;
+    email?: string;
+    subject?: string;
+    easyFormId?: string;
+    status?: string;
+    sort?: SortObject;
+    sortOrder?: string;
+    descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface EasyFormActionDTO {
+    actionType?: string;
+    workflowInstanceId?: string;
+    caseId?: string;
+    caseDefinitionVersionId?: string;
+    actionId?: string;
+    actionName?: string;
+}
+
+export interface EasyFormEmailLogDTO {
+    /** @format int64 */
+    id?: number;
+    email?: string;
+    subject?: string;
+    createdBy?: string;
+    status?: string;
+    /** @format date-time */
+    sentDate?: string;
+    relatedWorkflows?: EasyFormActionDTO[];
+    relateCases?: EasyFormActionDTO[];
+}
+
+export interface PaginationDTOEasyFormEmailLogDTO {
+    entryList?: EasyFormEmailLogDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOEasyFormEmailLogDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOEasyFormEmailLogDTO;
+}
+
+/** Form Design Form Result List */
+export interface EasyFormResult {
+    /** Action Item Id */
+    id?: string;
+    /** Action Type, Example value： Email、Workflow、CaseType  */
+    actionType?: string;
+    /** Bound business Key, Example value：customApproval */
+    actionKey?: string;
+    /** DeploymentId of Bound business, Example value：customApproval:1:7212b388-36f3-4aff-9b03-bc500537dd23 */
+    actionId?: string;
+    /** Name of Bound business */
+    actionName?: string;
+    /** Mapping data structure between form columns and bound business fields */
+    dataMapping?: ParamMappingDTO[];
+    /** Status, Active or Deactivated */
+    status?: string;
+    /** Email Subject */
+    subject?: string;
+    /** Email Body Text */
+    text?: string;
+    /** Email TO */
+    to?: string;
+    /** Email CC */
+    cc?: string;
+    /** Email BCC */
+    bcc?: string;
+}
+
+/** Form Designer (Response) */
+export interface FormDesignResponseDTO {
+    /** Form Design ID */
+    id?: string;
+    /** Form Design Name */
+    name?: string;
+    /** Form Design Publish Status */
+    publishStatus?: string;
+    /** Form Designer Process Definition Key */
+    processDefinitionKey?: string;
+    /** Form Design Permission */
+    permission?: string;
+    /** Disable or Enable form design */
+    enable?: boolean;
+    /** Form Design Information List */
+    information?: PlanTableFieldDTO[];
+    /** Form Design Preview */
+    previewStyle?: string;
+    /** Form Design Form Result List */
+    formResult?: EasyFormResult[];
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    formInfo?: FormInfoDTO;
+    createdBy?: string;
+    modifiedBy?: string;
+}
+
+export interface FormFieldMapping {
+    id?: string;
+    formInfoId?: string;
+    columnName?: string;
+    fieldName?: string;
+    dataType?: string;
+    status?: string;
+    required?: boolean;
+    unique?: boolean;
+    primaryKey?: boolean;
+}
+
+export interface FormInfoDTO {
+    id?: string;
+    bizId?: string;
+    label?: string;
+    tableName?: string;
+    tableNamePrefix?: string;
+    status?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    fieldMappings?: FormFieldMapping[];
+}
+
+export interface PaginationDTOFormDesignResponseDTO {
+    entryList?: FormDesignResponseDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+/** Mapping data structure between form columns and bound business fields */
+export interface ParamMappingDTO {
+    source?: string;
+    target?: string;
+}
+
+/** Form Design Information List */
+export interface PlanTableFieldDTO {
+    id?: string;
+    name?: string;
+    type?: string;
+    accesstype?: string;
+    fieldMappingId?: string;
+    masterTable?: string;
+    documentType?: string;
+    displayField?: string;
+    vocabulary?: string;
+    require?: string;
+    readOnly?: string;
+}
+
+export interface ResultPaginationDTOFormDesignResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOFormDesignResponseDTO;
 }
 
 /** Case model dashboard (RequestDTO) */
@@ -4015,6 +4307,8 @@ export interface CmmnDashboardRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 /** Case Table RequestDTO */
@@ -4067,6 +4361,8 @@ export interface CaseTableRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 /** Start Case Model Version */
@@ -4138,6 +4434,8 @@ export interface CaseTypeRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface CaseType {
@@ -4211,8 +4509,10 @@ export interface CaseTypeResponseDTO {
     caseIdDigit?: number;
     /** @format int32 */
     startNumber?: number;
-    productionVersion?: string;
     latestVersion?: string;
+    latestVersionId?: string;
+    productionVersion?: string;
+    productionVersionId?: string;
     enable?: boolean;
     publishStatus?: string;
     createdBy?: string;
@@ -4251,26 +4551,18 @@ export interface PlanItemDefinitionDTO {
     parent?: string;
     /** PlanItem Definition criterion */
     criterion?: Record<string, string>;
-    form?: Record<string, string>;
+    /** PlanItem Definition Rules or Behavior */
+    rules?: Record<string, object>;
     /** PlanItem Definition Sub-List */
     subItems?: PlanItemDefinitionDTO[];
     /** Case Model Plan Form DTO */
     planForm?: CmmnPlanFormDTO;
     fields?: PlanTableFieldDTO[];
-}
-
-export interface PlanTableFieldDTO {
-    id?: string;
-    name?: string;
-    type?: string;
-    accesstype?: string;
-    fieldMappingId?: string;
-    masterTable?: string;
-    documentType?: string;
-    displayField?: string;
-    vocabulary?: string;
-    require?: string;
-    readOnly?: string;
+    /** Form Design Information List */
+    assigneeField?: PlanTableFieldDTO;
+    isStartTask?: boolean;
+    upProcessTaskKey?: string;
+    upFormProperties?: FormPropertyDTO[];
 }
 
 export interface ResultListCaseTypeResponseDTO {
@@ -4279,6 +4571,13 @@ export interface ResultListCaseTypeResponseDTO {
     code?: number;
     message?: string;
     data?: CaseTypeResponseDTO[];
+}
+
+export interface CmmnTriggerEventReqDTO {
+    caseInstanceId?: string;
+    planItemDefinitionId?: string;
+    planItemInstanceId?: string;
+    state?: string;
 }
 
 /** Case Instance TaskDTO (Request) */
@@ -4341,6 +4640,10 @@ export interface CmmnTaskDTO {
     endTime?: string;
     /** @format int64 */
     durationInMillis?: number;
+    caseDefinitionId?: string;
+    caseInstanceId?: string;
+    assignees?: string[];
+    candidateGroups?: string[];
 }
 
 export interface ResultListCmmnTaskDTO {
@@ -4393,6 +4696,8 @@ export interface CaseInstanceRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 /** Case Instance */
@@ -4452,6 +4757,10 @@ export interface PlanItemInstanceDTO {
     businessKey?: string;
     operator?: string;
     variables?: Record<string, object>;
+    /** Case Model Plan Form DTO */
+    planForm?: CmmnPlanFormDTO;
+    processInstanceId?: string;
+    humanTaskId?: string;
 }
 
 export interface ResultCaseInstanceDTO {
@@ -4461,14 +4770,6 @@ export interface ResultCaseInstanceDTO {
     message?: string;
     /** Case Instance */
     data?: CaseInstanceDTO;
-}
-
-export interface ResultListPlanItemInstanceDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: PlanItemInstanceDTO[];
 }
 
 /** PlanItem Instance (Request) */
@@ -4512,6 +4813,16 @@ export interface PlanItemInstanceRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
+}
+
+export interface ResultListPlanItemInstanceDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PlanItemInstanceDTO[];
 }
 
 export interface CmmnDashboard {
@@ -4580,6 +4891,8 @@ export interface CmmnProcessRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 export interface PaginationDTOCmmnTaskDTO {
@@ -4695,10 +5008,12 @@ export interface DocFolderCabinetResponseDTO {
     templateId?: string;
     /** The name of folder cabinet */
     label?: string;
-    /** The document type of nuxeo */
+    /** The document type */
     documentType?: string;
-    /** The document path of nuxeo */
+    /** The document path */
     documentPath?: string;
+    /** The document Id */
+    documentId?: string;
     pathIds?: string;
     /** Whether it is a folder? */
     folder?: boolean;
@@ -4792,16 +5107,22 @@ export interface DocFolderCabinetRequestDTO {
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
+    /** @format int32 */
+    pageIndex?: number;
 }
 
 /** Document Folder Cabinet RequestDTO */
 export interface DFCRequestDTO {
     /** Parent Document */
     parentDocPath?: string;
+    /** Parent ID */
+    parentId?: string;
     /** Document ID or Path */
     idOrPath?: string;
     /** Document Name */
     name?: string;
+    /** Document File Suffix */
+    fileSuffix?: string;
     /** Document Creator */
     creator?: string;
     /** Document Type */
@@ -4810,6 +5131,7 @@ export interface DFCRequestDTO {
     properties?: Record<string, object>;
     /** Document Language */
     languages?: string[];
+    mixinType?: string[];
     /**
      * Page Number
      * @format int32
@@ -4829,6 +5151,7 @@ export interface DFCRequestDTO {
     layoutId?: string;
     oldDocPalType?: string;
     watermarkTemplateId?: string;
+    version?: string;
     /** Email Reminder */
     notificationReminder?: FCReminder;
     /** Email Reminder */
@@ -4836,6 +5159,7 @@ export interface DFCRequestDTO {
     /** Email Reminder */
     emailReminder?: FCReminder;
     title?: string;
+    fileName?: string;
 }
 
 export interface DFCNotificationConfig {
@@ -4894,6 +5218,14 @@ export interface ResultDocumentFolderCabinet {
     code?: number;
     message?: string;
     data?: DocumentFolderCabinet;
+}
+
+export interface FilingDocumentPreviewReq {
+    taskId?: string;
+    folderCabinetIds?: string[];
+    variables?: Record<string, object>;
+    operator?: string;
+    folderCabinetDataMapping?: Record<string, FCDataMappingDTO[]>;
 }
 
 /** Define block inherited permission of document */
@@ -4996,6 +5328,56 @@ export interface UpdateAiDocumentRequestDTO {
     metaDatas?: MetadataVO[];
 }
 
+/** Document (Request) */
+export interface DocumentReplaceReq {
+    /** Document ID or Path */
+    idOrPath?: string;
+    /** Document Req JSON */
+    document?: string;
+    /** @format binary */
+    file?: File;
+    /** Is need to AI analyze */
+    openAiAnalyzeMetadata?: boolean;
+    /** Document Name */
+    name?: string;
+    /** Document Creator */
+    creator?: string;
+    /** Document Type */
+    type?: string;
+    /** Document Properties */
+    properties?: Record<string, object>;
+    /** Document Language */
+    languages?: string[];
+    /** File Type */
+    fileType?: string;
+    /** FolderCabinet Template Id */
+    templateId?: string;
+    /** Every level folder cabinet template Id */
+    layoutId?: string;
+    title?: string;
+    /** Document (Request) */
+    documentRequestDTO?: DocumentReplaceReq;
+}
+
+export interface PageSearchHistory {
+    /** @format int32 */
+    totalPages?: number;
+    /** @format int64 */
+    totalElements?: number;
+    /** @format int32 */
+    number?: number;
+    /** @format int32 */
+    size?: number;
+    /** @format int32 */
+    numberOfElements?: number;
+    content?: SearchHistory[];
+    sort?: SortObject;
+    first?: boolean;
+    last?: boolean;
+    pageable?: PageableObject;
+    empty?: boolean;
+}
+
 export interface ResultListAclPermissionDTO {
     result?: boolean;
     /** @format int32 */
@@ -5018,6 +5400,35 @@ export interface ResultAclUserGroupDTO {
     code?: number;
     message?: string;
     data?: AclUserGroupDTO;
+}
+
+export interface ResultUserStatusDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** user status DTO */
+    data?: UserStatusDTO;
+}
+
+/** user status DTO */
+export interface UserStatusDTO {
+    accountExpire?: boolean;
+    firstLoginForceResetPassword?: boolean;
+}
+
+export interface LockUserDTO {
+    lockStatus?: boolean;
+    /** @format int32 */
+    lockMinutes?: number;
+}
+
+export interface ResultLockUserDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: LockUserDTO;
 }
 
 export interface ResultVocabularyDTO {
@@ -5154,48 +5565,6 @@ export interface ViewSettingResponseDTO {
     json_value?: string;
 }
 
-/** Aggregation Config */
-export interface AggregationConfigResponseDTO {
-    /** Aggregation id */
-    id?: string;
-    /** Aggregation description */
-    description?: string;
-    /** field */
-    field?: string;
-    /** Aggregation type */
-    type?: string;
-    /** The settings of range type */
-    ranges?: Range[];
-}
-
-/** The settings of range type */
-export interface Range {
-    /** The key associated with the range aggregation. */
-    rangeKey?: string;
-    /** The description of key. */
-    description?: string;
-    /** The range type, include 'Range','UnboundedTo' and 'UnboundedFrom'. */
-    rangeType?: string;
-    /**
-     * The starting value of the range.
-     * @format double
-     */
-    from?: number;
-    /**
-     * The ending value of the range.
-     * @format double
-     */
-    to?: number;
-}
-
-export interface ResultListAggregationConfigResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: AggregationConfigResponseDTO[];
-}
-
 export interface NestedSearchLogRecord {
     /** @format int64 */
     id?: number;
@@ -5214,158 +5583,6 @@ export interface ResultListNestedSearchLogRecord {
     code?: number;
     message?: string;
     data?: NestedSearchLogRecord[];
-}
-
-/** Aggregation (Request) */
-export interface AggregationRequestDTO {
-    /** Aggregation name. */
-    aggName?: string;
-    /** The values of terms, 'range','date_histogram', etc. */
-    values?: string[];
-}
-
-/** DocPal search (Request) */
-export interface DocPalSearchRequestDTO {
-    /**
-     * Page Number
-     * @format int32
-     */
-    pageNumber?: number;
-    /**
-     * Page Size
-     * @format int32
-     */
-    pageSize?: number;
-    /** Search text */
-    searchText?: string;
-    /** Include full text search,all meta or ocr content */
-    textSearchType?: string;
-    /** The name of elastic page provider. */
-    elasticPageProviderName?: string;
-    /** aggregation request parameters */
-    aggregations?: AggregationRequestDTO[];
-}
-
-/** Aggregation */
-export interface AggregationResponseDTO {
-    /** Aggregation id */
-    id?: string;
-    /** field */
-    field?: string;
-    /** Aggregation type */
-    type?: string;
-    /** The buckets in the aggregation */
-    buckets?: BucketResponseDTO[];
-}
-
-export type AggregationsContainerObject = object;
-
-/** Bucket */
-export interface BucketResponseDTO {
-    /** Bucket key */
-    key?: string;
-    /**
-     * The doc count in the bucket
-     * @format int32
-     */
-    docCount?: number;
-    /** Range from */
-    from?: string;
-    /** Range to */
-    to?: string;
-}
-
-/** SearchHit */
-export interface ESSearchResultResponseDTO {
-    /**
-     * The results count
-     * @format int64
-     */
-    resultsCount?: number;
-    /** The search hits */
-    searchHits?: SearchHitObject[];
-    /** The aggregations */
-    aggregations?: AggregationResponseDTO[];
-}
-
-export interface EntryOption {
-    text?: string;
-    /** @format int32 */
-    offset?: number;
-    /** @format int32 */
-    length?: number;
-    options?: Option[];
-}
-
-export interface Explanation {
-    match?: boolean;
-    /** @format double */
-    value?: number;
-    description?: string;
-    details?: Explanation[];
-}
-
-export interface NestedMetaData {
-    field?: string;
-    /** @format int32 */
-    offset?: number;
-    child?: NestedMetaData;
-}
-
-export interface Option {
-    text?: string;
-    highlighted?: string;
-    /** @format float */
-    score?: number;
-    collateMatch?: boolean;
-}
-
-export interface ResultESSearchResultResponseDTO {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** SearchHit */
-    data?: ESSearchResultResponseDTO;
-}
-
-/** The search hits */
-export interface SearchHitObject {
-    index?: string;
-    id?: string;
-    /** @format float */
-    score?: number;
-    sortValues?: object[];
-    content?: object;
-    highlightFields?: Record<string, string[]>;
-    innerHits?: Record<string, SearchHitsObject>;
-    nestedMetaData?: NestedMetaData;
-    routing?: string;
-    explanation?: Explanation;
-    matchedQueries?: string[];
-}
-
-export interface SearchHitsObject {
-    aggregations?: AggregationsContainerObject;
-    /** @format float */
-    maxScore?: number;
-    searchHits?: SearchHitObject[];
-    /** @format int64 */
-    totalHits?: number;
-    totalHitsRelation?: "EQUAL_TO" | "GREATER_THAN_OR_EQUAL_TO" | "OFF";
-    suggest?: Suggest;
-    empty?: boolean;
-}
-
-export interface Suggest {
-    suggestions?: SuggestionEntryOption[];
-}
-
-export interface SuggestionEntryOption {
-    name?: string;
-    /** @format int32 */
-    size?: number;
-    entries?: EntryOption[];
 }
 
 export interface EasyShareDocumentResponseDTO {
@@ -5546,6 +5763,34 @@ export interface ResultListMQDayTotalDTO {
     data?: MQDayTotalDTO[];
 }
 
+export interface ProcessDefinitionVersion {
+    id?: string;
+    draftId?: string;
+    versionNumber?: string;
+    productionVersion?: string;
+    source?: string;
+    publishStatus?: string;
+    isProduction?: string;
+    processDefinitionId?: string;
+    processDefinitionKey?: string;
+    bytes?: string[];
+    jsonValue?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface ResultProcessDefinitionVersion {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: ProcessDefinitionVersion;
+}
+
 export interface MetadataSetting {
     /** @format int64 */
     id?: number;
@@ -5707,6 +5952,48 @@ export interface ResultListBpmnDynamicFormDTO {
     data?: BpmnDynamicFormDTO[];
 }
 
+export interface AdhocApproval {
+    /** @format int64 */
+    id?: number;
+    documentId?: string;
+    documentPath?: string;
+    documentStartVersion?: string;
+    documentApprovalVersion?: string;
+    /** @format int32 */
+    documentStatus?: number;
+    taskId?: string;
+    taskName?: string;
+    processInstanceId?: string;
+    businessKey?: string;
+    /** @format int32 */
+    processInstanceStatus?: number;
+    user_creator_id?: string;
+    /** @format date-time */
+    startTime?: string;
+    approvedBy?: string;
+    user_approver_id?: string;
+    /** @format date-time */
+    approvedDate?: string;
+}
+
+export interface AdhocApprovalResp {
+    histories?: AdhocApproval[];
+    pendingApproval?: AdhocApproval;
+    id?: string;
+    approvedDate?: string;
+    approvalTaskId?: string;
+    documentApprovalVersion?: string;
+    approvedBy?: string;
+}
+
+export interface ResultAdhocApprovalResp {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: AdhocApprovalResp;
+}
+
 export interface Content {
     type?: string;
     format?: string;
@@ -5847,11 +6134,19 @@ export interface ResultListLanguageEntity {
     data?: LanguageEntity[];
 }
 
+/** KeyCloakPropertyVO */
+export interface KeyCloakPropertyVO {
+    /** isLdap */
+    isLdap?: boolean;
+    /** KeyCloakPropertyDTO */
+    keyCloakProperty?: KeycloakPropertyDTO;
+}
+
 /** KeyCloakPropertyDTO */
-export interface KeyCloakPropertyDTO {
+export interface KeycloakPropertyDTO {
     /** url */
     url?: string;
-    /** 域 */
+    /** Realm */
     realm?: string;
     /** clientId */
     clientId?: string;
@@ -5866,14 +6161,6 @@ export interface KeyCloakPropertyDTO {
     confidentialPort?: number;
     /** enable SSO */
     enableSSO?: boolean;
-}
-
-/** KeyCloakPropertyVO */
-export interface KeyCloakPropertyVO {
-    /** isLdap */
-    isLdap?: boolean;
-    /** KeyCloakPropertyDTO */
-    keyCloakProperty?: KeyCloakPropertyDTO;
 }
 
 export interface ResultKeyCloakPropertyVO {
@@ -6072,6 +6359,36 @@ export interface ResultPersonalLandingResponseDTO {
     data?: PersonalLandingResponseDTO;
 }
 
+export interface PersonalDashboard {
+    /** @format int64 */
+    id?: number;
+    name?: string;
+    creator?: string;
+    editor?: string;
+    groupId?: string;
+    styleJson?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+}
+
+export interface ResultPersonalDashboard {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PersonalDashboard;
+}
+
+export interface ResultListPersonalDashboard {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PersonalDashboard[];
+}
+
 export interface NotificationUnreadCountDTO {
     /** @format int32 */
     unreadCount?: number;
@@ -6171,93 +6488,6 @@ export interface ResultListMTRelationResponseDTO {
     data?: MTRelationResponseDTO[];
 }
 
-/** Form Design Form Result List */
-export interface EasyFormResult {
-    /** Action Type, Example value： Email、Workflow、CaseType  */
-    actionType?: string;
-    /** Bound business Key, Example value：customApproval */
-    actionKey?: string;
-    /** DeploymentId of Bound business, Example value：customApproval:1:7212b388-36f3-4aff-9b03-bc500537dd23 */
-    actionId?: string;
-    /** Name of Bound business */
-    actionName?: string;
-    /** Mapping data structure between form columns and bound business fields */
-    dataMapping?: ParamMappingDTO[];
-    /** Status, Active or Deactivated */
-    status?: string;
-    /** Email Subject */
-    subject?: string;
-    /** Email Body Text */
-    text?: string;
-    /** Email TO */
-    to?: string;
-    /** Email CC */
-    cc?: string;
-    /** Email BCC */
-    bcc?: string;
-}
-
-/** Form Designer (Response) */
-export interface FormDesignResponseDTO {
-    /** Form Design ID */
-    id?: string;
-    /** Form Design Name */
-    name?: string;
-    /** Form Design Publish Status */
-    publishStatus?: string;
-    /** Form Designer Process Definition Key */
-    processDefinitionKey?: string;
-    /** Form Design Permission */
-    permission?: string;
-    /** Disable or Enable form design */
-    enable?: boolean;
-    /** Form Design Information List */
-    information?: PlanTableFieldDTO[];
-    /** Form Design Preview */
-    previewStyle?: string;
-    /** Form Design Form Result List */
-    formResult?: EasyFormResult[];
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    formInfo?: FormInfoDTO;
-}
-
-export interface FormFieldMapping {
-    id?: string;
-    formInfoId?: string;
-    columnName?: string;
-    fieldName?: string;
-    dataType?: string;
-    status?: string;
-    required?: boolean;
-    unique?: boolean;
-    primaryKey?: boolean;
-}
-
-export interface FormInfoDTO {
-    id?: string;
-    bizId?: string;
-    label?: string;
-    tableName?: string;
-    tableNamePrefix?: string;
-    status?: string;
-    createdBy?: string;
-    modifiedBy?: string;
-    /** @format date-time */
-    createdDate?: string;
-    /** @format date-time */
-    modifiedDate?: string;
-    fieldMappings?: FormFieldMapping[];
-}
-
-/** Mapping data structure between form columns and bound business fields */
-export interface ParamMappingDTO {
-    source?: string;
-    target?: string;
-}
-
 export interface ResultListFormDesignResponseDTO {
     result?: boolean;
     /** @format int32 */
@@ -6273,6 +6503,20 @@ export interface ResultFormDesignResponseDTO {
     message?: string;
     /** Form Designer (Response) */
     data?: FormDesignResponseDTO;
+}
+
+export interface EasyFormBaseEmailDTO {
+    subject?: string;
+    body?: string;
+    userEmails?: UserEmailDTO[];
+}
+
+export interface ResultEasyFormBaseEmailDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EasyFormBaseEmailDTO;
 }
 
 export interface DAMConversionSetting {
@@ -6527,12 +6771,30 @@ export interface ResultCmmnDashboard {
     data?: CmmnDashboard;
 }
 
-export interface ResultListCmmnDashboard {
+export interface CmmnDashboardDTO {
+    id?: string;
+    caseTypeId?: string;
+    deploymentId?: string;
+    cmmnVersionId?: string;
+    label?: string;
+    userGroup?: string;
+    status?: string;
+    styleJson?: string;
+    createdBy?: string;
+    modifiedBy?: string;
+    /** @format date-time */
+    createdDate?: string;
+    /** @format date-time */
+    modifiedDate?: string;
+    caseDefinitionKey?: string;
+}
+
+export interface ResultListCmmnDashboardDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: CmmnDashboard[];
+    data?: CmmnDashboardDTO[];
 }
 
 /** case instance activity item */
@@ -6558,6 +6820,14 @@ export interface ResultListCmmnActivityItem {
     code?: number;
     message?: string;
     data?: CmmnActivityItem[];
+}
+
+export interface ResultListCmmnDashboard {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: CmmnDashboard[];
 }
 
 export interface Document {
@@ -6806,7 +7076,10 @@ export class HttpClient<SecurityDataType = unknown> {
     private format?: ResponseType;
 
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-        this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "http://app2.wclsolution.com" });
+        this.instance = axios.create({
+            ...axiosConfig,
+            baseURL: axiosConfig.baseURL || "http://sit-v2.wclsolution.com",
+        });
         this.secure = secure;
         this.format = format;
         this.securityWorker = securityWorker;
@@ -6900,7 +7173,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title DocPal REST API
  * @version 0.0.1
- * @baseUrl http://app2.wclsolution.com
+ * @baseUrl http://sit-v2.wclsolution.com
  *
  * DocPal REST API Documentation
  */
@@ -7256,66 +7529,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Configuration (Nuxeo)
-         * @name GetNuxeoKeywordGroupsGroupname
-         * @summary Get a keyword group
-         * @request GET:/api/nuxeo/keyword/groups/{groupName}
-         */
-        getNuxeoKeywordGroupsGroupname: (groupName: string, params: RequestParams = {}) =>
-            this.request<ResultKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/keyword/groups/${groupName}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoKeywordGroupsGroupname
-         * @summary Get a keyword group
-         * @request POST:/api/nuxeo/keyword/groups/{groupName}
-         */
-        postNuxeoKeywordGroupsGroupname: (groupName: string, params: RequestParams = {}) =>
-            this.request<ResultKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/keyword/groups/${groupName}`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name GetNuxeoKeywordGroupsGroupnameDeprecate
-         * @summary Get a keyword group
-         * @request GET:/api/nuxeo/keyword/groups/{groupName}/
-         */
-        getNuxeoKeywordGroupsGroupnameDeprecate: (groupName: string, params: RequestParams = {}) =>
-            this.request<ResultKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/keyword/groups/${groupName}/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoKeywordGroupsGroupnameDeprecate
-         * @summary Get a keyword group
-         * @request POST:/api/nuxeo/keyword/groups/{groupName}/
-         */
-        postNuxeoKeywordGroupsGroupnameDeprecate: (groupName: string, params: RequestParams = {}) =>
-            this.request<ResultKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/keyword/groups/${groupName}/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
          * @name GetNuxeoKeywordGroups
          * @summary Get all keyword groups
          * @request GET:/api/nuxeo/keyword/groups
@@ -7346,13 +7559,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Configuration (Nuxeo)
-         * @name GetNuxeoKeywordGroupsDeprecate
-         * @summary Get all keyword groups
-         * @request GET:/api/nuxeo/keyword/groups/
+         * @name GetNuxeoKeywordGroupsGroupname
+         * @summary Get a keyword group
+         * @request GET:/api/nuxeo/keyword/groups/{groupName}
          */
-        getNuxeoKeywordGroupsDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/keyword/groups/`,
+        getNuxeoKeywordGroupsGroupname: (groupName: string, params: RequestParams = {}) =>
+            this.request<ResultKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/keyword/groups/${groupName}`,
                 method: "GET",
                 ...params,
             }),
@@ -7361,43 +7574,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Configuration (Nuxeo)
-         * @name PostNuxeoKeywordGroupsDeprecate
-         * @summary Get all keyword groups
-         * @request POST:/api/nuxeo/keyword/groups/
+         * @name PostNuxeoKeywordGroupsGroupname
+         * @summary Get a keyword group
+         * @request POST:/api/nuxeo/keyword/groups/{groupName}
          */
-        postNuxeoKeywordGroupsDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/keyword/groups/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name GetNuxeoIconDocumenttypeDeprecate
-         * @summary Get the default icon of a document
-         * @request GET:/api/nuxeo/icon/{documentType}/
-         */
-        getNuxeoIconDocumenttypeDeprecate: (documentType: string, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/icon/${documentType}/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoIconDocumenttypeDeprecate
-         * @summary Get the default icon of a document
-         * @request POST:/api/nuxeo/icon/{documentType}/
-         */
-        postNuxeoIconDocumenttypeDeprecate: (documentType: string, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/icon/${documentType}/`,
+        postNuxeoKeywordGroupsGroupname: (groupName: string, params: RequestParams = {}) =>
+            this.request<ResultKeywordTypeGroupDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/keyword/groups/${groupName}`,
                 method: "POST",
                 ...params,
             }),
@@ -7479,119 +7662,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
-         * @description Retrieve a list of existing values of a document type and key
-         *
-         * @tags Form (Nuxeo)
-         * @name GetNuxeoFormMetadataListDeprecate
-         * @request GET:/api/nuxeo/form/metadata/list/
-         */
-        getNuxeoFormMetadataListDeprecate: (
-            query: {
-                docType: string;
-                filterKey?: string;
-                filterValue?: string;
-                key: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultSetString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/form/metadata/list/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * @description Retrieve a list of existing values of a document type and key
-         *
-         * @tags Form (Nuxeo)
-         * @name PostNuxeoFormMetadataListDeprecate
-         * @request POST:/api/nuxeo/form/metadata/list/
-         */
-        postNuxeoFormMetadataListDeprecate: (
-            query: {
-                docType: string;
-                filterKey?: string;
-                filterValue?: string;
-                key: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultSetString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/form/metadata/list/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentTrashDeprecate
-         * @summary Get trashed documents
-         * @request GET:/api/nuxeo/document/trash/
-         */
-        getNuxeoDocumentTrashDeprecate: (
-            query: {
-                /** @format int32 */
-                pageIndex: number;
-                /** @format int32 */
-                pageSize: number;
-                uuid: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultPaginableEntityDTODocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/trash/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentTrashDeprecate
-         * @summary Get trashed documents
-         * @request POST:/api/nuxeo/document/trash/
-         */
-        postNuxeoDocumentTrashDeprecate: (
-            query: {
-                /** @format int32 */
-                pageIndex: number;
-                /** @format int32 */
-                pageSize: number;
-                uuid: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultPaginableEntityDTODocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/trash/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentTrashDeprecate
-         * @summary Move a document to trash
-         * @request DELETE:/api/nuxeo/document/trash/
-         */
-        deleteNuxeoDocumentTrashDeprecate: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/trash/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
          * No description
          *
          * @tags Document (Nuxeo)
@@ -7601,15 +7671,11 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          */
         getNuxeoDocumentTrash: (
             query: {
-                /** @format int32 */
-                pageIndex: number;
-                /** @format int32 */
-                pageSize: number;
-                uuid: string;
+                basePageRequest: BasePageRequest;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultPaginableEntityDTODocumentDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTODocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/trash`,
                 method: "GET",
                 query: query,
@@ -7626,15 +7692,11 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          */
         postNuxeoDocumentTrash: (
             query: {
-                /** @format int32 */
-                pageIndex: number;
-                /** @format int32 */
-                pageSize: number;
-                uuid: string;
+                basePageRequest: BasePageRequest;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultPaginableEntityDTODocumentDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTODocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/trash`,
                 method: "POST",
                 query: query,
@@ -7655,186 +7717,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "DELETE",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentFollowedDeprecate
-         * @summary Get followed documents
-         * @request GET:/api/nuxeo/document/followed/
-         */
-        getNuxeoDocumentFollowedDeprecate: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFollowedDeprecate
-         * @summary Get followed documents
-         * @request POST:/api/nuxeo/document/followed/
-         */
-        postNuxeoDocumentFollowedDeprecate: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentFollowedUserid
-         * @summary Get followed documents
-         * @request GET:/api/nuxeo/document/followed/{userId}
-         */
-        getNuxeoDocumentFollowedUserid: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed/${userId}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFollowedUserid
-         * @summary Get followed documents
-         * @request POST:/api/nuxeo/document/followed/{userId}
-         */
-        postNuxeoDocumentFollowedUserid: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed/${userId}`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentFollowed
-         * @summary Get followed documents
-         * @request GET:/api/nuxeo/document/followed
-         */
-        getNuxeoDocumentFollowed: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFollowed
-         * @summary Get followed documents
-         * @request POST:/api/nuxeo/document/followed
-         */
-        postNuxeoDocumentFollowed: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentFollowedUseridDeprecate
-         * @summary Get followed documents
-         * @request GET:/api/nuxeo/document/followed/{userId}/
-         */
-        getNuxeoDocumentFollowedUseridDeprecate: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed/${userId}/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFollowedUseridDeprecate
-         * @summary Get followed documents
-         * @request POST:/api/nuxeo/document/followed/{userId}/
-         */
-        postNuxeoDocumentFollowedUseridDeprecate: (userId: string, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/followed/${userId}/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentFavoriteDeprecate
-         * @summary Get documents from favorite
-         * @request GET:/api/nuxeo/document/favorite/
-         */
-        getNuxeoDocumentFavoriteDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorite/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFavoriteDeprecate
-         * @summary Get documents from favorite
-         * @request POST:/api/nuxeo/document/favorite/
-         */
-        postNuxeoDocumentFavoriteDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorite/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentFavorite
-         * @summary Get documents from favorite
-         * @request GET:/api/nuxeo/document/favorite
-         */
-        getNuxeoDocumentFavorite: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorite`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFavorite
-         * @summary Get documents from favorite
-         * @request POST:/api/nuxeo/document/favorite
-         */
-        postNuxeoDocumentFavorite: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorite`,
-                method: "POST",
                 ...params,
             }),
 
@@ -8477,40 +8359,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Document (Nuxeo)
-         * @name PutNuxeoDocumentAclReplaceDeprecate
-         * @summary Replace user permission on document
-         * @request PUT:/api/nuxeo/document/acl/replace/
-         */
-        putNuxeoDocumentAclReplaceDeprecate: (data: AccessControlRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/replace/`,
-                method: "PUT",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PutNuxeoDocumentAclReplace
-         * @summary Replace user permission on document
-         * @request PUT:/api/nuxeo/document/acl/replace
-         */
-        putNuxeoDocumentAclReplace: (data: AccessControlRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/replace`,
-                method: "PUT",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags NuxeoAdminController
          * @name GetNuxeoAdminVirtualfolderSetting
          * @request GET:/api/nuxeo/admin/virtualfolder/setting
@@ -8676,6 +8524,60 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags NuxeoUserController
+         * @name GetUserProfile
+         * @request GET:/api/docpal/user/profile
+         */
+        getUserProfile: (
+            query?: {
+                userId?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultUserProfileSettingDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/user/profile`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags NuxeoUserController
+         * @name PutUserProfile
+         * @summary Update user profile
+         * @request PUT:/api/docpal/user/profile
+         */
+        putUserProfile: (data: UserProfileSettingDTO, params: RequestParams = {}) =>
+            this.request<ResultUserProfileSettingDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/user/profile`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags NuxeoUserController
+         * @name PostUserProfile
+         * @summary Save user profile
+         * @request POST:/api/docpal/user/profile
+         */
+        postUserProfile: (data: UserProfileSettingDTO, params: RequestParams = {}) =>
+            this.request<ResultUserProfileSettingDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/user/profile`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags PersonalLandingController
          * @name PutPersonalLandingSave
          * @request PUT:/api/docpal/personal/landing/save
@@ -8698,7 +8600,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request PUT:/api/docpal/notification/{id}/status/{status}
          */
         putNotificationIdStatusStatus: (id: number, status: string, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/notification/${id}/status/${status}`,
                 method: "PUT",
                 ...params,
@@ -8857,6 +8759,52 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags wopi-host-controller
+         * @name GetWopiFilesId
+         * @request GET:/api/wopi/files/{id}
+         */
+        getWopiFilesId: (
+            id: string,
+            query: {
+                access_token: string;
+                readonly?: boolean;
+                fileType?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<WOPIFileDTO, ResultString | (ResultString | Result)>({
+                path: `/wopi/files/${id}`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags wopi-host-controller
+         * @name PostWopiFilesId
+         * @request POST:/api/wopi/files/{id}
+         */
+        postWopiFilesId: (
+            id: string,
+            query: {
+                access_token: string;
+                readonly?: boolean;
+                fileType?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<WOPIFileDTO, ResultString | (ResultString | Result)>({
+                path: `/wopi/files/${id}`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags wopi-host-controller
          * @name GetWopiFilesIdContents
          * @request GET:/api/wopi/files/{id}/contents
          */
@@ -8935,45 +8883,50 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags VerificationPermissionController
-         * @name PostVerificationPermissionQuerycollapsefieldvalues
-         * @request POST:/api/verification/permission/queryCollapseFieldValues
+         * @tags Search History
+         * @name GetV1SearchHistory
+         * @summary Get paginated search history
+         * @request GET:/api/v1/search-history
          */
-        postVerificationPermissionQuerycollapsefieldvalues: (data: AuditLogRequestDTO, params: RequestParams = {}) =>
-            this.request<GenerateDocumentMode, ResultString | (ResultString | Result)>({
-                path: `/verification/permission/queryCollapseFieldValues`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
+        getV1SearchHistory: (
+            query: {
+                /** User ID */
+                userId: string;
+                /** Tenant ID */
+                tenantId: string;
+                /**
+                 * Page number (0-based)
+                 * @format int32
+                 * @default 0
+                 */
+                pageNum?: number;
+                /**
+                 * Page size
+                 * @format int32
+                 * @default 10
+                 */
+                pageSize?: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<PageSearchHistory, ResultString | (ResultString | Result)>({
+                path: `/v1/search-history`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
         /**
          * No description
          *
-         * @tags VerificationPermissionController
-         * @name PostVerificationPermissionQueryauditevent
-         * @request POST:/api/verification/permission/queryAuditEvent
+         * @tags Search History
+         * @name PostV1SearchHistory
+         * @summary Save search history record
+         * @request POST:/api/v1/search-history
          */
-        postVerificationPermissionQueryauditevent: (data: AuditTemplateDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTOAuditTemplateDTO, ResultString | (ResultString | Result)>({
-                path: `/verification/permission/queryAuditEvent`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags VerificationPermissionController
-         * @name PostVerificationPermissionAuditevent
-         * @request POST:/api/verification/permission/auditEvent
-         */
-        postVerificationPermissionAuditevent: (data: AuditModel, params: RequestParams = {}) =>
-            this.request<void, ResultString | (ResultString | Result)>({
-                path: `/verification/permission/auditEvent`,
+        postV1SearchHistory: (data: SearchHistory, params: RequestParams = {}) =>
+            this.request<SearchHistory, ResultString | (ResultString | Result)>({
+                path: `/v1/search-history`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -9243,6 +9196,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags AclUserGroupController
+         * @name PostPermissionUserGroupGroups
+         * @request POST:/api/permission/user/group/groups
+         */
+        postPermissionUserGroupGroups: (data: AclUserGroupDTO, params: RequestParams = {}) =>
+            this.request<ResultListAclUserGroup, ResultString | (ResultString | Result)>({
+                path: `/permission/user/group/groups`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags AclUserGroupController
          * @name PostPermissionUserGroupAddUsers
          * @summary Add user to user group
          * @request POST:/api/permission/user/group/add/users
@@ -9298,7 +9267,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/user/resetPassword
          */
         postNuxeoUserResetpassword: (data: PasswordRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/user/resetPassword`,
                 method: "POST",
                 body: data,
@@ -9600,13 +9569,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchSavesearchhistory
-         * @summary Save Search History
-         * @request POST:/api/nuxeo/search/saveSearchHistory
+         * @name PostNuxeoSearchOpenSearch
+         * @summary Open Search
+         * @request POST:/api/nuxeo/search/open-search
          */
-        postNuxeoSearchSavesearchhistory: (data: NestedSearchRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/saveSearchHistory`,
+        postNuxeoSearchOpenSearch: (data: SearchRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/open-search`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -9617,23 +9586,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchQuerysearchhistory
-         * @summary Query Search History
-         * @request POST:/api/nuxeo/search/querySearchHistory
-         */
-        postNuxeoSearchQuerysearchhistory: (params: RequestParams = {}) =>
-            this.request<ResultListSearchHistory, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/querySearchHistory`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
          * @name PostNuxeoSearchNestedsearchV2
-         * @summary Nested Search
+         * @summary Open Search
          * @request POST:/api/nuxeo/search/nestedSearch_v2
          */
         postNuxeoSearchNestedsearchV2: (data: SearchRequestDTO, params: RequestParams = {}) =>
@@ -9649,31 +9603,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchNestedsearch
-         * @summary Nested Search
-         * @request POST:/api/nuxeo/search/nestedSearch
+         * @name PostNuxeoSearchManticoreSearch
+         * @summary Manticore Search
+         * @request POST:/api/nuxeo/search/manticore-search
          */
-        postNuxeoSearchNestedsearch: (data: NestedSearchRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/nestedSearch`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchNestedsearchold
-         * @summary Nested Search
-         * @request POST:/api/nuxeo/search/nestedSearchOld
-         * @deprecated
-         */
-        postNuxeoSearchNestedsearchold: (data: NestedSearchRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/nestedSearchOld`,
+        postNuxeoSearchManticoreSearch: (data: DocpalSearchRequest, params: RequestParams = {}) =>
+            this.request<ResultSearchResponse, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/manticore-search`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -9701,13 +9637,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name PostNuxeoSearchDeprecate
-         * @summary Search Documents
-         * @request POST:/api/nuxeo/search/
+         * @name PostNuxeoSearchDocument
+         * @request POST:/api/nuxeo/search/document
          */
-        postNuxeoSearchDeprecate: (data: SearchRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/`,
+        postNuxeoSearchDocument: (data: ElasticSearchFilterDTO, params: RequestParams = {}) =>
+            this.request<ResultListSearchDocumentVO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/document`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -9718,13 +9653,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name PostNuxeoSearch
-         * @summary Search Documents
-         * @request POST:/api/nuxeo/search
+         * @name PostNuxeoSearchDocumentPaths
+         * @request POST:/api/nuxeo/search/document/paths
          */
-        postNuxeoSearch: (data: SearchRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search`,
+        postNuxeoSearchDocumentPaths: (data: ElasticSearchFilterDTO, params: RequestParams = {}) =>
+            this.request<ResultListSearchDocumentVO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/document/paths`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -9734,14 +9668,14 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Versioning Controller
-         * @name PostNuxeoRestoreversionDeprecate
-         * @summary Restores a document to the input version document
-         * @request POST:/api/nuxeo/restoreVersion/
+         * @tags Search (Nuxeo)
+         * @name PostNuxeoSearchAdminOpenSearch
+         * @summary Admin Open Search
+         * @request POST:/api/nuxeo/search/admin-open-search
          */
-        postNuxeoRestoreversionDeprecate: (data: VersioningRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/restoreVersion/`,
+        postNuxeoSearchAdminOpenSearch: (data: SearchRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/admin-open-search`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -9948,7 +9882,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @name PostNuxeoRegisteredserverFilingCreateDocument
          * @request POST:/api/nuxeo/registeredServer/filing/create/document
          */
-        postNuxeoRegisteredserverFilingCreateDocument: (data: GenerateDocumentRequestDTO, params: RequestParams = {}) =>
+        postNuxeoRegisteredserverFilingCreateDocument: (data: FilingCreateDocRequestDTO, params: RequestParams = {}) =>
             this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/registeredServer/filing/create/document`,
                 method: "POST",
@@ -9984,68 +9918,11 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/registeredServer/document/template/generate
          */
         postNuxeoRegisteredserverDocumentTemplateGenerate: (
-            data: GenerateDocumentRequestDTO,
+            data: WorkflowGenerateDocumentReq,
             params: RequestParams = {},
         ) =>
             this.request<DocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/registeredServer/document/template/generate`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverDocumentPrepareConvert
-         * @request POST:/api/nuxeo/registeredServer/document/prepare/convert
-         */
-        postNuxeoRegisteredserverDocumentPrepareConvert: (
-            query: {
-                documentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<boolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/document/prepare/convert`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverDocumentCreatenewversion
-         * @summary create New Version Without Auth
-         * @request POST:/api/nuxeo/registeredServer/document/createNewVersion
-         */
-        postNuxeoRegisteredserverDocumentCreatenewversion: (data: VersioningRequestDTO, params: RequestParams = {}) =>
-            this.request<DocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/document/createNewVersion`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverDocumentCreatenewversionDeprecate
-         * @summary create New Version Without Auth
-         * @request POST:/api/nuxeo/registeredServer/document/createNewVersion/
-         */
-        postNuxeoRegisteredserverDocumentCreatenewversionDeprecate: (
-            data: VersioningRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<DocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/document/createNewVersion/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -10083,29 +9960,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoRegisteredserverDocumentCreatefolder: (data: DocumentRequestDTO, params: RequestParams = {}) =>
             this.request<DocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/registeredServer/document/createFolder`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoRegisteredserverDocumentCreatedocumentDeprecate
-         * @summary Create document without authentication request from registered server side
-         * @request POST:/api/nuxeo/registeredServer/document/createDocument/
-         */
-        postNuxeoRegisteredserverDocumentCreatedocumentDeprecate: (
-            data: {
-                document: string;
-                files?: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<DocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/registeredServer/document/createDocument/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -10159,7 +10013,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @name PostNuxeoRegisteredserverDocumentCopy
          * @request POST:/api/nuxeo/registeredServer/document/copy
          */
-        postNuxeoRegisteredserverDocumentCopy: (data: CopyDocumentDTO, params: RequestParams = {}) =>
+        postNuxeoRegisteredserverDocumentCopy: (data: DocumentCopyDTO, params: RequestParams = {}) =>
             this.request<DocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/registeredServer/document/copy`,
                 method: "POST",
@@ -10319,37 +10173,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityUsers
-         * @summary Find all active user list
-         * @request POST:/api/nuxeo/identity/users
-         */
-        postNuxeoIdentityUsers: (params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/users`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityUsersDeprecate
-         * @summary Find all active user list
-         * @request POST:/api/nuxeo/identity/users/
-         */
-        postNuxeoIdentityUsersDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/users/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityUser
          * @summary Create new User
          * @request POST:/api/nuxeo/identity/user
@@ -10366,24 +10190,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name DeleteNuxeoIdentityUser
-         * @summary Delete User
-         * @request DELETE:/api/nuxeo/identity/user
-         */
-        deleteNuxeoIdentityUser: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/user`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PatchNuxeoIdentityUser
          * @summary Update User
          * @request PATCH:/api/nuxeo/identity/user
@@ -10400,58 +10207,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityUserDeprecate
-         * @summary Create new User
-         * @request POST:/api/nuxeo/identity/user/
-         */
-        postNuxeoIdentityUserDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/user/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name DeleteNuxeoIdentityUserDeprecate
-         * @summary Delete User
-         * @request DELETE:/api/nuxeo/identity/user/
-         */
-        deleteNuxeoIdentityUserDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/user/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name PatchNuxeoIdentityUserDeprecate
-         * @summary Update User
-         * @request PATCH:/api/nuxeo/identity/user/
-         */
-        patchNuxeoIdentityUserDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/user/`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityMembership
          * @summary Add user to group
          * @request POST:/api/nuxeo/identity/membership
@@ -10468,7 +10224,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name DeleteNuxeoIdentityMembership
          * @summary Remove user from group
          * @request DELETE:/api/nuxeo/identity/membership
@@ -10485,75 +10241,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityMembershipDeprecate
-         * @summary Add user to group
-         * @request POST:/api/nuxeo/identity/membership/
-         */
-        postNuxeoIdentityMembershipDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/membership/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name DeleteNuxeoIdentityMembershipDeprecate
-         * @summary Remove user from group
-         * @request DELETE:/api/nuxeo/identity/membership/
-         */
-        deleteNuxeoIdentityMembershipDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/membership/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityMembergroupDeprecate
-         * @summary Get the groups of a member
-         * @request POST:/api/nuxeo/identity/memberGroup/
-         */
-        postNuxeoIdentityMembergroupDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/memberGroup/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityMembergroup
-         * @summary Get the groups of a member
-         * @request POST:/api/nuxeo/identity/memberGroup
-         */
-        postNuxeoIdentityMembergroup: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/memberGroup`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityMember
          * @summary Get the members of a group
          * @request POST:/api/nuxeo/identity/member
@@ -10570,14 +10258,14 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityMemberDeprecate
-         * @summary Get the members of a group
-         * @request POST:/api/nuxeo/identity/member/
+         * @tags Identity
+         * @name PostNuxeoIdentityMembergroup
+         * @summary Get the groups of a member
+         * @request POST:/api/nuxeo/identity/memberGroup
          */
-        postNuxeoIdentityMemberDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/member/`,
+        postNuxeoIdentityMembergroup: (data: IdentityRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListGroupDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/identity/memberGroup`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -10587,9 +10275,9 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityGroups
-         * @summary List groups
+         * @summary Get groups list
          * @request POST:/api/nuxeo/identity/groups
          */
         postNuxeoIdentityGroups: (params: RequestParams = {}) =>
@@ -10602,22 +10290,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityGroupsDeprecate
-         * @summary List groups
-         * @request POST:/api/nuxeo/identity/groups/
-         */
-        postNuxeoIdentityGroupsDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/groups/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityGroup
          * @summary Create new group
          * @request POST:/api/nuxeo/identity/group
@@ -10634,24 +10307,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name DeleteNuxeoIdentityGroup
-         * @summary Delete group
-         * @request DELETE:/api/nuxeo/identity/group
-         */
-        deleteNuxeoIdentityGroup: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/group`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PatchNuxeoIdentityGroup
          * @summary Update group
          * @request PATCH:/api/nuxeo/identity/group
@@ -10668,58 +10324,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityGroupDeprecate
-         * @summary Create new group
-         * @request POST:/api/nuxeo/identity/group/
+         * @tags Identity
+         * @name PostNuxeoIdentityUsers
+         * @summary Find all active user list
+         * @request POST:/api/nuxeo/identity/users
          */
-        postNuxeoIdentityGroupDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/group/`,
+        postNuxeoIdentityUsers: (params: RequestParams = {}) =>
+            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/identity/users`,
                 method: "POST",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name DeleteNuxeoIdentityGroupDeprecate
-         * @summary Delete group
-         * @request DELETE:/api/nuxeo/identity/group/
-         */
-        deleteNuxeoIdentityGroupDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/group/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name PatchNuxeoIdentityGroupDeprecate
-         * @summary Update group
-         * @request PATCH:/api/nuxeo/identity/group/
-         */
-        patchNuxeoIdentityGroupDeprecate: (data: IdentityRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultGroupDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/group/`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityGetkeycloakallusers
          * @summary Find all active user list
          * @request POST:/api/nuxeo/identity/getKeyCloakAllUsers
@@ -10734,36 +10354,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityGetkeycloakallusersDeprecate
-         * @summary Find all active user list
-         * @request POST:/api/nuxeo/identity/getKeyCloakAllUsers/
-         */
-        postNuxeoIdentityGetkeycloakallusersDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/getKeyCloakAllUsers/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name PostNuxeoIdentityCopyusersDeprecate
-         * @request POST:/api/nuxeo/identity/copyUsers/
-         */
-        postNuxeoIdentityCopyusersDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/copyUsers/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityCopyusers
          * @request POST:/api/nuxeo/identity/copyUsers
          */
@@ -10771,23 +10362,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/identity/copyUsers`,
                 method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Versioning Controller
-         * @name PostNuxeoGetversionsDeprecate
-         * @summary Get All Versions by Document ID or Path
-         * @request POST:/api/nuxeo/getVersions/
-         */
-        postNuxeoGetversionsDeprecate: (data: VersioningRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringInstant, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/getVersions/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -10819,23 +10393,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoGetversionnum: (data: VersioningRequestDTO, params: RequestParams = {}) =>
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/getVersionNum`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Versioning Controller
-         * @name PostNuxeoGetversionnumDeprecate
-         * @summary Get Version Number by Document ID or Path
-         * @request POST:/api/nuxeo/getVersionNum/
-         */
-        postNuxeoGetversionnumDeprecate: (data: VersioningRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/getVersionNum/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -10879,17 +10436,60 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Versioning Controller
-         * @name PostNuxeoGetlatestversionDeprecate
-         * @summary Get Latest Version by Document ID or Path
-         * @request POST:/api/nuxeo/getLatestVersion/
+         * @tags File Request Upload (Nuxeo)
+         * @name GetNuxeoFilerequest
+         * @request GET:/api/nuxeo/filerequest
          */
-        postNuxeoGetlatestversionDeprecate: (data: VersioningRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/getLatestVersion/`,
+        getNuxeoFilerequest: (
+            query: {
+                /** @format int32 */
+                pageIndex: number;
+                /** @format int32 */
+                pageSize: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/filerequest`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags File Request Upload (Nuxeo)
+         * @name PostNuxeoFilerequest
+         * @summary Create a new file-request-upload
+         * @request POST:/api/nuxeo/filerequest
+         */
+        postNuxeoFilerequest: (data: FileRequestUploadRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/filerequest`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags File Request Upload (Nuxeo)
+         * @name DeleteNuxeoFilerequest
+         * @request DELETE:/api/nuxeo/filerequest
+         */
+        deleteNuxeoFilerequest: (
+            query: {
+                id: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/filerequest`,
+                method: "DELETE",
+                query: query,
                 ...params,
             }),
 
@@ -10922,124 +10522,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags File Request Upload (Nuxeo)
-         * @name GetNuxeoFilerequestDeprecate
-         * @request GET:/api/nuxeo/filerequest/
-         */
-        getNuxeoFilerequestDeprecate: (
-            query: {
-                /** @format int32 */
-                pageIndex: number;
-                /** @format int32 */
-                pageSize: number;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/filerequest/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags File Request Upload (Nuxeo)
-         * @name PostNuxeoFilerequestDeprecate
-         * @request POST:/api/nuxeo/filerequest/
-         */
-        postNuxeoFilerequestDeprecate: (data: FileRequestUploadRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/filerequest/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags File Request Upload (Nuxeo)
-         * @name DeleteNuxeoFilerequestDeprecate
-         * @request DELETE:/api/nuxeo/filerequest/
-         */
-        deleteNuxeoFilerequestDeprecate: (
-            query: {
-                id: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/filerequest/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags File Request Upload (Nuxeo)
-         * @name GetNuxeoFilerequest
-         * @request GET:/api/nuxeo/filerequest
-         */
-        getNuxeoFilerequest: (
-            query: {
-                /** @format int32 */
-                pageIndex: number;
-                /** @format int32 */
-                pageSize: number;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/filerequest`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags File Request Upload (Nuxeo)
-         * @name PostNuxeoFilerequest
-         * @request POST:/api/nuxeo/filerequest
-         */
-        postNuxeoFilerequest: (data: FileRequestUploadRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/filerequest`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags File Request Upload (Nuxeo)
-         * @name DeleteNuxeoFilerequest
-         * @request DELETE:/api/nuxeo/filerequest
-         */
-        deleteNuxeoFilerequest: (
-            query: {
-                id: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/filerequest`,
-                method: "DELETE",
-                query: query,
                 ...params,
             }),
 
@@ -11110,13 +10592,85 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentUploadtempfolderDeprecate
-         * @summary uploadTempFolder
-         * @request POST:/api/nuxeo/document/uploadTempFolder/
+         * @name GetNuxeoDocument
+         * @summary Get document information
+         * @request GET:/api/nuxeo/document
          */
-        postNuxeoDocumentUploadtempfolderDeprecate: (data: UploadTempFileRequestDTO, params: RequestParams = {}) =>
+        getNuxeoDocument: (
+            query: {
+                idOrPath: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoDocument
+         * @summary Get a document
+         * @request POST:/api/nuxeo/document
+         */
+        postNuxeoDocument: (data: DocumentRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name DeleteNuxeoDocument
+         * @summary Delete a document
+         * @request DELETE:/api/nuxeo/document
+         */
+        deleteNuxeoDocument: (data: DocumentRequestDTO, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/uploadTempFolder/`,
+                path: `/nuxeo/document`,
+                method: "DELETE",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PatchNuxeoDocument
+         * @summary Update a document
+         * @request PATCH:/api/nuxeo/document
+         */
+        patchNuxeoDocument: (data: DocumentRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoDocumentUploadFolder
+         * @summary Upload TempFolder
+         * @request POST:/api/nuxeo/document/upload/folder
+         */
+        postNuxeoDocumentUploadFolder: (data: UploadTempFileRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/upload/folder`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -11128,7 +10682,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentUploadtempfolder
-         * @summary uploadTempFolder
+         * @summary Upload TempFolder
          * @request POST:/api/nuxeo/document/uploadTempFolder
          */
         postNuxeoDocumentUploadtempfolder: (data: UploadTempFileRequestDTO, params: RequestParams = {}) =>
@@ -11144,35 +10698,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentUploadtempfileDeprecate
-         * @summary uploadTempFile
-         * @request POST:/api/nuxeo/document/uploadTempFile/
-         */
-        postNuxeoDocumentUploadtempfileDeprecate: (
-            query: {
-                uploadTempFileRequestStr: string;
-            },
-            data: {
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultLong, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/uploadTempFile/`,
-                method: "POST",
-                query: query,
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentUploadtempfile
-         * @summary uploadTempFile
+         * @summary Upload TempFile to system
          * @request POST:/api/nuxeo/document/uploadTempFile
          */
         postNuxeoDocumentUploadtempfile: (
@@ -11181,7 +10708,9 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             },
             data: {
                 /** @format binary */
-                file: File;
+                file?: File;
+                /** @format string */
+                uploadTempFileRequestStr?: string;
             },
             params: RequestParams = {},
         ) =>
@@ -11198,19 +10727,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentUploadfiles
-         * @summary Upload files
-         * @request POST:/api/nuxeo/document/uploadFiles
+         * @name PostNuxeoDocumentCheckfileexist
+         * @summary check file exist situation in nuxeo
+         * @request POST:/api/nuxeo/document/checkFileExist
          */
-        postNuxeoDocumentUploadfiles: (
-            data: {
-                document: string;
-                files: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/uploadFiles`,
+        postNuxeoDocumentCheckfileexist: (data: FileCheckRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultFileCheckResultDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/checkFileExist`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -11221,19 +10744,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentUploadfilesDeprecate
-         * @summary Upload files
-         * @request POST:/api/nuxeo/document/uploadFiles/
+         * @name PostNuxeoDocumentUploadValidate
+         * @summary check file exist situation in nuxeo
+         * @request POST:/api/nuxeo/document/upload/validate
          */
-        postNuxeoDocumentUploadfilesDeprecate: (
-            data: {
-                document: string;
-                files: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/uploadFiles/`,
+        postNuxeoDocumentUploadValidate: (data: FileCheckRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultFileCheckResultDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/upload/validate`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -11244,61 +10761,45 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentUploadAttachmentDeprecate
-         * @request POST:/api/nuxeo/document/upload/attachment/
+         * @name PostNuxeoDocumentUploadFile
+         * @summary Upload TempFile to system
+         * @request POST:/api/nuxeo/document/upload/file
          */
-        postNuxeoDocumentUploadAttachmentDeprecate: (
-            data: {
-                idOrPath: string;
+        postNuxeoDocumentUploadFile: (
+            query: {
                 /** @format binary */
                 file: File;
+                uploadFileDetailRecord: UploadFileDetailRecord;
             },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/upload/attachment/`,
-                method: "POST",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentUploadAttachment
-         * @request POST:/api/nuxeo/document/upload/attachment
-         */
-        postNuxeoDocumentUploadAttachment: (
             data: {
-                idOrPath: string;
                 /** @format binary */
-                file: File;
+                file?: File;
+                /** @format string */
+                fileName?: string;
+                /** @format string */
+                fileType?: string;
+                /** @format string */
+                fileAbsolutePath?: string;
+                /** @format string */
+                uploadId?: string;
+                /** @format string */
+                fileRelativePath?: string;
+                /**
+                 * @format string
+                 * @default "Admin"
+                 */
+                userId?: string;
+                /** @format number */
+                fileModifiedTimestamp?: long;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/upload/attachment`,
+            this.request<ResultLong, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/upload/file`,
                 method: "POST",
+                query: query,
                 body: data,
                 type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentThumbnailList
-         * @request POST:/api/nuxeo/document/thumbnail/list
-         */
-        postNuxeoDocumentThumbnailList: (data: string[], params: RequestParams = {}) =>
-            this.request<ResultListESDocumentThumbnailDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/thumbnail/list`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -11322,29 +10823,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentThumbnailDeprecate
-         * @summary Get document thumbnail
-         * @request POST:/api/nuxeo/document/thumbnail/
-         */
-        postNuxeoDocumentThumbnailDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/thumbnail/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags Document Template
          * @name PostNuxeoDocumentTemplatesGenerateDocument
          * @summary Generate document using template and specified variables
          * @request POST:/api/nuxeo/document/templates/generate/document
          */
-        postNuxeoDocumentTemplatesGenerateDocument: (data: GenerateDocumentRequestDTO, params: RequestParams = {}) =>
+        postNuxeoDocumentTemplatesGenerateDocument: (data: WorkflowGenerateDocumentReq, params: RequestParams = {}) =>
             this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/templates/generate/document`,
                 method: "POST",
@@ -11357,410 +10841,30 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSuperQuery
-         * @summary Query document by admin account
-         * @request POST:/api/nuxeo/document/super/query
-         */
-        postNuxeoDocumentSuperQuery: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/super/query`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSubscribeDeprecate
-         * @summary Subscribe to be notified
-         * @request POST:/api/nuxeo/document/subscribe/
-         */
-        postNuxeoDocumentSubscribeDeprecate: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/subscribe/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSubscribe
-         * @summary Subscribe to be notified
-         * @request POST:/api/nuxeo/document/subscribe
-         */
-        postNuxeoDocumentSubscribe: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/subscribe`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSiblingsDeprecate
-         * @summary Get siblings of a document
-         * @request POST:/api/nuxeo/document/siblings/
-         */
-        postNuxeoDocumentSiblingsDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/siblings/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSiblings
-         * @summary Get siblings of a document
-         * @request POST:/api/nuxeo/document/siblings
-         */
-        postNuxeoDocumentSiblings: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/siblings`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbytypeDeprecate
-         * @summary Search document by type
-         * @request POST:/api/nuxeo/document/searchByType/
-         */
-        postNuxeoDocumentSearchbytypeDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByType/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbytype
-         * @summary Search document by type
-         * @request POST:/api/nuxeo/document/searchByType
-         */
-        postNuxeoDocumentSearchbytype: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByType`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbypropertiesforvirtualfolder
-         * @request POST:/api/nuxeo/document/searchByPropertiesForVirtualFolder
-         */
-        postNuxeoDocumentSearchbypropertiesforvirtualfolder: (
-            data: DocumentRequestForVirtureFolderDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultPaginableEntityDTOVirtualFolderDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByPropertiesForVirtualFolder`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbypropertiesforvirtualfolderDeprecate
-         * @request POST:/api/nuxeo/document/searchByPropertiesForVirtualFolder/
-         */
-        postNuxeoDocumentSearchbypropertiesforvirtualfolderDeprecate: (
-            data: DocumentRequestForVirtureFolderDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultPaginableEntityDTOVirtualFolderDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByPropertiesForVirtualFolder/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbypropertiesDeprecate
-         * @summary Search document by document properties
-         * @request POST:/api/nuxeo/document/searchByProperties/
-         */
-        postNuxeoDocumentSearchbypropertiesDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByProperties/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbyproperties
-         * @summary Search document by document properties
-         * @request POST:/api/nuxeo/document/searchByProperties
-         */
-        postNuxeoDocumentSearchbyproperties: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByProperties`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbynameDeprecate
-         * @summary Search document by name
-         * @request POST:/api/nuxeo/document/searchByName/
-         */
-        postNuxeoDocumentSearchbynameDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByName/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbyname
-         * @summary Search document by name
-         * @request POST:/api/nuxeo/document/searchByName
-         */
-        postNuxeoDocumentSearchbyname: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByName`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbyfilenameDeprecate
-         * @summary Search document by uploaded filename
-         * @request POST:/api/nuxeo/document/searchByFilename/
-         */
-        postNuxeoDocumentSearchbyfilenameDeprecate: (data: FileRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByFilename/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbyfilename
-         * @summary Search document by uploaded filename
-         * @request POST:/api/nuxeo/document/searchByFilename
-         */
-        postNuxeoDocumentSearchbyfilename: (data: FileRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByFilename`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbyfilecontenttype
-         * @summary Search documents by mime type
-         * @request POST:/api/nuxeo/document/searchByFileContentType
-         */
-        postNuxeoDocumentSearchbyfilecontenttype: (data: FileRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByFileContentType`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbyfilecontenttypeDeprecate
-         * @summary Search documents by mime type
-         * @request POST:/api/nuxeo/document/searchByFileContentType/
-         */
-        postNuxeoDocumentSearchbyfilecontenttypeDeprecate: (data: FileRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByFileContentType/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbycreatorDeprecate
-         * @summary Search documents by creator
-         * @request POST:/api/nuxeo/document/searchByCreator/
-         */
-        postNuxeoDocumentSearchbycreatorDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByCreator/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchbycreator
-         * @summary Search documents by creator
-         * @request POST:/api/nuxeo/document/searchByCreator
-         */
-        postNuxeoDocumentSearchbycreator: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/searchByCreator`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearch
-         * @summary Search documents
-         * @request POST:/api/nuxeo/document/search
-         */
-        postNuxeoDocumentSearch: (
-            query: {
-                query: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/search`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSearchDeprecate
-         * @summary Search documents
-         * @request POST:/api/nuxeo/document/search/
-         */
-        postNuxeoDocumentSearchDeprecate: (
-            query: {
-                query: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/search/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentSaveuploadfileoverviewDeprecate
-         * @summary saveUploadFileOverview
-         * @request POST:/api/nuxeo/document/saveUploadFileOverview/
-         */
-        postNuxeoDocumentSaveuploadfileoverviewDeprecate: (
-            data: SaveFileOverviewRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/saveUploadFileOverview/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentSaveuploadfileoverview
-         * @summary saveUploadFileOverview
+         * @summary Create file upload batch and return uploadId
          * @request POST:/api/nuxeo/document/saveUploadFileOverview
          */
         postNuxeoDocumentSaveuploadfileoverview: (data: SaveFileOverviewRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/saveUploadFileOverview`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoDocumentUploadBatch
+         * @summary Create file upload batch and return uploadId
+         * @request POST:/api/nuxeo/document/upload/batch
+         */
+        postNuxeoDocumentUploadBatch: (data: SaveFileOverviewRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/upload/batch`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -11788,47 +10892,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentRestoreDeprecate
-         * @summary Restore a document
-         * @request POST:/api/nuxeo/document/restore/
-         */
-        postNuxeoDocumentRestoreDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/restore/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentQueryuploadfiledetaildtolistDeprecate
-         * @summary queryUploadFileDetailDTOList
-         * @request POST:/api/nuxeo/document/queryUploadFileDetailDTOList/
-         */
-        postNuxeoDocumentQueryuploadfiledetaildtolistDeprecate: (
-            query: {
-                userId: string;
-                uploadId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListUploadFileDetailDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/queryUploadFileDetailDTOList/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentQueryuploadfiledetaildtolist
-         * @summary queryUploadFileDetailDTOList
+         * @summary Query the list of upload files
          * @request POST:/api/nuxeo/document/queryUploadFileDetailDTOList
          */
         postNuxeoDocumentQueryuploadfiledetaildtolist: (
@@ -11849,16 +10914,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentQueryuploadfiledtopageDeprecate
-         * @summary queryUploadFileDTOPage
-         * @request POST:/api/nuxeo/document/queryUploadFileDTOPage/
+         * @name PostNuxeoDocumentUploadPage
+         * @summary Page query upload records
+         * @request POST:/api/nuxeo/document/upload/page
          */
-        postNuxeoDocumentQueryuploadfiledtopageDeprecate: (
-            data: QueryFileOverviewRequestDTO,
-            params: RequestParams = {},
-        ) =>
+        postNuxeoDocumentUploadPage: (data: QueryFileOverviewRequestDTO, params: RequestParams = {}) =>
             this.request<ResultPageUploadFileDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/queryUploadFileDTOPage/`,
+                path: `/nuxeo/document/upload/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -11870,7 +10932,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentQueryuploadfiledtopage
-         * @summary queryUploadFileDTOPage
+         * @summary Page query upload records
          * @request POST:/api/nuxeo/document/queryUploadFileDTOPage
          */
         postNuxeoDocumentQueryuploadfiledtopage: (data: QueryFileOverviewRequestDTO, params: RequestParams = {}) =>
@@ -11903,46 +10965,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentPreview
-         * @summary Get document preview
+         * @summary Preview document content
          * @request POST:/api/nuxeo/document/preview
          */
-        postNuxeoDocumentPreview: (data: PreviewDocumentReq, params: RequestParams = {}) =>
+        postNuxeoDocumentPreview: (data: DocumentRequestDTO, params: RequestParams = {}) =>
             this.request<string[], ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/preview`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentParentDeprecate
-         * @summary Get parent document
-         * @request POST:/api/nuxeo/document/parent/
-         */
-        postNuxeoDocumentParentDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/parent/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentParent
-         * @summary Get parent document
-         * @request POST:/api/nuxeo/document/parent
-         */
-        postNuxeoDocumentParent: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/parent`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -11959,56 +10987,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoDocumentOfficeCreate: (data: OfficeFileCreateDTO, params: RequestParams = {}) =>
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/office/create`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentOfficeCheck
-         * @request POST:/api/nuxeo/document/office/check
-         */
-        postNuxeoDocumentOfficeCheck: (data: OfficeRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/office/check`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentOcrList
-         * @summary List attachments of a document
-         * @request POST:/api/nuxeo/document/ocr/list
-         */
-        postNuxeoDocumentOcrList: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFileDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/ocr/list`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentOcrListDeprecate
-         * @summary List attachments of a document
-         * @request POST:/api/nuxeo/document/ocr/list/
-         */
-        postNuxeoDocumentOcrListDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFileDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/ocr/list/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -12036,29 +11014,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentMoveDeprecate
-         * @summary Move a document
-         * @request POST:/api/nuxeo/document/move/
-         */
-        postNuxeoDocumentMoveDeprecate: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/move/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentIsduplicatename
          * @summary Check is duplicate name
          * @request POST:/api/nuxeo/document/isDuplicateName
+         * @deprecated
          */
         postNuxeoDocumentIsduplicatename: (data: DuplicateNameRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDuplicateNameDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultDuplicateNameRespDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/isDuplicateName`,
                 method: "POST",
                 body: data,
@@ -12070,105 +11032,16 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentIsduplicatenameDeprecate
+         * @name PostNuxeoDocumentDuplicateName
          * @summary Check is duplicate name
-         * @request POST:/api/nuxeo/document/isDuplicateName/
+         * @request POST:/api/nuxeo/document/duplicate/name
          */
-        postNuxeoDocumentIsduplicatenameDeprecate: (data: DuplicateNameRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDuplicateNameDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/isDuplicateName/`,
+        postNuxeoDocumentDuplicateName: (data: CheckDuplicateNameReqDTO, params: RequestParams = {}) =>
+            this.request<ResultDuplicateNameRespDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/duplicate/name`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFavoritesAddDeprecate
-         * @summary Add document to favorites
-         * @request POST:/api/nuxeo/document/favorites/add/
-         */
-        postNuxeoDocumentFavoritesAddDeprecate: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorites/add/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentFavoritesAdd
-         * @summary Add document to favorites
-         * @request POST:/api/nuxeo/document/favorites/add
-         */
-        postNuxeoDocumentFavoritesAdd: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorites/add`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentExport
-         * @summary Export documents
-         * @request POST:/api/nuxeo/document/export
-         */
-        postNuxeoDocumentExport: (data: string[], params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/export`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentExportDeprecate
-         * @summary Export documents
-         * @request POST:/api/nuxeo/document/export/
-         */
-        postNuxeoDocumentExportDeprecate: (data: string[], params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/export/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentDownload
-         * @request GET:/api/nuxeo/document/download
-         */
-        getNuxeoDocumentDownload: (
-            query: {
-                idOrPath: string;
-                watermark?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/download`,
-                method: "GET",
-                query: query,
                 ...params,
             }),
 
@@ -12193,70 +11066,26 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentDownloadDeprecate
-         * @request GET:/api/nuxeo/document/download/
+         * @name PostNuxeoDocumentCreate
+         * @request POST:/api/nuxeo/document/create
          */
-        getNuxeoDocumentDownloadDeprecate: (
+        postNuxeoDocumentCreate: (
             query: {
-                idOrPath: string;
-                watermark?: string;
+                /** Document (Request) */
+                documentRequestDTO: DocumentRequestDTO;
+            },
+            data: {
+                /** @format binary */
+                file?: File;
             },
             params: RequestParams = {},
         ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/download/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentDownloadDeprecate
-         * @summary Download a document file
-         * @request POST:/api/nuxeo/document/download/
-         */
-        postNuxeoDocumentDownloadDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/download/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentDamDownload
-         * @request POST:/api/nuxeo/document/dam/download
-         */
-        postNuxeoDocumentDamDownload: (data: DownloadFileRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/dam/download`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCreatefoldersDeprecate
-         * @summary Create folders
-         * @request POST:/api/nuxeo/document/createFolders/
-         */
-        postNuxeoDocumentCreatefoldersDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
             this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/createFolders/`,
+                path: `/nuxeo/document/create`,
                 method: "POST",
+                query: query,
                 body: data,
-                type: ContentType.Json,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -12281,37 +11110,16 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCreatedocumentDeprecate
-         * @summary Create a document
-         * @request POST:/api/nuxeo/document/createDocument/
-         */
-        postNuxeoDocumentCreatedocumentDeprecate: (
-            data: {
-                document: string;
-                files?: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/createDocument/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentCreatedocument
          * @summary Create a document
          * @request POST:/api/nuxeo/document/createDocument
          */
         postNuxeoDocumentCreatedocument: (
             data: {
-                document: string;
-                files?: File[];
+                /** @format binary */
+                file?: File;
+                /** @format string */
+                document?: string;
             },
             params: RequestParams = {},
         ) =>
@@ -12319,7 +11127,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/nuxeo/document/createDocument`,
                 method: "POST",
                 body: data,
-                type: ContentType.Json,
+                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -12333,108 +11141,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoDocumentCreateStructure: (data: DocStructureRequestDTO, params: RequestParams = {}) =>
             this.request<ResultDocStructureResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/create/structure`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCreateFolder
-         * @request POST:/api/nuxeo/document/create/folder
-         */
-        postNuxeoDocumentCreateFolder: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/create/folder`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCreate
-         * @request POST:/api/nuxeo/document/create
-         */
-        postNuxeoDocumentCreate: (
-            query: {
-                /** Document (Request) */
-                documentRequestDTO: DocumentRequestDTO;
-            },
-            data: {
-                files?: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/create`,
-                method: "POST",
-                query: query,
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCreateDeprecate
-         * @request POST:/api/nuxeo/document/create/
-         */
-        postNuxeoDocumentCreateDeprecate: (
-            query: {
-                /** Document (Request) */
-                documentRequestDTO: DocumentRequestDTO;
-            },
-            data: {
-                files?: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/create/`,
-                method: "POST",
-                query: query,
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCopyWatermark
-         * @summary Create a document through attach watermark to generate new file
-         * @request POST:/api/nuxeo/document/copy/watermark
-         */
-        postNuxeoDocumentCopyWatermark: (data: WatermarkDocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/copy/watermark`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCopyDeprecate
-         * @summary Copy a document
-         * @request POST:/api/nuxeo/document/copy/
-         */
-        postNuxeoDocumentCopyDeprecate: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/copy/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -12462,40 +11168,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentConverttotxtDeprecate
-         * @summary Upload files
-         * @request POST:/api/nuxeo/document/convertToTxt/
+         * @name PostNuxeoDocumentCopyWatermark
+         * @summary Create a document through attach watermark to generate new file
+         * @request POST:/api/nuxeo/document/copy/watermark
          */
-        postNuxeoDocumentConverttotxtDeprecate: (
-            data: {
-                files: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/convertToTxt/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentConverttotxt
-         * @summary Upload files
-         * @request POST:/api/nuxeo/document/convertToTxt
-         */
-        postNuxeoDocumentConverttotxt: (
-            data: {
-                files: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/convertToTxt`,
+        postNuxeoDocumentCopyWatermark: (data: WatermarkDocumentRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/copy/watermark`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -12540,44 +11219,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentChildrenThumbnailV2
-         * @request POST:/api/nuxeo/document/children/thumbnail_v2
-         */
-        postNuxeoDocumentChildrenThumbnailV2: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTODocumentThumbnailDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/children/thumbnail_v2`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentChildrenThumbnailV2Deprecate
-         * @request POST:/api/nuxeo/document/children/thumbnail_v2/
-         */
-        postNuxeoDocumentChildrenThumbnailV2Deprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTODocumentThumbnailDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/children/thumbnail_v2/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentChildrenThumbnail
          * @summary Get children of thumbnail Result
          * @request POST:/api/nuxeo/document/children/thumbnail
          */
         postNuxeoDocumentChildrenThumbnail: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTODocumentThumbnailDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTODocumentThumbnailDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/children/thumbnail`,
                 method: "POST",
                 body: data,
@@ -12589,81 +11236,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentChildrenPage
-         * @summary Pagination to query children of documents
-         * @request POST:/api/nuxeo/document/children/page
+         * @name PostNuxeoDocumentChildrenThumbnailV2
+         * @summary Get children of thumbnail Result
+         * @request POST:/api/nuxeo/document/children/thumbnail_v2
          */
-        postNuxeoDocumentChildrenPage: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTODocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/children/page`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentChildrenDeprecate
-         * @summary Get children of a document
-         * @request POST:/api/nuxeo/document/children/
-         */
-        postNuxeoDocumentChildrenDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/children/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentChildren
-         * @summary Get children of a document
-         * @request POST:/api/nuxeo/document/children
-         */
-        postNuxeoDocumentChildren: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/children`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCheckfileexist
-         * @summary check file exist situation in nuxeo
-         * @request POST:/api/nuxeo/document/checkFileExist
-         */
-        postNuxeoDocumentCheckfileexist: (data: FileCheckRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultFileCheckResultDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/checkFileExist`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentCheckfileexistDeprecate
-         * @summary check file exist situation in nuxeo
-         * @request POST:/api/nuxeo/document/checkFileExist/
-         */
-        postNuxeoDocumentCheckfileexistDeprecate: (data: FileCheckRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultFileCheckResultDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/checkFileExist/`,
+        postNuxeoDocumentChildrenThumbnailV2: (data: DocumentRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTODocumentThumbnailDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/children/thumbnail_v2`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -12691,72 +11270,16 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentBreadcrumbDeprecate
-         * @summary Get document breadcrumb
-         * @request POST:/api/nuxeo/document/breadcrumb/
-         */
-        postNuxeoDocumentBreadcrumbDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/breadcrumb/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentBatchconfirm
-         * @summary batchConfirm
+         * @summary Confirm upload files by batch operation
          * @request POST:/api/nuxeo/document/batchConfirm
          */
         postNuxeoDocumentBatchconfirm: (data: FileConfirmRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+            this.request<ResultFileConfirmResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/batchConfirm`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentBatchconfirmDeprecate
-         * @summary batchConfirm
-         * @request POST:/api/nuxeo/document/batchConfirm/
-         */
-        postNuxeoDocumentBatchconfirmDeprecate: (data: FileConfirmRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/batchConfirm/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentBatchcancelDeprecate
-         * @summary batchCancel
-         * @request POST:/api/nuxeo/document/batchCancel/
-         */
-        postNuxeoDocumentBatchcancelDeprecate: (
-            query: {
-                userId: string;
-                uploadId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/batchCancel/`,
-                method: "POST",
-                query: query,
                 ...params,
             }),
 
@@ -12786,284 +11309,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAuditDeprecate
-         * @summary Get audit trial of a document
-         * @request POST:/api/nuxeo/document/audit/
-         */
-        postNuxeoDocumentAuditDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListLogEntryDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/audit/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAudit
-         * @summary Get audit trial of a document
-         * @request POST:/api/nuxeo/document/audit
-         */
-        postNuxeoDocumentAudit: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListLogEntryDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/audit`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentUpdateDeprecate
-         * @request POST:/api/nuxeo/document/attachment/update/
-         */
-        postNuxeoDocumentAttachmentUpdateDeprecate: (
-            data: {
-                idOrPath: string;
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultAttachmentUpdateResponseDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/update/`,
-                method: "POST",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentUpdate
-         * @request POST:/api/nuxeo/document/attachment/update
-         */
-        postNuxeoDocumentAttachmentUpdate: (
-            data: {
-                idOrPath: string;
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultAttachmentUpdateResponseDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/update`,
-                method: "POST",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentPdfDownloadDeprecate
-         * @request POST:/api/nuxeo/document/attachment/pdf/download/
-         */
-        postNuxeoDocumentAttachmentPdfDownloadDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/pdf/download/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentPdfDownload
-         * @request POST:/api/nuxeo/document/attachment/pdf/download
-         */
-        postNuxeoDocumentAttachmentPdfDownload: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/pdf/download`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentOcrresultDownload
-         * @summary Download a document file
-         * @request POST:/api/nuxeo/document/attachment/ocrresult/download
-         */
-        postNuxeoDocumentAttachmentOcrresultDownload: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/ocrresult/download`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentOcrresultDownloadDeprecate
-         * @summary Download a document file
-         * @request POST:/api/nuxeo/document/attachment/ocrresult/download/
-         */
-        postNuxeoDocumentAttachmentOcrresultDownloadDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/ocrresult/download/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentListDeprecate
-         * @summary List attachments of a document
-         * @request POST:/api/nuxeo/document/attachment/list/
-         */
-        postNuxeoDocumentAttachmentListDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFileDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/list/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentList
-         * @summary List attachments of a document
-         * @request POST:/api/nuxeo/document/attachment/list
-         */
-        postNuxeoDocumentAttachmentList: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFileDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/list`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentJpegDownloadDeprecate
-         * @request POST:/api/nuxeo/document/attachment/jpeg/download/
-         */
-        postNuxeoDocumentAttachmentJpegDownloadDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/jpeg/download/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentJpegDownload
-         * @request POST:/api/nuxeo/document/attachment/jpeg/download
-         */
-        postNuxeoDocumentAttachmentJpegDownload: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/jpeg/download`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentHocrDownloadDeprecate
-         * @request POST:/api/nuxeo/document/attachment/hocr/download/
-         */
-        postNuxeoDocumentAttachmentHocrDownloadDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/hocr/download/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentHocrDownload
-         * @request POST:/api/nuxeo/document/attachment/hocr/download
-         */
-        postNuxeoDocumentAttachmentHocrDownload: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/hocr/download`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentDownloadDeprecate
-         * @summary Download attachment of a document
-         * @request POST:/api/nuxeo/document/attachment/download/
-         */
-        postNuxeoDocumentAttachmentDownloadDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/download/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAttachmentDownload
-         * @summary Download attachment of a document
-         * @request POST:/api/nuxeo/document/attachment/download
-         */
-        postNuxeoDocumentAttachmentDownload: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/attachment/download`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentAddWatermark
          * @summary Replace document for add watermark to document and overview to new version
          * @request POST:/api/nuxeo/document/add/watermark
@@ -13074,81 +11319,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAddFacets
-         * @request POST:/api/nuxeo/document/add/facets
-         */
-        postNuxeoDocumentAddFacets: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/add/facets`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentAclsDeprecate
-         * @summary Get access control list of a document
-         * @request GET:/api/nuxeo/document/acls/
-         */
-        getNuxeoDocumentAclsDeprecate: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acls/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAclsDeprecate
-         * @summary Get access control list of a document
-         * @request POST:/api/nuxeo/document/acls/
-         */
-        postNuxeoDocumentAclsDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acls/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentAcls
-         * @summary Get access control list of a document
-         * @request GET:/api/nuxeo/document/acls
-         */
-        getNuxeoDocumentAcls: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acls`,
-                method: "GET",
-                query: query,
                 ...params,
             }),
 
@@ -13173,65 +11343,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentAclDeprecate
-         * @summary Get access control list of a document
-         * @request GET:/api/nuxeo/document/acl/
-         */
-        getNuxeoDocumentAclDeprecate: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAclDeprecate
-         * @summary Get access control list of a document
-         * @request POST:/api/nuxeo/document/acl/
-         */
-        postNuxeoDocumentAclDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentAcl
-         * @summary Get access control list of a document
-         * @request GET:/api/nuxeo/document/acl
-         */
-        getNuxeoDocumentAcl: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PostNuxeoDocumentAcl
          * @summary Get access control list of a document
          * @request POST:/api/nuxeo/document/acl
@@ -13239,233 +11350,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postNuxeoDocumentAcl: (data: DocumentRequestDTO, params: RequestParams = {}) =>
             this.request<ResultListAccessControlListDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/acl`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAclInviteDeprecate
-         * @summary Allow external user to access the document
-         * @request POST:/api/nuxeo/document/acl/invite/
-         */
-        postNuxeoDocumentAclInviteDeprecate: (data: AccessControlRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/invite/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAclInvite
-         * @summary Allow external user to access the document
-         * @request POST:/api/nuxeo/document/acl/invite
-         */
-        postNuxeoDocumentAclInvite: (data: AccessControlRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/invite`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAclAdd
-         * @summary Add local permission to document
-         * @request POST:/api/nuxeo/document/acl/add
-         */
-        postNuxeoDocumentAclAdd: (data: AccessControlRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/add`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentAclAddDeprecate
-         * @summary Add local permission to document
-         * @request POST:/api/nuxeo/document/acl/add/
-         */
-        postNuxeoDocumentAclAddDeprecate: (data: AccessControlRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/add/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocument
-         * @request GET:/api/nuxeo/document
-         */
-        getNuxeoDocument: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocument
-         * @summary Get a document
-         * @request POST:/api/nuxeo/document
-         */
-        postNuxeoDocument: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocument
-         * @summary Delete a document
-         * @request DELETE:/api/nuxeo/document
-         */
-        deleteNuxeoDocument: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PatchNuxeoDocument
-         * @summary Update a document
-         * @request PATCH:/api/nuxeo/document
-         */
-        patchNuxeoDocument: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentDeprecate
-         * @request GET:/api/nuxeo/document/
-         */
-        getNuxeoDocumentDeprecate: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PostNuxeoDocumentDeprecate
-         * @summary Get a document
-         * @request POST:/api/nuxeo/document/
-         */
-        postNuxeoDocumentDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentDeprecate
-         * @summary Delete a document
-         * @request DELETE:/api/nuxeo/document/
-         */
-        deleteNuxeoDocumentDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PatchNuxeoDocumentDeprecate
-         * @summary Update a document
-         * @request PATCH:/api/nuxeo/document/
-         */
-        patchNuxeoDocumentDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Versioning Controller
-         * @name PostNuxeoCreateversionDeprecate
-         * @summary Create Version by Document ID/Path and increment policy
-         * @request POST:/api/nuxeo/createVersion/
-         */
-        postNuxeoCreateversionDeprecate: (data: VersioningRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/createVersion/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -13586,7 +11470,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/nuxeo/conversion/downloadFile
          */
         postNuxeoConversionDownloadfile: (data: string[], params: RequestParams = {}) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
+            this.request<void, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/conversion/downloadFile`,
                 method: "POST",
                 body: data,
@@ -13921,6 +11805,210 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags micro-file-controller
+         * @name PostFileUploadtempfile
+         * @summary Upload TempFile to system
+         * @request POST:/api/file/uploadTempFile
+         */
+        postFileUploadtempfile: (
+            query: {
+                uploadTempFileRequestStr: string;
+            },
+            data: {
+                /** @format binary */
+                file?: File;
+                /** @format string */
+                uploadTempFileRequestStr?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultLong, ResultString | (ResultString | Result)>({
+                path: `/file/uploadTempFile`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadPage
+         * @summary Page query upload records
+         * @request POST:/api/file/upload/page
+         */
+        postFileUploadPage: (data: QueryFileOverviewRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPageUploadFileDTO, ResultString | (ResultString | Result)>({
+                path: `/file/upload/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadFolder
+         * @summary Upload TempFolder
+         * @request POST:/api/file/upload/folder
+         */
+        postFileUploadFolder: (data: UploadTempFileRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultUploadFileDetailRecord, ResultString | (ResultString | Result)>({
+                path: `/file/upload/folder`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadFile
+         * @summary Upload TempFile to system
+         * @request POST:/api/file/upload/file
+         */
+        postFileUploadFile: (
+            query: {
+                /** @format binary */
+                file: File;
+                uploadFileDetailRecord: UploadFileDetailRecord;
+            },
+            data: {
+                /** @format binary */
+                file?: File;
+                /** @format string */
+                fileName?: string;
+                /** @format string */
+                fileType?: string;
+                /** @format string */
+                fileAbsolutePath?: string;
+                /** @format string */
+                uploadId?: string;
+                /** @format string */
+                fileRelativePath?: string;
+                /**
+                 * @format string
+                 * @default "Admin"
+                 */
+                userId?: string;
+                /** @format number */
+                fileModifiedTimestamp?: long;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultLong, ResultString | (ResultString | Result)>({
+                path: `/file/upload/file`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadConfirm
+         * @summary Confirm upload files by batch operation
+         * @request POST:/api/file/upload/confirm
+         */
+        postFileUploadConfirm: (data: FileConfirmRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultFileConfirmResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/file/upload/confirm`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadConfirmValidate
+         * @summary check file exist situation in nuxeo
+         * @request POST:/api/file/upload/confirm/validate
+         */
+        postFileUploadConfirmValidate: (data: FileCheckRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultFileCheckResultDTO, ResultString | (ResultString | Result)>({
+                path: `/file/upload/confirm/validate`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadCancel
+         * @summary Cancel upload
+         * @request POST:/api/file/upload/cancel
+         */
+        postFileUploadCancel: (
+            query: {
+                userId: string;
+                uploadId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/file/upload/cancel`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileUploadBatch
+         * @summary Create file upload batch and return uploadId
+         * @request POST:/api/file/upload/batch
+         */
+        postFileUploadBatch: (data: SaveFileOverviewRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/file/upload/batch`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PostFileList
+         * @summary Query the list of upload files
+         * @request POST:/api/file/list
+         */
+        postFileList: (
+            query: {
+                userId: string;
+                uploadId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListUploadFileDetailDTO, ResultString | (ResultString | Result)>({
+                path: `/file/list`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags Workflow File
          * @name PostWorkflowUploadFiles
          * @summary Upload multiple files in the nuxeo repository
@@ -13985,12 +12073,66 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
+         * @name PostWorkflowTestStart
+         * @request POST:/api/docpal/workflow/test/start
+         */
+        postWorkflowTestStart: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<GenerateDocumentMode, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/test/start`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflowTasks
+         * @request GET:/api/docpal/workflow/tasks
+         */
+        getWorkflowTasks: (
+            query?: {
+                processInstanceId?: string;
+                userId?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/tasks`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowTasks
+         * @summary Retrieve tasks for a process instance
+         * @request POST:/api/docpal/workflow/tasks
+         */
+        postWorkflowTasks: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/tasks`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
          * @name PostWorkflowTasksUser
          * @summary Retrieve tasks for the candidate users
          * @request POST:/api/docpal/workflow/tasks/user
          */
         postWorkflowTasksUser: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOTaskDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/tasks/user`,
                 method: "POST",
                 body: data,
@@ -14037,25 +12179,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/tasks/personal
          */
         postWorkflowTasksPersonal: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOTaskDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/tasks/personal`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTasksPersonalDeprecate
-         * @summary Retrieve tasks for a user
-         * @request POST:/api/docpal/workflow/tasks/personal/
-         */
-        postWorkflowTasksPersonalDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks/personal/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14132,18 +12257,19 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTasksDeprecate
-         * @request GET:/api/docpal/workflow/tasks/
+         * @name GetWorkflowTask
+         * @request GET:/api/docpal/workflow/task
          */
-        getWorkflowTasksDeprecate: (
+        getWorkflowTask: (
             query?: {
                 processInstanceId?: string;
+                taskId?: string;
                 userId?: string;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks/`,
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
                 method: "GET",
                 query: query,
                 ...params,
@@ -14153,13 +12279,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowTasksDeprecate
-         * @summary Retrieve tasks for a process instance
-         * @request POST:/api/docpal/workflow/tasks/
+         * @name PostWorkflowTask
+         * @summary Retrieve a task
+         * @request POST:/api/docpal/workflow/task
          */
-        postWorkflowTasksDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks/`,
+        postWorkflowTask: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14170,37 +12296,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTasks
-         * @request GET:/api/docpal/workflow/tasks
+         * @name DeleteWorkflowTask
+         * @summary Delete a task
+         * @request DELETE:/api/docpal/workflow/task
          */
-        getWorkflowTasks: (
-            query?: {
-                processInstanceId?: string;
-                userId?: string;
+        deleteWorkflowTask: (
+            query: {
+                taskId: string;
+                deleteReason?: string;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks`,
-                method: "GET",
+            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task`,
+                method: "DELETE",
                 query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTasks
-         * @summary Retrieve tasks for a process instance
-         * @request POST:/api/docpal/workflow/tasks
-         */
-        postWorkflowTasks: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/tasks`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -14369,23 +12479,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowTaskClaimDeprecate
-         * @summary Claim a task
-         * @request POST:/api/docpal/workflow/task/claim/
-         */
-        postWorkflowTaskClaimDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/claim/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowTaskAssign
          * @summary Assign task to a user
          * @request POST:/api/docpal/workflow/task/assign
@@ -14420,121 +12513,15 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTaskDeprecate
-         * @request GET:/api/docpal/workflow/task/
+         * @name PostWorkflowAdhocApproval
+         * @request POST:/api/docpal/workflow/adhoc/approval
          */
-        getWorkflowTaskDeprecate: (
-            query?: {
-                processInstanceId?: string;
-                taskId?: string;
-                userId?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskDeprecate
-         * @summary Retrieve a task
-         * @request POST:/api/docpal/workflow/task/
-         */
-        postWorkflowTaskDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/`,
+        postWorkflowAdhocApproval: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/adhoc/approval`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowTaskDeprecate
-         * @summary Delete a task
-         * @request DELETE:/api/docpal/workflow/task/
-         */
-        deleteWorkflowTaskDeprecate: (
-            query: {
-                taskId: string;
-                deleteReason?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowTask
-         * @request GET:/api/docpal/workflow/task
-         */
-        getWorkflowTask: (
-            query?: {
-                processInstanceId?: string;
-                taskId?: string;
-                userId?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTask
-         * @summary Retrieve a task
-         * @request POST:/api/docpal/workflow/task
-         */
-        postWorkflowTask: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowTask
-         * @summary Delete a task
-         * @request DELETE:/api/docpal/workflow/task
-         */
-        deleteWorkflowTask: (
-            query: {
-                taskId: string;
-                deleteReason?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task`,
-                method: "DELETE",
-                query: query,
                 ...params,
             }),
 
@@ -14546,7 +12533,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/submitAdhocApproval
          */
         postWorkflowSubmitadhocapproval: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/submitAdhocApproval`,
                 method: "POST",
                 body: data,
@@ -14590,12 +12577,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowQueryadhocapprovalpage
-         * @request POST:/api/docpal/workflow/queryAdhocApprovalPage
+         * @name PostWorkflowProperties
+         * @summary Retrieve task form properties
+         * @request POST:/api/docpal/workflow/properties
          */
-        postWorkflowQueryadhocapprovalpage: (data: AdhocApprovalDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/queryAdhocApprovalPage`,
+        postWorkflowProperties: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultListFormPropertyDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/properties`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14640,13 +12628,13 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowPropertiesDeprecate
-         * @summary Retrieve task form properties
-         * @request POST:/api/docpal/workflow/properties/
+         * @name PostWorkflowProcess
+         * @summary Retrieve process definition
+         * @request POST:/api/docpal/workflow/process
          */
-        postWorkflowPropertiesDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFormPropertyDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/properties/`,
+        postWorkflowProcess: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -14657,16 +12645,24 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowProperties
-         * @summary Retrieve task form properties
-         * @request POST:/api/docpal/workflow/properties
+         * @name DeleteWorkflowProcess
+         * @request DELETE:/api/docpal/workflow/process
          */
-        postWorkflowProperties: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListFormPropertyDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/properties`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
+        deleteWorkflowProcess: (
+            query?: {
+                processInstanceId?: string;
+                /** @format date-time */
+                createdDate?: string;
+                /** @format date-time */
+                endedDate?: string;
+                completed?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process`,
+                method: "DELETE",
+                query: query,
                 ...params,
             }),
 
@@ -14983,106 +12979,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowProcessActiveDeprecate
-         * @request POST:/api/docpal/workflow/process/active/
-         */
-        postWorkflowProcessActiveDeprecate: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOInstanceDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/active/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowProcess
-         * @summary Retrieve process definition
-         * @request POST:/api/docpal/workflow/process
-         */
-        postWorkflowProcess: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowProcess
-         * @request DELETE:/api/docpal/workflow/process
-         */
-        deleteWorkflowProcess: (
-            query?: {
-                processInstanceId?: string;
-                /** @format date-time */
-                createdDate?: string;
-                /** @format date-time */
-                endedDate?: string;
-                completed?: boolean;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowProcessDeprecate
-         * @summary Retrieve process definition
-         * @request POST:/api/docpal/workflow/process/
-         */
-        postWorkflowProcessDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultProcessDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowProcessDeprecate
-         * @request DELETE:/api/docpal/workflow/process/
-         */
-        deleteWorkflowProcessDeprecate: (
-            query?: {
-                processInstanceId?: string;
-                /** @format date-time */
-                createdDate?: string;
-                /** @format date-time */
-                endedDate?: string;
-                completed?: boolean;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowHistoryVariableDeprecate
          * @summary Retrieve task variable history
          * @request POST:/api/docpal/workflow/history/variable/
@@ -15368,29 +13264,12 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowHistoryActivityDeprecate
-         * @summary Retrieve process definition model
-         * @request POST:/api/docpal/workflow/history/activity/
-         */
-        postWorkflowHistoryActivityDeprecate: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/history/activity/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowFormSubmit
          * @summary Submit a task form
          * @request POST:/api/docpal/workflow/form/submit
          */
         postWorkflowFormSubmit: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/form/submit`,
                 method: "POST",
                 body: data,
@@ -16079,66 +13958,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags system-feature-controller
-         * @name PostSystemfeatureInitentityDeprecate
-         * @request POST:/api/docpal/systemfeature/initEntity/
-         */
-        postSystemfeatureInitentityDeprecate: (params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/initEntity/`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags system-feature-controller
-         * @name PostSystemfeatureInitentity
-         * @request POST:/api/docpal/systemfeature/initEntity
-         */
-        postSystemfeatureInitentity: (params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/initEntity`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags system-feature-controller
-         * @name PostSystemfeatureAddfunctionbyidDeprecate
-         * @request POST:/api/docpal/systemfeature/addFunctionById/
-         */
-        postSystemfeatureAddfunctionbyidDeprecate: (data: SystemFeatureRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/addFunctionById/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags system-feature-controller
-         * @name PostSystemfeatureAddfunctionbyid
-         * @request POST:/api/docpal/systemfeature/addFunctionById
-         */
-        postSystemfeatureAddfunctionbyid: (data: SystemFeatureRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/addFunctionById`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags form-properties-relation-controller
          * @name PostRelationUpdatelanguage
          * @request POST:/api/docpal/relation/updateLanguage
@@ -16299,7 +14118,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/notification
          */
         postNotification: (data: NotificationRecord, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultNotificationRecord, ResultString | (ResultString | Result)>({
                 path: `/docpal/notification`,
                 method: "POST",
                 body: data,
@@ -16379,6 +14198,42 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags NotificationSettingController
+         * @name GetNotificationSettingUserUseridPreferences
+         * @summary Get notification preference of the user
+         * @request GET:/api/docpal/notification/setting/user/{userId}/preferences
+         */
+        getNotificationSettingUserUseridPreferences: (userId: string, params: RequestParams = {}) =>
+            this.request<ResultListUserNotifyPreference, ResultString | (ResultString | Result)>({
+                path: `/docpal/notification/setting/user/${userId}/preferences`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags NotificationSettingController
+         * @name PostNotificationSettingUserUseridPreferences
+         * @summary Save current user notification preference setting
+         * @request POST:/api/docpal/notification/setting/user/{userId}/preferences
+         */
+        postNotificationSettingUserUseridPreferences: (
+            userId: string,
+            data: UserNotifyPreference[],
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListUserNotifyPreference, ResultString | (ResultString | Result)>({
+                path: `/docpal/notification/setting/user/${userId}/preferences`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags NotificationSettingController
          * @name PostNotificationSettingTypeTypeModuleModulename
          * @summary Query list of some one module
          * @request POST:/api/docpal/notification/setting/type/{type}/module/{moduleName}
@@ -16443,7 +14298,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             data: NotificationRecord,
             params: RequestParams = {},
         ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
+            this.request<ResultPageNotificationRecord, ResultString | (ResultString | Result)>({
                 path: `/docpal/notification/page`,
                 method: "POST",
                 query: query,
@@ -16607,40 +14462,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postLogsRecentSearchPageV2: (data: BasePageRequest, params: RequestParams = {}) =>
             this.request<ResultPaginationDTONestedSearchLogV2, ResultString | (ResultString | Result)>({
                 path: `/docpal/logs/recent/search/page_v2`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Audit Log
-         * @name PostLogsRecentSearchPage
-         * @summary Query Recent Search
-         * @request POST:/api/docpal/logs/recent/search/page
-         */
-        postLogsRecentSearchPage: (data: BasePageRequest, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTONestedSearchLog, ResultString | (ResultString | Result)>({
-                path: `/docpal/logs/recent/search/page`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Audit Log
-         * @name PostLogsRecentDocumentPage
-         * @summary Query Recent Document
-         * @request POST:/api/docpal/logs/recent/document/page
-         */
-        postLogsRecentDocumentPage: (data: BasePageRequest, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTOESDocumentThumbnailDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/logs/recent/document/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -16879,26 +14700,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags InternalShareController
-         * @name GetInternalshareDeprecate
-         * @request GET:/api/docpal/internalShare/
-         */
-        getInternalshareDeprecate: (
-            query: {
-                queryDTO: InternalShareQueryDTO;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultPaginableEntityDTOObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/internalShare/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags InternalShareController
          * @name PostInternalshareDeprecate
          * @request POST:/api/docpal/internalShare/
          */
@@ -16914,16 +14715,120 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags InternalShareController
-         * @name DeleteInternalshareDeprecate
-         * @request DELETE:/api/docpal/internalShare/
+         * @tags grpc-controller
+         * @name PostGrpc
+         * @request POST:/api/docpal/grpc
          */
-        deleteInternalshareDeprecate: (data: InternalShareQueryDTO, params: RequestParams = {}) =>
+        postGrpc: (
+            query: {
+                bucketName: string;
+                /** @format binary */
+                file: File;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/internalShare/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
+                path: `/docpal/grpc`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags grpc-controller
+         * @name PostGrpcListbuckets
+         * @request POST:/api/docpal/grpc/listBuckets
+         */
+        postGrpcListbuckets: (
+            query: {
+                bucketName: string;
+                fileName: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<Result, ResultString | (ResultString | Result)>({
+                path: `/docpal/grpc/listBuckets`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags grpc-controller
+         * @name PostGrpcDownload
+         * @request POST:/api/docpal/grpc/download
+         */
+        postGrpcDownload: (
+            query: {
+                bucketName: string;
+                fileName: string;
+                versionId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/grpc/download`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags grpc-controller
+         * @name PostGrpcDelete
+         * @request POST:/api/docpal/grpc/delete
+         */
+        postGrpcDelete: (
+            query: {
+                bucketName: string;
+                fileName: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/docpal/grpc/delete`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags grpc-controller
+         * @name PostGrpcCreatebucket
+         * @request POST:/api/docpal/grpc/createBucket
+         */
+        postGrpcCreatebucket: (
+            query: {
+                bucketName: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/docpal/grpc/createBucket`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags grpc-controller
+         * @name PostGrpcAdd
+         * @request POST:/api/docpal/grpc/add
+         */
+        postGrpcAdd: (params: RequestParams = {}) =>
+            this.request<Record<string, object>, ResultString | (ResultString | Result)>({
+                path: `/docpal/grpc/add`,
+                method: "POST",
                 ...params,
             }),
 
@@ -16938,6 +14843,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postFormDesignSubmitData: (data: FormDesignDataDTO, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/submit/data`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignSendEmail
+         * @request POST:/api/docpal/form/design/send_email
+         */
+        postFormDesignSendEmail: (data: EasyFormEmailDTO, params: RequestParams = {}) =>
+            this.request<ResultVoid, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/send_email`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -16971,6 +14892,38 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postFormDesignRecordPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
             this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/record/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignPageEmailLog
+         * @request POST:/api/docpal/form/design/page_email_log
+         */
+        postFormDesignPageEmailLog: (data: EasyFormEmailQueryRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOEasyFormEmailLogDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/page_email_log`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name PostFormDesignPage
+         * @request POST:/api/docpal/form/design/page
+         */
+        postFormDesignPage: (data: FormDesignRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOFormDesignResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/page`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -17073,6 +15026,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags CaseTypeController
          * @name PostCaseTypesTablePage
+         * @summary Paging query of a case table
          * @request POST:/api/docpal/case/types/table/page
          */
         postCaseTypesTablePage: (data: CaseTableRequestDTO, params: RequestParams = {}) =>
@@ -17156,18 +15110,16 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags CaseInstanceController
-         * @name PostCaseInstanceCaseinstanceidEventsPlaniteminstanceidTrigger
+         * @name PostCaseInstanceTriggerEvent
          * @summary Trigger event for completed
-         * @request POST:/api/docpal/case/instance/{caseInstanceId}/events/{planItemInstanceId}/trigger
+         * @request POST:/api/docpal/case/instance/trigger/event
          */
-        postCaseInstanceCaseinstanceidEventsPlaniteminstanceidTrigger: (
-            caseInstanceId: string,
-            planItemInstanceId: string,
-            params: RequestParams = {},
-        ) =>
+        postCaseInstanceTriggerEvent: (data: CmmnTriggerEventReqDTO, params: RequestParams = {}) =>
             this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/docpal/case/instance/${caseInstanceId}/events/${planItemInstanceId}/trigger`,
+                path: `/docpal/case/instance/trigger/event`,
                 method: "POST",
+                body: data,
+                type: ContentType.Json,
                 ...params,
             }),
 
@@ -17216,6 +15168,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postCaseInstanceStart: (data: CaseInstanceRequestDTO, params: RequestParams = {}) =>
             this.request<ResultCaseInstanceDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/instance/start`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
+         * @name PostCaseInstanceProcessStart
+         * @summary Starting a sub-process of case instance
+         * @request POST:/api/docpal/case/instance/process/start
+         */
+        postCaseInstanceProcessStart: (data: PlanItemInstanceRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/process/start`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -17297,7 +15266,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/case/instance/auditLog
          */
         postCaseInstanceAuditlog: (data: CaseInstanceRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOAuditTemplateDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/instance/auditLog`,
                 method: "POST",
                 body: data,
@@ -17326,27 +15295,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags CmmnDashboardController
-         * @name PostCaseDashboardInstanceCaseidProcessInstanceTasks
-         * @summary Paging search process instance of this case instance
-         * @request POST:/api/docpal/case/dashboard/instance/{caseId}/process/instance/tasks
-         */
-        postCaseDashboardInstanceCaseidProcessInstanceTasks: (
-            caseId: string,
-            data: CmmnProcessRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultPaginationDTOCmmnTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/case/dashboard/instance/${caseId}/process/instance/tasks`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags CmmnDashboardController
          * @name PostCaseDashboardInstanceCaseidProcessInstancePage
          * @summary Paging search process instance of this case instance
          * @request POST:/api/docpal/case/dashboard/instance/{caseId}/process/instance/page
@@ -17358,6 +15306,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<ResultPaginationDTOCmmnTaskDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/instance/${caseId}/process/instance/page`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CmmnDashboardController
+         * @name PostCaseDashboardInstanceActionPreRequisite
+         * @summary Get Pre-requisite of planItem instance,
+         * @request POST:/api/docpal/case/dashboard/instance/action/pre-requisite
+         */
+        postCaseDashboardInstanceActionPreRequisite: (data: PlanItemInstanceDTO, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/dashboard/instance/action/pre-requisite`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -17410,22 +15375,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postCalendarsList: (data: CalendarTaskReq, params: RequestParams = {}) =>
             this.request<ResultListCalendarTaskRespDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/calendars/list`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags FolderCabinetController
-         * @name PostCabinetIdGenerateDocument
-         * @request POST:/api/docpal/cabinet/{id}/generate/document
-         */
-        postCabinetIdGenerateDocument: (id: string, data: Record<string, object>, params: RequestParams = {}) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/cabinet/${id}/generate/document`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -17513,29 +15462,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags FolderCabinetController
-         * @name PostCabinetFilingDocument
-         * @request POST:/api/docpal/cabinet/filing/document
+         * @name PostCabinetGenerateDocument
+         * @request POST:/api/docpal/cabinet/generate/document
          */
-        postCabinetFilingDocument: (data: FilingCreateDocRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/cabinet/filing/document`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags FolderCabinetController
-         * @name PostCabinetFilingCreateDocument
-         * @request POST:/api/docpal/cabinet/filing/create/document
-         */
-        postCabinetFilingCreateDocument: (data: GenerateDocumentRequestDTO, params: RequestParams = {}) =>
+        postCabinetGenerateDocument: (
+            query: {
+                processDefinitionKey: string;
+            },
+            data: FilingDocumentPreviewReq,
+            params: RequestParams = {},
+        ) =>
             this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/cabinet/filing/create/document`,
+                path: `/docpal/cabinet/generate/document`,
                 method: "POST",
+                query: query,
                 body: data,
                 type: ContentType.Json,
                 ...params,
@@ -17571,48 +15511,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Auto Generated Value
-         * @name GetAutoCridDeprecate
-         * @request GET:/api/docpal/auto/crId/
-         */
-        getAutoCridDeprecate: (
-            query: {
-                customerCode: string;
-                contractNo: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/docpal/auto/crId/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Auto Generated Value
-         * @name PostAutoCridDeprecate
-         * @request POST:/api/docpal/auto/crId/
-         */
-        postAutoCridDeprecate: (
-            query: {
-                customerCode: string;
-                contractNo: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/docpal/auto/crId/`,
-                method: "POST",
-                query: query,
                 ...params,
             }),
 
@@ -17682,34 +15580,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         postAutoCaseid: (params: RequestParams = {}) =>
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/docpal/auto/caseId`,
-                method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Auto Generated Value
-         * @name GetAutoCaseidDeprecate
-         * @request GET:/api/docpal/auto/caseId/
-         */
-        getAutoCaseidDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/docpal/auto/caseId/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Auto Generated Value
-         * @name PostAutoCaseidDeprecate
-         * @request POST:/api/docpal/auto/caseId/
-         */
-        postAutoCaseidDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultString, ResultString | (ResultString | Result)>({
-                path: `/docpal/auto/caseId/`,
                 method: "POST",
                 ...params,
             }),
@@ -17800,6 +15670,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Password Controller
+         * @name PatchPasswordUpdatePassword
+         * @request PATCH:/api/password/update-password
+         */
+        patchPasswordUpdatePassword: (data: IdentityRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/password/update-password`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags Share (Nuxeo)
          * @name DeleteNuxeoShare
          * @request DELETE:/api/nuxeo/share
@@ -17833,22 +15719,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PatchNuxeoDocumentUpdateaidocumentDeprecate
-         * @request PATCH:/api/nuxeo/document/updateAiDocument/
-         */
-        patchNuxeoDocumentUpdateaidocumentDeprecate: (data: UpdateAiDocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/updateAiDocument/`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PatchNuxeoDocumentUpdateaidocument
          * @request PATCH:/api/nuxeo/document/updateAiDocument
          */
@@ -17865,22 +15735,27 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PatchNuxeoDocumentReplacefileV2Deprecate
-         * @request PATCH:/api/nuxeo/document/replaceFile/v2/
+         * @name PatchNuxeoDocumentReplacefile
+         * @summary Replace document FILE Content
+         * @request PATCH:/api/nuxeo/document/replaceFile
          */
-        patchNuxeoDocumentReplacefileV2Deprecate: (
+        patchNuxeoDocumentReplacefile: (
             query: {
-                openAiAnalyzeMetadata: boolean;
+                /** Document (Request) */
+                request: DocumentReplaceReq;
             },
             data: {
-                document: string;
                 /** @format binary */
-                file: File;
+                file?: File;
+                /** @default "{"idOrPath":"73022e6a-1377-4a52-9c1c-a56acdf09746"}" */
+                document?: string;
+                /** @default "true" */
+                openAiAnalyzeMetadata?: boolean;
             },
             params: RequestParams = {},
         ) =>
             this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/replaceFile/v2/`,
+                path: `/nuxeo/document/replaceFile`,
                 method: "PATCH",
                 query: query,
                 body: data,
@@ -17893,16 +15768,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Document (Nuxeo)
          * @name PatchNuxeoDocumentReplacefileV2
+         * @summary Replace document FILE Content
          * @request PATCH:/api/nuxeo/document/replaceFile/v2
          */
         patchNuxeoDocumentReplacefileV2: (
             query: {
-                openAiAnalyzeMetadata: boolean;
+                /** Document (Request) */
+                request: DocumentReplaceReq;
             },
             data: {
-                document: string;
                 /** @format binary */
-                file: File;
+                file?: File;
+                /** @default "{"idOrPath":"73022e6a-1377-4a52-9c1c-a56acdf09746"}" */
+                document?: string;
+                /** @default "true" */
+                openAiAnalyzeMetadata?: boolean;
             },
             params: RequestParams = {},
         ) =>
@@ -17919,54 +15799,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name PatchNuxeoDocumentReplacefile
-         * @request PATCH:/api/nuxeo/document/replaceFile
-         */
-        patchNuxeoDocumentReplacefile: (
-            data: {
-                document: string;
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/replaceFile`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name PatchNuxeoDocumentReplacefileDeprecate
-         * @request PATCH:/api/nuxeo/document/replaceFile/
-         */
-        patchNuxeoDocumentReplacefileDeprecate: (
-            data: {
-                document: string;
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/replaceFile/`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name PatchNuxeoDocumentChangeType
-         * @summary Update a document
+         * @summary Change docpal type of document
          * @request PATCH:/api/nuxeo/document/change/docpal/type
          */
         patchNuxeoDocumentChangeType: (data: DocumentRequestDTO, params: RequestParams = {}) =>
@@ -18006,6 +15840,22 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         patchNuxeoCommentsUpdate: (data: CommentRequestDTO, params: RequestParams = {}) =>
             this.request<ResultCommentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/comments/update`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name PatchFileUpdateaidocument
+         * @request PATCH:/api/file/updateAiDocument
+         */
+        patchFileUpdateaidocument: (data: UpdateAiDocumentRequestDTO, params: RequestParams = {}) =>
+            this.request<Result, ResultString | (ResultString | Result)>({
+                path: `/file/updateAiDocument`,
                 method: "PATCH",
                 body: data,
                 type: ContentType.Json,
@@ -18242,43 +16092,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "PATCH",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags wopi-host-controller
-         * @name GetWopiFilesId
-         * @request GET:/api/wopi/files/{id}
-         */
-        getWopiFilesId: (
-            id: string,
-            query: {
-                access_token: string;
-                readonly?: boolean;
-                fileType?: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<FileDTO, ResultString | (ResultString | Result)>({
-                path: `/wopi/files/${id}`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags VerificationPermissionController
-         * @name GetVerificationPermissionEventTypes
-         * @request GET:/api/verification/permission/event/types
-         */
-        getVerificationPermissionEventTypes: (params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result)>({
-                path: `/verification/permission/event/types`,
-                method: "GET",
                 ...params,
             }),
 
@@ -18551,6 +16364,62 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Password Controller
+         * @name GetPasswordUserStatus
+         * @request GET:/api/password/user-status
+         */
+        getPasswordUserStatus: (params: RequestParams = {}) =>
+            this.request<ResultUserStatusDTO, ResultString | (ResultString | Result)>({
+                path: `/password/user-status`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Password Controller
+         * @name GetPasswordHasLockUserid
+         * @request GET:/api/password/has-lock/{userId}
+         */
+        getPasswordHasLockUserid: (userId: string, params: RequestParams = {}) =>
+            this.request<ResultLockUserDTO, ResultString | (ResultString | Result)>({
+                path: `/password/has-lock/${userId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Password Controller
+         * @name GetPasswordCheckLockUserUserid
+         * @request GET:/api/password/check-lock-user/{userId}
+         */
+        getPasswordCheckLockUserUserid: (userId: string, params: RequestParams = {}) =>
+            this.request<ResultLockUserDTO, ResultString | (ResultString | Result)>({
+                path: `/password/check-lock-user/${userId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Password Controller
+         * @name GetPasswordCheckExpire
+         * @request GET:/api/password/check-expire
+         */
+        getPasswordCheckExpire: (params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/password/check-expire`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags vocabulary-controller
          * @name GetNuxeoVocabularyId
          * @summary Get Vocabulary by id
@@ -18776,59 +16645,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchPageprovidernameAggConfigs
-         * @summary Get Aggregation Configs by search page provider name
-         * @request GET:/api/nuxeo/search/{pageProviderName}/agg_configs
+         * @name GetNuxeoSearchSearchallparent
+         * @summary Search All Parent Documents
+         * @request GET:/api/nuxeo/search/searchAllParent
          */
-        getNuxeoSearchPageprovidernameAggConfigs: (pageProviderName: string, params: RequestParams = {}) =>
-            this.request<ResultListAggregationConfigResponseDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/${pageProviderName}/agg_configs`,
+        getNuxeoSearchSearchallparent: (
+            query: {
+                documentPath: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/searchAllParent`,
                 method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchPageprovidernameAggConfigsDeprecate
-         * @summary Get Aggregation Configs by search page provider name
-         * @request GET:/api/nuxeo/search/{pageProviderName}/agg_configs/
-         */
-        getNuxeoSearchPageprovidernameAggConfigsDeprecate: (pageProviderName: string, params: RequestParams = {}) =>
-            this.request<ResultListAggregationConfigResponseDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/${pageProviderName}/agg_configs/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchTextsearchtypesDeprecate
-         * @summary Get all text search types
-         * @request GET:/api/nuxeo/search/textSearchTypes/
-         */
-        getNuxeoSearchTextsearchtypesDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/textSearchTypes/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchTextsearchtypes
-         * @summary Get all text search types
-         * @request GET:/api/nuxeo/search/textSearchTypes
-         */
-        getNuxeoSearchTextsearchtypes: (params: RequestParams = {}) =>
-            this.request<ResultListString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/textSearchTypes`,
-                method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -18850,41 +16680,14 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchGetsearchextends
-         * @summary getMimiType
-         * @request GET:/api/nuxeo/search/getSearchExtends
+         * @name GetNuxeoSearchOpenSearchDocumentid
+         * @summary Open Search By Id
+         * @request GET:/api/nuxeo/search/open-search/{documentId}
          */
-        getNuxeoSearchGetsearchextends: (
-            query: {
-                primaryType: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapObjectObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/getSearchExtends`,
+        getNuxeoSearchOpenSearchDocumentid: (documentId: string, params: RequestParams = {}) =>
+            this.request<ResultObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/search/open-search/${documentId}`,
                 method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchGetsearchextendsDeprecate
-         * @summary getMimiType
-         * @request GET:/api/nuxeo/search/getSearchExtends/
-         */
-        getNuxeoSearchGetsearchextendsDeprecate: (
-            query: {
-                primaryType: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapObjectObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/getSearchExtends/`,
-                method: "GET",
-                query: query,
                 ...params,
             }),
 
@@ -18899,65 +16702,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getNuxeoSearchGetexportheader: (params: RequestParams = {}) =>
             this.request<ResultMapObjectObject, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/search/getExportHeader`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchAssetsSearch
-         * @summary Assets Search
-         * @request GET:/api/nuxeo/search/assets_search
-         */
-        getNuxeoSearchAssetsSearch: (
-            query: {
-                /** DocPal search (Request) */
-                searchRequestDTO: DocPalSearchRequestDTO;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultESSearchResultResponseDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/assets_search`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchAssetsSearchDeprecate
-         * @summary Assets Search
-         * @request GET:/api/nuxeo/search/assets_search/
-         */
-        getNuxeoSearchAssetsSearchDeprecate: (
-            query: {
-                /** DocPal search (Request) */
-                searchRequestDTO: DocPalSearchRequestDTO;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultESSearchResultResponseDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/assets_search/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Search (Nuxeo)
-         * @name GetNuxeoSearchAlluser
-         * @summary List all user in DocPal
-         * @request GET:/api/nuxeo/search/allUser
-         */
-        getNuxeoSearchAlluser: (params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/search/allUser`,
                 method: "GET",
                 ...params,
             }),
@@ -19119,78 +16863,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
-         * @name GetNuxeoIdentitySynchronizeDeprecate
-         * @summary Synchronize Nuxeo users and groups to Workflow
-         * @request GET:/api/nuxeo/identity/synchronize/
-         */
-        getNuxeoIdentitySynchronizeDeprecate: (params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/synchronize/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name GetNuxeoIdentitySynchronize
-         * @summary Synchronize Nuxeo users and groups to Workflow
-         * @request GET:/api/nuxeo/identity/synchronize
-         */
-        getNuxeoIdentitySynchronize: (params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/synchronize`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name GetNuxeoIdentitySyncldapusersandgroupsbyid
-         * @summary Synchronize Nuxeo users and groups to Workflow
-         * @request GET:/api/nuxeo/identity/syncLdapUsersAndGroupsById
-         */
-        getNuxeoIdentitySyncldapusersandgroupsbyid: (
-            query: {
-                userId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/syncLdapUsersAndGroupsById`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Identity (Nuxeo)
-         * @name GetNuxeoIdentitySyncldapusersandgroupsbyidDeprecate
-         * @summary Synchronize Nuxeo users and groups to Workflow
-         * @request GET:/api/nuxeo/identity/syncLdapUsersAndGroupsById/
-         */
-        getNuxeoIdentitySyncldapusersandgroupsbyidDeprecate: (
-            query: {
-                userId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/identity/syncLdapUsersAndGroupsById/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags wopi-host-controller
          * @name GetNuxeoGetofficetokenId
          * @request GET:/api/nuxeo/getOfficeToken/{id}
@@ -19205,6 +16877,49 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/getOfficeToken/${id}`,
                 method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags File Request Upload (Nuxeo)
+         * @name GetNuxeoFilerequestDeprecate
+         * @request GET:/api/nuxeo/filerequest/
+         */
+        getNuxeoFilerequestDeprecate: (
+            query: {
+                /** @format int32 */
+                pageIndex: number;
+                /** @format int32 */
+                pageSize: number;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/filerequest/`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags File Request Upload (Nuxeo)
+         * @name DeleteNuxeoFilerequestDeprecate
+         * @request DELETE:/api/nuxeo/filerequest/
+         */
+        deleteNuxeoFilerequestDeprecate: (
+            query: {
+                id: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultFileRequestUploadDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/filerequest/`,
+                method: "DELETE",
                 query: query,
                 ...params,
             }),
@@ -19305,11 +17020,33 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @tags Document (Nuxeo)
          * @name GetNuxeoDocumentDocumentidOcrState
          * @request GET:/api/nuxeo/document/{documentId}/ocr/state
+         * @deprecated
          */
         getNuxeoDocumentDocumentidOcrState: (documentId: string, params: RequestParams = {}) =>
             this.request<ResultString, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/${documentId}/ocr/state`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name GetNuxeoDocumentVersions
+         * @summary Find all versions of a document
+         * @request GET:/api/nuxeo/document/versions
+         */
+        getNuxeoDocumentVersions: (
+            query: {
+                idOrPath: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/versions`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -19345,6 +17082,26 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
+         * @name GetNuxeoDocumentSearch
+         * @request GET:/api/nuxeo/document/search
+         */
+        getNuxeoDocumentSearch: (
+            query: {
+                d: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListSearchDocumentVO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/search`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
          * @name GetNuxeoDocumentRetryClassificationUploadidDeprecate
          * @request GET:/api/nuxeo/document/retry_classification/{uploadId}/
          */
@@ -19373,20 +17130,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentQueryaianalyzeIdorpathDeprecate
-         * @request GET:/api/nuxeo/document/queryAiAnalyze/{idOrPath}/
-         */
-        getNuxeoDocumentQueryaianalyzeIdorpathDeprecate: (idOrPath: string, params: RequestParams = {}) =>
-            this.request<ResultAiAnalysisDocumentVO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/queryAiAnalyze/${idOrPath}/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name GetNuxeoDocumentQueryaianalyzeIdorpath
          * @request GET:/api/nuxeo/document/queryAiAnalyze/{idOrPath}
          */
@@ -19401,157 +17144,19 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentOcrsPatch
-         * @request GET:/api/nuxeo/document/ocrs/patch
+         * @name GetNuxeoDocumentList
+         * @request GET:/api/nuxeo/document/list
          */
-        getNuxeoDocumentOcrsPatch: (
+        getNuxeoDocumentList: (
             query: {
-                documentIds: string[];
+                d: string;
             },
             params: RequestParams = {},
         ) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/ocrs/patch`,
+            this.request<ResultListSearchDocumentVO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/list`,
                 method: "GET",
                 query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentOcrsPatchResult
-         * @request GET:/api/nuxeo/document/ocrs/patch/result
-         */
-        getNuxeoDocumentOcrsPatchResult: (params: RequestParams = {}) =>
-            this.request<ResultLong, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/ocrs/patch/result`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentOcrPatchData
-         * @request GET:/api/nuxeo/document/ocr/patch/data
-         */
-        getNuxeoDocumentOcrPatchData: (params: RequestParams = {}) =>
-            this.request<ResultListString, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/ocr/patch/data`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentIsfollowedDeprecate
-         * @summary Check if document is followed by current user
-         * @request GET:/api/nuxeo/document/isFollowed/
-         */
-        getNuxeoDocumentIsfollowedDeprecate: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/isFollowed/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentIsfollowed
-         * @summary Check if document is followed by current user
-         * @request GET:/api/nuxeo/document/isFollowed
-         */
-        getNuxeoDocumentIsfollowed: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/isFollowed`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentInithocrclearup
-         * @request GET:/api/nuxeo/document/initHocrClearUp
-         */
-        getNuxeoDocumentInithocrclearup: (
-            query: {
-                date: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<void, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/initHocrClearUp`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentInitconversionclearup
-         * @request GET:/api/nuxeo/document/initConversionClearUp
-         */
-        getNuxeoDocumentInitconversionclearup: (
-            query: {
-                date: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<void, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/initConversionClearUp`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentExecuteOcrPatch
-         * @request GET:/api/nuxeo/document/execute/ocr/patch
-         */
-        getNuxeoDocumentExecuteOcrPatch: (params: RequestParams = {}) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/execute/ocr/patch`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name GetNuxeoDocumentDownloadTempFileIdDeprecate
-         * @request GET:/api/nuxeo/document/download_temp_file/{id}/
-         */
-        getNuxeoDocumentDownloadTempFileIdDeprecate: (id: number, params: RequestParams = {}) =>
-            this.request<string, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/download_temp_file/${id}/`,
-                method: "GET",
                 ...params,
             }),
 
@@ -19573,8 +17178,63 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
+         * @name GetNuxeoDocumentChildren
+         * @request GET:/api/nuxeo/document/children
+         */
+        getNuxeoDocumentChildren: (
+            query: {
+                documentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/children`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name GetNuxeoDocumentAdditionalFormatDocumentid
+         * @request GET:/api/nuxeo/document/additional/format/{documentId}
+         */
+        getNuxeoDocumentAdditionalFormatDocumentid: (documentId: string, params: RequestParams = {}) =>
+            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/additional/format/${documentId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name GetNuxeoDocumentAdditionalFormatDownload
+         * @request GET:/api/nuxeo/document/additional/format/download
+         */
+        getNuxeoDocumentAdditionalFormatDownload: (
+            query: {
+                documentId: string;
+                fileContentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/additional/format/download`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
          * @name GetNuxeoDocumentAclPermissionDeprecate
-         * @summary Get user maximum permission on a document
+         * @summary Get user's maximum permission on a document
          * @request GET:/api/nuxeo/document/acl/permission/
          */
         getNuxeoDocumentAclPermissionDeprecate: (
@@ -19596,7 +17256,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Document (Nuxeo)
          * @name GetNuxeoDocumentAclPermission
-         * @summary Get user maximum permission on a document
+         * @summary Get user's maximum permission on a document
          * @request GET:/api/nuxeo/document/acl/permission
          */
         getNuxeoDocumentAclPermission: (
@@ -19863,7 +17523,100 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Workflow
+         * @tags micro-file-controller
+         * @name GetFileRetryClassificationUploadid
+         * @request GET:/api/file/retry_classification/{uploadId}
+         */
+        getFileRetryClassificationUploadid: (uploadId: string, params: RequestParams = {}) =>
+            this.request<Result, ResultString | (ResultString | Result)>({
+                path: `/file/retry_classification/${uploadId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name GetFileQueryaianalyzeIdorpath
+         * @request GET:/api/file/queryAiAnalyze/{idOrPath}
+         */
+        getFileQueryaianalyzeIdorpath: (idOrPath: string, params: RequestParams = {}) =>
+            this.request<ResultAiAnalysisDocumentVO, ResultString | (ResultString | Result)>({
+                path: `/file/queryAiAnalyze/${idOrPath}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name GetFileDownloadFileId
+         * @request GET:/api/file/download/file/{id}
+         */
+        getFileDownloadFileId: (id: number, params: RequestParams = {}) =>
+            this.request<string, ResultString | (ResultString | Result)>({
+                path: `/file/download/file/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name GetWorkflowVersion
+         * @summary Get Version Data
+         * @request GET:/api/docpal/workflow/version
+         */
+        getWorkflowVersion: (
+            query: {
+                draftId: string;
+                versionNumber: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultProcessDefinitionVersion, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name GetWorkflowVersionVersionid
+         * @summary Get Version Data
+         * @request GET:/api/docpal/workflow/version/{versionId}
+         */
+        getWorkflowVersionVersionid: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultProcessDefinitionVersion, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/${versionId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name DeleteWorkflowVersionVersionid
+         * @request DELETE:/api/docpal/workflow/version/{versionId}
+         */
+        deleteWorkflowVersionVersionid: (versionId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/${versionId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
          * @name GetWorkflowVersionVersionidBpmnxml
          * @summary Download BPMN20.xml through version id of a workflow
          * @request GET:/api/docpal/workflow/version/{versionId}/bpmnXml
@@ -19878,7 +17631,30 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Workflow
+         * @tags Workflow Version Controller
+         * @name GetWorkflowVersionJson
+         * @summary Download Json through version number and draft id
+         * @request GET:/api/docpal/workflow/version/json
+         */
+        getWorkflowVersionJson: (
+            query?: {
+                draftId?: string;
+                versionNumber?: string;
+                versionId?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultString, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/json`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
          * @name GetWorkflowVersionBpmnxml
          * @summary Download BPMN20.xml through version number and draft id
          * @request GET:/api/docpal/workflow/version/bpmnXml
@@ -19886,7 +17662,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getWorkflowVersionBpmnxml: (
             query: {
                 draftId: string;
-                versionNumber: string;
+                versionNumber?: string;
+                versionId?: string;
             },
             params: RequestParams = {},
         ) =>
@@ -19894,6 +17671,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/docpal/workflow/version/bpmnXml`,
                 method: "GET",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflowVariablesInstanceid
+         * @request GET:/api/docpal/workflow/variables/{instanceId}
+         */
+        getWorkflowVariablesInstanceid: (instanceId: string, params: RequestParams = {}) =>
+            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/variables/${instanceId}`,
+                method: "GET",
                 ...params,
             }),
 
@@ -20120,47 +17911,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowIsdocumetidcanstartadhoc
-         * @request GET:/api/docpal/workflow/isDocumetIdCanStartAdhoc
-         */
-        getWorkflowIsdocumetidcanstartadhoc: (
-            query: {
-                documentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringString, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/isDocumetIdCanStartAdhoc`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowIsdocumetidcanapproval
-         * @request GET:/api/docpal/workflow/isDocumetIdCanApproval
-         */
-        getWorkflowIsdocumetidcanapproval: (
-            query: {
-                documentId: string;
-                userId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringString, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/isDocumetIdCanApproval`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name GetWorkflowHistoryGethistoryexportheader
          * @request GET:/api/docpal/workflow/history/getHistoryExportHeader
          */
@@ -20325,13 +18075,41 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowCleanup
-         * @request GET:/api/docpal/workflow/cleanUp
+         * @name GetWorkflowAdhocList
+         * @summary Check whether the current version of the document has Adhoc audit records
+         * @request GET:/api/docpal/workflow/adhoc/list
          */
-        getWorkflowCleanup: (params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/cleanUp`,
+        getWorkflowAdhocList: (
+            query: {
+                documentId: string;
+                userId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultAdhocApprovalResp, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/adhoc/list`,
                 method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflowAdhocCanstart
+         * @request GET:/api/docpal/workflow/adhoc/canStart
+         */
+        getWorkflowAdhocCanstart: (
+            query: {
+                documentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultMapStringString, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/adhoc/canStart`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -20478,6 +18256,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags NuxeoUserController
+         * @name GetUserProfileSetting
+         * @summary Get Global User Profile Setting
+         * @request GET:/api/docpal/user/profile/setting
+         */
+        getUserProfileSetting: (params: RequestParams = {}) =>
+            this.request<ResultUserProfileSettingDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/user/profile/setting`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags DocPalTypeController
          * @name GetTypesNameName
          * @summary Obtain docpal type detail through name
@@ -20574,48 +18367,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getSystemfeatureGetfeatures: (params: RequestParams = {}) =>
             this.request<ResultMapStringBoolean, ResultString | (ResultString | Result)>({
                 path: `/docpal/systemfeature/getFeatures`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags system-feature-controller
-         * @name GetSystemfeatureGetfeaturesDeprecate
-         * @request GET:/api/docpal/systemfeature/getFeatures/
-         */
-        getSystemfeatureGetfeaturesDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultMapStringBoolean, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/getFeatures/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags system-feature-controller
-         * @name GetSystemfeatureFindallDeprecate
-         * @request GET:/api/docpal/systemfeature/findAll/
-         */
-        getSystemfeatureFindallDeprecate: (params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/findAll/`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags system-feature-controller
-         * @name GetSystemfeatureFindall
-         * @request GET:/api/docpal/systemfeature/findAll
-         */
-        getSystemfeatureFindall: (params: RequestParams = {}) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/docpal/systemfeature/findAll`,
                 method: "GET",
                 ...params,
             }),
@@ -21012,6 +18763,34 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags PersonalLandingController
+         * @name GetPersonalLandingDashboardId
+         * @request GET:/api/docpal/personal/landing/dashboard/{id}
+         */
+        getPersonalLandingDashboardId: (id: number, params: RequestParams = {}) =>
+            this.request<ResultPersonalDashboard, ResultString | (ResultString | Result)>({
+                path: `/docpal/personal/landing/dashboard/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags PersonalLandingController
+         * @name GetPersonalLandingDashboardList
+         * @request GET:/api/docpal/personal/landing/dashboard/list
+         */
+        getPersonalLandingDashboardList: (params: RequestParams = {}) =>
+            this.request<ResultListPersonalDashboard, ResultString | (ResultString | Result)>({
+                path: `/docpal/personal/landing/dashboard/list`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags NotificationRecordController
          * @name GetNotificationUnreadNumber
          * @summary Query count number of unread for current login user
@@ -21088,6 +18867,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getNotificationSettingTypeTypeAll: (type: "SUB_DOCUMENT" | "SUBSCRIPTION", params: RequestParams = {}) =>
             this.request<Result, ResultString | (ResultString | Result)>({
                 path: `/docpal/notification/setting/type/${type}/all`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags NotificationSettingController
+         * @name GetNotificationSettingPreferences
+         * @summary Get all notification settings grouped by module_name
+         * @request GET:/api/docpal/notification/setting/preferences
+         */
+        getNotificationSettingPreferences: (params: RequestParams = {}) =>
+            this.request<ResultMapStringListString, ResultString | (ResultString | Result)>({
+                path: `/docpal/notification/setting/preferences`,
                 method: "GET",
                 ...params,
             }),
@@ -21351,6 +19145,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags grpc-controller
+         * @name GetGrpcAddId
+         * @request GET:/api/docpal/grpc/add/{id}
+         */
+        getGrpcAddId: (id: string, params: RequestParams = {}) =>
+            this.request<Record<string, object>, ResultString | (ResultString | Result)>({
+                path: `/docpal/grpc/add/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags FormDesignController
          * @name GetFormDesign
          * @summary Query form design
@@ -21401,6 +19209,34 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getFormDesignIdDetail: (id: string, params: RequestParams = {}) =>
             this.request<ResultFormDesignResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/${id}/detail`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name GetFormDesignEmailId
+         * @request GET:/api/docpal/form/design/email/{id}
+         */
+        getFormDesignEmailId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/email/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags FormDesignController
+         * @name GetFormDesignEmailHistoryLogId
+         * @request GET:/api/docpal/form/design/email/history/log/{id}
+         */
+        getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
+            this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/form/design/email/history/log/${id}`,
                 method: "GET",
                 ...params,
             }),
@@ -21652,6 +19488,29 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultCaseTypeResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/types/deploymentId/${deploymentId}`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags CaseInstanceController
+         * @name GetCaseInstanceCasetypeidStarttask
+         * @summary Retrieve start humanTask of production version of case definition
+         * @request GET:/api/docpal/case/instance/{caseTypeId}/startTask
+         */
+        getCaseInstanceCasetypeidStarttask: (
+            caseTypeId: string,
+            query?: {
+                startMatchSign?: string;
+                versionNumber?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListPlanItemDefinitionDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/case/instance/${caseTypeId}/startTask`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -21923,7 +19782,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/case/dashboard/version/{cmmnVersionId}/permission
          */
         getCaseDashboardVersionCmmnversionidPermission: (cmmnVersionId: string, params: RequestParams = {}) =>
-            this.request<ResultListCmmnDashboard, ResultString | (ResultString | Result)>({
+            this.request<ResultListCmmnDashboardDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/version/${cmmnVersionId}/permission`,
                 method: "GET",
                 ...params,
@@ -22167,13 +20026,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags CmmnDashboardController
          * @name GetCaseDashboardCasetypeCasetypeidPrimaryform
-         * @summary Retrieve information of case type
+         * @summary Get information form of case type
          * @request GET:/api/docpal/case/dashboard/caseType/{caseTypeId}/primaryForm
          */
-        getCaseDashboardCasetypeCasetypeidPrimaryform: (caseTypeId: string, params: RequestParams = {}) =>
+        getCaseDashboardCasetypeCasetypeidPrimaryform: (
+            caseTypeId: string,
+            query?: {
+                versionNumber?: string;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultCmmnPlanFormDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/caseType/${caseTypeId}/primaryForm`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -22186,7 +20052,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request GET:/api/docpal/case/dashboard/caseInstance/{caseInstanceId}
          */
         getCaseDashboardCaseinstanceCaseinstanceid: (caseInstanceId: string, params: RequestParams = {}) =>
-            this.request<ResultListCmmnDashboard, ResultString | (ResultString | Result)>({
+            this.request<ResultListCmmnDashboardDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/case/dashboard/caseInstance/${caseInstanceId}`,
                 method: "GET",
                 ...params,
@@ -22347,10 +20213,17 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @name GetCabinetIdPrefix
          * @request GET:/api/docpal/cabinet/{id}/prefix
          */
-        getCabinetIdPrefix: (id: string, params: RequestParams = {}) =>
+        getCabinetIdPrefix: (
+            id: string,
+            query: {
+                id: string;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultFolderCabinetResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/cabinet/${id}/prefix`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -22515,29 +20388,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Auto Generated Value
-         * @name GetAutoCridAcceptedDeprecate
-         * @request GET:/api/docpal/auto/crId/accepted/
-         */
-        getAutoCridAcceptedDeprecate: (
-            query: {
-                customerCode: string;
-                contractNo: string;
-                /** @format int64 */
-                crId: number;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/docpal/auto/crId/accepted/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Auto Generated Value
          * @name GetAutoCridAccepted
          * @request GET:/api/docpal/auto/crId/accepted
          */
@@ -22622,21 +20472,32 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentUnsubscribeDeprecate
-         * @summary Unsubscribe to be notified
-         * @request DELETE:/api/nuxeo/document/unsubscribe/
+         * @tags Identity
+         * @name DeleteNuxeoIdentityUserUserid
+         * @summary Delete User
+         * @request DELETE:/api/nuxeo/identity/user/{userId}
          */
-        deleteNuxeoDocumentUnsubscribeDeprecate: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/unsubscribe/`,
+        deleteNuxeoIdentityUserUserid: (userId: string, data: any, params: RequestParams = {}) =>
+            this.request<ResultUserDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/identity/user/${userId}`,
                 method: "DELETE",
-                query: query,
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Identity
+         * @name DeleteNuxeoIdentityGroupGroupid
+         * @summary Delete group by ID
+         * @request DELETE:/api/nuxeo/identity/group/{groupId}
+         */
+        deleteNuxeoIdentityGroupGroupid: (groupId: string, params: RequestParams = {}) =>
+            this.request<ResultGroupDTO, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/identity/group/${groupId}`,
+                method: "DELETE",
                 ...params,
             }),
 
@@ -22644,20 +20505,14 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentUnsubscribe
-         * @summary Unsubscribe to be notified
-         * @request DELETE:/api/nuxeo/document/unsubscribe
+         * @name DeleteNuxeoDocumentDocumentid
+         * @summary Delete a document using id
+         * @request DELETE:/api/nuxeo/document/{documentId}
          */
-        deleteNuxeoDocumentUnsubscribe: (
-            query: {
-                idOrPath: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/unsubscribe`,
+        deleteNuxeoDocumentDocumentid: (documentId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/document/${documentId}`,
                 method: "DELETE",
-                query: query,
                 ...params,
             }),
 
@@ -22680,152 +20535,14 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentTempfileIdDeprecate
-         * @summary deleteTempFileById
-         * @request DELETE:/api/nuxeo/document/tempFile/{id}/
-         */
-        deleteNuxeoDocumentTempfileIdDeprecate: (id: number, params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/tempFile/${id}/`,
-                method: "DELETE",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentPurgeDeprecate
-         * @summary Purge the trashcan
-         * @request DELETE:/api/nuxeo/document/purge/
-         */
-        deleteNuxeoDocumentPurgeDeprecate: (params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/purge/`,
-                method: "DELETE",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
          * @name DeleteNuxeoDocumentPurge
-         * @summary Purge the trashcan
+         * @summary Purge documents
          * @request DELETE:/api/nuxeo/document/purge
          */
         deleteNuxeoDocumentPurge: (params: RequestParams = {}) =>
             this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/purge`,
                 method: "DELETE",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentFavoritesRemoveDeprecate
-         * @summary Remove document from favorites
-         * @request DELETE:/api/nuxeo/document/favorites/remove/
-         */
-        deleteNuxeoDocumentFavoritesRemoveDeprecate: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorites/remove/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentFavoritesRemove
-         * @summary Remove document from favorites
-         * @request DELETE:/api/nuxeo/document/favorites/remove
-         */
-        deleteNuxeoDocumentFavoritesRemove: (data: DocumentRequestDTO[], params: RequestParams = {}) =>
-            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/favorites/remove`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentDeletefileDeprecate
-         * @request DELETE:/api/nuxeo/document/deleteFile/
-         */
-        deleteNuxeoDocumentDeletefileDeprecate: (
-            query: {
-                id: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/deleteFile/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentDeletefile
-         * @request DELETE:/api/nuxeo/document/deleteFile
-         */
-        deleteNuxeoDocumentDeletefile: (
-            query: {
-                id: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/deleteFile`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentDeletechildren
-         * @summary Delete children of a document
-         * @request DELETE:/api/nuxeo/document/deleteChildren
-         */
-        deleteNuxeoDocumentDeletechildren: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/deleteChildren`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentDeletechildrenDeprecate
-         * @summary Delete children of a document
-         * @request DELETE:/api/nuxeo/document/deleteChildren/
-         */
-        deleteNuxeoDocumentDeletechildrenDeprecate: (data: DocumentRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocumentDTO, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/deleteChildren/`,
-                method: "DELETE",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -22840,48 +20557,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<boolean, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/delete/all`,
                 method: "DELETE",
-                ...params,
-            }),
-
-        /**
-         * @description Remove user permission from document
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentAclRemoveDeprecate
-         * @request DELETE:/api/nuxeo/document/acl/remove/
-         */
-        deleteNuxeoDocumentAclRemoveDeprecate: (
-            query: {
-                idOrPath: string;
-                userId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/remove/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * @description Remove user permission from document
-         *
-         * @tags Document (Nuxeo)
-         * @name DeleteNuxeoDocumentAclRemove
-         * @request DELETE:/api/nuxeo/document/acl/remove
-         */
-        deleteNuxeoDocumentAclRemove: (
-            query: {
-                idOrPath: string;
-                userId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/document/acl/remove`,
-                method: "DELETE",
-                query: query,
                 ...params,
             }),
 
@@ -22956,6 +20631,49 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags Collection (Nuxeo)
+         * @name DeleteNuxeoCollectionDeleteCollectionCollectionid
+         * @request DELETE:/api/nuxeo/collection/delete_collection/{collectionId}
+         */
+        deleteNuxeoCollectionDeleteCollectionCollectionid: (collectionId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/collection/delete_collection/${collectionId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags micro-file-controller
+         * @name DeleteFileUploadFileId
+         * @summary Delete upload file by id
+         * @request DELETE:/api/file/upload/file/{id}
+         */
+        deleteFileUploadFileId: (id: number, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/file/upload/file/${id}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Version Controller
+         * @name DeleteWorkflowVersionDraftidDraftid
+         * @request DELETE:/api/docpal/workflow/version/draftId/{draftId}
+         */
+        deleteWorkflowVersionDraftidDraftid: (draftId: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/version/draftId/${draftId}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags Workflow
          * @name DeleteWorkflowProcessDeleteprocessinstancebycreator
          * @request DELETE:/api/docpal/workflow/process/deleteProcessInstanceByCreator
@@ -22999,14 +20717,25 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Audit Log
-         * @name DeleteLogsRecentDocumentLogs
-         * @request DELETE:/api/docpal/logs/recent/document/logs
+         * @tags Workflow
+         * @name DeleteWorkflowProcessDeprecate
+         * @request DELETE:/api/docpal/workflow/process/
          */
-        deleteLogsRecentDocumentLogs: (params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/logs/recent/document/logs`,
+        deleteWorkflowProcessDeprecate: (
+            query?: {
+                processInstanceId?: string;
+                /** @format date-time */
+                createdDate?: string;
+                /** @format date-time */
+                endedDate?: string;
+                completed?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListInstanceDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/process/`,
                 method: "DELETE",
+                query: query,
                 ...params,
             }),
 
@@ -23043,7 +20772,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name GetNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request GET:/api/nuxeo/identity/isCanModified
@@ -23064,7 +20793,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PutNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request PUT:/api/nuxeo/identity/isCanModified
@@ -23085,7 +20814,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PostNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request POST:/api/nuxeo/identity/isCanModified
@@ -23106,7 +20835,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name DeleteNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request DELETE:/api/nuxeo/identity/isCanModified
@@ -23127,7 +20856,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name OptionsNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request OPTIONS:/api/nuxeo/identity/isCanModified
@@ -23148,7 +20877,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name HeadNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request HEAD:/api/nuxeo/identity/isCanModified
@@ -23169,7 +20898,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Identity (Nuxeo)
+         * @tags Identity
          * @name PatchNuxeoIdentityIscanmodified
          * @summary group is can modified ?
          * @request PATCH:/api/nuxeo/identity/isCanModified
