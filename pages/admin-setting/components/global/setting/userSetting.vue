@@ -68,26 +68,30 @@ async function handleSubmit() {
 
     await adminApi.api.putUserProfileSetting({ properties: newProperties })
   } catch (e) {
-    console.error(e)
+    throw createError(e)
   }
 }
 
 async function init() {
-  let { properties } = await adminApi.api.getUserProfileSetting().then(res => res.data)
-  state.displayFieldList = Object.keys(properties)
-    .map(key => ({
-      key,
-      type: properties[key].type,
-      readyOnly: properties[key].readyOnly,
-      allowUserEdit: properties[key].allowUserEdit,
-      display: properties[key].display,
-      label: properties[key].label,
-      sort: properties[key].sort ?? 0
-    }))
-    .sort((a, b) => a.sort - b.sort)
-    .map(({ sort, ...rest }) => rest)
+  try {
+    let { properties } = await adminApi.api.getUserProfileSetting().then(res => res.data)
+    state.displayFieldList = Object.keys(properties)
+      .map(key => ({
+        key,
+        type: properties[key].type,
+        readyOnly: properties[key].readyOnly,
+        allowUserEdit: properties[key].allowUserEdit,
+        display: properties[key].display,
+        label: properties[key].label,
+        sort: properties[key].sort ?? 0
+      }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ sort, ...rest }) => rest)
 
-  state.systemFieldList = await adminApi.api.getUserSystemFields().then(res => res.data)
+    state.systemFieldList = await adminApi.api.getUserSystemFields().then(res => res.data)
+  } catch (e) {
+    throw createError(e)
+  }
 }
 
 onMounted(() => {
@@ -96,7 +100,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="card">
     <h3>{{ $t('User Profile View') }}</h3>
     <el-divider />
 
@@ -121,7 +125,7 @@ onMounted(() => {
                 <span style="font-weight: bold;">{{ element.label }} </span>
 
                 <div class="icon-actions">
-                  <el-icon disabled="element.allowUserEdit"  @click="openDialog(element)">
+                  <el-icon disabled="element.allowUserEdit" @click="openDialog(element)">
                     <Edit />
                   </el-icon>
                   <el-icon @click="removeItem(element)">
@@ -193,6 +197,15 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.card {
+  height: 100vh;
+  box-sizing: border-box;
+  min-width: 0;
+  padding-top: 16px;
+  padding-left: 16px;
+  position: relative;
+}
+
 .handle {
   float: left;
   padding-top: 8px;
