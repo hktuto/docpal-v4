@@ -2840,6 +2840,26 @@
       "successfully": {
         "msg": "The selected users have been inactivate successfully."
       }
+    },
+    "setting": {
+      "allowUserEdit": "Allow User Edit",
+      "company": "Company",
+      "department": "Department",
+      "displayField": "Display Field",
+      "editField": "Edit Field",
+      "email": "Email",
+      "firstName": "First Name",
+      "groups": "Groups",
+      "lastName": "Last Name",
+      "notificationPreference": "Notification Preference",
+      "phone": "Contact Details",
+      "preference": "Preference",
+      "role": "Role",
+      "status": "Status",
+      "systemField": "System Field",
+      "userProfile": "User Profile",
+      "userProfileView": "User Profile View",
+      "username": "Username"
     }
   },
   "userManage": {
