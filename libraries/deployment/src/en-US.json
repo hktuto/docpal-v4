@@ -2209,8 +2209,10 @@
     }
   },
   "passwordPolicy": {
+    "confirmPassword": "Confirm Password",
     "digit": "Numeric Digits",
     "digitDesc": "Must contain numbers [0-9]",
+    "expirationDayTip": "Password must be change each {day} days.",
     "expireDay": "Expiration Period (Days)",
     "expireEnable": "Enable Expiration Time",
     "expireEnableDesc": "Enter the password expiration time",
@@ -2225,6 +2227,9 @@
     "lockPolicy": "Enter the wrong password {count} times in {minute} minutes and the password will be locked for {lock} minutes",
     "lowerUpper": "Lower and Uppercase",
     "lowerUpperDesc": "Must contain upper and lower case letters [a-z][A-Z]",
+    "newPassword": "New Password",
+    "oldPassword": "Old Password",
+    "oldPasswordTip": "Old password is required",
     "retryPeriod": "Retry Period (Minutes)",
     "reuseCount": "Reuse Lock Count",
     "reuseEnable": "Enable Password Reuse Restriction",
@@ -2232,7 +2237,8 @@
     "saveError": "Failed to save password policy",
     "saveSuccess": "Password policy saved successfully",
     "special": "Special Characters",
-    "specialDesc": "Must contain special characters [@, #, $, %, ...]"
+    "specialDesc": "Must contain special characters [@, #, $, %, ...]",
+    "updatePassword": "Update Password"
   },
   "pending_approval": "Pending Approval",
   "pending_completed": "Completed",
@@ -2754,6 +2760,7 @@
     "reUpload": "Whether to initiate a file upload again?",
     "rename": "Rename",
     "replace": "Replace File",
+    "samePassword": "New password cannot be the same as old password",
     "selectHere": "Select here",
     "share": "External share",
     "subscribe": "Subscribe",

@@ -37,16 +37,17 @@ function emitChange(val) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: var(--app-space-s);
 }
 .switch-label {
   flex: 1;
 }
 .label {
   font-weight: bold;
+  font-size: 1.2rem;
 }
 .description {
-  font-size: 12px;
+  font-size: 1rem;
   color: #888;
 }
 </style>
