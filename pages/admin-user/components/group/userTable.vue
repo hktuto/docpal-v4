@@ -97,7 +97,7 @@ function handleGroupAddMemberFormShow() {
 async function getMemberGroupList() {
   setTimeout(async () => {
     const res = await groupProviderDetail?.GetMemberListApi({
-      groupName: props.group.id
+      groupName: props.group.name
     })
     state.userList = res.data
     state.selectedRows = []
