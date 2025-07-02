@@ -108,7 +108,7 @@ onMounted(async () => {
   if (passwordPolicy.value.containSpecialCharacters) {
     rules.newPassword.push({
       validator: (rule, value) => {
-        return /[^a-zA-Z0-9\\u4e00-\\u9fa5_ ]/.test(value)
+        return /^(?=.*[^\w\s]).+$/.test(value)
       },
       message: 'Password must contain at least one special character',
       trigger: 'blur'
