@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
-import ChangePassword from '~/components/global/setting/changePassword.vue'
+import ChangePassword from '~/components/setting/changePassword.vue'
+import userSignature from '~/components/setting/userSignature.vue'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -98,6 +99,11 @@ function handleChangePasswordOpen() {
   ChangePasswordRef.value.handleOpen()
 }
 
+const userSignatureRef = ref()
+function handleChangeMangeSignatureOpen() {
+  userSignatureRef.value.handleOpen()
+}
+
 async function save() {
   try {
     let newUserInfo = {
@@ -148,9 +154,16 @@ onMounted(() => {
         </div>
 
         <el-divider />
-        <h3>Password</h3>
-        <el-button style="width: 150px" type="primary" @click="handleChangePasswordOpen">{{ t('Change Password') }}
+        <h3>{{ t('login_password') }}</h3>
+        <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangePasswordOpen">
+          {{ t('Change Password') }}
         </el-button>
+
+<!--        <el-divider />-->
+<!--        <h3>{{ t('User Signature') }}</h3>-->
+<!--        <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">-->
+<!--          {{ t('Mange Signature') }}-->
+<!--        </el-button>-->
       </el-col>
 
       <div class="vertical-divider"></div>
@@ -186,6 +199,8 @@ onMounted(() => {
 
   <ChangePassword ref="ChangePasswordRef" />
 
+  <userSignature ref="userSignatureRef" />
+
 </template>
 
 <style scoped lang="scss">
@@ -215,14 +230,22 @@ onMounted(() => {
   max-height: 580px;
   overflow-y: auto;
   padding-right: 4px;
+
+  .el-checkbox.el-checkbox--large {
+    height: 16px;
+  }
 }
 
 .form-scroll-wrapper {
-  flex: 1 1 0;
+  flex: 1 1 0 !important;
   min-height: 0;
   min-width: 0;
   overflow-y: auto;
   padding-right: 4px;
+
+  .el-form-item {
+    margin-bottom: 6px;
+  }
 }
 
 .fixed-save-btn {
