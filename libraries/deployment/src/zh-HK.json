@@ -2206,8 +2206,10 @@
     }
   },
   "passwordPolicy": {
+    "confirmPassword": "確認密碼",
     "digit": "數字",
     "digitDesc": "必須包含數字 [0-9]",
+    "expirationDayTip": "密碼必須每{day}天更改一次。",
     "expireDay": "過期時間（天）",
     "expireEnable": "启用密码过期时间",
     "expireEnableDesc": "輸入密碼過期時間",
@@ -2221,6 +2223,8 @@
     "lockPolicy": "在 {minute} 分鐘內輸入錯誤密碼 {count} 次，密碼將被鎖定 {lock} 分鐘",
     "lowerUpper": "大小寫字母",
     "lowerUpperDesc": "必須包含大小寫字母 [a-z][A-Z]",
+    "newPassword": "新密碼",
+    "oldPassword": "舊密碼",
     "retryPeriod": "重試週期（分鐘）",
     "reuseCount": "重複使用鎖定次數",
     "reuseEnable": "啟用密碼重複使用限制",
@@ -2228,7 +2232,8 @@
     "saveError": "保存密碼原則失敗",
     "saveSuccess": "密碼策略保存成功",
     "special": "特殊字符",
-    "specialDesc": "必須包含特殊字符 [ @、#、$、%, ... ]"
+    "specialDesc": "必須包含特殊字符 [ @、#、$、%, ... ]",
+    "updatePassword": "更新密碼"
   },
   "pending_approval": "待批准",
   "pending_completed": "已完成",
@@ -2750,6 +2755,7 @@
     "reUpload": "是否再次發起文件上傳?",
     "rename": "重新命名",
     "replace": "替換文件",
+    "samePassword": "新密碼不能與舊密碼相同",
     "selectHere": "在此選擇",
     "share": "外部分享",
     "subscribe": "訂閱",
