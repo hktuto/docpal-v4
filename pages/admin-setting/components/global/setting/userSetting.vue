@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
-import { More, Edit, Delete, DeleteFilled } from '@element-plus/icons-vue'
+import { Edit, Delete, DeleteFilled } from '@element-plus/icons-vue'
 import { adminApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const FormRef = ref()
 const rules = reactive({
@@ -66,7 +67,13 @@ async function handleSubmit() {
       return acc
     }, {})
 
-    await adminApi.api.putUserProfileSetting({ properties: newProperties })
+    await adminApi.api.putUserProfileSetting({ properties: newProperties }).then((res: any) => {
+      if (res.code === 200) {
+        routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: null }))
+      }
+    })
+
+
   } catch (e) {
     throw createError(e)
   }
@@ -105,7 +112,7 @@ onMounted(() => {
     <el-divider />
 
     <el-row :gutter="30">
-      <el-col :span="12">
+      <el-col :span="6">
         <h3>{{ $t('Display Field') }}</h3>
         <el-divider />
 
@@ -118,16 +125,19 @@ onMounted(() => {
           <template #item="{ element }">
             <div class="list-group-item">
               <div class="field-row">
-                <el-icon class="fa fa-align-justify handle">
-                  <More />
-                </el-icon>
+                <svg class="fa fa-align-justify" xmlns="http://www.w3.org/2000/svg" width="16" height="15"
+                     viewBox="0 0 24 24">
+                  <path fill="currentColor"
+                        d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m0-3c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2m0 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2" />
+                </svg>
 
                 <span style="font-weight: bold;">{{ element.label }} </span>
 
                 <div class="icon-actions">
-                  <el-icon disabled="element.allowUserEdit" @click="openDialog(element)">
-                    <Edit />
-                  </el-icon>
+                  <svg disabled="element.allowUserEdit" @click="openDialog(element)" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 256 256">
+                    <path fill="currentColor"
+                          d="m232.49 55.51l-32-32a12 12 0 0 0-17 0l-96 96A12 12 0 0 0 84 128v32a12 12 0 0 0 12 12h32a12 12 0 0 0 8.49-3.51l96-96a12 12 0 0 0 0-16.98M192 49l15 15l-11 11l-15-15Zm-69 99h-15v-15l56-56l15 15Zm105-7.43V208a20 20 0 0 1-20 20H48a20 20 0 0 1-20-20V48a20 20 0 0 1 20-20h67.43a12 12 0 0 1 0 24H52v152h152v-63.43a12 12 0 0 1 24 0" />
+                  </svg>
                   <el-icon @click="removeItem(element)">
                     <DeleteFilled />
                   </el-icon>
@@ -138,7 +148,7 @@ onMounted(() => {
         </draggable>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="6">
         <h3>{{ $t('System Field') }}</h3>
         <el-divider />
 
@@ -157,7 +167,7 @@ onMounted(() => {
 
                 <div class="icon-actions">
                   <span style="font-size: 12px">{{ $t('System Field') }}</span>
-                  <el-icon disabled="element.allowUserEdit" @click="openDialog(element)">
+                  <el-icon disabled="element.allowUserEdit">
                     <Edit />
                   </el-icon>
                   <el-icon>
@@ -171,7 +181,9 @@ onMounted(() => {
       </el-col>
     </el-row>
 
-    <el-button id="UserProfileView__Save" type="primary" @click="handleSubmit">{{ $t('common_save') }}</el-button>
+    <el-button class="fixed-save-btn" id="UserProfileView__Save" type="primary" @click="handleSubmit">
+      {{ $t('common_save') }}
+    </el-button>
   </div>
 
   <el-dialog v-model="state.visible" :title="t('Edit Field')" width="600px">
@@ -225,5 +237,10 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.fixed-save-btn {
+  position: fixed;
+  bottom: 16px;
 }
 </style>
