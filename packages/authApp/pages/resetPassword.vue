@@ -13,13 +13,33 @@
           }}
         </div>
         <el-form-item :label="$t('passwordPolicy.oldPassword')" prop="oldPassword">
-          <el-input v-model="form.oldPassword" type="password" autocomplete="off" show-password placeholder="Enter old password" />
+          <el-input
+            v-model="form.oldPassword"
+            type="password"
+            autocomplete="off"
+            show-password
+            :placeholder="t('render.hint.fieldRequired', { name: t('passwordPolicy.oldPassword') })"
+          />
         </el-form-item>
         <el-form-item :label="$t('passwordPolicy.newPassword')" prop="newPassword">
-          <el-input v-model="form.newPassword" type="password" autocomplete="off" show-password placeholder="Enter new password" />
+          <el-input
+            v-model="form.newPassword"
+            type="password"
+            :maxlength="128"
+            autocomplete="off"
+            show-password
+            :placeholder="t('render.hint.fieldRequired', { name: t('passwordPolicy.newPassword') })"
+          />
         </el-form-item>
         <el-form-item :label="$t('passwordPolicy.confirmPassword')" prop="confirmPassword">
-          <el-input v-model="form.confirmPassword" type="password" autocomplete="off" show-password placeholder="Confirm new password" @paste.prevent />
+          <el-input
+            v-model="form.confirmPassword"
+            type="password"
+            autocomplete="off"
+            show-password
+            :placeholder="t('render.hint.fieldRequired', { name: t('passwordPolicy.confirmPassword') })"
+            @paste.prevent
+          />
         </el-form-item>
         <el-button style="width: 100%" type="primary" @click="onSubmit">{{ $t('confirm') }}</el-button>
       </el-form>
@@ -82,6 +102,7 @@ async function onSubmit() {
 onMounted(async () => {
   const res = await safeClientAPI.getPasswordConfig().then((res) => res.data)
   passwordPolicy.value = {
+    minPasswordLength: 8,
     containLowerAndUppercase: true,
     containNumericDigits: true,
     containSpecialCharacters: true,
