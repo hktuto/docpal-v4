@@ -49,7 +49,7 @@ export const actions: BrowseActionItem[] = [
     name: 'Subscribe',
     showInFolder: true,
     showInDetail: true,
-    permission: 'readwrite',
+    permission: 'normal',
     component: BrowseActionsSubscribe,
     groupBy: 'holdStatus'
   },
@@ -82,7 +82,7 @@ export const actions: BrowseActionItem[] = [
     name: 'copyPath',
     showInFolder: true,
     showInDetail: true,
-    permission: 'Read',
+    permission: 'normal',
     component: BrowseActionsCopyPath,
     groupBy: 'normal'
   },
