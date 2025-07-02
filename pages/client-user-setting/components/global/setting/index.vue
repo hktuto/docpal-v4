@@ -228,8 +228,6 @@ onMounted(() => {
 .fixed-save-btn {
   position: fixed;
   bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .vertical-divider {
