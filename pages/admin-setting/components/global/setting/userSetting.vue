@@ -125,12 +125,7 @@ onMounted(() => {
           <template #item="{ element }">
             <div class="list-group-item">
               <div class="field-row">
-                <svg class="fa fa-align-justify" xmlns="http://www.w3.org/2000/svg" width="16" height="15"
-                     viewBox="0 0 24 24">
-                  <path fill="currentColor"
-                        d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m0-3c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2m0 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2" />
-                </svg>
-
+                <SvgIcon class="fa fa-align-justify" style="width: 12px" src="/icons/drag.svg" />
                 <span style="font-weight: bold;">{{ element.label }} </span>
 
                 <div class="icon-actions">
@@ -162,17 +157,17 @@ onMounted(() => {
         >
           <template #item="{ element }">
             <div class="list-group-item">
-              <div class="field-row">
+              <div class="field-row2">
                 <span class="list-group-item" style="font-weight: bold;">{{ element.label }} </span>
 
                 <div class="icon-actions">
                   <span style="font-size: 12px">{{ $t('System Field') }}</span>
-                  <el-icon disabled="element.allowUserEdit">
-                    <Edit />
-                  </el-icon>
-                  <el-icon>
-                    <Delete />
-                  </el-icon>
+<!--                  <el-icon disabled="element.allowUserEdit">-->
+<!--                    <Edit />-->
+<!--                  </el-icon>-->
+<!--                  <el-icon>-->
+<!--                    <Delete />-->
+<!--                  </el-icon>-->
                 </div>
               </div>
             </div>
@@ -229,7 +224,14 @@ onMounted(() => {
   display: flex;
   align-items: center;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
+}
+
+.field-row2 {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 12px;
 }
 
 .icon-actions {
