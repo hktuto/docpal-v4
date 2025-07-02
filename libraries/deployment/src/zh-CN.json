@@ -2234,7 +2234,7 @@
     "saveError": "保存密码策略失败",
     "saveSuccess": "密码策略保存成功",
     "special": "特殊字符",
-    "specialDesc": "必须包含特殊字符 [@, #, $, %, ...]",
+    "specialDesc": "必须包含特殊字符{char}",
     "updatePassword": "更新密码"
   },
   "pending_approval": "待批准",

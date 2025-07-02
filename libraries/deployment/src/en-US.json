@@ -2237,7 +2237,7 @@
     "saveError": "Failed to save password policy",
     "saveSuccess": "Password policy saved successfully",
     "special": "Special Characters",
-    "specialDesc": "Must contain special characters [@, #, $, %, ...]",
+    "specialDesc": "Must contain special characters {char}",
     "updatePassword": "Update Password"
   },
   "pending_approval": "Pending Approval",
