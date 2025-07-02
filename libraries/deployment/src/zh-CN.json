@@ -2837,6 +2837,26 @@
       "successfully": {
         "msg": "The selected users have been inactivate successfully."
       }
+    },
+    "setting": {
+      "allowUserEdit": "允许用户编辑",
+      "company": "公司",
+      "department": "部门",
+      "displayField": "显示字段",
+      "editField": "编辑字段",
+      "email": "电子邮箱",
+      "firstName": "名",
+      "groups": "组",
+      "lastName": "姓",
+      "notificationPreference": "通知偏好",
+      "phone": "联系方式",
+      "preference": "偏好",
+      "role": "角色",
+      "status": "状态",
+      "systemField": "系统字段",
+      "userProfile": "用戶資料",
+      "userProfileView": "用户资料视图",
+      "username": "用户名"
     }
   },
   "userManage": {

@@ -108,12 +108,12 @@ onMounted(() => {
 
 <template>
   <div class="card">
-    <h3>{{ $t('User Profile View') }}</h3>
+    <h3>{{ $t('user.setting.userProfileView') }}</h3>
     <el-divider />
 
     <el-row :gutter="30">
       <el-col :span="6">
-        <h3>{{ $t('Display Field') }}</h3>
+        <h3>{{ $t('user.setting.displayField') }}</h3>
         <el-divider />
 
         <draggable
@@ -126,10 +126,11 @@ onMounted(() => {
             <div class="list-group-item">
               <div class="field-row">
                 <SvgIcon class="fa fa-align-justify" style="width: 12px" src="/icons/drag.svg" />
-                <span style="font-weight: bold;">{{ element.label }} </span>
+                <span style="font-weight: bold;">{{ $t(`user.setting.${element.key}`) }}</span>
 
                 <div class="icon-actions">
-                  <svg disabled="element.allowUserEdit" @click="openDialog(element)" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 256 256">
+                  <svg disabled="element.allowUserEdit" @click="openDialog(element)" xmlns="http://www.w3.org/2000/svg"
+                       width="15" height="15" viewBox="0 0 256 256">
                     <path fill="currentColor"
                           d="m232.49 55.51l-32-32a12 12 0 0 0-17 0l-96 96A12 12 0 0 0 84 128v32a12 12 0 0 0 12 12h32a12 12 0 0 0 8.49-3.51l96-96a12 12 0 0 0 0-16.98M192 49l15 15l-11 11l-15-15Zm-69 99h-15v-15l56-56l15 15Zm105-7.43V208a20 20 0 0 1-20 20H48a20 20 0 0 1-20-20V48a20 20 0 0 1 20-20h67.43a12 12 0 0 1 0 24H52v152h152v-63.43a12 12 0 0 1 24 0" />
                   </svg>
@@ -144,7 +145,7 @@ onMounted(() => {
       </el-col>
 
       <el-col :span="6">
-        <h3>{{ $t('System Field') }}</h3>
+        <h3>{{ $t('user.setting.systemField') }}</h3>
         <el-divider />
 
         <draggable
@@ -158,16 +159,16 @@ onMounted(() => {
           <template #item="{ element }">
             <div class="list-group-item">
               <div class="field-row2">
-                <span class="list-group-item" style="font-weight: bold;">{{ element.label }} </span>
+                <span class="list-group-item" style="font-weight: bold;">{{ $t(`user.setting.${element.key}`) }}</span>
 
                 <div class="icon-actions">
-                  <span style="font-size: 12px">{{ $t('System Field') }}</span>
-<!--                  <el-icon disabled="element.allowUserEdit">-->
-<!--                    <Edit />-->
-<!--                  </el-icon>-->
-<!--                  <el-icon>-->
-<!--                    <Delete />-->
-<!--                  </el-icon>-->
+                  <span style="font-size: 12px">{{ $t('user.setting.systemField') }}</span>
+                  <!--                  <el-icon disabled="element.allowUserEdit">-->
+                  <!--                    <Edit />-->
+                  <!--                  </el-icon>-->
+                  <!--                  <el-icon>-->
+                  <!--                    <Delete />-->
+                  <!--                  </el-icon>-->
                 </div>
               </div>
             </div>
@@ -181,13 +182,13 @@ onMounted(() => {
     </el-button>
   </div>
 
-  <el-dialog v-model="state.visible" :title="t('Edit Field')" width="600px">
+  <el-dialog v-model="state.visible" :title="t('user.setting.editField')" width="600px">
     <el-form ref="FormRef" :model="editForm" :rules="rules" label-position="top">
-      <el-form-item :label="t('label')" prop="label">
+      <el-form-item :label="t('table_label')" prop="label">
         <el-input v-model="editForm.label" />
       </el-form-item>
       <el-divider />
-      <el-form-item :label="t('Allow User Edit')">
+      <el-form-item :label="t('user.setting.allowUserEdit')">
         <el-switch v-model="editForm.allowUserEdit" />
       </el-form-item>
     </el-form>

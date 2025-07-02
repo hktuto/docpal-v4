@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
-import ChangePassword from '~/components/setting/changePassword.vue'
 import userSignature from '~/components/setting/userSignature.vue'
 
+const router = useRouter()
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const userPreference = useUserPreference()
 const userId = useUserId()
-const ChangePasswordRef = ref()
 
 const state = reactive({
   form: {},
@@ -95,11 +94,12 @@ function updateStyle() {
   }
 }
 
-function handleChangePasswordOpen() {
-  ChangePasswordRef.value.handleOpen()
+function handleChangePassword() {
+  router.push('/resetPassword')
 }
 
 const userSignatureRef = ref()
+
 function handleChangeMangeSignatureOpen() {
   userSignatureRef.value.handleOpen()
 }
@@ -136,68 +136,69 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="card">
-    <el-row :gutter="30" class="setting-row">
-      <el-col :span="11">
-        <h3>User Profile</h3>
-        <div class="form-scroll-wrapper">
-          <el-form :model="state.form" label-position="top">
-            <el-form-item v-for="item in state.list" :label="t(`${item.label}`)" :key="item.key">
-              <el-input v-if="item.type === 'string'" v-model="state.form[item.key]" :disabled="!item.allowUserEdit" />
-              <el-input-tag
-                v-if="item.type === 'array'"
-                v-model="state.form[item.key]"
-                :disabled="!item.allowUserEdit"
-              />
-            </el-form-item>
-          </el-form>
-        </div>
-
-        <el-divider />
-        <h3>{{ t('login_password') }}</h3>
-        <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangePasswordOpen">
-          {{ t('Change Password') }}
-        </el-button>
-
-<!--        <el-divider />-->
-<!--        <h3>{{ t('User Signature') }}</h3>-->
-<!--        <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">-->
-<!--          {{ t('Mange Signature') }}-->
-<!--        </el-button>-->
-      </el-col>
-
-      <div class="vertical-divider"></div>
-
-      <el-col :span="12">
-        <h3>Preference</h3>
-
-        <div class="colorSetting">
-          <div class="label">Color Mode</div>
-          <ElSwitch v-model="colorMode" active-text="Light" inactive-text="Dark" />
-        </div>
-        <div>
-          <div class="label">Font Size</div>
-          <el-slider v-model="fontSize" style="width: 50%" :min="10" :max="24" />
-        </div>
-
-        <el-divider />
-
-        <h3>Notification Preference</h3>
-        <div class="notification-scroll-wrapper">
-          <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
-            <h4>{{ item.name }}</h4>
-            <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value" :key="ite.key" />
+  <div>
+    <div class="card">
+      <el-row :gutter="30" class="setting-row">
+        <el-col :span="11">
+          <h3>{{ $t('user.setting.userProfile') }}</h3>
+          <div class="form-scroll-wrapper">
+            <el-form :model="state.form" label-position="top">
+              <el-form-item v-for="item in state.list" :label="t(`user.setting.${item.key}`)" :key="item.key">
+                <el-input v-if="item.type === 'string'" v-model="state.form[item.key]"
+                          :disabled="!item.allowUserEdit" />
+                <el-input-tag
+                  v-if="item.type === 'array'"
+                  v-model="state.form[item.key]"
+                  :disabled="!item.allowUserEdit"
+                />
+              </el-form-item>
+            </el-form>
           </div>
-        </div>
-      </el-col>
-    </el-row>
 
+          <el-divider />
+          <h3>{{ t('login_password') }}</h3>
+          <el-button style="width: 20%; margin-bottom: 10px" type="primary" @click="handleChangePassword">
+            {{ t('user_editPassword') }}
+          </el-button>
+          <el-divider />
+
+          <!--        <el-divider />-->
+          <!--        <h3>{{ t('User Signature') }}</h3>-->
+          <!--        <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">-->
+          <!--          {{ t('Mange Signature') }}-->
+          <!--        </el-button>-->
+        </el-col>
+
+        <div class="vertical-divider"></div>
+
+        <el-col :span="12">
+          <h3>{{ $t('user.setting.preference') }}}</h3>
+
+          <div class="colorSetting">
+            <div class="label">{{ $t('userSetting_colorMode') }}</div>
+            <ElSwitch v-model="colorMode" active-text="Light" inactive-text="Dark" />
+          </div>
+          <div>
+            <div class="label">{{ $t('dpTool_fontSize') }}</div>
+            <el-slider v-model="fontSize" style="width: 50%" :min="10" :max="24" />
+          </div>
+
+          <el-divider />
+
+          <h3 style="margin-bottom: 0">{{ t('user.setting.notificationPreference') }}</h3>
+          <div class="notification-scroll-wrapper">
+            <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
+              <h4>{{ item.name }}</h4>
+              <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value"
+                           :key="ite.key" />
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
     <el-divider />
-
     <el-button class="fixed-save-btn" type="primary" @click="save">{{ $t('common_save') }}</el-button>
   </div>
-
-  <ChangePassword ref="ChangePasswordRef" />
 
   <userSignature ref="userSignatureRef" />
 
@@ -205,29 +206,38 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .card {
-  height: 100vh;
+  height: 90vh;
   box-sizing: border-box;
   min-width: 0;
-  padding-top: 16px;
-  padding-left: 16px;
   position: relative;
+
+  .el-row {
+    height: 100%;
+    margin: 0;
+  }
 }
 
 .setting-row {
+  box-sizing: border-box;
+  padding-top: 16px;
+  padding-left: 16px;
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
-  height: calc(90vh - 40px);
 }
 
-.el-col {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+.form-scroll-wrapper {
+  max-height: 50vh;
+  overflow-y: auto;
+  padding-right: 6px;
+
+  .el-form-item {
+    margin-bottom: 6px;
+  }
 }
 
 .notification-scroll-wrapper {
-  max-height: 580px;
+  max-height: 80vh;
   overflow-y: auto;
   padding-right: 4px;
 
@@ -236,21 +246,10 @@ onMounted(() => {
   }
 }
 
-.form-scroll-wrapper {
-  flex: 1 1 0 !important;
-  min-height: 0;
-  min-width: 0;
-  overflow-y: auto;
-  padding-right: 4px;
-
-  .el-form-item {
-    margin-bottom: 6px;
-  }
-}
-
 .fixed-save-btn {
   position: fixed;
   bottom: 16px;
+  margin-left: 16px;
 }
 
 .vertical-divider {
