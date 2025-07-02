@@ -56,6 +56,7 @@ type rbacPermission =
   | 'deleteSubContent'
   | 'assignPermission'
   | 'addUserSet'
+  | 'normal'
 const permissionOptions = [
   { label: 'rbac.permission.viewFolder', value: 1, group: 'read', name: 'viewFolder' },
   { label: 'rbac.permission.viewMetadata', value: 2, group: 'read', name: 'viewMetadata' },
@@ -82,6 +83,7 @@ export const RbacAllowTo = (
 ): boolean => {
   if (!permissionIds) return false
   const permissions = Array.isArray(rbacPermission) ? rbacPermission : [rbacPermission]
+  if (permissions.includes('normal')) return true
   return permissionIds.some(id => {
     const option = permissionOptions.find(opt => {
       const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
