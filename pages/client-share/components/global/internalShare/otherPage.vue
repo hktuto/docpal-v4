@@ -125,91 +125,91 @@ const {
           handleDblclick(row)
         }
       },
-      {
-        code: 'docActionAddFolder',
-        name: 'filePopover_newFolder',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionAddFolder', {
-            detail: initToDocument(row)
-          })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionNewFile',
-        name: 'filePopover_newFile',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionNewFile', { detail: initToDocument(row) })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionUploadFile',
-        name: 'filePopover_uploadFile',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionUploadFile', {
-            detail: initToDocument(row)
-          })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionUploadFolder',
-        name: 'filePopover_uploadFolder',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionUploadFolder', {
-            detail: initToDocument(row)
-          })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionRename',
-        name: 'filePopover_rename',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionRename', { detail: initToDocument(row) })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionChangeDocType',
-        name: 'filePopover_changeDocType',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionChangeDocType', {
-            detail: initToDocument(row)
-          })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docWatermark',
-        name: 'filePopover_watermark',
-        action: async ({ row }: any) => {
-          const detail = await clientApi.api
-            .postNuxeoDocument({ idOrPath: row.documentIds })
-            .then((res) => res.data)
-          const ev = new CustomEvent('docWatermark', { detail: detail })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionInternalShare',
-        name: 'filePopover_internalShare',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionInternalShare', {
-            detail: initToDocument(row)
-          })
-          document.dispatchEvent(ev)
-        }
-      },
-      {
-        code: 'docActionDelete',
-        name: 'filePopover_delete',
-        action: ({ row }: any) => {
-          const ev = new CustomEvent('docActionDelete', { detail: initToDocument(row) })
-          document.dispatchEvent(ev)
-        }
-      },
+      // {
+      //   code: 'docActionAddFolder',
+      //   name: 'filePopover_newFolder',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionAddFolder', {
+      //       detail: initToDocument(row)
+      //     })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionNewFile',
+      //   name: 'filePopover_newFile',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionNewFile', { detail: initToDocument(row) })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionUploadFile',
+      //   name: 'filePopover_uploadFile',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionUploadFile', {
+      //       detail: initToDocument(row)
+      //     })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionUploadFolder',
+      //   name: 'filePopover_uploadFolder',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionUploadFolder', {
+      //       detail: initToDocument(row)
+      //     })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionRename',
+      //   name: 'filePopover_rename',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionRename', { detail: initToDocument(row) })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionChangeDocType',
+      //   name: 'filePopover_changeDocType',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionChangeDocType', {
+      //       detail: initToDocument(row)
+      //     })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docWatermark',
+      //   name: 'filePopover_watermark',
+      //   action: async ({ row }: any) => {
+      //     const detail = await clientApi.api
+      //       .postNuxeoDocument({ idOrPath: row.documentIds })
+      //       .then((res) => res.data)
+      //     const ev = new CustomEvent('docWatermark', { detail: detail })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionInternalShare',
+      //   name: 'filePopover_internalShare',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionInternalShare', {
+      //       detail: initToDocument(row)
+      //     })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
+      // {
+      //   code: 'docActionDelete',
+      //   name: 'filePopover_delete',
+      //   action: ({ row }: any) => {
+      //     const ev = new CustomEvent('docActionDelete', { detail: initToDocument(row) })
+      //     document.dispatchEvent(ev)
+      //   }
+      // },
       {
         code: 'docActionRefresh',
         name: 'common_refresh',
