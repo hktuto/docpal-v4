@@ -2208,6 +2208,9 @@
   },
   "passwordPolicy": {
     "confirmPassword": "確認密碼",
+    "containLowerAndUppercase": "至少包含一個小寫字母和一個大寫字母",
+    "containNumericDigits": "至少包含一個數字",
+    "containSpecialCharacters": "至少包含一個特殊字符",
     "digit": "數字",
     "digitDesc": "必須包含數字 [0-9]",
     "expirationDayTip": "密碼必須每{day}天更改一次。",

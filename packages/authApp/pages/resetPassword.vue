@@ -58,27 +58,24 @@ const form = reactive({
   newPassword: '',
   confirmPassword: ''
 })
-const passwordPolicy = ref({})
-const rules = {
-  oldPassword: [{ required: true, message: t('render.hint.fieldRequired', { name: t('passwordPolicy.oldPassword') }), trigger: 'blur' }],
-  newPassword: [
-    { required: true, message: t('render.hint.fieldRequired', { name: t('passwordPolicy.newPassword') }), trigger: 'blur' }
-    // {
-    //   validator: (rule, value) => value === form.oldPassword,
-    //   message: t('tip.samePassword'),
-    //   trigger: 'blur'
-    // }
-  ],
-  confirmPassword: [
-    { required: true, message: t('render.hint.fieldRequired', { name: t('passwordPolicy.confirmPassword') }), trigger: 'blur' },
-    {
-      validator: (rule, value) => value === form.newPassword,
-      message: t('tip.inputUserPasswordMatch'),
-      trigger: 'blur'
-    }
-  ]
-}
 
+const passwordPolicy = ref<any>({})
+const rules = ref<any>({})
+async function getPasswordPolicy() {
+  let config: any = {}
+  try {
+    config = await safeClientAPI.getPasswordConfig().then((res) => res.data)
+  } catch (e) {
+    console.error(e)
+  }
+  passwordPolicy.value = {
+    minPasswordLength: 8,
+    containLowerAndUppercase: true,
+    containNumericDigits: true,
+    containSpecialCharacters: true,
+    ...config
+  }
+}
 async function onSubmit() {
   try {
     await formRef.value.validate()
@@ -100,41 +97,56 @@ async function onSubmit() {
   }
 }
 onMounted(async () => {
-  const res = await safeClientAPI.getPasswordConfig().then((res) => res.data)
-  passwordPolicy.value = {
-    minPasswordLength: 8,
-    containLowerAndUppercase: true,
-    containNumericDigits: true,
-    containSpecialCharacters: true,
-    ...res
+  await isLocaleFinished()
+  await getPasswordPolicy()
+  // Need to wait for translation 
+  rules.value = {
+    oldPassword: [{ required: true, message: t('render.hint.fieldRequired', { name: t('passwordPolicy.oldPassword') }), trigger: 'blur' }],
+    newPassword: [
+      { required: true, message: t('render.hint.fieldRequired', { name: t('passwordPolicy.newPassword') }), trigger: 'blur' }
+      // {
+      //   validator: (rule, value) => value === form.oldPassword,
+      //   message: t('tip.samePassword'),
+      //   trigger: 'blur'
+      // }
+    ],
+    confirmPassword: [
+      { required: true, message: t('render.hint.fieldRequired', { name: t('passwordPolicy.confirmPassword') }), trigger: 'blur' },
+      {
+        validator: (rule: any, value: string) => value === form.newPassword,
+        message: t('tip.inputUserPasswordMatch'),
+        trigger: 'blur'
+      }
+    ]
   }
   if (passwordPolicy.value.containLowerAndUppercase) {
-    rules.newPassword.push({
-      validator: (rule, value) => {
+    rules.value.newPassword.push({
+      validator: (rule: any, value: string) => {
         return /^(?=.*[a-z])(?=.*[A-Z]).*$/.test(value)
       },
-      message: 'Password must contain at least one lowercase and one uppercase letter',
+      message: t('passwordPolicy.containLowerAndUppercase'),
       trigger: 'blur'
     })
   }
   if (passwordPolicy.value.containNumericDigits) {
-    rules.newPassword.push({
-      validator: (rule, value) => {
+    rules.value.newPassword.push({
+      validator: (rule: any, value: string) => {
         return /.*[0-9].*/.test(value)
       },
-      message: 'Password must contain at least one numeric digit',
+      message: t('passwordPolicy.containNumericDigits'),
       trigger: 'blur'
     })
   }
   if (passwordPolicy.value.containSpecialCharacters) {
-    rules.newPassword.push({
-      validator: (rule, value) => {
+    rules.value.newPassword.push({
+      validator: (rule: any, value: string) => {
         return /^(?=.*[^\w\s]).+$/.test(value)
       },
-      message: 'Password must contain at least one special character',
+      message: t('passwordPolicy.containSpecialCharacters'),
       trigger: 'blur'
     })
   }
+  formRef.value.resetFields()
 })
 </script>
 
