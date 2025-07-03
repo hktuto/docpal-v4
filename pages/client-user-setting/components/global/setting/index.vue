@@ -160,44 +160,50 @@ onMounted(() => {
           <el-button style="width: 20%; margin-bottom: 10px" type="primary" @click="handleChangePassword">
             {{ t('user_editPassword') }}
           </el-button>
-          <el-divider />
 
-          <!--        <el-divider />-->
-          <!--        <h3>{{ t('User Signature') }}</h3>-->
-          <!--        <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">-->
-          <!--          {{ t('Mange Signature') }}-->
-          <!--        </el-button>-->
+          <el-divider />
+          <h3>{{ t('User Signature') }}</h3>
+          <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">
+            {{ t('Mange Signature') }}
+          </el-button>
+
+          <el-divider />
         </el-col>
 
         <div class="vertical-divider"></div>
 
         <el-col :span="12">
-          <h3>{{ $t('user.setting.preference') }}}</h3>
-
-          <div class="colorSetting">
-            <div class="label">{{ $t('userSetting_colorMode') }}</div>
-            <ElSwitch v-model="colorMode" active-text="Light" inactive-text="Dark" />
-          </div>
           <div>
-            <div class="label">{{ $t('dpTool_fontSize') }}</div>
-            <el-slider v-model="fontSize" style="width: 50%" :min="10" :max="24" />
+            <h3>{{ $t('user.setting.preference') }}}</h3>
+
+            <div class="colorSetting">
+              <div class="label">{{ $t('userSetting_colorMode') }}</div>
+              <ElSwitch v-model="colorMode" active-text="Light" inactive-text="Dark" />
+            </div>
+            <div>
+              <div class="label">{{ $t('dpTool_fontSize') }}</div>
+              <el-slider v-model="fontSize" style="width: 50%" :min="10" :max="24" />
+            </div>
           </div>
 
           <el-divider />
 
-          <h3 style="margin-bottom: 0">{{ t('user.setting.notificationPreference') }}</h3>
-          <div class="notification-scroll-wrapper">
-            <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
-              <h4>{{ item.name }}</h4>
-              <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value"
-                           :key="ite.key" />
+          <div>
+            <h3 style="margin-bottom: 0">{{ t('user.setting.notificationPreference') }}</h3>
+            <div class="notification-scroll-wrapper">
+              <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
+                <h4>{{ item.name }}</h4>
+                <el-checkbox v-for="ite in item.value" :label="ite.label" size="large" v-model="ite.value"
+                             :key="ite.key" />
+              </div>
             </div>
           </div>
         </el-col>
       </el-row>
     </div>
-    <el-divider />
-    <el-button class="fixed-save-btn" type="primary" @click="save">{{ $t('common_save') }}</el-button>
+    <div class="footer-bar">
+      <el-button class="fixed-save-btn" type="primary" @click="save">{{ $t('common_save') }}</el-button>
+    </div>
   </div>
 
   <userSignature ref="userSignatureRef" />
@@ -206,7 +212,9 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .card {
-  height: 90vh;
+  height: calc(100vh - 70px);;
+  overflow-y: auto;
+  min-height: 100%;
   box-sizing: border-box;
   min-width: 0;
   position: relative;
@@ -237,18 +245,33 @@ onMounted(() => {
 }
 
 .notification-scroll-wrapper {
-  max-height: 80vh;
+  height: 100%;
+  max-height: 65vh;
   overflow-y: auto;
   padding-right: 4px;
+  padding-bottom: 22px;
 
   .el-checkbox.el-checkbox--large {
     height: 16px;
   }
 }
 
+.footer-bar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #fff;
+  z-index: 10;
+  padding-bottom: 12px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .fixed-save-btn {
-  position: fixed;
-  bottom: 16px;
+  margin-top: 10px;
   margin-left: 16px;
 }
 
