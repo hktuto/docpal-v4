@@ -2847,6 +2847,7 @@
       "department": "Department",
       "displayField": "Display Field",
       "editField": "Edit Field",
+      "editSignature": "Edit Signature",
       "email": "Email",
       "firstName": "First Name",
       "groups": "Groups",
@@ -2859,6 +2860,7 @@
       "systemField": "System Field",
       "userProfile": "User Profile",
       "userProfileView": "User Profile View",
+      "userSignature": "User Signature",
       "username": "Username"
     }
   },

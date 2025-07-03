@@ -2844,6 +2844,7 @@
       "department": "部门",
       "displayField": "显示字段",
       "editField": "编辑字段",
+      "editSignature": "编辑签名",
       "email": "电子邮箱",
       "firstName": "名",
       "groups": "组",
@@ -2856,6 +2857,7 @@
       "systemField": "系统字段",
       "userProfile": "用戶資料",
       "userProfileView": "用户资料视图",
+      "userSignature": "用户签名",
       "username": "用户名"
     }
   },

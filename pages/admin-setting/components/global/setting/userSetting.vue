@@ -37,10 +37,7 @@ function removeItem(el: any) {
 }
 
 function openDialog(item: any) {
-  editForm.key = item.key
-  editForm.label = item.label
-  editForm.allowUserEdit = item.allowUserEdit
-  editForm.type = item.type
+  Object.assign(editForm, item)
   state.visible = true
 }
 
@@ -187,8 +184,8 @@ onMounted(() => {
       <el-form-item :label="t('table_label')" prop="label">
         <el-input v-model="editForm.label" />
       </el-form-item>
-      <el-divider />
-      <el-form-item :label="t('user.setting.allowUserEdit')">
+      <el-divider v-if="!editForm.readyOnly" />
+      <el-form-item v-if="!editForm.readyOnly" :label="t('user.setting.allowUserEdit')">
         <el-switch v-model="editForm.allowUserEdit" />
       </el-form-item>
     </el-form>
