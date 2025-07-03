@@ -78,14 +78,19 @@ const permissionOptions = [
 ]
 export const RbacAllowTo = (
   rbacPermission: rbacPermission[] | rbacPermission,
-  permissionIds: number[],
+  docDetail: any,
   isFolder: boolean | '' = ''
 ): boolean => {
+  console.log('docDetail', docDetail)
+  if (!docDetail) return false
+  const permissionIds = docDetail?.permissionIds || []
   if (!permissionIds) return false
+  // hold status is A, L, P, return false,hold folder is not editable
+  if (!!docDetail.hold && ['A', 'L', 'P'].includes(docDetail.hold.status)) return false
   const permissions = Array.isArray(rbacPermission) ? rbacPermission : [rbacPermission]
-  if (permissions.includes('normal')) return true
-  return permissionIds.some(id => {
-    const option = permissionOptions.find(opt => {
+  if (permissions.includes('normal') || permissions.includes('read')) return true
+  return permissionIds.some((id: number) => {
+    const option = permissionOptions.find((opt) => {
       const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
       return opt.value === id && folderMatch
     })

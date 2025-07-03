@@ -26,12 +26,11 @@ import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   doc: any,
-  permissionIds: any
 }>()
 const { doc } = toRefs(props)
 const { t} = useI18n()
 const canWrite = computed(() => {
-  return RbacAllowTo('editMetadata', props.permissionIds)
+  return RbacAllowTo('editMetadata', doc.value)
 })
 // TODO : add api
 const emit = defineEmits(['update'])

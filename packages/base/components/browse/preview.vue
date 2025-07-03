@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { loading, editMode, editable, loadAnnotations, print, readOnly, docDetail, permissionIds } = defineProps<{
+const { loading, editMode, editable, loadAnnotations, print, readOnly, docDetail } = defineProps<{
   loading: boolean
   editMode?: boolean
   editable?: boolean
@@ -7,7 +7,6 @@ const { loading, editMode, editable, loadAnnotations, print, readOnly, docDetail
   print?: boolean
   readOnly?: boolean
   docDetail: any
-  permissionIds: any
 }>()
 
 const isPdf = ref(false)
@@ -81,11 +80,11 @@ function handleRefresh(needRefresh: boolean = true) {
           :editMode="editMode"
           fileType="NUXEO"
           :readonly="true"
-          :editable="RbacAllowTo('write', permissionIds)"
+          :editable="RbacAllowTo('write', docDetail)"
           :options="{
             loadAnnotations: true && allowFeature('DOC_ANNOTATION'),
-            print: RbacAllowTo('print', permissionIds) && allowFeature('DOC_PRINT'),
-            readOnly: !RbacAllowTo('write', permissionIds) || !allowFeature('DOC_ANNOTATION')
+            print: RbacAllowTo('print', docDetail) && allowFeature('DOC_PRINT'),
+            readOnly: !RbacAllowTo('write', docDetail) || !allowFeature('DOC_ANNOTATION')
           }"
           @saved="() => handleRefresh(false)"
         />

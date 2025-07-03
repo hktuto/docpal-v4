@@ -41,7 +41,7 @@ export const actions: BrowseActionItem[] = [
     name: 'Hold',
     showInFolder: true,
     showInDetail: false,
-    permission: 'ACL-ReadWrite',
+    permission: 'write',
     component: BrowseActionsHold,
     groupBy: 'holdStatus'
   },
@@ -150,9 +150,7 @@ export const actions: BrowseActionItem[] = [
 ]
 export const shareActions: ShareActionItem[] = []
 
-export const ActionsFilter = (actions: BrowseActionItem[], permissionIds: number[], booleanKey: 'showInFolder' | 'showInDetail' | 'showInShare') => {
-  console.log('permissionIds', actions);
-  
+export const ActionsFilter = (actions: BrowseActionItem[], docDetail: any, booleanKey: 'showInFolder' | 'showInDetail' | 'showInShare') => {
   return actions
     .filter((item) => {
       if (!item.needFeature || item.needFeature.length === 0) return true
@@ -165,9 +163,9 @@ export const ActionsFilter = (actions: BrowseActionItem[], permissionIds: number
       return item[booleanKey]
     })
     .filter((item) => {
-      console.log(RbacAllowTo(item.permission, permissionIds), permissionIds);
+      console.log(RbacAllowTo(item.permission, docDetail), docDetail);
       
-      return RbacAllowTo(item.permission, permissionIds)
+      return RbacAllowTo(item.permission, docDetail)
     })
     .reduce((prev: any, item: BrowseActionItem) => {
       prev[item.groupBy] = prev[item.groupBy] || []

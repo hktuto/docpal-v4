@@ -402,7 +402,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       if (row.source === 'tempFile') {
         return { visible: false, disabled: false }
       }
-      
+
       const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
       const map: any = {
         createSubFolder: ['docActionPaste'],
@@ -430,7 +430,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
           if (map[key].includes(code)) {
             const isPaste = code === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
             return {
-              visible: RbacAllowTo(key, row.permissionIds, row.isFolder) && isPaste,
+              visible: RbacAllowTo(key, row, row.isFolder) && isPaste,
               disabled: false
             }
           }
@@ -438,7 +438,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
 
       return {
-        visible: RbacAllowTo(code, row.permissionIds, row.isFolder),
+        visible: RbacAllowTo(code, row, row.isFolder),
         disabled: false
       }
     }
@@ -573,12 +573,11 @@ function dblClickHandler(row: any) {
     return
   }
   if (row.isFolder) {
-    listProvider?.changeRoute(row.path, row.permissionIds)
+    listProvider?.changeRoute(row.path)
   } else {
     const params = createDetailPageParams({
       idOrPath: row.id,
-      docName: row.name,
-      permissionIds: row.permissionIds
+      docName: row.name
     })
     routerProvider?.navigateTo(params)
   }
@@ -615,7 +614,6 @@ function cleanSelected() {
     emits('selectedChange', [])
   }
 }
-
 
 onDeactivated(() => {
   if (tableDropZone) {
