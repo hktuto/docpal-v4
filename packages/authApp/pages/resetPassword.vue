@@ -85,7 +85,7 @@ async function onSubmit() {
     const res = await safeClientAPI
       .patchPasswordUpdatePassword({
         oldPassword: form.oldPassword,
-        password: form.newPassword
+        newPassword: form.newPassword
       })
       .then((res) => res.data)
     if (!!res) {
