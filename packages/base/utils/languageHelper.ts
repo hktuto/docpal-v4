@@ -2,7 +2,17 @@ import enJson from 'deployment/src/en-US.json'
 import zhJson from 'deployment/src/zh-CN.json'
 import zhHKJson from 'deployment/src/zh-HK.json'
 import { clientApi } from 'api'
-
+let localeFinished = false
+export async function isLocaleFinished(){
+  // console.log('isLocaleFinished');
+  
+  // while(!localeFinished){
+  //   await new Promise((resolve) => setTimeout(resolve, 100))
+  //   console.log('isLocaleFinished', localeFinished);
+  // }
+  await new Promise((resolve) => setTimeout(resolve, 500))
+  return localeFinished
+}
 export async function getLocale(){
     const { locale, availableLocales, setLocaleMessage, setLocale } = useI18n()
     // if app is not public, then get user preference language
@@ -43,4 +53,5 @@ export async function getLocale(){
         ...adminJson,
         ...metaJson
     })
+    localeFinished = true
 }

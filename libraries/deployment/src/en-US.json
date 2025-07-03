@@ -2210,6 +2210,9 @@
   },
   "passwordPolicy": {
     "confirmPassword": "Confirm Password",
+    "containLowerAndUppercase": "Contain at least one lowercase letter and one uppercase letter",
+    "containNumericDigits": "Contain at least one numeric digit",
+    "containSpecialCharacters": "Contain at least one special character",
     "digit": "Numeric Digits",
     "digitDesc": "Must contain numbers [0-9]",
     "expirationDayTip": "Password must be change each {day} days.",
