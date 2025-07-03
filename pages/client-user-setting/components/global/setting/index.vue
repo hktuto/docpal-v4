@@ -36,11 +36,11 @@ async function init() {
       })
     }
 
-    // if ('groups' in state.form || 'role' in state.form) {
-    //   const { roleName, groups } = await clientApi.api.getAclUserUserid().then((res: any) => res.data)
-    //   state.form.role = roleName
-    //   state.form.groups = groups.map(item => item.groupName)
-    // }
+    if ('groups' in state.form || 'role' in state.form) {
+      const { roleName, groups } = await clientApi.api.getAclUserUserid(userId.value).then((res: any) => res.data)
+      state.form.role = roleName
+      state.form.groups = groups.map(item => item.groupName)
+    }
 
     if ('status' in state.form) {
       const statusItem = state.list.find(item => item.key === 'status')
@@ -120,7 +120,7 @@ async function save() {
       userId: userId.value
     }
     state.list.forEach((item: any) => {
-      if (item.allowUserEdit) {
+      if (!item.readyOnly) {
         newUserInfo[item.key] = state.form[item.key]
       }
     })
@@ -186,7 +186,7 @@ onMounted(() => {
 
         <el-col :span="12">
           <div>
-            <h3>{{ $t('user.setting.preference') }}}</h3>
+            <h3>{{ $t('user.setting.preference') }}</h3>
 
             <div class="colorSetting">
               <div class="label">{{ $t('userSetting_colorMode') }}</div>

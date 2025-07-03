@@ -29,10 +29,10 @@ function handleSubmit() {
 
 const onChange = useDebounceFn((file: any, _fileList: any) => {
     state.fileList = _fileList.reduce((prev: any, item: any) => {
-      const fileSizeCheckResult = item.size / 1024 / 1024 <= imageSize
+      const fileSizeCheckResult = item.size / 1024 / 1024 <= state.imageSize
       if (!fileSizeCheckResult) {
         routerProvider?.message.error(
-          '[' + item.name + ']' + t('render.hint.fileSizeExceed') + imageSize + 'MB'
+          '[' + item.name + ']' + t('render.hint.fileSizeExceed') + state.imageSize + 'MB'
         )
         return prev
       }
