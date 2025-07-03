@@ -12,13 +12,11 @@ const props = withDefaults(
     commentId?: string
     expandedItems: any[]
     isReload?: boolean
-    permissionIds?: any
   }>(),
   {
     idOrPath: '/',
     expandedItems: [],
-    isReload: false,
-    permissionIds: []
+    isReload: false
   }
 )
 
@@ -50,18 +48,16 @@ function removeFromSelection(items: any[]) {
   selectedItem.value = selectedItem.value.filter((item) => !items.includes(item))
 }
 
-function changeRoute(path: string, permissionIds: any) {
+function changeRoute(path: string) {
   currentIdOrPath.value = path
   if (props.isReload) {
     routerProvider?.updateProps({
-      idOrPath: path,
-      permissionIds: permissionIds
+      idOrPath: path
     })
   }
 }
 
 const docDetail = ref()
-// TODO: rbac maybe can set this to _permissionIds
 const docPermission = ref()
 const selectedList = ref<any[]>([])
 
@@ -101,11 +97,11 @@ function closePreview({ detail }: any) {
 }
 
 const docActions = computed(() => {
-  if (!docDetail.value || !props.permissionIds) return {}
+  if (!docDetail.value) return {}
   if (selectedList.value.length > 0) {
-    return ActionsFilter(actions, props.permissionIds, 'showInShare')
+    return ActionsFilter(actions, docDetail.value, 'showInShare')
   }
-  return ActionsFilter(actions, props.permissionIds, 'showInFolder')
+  return ActionsFilter(actions, docDetail.value, 'showInFolder')
 })
 
 function handleSelectAll() {
@@ -187,7 +183,6 @@ provide(BrowseListProviderKey, {
     return clientApi.api.postNuxeoDocumentChildrenThumbnailV2(pageParams)
   },
   idOrPath: currentIdOrPath,
-  permissionIds: props.permissionIds,
   docDetail,
   docPermission,
   mode,
@@ -314,14 +309,12 @@ function handleSearchBlur() {
                 </div>
               </div>
               <CollapseMenu v-if="idOrPath !== '/'">
-                <template #default="{ collapse }"
-                  >
+                <template #default="{ collapse }">
                   <template v-for="(group, key) in docActions" :key="key">
                     <template v-for="item in group" :key="item.name">
                       <component
                         :is="item.component"
                         :doc="docDetail"
-                        :permissionIds="permissionIds"
                         :selectedList="selectedList"
                         @clearSelected="handleClearSelected"
                         @success="handleRefresh"
@@ -332,7 +325,7 @@ function handleSearchBlur() {
                   </template>
                 </template>
               </CollapseMenu>
-              <BrowseActionsInfo v-if="idOrPath !== '/'" :doc="docDetail" :permissionIds="permissionIds" @itemClicked="infoOpened = !infoOpened" />
+              <BrowseActionsInfo v-if="idOrPath !== '/'" :doc="docDetail" @itemClicked="infoOpened = !infoOpened" />
             </slot>
           </template>
         </BrowseTable>
@@ -340,7 +333,6 @@ function handleSearchBlur() {
       <Pane v-if="idOrPath !== '/' && infoOpened" :min-size="minSize" :size="minSize">
         <BrowseInfo
           :doc="docDetail"
-          :permissionIds="permissionIds"
           :infoOpened="infoOpened"
           :commentId="commentId"
           @close="infoOpened = false"

@@ -5,7 +5,7 @@
         <div class="infoTitle">{{ $t('info_type') }}</div>
         <div class="infoContent" v-if="info.type">
           {{ $t(info.type) }}
-          <BrowseActionsChangeDocType v-if="RbacAllowTo('editMetadata', permissionIds)" class="el-icon--right" :doc="doc" @success="$emit('refresh')" />
+          <BrowseActionsChangeDocType v-if="RbacAllowTo('editMetadata', doc)" class="el-icon--right" :doc="doc" @success="$emit('refresh')" />
         </div>
       </div>
       <div v-show="!info.isFolder" class="infoSection">
@@ -45,16 +45,16 @@
         </div>
       </div>
 
-      <BrowseInfoMeta v-bind="$props" :permissionIds="permissionIds" @update="$emit('update', true)" />
-      <BrowseInfoTag :doc="doc" :permissionIds="permissionIds" @update="$emit('update', true)" />
-      <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" :permissionIds="permissionIds" @update="$emit('update', true)" />
+      <BrowseInfoMeta v-bind="$props" :doc="doc" @update="$emit('update', true)" />
+      <BrowseInfoTag :doc="doc" @update="$emit('update', true)" />
+      <BrowseInfoCollection v-if="doc.isCollectionMember" :doc="doc" @update="$emit('update', true)" />
     </el-card>
     <el-card v-if="!doc.isFolder && allowFeature('WORKFLOW_ADHOC')">
       <BrowseInfoWorkflowSection :doc="doc"></BrowseInfoWorkflowSection>
     </el-card>
     <!-- <el-divider /> -->
     <el-card>
-      <BrowseInfoAcl :doc="doc" :permissionIds="permissionIds" />
+      <BrowseInfoAcl :doc="doc" />
     </el-card>
   </div>
 </template>
@@ -63,7 +63,6 @@
 import * as mime from 'mime-types'
 const props = defineProps<{
   doc: any
-  permissionIds: any
 }>()
 
 const info = computed(() => {

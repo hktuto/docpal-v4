@@ -11,7 +11,6 @@ const props = withDefaults(defineProps<{
     draggable?:boolean,
     resizeOption?: any,
     listData?: any,
-    permissionIds?: any,
     commentId?: string
 }>(),{
     doc: null,
@@ -23,7 +22,6 @@ const currentTab = ref('info')
 
 const loading = ref(false);
 const detail = ref<any>();
-const _permissionIds = ref<any>();
 
 
 function openEditInfo() {
@@ -49,8 +47,6 @@ async function docUpdated(forceRefresh?: boolean = false) {
 
     if(props.listData && doc.value.id === props.listData.doc.id && !forceRefresh) {
         detail.value = deepCopy(props.listData.doc)
-        _permissionIds.value = props.permissionIds;
-        
         return
     }
     loading.value = true;
@@ -65,7 +61,6 @@ async function docUpdated(forceRefresh?: boolean = false) {
         //   const response = await getDocumentDetail(doc.value.id, userId);
         const response = await getDocDetail(doc.value.id, userId.value);
         detail.value = response.doc;
-        if(response.permissionIds) _permissionIds.value = response.permissionIds;
         //scroll to top
         const tabContent = document.querySelector('#browseInfoSection .infoTagContainer');
         if(tabContent) {
@@ -96,7 +91,7 @@ watch(() => props.commentId, async() => {
     <slot name="header" />
     <div class="headerTopRow">
         <div class="name"><div class="namespan" @dblclick="openEditInfo">{{ doc ? doc.name : '' }}</div> 
-            <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="RbacAllowTo('write', permissionIds)" :doc="doc" @success="$emit('refresh')"/>
+            <BrowseActionsEdit ref="BrowseActionsEditRef" v-if="RbacAllowTo('write', detail)" :doc="detail" @success="$emit('refresh')"/>
         </div>
         
         <SvgIcon :src="'/icons/close.svg'" @click="$emit('close')"/>
@@ -109,7 +104,7 @@ watch(() => props.commentId, async() => {
             <div v-if="!hidePreview" class="infoPreviewContainer">
                 <BrowseInfoPreview :doc="detail"  />
             </div>
-            <BrowseInfoDocInfo :doc="detail" :permissionIds="permissionIds" @update="docUpdated" @refresh="$emit('refresh')"/>
+            <BrowseInfoDocInfo :doc="detail" @update="docUpdated" @refresh="$emit('refresh')"/>
         </div>
     </el-tab-pane>
     <el-tab-pane :label="$t('rightDetail_activities')" name="activities">
@@ -127,7 +122,7 @@ watch(() => props.commentId, async() => {
         <BrowseInfoConvert v-if="currentTab === 'convert'" :doc="detail" />
     </el-tab-pane>
     <el-tab-pane v-for="slot in infoSlots" :key="slot.name" :label="$t(slot.name)" :name="slot.name">
-      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail, permissionIds}" />
+      <component v-if="currentTab === slot.name" :is="slot.component" v-bind="{...$props, detail}" />
     </el-tab-pane> 
 </el-tabs>
   </template>

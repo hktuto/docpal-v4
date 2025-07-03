@@ -1,23 +1,17 @@
 <script lang="ts" setup>
-
-const props = defineProps<{ 
-    idOrPath: string ,
-    filter: any,
-    home: any,
-    commentId: string
-    expandedItems: any[],
-    permissionIds: any[]
-}>();
-
-
-
+const props = defineProps<{
+  idOrPath: string
+  filter: any
+  home: any
+  commentId: string
+  expandedItems: any[]
+}>()
 </script>
 
 <template>
-    <div class="pageContainer" >
-        <BrowseTablePage v-bind="props" :isReload="true">
-        </BrowseTablePage>
-    </div>
+  <div class="pageContainer">
+    <BrowseTablePage v-bind="props" :isReload="true"> </BrowseTablePage>
+  </div>
 </template>
 
 <style lang="scss" scoped>

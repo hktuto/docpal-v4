@@ -10,16 +10,14 @@ const props = withDefaults(
     showHeaderAction?: boolean
     showInfo: boolean
     commentId: string
-    home: any,
-    permissionIds: any
+    home: any
   }>(),
   {
     idOrPath: '',
     showHeaderAction: true,
     showInfo: false,
     commentId: '',
-    home: '',
-    permissionIds: []
+    home: ''
   }
 )
 const { idOrPath, commentId } = toRefs(props)
@@ -36,15 +34,13 @@ if (!tabProvider || !routerProvider) {
 }
 const infoOpened = ref(false)
 const docDetail = ref()
-const docPermission = ref()
 
 const loading = ref(false)
 async function getDetail() {
   loading.value = true
   docDetail.value = null
-  docPermission.value = null
   const userId = useUserId()
-  const { doc, permission } = await getDocDetail(idOrPath.value, userId.value)
+  const { doc } = await getDocDetail(idOrPath.value, userId.value)
   // if doc is Folder, redirect to browse page
   if (doc.isFolder) {
     const newItem = createBrowseListPageParams({
@@ -54,7 +50,6 @@ async function getDetail() {
     return
   }
   docDetail.value = doc
-  docPermission.value = permission
   loading.value = false
   const newItem = createBrowseListPageParams({
     idOrPath: doc.parentRef
@@ -144,7 +139,7 @@ function mobileActionsOpenedChanged(bool: boolean) {
 
 const detailActions = computed(() => {
   if (!docDetail.value) return {}
-  return ActionsFilter(actions, props.permissionIds, 'showInDetail')
+  return ActionsFilter(actions, docDetail.value, 'showInDetail')
 })
 
 function goParent() {
@@ -222,7 +217,6 @@ useEventListener(window, 'resize', calMinWidth)
                           :is="item.component"
                           :doc="docDetail"
                           :ref="(el) => (itemRefs[item.name] = el)"
-                          :permission="docPermission"
                           :isPdf="isPdf"
                           @success="handleRefresh"
                           @delete="itemDeleted"
@@ -243,11 +237,10 @@ useEventListener(window, 'resize', calMinWidth)
           <div class="content">
             <BrowsePreview
               :docDetail="docDetail"
-              :permissionIds="permissionIds"
-              :editable="RbacAllowTo('write', permissionIds)"
+              :editable="RbacAllowTo('write', docDetail)"
               :loadAnnotations="true && allowFeature('DOC_ANNOTATION')"
-              :print="RbacAllowTo('print', permissionIds) && allowFeature('DOC_PRINT')"
-              :readOnly="!RbacAllowTo('write', permissionIds) || !allowFeature('DOC_ANNOTATION')"
+              :print="RbacAllowTo('print', docDetail) && allowFeature('DOC_PRINT')"
+              :readOnly="!RbacAllowTo('write', docDetail) || !allowFeature('DOC_ANNOTATION')"
             />
             <!-- <div v-if="loading || !docDetail || !docDetail.properties" class="noSupportContainer" >
                         {{ $t('common_loading') }}
@@ -261,8 +254,8 @@ useEventListener(window, 'resize', calMinWidth)
                             :doc="docDetail" :editMode="editMode"
                             fileType="NUXEO" 
                             :readonly="true" 
-                            :editable="AllowTo({feature:'ReadWrite', permission:docPermission })"
-                            :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print: docPermission.print && allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite', docPermission }) || !allowFeature('DOC_ANNOTATION')}"
+                            :editable="AllowTo({feature:'ReadWrite' })"
+                            :options="{loadAnnotations:true  && allowFeature('DOC_ANNOTATION'), print:  allowFeature('DOC_PRINT'), readOnly: !AllowTo({feature:'ReadWrite' }) || !allowFeature('DOC_ANNOTATION')}"
                             @saved="() => handleRefresh(false)"
                         /> 
                         <BrowseAiPopover v-if="appStore.licenseFeatures.ASK_AI"  :doc="docDetail"></BrowseAiPopover>
@@ -276,7 +269,6 @@ useEventListener(window, 'resize', calMinWidth)
                 v-if="showInfo"
                 :doc="docDetail"
                 :commentId="commentId"
-                :permissionIds="permissionIds"
                 :infoOpened="infoOpened"
                 :hidePreview="true"
                 @close="infoOpened = false"
@@ -289,7 +281,6 @@ useEventListener(window, 'resize', calMinWidth)
       <Pane v-if="infoOpened" :min-size="minSize" :size="minSize">
         <BrowseInfo
           :doc="docDetail"
-          :permissionIds="permissionIds"
           :infoOpened="infoOpened"
           :commentId="commentId"
           @close="infoOpened = false"

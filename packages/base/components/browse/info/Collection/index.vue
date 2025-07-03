@@ -6,7 +6,7 @@
     <div class="infoContent">
       <div v-for="(item) in collections" :key="item.id" class="tag">
         <div class="label">{{ item.name }}</div>
-        <SvgIcon v-if="RbacAllowTo('editMetadata', permissionIds)" :src="'/icons/close.svg'"
+        <SvgIcon v-if="RbacAllowTo('editMetadata', doc)" :src="'/icons/close.svg'"
                  class="deleteIcon" @click="handleDelete(item)"/>
       </div>
       <div class="addTagButton">
@@ -27,7 +27,6 @@ import {clientApi} from 'api'
 
 const props = defineProps<{
   doc: any,
-  permissionIds: any
 }>()
 const {doc} = toRefs(props)
 const {t} = useI18n()
