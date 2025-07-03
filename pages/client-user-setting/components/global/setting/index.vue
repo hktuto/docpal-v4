@@ -36,9 +36,18 @@ async function init() {
       })
     }
 
-    if ('groups' in state.form) {
-      let groupList: any = await clientApi.api.postNuxeoIdentityMembergroup({ userId: userId.value }).then(res => res.data)
-      state.form.groups = groupList.map(item => item.name)
+    // if ('groups' in state.form || 'role' in state.form) {
+    //   const { roleName, groups } = await clientApi.api.getAclUserUserid().then((res: any) => res.data)
+    //   state.form.role = roleName
+    //   state.form.groups = groups.map(item => item.groupName)
+    // }
+
+    if ('status' in state.form) {
+      const statusItem = state.list.find(item => item.key === 'status')
+      if (statusItem) {
+        statusItem.type = 'boolean'
+        state.form.status = state.form.status === 'A'
+      }
     }
 
     state.notificationPreferenceList = await clientApi.api.getNotificationSettingUserUseridPreferences(userId.value).then(res => res.data)
@@ -145,12 +154,15 @@ onMounted(() => {
             <el-form :model="state.form" label-position="top">
               <el-form-item v-for="item in state.list" :label="t(`user.setting.${item.key}`)" :key="item.key">
                 <el-input v-if="item.type === 'string'" v-model="state.form[item.key]"
-                          :disabled="!item.allowUserEdit" />
+                          :disabled="item.readyOnly" />
                 <el-input-tag
                   v-if="item.type === 'array'"
                   v-model="state.form[item.key]"
-                  :disabled="!item.allowUserEdit"
+                  :disabled="item.readyOnly"
                 />
+                <el-switch v-if="item.type === 'boolean'" v-model="state.form[item.key]" :disabled="item.readyOnly"
+                           :inactive-text="t('actions.inactive')"
+                           :active-text="t('user_active')"/>
               </el-form-item>
             </el-form>
           </div>
