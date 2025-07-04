@@ -90,8 +90,9 @@ const svgRoundClass = computed(() => {
         }
     }
     &-disabled  {
-        cursor: unset;
-        background-color: var(--icon-bg-color, var(--app-grey-300));
+        cursor: not-allowed;
+        background-color: var(--icon-bg-color, var(--app-grey-600));
+        color: var(--app-grey-900)!important;
         svg:hover { 
             opacity: unset;
             cursor: unset;
