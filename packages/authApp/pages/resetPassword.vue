@@ -1,8 +1,8 @@
 <template>
   <AppPublic>
-    <div class="LoginContainer">
+    <div class="LoginContainer" v-loading=""ready>
       <LoadingBg></LoadingBg>
-      <el-form ref="formRef" :model="form" :rules="rules" label-position="top" class="reset-password-form">
+      <el-form v-if="ready" ref="formRef" :model="form" :rules="rules" label-position="top" class="reset-password-form">
         <AppBigLogo class="logo" mode="withName" />
         <div class="title">{{ $t('passwordPolicy.updatePassword') }}</div>
         <div class="tip" v-if="passwordPolicy.expirationDay">
@@ -58,7 +58,7 @@ const form = reactive({
   newPassword: '',
   confirmPassword: ''
 })
-
+const ready = ref(false)
 const passwordPolicy = ref<any>({})
 const rules = ref<any>({})
 async function getPasswordPolicy() {
@@ -146,7 +146,8 @@ onMounted(async () => {
       trigger: 'blur'
     })
   }
-  formRef.value.resetFields()
+  ready.value = true
+  // formRef.value.resetFields()
 })
 </script>
 
