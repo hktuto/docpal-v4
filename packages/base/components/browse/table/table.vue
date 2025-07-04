@@ -389,17 +389,19 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     visible: boolean
     disabled: boolean
   } => {
-    if (!!row) {
+    const clickItem = row || listProvider.docDetail?.value
       // if click on empty row, return empty
-      // const docDetail = listProvider.docDetail?.value
-      // if (docDetail.path === '/') {
-      //   return {
-      //     visible: false,
-      //     disabled: false
-      //   }
-      // }
+    if (!!clickItem) {
+      if (clickItem.path === '/') {
+        return {
+          visible: false,
+          disabled: false
+        }
+      }
+      // if parent is on hold, child is not editable
+      if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
       // hide all action when click on temp file
-      if (row.source === 'tempFile') {
+      if (clickItem.source === 'tempFile') {
         return { visible: false, disabled: false }
       }
 
@@ -412,7 +414,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         delete: [],
         deleteSubContent: []
       }
-      if (row.isFolder) {
+      if (clickItem.isFolder) {
         map.create = ['docActionAddFolder', 'docActionUploadFolder', 'docActionNewFile', 'docActionUploadFile']
         map.write = ['docActionCopy']
         map.delete = []
@@ -430,7 +432,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
           if (map[key].includes(code)) {
             const isPaste = code === 'docActionPaste' ? copyDocumentList.value.length > 0 : 1
             return {
-              visible: RbacAllowTo(key, row, row.isFolder) && isPaste,
+              visible: (RbacAllowTo(key, clickItem, clickItem.isFolder) && isPaste) as boolean,
               disabled: false
             }
           }
@@ -438,7 +440,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       }
 
       return {
-        visible: RbacAllowTo(code, row, row.isFolder),
+        visible: RbacAllowTo(code, clickItem, clickItem.isFolder),
         disabled: false
       }
     }

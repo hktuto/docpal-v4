@@ -78,7 +78,7 @@ const permissionOptions = [
   { label: 'rbac.permission.addUserSet', value: 15, group: 'manage', name: 'addUserSet' }
 ]
 export const RbacAllowTo = (
-  rbacPermission: rbacPermission,
+  rbacPermission: rbacPermission | any,
   docDetail: any,
   isFolder: boolean | '' = ''
 ): boolean => {
@@ -86,7 +86,7 @@ export const RbacAllowTo = (
   const permissionIds = docDetail?.permissionIds || []
   if (!permissionIds) return false
   if (['normal', 'read'].includes(rbacPermission)) return true
-
+  
   // hold status is A, L, P, return false,hold folder is not editable
   if (!['hold-write'].includes(rbacPermission)) {
     if (!!docDetail.hold && ['A', 'L', 'P'].includes(docDetail.hold.status)) return false
