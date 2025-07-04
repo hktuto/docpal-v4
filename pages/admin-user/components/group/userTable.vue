@@ -54,8 +54,13 @@ const state = reactive<any>({
   selectedRows: [],
   userList: []
 })
+const ResponsiveFilterRef = ref()
 const { tableConfig, tableEvent, tableRef, cleanSelectedRows } = useVxeTable({
   id: 'a-userTableSetting',
+  api: () => {
+    ResponsiveFilterRef.value.handleFilter()
+    return getMemberGroupList()
+  },
   columns: [
     { field: 'username', title: 'user_username', fixed: 'left', type: 'checkbox' },
     { field: 'userId', title: 'user_groupIdentifer' }
