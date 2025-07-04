@@ -1,6 +1,6 @@
 <template>
   <AppPublic>
-    <div class="LoginContainer" v-loading=""ready>
+    <div class="LoginContainer" v-loading="!ready">
       <LoadingBg></LoadingBg>
       <el-form v-if="ready" ref="formRef" :model="form" :rules="rules" label-position="top" class="reset-password-form">
         <AppBigLogo class="logo" mode="withName" />
