@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
 import userSignature from '~/components/setting/userSignature.vue'
-
+const { public: { platform } } = useRuntimeConfig()
 const router = useRouter()
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -162,7 +162,7 @@ onMounted(() => {
                 />
                 <el-switch v-if="item.type === 'boolean'" v-model="state.form[item.key]" :disabled="item.readyOnly"
                            :inactive-text="t('actions.inactive')"
-                           :active-text="t('user_active')"/>
+                           :active-text="t('user_active')" />
               </el-form-item>
             </el-form>
           </div>
@@ -173,11 +173,11 @@ onMounted(() => {
             {{ t('user_editPassword') }}
           </el-button>
 
-          <el-divider />
-          <h3>{{ t('User Signature') }}</h3>
-          <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">
-            {{ t('Mange Signature') }}
-          </el-button>
+<!--          <el-divider />-->
+<!--          <h3>{{ t('User Signature') }}</h3>-->
+<!--          <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">-->
+<!--            {{ t('Mange Signature') }}-->
+<!--          </el-button>-->
 
           <el-divider />
         </el-col>
@@ -200,7 +200,7 @@ onMounted(() => {
 
           <el-divider />
 
-          <div>
+          <div v-if="platform !== 'admin'">
             <h3 style="margin-bottom: 0">{{ t('user.setting.notificationPreference') }}</h3>
             <div class="notification-scroll-wrapper">
               <div v-for="(item, index) in state.notificationPreferenceList" :key="index">
@@ -218,7 +218,7 @@ onMounted(() => {
     </div>
   </div>
 
-  <userSignature ref="userSignatureRef" />
+  <userSignature ref="userSignatureRef" :userId="userId" />
 
 </template>
 
