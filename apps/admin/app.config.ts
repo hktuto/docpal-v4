@@ -98,9 +98,9 @@ export default defineAppConfig({
         {
           name: 'admin-document-template'
         },
-        {
-          name: 'admin-doc-template-collaboration'
-        },
+        // {
+        //   name: 'admin-doc-template-collaboration'
+        // },
         {
           name: 'admin-email-template'
         },
@@ -154,6 +154,12 @@ export default defineAppConfig({
         },
         {
           name: 'admin-password-policy'
+        },
+        {
+          name: 'admin-setting'
+        },
+        {
+          name: 'admin-profile-setting'
         }
       ]
     },
@@ -168,9 +174,6 @@ export default defineAppConfig({
     },
     {
       name: 'admin-calendar-setting'
-    },
-    {
-      name: 'admin-setting'
     },
     {
       name: 'admin-unique-id-generator'
