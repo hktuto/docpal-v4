@@ -2447,9 +2447,11 @@
     "creators": "Created By",
     "documentTypes": "Document types",
     "keyword": "Keyword",
+    "last_modify_by": "Last modified by",
     "metadata": "Metadata",
     "mimeTypes": "Mime types",
     "modified": "Last Modified Date",
+    "path": "Path",
     "size": "File Size",
     "tags": "Tags"
   },
