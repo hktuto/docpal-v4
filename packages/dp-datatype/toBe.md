@@ -3,6 +3,13 @@
 ## Overview
 This document proposes a simplified set of core data types that will be used across all DocPal subsystems. The goal is to reduce complexity and ensure consistent data handling throughout the platform.
 
+- Document type
+- Workflow
+- Case
+- Easy form
+- Master table
+
+
 ## Core Data Types
 
 ### 1. Text
