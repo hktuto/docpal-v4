@@ -13,9 +13,10 @@ import { log } from 'vxe-pc-ui'
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
 }
-const { selectedRows, expandedItems } = defineProps<{
+const { selectedRows, expandedItems, mode } = defineProps<{
   selectedRows: any[]
   expandedItems: any[]
+  mode: string
 }>()
 const copyDocumentList = useCopyDocumnetList()
 const tableContainer = ref<HTMLElement>()
@@ -712,7 +713,7 @@ defineExpose({
 
 <template>
   <div ref="tableContainer" class="tableContainer">
-    <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
+    <VxeGrid v-show="mode === 'browse'" ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <slot name="toolbar_buttons" />
       </template>
@@ -725,6 +726,7 @@ defineExpose({
         </el-tag>
       </template>
     </VxeGrid>
+    <BrowseTableSearch v-show="mode === 'search'" :mode="mode" />
   </div>
 </template>
 
