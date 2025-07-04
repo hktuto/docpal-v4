@@ -36,6 +36,10 @@ const state = reactive<State>({
 let filterParams: any = {}
 const { t } = useI18n()
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
+  api: (pageParams: any) => {
+    ResponsiveFilterRef.value.handleFilter()
+    return getGroup()
+  },
   id: 'a-groupTable',
   columns: [
     { field: 'name', title: 'user_userGroupName', fixed: 'left' },
@@ -112,6 +116,7 @@ async function getGroup() {
   state.groupList = await adminApi.api.postNuxeoIdentityGroups().then((res) => res.data)
   handleFilterFormChange(filterParams)
   tableConfig.loading = false
+  return state.groupList
 }
 
 const GroupDialogRef = ref()
@@ -119,10 +124,6 @@ const GroupDialogRef = ref()
 function handleGroupDialogShow() {
   GroupDialogRef.value.handleOpen()
 }
-
-onMounted(() => {
-  getGroup()
-})
 
 function refresh() {
   getGroup()
