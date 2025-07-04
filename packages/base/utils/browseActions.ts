@@ -41,7 +41,7 @@ export const actions: BrowseActionItem[] = [
     name: 'Hold',
     showInFolder: true,
     showInDetail: false,
-    permission: 'write',
+    permission: 'hold-write',
     component: BrowseActionsHold,
     groupBy: 'holdStatus'
   },

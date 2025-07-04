@@ -57,6 +57,7 @@ type rbacPermission =
   | 'assignPermission'
   | 'addUserSet'
   | 'normal'
+  | 'hold-write'
 const permissionOptions = [
   { label: 'rbac.permission.viewFolder', value: 1, group: 'read', name: 'viewFolder' },
   { label: 'rbac.permission.viewMetadata', value: 2, group: 'read', name: 'viewMetadata' },
@@ -77,24 +78,28 @@ const permissionOptions = [
   { label: 'rbac.permission.addUserSet', value: 15, group: 'manage', name: 'addUserSet' }
 ]
 export const RbacAllowTo = (
-  rbacPermission: rbacPermission[] | rbacPermission,
+  rbacPermission: rbacPermission,
   docDetail: any,
   isFolder: boolean | '' = ''
 ): boolean => {
-  console.log('docDetail', docDetail)
   if (!docDetail) return false
   const permissionIds = docDetail?.permissionIds || []
   if (!permissionIds) return false
+  if (['normal', 'read'].includes(rbacPermission)) return true
+
   // hold status is A, L, P, return false,hold folder is not editable
-  if (!!docDetail.hold && ['A', 'L', 'P'].includes(docDetail.hold.status)) return false
-  const permissions = Array.isArray(rbacPermission) ? rbacPermission : [rbacPermission]
-  if (permissions.includes('normal') || permissions.includes('read')) return true
+  if (!['hold-write'].includes(rbacPermission)) {
+    if (!!docDetail.hold && ['A', 'L', 'P'].includes(docDetail.hold.status)) return false
+  } else {
+    rbacPermission = 'write'
+  }
+  
   return permissionIds.some((id: number) => {
     const option = permissionOptions.find((opt) => {
       const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
       return opt.value === id && folderMatch
     })
 
-    return option && permissions.includes(option.name as rbacPermission)
+    return option && option.name === rbacPermission
   })
 }
