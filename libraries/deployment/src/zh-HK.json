@@ -2444,9 +2444,11 @@
     "creators": "創建者",
     "documentTypes": "文檔類型",
     "keyword": "關鍵詞",
+    "last_modify_by": "最後修改者",
     "metadata": "Metadata",
     "mimeTypes": "檔案副檔名",
     "modified": "修改日期",
+    "path": "路徑",
     "size": "檔案大小",
     "tags": "标籤"
   },
