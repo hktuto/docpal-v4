@@ -189,7 +189,8 @@ provide(BrowseListProviderKey, {
   searchQuery,
   changeRoute,
   addToSelection,
-  removeFromSelection
+  removeFromSelection,
+  collapseSearch
 })
 
 const bus = useEventBus(EventType.FILE_NEED_REFRESH)
@@ -270,6 +271,7 @@ function handleSearchBlur() {
           :class="{ selected: selectedList.length > 0 }"
           :selectedRows="selectedItem"
           :expandedItems="expandedItems"
+          :mode="mode"
           @selectedChange="selectedChangeHandler"
           @expandedItemsChange="expandedItemsChangeHandler"
         >
@@ -288,7 +290,7 @@ function handleSearchBlur() {
               </div>
             </slot>
             <slot name="toolbarTools">
-              <div class="searchContainer vxe-button type--button">
+              <div class="searchContainer vxe-button type--button el-icon--left">
                 <div v-if="!isSearchExpanded" class="searchButton" @click="expandSearch">
                   <Icon name="mdi:magnify" />
                 </div>
