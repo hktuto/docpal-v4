@@ -11,8 +11,8 @@ export default defineVitestConfig({
     setupFiles: ['./test/setup.ts', './test/mock/element-plus.ts'],
     reporters: ["html", "json"],
     outputFile: {
-      html: "../../.vitest-reporter-html/index.html",
-      json: "../../.vitest-reporter-html/index.json"
+      html: "../../.vitest-reporter-html/html/client-case-manage/index.html",
+      json: "../../.vitest-reporter-html/json/client-case-manage/index.json"
     },
   },
   // compilerOptions: {

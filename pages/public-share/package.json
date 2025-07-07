@@ -23,7 +23,7 @@
     "js-base64": "^3.7.7"
   },
   "devDependencies": {
-    "@nuxt/test-utils": "^3.19.0",
+    
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
     "happy-dom": "^17.4.7",
