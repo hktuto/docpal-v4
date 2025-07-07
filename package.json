@@ -16,7 +16,7 @@
     "test:coverage": "vitest --coverage",
     "test:production": "vitest",
     "testw": "vitest run --workspace",
-    "test:report": "pnpm -r --stream --if-present test:report"
+    "test:reports": "pnpm -r --stream --if-present test:report"
   },
   "dependencies": {
     "@vueuse/core": "^11.3.0",
