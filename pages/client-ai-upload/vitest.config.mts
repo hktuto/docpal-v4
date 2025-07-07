@@ -12,7 +12,7 @@ export default defineVitestConfig({
     reporters: ["html", "json"],
     outputFile: {
       html: "../../.vitest-reporter-html/html/client-ai-upload/index.html",
-      json: "../../.vitest-reporter-html/json/client-ai-upload/index.json"
+      json: "../../.vitest-reporter-html/json/client-ai-upload.json"
     },
   },
   // compilerOptions: {

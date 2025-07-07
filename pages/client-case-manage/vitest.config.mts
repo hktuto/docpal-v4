@@ -12,7 +12,7 @@ export default defineVitestConfig({
     reporters: ["html", "json"],
     outputFile: {
       html: "../../.vitest-reporter-html/html/client-case-manage/index.html",
-      json: "../../.vitest-reporter-html/json/client-case-manage/index.json"
+      json: "../../.vitest-reporter-html/json/client-case-manage.json"
     },
   },
   // compilerOptions: {

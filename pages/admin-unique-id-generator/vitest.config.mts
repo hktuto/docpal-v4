@@ -12,7 +12,7 @@ export default defineVitestConfig({
     reporters: ["html", "json"],
     outputFile: {
       html: "../../.vitest-reporter-html/html/admin-unique-id-generator/index.html",
-      json: "../../.vitest-reporter-html/json/admin-unique-id-generator/index.json"
+      json: "../../.vitest-reporter-html/json/admin-unique-id-generator.json"
     },
   },
   // compilerOptions: {
