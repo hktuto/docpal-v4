@@ -88,18 +88,18 @@ describe('[admin-folder-cabinet]FolderCabinetSettingAddChildDialog', () => {
     wrapper.vm.state.isFolder = true
     wrapper.vm.state.loading = false
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
     }
     const formData = { folder: true, label: 'New Folder' }
-    wrapper.vm.FormRendererRef.vFormRenderRef.getFormData = vi.fn().mockResolvedValue(formData)
+    wrapper.vm.FormRendererRef.getFormData = vi.fn().mockResolvedValue(formData)
 
     await wrapper.vm.handleSubmit()
 
-    expect(wrapper.vm.FormRendererRef.vFormRenderRef.getFormData).toHaveBeenCalled()
+    expect(wrapper.vm.FormRendererRef.getFormData).toHaveBeenCalled()
     expect(wrapper.vm.state.visible).toBe(false)
     expect(ElMessage.success).toHaveBeenCalled()
   })
@@ -108,8 +108,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingAddChildDialog', () => {
     wrapper.vm.state.isFolder = true
     wrapper.vm.state.loading = false
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -174,8 +174,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingAddDialog', () => {
     const formData = { label: 'New Folder', userGroups: ['type1&&&&id1'], cabinetRoot: ['123', '456'] }
 
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(formData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(formData)),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -197,8 +197,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingAddDialog', () => {
     wrapper.vm.state.isEdit = false
     wrapper.vm.state.loading = false
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(formData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(formData)),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -217,8 +217,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingAddDialog', () => {
     // 模拟表单数据
     const formData = { label: 'New Folder', userGroups: ['type1&&&&id1'], cabinetRoot: ['123', '456'] }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(formData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(formData)),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }

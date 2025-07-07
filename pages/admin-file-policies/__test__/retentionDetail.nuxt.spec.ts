@@ -4,8 +4,7 @@ import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
 import { RetentionDetail, ResponsiveFilter, RetentionAddDialog } from '#components'
-import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
-import { mockQuery, mockTable } from './setup'
+import { ElMessage } from 'element-plus'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -45,7 +44,7 @@ describe('[admin-retention]RetentionDetail', () => {
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(RetentionDetail, {
+    wrapper = shallowMount(RetentionDetail, {
       props: {
         id: 1
       },
@@ -53,7 +52,7 @@ describe('[admin-retention]RetentionDetail', () => {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
         provide: {
           [TabManagerKey]: mockTabProvider,
-          [MenuRouterKey]: mockRouterProvider,
+          [MenuRouterKey]: mockRouterProvider
         },
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
@@ -80,17 +79,17 @@ describe('[admin-retention]RetentionDetail', () => {
     await wrapper.vm.init()
 
     expect(adminApi.api.getPolicyRetentionsId).toHaveBeenCalledWith(1)
-    
-    await new Promise(resolve => setTimeout(resolve, 300)); 
+
+    await new Promise((resolve) => setTimeout(resolve, 300))
     expect(wrapper.vm.state.setting).toEqual({ id: 1, status: 'A', actionType: false })
   })
   it('handles form submission', async () => {
     wrapper.vm.state.setting = { id: 1, status: 'A' }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue({ actionType: 'A' }),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({ actionType: 'A' }),
-        setFormData: vi.fn(),
-      },
+        setFormData: vi.fn()
+      }
     }
 
     await wrapper.vm.handleSubmit()
@@ -98,7 +97,7 @@ describe('[admin-retention]RetentionDetail', () => {
     expect(adminApi.api.putPolicyRetentions).toHaveBeenCalledWith({
       id: 1,
       status: 'A',
-      actionType: 'D',
+      actionType: 'D'
     })
     expect(mockRouterProvider.message.success).toHaveBeenCalledWith('tip_updateSuccessMsg')
   })
@@ -125,7 +124,7 @@ describe('[admin-retention]RetentionAddDialog', () => {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
         provide: {
           [TabManagerKey]: mockTabProvider,
-          [MenuRouterKey]: mockRouterProvider,
+          [MenuRouterKey]: mockRouterProvider
         },
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
@@ -152,16 +151,14 @@ describe('[admin-retention]RetentionAddDialog', () => {
   it('handles form submission', async () => {
     wrapper.vm.state.setting = { id: 1 }
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({ actionType: 'A' }),
-      },
+      getFormData: vi.fn().mockResolvedValue({ actionType: 'A' })
     }
 
     await wrapper.vm.handleSubmit()
 
     expect(adminApi.api.postPolicyRetentions).toHaveBeenCalledWith({
       id: 1,
-      actionType: 'D',
+      actionType: 'D'
     })
     expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg')
     expect(wrapper.vm.state.visible).toBe(false)
@@ -169,8 +166,8 @@ describe('[admin-retention]RetentionAddDialog', () => {
   it('does not submit if form data is not valid', async () => {
     wrapper.vm.FormRendererRef = {
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(null),
-      },
+        getFormData: vi.fn().mockResolvedValue(null)
+      }
     }
 
     await wrapper.vm.handleSubmit()
@@ -182,15 +179,14 @@ describe('[admin-retention]RetentionAddDialog', () => {
     wrapper.vm.state.setting = { id: 1 }
     wrapper.vm.FormRendererRef = {
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({ actionType: 'A' }),
-      },
+        getFormData: vi.fn().mockResolvedValue({ actionType: 'A' })
+      }
     }
     adminApi.api.postPolicyRetentions.mockRejectedValue(new Error('Error'))
 
     await wrapper.vm.handleSubmit()
 
     expect(wrapper.vm.state.loading).toBe(false)
-    expect(wrapper.vm.state.visible).toBe(true) 
+    expect(wrapper.vm.state.visible).toBe(true)
   })
 })
-

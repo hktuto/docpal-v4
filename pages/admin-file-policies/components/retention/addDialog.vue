@@ -27,21 +27,24 @@ const state = reactive({
   visible: false,
   setting: {}
 })
-const router = useRouter()
-const form = reactive({
-  labelRule: []
-})
+
 const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
+    console.log('???????handleSubmit')
+    console.log(FormRendererRef.value);
+    console.log(FormRendererRef.value.getFormData());
+    
     const data = await FormRendererRef.value.getFormData()
+    console.log(data)
     const params = {
       ...state.setting,
       ...data,
       actionType: data.actionType ? 'D' : 'A'
     }
     state.loading = true
+    console.log('??????????????????')
     await adminApi.api.postPolicyRetentions(params)
     ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('filePolicies_RetentionPolicy'),

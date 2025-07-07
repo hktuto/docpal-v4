@@ -49,8 +49,8 @@ describe('[admin-external-connection]Oauth', () => {
       },
     };
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -70,8 +70,8 @@ describe('[admin-external-connection]Oauth', () => {
       authenticationMethod: 'DEFAULT',
     };
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(mockFormData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(mockFormData),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -91,8 +91,8 @@ describe('[admin-external-connection]Oauth', () => {
       authenticationMethod: 'GOOGLE',
     };
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(mockFormData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(mockFormData),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }

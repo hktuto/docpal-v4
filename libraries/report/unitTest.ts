@@ -51,7 +51,7 @@ export function createTestReport() {
   })
   jsonToXlsx(dataArr, totalArr)
 }
-function jsonToXlsx(exportArr, totalArr) {
+export function jsonToXlsx(exportArr, totalArr) {
   const Header = [['Function', 'Test Case ID', 'Test Case Title', 'Pre-conditions', 'Test Step', 'Expected Result', 'Actual Result', 'Test Automation?']]
   const headerWs = XLSX.utils.aoa_to_sheet(Header)
   const ws = XLSX.utils.sheet_add_json(headerWs, exportArr, { skipHeader: true, origin: 'A2' })
@@ -70,5 +70,7 @@ function jsonToXlsx(exportArr, totalArr) {
   const date = new Date()
   const now = dayjs(date).format('MM.DD')
   const twoWeeksAgo = dayjs().subtract(2, 'week').format('MM.DD')
-  XLSX.writeFile(wb, `./report_unitTest/${twoWeeksAgo}-${now} unit-test.xlsx`)
+  const name = `${twoWeeksAgo}-${now} unit-test.xlsx`
+  XLSX.writeFile(wb, `./report_unitTest/${name}`)
+  return name
 }

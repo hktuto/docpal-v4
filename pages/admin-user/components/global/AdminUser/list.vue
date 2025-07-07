@@ -63,11 +63,6 @@ provide(userProviderKey, {
   },
   openUserDetail,
 });
-
-onMounted(() => {
-  tableRef.value?.reload()
-})
-
 </script>
 
 <template>

@@ -1,4 +1,7 @@
 import { vi } from 'vitest';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+
+mockNuxtImport('useI18n', () => () => useNuxtApp().$i18n);
 import { useVxeTable } from '../../../packages/base/composables/useVxeTable';
 const useUserId = vi.fn(() => {
   return {
@@ -20,15 +23,7 @@ vi.stubGlobal('MenuRouterKey', 'MenuRouterKey');
 vi.stubGlobal('useUserId', useUserId);
 vi.stubGlobal('useRuntimeConfig', useRuntimeConfig);
 vi.stubGlobal('useVxeTable', useVxeTable);
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key: string) => {
-      return key;
-    },
-    locale: { value: 'en' },
-    setLocale: vi.fn()
-  })
-}));
+
 // vi.stubGlobal('useLayout', useLayout)
 // vi.stubGlobal('deepCopy', deepCopy)
 
