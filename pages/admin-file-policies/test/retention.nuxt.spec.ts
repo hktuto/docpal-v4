@@ -73,7 +73,6 @@ describe('[admin-azure]RetentionPage', () => {
   })
 
   afterEach(() => {
-    wrapper.unmount()
     vi.clearAllMocks()
   })
   it('renders correctly', async () => {
