@@ -371,13 +371,13 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     ]
   ],
   additionalPermission: async ({ row }) => {
-    const userId = useUserId()
-    if (!row) {
-      return getPermission(listProvider.docDetail?.value.id, userId.value)
-    }
+    // const userId = useUserId()
+    // if (!row) {
+    //   return getPermission(listProvider.docDetail?.value.id, userId.value)
+    // }
 
-    const permission = await getPermission(row.id, userId.value)
-    return permission
+    // const permission = await getPermission(row.id, userId.value)
+    // return permission
   },
   permissionMethod: ({
     options,
