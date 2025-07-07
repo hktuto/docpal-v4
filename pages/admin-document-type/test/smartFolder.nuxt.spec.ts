@@ -3,9 +3,9 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { SmartFolderPage, SmartFolderDetail, SmartFolderInfoDialog,ResponsiveFilter } from '#components'
+import { SmartFolderPage, SmartFolderDetail, SmartFolderInfoDialog, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
-import { mockQuery, } from './setup'
+import { mockQuery } from './setup'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -48,7 +48,7 @@ describe('[admin-smart-folder]SmartFolderPage', () => {
   beforeEach(async () => {
     wrapper = mount(SmartFolderPage, {
       props: {
-        docType: { name: 'Test Document Type' },
+        docType: { name: 'Test Document Type' }
       },
       global: {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
@@ -60,10 +60,10 @@ describe('[admin-smart-folder]SmartFolderPage', () => {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key }
         }
-      },
+      }
     })
-    const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
-    dialogRef.handleOpen = vi.fn();
+    const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef
+    dialogRef.handleOpen = vi.fn()
     // const tableRef = wrapper.vm.$refs.tableRef;
     // tableRef.loadData = vi.fn();
   })
@@ -78,35 +78,35 @@ describe('[admin-smart-folder]SmartFolderPage', () => {
   it('should fetch filter options on mount', async () => {
     wrapper.vm.ResponsiveFilterRef = {
       init: vi.fn().mockResolvedValue('true')
-    };
+    }
     await wrapper.vm.getFilter()
     expect(adminApi.api.getNuxeoSfolderPageConditions).toHaveBeenCalled()
-  });
+  })
   it('should delete a smart folder and show success message', async () => {
-    const id = '123';
+    const id = '123'
     ElMessageBox.confirm.mockResolvedValue('confirm')
     await wrapper.vm.handleDelete(id)
-    expect(adminApi.api.deleteNuxeoSfolderId).toHaveBeenCalledWith(id);
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_deleteSuccessMsg'));
+    expect(adminApi.api.deleteNuxeoSfolderId).toHaveBeenCalledWith(id)
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith(expect.stringContaining('tip_deleteSuccessMsg'))
     expect(mockQuery).toHaveBeenCalledWith()
-  });
-  
+  })
+
   it('should open the dialog for creating a new smart folder', async () => {
-    const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
+    const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef
     wrapper.vm.handleCreate()
     expect(dialogRef.handleOpen).toHaveBeenCalled()
-  });
+  })
   it('should handle filter form changes', async () => {
-    const formModel = { name: 'Test' };
+    const formModel = { name: 'Test' }
     wrapper.vm.handleFilterFormChange(formModel)
-    expect(wrapper.vm.extraParams).toEqual(formModel);
-    expect(wrapper.vm.reload).toHaveBeenCalled();
-  });
+    expect(wrapper.vm.extraParams).toEqual(formModel)
+    expect(wrapper.vm.reload).toHaveBeenCalled()
+  })
   it('should navigate to the smart folder detail page on double click', async () => {
-    const row = { id: '123' };
+    const row = { id: '123' }
     wrapper.vm.handleDblclick(row)
-    expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(expect.anything(), false);
-  });
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalledWith(expect.anything(), false)
+  })
 })
 describe('[admin-smart-folder]SmartFolderDetail', () => {
   let wrapper: any
@@ -115,7 +115,7 @@ describe('[admin-smart-folder]SmartFolderDetail', () => {
   beforeEach(async () => {
     wrapper = shallowMount(SmartFolderDetail, {
       props: {
-        id: 'sm',
+        id: 'sm'
       },
       global: {
         components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, SearchGroupTable },
@@ -127,13 +127,13 @@ describe('[admin-smart-folder]SmartFolderDetail', () => {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key }
         }
-      },
+      }
     })
     await wrapper.vm.$nextTick()
     // const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
     // dialogRef.handleOpen = vi.fn();
-    const tableRef = wrapper.vm.$refs.tableRef;
-    tableRef.initBar = vi.fn();
+    const tableRef = wrapper.vm.$refs.tableRef
+    tableRef.initBar = vi.fn()
   })
 
   afterEach(() => {
@@ -146,34 +146,36 @@ describe('[admin-smart-folder]SmartFolderDetail', () => {
   it('should initialize settings on mount', async () => {
     await wrapper.vm.handleInit()
     expect(adminApi.api.getNuxeoSfolderId).toHaveBeenCalledWith('sm')
-  });
+  })
   it('should save settings and show success message', async () => {
-    const data = { condition: 'and', docId: '', query: [] };
+    const data = { condition: 'and', docId: '', query: [] }
     wrapper.vm.filterRef = {
-      getData: vi.fn(() => Promise.resolve(data)),
-    };
+      getData: vi.fn(() => Promise.resolve(data))
+    }
 
     await wrapper.vm.handleSave()
-    expect(adminApi.api.patchNuxeoSfolder).toHaveBeenCalledWith(expect.objectContaining({
-      json_value: JSON.stringify(data)
-    }));
-  });
+    expect(adminApi.api.patchNuxeoSfolder).toHaveBeenCalledWith(
+      expect.objectContaining({
+        json_value: JSON.stringify(data)
+      })
+    )
+  })
   it('should clear filters', async () => {
     wrapper.vm.filterRef = {
-      clear: vi.fn(),
-    };
+      clear: vi.fn()
+    }
     await wrapper.vm.handleClear()
     expect(wrapper.vm.filterRef.clear).toHaveBeenCalled()
-  });
+  })
   test('should test the query and update the table', async () => {
-    const data = [{ id: '1', name: 'Test' }];
+    const data = [{ id: '1', name: 'Test' }]
     wrapper.vm.filterRef = {
-      getData: vi.fn(() => Promise.resolve(data)),
-    };
+      getData: vi.fn(() => Promise.resolve(data))
+    }
     await wrapper.vm.$nextTick()
     await wrapper.vm.handleTest()
-    expect(wrapper.vm.$refs.tableRef.initBar).toHaveBeenCalled();
-  });
+    expect(wrapper.vm.$refs.tableRef.initBar).toHaveBeenCalled()
+  })
 })
 describe('[admin-smart-folder]SmartFolderInfoDialog', () => {
   let wrapper: any
@@ -191,7 +193,7 @@ describe('[admin-smart-folder]SmartFolderInfoDialog', () => {
           $t: (msg: string) => msg, // Mock translation function
           $i18n: { t: (key: string) => key }
         }
-      },
+      }
     })
     await wrapper.vm.$nextTick()
     // const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
@@ -211,30 +213,30 @@ describe('[admin-smart-folder]SmartFolderInfoDialog', () => {
     await wrapper.vm.handleOpen()
     expect(wrapper.vm.state.visible).toBe(true)
     expect(wrapper.vm.state.title).toBe(wrapper.vm.$t('doc_typeSmartFolderCreateFolder'))
-  });
+  })
   it('should submit the form and show success message', async () => {
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: 'Test Folder', access: ['user1', 'user2'] })),
-      }
-    };
+      getFormData: vi.fn(() => Promise.resolve({ name: 'Test Folder', access: ['user1', 'user2'] }))
+    }
 
     await wrapper.vm.handleSubmit()
-    expect(adminApi.api.patchNuxeoSfolder).toHaveBeenCalledWith(expect.objectContaining({
-      name: 'Test Folder',
-      bind: 'user1,user2'
-    }));
+    expect(adminApi.api.patchNuxeoSfolder).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'Test Folder',
+        bind: 'user1,user2'
+      })
+    )
     expect(ElMessage.success).toHaveBeenCalled()
     expect(wrapper.vm.state.visible).toBe(false)
-    expect(wrapper.emitted('refresh')).toBeTruthy();
-  });
+    expect(wrapper.emitted('refresh')).toBeTruthy()
+  })
   it('should handle opening with existing settings', async () => {
-    const setting = { name: 'Existing Folder', bind: 'user1,user2' };
+    const setting = { name: 'Existing Folder', bind: 'user1,user2' }
     await wrapper.vm.handleOpen(setting)
     expect(wrapper.vm.state.visible).toBe(true)
-    
-    await new Promise(resolve => setTimeout(resolve, 1000)); 
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     expect(wrapper.vm.state.title).toBe(wrapper.vm.$t('doc_typeSmartFolderInfo'))
-    expect(wrapper.vm.state.setting).toEqual({access: ['user1','user2'], ...setting})
-  });
+    expect(wrapper.vm.state.setting).toEqual({ access: ['user1', 'user2'], ...setting })
+  })
 })

@@ -126,8 +126,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingDetail', () => {
       validate: vi.fn().mockReturnValue(true)
     }
     wrapper.vm.FormRendererRef = {
+      getFormData:  vi.fn().mockResolvedValue(mockValidData),
       vFormRenderRef: {
-        getFormData:  vi.fn().mockResolvedValue(mockValidData),
         resetForm: vi.fn(),
         setFormData: vi.fn().mockReturnValue(true),
       }
@@ -148,8 +148,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingDetail', () => {
       validate: vi.fn().mockReturnValue(false)
     }
     wrapper.vm.FormRendererRef = {
+      getFormData:  vi.fn().mockResolvedValue({}),
       vFormRenderRef: {
-        getFormData:  vi.fn().mockResolvedValue({}),
         resetForm: vi.fn(),
         setFormData: vi.fn().mockReturnValue(true),
       }
