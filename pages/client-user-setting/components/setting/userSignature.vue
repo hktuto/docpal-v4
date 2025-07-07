@@ -3,27 +3,96 @@ import { clientApi } from 'api'
 import { UploadFilled, DeleteFilled } from '@element-plus/icons-vue'
 import { useDebounceFn } from '@vueuse/core'
 
+const props = defineProps<{
+  userId: string
+}>()
+
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const state = reactive({
   userSignatureVisible: false,
-  fileList: [],
-  imageSize: 10
+  fileList: [] as any[],
+  imageSize: 5,
+  isCreate: true
 })
 const form = reactive({})
 
 async function handleOpen() {
   state.userSignatureVisible = true
-  // TODO: 获取用户签圖片
-  // await clientApi.api.getUserProfileSetting().then((res: any) => res.data)
+  state.isCreate = true
+  state.fileList = []
+  await getImageUrl()
 }
 
-function handleSubmit() {
-  // TODO: 保存用户签圖片
+async function getImageUrl() {
+  try {
+    // 獲取用戶簽名圖片
 
+    const response = await clientApi.api.getUserprofileUseridSignature(props.userId, {
+      format: 'blob'
+    })
+    if (response) {
+      const blob = new Blob([response], { type: 'image/png' })
+      const url = URL.createObjectURL(blob)
+
+      const file = {
+        name: 'user-signature.png',
+        url: url,
+        size: blob.size,
+        type: 'image/png'
+      }
+      state.fileList = [file]
+      state.isCreate = false
+    }
+  } catch (error) {
+    routerProvider?.message.error(t('user.setting.userSignatureFailed'))
+  }
+}
+
+async function handleSubmit() {
+  if (state.fileList.length === 0) {
+    state.userSignatureVisible = false
+    return
+  }
+
+  try {
+    const fileObj = state.fileList[0].raw
+    const format = fileObj.type
+    const form = new FormData
+    form.append('file', fileObj)
+    form.append('format', format)
+
+    // TODO: swagger APi 文檔需要移除 query 參數
+    if (state.isCreate) {
+      await clientApi.api.postUserprofileUseridSignature(
+        props.userId,
+        {},
+        { body: form }
+      )
+    } else {
+      console.log(222,state.fileList)
+      if (state.fileList.length === 0) {
+        await clientApi.api.deleteUserprofileUseridSignature(userId)
+        routerProvider?.message.success(t('tip_updateSuccessMsg', {
+          modelName: t('user.setting.userSignature'),
+          name: null
+        }))
+        state.userSignatureVisible = false
+        return
+      }
+
+      await clientApi.api.putUserprofileUseridSignature(
+        props.userId,
+        {},
+        { body: form }
+      )
+    }
+  } catch (e) {
+    routerProvider?.message.error(t('user.setting.userSignatureUploadFailed'))
+    return
+  }
 
   routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user.setting.userSignature'), name: null }))
-
   state.userSignatureVisible = false
 }
 
