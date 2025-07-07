@@ -366,8 +366,8 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
 
     // Mock the FormRenderer's getFormData method
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockData)),
         resetForm: vi.fn()
       }
     }
@@ -382,8 +382,8 @@ describe('[admin-document-type]DocTypeDialogNew', () => {
   })
   it('should open dialog and reset form', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({})),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({})),
         resetForm: vi.fn()
       }
     }
@@ -432,8 +432,8 @@ describe('[admin-document-type]DocTypeDialogDuplicate', () => {
 
     // Mock the FormRenderer's getFormData method
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockData)),
         resetForm: vi.fn()
       }
     }
@@ -448,8 +448,8 @@ describe('[admin-document-type]DocTypeDialogDuplicate', () => {
   })
   it('should open dialog and reset form', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({})),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({})),
         resetForm: vi.fn()
       }
     }
@@ -503,8 +503,8 @@ describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
     wrapper.vm.LanguageUnitFormRef = { handleSubmit: vi.fn(() => Promise.resolve())  }
     // Mock the FormRenderer's getFormData method
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockData)),
         resetForm: vi.fn(),
       },
     };
@@ -581,8 +581,8 @@ describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
 
     // Mock the FormRenderer's getFormData method
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockData)),
         resetForm: vi.fn(),
       },
     };
@@ -610,8 +610,8 @@ describe('[admin-document-type]DocTypeDialogAddRelatedType', () => {
 
     // Mock the FormRenderer's getFormData method
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockData)),
         resetForm: vi.fn(),
       },
     };

@@ -405,8 +405,8 @@ describe('[admin-user]UserPasswordDialog', () => {
 
     // Mock the method to return form data
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(formData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData),
         resetForm: vi.fn(),
       },
     };
@@ -428,9 +428,8 @@ describe('[admin-user]UserPasswordDialog', () => {
 
     // Mock the method to return form data
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData),
-      },
+      getFormData: vi.fn().mockResolvedValue(formData),
+
     };
 
     // Simulate an error thrown by the PatchUserPasswordApi
@@ -610,8 +609,8 @@ describe('[admin-user]UserEditDialog', () => {
   it('submits the form successfully', async () => {
     const formData = { firstName: 'Updated Name' };
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(formData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData),
         resetForm: vi.fn()
       }
     };
@@ -629,8 +628,8 @@ describe('[admin-user]UserEditDialog', () => {
   });
   it('handles submit error gracefully', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue({}),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({}),
         resetForm: vi.fn()
       }
     };
@@ -694,8 +693,8 @@ describe('[admin-user]UserAddGroupsDialog', () => {
   it('submits the form successfully', async () => {
     const formData = { id: ['group-1'] };
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(formData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData),
         resetForm: vi.fn()
       }
     };
@@ -711,8 +710,8 @@ describe('[admin-user]UserAddGroupsDialog', () => {
   });
   it('handles submit error gracefully', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue({}),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({}),
         resetForm: vi.fn()
       }
     };
@@ -770,8 +769,8 @@ describe('[admin-user]UserAddGroupDialog', () => {
   it('submits the form successfully', async () => {
     const formData = { id: ['group-1'] };
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(formData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData),
         resetForm: vi.fn()
       }
     };
@@ -784,8 +783,8 @@ describe('[admin-user]UserAddGroupDialog', () => {
   });
   it('handles submit error gracefully', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue({}),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({}),
         resetForm: vi.fn()
       }
     };
