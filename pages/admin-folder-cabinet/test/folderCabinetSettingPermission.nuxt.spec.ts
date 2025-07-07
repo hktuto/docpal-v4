@@ -221,8 +221,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingPermissionAddDialog', () => 
   it('handles form submission', async () => {
     const mockFormData = { userId: 'user3', permission: 'Read', time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockFormData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockFormData)),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -244,8 +244,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingPermissionAddDialog', () => 
   it('handles form submission error', async () => {
     const mockFormData = { userId: 'user3', permission: 'Read', time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve(mockFormData)),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve(mockFormData)),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -329,8 +329,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingPermissionEditTimeDialog', (
   it('handles form submission successfully', async () => {
     const mockFormData = { time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
     wrapper.vm.FormRendererRef = {
+      getFormData:  vi.fn().mockResolvedValue(mockFormData),
       vFormRenderRef: {
-        getFormData:  vi.fn().mockResolvedValue(mockFormData),
         resetForm: vi.fn(),
         setFormData: vi.fn().mockReturnValue(true),
       }
@@ -344,8 +344,8 @@ describe('[admin-folder-cabinet]FolderCabinetSettingPermissionEditTimeDialog', (
   it('handles form submission error', async () => {
     const mockFormData = { time: 'dateBase', dateRange: ['2023-01-01', '2023-12-31'] }
     wrapper.vm.FormRendererRef = {
+      getFormData:  vi.fn().mockResolvedValue(mockFormData),
       vFormRenderRef: {
-        getFormData:  vi.fn().mockResolvedValue(mockFormData),
         resetForm: vi.fn(),
         setFormData: vi.fn().mockReturnValue(true),
       }
