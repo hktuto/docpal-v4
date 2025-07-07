@@ -129,5 +129,7 @@ export function createLanguageReport() {
   const date  = new Date()
   const now = dayjs(date).format('MM.DD')
   const twoWeeksAgo = dayjs().subtract(2, 'week').format('MM.DD');
-  XLSX.writeFile(wb, `./report_languageChange/${twoWeeksAgo}-${now} Language changes.xlsx`);
+  const fileName = `${twoWeeksAgo}-${now} Language changes.xlsx`
+  XLSX.writeFile(wb, `./report_languageChange/${fileName}`);
+  console.log(`[Language changes Excel] 文件已创建: ${fileName}`)
 }
