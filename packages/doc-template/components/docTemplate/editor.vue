@@ -4,7 +4,12 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey, validateVariable, type DocTemplateVariable } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
 import { defaultPageSetting, replaceVariables } from 'docpal-document-editor/src/utils'
-import { normalizeTipTapOptions, clientEditorExtensions, generateHtml } from 'docpal-document-editor/src/client'
+import {
+  normalizeTipTapOptions,
+  clientEditorExtensions,
+  generateHtml,
+  getJsonConfig
+} from 'docpal-document-editor/src/client'
 import * as Y from 'yjs'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 
@@ -169,8 +174,12 @@ function handleInsertVariable(variable: any) {
   })
 }
 
+function getJsonData() {
+  return getJsonConfig(editor.value.getJSON(), options.value, variables)
+}
+
 onMounted(() => {
-  initEditor(props.editorOptions)
+  initEditor(props.editorOptions, props.json)
 })
 
 onUnmounted(() => {
@@ -190,6 +199,8 @@ provide(DocTemplateProveKey, {
   lastSelection,
   updateVariable
 })
+
+defineExpose({ getJsonData })
 </script>
 
 <template>
