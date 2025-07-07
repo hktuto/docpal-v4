@@ -4,12 +4,13 @@ export default defineVitestConfig({
   // any custom Vitest config you require
   resolve: {
     alias: {
-      "api": path.resolve(__dirname, "./test/mock/api")
+      "api": path.resolve(__dirname, "./__test__/mock/api")
     }
   },
   test: {
-    setupFiles: ['./test/setup.ts', './test/mock/element-plus.ts'],
+    setupFiles: ['./__test__/setup.ts', './__test__/mock/element-plus.ts'],
     reporters: ["html", "json"],
+    environment: 'happy-dom',
     outputFile: {
       html: "../../.vitest-reporter-html/html/admin-file-policies/index.html",
       json: "../../.vitest-reporter-html/json/admin-file-policies.json"

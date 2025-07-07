@@ -48,9 +48,12 @@ const LanguageUnitFormRef = ref()
 async function handleSave() {
   state.lanLoading = true
   await LanguageUnitFormRef.value.handleSubmit()
-  setTimeout(() => {
-    state.lanLoading = false
-  }, 100)
+  await new Promise((resolve) =>
+    setTimeout(() => {
+      state.lanLoading = false
+      resolve()
+    }, 100)
+  )
 }
 
 async function initDocType() {

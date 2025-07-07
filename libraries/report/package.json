@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "prstart": "pnpm -w test:production",
-    "start": "npx ts-node index.ts"
+    "start": "npx ts-node index.ts",
+    "report": "npx ts-node unitTestSummary.ts"
   },
   "keywords": [],
   "author": "",

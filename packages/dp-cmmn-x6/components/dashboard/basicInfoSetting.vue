@@ -85,6 +85,7 @@ const widthList = [
     { width: '25%', label: '25%' },
     { width: '33%', label: '33%' },
     { width: '50%', label: '50%' },
+    { width: '66%', label: '66%' },
     { width: '75%', label: '75%' },
     { width: '100%', label: '100%' },
 ]

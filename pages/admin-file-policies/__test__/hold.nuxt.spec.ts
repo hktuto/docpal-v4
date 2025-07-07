@@ -169,8 +169,8 @@ describe('[admin-hold]HoldDialog', () => {
     wrapper.vm.state.setting = {}
     const mockFormData = { policyName: 'New Policy' }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(mockFormData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(mockFormData),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -187,8 +187,8 @@ describe('[admin-hold]HoldDialog', () => {
     wrapper.vm.state.setting = { id: '1' }
     const mockFormData = { policyName: 'Updated Policy' }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(mockFormData),
       vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(mockFormData),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
