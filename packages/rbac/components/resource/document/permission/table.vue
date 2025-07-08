@@ -8,9 +8,9 @@ const props = defineProps<{
 const { document } = toRefs(props)
 let tableData: any[] = []
 const ResponsiveFilterRef = ref()
-const targetOptions = ref([])
+const targetOptions = ref<any>([])
 let isFilter = ref(false)
-let extraParams = {}
+let extraParams: any = {}
 const isInherit = ref(false)
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'rbac-resource-document-permission-table',
@@ -147,8 +147,8 @@ async function getList() {
 
   if (extraParams.orderBy) {
     filterData = filterData.sort((a: any, b: any) => {
-      let aName = ''
-      let bName = ''
+      let aName: any = ''
+      let bName: any = ''
       if (extraParams.orderBy === 'targetName') {
         aName = a.targetName || a.configurationRuleName || ''
         bName = b.targetName || b.configurationRuleName || ''
@@ -171,7 +171,7 @@ async function getList() {
   isFilter.value = false
   return filterData
 }
-async function handleRemove(row) {
+async function handleRemove(row: any) {
   await adminApi.api.deleteAclResourcePermissionsId(row.id)
   reload()
 }
@@ -247,12 +247,12 @@ async function getTargetOptions() {
       return []
     }
   }
-  const groupList = await getGroupList()
-  const userList = await getUserList()
+  const groupList: any = await getGroupList()
+  const userList: any = await getUserList()
   targetOptions.value.push(
     {
       label: 'user_role',
-      value: 3, // 1=User, 2=Group, 3=Role
+      value: 2, // 1=User, 3=Group, 2=Role
       type: 'select',
       options: flatRole.value.map((item) => ({
         label: item.name,
@@ -261,9 +261,9 @@ async function getTargetOptions() {
     },
     {
       label: 'user_groups',
-      value: 2,
+      value: 3,
       type: 'select',
-      options: groupList.map((item) => ({
+      options: groupList.map((item: any) => ({
         label: item.name,
         value: item.id
       }))
