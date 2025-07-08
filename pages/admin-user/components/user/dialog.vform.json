@@ -312,36 +312,7 @@
         "automaticDropdown": false,
         "multiple": true,
         "multipleLimit": 0,
-        "optionItems": [
-          {
-            "id": "administrators",
-            "name": "Administrators group",
-            "isCanModified": true,
-            "value": "administrators",
-            "label": "Administrators group"
-          },
-          {
-            "id": "members",
-            "name": "Members group",
-            "isCanModified": true,
-            "value": "members",
-            "label": "Members group"
-          },
-          {
-            "id": "powerusers",
-            "name": "Power users group",
-            "isCanModified": true,
-            "value": "powerusers",
-            "label": "Power users group"
-          },
-          {
-            "id": "RecordManager",
-            "name": "RecordManager",
-            "isCanModified": true,
-            "value": "RecordManager",
-            "label": "RecordManager"
-          }
-        ],
+        "optionItems": [],
         "required": false,
         "requiredHint": "",
         "validation": "",
@@ -359,6 +330,37 @@
         "onValidate": ""
       },
       "id": "select65438"
+    },
+    {
+      "key": 53680,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "status",
+        "label": "user_status",
+        "labelAlign": "",
+        "defaultValue": true,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": "",
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch96086"
     }
   ],
   "formConfig": {
@@ -374,13 +376,15 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
-    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
+    "onFormValidate": "",
     "dataSources": []
   }
 }
+

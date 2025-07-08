@@ -29,6 +29,7 @@ const FormRendererRef = ref()
 async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.getFormData()
+    data.status = data.status ? 'A' : 'D'
     if (!data.userId || !data.username) {
       ElMessage.error(t('user_username') + t('render.hint.fieldRequired'))
       return
