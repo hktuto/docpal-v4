@@ -16,22 +16,47 @@ export function createReport() {
     jsonFiles.forEach((file) => {
       const filePath = path.join(jsonPath, file)
       const fileData = JSON.parse(fs.readFileSync(filePath, 'utf8'))
-      let title = ''  
       fileData.testResults.forEach((suite) => {
         suite.assertionResults.forEach((test) => {
           const titles = test.ancestorTitles.join(',').split(']')
-          title = titles[0].replace('[', '')
-          dataArr.push([title, titles[1], test.title, '', '', '', test.status, ''])
+          const title1 = titles[0].replace('[', '')
+          if (count[title1]) {
+            count[title1].total++
+            if (test.status === 'passed') count[title1].passed++
+            else if (test.status === 'failed') count[title1].failed++
+            else count[title1].skiped++
+          } else {
+            count[title1] = {
+              total: 1,
+              passed: 0,
+              failed: 0,
+              skiped: 0
+            }
+            if (test.status === 'passed') count[title1].passed++
+            else if (test.status === 'failed') count[title1].failed++
+            else count[title1].skiped++
+          }
+          dataArr.push([title1, titles[1], test.title, '', '', '', test.status, ''])
         })
+        // console.log(title);
+        // if (!!title) {
+        //   if(!count[title]) {
+        //     count[title] = {
+        //       total: 0,
+        //       passed: 0,
+        //       failed: 0,
+        //       skiped: 0
+        //     }
+        //   }
+        //   count[title] = {
+        //     total: fileData.numTotalTests + count[title].total,
+        //     passed: fileData.numPassedTests + count[title].passed,
+        //     failed: fileData.numFailedTests + count[title].failed,
+        //     skiped: fileData.numPendingTests + fileData.numTodoTests + count[title].skiped
+        //   }
+        // }
       })
-      if (!!title) {
-        count[title] = {
-          total: fileData.numTotalTests,
-          passed: fileData.numPassedTests,
-          failed: fileData.numFailedTests,
-          skiped: fileData.numPendingTests + fileData.numTodoTests
-        }
-      }
+      
       totalNum += fileData.numTotalTests
     })
     
