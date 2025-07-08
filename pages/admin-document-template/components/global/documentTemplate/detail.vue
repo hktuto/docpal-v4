@@ -218,8 +218,11 @@ onBeforeMount(async () => {
                                    @refresh="handleRefresh({ variables: true, preview: true })" />
           </div>
         </div>
-        <el-divider />
-        <div v-if="state.pageLoading">
+        <div class="editor-container">
+          <el-divider />
+          <Reader ref="ReaderRef" v-bind="state.previewFile"></Reader>
+        </div>
+        <!-- <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
             <div class="editor-container">
               <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
@@ -229,8 +232,8 @@ onBeforeMount(async () => {
           </template>
           <template v-else>
             <Reader ref="ReaderRef" v-bind="state.previewFile"></Reader>
-          </template>
-        </div>
+          </template> 
+        </div>-->
       </div>
       <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
                       :showClose="false">
