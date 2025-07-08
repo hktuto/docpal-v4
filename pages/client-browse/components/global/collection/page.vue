@@ -5,18 +5,19 @@
         <el-button id="Collection_CreateNewCollection" type="primary" @click="openAddCollectionDialog">
           {{ t('collections_new') }}
         </el-button>
-        <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']"
-                 @click="handleCollapse">
+        <el-icon :class="['collapse-icon', 'el-icon--right', style.collapse ? 'rotate' : 'revert']" @click="handleCollapse">
           <ArrowDownBold />
         </el-icon>
       </div>
-      <div class="collection-list" style="--color: #F56C6C">
-        <div v-for="item in state.collectionList" :key="item.id"
-             :class="['collection-item','cursorPointer', {'current': state.curCollection.id === item.id}]"
-             @click="handleTabClick(item)">
+      <div class="collection-list" style="--color: #f56c6c">
+        <div
+          v-for="item in state.collectionList"
+          :key="item.id"
+          :class="['collection-item', 'cursorPointer', { current: state.curCollection.id === item.id }]"
+          @click="handleTabClick(item)"
+        >
           <span class="ellipsis" :title="item.name">{{ item.name }}</span>
-          <el-icon :id="`Collection__Delete_${item.name}`" class="color__danger__hover cursorPointer"
-                   @click.stop="handleDelete(item)">
+          <el-icon :id="`Collection__Delete_${item.name}`" class="color__danger__hover cursorPointer" @click.stop="handleDelete(item)">
             <Delete />
           </el-icon>
         </div>
@@ -25,29 +26,28 @@
     <div class="collection-main">
       <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
         <template #toolbar_buttons>
-          <div class="flex-x-between">{{ state.curCollection.name }}
-            <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right el-icon--left"
-                     @click="openEditCollectionDialog" />
+          <div class="flex-x-between">
+            {{ state.curCollection.name }}
+            <SvgIcon id="Collection__EditCollectionInfo" src="/icons/edit.svg" class="el-icon--right el-icon--left" @click="openEditCollectionDialog" />
           </div>
           <div class="flex-x-end">
             <template v-if="state">
-              <SvgIcon v-if="state.tableData && state.tableData.length > 0"
-                       src="/icons/file/share.svg"
-                       round
-                       :content="t('tip.addToShare')"
-                       @click="handleShare" />
+              <SvgIcon
+                v-if="state.tableData && state.tableData.length > 0"
+                src="/icons/file/share.svg"
+                round
+                :content="t('tip.addToShare')"
+                @click="handleShare"
+              />
             </template>
             <SvgIcon id="shareToQueue" src="/icons/file/share.svg" round></SvgIcon>
-
           </div>
         </template>
       </VxeGrid>
     </div>
 
-    <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @success="handleAddCollection">
-    </LazyCollectionAddCollectionDialog>
-    <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reloadCollection">
-    </LazyCollectionEditCollectionDialog>
+    <LazyCollectionAddCollectionDialog ref="addCollectionDialog" @success="handleAddCollection"> </LazyCollectionAddCollectionDialog>
+    <LazyCollectionEditCollectionDialog ref="editCollectionDialog" @refresh="reloadCollection"> </LazyCollectionEditCollectionDialog>
   </div>
 </template>
 
@@ -66,18 +66,18 @@ const pageParams = {
   pageSize: 20
 }
 type TableState = {
-  loading: boolean,
-  tableData: any[],
+  loading: boolean
+  tableData: any[]
   options: {
-    showPagination: boolean,
+    showPagination: boolean
     paginationConfig: {
-      total: number,
-      currentPage: number,
+      total: number
+      currentPage: number
       pageSize: number
-    },
-  },
-  collectionList: any,
-  curCollection: any,
+    }
+  }
+  collectionList: any
+  curCollection: any
   selectedDocs: any[]
 }
 
@@ -101,13 +101,16 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   id: 'clientCollectionsList',
   api: async (pageParams: any) => {
     let id = state.curCollection.id
-    const { data: { entryList } }: any = await clientApi.api.postNuxeoCollectionDocuments({ idOrPath: id })
+    const {
+      data: { entryList }
+    }: any = await clientApi.api.postNuxeoCollectionDocuments({ idOrPath: id })
     state.tableData = entryList
     return entryList
   },
   columns: [
     {
-      field: 'name', title: 'tableHeader.fileOrFolderName',
+      field: 'name',
+      title: 'tableHeader.fileOrFolderName',
       type: 'html',
       formatter: ({ cellValue, row }: any) => {
         let icon = '/icons/doc/file.svg'
@@ -128,13 +131,14 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     { field: 'type', title: 'table_type' }
   ],
   bodyActions: [
-    [{
-      code: 'deleted',
-      name: 'collection_remove',
-      action: ({ row }: any) => {
-        handleDocDelete(row)
+    [
+      {
+        code: 'deleted',
+        name: 'collection_remove',
+        action: ({ row }: any) => {
+          handleDocDelete(row)
+        }
       }
-    }
     ]
   ],
   virtualScroll: true,
@@ -173,9 +177,7 @@ async function getCollectionList() {
       handleTabClick(state.collectionList[index])
     }
     reload()
-  } catch (error) {
-
-  }
+  } catch (error) {}
 }
 
 function handleAddCollection(data: any) {
@@ -187,16 +189,15 @@ function handleTabClick(row: any) {
   reload()
 }
 
-function handleDelete(row: any) {
-  ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }), {
+async function handleDelete(row: any) {
+  const action = await ElMessageBox.confirm(t('collection_deleteMsg', { name: row.name }), {
     confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_confirmDelete')
   })
-    .then(async () => {
-      await clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid(row.id)
-      routerProvider?.message.success(t('collection_deleteSuccessMsg', { name: row.name }))
-      reloadPage()
-    })
+  if (action !== 'confirm') return
+  await clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid(row.id)
+  routerProvider?.message.success(t('collection_deleteSuccessMsg', { name: row.name }))
+  reloadPage()
 }
 
 function handleDocDelete(row: any) {
@@ -209,21 +210,18 @@ function handleDocDelete(row: any) {
   ElMessageBox.confirm(t('collectionFile_deleteMsg', { name: row.name }), {
     confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_confirmDelete')
+  }).then(async () => {
+    state.loading = true
+    try {
+      await clientApi.api.deleteNuxeoCollectionRemove(param)
+      setTimeout(() => {
+        query({})
+      }, 1000)
+      routerProvider?.message.success(t('collectionFile_deleteSuccessMsg', { name: row.name }))
+      reload()
+    } catch (error) {}
+    state.loading = false
   })
-    .then(async () => {
-      state.loading = true
-      try {
-        await clientApi.api.deleteNuxeoCollectionRemove(param)
-        setTimeout(() => {
-          query({})
-        }, 1000)
-        routerProvider?.message.success(t('collectionFile_deleteSuccessMsg', { name: row.name }))
-        reload()
-      } catch (error) {
-
-      }
-      state.loading = false
-    })
 }
 
 const addCollectionDialog = ref()
@@ -276,7 +274,7 @@ async function handleShare() {
 function reloadCollection() {
   let data = editCollectionDialog.value.getData()
   state.curCollection.name = data.name
-  state.collectionList.find(item => {
+  state.collectionList.find((item) => {
     if (item.id === data.id) {
       item.name = data.name
     }
@@ -288,7 +286,6 @@ onMounted(() => {
   getCollectionList()
 })
 </script>
-
 
 <style scoped lang="scss">
 .current {
@@ -340,7 +337,6 @@ onMounted(() => {
 }
 
 .collection-main {
-
   overflow: hidden;
 }
 

@@ -72,7 +72,7 @@ describe('[client-collection]CollectionAction', () => {
       confirmButtonText: 'common_confirmDelete'
     })
 
-    expect(clientApi.api.deleteNuxeoDocument).toHaveBeenCalled()
+    expect(clientApi.api.deleteNuxeoCollectionDeleteCollectionCollectionid).toHaveBeenCalled()
     await new Promise((resolve) => setTimeout(resolve, 2000))
     expect(mockRouterProvider.message.success).toHaveBeenCalled()
   })

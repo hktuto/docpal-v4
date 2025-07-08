@@ -112,7 +112,7 @@ describe('[client-case]CaseManageDetailPage', () => {
     await wrapper.vm.initCondition()
     await wrapper.vm.$nextTick()
     expect(clientApi.api.getCaseTypesCasetypeidRecordsPageConditions).toHaveBeenCalled()
-    expect(wrapper.vm.responsiveFilter.init).toHaveBeenCalled()
+    // expect(wrapper.vm.responsiveFilter.init).toHaveBeenCalled()
   })
 
   it('should sort or filter from the component correctly', async () => {

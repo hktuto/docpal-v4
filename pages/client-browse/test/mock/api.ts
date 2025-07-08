@@ -5,5 +5,6 @@ export const clientApi = {
     getNuxeoCollection: vi.fn(() => Promise.resolve(true)),
     deleteNuxeoDocument: vi.fn(() => Promise.resolve(true)),
     postNuxeoCollectionAlldocuments: vi.fn(() => Promise.resolve(true)),
+    deleteNuxeoCollectionDeleteCollectionCollectionid: vi.fn(() => Promise.resolve(true)),
   }
 }
