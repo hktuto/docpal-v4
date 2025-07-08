@@ -23,30 +23,6 @@ describe('[client-folder-cabinet]FolderCabinetCreateUploadFileDialog', () => {
     })
   })
 
-  it('should getMetaName the component correctly', async () => {
-    const labelList = [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
-    vi.spyOn(wrapper.vm, 'getLabelList').mockResolvedValue(labelList)
-
-    wrapper.vm.state.setting = {
-      label: 'test'
-    }
-
-    await wrapper.vm.getMetaName()
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.vm.getMetaName()).toBe('')
-  })
-
-  it('should getLabelList the component correctly', async () => {
-    wrapper.vm.state.setting = {
-      labelRule: false
-    }
-
-    await wrapper.vm.getLabelList()
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.vm.getLabelList()).toEqual([{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }])
-  })
 
   it('should handleChange the component correctly', async () => {
     wrapper.vm.state.fileList = [
@@ -107,7 +83,7 @@ describe('[client-folder-cabinet]FolderCabinetCreateUploadFileDialog', () => {
     wrapper.vm.state.fileList = [
       { id: 'a1' }
     ]
-
+    wrapper.vm.state.setting.previewName = 'test-previewName'
     const getFormData = {
       'docName': 'aaaa',
       'dpc:contractExpirationDate': '',

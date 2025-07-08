@@ -1,23 +1,23 @@
 <template>
-  <el-dialog class="scroll-dialog" v-model="state.dialogOpened" append-to-body
-             :close-on-click-modal="false">
+  <el-dialog class="scroll-dialog" v-model="state.dialogOpened" append-to-body :close-on-click-modal="false">
     <template #header>
       <strong class="primaryTitle">{{ $t('filePopover_uploadFile') }}</strong>
       {{ 'in ' + state.setting.documentPath }}
     </template>
-    <div>{{ $t('tableHeader_labelRule') }}：
+    <div>
+      {{ $t('tableHeader_labelRule') }}：
       <template v-for="(item, index) in getLabelList(state.setting.labelRule)" :key="index">
         <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
         <template v-if="index !== getLabelList(state.setting.labelRule).length - 1"> -</template>
       </template>
     </div>
-    <el-text :type="hasPreviewName(state.setting.previewName) ? '': 'danger'" style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.setting.previewName }}</el-text>
+    <el-text :type="hasPreviewName(state.setting.previewName) ? '' : 'danger'" style="margin-bottom: 15px"
+      >{{ $t('folderCabinet.previewName') }}：{{ state.setting.previewName }}</el-text
+    >
     <BrowseActionsReplaceUpload v-model="state.fileList" :limit="1" @change="handleChange"></BrowseActionsReplaceUpload>
     <MetaRenderForm ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
     <template #footer>
-      <el-button id="FolderCabinet__Detail__Create__Submit" :loading="state.loading" type="primary"
-                 @click="handleSubmit">{{ $t('submit') }}
-      </el-button>
+      <el-button id="FolderCabinet__Detail__Create__Submit" :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('submit') }} </el-button>
     </template>
   </el-dialog>
 </template>
@@ -36,19 +36,16 @@ const state = reactive<any>({
   previewName: ''
 })
 const MetaFormRef = ref()
-const userId: string = useUserId().value
-
+const { t } = useI18n()
 function getMetaName(formData: any = {}) {
   try {
-    if (!!state.metaFormData) formData = {
-      ...formData,
-      ...state.metaFormData,
-      label: state.setting.label
-    }
-  } catch (error) {
-
-  }
-  console.log('getMetaName', formData)
+    if (!!state.metaFormData)
+      formData = {
+        ...formData,
+        ...state.metaFormData,
+        label: state.setting.label
+      }
+  } catch (error) {}
   const labelRules = getLabelList(state.setting.labelRule)
   return getNameByLabelRule(labelRules, formData)
 }
@@ -66,7 +63,6 @@ async function handleMetaChange(data: any) {
 function handleOpen(setting: any) {
   state.dialogOpened = true
   state.setting = deepCopy(setting)
-  console.log(state.setting)
 
   state.fileList = []
   let defaultValue = {}
@@ -81,15 +77,14 @@ async function handleSubmit() {
   try {
     const metaFormData = await MetaFormRef.value.getData()
     if (!metaFormData) return
-    if(!state.setting.previewName) {
-      ElMessage.error($t('dpTip.noValidName'))
+    if (!state.setting.previewName) {
+      ElMessage.error(t('dpTip.noValidName'))
       throw new Error('dpTip.noValidName')
     }
     if (!state.fileList || state.fileList.length === 0) {
-      ElMessage.error($t('msg_fileFetchFailed'))
+      ElMessage.error(t('msg_fileFetchFailed'))
       throw new Error('msg_fileFetchFailed')
     }
-    
     const file = state.fileList[0]
     state.loading = true
     const inputFile: any = {
@@ -98,16 +93,21 @@ async function handleSubmit() {
       idOrPath: state.setting.documentPath + '/' + state.setting.previewName,
       type: state.setting.documentType
     }
-    const duplicateResult: any = await clientApi.api.postNuxeoDocumentIsduplicatename({
-      path: state.setting.documentPath,
-      titles: [state.setting.previewName]
-    }).then(res => res.data)
+    const duplicateResult: any = await clientApi.api
+      .postNuxeoDocumentIsduplicatename({
+        path: state.setting.documentPath,
+        titles: [state.setting.previewName]
+      })
+      .then((res) => res.data)
     if (duplicateResult[state.setting.previewName]) {
       if (state.setting.repeatName) {
-        handleReplace({
-          idOrPath: duplicateResult[state.setting.previewName].idOrPath,
-          properties: metaFormData
-        }, file)
+        handleReplace(
+          {
+            idOrPath: duplicateResult[state.setting.previewName].idOrPath,
+            properties: metaFormData
+          },
+          file
+        )
         return
       } else {
         inputFile.name = duplicateResult[state.setting.previewName].uniqueName
@@ -140,13 +140,10 @@ async function handleReplace(inputFile: any, file: any) {
     state.dialogOpened = false
     emits('success', inputFile)
   } catch (error) {
-
   } finally {
     state.loading = false
   }
 }
 
-onMounted(() => {
-})
 defineExpose({ handleOpen })
 </script>
