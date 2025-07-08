@@ -44,6 +44,7 @@ const state = reactive<any>({
   loading: false,
   visible: false,
   cabinetTemplate: {},
+  setting: {},
   previewName: ''
 })
 const userId: string = useUserId().value
@@ -73,7 +74,7 @@ async function handleSubmit() {
     state.loading = true
     let fileName = await getMetaName()
     if(!fileName) {
-      ElMessage.error($t('dpTip.noValidName'))
+      ElMessage.error(t('dpTip.noValidName'))
       throw new Error('dpTip.noValidName')
     }
     // getUniqueName has bug, will return same name,
@@ -105,7 +106,7 @@ async function handleSubmit() {
     await new Promise(resolve => setTimeout(() => {
       state.visible = false
       emits('refresh')
-      resolve
+      resolve(true)
     }, 1000))
   } catch (error) {
     console.error(error)
@@ -116,8 +117,8 @@ async function handleSubmit() {
 async function getMetaName() {
   let formData: any = {}
   try {
-    const data = await FormRendererRef.value.getFormData(false)
     const metadataForm = await MetaFormRef.value.getData()
+    const data = await FormRendererRef.value.getFormData(false)
     if (data) formData = { ...formData, ...data, ...metadataForm,  }
     formData.docName = formData.title
     formData.label = state.setting.label || state.setting.docName || ""
