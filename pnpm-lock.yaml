@@ -22,7 +22,7 @@ importers:
         version: 26.2.0
       nuxt:
         specifier: ^3.17.3
-        version: 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)
+        version: 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)(vue-tsc@2.2.8)
       nuxt-auth-utils:
         specifier: ^0.3.9
         version: 0.3.9
@@ -761,6 +761,9 @@ importers:
       interactjs:
         specifier: ^1.10.27
         version: 1.10.27
+      jszip:
+        specifier: ^3.10.1
+        version: 3.10.1
       mime-types:
         specifier: ^2.1.35
         version: 2.1.35
@@ -770,6 +773,12 @@ importers:
       nuxt-viewport:
         specifier: ^2.2.0
         version: 2.2.0(vue@3.5.6)
+      pptx-preview:
+        specifier: ^1.0.5
+        version: 1.0.5
+      pptxjs:
+        specifier: ^0.0.0
+        version: 0.0.0
       splitpanes:
         specifier: ^3.2.0
         version: 3.2.0(vue@3.5.6)
@@ -19713,7 +19722,7 @@ packages:
       '@nuxt/telemetry': 2.6.6
       '@nuxt/vite-builder': 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@4.9.5)(vue@3.5.14)
       '@unhead/vue': 2.0.9(vue@3.5.14)
-      '@vue/shared': 3.5.14
+      '@vue/shared': 3.5.13
       c12: 3.0.4(magicast@0.3.5)
       chokidar: 4.0.3
       compatx: 0.2.0
@@ -19820,135 +19829,6 @@ packages:
       - xml2js
       - yaml
     dev: true
-
-  /nuxt@3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5):
-    resolution: {integrity: sha512-iaRGGcnOiahdz+rhEiDY+Ep/vgsvcCCSs2tIVwKmteHEZk6O2zcpk/U1rHxPWortTyMlluHHaohC2WngYceh+g==}
-    engines: {node: ^18.12.0 || ^20.9.0 || >=22.0.0}
-    hasBin: true
-    peerDependencies:
-      '@parcel/watcher': ^2.1.0
-      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
-    peerDependenciesMeta:
-      '@parcel/watcher':
-        optional: true
-      '@types/node':
-        optional: true
-    dependencies:
-      '@nuxt/cli': 3.25.1
-      '@nuxt/devalue': 2.0.2
-      '@nuxt/devtools': 2.4.1(vite@6.3.5)(vue@3.5.14)
-      '@nuxt/kit': 3.17.3(magicast@0.3.5)
-      '@nuxt/schema': 3.17.3
-      '@nuxt/telemetry': 2.6.6
-      '@nuxt/vite-builder': 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vue-tsc@2.2.8)(vue@3.5.14)
-      '@unhead/vue': 2.0.9(vue@3.5.14)
-      '@vue/shared': 3.5.14
-      c12: 3.0.4(magicast@0.3.5)
-      chokidar: 4.0.3
-      compatx: 0.2.0
-      consola: 3.4.2
-      cookie-es: 2.0.0
-      defu: 6.1.4
-      destr: 2.0.5
-      devalue: 5.1.1
-      errx: 0.1.0
-      esbuild: 0.25.4
-      escape-string-regexp: 5.0.0
-      estree-walker: 3.0.3
-      exsolve: 1.0.5
-      globby: 14.1.0
-      h3: 1.15.3
-      hookable: 5.5.3
-      ignore: 7.0.4
-      impound: 1.0.0
-      jiti: 2.4.2
-      klona: 2.0.6
-      knitwork: 1.2.0
-      magic-string: 0.30.17
-      mlly: 1.7.4
-      mocked-exports: 0.1.1
-      nanotar: 0.2.0
-      nitropack: 2.11.12
-      nypm: 0.6.0
-      ofetch: 1.4.1
-      ohash: 2.0.11
-      on-change: 5.0.1
-      oxc-parser: 0.69.0
-      pathe: 2.0.3
-      perfect-debounce: 1.0.0
-      pkg-types: 2.1.0
-      radix3: 1.1.2
-      scule: 1.3.0
-      semver: 7.7.2
-      std-env: 3.9.0
-      strip-literal: 3.0.0
-      tinyglobby: 0.2.13
-      ufo: 1.6.1
-      ultrahtml: 1.6.0
-      uncrypto: 0.1.3
-      unctx: 2.4.1
-      unimport: 5.0.1
-      unplugin: 2.3.4
-      unplugin-vue-router: 0.12.0(vue-router@4.5.1)(vue@3.5.14)
-      unstorage: 1.16.0(db0@0.3.2)(ioredis@5.6.1)
-      untyped: 2.0.0
-      vue: 3.5.14(typescript@5.8.3)
-      vue-bundle-renderer: 2.1.1
-      vue-devtools-stub: 0.1.0
-      vue-router: 4.5.1(vue@3.5.14)
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@biomejs/biome'
-      - '@capacitor/preferences'
-      - '@deno/kv'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@netlify/blobs'
-      - '@planetscale/database'
-      - '@upstash/redis'
-      - '@vercel/blob'
-      - '@vercel/kv'
-      - aws4fetch
-      - better-sqlite3
-      - bufferutil
-      - db0
-      - drizzle-orm
-      - encoding
-      - eslint
-      - idb-keyval
-      - ioredis
-      - less
-      - lightningcss
-      - magicast
-      - meow
-      - mysql2
-      - optionator
-      - rolldown
-      - rollup
-      - sass
-      - sass-embedded
-      - sqlite3
-      - stylelint
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - tsx
-      - typescript
-      - uploadthing
-      - utf-8-validate
-      - vite
-      - vls
-      - vti
-      - vue-tsc
-      - xml2js
-      - yaml
-    dev: false
 
   /nuxt@3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)(vue-tsc@2.2.8):
     resolution: {integrity: sha512-iaRGGcnOiahdz+rhEiDY+Ep/vgsvcCCSs2tIVwKmteHEZk6O2zcpk/U1rHxPWortTyMlluHHaohC2WngYceh+g==}
@@ -21221,6 +21101,20 @@ packages:
       nanoid: 3.3.8
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  /pptx-preview@1.0.5:
+    resolution: {integrity: sha512-4SafvnLUpwpAY9pHHTHzzU77DANTnxZQgnLK51g3qqv0CMSOAV6f9SVc9ANYXJ0+vyTwakt780xY4s/mbRO/KQ==}
+    dependencies:
+      echarts: 5.6.0
+      jszip: 3.10.1
+      lodash: 4.17.21
+      tslib: 2.8.1
+      uuid: 10.0.0
+    dev: false
+
+  /pptxjs@0.0.0:
+    resolution: {integrity: sha512-EycbVCEkBbZNw4TVQGZy5b0lUB7C9n4g6JhuVQsWHIW5KFGkMSZFx/J3E+cf3KI9Fw15oHxjNhmPm8BNKstncw==}
+    dev: false
 
   /preact@10.26.4:
     resolution: {integrity: sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w==}
@@ -24625,6 +24519,11 @@ packages:
   /utility-types@3.11.0:
     resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
     engines: {node: '>= 4'}
+    dev: false
+
+  /uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
+    hasBin: true
     dev: false
 
   /uuid@11.1.0:
