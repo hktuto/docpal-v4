@@ -182,8 +182,8 @@ describe('[admin-master-table]MasterTableSettingAddPermissionDialog', () => {
     })
     await wrapper.vm.$nextTick()
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '123', userId: '456' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '123', userId: '456' })),
         resetForm: vi.fn(),
         setFormData: vi.fn(),
         getWidgetRef: vi.fn(() => ({ loadOptions: () => vi.fn() }))

@@ -71,8 +71,8 @@ describe('[admin-master-table]MasterTableDialog', () => {
     const data = { name: 'Test Table' };
 
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -84,8 +84,8 @@ describe('[admin-master-table]MasterTableDialog', () => {
   });
   it('submits form data correctly', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: 'Test Table' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: 'Test Table' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -141,15 +141,15 @@ describe('[admin-master-table]MasterTableNewSchemaDialog', () => {
   });
   it('should confirm and emit add event', async () => {
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
     }
     wrapper.vm.state.options.edit = false
     await wrapper.vm.handleConfirm()
-    expect(wrapper.vm.FormRendererRef.vFormRenderRef.getFormData).toHaveBeenCalled();
+    expect(wrapper.vm.FormRendererRef.getFormData).toHaveBeenCalled();
     expect(wrapper.emitted().add).toBeTruthy();
   });
   it('should handle opening the dialog', async () => {

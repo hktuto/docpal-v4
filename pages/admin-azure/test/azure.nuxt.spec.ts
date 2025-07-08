@@ -175,8 +175,8 @@ describe('[admin-azure]AzureSettingOcr', () => {
   it('initializes form with setting data', async () => {
     const formData = { alertEmail: ['test@example.com'] }
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -188,9 +188,7 @@ describe('[admin-azure]AzureSettingOcr', () => {
   it('handles save action correctly', async () => {
     const formData = { alertEmail: ['test@example.com'] }
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData)
-      }
+      getFormData: vi.fn().mockResolvedValue(formData)
     }
     mockAzureProvider.UpdateAzureOcrSettingApi.mockResolvedValueOnce({ success: true })
 
@@ -200,28 +198,24 @@ describe('[admin-azure]AzureSettingOcr', () => {
       ...formData,
       alertEmail: 'test@example.com'
     })
-    expect(wrapper.vm.FormRendererRef.vFormRenderRef.getFormData).toHaveBeenCalled()
+    expect(wrapper.vm.FormRendererRef.getFormData).toHaveBeenCalled()
     expect(mockRouterProvider.message.success).toHaveBeenCalledWith('dpMsg_success')
   })
   it('handles error during save action', async () => {
     const formData = { alertEmail: ['test@example.com'] }
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData)
-      }
+      getFormData: vi.fn().mockResolvedValue(formData)
     }
     mockAzureProvider.UpdateAzureOcrSettingApi.mockRejectedValueOnce(new Error('Error'))
 
     await wrapper.vm.handleSave()
-    expect(wrapper.vm.FormRendererRef.vFormRenderRef.getFormData).toHaveBeenCalled()
+    expect(wrapper.vm.FormRendererRef.getFormData).toHaveBeenCalled()
     expect(mockRouterProvider.message.success).not.toHaveBeenCalled()
   })
   it('handles edit email template correctly', async () => {
     const formData = { emailTemplate: 'template-id' }
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue(formData)
-      }
+      getFormData: vi.fn().mockResolvedValue(formData)
     }
     wrapper.vm.emailTemplateEditor = { handleOpen: vi.fn() }
 
@@ -231,9 +225,7 @@ describe('[admin-azure]AzureSettingOcr', () => {
   })
   it('handles error when editing email template', async () => {
     wrapper.vm.FormRendererRef = {
-      vFormRenderRef: {
-        getFormData: vi.fn().mockResolvedValue({})
-      }
+      getFormData: vi.fn().mockResolvedValue({})
     }
     await wrapper.vm.handleEditEmailTemplate()
     expect(mockRouterProvider.message.error).toHaveBeenCalledWith('tip.emailTemplateMissing')
@@ -382,8 +374,8 @@ describe('[admin-azure]AzureSettingApi', () => {
   it('initializes form with setting prop', async () => {
     await wrapper.vm.$nextTick()
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }
@@ -395,8 +387,8 @@ describe('[admin-azure]AzureSettingApi', () => {
     mockAzureProvider.UpdateAzureApiKeyApi.mockReturnValue(true)
     await wrapper.vm.$nextTick()
     wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ description: 'Test description', apiKey: 'test-api-key' })),
       vFormRenderRef: {
-        getFormData: vi.fn(() => Promise.resolve({ description: 'Test description', apiKey: 'test-api-key' })),
         resetForm: vi.fn(),
         setFormData: vi.fn()
       }

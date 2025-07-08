@@ -1,3 +1,10 @@
+## order
+1. 生成 json report 
+pnpm test:reports
+
+2. 生成 test-excel
+pnpm -F report start
+
 ## 调试方法
 
 ```Javascript
