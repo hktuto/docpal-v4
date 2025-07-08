@@ -41,6 +41,7 @@ async function deleteItem(id: string) {
     routerProvider?.updateProps({
       id: list.value[0].id
     })
+    getDetail(list.value[0].id)
   }
 }
 async function handleSwitch(id: string) {
