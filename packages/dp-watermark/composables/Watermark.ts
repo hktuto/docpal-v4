@@ -111,6 +111,7 @@ export const useWatermark = () => {
     return data
   }
   async function updateWatermarkTemplateDetail(template:WatermarkTemplateDetail) {
+    console.log('template', template)
     const { data } = await clientApi.api.patchWatermarkTemplates(template as any) as any
     // const { data } = await api.patch<Response<WatermarkTemplateDetail>>(`/docpal/watermark/templates`, template).then(res => res.data);
     return data

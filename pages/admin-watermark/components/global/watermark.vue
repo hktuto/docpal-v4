@@ -54,7 +54,6 @@ async function handleSwitch(id: string) {
 async function getDetail(id: string) {
   try {
     detail.value = await getWatermarkTemplateDetail(id)
-    console.log('detail', detail.value)
     if (detail.value.type === 'dynamic') detail.value.contentType = detail.value.content
   } catch (error) {
     detail.value = null

@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts" setup>
-import { WatermarkTemplate, WatermarkTemplateDetail } from '../../composables/Watermark'
+import type{ WatermarkTemplate, WatermarkTemplateDetail } from '../../composables/Watermark'
 import { ElMessage } from 'element-plus'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
@@ -32,14 +32,19 @@ async function submit() {
     // TODO : show error
     return
   }
-
+  if(form.value.name === props.item.name){
+    routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
+    // emit('submit', form.value)
+    console.log('form.value', form.value)
+    return
+  }
   if (props.list.findIndex(item => item.name === form.value.name) !== -1) {
     routerProvider?.message.error(t('admin_watermark_name_already_exist') as string)
     return
   }
   await updateWatermarkTemplateDetail(form.value)
   routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('watermark.watermark'), name: null }))
-  emit('submit', form.value)
+  emit('submit', form.value.id)
 }
 </script>
 
