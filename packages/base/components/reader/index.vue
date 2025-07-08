@@ -11,6 +11,9 @@
     <template v-else-if="state.fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'">
         <ReaderDocx v-bind="props"></ReaderDocx>
     </template>
+    <template v-else-if="state.fileType === 'application/vnd.ms-powerpoint' || state.fileType === 'application/vnd.openxmlformats-officedocument.presentationml.presentation'">
+        <ReaderPpt :blob="blob" />
+    </template>
     <template v-else-if="state.fileType === 'image/tiff' && state.url" >
         <ReaderTiff v-bind="props" ></ReaderTiff>
     </template>
