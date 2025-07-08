@@ -68,7 +68,6 @@ const reopenFolder = useDebounceFn(() => {
   // get table opened row
 }, 300)
 
-async function searchData(entry: any[], path?: string, searchQuery?: string, pageNum: number = 0) {}
 
 const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeTable({
   id: 'tableSetting',
@@ -222,6 +221,14 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         name: 'common_open',
         action: ({ row }: any) => {
           dblClickHandler(row)
+        }
+      },
+      {
+        code:'docPreview',
+        name:'common_preview',
+        action:({row}:any)=>{
+          if(row.isFolder) return;
+          emitBus(EventType.FILE_PREVIEW_OPEN, row)
         }
       },
       {
@@ -396,6 +403,9 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       if (clickItem.source === 'tempFile') {
         return { visible: false, disabled: false }
       }
+      if(!clickItem.isFolder && code === 'docPreview') {
+        return { visible: true, disabled: false }
+      }
 
       const publicActionsCode = ['docActionRefresh', 'docActionNewTab', 'docOpen']
       const map: any = {
@@ -485,9 +495,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     }
   },
   optionalEvent: {
-    checkboxAll: ({ checked }) => {
-      console.log('checkbox-all', checked)
-    },
     toggleTreeExpand: ({ expanded, row }) => {
       if (expanded) {
         // check if item exist in expandedItems
@@ -504,13 +511,6 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cellMouseleave: ({ row, column, rowIndex }) => {
       emitBus(EventType.FILE_PREVIEW_CLOSE, row)
     },
-    cellClick: ({ row, column, rowIndex }) => {
-      if (column.field === 'name') {
-        emitBus(EventType.FILE_PREVIEW_OPEN, row)
-      } else {
-        emitBus(EventType.FILE_PREVIEW_CLOSE, row)
-      }
-    }
   }
 })
 
@@ -532,7 +532,7 @@ const tableChildChangeHandler = useDebounceFn(() => {
   }
   const allBodyRow = tableRef.value?.$el.querySelectorAll('.vxe-table--main-wrapper .vxe-body--row')
   if (allBodyRow.length === 0) {
-    console.log('no body row')
+    // no body row, return
     return
   }
   // unregister all dragableItemList
@@ -625,11 +625,26 @@ onDeactivated(() => {
 
   cleanSelectedRowsBus.off(cleanSelectedRows)
 })
+onUnmounted(() => {
+  if (tableDropZone) {
+    tableDropZone()
+  }
+  if (dragableItemList) {
+    dragableItemList.forEach((item) => {
+      // check if item is a function, if so, call it
+      if (typeof item === 'function') {
+        item()
+      }
+    })
+  }
+  emitBus(EventType.FILE_PREVIEW_CLOSE)
+
+  cleanSelectedRowsBus.off(cleanSelectedRows)
+})
 
 watch(
   () => listProvider.idOrPath,
   () => {
-    console.log('listProvider.idOrPath', listProvider.idOrPath)
     if (listProvider?.idOrPath?.value) {
       changeRoute()
     }
@@ -639,6 +654,9 @@ watch(
     deep: true
   }
 )
+
+
+
 
 // watch mode in listProvider, if mode change then reload table
 watch(
