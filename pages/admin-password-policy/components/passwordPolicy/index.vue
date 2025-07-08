@@ -103,8 +103,8 @@ const loading = ref(false)
 
 const form = ref({
   minPasswordLength: 12,
-  containLowerAndUppercase: true,
-  containNumericDigits: true,
+  containLowerAndUppercase: false,
+  containNumericDigits: false,
   containSpecialCharacters: false,
   forceResetPassword: false,
   enableExpirationTime: false,
@@ -120,9 +120,9 @@ const form = ref({
 // 加载密码策略配置
 async function init() {
   try {
+    
     loading.value = true
     const response = await adminApi.api.getPasswordConfig()
-    console.log(response)
     if (response.data) {
       const policyData = response.data
       // 更新表单数据

@@ -76,14 +76,14 @@ function generateTotalArr(count, totalNum) {
       Passed: item.passed,
       Failed: item.failed,
       Skiped: item.skiped,
-      ['Pass Rate']: Number(Number(item.passed / item.total).toFixed(2)) * 100 + '%',
+      ['Pass Rate']: Number(Number(item.passed / item.total).toFixed(4)) * 100 + '%',
       Total: item.total
     })
   })
   totalArr.sort((a, b) => a.Module.localeCompare(b.Module))
   totalArr.push({
     Module: '',
-    ['Pass Rate']: Number(Number(passedTotal / totalNum).toFixed(2)) * 100 + '%',
+    ['Pass Rate']: Number(Number(passedTotal / totalNum).toFixed(4)) * 100 + '%',
     Total: totalNum
   })
   return totalArr
