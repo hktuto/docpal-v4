@@ -81,7 +81,11 @@ onMounted(async() => {
 })
 
 </script>
-
+<style lang="scss">
+textarea[data-fabric-hiddentextarea]{
+  position: fixed !important;
+}
+</style>
 <style lang="scss" scoped>
 .pageContainer {
   height: 100%;
@@ -101,5 +105,6 @@ onMounted(async() => {
   gap: var(--app-space-xs);
   overflow: hidden;
   position: relative;
+  transform: scale(1);
 }
 </style>
