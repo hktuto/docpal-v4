@@ -129,7 +129,7 @@ function handleOpen(setting: any) {
 async function getRootIds(idOrPath: string) {
   try {
     const data = await adminApi.api.postNuxeoDocumentBreadcrumb({ idOrPath }).then((res) => res.data)
-    return data?.map((item) => item.id)
+    return data?.map((item) => item.id).filter((item: any) => item !== 'root')
   } catch (error) {
     return []
   }
