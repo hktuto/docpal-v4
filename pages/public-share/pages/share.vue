@@ -5,7 +5,7 @@
         <ShareTable ref="tableRef" :tableData="state.shareList">
           <template #toolbar_buttons>
             <h3 class="title">{{ $t('share_shareFiles') }}</h3>
-            <el-button @click="getData()"> {{ $t('refresh') }}</el-button>
+            <!-- <el-button @click="getData()"> {{ $t('refresh') }}</el-button> -->
           </template>
         </ShareTable>
       </main>
