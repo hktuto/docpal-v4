@@ -42,6 +42,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     const data = await FormVariablesRendererRef.value.getData(true)
+    if (!data) return
     let msg
     if (state.edit) {
       await adminApi.api.putMasterTablesIdRecord(props.tableId, {

@@ -96,6 +96,7 @@ async function handleTest() {
 
   try {
     const data = await FormVariablesRendererRef.value.getData()
+    if (!data) return
     const id = new Date().valueOf() + state.info.name
     const notification = ElNotification({
       title: '',

@@ -200,6 +200,7 @@ async function handleConfirm() {
     }, {});
     if (props.type === "again") {
       const defaultForm = await FormVariablesRendererRef.value.getData();
+      if (!defaultForm) return
       if (defaultForm.defaultValue || defaultForm.defaultValue === 0) {
         data.defaultValue = defaultForm.defaultValue;
       }
