@@ -62,12 +62,11 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   if (editor.value) {
     editor.value.destroy()
   }
+
   const normalizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normalizeOption)
   if (variables.value.length > 0 && json && json.content) {
     json.content = replaceVariables(json.content, [...variables.value])
-  }
-  if (initOptions.editable) {
   }
 
   let html = generateHtml(json, initOptions)
@@ -174,8 +173,19 @@ function handleInsertVariable(variable: any) {
   })
 }
 
+/**
+ * Get the entire edit page data JSON
+ * Include data, options, variables
+ */
 function getJsonData() {
-  return getJsonConfig(editor.value.getJSON(), options.value, variables)
+  return getJsonConfig(getContent(), options.value, variables)
+}
+
+/**
+ * Get the content of the edit data
+ */
+function getEditContent() {
+  return editor.value.getJSON()
 }
 
 onMounted(() => {
@@ -197,7 +207,8 @@ provide(DocTemplateProveKey, {
   addVariable,
   removeVariable,
   lastSelection,
-  updateVariable
+  updateVariable,
+  getEditContent
 })
 
 defineExpose({ getJsonData })
