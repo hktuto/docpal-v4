@@ -398,7 +398,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
         }
       }
       // if parent is on hold, child is not editable
-      if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
+      // if(!!row) clickItem.hold = listProvider.docDetail?.value.hold
       // hide all action when click on temp file
       if (clickItem.source === 'tempFile') {
         return { visible: false, disabled: false }

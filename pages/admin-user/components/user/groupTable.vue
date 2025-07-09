@@ -3,20 +3,18 @@
     <template #header>
       <div v-show="state.selectedRows.length > 0" class="flex-x-between">
         <div class="title-select color__primary flex-x-start">
-          <b class="el-icon--left ">
-            {{ $t('user_userGroup_selectedMsg') }}: {{ state.selectedRows.length }}
-          </b>
-          <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')"
-                   @click="cleanSelectedRows" />
+          <b class="el-icon--left"> {{ $t('user_userGroup_selectedMsg') }}: {{ state.selectedRows.length }} </b>
+          <SvgIcon :src="'/icons/close.svg'" :content="$t('button.clearSelected')" @click="cleanSelectedRows" />
         </div>
         <el-button id="UserList__Info__Delete" type="danger" @click="handleDeleteSelected()">
           {{ $t('common_delete') }}
         </el-button>
       </div>
       <div v-show="state.selectedRows.length === 0" class="flex-x-between">
-        <span><h3>{{ $t('user_userGroupAssignment') }}</h3></span>
-        <el-button id="UserList__Info__AssignUserGroup" class="button" type="primary"
-                   @click="handleGroupAddMemberFormShow()">
+        <span
+          ><h3>{{ $t('user_userGroupAssignment') }}</h3></span
+        >
+        <el-button id="UserList__Info__AssignUserGroup" class="button" type="primary" @click="handleGroupAddMemberFormShow()">
           {{ $t('user_addGroups') }}
         </el-button>
       </div>
@@ -24,22 +22,15 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <slot name="toolbar_buttons" />
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          inputPlaceHolder="placeHolder.userGroupName"
-          @form-change="handleFilterFormChange"
-          inputKey="metaData"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" inputPlaceHolder="placeHolder.userGroupName" @form-change="handleFilterFormChange" inputKey="q" />
       </template>
-      <template #more="{row}">
-        <Icon v-if="!noDeleteList.includes(row.id)" name="material-symbols:delete-rounded"
-              class="normal cursor-pointer" @click="handleDelete(row)"></Icon>
+      <template #more="{ row }">
+        <Icon v-if="!noDeleteList.includes(row.id)" name="material-symbols:delete-rounded" class="normal cursor-pointer" @click="handleDelete(row)"></Icon>
       </template>
     </VxeGrid>
-    <UserAddGroupDialog ref="UserAddGroupDialogRef" :user="user" @refresh="getMemberGroupList"></UserAddGroupDialog>
+    <UserAddGroupDialog ref="UserAddGroupDialogRef" :user="user" @refresh="reload"></UserAddGroupDialog>
   </el-card>
 </template>
-
 
 <script lang="ts" setup>
 import { ElMessageBox } from 'element-plus'
@@ -58,9 +49,15 @@ const state = reactive<any>({
   selectedRows: [],
   groupList: []
 })
-let filterParams: any = {}
-const { tableConfig, tableEvent, tableRef, cleanSelectedRows } = useVxeTable({
+let tableData: any[] = []
+let isFilter = false
+let extraParams: any = {}
+const { tableConfig, tableEvent, tableRef, cleanSelectedRows, reload } = useVxeTable({
   id: 'a-user-group',
+  api: async (params: any) => {
+    const data = await getMemberGroupList()
+    return data
+  },
   columns: [
     { field: 'name', title: 'user_userGroupName', fixed: 'left', type: 'checkbox' },
     { field: 'id', title: 'user_userGroupIdentifer' }
@@ -79,38 +76,42 @@ function handleGroupAddMemberFormShow() {
 }
 
 async function getMemberGroupList() {
-  const res = await userProviderDetail?.MemberGroupGetApi({
-    userId: props.user.userId
-  })
-  state.groupList = res.data
-  handleFilterFormChange(filterParams)
-  tableRef.value?.loadData(res.data)
+  if (!isFilter) {
+    tableData = await userProviderDetail
+      ?.MemberGroupGetApi({
+        userId: props.user.userId
+      })
+      .then((res) => res.data)
+  }
+  let filterData = JSON.parse(JSON.stringify(tableData))
+  if (!!extraParams.q) {
+    filterData = filterData.filter((item: any) => {
+      const name = (item.name || '').toLowerCase()
+      return name.includes(extraParams.q.toLowerCase())
+    })
+  }
+  isFilter = false
+  return filterData
 }
 
 async function handleDelete(row: any) {
-  const action = await ElMessageBox.confirm(
-    `${t('groupTip.confirmWhetherToDeleteItem')}`,
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: `${t('common_confirmDelete')}`
-    }
-  )
+  const action = await ElMessageBox.confirm(`${t('groupTip.confirmWhetherToDeleteItem')}`, {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: `${t('common_confirmDelete')}`
+  })
   if (action !== 'confirm') return
   await userProviderDetail?.BatchUserRemoveGroupsApi({
     groupIds: [row.id],
     userId: props.user.userId
   })
-  getMemberGroupList()
+  reload()
 }
 
 async function handleDeleteSelected() {
-  const action = await ElMessageBox.confirm(
-    t('groupTip.confirmWhetherToDeleteItems', { username: props.user.firstName }),
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmRemove')
-    }
-  )
+  const action = await ElMessageBox.confirm(t('groupTip.confirmWhetherToDeleteItems', { username: props.user.firstName }), {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmRemove')
+  })
   if (action !== 'confirm') return
   const ids = state.selectedRows.filter((item: any) => !noDeleteList.includes(item.id)).map((item: any) => item.id)
   if (ids.length === 0) {
@@ -123,21 +124,16 @@ async function handleDeleteSelected() {
   })
   state.selectedRows = []
   routerProvider?.message.success(t('user_removeGroupsSuccessMsg', { username: props.user.firstName }))
-  getMemberGroupList()
+  reload()
 }
 
 function handleFilterFormChange(formModel: any) {
-  filterParams = formModel
-  let data = state.groupList
-  if (formModel.metaData) {
-    const searchString = formModel.metaData.toLowerCase()
-    data = state.groupList.filter((item: any) => item.name.toLowerCase().includes(searchString))
-  }
-  tableRef.value?.loadData(data)
+  isFilter = true
+  extraParams = formModel
+  reload()
 }
 
 onMounted(() => {
-  getMemberGroupList()
   state.selectedRows = []
 })
 </script>
