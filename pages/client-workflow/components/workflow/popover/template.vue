@@ -1,4 +1,5 @@
 <template>
+
   <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')"
              destroy-on-close append-to-body :close-on-click-modal="false" width="90%" height="90%" :align-center="true"
              @closed="reset">
@@ -6,10 +7,11 @@
                @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
     </el-select>
+    
     <div class="template_form" style="min-height: 50px" v-loading="state.variableLoading">
       <div class="preview">
         <Reader v-if="previewFile.blob" v-bind="previewFile" />
-        <img v-else-if="imgBlob" :src="imgBlob" />
+        <!-- <img v-else-if="imgBlob" :src="imgBlob" /> -->
       </div>
       <FormVariablesRenderer ref="FormVariablesRendererRef" />
     </div>
@@ -66,7 +68,7 @@ const previewFile = reactive<{
 
 async function getImgPreviewBlob() {
   // check if 
-  const blob: any = await clientApi.api.postNuxeoDocumentThumbnail({ idOrPath: form.templatePath }, {
+  const blob: any = await clientApi.api.postNuxeoDocumentPreview({ idOrPath: form.templatePath }, {
     format: 'blob',
     timeout: 0,
     headers: {
@@ -140,6 +142,15 @@ async function templateParamGet(templatePath: string) {
       type: 'input',
       required: true
     }))
+    // get preview file
+    const blob = await clientApi.api.postNuxeoDocumentPreview({ idOrPath: templatePath }, {
+      format: 'blob',
+      timeout: 0,
+      headers: {
+        key: 'preview'
+      }
+    })
+    previewFile.blob = blob
     FormVariablesRendererRef.value.createJson(form.paramList)
     state.canDownload = true
   } catch (error) {
