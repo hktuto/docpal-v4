@@ -167,14 +167,23 @@ onDeactivated(() => {
 
 function getCalendarStyle(event:any){
     const categories = useCalenarCategories()
-    if(!event.calendarId) return ""
-    const category = categories.value.find(item => item.id === event.calendarId)
+    console.log("event", event)
+    const catId = event.detail.category || event.calendarId
+    if(!catId) return ""
+    const category = categories.value.find(item => item.id === catId)
     if(!category) return ""
     return `background-color: ${category.color}; color: ${category.onContainer}`
 }
 
-function displayTimeFn(event){
-    return dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
+function displayTimeFn(event:any){
+    // check if event is in all day
+    const stateDate = dayjs(event.start).format('YYYY-MM-DD')
+    const endDate = dayjs(event.end).format('YYYY-MM-DD')
+    if(stateDate === endDate){
+        return stateDate + ' ' + dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
+    }else{
+        return dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
+    }
 }
 
 function makeDescription(event:CalendarEventExternal){
@@ -231,6 +240,16 @@ defineExpose({
                     {{ displayTimeFn(calendarEvent) }}
                     </template>
                 </ElTooltip>
+                </div>
+            </template>
+            <template #monthAgendaEvent="{ calendarEvent }">
+                <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
+                    :style="getCalendarStyle(calendarEvent)"
+                >
+                  <div class="title">{{ calendarEvent.title }}</div>
+                   <div class="location">{{ calendarEvent.location || calendarEvent.detail.location }}</div>
+                   <div class="category">{{ calendarEvent.detail.category }}</div>
+                   <div class="time">{{ displayTimeFn(calendarEvent) }}</div>
                 </div>
             </template>
         </ScheduleXCalendar>

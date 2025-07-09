@@ -200,7 +200,7 @@ defineExpose({
       </ElForm>
     </div>
     <CalendarViewer ref="viewerRef" :options="options" :filter="filter" :editItem="editItem" v-on="calendarEvents" />
-    <CalendarDetailDialog ref="detailDialogRef" :options="options" :addtionalCheckBeforeEventUpdate="addtionalCheckBeforeEventUpdate" />
+    <CalendarDetailDialog ref="detailDialogRef" width="80%" :options="options" :addtionalCheckBeforeEventUpdate="addtionalCheckBeforeEventUpdate" />
   </div>
 </template>
 
