@@ -6,10 +6,10 @@
         @form-change="handleFilterFormChange"
         inputKey="documentName"
       />
-      <el-button id="RetentionList__RetentionPendingList__Refresh" text :loading="refreshLoading"
+      <!-- <el-button id="RetentionList__RetentionPendingList__Refresh" text :loading="refreshLoading"
                  @click="handleRefresh">
         {{ $t('common_refresh') }}
-      </el-button>
+      </el-button> -->
     </template>
     <template #commonActions="{ row }">
       <template v-if="row.status === 'P'">
