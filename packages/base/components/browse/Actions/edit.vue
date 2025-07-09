@@ -2,23 +2,23 @@
   <div>
     <BrowseActionsButton id="editActionButton" :label="$t('tip.editDocDetail')" @click="openDialog">
       <el-tooltip :content="$t('tip.editDocDetail')">
-        <SvgIcon id="Browse__Info__EditDetails" src="/icons/file/edit.svg" round
-                 :label="$t('tip.editDocDetail')">
-        </SvgIcon>
+        <SvgIcon id="Browse__Info__EditDetails" src="/icons/file/edit.svg" round :label="$t('tip.editDocDetail')"> </SvgIcon>
       </el-tooltip>
     </BrowseActionsButton>
     <el-dialog v-model="dialogOpened" append-to-body :title="$t('tip.editDocDetail')" class="scroll-dialog">
       <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
-        <el-form-item :label="$t('dpDocument_fileName')" prop="name"
-                      :rules="[ { required: true, message: $t('dpDocument_fileName') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
-          <el-input v-model="form.name" clearable/>
+        <el-form-item
+          :label="$t('dpDocument_fileName')"
+          prop="name"
+          :rules="[{ required: true, message: $t('dpDocument_fileName') + $t('render.hint.fieldRequired'), trigger: 'change' }]"
+        >
+          <el-input v-model="form.name" clearable />
         </el-form-item>
       </el-form>
 
       <MetaRenderForm2 ref="MetaFormRef" :mode="state.MetaRenderMode"></MetaRenderForm2>
       <template #footer>
-        <el-button id="Browse__EditDetails__Save" type="primary" :loading="state.loading" @click="handleSave"
-                   @keyup.enter="handleSave">
+        <el-button id="Browse__EditDetails__Save" type="primary" :loading="state.loading" @click="handleSave" @keyup.enter="handleSave">
           {{ $t('common_save') }}
         </el-button>
       </template>
@@ -28,16 +28,15 @@
 </template>
 
 <script lang="ts" setup>
-import {emitBus, EventType} from 'eventbus'
-import {clientApi} from 'api'
-import {ElMessage} from 'element-plus'
+import { emitBus, EventType } from 'eventbus'
+import { clientApi } from 'api'
+import { ElMessage } from 'element-plus'
 
 const props = defineProps<{
-  doc?: any,
+  doc?: any
   parentPath?: string
 }>()
 const emits = defineEmits(['success'])
-
 
 const dialogOpened = ref(false)
 const formRef = ref()
@@ -51,7 +50,7 @@ const state = reactive({
   MetaRenderMode: 'ai-edit'
 })
 const MetaFormRef = ref()
-const {t} = useI18n()
+const { t } = useI18n()
 
 async function openDialog() {
   state.doc = props.doc
@@ -71,10 +70,10 @@ async function openDialog() {
 }
 
 const getParentPath = (path: string): string => {
-  const arr = path.split("/");
-  arr.pop();
-  return arr.join("/");
-};
+  const arr = path.split('/')
+  arr.pop()
+  return arr.join('/')
+}
 
 async function handleSave() {
   state.loading = true
@@ -85,7 +84,7 @@ async function handleSave() {
       return
     }
     // check if the name is exist in the folder
-    const {isDuplicate} = await duplicateNameFilter(getParentPath(state.doc.path), [form.value]);
+    const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value])
     if (isDuplicate && form.value.name !== props.doc.name) {
       ElMessage({
         message: t('dpTip_duplicateFileName') as string,
@@ -97,16 +96,16 @@ async function handleSave() {
     await clientApi.api.patchNuxeoDocument({
       idOrPath: form.value.id,
       name: form.value.name,
-      properties: metaFormData,
+      properties: metaFormData
     })
-    ElMessage.success(t('tip_updateSuccessMsg', {modelName: t('common_item'), name: form.value.name}))
+    ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('common_item'), name: form.value.name }))
 
     emitBus(EventType.FILE_NEED_REFRESH, {
-      relatedIdOrPath: state.doc.id,
+      relatedIdOrPath: state.doc.id
     })
     dialogOpened.value = false
   } catch (error) {
-    console.log("edit fail", error)
+    console.log('edit fail', error)
   }
   state.loading = false
 }
@@ -114,5 +113,5 @@ async function handleSave() {
 onMounted(async () => {
   // useEventListener(document, 'docActionRename', (event) => openDialog(event.detail))
 })
-defineExpose({openDialog})
+defineExpose({ openDialog })
 </script>
