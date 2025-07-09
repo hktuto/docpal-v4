@@ -49,6 +49,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     const data = await FormVariablesRendererRef.value.getData(true)
+    if (!data) return
     const params: any = {
       data: [{ ...data }],
       in: { id: state.rows.map(item => item.id) }

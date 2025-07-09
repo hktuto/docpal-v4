@@ -75,6 +75,7 @@ async function getImgPreviewBlob() {
       key: 'preview'
     }
   })
+  console.log({blob})
   const urlCreator = window.URL || window.webkitURL
   imgBlob.value = urlCreator.createObjectURL(blob)
 }
@@ -100,6 +101,7 @@ async function generatePreviewFile() {
 
 async function generateFile() {
   const data = await FormVariablesRendererRef.value.getData()
+  if(!data) return
   const res: any = await clientApi.api.postNuxeoTemplateSummitanddownloadfile({
     templatePath: form.templatePath,
     paramsMap: data

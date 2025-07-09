@@ -40,6 +40,7 @@ const FormVariablesRendererRef = ref();
 const RelationRefs = ref<any>({});
 async function getData(needValidation: boolean = false) {
   const data = await FormVariablesRendererRef.value.getData(needValidation);
+  if (!data) return
   let pList: any = [];
   if (Object.keys(state.relationFields).length > 0) {
     let relationRecords: any = [];
