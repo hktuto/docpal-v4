@@ -15,8 +15,8 @@ const props = defineProps<{
 }>()
 const idOrPath = ref(props.homeId)
 const loading = ref(false)
-function changeRoute(path: string) {
-  idOrPath.value = path
+function changeRoute(id: string) {
+  idOrPath.value = id
 }
 const tableRef = ref()
 let selectedRows: any[] = []

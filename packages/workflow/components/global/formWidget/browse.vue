@@ -23,8 +23,8 @@ function getFormData() {
   return {}
 }
 
-function changeRoute(path: string) {
-  idOrPath.value = path
+function changeRoute(id: string) {
+  idOrPath.value = id
 }
 
 function getInfo() {

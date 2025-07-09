@@ -188,7 +188,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
 
 function dblClickHandler(row: any) {
   if (row.isFolder) {
-    listProvider.changeRoute(row.path)
+    listProvider.changeRoute(row.id)
   } else {
     // TODO : open dialog
     const params = createDetailPageParams({

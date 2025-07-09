@@ -48,11 +48,11 @@ function removeFromSelection(items: any[]) {
   selectedItem.value = selectedItem.value.filter((item) => !items.includes(item))
 }
 
-function changeRoute(path: string) {
-  currentIdOrPath.value = path
+function changeRoute(id: string) {
+  currentIdOrPath.value = id
   if (props.isReload) {
     routerProvider?.updateProps({
-      idOrPath: path
+      idOrPath: id
     })
   }
 }
