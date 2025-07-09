@@ -5,6 +5,7 @@
     class="scroll-dialog"
     append-to-body
     :close-on-click-modal="false"
+    destroy-on-close
   >
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
@@ -42,8 +43,8 @@ async function handleSubmit() {
 function handleOpen(setting) {
   state.visible = true;
   setTimeout(async () => {
-    state.setting = setting;
-    await FormRendererRef.value.vFormRenderRef.setFormData(setting);
+    state.setting = JSON.parse(JSON.stringify(setting));
+    await FormRendererRef.value.vFormRenderRef.setFormData(state.setting);
     state.loading = false;
   });
 }

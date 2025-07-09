@@ -29,10 +29,11 @@ async function handleSubmit() {
       modelName: t('adminMenu.uniqueIdGenerator'),
       name: name
     }))
-    state.loading = false
     routerProvider?.navigateTo(routeUniqueIdGeneratorDetail(data), false)
   } catch (e) {
     console.log(e)
+  } finally {
+    state.loading = false
   }
 }
 
