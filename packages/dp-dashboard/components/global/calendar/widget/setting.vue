@@ -65,6 +65,9 @@ function handleOpen() {
 }
 
 function submit() {
+  // editable is for workflow , so we need to force it to false
+  // force editable to false
+  form.value.editable = false
   emits('submit', form.value)
   opened.value = false
 }
@@ -79,11 +82,11 @@ defineExpose({
   <ElDialog v-model="opened" append-to-body>
     <ElForm :model="form" label-position="top" @submit.stop="" show-close>
       <ElRow :gutter="12">
-        <ElCol :span="12">
+        <!-- <ElCol :span="12">
           <ElFormItem label="Editable">
             <ElSwitch v-model="form.editable"></ElSwitch>
           </ElFormItem>
-        </ElCol>
+        </ElCol> -->
         <ElCol :span="12">
           <ElFormItem label="Allow Create New Event">
             <ElSwitch v-model="form.allowCreate"></ElSwitch>
