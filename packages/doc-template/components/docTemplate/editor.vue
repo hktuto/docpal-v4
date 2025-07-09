@@ -178,7 +178,7 @@ function handleInsertVariable(variable: any) {
  * Include data, options, variables
  */
 function getJsonData() {
-  return getJsonConfig(getContent(), options.value, variables)
+  return getJsonConfig(getEditContent(), options.value, variables)
 }
 
 /**

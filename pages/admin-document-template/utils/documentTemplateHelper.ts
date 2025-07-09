@@ -13,7 +13,7 @@ interface DocumentTemplateProvider {
 export const DocumentTemplateProviderKey: InjectionKey<DocumentTemplateProvider> = Symbol('DocumentTemplateProviderKey')
 
 
-export const createNewDocumentTemplateDetail = (data:any) => {
+export const createNewDocumentTemplateDetail = (data :any, isEdit :boolean) => {
     const newItem: TabItem = {
         id: "document-template-detail-" + new Date().getTime(),
         name: "document-template-detail-" + data.id,
@@ -23,7 +23,8 @@ export const createNewDocumentTemplateDetail = (data:any) => {
         props: {
             id: data.id,
             name: data.name,
-            item: data
+            item: data,
+            isEdit: isEdit
         }
     }
     return newItem
