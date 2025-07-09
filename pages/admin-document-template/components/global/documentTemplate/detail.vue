@@ -31,6 +31,8 @@ const state = reactive<any>({
 })
 const InteractDrawerRef = ref()
 const docTemplateEditorRef = ref()
+const variables = ref([])
+const templateVariablesRendererRef = ref()
 
 async function getPreviewFile() {
   state.previewFile.loading = true
@@ -83,7 +85,7 @@ async function getVariables() {
       }
     })
     nextTick(() => {
-      FormVariablesRendererRef.value.createJson(state.variables)
+      // FormVariablesRendererRef.value.createJson(state.variables)
     })
 
   } catch (error) {
@@ -150,13 +152,17 @@ const jsonData = ref({})
 
 function initWordEditor() {
   if (state.info.fileType === 'Word') {
-    const json = JSON.parse('{"json":{"options":{"mode":"PAGE","pageSetting":{"defaultMarginConfig":{"bottom":5,"top":5,"left":5,"right":5},"defaultPageBorders":{"bottom":1,"top":1,"left":1,"right":1},"defaultPaperColour":"#fff","defaultPaperOrientation":"portrait","defaultPaperSize":"A4","useDeviceThemeForPaperColour":false,"pageAmendmentOptions":{"enableHeader":false,"enableFooter":false}},"title":"New Document","creator":"","theme":{"fontSize":12,"fontColor":"#000000","fontBackgroundColor":"#ffffff","fontFamily":"Arial","bodyFontSize":20,"h1FontSize":20,"highlightColor":"#ffff00"},"editable":true},"content":{"type":"doc","content":[{"type":"page","attrs":{"paperSize":"A4","paperColour":"#fff","paperOrientation":"portrait","pageBorders":{"top":1,"right":1,"bottom":1,"left":1}},"content":[{"type":"body","attrs":{"pageMargins":{"top":5,"bottom":5,"left":5,"right":5}},"content":[{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"ffd;oajhg"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"asgp’dfa"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"asasg"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"afgagdfghadfgaslflas"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"sad"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"fgagasfgfg"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"sadfgasd"}]}]}]}]}},"variables":[]}')
+    // TODO: Test case
+    const json =JSON.parse('{"json":{"options":{"mode":"PAGE","pageSetting":{"defaultMarginConfig":{"bottom":5,"top":5,"left":5,"right":5},"defaultPageBorders":{"bottom":1,"top":1,"left":1,"right":1},"defaultPaperColour":"#fff","defaultPaperOrientation":"portrait","defaultPaperSize":"A4","useDeviceThemeForPaperColour":false,"pageAmendmentOptions":{"enableHeader":false,"enableFooter":false}},"title":"New Document","creator":"","theme":{"fontSize":12,"fontColor":"#000000","fontBackgroundColor":"#ffffff","fontFamily":"Arial","bodyFontSize":20,"h1FontSize":20,"highlightColor":"#ffff00"},"editable":true},"content":{"type":"doc","content":[{"type":"page","attrs":{"paperSize":"A4","paperColour":"#fff","paperOrientation":"portrait","pageBorders":{"top":1,"right":1,"bottom":1,"left":1}},"content":[{"type":"body","attrs":{"pageMargins":{"top":5,"bottom":5,"left":5,"right":5}},"content":[{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableText","attrs":{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"}}]},{"type":"variableList","attrs":{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}}},{"type":"variableTable","attrs":{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}}},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableLink","attrs":{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}}]},{"type":"variableList","attrs":{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}}}]}]}]}},"variables":[{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"},{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}},{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}},{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}},{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}]}')
+
     // documentOptions.value.title = state.info.name
     // TODO: service response
     documentOptions.value = json.json.options
     jsonData.value = json.json.content
-    state.pageLoading = true
+    variables.value = json.variables
+    templateVariablesRendererRef.value.setVariables(variables.value)
   }
+  state.pageLoading = true
 }
 
 function handleEditEditor() {
@@ -166,20 +172,17 @@ function handleEditEditor() {
 function handleSaveWord() {
   const { json, variables } = docTemplateEditorRef.value.getJsonData()
 
-  console.log(1, variables)
-
-  // 更新本地數據
   documentOptions.value = json.options
   jsonData.value = json.content
-  // TODO： 因爲更新variables數據時，保存在外部的頁面上，需要另外處理
-  state.variables = variables
-  console.log(2, variables)
 
   // TODO: 組裝成完整的Json， 發送請求更新數據
 
-
-
   state.isEdit = false
+}
+
+function updateVariables(newData: TipTapOptions) {
+  variables.value = newData
+  templateVariablesRendererRef.value.setVariables(variables.value)
 }
 
 onBeforeMount(async () => {
@@ -218,28 +221,27 @@ onBeforeMount(async () => {
                                    @refresh="handleRefresh({ variables: true, preview: true })" />
           </div>
         </div>
-        <div class="editor-container">
-          <el-divider />
-          <Reader ref="ReaderRef" v-bind="state.previewFile"></Reader>
-        </div>
-        <!-- <div v-if="state.pageLoading">
+         <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
             <div class="editor-container">
               <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
               <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
-                                 :json="jsonData" :user="{}" :variables="state.variables" />
+                                 :json="jsonData" :user="{}" :variables="variables"
+                                 @update:variables="updateVariables($event)" />
             </div>
           </template>
           <template v-else>
-            <Reader ref="ReaderRef" v-bind="state.previewFile"></Reader>
-          </template> 
-        </div>-->
+            <Reader class="reader-container" ref="ReaderRef" v-bind="state.previewFile"></Reader>
+          </template>
+        </div>
       </div>
       <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
                       :showClose="false">
         <div class="template-title">{{ $t('template.variable') }}</div>
-        <FormVariablesRenderer ref="FormVariablesRendererRef" />
-        <el-button id="DocumentTemplate__PreviewDocument__TestTemplateDownload" :loading="state.downloadLoading"
+        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" />
+
+        <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
+                   :loading="state.downloadLoading"
                    @click="handleTest">{{ $t('template.test') }}
         </el-button>
       </InteractDrawer>
@@ -258,8 +260,19 @@ onBeforeMount(async () => {
 }
 
 .editor-container {
-  height: calc(100vh - 110px);;
+  height: calc(100vh - 110px);
   overflow-y: auto;
+}
+
+.reader-container {
+  height: calc(100vh - 110px);
+  overflow-y: auto;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.template-test-button {
+  margin-bottom: 15px;
 }
 
 .template-left-container {
@@ -279,7 +292,7 @@ onBeforeMount(async () => {
   padding-bottom: 0;
 
   .formContainer {
-    overflow: auto;
+    overflow-y: auto;
   }
 }
 
