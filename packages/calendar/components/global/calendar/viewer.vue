@@ -112,12 +112,12 @@ function setupCalendar() {
         monthGridOptions:{
             nEventsPerDay: 10,
         },
-        isResponsive: false,
+        isResponsive: true,
         views:[
             createViewDay(),
             createViewWeek(),
-            createViewMonthGrid(),
             createViewMonthAgenda(),
+            createViewMonthGrid(),
         ],
         events: [
         ],
