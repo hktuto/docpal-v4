@@ -43,7 +43,7 @@ async function handleSubmit() {
       state.visible = false
     })
   } catch (e) {
-    routerProvider?.message.error(t('docTemplate.import.import.error'))
+    routerProvider?.message.error(t('docTemplate.import.importError'))
   }
 }
 
