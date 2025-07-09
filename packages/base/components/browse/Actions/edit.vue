@@ -55,11 +55,9 @@ const { t } = useI18n()
 async function openDialog() {
   state.doc = props.doc
   form.value.name = props.doc.name
-  form.value.id = props.doc.id
-  form.value.path = props.doc.path
   dialogOpened.value = true
   nextTick(async () => {
-    const analysis = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(state.doc.id)
+    const analysis: any = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(props.doc.id)
     state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
     await MetaFormRef.value.init(props.doc.type, {
       aiAnalysis: analysis.metaDatas,
@@ -84,7 +82,7 @@ async function handleSave() {
       return
     }
     // check if the name is exist in the folder
-    const { isDuplicate } = await duplicateNameFilter(getParentPath(state.doc.path), [form.value])
+    const { isDuplicate } = await duplicateNameFilter(props.doc.parentRef, [form.value])
     if (isDuplicate && form.value.name !== props.doc.name) {
       ElMessage({
         message: t('dpTip_duplicateFileName') as string,
@@ -94,14 +92,14 @@ async function handleSave() {
       return
     }
     await clientApi.api.patchNuxeoDocument({
-      idOrPath: form.value.id,
+      idOrPath: props.doc.id,
       name: form.value.name,
       properties: metaFormData
     })
     ElMessage.success(t('tip_updateSuccessMsg', { modelName: t('common_item'), name: form.value.name }))
 
     emitBus(EventType.FILE_NEED_REFRESH, {
-      relatedIdOrPath: state.doc.id
+      relatedIdOrPath: props.doc.id
     })
     dialogOpened.value = false
   } catch (error) {

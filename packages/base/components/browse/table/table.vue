@@ -567,7 +567,7 @@ function dblClickHandler(row: any) {
     return
   }
   if (row.isFolder) {
-    listProvider?.changeRoute(row.path)
+    listProvider?.changeRoute(row.id)
   } else {
     const params = createDetailPageParams({
       idOrPath: row.id,

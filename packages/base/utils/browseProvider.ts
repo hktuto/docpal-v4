@@ -5,7 +5,7 @@ interface BrowseListProvider {
     docPermission?: Ref<any>,
     mode: Ref<'browse' | 'search'>,
     searchQuery: Ref<string>,
-    changeRoute:(path:string) => void
+    changeRoute:(id:string) => void
     addToSelection?:(items: any[]) => void
     removeFromSelection?:(items: any[]) => void
     

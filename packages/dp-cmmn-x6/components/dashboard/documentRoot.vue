@@ -20,8 +20,8 @@ const caseDetail = ref<any>()
 const home = ref({ secondId: '/', disabled: true })
 const idOrPath = ref('')
 const homeId = ref('')
-function changeRoute(path: string) {
-  idOrPath.value = path
+function changeRoute(id: string) {
+  idOrPath.value = id
 }
 const caseProvider: any = inject(CaseManagementDashboardKey)
 async function getCDBasciInfo() {
