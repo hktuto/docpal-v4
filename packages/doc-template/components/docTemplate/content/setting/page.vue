@@ -9,7 +9,7 @@ const editorProvider = inject(DocTemplateProveKey)
 if (!editorProvider) {
   throw createError('editor Provider not found')
 }
-const { editor, options, initEditor } = editorProvider
+const { editor, options, initEditor, getEditContent } = editorProvider
 
 const { t } = useI18n()
 const opened = ref(false)
@@ -26,6 +26,21 @@ const rules = reactive({
   ]
 })
 
+function open() {
+  // TODO : get page Setting
+  opened.value = true
+  const extension = editor.value.options.extensions.find((ex: any) => ex.name === 'pagination')
+  if (!extension) {
+    throw createError('no pagination found')
+  }
+  // deep copy
+  form.value = JSON.parse(JSON.stringify(options.value))
+}
+
+function close() {
+  opened.value = false
+}
+
 function checkTitle(rule: any, value: any, callback: any) {
   // const invalidFileNameRegex = /[\/\\:*?"<>|]|^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$/i
   const invalidCharacterRegex = /[\/\\:*?"<>|]/
@@ -37,98 +52,81 @@ function checkTitle(rule: any, value: any, callback: any) {
 }
 
 async function updatePageSetting() {
-  // check if pageSize change = 
-  // editor.value.commands.
-  // editor.value.commands.setDocumentPaperSize(form.value?.defaultPaperSize);
-  // editor.value.commands.setDocumentPaperOrientation(form.value?.defaultPaperOrientation || "landscape")
   try {
     await formRef.value.validate()
   } catch (e) {
     return
   }
 
-  editor.value.commands.setDocumentPageMargins(form.value?.pageSetting.defaultMarginConfig)
   const extension = editor.value.options.extensions.find((ex: any) => ex.name === 'pagination')
 
   extension.options = {
     ...extension.options,
     ...form.value.pageSetting
   }
-  // TODO : get content and 
   const newOptions = {
     ...form.value
   }
-  initEditor(newOptions)
+  // 初始化時也會設置頁邊距，但是使用的參數是舊的參數
+  initEditor(newOptions, getEditContent())
+
+  editor.value.commands.setDocumentPageMargins(form.value?.pageSetting.defaultMarginConfig)
+
   // check if title has changed
   routerProvider?.updateTabName(form.value?.title)
 
   opened.value = false
 }
 
-function close() {
-  opened.value = false
-}
-
-function open() {
-  // TODO : get page Setting
-  opened.value = true
-  const extension = editor.value.options.extensions.find((ex: any) => ex.name === 'pagination')
-  if (!extension) {
-    throw createError('no pagination found')
-  }
-  form.value = options.value
-}
-
 </script>
 
-
 <template>
-  <ElButton @click="open">Page Setup</ElButton>
+  <ElButton @click="open">{{ $t('docTemplate.pageSetup.pageSetup') }}</ElButton>
 
-  <ElDialog v-model="opened">
+  <ElDialog v-model="opened" :title="t('docTemplate.pageSetup.pageSetup')">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-      <ElFormItem prop="title" label="Title">
-        <ElInput v-model="form.title" placeholder="Enter document title" />
+      <ElFormItem prop="title" :label="t('docTemplate.pageSetup.title')">
+        <ElInput v-model="form.title" :placeholder="t('docTemplate.pageSetup.EnterDocumentTitle')" />
       </ElFormItem>
-      <ElFormItem label="Page Size">
+      <ElFormItem :label="t('docTemplate.pageSetup.pageSize')">
         <ElSelect v-model="form.pageSetting.defaultPaperSize">
           <ElOption v-for="key in paperSizes" :key="key" :label="key" :value="key" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Orientation">
+      <ElFormItem :label="t('docTemplate.pageSetup.orientation')">
         <ElSelect v-model="form.pageSetting.defaultPaperOrientation">
-          <ElOption label="portrait" value="portrait" />
-          <ElOption label="landscape" value="landscape" />
+          <ElOption :label="t('docTemplate.pageSetup.portrait')" value="portrait" />
+          <ElOption :label="t('docTemplate.pageSetup.landscape')" value="landscape" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Page Margin">
+      <ElFormItem :label="t('docTemplate.pageSetup.pageMargin')">
         <ElRow :gutter="12">
           <ElCol :span="6">
-            <ElFormItem label="Left">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.left')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
-            <ElFormItem label="Top">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.top')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
-            <ElFormItem label="Right">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.right')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
-            <ElFormItem label="Bottom">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.bottom')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0" max="100" />
             </ElFormItem>
           </ElCol>
         </ElRow>
       </ElFormItem>
     </ElForm>
     <template #footer>
-      <ElButton type="link" @click="close">Cancel</ElButton>
-      <ElButton type="primary" @click="updatePageSetting">Save</ElButton>
+      <ElButton type="link" @click="close">{{ t('dpButtom_cancel') }}</ElButton>
+      <ElButton type="primary" @click="updatePageSetting">{{ $t('button.save') }}</ElButton>
     </template>
   </ElDialog>
 </template>
