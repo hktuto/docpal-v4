@@ -205,13 +205,13 @@ onBeforeMount(async () => {
             <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="$t('common_refresh')"
                      @click="handleRefresh()" />
 
-            <template v-if="state.info.fileType === 'Word'">
+            <!-- <template v-if="state.info.fileType === 'Word'">
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
                        :content="$t('editTemplateData')" @click="handleEditEditor"></SvgIcon>
               <SvgIcon v-if="state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
                        :content="t('saveWord')" @click="handleSaveWord">
               </SvgIcon>
-            </template>
+            </template> -->
 
             <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh()" />
             <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right"
