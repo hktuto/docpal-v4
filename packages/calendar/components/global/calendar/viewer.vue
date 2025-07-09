@@ -247,8 +247,8 @@ defineExpose({
                     :style="getCalendarStyle(calendarEvent)"
                 >
                   <div class="title">{{ calendarEvent.title }}</div>
+                  <div class="description">{{ calendarEvent.description }}</div>
                    <div class="location">{{ calendarEvent.location || calendarEvent.detail.location }}</div>
-                   <div class="category">{{ calendarEvent.detail.category }}</div>
                    <div class="time">{{ displayTimeFn(calendarEvent) }}</div>
                 </div>
             </template>
