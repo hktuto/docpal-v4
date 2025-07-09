@@ -167,12 +167,12 @@ onDeactivated(() => {
 
 function getCalendarStyle(event:any){
     const categories = useCalenarCategories()
-    console.log("event", event)
+    
     const catId = event.detail.category || event.calendarId
     if(!catId) return ""
     const category = categories.value.find(item => item.id === catId)
     if(!category) return ""
-    return `background-color: ${category.color}; color: ${category.onContainer}`
+    return `--bg-color: ${category.color}; --on-color: ${category.onContainer}; --container_color: ${category.Container_Color};`
 }
 
 function displayTimeFn(event:any){
@@ -242,6 +242,9 @@ defineExpose({
                 </ElTooltip>
                 </div>
             </template>
+            <template #monthGridEvent="{ calendarEvent }">
+
+            </template>
             <template #monthAgendaEvent="{ calendarEvent }">
                 <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
                     :style="getCalendarStyle(calendarEvent)"
@@ -268,15 +271,22 @@ defineExpose({
             }
         }
     }
-}   
+}
+
 .sx-vue-calendar-wrapper {
   height: 100%;
 }
 .eventContainer{
-    height:100%;
     padding:var(--app-space-xs);
     border-radius: 4px;
     // background-color: rgba(0, 0, 0, 0.1);
+    font-size: var(--app-font-size-m);
+    line-height: 1.1rem;
+    background-color: var(--container_color);
+    color: var(--on-color);
+    border-left: 4px solid var(--bg-color);
+    border-radius: 4px;
+    padding: var(--app-space-xs) var(--app-space-xs) var(--app-space-xs) var(--app-space-s); 
     font-size: var(--app-font-size-m);
     line-height: 1.1rem;
     &.isEditItem{
