@@ -277,6 +277,7 @@ async function handleSave() {
       }, [])
     }
     const metadataDefault = await FormVariablesRendererRef.value.getData(false)
+    if (!metadataDefault) return
     if (metadataDefault) params.metadataValue = JSON.stringify(metadataDefault)
 
     state.loading = true

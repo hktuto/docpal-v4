@@ -275,6 +275,7 @@ async function setData(properties: any) {
 }
 async function getData() {
   const data = await FormVariablesRendererRef.value.getData()
+  if (!data) return
   state.variables.forEach((item: any) => {
     switch (item.type) {
       case 'textarea':
