@@ -165,7 +165,7 @@ provide(DocumentTemplateProviderKey, {
     return adminApi.api.postTemplateDocumentPage(params)
   },
   dblClickHandle: (row: any) => {
-    const item = createNewDocumentTemplateDetail(row)
+    const item = createNewDocumentTemplateDetail(row, true)
     routerProvider?.navigateTo(item)
   },
   handleActive,
@@ -181,7 +181,6 @@ provide(DocumentTemplateProviderKey, {
     return { visible: true, disabled: false }
   }
 })
-
 
 </script>
 

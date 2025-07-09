@@ -4,9 +4,10 @@ import { ElNotification } from 'element-plus'
 import { adminApi } from 'api'
 
 const { t } = useI18n()
-const { id } = defineProps<{
+const { id, isEdit } = defineProps<{
   id: string
-  name: string
+  name: string,
+  isEdit: boolean,
 }>()
 const state = reactive<any>({
   info: {
@@ -27,7 +28,8 @@ const state = reactive<any>({
   },
   downloadLoading: false,
   pageLoading: false,
-  isEdit: false
+  isEdit: false,
+  openWordDialog: false
 })
 const InteractDrawerRef = ref()
 const docTemplateEditorRef = ref()
@@ -46,6 +48,7 @@ async function getPreviewFile() {
     })
     state.previewFile.blob = blob
   } catch (error) {
+    console.log(error)
   }
   state.previewFile.loading = false
 }
@@ -150,32 +153,35 @@ function handleRefresh(state: any) {
 const documentOptions = ref({})
 const jsonData = ref({})
 
-function initWordEditor() {
-  if (state.info.fileType === 'Word') {
-    // TODO: Test case
-    const json =JSON.parse('{"json":{"options":{"mode":"PAGE","pageSetting":{"defaultMarginConfig":{"bottom":5,"top":5,"left":5,"right":5},"defaultPageBorders":{"bottom":1,"top":1,"left":1,"right":1},"defaultPaperColour":"#fff","defaultPaperOrientation":"portrait","defaultPaperSize":"A4","useDeviceThemeForPaperColour":false,"pageAmendmentOptions":{"enableHeader":false,"enableFooter":false}},"title":"New Document","creator":"","theme":{"fontSize":12,"fontColor":"#000000","fontBackgroundColor":"#ffffff","fontFamily":"Arial","bodyFontSize":20,"h1FontSize":20,"highlightColor":"#ffff00"},"editable":true},"content":{"type":"doc","content":[{"type":"page","attrs":{"paperSize":"A4","paperColour":"#fff","paperOrientation":"portrait","pageBorders":{"top":1,"right":1,"bottom":1,"left":1}},"content":[{"type":"body","attrs":{"pageMargins":{"top":5,"bottom":5,"left":5,"right":5}},"content":[{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableText","attrs":{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"}}]},{"type":"variableList","attrs":{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}}},{"type":"variableTable","attrs":{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}}},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableLink","attrs":{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}}]},{"type":"variableList","attrs":{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}}}]}]}]}},"variables":[{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"},{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}},{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}},{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}},{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}]}')
-
-    // documentOptions.value.title = state.info.name
-    // TODO: service response
-    documentOptions.value = json.json.options
-    jsonData.value = json.json.content
-    variables.value = json.variables
-    templateVariablesRendererRef.value.setVariables(variables.value)
-  }
-  state.pageLoading = true
+function initWordEditor(json: any) {
+  documentOptions.value = json.json.options
+  jsonData.value = json.json.content
+  variables.value = json.variables
+  templateVariablesRendererRef.value.setVariables(variables.value)
 }
+
+function createWordEdit(newData: any) {
+  documentOptions.value = newData
+  documentOptions.value.editable = true
+  routerProvider?.updateTabName(newData.title)
+  state.isEdit = true
+}
+
 
 function handleEditEditor() {
   state.isEdit = true
 }
 
-function handleSaveWord() {
+async function handleSaveWord() {
   const { json, variables } = docTemplateEditorRef.value.getJsonData()
 
   documentOptions.value = json.options
   jsonData.value = json.content
 
+  // 封裝json
+
   // TODO: 組裝成完整的Json， 發送請求更新數據
+  // await adminApi.api.postNuxeoDocumentPreview({})
 
   state.isEdit = false
 }
@@ -183,13 +189,47 @@ function handleSaveWord() {
 function updateVariables(newData: TipTapOptions) {
   variables.value = newData
   templateVariablesRendererRef.value.setVariables(variables.value)
+  // TODO: 更新服務端的 Variables 數據
+
+}
+
+async function init() {
+  await getInfo()
+  await getVariables()
+  if (isEdit) {
+
+    // 分流不同的文件類型，顯示不同的編輯器
+    switch (state.info.type) {
+      case 'Word':
+        // 解析Blob
+        const json = JSON.parse('{"json":{"options":{"mode":"PAGE","pageSetting":{"defaultMarginConfig":{"bottom":5,"top":5,"left":5,"right":5},"defaultPageBorders":{"bottom":1,"top":1,"left":1,"right":1},"defaultPaperColour":"#fff","defaultPaperOrientation":"portrait","defaultPaperSize":"A4","useDeviceThemeForPaperColour":false,"pageAmendmentOptions":{"enableHeader":false,"enableFooter":false}},"title":"New Document","creator":"","theme":{"fontSize":12,"fontColor":"#000000","fontBackgroundColor":"#ffffff","fontFamily":"Arial","bodyFontSize":20,"h1FontSize":20,"highlightColor":"#ffff00"},"editable":true},"content":{"type":"doc","content":[{"type":"page","attrs":{"paperSize":"A4","paperColour":"#fff","paperOrientation":"portrait","pageBorders":{"top":1,"right":1,"bottom":1,"left":1}},"content":[{"type":"body","attrs":{"pageMargins":{"top":5,"bottom":5,"left":5,"right":5}},"content":[{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableText","attrs":{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"}}]},{"type":"variableList","attrs":{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}}},{"type":"variableTable","attrs":{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}}},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableLink","attrs":{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}}]},{"type":"variableList","attrs":{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}}}]}]}]}},"variables":[{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"},{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}},{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}},{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}},{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}]}')
+        initWordEditor(json)
+        break
+      case 'Excel':
+
+        break
+    }
+
+    state.pageLoading = true
+    return
+  }
+
+  // 新文件根據不同類型給與顯示的編輯器，並初始化編輯器
+  switch (state.info.type) {
+    case 'Word':
+      state.openWordDialog = true
+      break
+    case 'Excel':
+      break
+    default:
+  }
+
+  state.pageLoading = true
 }
 
 onBeforeMount(async () => {
-  await getVariables()
-  await getInfo()
   await getPreviewFile()
-  initWordEditor()
+  init()
 })
 </script>
 
@@ -210,9 +250,9 @@ onBeforeMount(async () => {
 
             <template v-if="state.info.fileType === 'Word'">
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                       :content="$t('editTemplateData')" @click="handleEditEditor"></SvgIcon>
-              <SvgIcon v-if="state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                       :content="t('saveWord')" @click="handleSaveWord">
+                       :content="t('edit Word')" @click="handleEditEditor"></SvgIcon>
+              <SvgIcon v-if="state.isEdit" src="/icons/file/save.svg" class="el-icon--right" round
+                       :content="t('save Word')" @click="handleSaveWord">
               </SvgIcon>
             </template>
 
@@ -221,7 +261,7 @@ onBeforeMount(async () => {
                                    @refresh="handleRefresh({ variables: true, preview: true })" />
           </div>
         </div>
-         <div v-if="state.pageLoading">
+        <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
             <div class="editor-container">
               <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
@@ -233,6 +273,7 @@ onBeforeMount(async () => {
           <template v-else>
             <Reader class="reader-container" ref="ReaderRef" v-bind="state.previewFile"></Reader>
           </template>
+          <!-- TODO: Other file editors -->
         </div>
       </div>
       <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
@@ -247,6 +288,9 @@ onBeforeMount(async () => {
       </InteractDrawer>
     </div>
     <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
+
+    <!-- TODO: 需要將標題名稱傳進去dialog内   -->
+    <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="state.openWordDialog" @submit="createWordEdit" />
   </div>
 </template>
 
