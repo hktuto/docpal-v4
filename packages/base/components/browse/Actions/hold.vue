@@ -146,7 +146,7 @@ async function refreshHold() {
   })
   if (!_permission) _permission = {}
   if (!_permission.hold) _permission.hold = {}
-  props.permission.hold = _permission.hold
+  props.doc.hold = _permission.hold
 }
 async function getHoldPolicies() {
   state.holdList = await clientApi.api.getPolicyHolds().then((res) => res.data)
