@@ -2,7 +2,7 @@
 import dayjs from 'dayjs'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 import {clientApi} from 'api'
-import { ElDialog } from 'element-plus'
+import { ElDialog, ElMessage } from 'element-plus'
 const opened = ref(false)
 const { options } = defineProps<{
 
@@ -79,6 +79,9 @@ async function openWorkflow(){
             name: task.name
         })
         routerProvider?.navigateTo(newTab, true)
+    }else{
+      // open dialog an show the task is already completed
+      ElMessage.warning("The task is already completed")
     }
   } catch (error: any) {
     console.error(error)
