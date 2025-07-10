@@ -65,15 +65,18 @@ async function handleSubmit() {
         item.parentPath = parentPath
         let defaultValue = {}
         if (item.metadataValue) defaultValue = JSON.parse(item.metadataValue)
-        const name = item.previewName || getMetaName({
-            label: item.label,
-            ...defaultValue
-          },
-          item)
+        const name =
+          item.previewName ||
+          getMetaName(
+            {
+              label: item.label,
+              ...defaultValue
+            },
+            item
+          )
         item.name = name
         item.path = parentPath + '/' + item.name
         return createDirectory(item).then((dir: any) => {
-          
           if (dir?.id && item.children) uploadFiles(item.children, item.path)
         })
       } else {
@@ -188,29 +191,16 @@ function getLabelList(row: any) {
 }
 
 function getMetaName(formData: any = {}, row: any) {
-  const date = new Date()
   const labelRule = getLabelList(row)
-  return labelRule.reduce((prev: any, rule: any, index: number) => {
-    const joiner = index === 0 ? '' : '-'
-    if (!rule.metadata) rule.metadata = rule.metaData
-    if (rule.metadata === 'fc:createDate') {
-      prev += joiner + formatDate(date, 'YYYY-MM-DD')
-    } else if (rule.metadata === 'fc:label') {
-      prev += joiner + formData.label
-    } else if (rule.metadata === 'fc:creator') {
-      prev += joiner + userId
-    } else if (rule.metadata === 'fc:docTitle') {
-      if (!formData.docName) prev += joiner + ''
-      else prev += joiner + formData.docName
-    } else if (rule.dataType === 'date') {
-      if (!formData[rule.metadata]) prev += joiner + ''
-      else prev += joiner + formatDate(formData[rule.metadata], 'YYYY-MM-DD')
-    } else {
-      if (!formData[rule.metadata]) prev += joiner + ''
-      else prev += joiner + formData[rule.metadata]
+  try {
+    const data = {
+      ...formData,
+      ...state.metaFormData,
+      label: formData.label,
+      docName: formData.docName
     }
-    return prev
-  }, '')
+    return getNameByLabelRule(labelRule, data)
+  } catch (error) {}
 }
 
 // #endregion
