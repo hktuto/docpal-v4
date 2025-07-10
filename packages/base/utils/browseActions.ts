@@ -27,6 +27,7 @@ export type BrowseActionItem = {
   component: any
   groupBy: string
   hideAfterClick?: boolean
+  additionalCheck?: (docDetail: any) => boolean
 }
 export type ShareActionItem = {
   name: string
@@ -108,7 +109,15 @@ export const actions: BrowseActionItem[] = [
     showInDetail: true,
     permission: 'write',
     component: BrowseActionsWatermarkBtn,
-    groupBy: 'other'
+    groupBy: 'other',
+    additionalCheck: (docDetail:any) => {
+      const watermarkAcceptFormat = ['jpg', 'pdf','png','mp4']
+      console.log("additionalCheck", docDetail)
+      if(docDetail.fileContentExtension && watermarkAcceptFormat.includes(docDetail.fileContentExtension.toLowerCase())){
+        return true;
+      }
+      return false;
+    }
   },
   {
     name: 'share',
@@ -163,9 +172,15 @@ export const ActionsFilter = (actions: BrowseActionItem[], docDetail: any, boole
       return item[booleanKey]
     })
     .filter((item) => {
-      console.log(RbacAllowTo(item.permission, docDetail), docDetail);
+      // console.log(RbacAllowTo(item.permission, docDetail), docDetail);
       
       return RbacAllowTo(item.permission, docDetail)
+    })
+    .filter((item) => {
+      if(item.additionalCheck){
+        return item.additionalCheck(docDetail)
+      }
+      return true;
     })
     .reduce((prev: any, item: BrowseActionItem) => {
       prev[item.groupBy] = prev[item.groupBy] || []

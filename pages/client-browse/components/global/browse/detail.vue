@@ -57,54 +57,8 @@ async function getDetail() {
   routerProvider?.addToHistory(newItem)
 }
 const isPdf = ref(false)
-const readerType = computed(() => {
-  try {
-    isPdf.value = false
 
-    if (!docDetail.value) {
-      loading.value = true
-      return resolveComponent('LazyOtherPlayer')
-    }
-    const mimeType = getMimeTypeFromDocument(docDetail.value)
-    if (!mimeType) return resolveComponent('LazyPdfViewer') // set to pdf for testing
-    // check if it is excel
 
-    if (canCollaboraEdit(mimeType)) {
-      return resolveComponent('LazyCollaboraViewer')
-    }
-    if (mimeType.includes('text/html')) {
-      return resolveComponent('LazyHtmlViewer')
-    }
-    if (mimeType.includes('tiff')) {
-      return resolveComponent('LazyTiffViewer')
-    }
-    if (mimeType === 'image/bmp' || mimeType === 'image/gif') {
-      return resolveComponent('LazyImageViewer')
-    }
-    if (mimeType.includes('image')) {
-      return resolveComponent('LazyPdfViewer')
-    }
-    if (
-      mimeType.includes('pdf') ||
-      mimeType.includes('document') ||
-      mimeType.includes('text') ||
-      mimeType.includes('photoshop') ||
-      mimeType.includes('psd') ||
-      mimeType.includes('illustrator') ||
-      mimeType.includes('text')
-    ) {
-      isPdf.value = true
-      return resolveComponent('LazyPdfViewer')
-    }
-    if (mimeType.includes('video') || mimeType.includes('audio')) {
-      return resolveComponent('LazyVideoPlayer')
-    }
-    return resolveComponent('LazyOtherPlayer')
-  } catch (error) {
-    console.log('canCollaboraEdit', error)
-    return resolveComponent('LazyOtherPlayer')
-  }
-})
 function closePreview({ detail }: any) {
   if (!detail) return
   if (detail.id === docDetail.value.id) {
