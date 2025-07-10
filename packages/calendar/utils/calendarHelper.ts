@@ -171,16 +171,21 @@ export function snapDownTo15Minutes(time: Dayjs) {
   return time.minute(snappedMinutes).second(0);
 }
 
-export function displayTimeFn(event:any){
+export function displayTimeFn(event:any, dateMode = false){
   // check if event is in all day
   const stateDate = dayjs(event.start).format('YYYY-MM-DD')
   const endDate = dayjs(event.end).format('YYYY-MM-DD')
+ 
   if(stateDate === endDate){
+    if(dateMode){
+      return dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
+    }
       return stateDate + ' ' + dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
   }else{
       return dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
   }
 }
+
 
 /**
  * example workflow setting

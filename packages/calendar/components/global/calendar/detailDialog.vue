@@ -104,7 +104,7 @@ defineExpose({
               <Icon name="mdi:calendar-text"  /> Title: {{ eventDetail.title }}
             </div>
             <div class="description eventInfo">
-              <Icon name="mdi:text"  /> description: {{ eventDetail.description }}
+              <Icon name="mdi:text"  /> Description: {{ eventDetail.description }}
             </div>
             <div class="location eventInfo">
               <Icon name="mdi:map-marker"  /> Location : {{ location }}
