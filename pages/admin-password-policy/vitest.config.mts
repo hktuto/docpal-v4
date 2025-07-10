@@ -11,8 +11,8 @@ export default defineVitestConfig({
     setupFiles: ['./__test__/setup.ts', './__test__/mock/element-plus.ts'],
     reporters: ["html", "json"],
     outputFile: {
-      html: "../../.vitest-reporter-html/html/admin-document-type/index.html",
-      json: "../../.vitest-reporter-html/json/admin-document-type.json"
+      html: "../../.vitest-reporter-html/html/admin-password-policy/index.html",
+      json: "../../.vitest-reporter-html/json/admin-password-policy.json"
     },
   },
   // compilerOptions: {
