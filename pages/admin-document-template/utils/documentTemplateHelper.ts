@@ -12,6 +12,23 @@ interface DocumentTemplateProvider {
 
 export const DocumentTemplateProviderKey: InjectionKey<DocumentTemplateProvider> = Symbol('DocumentTemplateProviderKey')
 
+export const navigateToTemplatePage= ()=>{
+    return {
+        id:"admin-document-template",
+        name: 'document-template',
+        label: "adminMenu.template",
+        icon: "lucide:file-sliders",
+        hoverIcon: "lucide:file-sliders",
+        component: "LazyDocumentTemplatePage",
+        feature: "GENERATE_TEMPLATE",
+        props:{
+            pageNum: 0,
+            pageSize: 20,
+            orderBy: 'createdDate',
+            isDesc: true
+        },
+    }
+}
 
 export const createNewDocumentTemplateDetail = (data :any, isEdit :boolean) => {
     const newItem: TabItem = {

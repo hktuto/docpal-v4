@@ -2,6 +2,7 @@
 import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi } from 'api'
+import { navigateToTemplatePage } from '~/utils/documentTemplateHelper'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -163,6 +164,10 @@ function createWordEdit(newData: any) {
   routerProvider?.updateTabName(newData.title)
   state.isEdit = true
   state.openWordDialog = false
+}
+
+function handleWordDialogClose() {
+  routerProvider?.navigateTo(navigateToTemplatePage())
 }
 
 function handleEditEditor() {
@@ -369,7 +374,8 @@ onBeforeMount(async () => {
     <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
 
     <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
-                                  :defaultOpened="state.openWordDialog" @submit="createWordEdit" />
+                                  :defaultOpened="state.openWordDialog" @submit="createWordEdit"
+                                  @close="handleWordDialogClose" />
   </div>
 </template>
 
