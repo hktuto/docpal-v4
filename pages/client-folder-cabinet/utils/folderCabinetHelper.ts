@@ -12,18 +12,15 @@ export function getNameByLabelRule(labelRules: any, data: any) {
         if (rule.metadata === 'fc:createDate') {
           prev += joiner + formatDate(date)
         } else if (rule.metadata === 'fc:label') {
-          prev += joiner + data.label
+          if (!!data.label) prev += joiner + data.label
         } else if (rule.metadata === 'fc:creator') {
           prev += joiner + userId
         } else if (rule.metadata === 'fc:docTitle') {
-          if (!data.docName) prev += joiner + ''
-          else prev += joiner + data.docName
+          if (!!data.docName) prev += joiner + data.docName
         } else if (rule.dataType === 'date') {
-          if (!data[rule.metadata]) prev += joiner + ''
-          else prev += joiner + formatDate(data[rule.metadata])
+          if (!!data[rule.metadata]) joiner + formatDate(data[rule.metadata])
         } else {
-          if (!data[rule.metadata]) prev += joiner + ''
-          else prev += joiner + data[rule.metadata]
+          if (!!data[rule.metadata]) prev += joiner + data[rule.metadata]
         }
         return prev
       }, '')
