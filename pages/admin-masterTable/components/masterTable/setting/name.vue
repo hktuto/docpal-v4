@@ -43,9 +43,13 @@ async function handleSave() {
 watch(
   () => props.table,
   () => {
-    state.name = props.table.name
+    if(props.table?.name) {
+      state.name = props.table?.name
+    }
   },
-  {}
+  {
+    immediate: true
+  }
 )
 </script>
 <style lang="scss" scoped>
