@@ -223,12 +223,18 @@ defineExpose({
                     :style="getCalendarStyle(calendarEvent)"
                 >
                 <ElTooltip  placement="top">  
-                  <div class="eventInfo">
+                  <div class="eventInfoGroup">
                     
-                    <Icon name="mdi:map-marker"  />
-                      {{ calendarEvent.location || calendarEvent.detail.location }}  <Icon name="mdi:clock-outline"  />
-                      {{ displayTimeFn(calendarEvent, true) }}
+                    <div class="eventInfo">
+                      
+                      <Icon name="mdi:map-marker"  />
+                        {{ calendarEvent.location || calendarEvent.detail.location }}  
+                        </div>
+                        <div class="eventInfo">
+                      <Icon name="mdi:clock-outline"  />
+                        {{ displayTimeFn(calendarEvent, true) }}
 
+                    </div>
                   </div>
                     
                     <template #content>
@@ -299,6 +305,12 @@ defineExpose({
             }
         }
     }
+}
+.eventInfoGroup{
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  gap: var(--app-space-xxs);
 }
 .eventInfo{
   display: flex;
