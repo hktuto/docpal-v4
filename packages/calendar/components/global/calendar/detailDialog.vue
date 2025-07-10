@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import type { CalendarEventExternal } from '@schedule-x/calendar'
 import {clientApi} from 'api'
 import { ElDialog, ElMessage } from 'element-plus'
+import { displayTimeFn } from '../../../utils/calendarHelper'
 const opened = ref(false)
 const { options } = defineProps<{
 
@@ -98,12 +99,24 @@ defineExpose({
 
     <ElDialog v-model="opened" draggable >
         <div class="content">
-            <div class="title">
-                {{ location }} - {{ eventDetail.people.join(", ") }}
+          <div class="eventInfoContainer">
+            <div class="title eventInfo">
+              <Icon name="mdi:calendar-text"  /> Title: {{ eventDetail.title }}
             </div>
-            Location : {{ location}} <br/>
-            Category : {{ category }} <br/>
-            Time: {{ dayjs(eventDetail.detail.startTime).format('YYYY-MM-DD HH:mm') }} - {{ dayjs(eventDetail.detail.endTime).format('YYYY-MM-DD HH:mm') }}
+            <div class="description eventInfo">
+              <Icon name="mdi:text"  /> description: {{ eventDetail.description }}
+            </div>
+            <div class="location eventInfo">
+              <Icon name="mdi:map-marker"  /> Location : {{ location }}
+            </div>
+            <div class="category eventInfo">
+              <Icon name="mdi:tag"  /> Category : {{ category }}
+            </div>
+            <div class="time eventInfo">
+              <Icon name="mdi:clock-outline"  /> Time: {{ displayTimeFn(eventDetail) }}
+            </div>
+          </div>
+           
             <!-- <ElForm label-position="top">
                 <ElRow :gutter="12">
                     <ElCol :span="12">
@@ -144,6 +157,19 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+.eventInfoContainer{
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-s);
+  padding-block: var(--app-space-s);
+  .eventInfo{
+    display: flex;
+    align-items: center;
+    gap: var(--app-space-s);
+    font-size: var(--app-font-size-m);
+    line-height: 1.1rem;
+  }
+}
 .relatedWorkflow{
     width:100%;
     height: 100%;

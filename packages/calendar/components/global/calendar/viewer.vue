@@ -13,7 +13,6 @@ import {
   type CalendarEventExternal
 } from '@schedule-x/calendar'
 
-import {isEventValid } from '../../../utils/calendarHelper'
 
 import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
@@ -24,6 +23,7 @@ import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import {getEventFromApi, type CalendarOptions, type DocPalEventType} from '../../../utils/calendarHelper'
 import {useCalendarStore} from '../../../composables/useCalendar'
+import { displayTimeFn } from '../../../utils/calendarHelper'
 
 const { setting, calendarViewerCategories } = useCalendarStore();
 const props = defineProps<{
@@ -175,16 +175,6 @@ function getCalendarStyle(event:any){
     return `--bg-color: ${category.color}; --on-color: ${category.onContainer}; --container_color: ${category.Container_Color};`
 }
 
-function displayTimeFn(event:any){
-    // check if event is in all day
-    const stateDate = dayjs(event.start).format('YYYY-MM-DD')
-    const endDate = dayjs(event.end).format('YYYY-MM-DD')
-    if(stateDate === endDate){
-        return stateDate + ' ' + dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
-    }else{
-        return dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
-    }
-}
 
 function makeDescription(event:CalendarEventExternal){
     return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
@@ -249,10 +239,22 @@ defineExpose({
                 <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
                     :style="getCalendarStyle(calendarEvent)"
                 >
-                  <div class="title">{{ calendarEvent.title }}</div>
-                  <div class="description">{{ calendarEvent.description }}</div>
-                   <div class="location">{{ calendarEvent.location || calendarEvent.detail.location }}</div>
-                   <div class="time">{{ displayTimeFn(calendarEvent) }}</div>
+                  <div class="title eventInfo">
+                    <Icon name="mdi:calendar-text"  />
+                    {{ calendarEvent.title }}
+                  </div>
+                  <div class="description eventInfo">
+                    <Icon name="mdi:text"  />
+                    {{ calendarEvent.description }}
+                  </div>
+                   <div class="location eventInfo">
+                    <Icon name="mdi:map-marker"  />
+                    {{ calendarEvent.location || calendarEvent.detail.location }}
+                  </div>
+                   <div class="time eventInfo">
+                    <Icon name="mdi:clock-outline"  />
+                    {{ displayTimeFn(calendarEvent) }}
+                  </div>
                 </div>
             </template>
         </ScheduleXCalendar>
@@ -272,7 +274,13 @@ defineExpose({
         }
     }
 }
-
+.eventInfo{
+  display: flex;
+  align-items: center;
+  font-size: var(--app-font-size-m);
+  justify-content: flex-start;
+  gap: 4px;
+}
 .sx-vue-calendar-wrapper {
   height: 100%;
 }
