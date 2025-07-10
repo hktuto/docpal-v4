@@ -222,19 +222,44 @@ defineExpose({
                 <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
                     :style="getCalendarStyle(calendarEvent)"
                 >
-                <ElTooltip  placement="top">
-                    {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(", ") }} <br/>
-                    {{ displayTimeFn(calendarEvent) }}
+                <ElTooltip  placement="top">  
+                  <div class="eventInfo">
+                    
+                    <Icon name="mdi:map-marker"  />
+                      {{ calendarEvent.location || calendarEvent.detail.location }}  <Icon name="mdi:clock-outline"  />
+                      {{ displayTimeFn(calendarEvent, true) }}
+
+                  </div>
+                    
                     <template #content>
                         {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(", ") }} <br/>
-                    {{ displayTimeFn(calendarEvent) }}
+                        {{ displayTimeFn(calendarEvent) }}
                     </template>
                 </ElTooltip>
                 </div>
             </template>
-            <template #monthGridEvent="{ calendarEvent }">
 
+            <template #monthGridEvent="{ calendarEvent }">
+                <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId, small: true}"
+                    :style="getCalendarStyle(calendarEvent)"
+                >
+                <ElTooltip  placement="top">  
+                  <div class="eventInfo small">
+                    
+                    <Icon name="mdi:map-marker"  />
+                      {{ calendarEvent.location || calendarEvent.detail.location }}  <Icon name="mdi:clock-outline"  />
+                      {{ displayTimeFn(calendarEvent, true) }}
+
+                  </div>
+                    
+                    <template #content>
+                        {{ calendarEvent.location || calendarEvent.detail.location }} - {{ calendarEvent.people.join(", ") }} <br/>
+                        {{ displayTimeFn(calendarEvent) }}
+                    </template>
+                </ElTooltip>
+                </div>
             </template>
+
             <template #monthAgendaEvent="{ calendarEvent }">
                 <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
                     :style="getCalendarStyle(calendarEvent)"
@@ -265,6 +290,7 @@ defineExpose({
 .calendarViewerContainer{
     flex: 1;
     overflow: hidden;
+    
     &.editMode, &.createMode{
         .eventContainer{
             filter: grayscale(1);
@@ -280,6 +306,18 @@ defineExpose({
   font-size: var(--app-font-size-m);
   justify-content: flex-start;
   gap: 4px;
+  white-space: nowrap;
+  .iconify{
+    flex: 0 0 auto;
+  }
+  &.small{
+    font-size: var(--app-font-size-xs);
+    .iconify{
+      width: var(--app-font-size-xs);
+      height: var(--app-font-size-xs);
+      font-size: var(--app-font-size-xs);
+    }
+  }
 }
 .sx-vue-calendar-wrapper {
   height: 100%;
@@ -288,15 +326,19 @@ defineExpose({
     padding:var(--app-space-xs);
     border-radius: 4px;
     // background-color: rgba(0, 0, 0, 0.1);
-    font-size: var(--app-font-size-m);
     line-height: 1.1rem;
     background-color: var(--container_color);
     color: var(--on-color);
     border-left: 4px solid var(--bg-color);
-    border-radius: 4px;
     padding: var(--app-space-xs) var(--app-space-xs) var(--app-space-xs) var(--app-space-s); 
     font-size: var(--app-font-size-m);
     line-height: 1.1rem;
+    height: 100%;
+    &.small{
+      padding: var(--app-space-xxs) ; 
+      border-left: 2px solid var(--bg-color);
+      font-size: var(--app-font-size-s);
+    }
     &.isEditItem{
         cursor: pointer;
         box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
