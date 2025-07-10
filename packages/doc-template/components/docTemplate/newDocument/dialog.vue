@@ -16,6 +16,10 @@ function handleSubmit(newDoc: any) {
 }
 
 function handleClose() {
+  if (title) {
+    emits('close')
+    opened.value = false
+  }
 }
 </script>
 
