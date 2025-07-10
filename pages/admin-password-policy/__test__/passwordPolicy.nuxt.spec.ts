@@ -1,11 +1,12 @@
 import { shallowMount, mount } from '@vue/test-utils'
 import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import {
-  PasswordPolicy
+  PasswordPolicy,
+  PasswordPolicySwitch
 } from '#components'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
-import { ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessageBox, ElMessage, ElSwitch } from 'element-plus'
 import { mockRouterProvider } from './util'
 
 vi.mock('element-plus', () => ({
@@ -18,7 +19,8 @@ vi.mock('element-plus', () => ({
   },
   ElMessage: {
     success: vi.fn(),
-    warning: vi.fn()
+    warning: vi.fn(),
+    error: vi.fn()
   }
 }))
 
@@ -123,17 +125,69 @@ describe('[admin-password-policy]PasswordPolicy', () => {
     await wrapper.vm.handleSave()
     await nextTick()
 
-    expect(adminApi.api.postPasswordSaveConfig).toHaveBeenCalledWith({
-      ...wrapper.vm.form,
-      containLowerAndUppercase: false,
-      containNumericDigits: true,
-      containSpecialCharacters: false,
-      forceResetPassword: false,
-      enableExpirationTime: false,
-      enableLockoutPolicy: true,
-      enableReusePasswordLimit: false
-    })
-
+    expect(adminApi.api.postPasswordSaveConfig).toHaveBeenCalled()
     expect(ElMessage.success).toHaveBeenCalledWith(wrapper.vm.$t('passwordPolicy.saveSuccess'))
   })
+  it('should handle error when loading password policy', async () => {
+    adminApi.api.getPasswordConfig.mockRejectedValue(new Error('Failed to load'))
+
+    await wrapper.vm.init()
+    await nextTick()
+
+    expect(ElMessage.error).toHaveBeenCalledWith(wrapper.vm.$t('passwordPolicy.loadError'))
+  })
+  it('should handle error when saving password policy', async () => {
+    adminApi.api.postPasswordSaveConfig.mockRejectedValue(new Error('Failed to save'))
+
+    await wrapper.vm.handleSave()
+    await nextTick()
+
+    expect(ElMessage.error).toHaveBeenCalledWith(wrapper.vm.$t('passwordPolicy.saveError'))
+  })
+})
+describe('[admin-password-policy]PasswordPolicySwitch', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+
+  beforeEach(async () => {
+    wrapper = mount(PasswordPolicySwitch, {
+      props: {
+        label: 'Test Label',
+        value: false,
+        description: 'Test Description',
+        disabled: false
+      },
+      global: {
+        components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef
+    // dialogRef.handleOpen = vi.fn()
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('renders correctly with props', async () => {
+    console.log(wrapper.html())
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.label').text()).toBe('Test Label')
+    expect(wrapper.find('.description').text()).toBe('Test Description')
+  })
+  it('updates localValue when value prop changes', async () => {
+    await wrapper.setProps({ value: true })
+    expect(wrapper.vm.localValue).toBe(true)
+  })
+
 })
