@@ -290,7 +290,7 @@ function handleSearchBlur() {
               </div>
             </slot>
             <slot name="toolbarTools">
-              <div class="searchContainer vxe-button type--button el-icon--left">
+              <div :class="{searchContainer:true, expanded: isSearchExpanded}">
                 <div v-if="!isSearchExpanded" class="searchButton" @click="expandSearch">
                   <Icon name="mdi:magnify" />
                 </div>
@@ -396,7 +396,23 @@ function handleSearchBlur() {
   flex-flow: row nowrap;
   align-items: center;
   gap: var(--app-space-s);
-  border-radius: 18px;
+  border-radius: 20px;
+  background: transparent;
+  border: 1px solid var(--app-grey-900);
+  min-width: var(--vxe-ui-button-height-default);
+  height: var(--vxe-ui-button-height-default);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: var(--app-space-xs);
+  .searchButton{
+    line-height: 1;
+    padding: 0;
+    height: fit-content;
+  }
+  &.expanded{
+    justify-content: flex-start;
+  }
   cursor: pointer;
 }
 
@@ -405,7 +421,7 @@ function handleSearchBlur() {
   align-items: center;
   background: var(--app-white);
   border-color: transparent;
-  border-radius: var(--app-border-radius);
+  border-radius: 20px;
   padding: var(--app-space-xs);
   gap: var(--app-space-xs);
 }
