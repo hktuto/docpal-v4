@@ -163,7 +163,10 @@ function toggleMenuStick(){
 
 onMounted(() => {
     const LastMenuClosed = localStorage.getItem('docpal-closeMenu')
-    if(LastMenuClosed){
+    // check if window is small screen, if small screen, set menuStick to false
+    if(window.innerWidth <= 768){
+        menuStick.value = false
+    }else if(LastMenuClosed){
         menuStick.value = false
     }else{
         menuStick.value = true

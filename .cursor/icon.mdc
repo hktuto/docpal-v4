@@ -1,0 +1,84 @@
+# Cursor Rule: Icon Usage with Nuxt Icon
+
+## Purpose
+Standardize the way icons are added and used in this project using the Nuxt Icon package.
+
+---
+
+## 1. Icon Library
+- **Use only the [Nuxt Icon](https://github.com/nuxt-modules/icon) package** for all icon needs.
+- Do not import SVGs or use other icon libraries directly in components.
+
+---
+
+## 2. Installation
+If not already installed, add Nuxt Icon to your project:
+```bash
+pnpm add @nuxt/icon
+# or
+npm install @nuxt/icon
+```
+Add the module to your `nuxt.config.ts`:
+```ts
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/icon',
+    // ...other modules
+  ],
+})
+```
+
+---
+
+## 3. Usage
+- Use the `<NuxtIcon />` component to render icons.
+- Reference icons by their name as registered in Nuxt Icon.
+- Example usage in a Vue file:
+```vue
+<template>
+  <NuxtIcon name="mdi:home" size="24" />
+</template>
+```
+
+---
+
+## 4. Naming Conventions
+- Use the full icon name as required by Nuxt Icon (e.g., `mdi:home`, `fa:check`).
+- For custom icons, register them according to Nuxt Icon documentation and use a consistent prefix (e.g., `custom:my-icon`).
+
+---
+
+## 5. Best Practices
+- Prefer semantic icon names that match their purpose (e.g., `mdi:delete` for a delete button).
+- Use the `size` prop for sizing instead of custom CSS when possible.
+- Avoid inline SVGs or external icon fonts.
+- Document any new custom icons in the project README or a dedicated icon reference file.
+
+---
+
+## 6. Example: Button with Icon
+```vue
+<template>
+  <button>
+    <NuxtIcon name="mdi:plus" size="20" />
+    Add Item
+  </button>
+</template>
+```
+
+---
+
+## 7. Linting & Review
+- PRs adding icons should follow this rule.
+- Reviewers: Ensure only Nuxt Icon is used for new icons.
+
+---
+
+## 8. Resources
+- [Nuxt Icon Documentation](https://github.com/nuxt-modules/icon)
+- [Material Design Icons](https://materialdesignicons.com/)
+- [Iconify Collection](https://icon-sets.iconify.design/)
+description:
+globs:
+alwaysApply: false
+---
