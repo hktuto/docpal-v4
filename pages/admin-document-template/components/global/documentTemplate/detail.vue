@@ -3,6 +3,7 @@ import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi } from 'api'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const { id, isEdit } = defineProps<{
   id: string
@@ -36,6 +37,11 @@ const docTemplateEditorRef = ref()
 const variables = ref([])
 const templateVariablesRendererRef = ref()
 
+async function getInfo() {
+  const { data } = await adminApi.api.getTemplateDocumentId(id)
+  state.info = data
+}
+
 async function getPreviewFile() {
   state.previewFile.loading = true
   try {
@@ -52,14 +58,6 @@ async function getPreviewFile() {
   }
   state.previewFile.loading = false
 }
-
-async function getInfo() {
-  const { data } = await adminApi.api.getTemplateDocumentId(id)
-  state.info = data
-}
-
-// #region module: Variables
-const FormVariablesRendererRef = ref()
 
 async function getVariables() {
   try {
@@ -79,7 +77,6 @@ async function getVariables() {
           required: false
         })
       } catch (err) {
-
         state.variables.push({
           name: item,
           type: 'input',
@@ -100,7 +97,7 @@ async function handleTest() {
   state.downloadLoading = true
 
   try {
-    const data = await FormVariablesRendererRef.value.getData()
+    const data = {}
     const id = new Date().valueOf() + state.info.name
     const notification = ElNotification({
       title: '',
@@ -135,7 +132,7 @@ async function handleTest() {
 
 // #endregion
 function getName() {
-  return state.info.name.split('.')[0]
+  return state.info.name
 }
 
 const TemplateAddStep1DialogRef = ref()
@@ -165,28 +162,99 @@ function createWordEdit(newData: any) {
   documentOptions.value.editable = true
   routerProvider?.updateTabName(newData.title)
   state.isEdit = true
+  state.openWordDialog = false
 }
-
 
 function handleEditEditor() {
   state.isEdit = true
 }
 
+const nodeBackendEndpoint = 'http://localhost:3333'
+
+// TODO test case
+async function getWordJson(docId: string) {
+  const url = new URL(nodeBackendEndpoint + '/convert/getJsonFile')
+  url.searchParams.append('docId', docId)
+
+  const res = await fetch(url.toString(), {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  if (res.status === 200) {
+    return await res.blob()
+  }
+  return null
+}
+
+async function setWordJson(docId: string, jsonData: any) {
+  const url = new URL(nodeBackendEndpoint + '/convert/setJson')
+
+  try {
+    // 将JSON数据转换为Blob文件
+    const fileName = state.info.name + '.json'
+    const blob = await convertJsonToBlob(jsonData, fileName)
+
+    // 创建FormData对象
+    const formData = new FormData()
+    formData.append('file', blob, fileName)
+    formData.append('docId', docId)
+
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData
+    })
+
+    const result = await response.json()
+    return result
+  } catch (error) {
+    throw error
+  }
+}
+
 async function handleSaveWord() {
-  const { json, variables } = docTemplateEditorRef.value.getJsonData()
+  const editDataJson = docTemplateEditorRef.value.getJsonData()
 
-  documentOptions.value = json.options
-  jsonData.value = json.content
+  documentOptions.value = editDataJson.json.options
+  jsonData.value = editDataJson.json.content
 
-  // 封裝json
+  // const fileName = state.info.name + '.json'
+  // const formData = new FormData()
+  // formData.append('file', file)
+  // formData.append('id', state.setting.id)
 
-  // TODO: 組裝成完整的Json， 發送請求更新數據
-  // await adminApi.api.postNuxeoDocumentPreview({})
+  // await adminApi.api.putTemplateDocumentUpload({requestDTO:{}},formData as any)
+  try {
+    await setWordJson(state.info.documentId, editDataJson)
+  } catch (error) {
+    console.error('保存Word文档失败:', error)
+  }
 
   state.isEdit = false
 }
 
-function updateVariables(newData: TipTapOptions) {
+/**
+ * 将JSON对象转换为Blob文件
+ * @param jsonData - 要转换的JSON对象
+ * @param fileName - 文件名（可选，默认为 'data.json'）
+ * @returns Promise<Blob> - 返回包含JSON内容的Blob对象
+ */
+function convertJsonToBlob(jsonData: any, fileName: string = 'data.json'): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    try {
+
+      const jsonString = JSON.stringify(jsonData)
+      // 创建Blob对象
+      const blob = new Blob([jsonString], { type: 'application/json' })
+      resolve(blob)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+function updateVariables(newData: any) {
   variables.value = newData
   templateVariablesRendererRef.value.setVariables(variables.value)
   // TODO: 更新服務端的 Variables 數據
@@ -195,18 +263,29 @@ function updateVariables(newData: TipTapOptions) {
 
 async function init() {
   await getInfo()
-  await getVariables()
+  // await getVariables()
   if (isEdit) {
-
     // 分流不同的文件類型，顯示不同的編輯器
-    switch (state.info.type) {
+    switch (state.info.fileType) {
       case 'Word':
-        // 解析Blob
-        const json = JSON.parse('{"json":{"options":{"mode":"PAGE","pageSetting":{"defaultMarginConfig":{"bottom":5,"top":5,"left":5,"right":5},"defaultPageBorders":{"bottom":1,"top":1,"left":1,"right":1},"defaultPaperColour":"#fff","defaultPaperOrientation":"portrait","defaultPaperSize":"A4","useDeviceThemeForPaperColour":false,"pageAmendmentOptions":{"enableHeader":false,"enableFooter":false}},"title":"New Document","creator":"","theme":{"fontSize":12,"fontColor":"#000000","fontBackgroundColor":"#ffffff","fontFamily":"Arial","bodyFontSize":20,"h1FontSize":20,"highlightColor":"#ffff00"},"editable":true},"content":{"type":"doc","content":[{"type":"page","attrs":{"paperSize":"A4","paperColour":"#fff","paperOrientation":"portrait","pageBorders":{"top":1,"right":1,"bottom":1,"left":1}},"content":[{"type":"body","attrs":{"pageMargins":{"top":5,"bottom":5,"left":5,"right":5}},"content":[{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableText","attrs":{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"}}]},{"type":"variableList","attrs":{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}}},{"type":"variableTable","attrs":{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}}},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"variableLink","attrs":{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}}]},{"type":"variableList","attrs":{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}}}]}]}]}},"variables":[{"id":"20250708T022955","name":"text","type":"text","value":"test-aaaa"},{"id":"20250708T023025","name":"list","type":"list","value":{"items":[{"label":"a"},{"label":"b"},{"label":"c"}],"listStyle":"bullet"}},{"id":"20250708T023044","name":"list_1","type":"list","value":{"items":[{"label":"1"},{"label":"2"},{"label":"3"}],"listStyle":"number"}},{"id":"20250708T023104","name":"test_table","type":"table","value":{"columns":[{"name":"Column 1","align":"left","color":"#d3dbde","width":"","key":"Col_1"},{"name":"Column 2","align":"left","color":"#d3dbde","width":"","key":"Col_2"}],"rows":[["1asfaf","2sdg"]],"bordered":true,"striped":false,"stripedColor":"#C0C6C8","sort":"Default","sortBy":true}},{"id":"20250708T023122","name":"test_Link","type":"link","value":{"type":"String","label":"youtb","url":"https://google.com"}}]}')
-        initWordEditor(json)
+        const blob = await getWordJson(state.info.documentId)
+        console.log('---blob', blob)
+        // the word Json file  not created
+        if (!blob) {
+          state.openWordDialog = true
+          break
+        }
+
+        try {
+          const text = await blob.text()
+          const json = JSON.parse(text)
+          initWordEditor(json)
+        } catch (error) {
+          throw new Error('解析JSON文件失败:', error)
+        }
         break
       case 'Excel':
-
+        await getPreviewFile()
         break
     }
 
@@ -215,7 +294,7 @@ async function init() {
   }
 
   // 新文件根據不同類型給與顯示的編輯器，並初始化編輯器
-  switch (state.info.type) {
+  switch (state.info.fileType) {
     case 'Word':
       state.openWordDialog = true
       break
@@ -228,7 +307,6 @@ async function init() {
 }
 
 onBeforeMount(async () => {
-  await getPreviewFile()
   init()
 })
 </script>
@@ -241,12 +319,12 @@ onBeforeMount(async () => {
           <div class="flex-x-between">
             <span class="template-title"> {{ state.info.name }} </span>
             <SvgIcon src="/icons/file/edit.svg" class="el-icon--right"
-                     round :content="$t('tip.editTemplateInfo')"
+                     round :content="t('tip.editTemplateInfo')"
                      @click="handleEdit"></SvgIcon>
           </div>
           <div class="flex-x-between">
-            <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="$t('common_refresh')"
-                     @click="handleRefresh()" />
+            <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="t('common_refresh')"
+                     @click="handleRefresh({})" />
 
             <template v-if="state.info.fileType === 'Word'">
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
@@ -256,11 +334,14 @@ onBeforeMount(async () => {
               </SvgIcon>
             </template>
 
-            <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh()" />
+            <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh({})" />
             <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right"
                                    @refresh="handleRefresh({ variables: true, preview: true })" />
           </div>
         </div>
+
+        <el-divider />
+
         <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
             <div class="editor-container">
@@ -273,24 +354,22 @@ onBeforeMount(async () => {
           <template v-else>
             <Reader class="reader-container" ref="ReaderRef" v-bind="state.previewFile"></Reader>
           </template>
-          <!-- TODO: Other file editors -->
         </div>
       </div>
       <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
                       :showClose="false">
-        <div class="template-title">{{ $t('template.variable') }}</div>
+        <div class="template-title">{{ t('template.variable') }}</div>
         <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" />
 
         <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
-                   :loading="state.downloadLoading"
-                   @click="handleTest">{{ $t('template.test') }}
+                   :loading="state.downloadLoading" @click="handleTest">{{ t('template.test') }}
         </el-button>
       </InteractDrawer>
     </div>
     <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
 
-    <!-- TODO: 需要將標題名稱傳進去dialog内   -->
-    <DocTemplateNewDocumentDialog ref="dialog" :defaultOpened="state.openWordDialog" @submit="createWordEdit" />
+    <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
+                                  :defaultOpened="state.openWordDialog" @submit="createWordEdit" />
   </div>
 </template>
 

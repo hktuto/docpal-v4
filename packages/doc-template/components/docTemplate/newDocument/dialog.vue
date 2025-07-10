@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 
-const { defaultOpened = false } = defineProps<{
-  defaultOpened: boolean
+const { defaultOpened = false, title } = defineProps<{
+  defaultOpened: boolean,
+  title?: string
 }>()
 
 const opened = ref(defaultOpened)
@@ -20,6 +21,6 @@ function handleClose() {
 
 <template>
   <ElDialog v-model="opened">
-    <DocTemplateNewDocumentForm ref="formRef" @submit="handleSubmit" />
+    <DocTemplateNewDocumentForm ref="formRef" :title="title" @submit="handleSubmit" />
   </ElDialog>
 </template>
