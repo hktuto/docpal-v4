@@ -1,15 +1,12 @@
 <template>
-  <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')"
-             class="scroll-dialog"
-             append-to-body
-  >
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" v-loading="state.initLoading"
-                  @formChange="formChange">
+  <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')" class="scroll-dialog" append-to-body>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" v-loading="state.initLoading" @formChange="formChange">
       <template v-slot:metaForm>
         <MetaRenderForm ref="MetaFormRef" @formChange="formChange"></MetaRenderForm>
       </template>
       <template v-slot:namingRule>
-        <div>{{ $t('tableHeader_labelRule') }}：
+        <div>
+          {{ $t('tableHeader_labelRule') }}：
           <template v-for="(item, index) in getLabelList(state.cabinetTemplate.labelRule)" :key="index">
             <el-tag>{{ $t(item.metadata || item.metaData) }} </el-tag>
             <template v-if="index !== getLabelList(state.cabinetTemplate.labelRule).length - 1"> -</template>
@@ -17,13 +14,18 @@
         </div>
       </template>
       <template v-slot:previewName>
-        <el-text :type="hasPreviewName(state.previewName) ? '': 'danger'">{{ $t('folderCabinet.previewName') }}：{{ state.previewName }}</el-text>
+        <el-text :type="hasPreviewName(state.previewName) ? '' : 'danger'">{{ $t('folderCabinet.previewName') }}：{{ state.previewName }}</el-text>
       </template>
     </FormRenderer>
     <template #footer>
-      <el-button clientFolderCabinetAllowOtherFilesCabinetNewItemNext
-                 id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next" type="primary" :loading="state.loading"
-                 data-testid="folderCabinet-next-button" @click="handleSubmit">
+      <el-button
+        clientFolderCabinetAllowOtherFilesCabinetNewItemNext
+        id="FolderCabinet__AllowOtherFilesCabinet__NewItem__Next"
+        type="primary"
+        :loading="state.loading"
+        data-testid="folderCabinet-next-button"
+        @click="handleSubmit"
+      >
         {{ $t('button.next') }}
       </el-button>
     </template>
@@ -35,16 +37,13 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import formJson from './dialog.vform.json'
 import { clientApi } from 'api'
 
-const emits = defineEmits([
-  'refresh'
-])
+const emits = defineEmits(['refresh'])
 const { t } = useI18n()
 const state = reactive<any>({
   initLoading: false,
   loading: false,
   visible: false,
   cabinetTemplate: {},
-  setting: {},
   previewName: ''
 })
 const userId: string = useUserId().value
@@ -58,7 +57,7 @@ async function handleSubmit() {
     // 获取 v-form 数据
     const formData = await FormRendererRef.value.getFormData()
     const arr = ['notificationReminder', 'emailReminder', 'emailReport']
-    arr.forEach(key => {
+    arr.forEach((key) => {
       formData[key] = {}
       formData[key].intervalTime = formData[`${key}.intervalTime`]
       if (formData[`${key}.tos`]) formData[key].tos = formData[`${key}.tos`]
@@ -69,11 +68,11 @@ async function handleSubmit() {
     })
     // 获取 metaForm 数据
     const metaFormData = await MetaFormRef.value.getData()
-  
+
     if (!formData) return
     state.loading = true
     let fileName = await getMetaName()
-    if(!fileName) {
+    if (!fileName) {
       ElMessage.error(t('dpTip.noValidName'))
       throw new Error('dpTip.noValidName')
     }
@@ -88,26 +87,30 @@ async function handleSubmit() {
     //   ElMessage.error($t('dpTip.folderCabinet.duplicateRootFolder'))
     //   throw new Error('dpTip.folderCabinet.duplicateRootFolder')
     // }
-    
+
     const idOrPath = `${state.cabinetTemplate.documentPath}/${fileName}`
     // 上传最上层数据
-    const res = await clientApi.api.postCabinetCreate({
-      ...formData,
-      title: fileName,
-      type: state.cabinetTemplate.documentType,
-      idOrPath,
-      properties: metaFormData,
-      templateId: state.cabinetTemplate.id,
-      parentId: state.cabinetTemplate.rootId
-    }).then(res => res.data)
+    const res = await clientApi.api
+      .postCabinetCreate({
+        ...formData,
+        title: fileName,
+        type: state.cabinetTemplate.documentType,
+        idOrPath,
+        properties: metaFormData,
+        templateId: state.cabinetTemplate.id,
+        parentId: state.cabinetTemplate.rootId
+      })
+      .then((res) => res.data)
     if (res?.path) {
       NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path, res.id)
     }
-    await new Promise(resolve => setTimeout(() => {
-      state.visible = false
-      emits('refresh')
-      resolve(true)
-    }, 1000))
+    await new Promise((resolve) =>
+      setTimeout(() => {
+        state.visible = false
+        emits('refresh')
+        resolve(true)
+      }, 1000)
+    )
   } catch (error) {
     console.error(error)
   }
@@ -119,9 +122,9 @@ async function getMetaName() {
   try {
     const metadataForm = await MetaFormRef.value.getData()
     const data = await FormRendererRef.value.getFormData(false)
-    if (data) formData = { ...formData, ...data, ...metadataForm,  }
+    if (data) formData = { ...formData, ...data, ...metadataForm }
     formData.docName = formData.title
-    formData.label = state.setting.label || state.setting.docName || ""
+    formData.label = state.cabinetTemplate.label || ''
   } catch (error) {
     console.error(error)
   }
@@ -138,7 +141,7 @@ async function handleOpen(id: string) {
   state.visible = true
   try {
     let defaultValue = {}
-    state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(id).then(res => res.data)
+    state.cabinetTemplate = await clientApi.api.getCabinetTemplateId(id).then((res) => res.data)
     if (state.cabinetTemplate.metadataValue) {
       defaultValue = JSON.parse(state.cabinetTemplate.metadataValue)
     }
@@ -207,5 +210,4 @@ main {
 :deep(.static-content-item) {
   margin-bottom: 10px;
 }
-
 </style>
