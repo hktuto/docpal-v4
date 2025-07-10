@@ -13,7 +13,6 @@ import {
   type CalendarEventExternal
 } from '@schedule-x/calendar'
 
-import {isEventValid } from '../../../utils/calendarHelper'
 
 import '@schedule-x/theme-default/dist/index.css'
 import { createCurrentTimePlugin } from '@schedule-x/current-time'
@@ -24,6 +23,7 @@ import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
 import {getEventFromApi, type CalendarOptions, type DocPalEventType} from '../../../utils/calendarHelper'
 import {useCalendarStore} from '../../../composables/useCalendar'
+import { displayTimeFn } from '../../../utils/calendarHelper'
 
 const { setting, calendarViewerCategories } = useCalendarStore();
 const props = defineProps<{
@@ -167,15 +167,14 @@ onDeactivated(() => {
 
 function getCalendarStyle(event:any){
     const categories = useCalenarCategories()
-    if(!event.calendarId) return ""
-    const category = categories.value.find(item => item.id === event.calendarId)
+    
+    const catId = event.detail.category || event.calendarId
+    if(!catId) return ""
+    const category = categories.value.find(item => item.id === catId)
     if(!category) return ""
-    return `background-color: ${category.color}; color: ${category.onContainer}`
+    return `--bg-color: ${category.color}; --on-color: ${category.onContainer}; --container_color: ${category.Container_Color};`
 }
 
-function displayTimeFn(event){
-    return dayjs(event.start).format('HH:mm') + ' - ' + dayjs(event.end).format('HH:mm')
-}
 
 function makeDescription(event:CalendarEventExternal){
     return event.location + ' - ' + event.people.join(', ') + ' - ' + dayjs(event.start).format('YYYY-MM-DD HH:mm') + ' - ' + dayjs(event.end).format('YYYY-MM-DD HH:mm')
@@ -233,6 +232,31 @@ defineExpose({
                 </ElTooltip>
                 </div>
             </template>
+            <template #monthGridEvent="{ calendarEvent }">
+
+            </template>
+            <template #monthAgendaEvent="{ calendarEvent }">
+                <div :class="{eventContainer:true, isEditItem: editItem && calendarEvent.detail.eventId ===  editItem.eventId}"
+                    :style="getCalendarStyle(calendarEvent)"
+                >
+                  <div class="title eventInfo">
+                    <Icon name="mdi:calendar-text"  />
+                    {{ calendarEvent.title }}
+                  </div>
+                  <div class="description eventInfo">
+                    <Icon name="mdi:text"  />
+                    {{ calendarEvent.description }}
+                  </div>
+                   <div class="location eventInfo">
+                    <Icon name="mdi:map-marker"  />
+                    {{ calendarEvent.location || calendarEvent.detail.location }}
+                  </div>
+                   <div class="time eventInfo">
+                    <Icon name="mdi:clock-outline"  />
+                    {{ displayTimeFn(calendarEvent) }}
+                  </div>
+                </div>
+            </template>
         </ScheduleXCalendar>
     </div>
 </template>
@@ -249,15 +273,28 @@ defineExpose({
             }
         }
     }
-}   
+}
+.eventInfo{
+  display: flex;
+  align-items: center;
+  font-size: var(--app-font-size-m);
+  justify-content: flex-start;
+  gap: 4px;
+}
 .sx-vue-calendar-wrapper {
   height: 100%;
 }
 .eventContainer{
-    height:100%;
     padding:var(--app-space-xs);
     border-radius: 4px;
     // background-color: rgba(0, 0, 0, 0.1);
+    font-size: var(--app-font-size-m);
+    line-height: 1.1rem;
+    background-color: var(--container_color);
+    color: var(--on-color);
+    border-left: 4px solid var(--bg-color);
+    border-radius: 4px;
+    padding: var(--app-space-xs) var(--app-space-xs) var(--app-space-xs) var(--app-space-s); 
     font-size: var(--app-font-size-m);
     line-height: 1.1rem;
     &.isEditItem{
