@@ -70,9 +70,12 @@ function handleShowColumn() {
         }
       })
     } else if (!!column) {
+      // get label from primaryForm
+      // TODO : this is a backend bug, the information is not returning correct label/name
+      const field = state.detail.primaryForm.fields.find((p: any) => p.id === columnId)
       prev.push({
         id: columnId,
-        name: columnId
+        name: field?.name || columnId
       })
     }
     return prev
