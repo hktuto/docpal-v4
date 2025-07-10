@@ -4,12 +4,7 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey, validateVariable, type DocTemplateVariable } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
 import { defaultPageSetting, replaceVariables } from 'docpal-document-editor/src/utils'
-import {
-  normalizeTipTapOptions,
-  clientEditorExtensions,
-  generateHtml,
-  getJsonConfig
-} from 'docpal-document-editor/src/client'
+import { normalizeTipTapOptions, clientEditorExtensions, generateHtml, getJsonConfig } from 'docpal-document-editor/src/client'
 import * as Y from 'yjs'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 

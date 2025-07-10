@@ -7,6 +7,10 @@ const emits = defineEmits(['submit'])
 const { t } = useI18n()
 const formRef = ref()
 
+const props = defineProps<{
+  title?: string
+}>()
+
 const showTextCounter = ref(false)
 watch(showTextCounter, (bool) => {
   if (bool) {
@@ -21,7 +25,7 @@ const form = reactive<TipTapOptions>({
   pageSetting: {
     ...defaultPageSetting
   },
-  title: 'New Document',
+  title: props.title ? props.title : 'New Document',
   creator: '',
   theme: {
     fontSize: 12,
@@ -105,22 +109,22 @@ async function submit() {
         <ElRow :gutter="12">
           <ElCol :span="6">
             <ElFormItem :label="t('docTemplate.pageSetup.left')">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0" max="100"/>
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
             <ElFormItem :label="t('docTemplate.pageSetup.top')">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0" max="100"/>
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
             <ElFormItem :label="t('docTemplate.pageSetup.right')">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0" max="100"/>
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
             <ElFormItem :label="t('docTemplate.pageSetup.bottom')">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0" max="100"/>
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0" max="100" />
             </ElFormItem>
           </ElCol>
         </ElRow>
@@ -128,7 +132,7 @@ async function submit() {
     </template>
 
     <ElFormItem>
-      <ElButton type="primary" @click="submit">{{$t('button.save')}}</ElButton>
+      <ElButton type="primary" @click="submit">{{ $t('button.save') }}</ElButton>
     </ElFormItem>
   </ElForm>
 </template>

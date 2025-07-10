@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { DocTemplateProveKey } from '../../../../utils/docTemplateHelper'
+import { getJsonConfig } from 'docpal-document-editor/src/client'
 import formJson from './docJson.json'
 import { useI18n } from 'vue-i18n'
 import cloneDeep from 'lodash/cloneDeep'
@@ -40,7 +41,7 @@ async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
 }
 
 async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: any[]) {
-  const data = getJsonConfig(configuredVariables)
+  const data = getJsonConfig(editor.value.getJSON(), options.value, configuredVariables)
   let endpoint
   let filename
   let mime
@@ -85,7 +86,7 @@ function handleExportDropdown(command: 'html' | 'pdf' | 'docx' | 'json') {
 }
 
 function openDialog() {
-  const json = getJsonConfig([...variables.value])
+  const json = getJsonConfig(editor.value.getJSON(), options.value, [...variables.value])
   const textContent = JSON.stringify(json)
   state.visible = true
   state.loading = true
@@ -94,19 +95,6 @@ function openDialog() {
     await FormRendererRef.value.vFormRenderRef.setFormData({ textContent, isExport: true })
     state.loading = false
   })
-}
-
-function getJsonConfig(configuredVariables: any[] = []) {
-  const data = {
-    json: {
-      options: {},
-      content: {}
-    },
-    variables: configuredVariables
-  }
-  data.json.options = options.value
-  data.json.content = editor.value.getJSON()
-  return data
 }
 
 function openExportVariableDrawer() {
