@@ -78,7 +78,6 @@ const officeUrl = (docId: string) => {
 }
 
 function gotMessageFromIframe(e: MessageEvent) {
-  console.log("gotMessageFromIframe", e)
   const data = e.data !== 'unchanged' ? JSON.parse(e.data) ? JSON.parse(e.data) : undefined : undefined;
   if (!data) return
   if (data.MessageId === "App_LoadingStatus") {
