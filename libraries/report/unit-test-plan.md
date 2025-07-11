@@ -34,7 +34,7 @@
 - [x] admin-smart-folder	
 - [x] admin-unique-id-generator	
 - [x] admin-user	
-- [-] admin-watermark	
+- [x] admin-watermark	
 - [ ] admin-workflow	
 - [*] admin-workflow-editor
 - [x] client-ai-upload	
