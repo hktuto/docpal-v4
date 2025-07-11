@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   extends:[
     "../base",
     "../calendar",
-    "../bpmn",
     "../workflow"
   ],
   modules: [

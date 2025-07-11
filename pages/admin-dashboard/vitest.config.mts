@@ -8,10 +8,7 @@ export default defineVitestConfig({
     }
   },
   test: {
-    alias: [
-      { find: /^lodash-es@4.17.21$/, replacement: 'lodash-es@4.17.21/esm/index.js' },
-      { find: /^@antv+x6-common@2.0.17/, replacement: '@antv+x6-common@2.0.17/esm/index.js' },
-    ],
+
     setupFiles: ['./__test__/setup.ts', './__test__/mock/element-plus.ts'],
     reporters: ["html", "json"],
     outputFile: {

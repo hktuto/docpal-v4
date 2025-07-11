@@ -24,7 +24,6 @@ vi.stubGlobal('useIsLDAP', () => false);
 vi.stubGlobal('MenuRouterKey', 'MenuRouterKey');
 vi.stubGlobal('useUserId', useUserId);
 vi.stubGlobal('useRuntimeConfig', useRuntimeConfig);
-// vi.stubGlobal('useVxeTable', useVxeTable);
 
 export const mockReload = vi.fn()
 export const mockQuery = vi.fn()

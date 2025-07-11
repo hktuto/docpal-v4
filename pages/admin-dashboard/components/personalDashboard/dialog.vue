@@ -80,10 +80,9 @@ function handleOpen(setting?: any) {
     return
   }
   title = t('workPanel_edit')
+  const _setting = deepCopy(setting)
+  state.edit = _setting.edit = true
   nextTick(async () => {
-    const _setting = deepCopy(setting)
-    console.log('_setting', setting)
-    state.edit = _setting.edit = true
     state.setting = _setting
     if (_setting.groupId) _setting.groupId = _setting.groupId.split(',')
     else _setting.groupId = []
@@ -92,11 +91,6 @@ function handleOpen(setting?: any) {
     })
     state.loading = false
   })
-}
-
-function handleDelete() {
-  emits('delete')
-  state.visible = false
 }
 
 defineExpose({ handleOpen })
