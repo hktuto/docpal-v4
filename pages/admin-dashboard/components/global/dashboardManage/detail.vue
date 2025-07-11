@@ -23,7 +23,6 @@ const state = reactive({
 })
 
 function handleRefresh(layoutSetting: any) {
-  console.log(layoutSetting)
   const index = state.layout.findIndex((item) => item.i === layoutSetting.i)
   state.layout[index] = deepCopy(layoutSetting)
 }

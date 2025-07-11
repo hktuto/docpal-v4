@@ -1,7 +1,8 @@
 # unit test plan
-1. \*: no plan
+1. [*]: no plan
 2. \-: in progress
 3. x: done
+4. [????]: error
 ## pages
 - [*] admin-acl	
 - [x] admin-audit	
@@ -10,7 +11,7 @@
 - [*] admin-calendar-setting	
 - [*] admin-case-management	
 - [*] admin-dam	
-- [-] admin-dashboard	
+- [????] admin-dashboard	
 - [ ] admin-docker-log	
 - [ ] admin-docTemplate	
 - [ ] admin-document-template	
