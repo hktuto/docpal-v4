@@ -35,7 +35,7 @@
 - [x] admin-unique-id-generator	
 - [x] admin-user	
 - [x] admin-watermark	
-- [ ] admin-workflow	
+- [x] admin-workflow	
 - [*] admin-workflow-editor
 - [x] client-ai-upload	
 - [ ] client-browse	

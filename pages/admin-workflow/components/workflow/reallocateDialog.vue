@@ -1,17 +1,13 @@
 <template>
   <el-dialog v-model="dialogVisible" :title="$t('workflow_ManageReallocateTask')">
-    <el-form ref="formRef"
-             :model="form"
-             label-width="120px"
-             label-position="top"
-             @submit.native.prevent
-    >
-      <el-form-item :label="$t('workflow_ManageReallocateAssignee')" prop="assignee"
-                    :rules="[ { required: true, message: $t('workflow_ManageReallocateAssignee') + $t('render.hint.fieldRequired'), trigger: 'change'}]">
-        <el-select v-model="form.assignee" filterable clearable :placeholder="t('common_selectedIsRequiredMsg')"
-                   style="width: 100%">
-          <el-option v-for="item in state.userList" :key="item.id" :label="item.userId"
-                     :value="item.userId"></el-option>
+    <el-form ref="formRef" :model="form" label-width="120px" label-position="top" @submit.native.prevent>
+      <el-form-item
+        :label="$t('workflow_ManageReallocateAssignee')"
+        prop="assignee"
+        :rules="[{ required: true, message: $t('workflow_ManageReallocateAssignee') + $t('render.hint.fieldRequired'), trigger: 'change' }]"
+      >
+        <el-select v-model="form.assignee" filterable clearable :placeholder="t('common_selectedIsRequiredMsg')" style="width: 100%">
+          <el-option v-for="item in state.userList" :key="item.id" :label="item.userId" :value="item.userId"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -46,8 +42,8 @@ async function handleOpen(row) {
     form.assignee = ''
     form.id = row.id
   }
-  state.userList = await adminApi.api.postNuxeoIdentityUsers({}).then(res => res.data)
-  state.userList = state.userList.filter(item => item.userId !== row.assignee && item.userId)
+  state.userList = await adminApi.api.postNuxeoIdentityUsers({}).then((res) => res.data)
+  state.userList = state.userList.filter((item) => item.userId !== row.assignee && item.userId)
 }
 
 // #endregion
@@ -84,17 +80,12 @@ async function handleSubmit() {
     emit('success')
     dialogVisible.value = false
   } catch (error) {
-
   } finally {
-
   }
-
 }
 
 // #endregion
 defineExpose({ handleOpen })
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
