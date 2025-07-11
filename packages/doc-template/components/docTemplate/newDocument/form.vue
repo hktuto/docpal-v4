@@ -3,7 +3,7 @@ import { defaultPageSetting } from 'docpal-document-editor/src/utils'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
 import { paperSizes } from 'tiptap-extension-pagination/src'
 
-const emits = defineEmits(['submit'])
+const emits = defineEmits(['submit', 'close'])
 const { t } = useI18n()
 const formRef = ref()
 
@@ -71,6 +71,12 @@ async function submit() {
   }
 }
 
+function handleClose() {
+  if (!props.title) {
+    emits('close')
+  }
+}
+
 </script>
 
 <template>
@@ -133,6 +139,7 @@ async function submit() {
 
     <ElFormItem>
       <ElButton type="primary" @click="submit">{{ $t('button.save') }}</ElButton>
+      <el-button @click="handleClose">{{ $t('button.close') }}</el-button>
     </ElFormItem>
   </ElForm>
 </template>

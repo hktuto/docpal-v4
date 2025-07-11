@@ -8,7 +8,7 @@ const { defaultOpened = false, title } = defineProps<{
 const opened = ref(defaultOpened)
 const formRef = ref()
 
-const emits = defineEmits(['submit'])
+const emits = defineEmits(['submit', 'wordDialogClose'])
 
 function handleSubmit(newDoc: any) {
   emits('submit', newDoc)
@@ -17,14 +17,14 @@ function handleSubmit(newDoc: any) {
 
 function handleClose() {
   if (title) {
-    emits('close')
+    emits('wordDialogClose')
     opened.value = false
   }
 }
 </script>
 
 <template>
-  <ElDialog v-model="opened">
-    <DocTemplateNewDocumentForm ref="formRef" :title="title" @submit="handleSubmit" />
+  <ElDialog v-model="opened" :show-close="false">
+    <DocTemplateNewDocumentForm ref="formRef" :title="title" @submit="handleSubmit" @close="handleClose" />
   </ElDialog>
 </template>
