@@ -1,8 +1,10 @@
 # unit test plan
 1. [*]: no plan
-2. \-: in progress
-3. x: done
+2. [-]: in progress
+3. [x]: done
 4. [????]: error
+
+
 ## pages
 - [*] admin-acl	
 - [x] admin-audit	
@@ -25,7 +27,7 @@
 - [x] admin-hold	
 - [x] admin-log-manage	
 - [x] admin-master-table	
-- [ ] admin-message-queue	
+- [-] admin-message-queue	
 - [x] admin-message-template	
 - [x] admin-password-policy	
 - [x] admin-retention	
