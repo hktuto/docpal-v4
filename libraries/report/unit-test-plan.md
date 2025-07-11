@@ -27,7 +27,7 @@
 - [x] admin-hold	
 - [x] admin-log-manage	
 - [x] admin-master-table	
-- [-] admin-message-queue	
+- [*] admin-message-queue	
 - [x] admin-message-template	
 - [x] admin-password-policy	
 - [x] admin-retention	
