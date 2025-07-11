@@ -34,7 +34,7 @@ const ReaderDialog = {
   template: '<div class="FormRenderer">FormRenderer</div>',
   methods: {}
 };
-describe('[admin-external-share]ExternalSharePage', () => {
+describe('[admin-share]ExternalSharePage', () => {
   let wrapper: any;
   const mockTabProvider = {};
 
@@ -97,7 +97,7 @@ describe('[admin-external-share]ExternalSharePage', () => {
     expect(adminApi.api.deleteNuxeoShare).not.toHaveBeenCalled();
   });
 });
-describe('[admin-external-share]ExternalShareDialog', () => {
+describe('[admin-share]ExternalShareDialog', () => {
   let wrapper: any;
   const mockTabProvider = {};
 

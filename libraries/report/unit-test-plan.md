@@ -11,19 +11,18 @@
 - [*] admin-calendar-setting	
 - [*] admin-case-management	
 - [*] admin-dam	
-- [????] admin-dashboard	
-- [ ] admin-docker-log	
+- [x] admin-dashboard	
+- [*] admin-docker-log	
 - [ ] admin-docTemplate	
 - [ ] admin-document-template	
 - [x] admin-document-type	
 - [x] admin-easy-form	
 - [x] admin-email-template	
 - [x] admin-external-connection	
-- [ ] admin-external-share	
+- [x] admin-share	
 - [x] admin-folder-cabinet	
 - [x] admin-group	
 - [x] admin-hold	
-- [x] admin-internale-share	
 - [x] admin-log-manage	
 - [x] admin-master-table	
 - [ ] admin-message-queue	

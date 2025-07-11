@@ -43,7 +43,7 @@ const ReaderDialog = {
   methods: {}
 };
 
-describe('[admin-internale-share]InternalShareList', () => {
+describe('[admin-share-internal]InternalShareList', () => {
   let wrapper: any
   const mockTabProvider = {}
 
@@ -139,7 +139,7 @@ const ShareListProviderDetail = {
   deleteAction: vi.fn(),
   actionPermission: vi.fn()
 }
-describe('[admin-internale-share]InternalShareListTable', () => {
+describe('[admin-share-internal]InternalShareListTable', () => {
   let wrapper: any
   const mockTabProvider = {}
 
