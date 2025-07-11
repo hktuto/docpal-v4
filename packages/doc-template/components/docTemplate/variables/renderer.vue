@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import EditVariablesDialog from './editVariablesDialog.vue'
 
+const editVariablesDialogRef = ref()
+const emits = defineEmits(['update'])
 const { t } = useI18n()
 const state = reactive({
   variables: []
@@ -22,16 +25,27 @@ function handleTableData(cols: any, rows: any) {
   return rowList
 }
 
+function handleVariableData(item: any) {
+  editVariablesDialogRef.value.openVariablesDialog(item)
+}
+
+function handleUpdate(item: any) {
+  const index = state.variables.findIndex((variable: any) => variable.id === item.id)
+  if (index !== -1) {
+    state.variables[index] = { ...state.variables[index], ...item }
+  }
+  emits('update', state.variables)
+}
+
 defineExpose({ setVariables })
 </script>
 
 <template>
   <div class="renderer-container">
-    <!-- {{ state.variables }} -->
-    <div v-for="item in state.variables" :key="item.key" class="variable-item">
+    <div v-for="item in state.variables" :key="item.key" class="variable-item" @dblclick="handleVariableData(item)">
       <div v-if="item.type==='text'" class="variable-content">
-        <el-form>
-          {{ $t('docTemplate.variable.name') }}: {{ item.name }}
+        {{ $t('docTemplate.variable.name') }}: {{ item.name }}
+        <el-form style="margin-top: 5px">
           <el-form-item :label="`${t('docTemplate.variable.value')}:`">
             <el-input v-model="item.value" disabled />
           </el-form-item>
@@ -39,8 +53,8 @@ defineExpose({ setVariables })
       </div>
 
       <div v-if="item.type==='link'" class="variable-content">
+        {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form label-position="top">
-          {{ $t('docTemplate.variable.name') }}: {{ item.name }}
           <el-form-item :label="`${t('docTemplate.variable.value')}:`">
             <div class="input-row">
               <span class="label-text">{{ $t('docTemplate.variable.type') + ':' }}</span>
@@ -59,8 +73,8 @@ defineExpose({ setVariables })
       </div>
 
       <div v-if="item.type==='list'" class="variable-content">
+        {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form label-position="top">
-          {{ $t('docTemplate.variable.name') }}: {{ item.name }}
           <el-form-item :label="`${t('docTemplate.variable.value')}:`">
             <ul v-if="item.value.listStyle === 'bullet'" class="ol-ul-container">
               <li v-for="(listItem, index) in item.value.items" :key="index">{{ listItem.label }}</li>
@@ -77,12 +91,14 @@ defineExpose({ setVariables })
         <br />
         <div class="el-form-item__label">{{ $t('docTemplate.variable.value') + ':' }}</div>
         <el-table :data="handleTableData(item.value.columns,item.value.rows)" :stripe="item.value.striped"
-                  style="width: 100%" border="parentBorder">
+                  style="width: 100%">
           <el-table-column v-for="column in item.value.columns" :prop="column.key" :label="column.name" width="180" />
         </el-table>
       </div>
     </div>
   </div>
+
+  <EditVariablesDialog ref="editVariablesDialogRef" @update="handleUpdate" />
 </template>
 
 <style scoped lang="scss">
@@ -95,7 +111,7 @@ defineExpose({ setVariables })
   }
 
   .variable-content {
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
     padding: 12px;
     border: 1px solid #e4e7ed;
@@ -115,6 +131,7 @@ defineExpose({ setVariables })
     display: flex;
     align-items: center;
     margin-bottom: 8px;
+    margin-right: 5px;
 
     &:last-child {
       margin-bottom: 0;
@@ -127,7 +144,6 @@ defineExpose({ setVariables })
     }
   }
 
-  // 自定義滾動條樣式
   .variable-content::-webkit-scrollbar {
     width: 6px;
   }

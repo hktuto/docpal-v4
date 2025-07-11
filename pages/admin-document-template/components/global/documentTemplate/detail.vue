@@ -16,6 +16,7 @@ const state = reactive<any>({
     name: ''
   },
   variables: [],
+  testVariables: [],
   previewFile: {
     blob: null,
     name: '',
@@ -46,14 +47,13 @@ async function getInfo() {
 async function getPreviewFile() {
   state.previewFile.loading = true
   try {
-    const blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
+    state.previewFile.blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
       format: 'blob',
       timeout: 0,
       headers: {
         key: 'preview'
       }
     })
-    state.previewFile.blob = blob
   } catch (error) {
     console.log(error)
   }
@@ -94,11 +94,24 @@ async function getVariables() {
   }
 }
 
+const nodeBackendEndpoint = 'http://localhost:3333'
+
+async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
+  const res = await fetch(nodeBackendEndpoint + endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  return await res.blob()
+}
+
 async function handleTest() {
   state.downloadLoading = true
 
   try {
-    const data = {}
+    const data = state.testVariables
     const id = new Date().valueOf() + state.info.name
     const notification = ElNotification({
       title: '',
@@ -110,18 +123,34 @@ async function handleTest() {
       duration: 0,
       position: 'bottom-right'
     })
-    const blob = await adminApi.api.postTemplateDocumentGenerateFile({
-      id: state.info.id,
-      variables: data
-    }, {
-      format: 'blob',
-      timeout: 0,
-      onDownloadProgress: (e: any) => {
-        const el = document.getElementById(id)
-        if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+    let blob
+    if (state.info.fileType === 'Word') {
+
+      const filename = `${state.info.name}.docx`
+      const dataJson = {
+        json: {
+          options: documentOptions.value,
+          content: jsonData.value
+        },
+        variables: state.testVariables
       }
-    })
-    downloadBlob(blob, getName())
+
+      // TODO: call local server
+      blob = await fetchExportBlob('/convert/docx', dataJson)
+    } else {
+      blob = await adminApi.api.postTemplateDocumentGenerateFile({
+        id: state.info.id,
+        variables: data
+      }, {
+        format: 'blob',
+        timeout: 0,
+        onDownloadProgress: (e: any) => {
+          const el = document.getElementById(id)
+          if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+        }
+      })
+    }
+    downloadBlob(blob, state.info.name)
     setTimeout(() => {
       notification.close()
     }, 3000)
@@ -129,11 +158,6 @@ async function handleTest() {
 
   }
   state.downloadLoading = false
-}
-
-// #endregion
-function getName() {
-  return state.info.name
 }
 
 const TemplateAddStep1DialogRef = ref()
@@ -155,7 +179,7 @@ function initWordEditor(json: any) {
   documentOptions.value = json.json.options
   jsonData.value = json.json.content
   variables.value = json.variables
-  templateVariablesRendererRef.value.setVariables(variables.value)
+  templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
 }
 
 function createWordEdit(newData: any) {
@@ -173,8 +197,6 @@ function handleWordDialogClose() {
 function handleEditEditor() {
   state.isEdit = true
 }
-
-const nodeBackendEndpoint = 'http://localhost:3333'
 
 // TODO test case
 async function getWordJson(docId: string) {
@@ -205,7 +227,7 @@ async function setWordJson(docId: string, jsonData: any) {
     const formData = new FormData()
     formData.append('file', blob, fileName)
     formData.append('docId', docId)
-
+    await adminApi.api.putTemplateDocumentUpload()
     const response = await fetch(url, {
       method: 'POST',
       body: formData
@@ -224,17 +246,13 @@ async function handleSaveWord() {
   documentOptions.value = editDataJson.json.options
   jsonData.value = editDataJson.json.content
 
-  // const fileName = state.info.name + '.json'
-  // const formData = new FormData()
-  // formData.append('file', file)
-  // formData.append('id', state.setting.id)
+  const fileName = state.info.name + '.json'
+  const blob = await convertJsonToBlob(jsonData, fileName)
 
-  // await adminApi.api.putTemplateDocumentUpload({requestDTO:{}},formData as any)
-  try {
-    await setWordJson(state.info.documentId, editDataJson)
-  } catch (error) {
-    console.error('保存Word文档失败:', error)
-  }
+  const formData = new FormData()
+  formData.append('file', blob, fileName)
+  formData.append('id', id)
+  await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, formData as any)
 
   state.isEdit = false
 }
@@ -248,10 +266,12 @@ async function handleSaveWord() {
 function convertJsonToBlob(jsonData: any, fileName: string = 'data.json'): Promise<Blob> {
   return new Promise((resolve, reject) => {
     try {
-
       const jsonString = JSON.stringify(jsonData)
       // 创建Blob对象
-      const blob = new Blob([jsonString], { type: 'application/json' })
+      const blob = new Blob([jsonString], {
+        name: fileName,
+        type: 'application/json'
+      })
       resolve(blob)
     } catch (error) {
       reject(error)
@@ -261,21 +281,25 @@ function convertJsonToBlob(jsonData: any, fileName: string = 'data.json'): Promi
 
 function updateVariables(newData: any) {
   variables.value = newData
-  templateVariablesRendererRef.value.setVariables(variables.value)
+  templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
   // TODO: 更新服務端的 Variables 數據
 
 }
 
 async function init() {
   await getInfo()
-  // await getVariables()
+  await getPreviewFile()
+  await getVariables()
   if (isEdit) {
     // 分流不同的文件類型，顯示不同的編輯器
     switch (state.info.fileType) {
       case 'Word':
-        const blob = await getWordJson(state.info.documentId)
-        console.log('---blob', blob)
+        // state.previewFile.blo = await getWordJson(id)
+        const blob = await getWordJson(id)
+        // console.log(22, state.previewFile.blob)
+
         // the word Json file  not created
+        // if (!state.previewFile.blob) {
         if (!blob) {
           state.openWordDialog = true
           break
@@ -290,7 +314,6 @@ async function init() {
         }
         break
       case 'Excel':
-        await getPreviewFile()
         break
     }
 
@@ -309,6 +332,10 @@ async function init() {
   }
 
   state.pageLoading = true
+}
+
+function handleTestVariable(variables: any) {
+  state.testVariables = variables
 }
 
 onBeforeMount(async () => {
@@ -364,7 +391,7 @@ onBeforeMount(async () => {
       <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
                       :showClose="false">
         <div class="template-title">{{ t('template.variable') }}</div>
-        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" />
+        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" @update="handleTestVariable" />
 
         <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
                    :loading="state.downloadLoading" @click="handleTest">{{ t('template.test') }}
@@ -375,7 +402,7 @@ onBeforeMount(async () => {
 
     <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
                                   :defaultOpened="state.openWordDialog" @submit="createWordEdit"
-                                  @close="handleWordDialogClose" />
+                                  @wordDialogClose="handleWordDialogClose" />
   </div>
 </template>
 
