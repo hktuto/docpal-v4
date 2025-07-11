@@ -10,7 +10,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare",
-    "predev": "npm run prepare"
+    "predev": "npm run prepare",
+    "test": "vitest --ui --watch",
+    "test:report":"vitest run"
   },
   "keywords": [],
   "author": "",
