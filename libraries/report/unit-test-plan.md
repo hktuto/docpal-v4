@@ -9,7 +9,7 @@
 - [*] admin-bulk-import	
 - [*] admin-calendar-setting	
 - [*] admin-case-management	
-- [ ] admin-dam	
+- [*] admin-dam	
 - [-] admin-dashboard	
 - [ ] admin-docker-log	
 - [ ] admin-docTemplate	
@@ -29,7 +29,7 @@
 - [x] admin-message-template	
 - [x] admin-password-policy	
 - [x] admin-retention	
-- [ ] admin-rbac	
+- [*] admin-rbac	
 - [x] admin-setting	
 - [x] admin-smart-folder	
 - [x] admin-unique-id-generator	

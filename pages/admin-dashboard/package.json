@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "all DocPal module entry",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
@@ -10,7 +11,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare ",
-    "predev": "npm run prepare"
+    "predev": "npm run prepare",
+    "test": "vitest --ui --watch"
   },
   "keywords": [],
   "author": "",
