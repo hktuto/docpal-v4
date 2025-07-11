@@ -126,7 +126,6 @@ async function handleTest() {
     let blob
     if (state.info.fileType === 'Word') {
 
-      const filename = `${state.info.name}.docx`
       const dataJson = {
         json: {
           options: documentOptions.value,
@@ -134,9 +133,15 @@ async function handleTest() {
         },
         variables: state.testVariables
       }
-
       // TODO: call local server
       blob = await fetchExportBlob('/convert/docx', dataJson)
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${state.info.name}.docx`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
     } else {
       blob = await adminApi.api.postTemplateDocumentGenerateFile({
         id: state.info.id,
@@ -149,8 +154,9 @@ async function handleTest() {
           if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
         }
       })
+      downloadBlob(blob, state.info.name)
     }
-    downloadBlob(blob, state.info.name)
+
     setTimeout(() => {
       notification.close()
     }, 3000)
@@ -215,45 +221,26 @@ async function getWordJson(docId: string) {
   return null
 }
 
-async function setWordJson(docId: string, jsonData: any) {
-  const url = new URL(nodeBackendEndpoint + '/convert/setJson')
-
-  try {
-    // 将JSON数据转换为Blob文件
-    const fileName = state.info.name + '.json'
-    const blob = await convertJsonToBlob(jsonData, fileName)
-
-    // 创建FormData对象
-    const formData = new FormData()
-    formData.append('file', blob, fileName)
-    formData.append('docId', docId)
-    await adminApi.api.putTemplateDocumentUpload()
-    const response = await fetch(url, {
-      method: 'POST',
-      body: formData
-    })
-
-    const result = await response.json()
-    return result
-  } catch (error) {
-    throw error
-  }
-}
-
 async function handleSaveWord() {
   const editDataJson = docTemplateEditorRef.value.getJsonData()
-
   documentOptions.value = editDataJson.json.options
   jsonData.value = editDataJson.json.content
 
+  const newWordJson = {
+    json: {
+      options: documentOptions.value,
+      content: jsonData.value
+    },
+    variables: variables.value
+  }
+
   const fileName = state.info.name + '.json'
-  const blob = await convertJsonToBlob(jsonData, fileName)
+  const blob = await convertJsonToBlob(newWordJson, fileName)
 
   const formData = new FormData()
   formData.append('file', blob, fileName)
   formData.append('id', id)
   await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, formData as any)
-
   state.isEdit = false
 }
 
@@ -294,9 +281,8 @@ async function init() {
     // 分流不同的文件類型，顯示不同的編輯器
     switch (state.info.fileType) {
       case 'Word':
-        // state.previewFile.blo = await getWordJson(id)
         const blob = await getWordJson(id)
-        // console.log(22, state.previewFile.blob)
+        console.log(22, state.previewFile.blob)
 
         // the word Json file  not created
         // if (!state.previewFile.blob) {
@@ -304,9 +290,9 @@ async function init() {
           state.openWordDialog = true
           break
         }
-
         try {
           const text = await blob.text()
+          // const text = await state.previewFile.blob.text()
           const json = JSON.parse(text)
           initWordEditor(json)
         } catch (error) {
