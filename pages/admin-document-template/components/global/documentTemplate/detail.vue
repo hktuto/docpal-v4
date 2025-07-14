@@ -204,23 +204,6 @@ function handleEditEditor() {
   state.isEdit = true
 }
 
-// TODO test case
-async function getWordJson(docId: string) {
-  const url = new URL(nodeBackendEndpoint + '/convert/getJsonFile')
-  url.searchParams.append('docId', docId)
-
-  const res = await fetch(url.toString(), {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  if (res.status === 200) {
-    return await res.blob()
-  }
-  return null
-}
-
 async function handleSaveWord() {
   const editDataJson = docTemplateEditorRef.value.getJsonData()
   documentOptions.value = editDataJson.json.options
@@ -246,13 +229,7 @@ async function handleSaveWord() {
   state.isEdit = false
 }
 
-/**
- * 将JSON对象转换为Blob文件
- * @param {any} jsonData - 要转换的JSON对象
- * @param {string} fileName - 文件名（可选，默认为 'data.json'）
- * @returns {Promise<Blob>} 返回包含JSON内容的Blob对象
- */
-async function convertJsonToBlob(jsonData: any, fileName: string = 'data.json'): Promise<Blob> {
+async function convertJsonToBlob(jsonData: any): Promise<Blob> {
   if (!jsonData) {
     throw new Error('JSON 数据不能为空')
   }
@@ -285,8 +262,14 @@ async function init() {
         initWordEditor(dataJson)
         break
       case 'Excel':
-        await getPreviewFile()
         await getVariables()
+        await getPreviewFile()
+        break
+      case 'PPT':
+        await getVariables()
+        await getPreviewFile()
+        break
+      default:
         break
     }
 
@@ -294,12 +277,11 @@ async function init() {
     return
   }
 
-  // 新文件根據不同類型給與顯示的編輯器，並初始化編輯器
   switch (state.info.fileType) {
     case 'Word':
       state.openWordDialog = true
       break
-    case 'Excel':
+    case 'Excel' || 'PPT':
       break
     default:
   }
