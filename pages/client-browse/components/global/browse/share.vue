@@ -1,7 +1,7 @@
 <template>
   <div class="pageContainer">
     <main class="share-main" v-loading="state.loading">
-      <FormRenderer ref="FromRendererRef" class="div1" :form-json="formJson" />
+      <FormRenderer ref="FormRendererRef" class="div1" :form-json="formJson" />
       <div class="div2" v-loading="previewFile.loading">
         <template v-if="state.loadingFileFail">
           <div class="no-file-preview"> {{ $t('tip.loadingFileFail') }}</div>
@@ -39,7 +39,7 @@ import { clientApi } from 'api'
 const { updateShareList, getMineTypeShareList, getUseWatermark } = useShareStore()
 import formJson from './shareRequest.vform.json'
 
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 const { diffMinute } = useTime()
 const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
@@ -70,7 +70,7 @@ const previewFile = reactive<any>({
   }
 })
 
-async function handleDblclick(row) {
+async function handleDblclick(row: any) {
   previewFile.loading = true
   state.loadingFileFail = false
   try {
@@ -119,7 +119,7 @@ async function handleSubmit() {
   try {
     state.loading = true
     if (!!state.interval) clearInterval(state.interval)
-    const formData = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const formData = await FormRendererRef.value.getFormData()
     if (!formData) throw new Error('no emailList')
     const param = {
       emailList: formData.emailList,
@@ -134,7 +134,7 @@ async function handleSubmit() {
       idOrPath: props.backPath
     })
     routerProvider?.back(item)
-  } catch (error) {
+  } catch (error: any) {
     routerProvider?.message.error(error.message)
   } finally {
     state.loading = false
@@ -156,8 +156,8 @@ async function handleSubmit() {
   }
 }
 
-function handleDeleteRow(row) {
-  const index = state.minTypeShareList.findIndex(item => row.id === item.id)
+function handleDeleteRow(row: any) {
+  const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
   state.minTypeShareList.splice(index, 1)
   updateShareList(state.minTypeShareList)
 }
@@ -196,7 +196,7 @@ onMounted(async () => {
     })
     routerProvider?.navigateTo(item)
   }
-  const mimeTypeList = state.minTypeShareList.reduce((prev, item) => {
+  const mimeTypeList = state.minTypeShareList.reduce((prev: any, item: any) => {
     if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
     return prev
   }, [])

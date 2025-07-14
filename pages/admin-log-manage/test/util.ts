@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-export const FromRendererRef = {
+export const FormRendererRef = {
   getFormJson: () => ({ widgetList: [], formConfig: {} }),
   init: () => {
     return {};

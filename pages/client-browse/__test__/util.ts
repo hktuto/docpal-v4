@@ -34,6 +34,7 @@ export const MetaFormRef = {
 export const mockRouterProvider = {
   navigateTo: vi.fn(),
   updateProps: vi.fn(),
+  addToHistory: vi.fn(),
   menuSymbol: 'mockMenuSymbol',
   message: {
     success: vi.fn(),

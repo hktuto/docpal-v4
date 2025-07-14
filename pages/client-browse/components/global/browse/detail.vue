@@ -34,7 +34,7 @@ if (!tabProvider || !routerProvider) {
 }
 const infoOpened = ref(false)
 const docDetail = ref()
-
+const mobileActionOpened = ref(false)
 const loading = ref(false)
 async function getDetail() {
   loading.value = true
