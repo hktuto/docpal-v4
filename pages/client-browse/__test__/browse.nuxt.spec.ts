@@ -1,6 +1,6 @@
 import { shallowMount, mount } from '@vue/test-utils'
 import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
-import { BrowseDetail, BrowsePage, BrowseShare, BrowseVersionComparison, BrowseWatermark } from '#components'
+import { BrowseDetail, BrowseShare, BrowseVersionComparison, BrowseDetailFileNamePicker } from '#components'
 import { clientApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { ElMessageBox, ElMessage, ElSwitch } from 'element-plus'
@@ -131,7 +131,7 @@ describe('[client-browse-share]BrowseShare', () => {
   beforeEach(async () => {
     wrapper = mount(BrowseShare, {
       props: {
-        backPath: 'some/path',
+        backPath: 'some/path'
       },
       global: {
         components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
@@ -161,7 +161,7 @@ describe('[client-browse-share]BrowseShare', () => {
 
   it('should load file preview on double click', async () => {
     const mockRow = { id: 'file1', name: 'File 1', watermark: null }
-    
+
     await wrapper.vm.handleDblclick(mockRow)
     expect(wrapper.vm.previewFile.name).toBe('File 1')
   })
@@ -172,11 +172,11 @@ describe('[client-browse-share]BrowseShare', () => {
     await wrapper.vm.handleDblclick(mockRow)
     expect(wrapper.vm.state.loadingFileFail).toBe(true)
   })
-  
+
   it('should submit share request successfully', async () => {
     const mockFormData = { emailList: ['test@example.com'], password: '12345', dueDate: new Date() }
     wrapper.vm.FormRendererRef = {
-      getFormData: vi.fn(() => Promise.resolve(mockFormData )),
+      getFormData: vi.fn(() => Promise.resolve(mockFormData)),
       vFormRenderRef: {
         resetForm: vi.fn(),
         setFormData: vi.fn()
@@ -185,19 +185,19 @@ describe('[client-browse-share]BrowseShare', () => {
     clientApi.api.postNuxeoShareNew.mockResolvedValue({ data: {} })
     await wrapper.vm.handleSubmit()
     expect(clientApi.api.postNuxeoShareNew).toHaveBeenCalled()
-    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('share_success');
+    expect(mockRouterProvider.message.success).toHaveBeenCalledWith('share_success')
   })
 
   it('should handle delete row', () => {
     wrapper.vm.state.minTypeShareList = [{ id: 'file1' }, { id: 'file2' }]
     wrapper.vm.handleDeleteRow({ id: 'file1' })
-    
+
     expect(wrapper.vm.state.minTypeShareList).toEqual([{ id: 'file2' }])
   })
   it('should discard changes', async () => {
     ElMessageBox.confirm.mockResolvedValue('confirm')
     await wrapper.vm.handleDiscard()
-    expect(mockRouterProvider.navigateTo).toHaveBeenCalled();
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalled()
   })
   it('should navigate to back path on add more', () => {
     wrapper.vm.handleAddMore()
@@ -212,7 +212,7 @@ describe('[client-browse-version]BrowseVersionComparison', () => {
     wrapper = mount(BrowseVersionComparison, {
       props: {
         id: 'doc123',
-        oldVersionNum: '1.0',
+        oldVersionNum: '1.0'
       },
       global: {
         components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
@@ -236,7 +236,7 @@ describe('[client-browse-version]BrowseVersionComparison', () => {
     wrapper.unmount()
     vi.clearAllMocks()
   })
-  
+
   it('should render correctly with props', () => {
     expect(wrapper.props().id).toBe('doc123')
     expect(wrapper.props().oldVersionNum).toBe('1.0')
@@ -245,7 +245,7 @@ describe('[client-browse-version]BrowseVersionComparison', () => {
   it('should get preview files successfully', async () => {
     const mockPreviewFile = new Blob()
     const spyGetPreviewFile = vi.spyOn(clientApi.api, 'postNuxeoDocumentPreview').mockResolvedValue(mockPreviewFile)
-    
+
     await wrapper.vm.getPreviewFile(wrapper.vm.state.previewNewFile, 'newDocId')
     // expect(wrapper.vm.state.previewNewFile.blob).toBe(mockPreviewFile)
 
@@ -260,15 +260,57 @@ describe('[client-browse-version]BrowseVersionComparison', () => {
 
   it('should show loading state when fetching previews', async () => {
     const spyGetPreviewFile = vi.spyOn(clientApi.api, 'postNuxeoDocumentPreview').mockResolvedValue(new Blob())
-    
+
     expect(wrapper.vm.state.previewNewFile.loading).toBe(false)
     await wrapper.vm.getPreviewFile(wrapper.vm.state.previewNewFile, 'newDocId')
     expect(wrapper.vm.state.previewNewFile.loading).toBe(false)
   })
   it('should handle errors when fetching preview files', async () => {
     vi.spyOn(clientApi.api, 'postNuxeoDocumentPreview').mockRejectedValue(new Error('Error fetching file'))
-    
+
     await expect(wrapper.vm.getPreviewFile(wrapper.vm.state.previewNewFile, 'newDocId')).rejects.toThrow('Error fetching file')
   })
 })
+describe('[client-browse-version]BrowseDetailFileNamePicker', () => {
+  let wrapper: any
+  const mockTabProvider = {}
 
+  beforeEach(async () => {
+    wrapper = mount(BrowseDetailFileNamePicker, {
+      props: {
+        title: 'Test Title',
+        docId: 'doc123',
+        parentRef: 'parentDocId',
+      },
+      global: {
+        components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef
+    // dialogRef.handleOpen = vi.fn()
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('should render correctly with props', () => {
+    expect(wrapper.props().title).toBe('Test Title')
+    expect(wrapper.props().docId).toBe('doc123')
+    expect(wrapper.props().parentRef).toBe('parentDocId')
+  })
+
+  it('should load more data if next page is available', async () => {
+    await wrapper.vm.loadData([], 'parentDocId')
+  })
+})
