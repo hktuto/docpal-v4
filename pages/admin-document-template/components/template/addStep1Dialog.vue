@@ -95,6 +95,10 @@ async function handleOpen(setting?) {
 }
 
 async function createFile(fileType: 'Word' | 'Excel' | 'PPT' | 'PDF', name: string) {
+  if (fileType === 'Word') {
+    fileType = 'Json'
+  }
+
   const path = `/docTemplate/template${ExtensionMap[fileType]}`
   const file = await fetch(path)
   const fileArrayBuffer = await file.arrayBuffer()
