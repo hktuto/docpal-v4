@@ -13,7 +13,8 @@ const { id, isEdit } = defineProps<{
 }>()
 const state = reactive<any>({
   info: {
-    name: ''
+    name: '',
+    fileType: ''
   },
   variables: [],
   testVariables: [],
@@ -111,7 +112,8 @@ async function handleTest() {
   state.downloadLoading = true
 
   try {
-    const data = state.testVariables
+    const data = await templateVariablesRendererRef.value.getData(state.fileType)
+    if (data) return
     const id = new Date().valueOf() + state.info.name
     const notification = ElNotification({
       title: '',
@@ -125,7 +127,6 @@ async function handleTest() {
     })
     let blob
     if (state.info.fileType === 'Word') {
-
       const dataJson = {
         json: {
           options: documentOptions.value,
@@ -161,9 +162,10 @@ async function handleTest() {
       notification.close()
     }, 3000)
   } catch (error) {
-
+    throw new Error(error)
+  } finally {
+    state.downloadLoading = false
   }
-  state.downloadLoading = false
 }
 
 const TemplateAddStep1DialogRef = ref()

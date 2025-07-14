@@ -10,6 +10,7 @@ interface VariableItem {
   required?: boolean
 }
 
+const routerProvider = inject(MenuRouterKey)
 const editVariablesDialogRef = ref()
 const emits = defineEmits(['update'])
 const { t } = useI18n()
@@ -48,13 +49,31 @@ function handleUpdate(item: VariableItem) {
   }
 }
 
-defineExpose({ setVariables })
+async function getData(type: string) {
+  if (type !== 'Word') {
+    const existEmptyValue = state.variables.some(item =>
+      item.required &&
+      (
+        !('value' in item) ||
+        item.value === null ||
+        item.value === undefined ||
+        (typeof item.value === 'string' && item.value.trim() === '')
+      )
+    )
+    if (existEmptyValue) {
+      routerProvider?.message.error('The required fields exist in template variables')
+      return
+    }
+  }
+  return state.variables
+}
+
+defineExpose({ setVariables, getData })
 </script>
 
 <template>
   <div class="renderer-container">
-    <div v-for="(item,index) in state.variables" class="variable-item" @dblclick="handleVariableData(item)">
-      <!--      {{ item }}-->
+    <div v-for="(item,index) in state.variables" class="variable-item"  @dblclick="handleVariableData(item)">
       <div v-if="item.type==='text'" class="variable-content">
         {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form style="margin-top: 5px">
