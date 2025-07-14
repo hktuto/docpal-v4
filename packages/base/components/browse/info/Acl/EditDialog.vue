@@ -4,7 +4,7 @@
     v-model="state.dialogVisible"
     :close-on-click-modal="false"
     append-to-body>
-    <FormRenderer ref="FromRendererRef" :form-json="formJson"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"/>
     <template #footer>
       <el-button id="Browse__CreateInternalSharing__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
@@ -26,11 +26,11 @@ const state = reactive({
   doc: {},
   title: 'filePopover_internalShare'
 })
-const FromRendererRef = ref()
+const FormRendererRef = ref()
 
 async function handleSubmit() {
   try {
-    const data = await FromRendererRef.value.vFormRenderRef.getFormData()
+    const data = await FormRendererRef.value.getFormData()
     if (!data) return
     state.loading = true;
     const result = {...data}
@@ -57,7 +57,7 @@ async function handleSubmit() {
 const handleCloseDialog = (closeDialog: boolean = true) => {
   state.dialogVisible = !closeDialog
   state.loading = false
-  if (closeDialog) FromRendererRef.value.vFormRenderRef.resetForm()
+  if (closeDialog) FormRendererRef.value.vFormRenderRef.resetForm()
 }
 
 function handleOpen(docDetail) {
@@ -68,7 +68,7 @@ function handleOpen(docDetail) {
     ids: []
   }
   nextTick(() => {
-    FromRendererRef.value.vFormRenderRef.setFormData(params)
+    FormRendererRef.value.vFormRenderRef.setFormData(params)
   })
 }
 
