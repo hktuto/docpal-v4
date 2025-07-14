@@ -66,5 +66,7 @@ export const clientApi = {
     getNuxeoCollection: vi.fn(),
     deleteNuxeoCollectionDeleteCollectionCollectionid: vi.fn(),
     deleteNuxeoCollectionRemove: vi.fn(),
+    postNuxeoCollectionCreate: vi.fn(),
+    patchNuxeoCollection: vi.fn(),
   }
 }

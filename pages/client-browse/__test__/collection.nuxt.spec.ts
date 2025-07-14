@@ -169,3 +169,161 @@ describe('[client-browse-collection]CollectionPage', () => {
     expect(wrapper.vm.style.collapse).toBe(!initialCollapseState)
   })
 })
+describe('[client-browse-collection]CollectionAddCollectionDialog', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+
+  beforeEach(async () => {
+    wrapper = mount(CollectionAddCollectionDialog, {
+      global: {
+        components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef
+    // dialogRef.handleOpen = vi.fn()
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('should render correctly', () => {
+    expect(wrapper.exists()).toBe(true)
+    expect(wrapper.vm.state.visible).toBe(false) // 默认不可见
+  })
+  it('should open the dialog', () => {
+    wrapper.vm.handleOpen()
+    expect(wrapper.vm.state.visible).toBe(true)
+  })
+  it('should submit the form successfully', async () => {
+    const mockData = { name: 'New Collection' }
+    const mockResponse = { data: { id: 'new-collection-id', name: mockData.name } }
+
+    wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(mockData),
+      vFormRenderRef: {
+        resetForm: vi.fn()
+      }
+    }
+
+    clientApi.api.postNuxeoCollectionCreate.mockResolvedValue(mockResponse)
+
+    await wrapper.vm.handleSubmit()
+
+    expect(clientApi.api.postNuxeoCollectionCreate).toHaveBeenCalledWith({
+      name: mockData.name,
+      description: null
+    })
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_createdSuccessMsg')
+    expect(wrapper.vm.state.visible).toBe(false)
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled()
+  })
+  it('should handle submit error', async () => {
+    wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue({ name: 'Invalid Collection' })
+    }
+    wrapper.vm.state.visible = true
+    clientApi.api.postNuxeoCollectionCreate.mockRejectedValue(new Error('Submission failed'))
+
+    await wrapper.vm.handleSubmit()
+
+    expect(ElMessage.success).not.toHaveBeenCalled() // 确保没有显示成功消息
+    expect(wrapper.vm.state.visible).toBe(true) // 对话框仍然可见
+  })
+})
+describe('[client-browse-collection]CollectionEditCollectionDialog', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+
+  beforeEach(async () => {
+    wrapper = mount(CollectionEditCollectionDialog, {
+      global: {
+        components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef
+    // dialogRef.handleOpen = vi.fn()
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('should render correctly', () => {
+    expect(wrapper.exists()).toBe(true)
+    expect(wrapper.vm.state.visible).toBe(false) // 默认不可见
+  })
+  it('should open the dialog and set form data', async () => {
+    const mockCollection = { id: '123', name: 'Existing Collection' }
+    wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn(() => Promise.resolve({ name: '1111' })),
+      vFormRenderRef: {
+        resetForm: vi.fn(),
+        setFormData: vi.fn()
+      }
+    }
+    wrapper.vm.handleOpen(mockCollection)
+
+    // 等待下一个事件循环以确保 setFormData 被调用
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.state.visible).toBe(true)
+  })
+  it('should submit the form successfully', async () => {
+    const mockData = { id: '123', name: 'Updated Collection' }
+    const mockResponse = { data: { id: '123', name: mockData.name } }
+
+    wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue(mockData),
+      vFormRenderRef: {
+        resetForm: vi.fn()
+      }
+    }
+
+    clientApi.api.patchNuxeoCollection.mockResolvedValue(mockResponse)
+
+    await wrapper.vm.handleSubmit()
+
+    expect(clientApi.api.patchNuxeoCollection).toHaveBeenCalledWith({
+      idOrPath: mockData.id,
+      name: mockData.name,
+      description: null
+    })
+    expect(ElMessage.success).toHaveBeenCalledWith('tip_updateSuccessMsg')
+    expect(wrapper.vm.state.visible).toBe(false)
+    expect(wrapper.vm.FormRendererRef.vFormRenderRef.resetForm).toHaveBeenCalled()
+    expect(wrapper.vm.state.data).toEqual(mockResponse.data) // 确保数据被更新
+  })
+  it('should handle submit error', async () => {
+    wrapper.vm.state.visible = true
+    wrapper.vm.FormRendererRef = {
+      getFormData: vi.fn().mockResolvedValue({ id: '123', name: 'Invalid Collection' })
+    }
+
+    clientApi.api.patchNuxeoCollection.mockRejectedValue(new Error('Submission failed'))
+
+    await wrapper.vm.handleSubmit()
+
+    expect(ElMessage.success).not.toHaveBeenCalled() // 确保没有显示成功消息
+    expect(wrapper.vm.state.visible).toBe(true) // 对话框仍然可见
+  })
+})
