@@ -51,7 +51,8 @@ export const ExtensionMimeTypeMap = {
     'PPT': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'Word': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'Excel': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'PDF': 'application/pdf'
+    'PDF': 'application/pdf',
+    'Json':'application/json'
 }
 
 export const ExtensionMap = {
@@ -59,4 +60,5 @@ export const ExtensionMap = {
     'Excel': '.xlsx',
     'PPT': '.pptx',
     'PDF': '.pdf',
+    'Json':'.json'
 }

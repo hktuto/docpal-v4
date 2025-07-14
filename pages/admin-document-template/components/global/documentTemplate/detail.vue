@@ -86,7 +86,7 @@ async function getVariables() {
       }
     })
     nextTick(() => {
-      // FormVariablesRendererRef.value.createJson(state.variables)
+      templateVariablesRendererRef.value.setVariables(deepCopy(state.variables))
     })
 
   } catch (error) {
@@ -236,34 +236,32 @@ async function handleSaveWord() {
 
   const fileName = state.info.name + '.json'
   const blob = await convertJsonToBlob(newWordJson, fileName)
+  const file = new File([blob], fileName, { type: 'application/json' })
 
-  const formData = new FormData()
-  formData.append('file', blob, fileName)
-  formData.append('id', id)
-  await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, formData as any)
+  const form = new FormData()
+  form.append('file', file)
+  form.append('fileName', fileName)
+  form.append('id', id)
+  await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form)
   state.isEdit = false
 }
 
 /**
  * 将JSON对象转换为Blob文件
- * @param jsonData - 要转换的JSON对象
- * @param fileName - 文件名（可选，默认为 'data.json'）
- * @returns Promise<Blob> - 返回包含JSON内容的Blob对象
+ * @param {any} jsonData - 要转换的JSON对象
+ * @param {string} fileName - 文件名（可选，默认为 'data.json'）
+ * @returns {Promise<Blob>} 返回包含JSON内容的Blob对象
  */
-function convertJsonToBlob(jsonData: any, fileName: string = 'data.json'): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    try {
-      const jsonString = JSON.stringify(jsonData)
-      // 创建Blob对象
-      const blob = new Blob([jsonString], {
-        name: fileName,
-        type: 'application/json'
-      })
-      resolve(blob)
-    } catch (error) {
-      reject(error)
-    }
-  })
+async function convertJsonToBlob(jsonData: any, fileName: string = 'data.json'): Promise<Blob> {
+  if (!jsonData) {
+    throw new Error('JSON 数据不能为空')
+  }
+  try {
+    const jsonString = JSON.stringify(jsonData)
+    return new Blob([jsonString], { type: 'application/json; charset=utf-8' })
+  } catch (error) {
+    console.error('转换 JSON 到 Blob 失败:', error)
+  }
 }
 
 function updateVariables(newData: any) {
@@ -275,31 +273,20 @@ function updateVariables(newData: any) {
 
 async function init() {
   await getInfo()
-  await getPreviewFile()
-  await getVariables()
   if (isEdit) {
     // 分流不同的文件類型，顯示不同的編輯器
     switch (state.info.fileType) {
       case 'Word':
-        const blob = await getWordJson(id)
-        console.log(22, state.previewFile.blob)
-
-        // the word Json file  not created
-        // if (!state.previewFile.blob) {
-        if (!blob) {
+        const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId })
+        if (!dataJson) {
           state.openWordDialog = true
           break
         }
-        try {
-          const text = await blob.text()
-          // const text = await state.previewFile.blob.text()
-          const json = JSON.parse(text)
-          initWordEditor(json)
-        } catch (error) {
-          throw new Error('解析JSON文件失败:', error)
-        }
+        initWordEditor(dataJson)
         break
       case 'Excel':
+        await getPreviewFile()
+        await getVariables()
         break
     }
 
