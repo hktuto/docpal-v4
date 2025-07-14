@@ -1,40 +1,51 @@
 <script setup lang="ts">
 import EditVariablesDialog from './editVariablesDialog.vue'
 
+interface VariableItem {
+  key: string
+  id: string
+  name: string
+  type: string
+  value: any
+  required?: boolean
+}
+
 const editVariablesDialogRef = ref()
 const emits = defineEmits(['update'])
 const { t } = useI18n()
 const state = reactive({
-  variables: []
+  variables: [] as VariableItem[]
 })
 
-function setVariables(variablesList: any) {
+function setVariables(variablesList: VariableItem[]) {
   state.variables = variablesList
 }
 
 function handleTableData(cols: any, rows: any) {
   const colKeys: string[] = cols.map((column: any) => column.key)
 
-  const rowList = rows.map(row => {
-    return colKeys.reduce((acc, key, index) => {
+  return rows.map((row: any) => {
+    return colKeys.reduce((acc: any, key: string, index: number) => {
       acc[key] = row[index]
       return acc
     }, {})
   })
-
-  return rowList
 }
 
-function handleVariableData(item: any) {
-  editVariablesDialogRef.value.openVariablesDialog(item)
-}
-
-function handleUpdate(item: any) {
-  const index = state.variables.findIndex((variable: any) => variable.id === item.id)
-  if (index !== -1) {
-    state.variables[index] = { ...state.variables[index], ...item }
+function handleVariableData(item: VariableItem) {
+  if (item.type !== 'input') {
+    editVariablesDialogRef.value.openVariablesDialog(item)
   }
-  emits('update', state.variables)
+}
+
+function handleUpdate(item: VariableItem) {
+  if (item.type !== 'input') {
+    const index = state.variables.findIndex((variable: VariableItem) => variable.id === item.id)
+    if (index !== -1) {
+      state.variables[index] = { ...state.variables[index], ...item }
+    }
+    emits('update', state.variables)
+  }
 }
 
 defineExpose({ setVariables })
@@ -42,11 +53,12 @@ defineExpose({ setVariables })
 
 <template>
   <div class="renderer-container">
-    <div v-for="item in state.variables" :key="item.key" class="variable-item" @dblclick="handleVariableData(item)">
+    <div v-for="(item,index) in state.variables" class="variable-item" @dblclick="handleVariableData(item)">
+      <!--      {{ item }}-->
       <div v-if="item.type==='text'" class="variable-content">
         {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form style="margin-top: 5px">
-          <el-form-item :label="`${t('docTemplate.variable.value')}:`">
+          <el-form-item :key="item.key" :label="`${t('docTemplate.variable.value')}:`">
             <el-input v-model="item.value" disabled />
           </el-form-item>
         </el-form>
@@ -55,7 +67,7 @@ defineExpose({ setVariables })
       <div v-if="item.type==='link'" class="variable-content">
         {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form label-position="top">
-          <el-form-item :label="`${t('docTemplate.variable.value')}:`">
+          <el-form-item :key="item.key" :label="`${t('docTemplate.variable.value')}:`">
             <div class="input-row">
               <span class="label-text">{{ $t('docTemplate.variable.type') + ':' }}</span>
               <el-input v-model="item.value.type" disabled />
@@ -75,7 +87,7 @@ defineExpose({ setVariables })
       <div v-if="item.type==='list'" class="variable-content">
         {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form label-position="top">
-          <el-form-item :label="`${t('docTemplate.variable.value')}:`">
+          <el-form-item :key="item.key" :label="`${t('docTemplate.variable.value')}:`">
             <ul v-if="item.value.listStyle === 'bullet'" class="ol-ul-container">
               <li v-for="(listItem, index) in item.value.items" :key="index">{{ listItem.label }}</li>
             </ul>
@@ -95,6 +107,23 @@ defineExpose({ setVariables })
           <el-table-column v-for="column in item.value.columns" :prop="column.key" :label="column.name" width="180" />
         </el-table>
       </div>
+
+      <div v-if="item.type==='input'" class="variable-content">
+        <el-form style="margin-top: 5px" :model="state">
+          <el-form-item
+            :key="item.name"
+            :label="item.name"
+            :prop="'variables.'+ index +'.value'"
+            :rules="{
+              required: item.required,
+              message: t('render.hint.fieldRequired', { name: item.name }),
+              trigger: 'blur'
+            }"
+          >
+            <el-input v-model="item.value" />
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 
@@ -111,6 +140,7 @@ defineExpose({ setVariables })
   }
 
   .variable-content {
+    min-height: 80px;
     max-height: 300px;
     overflow-y: auto;
     padding: 12px;
