@@ -30,8 +30,7 @@
           <template #toggleText>
             <div class="label">{{ $t('ai.uploadText') }}</div>
           </template>
-          <el-tree ref="treeRef" :data="state.fileList" default-expand-all nodeKey="id" :expand-on-click-node="false"
-                   @node-click="handleNodeClick">
+          <el-tree ref="treeRef" :data="state.fileList" default-expand-all nodeKey="id" :expand-on-click-node="false" @node-click="handleNodeClick">
             <template #default="{ node, data }">
               <div :class="['flex-x-between', 'tree-item', { 'disabled-line': data.isUpload === false }]">
                 <span :class="['flex-x-start', { color__danger: state.repearNameIdList.includes(data.id) }]">
@@ -48,8 +47,7 @@
             </template>
           </el-tree>
         </SplitpanesPanes>
-        <SplitpanesPanes class="main-center" v-model:size="middleSize" :defaultSize="55" parentId="panesContainer"
-                         :dragging="dragging" :minSizeInPixel="300">
+        <SplitpanesPanes class="main-center" v-model:size="middleSize" :defaultSize="55" parentId="panesContainer" :dragging="dragging" :minSizeInPixel="300">
           <div class="flex-x-between" v-show="state.selectedDoc" style="padding: var(--app-space-xs)">
             {{ state.selectedDoc.name }}
           </div>
@@ -92,24 +90,21 @@
       <div class="upload-footer flex-x-between">
         <div class="space"></div>
         <div>
-          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="danger"
-                     @click.native="handleDiscard"> {{ $t('ai.cancelPatch') }}
+          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="danger" @click.native="handleDiscard">
+            {{ $t('ai.cancelPatch') }}
           </el-button>
-          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="info"
-                     @click.native="handleClose">{{ $t('common_close') }}
+          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="info" @click.native="handleClose">{{ $t('common_close') }} </el-button>
+          <el-button v-if="state.status === 'Error'" :loading="state.retryLoading" :disabled="state.submitLoading" type="primary" @click.native="handleRetry"
+            >{{ $t('ai.retryAiLoading') }}
           </el-button>
-          <el-button v-if="state.status === 'Error'" :loading="state.retryLoading" :disabled="state.submitLoading"
-                     type="primary" @click.native="handleRetry">{{ $t('ai.retryAiLoading') }}
-          </el-button>
-          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="primary"
-                     @click.native="handleSubmit">{{ $t('dpButtom_confirm') }}
+          <el-button :loading="state.submitLoading" :disabled="state.retryLoading" type="primary" @click.native="handleSubmit"
+            >{{ $t('dpButtom_confirm') }}
           </el-button>
         </div>
       </div>
     </main>
   </div>
 </template>
-
 
 <script lang="ts" setup>
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
@@ -263,8 +258,7 @@ async function handleDiscard() {
   const formData = new FormData()
   formData.append('userId', userId.value)
   formData.append('uploadId', id)
-  await clientApi.instance.post(`/nuxeo/document/batchCancel`, {
-    data: formData,
+  await clientApi.instance.post(`/nuxeo/document/batchCancel`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -306,8 +300,7 @@ async function handleRetry() {
       init()
     }
     init()
-  } catch (error) {
-  }
+  } catch (error) {}
   setTimeout(() => (state.retryLoading = false), 1000)
 }
 
@@ -401,10 +394,12 @@ async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean>
 }
 
 async function init() {
-  let docList: any = await clientApi.api.postNuxeoDocumentQueryuploadfiledetaildtolist({
-    userId: userId.value,
-    uploadId: id
-  }).then((res) => res.data)
+  let docList: any = await clientApi.api
+    .postNuxeoDocumentQueryuploadfiledetaildtolist({
+      userId: userId.value,
+      uploadId: id
+    })
+    .then((res) => res.data)
   console.log('docList', docList)
   docList = docList.map((item) => ({
     ...item,
@@ -425,7 +420,6 @@ onMounted(async () => {
   leftMin.value = CalMax()
   rightMin.value = CalMax()
 })
-
 </script>
 
 <style lang="scss" scoped>
