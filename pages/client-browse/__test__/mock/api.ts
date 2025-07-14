@@ -54,6 +54,17 @@ export const clientApi = {
           name: 'test-name'
         }
       })
-    )
+    ),
+    postNuxeoDocumentChildrenThumbnailV2: vi.fn(() =>
+      Promise.resolve({
+        data: {
+          entryList: [],
+          name: 'test-name'
+        }
+      })
+    ),
+    getNuxeoCollection: vi.fn(),
+    deleteNuxeoCollectionDeleteCollectionCollectionid: vi.fn(),
+    deleteNuxeoCollectionRemove: vi.fn(),
   }
 }
