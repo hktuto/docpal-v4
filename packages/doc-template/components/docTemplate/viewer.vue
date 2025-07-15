@@ -68,6 +68,8 @@ onUnmounted(() => {
     editor.value.destroy()
   }
 })
+
+defineExpose({ initEditor })
 </script>
 
 <template>

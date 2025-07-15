@@ -228,6 +228,7 @@ async function handleSaveWord() {
   form.append('fileName', fileName)
   form.append('id', id)
   await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form)
+  routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
   state.isEdit = false
 }
 
@@ -319,7 +320,10 @@ onBeforeMount(async () => {
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
                        :content="t('edit Word')" @click="handleEditEditor"></SvgIcon>
               <SvgIcon v-if="state.isEdit" src="/icons/file/save.svg" class="el-icon--right" round
-                       :content="t('save Word')" @click="handleSaveWord">
+                       :content="t('Save Word')" @click="handleSaveWord">
+              </SvgIcon>
+              <SvgIcon v-if="state.isEdit" src="/icons/file/save.svg" class="el-icon--right" round
+                       :content="t('Don\'t save and exit')" @click="state.isEdit = false">
               </SvgIcon>
             </template>
 
