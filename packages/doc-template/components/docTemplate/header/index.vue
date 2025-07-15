@@ -23,7 +23,7 @@ defineExpose({
   <div class="headerContainer">
     <template v-if="editor">
       <div class="toolContainer">
-            <LazyDocTemplateContentToolbarFont />
+            <LazyDocTemplateContentToolbar />
           </div>
     </template>
   </div>

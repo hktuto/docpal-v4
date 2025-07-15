@@ -146,33 +146,6 @@ function removeVariable(variable: DocTemplateVariable) {
   setVariables(newVariables)
 }
 
-function handleInsertVariable(variable: any) {
-  if (!editor.value) return
-  let nodeType = ''
-  switch (variable.type) {
-    case 'text':
-      nodeType = 'variableText'
-      break
-    case 'list':
-      nodeType = 'variableList'
-      break
-    case 'table':
-      nodeType = 'variableTable'
-      break
-    case 'link':
-      nodeType = 'variableLink'
-      break
-    case 'image':
-      nodeType = 'image'
-      break // or your custom variableImage
-    default:
-      return
-  }
-  editor.value.commands.insertContent({
-    type: nodeType,
-    attrs: { ...variable }
-  })
-}
 
 function getJsonData() {
   return getJsonConfig(editor.value.getJSON(), options.value, variables)
