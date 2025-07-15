@@ -2,7 +2,7 @@ import { adminApi } from "api";
 import type { OrgNode } from '../components/rbac/OrgChart/X6/types'
 const useRoleTree = () => useState<OrgNode[]>('role-tree', () => ([]))
 const useFlatRole = () => useState<any[]>('flat-role', () => ([]))
-export const useRBAC = (roleIds?: string | string[]) => {
+export const useRBAC = (roleId?: string) => {
 
 
   const loading = ref(false)
@@ -13,15 +13,16 @@ export const useRBAC = (roleIds?: string | string[]) => {
   async function getRoleTree() {
     loading.value = true
     try{
-      if(roleIds) {
-        const roleIdArray = Array.isArray(roleIds) ? roleIds : [roleIds]
+      if(roleId) {
+        // const roleIdArray = Array.isArray(roleIds) ? roleIds : [roleIds]
         // normalize roleIds to array
-        const data = await adminApi.api.postAclRoleHierarchy(roleIdArray)
-        .then((res) => res.data) as OrgNode[]
-        roleTree.value = data || []
+        const data: any = await adminApi.api.getAclRoleHierarchyRoleid(roleId)
+        .then((res: any) => res.data) as OrgNode[]
+        roleTree.value = data.children || []
+        console.log(roleTree)
       }else{
         const data = await adminApi.api.getAclRoleRoot()
-        .then((res) => res.data) as OrgNode
+        .then((res: any) => res.data) as OrgNode
         roleTree.value = data ? [data] : []
       }
       flatRole.value = makeFlapRoleList([...roleTree.value])
@@ -41,14 +42,11 @@ export const useRBAC = (roleIds?: string | string[]) => {
     })
     return roleList
   }
-
-  onMounted(async () => {
-    if(roleTree.value.length === 0) {
-      await getRoleTree()
-    }
-  })
-
-
+  // onMounted(async () => {
+  //   if(roleTree.value.length === 0) {
+  //     await getRoleTree()
+  //   }
+  // })
   return {
     getRoleTree,
     roleTree,

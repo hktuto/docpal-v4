@@ -69,6 +69,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'success'): void
   (e: 'close'): void
+  (e: 'update'): void
 }>()
 
 const dialogVisible = ref(false)
@@ -173,7 +174,7 @@ function handleCancel() {
 
 const handleUsersUpdate = (users: any[]) => {
   // formData.users = users
-  emit('success')
+  emit('update')
 }
 onMounted(async () => {
   userList.value = await getUserList()

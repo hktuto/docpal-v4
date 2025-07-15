@@ -63,7 +63,6 @@ async function handleMetaChange(data: any) {
 function handleOpen(setting: any) {
   state.dialogOpened = true
   state.setting = deepCopy(setting)
-
   state.fileList = []
   let defaultValue = {}
   if (state.setting.metadataValue) defaultValue = JSON.parse(state.setting.metadataValue)
@@ -118,6 +117,7 @@ async function handleSubmit() {
     inputFile.layoutId = state.setting.templateId
     delete inputFile.properties.docName
     const formData: any = new FormData()
+    inputFile.dfcId = state.setting.id
     formData.append('files', file.raw)
     formData.append('document', JSON.stringify(inputFile))
     const res = await clientApi.api.postNuxeoDocumentCreatedocument(formData)

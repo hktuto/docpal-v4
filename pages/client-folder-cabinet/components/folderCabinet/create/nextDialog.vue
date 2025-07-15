@@ -104,7 +104,8 @@ async function handleSubmit() {
         name,
         type: directory.documentType,
         idOrPath: directory.path,
-        properties: directory.properties
+        properties: directory.properties,
+        dfcId: state.rootDetail.dfcId
       })
       .then((res) => res.data)
   }
@@ -128,7 +129,8 @@ async function handleSubmit() {
       name,
       idOrPath: parentPath + '/' + name,
       type: file.documentType,
-      properties: file.properties
+      properties: file.properties,
+      dfcId: state.rootDetail.dfcId
     }
     const formData: any = new FormData()
     formData.append('files', file.raw)
@@ -140,10 +142,11 @@ async function handleSubmit() {
 // #endregion
 
 // #region module: init
-async function handleOpen(cabinetTemplate: any, path: string, id: string) {
+async function handleOpen(cabinetTemplate: any, doc: any) {
   state.cabinetTemplate = cabinetTemplate
-  state.rootDetail.idOrPath = path
-  state.rootDetail.id = id
+  state.rootDetail.idOrPath = doc.path
+  state.rootDetail.id = doc.id
+  state.rootDetail.dfcId = doc.dfcId
   state.visible = true
   state.loading = false
   state.treeLoading = true
