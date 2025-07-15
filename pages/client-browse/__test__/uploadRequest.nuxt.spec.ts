@@ -53,7 +53,67 @@ const ReaderDialog = {
   methods: {}
 }
 
-describe('[admin-workflow]UploadRequestDetail', () => {
+describe('[client-browse-upload-request]UploadRequestPage', () => {
+  let wrapper: any
+  const mockTabProvider = {}
+
+  beforeEach(async () => {
+    wrapper = mount(UploadRequestPage, {
+      global: {
+        components: { VxeGrid, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg, // Mock translation function
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef
+    // dialogRef.handleOpen = vi.fn()
+    // const tableRef = wrapper.vm.$refs.tableRef;
+    // tableRef.loadData = vi.fn();
+  })
+
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('should render correctly', () => {
+    expect(wrapper.exists()).toBe(true)
+    expect(wrapper.vm.tableRef).toBeTruthy() // 确保表格引用存在
+  })
+  it('should handle filter form change', async () => {
+    const formModel = { isDesc: false, orderBy: 'email' }
+    await wrapper.vm.handleFilterFormChange(formModel)
+
+    expect(wrapper.vm.extraParams).toEqual(formModel)
+    expect(wrapper.vm.reload).toHaveBeenCalled() // 确保重载方法被调用
+  })
+
+  it('should double click to navigate to upload request detail', async () => {
+    const mockRow = { status: 'pending_approval', documentId: '123' }
+
+    await wrapper.vm.handleDblclick(mockRow)
+
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalled()
+  })
+  it('should not navigate if status is not pending_approval', async () => {
+    const mockRow = { status: 'completed', documentId: '123' }
+    await wrapper.vm.handleDblclick(mockRow)
+
+    expect(mockRouterProvider.navigateTo).not.toHaveBeenCalled()
+  })
+  it('should navigate to folder', async () => {
+    const mockRow = { documentId: '123' }
+    await wrapper.vm.toFolder(mockRow)
+
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalled()
+  })
+})
+describe('[client-browse-upload-request]UploadRequestDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
 
@@ -80,5 +140,41 @@ describe('[admin-workflow]UploadRequestDetail', () => {
   afterEach(() => {
     wrapper.unmount()
     vi.clearAllMocks()
+  })
+  it('should render correctly', () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('should handle file download', async () => {
+    const mockFile = { id: 'file1', name: 'File1.txt' }
+    clientApi.api.getWorkflowTaskAttachment.mockResolvedValue(new Blob(['file content'], { type: 'text/plain' }))
+
+    await wrapper.vm.handleDownload(mockFile)
+
+    // 这里可以添加对下载逻辑的验证，例如检查是否调用了 downloadBlob 函数
+  })
+
+  it('should submit form successfully', async () => {
+    wrapper.vm.state.selectedRow = { id: 'file1', approved: true, documentType: 'File', properties: {} }
+    wrapper.vm.state.tableData = [wrapper.vm.state.selectedRow]
+
+    wrapper.vm.MetaFormRef = {
+      checkMetaValidate: vi.fn().mockResolvedValue(true)
+    }
+
+    clientApi.api.postWorkflowFormSubmit.mockResolvedValue({ result: true })
+
+    await wrapper.vm.handleSubmit()
+
+    expect(clientApi.api.postWorkflowFormSubmit).toHaveBeenCalled()
+    expect(wrapper.vm.state.submitLoading).toBe(false)
+  })
+  it('should handle form validation error', async () => {
+    wrapper.vm.formRef = {
+      validate: vi.fn().mockRejectedValue(new Error('Validation failed'))
+    }
+
+    await wrapper.vm.handleSubmit()
+
+    expect(wrapper.vm.state.submitLoading).toBe(false)
   })
 })
