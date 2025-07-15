@@ -1,17 +1,23 @@
 <template>
-  <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')"
+  <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')" :fullscreen="state.fullscreen"
              destroy-on-close append-to-body :close-on-click-modal="false" width="90%" height="90%" :align-center="true"
              @closed="reset">
     <el-select v-model="form.templatePath" clearable filterable
                @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
     </el-select>
-    <div class="template_form" style="min-height: 50px" v-loading="state.variableLoading">
+
+    <div class="template_form" style="min-height: 50px; height: 100%" v-loading="state.variableLoading">
       <div class="preview">
-        <Reader v-if="previewFile.blob" v-bind="previewFile" />
-        <img v-else-if="imgBlob" :src="imgBlob" />
+        <DocTemplateViewer ref="wordTemplateViewerRef" v-if="state.fileType=== 'json' && state.showViewer"
+                           :options="state.documentOptions" :json="state.jsonData" />
+        <Reader style="margin-top: 28px; max-height: 100vh" v-if="previewFile.blob" v-bind="previewFile" />
       </div>
-      <FormVariablesRenderer ref="FormVariablesRendererRef" />
+      <div style="margin-top: 28px; max-width: 820px; overflow-y: auto">
+        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" v-if="state.fileType==='json'"
+                                      @update="handleTestVariable" />
+        <FormVariablesRenderer v-else ref="FormVariablesRendererRef" />
+      </div>
     </div>
     <template #footer>
       <el-button id="Workflow__PersonalWorkflow__Cancel" @click="state.dialogVisible = false">
@@ -30,7 +36,8 @@
 </template>
 
 <script lang="ts" setup>
-import { clientApi } from 'api'
+import { adminApi, clientApi } from 'api'
+import { replaceVariables } from 'docpal-document-editor/src/utils'
 
 const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
@@ -42,12 +49,13 @@ const state = reactive({
   variableLoading: false,
   templateList: [],
   canSubmit: false,
-  params: {
-    fileType: '',
-    templatePath: '',
-    name: ''
-  },
-  canDownload: false
+  fileType: '',
+  canDownload: false,
+  showViewer: false,
+  documentOptions: [],
+  jsonData: {},
+  variables: [],
+  fullscreen: false
 })
 // @ts-ignore
 const form = reactive({
@@ -63,34 +71,35 @@ const previewFile = reactive<{
   name: '',
   blob: null
 })
+const wordTemplateViewerRef = ref()
+const templateVariablesRendererRef = ref()
 
-async function getImgPreviewBlob() {
-  // check if 
-  const blob: any = await clientApi.api.postNuxeoDocumentThumbnail({ idOrPath: form.templatePath }, {
-    format: 'blob',
-    timeout: 0,
-    headers: {
-      key: 'preview'
-    }
-  })
-  const urlCreator = window.URL || window.webkitURL
-  imgBlob.value = urlCreator.createObjectURL(blob)
+function handleFullscreen() {
+  state.fullscreen = !state.fullscreen
 }
 
-// #region module: dialog
-function handleOpen(shareInfo) {
+function handleOpen() {
   state.dialogVisible = true
+}
+
+function handleTestVariable(variables: any) {
+  state.variables = variables
 }
 
 async function generatePreviewFile() {
   try {
-
     state.loading = true
+    state.showViewer = false
+    if (state.fileType === 'json') {
+      state.jsonData.content = replaceVariables(state.jsonData.content, state.variables)
+      wordTemplateViewerRef.value.initEditor(state.documentOptions, state.jsonData)
+      state.showViewer = true
+      return
+    }
+
     const res = await generateFile()
     const ext = mimeTypeToExtension(res.type)
-
     previewFile.blob = res
-
   } finally {
     state.loading = false
   }
@@ -128,9 +137,25 @@ async function handleSubmit() {
 const FormVariablesRendererRef = ref()
 
 async function templateParamGet(templatePath: string) {
+  state.fileType = state.templateList.find((item: any) => item.path === templatePath).fileSuffix
   state.canDownload = false
   state.variableLoading = true
   previewFile.blob = null
+
+  // word
+  if (state.fileType === 'json') {
+    const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: form.templatePath })
+    state.jsonData = dataJson.json.content
+    state.documentOptions = dataJson.json.options
+    state.variables = dataJson.variables
+    templateVariablesRendererRef.value.setVariables(deepCopy(state.variables))
+    state.showViewer = true
+    state.canDownload = true
+    state.variableLoading = false
+    return
+  }
+
+  // excel and ppt
   try {
     const res: any = await clientApi.api.postNuxeoTemplateGettemplateparams({
       templatePath
@@ -140,6 +165,17 @@ async function templateParamGet(templatePath: string) {
       type: 'input',
       required: true
     }))
+    // get preview file
+    previewFile.blob = await clientApi.api.postNuxeoDocumentPreview(
+      { idOrPath: templatePath },
+      {
+        format: 'blob',
+        timeout: 0,
+        headers: {
+          key: 'preview'
+        }
+      }
+    )
     FormVariablesRendererRef.value.createJson(form.paramList)
     state.canDownload = true
   } catch (error) {
@@ -157,24 +193,19 @@ const reset = () => {
   previewFile.blob = null
   form.templatePath = ''
   form.paramList = []
+  state.fileType = ''
+  state.showViewer = false
 }
-// @ts-ignore
-watch(form, async () => {
-  if (form.templatePath) {
-    await getImgPreviewBlob()
-  } else {
-    imgBlob.value = null
-  }
-}, {
-  deep: true
-})
+
 defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">
 .preview {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
+  height: 100%;
+  overflow-y: hidden;
 }
 
 .template_form {
