@@ -2,6 +2,9 @@
   <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')" :fullscreen="state.fullscreen"
              destroy-on-close append-to-body :close-on-click-modal="false" width="90%" height="50%" :align-center="true"
              @closed="reset">
+    <template #header>
+      <el-button class="dialog__fullscreen__icon" link circle :icon="FullScreen" @click="handleFullscreen"/>
+    </template>
     <el-select v-model="form.templatePath" clearable filterable
                @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
@@ -39,6 +42,7 @@
 <script lang="ts" setup>
 import { adminApi, clientApi } from 'api'
 import { replaceVariables } from 'docpal-document-editor/src/utils'
+import { FullScreen } from '@element-plus/icons-vue'
 
 const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
@@ -202,13 +206,38 @@ defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">
+.dialog__fullscreen__icon{
+  position: absolute;
+  top: -2px;
+  right: 35px;
+  padding: 0;
+  width: 48px;
+  height: 48px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: var(--el-message-close-size, 16px);
+}
+
 .template_form {
   display: grid;
   grid-template-columns: 2fr 1fr;
+
   gap: calc(var(--app-space-xs) * 2);
   height: 100%;
   min-height: 400px;
   overflow: hidden;
+
+
+  @media (max-width: 1200px) {
+    grid-template-columns: 1.5fr 1fr;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 }
 
 .body_content {
@@ -233,5 +262,4 @@ defineExpose({ handleOpen })
   border-radius: 4px;
   padding: 10px;
 }
-
 </style>
