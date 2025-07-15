@@ -1,14 +1,21 @@
 <template>
   <div class="pageContainer--padding">
-    <!-- TODO : add user rold id to chart -->
-    <RbacOrgChart />
+    <RbacOrgChart v-if="userRole" :role-id="userRole" />
   </div>
 </template>
 
 <script lang="ts" setup>
-const activeName = ref('chart')
+const userRole: string = useUserRole().value
+// const userRole: string = 'safsf'
 </script>
 
 <style lang="scss" scoped>
-
+.dp-tabs--auto {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  .el-tab-pane {
+    height: 100%;
+  }
+}
 </style>
