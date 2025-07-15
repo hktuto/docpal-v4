@@ -9,6 +9,7 @@ import ListControls from './setting/ListControls.vue'
 import LinkMediaControls from './setting/LinkMediaControls.vue'
 import TableIndentControls from './setting/TableIndentControls.vue'
 import SettingsControls from './setting/SettingsControls.vue'
+import SignatureControls from './setting/signature.vue'
 
 const provider = inject(DocTemplateProveKey)
 if (!provider) throw new Error('DocTemplateProvider not found')
@@ -33,6 +34,9 @@ const { t } = useI18n()
 
     <!-- Link and Media Controls -->
     <LinkMediaControls />
+
+    <!-- Signature Controls -->
+    <SignatureControls />
 
     <!-- Table and Indentation Controls -->
     <TableIndentControls />
