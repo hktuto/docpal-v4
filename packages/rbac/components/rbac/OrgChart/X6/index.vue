@@ -10,7 +10,7 @@
       @delete="handleDelete"
       @setStatus="setStatus"
     />
-    <RbacEditRoleSidebar ref="editRoleSidebarRef" :roleOptions="flatRole" @close="closeSidebar" @success="handleSave" />
+    <RbacEditRoleSidebar ref="editRoleSidebarRef" :roleOptions="flatRole" @close="closeSidebar" @success="handleSave" @update="emit('reload')" />
     <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="closeSidebar" />
   </div>
 </template>
