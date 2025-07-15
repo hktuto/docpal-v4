@@ -3,7 +3,7 @@
     <template v-if="roleData.length === 0">
       <el-empty :description="$t('orgChart.noData')"></el-empty>
       <div class="flex-x-center">
-        <el-button type="primary" @click="openCreateDialog">{{ $t('orgChart.add') }}</el-button>
+        <el-button v-if="endPoint === 'admin'" type="primary" @click="openCreateDialog">{{ $t('orgChart.add') }}</el-button>
       </div>
       <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="initData" />
     </template>
@@ -31,9 +31,11 @@ import { adminApi } from 'api'
 import { useRBAC } from '../../../composables/useRBAC'
 
 interface Props {
-  roleIds?: string[]
+  roleId?: string
 }
-
+const {
+  public: { endPoint },
+} = useRuntimeConfig();
 const props = defineProps<Props>()
 
 const { t } = useI18n()
@@ -182,7 +184,7 @@ function handleNodeClick(node: OrgNode) {
 function handleDataUpdate(newData: OrgNode[]) {
   roleData.value = newData
 }
-const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleIds)
+const { getRoleTree, roleTree, flatRole } = useRBAC(props.roleId)
 async function initData() {
   try {
     loading.value = true

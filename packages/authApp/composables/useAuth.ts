@@ -19,7 +19,7 @@ export const useFeature = () => useState<Record<string, boolean>>('app-feature')
 export const useToken = () => useState<string>('auth-token')
 export const useOcrSetting = () => useState<any>('ocr-setting')
 export const useLoginState = () => useState<boolean>('auth-login-state', () => false)
-
+export const useUserRole = () => useState<string>(() => '')
 export const useAuth = () => {
   const loggedIn = useLoginState()
   return {
@@ -234,9 +234,10 @@ export async function getUserPreference() {
 async function getUser() {
   const user = useUserState()
   const userId = useUserId()
+  const userRole = useUserRole()
   const { data } = (await clientApi.api.getNuxeoUserGetapplication()) as any
   userId.value = data.userId
-
+  userRole.value = data.aclUserDetail?.roleId
   localStorage.setItem('docpal-user', JSON.stringify(data))
   if (!data) throw new Error('Get user info fail')
   user.value = data
