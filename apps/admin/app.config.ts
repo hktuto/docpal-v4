@@ -177,6 +177,9 @@ export default defineAppConfig({
     },
     {
       name: 'admin-unique-id-generator'
+    },
+    {
+      name: 'admin-doc-template-collaboration'
     }
   ]
 })
