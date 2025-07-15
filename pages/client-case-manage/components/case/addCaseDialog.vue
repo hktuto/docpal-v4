@@ -14,11 +14,14 @@ const MasterTableVariableFormRef = ref()
 const isWorkflowForm = ref(false)
 const primaryForm = ref<any>()
 const routerProvider = inject(MenuRouterKey)
-
+const isFullScreen = ref(false)
 async function handleOpen(id: string, caseDetail: any) {
   try {
     state.id = id
     const { data: startForm } = await clientApi.api.getCaseInstanceCasetypeidStarttask(id)
+    if(!startForm) {
+      throw new Error('no data')
+    }
     // get cmmn xml
     primaryForm.value = startForm
     const form = await clientApi.api.getRelationQuery({
@@ -104,6 +107,8 @@ async function handleSubmit() {
   state.loading = false
 }
 
+
+
 const props = withDefaults(defineProps<{
   ignoreList?: string[],
   label?: string,
@@ -115,8 +120,17 @@ defineExpose({ handleOpen })
 </script>
 
 <template>
-  <el-dialog v-model="state.visible" :title="label || state.title" class="scroll-dialog" append-to-body
-             :close-on-click-modal="false" destroy-on-close @close="handleClose">
+  <el-dialog 
+    v-model="state.visible" :title="label || state.title" 
+    class="scroll-dialog" 
+    append-to-body
+    :fullscreen="isFullScreen"
+    :close-on-click-modal="false" 
+    @close="isFullScreen = false"
+    destroy-on-close>
+    <template #header>
+      <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+    </template>
     <WorkflowDetailFormRender v-if="isWorkflowForm" ref="FromVariablesRendererRef" />
     <MasterTableVariableForm v-else ref="MasterTableVariableFormRef" :ignoreList="ignoreList" />
     <template #footer>
@@ -131,5 +145,11 @@ defineExpose({ handleOpen })
 </template>
 
 <style scoped lang="scss">
-
+.float-right{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+}
 </style>

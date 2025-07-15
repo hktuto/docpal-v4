@@ -18,8 +18,13 @@
   <el-dialog v-model="state.formDialogVisible" :title="state.selectedWorkflow.name"
              destroy-on-close append-to-body width="60%"
              :close-on-click-modal="false"
+             :fullscreen="isFullScreen"
+             @close="isFullScreen = false"
              class="scroll-dialog"
   >
+    <template #header>
+      <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+    </template>
     <ElTabs v-if="state.formDialogVisible" v-model="activeName" v-loading="state.loading" @tab-change="tabChangeHandler">
       <ElTabPane v-loading="state.loading" :label="$t('workflow_form')" name="Form">
         <WorkflowDetailFormRender ref="vFormRef"/>
@@ -46,6 +51,7 @@ import {ArrowDown} from '@element-plus/icons-vue'
 import {clientApi} from 'api';
 
 const {formStartHandle} = useWorkflow()
+const isFullScreen = ref(false)
 // @ts-ignore
 const graphEl = ref()
 const emits = defineEmits(['created']);
@@ -121,6 +127,7 @@ async function workflowClickHandler(item: any) {
   // const formJson = await handleTaskFormJsonGet(selectedWorkflow.value)
   // VformRenderRef.value.setFormDataAndJson(formJson, formData, createWorkflowForm.value)
 }
+
 
 // #region module: vform
 // @ts-ignore
