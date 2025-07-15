@@ -101,8 +101,8 @@ async function handleSubmit() {
         parentId: state.cabinetTemplate.rootId
       })
       .then((res) => res.data)
-    if (res?.path) {
-      NextDialogRef.value.handleOpen(state.cabinetTemplate, res.path, res.id)
+    if (res?.id) {
+      NextDialogRef.value.handleOpen(state.cabinetTemplate, res)
     }
     await new Promise((resolve) =>
       setTimeout(() => {
