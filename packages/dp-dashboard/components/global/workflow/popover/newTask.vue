@@ -23,7 +23,9 @@
              class="scroll-dialog"
   >
     <template #header>
-      <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+      <div class="float-right">
+        <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+      </div>
     </template>
     <ElTabs v-if="state.formDialogVisible" v-model="activeName" v-loading="state.loading" @tab-change="tabChangeHandler">
       <ElTabPane v-loading="state.loading" :label="$t('workflow_form')" name="Form">
@@ -198,6 +200,13 @@ onMounted(() => {
 defineExpose({workflowClickHandler})
 </script>
 <style lang="scss" scoped>
+.float-right{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+}
 .graphContent {
   height: 500px;
 }
