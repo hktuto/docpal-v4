@@ -68,5 +68,8 @@ export const clientApi = {
     deleteNuxeoCollectionRemove: vi.fn(),
     postNuxeoCollectionCreate: vi.fn(),
     patchNuxeoCollection: vi.fn(),
+
+    getWorkflowTaskAttachment: vi.fn(),
+    postWorkflowFormSubmit: vi.fn(),
   }
 }
