@@ -22,7 +22,7 @@ export default defineNuxtConfig({
         "../../packages/dp-cmmn-x6",
         "../../pages/client-case-manage",
         "../../pages/client-easy-form",
-        // "../../pages/client-rbac",
+        "../../pages/client-rbac",
         "../../pages/client-user-setting",
     ],
     features: {
