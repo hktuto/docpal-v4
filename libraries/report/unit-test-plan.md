@@ -40,9 +40,9 @@
 - [x] admin-workflow	
 - [*] admin-workflow-editor
 - [x] client-ai-upload	
-- [ ] client-browse	
+- [x] client-browse	
 - [x] client-case	
-- [ ] client-dashboard	
+- [-] client-dashboard	
 - [ ] client-easy-form	
 - [x] client-collection	
 - [x] client-external-share	
