@@ -1,22 +1,23 @@
 <template>
   <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')" :fullscreen="state.fullscreen"
-             destroy-on-close append-to-body :close-on-click-modal="false" width="90%" height="90%" :align-center="true"
+             destroy-on-close append-to-body :close-on-click-modal="false" width="90%" height="50%" :align-center="true"
              @closed="reset">
     <el-select v-model="form.templatePath" clearable filterable
                @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
     </el-select>
-
-    <div class="template_form" style="min-height: 50px; height: 100%" v-loading="state.variableLoading">
-      <div class="preview">
-        <DocTemplateViewer ref="wordTemplateViewerRef" v-if="state.fileType=== 'json' && state.showViewer"
-                           :options="state.documentOptions" :json="state.jsonData" />
-        <Reader style="margin-top: 28px; max-height: 100vh" v-if="previewFile.blob" v-bind="previewFile" />
-      </div>
-      <div style="margin-top: 28px; max-width: 820px; overflow-y: auto">
-        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" v-if="state.fileType==='json'"
-                                      @update="handleTestVariable" />
-        <FormVariablesRenderer v-else ref="FormVariablesRendererRef" />
+    <div class="body_content" v-if="form.templatePath" v-loading="state.variableLoading">
+      <div class="template_form" style="min-height: 50px; height: 100%">
+        <div class="preview">
+          <DocTemplateViewer ref="wordTemplateViewerRef" v-if="state.fileType=== 'json' && state.showViewer"
+                             :options="state.documentOptions" :json="state.jsonData" />
+          <Reader v-if="previewFile.blob" v-bind="previewFile" />
+        </div>
+        <div style="margin-top: 28px; max-width: 820px; overflow-y: auto">
+          <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" v-if="state.fileType==='json'"
+                                        @update="handleTestVariable" />
+          <FormVariablesRenderer v-else ref="FormVariablesRendererRef" />
+        </div>
       </div>
     </div>
     <template #footer>
@@ -201,21 +202,36 @@ defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">
-.preview {
-  width: 100%;
-  max-width: 1000px;
-  height: 100%;
-  overflow-y: hidden;
-}
-
 .template_form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   gap: calc(var(--app-space-xs) * 2);
+  height: 100%;
+  min-height: 400px;
+  overflow: hidden;
+}
 
-  img {
-    width: 100%;
-    border: 1px solid #eee;
+.body_content {
+  height: calc(100vh - 160px);
+  max-height: calc(100vh - 160px);
+
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    height: calc(100vh - 150px);
+    max-height: calc(100vh - 150px);
   }
 }
+
+.preview {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  padding: 10px;
+}
+
 </style>
