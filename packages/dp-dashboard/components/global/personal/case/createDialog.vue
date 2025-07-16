@@ -5,7 +5,14 @@
     class="scroll-dialog"
     append-to-body
     :close-on-click-modal="false"
+    :fullscreen="isFullScreen"
+    @close="isFullScreen = false"
   >
+    <template #header>
+      <div class="float-right">
+        <Icon name="mdi:fullscreen" class="cursor-pointer" @click="isFullScreen = !isFullScreen" />
+      </div>
+    </template>
     <div>
       <DragSelect
         layout="lr"
@@ -39,6 +46,10 @@ const state = reactive({
 const form = ref({
   caseList: [],
 });
+
+const isFullScreen = ref(false)
+
+
 async function handleSubmit() {
   try {
     state.loading = true;
@@ -69,5 +80,11 @@ function handleOpen(setting) {
 defineExpose({ handleOpen });
 </script>
 <style lang="scss" scoped>
-
+.float-right{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 10px;
+}
 </style>
