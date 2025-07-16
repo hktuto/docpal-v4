@@ -45,7 +45,7 @@
     "pptxjs": "^0.0.0",
     "splitpanes": "^3.2.0",
     "v-code-diff": "^1.13.1",
-    "v-form": "file:..\\dp-form\\dist\\v-form-designer-3.3.4.tar.gz",
+    "v-form": "file:..\\dp-form\\dist\\v-form-designer-3.3.5.tar.gz",
     "v-viewer": "^3.0.21",
     "viewerjs": "^1.11.7",
     "vue": "3.5.6",
