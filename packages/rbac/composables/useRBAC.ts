@@ -42,11 +42,11 @@ export const useRBAC = (roleId?: string) => {
     })
     return roleList
   }
-  // onMounted(async () => {
-  //   if(roleTree.value.length === 0) {
-  //     await getRoleTree()
-  //   }
-  // })
+  onMounted(async () => {
+    if(roleTree.value.length === 0) {
+      await getRoleTree()
+    }
+  })
   return {
     getRoleTree,
     roleTree,

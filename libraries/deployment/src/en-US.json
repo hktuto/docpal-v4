@@ -524,7 +524,12 @@
   "commons_error": "Fail",
   "commons_success": "Success",
   "companyProfile": {
-    "create": "New Profile"
+    "chopCreate": "Add Chop",
+    "chopEdit": "Edit Chop",
+    "chopName": "Chop Name",
+    "chopTitle": "Chop Management",
+    "create": "New Profile",
+    "name": "Company Profile"
   },
   "config": {
     "accessToken": "Access Token",

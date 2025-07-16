@@ -180,6 +180,9 @@ export default defineAppConfig({
     },
     // {
     //   name: 'admin-doc-template-collaboration'
-    // }
+    // },
+    {
+      name: 'admin-company-profile'
+    }
   ]
 })
