@@ -1,6 +1,7 @@
 <template>
   <div class="pageContainer--padding">
     <RbacOrgChart v-if="userRole" :role-id="userRole" />
+    <el-empty v-else :description="$t('rbac.noRole')"></el-empty>
   </div>
 </template>
 

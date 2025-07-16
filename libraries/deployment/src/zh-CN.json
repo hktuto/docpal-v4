@@ -523,6 +523,9 @@
   "common_years": "年",
   "commons_error": "失败",
   "commons_success": "成功",
+  "companyProfile": {
+    "create": "新简介"
+  },
   "config": {
     "accessToken": "访问令牌",
     "accessTokenTip": "填写访问令牌",
@@ -2270,6 +2273,7 @@
     "label": "快速操作"
   },
   "rbac": {
+    "noRole": "未检测到用户角色",
     "permission": {
       "addPermission": "添加权限",
       "addUserSet": "添加细控",

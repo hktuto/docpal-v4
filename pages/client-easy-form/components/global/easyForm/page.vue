@@ -118,7 +118,7 @@ function initFilter() {
       ]
     }
   ]
-  ResponsiveFilterRef.value.init(data)
+  ResponsiveFilterRef.value?.init(data)
 }
 
 function handleDblclick(row: any) {

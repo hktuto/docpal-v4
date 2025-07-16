@@ -523,6 +523,9 @@
   "common_years": "Years",
   "commons_error": "Fail",
   "commons_success": "Success",
+  "companyProfile": {
+    "create": "New Profile"
+  },
   "config": {
     "accessToken": "Access Token",
     "accessTokenTip": "Fill in the access token",
@@ -2273,6 +2276,7 @@
     "label": "Quick Actions"
   },
   "rbac": {
+    "noRole": "User role not detected",
     "permission": {
       "addPermission": "Add Permission",
       "addUserSet": "Add Attribute Set",
@@ -2847,6 +2851,7 @@
       }
     },
     "setting": {
+      "address": "Address",
       "allowUserEdit": "Allow User Edit",
       "company": "Company",
       "department": "Department",
@@ -2854,9 +2859,11 @@
       "editField": "Edit Field",
       "editSignature": "Edit Signature",
       "email": "Email",
+      "fax": "Fax",
       "firstName": "First Name",
       "groups": "Groups",
       "lastName": "Last Name",
+      "mobilePhone": "Phone",
       "notificationPreference": "Notification Preference",
       "phone": "Contact Details",
       "preference": "Preference",
@@ -2866,7 +2873,8 @@
       "userProfile": "User Profile",
       "userProfileView": "User Profile View",
       "userSignature": "User Signature",
-      "username": "Username"
+      "username": "Username",
+      "website": "Website"
     }
   },
   "userManage": {
