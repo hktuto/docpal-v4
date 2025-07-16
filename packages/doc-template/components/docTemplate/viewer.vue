@@ -47,10 +47,8 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   const normalizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normalizeOption)
 
-  const html = generateHtml(json, initOptions)
-
   editor.value = new Editor({
-    content: html || '',
+    content: json || '',
     autofocus: true,
     extensions: [
       ...extensions
