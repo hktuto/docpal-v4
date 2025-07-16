@@ -1,11 +1,8 @@
 <template>
-  <el-dialog v-model="state.dialogVisible" :title="$t('workflow_GenerateDocument')" :fullscreen="state.fullscreen"
-             destroy-on-close append-to-body :close-on-click-modal="false" width="90%" height="50%" :align-center="true"
-             @closed="reset">
-    <template #header>
-      <el-button class="dialog__fullscreen__icon" link circle :icon="FullScreen" @click="handleFullscreen"/>
-    </template>
+  <Dialog v-model="state.dialogVisible" :fullscreen="state.fullscreen" destroy-on-close append-to-body
+          :close-on-click-modal="false" width="90%" height="50%" :align-center="true" @closed="reset">
     <el-select v-model="form.templatePath" clearable filterable
+               popper-class="dialog-select-dropdown"
                @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
     </el-select>
@@ -36,13 +33,13 @@
         {{ $t('common_download') }}
       </el-button>
     </template>
-  </el-dialog>
+  </Dialog>
+
 </template>
 
 <script lang="ts" setup>
 import { adminApi, clientApi } from 'api'
 import { replaceVariables } from 'docpal-document-editor/src/utils'
-import { FullScreen } from '@element-plus/icons-vue'
 
 const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
@@ -67,8 +64,6 @@ const form = reactive({
   templatePath: '',
   paramList: []
 })
-// @ts-ignore
-const imgBlob = ref()
 const previewFile = reactive<{
   name: string,
   blob: Blob | null
@@ -78,10 +73,6 @@ const previewFile = reactive<{
 })
 const wordTemplateViewerRef = ref()
 const templateVariablesRendererRef = ref()
-
-function handleFullscreen() {
-  state.fullscreen = !state.fullscreen
-}
 
 function handleOpen() {
   state.dialogVisible = true
@@ -206,20 +197,6 @@ defineExpose({ handleOpen })
 </script>
 
 <style scoped lang="scss">
-.dialog__fullscreen__icon{
-  position: absolute;
-  top: -2px;
-  right: 35px;
-  padding: 0;
-  width: 48px;
-  height: 48px;
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  font-size: var(--el-message-close-size, 16px);
-}
-
 .template_form {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -228,7 +205,6 @@ defineExpose({ handleOpen })
   height: 100%;
   min-height: 400px;
   overflow: hidden;
-
 
   @media (max-width: 1200px) {
     grid-template-columns: 1.5fr 1fr;
