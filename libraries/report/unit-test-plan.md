@@ -42,7 +42,7 @@
 - [x] client-ai-upload	
 - [x] client-browse	
 - [x] client-case	
-- [-] client-dashboard	
+- [x] client-dashboard	
 - [ ] client-easy-form	
 - [x] client-collection	
 - [x] client-external-share	
