@@ -1,7 +1,7 @@
 <template>
   <div ref="nodeWrapper" :class="['org-chart-node-wrapper',  `rbac-node-${data.status}`]">
     <div class="person-name">{{ data.name }}</div>
-      <div class="person-count" v-if="data.count">人数: {{ data.count }}</div>
+      <div class="person-count" v-if="data.count">Count: {{ data.count }}</div>
   </div>
 </template>
 

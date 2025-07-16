@@ -42,7 +42,8 @@ export default defineNuxtConfig({
     "../../pages/admin-unique-id-generator",
     // "../../pages/admin-share",
     "../../pages/admin-rbac",
-    "../../pages/admin-password-policy"
+    "../../pages/admin-password-policy",
+    "../../pages/admin-company-profile"
   ],
   features:{
     inlineStyles: true,

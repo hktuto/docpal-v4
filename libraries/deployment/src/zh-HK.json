@@ -524,7 +524,12 @@
   "commons_error": "失敗",
   "commons_success": "成功",
   "companyProfile": {
-    "create": "新簡介"
+    "chopCreate": "添加印章",
+    "chopEdit": "編輯印章",
+    "chopName": "印章名稱",
+    "chopTitle": "印章管理",
+    "create": "新簡介",
+    "name": "公司簡介"
   },
   "config": {
     "accessToken": "訪問令牌",
