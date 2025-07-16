@@ -101,6 +101,7 @@
     "bulkImportConfig": "批量導入",
     "calendarSetting": "日曆設定",
     "caseManagement": "案例管理",
+    "companyProfile": "公司簡介",
     "dashboard": "儀表板",
     "dashboardManagement": "儀表板管理",
     "directus": "Directus",
@@ -529,6 +530,7 @@
     "chopName": "印章名稱",
     "chopTitle": "印章管理",
     "create": "新簡介",
+    "filterTip": "依公司簡介篩選",
     "name": "公司簡介"
   },
   "config": {
@@ -2853,6 +2855,7 @@
       }
     },
     "setting": {
+      "address": "地址",
       "allowUserEdit": "允許使用者編輯",
       "company": "公司",
       "department": "部門",
@@ -2860,9 +2863,11 @@
       "editField": "編輯字段",
       "editSignature": "編輯簽名",
       "email": "電子郵箱",
+      "fax": "傳真",
       "firstName": "名",
       "groups": "使用者群組",
       "lastName": "姓",
+      "mobilePhone": "電話",
       "notificationPreference": "通知偏好",
       "phone": "聯絡方式",
       "preference": "偏好",
@@ -2872,7 +2877,8 @@
       "userProfile": "使用者設定檔",
       "userProfileView": "使用者資料視圖",
       "userSignature": "使用者簽名",
-      "username": "使用者名稱"
+      "username": "使用者名稱",
+      "website": "網站"
     }
   },
   "userManage": {

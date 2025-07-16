@@ -101,6 +101,7 @@
     "bulkImportConfig": "Bulk Import",
     "calendarSetting": "Calendar Setting",
     "caseManagement": "Case management",
+    "companyProfile": "Company profile",
     "dashboard": "Dashboard",
     "dashboardManagement": "Dashboard Management",
     "directus": "Directus",
@@ -529,6 +530,7 @@
     "chopName": "Chop Name",
     "chopTitle": "Chop Management",
     "create": "New Profile",
+    "filterTip": "Filter by company profile",
     "name": "Company Profile"
   },
   "config": {
