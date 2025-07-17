@@ -89,7 +89,7 @@ const validateFile = (file: File): boolean => {
 }
 
 const processFile = (file: File, isUpload = true) => {
-  if (!validateFile(file)) {
+  if (isUpload && !validateFile(file)) {
     emit('upload-error', errorMessage.value)
     return
   }
@@ -140,10 +140,6 @@ const handleDrop = (event: DragEvent) => {
     const file = files[0]
     processFile(file)
   }
-}
-
-const handleReplace = () => {
-  fileInput.value?.click()
 }
 
 const handleDelete = () => {
