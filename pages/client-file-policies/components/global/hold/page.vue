@@ -69,12 +69,12 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
 const ResponsiveFilterRef = ref()
 
 async function getFilter() {
-  const data = await clientApi.api
+  const data: any = await clientApi.api
     .getPolicyDocumentsPageConditions()
     .then((res) => res.data)
-  data.forEach(item => {
+  data.forEach((item: any) => {
     if (item.options && item.options.length > 0) {
-      item.options.sort((a, b) => a.value.toString().localeCompare(b.value.toString()))
+      item.options.sort((a: any, b: any) => a.value.toString().localeCompare(b.value.toString()))
     }
   })
   data.unshift(
@@ -103,7 +103,7 @@ async function getFilter() {
     }
   )
 
-  ResponsiveFilterRef.value.init(data)
+  ResponsiveFilterRef.value?.init(data)
 }
 
 function handleFilterFormChange(formModel: any) {
