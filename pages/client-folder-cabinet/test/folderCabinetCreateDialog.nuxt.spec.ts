@@ -125,7 +125,6 @@ describe('[client-folder-cabinet]FolderCabinetCreateDialog', () => {
     wrapper.vm.MetaFormRef = {
       getData: vi.fn()
     }
-    wrapper.vm.state.setting.label = 'test-label'
     await wrapper.vm.handleSubmit()
     expect(wrapper.vm.state.loading).toBe(false)
   })

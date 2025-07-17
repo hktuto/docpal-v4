@@ -71,14 +71,18 @@ describe('[client-folder-cabinet]FolderCabinetCreateNextDialog', () => {
         }
       ]
     }
-    const idOrPath = '123'
+    const mockData = {
+      id: '123',
+      path: '/path',
+      dfcId: '111'
+    }
 
-    await wrapper.vm.handleOpen(cabinetTemplate, idOrPath)
+    await wrapper.vm.handleOpen(cabinetTemplate, mockData)
     await wrapper.vm.$nextTick()
     await new Promise((resolve) => setTimeout(resolve, 2000))
 
     expect(wrapper.vm.state.cabinetTemplate).toEqual(cabinetTemplate)
-    expect(wrapper.vm.state.rootDetail.idOrPath).toBe(idOrPath)
+    expect(wrapper.vm.state.rootDetail.idOrPath).toBe(mockData.path)
     expect(wrapper.vm.state.visible).toBe(true)
     expect(wrapper.vm.state.treeData).toEqual(cabinetTemplate.children)
     expect(wrapper.vm.state.treeLoading).toBe(false)
