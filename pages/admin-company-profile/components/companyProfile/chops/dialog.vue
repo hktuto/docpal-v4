@@ -55,7 +55,7 @@ const isEdit = ref(false)
 const editData = ref<any>(null)
 const fileChange = ref(false)
 const formRef = ref()
-const form = ref({
+const form = ref<any>({
   name: '',
   status: 'A',
   permissions: [],
@@ -93,17 +93,17 @@ async function handleEdit(data: any) {
   editData.value = data
   visible.value = true
   fileChange.value = false
-  const file = await adminApi.api.getCompanyprofilesCompanyidChopsCompanychopidFile(props.companyId, data.id, {
+  const file = await adminApi.api.getCompanyprofilesCompanyidChopsCompanychopidFile(props.companyId as string, data.id, {
     format: 'blob'
   })
-  const permissions = []
+  const permissions: any = []
   if (data.roles) {
-    data.roles.split(',').forEach((item) => {
+    data.roles.split(',').forEach((item: any) => {
       permissions.push('role____' + item)
     })
   }
   if (data.users) {
-    data.users.split(',').forEach((item) => {
+    data.users.split(',').forEach((item: any) => {
       permissions.push(item)
     })
   }
@@ -117,7 +117,7 @@ async function handleEdit(data: any) {
 }
 
 const { flatRole } = useRBAC()
-let userList = []
+let userList: any = []
 async function getOptions() {
   await getUserList()
   permissionOptions.value.push(
@@ -125,7 +125,7 @@ async function getOptions() {
       label: 'user_role',
       value: 2, // 1=User, 3=Group, 2=Role
       type: 'select',
-      options: flatRole.value.map((item) => ({
+      options: flatRole.value.map((item: any) => ({
         label: item.name,
         value: 'role____' + item.id
       }))
@@ -137,14 +137,13 @@ async function getOptions() {
       options: userList
     }
   )
-  console.log(permissionOptions.value)
   async function getUserList() {
     if (userList.length > 0) return
     try {
-      const _userList = await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)
+      const _userList: any = await clientApi.api.postNuxeoIdentityUsers().then((res) => res.data)
       userList = _userList
-        .sort((a, b) => a.username.localeCompare(b.username))
-        .map((item) => ({
+        .sort((a: any, b: any) => a.username.localeCompare(b.username))
+        .map((item: any) => ({
           label: item.userId,
           value: item.userId
         }))
@@ -162,9 +161,9 @@ async function onSave() {
     }
     await formRef.value?.validate()
     loading.value = true
-    const roles = []
-    const users = []
-    form.value.permissions.forEach((item) => {
+    const roles: any = []
+    const users: any = []
+    form.value.permissions.forEach((item: any) => {
       if (item.includes('role____')) {
         roles.push(item.split('role____')[1])
       } else {
@@ -172,7 +171,6 @@ async function onSave() {
       }
     })
     const formData = new FormData()
-    console.log(form.value.file)
     formData.append('status', form.value.status)
     formData.append('name', form.value.name)
     if (roles.length > 0) {
@@ -186,13 +184,13 @@ async function onSave() {
       if (fileChange.value) {
         formData.append('file', form.value.file)
       }
-      await adminApi.api.putCompanyprofilesCompanyidChopsCompanychopid(props.companyId, editData.value.id, {}, formData)
+      await adminApi.api.putCompanyprofilesCompanyidChopsCompanychopid(props.companyId as string, editData.value.id, {} as any, formData as any)
       ElMessage.success('Updated successfully')
     } else {
       // 添加模式
       formData.append('file', form.value.file)
 
-      await adminApi.api.postCompanyprofilesCompanyidChops(props.companyId, {}, formData)
+      await adminApi.api.postCompanyprofilesCompanyidChops(props.companyId as string, {} as any, formData as any)
       ElMessage.success('Created successfully')
     }
 
