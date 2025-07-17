@@ -9,6 +9,7 @@ import VariableValueList from './variable/VariableValueList.vue'
 import VariableValueTable from './variable/VariableValueTable.vue'
 import VariableValueLink from './variable/VariableValueLink.vue'
 import VariableValueImage from './variable/VariableValueImage.vue'
+import { templateApi } from 'api'
 
 const docTempalteProvider = inject(DocTemplateProveKey)
 const { t } = useI18n()
@@ -27,7 +28,8 @@ const exportVariables = ref<any[]>([])
 
 const FormRendererRef = ref()
 // TODO : the server should add to nuxtConfig runtime
-const nodeBackendEndpoint = 'http://localhost:3333'
+// const nodeBackendEndpoint = 'http://localhost:3333'
+const nodeBackendEndpoint = 'https://sit-v2.wclsolution.com/open-api/template'
 
 async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
   const res = await fetch(nodeBackendEndpoint + endpoint, {
@@ -45,20 +47,24 @@ async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVari
   let endpoint
   let filename
   let mime
+  let blob
   if (exportType === 'docx') {
-    endpoint = '/convert/docx'
+    // endpoint = '/convert/docx'
+    blob = await templateApi.convert.postConvertDocx(data)
     filename = `${options.value.title}.docx`
     mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   } else if (exportType === 'pdf') {
-    endpoint = '/convert/pdf'
+    // endpoint = '/convert/pdf'
+    blob = await templateApi.convert.postConvertPdf(data)
     filename = `${options.value.title}.pdf`
     mime = 'application/pdf'
   } else {
-    endpoint = '/convert/html'
-    filename = `${options.value.title}.html`
+    // endpoint = '/convert/html'
+    blob = await templateApi.convert.postConvertHtml(data)
+    // filename = `${options.value.title}.html`
     mime = 'text/html'
   }
-  const blob = await fetchExportBlob(endpoint, data)
+  // const blob = await fetchExportBlob(endpoint, data)
   // For HTML, the server may return text, so we need to handle it as text
   let finalBlob = blob
   if (exportType === 'html') {

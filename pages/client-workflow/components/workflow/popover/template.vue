@@ -1,9 +1,8 @@
 <template>
   <Dialog v-model="state.dialogVisible" :fullscreen="state.fullscreen" destroy-on-close append-to-body
           :close-on-click-modal="false" width="90%" height="50%" :align-center="true" @closed="reset">
-    <el-select v-model="form.templatePath" clearable filterable
-               popper-class="dialog-select-dropdown"
-               @change="templateParamGet">
+    <el-select v-model="form.templatePath" clearable filterable :disabled="state.loading"
+               popper-class="dialog-select-dropdown" @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
     </el-select>
     <div class="body_content" v-if="form.templatePath" v-loading="state.variableLoading">
@@ -38,8 +37,8 @@
 </template>
 
 <script lang="ts" setup>
-import { adminApi, clientApi } from 'api'
-import { replaceVariables } from 'docpal-document-editor/src/utils'
+import { clientApi, templateApi } from 'api'
+import { replaceVariables, generateVariables } from 'docpal-document-editor/src/utils'
 
 const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
@@ -54,10 +53,13 @@ const state = reactive({
   fileType: '',
   canDownload: false,
   showViewer: false,
+  wordJson: {},
   documentOptions: [],
   jsonData: {},
   variables: [],
-  fullscreen: false
+  generateVariables: {},
+  fullscreen: false,
+  fileName: ''
 })
 // @ts-ignore
 const form = reactive({
@@ -80,6 +82,7 @@ function handleOpen() {
 
 function handleTestVariable(variables: any) {
   state.variables = variables
+  state.generateVariables = generateVariables(variables)
 }
 
 async function generatePreviewFile() {
@@ -103,28 +106,40 @@ async function generatePreviewFile() {
 
 async function generateFile() {
   const data = await FormVariablesRendererRef.value.getData()
-  const res: any = await clientApi.api.postNuxeoTemplateSummitanddownloadfile({
+  return await clientApi.api.postNuxeoTemplateSummitanddownloadfile({
     templatePath: form.templatePath,
     paramsMap: data
   }, {
     format: 'blob'
   })
-  return res
 }
 
 // #endregion
 async function handleSubmit() {
   state.loading = true
   try {
-    const res = await generateFile()
-    if (!res || res.errorCode) throw new Error(`${t('responseMsg_errorCode_2')}`)
-    // get document name from state.templateList
-    const name = state.templateList.find(item => item.path === form.templatePath)?.name
+    let res
+    if (state.fileType === 'json') {
+      state.generateVariables = generateVariables(state.variables)
+      const data = {
+        data: state.generateVariables,
+        template: state.wordJson
+      }
+      res = await templateApi.convert.postConvertGeneratedatatodocx(data)
+      console.log(11, res)
+
+    } else {
+      res = await generateFile()
+      if (!res || res.errorCode) {
+        throw new Error(`${t('responseMsg_errorCode_2')}`)
+      }
+    }
 
     // @ts-ignore
-    downloadBlob(res, name)
+    downloadBlob(res, state.fileName)
     state.dialogVisible = false
   } catch (error) {
+    console.log(error)
   }
   state.loading = false
 }
@@ -140,7 +155,8 @@ async function templateParamGet(templatePath: string) {
 
   // word
   if (state.fileType === 'json') {
-    const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: form.templatePath })
+    const dataJson = await clientApi.api.postNuxeoDocumentPreview({ idOrPath: form.templatePath })
+    state.wordJson = dataJson
     state.jsonData = dataJson.json.content
     state.documentOptions = dataJson.json.options
     state.variables = dataJson.variables
@@ -193,6 +209,15 @@ const reset = () => {
   state.showViewer = false
 }
 
+watch(() => form.templatePath, (newValue) => {
+  if (!newValue || newValue === '') return
+  const item = state.templateList.find((item: any) => item.path === newValue)
+  if (item?.fileSuffix === 'json') {
+    state.fileName = item.name + '.docx'
+  } else {
+    state.fileName = item?.fileContentName || ''
+  }
+})
 defineExpose({ handleOpen })
 </script>
 
@@ -200,7 +225,6 @@ defineExpose({ handleOpen })
 .template_form {
   display: grid;
   grid-template-columns: 2fr 1fr;
-
   gap: calc(var(--app-space-xs) * 2);
   height: 100%;
   min-height: 400px;
@@ -219,7 +243,6 @@ defineExpose({ handleOpen })
 .body_content {
   height: calc(100vh - 160px);
   max-height: calc(100vh - 160px);
-
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -233,9 +256,53 @@ defineExpose({ handleOpen })
 .preview {
   width: 100%;
   height: 100%;
-  overflow-y: auto;
+  min-height: 300px;
   border: 1px solid #e4e7ed;
   border-radius: 4px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  // 确保 DocTemplateViewer 能够正确显示
+  :deep(.editorContainer) {
+    height: 100%;
+    min-height: 0;
+  }
+
+  :deep(.editorBody) {
+    height: 100% !important;
+    min-height: 0;
+    overflow: auto;
+  }
+
+  // 确保 Reader 组件能够正确显示
+  :deep(.docxContainer),
+  :deep(.iframeContainer),
+  :deep(.contentContainer) {
+    height: 100%;
+    overflow: auto;
+  }
+
+  :deep(iframe) {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}
+
+// 变量渲染器容器样式
+.template_form > div:last-child {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  // 确保变量渲染器能够正确滚动
+  :deep(.renderer-container) {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
 }
 </style>

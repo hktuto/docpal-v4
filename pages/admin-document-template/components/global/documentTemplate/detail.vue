@@ -337,11 +337,11 @@ onBeforeMount(async () => {
 
         <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
-            <div class="editor-container">
+            <div class="doc-template-viewer-container">
               <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
               <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
-                                 :json="jsonData" :user="{}" :variables="variables"
-                                 @update:variables="updateVariables($event)" />
+                               :json="jsonData" :user="{}" :variables="variables"
+                               @update:variables="updateVariables($event)" />
             </div>
           </template>
           <template v-else>
@@ -376,16 +376,33 @@ onBeforeMount(async () => {
   overflow: hidden;
 }
 
-.editor-container {
-  height: calc(100vh - 110px);
-  overflow-y: auto;
-}
-
 .reader-container {
   height: calc(100vh - 110px);
   overflow-y: auto;
   margin-top: 0;
   padding-top: 0;
+}
+
+.doc-template-viewer-container {
+  height: calc(100vh - 110px);
+  overflow: hidden;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  // 确保 DocTemplateViewer 能够正确显示和滚动
+  :deep(.editorContainer) {
+    height: 100%;
+    min-height: 0;
+  }
+
+  :deep(.editorBody) {
+    height: 100% !important;
+    min-height: 0;
+    overflow: auto;
+  }
 }
 
 .template-test-button {
