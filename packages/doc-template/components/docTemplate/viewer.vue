@@ -58,7 +58,9 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
 }
 
 onMounted(() => {
-  initEditor(props.options, props.json)
+  if (props.options) {
+    initEditor(props.options, props.json)
+  }
 })
 
 onUnmounted(() => {
@@ -72,7 +74,7 @@ defineExpose({ initEditor })
 
 <template>
   <div class="editorContainer"
-       :style="`--margin-top: ${options.pageSetting?.defaultMarginConfig?.top}mm; --margin-bottom: ${options.pageSetting?.defaultMarginConfig?.bottom}mm; --margin-left: ${options.pageSetting?.defaultMarginConfig?.left}mm; --margin-right: ${options.pageSetting?.defaultMarginConfig?.right}mm;`">
+       :style="`--margin-top: ${options?.pageSetting?.defaultMarginConfig?.top || 0}mm; --margin-bottom: ${options?.pageSetting?.defaultMarginConfig?.bottom || 0}mm; --margin-left: ${options?.pageSetting?.defaultMarginConfig?.left || 0}mm; --margin-right: ${options?.pageSetting?.defaultMarginConfig?.right || 0}mm;`">
     <div class="editorBody">
       <EditorContent :editor="editor" />
     </div>
@@ -83,17 +85,20 @@ defineExpose({ initEditor })
 .editorContainer {
   width: 100%;
   height: 100%;
-  display: grid;
-  grid-template-rows: min-content 1fr min-content;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .editorBody {
-  flex: 1 0 auto;
+  flex: 1;
   padding: var(--app-space-m);
+  min-height: 0;
   overflow: auto;
 
   :deep(.tiptap) {
     outline: none;
+    min-height: 100%;
   }
 }
 </style>
@@ -103,8 +108,6 @@ defineExpose({ initEditor })
   :first-child {
     margin-top: 0;
   }
-
-  /* Table-specific styling */
 
   table {
     border-collapse: collapse;
@@ -132,38 +135,6 @@ defineExpose({ initEditor })
       font-weight: bold;
       text-align: left;
     }
-
-    .selectedCell:after {
-      background: var(--app-grey-975);
-      content: '';
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      pointer-events: none;
-      position: absolute;
-      z-index: 2;
-    }
-
-    .column-resize-handle {
-      background-color: var(--app-primary-color);
-      bottom: -2px;
-      pointer-events: none;
-      position: absolute;
-      right: -2px;
-      top: 0;
-      width: 4px;
-    }
-  }
-
-  .tableWrapper {
-    margin: 1.5rem 0;
-    overflow-x: auto;
-  }
-
-  &.resize-cursor {
-    cursor: ew-resize;
-    cursor: col-resize;
   }
 
   [data-type='taskList'] {
@@ -179,6 +150,20 @@ defineExpose({ initEditor })
 
   .page {
     --border-color: #888;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid;
+    background: white;
+    box-sizing: border-box;
+    position: relative;
+    overflow: visible;
+
+    &:last-child {
+      page-break-after: auto;
+      break-after: auto;
+      margin-bottom: 0;
+    }
 
     &:before {
       content: "";
@@ -208,6 +193,8 @@ defineExpose({ initEditor })
   .body {
     position: relative;
     overflow: visible !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
 
     &:before {
       content: "";
@@ -233,31 +220,42 @@ defineExpose({ initEditor })
       border-right: 1px solid var(--border-color);
     }
   }
-}
 
-.collaboration-cursor__caret {
-  border-left: 1px solid #0d0d0d;
-  border-right: 1px solid #0d0d0d;
-  margin-left: -1px;
-  margin-right: -1px;
-  pointer-events: none;
-  position: relative;
-  word-break: normal;
-}
+  /* 确保段落和块级元素不会在页面中间断开 */
+  p, div, h1, h2, h3, h4, h5, h6, blockquote, pre, table {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 
-/* Render the username above the caret */
-.collaboration-cursor__label {
-  border-radius: 3px 3px 3px 0;
-  color: #0d0d0d;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 600;
-  left: -1px;
-  line-height: normal;
-  padding: 0.1rem 0.3rem;
-  position: absolute;
-  top: -1.4em;
-  user-select: none;
-  white-space: nowrap;
+  /* 允许标题在页面顶部断开 */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* 确保表格不会在页面中间断开 */
+  table {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* 图片和媒体元素的分页控制 */
+  img, video, canvas {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* 列表的分页控制 */
+  ul, ol {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 }
 </style> 
