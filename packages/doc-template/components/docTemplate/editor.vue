@@ -4,7 +4,12 @@ import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey, validateVariable, type DocTemplateVariable } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
 import { defaultPageSetting, replaceVariables } from 'docpal-document-editor/src/utils'
-import { normalizeTipTapOptions, clientEditorExtensions, generateHtml, getJsonConfig } from 'docpal-document-editor/src/client'
+import {
+  normalizeTipTapOptions,
+  clientEditorExtensions,
+  generateHtml,
+  getJsonConfig
+} from 'docpal-document-editor/src/client'
 import * as Y from 'yjs'
 import { HocuspocusProvider } from '@hocuspocus/provider'
 
@@ -45,11 +50,11 @@ const lastSelection = ref<LastSelection | null>()
 
 const ydoc = new Y.Doc()
 
-const provider = new HocuspocusProvider({
-  url: 'ws://localhost:3333/ws',
-  name: 'docpal-doc-editor',
-  document: ydoc
-})
+// const provider = new HocuspocusProvider({
+//   url: `ws://sit-v2.wclsolution.com/open-api/template/ws`,
+//   name: 'docpal-doc-editor',
+//   document: ydoc
+// })
 
 const headerRef = ref<any>(null)
 
@@ -232,6 +237,7 @@ defineExpose({ getJsonData })
 .editorBody {
   flex: 1 0 auto;
   padding: var(--app-space-m);
+  height: calc(100vh - 180px);
   overflow: auto;
 
   :deep(.tiptap) {
@@ -376,31 +382,5 @@ defineExpose({ getJsonData })
       border-right: 1px solid var(--border-color);
     }
   }
-}
-
-.collaboration-cursor__caret {
-  border-left: 1px solid #0d0d0d;
-  border-right: 1px solid #0d0d0d;
-  margin-left: -1px;
-  margin-right: -1px;
-  pointer-events: none;
-  position: relative;
-  word-break: normal;
-}
-
-/* Render the username above the caret */
-.collaboration-cursor__label {
-  border-radius: 3px 3px 3px 0;
-  color: #0d0d0d;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 600;
-  left: -1px;
-  line-height: normal;
-  padding: 0.1rem 0.3rem;
-  position: absolute;
-  top: -1.4em;
-  user-select: none;
-  white-space: nowrap;
 }
 </style>
