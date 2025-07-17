@@ -39,7 +39,8 @@
 - [x] admin-watermark	
 - [x] admin-workflow	
 - [*] admin-workflow-editor
-- [x] client-ai-upload	
+- [ ] admin-company-profile
+- [x] client-ai-upload
 - [x] client-browse	
 - [x] client-case	
 - [x] client-dashboard	
