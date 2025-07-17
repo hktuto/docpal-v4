@@ -39,12 +39,12 @@
 - [x] admin-watermark	
 - [x] admin-workflow	
 - [*] admin-workflow-editor
-- [ ] admin-company-profile
+- [x] admin-company-profile
 - [x] client-ai-upload
 - [x] client-browse	
 - [x] client-case	
 - [x] client-dashboard	
-- [ ] client-easy-form	
+- [x] client-easy-form	
 - [x] client-collection	
 - [x] client-external-share	
 - [ ] client-file-policies	

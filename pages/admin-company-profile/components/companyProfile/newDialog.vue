@@ -35,6 +35,7 @@ async function handleSubmit() {
     state.visible = false
     emits('refresh')
   } catch (error) {
+    console.error(error)
   } finally {
     state.loading = false
   }
