@@ -47,10 +47,10 @@
 - [x] client-easy-form	
 - [x] client-collection	
 - [x] client-external-share	
-- [ ] client-file-policies	
+- [x] client-file-policies	
 - [x] client-folder-cabinet	
-- [ ] client-rbac	
-- [ ] client-search	
+- [*] client-rbac	
+- [-] client-search	
 - [ ] client-share	
 - [ ] client-master-table	
 - [x] client-trash	
