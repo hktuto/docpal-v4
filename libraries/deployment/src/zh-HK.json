@@ -312,6 +312,7 @@
     "redo": "重做",
     "save": "儲存",
     "saveDraft": "儲存草稿",
+    "saveOff": "不保存並退出",
     "selectAll": "全選",
     "stop": "停止分享",
     "templateDownload": "下載模板",
@@ -850,7 +851,7 @@
       "insertRowAbove": "插入上方行",
       "insertRowBelow": "插入下方行",
       "isCreateDynamicCode": "啟動前生成",
-      "label": "标籤",
+      "label": "標籤",
       "labelAlign": "字段标籤对齐",
       "labelHidden": "隐藏字段标籤",
       "labelIconClass": "标籤Icon样式",
@@ -1038,10 +1039,23 @@
       "underline": "下划線"
     },
     "import": {
-      "import": {
-        "error": "Json 解析失敗"
-      },
+      "import": "導入模板",
+      "importError": "Json 解析失敗",
       "msg": "請注意，導入將清除原始數據"
+    },
+    "pageSetup": {
+      "EnterDocumentTitle": "輸入文件標題",
+      "bottom": "下邊距",
+      "landscape": "橫向",
+      "left": "左邊距",
+      "orientation": "方向",
+      "pageMargin": "頁邊距",
+      "pageSetup": "頁面設定",
+      "pageSize": "頁面大小",
+      "portrait": "正向",
+      "right": "右邊距",
+      "title": "標題",
+      "top": "上邊距"
     },
     "paragraph": {
       "bulletList": "清單",
@@ -1140,6 +1154,8 @@
       "linkLabel": "標籤",
       "linkLabelPlaceholder": "輸入連結標籤（可選）",
       "linkTarget": "目標",
+      "linkType": "類型",
+      "linkUrl": "Url",
       "listContent": "清單內容",
       "listItemPlaceholder": "輸入清單項目...",
       "listItems": "清單項目",
@@ -1165,6 +1181,7 @@
       "tableStriped": "斑馬條紋",
       "tableStyle": "表格樣式",
       "type": "類型",
+      "value": "值",
       "variableName": "變數名稱",
       "variableType": "變數類型",
       "variableValue": "變數值"

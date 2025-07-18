@@ -21,6 +21,7 @@ import { adminApi } from 'api'
 import { ExtensionMap } from '~/utils/documentTemplateHelper'
 import formJson from './templateAddStep1.vform.json'
 import { ElMessage } from 'element-plus'
+
 const emits = defineEmits([
   'update'
 ])
@@ -66,7 +67,7 @@ async function handleSubmit() {
         id: templateInfo.id,
         name: templateInfo.name,
         item: templateInfo
-      })
+      }, false)
       routerProvider?.navigateTo(link)
       TemplateAddStep2DialogRef.value.handleOpen(templateInfo)
     }
@@ -94,6 +95,10 @@ async function handleOpen(setting?) {
 }
 
 async function createFile(fileType: 'Word' | 'Excel' | 'PPT' | 'PDF', name: string) {
+  if (fileType === 'Word') {
+    fileType = 'Json'
+  }
+
   const path = `/docTemplate/template${ExtensionMap[fileType]}`
   const file = await fetch(path)
   const fileArrayBuffer = await file.arrayBuffer()

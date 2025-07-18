@@ -312,6 +312,7 @@
     "redo": "重做",
     "save": "保存",
     "saveDraft": "保存草稿",
+    "saveOff": "不保存并退出",
     "selectAll": "全选",
     "stop": "停止分享",
     "templateDownload": "下载模板",
@@ -1038,10 +1039,23 @@
       "underline": "下划线"
     },
     "import": {
-      "import": {
-        "error": "Json 解析失败"
-      },
+      "import": "导入模板",
+      "importError": "Json 解析失败",
       "msg": "请注意，导入将清除原始数据"
+    },
+    "pageSetup": {
+      "EnterDocumentTitle": "输入文档标题",
+      "bottom": "下边距",
+      "landscape": "横向",
+      "left": "左边距",
+      "orientation": "方向",
+      "pageMargin": "页边距",
+      "pageSetup": "頁面設定",
+      "pageSize": "页面大小",
+      "portrait": "正向",
+      "right": "右边距",
+      "title": "标题",
+      "top": "上边距"
     },
     "paragraph": {
       "bulletList": "列表",
@@ -1140,6 +1154,8 @@
       "linkLabel": "标签",
       "linkLabelPlaceholder": "输入链接标签（可选）",
       "linkTarget": "目标",
+      "linkType": "类型",
+      "linkUrl": "Url",
       "listContent": "列表内容",
       "listItemPlaceholder": "输入列表项...",
       "listItems": "列表项",
@@ -1165,6 +1181,7 @@
       "tableStriped": "斑马条纹",
       "tableStyle": "表格样式",
       "type": "类型",
+      "value": "值",
       "variableName": "变量名称",
       "variableType": "变量类型",
       "variableValue": "变量值"

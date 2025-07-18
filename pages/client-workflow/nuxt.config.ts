@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     "../../packages/base",
     "../../packages/bpmn",
     "../../packages/workflow",
-    "../../packages/calendar"
+    "../../packages/calendar",
+    "../../packages/doc-template"
   ]
 })
