@@ -311,6 +311,7 @@
     "redo": "重做",
     "save": "保存",
     "saveDraft": "保存草稿",
+    "saveOff": "不保存并退出",
     "selectAll": "全选",
     "stop": "停止分享",
     "templateDownload": "下载模板",
