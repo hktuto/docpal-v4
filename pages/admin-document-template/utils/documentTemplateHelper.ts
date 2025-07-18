@@ -12,8 +12,25 @@ interface DocumentTemplateProvider {
 
 export const DocumentTemplateProviderKey: InjectionKey<DocumentTemplateProvider> = Symbol('DocumentTemplateProviderKey')
 
+export const navigateToTemplatePage= ()=>{
+    return {
+        id:"admin-document-template",
+        name: 'document-template',
+        label: "adminMenu.template",
+        icon: "lucide:file-sliders",
+        hoverIcon: "lucide:file-sliders",
+        component: "LazyDocumentTemplatePage",
+        feature: "GENERATE_TEMPLATE",
+        props:{
+            pageNum: 0,
+            pageSize: 20,
+            orderBy: 'createdDate',
+            isDesc: true
+        },
+    }
+}
 
-export const createNewDocumentTemplateDetail = (data:any) => {
+export const createNewDocumentTemplateDetail = (data :any, isEdit :boolean) => {
     const newItem: TabItem = {
         id: "document-template-detail-" + new Date().getTime(),
         name: "document-template-detail-" + data.id,
@@ -23,7 +40,8 @@ export const createNewDocumentTemplateDetail = (data:any) => {
         props: {
             id: data.id,
             name: data.name,
-            item: data
+            item: data,
+            isEdit: isEdit
         }
     }
     return newItem
@@ -33,7 +51,8 @@ export const ExtensionMimeTypeMap = {
     'PPT': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'Word': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'Excel': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'PDF': 'application/pdf'
+    'PDF': 'application/pdf',
+    'Json':'application/json'
 }
 
 export const ExtensionMap = {
@@ -41,4 +60,5 @@ export const ExtensionMap = {
     'Excel': '.xlsx',
     'PPT': '.pptx',
     'PDF': '.pdf',
+    'Json':'.json'
 }

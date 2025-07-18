@@ -73,7 +73,20 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "label": "Word",
+            "value": "Word"
+          },
+          {
+            "label": "Excel",
+            "value": "Excel"
+          },
+          {
+            "label": "PPT",
+            "value": "PPT"
+          }
+        ],
         "required": true,
         "requiredHint": "",
         "validation": "",
@@ -83,7 +96,7 @@
         "labelIconPosition": "rear",
         "labelTooltip": null,
         "onCreated": "",
-        "onMounted": "const _this = this\n$api.get('/docpal/template/document/support/fileType').then(res => {\n  const options = res.data.data.reduce((prev, item) => {\n    prev.push({\n      label: item,\n      value: item\n    })\n    return prev\n  }, [])\n  _this.loadOptions(options)\n}).catch(err => {\n})\n",
+        "onMounted": "// const _this = this\n// $api.get('/docpal/template/document/support/fileType').then(res => {\n//   const options = res.data.data.reduce((prev, item) => {\n//     prev.push({\n//       label: item,\n//       value: item\n//     })\n//     return prev\n//   }, [])\n//   _this.loadOptions(options)\n// }).catch(err => {\n// })\n",
         "onRemoteQuery": "",
         "onChange": "",
         "onFocus": "",
@@ -177,6 +190,7 @@
     "functions": "",
     "layoutType": "PC",
     "jsonVersion": 3,
+    "isCreateDynamicCode": true,
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
