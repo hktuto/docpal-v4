@@ -15,8 +15,6 @@
 </template>
 <script lang="ts" setup>
 import {clientApi} from 'api'
-
-const props = defineProps(["detail"]);
 const route = useRoute();
 const router = useRouter();
 
@@ -30,8 +28,8 @@ const FormRendererRef = ref()
 async function getFormJson() {
   try {
     state.formJsonLoad = true
-    state.detail = await clientApi.api.getFormDesignIdDetail(route.query.id as string).then(res => res.data);
-
+    state.detail = await clientApi.api.getFormDesignIdDetail(route.query?.id as string).then(res => res.data);
+    console.log(state.detail)
     const json = state.detail.previewStyle
     state.formJson = JSON.parse(json)
     FormRendererRef.value.setFormJson(state.formJson)
@@ -71,7 +69,7 @@ async function handleSubmit() {
     })
     router.push('/public/uploadTip?tip=easyFormSubmitSuccessfully')
   } catch (error) {
-
+    console.error(error)
   }
 }
 

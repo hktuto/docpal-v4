@@ -55,8 +55,8 @@
 - [x] client-master-table	
 - [x] client-trash	
 - [x] client-user-setting	
-- [ ] client-workflow	
-- [ ] public-easy-form	
+- [*] client-workflow	
+- [x] public-easy-form	
 - [ ] public-share	
 - [ ] public-upload	
 
