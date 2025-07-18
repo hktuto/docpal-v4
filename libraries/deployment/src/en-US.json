@@ -2191,7 +2191,7 @@
       "editRole": "Edit Role",
       "parentRole": "Parent Role",
       "parentRolePlaceholder": "Please enter parent role",
-      "roleLabel": "Role Name",
+      "roleLabel": "Role Label",
       "rolePlaceholder": "Please enter role name",
       "save": "Save",
       "sharePermission": "Other User can edit",
