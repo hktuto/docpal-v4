@@ -52,9 +52,9 @@
 - [*] client-rbac	
 - [x] client-search	
 - [x] client-share	
-- [ ] client-master-table	
+- [x] client-master-table	
 - [x] client-trash	
-- [ ] client-user-setting	
+- [x] client-user-setting	
 - [ ] client-workflow	
 - [ ] public-easy-form	
 - [ ] public-share	
