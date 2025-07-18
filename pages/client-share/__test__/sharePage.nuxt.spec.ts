@@ -2,9 +2,9 @@ import { describe, it, expect, vi, beforeEach, test } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { SharePage } from '#components'
 import { VxeGrid } from 'vxe-table'
-import { clientApi } from '~/test/mock/api'
+import { clientApi } from './mock/api'
 
-describe('[client-external-share]SharePage', () => {
+describe('[client-share-external]SharePage', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

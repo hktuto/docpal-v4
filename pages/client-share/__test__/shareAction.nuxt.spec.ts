@@ -16,7 +16,7 @@ vi.mock('element-plus', () => ({
   }
 }))
 
-describe('[client-external-share]ShareAction', () => {
+describe('[client-share-external]ShareAction', () => {
   let shareInfoDialogRef: any
   let wrapper: any
   beforeEach(() => {

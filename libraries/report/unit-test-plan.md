@@ -50,8 +50,8 @@
 - [x] client-file-policies	
 - [x] client-folder-cabinet	
 - [*] client-rbac	
-- [-] client-search	
-- [ ] client-share	
+- [x] client-search	
+- [x] client-share	
 - [ ] client-master-table	
 - [x] client-trash	
 - [ ] client-user-setting	

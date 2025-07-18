@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { ShareDialog } from '#components'
 
-describe('[client-external-share]ShareDialog', () => {
+describe('[client-share-external]ShareDialog', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()
