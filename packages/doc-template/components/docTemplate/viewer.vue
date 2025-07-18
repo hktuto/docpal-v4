@@ -1,54 +1,29 @@
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, provide } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
+import { DocTemplateProveKey } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
-import { defaultPageSetting } from 'docpal-document-editor/src/utils'
 import { normalizeTipTapOptions, clientEditorExtensions, generateHtml } from 'docpal-document-editor/src/client'
 
 const props = defineProps<{
-  json?: any,
-  content?: any,
-  options?: TipTapOptions,
+  options: TipTapOptions
+  json?: any
 }>()
-const editor = ref<Editor | undefined>(undefined)
 
-const defaultTheme = {
-  fontSize: 12,
-  fontColor: '#000000',
-  fontBackgroundColor: '#ffffff',
-  fontFamily: 'Arial',
-  bodyFontSize: 20,
-  h1FontSize: 20,
-  highlightColor: '#ffff00'
-}
-
-onMounted(() => {
-  const normlizeOption = normalizeTipTapOptions({
-    ...props.options,
-    editable: false,
-    mode: props.options?.mode || 'PAGE',
-    pageSetting: props.options?.pageSetting || { ...defaultPageSetting },
-    title: props.options?.title ?? 'Viewer',
-    creator: props.options?.creator ?? '',
-    theme: props.options?.theme ?? defaultTheme
-  })
-  const extensions = clientEditorExtensions(normlizeOption)
-  editor.value = new Editor({
-    content: props.content || '',
-    extensions: [...extensions],
-    editable: false
-  })
-})
+const editor = ref()
 
 function initEditor(initOptions: TipTapOptions, json?: any) {
   if (editor.value) {
     editor.value.destroy()
   }
+
   const normalizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normalizeOption)
 
+  let html = generateHtml(json, initOptions)
+
   editor.value = new Editor({
-    content: json || '',
+    content: html,
     autofocus: true,
     extensions: [
       ...extensions
@@ -69,12 +44,16 @@ onUnmounted(() => {
   }
 })
 
+provide(DocTemplateProveKey, {
+  editor
+})
+
 defineExpose({ initEditor })
 </script>
 
 <template>
   <div class="editorContainer"
-       :style="`--margin-top: ${options?.pageSetting?.defaultMarginConfig?.top || 0}mm; --margin-bottom: ${options?.pageSetting?.defaultMarginConfig?.bottom || 0}mm; --margin-left: ${options?.pageSetting?.defaultMarginConfig?.left || 0}mm; --margin-right: ${options?.pageSetting?.defaultMarginConfig?.right || 0}mm;`">
+       :style="`--margin-top: ${props.options.pageSetting?.defaultMarginConfig?.top}mm; --margin-bottom: ${props.options.pageSetting?.defaultMarginConfig?.bottom}mm; --margin-left: ${props.options.pageSetting?.defaultMarginConfig?.left}mm; --margin-right: ${props.options.pageSetting?.defaultMarginConfig?.right}mm;`">
     <div class="editorBody">
       <EditorContent :editor="editor" />
     </div>
@@ -258,4 +237,4 @@ defineExpose({ initEditor })
     break-inside: avoid;
   }
 }
-</style> 
+</style>
