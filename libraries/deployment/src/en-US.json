@@ -2194,7 +2194,7 @@
       "roleLabel": "Role Name",
       "rolePlaceholder": "Please enter role name",
       "save": "Save",
-      "sharePermission": "Share Permission Assignment",
+      "sharePermission": "Other User can edit",
       "validation": {
         "minLength": "Length must be at least 2 characters",
         "roleRequired": "Please enter role name"
