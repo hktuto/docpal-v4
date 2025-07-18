@@ -81,7 +81,7 @@ async function updatePageSetting() {
 </script>
 
 <template>
-  <ElButton @click="open">{{ $t('docTemplate.pageSetup.pageSetup') }}</ElButton>
+  <ElButton @click="open" style="margin-left: 4px">{{ $t('docTemplate.pageSetup.pageSetup') }}</ElButton>
 
   <ElDialog v-model="opened" :title="t('docTemplate.pageSetup.pageSetup')">
     <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">

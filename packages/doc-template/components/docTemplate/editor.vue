@@ -110,6 +110,10 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
       lastSelection.value = newSelectionData
     }
   })
+
+  // Override import json
+  normalizeOption.title = props.editorOptions.title
+
   options.value = { ...normalizeOption }
   headerRef.value.init(normalizeOption)
 }

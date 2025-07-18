@@ -23,15 +23,15 @@ defineExpose({
   <div class="headerContainer">
     <template v-if="editor">
       <div class="toolContainer">
-            <LazyDocTemplateContentToolbar />
-          </div>
+        <LazyDocTemplateContentToolbar />
+      </div>
     </template>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .headerContainer {
-  width: 100%;
+  width: auto;
   background: var(--app-grey-975);
   padding-inline: var(--app-space-s);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -48,7 +48,7 @@ defineExpose({
   align-items: flex-start;
   gap: var(--gap);
   overflow: auto;
-  width: 100%;
+  width: auto;
   padding-block: var(--app-space-s);
 }
 
