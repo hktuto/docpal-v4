@@ -1,33 +1,26 @@
 <template>
-  <LoadingBg/>
+  <LoadingBg />
   <el-card class="formContainer">
     <div class="flex-x-start">
-      <Logo class="logo" mode="withName"/>
+      <Logo class="logo" mode="withName" />
     </div>
-    <FormRenderer ref="FormRendererRef" :form-json="formJson" @enter="handleSubmit"/>
+    <FormRenderer ref="FormRendererRef" :form-json="formJson" @enter="handleSubmit" />
     <div class="footer">
       <el-button id="public_Share_Submit" @click="handleSubmit">
-        {{ $t("common_submit") }}
+        {{ $t('common_submit') }}
       </el-button>
     </div>
   </el-card>
 </template>
 <script lang="ts" setup>
-import formJson from "./sharePassword.vform.json";
+import formJson from './sharePassword.vform.json'
 
-const emits = defineEmits(["submit"]);
-const FormRendererRef = ref();
+const emits = defineEmits(['submit'])
+const FormRendererRef = ref()
 
 async function handleSubmit() {
-  const formData = await FormRendererRef.value.vFormRenderRef
-    .getFormData()
-    .then((res: any) => {
-      return res;
-    })
-    .catch((error: any) => {
-      return false;
-    });
-  emits("submit", deepCopy(formData));
+  const formData = await FormRendererRef.value.getFormData()
+  emits('submit', deepCopy(formData))
 }
 </script>
 
