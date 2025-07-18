@@ -2,17 +2,22 @@
 import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi } from 'api'
+import { navigateToTemplatePage } from '~/utils/documentTemplateHelper'
 
+const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const { id } = defineProps<{
+const { id, isEdit } = defineProps<{
   id: string
-  name: string
+  name: string,
+  isEdit: boolean,
 }>()
 const state = reactive<any>({
   info: {
-    name: ''
+    name: '',
+    fileType: ''
   },
   variables: [],
+  testVariables: [],
   previewFile: {
     blob: null,
     name: '',
@@ -27,34 +32,34 @@ const state = reactive<any>({
   },
   downloadLoading: false,
   pageLoading: false,
-  isEdit: false
+  isEdit: false,
+  openWordDialog: false
 })
 const InteractDrawerRef = ref()
 const docTemplateEditorRef = ref()
-
-async function getPreviewFile() {
-  state.previewFile.loading = true
-  try {
-    const blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
-      format: 'blob',
-      timeout: 0,
-      headers: {
-        key: 'preview'
-      }
-    })
-    state.previewFile.blob = blob
-  } catch (error) {
-  }
-  state.previewFile.loading = false
-}
+const variables = ref([])
+const templateVariablesRendererRef = ref()
 
 async function getInfo() {
   const { data } = await adminApi.api.getTemplateDocumentId(id)
   state.info = data
 }
 
-// #region module: Variables
-const FormVariablesRendererRef = ref()
+async function getPreviewFile() {
+  state.previewFile.loading = true
+  try {
+    state.previewFile.blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
+      format: 'blob',
+      timeout: 0,
+      headers: {
+        key: 'preview'
+      }
+    })
+  } catch (error) {
+    console.log(error)
+  }
+  state.previewFile.loading = false
+}
 
 async function getVariables() {
   try {
@@ -74,7 +79,6 @@ async function getVariables() {
           required: false
         })
       } catch (err) {
-
         state.variables.push({
           name: item,
           type: 'input',
@@ -83,7 +87,7 @@ async function getVariables() {
       }
     })
     nextTick(() => {
-      FormVariablesRendererRef.value.createJson(state.variables)
+      templateVariablesRendererRef.value.setVariables(deepCopy(state.variables))
     })
 
   } catch (error) {
@@ -91,12 +95,25 @@ async function getVariables() {
   }
 }
 
+const nodeBackendEndpoint = 'http://localhost:3333'
+
+async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
+  const res = await fetch(nodeBackendEndpoint + endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  return await res.blob()
+}
+
 async function handleTest() {
   state.downloadLoading = true
 
   try {
-    const data = await FormVariablesRendererRef.value.getData()
-    if (!data) return
+    const data = await templateVariablesRendererRef.value.getData(state.fileType)
+    if (data) return
     const id = new Date().valueOf() + state.info.name
     const notification = ElNotification({
       title: '',
@@ -108,30 +125,47 @@ async function handleTest() {
       duration: 0,
       position: 'bottom-right'
     })
-    const blob = await adminApi.api.postTemplateDocumentGenerateFile({
-      id: state.info.id,
-      variables: data
-    }, {
-      format: 'blob',
-      timeout: 0,
-      onDownloadProgress: (e: any) => {
-        const el = document.getElementById(id)
-        if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+    let blob
+    if (state.info.fileType === 'Word') {
+      const dataJson = {
+        json: {
+          options: documentOptions.value,
+          content: jsonData.value
+        },
+        variables: state.testVariables
       }
-    })
-    downloadBlob(blob, getName())
+      // TODO: call local server
+      blob = await fetchExportBlob('/convert/docx', dataJson)
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${state.info.name}.docx`
+      document.body.appendChild(link)
+      link.click()
+      link.remove()
+    } else {
+      blob = await adminApi.api.postTemplateDocumentGenerateFile({
+        id: state.info.id,
+        variables: data
+      }, {
+        format: 'blob',
+        timeout: 0,
+        onDownloadProgress: (e: any) => {
+          const el = document.getElementById(id)
+          if (el) el.innerHTML = Math.round((e.loaded / e.total) * 100) + '%'
+        }
+      })
+      downloadBlob(blob, state.info.name)
+    }
+
     setTimeout(() => {
       notification.close()
     }, 3000)
   } catch (error) {
-
+    throw new Error(error)
+  } finally {
+    state.downloadLoading = false
   }
-  state.downloadLoading = false
-}
-
-// #endregion
-function getName() {
-  return state.info.name.split('.')[0]
 }
 
 const TemplateAddStep1DialogRef = ref()
@@ -149,45 +183,121 @@ function handleRefresh(state: any) {
 const documentOptions = ref({})
 const jsonData = ref({})
 
-function initWordEditor() {
-  if (state.info.fileType === 'Word') {
-    const json = JSON.parse('{"json":{"options":{"mode":"PAGE","pageSetting":{"defaultMarginConfig":{"bottom":5,"top":5,"left":5,"right":5},"defaultPageBorders":{"bottom":1,"top":1,"left":1,"right":1},"defaultPaperColour":"#fff","defaultPaperOrientation":"portrait","defaultPaperSize":"A4","useDeviceThemeForPaperColour":false,"pageAmendmentOptions":{"enableHeader":false,"enableFooter":false}},"title":"New Document","creator":"","theme":{"fontSize":12,"fontColor":"#000000","fontBackgroundColor":"#ffffff","fontFamily":"Arial","bodyFontSize":20,"h1FontSize":20,"highlightColor":"#ffff00"},"editable":true},"content":{"type":"doc","content":[{"type":"page","attrs":{"paperSize":"A4","paperColour":"#fff","paperOrientation":"portrait","pageBorders":{"top":1,"right":1,"bottom":1,"left":1}},"content":[{"type":"body","attrs":{"pageMargins":{"top":5,"bottom":5,"left":5,"right":5}},"content":[{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"ffd;oajhg"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"asgp’dfa"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"asasg"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"afgagdfghadfgaslflas"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"sad"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"fgagasfgfg"}]},{"type":"paragraph","attrs":{"textAlign":null,"indent":0},"content":[{"type":"text","text":"sadfgasd"}]}]}]}]}},"variables":[]}')
-    // documentOptions.value.title = state.info.name
-    // TODO: service response
-    documentOptions.value = json.json.options
-    jsonData.value = json.json.content
-    state.pageLoading = true
-  }
+function initWordEditor(json: any) {
+  documentOptions.value = json.json.options
+  jsonData.value = json.json.content
+  variables.value = json.variables
+  templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
+}
+
+function createWordEdit(newData: any) {
+  documentOptions.value = newData
+  documentOptions.value.editable = true
+  routerProvider?.updateTabName(newData.title)
+  state.isEdit = true
+  state.openWordDialog = false
+}
+
+function handleWordDialogClose() {
+  routerProvider?.navigateTo(navigateToTemplatePage())
 }
 
 function handleEditEditor() {
   state.isEdit = true
 }
 
-function handleSaveWord() {
-  const { json, variables } = docTemplateEditorRef.value.getJsonData()
+async function handleSaveWord() {
+  const editDataJson = docTemplateEditorRef.value.getJsonData()
+  documentOptions.value = editDataJson.json.options
+  jsonData.value = editDataJson.json.content
 
-  console.log(1, variables)
+  const newWordJson = {
+    json: {
+      options: documentOptions.value,
+      content: jsonData.value
+    },
+    variables: variables.value
+  }
 
-  // 更新本地數據
-  documentOptions.value = json.options
-  jsonData.value = json.content
-  // TODO： 因爲更新variables數據時，保存在外部的頁面上，需要另外處理
-  state.variables = variables
-  console.log(2, variables)
+  const fileName = state.info.name + '.json'
+  const blob = await convertJsonToBlob(newWordJson, fileName)
+  const file = new File([blob], fileName, { type: 'application/json' })
 
-  // TODO: 組裝成完整的Json， 發送請求更新數據
-
-
-
+  const form = new FormData()
+  form.append('file', file)
+  form.append('fileName', fileName)
+  form.append('id', id)
+  await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form)
+  routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
   state.isEdit = false
 }
 
-onBeforeMount(async () => {
-  await getVariables()
+async function convertJsonToBlob(jsonData: any): Promise<Blob> {
+  if (!jsonData) {
+    throw new Error('JSON 数据不能为空')
+  }
+  try {
+    const jsonString = JSON.stringify(jsonData)
+    return new Blob([jsonString], { type: 'application/json; charset=utf-8' })
+  } catch (error) {
+    console.error('转换 JSON 到 Blob 失败:', error)
+  }
+}
+
+function updateVariables(newData: any) {
+  variables.value = newData
+  templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
+  // TODO: 更新服務端的 Variables 數據
+
+}
+
+async function init() {
   await getInfo()
-  await getPreviewFile()
-  initWordEditor()
+  if (isEdit) {
+    // 分流不同的文件類型，顯示不同的編輯器
+    switch (state.info.fileType) {
+      case 'Word':
+        const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId })
+        if (!dataJson) {
+          state.openWordDialog = true
+          break
+        }
+        initWordEditor(dataJson)
+        break
+      case 'Excel':
+        await getVariables()
+        await getPreviewFile()
+        break
+      case 'PPT':
+        await getVariables()
+        await getPreviewFile()
+        break
+      default:
+        break
+    }
+
+    state.pageLoading = true
+    return
+  }
+
+  switch (state.info.fileType) {
+    case 'Word':
+      state.openWordDialog = true
+      break
+    case 'Excel' || 'PPT':
+      break
+    default:
+  }
+
+  state.pageLoading = true
+}
+
+function handleTestVariable(variables: any) {
+  state.testVariables = variables
+}
+
+onBeforeMount(async () => {
+  init()
 })
 </script>
 
@@ -199,53 +309,77 @@ onBeforeMount(async () => {
           <div class="flex-x-between">
             <span class="template-title"> {{ state.info.name }} </span>
             <SvgIcon src="/icons/file/edit.svg" class="el-icon--right"
-                     round :content="$t('tip.editTemplateInfo')"
+                     round :content="t('tip.editTemplateInfo')"
                      @click="handleEdit"></SvgIcon>
           </div>
           <div class="flex-x-between">
-            <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="$t('common_refresh')"
-                     @click="handleRefresh()" />
+            <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="t('common_refresh')"
+                     @click="handleRefresh({})" />
 
-            <!-- <template v-if="state.info.fileType === 'Word'">
+            <template v-if="state.info.fileType === 'Word'">
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                       :content="$t('editTemplateData')" @click="handleEditEditor"></SvgIcon>
-              <SvgIcon v-if="state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                       :content="t('saveWord')" @click="handleSaveWord">
-              </SvgIcon>
-            </template> -->
+                       :content="t('edit Word')" @click="handleEditEditor"></SvgIcon>
 
-            <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh()" />
+
+              <div v-if="state.isEdit" class="save-or-exit-icon-container">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="t('button.save')"
+                  placement="bottom"
+                >
+                  <Icon style="width:1.2em; height:1.2em;" name="lucide:save" @click="handleSaveWord" />
+                </el-tooltip>
+              </div>
+              <div v-if="state.isEdit" class="save-or-exit-icon-container">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="t('button.saveOff')"
+                  placement="bottom"
+                >
+                  <Icon style="width:1.2em; height:1.2em;" name="lucide:save-off" @click="state.isEdit = false" />
+                </el-tooltip>
+              </div>
+            </template>
+
+            <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh({})" />
             <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right"
                                    @refresh="handleRefresh({ variables: true, preview: true })" />
           </div>
         </div>
-        <div class="editor-container">
-          <el-divider />
-          <Reader ref="ReaderRef" v-bind="state.previewFile"></Reader>
-        </div>
-        <!-- <div v-if="state.pageLoading">
+
+        <el-divider />
+
+        <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
-            <div class="editor-container">
+            <div class="doc-template-viewer-container">
               <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
               <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
-                                 :json="jsonData" :user="{}" :variables="state.variables" />
+                                 :json="jsonData" :user="{}" :variables="variables"
+                                 @update:variables="updateVariables($event)" />
             </div>
           </template>
           <template v-else>
-            <Reader ref="ReaderRef" v-bind="state.previewFile"></Reader>
-          </template> 
-        </div>-->
+            <Reader class="reader-container" ref="ReaderRef" v-bind="state.previewFile"></Reader>
+          </template>
+        </div>
       </div>
       <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
                       :showClose="false">
-        <div class="template-title">{{ $t('template.variable') }}</div>
-        <FormVariablesRenderer ref="FormVariablesRendererRef" />
-        <el-button id="DocumentTemplate__PreviewDocument__TestTemplateDownload" :loading="state.downloadLoading"
-                   @click="handleTest">{{ $t('template.test') }}
+        <div class="template-title">{{ t('template.variable') }}</div>
+        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" @update="handleTestVariable" />
+
+        <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
+                   :loading="state.downloadLoading" @click="handleTest">{{ t('template.test') }}
         </el-button>
       </InteractDrawer>
     </div>
     <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
+
+    <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
+                                  :defaultOpened="state.openWordDialog" @submit="createWordEdit"
+                                  @wordDialogClose="handleWordDialogClose" />
   </div>
 </template>
 
@@ -258,9 +392,37 @@ onBeforeMount(async () => {
   overflow: hidden;
 }
 
-.editor-container {
-  height: calc(100vh - 110px);;
+.reader-container {
+  height: calc(100vh - 110px);
   overflow-y: auto;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.doc-template-viewer-container {
+  height: calc(100vh - 110px);
+  overflow: hidden;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  // 确保 DocTemplateViewer 能够正确显示和滚动
+  :deep(.editorContainer) {
+    height: 100%;
+    min-height: 0;
+  }
+
+  :deep(.editorBody) {
+    height: 100% !important;
+    min-height: 0;
+    overflow: auto;
+  }
+}
+
+.template-test-button {
+  margin-bottom: 15px;
 }
 
 .template-left-container {
@@ -280,7 +442,7 @@ onBeforeMount(async () => {
   padding-bottom: 0;
 
   .formContainer {
-    overflow: auto;
+    overflow-y: auto;
   }
 }
 
@@ -290,5 +452,30 @@ onBeforeMount(async () => {
   line-height: 22px;
   letter-spacing: 0px;
   color: #606266;
+}
+
+.save-or-exit-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #f0f3f4;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 2px;
+  margin-right: 2px;
+
+  &:hover {
+    background-color: #f0f3f4;
+    color: #848687;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
 }
 </style>

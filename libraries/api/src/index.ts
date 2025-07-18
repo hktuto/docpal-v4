@@ -1,12 +1,14 @@
 import { Client } from './generate/client'
 import { Admin } from './generate/admin'
 import { Public } from './generate/public'
+import { Template } from './generate/template'
 import { ElMessage } from 'element-plus'
 // import {logout} from '~/utils/auth'
 
 let clientBaseURL = '/api'
 let adminBaseURL = '/api'
 let publicBaseURL = '/public-api/report/v1/api'
+let templateBaseURL = '/open-api/template'
 
 export const clientApi = new Client({
   baseURL: clientBaseURL,
@@ -54,4 +56,10 @@ export const safePublicAPI = new Proxy(publicApi.api, {
     }
   }
 })
+
+export const templateApi = new Template({
+  baseURL: templateBaseURL,
+  timeout: 50000
+})
+
 // if node env mode is dev set proxy

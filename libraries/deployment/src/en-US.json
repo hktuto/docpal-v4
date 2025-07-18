@@ -312,6 +312,7 @@
     "redo": "button.redo",
     "save": "Save",
     "saveDraft": "Save Draft",
+    "saveOff": "Exit without saving",
     "selectAll": "Select All",
     "stop": "Stop sharing",
     "templateDownload": "Download Template",
@@ -1038,10 +1039,23 @@
       "underline": "Underline"
     },
     "import": {
-      "import": {
-        "error": "Json parsing failed"
-      },
+      "import": "Import Template",
+      "importError": "Json parsing failed",
       "msg": "Please note that import will clear the original data"
+    },
+    "pageSetup": {
+      "EnterDocumentTitle": "Enter Document Title",
+      "bottom": "Bottom",
+      "landscape": "landscape",
+      "left": "Left",
+      "orientation": "Orientation",
+      "pageMargin": "Page Margin",
+      "pageSetup": "Page Setup",
+      "pageSize": "Page Size",
+      "portrait": "Portrait",
+      "right": "Right",
+      "title": "Title",
+      "top": "Top"
     },
     "paragraph": {
       "bulletList": "Bullet List",
@@ -1140,6 +1154,8 @@
       "linkLabel": "Label",
       "linkLabelPlaceholder": "Enter link label (optional)",
       "linkTarget": "Target",
+      "linkType": "Type",
+      "linkUrl": "Url",
       "listContent": "List Content",
       "listItemPlaceholder": "Enter list item...",
       "listItems": "List Items",
@@ -1165,6 +1181,7 @@
       "tableStriped": "Striped Rows",
       "tableStyle": "Table Style",
       "type": "Type",
+      "value": "Value",
       "variableName": "Variable Name",
       "variableType": "Variable Type",
       "variableValue": "Variable Value"

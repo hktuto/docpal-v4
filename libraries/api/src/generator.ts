@@ -5,13 +5,11 @@ import dotenv from 'dotenv'
 //@ts-ignore
 import setting from './setting.json'
 
-
-
-
 const endpoint = [
     {name: 'client', url:`${setting.CLIENT_URL}/v3/api-docs`, className:"Client"},
     {name: 'admin', url:`${setting.ADMIN_URL}/v3/api-docs`, className:"Admin"},
     {name: 'public', url:`${setting.PUBLIC_URL}/v3/api-docs`, className:"Public"},
+    {name: 'template', url:`${setting.TEMPLATE_URL}/docs/swagger.json`, className:"Template"},
 ]
 
 async function generate(){
