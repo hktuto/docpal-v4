@@ -8,7 +8,7 @@ const { t } = useI18n()
 const userPreference = useUserPreference()
 const userId = useUserId()
 
-const state = reactive({
+const state = reactive<any>({
   form: {},
   list: [],
   notificationPreferenceList: []
@@ -18,8 +18,8 @@ async function init() {
   try {
     const { properties } = await clientApi.api.getUserProfileSetting().then((res: any) => res.data)
     state.list = Object.entries(properties)
-      .sort(([, v1], [, v2]) => (v1.sort ?? 0) - (v2.sort ?? 0))
-      .map(([key, value]) => ({
+      .sort(([, v1]:any, [, v2]:any) => (v1.sort ?? 0) - (v2.sort ?? 0))
+      .map(([key, value]: any) => ({
         key,
         type: value.type,
         label: value.label,
@@ -31,7 +31,7 @@ async function init() {
     if (state.list.length > 0) {
       const data = await clientApi.api.getNuxeoUserGetapplication().then((res: any) => res.data)
       state.form.id = data.id
-      state.list.forEach(item => {
+      state.list.forEach((item: any) => {
         state.form[item.key] = data[item.key]
       })
     }
@@ -39,11 +39,11 @@ async function init() {
     if ('groups' in state.form || 'role' in state.form) {
       const { roleName, groups } = await clientApi.api.getAclUserUserid(userId.value).then((res: any) => res.data)
       state.form.role = roleName
-      state.form.groups = groups.map(item => item.groupName)
+      state.form.groups = groups.map((item: any) => item.groupName)
     }
 
     if ('status' in state.form) {
-      const statusItem = state.list.find(item => item.key === 'status')
+      const statusItem = state.list.find((item: any) => item.key === 'status')
       if (statusItem) {
         statusItem.type = 'boolean'
         state.form.status = state.form.status === 'A'
@@ -51,7 +51,7 @@ async function init() {
     }
 
     state.notificationPreferenceList = await clientApi.api.getNotificationSettingUserUseridPreferences(userId.value).then(res => res.data)
-  } catch (e) {
+  } catch (e: any) {
     throw createError(e)
   }
 }
@@ -115,7 +115,7 @@ function handleChangeMangeSignatureOpen() {
 
 async function save() {
   try {
-    let newUserInfo = {
+    let newUserInfo: any = {
       id: state.form.id,
       userId: userId.value
     }
@@ -133,7 +133,7 @@ async function save() {
     routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: t('user_info'), name: null }))
 
     await init()
-  } catch (e) {
+  } catch (e: any) {
     throw createError(e)
   }
 }

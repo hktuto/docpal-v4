@@ -58,34 +58,28 @@ async function handleSubmit() {
   try {
     const fileObj = state.fileList[0].raw
     const format = fileObj.type
-    const form = new FormData
+    const form = new FormData()
     form.append('file', fileObj)
     form.append('format', format)
 
     // TODO: swagger APi 文檔需要移除 query 參數
     if (state.isCreate) {
-      await clientApi.api.postUserprofileUseridSignature(
-        props.userId,
-        {},
-        { body: form }
-      )
+      await clientApi.api.postUserprofileUseridSignature(props.userId, {}, { body: form })
     } else {
-      console.log(222,state.fileList)
+      console.log(222, state.fileList)
       if (state.fileList.length === 0) {
         await clientApi.api.deleteUserprofileUseridSignature(userId)
-        routerProvider?.message.success(t('tip_updateSuccessMsg', {
-          modelName: t('user.setting.userSignature'),
-          name: null
-        }))
+        routerProvider?.message.success(
+          t('tip_updateSuccessMsg', {
+            modelName: t('user.setting.userSignature'),
+            name: null
+          })
+        )
         state.userSignatureVisible = false
         return
       }
 
-      await clientApi.api.putUserprofileUseridSignature(
-        props.userId,
-        {},
-        { body: form }
-      )
+      await clientApi.api.putUserprofileUseridSignature(props.userId, {}, { body: form })
     }
   } catch (e) {
     routerProvider?.message.error(t('user.setting.userSignatureUploadFailed'))
@@ -96,13 +90,12 @@ async function handleSubmit() {
   state.userSignatureVisible = false
 }
 
-const onChange = useDebounceFn((file: any, _fileList: any) => {
+const onChange = useDebounceFn(
+  (file: any, _fileList: any) => {
     state.fileList = _fileList.reduce((prev: any, item: any) => {
       const fileSizeCheckResult = item.size / 1024 / 1024 <= state.imageSize
       if (!fileSizeCheckResult) {
-        routerProvider?.message.error(
-          '[' + item.name + ']' + t('render.hint.fileSizeExceed') + state.imageSize + 'MB'
-        )
+        routerProvider?.message.error('[' + item.name + ']' + t('render.hint.fileSizeExceed') + state.imageSize + 'MB')
         return prev
       }
       prev.push(item)
@@ -110,7 +103,8 @@ const onChange = useDebounceFn((file: any, _fileList: any) => {
     }, [])
     state._fileList = [...state.fileList]
   },
-  500, { maxWait: 5000 }
+  500,
+  { maxWait: 5000 }
 )
 
 function beforeRemove() {
@@ -139,9 +133,12 @@ defineExpose({ handleOpen })
             :show-file-list="false"
           >
             <div>
-              <el-icon v-if="state.fileList.length > 0" :disabled="!state.fileList.length > 0"
-                       style="position: relative; right: -80px; font-size: 18px; cursor: pointer;"
-                       @click.stop="beforeRemove">
+              <el-icon
+                v-if="state.fileList.length > 0"
+                :disabled="!state.fileList.length > 0"
+                style="position: relative; right: -80px; font-size: 18px; cursor: pointer"
+                @click.stop="beforeRemove"
+              >
                 <DeleteFilled />
               </el-icon>
             </div>
@@ -149,17 +146,14 @@ defineExpose({ handleOpen })
             <el-icon class="el-icon--upload" v-if="state.fileList.length === 0">
               <upload-filled />
             </el-icon>
-            <div class="el-upload__text">
-              Drop file here or <em>click to upload</em>
-            </div>
+            <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
           </el-upload>
         </el-form-item>
       </el-form>
     </div>
     <template #footer>
       <div class="actions">
-        <ElButton id="UserSignature__Dialog__Cancel" type="info"
-                  @click="state.userSignatureVisible = false">
+        <ElButton id="UserSignature__Dialog__Cancel" type="info" @click="state.userSignatureVisible = false">
           {{ $t('dpButtom_cancel') }}
         </ElButton>
         <ElButton id="UserSignature__Dialog__Save" type="primary" @click="handleSubmit">
@@ -168,9 +162,6 @@ defineExpose({ handleOpen })
       </div>
     </template>
   </el-dialog>
-
 </template>
 
-<style>
-
-</style>
+<style></style>
