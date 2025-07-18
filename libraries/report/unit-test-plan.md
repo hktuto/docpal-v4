@@ -57,7 +57,7 @@
 - [x] client-user-setting	
 - [*] client-workflow	
 - [x] public-easy-form	
-- [ ] public-share	
+- [-] public-share	
 - [ ] public-upload	
 
 
