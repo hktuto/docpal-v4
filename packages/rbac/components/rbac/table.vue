@@ -162,7 +162,7 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   columns: [
     {
       field: 'name',
-      title: 'tableHeader_name'
+      title: 'orgChart.editSidebar.roleLabel'
     },
     {
       field: 'parentRoleName',
