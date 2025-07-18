@@ -12,8 +12,6 @@ import SettingsControls from './setting/SettingsControls.vue'
 
 const provider = inject(DocTemplateProveKey)
 if (!provider) throw new Error('DocTemplateProvider not found')
-const { editor } = provider
-const { t } = useI18n()
 </script>
 
 <template>
@@ -45,7 +43,6 @@ const { t } = useI18n()
 <style scoped lang="scss">
 .toolsContainer {
   min-width: 240px;
-  width: 100%;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
