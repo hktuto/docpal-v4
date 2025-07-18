@@ -3,9 +3,13 @@ import { defaultPageSetting } from 'docpal-document-editor/src/utils'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
 import { paperSizes } from 'tiptap-extension-pagination/src'
 
-const emits = defineEmits(['submit'])
+const emits = defineEmits(['submit', 'close'])
 const { t } = useI18n()
 const formRef = ref()
+
+const props = defineProps<{
+  title?: string
+}>()
 
 const showTextCounter = ref(false)
 watch(showTextCounter, (bool) => {
@@ -21,7 +25,7 @@ const form = reactive<TipTapOptions>({
   pageSetting: {
     ...defaultPageSetting
   },
-  title: 'New Document',
+  title: props.title ? props.title : 'New Document',
   creator: '',
   theme: {
     fontSize: 12,
@@ -67,19 +71,25 @@ async function submit() {
   }
 }
 
+function handleClose() {
+  if (!props.title) {
+    emits('close')
+  }
+}
+
 </script>
 
 <template>
   <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-    <ElFormItem prop="title" label="Title">
-      <ElInput v-model="form.title" placeholder="Enter document title" />
+    <ElFormItem prop="title" :label="t('docTemplate.pageSetup.title')">
+      <ElInput v-model="form.title" :placeholder="t('docTemplate.pageSetup.EnterDocumentTitle')" />
     </ElFormItem>
     <ElFormItem prop="mode" label="Page Mode">
       <ElSelect v-model="form.mode" filterable>
         <ElOption v-for="mode in ModeOption" :key="mode" :label="mode" :value="mode" />
       </ElSelect>
     </ElFormItem>
-    <!-- Text Couter  -->
+    <!-- Text Counter  -->
     <ElFormItem label="Text Counter">
       <ElSwitch v-model="showTextCounter" />
     </ElFormItem>
@@ -90,37 +100,37 @@ async function submit() {
     </template>
     <!-- PAGE setting -->
     <template v-if="form.mode === 'PAGE'">
-      <ElFormItem label="Page Size">
+      <ElFormItem :label="t('docTemplate.pageSetup.pageSize')">
         <ElSelect v-model="form.pageSetting.defaultPaperSize">
           <ElOption v-for="key in paperSizes" :key="key" :label="key" :value="key" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Orientation">
+      <ElFormItem :label="t('docTemplate.pageSetup.orientation')">
         <ElSelect v-model="form.pageSetting.defaultPaperOrientation">
-          <ElOption label="portrait" value="portrait" />
-          <ElOption label="landscape" value="landscape" />
+          <ElOption :label="t('docTemplate.pageSetup.portrait')" value="portrait" />
+          <ElOption :label="t('docTemplate.pageSetup.landscape')" value="landscape" />
         </ElSelect>
       </ElFormItem>
-      <ElFormItem label="Page Margin">
+      <ElFormItem :label="t('docTemplate.pageSetup.pageMargin')">
         <ElRow :gutter="12">
           <ElCol :span="6">
-            <ElFormItem label="Left">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.left')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.left" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
-            <ElFormItem label="Top">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.top')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.top" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
-            <ElFormItem label="Right">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.right')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.right" min="0" max="100" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="6">
-            <ElFormItem label="Bottom">
-              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0" />
+            <ElFormItem :label="t('docTemplate.pageSetup.bottom')">
+              <ElInputNumber v-model="form.pageSetting.defaultMarginConfig.bottom" min="0" max="100" />
             </ElFormItem>
           </ElCol>
         </ElRow>
@@ -128,7 +138,8 @@ async function submit() {
     </template>
 
     <ElFormItem>
-      <ElButton type="primary" @click="submit">Save</ElButton>
+      <ElButton type="primary" @click="submit">{{ $t('button.save') }}</ElButton>
+      <el-button @click="handleClose">{{ $t('button.close') }}</el-button>
     </ElFormItem>
   </ElForm>
 </template>
