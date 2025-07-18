@@ -43,6 +43,11 @@ export default defineNuxtConfig({
     },
     nitro: {
         devProxy: {
+            '/open-api/template':{
+                target: process.env.OPEN_PROXY,
+                changeOrigin: true,
+                prependPath: true
+            },
             '/public-api/report/v1/api': {
                 target: process.env.DASHBOARD_PROXY,
                 changeOrigin: true,
