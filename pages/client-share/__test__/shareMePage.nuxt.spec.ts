@@ -3,9 +3,9 @@ import { mount } from '@vue/test-utils'
 import { mockRouterProvider } from './util'
 import { InternalShareMePage } from '#components'
 import { VxeGrid } from 'vxe-table'
-import { clientApi } from '~/test/mock/api'
+import { clientApi } from './mock/api'
 
-describe('[client-external-share]ShareMePage', () => {
+describe('[client-share-internal]ShareMePage', () => {
   let wrapper: any
   beforeEach(() => {
     vi.clearAllMocks()

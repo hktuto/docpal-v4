@@ -17,7 +17,6 @@ let searchParams: any = {}
 const tableRef = ref()
 async function getSfolder() {
   const sfSetting = sessionStorage.getItem('smartFolder')
-  console.log("sfSetting",sfSetting)
   if(!sfSetting) {
       const sfolderList = await clientApi.api.getNuxeoSfolder().then(res => res.data)
       sfolder = sfolderList?.find(item => item.id === id)
