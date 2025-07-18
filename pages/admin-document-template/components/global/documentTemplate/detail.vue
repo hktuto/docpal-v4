@@ -319,12 +319,28 @@ onBeforeMount(async () => {
             <template v-if="state.info.fileType === 'Word'">
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
                        :content="t('edit Word')" @click="handleEditEditor"></SvgIcon>
-              <SvgIcon v-if="state.isEdit" src="/icons/file/save.svg" class="el-icon--right" round
-                       :content="t('Save Word')" @click="handleSaveWord">
-              </SvgIcon>
-              <SvgIcon v-if="state.isEdit" src="/icons/file/save.svg" class="el-icon--right" round
-                       :content="t('Don\'t save and exit')" @click="state.isEdit = false">
-              </SvgIcon>
+
+
+              <div v-if="state.isEdit" class="save-or-exit-icon-container">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="t('button.save')"
+                  placement="bottom"
+                >
+                  <Icon style="width:1.2em; height:1.2em;" name="lucide:save" @click="handleSaveWord" />
+                </el-tooltip>
+              </div>
+              <div v-if="state.isEdit" class="save-or-exit-icon-container">
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  :content="t('button.saveOff')"
+                  placement="bottom"
+                >
+                  <Icon style="width:1.2em; height:1.2em;" name="lucide:save-off" @click="state.isEdit = false" />
+                </el-tooltip>
+              </div>
             </template>
 
             <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh({})" />
@@ -340,8 +356,8 @@ onBeforeMount(async () => {
             <div class="doc-template-viewer-container">
               <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
               <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
-                               :json="jsonData" :user="{}" :variables="variables"
-                               @update:variables="updateVariables($event)" />
+                                 :json="jsonData" :user="{}" :variables="variables"
+                                 @update:variables="updateVariables($event)" />
             </div>
           </template>
           <template v-else>
@@ -436,5 +452,30 @@ onBeforeMount(async () => {
   line-height: 22px;
   letter-spacing: 0px;
   color: #606266;
+}
+
+.save-or-exit-icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background-color: #f0f3f4;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 2px;
+  margin-right: 2px;
+
+  &:hover {
+    background-color: #f0f3f4;
+    color: #848687;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
 }
 </style>

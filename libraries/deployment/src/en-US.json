@@ -311,6 +311,7 @@
     "redo": "button.redo",
     "save": "Save",
     "saveDraft": "Save Draft",
+    "saveOff": "Exit without saving",
     "selectAll": "Select All",
     "stop": "Stop sharing",
     "templateDownload": "Download Template",
