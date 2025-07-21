@@ -50,7 +50,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <ElButton @click="handleOpen">Import</ElButton>
+  <ElButton @click="handleOpen" style="margin-right: 4px">Import</ElButton>
   <el-dialog v-model="state.visible" :title="t('docTemplate.import.import')">
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <template #footer>
