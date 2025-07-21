@@ -44,27 +44,22 @@ async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
 
 async function performExport(exportType: 'html' | 'docx' | 'pdf', configuredVariables: any[]) {
   const data = getJsonConfig(editor.value.getJSON(), options.value, configuredVariables)
-  let endpoint
   let filename
   let mime
   let blob
   if (exportType === 'docx') {
-    // endpoint = '/convert/docx'
-    blob = await templateApi.convert.postConvertDocx(data)
+    blob = await templateApi.convert.postConvertDocx(data, { format: 'blob' })
     filename = `${options.value.title}.docx`
     mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   } else if (exportType === 'pdf') {
-    // endpoint = '/convert/pdf'
-    blob = await templateApi.convert.postConvertPdf(data)
+    blob = await templateApi.convert.postConvertPdf(data, { format: 'blob' })
     filename = `${options.value.title}.pdf`
     mime = 'application/pdf'
   } else {
-    // endpoint = '/convert/html'
-    blob = await templateApi.convert.postConvertHtml(data)
-    // filename = `${options.value.title}.html`
+    blob = await templateApi.convert.postConvertHtml(data, { format: 'blob' })
+    filename = `${options.value.title}.html`
     mime = 'text/html'
   }
-  // const blob = await fetchExportBlob(endpoint, data)
   // For HTML, the server may return text, so we need to handle it as text
   let finalBlob = blob
   if (exportType === 'html') {

@@ -41,7 +41,7 @@ const tableRef = ref()
 async function handleGetPublicDocument(formData: any) {
   try {
     state.loading = true
-    formData.token = route.query.token
+    formData.token = !!route.query.token ? route.query.token : formData.token
     if (!formData.token) throw new Error(`${t('responseMsg_errorCode_2')}`)
     const res: any = await clientApi.api
       .getNuxeoPublicDocument(formData)

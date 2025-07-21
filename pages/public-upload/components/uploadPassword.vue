@@ -5,25 +5,18 @@
     </div>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" />
     <div class="footer">
-      <el-button @click="handleSubmit">{{ $t("submit") }}</el-button>
+      <el-button @click="handleSubmit">{{ $t('submit') }}</el-button>
     </div>
   </el-card>
 </template>
 <script lang="ts" setup>
-import formJson from "./uploadPassword.vform.json";
-const emits = defineEmits(["submit"]);
+import formJson from './uploadPassword.vform.json'
+const emits = defineEmits(['submit'])
 
-const FormRendererRef = ref();
+const FormRendererRef = ref()
 async function handleSubmit() {
-  const formData = await FormRendererRef.value.vFormRenderRef
-    .getFormData()
-    .then((res: any) => {
-      return res;
-    })
-    .catch((error: any) => {
-      return false;
-    });
-  emits("submit", deepCopy(formData));
+  const formData = await FormRendererRef.value.getFormData()
+  emits('submit', deepCopy(formData))
 }
 </script>
 
