@@ -28,7 +28,6 @@
 import { ElMessage } from 'element-plus'
 import { useDebounceFn } from '@vueuse/core'
 
-const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   disabled?: Boolean;
   multiple?: Boolean;
@@ -49,7 +48,7 @@ const onChange = useDebounceFn(
     state.fileList = _fileList.reduce((prev: any, item: any) => {
       const fileSizeCheckResult = item.size / 1024 / 1024 <= props.fileMaxSize
       if (!fileSizeCheckResult) {
-        routerProvider?.message.error(
+        ElMessage.error(
           '[' + item.name + ']' + t('render.hint.fileSizeExceed') + props.fileMaxSize + 'MB'
         )
         return prev
