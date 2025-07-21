@@ -94,7 +94,7 @@ async function handleDblclick(row: any) {
   const fileId = row.id;
   try {
     const params: any = {
-      token: route.query.token,
+      token: route.query.token || row.token,
       password: sessionStorage.getItem("sharePWD"),
       documentId: fileId,
     };
@@ -120,6 +120,7 @@ async function handleDownload(row: any) {
     });
     downloadBlob(blob, row.name || row.title, blob.type);
   } catch (error) {
+    console.error(error)
   } finally {
     row.downloading = false;
   }

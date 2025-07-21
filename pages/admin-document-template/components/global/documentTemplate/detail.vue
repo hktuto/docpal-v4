@@ -251,18 +251,22 @@ function updateVariables(newData: any) {
 
 }
 
+async function getWordJsonFile() {
+  const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId })
+  if (!dataJson) {
+    state.openWordDialog = true
+    return
+  }
+  initWordEditor(dataJson)
+}
+
 async function init() {
   await getInfo()
   if (isEdit) {
     // 分流不同的文件類型，顯示不同的編輯器
     switch (state.info.fileType) {
       case 'Word':
-        const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId })
-        if (!dataJson) {
-          state.openWordDialog = true
-          break
-        }
-        initWordEditor(dataJson)
+        await getWordJsonFile()
         break
       case 'Excel':
         await getVariables()
@@ -313,13 +317,12 @@ onBeforeMount(async () => {
                      @click="handleEdit"></SvgIcon>
           </div>
           <div class="flex-x-between">
-            <SvgIcon class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="t('common_refresh')"
+            <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="t('common_refresh')"
                      @click="handleRefresh({})" />
 
             <template v-if="state.info.fileType === 'Word'">
               <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                       :content="t('edit Word')" @click="handleEditEditor"></SvgIcon>
-
+                       :content="t('Edit Word')" @click="handleEditEditor"></SvgIcon>
 
               <div v-if="state.isEdit" class="save-or-exit-icon-container">
                 <el-tooltip
@@ -343,8 +346,10 @@ onBeforeMount(async () => {
               </div>
             </template>
 
-            <BrowseActionsOffice :doc="{...state.info, id: state.info.documentId}" @refresh="handleRefresh({})" />
-            <TemplateReplaceButton :templateInfo="state.info" class="el-icon--right"
+            <BrowseActionsOffice v-if="state.info.fileType !== 'Word'" :doc="{...state.info, id: state.info.documentId}"
+                                 @refresh="handleRefresh({})" />
+            <TemplateReplaceButton v-if="state.info.fileType !== 'Word'" :templateInfo="state.info"
+                                   class="el-icon--right"
                                    @refresh="handleRefresh({ variables: true, preview: true })" />
           </div>
         </div>

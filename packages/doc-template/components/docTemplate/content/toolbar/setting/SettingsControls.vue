@@ -79,7 +79,7 @@ function handlePickerClose() {
 </script>
 
 <template>
-  <div class="setting-button">
+  <div>
     <!-- Import -->
     <LazyDocTemplateContentSettingImport />
 
@@ -87,7 +87,7 @@ function handlePickerClose() {
     <LazyDocTemplateContentSettingExport />
 
     <!-- Variable Manager -->
-    <el-dropdown class="ordinary-button">
+    <el-dropdown class="ordinary-button" style="margin-left: 4px">
       <el-button>
         {{ t('docTemplate.variable.manager') }}
       </el-button>
@@ -140,14 +140,6 @@ function handlePickerClose() {
 </template>
 
 <style scoped lang="scss">
-.setting-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
-  flex-shrink: 0;
-}
-
 .el-dropdown {
   :deep(.el-button-group > .el-button:first-child) {
     width: 120px;
