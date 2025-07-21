@@ -20,7 +20,7 @@ vi.mock('element-plus', () => ({
     error: vi.fn()
   }
 }))
-describe('[public-easy-form]SharePage', () => {
+describe('[public-share]SharePage', () => {
   let wrapper: any
   const mockTabProvider = {}
   const mockToken = 'test-token';
@@ -82,7 +82,7 @@ describe('[public-easy-form]SharePage', () => {
   });
 
 })
-describe('[public-easy-form]ShareTable', () => {
+describe('[public-share]ShareTable', () => {
   let wrapper: any
   const mockTabProvider = {}
   const mockToken = 'test-token';
@@ -148,7 +148,7 @@ describe('[public-easy-form]ShareTable', () => {
   });
 
 })
-describe('[public-easy-form]SharePassword', () => {
+describe('[public-share]SharePassword', () => {
   let wrapper: any
   const mockTabProvider = {}
   const mockToken = 'test-token';
@@ -170,12 +170,6 @@ describe('[public-easy-form]SharePassword', () => {
         }
       }
     })
-    // const router = useRouter()
-    // router.push({
-    //   query: {
-    //     token: 'test'
-    //   }
-    // })
     // const dialogRef = wrapper.vm.$refs.DocTypeDialogNewRef
     // dialogRef.handleOpen = vi.fn()
     // const tableRef = wrapper.vm.$refs.tableRef;
