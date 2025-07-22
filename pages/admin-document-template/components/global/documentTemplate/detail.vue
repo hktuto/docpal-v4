@@ -3,6 +3,7 @@ import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi } from 'api'
 import { navigateToTemplatePage } from '~/utils/documentTemplateHelper'
+import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -39,6 +40,8 @@ const InteractDrawerRef = ref()
 const docTemplateEditorRef = ref()
 const variables = ref([])
 const templateVariablesRendererRef = ref()
+const wordEditCheckingDialogRef = ref()
+const templateViewerRef = ref()
 
 async function getInfo() {
   const { data } = await adminApi.api.getTemplateDocumentId(id)
@@ -184,6 +187,10 @@ const documentOptions = ref({})
 const jsonData = ref({})
 
 function initWordEditor(json: any) {
+  if (!json) {
+    state.openWordDialog = true
+    return
+  }
   documentOptions.value = json.json.options
   jsonData.value = json.json.content
   variables.value = json.variables
@@ -244,12 +251,24 @@ function updateVariables(newData: any) {
 }
 
 async function getWordJsonFile() {
-  const dataJson = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId })
-  if (!dataJson) {
-    state.openWordDialog = true
-    return
+  const blob = await adminApi.api.postNuxeoDocumentPreview({ idOrPath: state.info.documentId }, {
+    format: 'blob'
+  })
+
+  // check dataJson is json or old docx
+  try {
+    const isJson = await blob.text()
+    const dataJson = JSON.parse(isJson)
+    initWordEditor(dataJson)
+  } catch (e) {
+    wordEditCheckingDialogRef.value.openDialog(blob)
   }
-  initWordEditor(dataJson)
+}
+
+function updateEditorData(json: any) {
+  documentOptions.value = json.json.options
+  jsonData.value = json.json.content
+  templateViewerRef.value.initEditor(documentOptions.value, jsonData.value)
 }
 
 async function init() {
@@ -309,7 +328,8 @@ onBeforeMount(async () => {
                      @click="handleEdit"></SvgIcon>
           </div>
           <div class="flex-x-between">
-            <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg" round :content="t('common_refresh')"
+            <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
+                     round :content="t('common_refresh')"
                      @click="handleRefresh({})" />
 
             <template v-if="state.info.fileType === 'Word'">
@@ -351,7 +371,8 @@ onBeforeMount(async () => {
         <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
             <div class="doc-template-viewer-container">
-              <DocTemplateViewer v-if="!state.isEdit" :options="documentOptions" :json="jsonData" />
+              <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
+                                 :json="jsonData" />
               <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
                                  :json="jsonData" :user="{}" :variables="variables"
                                  @update:variables="updateVariables($event)" />
@@ -377,6 +398,8 @@ onBeforeMount(async () => {
     <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
                                   :defaultOpened="state.openWordDialog" @submit="createWordEdit"
                                   @wordDialogClose="handleWordDialogClose" />
+
+    <InitWordEditCheckingDialog ref="wordEditCheckingDialogRef" @convertJson="updateEditorData" />
   </div>
 </template>
 
