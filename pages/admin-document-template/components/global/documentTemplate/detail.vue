@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
-import { adminApi } from 'api'
+import { adminApi, templateApi } from 'api'
 import { navigateToTemplatePage } from '~/utils/documentTemplateHelper'
 import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
 
@@ -98,25 +98,10 @@ async function getVariables() {
   }
 }
 
-const nodeBackendEndpoint = 'http://localhost:3333'
-
-async function fetchExportBlob(endpoint: string, data: any): Promise<Blob> {
-  const res = await fetch(nodeBackendEndpoint + endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  return await res.blob()
-}
-
 async function handleTest() {
   state.downloadLoading = true
 
   try {
-    const data = await templateVariablesRendererRef.value.getData(state.fileType)
-    if (data) return
     const id = new Date().valueOf() + state.info.name
     const notification = ElNotification({
       title: '',
@@ -137,8 +122,7 @@ async function handleTest() {
         },
         variables: state.testVariables
       }
-      // TODO: call local server
-      blob = await fetchExportBlob('/convert/docx', dataJson)
+      blob = await templateApi.convert.postConvertDocx(dataJson, { format: 'blob' })
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
@@ -147,6 +131,8 @@ async function handleTest() {
       link.click()
       link.remove()
     } else {
+      const data = await templateVariablesRendererRef.value.getData(state.fileType)
+      if (!data) return
       blob = await adminApi.api.postTemplateDocumentGenerateFile({
         id: state.info.id,
         variables: data
@@ -317,90 +303,88 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <div class="pageContainer--padding">
-    <div class="template-container">
-      <div class="template-left-container">
+  <div class="template-container">
+    <div class="template-left-container">
+      <div class="flex-x-between">
         <div class="flex-x-between">
-          <div class="flex-x-between">
-            <span class="template-title"> {{ state.info.name }} </span>
-            <SvgIcon src="/icons/file/edit.svg" class="el-icon--right"
-                     round :content="t('tip.editTemplateInfo')"
-                     @click="handleEdit"></SvgIcon>
-          </div>
-          <div class="flex-x-between">
-            <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
-                     round :content="t('common_refresh')"
-                     @click="handleRefresh({})" />
-
-            <template v-if="state.info.fileType === 'Word'">
-              <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                       :content="t('Edit Word')" @click="handleEditEditor"></SvgIcon>
-
-              <div v-if="state.isEdit" class="save-or-exit-icon-container">
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  :content="t('button.save')"
-                  placement="bottom"
-                >
-                  <Icon style="width:1.2em; height:1.2em;" name="lucide:save" @click="handleSaveWord" />
-                </el-tooltip>
-              </div>
-              <div v-if="state.isEdit" class="save-or-exit-icon-container">
-                <el-tooltip
-                  class="box-item"
-                  effect="dark"
-                  :content="t('button.saveOff')"
-                  placement="bottom"
-                >
-                  <Icon style="width:1.2em; height:1.2em;" name="lucide:save-off" @click="state.isEdit = false" />
-                </el-tooltip>
-              </div>
-            </template>
-
-            <BrowseActionsOffice v-if="state.info.fileType !== 'Word'" :doc="{...state.info, id: state.info.documentId}"
-                                 @refresh="handleRefresh({})" />
-            <TemplateReplaceButton v-if="state.info.fileType !== 'Word'" :templateInfo="state.info"
-                                   class="el-icon--right"
-                                   @refresh="handleRefresh({ variables: true, preview: true })" />
-          </div>
+          <span class="template-title"> {{ state.info.name }} </span>
+          <SvgIcon src="/icons/file/edit.svg" class="el-icon--right"
+                   round :content="t('tip.editTemplateInfo')"
+                   @click="handleEdit"></SvgIcon>
         </div>
+        <div class="flex-x-between">
+          <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
+                   round :content="t('common_refresh')"
+                   @click="handleRefresh({})" />
 
-        <el-divider />
-
-        <div v-if="state.pageLoading">
           <template v-if="state.info.fileType === 'Word'">
-            <div class="doc-template-viewer-container">
-              <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
-                                 :json="jsonData" />
-              <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
-                                 :json="jsonData" :user="{}" :variables="variables"
-                                 @update:variables="updateVariables($event)" />
+            <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
+                     :content="t('Edit Word')" @click="handleEditEditor"></SvgIcon>
+
+            <div v-if="state.isEdit" class="save-or-exit-icon-container">
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="t('button.save')"
+                placement="bottom"
+              >
+                <Icon style="width:1.2em; height:1.2em;" name="lucide:save" @click="handleSaveWord" />
+              </el-tooltip>
+            </div>
+            <div v-if="state.isEdit" class="save-or-exit-icon-container">
+              <el-tooltip
+                class="box-item"
+                effect="dark"
+                :content="t('button.saveOff')"
+                placement="bottom"
+              >
+                <Icon style="width:1.2em; height:1.2em;" name="lucide:save-off" @click="state.isEdit = false" />
+              </el-tooltip>
             </div>
           </template>
-          <template v-else>
-            <Reader class="reader-container" ref="ReaderRef" v-bind="state.previewFile"></Reader>
-          </template>
+
+          <BrowseActionsOffice v-if="state.info.fileType !== 'Word'" :doc="{...state.info, id: state.info.documentId}"
+                               @refresh="handleRefresh({})" />
+          <TemplateReplaceButton v-if="state.info.fileType !== 'Word'" :templateInfo="state.info"
+                                 class="el-icon--right"
+                                 @refresh="handleRefresh({ variables: true, preview: true })" />
         </div>
       </div>
-      <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
-                      :showClose="false">
-        <div class="template-title">{{ t('template.variable') }}</div>
-        <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" @update="handleTestVariable" />
 
-        <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
-                   :loading="state.downloadLoading" @click="handleTest">{{ t('template.test') }}
-        </el-button>
-      </InteractDrawer>
+      <el-divider />
+
+      <div v-if="state.pageLoading">
+        <template v-if="state.info.fileType === 'Word'">
+          <div class="doc-template-viewer-container">
+            <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
+                               :json="jsonData" />
+            <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"
+                               :json="jsonData" :user="{}" :variables="variables"
+                               @update:variables="updateVariables($event)" />
+          </div>
+        </template>
+        <template v-else>
+          <Reader class="reader-container" ref="ReaderRef" v-bind="state.previewFile"></Reader>
+        </template>
+      </div>
     </div>
-    <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
+    <InteractDrawer ref="InteractDrawerRef" class="template-interact-drawer" :min-width="200" :defaultOpen="true"
+                    :showClose="false">
+      <div class="template-title">{{ t('template.variable') }}</div>
+      <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" @update="handleTestVariable" />
 
-    <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
-                                  :defaultOpened="state.openWordDialog" @submit="createWordEdit"
-                                  @wordDialogClose="handleWordDialogClose" />
-
-    <InitWordEditCheckingDialog ref="wordEditCheckingDialogRef" @convertJson="updateEditorData" />
+      <el-button class="template-test-button" id="DocumentTemplate__PreviewDocument__TestTemplateDownload"
+                 :loading="state.downloadLoading" @click="handleTest">{{ t('template.test') }}
+      </el-button>
+    </InteractDrawer>
   </div>
+  <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
+
+  <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
+                                :defaultOpened="state.openWordDialog" @submit="createWordEdit"
+                                @wordDialogClose="handleWordDialogClose" />
+
+  <InitWordEditCheckingDialog ref="wordEditCheckingDialogRef" @convertJson="updateEditorData" />
 </template>
 
 <style lang="scss" scoped>
