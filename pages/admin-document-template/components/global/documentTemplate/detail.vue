@@ -211,16 +211,8 @@ async function handleSaveWord() {
   documentOptions.value = editDataJson.json.options
   jsonData.value = editDataJson.json.content
 
-  const newWordJson = {
-    json: {
-      options: documentOptions.value,
-      content: jsonData.value
-    },
-    variables: variables.value
-  }
-
   const fileName = state.info.name + '.json'
-  const blob = await convertJsonToBlob(newWordJson, fileName)
+  const blob = await convertJsonToBlob(editDataJson, fileName)
   const file = new File([blob], fileName, { type: 'application/json' })
 
   const form = new FormData()
