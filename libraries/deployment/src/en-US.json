@@ -1144,6 +1144,8 @@
       "editSuccess": "Variable updated successfully",
       "editTable": "Edit Table",
       "editVariable": "Edit Variable",
+      "importDocx": "import Docx",
+      "importJson": "import Json",
       "insertLink": "Insert Link",
       "insertList": "Insert List",
       "insertListVariable": "Insert List Variable",

@@ -1144,6 +1144,8 @@
       "editSuccess": "變數更新成功",
       "editTable": "編輯表格",
       "editVariable": "編輯變數",
+      "importDocx": "導入 Docx",
+      "importJson": "導入 Json",
       "insertLink": "插入連結",
       "insertList": "插入清單",
       "insertListVariable": "插入清單變數",
