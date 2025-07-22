@@ -11,7 +11,8 @@ function normalizeSetting(){
         setting:{
             CLIENT_URL,
             ADMIN_URL,
-            PUBLIC_URL
+            PUBLIC_URL,
+            TEMPLATE_URL
         }
     }
 }
