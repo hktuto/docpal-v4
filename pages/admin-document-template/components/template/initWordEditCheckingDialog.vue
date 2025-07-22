@@ -12,7 +12,7 @@ const { t } = useI18n()
 const state = reactive({
   visible: false,
   blob: Blob,
-  name: '',
+  name: ''
 })
 
 function openDialog(blob: Blob, name: string) {
@@ -48,7 +48,7 @@ defineExpose({ openDialog })
 </script>
 
 <template>
-  <el-dialog v-model="state.visible" :title="t('dpTip_warning')" :before-close="handelDialogClose">
+  <el-dialog v-model="state.visible" :title="t('dpTip_warning')" :center="true" :before-close="handelDialogClose">
     {{ t('documentTemplate_warningMsg') }}
     <template #footer>
       <el-button @click="handleExportOldDocxDocument">{{ t('Export') }}</el-button>
