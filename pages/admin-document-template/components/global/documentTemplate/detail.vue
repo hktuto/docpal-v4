@@ -261,7 +261,7 @@ async function getWordJsonFile() {
     const dataJson = JSON.parse(isJson)
     initWordEditor(dataJson)
   } catch (e) {
-    wordEditCheckingDialogRef.value.openDialog(blob)
+    wordEditCheckingDialogRef.value.openDialog(blob, state.info.name)
   }
 }
 
