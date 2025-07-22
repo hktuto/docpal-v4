@@ -4,7 +4,7 @@
       <div class="label">{{ label }}</div>
       <div class="description" v-if="description">{{ description }}</div>
     </div>
-    <el-switch v-model="localValue" :disabled="disabled" @change="emitChange" />
+    <el-switch :id="props.id" v-model="localValue" :disabled="disabled" @change="emitChange" />
   </div>
 </template>
 
@@ -12,6 +12,7 @@
 import { ref, watch } from 'vue'
 
 const props = defineProps({
+  id: String,
   label: String,
   value: Boolean,
   description: String,
@@ -39,13 +40,16 @@ function emitChange(val) {
   justify-content: space-between;
   margin-bottom: var(--app-space-s);
 }
+
 .switch-label {
   flex: 1;
 }
+
 .label {
   font-weight: bold;
   font-size: 1.2rem;
 }
+
 .description {
   font-size: 1rem;
   color: #888;
