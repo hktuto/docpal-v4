@@ -372,6 +372,7 @@ onUnmounted(() => {
   height: 100%;
   position: relative;
   overflow: hidden;
+  padding: var(--app-space-s);
 }
 
 .v-enter-active,

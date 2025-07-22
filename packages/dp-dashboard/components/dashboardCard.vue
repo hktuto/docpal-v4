@@ -75,6 +75,7 @@ defineExpose({
   grid-template-rows: min-content 1fr;
   overflow: hidden;
   container-type: inline-size;
+  border-radius: 12px;
 }
 :deep .el-card__header {
   margin: 0;
@@ -93,12 +94,14 @@ defineExpose({
   .dp-dashboard--card__title {
     max-width: calc(100% - 4rem);
     overflow: hidden;
+    font-size: var(--app-font-size-l);
     .el-dropdown {
       padding-top: 3px;
     }
   }
 }
 .dp-dashboard--card__padding {
+  padding: var(--app-space-s);
   :deep .el-card__body {
     padding: var(--el-card-padding);
   }
