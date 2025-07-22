@@ -2,7 +2,6 @@
 import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi, templateApi } from 'api'
-import { navigateToTemplatePage } from '~/utils/documentTemplateHelper'
 import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
 
 const routerProvider = inject(MenuRouterKey)
@@ -191,10 +190,6 @@ function createWordEdit(newData: any) {
   state.openWordDialog = false
 }
 
-function handleWordDialogClose() {
-  routerProvider?.navigateTo(navigateToTemplatePage())
-}
-
 function handleEditEditor() {
   state.isEdit = true
 }
@@ -244,9 +239,14 @@ async function getWordJsonFile() {
   // check dataJson is json or old docx
   try {
     const isJson = await blob.text()
+    if (isJson === '' && isJson.length === 0) {
+      state.openWordDialog = true
+      return
+    }
     const dataJson = JSON.parse(isJson)
     initWordEditor(dataJson)
   } catch (e) {
+    console.log(e)
     wordEditCheckingDialogRef.value.openDialog(blob, state.info.name)
   }
 }
@@ -381,8 +381,7 @@ onBeforeMount(async () => {
   <TemplateAddStep1Dialog ref="TemplateAddStep1DialogRef" @update="getInfo()"></TemplateAddStep1Dialog>
 
   <DocTemplateNewDocumentDialog ref="wordEditDialog" v-model="state.openWordDialog" :title="state.info.name"
-                                :defaultOpened="state.openWordDialog" @submit="createWordEdit"
-                                @wordDialogClose="handleWordDialogClose" />
+                                :defaultOpened="state.openWordDialog" @submit="createWordEdit" />
 
   <InitWordEditCheckingDialog ref="wordEditCheckingDialogRef" @convertJson="updateEditorData" />
 </template>
