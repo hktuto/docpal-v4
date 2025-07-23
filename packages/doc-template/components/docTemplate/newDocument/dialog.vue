@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+const routerProvider = inject(MenuRouterKey)
 
 const { defaultOpened = false, title } = defineProps<{
   defaultOpened: boolean,
@@ -8,7 +9,7 @@ const { defaultOpened = false, title } = defineProps<{
 const opened = ref(defaultOpened)
 const formRef = ref()
 
-const emits = defineEmits(['submit', 'wordDialogClose'])
+const emits = defineEmits(['submit'])
 
 function handleSubmit(newDoc: any) {
   emits('submit', newDoc)
@@ -16,15 +17,12 @@ function handleSubmit(newDoc: any) {
 }
 
 function handleClose() {
-  if (title) {
-    emits('wordDialogClose')
-    opened.value = false
-  }
+  routerProvider?.navigateTo(navigateToTemplatePage())
 }
 </script>
 
 <template>
-  <ElDialog v-model="opened" :show-close="false">
+  <ElDialog v-model="opened" :show-close="false" :before-close="handleClose">
     <DocTemplateNewDocumentForm ref="formRef" :title="title" @submit="handleSubmit" @close="handleClose" />
   </ElDialog>
 </template>
