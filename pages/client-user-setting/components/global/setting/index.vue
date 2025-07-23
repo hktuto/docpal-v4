@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { clientApi } from 'api'
 import userSignature from '~/components/setting/userSignature.vue'
+
 const { public: { platform } } = useRuntimeConfig()
 const router = useRouter()
 const routerProvider = inject(MenuRouterKey)
@@ -17,8 +18,12 @@ const state = reactive<any>({
 async function init() {
   try {
     const { properties } = await clientApi.api.getUserProfileSetting().then((res: any) => res.data)
+    if (!properties || properties.length === 0) {
+      return
+    }
+
     state.list = Object.entries(properties)
-      .sort(([, v1]:any, [, v2]:any) => (v1.sort ?? 0) - (v2.sort ?? 0))
+      .sort(([, v1]: any, [, v2]: any) => (v1.sort ?? 0) - (v2.sort ?? 0))
       .map(([key, value]: any) => ({
         key,
         type: value.type,
