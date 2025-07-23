@@ -75,6 +75,7 @@
     "configCase": "設定案例模型",
     "configEmail": "設定電子郵件模板",
     "duplicate": "複製",
+    "editDetail": "編輯詳細信息",
     "inactivate": "停用",
     "inactivated": "未啟用",
     "inactive": "停用",
@@ -1370,6 +1371,7 @@
   },
   "dpTable": {
     "latestVersion": "最新版本",
+    "name": "名稱",
     "productionVersion": "生產版本"
   },
   "dpTableHeader": {
@@ -1740,6 +1742,19 @@
   "externalSharing_edit": "Edit Sharing Request",
   "externalSharing_expiryDate": "分享到期時間",
   "externalSharing_sharingRequest": "sharing request",
+  "externalStorage": {
+    "capture": "捕獲",
+    "connection": "連接",
+    "create": "新建",
+    "editConnection": "編輯連接",
+    "generate": "產生",
+    "import": "輸入",
+    "output": "輸出",
+    "process": "處理",
+    "profile": {
+      "sourcePath": "來源路徑"
+    }
+  },
   "fc": {
     "Completed": "已完成",
     "Delay": "逾期",

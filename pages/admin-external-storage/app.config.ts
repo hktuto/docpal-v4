@@ -4,13 +4,13 @@ import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
   menu: {
-    "admin-company-profile":{
-      id:"admin-company-profile",
-      name: 'admin-company-profile',
-      label: "adminMenu.companyProfile",
+    "admin-external-storage":{
+      id:"admin-external-storage",
+      name: 'aadmin-external-storage',
+      label: "adminMenu.externalStorage",
       icon: "material-symbols-light:table-edit-rounded",
       hoverIcon: "material-symbols-light:table-edit-rounded",
-      component: "LazyCompanyProfilePage",
+      component: "LazyExternalStoragePage",
       props:{},
     }
   } ,

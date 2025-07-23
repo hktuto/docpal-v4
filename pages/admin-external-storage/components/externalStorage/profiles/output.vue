@@ -1,11 +1,10 @@
 <template>
-  <div class="chopsTable-container">
+  <div class="outputTable-container">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actions">
           <h3>{{ $t('companyProfile.chopTitle') }}</h3>
-          <!-- <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="companyProfile.filterTip" /> -->
-          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
+          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleOpen()">
             {{ $t('companyProfile.chopCreate') }}
           </el-button>
         </div>
@@ -15,7 +14,7 @@
         <el-tag v-else type="danger">{{ $t('Deactivated') }}</el-tag>
       </template>
     </VxeGrid>
-    <CompanyProfileChopsDialog ref="DialogRef" :company-id="props.id" @refresh="query({})" />
+    <ExternalStorageProfilesOutputDialog ref="DialogRef" v-bind="props" @refresh="query({})" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -24,7 +23,6 @@ import { ElMessageBox } from 'element-plus'
 const props = defineProps<{
   id: string,
 }>()
-const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
@@ -33,30 +31,14 @@ const { t } = useI18n()
 let extraParams: any = {}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-company-profile-chops',
-  api: (pageParams: any) => adminApi.api.postCompanyprofilesCompanyidChopsPage(props.id, {
+  api: (pageParams: any) => adminApi.api.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
     ...pageParams, ...extraParams
   }),
   columns: [
-    { field: 'name', title: 'companyProfile.chopName', fixed: 'left' },
-    {
-      field: 'createdBy',
-      title: 'search.createdBy'
-    },
-    {
-      field: 'createdDate',
-      title: 'dpTable_createdDate',
-      formatter({ cellValue }: any) {
-        return formatDate(cellValue)
-      }
-    },
-
-    {
-      field: 'modifiedDate',
-      title: 'table_modifiedDate',
-      formatter({ cellValue }: any) {
-        return formatDate(cellValue)
-      }
-    },
+    { field: 'documentType', title: 'companyProfile.chopName' },
+    { field: 'outputFormat', title: 'outputFormat' },
+    { field: 'destination', title: 'destination' },
+    { field: 'path', title: 'path' },
     {
       field: 'status',
       title: 'common_status',
@@ -68,7 +50,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   bodyActions: [
     [
       {
-        code: 'edit_easyForm',
+        code: 'edit',
         name: t('common_edit'),
         visible: true,
         disabled: false,
@@ -92,6 +74,15 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         disabled: false,
         action: ({ row }: any) => {
           handleActive(row, 'D')
+        }
+      },
+      {
+        code: 'duplicate',
+        name: t('actions.duplicate'),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleDuplicate(row)
         }
       },
       {
@@ -129,39 +120,41 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 })
 
 function handleEdit(row: any) {
-  DialogRef.value.handleEdit(row)
+  DialogRef.value.handleOpen(row, true)
 }
 
 async function handleActive(row: any, status: string) {
   try {
-    const result = await adminApi.api.putCompanyprofilesCompanyidChopsCompanychopidStatus(props.id, row.id, { status: status }).then((res) => res.data)
+    const result = await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordidStatus(props.id, row.id, { status: status }).then((res) => res.data)
     if (!!result) {
       row.status = status
     }
   } catch (error) {}
 }
 
-function handleFilterFormChange(formModel: any) {
-  extraParams = formModel
-  reload()
-}
-
 const DialogRef = ref()
 
-async function handleAdd() {
-  DialogRef.value.handleAdd()
+async function handleOpen() {
+  DialogRef.value.handleOpen()
+}
+async function handleDuplicate(row: any) {
+  const detail = await adminApi.api.getExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id, row.id).then((res:any) => res.data)
+  DialogRef.value.handleOpen(detail)
 }
 async function handleDelete(row: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
-    await adminApi.api.deleteCompanyprofilesCompanyidChopsCompanychopid(props.id, row.id).then((res) => res.data)
+    await adminApi.api.deleteExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id, row.id).then((res) => res.data)
     reload()
   } catch (error) {}
 }
 
 </script>
 <style lang="scss" scoped>
+.outputTable-container {
+  height: 100%;
+}
 .actions {
   width: 100%;
   display: flex;

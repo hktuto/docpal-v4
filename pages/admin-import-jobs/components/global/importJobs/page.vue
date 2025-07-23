@@ -4,9 +4,6 @@
       <template #toolbar_buttons>
         <div class="actions">
           <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="companyProfile.filterTip" />
-          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
-            {{ $t('companyProfile.create') }}
-          </el-button>
         </div>
       </template>
       <template #status="{ row }">
@@ -14,13 +11,12 @@
         <el-tag v-else type="danger">{{ $t('Deactivated') }}</el-tag>
       </template>
     </VxeGrid>
-    <CompanyProfileNewDialog ref="DialogRef" @refresh="query({})" />
   </div>
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
-import { routeCompanyProfileDetailPage } from '../../../util/routerHelper'
+import { routeImportJobsDetailPage } from '../../../util/routerHelper'
 const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -30,13 +26,13 @@ const { t } = useI18n()
 let extraParams: any = {}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-company-profile',
-  api: (pageParams: any) => adminApi.api.postCompanyprofilesPage({ ...pageParams, ...extraParams }),
+  api: (pageParams: any) => adminApi.api.postImportjobsPage({ ...pageParams, ...extraParams }),
   columns: [
-    { field: 'name', title: 'companyProfile.name', fixed: 'left' },
-    {
-      field: 'createdBy',
-      title: 'search.createdBy'
-    },
+    { field: 'profileName', title: 'importJobs.profileName', fixed: 'left' },
+    { field: 'fileName', title: 'importJobs.fileName' },
+    { field: 'status', title: 'common_status' },
+    { field: 'queueOrder', title: 'importJobs.queueOrder' },
+    { field: 'source', title: 'importJobs.source' },
     {
       field: 'createdDate',
       title: 'dpTable_createdDate',
@@ -44,21 +40,6 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         return formatDate(cellValue)
       }
     },
-
-    {
-      field: 'modifiedDate',
-      title: 'table_modifiedDate',
-      formatter({ cellValue }: any) {
-        return formatDate(cellValue)
-      }
-    },
-    {
-      field: 'status',
-      title: 'common_status',
-      slots: {
-        default: 'status'
-      }
-    }
   ],
   bodyActions: [
     [
@@ -71,53 +52,14 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
           handleDblclick(row)
         }
       },
-      {
-        code: 'active',
-        name: t('actions.active'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleActive(row, 'A')
-        }
-      },
-      {
-        code: 'inactive',
-        name: t('actions.inactive'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleActive(row, 'D')
-        }
-      },
-      {
-        code: 'remove',
-        name: t('common_remove'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleDelete(row)
-        }
-      }
     ]
   ],
-  permissionMethod: (args: PermissionMethodParams) => {
-    if (args.code === 'inactive') {
-      return {
-        visible: args.row.status === 'A',
-        disabled: false
-      }
-    }
-    if (args.code === 'active') {
-      return {
-        visible: args.row.status !== 'A',
-        disabled: false
-      }
-    }
-    return {
-      visible: true,
-      disabled: false
-    }
-  },
+  // permissionMethod: (args: PermissionMethodParams) => {
+  //   return {
+  //     visible: true,
+  //     disabled: false
+  //   }
+  // },
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   }
@@ -125,17 +67,9 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeCompanyProfileDetailPage(row), false)
+  routerProvider?.navigateTo(routeImportJobsDetailPage(row), false)
 }
 
-async function handleActive(row: any, status: string) {
-  try {
-    const result = await adminApi.api.patchCompanyprofilesCompanyidStatus(row.id, { status: status }).then((res) => res.data)
-    if (!!result) {
-      row.status = status
-    }
-  } catch (error) {}
-}
 
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true
@@ -144,19 +78,7 @@ function handleFilterFormChange(formModel: any) {
   reload()
 }
 
-const DialogRef = ref()
 
-async function handleAdd() {
-  DialogRef.value.handleOpen()
-}
-async function handleDelete(row: any) {
-  try {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-    if (action !== 'confirm') return
-    await adminApi.api.deleteCompanyprofilesCompanyid(row.id).then((res) => res.data)
-    reload()
-  } catch (error) {}
-}
 function getFilter() {
   const data = [
     {
@@ -165,10 +87,9 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'companyProfile.name', value: 'name' },
+        { label: 'importJobs.profileName', value: 'profileName' },
         { label: 'dpTable_createdDate', value: 'createdDate' },
         { label: 'common_status', value: 'status' },
-        { label: 'table_modifiedDate', value: 'modifiedDate' }
       ]
     },
     {
