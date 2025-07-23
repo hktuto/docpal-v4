@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="state.dialogVisible" :fullscreen="state.fullscreen" destroy-on-close append-to-body
+  <DialogFullscreen v-model="state.dialogVisible" :fullscreen="state.fullscreen" destroy-on-close append-to-body
           :title="t('file_generateTemplate')" :close-on-click-modal="false" width="90%" height="50%" :align-center="true" @closed="reset">
     <el-select v-model="form.templatePath" clearable filterable :disabled="state.loading"
                popper-class="dialog-select-dropdown" @change="templateParamGet">
@@ -32,7 +32,7 @@
         {{ $t('common_download') }}
       </el-button>
     </template>
-  </Dialog>
+  </DialogFullscreen>
 
 </template>
 
