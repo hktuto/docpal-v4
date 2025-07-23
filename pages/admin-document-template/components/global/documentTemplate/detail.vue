@@ -3,6 +3,7 @@ import { Download } from '@element-plus/icons-vue'
 import { ElNotification } from 'element-plus'
 import { adminApi, templateApi } from 'api'
 import InitWordEditCheckingDialog from '~/components/template/initWordEditCheckingDialog.vue'
+import { variablesSchema } from 'docpal-document-editor/src/client'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
@@ -32,6 +33,7 @@ const state = reactive<any>({
   },
   downloadLoading: false,
   pageLoading: false,
+  saveLoading: false,
   isEdit: false,
   openWordDialog: false
 })
@@ -195,40 +197,52 @@ function handleEditEditor() {
 }
 
 async function handleSaveWord() {
+  state.saveLoading = true
   const editDataJson = docTemplateEditorRef.value.getJsonData()
   documentOptions.value = editDataJson.json.options
   jsonData.value = editDataJson.json.content
 
-  const fileName = state.info.name + '.json'
-  const blob = await convertJsonToBlob(editDataJson, fileName)
-  const file = new File([blob], fileName, { type: 'application/json' })
+  try {
+    const fileName = state.info.name + '.json'
+    const blob = await convertJsonToBlob(editDataJson, fileName)
+    const file = new File([blob], fileName, { type: 'application/json' })
 
-  const form = new FormData()
-  form.append('file', file)
-  form.append('fileName', fileName)
-  form.append('id', id)
-  await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form)
-  routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
+    const form = new FormData()
+    form.append('file', file)
+    form.append('fileName', fileName)
+    form.append('id', id)
+    await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form)
+
+    const schema = variablesSchema(variables.value)
+    await adminApi.api.patchTemplateDocumentUpdatetemplatevariable({ id: id, templateVariable: JSON.stringify(schema) })
+    routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
+  } catch (e) {
+    routerProvider?.message.error('Save Document template Error')
+  } finally {
+    state.saveLoading = false
+  }
+}
+
+async function handleSaveWordAndClose() {
+  await handleSaveWord()
   state.isEdit = false
 }
 
 async function convertJsonToBlob(jsonData: any): Promise<Blob> {
   if (!jsonData) {
-    throw new Error('JSON 数据不能为空')
+    throw new Error('JSON data cannot be empty')
   }
   try {
     const jsonString = JSON.stringify(jsonData)
     return new Blob([jsonString], { type: 'application/json; charset=utf-8' })
   } catch (error) {
-    console.error('转换 JSON 到 Blob 失败:', error)
+    console.error('Converting JSON to Blob failed:', error)
   }
 }
 
-function updateVariables(newData: any) {
+async function updateVariables(newData: any) {
   variables.value = newData
   templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
-  // TODO: 更新服務端的 Variables 數據
-
 }
 
 async function getWordJsonFile() {
@@ -335,11 +349,25 @@ onBeforeMount(async () => {
               <el-tooltip
                 class="box-item"
                 effect="dark"
-                :content="t('button.saveOff')"
+                :content="t('button.saveAndClose')"
                 placement="bottom"
               >
-                <Icon style="width:1.2em; height:1.2em;" name="lucide:save-off" @click="state.isEdit = false" />
+                <Icon style="width:1.2em; height:1.2em;" name="lucide:save-all" @click="handleSaveWordAndClose" />
               </el-tooltip>
+            </div>
+            <div v-if="state.isEdit" class="save-or-exit-icon-container">
+              <el-popconfirm
+                class="box-item"
+                :title="t('button.saveOff')"
+                placement="top"
+                @confirm="state.isEdit = false"
+              >
+                <template #reference>
+                  <SvgIcon style="width: 18px; "
+                           src="https://api.iconify.design/lucide:save-off.svg?color=%23333333"
+                           :content="t('button.saveOff')"></SvgIcon>
+                </template>
+              </el-popconfirm>
             </div>
           </template>
 
@@ -355,7 +383,7 @@ onBeforeMount(async () => {
 
       <div v-if="state.pageLoading">
         <template v-if="state.info.fileType === 'Word'">
-          <div class="doc-template-viewer-container">
+          <div class="doc-template-viewer-container" v-loading="state.saveLoading">
             <DocTemplateViewer ref="templateViewerRef" v-if="!state.isEdit" :options="documentOptions"
                                :json="jsonData" />
             <DocTemplateEditor ref="docTemplateEditorRef" v-if="state.isEdit" :editorOptions="documentOptions"

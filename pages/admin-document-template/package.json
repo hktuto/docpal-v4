@@ -19,7 +19,8 @@
     "dayjs": "^1.11.13",
     "nuxt": "^3.17.3",
     "vue": "3.5.6",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "docpal-document-editor": "workspace:*"
   },
   "devDependencies": {
     
