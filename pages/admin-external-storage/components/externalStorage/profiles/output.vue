@@ -3,9 +3,8 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actions">
-          <h3>{{ $t('companyProfile.chopTitle') }}</h3>
-          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleOpen()">
-            {{ $t('companyProfile.chopCreate') }}
+          <el-button id="new" type="primary" @click="handleOpen()">
+            {{ $t('common_new') }}
           </el-button>
         </div>
       </template>
@@ -31,14 +30,18 @@ const { t } = useI18n()
 let extraParams: any = {}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'a-company-profile-chops',
-  api: (pageParams: any) => adminApi.api.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
-    ...pageParams, ...extraParams
-  }),
+  virtualScroll: true,
+  api: async (pageParams: any) => {
+    const data = await adminApi.api.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
+      ...pageParams, ...extraParams
+    }).then((res: any) => res.data)
+    return data
+  },
   columns: [
-    { field: 'documentType', title: 'companyProfile.chopName' },
-    { field: 'outputFormat', title: 'outputFormat' },
-    { field: 'destination', title: 'destination' },
-    { field: 'path', title: 'path' },
+    { field: 'documentType', title: 'docType_documentType' },
+    { field: 'outputFormat', title: 'externalStorage.outputFormat' },
+    { field: 'destination', title: 'externalStorage.destination' },
+    { field: 'path', title: 'externalStorage.path' },
     {
       field: 'status',
       title: 'common_status',
@@ -161,7 +164,7 @@ async function handleDelete(row: any) {
   flex-flow: row nowrap;
   gap: var(--app-space-xs);
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   --icon-size: var(--app-font-size-m);
 }
 

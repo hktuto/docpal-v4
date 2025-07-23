@@ -1,74 +1,74 @@
 <template>
-  <el-dialog v-model="dialogVisible" class="scroll-dialog" title="New Documents">
+  <el-dialog v-model="dialogVisible" class="scroll-dialog outputDialog" :title="isEdit ? $t('externalStorage.outputEdit') : $t('externalStorage.outputNew')">
     <el-form label-position="top" :model="form" :rules="rules" ref="formRef">
-      <el-form-item label="Document Type" prop="documentType">
-        <el-select v-model="form.documentType">
+      <el-form-item :label="$t('docType_documentType')" prop="documentType">
+        <el-select class="documentType" v-model="form.documentType">
           <el-option v-for="item in documentTypeOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="outputFormat" prop="outputFormat">
-        <el-select v-model="form.outputFormat">
+      <el-form-item :label="$t('externalStorage.outputFormat')" prop="outputFormat">
+        <el-select class="outputFormat" v-model="form.outputFormat">
           <el-option v-for="item in outputFormatOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <template v-if="form.outputFormat === 'Text'">
-        <el-form-item label="Keep line breaks" prop="keepLineBreaks" required>
-          <el-select v-model="form.keepLineBreaks">
+        <el-form-item :label="$t('externalStorage.keepLineBreaks')" prop="keepLineBreaks" required>
+          <el-select class="keepLineBreaks" v-model="form.keepLineBreaks">
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Insert page break character" prop="insertPageBreakChar" required>
-          <el-select v-model="form.insertPageBreakChar">
+        <el-form-item :label="$t('externalStorage.insertPageBreakChar')" prop="insertPageBreakChar" required>
+          <el-select class="insertPageBreakChar" v-model="form.insertPageBreakChar">
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Use blank line as paragraph separator" prop="useBlankLineAsParaSep" required>
-          <el-select v-model="form.useBlankLineAsParaSep">
+        <el-form-item :label="$t('externalStorage.useBlankLineAsParaSep')" prop="useBlankLineAsParaSep" required>
+          <el-select class="useBlankLineAsParaSep" v-model="form.useBlankLineAsParaSep">
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
       </template>
       <template v-if="['Image'].includes(form.outputFormat)">
-        <el-form-item label="File type" prop="fileType" required>
-          <el-select v-model="form.fileType">
+        <el-form-item :label="$t('DAM_fileType')" prop="fileType" required>
+          <el-select class="fileType" v-model="form.fileType">
             <el-option v-for="item in fileTypeOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Resolution" prop="resolution" required>
-          <el-select v-model="form.resolution">
+        <el-form-item :label="$t('externalStorage.resolution')" prop="resolution" required>
+          <el-select class="resolution" v-model="form.resolution">
             <el-option v-for="item in resolutionOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Quality" prop="quality" required>
-          <el-input v-model="form.quality" type="number" min="1" max="100" />
+        <el-form-item :label="$t('externalStorage.quality')" prop="quality" required>
+          <el-input class="quality" v-model="form.quality" type="number" min="1" max="100" />
         </el-form-item>
       </template>
-      <el-form-item v-if="['PDF', 'Image'].includes(form.outputFormat)" label="Color" prop="color">
-        <el-select v-model="form.color">
+      <el-form-item v-if="['PDF', 'Image'].includes(form.outputFormat)" :label="$t('externalStorage.color')" prop="color">
+        <el-select class="color" v-model="form.color">
           <el-option v-for="item in colorOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-divider />
 
-      <el-form-item label="Destination" prop="destination">
-        <el-select v-model="form.destination">
+      <el-form-item :label="$t('externalStorage.destination')" prop="destination">
+        <el-select class="destination" v-model="form.destination">
           <el-option v-for="item in destinationOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
 
-      <el-form-item v-if="form.destination === 'external'" label="External Storage Profile" prop="externalProfile">
-        <el-select v-model="form.shareDriveProfile">
+      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.externalStorageProfile')" prop="externalProfile">
+        <el-select class="shareDriveProfile" v-model="form.shareDriveProfile">
           <el-option v-for="item in externalStorageProfileOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <template v-if="form.destination !== 'Workflow'">
-        <el-form-item label="Path" prop="path">
-          <el-input v-model="form.path" ref="pathInput" />
+        <el-form-item :label="$t('externalStorage.path')" prop="path">
+          <el-input class="path" v-model="form.path" ref="pathInput" />
           <el-dropdown @command="(value: string) => handleVariableSelect(value, 'path')">
-            <el-button> Add Variable </el-button>
+            <el-button class="el-icon--right pathAddVariable"> Add Variable </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="item in pathVOpts" :key="item.value" :command="item.value">{{ item.label }}</el-dropdown-item>
@@ -76,10 +76,10 @@
             </template>
           </el-dropdown>
         </el-form-item>
-        <el-form-item label="File name" prop="fileName">
-          <el-input v-model="form.fileName" ref="fileNameInput" />
+        <el-form-item :label="$t('externalStorage.fileName')" prop="fileName">
+          <el-input class="fileName" v-model="form.fileName" ref="fileNameInput" />
           <el-dropdown @command="(value: string) => handleVariableSelect(value, 'fileName')">
-            <el-button> Add Variable </el-button>
+            <el-button class="el-icon--right fileNameAddVariable"> Add Variable </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="item in fileNameVOpts" :key="item.value" :command="item.value">{{ item.label }}</el-dropdown-item>
@@ -89,32 +89,32 @@
         </el-form-item>
       </template>
       <template v-else>
-        <el-form-item label="File" prop="file">
-          <el-select v-model="form.file">
+        <el-form-item :label="$t('externalStorage.file')" prop="file">
+          <el-select class="file" v-model="form.file">
             <el-option v-for="item in fileOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Document Name" prop="documentName">
-          <el-select v-model="form.documentName">
+        <el-form-item :label="$t('externalStorage.fileName')" prop="documentName">
+          <el-select class="documentName" v-model="form.documentName">
             <el-option v-for="item in documentNameOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="meta" prop="meta">
-          <el-select v-model="form.meta">
+        <el-form-item :label="$t('dpSearch.searchMeta')" prop="meta">
+          <el-select class="meta" v-model="form.meta">
             <el-option v-for="item in metaOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </template>
-      <el-form-item v-if="form.destination === 'external'" label="Replace or rename" prop="duplicateNameStrategy" required>
-        <el-select v-model="form.duplicateNameStrategy" placeholder="Please select">
+      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.duplicateNameStrategy')" prop="duplicateNameStrategy" required>
+        <el-select class="duplicateNameStrategy" v-model="form.duplicateNameStrategy" placeholder="Please select">
           <el-option v-for="item in duplicateNameStrategyOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
     </el-form>
-    <span slot="footer">
-      <el-button @click="dialogVisible = false">Cancel</el-button>
-      <el-button type="primary" @click="save">Save</el-button>
-    </span>
+    <template #footer>
+      <el-button class="cancel-btn" @click="dialogVisible = false">{{ $t('cancelText') }}</el-button>
+      <el-button class="save-btn" type="primary" @click="save">{{ $t('common_save') }}</el-button>
+    </template>
   </el-dialog>
 </template>
 
@@ -145,6 +145,7 @@ const defaultValue = {
   documentName: '',
   meta: ''
 }
+const { t } = useI18n()
 const dialogVisible = ref(false)
 const isEdit = ref(false)
 const {
@@ -190,13 +191,12 @@ const rules = {
 function handleOpen(data: any, _isEdit = false) {
   isEdit.value = _isEdit
   setting.value = null
-  console.log(data)
-  if(!!data) {
+  if (!!data) {
     form.value = {
       ...defaultValue,
       ...data
     }
-    setting.value = {...data}
+    setting.value = { ...data }
   }
   console.log(form.value)
   dialogVisible.value = true
@@ -220,7 +220,7 @@ function handleVariableSelect(variable: string, attr = 'fileName') {
 async function save() {
   try {
     await formRef.value.validate()
-    if(isEdit.value) {
+    if (isEdit.value) {
       await adminApi.api.patchExternalstorageProfilesProfileidOutputrecordOutputrecordid(props.id as string, setting.value.id, form.value)
     } else {
       await adminApi.api.postExternalstorageProfilesProfileidOutputrecord(props.id as string, form.value)

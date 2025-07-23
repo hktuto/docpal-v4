@@ -3,7 +3,7 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actions">
-          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="companyProfile.filterTip" />
+          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="profileName" @form-change="handleFilterFormChange" />
         </div>
       </template>
       <template #status="{ row }">
@@ -29,7 +29,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   api: (pageParams: any) => adminApi.api.postImportjobsPage({ ...pageParams, ...extraParams }),
   columns: [
     { field: 'profileName', title: 'importJobs.profileName', fixed: 'left' },
-    { field: 'fileName', title: 'importJobs.fileName' },
+    { field: 'fileName', title: 'externalStorage.fileName' },
     { field: 'status', title: 'common_status' },
     { field: 'queueOrder', title: 'importJobs.queueOrder' },
     { field: 'source', title: 'importJobs.source' },
@@ -39,7 +39,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
-    },
+    }
   ],
   bodyActions: [
     [
@@ -52,14 +52,29 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
           handleDblclick(row)
         }
       },
+      // {
+      //   code: 'placeFirst',
+      //   name: t('importJobs.placeFirst'),
+      //   visible: true,
+      //   disabled: false,
+      //   action: ({ row }: any) => {
+      //     handlePlaceFirst(row)
+      //   }
+      // }
     ]
   ],
-  // permissionMethod: (args: PermissionMethodParams) => {
-  //   return {
-  //     visible: true,
-  //     disabled: false
-  //   }
-  // },
+  permissionMethod: (args: PermissionMethodParams) => {
+    // if (args.code === 'placeFirst') {
+    //   return {
+    //     visible: args.rowIndex !== 0,
+    //     disabled: false
+    //   }
+    // }
+    return {
+      visible: true,
+      disabled: false
+    }
+  },
   dblClickAction: ({ row, column, event }: any) => {
     handleDblclick(row)
   }
@@ -70,14 +85,15 @@ function handleDblclick(row: any) {
   routerProvider?.navigateTo(routeImportJobsDetailPage(row), false)
 }
 
-
+// async function handlePlaceFirst(row) {
+  // await adminApi.api.postImportjobsPage({ ...pageParams, ...extraParams })
+// }
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true
   if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   extraParams = formModel
   reload()
 }
-
 
 function getFilter() {
   const data = [
@@ -89,7 +105,7 @@ function getFilter() {
       options: [
         { label: 'importJobs.profileName', value: 'profileName' },
         { label: 'dpTable_createdDate', value: 'createdDate' },
-        { label: 'common_status', value: 'status' },
+        { label: 'common_status', value: 'status' }
       ]
     },
     {

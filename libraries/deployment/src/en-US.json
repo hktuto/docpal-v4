@@ -1747,17 +1747,49 @@
   "externalSharing_expiryDate": "Sharing Expiry Date",
   "externalSharing_sharingRequest": "sharing request",
   "externalStorage": {
+    "batchId_digit": "Batch id digit ",
+    "batchId_prefix": "Batch id prefix",
+    "batchId_startNumber": "Batch id starting number",
     "capture": "Capture",
+    "color": "Color",
+    "confirmUser": "Confirm user / user group",
     "connection": "Connection",
     "create": "Add New",
+    "destination": "Destination",
+    "duplicateNameStrategy": "Replace or rename",
     "editConnection": "Edit Connection",
+    "errorFolder": "Error Folder",
+    "externalStorageProfile": "External Storage Profile",
+    "file": "File",
+    "fileName": "File Name",
+    "finishFolder": "Error Folder",
     "generate": "Generate",
     "import": "Import",
+    "importTask": "Import Task Setting",
+    "includeFolder": "Include Subfolder",
+    "insertPageBreakChar": "Insert page break character",
+    "keepLineBreaks": "Keep line breaks",
+    "needConfirm": "Always need user confirm",
+    "noSeparation": "No seperate",
     "output": "Output",
+    "outputEdit": "Output Setting",
+    "outputFormat": "Output Format",
+    "outputNew": "New Output Setting",
+    "path": "Path",
     "process": "process",
+    "processingFolder": "Processing Folder",
     "profile": {
       "sourcePath": "Source Path"
-    }
+    },
+    "regex": "Filter Rule REGEX",
+    "resolution": "Quality",
+    "scan": "Scan Schedule (Sec)",
+    "separationByBarCode": "Seperate by Barcode",
+    "separationByCount": "Seperate by page count",
+    "separationByPage": "Seperate by blank page",
+    "separationType": "Separation Type",
+    "useBlankLineAsParaSep": "Use blank line as paragraph separator",
+    "useDocumentType": "Use document type capture"
   },
   "fc": {
     "Completed": "Completed",
@@ -1929,6 +1961,12 @@
     "requireReason": "Require Reason"
   },
   "import": "Import",
+  "importJobs": {
+    "placeFirst": "Place first in queue",
+    "profileName": "Profile Name",
+    "queueOrder": "Queue Order",
+    "source": "Source"
+  },
   "incompleteData": "Please fill in the complete data",
   "info": {
     "displayMeta": "Properties",

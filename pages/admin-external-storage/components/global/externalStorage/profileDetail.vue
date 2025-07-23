@@ -1,6 +1,6 @@
 <template>
   <div class="pageContainer--padding externalStorage-profileDetail">
-    <el-tabs v-model="activeName" class="dp-tabs--auto" @tab-click="handleClick">
+    <el-tabs v-model="activeName" class="dp-tabs--auto" >
       <el-tab-pane :label="$t('externalStorage.generate')" name="generate">
         <ExternalStorageProfilesGenerate v-bind="props" :settings="profile" @update="init" />
       </el-tab-pane>
@@ -59,7 +59,4 @@ onMounted(() => {
   --icon-size: var(--app-font-size-m);
 }
 
-:deep .el-input {
-  width: 200px;
-}
 </style>
