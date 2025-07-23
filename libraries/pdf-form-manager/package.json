@@ -1,0 +1,25 @@
+{
+  "name": "pdf-form-manager",
+  "version": "0.1.0",
+  "description": "PDF form field detection, highlighting, and management system with multi-page support",
+  "main": "src/backend/index.ts",
+  "types": "src/backend/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "vite",
+    "test": "echo 'No tests yet'"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^3.11.174"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "ts-node": "^10.0.0",
+    "vite": "^4.0.0",
+    "vue": "^3.3.0",
+    "@vitejs/plugin-vue": "^4.0.0"
+  }
+} 
