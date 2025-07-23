@@ -1746,17 +1746,49 @@
   "externalSharing_expiryDate": "分享有效期",
   "externalSharing_sharingRequest": "sharing request",
   "externalStorage": {
+    "batchId_digit": "批次 ID 数字",
+    "batchId_prefix": "批次 ID 前缀",
+    "batchId_startNumber": "批次 ID 起始编号",
     "capture": "捕获",
+    "color": "颜色",
+    "confirmUser": "确认用户/用户组",
     "connection": "连接",
     "create": "新建",
+    "destination": "目的地",
+    "duplicateNameStrategy": "替换或重命名",
     "editConnection": "编辑连接",
+    "errorFolder": "错误文件夹",
+    "externalStorageProfile": "外部存储配置文件",
+    "file": "文件",
+    "fileName": "文件名",
+    "finishFolder": "错误文件夹",
     "generate": "产生",
     "import": "输入",
+    "importTask": "导入任务设置",
+    "includeFolder": "包含子文件夹",
+    "insertPageBreakChar": "插入分页符",
+    "keepLineBreaks": "保留换行符",
+    "needConfirm": "始终需要用户确认",
+    "noSeparation": "不分隔",
     "output": "输出",
+    "outputEdit": "输出设置",
+    "outputFormat": "输出格式",
+    "outputNew": "新输出设置",
+    "path": "路径",
     "process": "处理",
+    "processingFolder": "处理文件夹",
     "profile": {
       "sourcePath": "源路径"
-    }
+    },
+    "regex": "過濾規則 REGEX",
+    "resolution": "质量",
+    "scan": "扫描时间表（秒）",
+    "separationByBarCode": "按条形码分隔",
+    "separationByCount": "按页数分隔",
+    "separationByPage": "以空白页分隔",
+    "separationType": "分隔类型",
+    "useBlankLineAsParaSep": "使用空行作为段落分隔符",
+    "useDocumentType": "使用文档类型捕获"
   },
   "fc": {
     "Completed": "已完成",
@@ -1927,6 +1959,12 @@
     "requireReason": "需要理由"
   },
   "import": "导入",
+  "importJobs": {
+    "placeFirst": "排在队列第一位",
+    "profileName": "配置文件名称",
+    "queueOrder": "队列顺序",
+    "source": "来源"
+  },
   "incompleteData": "请填写完整数据",
   "info": {
     "displayMeta": "属性",

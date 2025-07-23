@@ -184,11 +184,11 @@ export default defineAppConfig({
     {
       name: 'admin-company-profile'
     },
-    {
-      name: 'admin-external-storage'
-    },
-    {
-      name: 'admin-import-jobs'
-    }
+    // {
+    //   name: 'admin-external-storage'
+    // },
+    // {
+    //   name: 'admin-import-jobs'
+    // }
   ]
 })

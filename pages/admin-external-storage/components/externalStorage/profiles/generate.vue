@@ -35,7 +35,7 @@ watch(() => props.settings, (newVal) => {
   if (newVal) {
     const data = {
       name: newVal.name,
-      status: newVal.status ? 'A' : 'D',
+      status: newVal.status === 'A' ? true : false,
       prefix: newVal.batchIdSetting?.prefix,
       digit: newVal.batchIdSetting?.digit,
       startNumber: newVal.batchIdSetting?.startNumber,
