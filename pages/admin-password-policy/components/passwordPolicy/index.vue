@@ -4,9 +4,11 @@
     <el-form label-width="180px" :model="form" label-position="top" class="password-policy-form">
       <div>
         <el-form-item :label="$t('passwordPolicy.length')">
-          <el-input-number v-model="form.minPasswordLength" :disabled="loading" :min="8" :max="24" @change="handleSave" />
+          <el-input-number id="SystemSetting__PasswordPolicy__MinimumPasswordLength" v-model="form.minPasswordLength"
+                           :disabled="loading" :min="8" :max="24" @change="handleSave" />
         </el-form-item>
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__LowerAndUppercase"
           :label="$t('passwordPolicy.lowerUpper')"
           v-model:value="form.containLowerAndUppercase"
           :description="$t('passwordPolicy.lowerUpperDesc')"
@@ -14,6 +16,7 @@
           @change="handleSave"
         />
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__NumericDigits"
           :label="$t('passwordPolicy.digit')"
           v-model:value="form.containNumericDigits"
           :description="$t('passwordPolicy.digitDesc')"
@@ -21,6 +24,7 @@
           @change="handleSave"
         />
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__SpecialCharacters"
           :label="$t('passwordPolicy.special')"
           v-model:value="form.containSpecialCharacters"
           :description="$t('passwordPolicy.specialDesc', {char: '[ @, #, $, %, ... ]'})"
@@ -28,6 +32,7 @@
           @change="handleSave"
         />
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__ForceFirstPasswordReset"
           :label="$t('passwordPolicy.forceReset')"
           v-model:value="form.forceResetPassword"
           :description="$t('passwordPolicy.forceResetDesc')"
@@ -38,6 +43,7 @@
       <el-divider direction="vertical" />
       <div>
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__EnableExpirationTime"
           :label="$t('passwordPolicy.expireEnable')"
           v-model:value="form.enableExpirationTime"
           :description="$t('passwordPolicy.expireEnableDesc')"
@@ -45,10 +51,12 @@
           @change="handleSave"
         />
         <el-form-item :label="$t('passwordPolicy.expireDay')" v-if="form.enableExpirationTime">
-          <el-input-number v-model="form.expirationDay" :disabled="loading" :min="1" @change="handleSave" />
+          <el-input-number id="SystemSetting__PasswordPolicy__EnableExpirationTime__ExpirationPeriod"
+                           v-model="form.expirationDay" :disabled="loading" :min="1" @change="handleSave" />
         </el-form-item>
         <el-divider />
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__LockoutPolicy"
           :label="$t('passwordPolicy.lockEnable')"
           v-model:value="form.enableLockoutPolicy"
           :description="$t('passwordPolicy.lockEnableDesc')"
@@ -58,13 +66,17 @@
 
         <template v-if="form.enableLockoutPolicy">
           <el-form-item :label="$t('passwordPolicy.retryPeriod')">
-            <el-input-number v-model="form.retryPeriod" :disabled="loading" :min="1" :max="255" @change="handleSave" />
+            <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__RetryPeriod" v-model="form.retryPeriod"
+                             :disabled="loading" :min="1" :max="255" @change="handleSave" />
           </el-form-item>
           <el-form-item :label="$t('passwordPolicy.lockPeriod')">
-            <el-input-number v-model="form.lockoutPeriod" :disabled="loading" :min="1" :max="4294967295" @change="handleSave" />
+            <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__LockPeriod" v-model="form.lockoutPeriod"
+                             :disabled="loading" :min="1" :max="4294967295"
+                             @change="handleSave" />
           </el-form-item>
           <el-form-item :label="$t('passwordPolicy.lockCount')">
-            <el-input-number v-model="form.lockoutCount" :disabled="loading" :min="1" :max="255" @change="handleSave" />
+            <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__LockCount" v-model="form.lockoutCount"
+                             :disabled="loading" :min="1" :max="255" @change="handleSave" />
           </el-form-item>
           <el-tag type="warning">
             {{
@@ -78,6 +90,7 @@
         </template>
         <el-divider />
         <PasswordPolicySwitch
+          id="SystemSetting__PasswordPolicy__EnablePasswordReuseRestriction"
           :label="$t('passwordPolicy.reuseEnable')"
           :disabled="loading"
           v-model:value="form.enableReusePasswordLimit"
@@ -85,7 +98,9 @@
           @change="handleSave"
         />
         <el-form-item :label="$t('passwordPolicy.reuseCount')" v-if="form.enableReusePasswordLimit">
-          <el-input-number v-model="form.reusePasswordCount" :disabled="loading" :min="1" :max="10" @change="handleSave" />
+          <el-input-number id="SystemSetting__PasswordPolicy__EnablePasswordReuseRestriction__ReuseLockCount"
+                           v-model="form.reusePasswordCount" :disabled="loading" :min="1" :max="10"
+                           @change="handleSave" />
         </el-form-item>
       </div>
     </el-form>
@@ -120,7 +135,7 @@ const form = ref({
 // 加载密码策略配置
 async function init() {
   try {
-    
+
     loading.value = true
     const response = await adminApi.api.getPasswordConfig()
     if (response.data) {
@@ -194,14 +209,17 @@ onMounted(() => {
   color: #888;
   font-size: 13px;
 }
+
 .password-policy-form {
   display: grid;
   grid-template-columns: 1fr min-content 1fr;
   gap: 3rem;
 }
+
 .el-divider--vertical {
   height: 100%;
 }
+
 :deep(.el-card__body) {
   padding: var(--app-space-m);
 }

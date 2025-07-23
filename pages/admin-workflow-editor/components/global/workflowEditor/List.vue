@@ -147,9 +147,12 @@ function getFilter() {
       ]
     }
   ]
-  if(ResponsiveFilterRef.value) {
-    ResponsiveFilterRef.value?.init(data)
-  }
+
+  nextTick(() => {
+    if(ResponsiveFilterRef.value) {
+      ResponsiveFilterRef.value?.init(data)
+    }
+  })
 }
 
 onMounted(() => {
@@ -184,7 +187,7 @@ function reload() {
     <LazyWorkflowEditorWorkflowListTable ref="tableRef">
       <template #toolbar_buttons>
         <div class="actionsContainer">
-          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" />
+          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" />
           <ElButton id="WorkflowEditor__CreateNewWorkflow" type="primary" @click="createNewWorkflow">
             {{ t('workflow_editorCreate') }}
           </ElButton>

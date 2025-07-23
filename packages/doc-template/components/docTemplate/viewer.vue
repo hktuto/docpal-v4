@@ -3,7 +3,7 @@ import { ref, onMounted, onUnmounted, provide } from 'vue'
 import { Editor, EditorContent } from '@tiptap/vue-3'
 import { DocTemplateProveKey } from '../../utils/docTemplateHelper'
 import { type TipTapOptions } from 'docpal-document-editor/src/types'
-import { normalizeTipTapOptions, clientEditorExtensions, generateHtml } from 'docpal-document-editor/src/client'
+import { normalizeTipTapOptions, clientEditorExtensions } from 'docpal-document-editor/src/client'
 
 const props = defineProps<{
   options: TipTapOptions
@@ -20,10 +20,8 @@ function initEditor(initOptions: TipTapOptions, json?: any) {
   const normalizeOption = normalizeTipTapOptions(initOptions)
   const extensions = clientEditorExtensions(normalizeOption)
 
-  let html = generateHtml(json, initOptions)
-
   editor.value = new Editor({
-    content: html,
+    content: json,
     autofocus: true,
     extensions: [
       ...extensions
@@ -201,24 +199,28 @@ defineExpose({ initEditor })
   }
 
   /* 确保段落和块级元素不会在页面中间断开 */
+
   p, div, h1, h2, h3, h4, h5, h6, blockquote, pre, table {
     page-break-inside: avoid;
     break-inside: avoid;
   }
 
   /* 允许标题在页面顶部断开 */
+
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
     break-after: avoid;
   }
 
   /* 确保表格不会在页面中间断开 */
+
   table {
     page-break-inside: avoid;
     break-inside: avoid;
   }
 
   /* 图片和媒体元素的分页控制 */
+
   img, video, canvas {
     page-break-inside: avoid;
     break-inside: avoid;
@@ -227,6 +229,7 @@ defineExpose({ initEditor })
   }
 
   /* 列表的分页控制 */
+
   ul, ol {
     page-break-inside: avoid;
     break-inside: avoid;

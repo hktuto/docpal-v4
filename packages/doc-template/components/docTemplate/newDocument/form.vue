@@ -72,9 +72,7 @@ async function submit() {
 }
 
 function handleClose() {
-  if (!props.title) {
-    emits('close')
-  }
+  emits('close')
 }
 
 </script>
