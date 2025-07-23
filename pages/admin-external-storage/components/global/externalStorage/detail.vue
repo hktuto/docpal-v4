@@ -1,11 +1,14 @@
 <template>
-  <div class="pageContainer--padding">
+  <div class="pageContainer--padding externalStorage-detail">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actions">
-          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="companyProfile.filterTip" />
-          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
-            {{ $t('companyProfile.create') }}
+          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" />
+          <el-button id="edit" type="primary" @click="handleEdit()">
+            {{ $t('externalStorage.editConnection') }}
+          </el-button>
+          <el-button id="add" type="primary" @click="handleAdd()">
+            {{ $t('externalStorage.create') }}
           </el-button>
         </div>
       </template>
@@ -14,29 +17,46 @@
         <el-tag v-else type="danger">{{ $t('Deactivated') }}</el-tag>
       </template>
     </VxeGrid>
-    <CompanyProfileNewDialog ref="DialogRef" @refresh="query({})" />
+    <ExternalStorageNewDialog ref="DialogRef" @refresh="getDetail()" />
+    <ExternalStorageProfilesDialog ref="NewDialogRef" :id="id" @refresh="query({})" />
   </div>
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
-import { routeCompanyProfileDetailPage } from '../../../util/routerHelper'
+import { routeExternalStorageProfileDetailPage } from '../../../util/routerHelper'
+const props = defineProps(['id'])
 const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
 }
 const { t } = useI18n()
-let extraParams: any = {}
+const detail = ref({})
+let extraParams: any = {
+  isDesc: false
+}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
-  id: 'a-company-profile',
-  api: (pageParams: any) => adminApi.api.postCompanyprofilesPage({ ...pageParams, ...extraParams }),
+  id: 'a-external-storage-detail',
+  // api: (pageParams: any) => adminApi.api.getExternalstorageIdProfilesList(props.id, { ...pageParams, ...extraParams }),
+  api: (pageParams: any) => adminApi.api.postExternalstorageIdProfilesPage(props.id, { ...pageParams, ...extraParams }),
   columns: [
-    { field: 'name', title: 'companyProfile.name', fixed: 'left' },
+    { field: 'name', title: 'dpTable.name', fixed: 'left' },
+    { field: 'profileType', title: 'docType_type' },
     {
-      field: 'createdBy',
-      title: 'search.createdBy'
+      field: 'status',
+      title: 'common_status',
+      slots: {
+        default: 'status'
+      }
     },
+    {
+      title: 'externalStorage.profile.sourcePath',
+      formatter({ row }: any) {
+        return row.importSetting?.path
+      }
+    },
+    { field: 'createdBy', title: 'search.createdBy' },
     {
       field: 'createdDate',
       title: 'dpTable_createdDate',
@@ -51,20 +71,13 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
-    },
-    {
-      field: 'status',
-      title: 'common_status',
-      slots: {
-        default: 'status'
-      }
     }
   ],
   bodyActions: [
     [
       {
-        code: 'edit',
-        name: t('common_edit'),
+        code: 'editDetail',
+        name: t('actions.editDetail'),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
@@ -125,12 +138,12 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
 
 function handleDblclick(row: any) {
   // router.push(`/easyFormManage/${row.id}`);
-  routerProvider?.navigateTo(routeCompanyProfileDetailPage(row), false)
+  routerProvider?.navigateTo(routeExternalStorageProfileDetailPage({...row, storageId: props.id}), false)
 }
 
 async function handleActive(row: any, status: string) {
   try {
-    const result = await adminApi.api.patchCompanyprofilesCompanyidStatus(row.id, { status: status }).then((res) => res.data)
+    const result = await adminApi.api.patchExternalstorageIdProfilesProfileidStatus(props.id, row.id, { status: status }).then((res) => res.data)
     if (!!result) {
       row.status = status
     }
@@ -143,17 +156,19 @@ function handleFilterFormChange(formModel: any) {
   extraParams = formModel
   reload()
 }
-
+const NewDialogRef = ref()
 const DialogRef = ref()
-
 async function handleAdd() {
-  DialogRef.value.handleOpen()
+  NewDialogRef.value.handleOpen()
+}
+function handleEdit() {
+  DialogRef.value.handleEdit(detail.value)
 }
 async function handleDelete(row: any) {
   try {
     const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
     if (action !== 'confirm') return
-    await adminApi.api.deleteCompanyprofilesCompanyid(row.id).then((res) => res.data)
+    await adminApi.api.deleteExternalstorageIdProfilesProfileid(props.id, row.id)
     reload()
   } catch (error) {}
 }
@@ -165,7 +180,7 @@ function getFilter() {
       type: 'string',
       isMultiple: false,
       options: [
-        { label: 'companyProfile.name', value: 'name' },
+        { label: 'dpTable.name', value: 'name' },
         { label: 'dpTable_createdDate', value: 'createdDate' },
         { label: 'common_status', value: 'status' },
         { label: 'table_modifiedDate', value: 'modifiedDate' }
@@ -184,9 +199,12 @@ function getFilter() {
   ]
   ResponsiveFilterRef.value?.init(data)
 }
-
+async function getDetail() {
+  detail.value = await adminApi.api.getExternalstorageId(props.id).then((res: any) => res.data)
+}
 onMounted(() => {
   getFilter()
+  getDetail()
 })
 </script>
 <style lang="scss" scoped>

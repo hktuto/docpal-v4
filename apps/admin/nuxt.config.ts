@@ -42,7 +42,9 @@ export default defineNuxtConfig({
     // "../../pages/admin-share",
     '../../pages/admin-rbac',
     '../../pages/admin-password-policy',
-    '../../pages/admin-company-profile'
+    '../../pages/admin-company-profile',
+    '../../pages/admin-external-storage',
+    '../../pages/admin-import-jobs'
   ],
   features: {
     inlineStyles: true

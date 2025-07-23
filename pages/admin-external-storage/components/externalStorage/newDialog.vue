@@ -1,0 +1,99 @@
+<template>
+  <el-dialog
+    v-model="state.visible"
+    :title="state.isEdit ? $t('externalStorage.editConnection') : $t('externalStorage.create')"
+    class="scroll-dialog externalStorage-dialog"
+    append-to-body
+    :close-on-click-modal="false"
+    destroy-on-close
+  >
+    <FormRenderer ref="FormRendererRef" :form-json="formJson"> </FormRenderer>
+    <template #footer>
+      <div class="footer-grid">
+        <el-button id="submit" type="primary" :loading="state.loading" @click="handleSubmit">
+          {{ $t('common_submit') }}
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
+</template>
+<script lang="ts" setup>
+import formJson from './newDialog.vform.json'
+import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
+const { t } = useI18n()
+const emits = defineEmits(['refresh'])
+const state = reactive<any>({
+  isEdit: false,
+  loading: false,
+  visible: false,
+  setting: {}
+})
+
+const FormRendererRef = ref()
+
+async function handleSubmit() {
+  try {
+    const data = await FormRendererRef.value.getFormData()
+    state.loading = true
+    const params: any = {
+      name: data.name,
+      connectionType: data.connectionType,
+      path: data.path,
+      status: data.status ? 'A' : 'D',
+      workGroup: data.workGroup,
+      credentials: {
+        password: data.password,
+        secret: data.secret,
+        username: data.username
+      }
+    }
+    if (state.isEdit) {
+      adminApi.api.putExternalstorageId(state.setting.id, params)
+    } else {
+      await adminApi.api.postExternalstorage(params)
+    }
+    ElMessage.success(t('dpMsg_success'))
+    state.visible = false
+    setTimeout(() => {
+      emits('refresh')
+    }, 500)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    state.loading = false
+  }
+}
+
+function handleOpen() {
+  state.visible = true
+  state.isEdit = false
+  state.setting = {}
+  setTimeout(async () => {
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    state.loading = false
+  })
+}
+function handleEdit(data: any) {
+  state.visible = true
+  state.isEdit = true
+  state.setting = { ...data }
+  const params = {
+    name: data.name,
+    connectionType: data.connectionType,
+    path: data.path,
+    status: data.status === 'A' ? true : false,
+    workGroup: data.workGroup,
+    password: data.credentials?.password,
+    secret: data.credentials?.secret,
+    username: data.credentials?.username
+  }
+  setTimeout(async () => {
+    FormRendererRef.value.vFormRenderRef.resetForm()
+    FormRendererRef.value.vFormRenderRef.setFormData(params)
+    state.loading = false
+  })
+}
+defineExpose({ handleOpen, handleEdit })
+</script>
+<style lang="scss" scoped></style>

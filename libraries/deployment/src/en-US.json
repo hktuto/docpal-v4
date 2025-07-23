@@ -75,6 +75,7 @@
     "configCase": "Setting up the case model",
     "configEmail": "Set up email templates",
     "duplicate": "Duplicate",
+    "editDetail": "Edit Detail",
     "inactivate": "Inactivate",
     "inactivated": "Inactivated",
     "inactive": "Inactive",
@@ -1371,6 +1372,7 @@
   },
   "dpTable": {
     "latestVersion": "Latest Version",
+    "name": "Name",
     "productionVersion": "Production Version"
   },
   "dpTableHeader": {
@@ -1741,6 +1743,19 @@
   "externalSharing_edit": "Edit Sharing Request",
   "externalSharing_expiryDate": "Sharing Expiry Date",
   "externalSharing_sharingRequest": "sharing request",
+  "externalStorage": {
+    "capture": "Capture",
+    "connection": "Connection",
+    "create": "Add New",
+    "editConnection": "Edit Connection",
+    "generate": "Generate",
+    "import": "Import",
+    "output": "Output",
+    "process": "process",
+    "profile": {
+      "sourcePath": "Source Path"
+    }
+  },
   "fc": {
     "Completed": "Completed",
     "Delay": "Overdue",

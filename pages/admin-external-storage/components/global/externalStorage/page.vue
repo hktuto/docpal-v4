@@ -1,12 +1,11 @@
 <template>
-  <div class="chopsTable-container">
+  <div class="pageContainer--padding externalStorage-page">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actions">
-          <h3>{{ $t('companyProfile.chopTitle') }}</h3>
-          <!-- <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" inputPlaceHolder="companyProfile.filterTip" /> -->
-          <el-button id="EasyForm__CreateNewForm" type="primary" @click="handleAdd()">
-            {{ $t('companyProfile.chopCreate') }}
+          <ResponsiveFilter ref="ResponsiveFilterRef" inputKey="name" @form-change="handleFilterFormChange" />
+          <el-button id="add" type="primary" @click="handleAdd()">
+            {{ $t('externalStorage.create') }}
           </el-button>
         </div>
       </template>
@@ -15,15 +14,13 @@
         <el-tag v-else type="danger">{{ $t('Deactivated') }}</el-tag>
       </template>
     </VxeGrid>
-    <CompanyProfileChopsDialog ref="DialogRef" :company-id="props.id" @refresh="query({})" />
+    <ExternalStorageNewDialog ref="DialogRef" @refresh="query({})" />
   </div>
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
-const props = defineProps<{
-  id: string,
-}>()
+import { routeExternalStorageDetailPage } from '../../../util/routerHelper'
 const ResponsiveFilterRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
@@ -32,16 +29,20 @@ if (!routerProvider) {
 const { t } = useI18n()
 let extraParams: any = {}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
-  id: 'a-company-profile-chops',
-  api: (pageParams: any) => adminApi.api.postCompanyprofilesCompanyidChopsPage(props.id, {
-    ...pageParams, ...extraParams
-  }),
+  id: 'a-external-storage',
+  api: (pageParams: any) => adminApi.api.postExternalstoragePage({ ...pageParams, ...extraParams }),
   columns: [
-    { field: 'name', title: 'companyProfile.chopName', fixed: 'left' },
+    { field: 'name', title: 'dpTable.name', fixed: 'left' },
+    { field: 'connectionType', title: 'externalStorage.connection' },
+    { field: 'path', title: 'table_path' },
     {
-      field: 'createdBy',
-      title: 'search.createdBy'
+      field: 'status',
+      title: 'common_status',
+      slots: {
+        default: 'status'
+      }
     },
+    { field: 'createdBy', title: 'search.createdBy' },
     {
       field: 'createdDate',
       title: 'dpTable_createdDate',
@@ -56,24 +57,26 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
-    },
-    {
-      field: 'status',
-      title: 'common_status',
-      slots: {
-        default: 'status'
-      }
     }
   ],
   bodyActions: [
     [
       {
-        code: 'edit_easyForm',
-        name: t('common_edit'),
+        code: 'editConnection',
+        name: t('externalStorage.editConnection'),
         visible: true,
         disabled: false,
         action: ({ row }: any) => {
           handleEdit(row)
+        }
+      },
+      {
+        code: 'editDetail',
+        name: t('actions.editDetail'),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleDblclick(row)
         }
       },
       {
@@ -92,15 +95,6 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
         disabled: false,
         action: ({ row }: any) => {
           handleActive(row, 'D')
-        }
-      },
-      {
-        code: 'remove',
-        name: t('common_remove'),
-        visible: true,
-        disabled: false,
-        action: ({ row }: any) => {
-          handleDelete(row)
         }
       }
     ]
@@ -124,17 +118,18 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
     }
   },
   dblClickAction: ({ row, column, event }: any) => {
-    handleEdit(row)
+    handleDblclick(row)
   }
 })
 
-function handleEdit(row: any) {
-  DialogRef.value.handleEdit(row)
+function handleDblclick(row: any) {
+  // router.push(`/easyFormManage/${row.id}`);
+  routerProvider?.navigateTo(routeExternalStorageDetailPage(row), false)
 }
 
 async function handleActive(row: any, status: string) {
   try {
-    const result = await adminApi.api.putCompanyprofilesCompanyidChopsCompanychopidStatus(props.id, row.id, { status: status }).then((res) => res.data)
+    const result = await adminApi.api.patchExternalstorageIdStatus(row.id, { status: status }).then((res) => res.data)
     if (!!result) {
       row.status = status
     }
@@ -142,6 +137,8 @@ async function handleActive(row: any, status: string) {
 }
 
 function handleFilterFormChange(formModel: any) {
+  if (!formModel.isDesc) formModel.isDesc = true
+  if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'
   extraParams = formModel
   reload()
 }
@@ -149,17 +146,43 @@ function handleFilterFormChange(formModel: any) {
 const DialogRef = ref()
 
 async function handleAdd() {
-  DialogRef.value.handleAdd()
+  DialogRef.value.handleOpen()
 }
-async function handleDelete(row: any) {
-  try {
-    const action = await ElMessageBox.confirm(`${t('msg_confirmWhetherToDelete')}`)
-    if (action !== 'confirm') return
-    await adminApi.api.deleteCompanyprofilesCompanyidChopsCompanychopid(props.id, row.id).then((res) => res.data)
-    reload()
-  } catch (error) {}
+function handleEdit(row: any) {
+  DialogRef.value.handleEdit(row)
 }
 
+function getFilter() {
+  const data = [
+    {
+      key: 'orderBy',
+      label: 'tableHeader.sortBy',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'dpTable.name', value: 'name' },
+        { label: 'dpTable_createdDate', value: 'createdDate' },
+        { label: 'common_status', value: 'status' },
+        { label: 'table_modifiedDate', value: 'modifiedDate' }
+      ]
+    },
+    {
+      key: 'isDesc',
+      label: 'tableHeader.sortOrder',
+      type: 'string',
+      isMultiple: false,
+      options: [
+        { label: 'tableHeader.asc', value: false },
+        { label: 'tableHeader.desc', value: true }
+      ]
+    }
+  ]
+  ResponsiveFilterRef.value?.init(data)
+}
+
+onMounted(() => {
+  getFilter()
+})
 </script>
 <style lang="scss" scoped>
 .actions {
@@ -168,7 +191,7 @@ async function handleDelete(row: any) {
   flex-flow: row nowrap;
   gap: var(--app-space-xs);
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   --icon-size: var(--app-font-size-m);
 }
 
