@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-import-jobs",
       name: 'admin-import-jobs',
       label: "adminMenu.importJobs",
-      icon: "material-symbols-light:table-edit-rounded",
-      hoverIcon: "material-symbols-light:table-edit-rounded",
+      icon: "hugeicons:folder-import",
+      hoverIcon: "hugeicons:folder-import",
       component: "LazyImportJobsPage",
       props:{},
     }

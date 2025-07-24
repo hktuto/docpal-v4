@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-external-storage",
       name: 'aadmin-external-storage',
       label: "adminMenu.externalStorage",
-      icon: "material-symbols-light:table-edit-rounded",
-      hoverIcon: "material-symbols-light:table-edit-rounded",
+      icon: "carbon:volume-block-storage",
+      hoverIcon: "carbon:volume-block-storage",
       component: "LazyExternalStoragePage",
       props:{},
     }

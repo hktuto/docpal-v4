@@ -52,24 +52,24 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
           handleDblclick(row)
         }
       },
-      // {
-      //   code: 'placeFirst',
-      //   name: t('importJobs.placeFirst'),
-      //   visible: true,
-      //   disabled: false,
-      //   action: ({ row }: any) => {
-      //     handlePlaceFirst(row)
-      //   }
-      // }
+      {
+        code: 'placeFirst',
+        name: t('importJobs.placeFirst'),
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handlePlaceFirst(row)
+        }
+      }
     ]
   ],
   permissionMethod: (args: PermissionMethodParams) => {
-    // if (args.code === 'placeFirst') {
-    //   return {
-    //     visible: args.rowIndex !== 0,
-    //     disabled: false
-    //   }
-    // }
+    if (args.code === 'placeFirst') {
+      return {
+        visible: args.row.status === 'QUEUE',
+        disabled: false
+      }
+    }
     return {
       visible: true,
       disabled: false
@@ -85,9 +85,10 @@ function handleDblclick(row: any) {
   routerProvider?.navigateTo(routeImportJobsDetailPage(row), false)
 }
 
-// async function handlePlaceFirst(row) {
-  // await adminApi.api.postImportjobsPage({ ...pageParams, ...extraParams })
-// }
+async function handlePlaceFirst(row: any) {
+  await adminApi.api.postImportjobsJobqueueFirst({ id: row.id })
+  reload()
+}
 function handleFilterFormChange(formModel: any) {
   if (!formModel.isDesc) formModel.isDesc = true
   if (!!formModel.isDesc) formModel.isDesc = formModel.isDesc !== 'false'

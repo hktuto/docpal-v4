@@ -15,7 +15,7 @@ export const useOutputOptioins = () => {
   ])
   const fileTypeOpts = useState('fileTypeOpts', () => [
     { label: 'TIFF', value: 'TIFF' },
-    { label: 'JPEG', value: 'JPEG' },
+    { label: 'JPEG', value: 'JPEG' }
     // { label: 'PNG', value: 'PNG' }
   ])
   const resolutionOpts = useState('resolutionOpts', () => [
@@ -72,8 +72,20 @@ export const useOutputOptioins = () => {
     { label: '${Invoice_amount}', value: '${Invoice_amount}' }
   ])
   // @ts-ignore
-
-  onMounted(async () => {})
+  async function initExternalStorageProfileOpts() {
+    try {
+      const data = await adminApi.api.getExternalstorage({} as any).then((res: any) => res.data)
+      externalStorageProfileOpts.value = data.map((item: any) => ({
+        label: item.name,
+        value: item.id
+      }))
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
+  onMounted(async () => {
+    initExternalStorageProfileOpts()
+  })
 
   return {
     documentTypeOpts,

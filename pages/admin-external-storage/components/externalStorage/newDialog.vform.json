@@ -60,7 +60,7 @@
       "formItemFlag": true,
       "options": {
         "name": "connectionType",
-        "label": "connectionType",
+        "label": "externalStorage.connection",
         "labelAlign": "",
         "defaultValue": "",
         "placeholder": "",
@@ -78,7 +78,12 @@
         "automaticDropdown": false,
         "multiple": false,
         "multipleLimit": 0,
-        "optionItems": [],
+        "optionItems": [
+          {
+            "label": "SMB",
+            "value": "SMB"
+          }
+        ],
         "required": true,
         "requiredHint": "",
         "validation": "",
@@ -106,7 +111,7 @@
       "formItemFlag": true,
       "options": {
         "name": "workGroup",
-        "label": "workGroup",
+        "label": "externalStorage.workGroup",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -159,7 +164,7 @@
       "formItemFlag": true,
       "options": {
         "name": "path",
-        "label": "path",
+        "label": "table_path",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -232,7 +237,7 @@
         "name": "statictext39433",
         "columnWidth": "200px",
         "hidden": false,
-        "textContent": "static text",
+        "textContent": "externalStorage.credential",
         "textAlign": "left",
         "fontSize": "24px",
         "preWrap": false,
@@ -250,7 +255,7 @@
       "formItemFlag": true,
       "options": {
         "name": "username",
-        "label": "username",
+        "label": "login_username",
         "labelAlign": "",
         "type": "password",
         "defaultValue": "",
@@ -303,7 +308,7 @@
       "formItemFlag": true,
       "options": {
         "name": "password",
-        "label": "password",
+        "label": "login_password",
         "labelAlign": "",
         "type": "password",
         "defaultValue": "",
@@ -356,7 +361,7 @@
       "formItemFlag": true,
       "options": {
         "name": "secret",
-        "label": "secret",
+        "label": "externalStorage.secret",
         "labelAlign": "",
         "type": "text",
         "defaultValue": "",
@@ -427,7 +432,7 @@
       "formItemFlag": true,
       "options": {
         "name": "status",
-        "label": "status",
+        "label": "common_status",
         "labelAlign": "",
         "defaultValue": true,
         "columnWidth": "200px",
