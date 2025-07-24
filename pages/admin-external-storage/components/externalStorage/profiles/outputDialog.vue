@@ -2,30 +2,30 @@
   <el-dialog v-model="dialogVisible" class="scroll-dialog outputDialog" :title="isEdit ? $t('externalStorage.outputEdit') : $t('externalStorage.outputNew')">
     <el-form label-position="top" :model="form" :rules="rules" ref="formRef">
       <el-form-item :label="$t('docType_documentType')" prop="documentType">
-        <el-select class="documentType" v-model="form.documentType">
+        <el-select class="documentType" v-model="form.documentType" filterable clearable>
           <el-option v-for="item in documentTypeOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('externalStorage.outputFormat')" prop="outputFormat">
-        <el-select class="outputFormat" v-model="form.outputFormat">
+        <el-select class="outputFormat" v-model="form.outputFormat" filterable clearable>
           <el-option v-for="item in outputFormatOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <template v-if="form.outputFormat === 'Text'">
         <el-form-item :label="$t('externalStorage.keepLineBreaks')" prop="keepLineBreaks" required>
-          <el-select class="keepLineBreaks" v-model="form.keepLineBreaks">
+          <el-select class="keepLineBreaks" v-model="form.keepLineBreaks" filterable clearable>
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('externalStorage.insertPageBreakChar')" prop="insertPageBreakChar" required>
-          <el-select class="insertPageBreakChar" v-model="form.insertPageBreakChar">
+          <el-select class="insertPageBreakChar" v-model="form.insertPageBreakChar" filterable clearable>
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('externalStorage.useBlankLineAsParaSep')" prop="useBlankLineAsParaSep" required>
-          <el-select class="useBlankLineAsParaSep" v-model="form.useBlankLineAsParaSep">
+          <el-select class="useBlankLineAsParaSep" v-model="form.useBlankLineAsParaSep" filterable clearable>
             <el-option label="Yes" value="Yes" />
             <el-option label="No" value="No" />
           </el-select>
@@ -33,12 +33,12 @@
       </template>
       <template v-if="['Image'].includes(form.outputFormat)">
         <el-form-item :label="$t('DAM_fileType')" prop="fileType" required>
-          <el-select class="fileType" v-model="form.fileType">
+          <el-select class="fileType" v-model="form.fileType" filterable clearable>
             <el-option v-for="item in fileTypeOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('externalStorage.resolution')" prop="resolution" required>
-          <el-select class="resolution" v-model="form.resolution">
+          <el-select class="resolution" v-model="form.resolution" filterable clearable>
             <el-option v-for="item in resolutionOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -47,20 +47,20 @@
         </el-form-item>
       </template>
       <el-form-item v-if="['PDF', 'Image'].includes(form.outputFormat)" :label="$t('externalStorage.color')" prop="color">
-        <el-select class="color" v-model="form.color">
+        <el-select class="color" v-model="form.color" filterable clearable>
           <el-option v-for="item in colorOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-divider />
 
       <el-form-item :label="$t('externalStorage.destination')" prop="destination">
-        <el-select class="destination" v-model="form.destination">
+        <el-select class="destination" v-model="form.destination" filterable clearable>
           <el-option v-for="item in destinationOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
 
-      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.externalStorageProfile')" prop="externalProfile">
-        <el-select class="shareDriveProfile" v-model="form.shareDriveProfile">
+      <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.externalStorageProfile')" prop="shareDriveProfile">
+        <el-select class="shareDriveProfile" v-model="form.shareDriveProfile" filterable clearable>
           <el-option v-for="item in externalStorageProfileOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -68,7 +68,7 @@
         <el-form-item :label="$t('externalStorage.path')" prop="path">
           <el-input class="path" v-model="form.path" ref="pathInput" />
           <el-dropdown @command="(value: string) => handleVariableSelect(value, 'path')">
-            <el-button class="el-icon--right pathAddVariable"> Add Variable </el-button>
+            <el-button type="primary" class="el-icon--right pathAddVariable"> {{ $t('docTemplate.variable.addVariable') }} </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="item in pathVOpts" :key="item.value" :command="item.value">{{ item.label }}</el-dropdown-item>
@@ -79,7 +79,7 @@
         <el-form-item :label="$t('externalStorage.fileName')" prop="fileName">
           <el-input class="fileName" v-model="form.fileName" ref="fileNameInput" />
           <el-dropdown @command="(value: string) => handleVariableSelect(value, 'fileName')">
-            <el-button class="el-icon--right fileNameAddVariable"> Add Variable </el-button>
+            <el-button type="primary" class="el-icon--right fileNameAddVariable">  {{ $t('docTemplate.variable.addVariable') }} </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="item in fileNameVOpts" :key="item.value" :command="item.value">{{ item.label }}</el-dropdown-item>
@@ -90,23 +90,23 @@
       </template>
       <template v-else>
         <el-form-item :label="$t('externalStorage.file')" prop="file">
-          <el-select class="file" v-model="form.file">
+          <el-select class="file" v-model="form.file" filterable clearable>
             <el-option v-for="item in fileOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('externalStorage.fileName')" prop="documentName">
-          <el-select class="documentName" v-model="form.documentName">
+          <el-select class="documentName" v-model="form.documentName" filterable clearable>
             <el-option v-for="item in documentNameOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('dpSearch.searchMeta')" prop="meta">
-          <el-select class="meta" v-model="form.meta">
+          <el-select class="meta" v-model="form.meta" filterable clearable>
             <el-option v-for="item in metaOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
       </template>
       <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.duplicateNameStrategy')" prop="duplicateNameStrategy" required>
-        <el-select class="duplicateNameStrategy" v-model="form.duplicateNameStrategy" placeholder="Please select">
+        <el-select class="duplicateNameStrategy" v-model="form.duplicateNameStrategy" filterable clearable>
           <el-option v-for="item in duplicateNameStrategyOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -121,11 +121,13 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { adminApi } from 'api'
+import { emitBus } from '../../../../../libraries/eventbus/src';
 const props = defineProps({
   storageId: String,
   id: String,
   settings: Object
 })
+const emits = defineEmits(['refresh'])
 const defaultValue = {
   fileName: '',
   documentType: '',
@@ -169,23 +171,23 @@ const form = ref<any>({
 })
 const setting = ref<any>(null)
 const rules = {
-  fileName: [{ required: true, message: 'File name is required', trigger: 'blur' }],
-  documentType: [{ required: true, message: 'Document Type is required', trigger: 'change' }],
-  outputFormat: [{ required: true, message: 'outputFormat is required', trigger: 'change' }],
-  color: [{ required: true, message: 'Color is required', trigger: 'change' }],
-  destination: [{ required: true, message: 'Destination is required', trigger: 'change' }],
-  shareDriveProfile: [{ required: true, message: 'Share Drive Profile is required', trigger: 'change' }],
-  path: [{ required: true, message: 'Path is required', trigger: 'blur' }],
-  fileType: [{ required: true, message: 'File type is required', trigger: 'change' }],
-  resolution: [{ required: true, message: 'Resolution is required', trigger: 'change' }],
-  quality: [{ required: true, message: 'Quality is required', trigger: 'blur' }],
-  keepLineBreaks: [{ required: true, message: 'Keep line breaks is required', trigger: 'change' }], // 新增
-  insertPageBreakChar: [{ required: true, message: 'Insert page break character is required', trigger: 'change' }], // 新增
-  useBlankLineAsParaSep: [{ required: true, message: 'Use blank line as paragraph separator is required', trigger: 'change' }], // 新增
-  duplicateNameStrategy: [{ required: true, message: 'Please select replace or rename', trigger: 'change' }], // 新增
-  file: [{ required: true, message: 'File is required', trigger: 'change' }],
-  documentName: [{ required: true, message: 'Document Name is required', trigger: 'change' }],
-  meta: [{ required: true, message: 'Meta is required', trigger: 'change' }]
+  fileName: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType_documentType') }), trigger: 'blur' }],
+  documentType: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType_documentType') }), trigger: 'change' }],
+  outputFormat: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.outputFormat') }), trigger: 'change' }],
+  color: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.color') }), trigger: 'change' }],
+  destination: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.destination') }), trigger: 'change' }],
+  shareDriveProfile: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.externalStorageProfile') }), trigger: 'change' }],
+  path: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.path') }), trigger: 'blur' }],
+  fileType: [{ required: true, message: t('render.hint.fieldRequired', { name: t('DAM_fileType') }), trigger: 'change' }],
+  resolution: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.resolution') }), trigger: 'change' }],
+  quality: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.quality') }), trigger: 'blur' }],
+  keepLineBreaks: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.keepLineBreaks') }), trigger: 'change' }], // 新增
+  insertPageBreakChar: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.insertPageBreakChar') }), trigger: 'change' }], // 新增
+  useBlankLineAsParaSep: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }], // 新增
+  duplicateNameStrategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }], // 新增
+  file: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.file') }), trigger: 'change' }],
+  documentName: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.fileName') }), trigger: 'change' }],
+  meta: [{ required: true, message: t('render.hint.fieldRequired', { name: t('dpSearch.searchMeta') }), trigger: 'change' }]
 }
 
 function handleOpen(data: any, _isEdit = false) {
@@ -197,9 +199,15 @@ function handleOpen(data: any, _isEdit = false) {
       ...data
     }
     setting.value = { ...data }
+  } else {
+    form.value = {
+      ...defaultValue
+    }
   }
-  console.log(form.value)
   dialogVisible.value = true
+  setTimeout(() => {
+    formRef.value.clearValidate()
+  })
 }
 
 const pathInput = ref<any>(null)
@@ -225,6 +233,7 @@ async function save() {
     } else {
       await adminApi.api.postExternalstorageProfilesProfileidOutputrecord(props.id as string, form.value)
     }
+    emits('refresh')
     dialogVisible.value = false
   } catch (error) {
     console.log(error)

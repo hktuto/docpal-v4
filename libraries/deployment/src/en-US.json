@@ -113,11 +113,13 @@
     "easyForm": "Easy Form",
     "emailTemplate": "Email Content Template",
     "externalConnection": "External Connection",
+    "externalStorage": "External Storage",
     "folderCabinet": "Folder Cabinet Setting",
     "glossary": "Glossary Management",
     "group": "User Group List",
     "help": "Help",
     "holdPoliciesManage": "Hold Policy Setting",
+    "importJobs": "Import Jobs",
     "log": "Log Manage",
     "logManage": "Log Output Configuration",
     "mailConfig": "Notification Configuration",
@@ -1755,6 +1757,7 @@
     "confirmUser": "Confirm user / user group",
     "connection": "Connection",
     "create": "Add New",
+    "credential": "Credential",
     "destination": "Destination",
     "duplicateNameStrategy": "Replace or rename",
     "editConnection": "Edit Connection",
@@ -1781,15 +1784,18 @@
     "profile": {
       "sourcePath": "Source Path"
     },
+    "quality": "Quality",
     "regex": "Filter Rule REGEX",
     "resolution": "Quality",
     "scan": "Scan Schedule (Sec)",
+    "secret": "Shared Secret",
     "separationByBarCode": "Seperate by Barcode",
     "separationByCount": "Seperate by page count",
     "separationByPage": "Seperate by blank page",
     "separationType": "Separation Type",
     "useBlankLineAsParaSep": "Use blank line as paragraph separator",
-    "useDocumentType": "Use document type capture"
+    "useDocumentType": "Use document type capture",
+    "workGroup": "Work Group"
   },
   "fc": {
     "Completed": "Completed",

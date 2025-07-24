@@ -113,11 +113,13 @@
     "easyForm": "外部表單",
     "emailTemplate": "電子郵件內容模板",
     "externalConnection": "外部連接",
+    "externalStorage": "外部存儲",
     "folderCabinet": "文件櫃設定",
     "glossary": "词彙表管理",
     "group": "使用者群組列表",
     "help": "幫助",
     "holdPoliciesManage": "保全政策設定",
+    "importJobs": "導入工作",
     "log": "日誌管理",
     "logManage": "日誌管理",
     "mailConfig": "通知配置",
@@ -1754,6 +1756,7 @@
     "confirmUser": "確認用戶/用戶群組",
     "connection": "連接",
     "create": "新建",
+    "credential": "憑證",
     "destination": "目的地",
     "duplicateNameStrategy": "替換或重新命名",
     "editConnection": "編輯連接",
@@ -1780,15 +1783,18 @@
     "profile": {
       "sourcePath": "來源路徑"
     },
+    "quality": "品質",
     "regex": "过滤规则 REGEX",
     "resolution": "品質",
     "scan": "掃描時間表（秒）",
+    "secret": "共享密鑰",
     "separationByBarCode": "按條碼分隔",
     "separationByCount": "按頁分隔",
     "separationByPage": "以空白頁分隔",
     "separationType": "分隔類型",
     "useBlankLineAsParaSep": "使用空行作為段落分隔符",
-    "useDocumentType": "使用文檔類型捕獲"
+    "useDocumentType": "使用文檔類型捕獲",
+    "workGroup": "工作小組"
   },
   "fc": {
     "Completed": "已完成",

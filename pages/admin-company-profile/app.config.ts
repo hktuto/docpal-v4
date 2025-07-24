@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-company-profile",
       name: 'admin-company-profile',
       label: "adminMenu.companyProfile",
-      icon: "material-symbols-light:table-edit-rounded",
-      hoverIcon: "material-symbols-light:table-edit-rounded",
+      icon: "octicon:organization-24",
+      hoverIcon: "octicon:organization-24",
       component: "LazyCompanyProfilePage",
       props:{},
     }
