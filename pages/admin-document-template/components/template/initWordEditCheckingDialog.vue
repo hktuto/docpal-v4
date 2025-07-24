@@ -3,10 +3,7 @@ import { templateApi } from 'api'
 import { navigateToTemplatePage } from '~/utils/documentTemplateHelper'
 
 const routerProvider = inject(MenuRouterKey)
-const props = defineProps<{
-  userId: string,
-  blob: Blob
-}>()
+
 const emits = defineEmits(['convertJson'])
 const { t } = useI18n()
 const state = reactive({
@@ -34,8 +31,8 @@ async function handleConvertDocxToJson() {
     json.json.options.title = state.name
     emits('convertJson', json)
   } catch (e) {
-    console.log(e)
-    throw new Error(e)
+    routerProvider?.message.error(e.response.data.error)
+    emits('convertJson', "")
   } finally {
     state.visible = false
   }

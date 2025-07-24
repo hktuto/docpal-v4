@@ -65,7 +65,11 @@ async function getData(type: string) {
       return
     }
   }
-  return state.variables
+
+  return state.variables.reduce((acc, item) => {
+    acc[item.name] = item.value
+    return acc
+  }, {})
 }
 
 defineExpose({ setVariables, getData })
@@ -73,7 +77,7 @@ defineExpose({ setVariables, getData })
 
 <template>
   <div class="renderer-container">
-    <div v-for="(item,index) in state.variables" class="variable-item"  @dblclick="handleVariableData(item)">
+    <div v-for="(item,index) in state.variables" class="variable-item" @dblclick="handleVariableData(item)">
       <div v-if="item.type==='text'" class="variable-content">
         {{ $t('docTemplate.variable.name') }}: {{ item.name }}
         <el-form style="margin-top: 5px">
