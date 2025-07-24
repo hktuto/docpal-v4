@@ -54,22 +54,31 @@ export const useOutputOptioins = () => {
     { label: 'invoice_amount', value: 'invoice_amount' }
   ])
   const documentNameOpts = useState('documentNameOpts', () => [
-    { label: 'file_name', value: 'file_name' },
-    { label: 'invoice_number', value: 'invoice_number' },
-    { label: 'invoice_date', value: 'invoice_date' },
-    { label: 'invoice_amount', value: 'invoice_amount' }
+    { label: 'Profile_id', value: 'Profile_id' },
+    { label: 'File_name', value: 'File_name' },
+    { label: 'File', value: 'File' },
+    { label: 'Original_path', value: 'Original_path' },
+    { label: 'Capture_date(yyyy)', value: 'Capture_date(yyyy)' },
+    { label: 'Capture_date(mm)', value: 'Capture_date(mm)' },
+    { label: 'Capture_date(yyyy-mm-dd)', value: 'Capture_date(yyyy-mm-dd)' },
+    { label: 'Invoice_number', value: 'Invoice_number' },
+    { label: 'sales_name', value: 'sales_name' },
+    { label: 'customer_name', value: 'customer_name' }
   ])
   const pathVOpts = useState('pathVOpts', () => [
-    { label: '${File_name}', value: '${File_name}' },
-    { label: '${Invoice_number}', value: '${Invoice_number}' },
-    { label: '${Invoice_date}', value: '${Invoice_date}' },
-    { label: '${Invoice_amount}', value: '${Invoice_amount}' }
+    { label: 'Profile_id', value: 'Profile_id' },
+    { label: 'File_name', value: 'File_name' },
+    { label: 'Original_path', value: 'Original_path' },
+    { label: 'Capture_date(yyyy)', value: 'Capture_date(yyyy)' },
+    { label: 'Capture_date(mm)', value: 'Capture_date(mm)' },
+    { label: 'Capture_date(yyyy-mm-dd)', value: 'Capture_date(yyyy-mm-dd)' },
+    { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: 'Capture_date(yyyy-mm-ddTHH:mm:ss)' }
   ])
   const fileNameVOpts = useState('fileNameVOpts', () => [
-    { label: '${File_name}', value: '${File_name}' },
-    { label: '${Invoice_number}', value: '${Invoice_number}' },
-    { label: '${Invoice_date}', value: '${Invoice_date}' },
-    { label: '${Invoice_amount}', value: '${Invoice_amount}' }
+    { label: 'Profile_id', value: 'Profile_id' },
+    { label: 'File_name', value: 'File_name' },
+    { label: 'Capture_date(yyyy-mm-dd)', value: 'Capture_date(yyyy-mm-dd)' },
+    { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: 'Capture_date(yyyy-mm-ddTHH:mm:ss)' }
   ])
   // @ts-ignore
   async function initExternalStorageProfileOpts() {
@@ -83,8 +92,22 @@ export const useOutputOptioins = () => {
       console.error(error)
     }
   }
+  async function getMetaOpts() {
+    try {
+      const { data }: any = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile')
+      const optionList = data.keywords.map((item: any) => ({
+        ...item,
+        label: item.name,
+        value: item.name
+      }))
+      metaOpts.value = optionList
+    } catch (error: any) {
+      console.error(error)
+    }
+  }
   onMounted(async () => {
     initExternalStorageProfileOpts()
+    getMetaOpts()
   })
 
   return {
