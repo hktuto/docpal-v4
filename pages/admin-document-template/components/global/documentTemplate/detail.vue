@@ -266,6 +266,11 @@ async function getWordJsonFile() {
 }
 
 function updateEditorData(json: any) {
+  if (json === '') {
+    initWordEditor(json)
+    return
+  }
+
   documentOptions.value = json.json.options
   jsonData.value = json.json.content
   templateViewerRef.value.initEditor(documentOptions.value, jsonData.value)
