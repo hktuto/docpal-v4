@@ -17,6 +17,7 @@ const state = reactive<any>({
     name: '',
     fileType: ''
   },
+  oldVariables: [],
   variables: [],
   testVariables: [],
   previewFile: {
@@ -181,6 +182,7 @@ function initWordEditor(json: any) {
   documentOptions.value = json.json.options
   jsonData.value = json.json.content
   variables.value = json.variables
+  state.oldVariables = JSON.parse(JSON.stringify(json.variables))
   templateVariablesRendererRef.value.setVariables(deepCopy(variables.value))
 }
 
@@ -201,6 +203,7 @@ async function handleSaveWord() {
   const editDataJson = docTemplateEditorRef.value.getJsonData()
   documentOptions.value = editDataJson.json.options
   jsonData.value = editDataJson.json.content
+  editDataJson.variables = variables.value
 
   try {
     const fileName = state.info.name + '.json'
@@ -215,6 +218,7 @@ async function handleSaveWord() {
 
     const schema = variablesSchema(variables.value)
     await adminApi.api.patchTemplateDocumentUpdatetemplatevariable({ id: id, templateVariable: JSON.stringify(schema) })
+    state.oldVariables = JSON.parse(JSON.stringify(variables.value))
     routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
   } catch (e) {
     routerProvider?.message.error('Save Document template Error')
@@ -225,6 +229,11 @@ async function handleSaveWord() {
 
 async function handleSaveWordAndClose() {
   await handleSaveWord()
+  state.isEdit = false
+}
+
+function handleCloseWordEditor() {
+  updateVariables(deepCopy(state.oldVariables))
   state.isEdit = false
 }
 
@@ -365,7 +374,7 @@ onBeforeMount(async () => {
                 class="box-item"
                 :title="t('button.saveOff')"
                 placement="top"
-                @confirm="state.isEdit = false"
+                @confirm="handleCloseWordEditor"
               >
                 <template #reference>
                   <SvgIcon style="width: 18px; "
