@@ -9,7 +9,7 @@
         "name": "useDocumentType",
         "label": "externalStorage.useDocumentType",
         "labelAlign": "label-center-align",
-        "defaultValue": false,
+        "defaultValue": true,
         "columnWidth": "200px",
         "labelWidth": null,
         "labelHidden": false,
@@ -99,144 +99,7 @@
         "automaticDropdown": false,
         "multiple": true,
         "multipleLimit": 0,
-        "optionItems": [
-          {
-            "value": "user_groups",
-            "label": "分组",
-            "options": [
-              {
-                "label": "Adhoc Group",
-                "value": "Adhoc_Group"
-              },
-              {
-                "label": "Administrators Group",
-                "value": "administrators"
-              },
-              {
-                "label": "Bedfordshire Dept",
-                "value": "BedfordshireDept"
-              },
-              {
-                "label": "BOOK",
-                "value": "BOOK"
-              },
-              {
-                "label": "CPA-Members",
-                "value": "CPA-Members"
-              },
-              {
-                "label": "HR deptartment",
-                "value": "HR_dept"
-              },
-              {
-                "label": "IT Group",
-                "value": "IT_Group"
-              },
-              {
-                "label": "IT Dept",
-                "value": "ITDept"
-              },
-              {
-                "label": "Market Group",
-                "value": "Market_Group"
-              },
-              {
-                "label": "Sales Group",
-                "value": "Sales_Group"
-              },
-              {
-                "label": "Show Group",
-                "value": "Show_Group"
-              },
-              {
-                "label": "USB Dept",
-                "value": "USBDept"
-              }
-            ]
-          },
-          {
-            "value": "user_users",
-            "label": "用户",
-            "options": [
-              {
-                "label": "ashlee_sauer",
-                "value": "ashlee_sauer"
-              },
-              {
-                "label": "jack5",
-                "value": "jack5"
-              },
-              {
-                "label": "jack_li",
-                "value": "jack_li"
-              },
-              {
-                "label": "jack_li1",
-                "value": "jack_li1"
-              },
-              {
-                "label": "jack_li2",
-                "value": "jack_li2"
-              },
-              {
-                "label": "jack_li5",
-                "value": "jack_li5"
-              },
-              {
-                "label": "joshua",
-                "value": "joshua"
-              },
-              {
-                "label": "lyle",
-                "value": "lyle"
-              },
-              {
-                "label": "lyletest",
-                "value": "lyletest"
-              },
-              {
-                "label": "nine",
-                "value": "nine"
-              },
-              {
-                "label": "nineadmin",
-                "value": "nineadmin"
-              },
-              {
-                "label": "nineins",
-                "value": "nineins"
-              },
-              {
-                "label": "ninerabbit",
-                "value": "ninerabbit"
-              },
-              {
-                "label": "ooyy",
-                "value": "ooyy"
-              },
-              {
-                "label": "ooyycdbd",
-                "value": "ooyycdbd"
-              },
-              {
-                "label": "roy",
-                "value": "roy"
-              },
-              {
-                "label": "teststatu",
-                "value": "teststatu"
-              },
-              {
-                "label": "testuser",
-                "value": "testuser"
-              },
-              {
-                "label": "will_du",
-                "value": "will_du"
-              }
-            ]
-          }
-        ],
+        "optionItems": [],
         "selectSetting": {
           "userApi": "/nuxeo/identity/users",
           "userMethod": "post",
@@ -276,7 +139,7 @@
         "name": "needConfirm",
         "label": "externalStorage.needConfirm",
         "labelAlign": "",
-        "defaultValue": false,
+        "defaultValue": true,
         "columnWidth": "200px",
         "labelWidth": null,
         "labelHidden": false,
@@ -316,6 +179,39 @@
     "onFormCreated": "",
     "onFormMounted": "",
     "onFormDataChange": "",
-    "dhList": []
+    "dhList": [
+      {
+        "id": 119903,
+        "fieldConditionList": [
+          {
+            "fieldName": "useDocumentType",
+            "condition": "===",
+            "value": false
+          }
+        ],
+        "hiddenList": [
+          {
+            "id": 61680,
+            "fieldName": "documentType",
+            "required": true
+          },
+          {
+            "id": 67201,
+            "fieldName": "confirmUser",
+            "required": true
+          },
+          {
+            "id": 101930,
+            "fieldName": "needConfirm",
+            "required": true
+          }
+        ],
+        "disabledList": []
+      }
+    ],
+    "onFormValidate": "",
+    "saveRemoteOptions": "never",
+    "labelFormUniqueName": true,
+    "dataSources": []
   }
 }
