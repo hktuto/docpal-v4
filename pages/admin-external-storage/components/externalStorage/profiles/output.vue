@@ -21,7 +21,9 @@ import { adminApi } from 'api'
 import { ElMessageBox } from 'element-plus'
 const props = defineProps<{
   id: string,
+  captureSetting: any
 }>()
+const { setDocumentTypeOpts } = useOutputOptioins()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
@@ -29,7 +31,7 @@ if (!routerProvider) {
 const { t } = useI18n()
 let extraParams: any = {}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
-  id: 'a-company-profile-chops',
+  id: 'a-externalStorage-profile-output',
   virtualScroll: true,
   api: async (pageParams: any) => {
     const data = await adminApi.api.getExternalstorageProfilesProfileidOutputrecordList(props.id, {
@@ -152,7 +154,13 @@ async function handleDelete(row: any) {
     reload()
   } catch (error) {}
 }
-
+watch(() => props.captureSetting, (newVal) => {
+  console.log(newVal, 'captureSetting')
+  if(newVal && newVal.documentType?.length > 0) {
+    const opts = newVal.documentType.map((item: any) => ({ label: item, value: item }))
+    setDocumentTypeOpts(opts)
+  }
+})
 </script>
 <style lang="scss" scoped>
 .outputTable-container {

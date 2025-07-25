@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import formJson from './generate.vform.json'
 import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
+const { t } = useI18n()
 const props = defineProps<{
   id: string
   storageId: string
@@ -23,7 +25,8 @@ async function handleSave() {
         startNumber: data.startNumber,
       }
     }
-    const result = await adminApi.api.patchExternalstorageIdProfilesProfileidGeneral(props.storageId, props.id, params)
+    await adminApi.api.patchExternalstorageIdProfilesProfileidGeneral(props.storageId, props.id, params)
+    ElMessage.success(t('dpMsg_success'))
     emits('update')
   } catch (error: any) {
     console.error(error)

@@ -42,7 +42,9 @@ async function handleSubmit() {
       path: data.path,
       status: data.status ? 'A' : 'D',
       workGroup: data.workGroup,
+      platform: data.platform,
       credentials: {
+        port: data.port,
         password: data.password,
         secret: data.secret,
         username: data.username
@@ -86,7 +88,9 @@ function handleEdit(data: any) {
     workGroup: data.workGroup,
     password: data.credentials?.password,
     secret: data.credentials?.secret,
-    username: data.credentials?.username
+    username: data.credentials?.username,
+    port: data.credentials?.port,
+    platform: data.platform
   }
   setTimeout(async () => {
     FormRendererRef.value.vFormRenderRef.resetForm()

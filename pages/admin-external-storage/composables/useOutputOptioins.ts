@@ -1,11 +1,7 @@
 import { adminApi } from 'api'
 
 export const useOutputOptioins = () => {
-  const documentTypeOpts = useState('documentTypeOpts', () => [
-    { label: 'File', value: 'File' },
-    { label: 'Folder', value: 'Folder' },
-    { label: 'Link', value: 'Link' }
-  ])
+  const documentTypeOpts = useState('documentTypeOpts', () => [{ label: 'File', value: 'File' }])
   const outputFormatOpts = useState('outputFormatOpts', () => [
     { label: 'PDF', value: 'PDF' },
     { label: 'Image', value: 'Image' },
@@ -19,9 +15,9 @@ export const useOutputOptioins = () => {
     // { label: 'PNG', value: 'PNG' }
   ])
   const resolutionOpts = useState('resolutionOpts', () => [
-    { label: 'Original', value: 'Original' },
-    { label: '0.25x', value: '0.25x' },
-    { label: '0.5x', value: '0.5x' }
+    { label: 'Original', value: 1 },
+    { label: '0.25x', value: 0.25 },
+    { label: '0.5x', value: 0.5 }
   ])
   const colorOpts = useState('colorOpts', () => [
     { label: 'Original', value: 'original' },
@@ -30,55 +26,44 @@ export const useOutputOptioins = () => {
   ])
   const destinationOpts = useState('destinationOpts', () => [
     { label: 'External Storage Profile', value: 'external' },
-    { label: 'DocPal', value: 'DocPal' },
-    { label: 'Workflow', value: 'Workflow' }
+    { label: 'DocPal', value: 'docPal' },
+    { label: 'Workflow', value: 'workflow' }
   ])
-  const externalStorageProfileOpts = useState('externalStorageProfileOpts', () => [
-    { label: 'Network Drive', value: 'Network Drive' },
-    { label: 'Local Drive', value: 'Local Drive' }
-  ])
+  const externalStorageProfileOpts = useState('externalStorageProfileOpts', () => [])
   const duplicateNameStrategyOpts = useState('duplicateNameStrategyOpts', () => [
-    { label: 'Replace', value: 'Replace' },
-    { label: 'Rename', value: 'Rename' },
-    { label: 'Skip', value: 'Skip' }
+    { label: 'Replace', value: 'replace' },
+    { label: 'Rename', value: 'rename' },
+    { label: 'Skip', value: 'skip' }
   ])
 
-  const fileOpts = useState('fileOpts', () => [
-    { label: 'File', value: 'File' },
-    { label: 'Folder', value: 'Folder' },
-    { label: 'Link', value: 'Link' }
-  ])
-  const metaOpts = useState('metaOpts', () => [
-    { label: 'invoice_number', value: 'invoice_number' },
-    { label: 'invoice_date', value: 'invoice_date' },
-    { label: 'invoice_amount', value: 'invoice_amount' }
-  ])
-  const documentNameOpts = useState('documentNameOpts', () => [
-    { label: 'Profile_id', value: 'Profile_id' },
-    { label: 'File_name', value: 'File_name' },
-    { label: 'File', value: 'File' },
-    { label: 'Original_path', value: 'Original_path' },
-    { label: 'Capture_date(yyyy)', value: 'Capture_date(yyyy)' },
-    { label: 'Capture_date(mm)', value: 'Capture_date(mm)' },
-    { label: 'Capture_date(yyyy-mm-dd)', value: 'Capture_date(yyyy-mm-dd)' },
-    { label: 'Invoice_number', value: 'Invoice_number' },
-    { label: 'sales_name', value: 'sales_name' },
-    { label: 'customer_name', value: 'customer_name' }
-  ])
   const pathVOpts = useState('pathVOpts', () => [
-    { label: 'Profile_id', value: 'Profile_id' },
-    { label: 'File_name', value: 'File_name' },
-    { label: 'Original_path', value: 'Original_path' },
-    { label: 'Capture_date(yyyy)', value: 'Capture_date(yyyy)' },
-    { label: 'Capture_date(mm)', value: 'Capture_date(mm)' },
-    { label: 'Capture_date(yyyy-mm-dd)', value: 'Capture_date(yyyy-mm-dd)' },
-    { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: 'Capture_date(yyyy-mm-ddTHH:mm:ss)' }
+    { label: 'Profile_id', value: '${Profile_id}' },
+    { label: 'File_name', value: '${File_name}' },
+    { label: 'Original_path', value: '${Original_path}' },
+    { label: 'Capture_date(yyyy)', value: '${Capture_date(yyyy)}' },
+    { label: 'Capture_date(mm)', value: '${Capture_date(mm)}' },
+    { label: 'Capture_date(yyyy-mm-dd)', value: '${Capture_date(yyyy-mm-dd)}' },
+    { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: '${Capture_date(yyyy-mm-ddTHH:mm:ss)}' }
   ])
   const fileNameVOpts = useState('fileNameVOpts', () => [
-    { label: 'Profile_id', value: 'Profile_id' },
-    { label: 'File_name', value: 'File_name' },
-    { label: 'Capture_date(yyyy-mm-dd)', value: 'Capture_date(yyyy-mm-dd)' },
-    { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: 'Capture_date(yyyy-mm-ddTHH:mm:ss)' }
+    { label: 'Profile_id', value: '${Profile_id}' },
+    { label: 'File_name', value: '${File_name}' },
+    { label: 'Capture_date(yyyy-mm-dd)', value: '${Capture_date(yyyy-mm-dd)}' },
+    { label: 'Capture_date(yyyy-mm-ddTHH:mm:ss)', value: '${Capture_date(yyyy-mm-ddTHH:mm:ss)}' }
+  ])
+  const workflowOpts = useState('workflowOpts', () => [
+    { label: 'Workflow_1', value: 'Workflow_1' },
+    { label: 'Workflow_2', value: 'Workflow_2' },
+    { label: 'Workflow_3', value: 'Workflow_3' }
+  ])
+  const workflowVOpts = useState('workflowVOpts', () => [
+    { label: 'Profile_id', value: 'profile_id' },
+    { label: 'File_name', value: 'file_name' },
+    { label: 'File', value: 'file' },
+    { label: 'Original_path', value: 'original_path' },
+    { label: 'Capture_date(yyyy)', value: 'capture_date(yyyy)' },
+    { label: 'Capture_date(mm)', value: 'capture_date(mm)' },
+    { label: 'Capture_date(yyyy-mm-dd)', value: 'capture_date(yyyy-mm-dd)' }
   ])
   // @ts-ignore
   async function initExternalStorageProfileOpts() {
@@ -100,14 +85,25 @@ export const useOutputOptioins = () => {
         label: item.name,
         value: item.name
       }))
-      metaOpts.value = optionList
+      // metaOpts.value = optionList
     } catch (error: any) {
       console.error(error)
     }
   }
+  function setDocumentTypeOpts(opts: any) {
+    documentTypeOpts.value = [{ label: 'File', value: 'File' }, ...opts]
+  }
+  async function initWorkflowOpts() {
+    const data = await adminApi.api.getFormDesignProcessDefinitions().then((res: any) => res.data)
+    workflowOpts.value = data.map((item: any) => ({
+      label: item.label,
+      value: item.key
+    }))
+  }
   onMounted(async () => {
     initExternalStorageProfileOpts()
-    getMetaOpts()
+    // getMetaOpts()
+    initWorkflowOpts()
   })
 
   return {
@@ -121,8 +117,8 @@ export const useOutputOptioins = () => {
     duplicateNameStrategyOpts,
     pathVOpts,
     fileNameVOpts,
-    metaOpts,
-    documentNameOpts,
-    fileOpts
+    workflowOpts,
+    setDocumentTypeOpts,
+    workflowVOpts
   }
 }

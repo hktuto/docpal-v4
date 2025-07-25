@@ -51,7 +51,6 @@
           <el-option v-for="item in colorOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-divider />
 
       <el-form-item :label="$t('externalStorage.destination')" prop="destination">
         <el-select class="destination" v-model="form.destination" filterable clearable>
@@ -64,7 +63,7 @@
           <el-option v-for="item in externalStorageProfileOpts" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <template v-if="form.destination !== 'Workflow'">
+      <template v-if="form.destination !== 'workflow'">
         <el-form-item :label="$t('externalStorage.path')" prop="path">
           <el-input class="path" v-model="form.path" ref="pathInput" />
           <el-dropdown @command="(value: string) => handleVariableSelect(value, 'path')">
@@ -79,7 +78,7 @@
         <el-form-item :label="$t('externalStorage.fileName')" prop="fileName">
           <el-input class="fileName" v-model="form.fileName" ref="fileNameInput" />
           <el-dropdown @command="(value: string) => handleVariableSelect(value, 'fileName')">
-            <el-button type="primary" class="el-icon--right fileNameAddVariable">  {{ $t('docTemplate.variable.addVariable') }} </el-button>
+            <el-button type="primary" class="el-icon--right fileNameAddVariable"> {{ $t('docTemplate.variable.addVariable') }} </el-button>
             <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item v-for="item in fileNameVOpts" :key="item.value" :command="item.value">{{ item.label }}</el-dropdown-item>
@@ -89,21 +88,13 @@
         </el-form-item>
       </template>
       <template v-else>
-        <el-form-item :label="$t('externalStorage.file')" prop="file">
-          <el-select class="file" v-model="form.file" filterable clearable>
-            <el-option v-for="item in fileOpts" :key="item.value" :label="item.label" :value="item.value" />
+        <el-form-item :label="$t('workflow_workflow')" prop="workflow">
+          <el-select class="workflow" v-model="form.workflow" filterable clearable>
+            <el-option v-for="item in workflowOpts" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="$t('externalStorage.fileName')" prop="documentName">
-          <el-select class="documentName" v-model="form.documentName" filterable clearable>
-            <el-option v-for="item in documentNameOpts" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('dpSearch.searchMeta')" prop="meta">
-          <el-select class="meta" v-model="form.meta" filterable clearable>
-            <el-option v-for="item in metaOpts" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
+        <el-divider />
+        <WorkflowVariableMapping v-if="form.workflow" :workflow="form.workflow" :varList="workflowVOpts" />
       </template>
       <el-form-item v-if="form.destination === 'external'" :label="$t('externalStorage.duplicateNameStrategy')" prop="duplicateNameStrategy" required>
         <el-select class="duplicateNameStrategy" v-model="form.duplicateNameStrategy" filterable clearable>
@@ -129,22 +120,19 @@ const props = defineProps({
 const emits = defineEmits(['refresh'])
 const defaultValue = {
   fileName: '',
-  documentType: '',
+  documentType: 'File',
   outputFormat: '',
   color: '',
   destination: '',
   shareDriveProfile: '',
   path: '/',
   fileType: '', // 新增
-  resolution: '', // 新增
-  quality: '', // 新增
-  keepLineBreaks: '', // 新增
-  insertPageBreakChar: '', // 新增
-  useBlankLineAsParaSep: '', // 新增
-  duplicateNameStrategy: '', // 新增
-  file: '',
-  documentName: '',
-  meta: ''
+  resolution: 1, // 新增
+  quality: 80, // 新增
+  keepLineBreaks: 'Yes', // 新增
+  insertPageBreakChar: 'Yes', // 新增
+  useBlankLineAsParaSep: 'Yes', // 新增
+  duplicateNameStrategy: '' // 新增
 }
 const { t } = useI18n()
 const dialogVisible = ref(false)
@@ -160,9 +148,8 @@ const {
   duplicateNameStrategyOpts,
   pathVOpts,
   fileNameVOpts,
-  metaOpts,
-  documentNameOpts,
-  fileOpts
+  workflowOpts,
+  workflowVOpts
 } = useOutputOptioins()
 const formRef = ref<any>(null)
 const form = ref<any>({
@@ -183,10 +170,7 @@ const rules = {
   keepLineBreaks: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.keepLineBreaks') }), trigger: 'change' }], // 新增
   insertPageBreakChar: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.insertPageBreakChar') }), trigger: 'change' }], // 新增
   useBlankLineAsParaSep: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.useBlankLineAsParaSep') }), trigger: 'change' }], // 新增
-  duplicateNameStrategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }], // 新增
-  file: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.file') }), trigger: 'change' }],
-  documentName: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.fileName') }), trigger: 'change' }],
-  meta: [{ required: true, message: t('render.hint.fieldRequired', { name: t('dpSearch.searchMeta') }), trigger: 'change' }]
+  duplicateNameStrategy: [{ required: true, message: t('render.hint.fieldRequired', { name: t('externalStorage.duplicateNameStrategy') }), trigger: 'change' }] // 新增
 }
 
 function handleOpen(data: any, _isEdit = false) {
