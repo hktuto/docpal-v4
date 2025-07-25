@@ -11,35 +11,33 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['updateCData'])
 const { templateId } = toRefs(props)
-const variableList = ref<any>({})
+const variableList = ref<any>([])
 
 const state = reactive({
-  fileType: '',
-  testVariables: {},
-  loading: false
+  fileType: ''
 })
-
-const templateVariablesRendererRef = ref()
 
 async function getTemplateVariableList() {
   if (!props.templateId) {
+    variableList.value = []
     return
   }
   variableList.value = {}
 
   const { data } = await adminApi.api.getTemplateDocumentRefreshId(props.templateId)
-  // const {templateVariable} = await GetTemplateVariablesApi(props.templateId);
   state.fileType = data.fileType
+  const cdata = props.templateCData ? JSON.parse(props.templateCData) : {}
   if (data.fileType === 'Word') {
-    state.loading = true
     const variable = JsonSchemaToJsonData(data.templateVariable)
-    console.log(111, templateVariablesRendererRef)
-    if (variable) {
-      state.loading = false
-      variableList.value = variable
-      await templateVariablesRendererRef.value.setVariables(variable)
+    if (!variable) {
+      return
     }
-    return
+    variable.map((item: any) => {
+      const rawValue = cdata[item.id] || ''
+      item.value = rawValue.replace('${variables:get(', '').replace(')}', '')
+      return item
+    })
+    variableList.value = variable
   }
 
   const fullVarList = JSON.parse(data.templateVariable as any).reduce((prev: any, curr: any) => {
@@ -55,31 +53,29 @@ async function getTemplateVariableList() {
   }, [])
   const varList = [...new Set(fullVarList)]
   // check if templateCData is in varList
-  const cdata = props.templateCData ? JSON.parse(props.templateCData) : {}
-  variableList.value = varList.reduce((all: any, key: any) => {
+  variableList.value = varList.map((key: string) => {
+    const rawValue = cdata[key] || ''
+    const value = rawValue.replace('${variables:get(', '').replace(')}', '')
 
-    // get variable from ${variables:get(variable)} in cdata[key]
-    all[key] = cdata[key] ? cdata[key].replace('${variables:get(', '').replace(')}', '') : ''
-
-    return all
-  }, {})
+    return {
+      id: key,
+      name: key,
+      value
+    }
+  })
 }
 
 function updateData() {
-  // loop thought variableList.value, and convert all value to ${variables:get(variable)}
-  const newCDate = Object.keys(variableList.value).reduce((all: any, key: any) => {
-    if (!variableList.value[key]) {
-      return all
-    }
-    all[key] = '${variables:get(' + variableList.value[key] + ')}'
-    return all
-  }, {})
-
+  const newCDate = Object.fromEntries(
+    variableList.value
+      .filter(item => item.value)
+      .map(item => [item.id, `\${variables:get(${item.value})}`])
+  )
   emits('updateCData', JSON.stringify(newCDate))
 }
 
-function handleTestVariable(variables: any) {
-  state.testVariables = variables
+function isEmptyObj(obj: any) {
+  return Object.keys(obj).length === 0
 }
 
 watch(templateId, () => {
@@ -92,17 +88,14 @@ watch(templateId, () => {
 
 <template>
   <div class="templateVariableContainer">
-    <ElForm v-if="variableList" label-position="top" style="width:100%;">
+    <ElForm v-if="!isEmptyObj(variableList)" label-position="top" style="width:100%;">
       <el-divider />
       <ElFormItem>
         <span>Variables</span>
       </ElFormItem>
-      <DocTemplateVariablesRenderer v-loading="state.loading" ref="templateVariablesRendererRef"
-                                    v-if="state.fileType==='Word'"
-                                    @update="handleTestVariable" />
 
-      <ElFormItem v-else v-for="(value, key) in variableList" :key="key" :label="key">
-        <ElSelect v-model="variableList[key]" @change="updateData" clearable filterable>
+      <ElFormItem v-for="(value, key) in variableList" :key="value.id" :label="value.name">
+        <ElSelect v-model="value.value" @change="updateData" clearable filterable>
           <ElOption v-for="item in allFields" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
         </ElSelect>
       </ElFormItem>
@@ -110,6 +103,7 @@ watch(templateId, () => {
     <div v-else>
       No variable
     </div>
+
   </div>
 </template>
 
