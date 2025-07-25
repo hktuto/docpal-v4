@@ -325,6 +325,19 @@ function handleTestVariable(variables: any) {
   state.testVariables = variables
 }
 
+// 优化后的变量处理函数
+function processVariablesToObject(variableList: any[]) {
+  return variableList
+    .filter((item: any) => item.value) // 过滤掉空值
+    .reduce((acc: Record<string, string>, item: any) => {
+      acc[item.id] = `\${variables:get(${item.value})}`
+      return acc
+    }, {})
+}
+
+// 使用示例：
+// const all = processVariablesToObject(variableList.value)
+
 onBeforeMount(async () => {
   init()
 })
