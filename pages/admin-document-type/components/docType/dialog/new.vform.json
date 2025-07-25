@@ -95,13 +95,108 @@
       "id": "select77632"
     },
     {
-      "key": 36765,
+      "key": 114914,
+      "type": "input",
+      "icon": "text-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "status",
+        "label": "enable",
+        "labelAlign": "",
+        "defaultValue": "D",
+        "placeholder": "",
+        "columnWidth": "200px",
+        "size": "",
+        "labelWidth": null,
+        "labelHidden": false,
+        "readonly": false,
+        "disabled": false,
+        "hidden": true,
+        "clearable": true,
+        "showPassword": false,
+        "required": false,
+        "requiredHint": "",
+        "validation": "",
+        "validationHint": "",
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "minLength": null,
+        "maxLength": 1,
+        "showWordLimit": false,
+        "prefixIcon": "",
+        "suffixIcon": "",
+        "appendButton": false,
+        "appendButtonText": "",
+        "prependText": "",
+        "appendButtonDisabled": false,
+        "buttonIcon": "",
+        "onCreated": "",
+        "onMounted": "",
+        "onInput": "",
+        "onChange": "",
+        "onFocus": "",
+        "onBlur": "",
+        "onEnter": "",
+        "onValidate": "",
+        "onAppendButtonClick": ""
+      },
+      "id": "input_status"
+    },
+    {
+      "key": 200001,
+      "type": "switch",
+      "icon": "switch-field",
+      "formItemFlag": true,
+      "options": {
+        "name": "isFolder",
+        "label": "is_Folder",
+        "labelAlign": "",
+        "defaultValue": false,
+        "columnWidth": "200px",
+        "labelWidth": null,
+        "labelHidden": false,
+        "disabled": false,
+        "hidden": false,
+        "customClass": [],
+        "labelIconClass": null,
+        "labelIconPosition": "rear",
+        "labelTooltip": null,
+        "switchWidth": 40,
+        "activeText": "",
+        "inactiveText": "",
+        "activeColor": null,
+        "inactiveColor": null,
+        "onCreated": "",
+        "onMounted": "",
+        "onChange": "",
+        "onValidate": ""
+      },
+      "id": "switch_isFolder"
+    },
+    {
+      "key": 200003,
+      "type": "divider",
+      "icon": "el-divider",
+      "formItemFlag": false,
+      "options": {
+        "name": "divider_after_isFolder",
+        "label": "",
+        "direction": "horizontal",
+        "contentPosition": "center",
+        "style": "margin: 16px 0;"
+      },
+      "id": "divider_after_isFolder"
+    },
+    {
+      "key": 200002,
       "type": "select",
       "icon": "select-field",
       "formItemFlag": true,
       "options": {
-        "name": "dataType",
-        "label": "documentType_Type",
+        "name": "acl",
+        "label": "permission",
         "labelAlign": "",
         "defaultValue": "",
         "placeholder": "",
@@ -119,36 +214,19 @@
         "multiple": false,
         "multipleLimit": 0,
         "optionItems": [
-          {
-            "label": "文件",
-            "value": "File"
-          },
-          {
-            "label": "文件夹",
-            "value": "Folder"
-          },
-          {
-            "label": "音频",
-            "value": "Audio"
-          },
-          {
-            "label": "视频",
-            "value": "Video"
-          },
-          {
-            "label": "图片",
-            "value": "Picture"
-          }
+          { "label": "Read", "value": "read" },
+          { "label": "Write", "value": "write" },
+          { "label": "Admin", "value": "admin" }
         ],
-        "required": true,
-        "requiredHint": "common_selectedIsRequiredMsg",
+        "required": false,
+        "requiredHint": "",
         "validation": "",
         "validationHint": "",
         "customClass": [],
         "labelIconClass": null,
         "labelIconPosition": "rear",
         "labelTooltip": null,
-        "onCreated": "this.loadOptions([\r\n  { label: $t('docType.File'), value: 'File'},\r\n  { label: $t('docType.Folder'), value: 'Folder'},\r\n  { label: $t('docType.Audio'), value: 'Audio'},\r\n  { label: $t('docType.Video'), value: 'Video'},\r\n  { label: $t('docType.Picture'), value: 'Picture'},\r\n])\r\nthis.setValue('File')",
+        "onCreated": "",
         "onMounted": "",
         "onRemoteQuery": "",
         "onChange": "",
@@ -156,38 +234,7 @@
         "onBlur": "",
         "onValidate": ""
       },
-      "id": "select95675"
-    },
-    {
-      "key": 114914,
-      "type": "switch",
-      "icon": "switch-field",
-      "formItemFlag": true,
-      "options": {
-        "name": "enable",
-        "label": "enable",
-        "labelAlign": "",
-        "defaultValue": true,
-        "columnWidth": "200px",
-        "labelWidth": null,
-        "labelHidden": false,
-        "disabled": false,
-        "hidden": true,
-        "customClass": [],
-        "labelIconClass": null,
-        "labelIconPosition": "rear",
-        "labelTooltip": null,
-        "switchWidth": 40,
-        "activeText": "",
-        "inactiveText": "",
-        "activeColor": null,
-        "inactiveColor": null,
-        "onCreated": "",
-        "onMounted": "",
-        "onChange": "",
-        "onValidate": ""
-      },
-      "id": "switch69942"
+      "id": "select_acl"
     }
   ],
   "formConfig": {
