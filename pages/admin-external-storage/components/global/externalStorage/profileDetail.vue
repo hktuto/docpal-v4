@@ -14,7 +14,7 @@
         <ExternalStorageProfilesCapture lazy v-bind="props" :settings="profile?.captureSetting" @update="init" />
       </el-tab-pane>
       <el-tab-pane :label="$t('externalStorage.output')" name="output">
-        <ExternalStorageProfilesOutput lazy v-bind="props"  />
+        <ExternalStorageProfilesOutput lazy v-bind="props" :captureSetting="profile?.captureSetting" />
       </el-tab-pane>
     </el-tabs>
   </div>

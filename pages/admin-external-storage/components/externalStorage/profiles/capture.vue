@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import formJson from './capture.vform.json'
 import { adminApi } from 'api'
+import { ElMessage } from 'element-plus'
+const { t } = useI18n()
 const props = defineProps<{
   id: string
   settings: any
@@ -13,7 +15,17 @@ async function handleSave() {
   try {
     const data = await FormRendererRef.value.getFormData()
     loading.value = true
-    const result = await adminApi.api.patchExternalstorageIdProfilesProfileidCapture(props.storageId, props.id, data)
+    const params = {
+      useDocumentType: data.useDocumentType,
+    }
+    if (data.useDocumentType) {
+      params.documentType = data.documentType
+      params.needConfirm = data.needConfirm
+      params.confirmUser = data.confirmUser.filter((item: any) => !item.includes('group&&&&'))
+      params.confirmGroup = data.confirmUser.filter((item: any) => item.includes('group&&&&')).map((item: any) => item.replace('group&&&&', ''))
+    }
+    await adminApi.api.patchExternalstorageIdProfilesProfileidCapture(props.storageId, props.id, params)
+    ElMessage.success(t('dpMsg_success'))
     emits('update')
   } catch (error: any) {
     console.error(error)
@@ -23,7 +35,23 @@ async function handleSave() {
 }
 watch(() => props.settings, (newVal) => {
   if (newVal) {
-    FormRendererRef.value.vFormRenderRef.setFormData(newVal)
+    const data = {
+      useDocumentType: newVal.useDocumentType,
+    }
+    if (newVal.useDocumentType) {
+      data.needConfirm = newVal.needConfirm
+      data.documentType = newVal.documentType
+      let confirmUser = []
+      let confirmGroup = []
+      if (newVal.confirmUser) {
+        confirmUser = newVal.confirmUser
+      }
+      if (newVal.confirmGroup) {
+        confirmGroup = newVal.confirmGroup.map((item: any) => 'group&&&&' + item)
+      }
+      data.confirmUser = [...confirmUser, ...confirmGroup]
+    }
+    FormRendererRef.value.vFormRenderRef.setFormData(data)
   }
 })
 </script>
