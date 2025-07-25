@@ -121,7 +121,6 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { adminApi } from 'api'
-import { emitBus } from '../../../../../libraries/eventbus/src';
 const props = defineProps({
   storageId: String,
   id: String,
