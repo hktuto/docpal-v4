@@ -178,11 +178,11 @@ onMounted(() => {
             {{ t('user_editPassword') }}
           </el-button>
 
-<!--          <el-divider />-->
-<!--          <h3>{{ t('User Signature') }}</h3>-->
-<!--          <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">-->
-<!--            {{ t('Mange Signature') }}-->
-<!--          </el-button>-->
+          <el-divider />
+          <h3>{{ t('user.setting.userSignature') }}</h3>
+          <el-button style="width: 150px; margin-bottom: 10px" type="primary" @click="handleChangeMangeSignatureOpen">
+            {{ t('user.setting.mangeSignature') }}
+          </el-button>
 
           <el-divider />
         </el-col>
