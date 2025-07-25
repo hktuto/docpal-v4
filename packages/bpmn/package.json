@@ -28,10 +28,11 @@
     "vue": "3.5.6",
     "vue-draggable-next": "^2.2.1",
     "vue-router": "latest",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "docpal-document-editor": "workspace:*",
+    "doc-template": "workspace:*"
   },
   "devDependencies": {
-    
     "@nuxt/test-utils": "3.18.0",
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
