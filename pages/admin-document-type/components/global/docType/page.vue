@@ -8,7 +8,7 @@
         </el-button>
       </template>
       <template #status="{ row }">
-        <el-tag v-if="row.enable" type="success">{{ $t('actions.active') }}</el-tag>
+        <el-tag v-if="row.active === 'Active'" type="success">{{ $t('actions.active') }}</el-tag>
         <el-tag v-else type="danger">{{ $t('actions.inactive') }}</el-tag>
       </template>
     </VxeGrid>
@@ -30,8 +30,8 @@ const state = reactive<any>({})
 const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   id: 'docTypeManage',
   api: async (pageParams: any) => {
-    return await adminApi.api.postDocpaltypeSettingsPage({
-      ...pageParams,
+    return await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Query({
+        ...pageParams,
       ...extraParams
     })
   },
@@ -48,7 +48,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     },
     { field: 'createdBy', title: 'role.creator' },
     {
-      field: 'modifiedDate',
+      field: 'lastModifiedDate',
       title: 'table_last_update',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
@@ -98,13 +98,14 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   permissionMethod: (args: PermissionMethodParams) => {
     switch (args.code) {
       case 'active':
+        console.log(args.row)
         return {
-          visible: !args.row.enable,
+          visible: args.row.active !== 'Active',
           disabled: false
         }
       case 'inactive':
         return {
-          visible: args.row.enable,
+          visible: args.row.active === 'Active',
           disabled: false
         }
       default:
@@ -120,6 +121,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
 })
 
 function handleDblclick(row) {
+  // TODO : update dupliate dialog iwth new api
   routerProvider?.navigateTo(routeDocDetail(row), false)
 }
 
@@ -138,7 +140,7 @@ async function handleActive(row: any, isActive: boolean) {
     })
     .then((res) => res.data)
   if (!!result) {
-    row.enable = isActive
+    row.active = isActive ? 'Active' : 'Inactive'
   }
 }
 
