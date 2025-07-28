@@ -2131,6 +2131,8 @@
     },
     "displayField": "显示字段",
     "dropdownType": "下拉类型",
+    "mask": "遮罩設定",
+    "mask_type": "遮罩類型",
     "multiple": "多选",
     "regex": "正则表达式",
     "regexData": "正则表达式范例",
@@ -2140,7 +2142,8 @@
   "metadata": {
     "dataType": "数据类型",
     "export": "導出 XLS",
-    "new": "新增 Metadata"
+    "new": "新增 Metadata",
+    "type": "Metadata"
   },
   "modified_by": "修改者",
   "moreAction": {

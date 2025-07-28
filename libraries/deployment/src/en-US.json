@@ -2133,6 +2133,8 @@
     },
     "displayField": "Display Field",
     "dropdownType": "Dropdown Type",
+    "mask": "Mask Setting",
+    "mask_type": "Mask type",
     "multiple": "Multiple",
     "regex": "Regex",
     "regexData": "Regular expression example",
@@ -2142,7 +2144,8 @@
   "metadata": {
     "dataType": "Data Type",
     "export": "Exprot XLS",
-    "new": "New Metadata"
+    "new": "New Metadata",
+    "type": "Metadata"
   },
   "modified_by": "Last Modified By",
   "moreAction": {

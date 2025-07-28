@@ -2,6 +2,21 @@
 
 type MetadataGroup = 'DATA' | 'SYSTEM' | 'USER' | 'COMPREHENSIVE';
 
+export const MASK_OPTIONS = [
+  {
+    label: 'MASK_ALL',
+    value: 'Mask All'
+  },
+  {
+    label: 'MASK_PREFIX',
+    value: 'Mask Prefix'
+  },
+  {
+    label: 'MASK_SUFFIX',
+    value: 'Mask Suffix'
+  }
+]
+
 // Base validation types
 export type TextValidation = {
   validationRuleName: 'text';

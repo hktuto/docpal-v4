@@ -34,7 +34,7 @@
       </ElSelect>
     </ElFormItem>
 
-    <ElFormItem :label="t('metadata.validation.masterTable.isMultiple')" :required="false">
+    <ElFormItem :label="t('meta.multiple')" :required="false">
       <ElSwitch v-model="validation.isMultiple" />
     </ElFormItem>
     

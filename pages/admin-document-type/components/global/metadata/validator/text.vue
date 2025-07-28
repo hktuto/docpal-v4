@@ -28,9 +28,7 @@ const validationRules = reactive({
 
 const formRef = ref<FormInstance>()
 
-const validate = async () => {
-  await formRef.value?.validate()
-}
+const validate = async () =>formRef.value?.validate()
 
 const getData = () => {
   return validation.value
