@@ -1,5 +1,5 @@
 <template>
-  <div class="pageContainer--padding">
+  <div class="tableContainer pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" />
@@ -36,9 +36,19 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
     })
   },
   columns: [
-    { field: 'name', title: 'search.type', fixed: 'left' },
+    { field: 'name', 
+      title: 'search.type', 
+      fixed: 'left', 
+      type: 'html',
+      formatter({ cellValue, row }: any) {
+        let icon = '/icons/doc/file.svg'
+        if (row.isFolder === 'Yes') {
+          icon = '/icons/doc/folder.svg'
+        }
+        return `<span class="browseNameCell"><img src="${icon}" class="browseFileIcon" /> ${cellValue}</span> `
+      }
+     },
     { field: 'category', title: 'docType.category' },
-    { field: 'dataType', title: 'documentType_Type' },
     {
       field: 'status',
       title: 'documentType_Status',
@@ -177,7 +187,6 @@ async function getFilter() {
         { label: 'role.creator', value: 'createdBy' },
         { label: 'search.type', value: 'name' },
         { label: 'documentType_Status', value: 'enable' },
-        { label: 'documentType_Type', value: 'dataType' },
         { label: 'table_last_update', value: 'modifiedDate' }
       ]
     },
@@ -208,6 +217,18 @@ onMounted(() => {
 :deep .vxe-buttons--wrapper {
   display: flex;
   justify-content: space-between;
+}
+
+.tableContainer{
+  :deep(.browseFileIcon) {
+    width: calc(var(--app-space-m) * 1.5);
+    height: calc(var(--app-space-m) * 1.5);
+  }
+  :deep(.browseNameCell) {
+    display: flex;
+    align-items: center;
+    gap: var(--app-space-xs);
+  }
 }
 
 .responsive-container {

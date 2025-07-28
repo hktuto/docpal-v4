@@ -27,7 +27,7 @@ const { t } = useI18n()
 const state = reactive({
   loading: false,
   visible: false,
-  setting: {}
+  setting: {} as any
 })
 const FormRendererRef = ref()
 
@@ -35,10 +35,19 @@ async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.getFormData()
     state.loading = true
-    await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
-    ElMessage.success(t('documentType_duplicateSuccessMsg'))
-    emits('refresh')
-    state.visible = false
+    console.log(data, state.setting)
+    const newType = {
+      status: "D",
+      name: data.fromName,
+      category: state.setting.category,
+      isFolder: state.setting.isFolder === 'false' ? false : true,
+    }
+    // TODO : handle duplicate metadata
+    throw Error("demo")
+    // await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
+    // ElMessage.success(t('documentType_duplicateSuccessMsg'))
+    // emits('refresh')
+    // state.visible = false
   } catch (error) {
   } finally {
     state.loading = false

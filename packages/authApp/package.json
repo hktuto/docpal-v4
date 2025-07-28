@@ -24,8 +24,9 @@
     "vue-router": "latest"
   },
   "devDependencies": {
-    
     "@nuxt/test-utils": "3.18.0",
+    "@stagewise/toolbar": "^0.6.2",
+    "@stagewise/toolbar-vue": "^0.6.2",
     "@vue/test-utils": "^2.4.6",
     "api": "workspace:*",
     "happy-dom": "^17.4.7",

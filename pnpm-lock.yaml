@@ -699,6 +699,12 @@ importers:
       '@nuxt/test-utils':
         specifier: 3.18.0
         version: 3.18.0(@vitest/ui@3.1.4)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.3)(vitest@3.1.4)
+      '@stagewise/toolbar':
+        specifier: ^0.6.2
+        version: 0.6.2
+      '@stagewise/toolbar-vue':
+        specifier: ^0.6.2
+        version: 0.6.2(vue@3.5.6)
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
@@ -907,6 +913,9 @@ importers:
       '@nuxt/icon':
         specifier: ^1.10.3
         version: 1.11.0(vite@6.3.5)(vue@3.5.6)
+      docpal-document-editor:
+        specifier: workspace:*
+        version: link:../../libraries/docpal-document-editor
       fast-xml-parser:
         specifier: ^4.5.1
         version: 4.5.3
@@ -2094,6 +2103,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      docpal-document-editor:
+        specifier: workspace:*
+        version: link:../../libraries/docpal-document-editor
       nuxt:
         specifier: ^3.17.3
         version: 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)(vue-tsc@2.2.8)
@@ -2301,6 +2313,49 @@ importers:
         specifier: ^2.2.0
         version: 2.2.8(typescript@5.8.3)
 
+  pages/admin-external-storage:
+    dependencies:
+      '@nuxt/icon':
+        specifier: ^1.10.3
+        version: 1.11.0(vite@6.3.5)(vue@3.5.6)
+      nuxt:
+        specifier: ^3.17.3
+        version: 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)(vue-tsc@2.2.8)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.8.3)
+      vue-router:
+        specifier: latest
+        version: 4.5.1(vue@3.5.6)
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: 3.18.0
+        version: 3.18.0(@vitest/ui@3.1.4)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.3)(vitest@3.1.4)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^17.4.7
+        version: 17.4.7
+      msw:
+        specifier: ^2.7.0
+        version: 2.7.3(typescript@5.8.3)
+      playwright-core:
+        specifier: ^1.50.1
+        version: 1.51.0
+      sass:
+        specifier: ^1.85.0
+        version: 1.85.1
+      typescript:
+        specifier: ^5.7.3
+        version: 5.8.3
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.8(typescript@5.8.3)
+
   pages/admin-file-policies:
     dependencies:
       dayjs:
@@ -2349,6 +2404,49 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      nuxt:
+        specifier: ^3.17.3
+        version: 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)(vue-tsc@2.2.8)
+      vue:
+        specifier: 3.5.6
+        version: 3.5.6(typescript@5.8.3)
+      vue-router:
+        specifier: latest
+        version: 4.5.1(vue@3.5.6)
+    devDependencies:
+      '@nuxt/test-utils':
+        specifier: 3.18.0
+        version: 3.18.0(@vitest/ui@3.1.4)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.3)(vitest@3.1.4)
+      '@vue/test-utils':
+        specifier: ^2.4.6
+        version: 2.4.6
+      api:
+        specifier: workspace:*
+        version: link:../../libraries/api
+      happy-dom:
+        specifier: ^17.4.7
+        version: 17.4.7
+      msw:
+        specifier: ^2.7.0
+        version: 2.7.3(typescript@5.8.3)
+      playwright-core:
+        specifier: ^1.50.1
+        version: 1.51.0
+      sass:
+        specifier: ^1.85.0
+        version: 1.85.1
+      typescript:
+        specifier: ^5.7.3
+        version: 5.8.3
+      vue-tsc:
+        specifier: ^2.2.0
+        version: 2.2.8(typescript@5.8.3)
+
+  pages/admin-import-jobs:
+    dependencies:
+      '@nuxt/icon':
+        specifier: ^1.10.3
+        version: 1.11.0(vite@6.3.5)(vue@3.5.6)
       nuxt:
         specifier: ^3.17.3
         version: 3.17.3(eslint@8.57.1)(sass@1.85.1)(typescript@5.8.3)(vite@6.3.5)(vue-tsc@2.2.8)
@@ -9264,6 +9362,19 @@ packages:
 
   /@speed-highlight/core@1.2.7:
     resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
+
+  /@stagewise/toolbar-vue@0.6.2(vue@3.5.6):
+    resolution: {integrity: sha512-dmEQEWn3hXB6NogoQmBmkyPzaFs72Xvh/abrIvmYSjLze9kILOt7ijaKV/ENqnq6GfPGfXTPKqGKESpBecyFVQ==}
+    peerDependencies:
+      vue: '>=3.0.0'
+    dependencies:
+      '@stagewise/toolbar': 0.6.2
+      vue: 3.5.6(typescript@5.8.3)
+    dev: true
+
+  /@stagewise/toolbar@0.6.2:
+    resolution: {integrity: sha512-WN7PWaOT6YQKjJYL4/85V5UU0eZEws+/UBT/J4wJOEbFxoluLuchqh7xVTmUZTtw0q0xpzlgX8Vb0kAZf/pjmw==}
+    dev: true
 
   /@statsig/client-core@3.12.2:
     resolution: {integrity: sha512-v+dVrzfgsHbtr665KcU/4FVH7FJ5cfEHqNofMEjQmU7uV7G7/88qyr1Bq4u3EiX1nEs+RJi26xLNVrwfENe5jg==}
