@@ -2140,7 +2140,9 @@
   },
   "meta_contractNo": "Contract No.",
   "metadata": {
-    "dataType": "Data Type"
+    "dataType": "Data Type",
+    "export": "Exprot XLS",
+    "new": "New Metadata"
   },
   "modified_by": "Last Modified By",
   "moreAction": {

@@ -51,6 +51,9 @@ export default defineAppConfig({
           name: 'admin-document-type'
         },
         {
+          name: 'admin-metadata-list'
+        },
+        {
           name: 'admin-folder-cabinet'
         },
         {
