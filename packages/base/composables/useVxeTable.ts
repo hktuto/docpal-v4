@@ -501,7 +501,16 @@ export const useVxeTable = (params: UseVxeTableParams) => {
   // })
 
   function reload() {
-    tableRef.value?.commitProxy('reload')
+    // if virtualScroll is true, then reload the table
+    if (!params.virtualScroll) {
+      tableRef.value?.commitProxy('reload')
+      return
+    } else {
+      tableRef.value?.loadData([]);
+      nextTick(() => {
+        tableRef.value?.commitProxy('reload')
+      })
+    }
   }
 
   function query(params: any) {
