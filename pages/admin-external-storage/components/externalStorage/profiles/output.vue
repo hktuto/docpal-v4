@@ -13,7 +13,7 @@
         <el-tag v-else type="danger">{{ $t('Deactivated') }}</el-tag>
       </template>
     </VxeGrid>
-    <ExternalStorageProfilesOutputDialog ref="DialogRef" v-bind="props" @refresh="query({})" />
+    <ExternalStorageProfilesOutputDialog ref="DialogRef" v-bind="props" @refresh="reload" />
   </div>
 </template>
 <script lang="ts" setup>

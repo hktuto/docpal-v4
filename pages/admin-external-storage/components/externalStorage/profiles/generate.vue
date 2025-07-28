@@ -14,7 +14,6 @@ const FormRendererRef = ref()
 async function handleSave() {
   try {
     const data = await FormRendererRef.value.getFormData()
-    data.status = data.status ? 'A' : 'D'
     loading.value = true
     const params = {
       name: data.name,
