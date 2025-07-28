@@ -41,3 +41,19 @@ export const mockRouterProvider = {
     error: vi.fn(),
   }
 };
+
+export const FormRenderer = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {
+    setFormJson: vi.fn(),
+    setFormData: vi.fn()
+  }
+}
+export const VFormRender = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {}
+}
+export const ReaderDialog = {
+  template: '<div class="FormRenderer">FormRenderer</div>',
+  methods: {}
+}

@@ -40,9 +40,8 @@ async function handleSubmit() {
     await adminApi.api.postExternalstorageIdProfiles(props.id, data)
     ElMessage.success(t('dpMsg_success'))
     state.visible = false
-    setTimeout(() => {
-      emits('refresh')
-    }, 500)
+    await new Promise(resolve => setTimeout(resolve, 500))
+    emits('refresh')
   } catch (error) {
     console.error(error)
   } finally {

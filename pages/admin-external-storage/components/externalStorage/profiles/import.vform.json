@@ -33,7 +33,7 @@
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
-                "required": false,
+                "required": true,
                 "requiredHint": "",
                 "validation": "",
                 "validationHint": "",
@@ -86,7 +86,7 @@
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
-                "required": false,
+                "required": true,
                 "requiredHint": "",
                 "validation": "",
                 "validationHint": "",
@@ -139,7 +139,7 @@
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
-                "required": false,
+                "required": true,
                 "requiredHint": "",
                 "validation": "",
                 "validationHint": "",
@@ -192,7 +192,7 @@
                 "hidden": false,
                 "clearable": true,
                 "showPassword": false,
-                "required": false,
+                "required": true,
                 "requiredHint": "",
                 "validation": "",
                 "validationHint": "",
@@ -273,28 +273,20 @@
                 "multipleLimit": 0,
                 "optionItems": [
                   {
-                    "value": "png",
-                    "label": "png"
+                    "value": "PDF",
+                    "label": "PDF"
                   },
                   {
-                    "value": "jpg ",
-                    "label": "jpg "
+                    "value": "JPG",
+                    "label": "JPG"
                   },
                   {
-                    "value": "xlsx",
-                    "label": "xlsx"
+                    "value": "TIFF",
+                    "label": "TIFF"
                   },
                   {
-                    "value": "docx",
-                    "label": "docx"
-                  },
-                  {
-                    "value": "pdf ",
-                    "label": "pdf "
-                  },
-                  {
-                    "value": "pptx ",
-                    "label": "pptx "
+                    "value": "PNG",
+                    "label": "PNG"
                   }
                 ],
                 "required": false,
@@ -451,7 +443,7 @@
                 "labelHidden": false,
                 "disabled": false,
                 "hidden": false,
-                "required": false,
+                "required": true,
                 "requiredHint": "",
                 "validation": "",
                 "validationHint": "",

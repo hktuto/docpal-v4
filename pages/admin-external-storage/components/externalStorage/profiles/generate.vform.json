@@ -141,7 +141,7 @@
         "labelHidden": false,
         "disabled": false,
         "hidden": false,
-        "required": false,
+        "required": true,
         "requiredHint": "",
         "validation": "",
         "validationHint": "",
