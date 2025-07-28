@@ -59,15 +59,8 @@ const { tableConfig, tableEvent, tableRef } = useVxeTable({
                 formatter({cellValue}: any) {
                     return t(`meta.dataType.${cellValue}`);
                 },
-            },*/
-    { field: 'dataType', title: 'docTypeDetail.type' },
-    {
-      field: 'isRequire',
-      title: 'form_isRequire',
-      slots: {
-        default: 'isRequire'
-      }
-    },
+            },
+    { field: 'dataType', title: 'docTypeDetail.type' }, */
     {
       field: 'display',
       title: 'form_display',
