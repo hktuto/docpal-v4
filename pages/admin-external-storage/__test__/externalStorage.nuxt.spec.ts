@@ -2,12 +2,15 @@ import { shallowMount, mount } from '@vue/test-utils'
 import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
-import { mockRouterProvider } from './util'
 import {
+  ResponsiveFilter,
+  ExternalStoragePage,
+  ExternalStorageNewDialog,
+  WorkflowVariableMapping
 } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
-import { mockQuery, mockTable } from './setup'
-
+import { mockQuery, mockTable, mockReload } from './setup'
+import { mockRouterProvider, ReaderDialog, VFormRender, FormRenderer } from './util'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -21,44 +24,18 @@ vi.mock('element-plus', () => ({
     warning: vi.fn()
   }
 }))
-
-const FormRenderer = {
-  template: '<div class="FormRenderer">FormRenderer</div>',
-  methods: {
-    setFormJson: vi.fn(),
-    setFormData: vi.fn()
-  }
-}
-const VFormRender = {
-  template: '<div class="VFormRender">VFormRender</div>',
-  methods: {}
-}
-const ReaderDialog = {
-  template: '<div class="ReaderDialog">ReaderDialog</div>',
-  methods: {}
-}
-
-const Editorjs = {
-  template: '<div class="Editorjs">Editorjs</div>',
-  methods: {}
-}
-
-describe('[admin-company-profile]CompanyProfilePage', () => {
+const mockTabProvider = {}
+describe('[admin-external-storage]ExternalStoragePage', () => {
   let wrapper: any
-  const mockTabProvider = {}
-  const mockData = [
-    { id: 1, name: 'Company A', createdBy: 'User1', createdDate: '2025-01-01', modifiedDate: '2025-01-02', status: 'A' },
-    { id: 2, name: 'Company B', createdBy: 'User2', createdDate: '2025-01-03', modifiedDate: '2025-01-04', status: 'D' }
-  ]
-
+  const mockRow = { id: 1, status: 'A' }
   beforeEach(async () => {
-    wrapper = shallowMount(CompanyProfilePage, {
+    wrapper = shallowMount(ExternalStoragePage, {
       props: {
         page: 1,
         pageSize: 10
       },
       global: {
-        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
         provide: {
           [TabManagerKey]: mockTabProvider,
           [MenuRouterKey]: mockRouterProvider
@@ -80,62 +57,41 @@ describe('[admin-company-profile]CompanyProfilePage', () => {
     wrapper.unmount()
     vi.clearAllMocks()
   })
-  it('should render correctly', () => {
+  it('should render', () => {
     expect(wrapper.exists()).toBe(true)
   })
-
-  it('should handle filter form change', async () => {
-    await wrapper.vm.handleFilterFormChange({ isDesc: 'false', orderBy: 'name' })
-    expect(wrapper.vm.extraParams).toEqual({ isDesc: false, orderBy: 'name' }) // 确保参数正确更新
-    await wrapper.vm.reload() // 重新加载数据
-  })
-
-  it('should open new company profile dialog on add action', async () => {
-    const dialogRef = wrapper.vm.DialogRef
-    dialogRef.handleOpen = vi.fn((item) => Promise.resolve(item))
+  it('should open dialog when add button clicked', async () => {
+    wrapper.vm.DialogRef = { handleOpen: vi.fn() }
     await wrapper.vm.handleAdd()
-    expect(dialogRef.handleOpen).toHaveBeenCalled() // 确保 dialog 被正确打开
+    expect(wrapper.vm.DialogRef.handleOpen).toHaveBeenCalled()
   })
-
-  it('should navigate to detail page on double click', async () => {
-    const row = mockData[0]
-    await wrapper.vm.handleDblclick(row)
-    expect(mockRouterProvider.navigateTo).toHaveBeenCalled() // 确保导航被调用
+  it('should call handleEdit on edit', () => {
+    wrapper.vm.DialogRef = { handleEdit: vi.fn() }
+    wrapper.vm.handleEdit(mockRow)
+    expect(wrapper.vm.DialogRef.handleEdit).toHaveBeenCalledWith(mockRow)
+  })  
+  it('should call routerProvider.navigateTo on double click', () => {
+    wrapper.vm.handleDblclick(mockRow)
+    expect(mockRouterProvider.navigateTo).toHaveBeenCalled()
   })
-  it('should confirm and delete a company profile', async () => {
-    const row = mockData[0]
-    const messageBoxConfirmSpy = vi.spyOn(ElMessageBox, 'confirm').mockResolvedValue('confirm') // 模拟确认对话框
-
-    await wrapper.vm.handleDelete(row)
-    expect(messageBoxConfirmSpy).toHaveBeenCalledWith(expect.any(String)) // 确保确认对话框被调用
-    expect(adminApi.api.deleteCompanyprofilesCompanyid).toHaveBeenCalledWith(row.id) // 确保删除 API 被调用
+  it('should call reload on filter form change', () => {
+    wrapper.vm.reload = mockReload
+    wrapper.vm.handleFilterFormChange({ isDesc: true })
+    expect(mockReload).toHaveBeenCalled()
   })
-
-  it('should not delete a company profile if cancelled', async () => {
-    const row = mockData[0]
-    const messageBoxConfirmSpy = vi.spyOn(ElMessageBox, 'confirm').mockResolvedValue('cancel') // 模拟取消对话框
-
-    await wrapper.vm.handleDelete(row)
-    expect(messageBoxConfirmSpy).toHaveBeenCalledWith(expect.any(String)) // 确保确认对话框被调用
-    expect(adminApi.api.deleteCompanyprofilesCompanyid).not.toHaveBeenCalled() // 确保删除 API 未被调用
+  it('should call API and update status on handleActive', async () => {
+    adminApi.api.patchExternalstorageIdStatus.mockResolvedValue({ data: true })
+    mockRow.status = 'A'
+    await wrapper.vm.handleActive(mockRow, 'D')
+    expect(mockRow.status).toBe('D')
   })
 })
-describe('[admin-company-profile]CompanyProfileDetail', () => {
+describe('[admin-external-storage]ExternalStorageNewDialog', () => {
   let wrapper: any
-  const mockTabProvider = {}
-  const mockId = '12345'
-  const mockData = {
-    name: 'Company A',
-    createdBy: 'User1',
-    createdDate: '2025-01-01',
-    modifiedDate: '2025-01-02',
-    status: 'A'
-  }
   beforeEach(async () => {
-    wrapper = shallowMount(CompanyProfileDetail, {
-      props: { id: mockId },
+    wrapper = shallowMount(ExternalStorageNewDialog, {
       global: {
-        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs },
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
         provide: {
           [TabManagerKey]: mockTabProvider,
           [MenuRouterKey]: mockRouterProvider
@@ -146,18 +102,131 @@ describe('[admin-company-profile]CompanyProfileDetail', () => {
         }
       }
     })
-    await wrapper.vm.$nextTick()
-    // const dialogRef = wrapper.vm.$refs.SmartFolderInfoDialogRef;
-    // dialogRef.handleOpen = vi.fn();
-    // const tableRef = wrapper.vm.$refs.tableRef;
-    // tableRef.initBar = vi.fn();
   })
-
   afterEach(() => {
     wrapper.unmount()
     vi.clearAllMocks()
   })
-  it('should render correctly', () => {
+  it('should render', () => {
     expect(wrapper.exists()).toBe(true)
   })
+  it('should open dialog and reset form on handleOpen', async () => {
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: { resetForm: vi.fn() }
+    }
+    await wrapper.vm.handleOpen()
+    expect(wrapper.vm.state.visible).toBe(true)
+    expect(wrapper.vm.state.isEdit).toBe(false)
+  })
+  it('should open dialog and set form data on handleEdit', async () => {
+    const data = {
+      id: 1,
+      name: 'test',
+      connectionType: 'type',
+      path: '/test',
+      status: 'A',
+      workGroup: 'wg',
+      credentials: { password: 'p', secret: 's', username: 'u', port: 22 },
+      platform: 'p'
+    }
+    const setFormData = vi.fn()
+    wrapper.vm.FormRendererRef = {
+      vFormRenderRef: { resetForm: vi.fn(), setFormData }
+    }
+    await wrapper.vm.handleEdit(data)
+    expect(wrapper.vm.state.visible).toBe(true)
+    expect(wrapper.vm.state.isEdit).toBe(true)
+    expect(wrapper.vm.state.setting).toEqual(data)
+  })
+  it('should submit and emit refresh (create)', async () => {
+    const getFormData = vi.fn().mockResolvedValue({
+      name: 'test', connectionType: 'type', path: '/test', status: true, workGroup: 'wg', platform: 'p', port: 22, password: 'p', secret: 's', username: 'u'
+    })
+    wrapper.vm.FormRendererRef = { getFormData, vFormRenderRef: { resetForm: vi.fn() } }
+    wrapper.vm.state.isEdit = false
+    adminApi.api.postExternalstorage = vi.fn().mockResolvedValue({})
+    await wrapper.vm.handleSubmit()
+    expect(adminApi.api.postExternalstorage).toHaveBeenCalled()
+    expect(wrapper.vm.state.visible).toBe(false)
+    // 等待 setTimeout
+    await new Promise(r => setTimeout(r, 600))
+    expect(wrapper.emitted('refresh')).toBeTruthy()
+  })
+  it('should submit and emit refresh (edit)', async () => {
+    const getFormData = vi.fn().mockResolvedValue({
+      name: 'test', connectionType: 'type', path: '/test', status: true, workGroup: 'wg', platform: 'p', port: 22, password: 'p', secret: 's', username: 'u'
+    })
+    wrapper.vm.FormRendererRef = { getFormData, vFormRenderRef: { resetForm: vi.fn() } }
+    wrapper.vm.state.isEdit = true
+    wrapper.vm.state.setting = { id: 1 }
+    adminApi.api.putExternalstorageId = vi.fn().mockResolvedValue({})
+    await wrapper.vm.handleSubmit()
+    expect(adminApi.api.putExternalstorageId).toHaveBeenCalled()
+    expect(wrapper.vm.state.visible).toBe(false)
+    await new Promise(r => setTimeout(r, 600))
+    expect(wrapper.emitted('refresh')).toBeTruthy()
+  })
 })
+
+describe('[admin-external-storage]WorkflowVariableMapping', () => {
+  let wrapper: any
+  const mockVarList = [
+    { label: 'Variable 1', value: 'var1' },
+    { label: 'Variable 2', value: 'var2' }
+  ]
+  beforeEach(async () => {
+    wrapper = shallowMount(WorkflowVariableMapping, {
+      props: {
+        workflow: 'test-workflow',
+        varList: mockVarList
+      },
+      global: {
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog },
+        provide: {
+          [TabManagerKey]: mockTabProvider,
+          [MenuRouterKey]: mockRouterProvider
+        },
+        mocks: {
+          $t: (msg: string) => msg,
+          $i18n: { t: (key: string) => key }
+        }
+      }
+    })
+    await wrapper.vm.$nextTick()
+  })
+  afterEach(() => {
+    wrapper.unmount()
+    vi.clearAllMocks()
+  })
+  it('should render', () => {
+    expect(wrapper.exists()).toBe(true)
+  })
+  it('should return correct target label when found in varList', () => {
+    const result = wrapper.vm.getTargetLabel('Variable 1')
+    expect(result).toBe('Variable 1')
+  })
+  it('should return original value when not found in varList', () => {
+    const result = wrapper.vm.getTargetLabel('Unknown Variable')
+    expect(result).toBe('Unknown Variable')
+  })
+  it('should call API and return mapped data on getWorkflowProps', async () => {
+    const mockApiResponse = [
+      { name: 'Property 1', id: 'prop1' },
+      { name: 'Property 2', id: 'prop2' }
+    ]
+    adminApi.api.postWorkflowProperties.mockResolvedValue({ data: mockApiResponse })
+    const result = await wrapper.vm.getWorkflowProps('test-workflow')
+    expect(adminApi.api.postWorkflowProperties).toHaveBeenCalledWith({ processKey: 'test-workflow' })
+    expect(result).toEqual([
+      { label: 'Property 1', value: 'prop1' },
+      { label: 'Property 2', value: 'prop2' }
+    ])
+  })
+  it('should handle API error in getWorkflowProps', async () => {
+    adminApi.api.postWorkflowProperties.mockRejectedValue(new Error('API Error'))
+    const result = await wrapper.vm.getWorkflowProps('test-workflow')
+    expect(result).toEqual([])
+  })
+
+})
+
