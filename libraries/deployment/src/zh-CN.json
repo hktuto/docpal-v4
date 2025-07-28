@@ -2138,7 +2138,9 @@
   },
   "meta_contractNo": "合同编号",
   "metadata": {
-    "dataType": "数据类型"
+    "dataType": "数据类型",
+    "export": "導出 XLS",
+    "new": "新增 Metadata"
   },
   "modified_by": "修改者",
   "moreAction": {

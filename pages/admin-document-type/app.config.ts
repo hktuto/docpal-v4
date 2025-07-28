@@ -14,6 +14,16 @@ export default defineAppConfig({
       feature: "CORE",
       props:{},
     },
+    "admin-metadata-list":{
+      id:"admin-metadata-list",
+      name: 'admin-metadata-list',
+      label: "adminMenu.metadataList",
+      icon: "typcn:database",
+      hoverIcon: "typcn:database",
+      component: "LazyMetadataList",
+      feature: "CORE",
+      props:{},
+    },
     "admin-smart-folder":{
       id:"admin-smart-folder",
       name: 'admin-smart-folder',
