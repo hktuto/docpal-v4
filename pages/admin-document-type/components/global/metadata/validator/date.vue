@@ -41,7 +41,7 @@
       />
     </ElFormItem>
 
-    <ElFormItem :label="t('metadata.validation.date.isMultiple')" :required="false">
+    <ElFormItem :label="t('meta.multiple')" :required="false">
       <ElSwitch v-model="validation.isMultiple" />
     </ElFormItem>
     
@@ -81,7 +81,7 @@ const validationRules = reactive({
 const formRef = ref<FormInstance>()
 
 const validate = async () => {
-  await formRef.value?.validate()
+  return await formRef.value?.validate()
 }
 
 const getData = () => {
