@@ -1,7 +1,7 @@
 <template>
   <ElForm ref="formRef" :model="validation" label-position="top">
 
-    <ElFormItem :label="t('metadata.validation.workflow.isMultiple')" :required="false">
+    <ElFormItem :label="t('meta.multiple')" :required="false">
       <ElSwitch v-model="validation.isMultiple" />
     </ElFormItem>
 
@@ -19,10 +19,7 @@ const { t } = useI18n()
 
 const formRef = ref<FormInstance>()
 
-const validate = async () => {
-  // Workflow validation has no required fields to validate
-  return true
-}
+const validate = async () => true
 
 const getData = () => {
   return validation.value

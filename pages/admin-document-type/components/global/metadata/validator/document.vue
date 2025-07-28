@@ -1,7 +1,7 @@
 <template>
   <ElForm ref="formRef" :model="validation" label-position="top">
 
-    <ElFormItem :label="t('metadata.validation.document.isMultiple')" :required="false">
+    <ElFormItem :label="t('meta.multiple')" :required="false">
       <ElSwitch v-model="validation.isMultiple" />
     </ElFormItem>
 

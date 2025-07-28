@@ -2,27 +2,34 @@
 <div class="pageContainer--padding tableContainer">
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
-      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" />
+      <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="metadataName" inputPlaceHolder="documentType_filter" />
       <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
-          {{ $t('metadata.new') }}
+          {{ t('metadata.new') }}
         </el-button>
         <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleExport">
-          {{ $t('metadata.export') }}
+          {{ t('metadata.export') }}
         </el-button>
     </template>
     <template #display="{ row }">
         <el-switch v-model="row.active" />
     </template>
   </VxeGrid>
-  <MetadataDialogNew ref="metadataDialogNewRef" />
+  <MetadataDialogNew ref="metadataDialogNewRef" @reload="reload" />
+  <MetadataDialogEdit ref="metadataDialogEditRef" @reload="reload" />
+  <MetadataDialogDuplicate ref="metadataDialogDuplicateRef" @reload="reload" />
 </div>
 </template>
 
 
 <script lang="ts" setup>
 import { adminApi } from 'api'
-const ResponsiveFilterRef = ref()
+import { useDebounceFn } from '@vueuse/core'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
+const { t } = useI18n()
+const ResponsiveFilterRef = ref()
+const metadataDialogEditRef = ref()
+const metadataDialogDuplicateRef = ref()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
@@ -43,11 +50,8 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
       fixed: 'left'
     },
     {
-      field: 'display',
-      title: 'docType_displayMeta',
-      slots: {
-        default: 'display'
-      }
+      field: 'dateType',
+      title: 'meta.dateType',
     },
     {
       field:'lastModifiedDate',
@@ -59,16 +63,46 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   ],
   bodyActions:[
     [
-
+      {
+        code: 'edit',
+        name: 'common_edit',
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleEdit(row)
+        }
+      },
+      {
+        code: 'duplicate',
+        name: 'actions.duplicate',
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleDuplicate(row)
+        }
+      },
+      {
+        code: 'remove',
+        name: 'common_remove',
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleRemove(row)
+        }
+      }
     ]
-  ]
+  ],
+  dblClickAction({ row, column, event }) {
+    handleEdit(row)
+  },
 })
 
 const metadataDialogNewRef = ref()
 
-const handleFilterFormChange = (formModel: any) => {
-  console.log(formModel)
-}
+const handleFilterFormChange = useDebounceFn((formModel: any) => {
+  extraParams = formModel
+  reload()
+}, 500)
 
 const handleCreate = () => {
   metadataDialogNewRef.value.open()
@@ -76,6 +110,56 @@ const handleCreate = () => {
 
 const handleExport = () => {
   console.log('export')
+}
+
+const handleEdit = (row: any) => {
+  
+  // remove any additional field in row
+  const editForm = {
+    id: row.id,
+    name: row.name,
+    validationRule: row.validationRule || null,
+    maskRule: row.maskRule || null,
+    langs: row.langs || {},
+  }
+  console.log('Edit metadata:', editForm)
+  metadataDialogEditRef.value.open(editForm)
+  // TODO: Open edit dialog
+}
+
+const handleDuplicate = (row: any) => {
+  // remove any additional field in row
+  const duplicateForm = {
+    id: row.id,
+    name: row.name,
+    validationRule: row.validationRule || null,
+    maskRule: row.maskRule || null,
+    langs: row.langs || {},
+  }
+  console.log('Duplicate metadata:', duplicateForm)
+  metadataDialogDuplicateRef.value.open(duplicateForm)
+}
+
+const handleRemove = async (row: any) => {
+  const action = await ElMessageBox.confirm(
+    t('metadata.confirm_delete', { name: row.name }),
+    t('metadata.confirm_delete_title'),
+    {
+      confirmButtonText: t('common_confirm'),
+      cancelButtonText: t('common_cancel'),
+      type: 'warning'
+    }
+  )
+  console.log('action', action)
+  if (action !== 'confirm') return
+
+  const result = await adminApi.api.deleteDocpaltypeSettingsMetadataV2DeleteMetadataid(row.id)
+  if(result) {
+    ElMessage.success(t('metadata.remove_success'))
+    reload()
+  } else {
+    ElMessage.error(t('metadata.remove_error'))
+  }
 }
 </script>
 
@@ -85,5 +169,11 @@ const handleExport = () => {
     background-color: var(--app-color-bg-secondary);
   }
 }
+.responsive-container {
+  width: 70%;
 
+  :deep .el-input {
+    width: 250px;
+  }
+}
 </style>

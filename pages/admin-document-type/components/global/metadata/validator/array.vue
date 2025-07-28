@@ -13,7 +13,7 @@
       <ElInput v-model="validation.maxItems" :placeholder="t('metadata.validation.array.maxItems')" type="number" min="0" />
     </ElFormItem>
 
-    <ElFormItem :label="t('metadata.validation.array.info')">
+    <ElFormItem :label="t('meta.multiple')">
       <ElAlert 
         :title="t('metadata.validation.array.title')" 
         :description="t('metadata.validation.array.description')" 
