@@ -21,6 +21,7 @@
 - [x] admin-easy-form	
 - [x] admin-email-template	
 - [x] admin-external-connection	
+- [x] admin-external-storage
 - [x] admin-share	
 - [x] admin-folder-cabinet	
 - [x] admin-group	
@@ -62,7 +63,7 @@
 
 
 ## packages
-- [ ] authApp
+- [-] authApp
 - [ ] base
 - [ ] bpmn
 - [ ] calendar
