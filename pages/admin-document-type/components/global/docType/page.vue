@@ -2,10 +2,13 @@
   <div class="tableContainer pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" />
-        <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
-          {{ $t('docType.new') }}
-        </el-button>
+        <div class="actionsButtonsContainer">
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" >
+          </ResponsiveFilter>
+          <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
+            {{ $t('docType.new') }}
+          </el-button>
+        </div>
       </template>
       <template #status="{ row }">
         <el-tag v-if="row.active === 'Active'" type="success">{{ $t('actions.active') }}</el-tag>
@@ -231,11 +234,14 @@ onMounted(() => {
   }
 }
 
-.responsive-container {
-  width: 70%;
-
-  :deep .el-input {
-    width: 250px;
+.actionsButtonsContainer{
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: var(--app-space-xs);
+  @container (width < 600px) {
+    grid-template-columns: 1fr;
   }
 }
+
 </style>
