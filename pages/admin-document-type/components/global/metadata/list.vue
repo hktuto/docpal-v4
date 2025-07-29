@@ -4,12 +4,15 @@
     <template #toolbar_buttons>
       <div class="actionsButtonsContainer">
       <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="metadataName" inputPlaceHolder="documentType_filter" />
-      <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
+        <div class="btns">
+
+        <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
           {{ t('metadata.new') }}
         </el-button>
         <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleExport">
           {{ t('metadata.export') }}
         </el-button>
+        </div>
       </div>
     </template>
     <template #display="{ row }">
@@ -187,21 +190,12 @@ const handleRemove = async (row: any) => {
   }
 }
 .actionsButtonsContainer{
-    width: 100%;
-    display: flex;
-    flex-flow: row wrap;
-    gap: var(--app-space-xs);
-    justify-content: flex-start;
-    align-items: center;
-    :deep .el-input {
-      width: 250px;
-    }
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: var(--app-space-xs);
+  @container (width < 600px) {
+    grid-template-columns: 1fr;
   }
-  .responsive-container{
-    max-width: 400px;
-    min-width: 250px;
-    :deep(.el-input){
-      width: 100%;
-    }
-  }
+}
 </style>
