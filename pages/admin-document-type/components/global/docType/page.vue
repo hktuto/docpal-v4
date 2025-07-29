@@ -3,11 +3,16 @@
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
         <div class="actionsButtonsContainer">
-          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" >
-          </ResponsiveFilter>
-          <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
-            {{ $t('docType.new') }}
-          </el-button>
+          <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="name" inputPlaceHolder="documentType_filter" />
+          <div class="btns">
+
+            <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
+              {{ $t('docType.new') }}
+            </el-button>
+            <el-button id="DocumentType__ExportCSV" type="primary" @click="handleExport">
+              {{ t('metadata.export') }}
+            </el-button>
+          </div>
         </div>
       </template>
       <template #status="{ row }">
@@ -22,8 +27,9 @@
 </template>
 <script lang="ts" setup>
 import { adminApi } from 'api'
+import { ElLoading, ElMessageBox } from 'element-plus'
 import { routeDocDetail } from '~/utils/routerHelper'
-
+const { t } = useI18n()
 const routerProvider = inject(MenuRouterKey)
 if (!routerProvider) {
   throw new Error('MenuRouterKey is not provided')
@@ -210,6 +216,23 @@ async function getFilter() {
     extraParams.isDesc = false
     reload()
   })
+}
+
+async function handleExport() {
+  const exportLoading = ElLoading.service({
+    lock: true,
+    text: t('metadata.export_loading'),
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  const result = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2ExportDocpalTypeCvs({
+    pageNum:0,
+    pageSize:1000
+  },{
+    format: 'blob',
+    timeout: 0,
+  })
+  downloadBlob(result, 'documentType', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+  exportLoading.close()
 }
 
 onMounted(() => {
