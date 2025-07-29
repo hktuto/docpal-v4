@@ -150,7 +150,8 @@
     "workflow": "Workflow Management",
     "workflowEditor": "Workflow Editor",
     "workflowForm": "Form Designer",
-    "workflowRetry": "Workflow Retry"
+    "workflowRetry": "Workflow Retry",
+    "metadataList": "Metadata"
   },
   "adminSetting": {
     "globalGeneralConfiguration": "Global General Configuration"
@@ -2146,7 +2147,33 @@
     "export": "Exprot XLS",
     "export_loading": "Exporting XLS",
     "new": "New Metadata",
-    "type": "Metadata"
+    "type": "Metadata",
+    "validation": {
+      "text": {
+        "maxLength": "Max Length"
+      },
+      "number": {
+        "maximum": "Max",
+        "minimum": "Min",
+        "precision": "Precision"
+      },
+      "select": {
+        "options": "Options"
+      },
+      "date": {
+        "dateOrDateTime": "Date or Date Time",
+        "format": "Format",
+        "defaultValue": "Default Value"
+      },
+      "masterTable": {
+        "masterTableId": "Master Table",
+        "displayColumn": "Display Column",
+        "valueColumn": "Value Column"
+      },
+      "role": {
+        "allow": "Allow"
+      }
+    }
   },
   "modified_by": "Last Modified By",
   "moreAction": {
