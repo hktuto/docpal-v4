@@ -2,6 +2,7 @@
 <div class="pageContainer--padding tableContainer">
   <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
     <template #toolbar_buttons>
+      <div class="actionsButtonsContainer">
       <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="metadataName" inputPlaceHolder="documentType_filter" />
       <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleCreate">
           {{ t('metadata.new') }}
@@ -9,6 +10,7 @@
         <el-button id="DocumentType__CreateNewDocumentType" type="primary" @click="handleExport">
           {{ t('metadata.export') }}
         </el-button>
+      </div>
     </template>
     <template #display="{ row }">
         <el-switch v-model="row.active" />
@@ -24,7 +26,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { useDebounceFn } from '@vueuse/core'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus'
 
 const { t } = useI18n()
 const ResponsiveFilterRef = ref()
@@ -108,8 +110,23 @@ const handleCreate = () => {
   metadataDialogNewRef.value.open()
 }
 
-const handleExport = () => {
+async function handleExport() {
+  const exportLoading = ElLoading.service({
+    lock: true,
+    text: t('metadata.export_loading'),
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
   console.log('export')
+  const result = await adminApi.api.postDocpaltypeSettingsMetadataV2ExportMetadataCvs({
+    pageNum:0,
+    pageSize:1000
+  },{
+    format: 'blob',
+    timeout: 0,
+  })
+  console.log('result', result)
+  downloadBlob(result, 'metadata.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+  exportLoading.close()
 }
 
 const handleEdit = (row: any) => {
@@ -169,11 +186,22 @@ const handleRemove = async (row: any) => {
     background-color: var(--app-color-bg-secondary);
   }
 }
-.responsive-container {
-  width: 70%;
-
-  :deep .el-input {
-    width: 250px;
+.actionsButtonsContainer{
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    gap: var(--app-space-xs);
+    justify-content: flex-start;
+    align-items: center;
+    :deep .el-input {
+      width: 250px;
+    }
   }
-}
+  .responsive-container{
+    max-width: 400px;
+    min-width: 250px;
+    :deep(.el-input){
+      width: 100%;
+    }
+  }
 </style>

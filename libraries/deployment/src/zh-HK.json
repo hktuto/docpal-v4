@@ -2142,6 +2142,7 @@
   "metadata": {
     "dataType": "資料類型",
     "export": "導出 XLS",
+    "export_loading": "導出中",
     "new": "新增 Metadata",
     "type": "Metadata"
   },

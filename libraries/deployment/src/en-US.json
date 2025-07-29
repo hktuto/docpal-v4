@@ -2144,6 +2144,7 @@
   "metadata": {
     "dataType": "Data Type",
     "export": "Exprot XLS",
+    "export_loading": "Exporting XLS",
     "new": "New Metadata",
     "type": "Metadata"
   },

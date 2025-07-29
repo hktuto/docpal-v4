@@ -13,8 +13,13 @@ export const deepCopy = (data: any) => {
 };
 
 export function downloadBlob(blob: any, name: string, type = 'application/octet-stream') {
-  const blobStream = new Blob([blob], { type });
-  const fileName = calFileNameAndExt(blob.type, name);
+  let blobStream: Blob;
+  if(blob instanceof Blob){
+    blobStream = blob.slice(0, blob.size, type)
+  }else{
+    blobStream = new Blob([blob], { type });
+  }
+  const fileName = calFileNameAndExt(blobStream.type, name);
   const url = window.URL.createObjectURL(blobStream);
   downloadUrl(url, fileName);
 }
