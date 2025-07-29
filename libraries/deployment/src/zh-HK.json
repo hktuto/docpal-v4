@@ -150,7 +150,8 @@
     "workflow": "工作流程管理",
     "workflowEditor": "工作流程編輯器",
     "workflowForm": "工作流程表單設計",
-    "workflowRetry": "工作流程重試"
+    "workflowRetry": "工作流程重試",
+    "metadataList": "Metadata"
   },
   "adminSetting": {
     "globalGeneralConfiguration": "全域通用配置"
@@ -2144,7 +2145,33 @@
     "export": "導出 XLS",
     "export_loading": "導出中",
     "new": "新增 Metadata",
-    "type": "Metadata"
+    "type": "Metadata",
+    "validation": {
+      "text": {
+        "maxLength": "最大長度"
+      },
+      "number": {
+        "maximum": "最大值",
+        "minimum": "最小值",
+        "precision": "精度"
+      },
+      "select": {
+        "options": "選項"
+      },
+      "date": {
+        "dateOrDateTime": "日期或日期時間",
+        "format": "格式",
+        "defaultValue": "預設值"
+      },
+      "masterTable": {
+        "masterTableId": "主表",
+        "displayColumn": "顯示欄位",
+        "valueColumn": "值欄位"
+      },
+      "role": {
+        "allow": "允許"
+      }
+    }
   },
   "modified_by": "修改者",
   "moreAction": {
