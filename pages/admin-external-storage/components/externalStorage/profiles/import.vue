@@ -26,6 +26,10 @@ async function handleSave() {
 }
 watch(() => props.settings, (newVal) => {
   if (newVal) {
+    // normalize newVal processingFolder, finishFolder, errorFolder
+    newVal.processingFolder = '/processing'
+    newVal.finishFolder = '/finish'
+    newVal.errorFolder = '/error'
     FormRendererRef.value.vFormRenderRef.setFormData(newVal)
   }
 })
