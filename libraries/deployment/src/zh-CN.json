@@ -1765,7 +1765,7 @@
     "externalStorageProfile": "外部存储配置文件",
     "file": "文件",
     "fileName": "文件名",
-    "finishFolder": "错误文件夹",
+    "finishFolder": "成功文件夹",
     "generate": "产生",
     "import": "输入",
     "importTask": "导入任务设置",

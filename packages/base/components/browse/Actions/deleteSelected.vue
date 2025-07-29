@@ -11,6 +11,9 @@ import { clientApi } from 'api'
 const props = defineProps<{
   selectedList: any
 }>()
+
+
+
 const emits = defineEmits(['success'])
 const { t } = useI18n()
 async function deleteSelected() {

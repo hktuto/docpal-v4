@@ -1765,7 +1765,7 @@
     "externalStorageProfile": "外部儲存設定檔",
     "file": "文件",
     "fileName": "文件名",
-    "finishFolder": "錯誤資料夾",
+    "finishFolder": "成功資料夾",
     "generate": "產生",
     "import": "輸入",
     "importTask": "導入任務設定",
