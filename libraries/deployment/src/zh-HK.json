@@ -1361,7 +1361,7 @@
   "dpMsg_503": "服務器異常，請稍後再試",
   "dpMsg_error": "失敗",
   "dpMsg_noDataUpdate": "沒有數據更新",
-  "dpMsg_success": "成功",
+  "dpMsg_success": "成功{tip}",
   "dpSearch": {
     "recordDetailTitle": "編輯搜尋條件",
     "recordTitle": "儲存搜尋",
