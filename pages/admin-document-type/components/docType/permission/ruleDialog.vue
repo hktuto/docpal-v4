@@ -1,9 +1,9 @@
 <template>
-  <el-dialog v-model="visible" title="Hidden Rule" width="600px" :before-close="handleClose" class="scroll-dialog">
+  <el-dialog v-model="visible" :title="$t('docType.ruleTitle', { name: title })" width="600px" :before-close="handleClose" class="scroll-dialog">
     <el-form ref="ruleFormRef" :model="formData" :rules="rules" label-position="top">
       <!-- 规则名称 -->
-      <el-form-item label="Rule Name" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入规则名称" clearable />
+      <el-form-item :label="$t('docType.ruleName')" prop="name">
+        <el-input v-model="formData.name" :placeholder="$t('render.hint.fieldRequired', { name: $t('docType.ruleName') })" clearable />
       </el-form-item>
       <DocTypePermissionUserRules ref="UserRulesRef" :targetOptions="userRulesOpts" />
     </el-form>
@@ -23,6 +23,10 @@ import { ref, reactive, watch } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { User, Delete, Plus } from '@element-plus/icons-vue'
 
+const props = defineProps<{
+  title: string
+}>()
+const { t } = useI18n()
 // Emits
 const emit = defineEmits(['add', 'remove'])
 const { userRulesOpts } = useDocumentTypeOptioins()
@@ -45,7 +49,7 @@ const formData = reactive<RuleForm>({
 
 // 表单验证规则
 const rules: FormRules = {
-  ruleName: [{ required: true, message: '请输入规则名称', trigger: 'blur' }]
+  name: [{ required: true, message: t('render.hint.fieldRequired', { name: t('docType.ruleName') }), trigger: 'blur' }]
 }
 const UserRulesRef = ref()
 // 打开弹窗

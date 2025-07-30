@@ -9,7 +9,7 @@
     <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" class="display-meta-form">
       <!-- Metadata Selection -->
       <el-form-item :label="$t('rightDetail_meta')" prop="metadataId" required>
-        <el-select-v2 v-model="formData.metadataId" :options="metadataOpts" :placeholder="$t('docType_metaFilter')" default-first-option clearable filterable>
+        <el-select-v2 v-model="formData.metadataId" :options="metadataOpts" :placeholder="$t('render.hint.fieldRequired', { name: $t('rightDetail_meta') })" default-first-option clearable filterable>
           <template #default="{ item }">
             <span style="margin-right: 8px">{{ $t(item.label) }}</span>
           </template>
@@ -86,7 +86,7 @@ const state = reactive({
 })
 
 // Form data
-const formData = reactive({
+const formData = reactive<any>({
   metadataId: '',
   display: true,
   metadataPermission: {

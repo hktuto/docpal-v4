@@ -49,8 +49,8 @@ export const useDocumentTypeOptioins = () => {
         return []
       }
     }
-    const groupList: any = await getGroupList()
-    const userList: any = await getUserList()
+    // const groupList: any = await getGroupList()
+    // const userList: any = await getUserList()
     userRulesOpts.value = [
       {
         label: 'user_role',
@@ -61,24 +61,24 @@ export const useDocumentTypeOptioins = () => {
           value: item.id
         }))
       },
-      {
-        label: 'user_groups',
-        value: 'userGroup',
-        type: 'select',
-        options: groupList.map((item: any) => ({
-          label: item.name,
-          value: item.id
-        }))
-      },
-      {
-        label: 'user_users',
-        value: 'user',
-        type: 'select',
-        options: userList.map((item: any) => ({
-          label: item.username,
-          value: item.userId
-        }))
-      }
+      // {
+      //   label: 'user_groups',
+      //   value: 'userGroup',
+      //   type: 'select',
+      //   options: groupList.map((item: any) => ({
+      //     label: item.name,
+      //     value: item.id
+      //   }))
+      // },
+      // {
+      //   label: 'user_users',
+      //   value: 'user',
+      //   type: 'select',
+      //   options: userList.map((item: any) => ({
+      //     label: item.username,
+      //     value: item.userId
+      //   }))
+      // }
     ]
   }
   onMounted(async () => {

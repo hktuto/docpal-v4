@@ -33,7 +33,7 @@ const props = defineProps<{
 }>()
 const ResponsiveFilterRef = ref()
 const isFilter = ref(false)
-let extraParams = {}
+let extraParams: any = {}
 let tableData: any[] = []
 const emits = defineEmits(['refresh', 'updateDetail'])
 const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
@@ -53,7 +53,7 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
         return t(cellValue)
       }
     },
-    { field: 'dataType', title: 'docTypeDetail.type' },
+    { field: 'dataType', title: 'meta.dataTypeText' },
     {
       field: 'display',
       title: 'form_display',
@@ -112,11 +112,10 @@ const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   dblClickAction: ({ row, column, event }: any) => {
     handleDialogShow(row)
   },
-  virtualScroll: true
 })
 async function getList() {
   if (!isFilter.value) {
-    const data = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MetadataQuery({ docpalTypeName: props.documentType }).then((res) => res.data)
+    const data: any = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MetadataQuery({ docpalTypeName: props.documentType }).then((res) => res.data)
     tableData = data.metadataList.map((item: any) => ({
       ...item,
       display: !!item.display
@@ -141,7 +140,7 @@ function handleRefresh(addMore: boolean = false) {
   reload()
 }
 
-async function handleDelete(row) {
+async function handleDelete(row: any) {
   const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('docType_displayMeta'), name: null }), {
     confirmButtonClass: 'el-button el-button--warning',
     confirmButtonText: t('common_confirmDelete')
@@ -166,7 +165,7 @@ function handleFilterFormChange(formModel: any) {
   reload()
 }
 
-async function handleMove(row, moveIndex: number) {
+async function handleMove(row: any, moveIndex: number) {
   await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MoveMetadata({
     docpalTypeId: props.id,
     metadataId: row.id,
@@ -175,7 +174,7 @@ async function handleMove(row, moveIndex: number) {
   reload()
 }
 
-async function handleDisplayChange(row) {
+async function handleDisplayChange(row: any) {
   try {
     row.loading = true
     const params = {
