@@ -114,7 +114,7 @@ async function handleEdit(formData: OrgNode, selectedNodeId: string) {
     Object.assign(dataNode, formData)
     ElNotification({
       title: t('commons_success'),
-      message: t('common_updateSuccess'),
+      message: t('dpMsg_success'),
       type: 'success'
     })
   } catch (error) {

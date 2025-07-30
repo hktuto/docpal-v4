@@ -76,6 +76,8 @@ function open(data: any) {
   if (data.validationRule && data.validationRule.validationRuleName) {
     // Set the selected type based on the original validation rule
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
+  } else if(data.validationRule.validationRuleName === 'mastertable'){
+    selectedType.value = 'MasterTable'
   } else {
     selectedType.value = 'Text'
     const validationRule = METADATA_OPTIONS.reduce((acc, group) => {

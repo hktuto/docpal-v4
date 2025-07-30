@@ -1362,7 +1362,7 @@
   "dpMsg_503": "Server exception, please try again later",
   "dpMsg_error": "Fail",
   "dpMsg_noDataUpdate": "No Data Update",
-  "dpMsg_success": "Success",
+  "dpMsg_success": "Success{tip}",
   "dpSearch": {
     "recordDetailTitle": "Edit Search Criteria",
     "recordTitle": "Save Search",

@@ -78,7 +78,9 @@ function open(data:any ) {
     }, [] as MetadataOption[])
     .find(option => option.name === selectedType.value)?.validation
     data.validationRule = validationRule
-  }else{
+  } else if(data.validationRule.validationRuleName === 'mastertable'){
+    selectedType.value = 'MasterTable'
+  } else{
     // data.validationRule.type maybe in lower case, change it to first letter uppercase
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
   }
