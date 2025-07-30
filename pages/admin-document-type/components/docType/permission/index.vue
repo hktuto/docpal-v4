@@ -1,6 +1,6 @@
 <template>
   <div class="permission-container">
-    <h3 class="section-title">{{ $t(`permission.${permissionType}`) }}</h3>
+    <h3 class="section-title">{{ $t(`docType.${permissionType}`) }}</h3>
     <div class="rules-list">
       <div v-if="modelValue && modelValue.length > 0" class="rule-item">
         <div v-for="(rule, index) in modelValue" :key="index" class="rule-content">
@@ -9,8 +9,8 @@
         </div>
       </div>
     </div>
-    <el-button link class="add-rule-button" @click="handleOpen">Add Rule</el-button>
-    <DocTypePermissionRuleDialog ref="ruleDialogRef" @add="handleAdd" @remove="handleRemove" @update="handleUpdate" />
+    <el-button link class="add-rule-button" @click="handleOpen">{{ $t('docType.addRule') }}</el-button>
+    <DocTypePermissionRuleDialog ref="ruleDialogRef" :title="$t(`docType.${permissionType}`)" @add="handleAdd" @remove="handleRemove" @update="handleUpdate" />
   </div>
 </template>
 

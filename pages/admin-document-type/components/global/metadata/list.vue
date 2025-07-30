@@ -55,8 +55,8 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
       fixed: 'left'
     },
     {
-      field: 'dateType',
-      title: 'meta.dateType',
+      field: 'dataType',
+      title: 'meta.dataTypeText',
     },
     {
       field:'lastModifiedDate',

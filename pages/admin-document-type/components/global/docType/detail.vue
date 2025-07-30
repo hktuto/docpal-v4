@@ -37,7 +37,6 @@
           <DocTypeRelatedTypeTable :docTypeDetail="state.docTypeDetail" :name="name"></DocTypeRelatedTypeTable>
         </el-tab-pane> -->
       </el-tabs>
-      <!-- <MetaInfo :docTypeDetail="state.docTypeDetail"></MetaInfo> -->
     </div>
   </div>
 </template>
@@ -106,9 +105,10 @@ async function handleSubmit(attr: string) {
   try {
     state.loading = true
     const params = {
-      docpalTypeName: state.form.docpalTypeName,
+      name: state.form.docpalTypeName,
       category: state.form.category,
-      isFolder: state.form.isFolder ? 'Yes' : 'No'
+      isFolder: state.form.isFolder,
+      id
     }
     let tip = ''
     if (attr) {
@@ -122,6 +122,8 @@ async function handleSubmit(attr: string) {
     }
     ElMessage.success(t('dpMsg_success', { tip }))
     state.docTypeDetail[attr] = params[attr]
+    const res = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Update(params)
+    console.log(res)
   } catch (error) {
     console.error(error)
     state.form[attr] = state.docTypeDetail[attr]

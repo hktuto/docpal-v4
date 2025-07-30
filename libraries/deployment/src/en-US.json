@@ -127,6 +127,7 @@
     "messageTemplate": "Message Template",
     "message_queue": "Jobs Status",
     "meta": "Metadata Setting",
+    "metadataList": "Metadata",
     "oauth": "Oauth",
     "passwordPolicy": "Password Policy",
     "policy": "Retention Management",
@@ -150,8 +151,7 @@
     "workflow": "Workflow Management",
     "workflowEditor": "Workflow Editor",
     "workflowForm": "Form Designer",
-    "workflowRetry": "Workflow Retry",
-    "metadataList": "Metadata"
+    "workflowRetry": "Workflow Retry"
   },
   "adminSetting": {
     "globalGeneralConfiguration": "Global General Configuration"
@@ -1200,10 +1200,16 @@
     "Folder": "Folder",
     "Picture": "Picture",
     "Video": "Video",
+    "addRule": "Add Rule",
     "category": "Category",
     "duplicate": "Duplicate Document Type",
     "duplicateFrom": "Duplicate From",
+    "hiddenPermissions": "Hidden",
+    "maskPermissions": "Mask",
     "new": "Create New Document Type",
+    "readOnlyPermissions": "Read only",
+    "ruleName": "Rule Name",
+    "ruleTitle": "{name} Rule",
     "type": "Type"
   },
   "docTypeDetail": {
@@ -1289,6 +1295,8 @@
   "documentType_inactivate": "Inactivate Document Type",
   "documentType_metaAdd": "Add New Display Meta",
   "documentType_metaFilter": "Filter by Meta",
+  "documentType_movedown": "Move down",
+  "documentType_moveup": "Move up",
   "documentType_newDocument": "New Document Type Name",
   "documentType_newDuplicateSuccessMsg": "The new display meta has been added to this document type successfully.",
   "documentType_relatedAddSuccessMsg": "The new related document has been added to this document type successfully.",
@@ -2132,46 +2140,52 @@
       "select": "Dropdown",
       "textarea": "Multi line text"
     },
+    "dataTypeText": "Data Type",
     "displayField": "Display Field",
     "dropdownType": "Dropdown Type",
     "mask": "Mask Setting",
+    "maskLength": "Mask Length",
     "mask_type": "Mask type",
     "multiple": "Multiple",
     "regex": "Regex",
     "regexData": "Regular expression example",
-    "regexWarning": "Regular expression warning"
+    "regexWarning": "Regular expression warning",
+    "validation_error": "Validation error"
   },
   "meta_contractNo": "Contract No.",
   "metadata": {
     "dataType": "Data Type",
+    "duplicate_error": "Duplicate error",
+    "duplicate_success": "Duplicate success",
     "export": "Exprot XLS",
     "export_loading": "Exporting XLS",
     "new": "New Metadata",
+    "original_name": "Original Name",
     "type": "Metadata",
     "validation": {
-      "text": {
-        "maxLength": "Max Length"
+      "date": {
+        "dateOrDateTime": "Date or Date Time",
+        "defaultValue": "Default Value",
+        "format": "Format"
+      },
+      "masterTable": {
+        "displayColumn": "Display Column",
+        "masterTableId": "Master Table",
+        "valueColumn": "Value Column"
       },
       "number": {
         "maximum": "Max",
         "minimum": "Min",
         "precision": "Precision"
       },
+      "role": {
+        "allow": "Allow"
+      },
       "select": {
         "options": "Options"
       },
-      "date": {
-        "dateOrDateTime": "Date or Date Time",
-        "format": "Format",
-        "defaultValue": "Default Value"
-      },
-      "masterTable": {
-        "masterTableId": "Master Table",
-        "displayColumn": "Display Column",
-        "valueColumn": "Value Column"
-      },
-      "role": {
-        "allow": "Allow"
+      "text": {
+        "maxLength": "Max Length"
       }
     }
   },

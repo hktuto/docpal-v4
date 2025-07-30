@@ -127,6 +127,7 @@
     "messageTemplate": "訊息模板",
     "message_queue": "消息列",
     "meta": "後設資料設定",
+    "metadataList": "Metadata",
     "oauth": "授權",
     "passwordPolicy": "密码策略",
     "policy": "保留管理",
@@ -150,8 +151,7 @@
     "workflow": "工作流程管理",
     "workflowEditor": "工作流程編輯器",
     "workflowForm": "工作流程表單設計",
-    "workflowRetry": "工作流程重試",
-    "metadataList": "Metadata"
+    "workflowRetry": "工作流程重試"
   },
   "adminSetting": {
     "globalGeneralConfiguration": "全域通用配置"
@@ -1200,10 +1200,16 @@
     "Folder": "資料夾",
     "Picture": "圖片",
     "Video": "影片",
+    "addRule": "新增規則",
     "category": "類別",
     "duplicate": "複製文檔類型",
     "duplicateFrom": "原文檔類型",
+    "hiddenPermissions": "隱藏",
+    "maskPermissions": "遮蓋",
     "new": "創建",
+    "readOnlyPermissions": "只讀",
+    "ruleName": "規則名稱",
+    "ruleTitle": "{name} 規則",
     "type": "類型"
   },
   "docTypeDetail": {
@@ -1286,8 +1292,10 @@
   "documentType_edit": "編輯顯示元",
   "documentType_filter": "依文件類型名稱篩選",
   "documentType_inactivate": "停用文件類型",
-  "documentType_metaAdd": "Add New Display Meta",
-  "documentType_metaFilter": "Filter by Meta",
+  "documentType_metaAdd": "新增新顯示元數據",
+  "documentType_metaFilter": "按 Meta 過濾",
+  "documentType_movedown": "下移",
+  "documentType_moveup": "上移",
   "documentType_newDocument": "新文件類型名稱",
   "documentType_newDuplicateSuccessMsg": "The new display meta has been added to this document type successfully.",
   "documentType_relatedAddSuccessMsg": "The new related document has been added to this document type successfully.",
@@ -2130,46 +2138,52 @@
       "select": "下拉",
       "textarea": "多行文字"
     },
+    "dataTypeText": "資料類型",
     "displayField": "顯示欄位",
     "dropdownType": "下拉類型",
     "mask": "遮罩設定",
+    "maskLength": "遮盖长度",
     "mask_type": "遮罩類型",
     "multiple": "多選",
     "regex": "正規表示式",
     "regexData": "正規表示式範例",
-    "regexWarning": "正規表示式警告"
+    "regexWarning": "正規表示式警告",
+    "validation_error": "驗證錯誤"
   },
   "meta_contractNo": "合同編號",
   "metadata": {
     "dataType": "資料類型",
+    "duplicate_error": "複製錯誤",
+    "duplicate_success": "複製成功",
     "export": "導出 XLS",
     "export_loading": "導出中",
     "new": "新增 Metadata",
+    "original_name": "原名",
     "type": "Metadata",
     "validation": {
-      "text": {
-        "maxLength": "最大長度"
+      "date": {
+        "dateOrDateTime": "日期或日期時間",
+        "defaultValue": "預設值",
+        "format": "格式"
+      },
+      "masterTable": {
+        "displayColumn": "顯示欄位",
+        "masterTableId": "主表",
+        "valueColumn": "值欄位"
       },
       "number": {
         "maximum": "最大值",
         "minimum": "最小值",
         "precision": "精度"
       },
+      "role": {
+        "allow": "允許"
+      },
       "select": {
         "options": "選項"
       },
-      "date": {
-        "dateOrDateTime": "日期或日期時間",
-        "format": "格式",
-        "defaultValue": "預設值"
-      },
-      "masterTable": {
-        "masterTableId": "主表",
-        "displayColumn": "顯示欄位",
-        "valueColumn": "值欄位"
-      },
-      "role": {
-        "allow": "允許"
+      "text": {
+        "maxLength": "最大長度"
       }
     }
   },
