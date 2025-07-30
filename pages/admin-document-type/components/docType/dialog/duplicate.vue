@@ -42,8 +42,8 @@ async function handleSubmit() {
       category: state.setting.category,
       isFolder: state.setting.isFolder === 'false' ? false : true,
     }
-    // TODO : handle duplicate metadata
-    throw Error("demo")
+    // TODO : jack will add duplicate api
+    throw Error("api not implemented")
     // await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
     // ElMessage.success(t('documentType_duplicateSuccessMsg'))
     // emits('refresh')
