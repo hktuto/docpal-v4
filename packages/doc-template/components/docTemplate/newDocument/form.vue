@@ -79,8 +79,8 @@ function handleClose() {
 
 <template>
   <ElForm ref="formRef" :model="form" :rules="rules" label-position="top">
-    <ElFormItem prop="title" :label="t('docTemplate.pageSetup.title')">
-      <ElInput v-model="form.title" :placeholder="t('docTemplate.pageSetup.EnterDocumentTitle')" />
+    <ElFormItem  prop="title" :label="t('docTemplate.pageSetup.title')">
+      <ElInput disabled v-model="form.title" :placeholder="t('docTemplate.pageSetup.EnterDocumentTitle')" />
     </ElFormItem>
     <ElFormItem prop="mode" label="Page Mode">
       <ElSelect v-model="form.mode" filterable>
@@ -136,8 +136,8 @@ function handleClose() {
     </template>
 
     <ElFormItem>
-      <ElButton type="primary" @click="submit">{{ $t('button.save') }}</ElButton>
-      <el-button @click="handleClose">{{ $t('button.close') }}</el-button>
+      <ElButton id="DocumentTemplate__Word__Save" type="primary" @click="submit">{{ $t('button.save') }}</ElButton>
+      <el-button id="DocumentTemplate__Word__Close" @click="handleClose">{{ $t('button.close') }}</el-button>
     </ElFormItem>
   </ElForm>
 </template>
