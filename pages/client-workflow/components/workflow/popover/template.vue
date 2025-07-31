@@ -1,6 +1,7 @@
 <template>
   <DialogFullscreen v-model="state.dialogVisible" :fullscreen="state.fullscreen" destroy-on-close append-to-body
-          :title="t('file_generateTemplate')" :close-on-click-modal="false" width="90%" height="50%" :align-center="true" @closed="reset">
+                    :title="t('file_generateTemplate')" :close-on-click-modal="false" width="90%" height="50%"
+                    :align-center="true" @closed="reset">
     <el-select v-model="form.templatePath" clearable filterable :disabled="state.loading"
                popper-class="dialog-select-dropdown" @change="templateParamGet">
       <el-option v-for="(item,index) in state.templateList" :key="index" :label="item.name" :value="item.path" />
@@ -23,7 +24,7 @@
       <el-button id="Workflow__PersonalWorkflow__Cancel" @click="state.dialogVisible = false">
         {{ $t('dpButtom_cancel') }}
       </el-button>
-      <el-button id="Workflow__PersonalWorkflow__Download" type="primary" v-if="state.canDownload"
+      <el-button id="Workflow__PersonalWorkflow__Preview" type="primary" v-if="state.canDownload"
                  :loading="state.loading" @click="generatePreviewFile">
         {{ $t('common_preview') }}
       </el-button>
@@ -141,6 +142,7 @@ async function handleSubmit() {
     state.dialogVisible = false
   } catch (error) {
     console.log(error)
+    throw new Error(error)
   }
   state.loading = false
 }
@@ -265,7 +267,6 @@ defineExpose({ handleOpen })
   flex-direction: column;
   overflow: hidden;
 
-  // 确保 DocTemplateViewer 能够正确显示
   :deep(.editorContainer) {
     height: 100%;
     min-height: 0;
@@ -277,7 +278,6 @@ defineExpose({ handleOpen })
     overflow: auto;
   }
 
-  // 确保 Reader 组件能够正确显示
   :deep(.docxContainer),
   :deep(.iframeContainer),
   :deep(.contentContainer) {
@@ -292,14 +292,12 @@ defineExpose({ handleOpen })
   }
 }
 
-// 变量渲染器容器样式
 .template_form > div:last-child {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
 
-  // 确保变量渲染器能够正确滚动
   :deep(.renderer-container) {
     flex: 1;
     overflow-y: auto;
