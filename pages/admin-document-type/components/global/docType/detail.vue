@@ -2,31 +2,41 @@
   <div class="pageContainer--padding" backPath="/documentType">
     <div class="metaSetting-container">
       <div class="meta-setting-info">
-        <div class="meta-setting-info-title">
-          <div class="meta-setting-info-title-header">{{ $t('docType_documentType') }}</div>
-          <div class="meta-setting-info-title-main">
-            <BrowseItemIcon class="el-icon--left" :documentBasicType="state.docTypeDetail.dataType" />
-            {{ state.docTypeDetail.name }}
-          </div>
-        </div>
-        <LanguageUnitForm ref="LanguageUnitFormRef" :lKey="state.docTypeDetail.name" />
-        <el-button id="DocumentType__Detail__Save" :loading="state.lanLoading" type="primary" @click="handleSave">
-          {{ $t('common_save') }}
-        </el-button>
+        <BrowseItemIcon style="--icon-size: 80px" class="meta-setting-info-icon el-icon--left" :documentBasicType="state.docTypeDetail.dataType" />
+        <el-form label-position="top" class="meta-setting-info-form">
+          <el-form-item :label="$t('search.type')">
+            <el-input
+              v-model="state.form.docpalTypeName"
+              @input="handleInput('docpalTypeName')"
+              @keyup.enter="handleSubmit('docpalTypeName')"
+              :disabled="state.loading"
+            ></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('docType.category')">
+            <el-select v-model="state.form.category" :disabled="state.loading" filterable @change="handleSubmit('category')">
+              <el-option v-for="item in categoryOpts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('doc.isFolder')">
+            <el-switch
+              v-model="state.form.isFolder"
+              :active-text="$t('el.popconfirm.confirmButtonText')"
+              :inactive-text="$t('el.popconfirm.cancelButtonText')"
+              @change="handleSubmit('isFolder')"
+              :disabled="state.loading"
+            />
+          </el-form-item>
+        </el-form>
+        <LanguageUnitForm ref="LanguageUnitFormRef" class="meta-setting-info-language" :lKey="name" />
       </div>
       <el-tabs v-model="state.activeTabName" class="dp-tabs--auto">
         <el-tab-pane :label="$t('docType_displayMeta')" name="metadata">
-          <DocTypeDisplayMetaTable
-            :docTypeDetail="state.docTypeDetail"
-            :metadata="state.docTypeDetail.metadata"
-            @refresh="initDocType"
-          ></DocTypeDisplayMetaTable>
+          <DocTypeDisplayMetaTable :documentType="name" :id="id" @refresh="initDocType" @updateDetail="initDocType"></DocTypeDisplayMetaTable>
         </el-tab-pane>
-        <el-tab-pane :label="$t('docType_relatedDocument')" name="related">
+        <!-- <el-tab-pane :label="$t('docType_relatedDocument')" name="related">
           <DocTypeRelatedTypeTable :docTypeDetail="state.docTypeDetail" :name="name"></DocTypeRelatedTypeTable>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
-      <!-- <MetaInfo :docTypeDetail="state.docTypeDetail"></MetaInfo> -->
     </div>
   </div>
 </template>
@@ -34,14 +44,24 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
+import { useDebounceFn } from '@vueuse/core'
 // const { getLanguageListStore } = useLanguage()
-const { name } = defineProps<{
+const { name, id } = defineProps<{
   name: string
+  id: string
 }>()
+const { categoryOpts } = useDocumentTypeOptioins()
+const { t } = useI18n()
+
 const state = reactive({
   docTypeDetail: {},
   lanLoading: false,
-  activeTabName: 'metadata'
+  activeTabName: 'metadata',
+  form: {
+    docpalTypeName: '',
+    category: '',
+    isFolder: false
+  }
 })
 const LanguageUnitFormRef = ref()
 
@@ -56,13 +76,61 @@ async function handleSave() {
   )
 }
 
-async function initDocType() {
-  state.docTypeDetail = await adminApi.api.getDocpaltypeSettingsNameName(name).then((res) => res.data)
+async function initDocType(detail: any) {
+  state.docTypeDetail = {
+    docpalTypeName: detail.docpalTypeName,
+    category: detail.category,
+    isFolder: detail.isFolder === 'Yes',
+    dataType: detail.dataType
+  }
+  setTimeout(() => {
+    state.form = {
+      docpalTypeName: detail.docpalTypeName,
+      category: detail.category,
+      isFolder: detail.isFolder === 'Yes'
+    }
+  }, 100)
 }
-
-onMounted(async () => {
-  initDocType()
-})
+const handleInput = useDebounceFn(
+  (attr: string) => {
+    handleSubmit(attr)
+  },
+  1000,
+  {
+    maxWait: 3000
+  }
+)
+async function handleSubmit(attr: string) {
+  if (attr === 'isFolder' && state.form.isFolder === state.docTypeDetail.isFolder) return
+  try {
+    state.loading = true
+    const params = {
+      name: state.form.docpalTypeName,
+      category: state.form.category,
+      isFolder: state.form.isFolder,
+      id
+    }
+    let tip = ''
+    if (attr) {
+      const i18nMap = {
+        docpalTypeName: t('search.type'),
+        category: t('docType.category'),
+        isFolder: t('doc.isFolder')
+      }
+      const i18nValue = attr === 'isFolder' ? (state.form.isFolder ? 'Yes' : 'No') : state.form[attr]
+      tip = '[' + i18nMap[attr] + ':' + i18nValue + ']'
+    }
+    ElMessage.success(t('dpMsg_success', { tip }))
+    state.docTypeDetail[attr] = params[attr]
+    const res = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Update(params)
+    console.log(res)
+  } catch (error) {
+    console.error(error)
+    state.form[attr] = state.docTypeDetail[attr]
+  } finally {
+    state.loading = false
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -85,28 +153,26 @@ onMounted(async () => {
 
 .meta-setting-info {
   display: grid;
-  grid-template-columns: min-content 1fr min-content;
   gap: calc(var(--app-space-xs) * 2);
-  align-items: end;
   margin-bottom: var(--app-space-xs);
-
-  &-title {
-    display: grid;
-    grid-template-rows: min-content min-content;
-    justify-content: space-between;
-
-    &-header {
-      text-wrap: nowrap;
-      line-height: 22px;
-      margin-bottom: 8px;
-    }
-
-    &-main {
-      display: flex;
-      line-height: 34px;
-      align-items: center;
-      text-wrap: nowrap;
-    }
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: repeat(2, min-content);
+  grid-column-gap: var(--app-space-s);
+  grid-row-gap: 0px;
+  align-items: center;
+  &-icon {
+    grid-area: 1 / 1 / 3 / 2;
   }
+  &-form {
+    grid-area: 1 / 2 / 2 / 3;
+  }
+  &-language {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+}
+.meta-setting-info-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--app-space-xs);
 }
 </style>

@@ -1,7 +1,14 @@
 <template>
   <div class="search-group-bar-filter" v-if="formData && formData.resourceRules">
     <div v-for="(rule, index) in formData.resourceRules" :key="'rule' + index">
-      <ElSelect class="attribute-row" v-model="rule.attribute" :placeholder="$t('render.hint.selectPlaceholder')" @change="(val) => onResourceAttributeChange(rule, val)">
+      <ElSelect
+        class="attribute-row"
+        v-model="rule.attribute"
+        :placeholder="$t('render.hint.selectPlaceholder')"
+        clearable
+        filterable
+        @change="(val: string) => onResourceAttributeChange(rule, val)"
+      >
         <ElOption v-for="attr in resourceAttributes" :key="attr.value" :label="attr.label" :value="attr.value" />
       </ElSelect>
       <div v-if="rule.type === 'number'" class="filter-row">
@@ -27,7 +34,7 @@
         <ElSelect v-model="rule.condition" :placeholder="$t('dhList.condition')">
           <ElOption v-for="cond in stringConditions" :key="cond.value" :label="cond.label" :value="cond.value" />
         </ElSelect>
-        <ElSelect v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')">
+        <ElSelect v-model="rule.value[0]" :placeholder="$t('dataField.apiFieldValue')" clearable filterable>
           <ElOption
             v-for="opt in resourceAttributes.find((a) => a.value === rule.attribute)?.options || []"
             :key="opt.value"
@@ -37,7 +44,7 @@
           />
         </ElSelect>
       </div>
-      <el-divider  v-if="index !== formData.resourceRules.length - 1 || formData.resourceRules.length > 1" content-position="left">
+      <el-divider v-if="index !== formData.resourceRules.length - 1 || formData.resourceRules.length > 1" content-position="left">
         <template v-if="index !== formData.resourceRules.length - 1">
           {{ $t(`logic.${formData.condition}`) }}
         </template>
@@ -72,29 +79,29 @@ const props = defineProps({
     required: true
   },
   resourceAttributes: {
-    type: Array,
+    type: Array as PropType<any[]>,
     required: true
   }
 })
 const emits = defineEmits(['update:formData'])
-
+const { t } = useI18n()
 function handleCommand(command: string) {
   const newFormData = { ...props.formData, condition: command }
   emits('update:formData', newFormData)
 }
 const numberConditions = [
-  { label: '大于', value: 'gt' },
-  { label: '等于', value: 'eq' },
-  { label: '小于', value: 'lt' },
-  { label: '在...之间', value: 'between' }
+  { label: t('vxe.renderer.cases.gt'), value: 'gt' },
+  { label: t('vxe.renderer.cases.equal'), value: 'eq' },
+  { label: t('vxe.renderer.cases.lt'), value: 'lt' },
+  { label: t('vxe.renderer.cases.between'), value: 'between' }
 ]
 const stringConditions = [
-  { label: '等于', value: 'eq' },
-  { label: '不等于', value: 'neq' }
+  { label: t('vxe.renderer.cases.equal'), value: 'eq' },
+  { label: t('vxe.renderer.cases.unequal'), value: 'neq' }
 ]
 const selectConditions = stringConditions
 // 监听 attribute 变化，自动设置 type
-function onResourceAttributeChange(rule, attrValue) {
+function onResourceAttributeChange(rule: any, attrValue: string) {
   const attr = props.resourceAttributes.find((a) => a.value === attrValue)
   rule.type = attr?.type || ''
   rule.condition = 'eq'
@@ -108,7 +115,7 @@ function addResourceRule() {
   const newFormData = { ...props.formData, resourceRules: newRules }
   emits('update:formData', newFormData)
 }
-function removeResourceRule(index) {
+function removeResourceRule(index: number) {
   const newRules = [...props.formData.resourceRules]
   newRules.splice(index, 1)
   const newFormData = { ...props.formData, resourceRules: newRules }

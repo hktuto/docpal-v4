@@ -127,6 +127,7 @@
     "messageTemplate": "消息模板",
     "message_queue": "消息列",
     "meta": "后设资料设置",
+    "metadataList": "Metadata",
     "oauth": "授权",
     "passwordPolicy": "密码策略",
     "policy": "保留管理",
@@ -150,8 +151,7 @@
     "workflow": "工作流程管理",
     "workflowEditor": "工作流程编辑器",
     "workflowForm": "工作流程表单设计",
-    "workflowRetry": "工作流重试",
-    "metadataList": "Metadata"
+    "workflowRetry": "工作流重试"
   },
   "adminSetting": {
     "globalGeneralConfiguration": "全局通用配置"
@@ -1200,10 +1200,16 @@
     "Folder": "文件夹",
     "Picture": "图片",
     "Video": "视频",
+    "addRule": "添加规则",
     "category": "类别",
     "duplicate": "复制文档类型",
     "duplicateFrom": "原文档类型",
+    "hiddenPermissions": "隐藏",
+    "maskPermissions": "遮盖",
     "new": "创建",
+    "readOnlyPermissions": "只读",
+    "ruleName": "规则名称",
+    "ruleTitle": "{name} 规则",
     "type": "类型"
   },
   "docTypeDetail": {
@@ -1286,8 +1292,10 @@
   "documentType_edit": "编辑显示元",
   "documentType_filter": "按文件类型名称筛选",
   "documentType_inactivate": "停用文件类型",
-  "documentType_metaAdd": "Add New Display Meta",
-  "documentType_metaFilter": "Filter by Meta",
+  "documentType_metaAdd": "添加新显示元数据",
+  "documentType_metaFilter": "按 Meta 过滤",
+  "documentType_movedown": "下移",
+  "documentType_moveup": "上移",
   "documentType_newDocument": "新文件类型名称",
   "documentType_newDuplicateSuccessMsg": "The new display meta has been added to this document type successfully.",
   "documentType_relatedAddSuccessMsg": "The new related document has been added to this document type successfully.",
@@ -1361,7 +1369,7 @@
   "dpMsg_503": "服务器异常，请稍后再试",
   "dpMsg_error": "失败",
   "dpMsg_noDataUpdate": "没有数据更新",
-  "dpMsg_success": "成功",
+  "dpMsg_success": "成功{tip}",
   "dpSearch": {
     "recordDetailTitle": "编辑搜索条件",
     "recordTitle": "已存搜索",
@@ -2130,49 +2138,54 @@
       "select": "下拉",
       "textarea": "多行文本"
     },
+    "dataTypeText": "数据类型",
     "displayField": "显示字段",
     "dropdownType": "下拉类型",
     "mask": "遮罩設定",
+    "maskLength": "遮盖长度",
     "mask_type": "遮罩類型",
     "multiple": "多选",
     "regex": "正则表达式",
     "regexData": "正则表达式范例",
-    "regexWarning": "正则表达式警告"
+    "regexWarning": "正则表达式警告",
+    "validation_error": "验证错误"
   },
   "meta_contractNo": "合同编号",
   "metadata": {
     "dataType": "数据类型",
+    "duplicate_error": "复制错误",
+    "duplicate_success": "复制成功",
     "export": "導出 XLS",
     "export_loading": "導出中",
     "new": "新增 Metadata",
+    "original_name": "原名",
     "type": "Metadata",
     "validation": {
-      "text": {
-        "maxLength": "最大长度"
+      "date": {
+        "dateOrDateTime": "日期或日期时间",
+        "defaultValue": "默认值",
+        "format": "格式"
+      },
+      "masterTable": {
+        "displayColumn": "显示列",
+        "masterTableId": "主表",
+        "valueColumn": "值列"
       },
       "number": {
         "maximum": "最大值",
         "minimum": "最小值",
         "precision": "精度"
       },
+      "role": {
+        "allow": "允许"
+      },
       "select": {
         "options": "选项"
       },
-      "date": {
-        "dateOrDateTime": "日期或日期时间",
-        "format": "格式",
-        "defaultValue": "默认值"
-      },
-      "masterTable": {
-        "masterTableId": "主表",
-        "displayColumn": "显示列",
-        "valueColumn": "值列"
-      },
-      "role": {
-        "allow": "允许"
+      "text": {
+        "maxLength": "最大长度"
       }
     }
-    
   },
   "modified_by": "修改者",
   "moreAction": {
