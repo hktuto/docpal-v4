@@ -2,15 +2,21 @@
   <div class="table-editor">
     <div class="switch-container">
       <el-switch v-model="bordered" active-text="Bordered" inactive-text="Borderless" @change="emitValue" />
+      <el-divider style="" direction="vertical" />
       <el-switch v-model="striped" active-text="Striped" inactive-text="Not Striped" @change="emitValue" />
       <el-color-picker v-if="striped" v-model="stripedColor" color-format="hex" />
+      <el-divider direction="vertical" />
 
-      <el-select v-model="sort" style="width: 120px">
-        <el-option v-for="(col, index) in sortColumns" :key="col.key" :label="col.name" :value="col.key"
-                   @change="emitValue">
-          {{ col.name }}
-        </el-option>
-      </el-select>
+      <el-form-item :label="$t('vxe.custom.setting.colSort')">
+        <el-select v-model="sort" style="width: 120px">
+          <el-option v-for="(col, index) in sortColumns" :key="col.key" :label="col.name" :value="col.key"
+                     @change="emitValue">
+            {{ col.name }}
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-divider direction="vertical" />
+
       <el-switch v-model="sortBy" active-text="Desc" inactive-text="Asc" @change="emitValue" />
     </div>
 
@@ -168,17 +174,17 @@ watch(sort, (newValue, oldValue) => {
     let index = columns.value.findIndex(column => column.key === newValue)
 
     rows.value.sort((a, b) => {
-      const aValue = a[index];
-      const bValue = b[index];
+      const aValue = a[index]
+      const bValue = b[index]
 
       // 檢查兩個值是否都是數字
-      const isANumber = typeof aValue === 'number';
-      const isBNumber = typeof bValue === 'number';
+      const isANumber = typeof aValue === 'number'
+      const isBNumber = typeof bValue === 'number'
 
       if (isANumber && isBNumber) {
-        return !sortBy.value ? aValue - bValue : bValue - aValue;
+        return !sortBy.value ? aValue - bValue : bValue - aValue
       } else {
-        return !sortBy.value ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        return !sortBy.value ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
       }
     })
   }
@@ -192,17 +198,17 @@ watch(sortBy, (newValue, oldValue) => {
   let index = columns.value.findIndex(column => column.key === sort.value)
 
   rows.value.sort((a, b) => {
-    const aValue = a[index];
-    const bValue = b[index];
+    const aValue = a[index]
+    const bValue = b[index]
 
     // 檢查兩個值是否都是數字
-    const isANumber = typeof aValue === 'number';
-    const isBNumber = typeof bValue === 'number';
+    const isANumber = typeof aValue === 'number'
+    const isBNumber = typeof bValue === 'number'
 
     if (isANumber && isBNumber) {
-      return !newValue ? aValue - bValue : bValue - aValue;
+      return !newValue ? aValue - bValue : bValue - aValue
     } else {
-      return !newValue ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+      return !newValue ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
     }
   })
 })

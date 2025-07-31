@@ -6,7 +6,8 @@
     </el-radio-group>
     <div v-for="(item, idx) in items" :key="idx" class="list-item">
       <el-input v-model="item.label" placeholder="Label" @input="emitValue" style="width: 40%" />
-      <el-button icon="el-icon-delete" @click="removeItem(idx)" circle size="small" v-tooltip="'Remove'" />
+      <el-button :disabled="items.length<=1" icon="el-icon-delete" @click="removeItem(idx)" circle
+                 size="small" v-tooltip="'Remove'" />
     </div>
     <el-button type="primary" @click="addItem" size="small" v-tooltip="'Add item'">Add Item</el-button>
   </div>
