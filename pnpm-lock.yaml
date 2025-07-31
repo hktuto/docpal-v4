@@ -913,6 +913,9 @@ importers:
       '@nuxt/icon':
         specifier: ^1.10.3
         version: 1.11.0(vite@6.3.5)(vue@3.5.6)
+      ace-builds:
+        specifier: ^1.43.2
+        version: 1.43.2
       docpal-document-editor:
         specifier: workspace:*
         version: link:../../libraries/docpal-document-editor
@@ -931,6 +934,9 @@ importers:
       vue-router:
         specifier: latest
         version: 4.5.1(vue@3.5.6)
+      vue3-ace-editor:
+        specifier: ^2.2.4
+        version: 2.2.4(ace-builds@1.43.2)(vue@3.5.6)
       vuedraggable:
         specifier: ^4.1.0
         version: 4.1.0(vue@3.5.6)
@@ -11668,6 +11674,10 @@ packages:
 
   /ace-builds@1.39.0:
     resolution: {integrity: sha512-MqoZojv4gpc5QyTMor/dS6kmruDV9db9LVZbCiT4qYz6WsDiv4qyG5f7ZPc+wjUl6oLMqgCAsBjo1whdSVyMlQ==}
+    dev: false
+
+  /ace-builds@1.43.2:
+    resolution: {integrity: sha512-3wzJUJX0RpMc03jo0V8Q3bSb/cKPnS7Nqqw8fVHsCCHweKMiTIxT3fP46EhjmVy6MCuxwP801ere+RW245phGw==}
     dev: false
 
   /acorn-globals@3.1.0:
@@ -25828,6 +25838,17 @@ packages:
       ace-builds: 1.39.0
       resize-observer-polyfill: 1.5.1
       vue: 3.5.14(typescript@5.8.3)
+    dev: false
+
+  /vue3-ace-editor@2.2.4(ace-builds@1.43.2)(vue@3.5.6):
+    resolution: {integrity: sha512-FZkEyfpbH068BwjhMyNROxfEI8135Sc+x8ouxkMdCNkuj/Tuw83VP/gStFQqZHqljyX9/VfMTCdTqtOnJZGN8g==}
+    peerDependencies:
+      ace-builds: '*'
+      vue: ^3
+    dependencies:
+      ace-builds: 1.43.2
+      resize-observer-polyfill: 1.5.1
+      vue: 3.5.6(typescript@5.8.3)
     dev: false
 
   /vue3-grid-layout-next@1.0.7(typescript@5.8.3):

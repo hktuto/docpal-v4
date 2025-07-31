@@ -16,7 +16,7 @@ import { EDITOR_PROVIDER, conditionOptions, MenuRouterKey } from '#imports'
  *  workflowData: workflow data ( versionNamber, versionId ...etc)
  */
 const routerProvider = inject(MenuRouterKey)
-
+const xmlEl = ref()
 const props = defineProps<{
   options?: any
   workflowData: any
@@ -29,6 +29,7 @@ const props = defineProps<{
 const { options = {}, workflowData, currentVersion, readonly } = toRefs(props)
 
 const graphOptions = ref({})
+const bpmn = ref('')
 function init(bpmnXml: string, x6Json?: any) {
   console.log('init editor')
   // check if ready
@@ -73,6 +74,7 @@ function init(bpmnXml: string, x6Json?: any) {
       }
     }
   }
+  bpmn.value = bpmnXml
   nextTick(() => {
     viewerRef.value.init(bpmnXml, x6Json)
   })
@@ -338,6 +340,32 @@ function openSidebar(component: string, node: Node | Edge | Cell) {
   sidebarRef.value.openSidebar(component, node)
 }
 
+function openXmlEditor() {
+  xmlEl.value.openXmlEditor()
+}
+
+// Handle XML editor save
+function handleXmlSave(xml: string) {
+  xmlEl.value.closeXmlEditor()
+  // Update the bpmn ref with the new XML
+  bpmn.value = xml
+  // Reinitialize the graph with the new XML
+  ready.value = false
+  nextTick(() => {
+    viewerRef.value.init(xml)
+    graphReady()
+  })
+}
+
+// Handle XML editor refresh
+function handleXmlRefresh() {
+  console.log('XML editor refreshed')
+  // Refresh the XML editor with current graph data
+  if (xmlEl.value) {
+    xmlEl.value.refreshXml()
+  }
+}
+
 onMounted(async () => {
   await getConditionSetting()
 })
@@ -385,6 +413,13 @@ defineExpose({
       <BpmnSidebar ref="sidebarRef" />
       <BpmnEdge v-if="ready" ref="edgeEl" />
       <BpmnNode v-if="ready" ref="nodeEl" @openForm="openForm" />
+      <BpmnXmlEditor 
+        v-if="ready" 
+        ref="xmlEl"
+        :bpmnXml="bpmn"
+        @save="handleXmlSave"
+        @refresh="handleXmlRefresh"
+      />
     </BpmnViewer>
     <ElDialog v-model="formDialogVisible" fullscreen class="bpmn-vform--dialog" width="100%" top="0" append-to-body destroy-on-close>
       <FormDesigner ref="fromDesignRef" :fieldListApi="fieldListApi">
@@ -398,7 +433,9 @@ defineExpose({
     </ElDialog>
     <div class="actions">
       <slot name="actions" />
+      <ElButton @click="openXmlEditor" :disabled="!ready || readonly">Open XML Editor</ElButton>
     </div>
+    
   </div>
 </template>
 
