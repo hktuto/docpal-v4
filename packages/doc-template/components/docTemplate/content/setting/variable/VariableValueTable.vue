@@ -1,13 +1,15 @@
 <template>
   <div class="table-editor">
     <div class="switch-container">
-      <el-switch v-model="bordered" active-text="Bordered" inactive-text="Borderless" @change="emitValue" />
-      <el-divider style="" direction="vertical" />
-      <el-switch v-model="striped" active-text="Striped" inactive-text="Not Striped" @change="emitValue" />
+      <el-switch v-model="bordered" :active-text="t('docTemplate.variable.bordered')"
+                 :inactive-text="t('docTemplate.variable.borderless')" @change="emitValue" />
+      <el-divider direction="vertical" />
+      <el-switch v-model="striped" :active-text="t('docTemplate.variable.striped')"
+                 :inactive-text="t('docTemplate.variable.notStriped')" @change="emitValue" />
       <el-color-picker v-if="striped" v-model="stripedColor" color-format="hex" />
       <el-divider direction="vertical" />
 
-      <el-form-item :label="$t('vxe.custom.setting.colSort')">
+      <el-form-item :label="t('vxe.custom.setting.colSort')">
         <el-select v-model="sort" style="width: 120px">
           <el-option v-for="(col, index) in sortColumns" :key="col.key" :label="col.name" :value="col.key"
                      @change="emitValue">
@@ -17,7 +19,8 @@
       </el-form-item>
       <el-divider direction="vertical" />
 
-      <el-switch v-model="sortBy" active-text="Desc" inactive-text="Asc" @change="emitValue" />
+      <el-switch v-model="sortBy" :active-text="t('docTemplate.variable.desc')"
+                 :inactive-text="t('docTemplate.variable.asc')" @change="emitValue" />
     </div>
 
     <el-table :data="rows" style="width: 100%">
@@ -73,8 +76,12 @@
       </el-table-column>
     </el-table>
     <div class="table-controls">
-      <el-button @click="addColumn" size="small" v-tooltip="'Add column'">Add Column</el-button>
-      <el-button @click="addRow" size="small" v-tooltip="'Add row'">Add Row</el-button>
+      <el-button @click="addColumn" size="small" v-tooltip="t('docTemplate.variable.addColumn')">
+        {{ t('docTemplate.variable.addColumn') }}
+      </el-button>
+      <el-button @click="addRow" size="small" v-tooltip="t('docTemplate.variable.addRow')">
+        {{ t('docTemplate.variable.addRow') }}
+      </el-button>
     </div>
   </div>
 </template>
@@ -82,6 +89,7 @@
 import { ref, watch, defineProps, defineEmits } from 'vue'
 import { ElSwitch } from 'element-plus'
 
+const { t } = useI18n()
 const props = defineProps<{ modelValue: { columns: any[], rows: string[][] } }>()
 const emit = defineEmits<{ (e: 'update:modelValue', value: { columns: any[], rows: string[][] }): void }>()
 const bordered = ref(props.modelValue?.bordered ?? true)
