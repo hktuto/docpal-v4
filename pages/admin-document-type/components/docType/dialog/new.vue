@@ -5,7 +5,7 @@
              :close-on-click-modal="false"
              destroy-on-close
   >
-    <el-form :model="formData" ref="elFormRef" label-position="top">
+    <el-form :model="formData" ref="elFormRef" label-position="top" >
       <el-form-item :label="$t('search.type')" prop="name" required>
         <el-input v-model="formData.name" />
       </el-form-item>
@@ -14,7 +14,7 @@
           <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('is_Folder')" prop="isFolder">
+      <el-form-item :label="$t('doc.isFolder')" prop="isFolder">
         <el-switch v-model="formData.isFolder" />
       </el-form-item>
       <el-divider />
@@ -116,8 +116,10 @@ const formData = reactive({
 
 async function handleSubmit() {
   try {
+    await elFormRef.value.validate()
     const data = formData
     state.loading = true
+
     const result = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Create(data)
     ElMessage.success(t('tip_createdSuccessMsg', {
       modelName: t('docType_documentType'),

@@ -3,7 +3,7 @@
     <template v-if="roleData.length === 0">
       <el-empty :description="$t('orgChart.noData')"></el-empty>
       <div class="flex-x-center">
-        <el-button v-if="endPoint === 'admin'" type="primary" @click="openCreateDialog">{{ $t('orgChart.add') }}</el-button>
+        <el-button v-if="platform === 'admin'" type="primary" @click="openCreateDialog">{{ $t('orgChart.add') }}</el-button>
       </div>
       <RbacCreateDialog ref="createDialogRef" :roleOptions="flatRole" @success="initData" />
     </template>
@@ -34,7 +34,7 @@ interface Props {
   roleId?: string
 }
 const {
-  public: { endPoint },
+  public: { platform },
 } = useRuntimeConfig();
 const props = defineProps<Props>()
 

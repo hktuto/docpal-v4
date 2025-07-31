@@ -20,7 +20,7 @@
           </div>
           <el-button
             id="MasterTable__Add"
-            v-if="permission?.create && !!endPoint && endPoint !== 'admin'"
+            v-if="permission?.create && !!platform && platform !== 'admin'"
             class="el-icon--right"
             type="primary"
             size="small"
@@ -40,12 +40,12 @@
           </Icon>
         </div>
         <div>
-          <!-- v-if="isSuperAdmin && endPoint === 'admin'" -->
+          <!-- v-if="isSuperAdmin && platform === 'admin'" -->
           <el-button id="MasterTable__Tables__Detail__Records__Delete" type="danger" @click="handleDeleteSelected">
             {{ t('common_delete') }}
           </el-button>
           <el-dropdown id="MasterTable__Tables__Detail__Records__Active"
-                       v-if="endPoint === 'admin' || permission?.enable" trigger="click">
+                       v-if="platform === 'admin' || permission?.enable" trigger="click">
             <el-button class="el-icon--left el-icon--right" type="warning">
               {{ t('actions.active') }}
             </el-button>
@@ -113,7 +113,7 @@ const emits = defineEmits(['filter-change'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const {
-  public: { endPoint }
+  public: { platform }
 } = useRuntimeConfig()
 const ignoreList = getIgnoreSchemas()
 // const isSuperAdmin = useIsSuperAdmin()
@@ -223,7 +223,7 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
         }
       case 'delete':
         return {
-          visible: endPoint === 'admin',
+          visible: platform === 'admin',
           disabled: false
         }
       case 'active':
@@ -371,8 +371,8 @@ async function initTableColumns(fields: any) {
       }
       return _item
     })
-  // TODO: endPoint
-  // if (!props.permission?.edit && !props.permission?.enable && endPoint !== "admin") {
+  // TODO: platform
+  // if (!props.permission?.edit && !props.permission?.enable && platform !== "admin") {
   //   const index = baseTableColumns.findIndex(
   //     (item) => item.title === "dpTable_actions"
   //   );
