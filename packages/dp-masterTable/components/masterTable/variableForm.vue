@@ -34,7 +34,7 @@ const state = reactive<any>({
   relationFields: {}, // 动态生成 RelationRefs
 });
 const {
-  public: { endPoint },
+  public: { platform },
 } = useRuntimeConfig();
 const FormVariablesRendererRef = ref();
 const RelationRefs = ref<any>({});
@@ -355,7 +355,7 @@ async function handleRelationField(fieldName: string) {
   async function handleRenderRelationField(initData: any = {}) {
     const relationFields = await getRelationFields(field.tableId, fieldName);
     const isContinue =
-      endPoint === "admin"
+      platform === "admin"
         ? true
         : initData.id
         ? state.relationfieldsDetail[fieldName].edit

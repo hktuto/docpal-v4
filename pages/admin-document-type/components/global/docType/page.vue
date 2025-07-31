@@ -183,7 +183,7 @@ async function getFilter() {
   const filters = await adminApi.api.getDocpaltypeSettingsPageConditions().then((res) => {
     return res.data
   })
-  ResponsiveFilterRef.value.init([
+  ResponsiveFilterRef.value?.init([
     ...filters,
     {
       key: 'orderBy',

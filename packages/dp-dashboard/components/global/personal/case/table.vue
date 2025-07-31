@@ -10,7 +10,7 @@ import { watch } from "vue";
 const routerProvider = inject(MenuRouterKey);
 const { t } = useI18n();
 const {
-  public: { endPoint },
+  public: { platform },
 } = useRuntimeConfig();
 let extraParams: any = {};
 let caseId = "";
@@ -50,7 +50,7 @@ async function getData(
     if (!caseId) {
       throw new Error("caseId is null");
     }
-    if (endPoint === "admin") return;
+    if (platform === "admin") return;
     const res = await clientApi.api
       .postCaseTypesCasetypeidRecordsPage(caseId, { ...params, ...extraParams })
       .then((res) => res.data);
