@@ -2,31 +2,22 @@
   <div class="pageContainer--padding">
     <VxeGrid ref="tableRef" v-bind="tableConfig" v-on="tableEvent">
       <template #toolbar_buttons>
-        <ResponsiveFilter
-          ref="ResponsiveFilterRef"
-          @form-change="handleFilterFormChange"
-          inputKey="metaData"
-          inputPlaceHolder="documentType_metaFilter"
-        />
+        <ResponsiveFilter ref="ResponsiveFilterRef" @form-change="handleFilterFormChange" inputKey="q" inputPlaceHolder="documentType_metaFilter" />
         <el-button id="DocumentType__DisplayMeta__AddNewDisplayMeta" type="primary" @click="handleDialogShow()">
           {{ $t('documentType_metaAdd') }}
         </el-button>
       </template>
       <template #display="{ row }">
-        <el-switch v-model="row.display" :loading="row.loading"
-                   @click.native.stop
-                   @change="handleDisplayChange(row)"></el-switch>
+        <el-switch v-model="row.display" :loading="row.loading" @click.native.stop @change="handleDisplayChange(row)"></el-switch>
       </template>
-      <template #isRequire="{ row }">
+      <!-- <template #isRequire="{ row }">
         <el-icon v-if="row.isRequire" style="--color: var(--app-primary-color)"><Select /></el-icon>
-        <el-icon v-else style="--color: #F56C6C">
+        <el-icon v-else style="--color: #f56c6c">
           <CloseBold />
         </el-icon>
-      </template>
+      </template> -->
     </VxeGrid>
-    <DocTypeDialogAddDisplayMeta ref="MetaDisplayMetaDialogRef"
-                                 :docTypeDetail="docTypeDetail"
-                                 @refresh="handleRefresh" />
+    <DocTypeDialogAddDisplayMeta ref="MetaDisplayMetaDialogRef" v-bind="props" @refresh="handleRefresh" />
   </div>
 </template>
 <script lang="ts" setup>
@@ -37,35 +28,44 @@ import { Select, CloseBold } from '@element-plus/icons-vue'
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
 const props = defineProps<{
-  docTypeDetail: any;
-  metadata: any;
+  documentType: string
+  id: string
 }>()
 const ResponsiveFilterRef = ref()
-const emits = defineEmits(['refresh'])
-const { tableConfig, tableEvent, tableRef } = useVxeTable({
+const isFilter = ref(false)
+let extraParams: any = {}
+let tableData: any[] = []
+const emits = defineEmits(['refresh', 'updateDetail'])
+const { tableConfig, tableEvent, tableRef, reload } = useVxeTable({
   id: 'displayMetaTable',
+  virtualScroll: true,
+  api: async (pageParams: any) => {
+    // const data = await getChildApi(id.value || 'root')
+    return await getList()
+  },
   columns: [
+    { type: 'seq', width: 70, align: 'right' },
     {
-      field: 'metadata',
+      field: 'name',
       title: 'rightDetail_meta',
-      fixed: 'left',
       formatter({ cellValue }: any) {
+        console.log(cellValue, 'cellValue')
         return t(cellValue)
       }
     },
-    /*        {
-                field: "metaDataType",
-                title: "metadata.dataType",
-                formatter({cellValue}: any) {
-                    return t(`meta.dataType.${cellValue}`);
-                },
-            },
-    { field: 'dataType', title: 'docTypeDetail.type' }, */
+    { field: 'dataType', title: 'meta.dataTypeText' },
     {
       field: 'display',
       title: 'form_display',
       slots: {
         default: 'display'
+      }
+    },
+    {
+      field: 'lastModifiedDate',
+      title: 'tableHeader_lastModified',
+      formatter: ({ cellValue }) => {
+        return formatDate(cellValue)
       }
     }
   ],
@@ -88,85 +88,114 @@ const { tableConfig, tableEvent, tableRef } = useVxeTable({
         action: ({ row }: any) => {
           handleDelete(row)
         }
+      },
+      {
+        code: 'moveup',
+        name: 'documentType_moveup',
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleMove(row, 1)
+        }
+      },
+      {
+        code: 'movedown',
+        name: 'documentType_movedown',
+        visible: true,
+        disabled: false,
+        action: ({ row }: any) => {
+          handleMove(row, -1)
+        }
       }
     ]
   ],
   dblClickAction: ({ row, column, event }: any) => {
     handleDialogShow(row)
   },
-  virtualScroll: true
 })
+async function getList() {
+  if (!isFilter.value) {
+    const data: any = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MetadataQuery({ docpalTypeName: props.documentType }).then((res) => res.data)
+    tableData = data.metadataList.map((item: any) => ({
+      ...item,
+      display: !!item.display
+    }))
+    emits('updateDetail', data)
+  }
+  let filterData = tableData.filter((item: any) => {
+    return true
+  })
+  if (extraParams.q) {
+    filterData = filterData.filter((item: any) => {
+      const name = (item.name || '').toLowerCase()
+      return name.includes(extraParams.q.toLowerCase())
+    })
+  }
 
+  isFilter.value = false
+  return filterData
+}
 function handleRefresh(addMore: boolean = false) {
-  ResponsiveFilterRef.value.handleFilter()
   if (addMore) handleDialogShow()
-  emits('refresh')
+  reload()
 }
 
-async function handleDelete(row) {
-  const action = await ElMessageBox.confirm(
-    t('tip_deleteMsg', { modelName: t('docType_displayMeta'), name: null }),
-    {
-      confirmButtonClass: 'el-button el-button--warning',
-      confirmButtonText: t('common_confirmDelete')
-    }
-  )
+async function handleDelete(row: any) {
+  const action = await ElMessageBox.confirm(t('tip_deleteMsg', { modelName: t('docType_displayMeta'), name: null }), {
+    confirmButtonClass: 'el-button el-button--warning',
+    confirmButtonText: t('common_confirmDelete')
+  })
   if (action !== 'confirm') return
-  const res = await adminApi.api.deleteDocpaltypeSettingsNameMetadata(props.docTypeDetail.name, {
-    metadata: row.metadata
+  const res = await adminApi.api.deleteDocpaltypeSettingsDocpalTypeV2DeleteMetadataDocpaltypeid(props.id, {
+    metadataId: row.id
   })
   routerProvider?.message.success(t('tip_deleteSuccessMsg', { modelName: t('docType_displayMeta'), name: null }))
-  emits('refresh')
+  reload()
 }
 
 const MetaDisplayMetaDialogRef = ref()
 
 function handleDialogShow(data?: any) {
-  MetaDisplayMetaDialogRef.value.handleOpen(props.metadata, data)
+  MetaDisplayMetaDialogRef.value.handleOpen(tableData, data)
 }
 
 function handleFilterFormChange(formModel: any) {
-  const data = props.metadata.filter((item: any) => {
-    return (
-      !formModel.metaData ||
-      item.metadata.toLowerCase().includes(formModel.metaData.toLowerCase()) ||
-      t(item.metadata).toLowerCase().includes(formModel.metaData.toLowerCase())
-    )
-  })
-  console.log(data, formModel)
-  tableRef.value?.loadData(data)
+  isFilter.value = true
+  extraParams = formModel
+  reload()
 }
 
-async function handleDisplayChange(row) {
+async function handleMove(row: any, moveIndex: number) {
+  await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MoveMetadata({
+    docpalTypeId: props.id,
+    metadataId: row.id,
+    moveIndex
+  })
+  reload()
+}
+
+async function handleDisplayChange(row: any) {
   try {
     row.loading = true
     const params = {
-      docType: props.docTypeDetail.name,
-      id: row.id,
+      metadataId: row.id,
       display: row.display,
-      ...row,
-      metaData: row.metadata
+      metadataPermission: row.metadataPermission || {
+        hiddenPermissions: [],
+        maskPermissions: [],
+        readOnlyPermissions: []
+      }
     }
-    await adminApi.api.postDocpaltypeSettingsAddMetadata(params)
+    await adminApi.api.postDocpaltypeSettingsDocpalTypeV2UpdateMetadataDocpaltypeid(props.id, params)
   } catch (error) {
     row.display = !row.display
+    console.error(error)
   } finally {
     setTimeout(() => {
       row.loading = false
     }, 500)
   }
 }
-
-watch(
-  () => props.metadata,
-  (newValue: any) => {
-    setTimeout(() => {
-      const data = !!newValue ? [...newValue] : []
-      tableRef.value?.loadData(data)
-    })
-  },
-  { immediate: true, deep: true }
-)
 </script>
 <style lang="scss" scoped>
 :deep .vxe-buttons--wrapper {

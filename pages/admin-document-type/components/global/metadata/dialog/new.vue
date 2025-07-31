@@ -121,7 +121,7 @@ async function handleCreate() {
       pageSize: 1
     }).then(res => res.data?.entryList?.length > 0)
     if(nameExists) {
-      ElMessage.error(t('meta.name_exists'))
+      ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
       return
     }
     // step 4 create the metadata

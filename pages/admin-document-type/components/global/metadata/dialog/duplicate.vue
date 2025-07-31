@@ -1,10 +1,5 @@
 <template>
-  <el-dialog v-model="visible" :title="t('metadata.duplicate')"
-             class="scroll-dialog"
-             append-to-body
-             :close-on-click-modal="false"
-             destroy-on-close
-  >
+  <el-dialog v-model="visible" :title="t('metadata.duplicate')" class="scroll-dialog" append-to-body :close-on-click-modal="false" destroy-on-close>
     <el-form :model="formData" ref="elFormRef" label-position="top">
       <el-form-item :label="t('metadata.original_name')" required>
         <el-input v-model="originalName" disabled />
@@ -34,23 +29,23 @@
         <el-input-number v-model="formData.maskRule.maskLength" :min="1" :max="24" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleDuplicate">{{ t('metadata.duplicate') }}</el-button>
+        <el-button type="primary" @click="handleDuplicate">{{ t('actions.duplicate') }}</el-button>
       </el-form-item>
     </el-form>
   </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { adminApi } from 'api';
-import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../utils/metadataHelper';
-import { ElMessage, type FormInstance } from 'element-plus';
+import { adminApi } from 'api'
+import { METADATA_OPTIONS, MASK_OPTIONS, type MetadataOption } from '../../../../utils/metadataHelper'
+import { ElMessage, type FormInstance } from 'element-plus'
 
 const formData = ref<any>({
   name: '',
   validationRule: {},
   langs: {},
   maskRule: {
-    maskType: "MASK_ALL",
+    maskType: 'MASK_ALL',
     maskLength: 10
   }
 })
@@ -60,7 +55,7 @@ const visible = defineModel<boolean>('visible', { required: true })
 
 const { t } = useI18n()
 
-const selectedType = ref<MetadataOption['name']>("Text")
+const selectedType = ref<MetadataOption['name']>('Text')
 const originalName = ref('')
 const elFormRef = ref<FormInstance>()
 const validationFormRef = ref<FormInstance>()
@@ -71,24 +66,25 @@ const validationComponent = computed(() => {
 
 function open(data: any) {
   originalName.value = data.name
-  
+
   // Copy all settings from the original metadata
   if (data.validationRule && data.validationRule.validationRuleName) {
     // Set the selected type based on the original validation rule
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
+  } else if (data.validationRule.validationRuleName === 'mastertable') {
+    selectedType.value = 'MasterTable'
   } else {
     selectedType.value = 'Text'
     const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
       return acc.concat(group.options)
-    }, [] as MetadataOption[])
-    .find(option => option.name === selectedType.value)?.validation
+    }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
     data.validationRule = validationRule
   }
 
   // Ensure maskRule exists
   if (!data.maskRule) {
     data.maskRule = {
-      maskType: "MASK_ALL",
+      maskType: 'MASK_ALL',
       maskLength: 10
     }
   }
@@ -113,7 +109,7 @@ function close() {
   formData.value.validationRule = null
   formData.value.langs = {}
   formData.value.maskRule = {
-    maskType: "MASK_ALL",
+    maskType: 'MASK_ALL',
     maskLength: 10
   }
   originalName.value = ''
@@ -129,7 +125,7 @@ async function handleDuplicate() {
     if (!formValid) {
       return
     }
-    
+
     // check if the validationRule is valid
     if (validationFormRef.value) {
       const isValid = await validationFormRef.value.validate()
@@ -138,21 +134,23 @@ async function handleDuplicate() {
         return
       }
     }
-    
+
     // step 3 check if the name is already exists
-    const nameExists = await adminApi.api.postDocpaltypeSettingsMetadataV2Query({
-      metadataName: formData.value.name,
-      pageNum: 0,
-      pageSize: 1
-    }).then(res => (res.data?.entryList?.length ?? 0) > 0)
-    
+    const nameExists = await adminApi.api
+      .postDocpaltypeSettingsMetadataV2Query({
+        metadataName: formData.value.name,
+        pageNum: 0,
+        pageSize: 1
+      })
+      .then((res) => (res.data?.entryList?.length ?? 0) > 0)
+
     if (nameExists) {
-      ElMessage.error(t('meta.name_exists'))
+      ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
       return
     }
-    
+
     // step 4 create the duplicated metadata
-    const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Create(formData.value).then(res => res.data)
+    const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Create(formData.value).then((res) => res.data)
     if (result) {
       ElMessage.success(t('metadata.duplicate_success'))
       close()
@@ -162,21 +160,24 @@ async function handleDuplicate() {
   }
 }
 
-watch(selectedType, () => {
-  // if selectedType is valid, then get the default value of the validationRule
-  if (selectedType.value) {
-    const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
-      return acc.concat(group.options)
-    }, [] as MetadataOption[])
-    .find(option => option.name === selectedType.value)?.validation
-    console.log(validationRule)
-    if (validationRule) {
-      formData.value.validationRule = validationRule
+watch(
+  selectedType,
+  () => {
+    // if selectedType is valid, then get the default value of the validationRule
+    if (selectedType.value) {
+      const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
+        return acc.concat(group.options)
+      }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
+      console.log(validationRule)
+      if (validationRule) {
+        formData.value.validationRule = validationRule
+      }
     }
+  },
+  {
+    immediate: true
   }
-}, {
-  immediate: true,
-})
+)
 
 defineExpose({
   open,
@@ -184,6 +185,4 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped>
-
-</style> 
+<style lang="scss" scoped></style>

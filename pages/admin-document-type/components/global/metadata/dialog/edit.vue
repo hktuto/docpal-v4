@@ -78,7 +78,9 @@ function open(data:any ) {
     }, [] as MetadataOption[])
     .find(option => option.name === selectedType.value)?.validation
     data.validationRule = validationRule
-  }else{
+  } else if(data.validationRule.validationRuleName === 'mastertable'){
+    selectedType.value = 'MasterTable'
+  } else{
     // data.validationRule.type maybe in lower case, change it to first letter uppercase
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
   }
@@ -134,7 +136,7 @@ async function handleUpdate() {
         pageSize: 1
       }).then(res => (res.data?.entryList?.length ?? 0) > 0)
       if(nameExists) {
-        ElMessage.error(t('meta.name_exists'))
+        ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
         return
       }
     }

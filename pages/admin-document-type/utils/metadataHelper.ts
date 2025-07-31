@@ -64,8 +64,8 @@ export type WorkflowValidation = {
 }
 
 export type MasterTableValidation = {
-  validationRuleName: 'masterTable';
-  masterTableId: string,
+  validationRuleName: 'mastertable'; // Fixed writing method of the backend
+  masterTableName: string,
   displayColumn: string,
   valueColumn: string,
   isMultiple: boolean
@@ -213,8 +213,8 @@ export const METADATA_OPTIONS: {
         group: 'SYSTEM',
         name: "MasterTable",
         validation: {
-          validationRuleName: 'masterTable',
-          masterTableId: '',
+          validationRuleName: 'mastertable',
+          masterTableName: '',
           displayColumn: '',
           valueColumn: '',
           isMultiple: false
