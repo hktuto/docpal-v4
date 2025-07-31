@@ -24,7 +24,7 @@
       <el-button id="Workflow__PersonalWorkflow__Cancel" @click="state.dialogVisible = false">
         {{ $t('dpButtom_cancel') }}
       </el-button>
-      <el-button id="Workflow__PersonalWorkflow__Download" type="primary" v-if="state.canDownload"
+      <el-button id="Workflow__PersonalWorkflow__Preview" type="primary" v-if="state.canDownload"
                  :loading="state.loading" @click="generatePreviewFile">
         {{ $t('common_preview') }}
       </el-button>

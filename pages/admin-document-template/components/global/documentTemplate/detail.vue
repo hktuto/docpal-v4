@@ -342,12 +342,11 @@ onBeforeMount(async () => {
         </div>
         <div class="flex-x-between">
           <SvgIcon v-if="state.info.fileType !== 'Word'" class="el-icon--left" src="/icons/file/file-refresh.svg"
-                   round :content="t('common_refresh')"
-                   @click="handleRefresh({})" />
+                   round :content="t('common_refresh')" @click="handleRefresh({})" />
 
           <template v-if="state.info.fileType === 'Word'">
             <SvgIcon v-if="!state.isEdit" src="/icons/file/edit.svg" class="el-icon--right" round
-                     :content="t('Edit Word')" @click="handleEditEditor"></SvgIcon>
+                     :content="t('Edit Word')" @click="handleEditEditor" />
 
             <div v-if="state.isEdit" class="save-or-exit-icon-container">
               <el-tooltip
@@ -377,9 +376,8 @@ onBeforeMount(async () => {
                 @confirm="handleCloseWordEditor"
               >
                 <template #reference>
-                  <SvgIcon style="width: 18px; "
-                           src="https://api.iconify.design/lucide:save-off.svg?color=%23333333"
-                           :content="t('button.saveOff')"></SvgIcon>
+                  <SvgIcon style="width: 18px; " src="https://api.iconify.design/lucide:save-off.svg?color=%23333333"
+                           :content="t('button.saveOff')" />
                 </template>
               </el-popconfirm>
             </div>
@@ -388,8 +386,7 @@ onBeforeMount(async () => {
           <BrowseActionsOffice v-if="state.info.fileType !== 'Word'" :doc="{...state.info, id: state.info.documentId}"
                                @refresh="handleRefresh({})" />
           <TemplateReplaceButton v-if="state.info.fileType !== 'Word'" :templateInfo="state.info"
-                                 class="el-icon--right"
-                                 @refresh="handleRefresh({ variables: true, preview: true })" />
+                                 class="el-icon--right" @refresh="handleRefresh({ variables: true, preview: true })" />
         </div>
       </div>
 
