@@ -6,7 +6,7 @@ const selectedNode = ref()
 
 const graphProvider = inject(BPMN_PROVIDER)
 const editorProvider = inject(EDITOR_PROVIDER);
-
+const activeTab = ref('properties')
 if(!graphProvider || !editorProvider) {
     throw createError('graph provider not found')
 }
@@ -67,7 +67,15 @@ defineExpose({
             <Icon name="lucide:settings-2" />
             Propertie 
         </div>
-        <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
+        <!-- tabs container -->
+        <ElTabs v-model="activeTab" type="card">
+            <ElTabPane label="Properties" name="properties">
+                <component v-if="editComponent" :is="editComponent"  :node="selectedNode" />
+            </ElTabPane>
+            <ElTabPane label="XML" name="xml">
+                <LazyBpmnContextXmlEditor v-if="selectedNode" :node="selectedNode" />
+            </ElTabPane>
+        </ElTabs>
     </div>
 </template>
 
@@ -95,6 +103,9 @@ defineExpose({
     &.opened{
         transform: translateX(0);
         opacity: 1;
+    }
+    :deep(.el-tab-pane){
+      height: 100%;
     }
 }
 .opened{

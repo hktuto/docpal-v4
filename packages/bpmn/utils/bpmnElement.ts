@@ -156,30 +156,55 @@ export const bpmnElement: BpmnElement = {
     contextMenuComponent: 'LazyBpmnContextEndEvent'
   },
   userTask: {
-    nodeStyle: () => ({
-      ...squareNodeStyle('#0099ff', 'UserTask', '/bpmn/icons/form.svg'),
-      shape: 'bpmn-node',
-      ports: {
-        items: [
-          {
-            id: 'from',
-            group: 'from'
-          },
-          {
-            id: 'to',
-            group: 'to'
-          },
-          {
-            id: 'left',
-            group: 'left'
-          },
-          {
-            id: 'right',
-            group: 'right'
-          }
-        ]
+    nodeStyle: (item:any) => {
+      let icon = '/bpmn/icons/form.svg'
+      let color = '#0099ff'
+      let type = 'UserTask'
+      let bgColor = '#fff'
+      let textColor = '#000'
+      switch (item['attr_docpal:formType']) {
+        case 'signature':
+          icon = '/bpmn/icons/signature.svg'
+          color = '#0099ff'
+          type = 'Signature'
+          bgColor = '#fff'
+          textColor = '#000'
+          break;
+        case 'form':
+          icon = '/bpmn/icons/form.svg'
+          color = '#0099ff'
+          type = 'UserTask'
+          bgColor = '#fff'
+          textColor = '#000'
+          break;
+        default:
+          break;
       }
-    }),
+      return{
+        ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
+        shape: 'bpmn-node',
+        ports: {
+          items: [
+            {
+              id: 'from',
+              group: 'from'
+            },
+            {
+              id: 'to',
+              group: 'to'
+            },
+            {
+              id: 'left',
+              group: 'left'
+            },
+            {
+              id: 'right',
+              group: 'right'
+            }
+          ]
+        }
+      }
+    },
     embed: false,
     toolbar: [
       {
@@ -194,8 +219,37 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:formFieldValidation']: true,
             attr_id: id,
             attr_name: 'New User Task',
+            ['attr_docpal:formType']: 'form',
             extensionElements: {
               ['flowable:formProperty']: [],
+              ['modeler:activiti-idm-candidate-group']: {
+                'attr_xmlns:modeler': 'http://flowable.org/modeler',
+                __cdata: 'true'
+              },
+              ['modeler:initiator-can-complete']: {
+                'attr_xmlns:modeler': 'http://flowable.org/modeler',
+                __cdata: 'false'
+              }
+            }
+          })
+        })
+      },
+      {
+        icon: 'bpmn:signature',
+        label: 'Signature',
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.userTask.nodeStyle({}),
+          label: 'New Signature',
+          data: bpmnElement.userTask.newNodeData(id, 'New Signature', {
+            attr_id: id,
+            attr_name: 'New Signature',
+            ['attr_docpal:formType']: 'signature',
+            extensionElements: {
+              ['flowable:formProperty']: [],
+              ['docpal:signature']:[],
+              ['docpal:showForm']: true,
+              ['docpal:rejectField']:"",
               ['modeler:activiti-idm-candidate-group']: {
                 'attr_xmlns:modeler': 'http://flowable.org/modeler',
                 __cdata: 'true'
@@ -217,7 +271,12 @@ export const bpmnElement: BpmnElement = {
       data
     }),
     clickHandler: () => {},
-    contextMenuComponent: 'LazyBpmnContextUserTask'
+    contextMenuComponent: (item: any) => {
+      if (item['attr_docpal:formType'] === 'signature') {
+        return 'LazyBpmnContextSignature'
+      }
+      return 'LazyBpmnContextUserTask'
+    }
   },
   exclusiveGateway: {
     nodeStyle: (item: any) => ({
