@@ -51,24 +51,21 @@ defineExpose({ openVariablesDialog })
 </script>
 
 <template>
-  <el-dialog :title="t('Edit Variables')" v-model="state.visible" width="1000px">
+  <el-dialog :title="t('docTemplate.variable.editVariables')" v-model="state.visible" width="1000px">
     <el-form ref="editFormRef" :model="state.editForm" :rules="rules">
-      <el-form-item :label="t('Name')" disabled>
+      <el-form-item :label="t('dpTable.name')" disabled>
         <el-input v-model="state.editForm.name" />
       </el-form-item>
 
-      <el-form-item :label="t('Value')" prop="value">
+      <el-form-item :label="t('vxe.pro.fnr.header.value')" prop="value">
         <div style="max-width: 900px">
-          <component
-            :is="valueEditorComponent"
-            v-model="state.editForm.value"
-          />
+          <component :is="valueEditorComponent" v-model="state.editForm.value" />
         </div>
       </el-form-item>
     </el-form>
 
     <template #footer>
-      <el-button id="UserList__CreateNewUser__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
+      <el-button id="Workflow__GenerateTemplate__Submit" type="primary" :loading="state.loading" @click="handleSubmit">
         {{ $t('common_submit') }}
       </el-button>
     </template>
