@@ -99,7 +99,10 @@ describe('[admin-external-storage]ExternalStorageProfilesImport', () => {
       expect(setFormDataSpy).toHaveBeenCalledWith({
         path: '/new/path',
         enabled: false,
-        recursive: true
+        recursive: true,
+        errorFolder: '/error',
+        finishFolder: '/finish',
+        processingFolder: '/processing',
       })
     })
 
