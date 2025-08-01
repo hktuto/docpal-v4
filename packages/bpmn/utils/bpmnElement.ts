@@ -751,7 +751,7 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
-      }
+      },
     ],
     newNodeData: (id, label, data) => ({
       id,

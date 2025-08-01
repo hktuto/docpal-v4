@@ -5,7 +5,7 @@
       <div>
         <el-form-item :label="$t('passwordPolicy.length')">
           <el-input-number id="SystemSetting__PasswordPolicy__MinimumPasswordLength" v-model="form.minPasswordLength"
-                           :disabled="loading" :min="8" :max="24" @change="handleSave" />
+                           :disabled="loading" :precision="0" :min="8" :max="24" @change="handleSave" />
         </el-form-item>
         <PasswordPolicySwitch
           id="SystemSetting__PasswordPolicy__LowerAndUppercase"
@@ -52,7 +52,8 @@
         />
         <el-form-item :label="$t('passwordPolicy.expireDay')" v-if="form.enableExpirationTime">
           <el-input-number id="SystemSetting__PasswordPolicy__EnableExpirationTime__ExpirationPeriod"
-                           v-model="form.expirationDay" :disabled="loading" :min="1" @change="handleSave" />
+                           v-model="form.expirationDay" :disabled="loading" :precision="0" :min="1" :max="2147483647"
+                           @change="handleSave" />
         </el-form-item>
         <el-divider />
         <PasswordPolicySwitch
@@ -67,16 +68,16 @@
         <template v-if="form.enableLockoutPolicy">
           <el-form-item :label="$t('passwordPolicy.retryPeriod')">
             <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__RetryPeriod" v-model="form.retryPeriod"
-                             :disabled="loading" :min="1" :max="255" @change="handleSave" />
+                             :disabled="loading" :precision="0" :min="1" :max="255" @change="handleSave" />
           </el-form-item>
           <el-form-item :label="$t('passwordPolicy.lockPeriod')">
             <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__LockPeriod" v-model="form.lockoutPeriod"
-                             :disabled="loading" :min="1" :max="4294967295"
+                             :disabled="loading" :precision="0" :min="1" :max="2147483647"
                              @change="handleSave" />
           </el-form-item>
           <el-form-item :label="$t('passwordPolicy.lockCount')">
             <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__LockCount" v-model="form.lockoutCount"
-                             :disabled="loading" :min="1" :max="255" @change="handleSave" />
+                             :disabled="loading" :precision="0" :min="1" :max="255" @change="handleSave" />
           </el-form-item>
           <el-tag type="warning">
             {{
@@ -99,7 +100,7 @@
         />
         <el-form-item :label="$t('passwordPolicy.reuseCount')" v-if="form.enableReusePasswordLimit">
           <el-input-number id="SystemSetting__PasswordPolicy__EnablePasswordReuseRestriction__ReuseLockCount"
-                           v-model="form.reusePasswordCount" :disabled="loading" :min="1" :max="10"
+                           v-model="form.reusePasswordCount" :disabled="loading" :precision="0" :min="1" :max="10"
                            @change="handleSave" />
         </el-form-item>
       </div>
