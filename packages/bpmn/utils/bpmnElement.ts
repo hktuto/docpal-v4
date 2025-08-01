@@ -445,12 +445,12 @@ export const bpmnElement: BpmnElement = {
           color = '#7B61FF'
           break
         case '${pdfFormReader}':
-          icon = '/bpmn/icons/reader-PDF'
+          icon = '/bpmn/icons/upload-pdf.svg'
           type = 'Reader PDF'
           color = '#7B61FF'
           break
         case '${pdfFormWriter}':
-          icon = '/bpmn/icons/reader-PDF'
+          icon = '/bpmn/icons/download-pdf.svg'
           type = 'Writer PDF'
           color = '#7B61FF'
           break
@@ -717,7 +717,7 @@ export const bpmnElement: BpmnElement = {
         })
       },
       {
-        icon: 'bpmn:reader-PDF',
+        icon: 'bpmn:upload-pdf',
         label: 'Reader PDF',
         dropData: (id: string) => ({
           id,
@@ -757,7 +757,7 @@ export const bpmnElement: BpmnElement = {
         })
       },
       {
-        icon: 'bpmn:writer-PDF',
+        icon: 'bpmn:download-pdf',
         label: 'Writer PDF',
         dropData: (id: string) => ({
           id,
