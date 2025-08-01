@@ -42,7 +42,7 @@
       <el-divider />
       <el-row :gutter="20">
         <el-col :span="8" v-for="item in ['hiddenPermissions', 'maskPermissions', 'readOnlyPermissions']" :key="item">
-          <DocTypePermission v-model="formData.metadataPermission[item]" :permissionType="item" :documentType="props.documentType" />
+          <DocTypePermission v-model="formData.metadataPermission[item]" :permissionType="item"  />
         </el-col>
       </el-row>
     </el-form>

@@ -30,10 +30,11 @@
       <el-form-item :label="t('meta.maskLength')"  required>
         <el-input-number v-model="formData.maskRule.maskLength" :min="1" :max="24" />
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleCreate">{{ t('meta.create') }}</el-button>
-      </el-form-item>
     </el-form>
+    
+    <template #footer>
+      <el-button type="primary" @click="handleUpdate">{{ t('metadata.new') }}</el-button>
+    </template>
   </el-dialog>
 </template>
 

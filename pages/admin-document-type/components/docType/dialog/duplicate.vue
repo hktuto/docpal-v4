@@ -35,20 +35,20 @@ async function handleSubmit() {
   try {
     const data = await FormRendererRef.value.getFormData()
     state.loading = true
-    console.log(data, state.setting)
-    const newType = {
-      status: "D",
-      name: data.fromName,
-      category: state.setting.category,
-      isFolder: state.setting.isFolder === 'false' ? false : true,
+    const params = {
+      name: data.name,
+      id: state.setting.id
+      // category: state.setting.category,
+      // isFolder: state.setting.isFolder === 'false' ? false : true,
     }
     // TODO : jack will add duplicate api
-    throw Error("api not implemented")
-    // await adminApi.api.postDocpaltypeSettingsCopyName(data.fromName, { ...data })
-    // ElMessage.success(t('documentType_duplicateSuccessMsg'))
-    // emits('refresh')
-    // state.visible = false
+    await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Duplicate(params)
+    ElMessage.success(t('metadata.duplicate_success', { name: data.name }))
+    emits('refresh')
+    state.visible = false
   } catch (error) {
+    console.error(error)
+    ElMessage.error(t('metadata.duplicate_error', { name: data.name }))
   } finally {
     state.loading = false
   }
@@ -61,8 +61,7 @@ function handleOpen(setting) {
     state.setting = setting
     await FormRendererRef.value.vFormRenderRef.setFormData({
       fromName: setting.name,
-      category: setting.category,
-      dataType: setting.dataType
+      name: '',
     })
     state.loading = false
   })
