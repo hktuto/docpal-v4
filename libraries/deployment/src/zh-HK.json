@@ -2162,6 +2162,7 @@
     "dataType": "資料類型",
     "duplicate_error": "複製錯誤",
     "duplicate_success": "複製成功",
+    "edit": "編輯 Metadata",
     "export": "導出 XLS",
     "export_loading": "導出中",
     "new": "新增 Metadata",
