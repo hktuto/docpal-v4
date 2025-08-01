@@ -1,11 +1,11 @@
 <template>
-  <el-dialog v-model="visible" :title="t('metadata.duplicate')" class="scroll-dialog" append-to-body :close-on-click-modal="false" destroy-on-close>
+  <el-dialog v-model="visible" :title="t('actions.duplicate')" class="scroll-dialog" append-to-body :close-on-click-modal="false" destroy-on-close>
     <el-form :model="formData" ref="elFormRef" label-position="top">
       <el-form-item :label="t('metadata.original_name')" required>
         <el-input v-model="originalName" disabled />
       </el-form-item>
       <el-form-item :label="t('table_name')" prop="name" required>
-        <el-input v-model="formData.name" :placeholder="t('metadata.enter_new_name')" />
+        <el-input v-model="formData.name" :placeholder="t('render.hint.fieldRequired', { name: t('table_name') })" />
       </el-form-item>
       <el-form-item :label="t('metadata.dataType')" required>
         <el-select v-model="selectedType" placeholder="Select" disabled>
@@ -115,7 +115,6 @@ function close() {
   }
   originalName.value = ''
   visible.value = false
-  emit('reload')
 }
 
 async function handleDuplicate() {
@@ -154,6 +153,9 @@ async function handleDuplicate() {
     if (result) {
       ElMessage.success(t('metadata.duplicate_success'))
       close()
+      setTimeout(() => {
+        emit('reload')
+      }, 100)
     } else {
       ElMessage.error(t('metadata.duplicate_error'))
     }
