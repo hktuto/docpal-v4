@@ -12,11 +12,11 @@ const props = defineProps<{
 </script>
 <template>
   <div class="pageContainer--padding">
-    <BrowsePageComponent :idOrPath="idOrPath" :home="{
+    <BrowseTablePage :idOrPath="idOrPath" :home="{
       secondId: homeId,
       homeRouteItem: routeShareMePage({})
     }">
-    </BrowsePageComponent>
+    </BrowseTablePage>
   </div>
 </template>
 <style lang="scss" scoped>
