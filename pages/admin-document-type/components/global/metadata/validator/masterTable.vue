@@ -1,7 +1,7 @@
 <template>
   <ElForm ref="formRef" :model="validation" :rules="validationRules" label-position="top">
     <ElFormItem :label="t('metadata.validation.masterTable.masterTableId')" :required="true">
-      <ElSelect v-model="validation.masterTableName" :placeholder="t('metadata.validation.masterTable.masterTableId')">
+      <ElSelect v-model="validation.masterTableName" :placeholder="t('metadata.validation.masterTable.masterTableId')" @change="masterTableChange">
         <ElOption v-for="table in masterTableOpts" :key="table.id" :label="table.label" :value="table.value" />
       </ElSelect>
     </ElFormItem>
@@ -59,31 +59,17 @@ const validate = async () => {
 }
 
 const getData = () => {
-  return validation.value
+  return JSON.parse(JSON.stringify(validation.value))
 }
-async function masterTableChange(value: string) {
+async function masterTableChange(value: string, isInit: boolean = false) {
+  if (!isInit) {
+    validation.value.displayColumn = ''
+    validation.value.valueColumn = ''
+  }
   const masterTableId = masterTableOpts.value.find((item: any) => item.label === value)?.id
   const data = await getMasterTableDisplayOpts(masterTableId)
   availableColumns.value = data
 }
-watch(
-  () => validation.value?.masterTableName,
-  async (value) => {
-    if (value) {
-      await masterTableChange(value)
-    } else {
-      validation.value = {
-        validationRuleName: 'mastertable',
-        masterTableName: '',
-        displayColumn: '',
-        valueColumn: '',
-        isMultiple: false
-      }
-    }
-  },
-  {
-    immediate: true
-  }
-)
-defineExpose({ validate, getData })
+
+defineExpose({ validate, getData, masterTableChange })
 </script>
