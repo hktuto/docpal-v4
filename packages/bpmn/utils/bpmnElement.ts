@@ -156,7 +156,7 @@ export const bpmnElement: BpmnElement = {
     contextMenuComponent: 'LazyBpmnContextEndEvent'
   },
   userTask: {
-    nodeStyle: (item:any) => {
+    nodeStyle: (item: any) => {
       let icon = '/bpmn/icons/form.svg'
       let color = '#0099ff'
       let type = 'UserTask'
@@ -169,18 +169,18 @@ export const bpmnElement: BpmnElement = {
           type = 'Signature'
           bgColor = '#fff'
           textColor = '#000'
-          break;
+          break
         case 'form':
           icon = '/bpmn/icons/form.svg'
           color = '#0099ff'
           type = 'UserTask'
           bgColor = '#fff'
           textColor = '#000'
-          break;
+          break
         default:
-          break;
+          break
       }
-      return{
+      return {
         ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
         shape: 'bpmn-node',
         ports: {
@@ -247,9 +247,9 @@ export const bpmnElement: BpmnElement = {
             ['attr_docpal:formType']: 'signature',
             extensionElements: {
               ['flowable:formProperty']: [],
-              ['docpal:signature']:[],
+              ['docpal:signature']: [],
               ['docpal:showForm']: true,
-              ['docpal:rejectField']:"",
+              ['docpal:rejectField']: '',
               ['modeler:activiti-idm-candidate-group']: {
                 'attr_xmlns:modeler': 'http://flowable.org/modeler',
                 __cdata: 'true'
@@ -270,7 +270,8 @@ export const bpmnElement: BpmnElement = {
 
       data
     }),
-    clickHandler: () => {},
+    clickHandler: () => {
+    },
     contextMenuComponent: (item: any) => {
       if (item['attr_docpal:formType'] === 'signature') {
         return 'LazyBpmnContextSignature'
@@ -327,7 +328,8 @@ export const bpmnElement: BpmnElement = {
         ...data
       }
     }),
-    clickHandler: () => {},
+    clickHandler: () => {
+    },
     contextMenuComponent: 'LazyBpmnContextExclusiveGateway'
   },
   boundaryEvent: {
@@ -380,7 +382,8 @@ export const bpmnElement: BpmnElement = {
       name: label,
       data
     }),
-    clickHandler: () => {},
+    clickHandler: () => {
+    },
     contextMenuComponent: 'LazyBpmnContextBoundaryEvent'
   },
   serviceTask: {
@@ -440,6 +443,17 @@ export const bpmnElement: BpmnElement = {
           icon = '/bpmn/icons/calendar.svg'
           type = 'Calendar'
           color = '#7B61FF'
+          break
+        case '${pdfFormReader}':
+          icon = '/bpmn/icons/reader-PDF'
+          type = 'Reader PDF'
+          color = '#7B61FF'
+          break
+        case '${pdfFormWriter}':
+          icon = '/bpmn/icons/reader-PDF'
+          type = 'Writer PDF'
+          color = '#7B61FF'
+          break
       }
       return {
         ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
@@ -660,9 +674,9 @@ export const bpmnElement: BpmnElement = {
             ['attr_flowable:delegateExpression']: '${idGeneratorDelegate}',
             extensionElements: {
               ['flowable:field']: [
-                { attr_name: 'templateId', ['flowable:expression']: {'__cdata': ''} },
-                { attr_name: 'workflowInfo', ['flowable:expression']: {'__cdata': ''} },
-                { attr_name: 'variables', ['flowable:expression']: {'__cdata': ''} },
+                { attr_name: 'templateId', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'workflowInfo', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'variables', ['flowable:expression']: { '__cdata': '' } }
               ]
             }
           })
@@ -703,37 +717,27 @@ export const bpmnElement: BpmnElement = {
         })
       },
       {
-        icon: 'bpmn:calendar',
-        label: 'Calendar',
+        icon: 'bpmn:reader-PDF',
+        label: 'Reader PDF',
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
-            ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
+            ['attr_flowable:delegateExpression']: '${pdfFormReader}',
             extensionElements: {
-              'flowable:calendarEvent': {
-                attr_eventId: '',
-                attr_eventName: '',
-                attr_actionType: '',
-                attr_description: '',
-                attr_category: '',
-                attr_location: '',
-                attr_startTime: '',
-                attr_endTime: '',
-                attr_isAllDay: '',
-                related: {
-                  attr_user: ''
-                },
-                reminder: []
-              }
+              ['flowable:field']: [
+                { attr_name: 'fileField', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'fileId', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'pdfExample', ['flowable:expression']: { '__cdata': '' } }
+              ]
             }
           }),
-          label: 'New Calendar Task',
-          data: bpmnElement.serviceTask.newNodeData(id, 'New Calendar Task', {
+          label: 'New Reader PDF',
+          data: bpmnElement.serviceTask.newNodeData(id, 'Reader PDF', {
             attr_id: id,
-            attr_name: 'New Calendar Task',
-            ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
+            attr_name: 'Reader PDF',
+            ['attr_flowable:delegateExpression']: '${pdfFormReader}',
             extensionElements: {
-              'flowable:calendarEvent': {
+              'flowable:pdfFormReaderEvent': {
                 attr_eventId: false,
                 attr_eventName: '',
                 attr_actionType: '',
@@ -752,6 +756,40 @@ export const bpmnElement: BpmnElement = {
           })
         })
       },
+      {
+        icon: 'bpmn:writer-PDF',
+        label: 'Writer PDF',
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${pdfFormWriter}',
+            extensionElements: {}
+          }),
+          label: 'New Writer PDF',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Writer PDF', {
+            attr_id: id,
+            attr_name: 'New Writer PDF',
+            ['attr_flowable:delegateExpression']: '${pdfFormWriter}',
+            extensionElements: {
+              'flowable:pdfFormWriterEvent': {
+                attr_eventId: false,
+                attr_eventName: '',
+                attr_actionType: '',
+                attr_description: '',
+                attr_category: '',
+                attr_location: '',
+                attr_startTime: '',
+                attr_endTime: '',
+                attr_isAllDay: '',
+                related: {
+                  attr_user: ''
+                },
+                reminder: []
+              }
+            }
+          })
+        })
+      }
     ],
     newNodeData: (id, label, data) => ({
       id,
@@ -760,7 +798,8 @@ export const bpmnElement: BpmnElement = {
 
       data
     }),
-    clickHandler: () => {},
+    clickHandler: () => {
+    },
     contextMenuComponent: (item: any) => {
       const type = item['attr_flowable:delegateExpression']
       if (!type) {
@@ -785,6 +824,10 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextUpdateMasterTable'
         case '${calendarEventDelegate}':
           return 'LazyBpmnContextCalendar'
+        case '${pdfFormReader}':
+          return 'LazyBpmnContextPDFReader'
+        case '${pdfFormWriter}':
+          return 'LazyBpmnContextPDFWriter'
         default:
           return 'LazyBpmnContextCustomeService'
       }
@@ -814,6 +857,7 @@ export const bpmnElement: BpmnElement = {
 
       data
     }),
-    clickHandler: () => {}
+    clickHandler: () => {
+    }
   }
 }
