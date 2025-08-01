@@ -469,8 +469,15 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       showLine: true,
       hasChildField: 'isFolder',
       loadMethod: async (params) => {
-        const entry = await loadAllChildren([], params.row.id)
-        return entry.sort(sortEntry)
+        try{
+
+          const entry = await loadAllChildren([], params.row.id)
+          return entry.sort(sortEntry)
+        }catch(e){
+          // if error, return empty array and remove item from expandedItems
+          
+          return []
+        }
       }
     },
     checkboxConfig: {
