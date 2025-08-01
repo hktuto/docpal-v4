@@ -28,10 +28,10 @@
       <el-form-item :label="t('meta.maskLength')" required>
         <el-input-number v-model="formData.maskRule.maskLength" :min="1" :max="24" />
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleDuplicate">{{ t('actions.duplicate') }}</el-button>
-      </el-form-item>
     </el-form>
+    <template #footer>
+      <el-button type="primary" @click="handleDuplicate">{{ t('actions.duplicate') }}</el-button>
+    </template>
   </el-dialog>
 </template>
 
@@ -66,13 +66,13 @@ const validationComponent = computed(() => {
 
 function open(data: any) {
   originalName.value = data.name
-
+  if (data.validationRule.validationRuleName === 'mastertable') {
+    selectedType.value = 'MasterTable'
+  }
   // Copy all settings from the original metadata
-  if (data.validationRule && data.validationRule.validationRuleName) {
+  else if (data.validationRule && data.validationRule.validationRuleName) {
     // Set the selected type based on the original validation rule
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
-  } else if (data.validationRule.validationRuleName === 'mastertable') {
-    selectedType.value = 'MasterTable'
   } else {
     selectedType.value = 'Text'
     const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
@@ -93,11 +93,12 @@ function open(data: any) {
   formData.value = {
     ...data,
     name: '', // Clear the name so user can enter a new one
-    id: undefined // Remove the ID since this will be a new record
+    id: data.id // Remove the ID since this will be a new record
   }
-
+  if (formData.value.validationRule.validationRuleName === 'mastertable') {
+    validationFormRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
+  }
   nextTick(() => {
-    console.log('Duplicate metadata form data:', formData.value)
     visible.value = true
   })
 }
@@ -148,9 +149,8 @@ async function handleDuplicate() {
       ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
       return
     }
-
     // step 4 create the duplicated metadata
-    const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Create(formData.value).then((res) => res.data)
+    const result = await adminApi.api.postDocpaltypeSettingsMetadataV2Duplicate(formData.value).then((res) => res.data)
     if (result) {
       ElMessage.success(t('metadata.duplicate_success'))
       close()
@@ -159,25 +159,6 @@ async function handleDuplicate() {
     }
   }
 }
-
-watch(
-  selectedType,
-  () => {
-    // if selectedType is valid, then get the default value of the validationRule
-    if (selectedType.value) {
-      const validationRule = METADATA_OPTIONS.reduce((acc, group) => {
-        return acc.concat(group.options)
-      }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
-      console.log(validationRule)
-      if (validationRule) {
-        formData.value.validationRule = validationRule
-      }
-    }
-  },
-  {
-    immediate: true
-  }
-)
 
 defineExpose({
   open,
