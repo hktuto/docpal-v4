@@ -13,7 +13,7 @@
                              :options="state.documentOptions" :json="state.jsonData" />
           <Reader v-if="previewFile.blob" v-bind="previewFile" />
         </div>
-        <div style="margin-top: 28px; max-width: 820px; overflow-y: auto">
+        <div style="max-width: 820px; overflow-y: auto">
           <DocTemplateVariablesRenderer ref="templateVariablesRendererRef" v-if="state.fileType==='json'"
                                         @update="handleTestVariable" />
           <FormVariablesRenderer v-else ref="FormVariablesRendererRef" />
