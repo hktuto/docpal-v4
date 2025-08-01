@@ -126,7 +126,8 @@ export const bpmnElement: BpmnElement = {
       type: BpmnElementType['startEvent'],
       data
     }),
-    clickHandler: () => {},
+    clickHandler: () => {
+    },
     contextMenuComponent: 'LazyBpmnContextStartEvent'
   },
   endEvent: {
@@ -152,7 +153,8 @@ export const bpmnElement: BpmnElement = {
       type: BpmnElementType['endEvent'],
       data
     }),
-    clickHandler: () => {},
+    clickHandler: () => {
+    },
     contextMenuComponent: 'LazyBpmnContextEndEvent'
   },
   userTask: {
@@ -162,23 +164,25 @@ export const bpmnElement: BpmnElement = {
       let type = 'UserTask'
       let bgColor = '#fff'
       let textColor = '#000'
-      switch (item['attr_docpal:formType']) {
-        case 'signature':
-          icon = '/bpmn/icons/signature.svg'
-          color = '#0099ff'
-          type = 'Signature'
-          bgColor = '#fff'
-          textColor = '#000'
-          break
-        case 'form':
-          icon = '/bpmn/icons/form.svg'
-          color = '#0099ff'
-          type = 'UserTask'
-          bgColor = '#fff'
-          textColor = '#000'
-          break
-        default:
-          break
+      if (item && item['attr_docpal:formType']) {
+        switch (item['attr_docpal:formType']) {
+          case 'signature':
+            icon = '/bpmn/icons/signature.svg'
+            color = '#0099ff'
+            type = 'Signature'
+            bgColor = '#fff'
+            textColor = '#000'
+            break
+          case 'form':
+            icon = '/bpmn/icons/form.svg'
+            color = '#0099ff'
+            type = 'UserTask'
+            bgColor = '#fff'
+            textColor = '#000'
+            break
+          default:
+            break
+        }
       }
       return {
         ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
@@ -273,7 +277,7 @@ export const bpmnElement: BpmnElement = {
     clickHandler: () => {
     },
     contextMenuComponent: (item: any) => {
-      if (item['attr_docpal:formType'] === 'signature') {
+      if (item && item['attr_docpal:formType'] && item['attr_docpal:formType'] === 'signature') {
         return 'LazyBpmnContextSignature'
       }
       return 'LazyBpmnContextUserTask'
@@ -726,7 +730,6 @@ export const bpmnElement: BpmnElement = {
             extensionElements: {
               ['flowable:field']: [
                 { attr_name: 'fileField', ['flowable:expression']: { '__cdata': '' } },
-                { attr_name: 'fileId', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'pdfExample', ['flowable:expression']: { '__cdata': '' } }
               ]
             }
@@ -737,21 +740,10 @@ export const bpmnElement: BpmnElement = {
             attr_name: 'Reader PDF',
             ['attr_flowable:delegateExpression']: '${pdfFormReader}',
             extensionElements: {
-              'flowable:pdfFormReaderEvent': {
-                attr_eventId: false,
-                attr_eventName: '',
-                attr_actionType: '',
-                attr_description: '',
-                attr_category: '',
-                attr_location: '',
-                attr_startTime: '',
-                attr_endTime: '',
-                attr_isAllDay: '',
-                related: {
-                  attr_user: ''
-                },
-                reminder: []
-              }
+              ['flowable:field']: [
+                { attr_name: 'fileField', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'pdfExample', ['flowable:expression']: { '__cdata': '' } }
+              ]
             }
           })
         })
