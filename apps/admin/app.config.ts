@@ -4,7 +4,7 @@ export default defineAppConfig({
       name: '',
       icon: 'tabler:align-box-right-bottom',
       hoverIcon: 'tabler:align-box-right-bottom-filled',
-      label: 'adminMenu.User',
+      label: 'User Management',
       children: [
         {
           name: 'admin-user'
@@ -24,7 +24,7 @@ export default defineAppConfig({
       name: 'admin-bulk-import'
     },
     {
-      label: 'adminMenu.shareInternal',
+      label: 'adminMenu.shareModule',
       icon: 'lucide:file-symlink',
       hoverIcon: 'lucide:file-symlink',
       children: [
