@@ -440,16 +440,6 @@ export const bpmnElement: BpmnElement = {
           icon = '/bpmn/icons/calendar.svg'
           type = 'Calendar'
           color = '#7B61FF'
-        case '${pdfFormReader}':
-          icon = '/bpmn/icons/pdf.svg'
-          type = 'PDF Form Reader'
-          color = '#7B61FF'
-          break
-        case '${pdfFormWrite}':
-          icon = '/bpmn/icons/pdf.svg'
-          type = 'PDF Form Reader'
-          color = '#7B61FF'
-          break
       }
       return {
         ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
@@ -762,28 +752,6 @@ export const bpmnElement: BpmnElement = {
           })
         })
       },
-      {
-        icon: 'bpmn:pdf-reader',
-        label: 'Read PDF',
-        dropData: (id: string) => ({
-          id,
-          ...bpmnElement.serviceTask.nodeStyle({
-            ['attr_flowable:delegateExpression']: '${pdfFormReader}',
-            extensionElements: {
-               // TODO : @joshua edit here
-            }
-          }),
-          label: 'New Calendar Task',
-          data: bpmnElement.serviceTask.newNodeData(id, 'New Calendar Task', {
-            attr_id: id,
-            attr_name: 'New Calendar Task',
-            ['attr_flowable:delegateExpression']: '${calendarEventDelegate}',
-            extensionElements: {
-              // TODO : @joshua edit here
-            }
-          })
-        })
-      }
     ],
     newNodeData: (id, label, data) => ({
       id,
@@ -817,7 +785,6 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextUpdateMasterTable'
         case '${calendarEventDelegate}':
           return 'LazyBpmnContextCalendar'
-        // TODO : @joshua edit here
         default:
           return 'LazyBpmnContextCustomeService'
       }
