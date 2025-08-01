@@ -52,7 +52,8 @@
         />
         <el-form-item :label="$t('passwordPolicy.expireDay')" v-if="form.enableExpirationTime">
           <el-input-number id="SystemSetting__PasswordPolicy__EnableExpirationTime__ExpirationPeriod"
-                           v-model="form.expirationDay" :disabled="loading" :precision="0" :min="1" @change="handleSave" />
+                           v-model="form.expirationDay" :disabled="loading" :precision="0" :min="1" :max="2147483647"
+                           @change="handleSave" />
         </el-form-item>
         <el-divider />
         <PasswordPolicySwitch
@@ -71,7 +72,7 @@
           </el-form-item>
           <el-form-item :label="$t('passwordPolicy.lockPeriod')">
             <el-input-number id="SystemSetting__PasswordPolicy__LockoutPolicy__LockPeriod" v-model="form.lockoutPeriod"
-                             :disabled="loading" :precision="0" :min="1" :max="4294967295"
+                             :disabled="loading" :precision="0" :min="1" :max="2147483647"
                              @change="handleSave" />
           </el-form-item>
           <el-form-item :label="$t('passwordPolicy.lockCount')">
