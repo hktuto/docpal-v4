@@ -63,18 +63,6 @@ const state = reactive({
     isFolder: false
   }
 })
-const LanguageUnitFormRef = ref()
-
-async function handleSave() {
-  state.lanLoading = true
-  await LanguageUnitFormRef.value.handleSubmit()
-  await new Promise((resolve) =>
-    setTimeout(() => {
-      state.lanLoading = false
-      resolve()
-    }, 100)
-  )
-}
 
 async function initDocType(detail: any) {
   state.docTypeDetail = {
@@ -120,10 +108,9 @@ async function handleSubmit(attr: string) {
       const i18nValue = attr === 'isFolder' ? (state.form.isFolder ? 'Yes' : 'No') : state.form[attr]
       tip = '[' + i18nMap[attr] + ':' + i18nValue + ']'
     }
-    ElMessage.success(t('dpMsg_success', { tip }))
-    state.docTypeDetail[attr] = params[attr]
     const res = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2Update(params)
-    console.log(res)
+    state.docTypeDetail[attr] = params[attr]
+    ElMessage.success(t('dpMsg_success', { tip }))
   } catch (error) {
     console.error(error)
     state.form[attr] = state.docTypeDetail[attr]

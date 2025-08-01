@@ -67,12 +67,12 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
         return `<span class="tableRow-icon-cell"><img src="${icon}" /> ${cellValue}</span>`
       }
     },
-    { field: 'path', title: 'tableHeader_path' },
+    { field: 'path', title: 'document_path' },
     { field: 'type', title: 'tableHeader_type' },
-    { field: 'properties.principalName', title: 'trash_deleteBy' },
+    { field: 'properties.principalName', title: 'modified_by' },
     {
       field: 'properties.trashed_date',
-      title: 'trash_date',
+      title: 'table_modifiedDate',
       formatter({ cellValue }: any) {
         return formatDate(cellValue)
       }
