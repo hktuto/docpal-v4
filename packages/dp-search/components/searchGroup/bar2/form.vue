@@ -38,7 +38,7 @@
     <el-form-item v-if="isQuertType('keyword')" :label="$t('search.synonyms')">
       <el-switch v-model="state.form.synonyms" size="small" @change="handleChangeKeyword" />
     </el-form-item>
-    <el-form-item v-if="isQuertType('keyword')" :label="$t('search.includeLanguages')">
+    <el-form-item v-if="!state.form.synonyms && isQuertType('keyword')" :label="$t('search.includeLanguages')">
       <el-select-v2
         v-model="state.form.includeLanguages"
         :options="options.languages"

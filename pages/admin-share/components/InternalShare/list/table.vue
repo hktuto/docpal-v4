@@ -35,7 +35,7 @@ const { tableRef, tableConfig, tableEvent, reload } = useVxeTable({
       field: 'shareByUserId'
     },
     {
-      title: 'table_path',
+      title: 'document_path',
       field: 'path'
     },
     {

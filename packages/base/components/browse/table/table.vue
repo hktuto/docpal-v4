@@ -158,7 +158,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     },
     {
       field: 'mimeType',
-      title: 'search.mimeTypes',
+      title: 'search.mimeType',
       formatter: ({ cellValue }: any) => {
         return mimeTypeToExtension(cellValue)
       }
