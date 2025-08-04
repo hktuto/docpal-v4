@@ -9,7 +9,7 @@ node_modules
 # .vscode
 .gitignore
 .vitest-reporter-html
-**/src/generate/**
+# **/src/generate/**
 **/oldSrc/**
 **/report_unitTest/**
 **/report_languageChange/**
