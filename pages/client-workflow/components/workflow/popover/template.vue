@@ -201,7 +201,7 @@ async function templateParamGet(templatePath: string) {
 
 // @ts-ignore
 onMounted(async () => {
-  state.templateList = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) || []
+  // state.templateList = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) || []
 })
 
 const reset = () => {
