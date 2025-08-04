@@ -1,19 +1,19 @@
 <template>
   <ElForm ref="formRef" :model="validation" :rules="validationRules" label-position="top">
     <ElFormItem :label="t('metadata.validation.masterTable.masterTableId')" :required="true">
-      <ElSelect v-model="validation.masterTableName" :placeholder="t('metadata.validation.masterTable.masterTableId')" @change="masterTableChange">
+      <ElSelect class="master-table-name-select" v-model="validation.masterTableName" :placeholder="t('metadata.validation.masterTable.masterTableId')" @change="masterTableChange">
         <ElOption v-for="table in masterTableOpts" :key="table.id" :label="table.label" :value="table.value" />
       </ElSelect>
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.masterTable.displayColumn')" :required="true">
-      <ElSelect v-model="validation.displayColumn" :placeholder="t('metadata.validation.masterTable.displayColumn')">
+      <ElSelect class="master-table-display-column-select" v-model="validation.displayColumn" :placeholder="t('metadata.validation.masterTable.displayColumn')">
         <ElOption v-for="column in availableColumns" :key="column.name" :label="column.label" :value="column.value" />
       </ElSelect>
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.masterTable.valueColumn')" :required="true">
-      <ElSelect v-model="validation.valueColumn" :placeholder="t('metadata.validation.masterTable.valueColumn')">
+      <ElSelect class="master-table-value-column-select" v-model="validation.valueColumn" :placeholder="t('metadata.validation.masterTable.valueColumn')">
         <ElOption v-for="column in availableColumns" :key="column.name" :label="column.label" :value="column.value" />
       </ElSelect>
     </ElFormItem>
