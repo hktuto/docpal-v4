@@ -5,11 +5,18 @@ import dotenv from 'dotenv'
 //@ts-ignore
 import setting from './setting.json'
 
+dotenv.config()
+
+const clientUrl = process.env.CLIENTURL || setting.CLIENT_URL
+const adminUrl = process.env.ADMINURL || setting.ADMIN_URL
+const publicUrl = process.env.PUBLIC_URL || setting.PUBLIC_URL
+const templateUrl = process.env.OPEN_PROXY || setting.TEMPLATE_URL
+
 const endpoint = [
-    {name: 'client', url:`${setting.CLIENT_URL}/v3/api-docs`, className:"Client"},
-    {name: 'admin', url:`${setting.ADMIN_URL}/v3/api-docs`, className:"Admin"},
-    {name: 'public', url:`${setting.PUBLIC_URL}/v3/api-docs`, className:"Public"},
-    {name: 'template', url:`${setting.TEMPLATE_URL}/docs/swagger.json`, className:"Template"},
+    {name: 'client', url:`${clientUrl}/v3/api-docs`, className:"Client"},
+    {name: 'admin', url:`${adminUrl}/v3/api-docs`, className:"Admin"},
+    {name: 'public', url:`${publicUrl}/v3/api-docs`, className:"Public"},
+    {name: 'template', url:`${templateUrl}/docs/swagger.json`, className:"Template"},
 ]
 
 async function generate(){
