@@ -232,6 +232,10 @@
     "Summarize": "总结这个文档",
     "analyze": "分析这个文档"
   },
+  "appVersionUpdate": {
+    "button": "更新",
+    "title": "发现新版本"
+  },
   "application": {
     "deployment": "私有部署",
     "document": "文档",
