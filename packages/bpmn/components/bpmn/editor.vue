@@ -417,6 +417,7 @@ defineExpose({
         v-if="ready" 
         ref="xmlEl"
         :bpmnXml="bpmn"
+        :readonly="readonly"
         @save="handleXmlSave"
         @refresh="handleXmlRefresh"
       />
@@ -433,7 +434,7 @@ defineExpose({
     </ElDialog>
     <div class="actions">
       <slot name="actions" />
-      <ElButton @click="openXmlEditor" :disabled="!ready || readonly">Open XML Editor</ElButton>
+      <ElButton @click="openXmlEditor" :disabled="!ready">Open XML Editor</ElButton>
     </div>
     
   </div>
