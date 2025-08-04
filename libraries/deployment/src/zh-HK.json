@@ -2140,6 +2140,10 @@
   "message_templateUsage": "用途",
   "meta": {
     "array": "數組",
+    "create_error": "{name}創建失敗",
+    "create_success": "{name}已創建成功",
+    "update_error": "{name}更新失敗",
+    "update_success": "{name}已更新成功",
     "dataType": {
       "date": "日期",
       "input": "單行文字",
