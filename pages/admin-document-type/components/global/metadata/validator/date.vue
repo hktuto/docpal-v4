@@ -13,10 +13,10 @@
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.date.defaultValue')" class="date-default-value-item" :required="false">
-      <ElSelect v-model="defaultValueType" class="date-default-value-select" :placeholder="t('metadata.validation.date.defaultValueType')">
+      <ElSelect v-model="defaultValueType" class="date-default-value-select" :placeholder="t('metadata.validation.date.defaultValue')">
         <ElOption label="None" value="none" />
-        <ElOption label="Special Value" value="special" />
-        <ElOption label="Specific Date" value="date" />
+        <ElOption :label="t('metadata.validation.date.specialValue')" value="special" />
+        <ElOption :label="t('metadata.validation.date.specificDate')" value="date" />
       </ElSelect>
       
       <ElSelect 

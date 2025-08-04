@@ -6,7 +6,7 @@
         <div v-for="(option, index) in validation.options" :key="index" class="option-item">
           <ElInput 
             v-model="validation.options[index]" 
-            :placeholder="t('metadata.validation.select.optionPlaceholder')" 
+            :placeholder="t('metadata.validation.select.options')" 
             class="option-input"
           />
           <ElButton 
