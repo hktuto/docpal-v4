@@ -1698,6 +1698,9 @@ importers:
       '@nuxt/test-utils':
         specifier: 3.18.0
         version: 3.18.0(@vitest/ui@3.1.4)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.3)(vitest@3.1.4)
+      '@vitest/ui':
+        specifier: 3.1.4
+        version: 3.1.4(vitest@3.1.4)
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
@@ -1741,6 +1744,9 @@ importers:
       '@nuxt/test-utils':
         specifier: 3.18.0
         version: 3.18.0(@vitest/ui@3.1.4)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.3)(vitest@3.1.4)
+      '@vitest/ui':
+        specifier: 3.1.4
+        version: 3.1.4(vitest@3.1.4)
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
