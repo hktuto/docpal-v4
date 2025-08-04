@@ -232,6 +232,10 @@
     "Summarize": "To summarize this document",
     "analyze": "Analyze this document"
   },
+  "appVersionUpdate": {
+    "button": "Update",
+    "title": "New Version Available"
+  },
   "application": {
     "deployment": "Deployment",
     "document": "Docs",
