@@ -2,15 +2,15 @@
   <ElForm ref="formRef" :model="validation" :rules="validationRules" label-position="top">
 
     <ElFormItem :label="t('metadata.validation.array.itemType')" :required="false">
-      <ElInput v-model="validation.itemType" :placeholder="t('metadata.validation.array.itemType')" />
+      <ElInput class="array-item-type-input" v-model="validation.itemType" :placeholder="t('metadata.validation.array.itemType')" />
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.array.minItems')" :required="false">
-      <ElInput v-model="validation.minItems" :placeholder="t('metadata.validation.array.minItems')" type="number" min="0" />
+      <ElInput class="array-min-items-input" v-model="validation.minItems" :placeholder="t('metadata.validation.array.minItems')" type="number" min="0" />
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.array.maxItems')" :required="false">
-      <ElInput v-model="validation.maxItems" :placeholder="t('metadata.validation.array.maxItems')" type="number" min="0" />
+      <ElInput class="array-max-items-input" v-model="validation.maxItems" :placeholder="t('metadata.validation.array.maxItems')" type="number" min="0" />
     </ElFormItem>
 
     <ElFormItem :label="t('meta.multiple')">

@@ -46,10 +46,13 @@ export const adminApi = {
     // Add missing methods for DocTypeDialogAddRelatedType tests
     getDocpaltypeSettingsAll: vi.fn(() => Promise.resolve({ data: [] })),
     
-    postDocpaltypeSettingsMetadataV2Query: vi.fn(),
     postDocpaltypeSettingsMetadataV2Duplicate: vi.fn(),
     patchDocpaltypeSettingsMetadataV2Update: vi.fn(),
-    postDocpaltypeSettingsMetadataV2Create: vi.fn()
+    postDocpaltypeSettingsMetadataV2Create: vi.fn(),
+    
+    postDocpaltypeSettingsMetadataV2Query: vi.fn(),
+    deleteDocpaltypeSettingsMetadataV2DeleteMetadataid: vi.fn(),
+    postDocpaltypeSettingsMetadataV2ExportMetadataCvs: vi.fn()
   }
 }
 
