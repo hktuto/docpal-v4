@@ -66,7 +66,7 @@ const validationComponent = computed(() => {
 
 function open(data: any) {
   originalName.value = data.name
-  if (data.validationRule.validationRuleName === 'mastertable') {
+  if (data.validationRule && data.validationRule.validationRuleName === 'mastertable') {
     selectedType.value = 'MasterTable'
   }
   // Copy all settings from the original metadata
@@ -80,15 +80,13 @@ function open(data: any) {
     }, [] as MetadataOption[]).find((option) => option.name === selectedType.value)?.validation
     data.validationRule = validationRule
   }
-
   // Ensure maskRule exists
-  if (!data.maskRule) {
+  if (!data.maskRule || !data.maskRule.maskType) {
     data.maskRule = {
       maskType: 'MASK_ALL',
       maskLength: 10
     }
   }
-
   // Copy all data except the name
   formData.value = {
     ...data,

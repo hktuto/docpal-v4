@@ -2142,6 +2142,10 @@
   "message_templateUsage": "Usage",
   "meta": {
     "array": "Array",
+    "create_error": "Failed to create {name}",
+    "create_success": "{name} has been created successfully",
+    "update_error": "Failed to update {name}",
+    "update_success": "{name} has been updated successfully",
     "dataType": {
       "date": "Date",
       "input": "Single line text",
