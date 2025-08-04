@@ -2146,8 +2146,6 @@
     "array": "数组",
     "create_error": "{name}创建失败",
     "create_success": "{name}已创建成功",
-    "update_error": "{name}更新失败",
-    "update_success": "{name}已更新成功",
     "dataType": {
       "date": "日期",
       "input": "单行文本",
@@ -2164,6 +2162,8 @@
     "regex": "正则表达式",
     "regexData": "正则表达式范例",
     "regexWarning": "正则表达式警告",
+    "update_error": "{name}更新失败",
+    "update_success": "{name}已更新成功",
     "validation_error": "验证错误"
   },
   "meta_contractNo": "合同编号",
@@ -2181,7 +2181,9 @@
       "date": {
         "dateOrDateTime": "日期或日期时间",
         "defaultValue": "默认值",
-        "format": "格式"
+        "format": "格式",
+        "specialValue": "特殊日期",
+        "specificDate": "具体日期"
       },
       "masterTable": {
         "displayColumn": "显示列",
@@ -2192,6 +2194,10 @@
         "maximum": "最大值",
         "minimum": "最小值",
         "precision": "精度"
+      },
+      "object": {
+        "info": "信息",
+        "schema": "Schema"
       },
       "role": {
         "allow": "允许"

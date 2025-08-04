@@ -2148,8 +2148,6 @@
     "array": "Array",
     "create_error": "Failed to create {name}",
     "create_success": "{name} has been created successfully",
-    "update_error": "Failed to update {name}",
-    "update_success": "{name} has been updated successfully",
     "dataType": {
       "date": "Date",
       "input": "Single line text",
@@ -2166,6 +2164,8 @@
     "regex": "Regex",
     "regexData": "Regular expression example",
     "regexWarning": "Regular expression warning",
+    "update_error": "Failed to update {name}",
+    "update_success": "{name} has been updated successfully",
     "validation_error": "Validation error"
   },
   "meta_contractNo": "Contract No.",
@@ -2182,7 +2182,9 @@
       "date": {
         "dateOrDateTime": "Date or Date Time",
         "defaultValue": "Default Value",
-        "format": "Format"
+        "format": "Format",
+        "specialValue": "Special Date",
+        "specificDate": "Specific Date"
       },
       "masterTable": {
         "displayColumn": "Display Column",
@@ -2193,6 +2195,10 @@
         "maximum": "Max",
         "minimum": "Min",
         "precision": "Precision"
+      },
+      "object": {
+        "info": "Info",
+        "schema": "Schema"
       },
       "role": {
         "allow": "Allow"
