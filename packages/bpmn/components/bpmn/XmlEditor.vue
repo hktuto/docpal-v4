@@ -13,7 +13,7 @@
     <div class="adminXmlEditor">
       <div class="adminXmlEditor__header">
         <h3>{{ $t('bpmn_adminXmlEditor_title') || 'BPMN XML Editor' }}</h3>
-        <div class="adminXmlEditor__actions">
+        <div v-if="!readonly" class="adminXmlEditor__actions">
           <ElButton 
             size="small" 
             type="info"
@@ -52,6 +52,7 @@
             :options="aceOptions"
             :height="'600px'"
             :width="'100%'"
+            :readonly="readonly"
             @change="onXmlChange"
             @blur="onXmlChange"
             class="adminXmlEditor__ace-editor"
@@ -69,7 +70,7 @@
           type="primary" 
           @click="saveAndClose"
           :loading="isSaving"
-          :disabled="!hasChanges"
+          :disabled="!hasChanges || readonly"
         >
           {{ $t('common_save') || 'Save' }}
         </ElButton>
@@ -91,7 +92,8 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 const { t } = useI18n()
 
 const props = defineProps<{
-  bpmnXml: string
+  bpmnXml: string,
+  readonly:boolean
 }>()
 
 const emit = defineEmits<{
