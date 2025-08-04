@@ -1,29 +1,29 @@
 <template>
   <ElForm ref="formRef" :model="validation" :rules="validationRules" label-position="top">
 
-    <ElFormItem :label="t('metadata.validation.date.dateOrDateTime')" :required="true">
+    <ElFormItem :label="t('metadata.validation.date.dateOrDateTime')" class="date-or-date-time-item" :required="true">
       <ElSelect v-model="validation.dateOrDateTime" :placeholder="t('metadata.validation.date.dateOrDateTime')">
         <ElOption label="Date" value="date" />
         <ElOption label="Date Time" value="dateTime" />
       </ElSelect>
     </ElFormItem>
 
-    <ElFormItem :label="t('metadata.validation.date.format')" :required="true">
+    <ElFormItem :label="t('metadata.validation.date.format')" class="date-format-item" :required="true">
       <ElInput v-model="validation.format" :placeholder="t('metadata.validation.date.format')" />
     </ElFormItem>
 
-    <ElFormItem :label="t('metadata.validation.date.defaultValue')" :required="false">
-      <ElSelect v-model="defaultValueType" :placeholder="t('metadata.validation.date.defaultValueType')">
+    <ElFormItem :label="t('metadata.validation.date.defaultValue')" class="date-default-value-item" :required="false">
+      <ElSelect v-model="defaultValueType" class="date-default-value-select" :placeholder="t('metadata.validation.date.defaultValue')">
         <ElOption label="None" value="none" />
-        <ElOption label="Special Value" value="special" />
-        <ElOption label="Specific Date" value="date" />
+        <ElOption :label="t('metadata.validation.date.specialValue')" value="special" />
+        <ElOption :label="t('metadata.validation.date.specificDate')" value="date" />
       </ElSelect>
       
       <ElSelect 
         v-if="defaultValueType === 'special'" 
         v-model="validation.defaultValue" 
         :placeholder="t('metadata.validation.date.specialValue')"
-        class="mt-2"
+        class="mt-2 special-value-select"
       >
         <ElOption label="Today" value="today" />
         <ElOption label="Tomorrow" value="tomorrow" />
@@ -37,7 +37,7 @@
         :type="validation.dateOrDateTime === 'date' ? 'date' : 'datetime'"
         :format="validation.format"
         :placeholder="t('metadata.validation.date.specificDate')"
-        class="mt-2"
+        class="mt-2 date-picker"
       />
     </ElFormItem>
 
