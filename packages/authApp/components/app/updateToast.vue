@@ -3,7 +3,7 @@ import { ElNotification } from 'element-plus'
 const nuxtApp = useNuxtApp()
 const { t } = useI18n()
 // app:manifest:update'
-nuxtApp.hooks.hook('app:manifest:update', () => {
+nuxtApp.hooks.hookOnce('app:manifest:update', () => {
   setTimeout(() => {
     showUpdateToast()
   }, 3000)
