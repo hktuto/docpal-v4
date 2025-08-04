@@ -22,6 +22,10 @@ const config = {
         upload: process.env.UPLOAD_PROXY,
       }
     }
+  },
+  experimental:{
+    appManifest: true,
+    checkOutdatedBuildInterval: 10000,
   }
 } as any
 if(process.env.NODE_ENV === 'development'){
