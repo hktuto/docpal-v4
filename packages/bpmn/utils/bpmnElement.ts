@@ -755,29 +755,23 @@ export const bpmnElement: BpmnElement = {
           id,
           ...bpmnElement.serviceTask.nodeStyle({
             ['attr_flowable:delegateExpression']: '${pdfFormWriter}',
-            extensionElements: {}
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'fileField', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'pdfExample', ['flowable:expression']: { '__cdata': '' } }
+              ]
+            }
           }),
           label: 'New Writer PDF',
-          data: bpmnElement.serviceTask.newNodeData(id, 'New Writer PDF', {
+          data: bpmnElement.serviceTask.newNodeData(id, 'Writer PDF', {
             attr_id: id,
             attr_name: 'New Writer PDF',
             ['attr_flowable:delegateExpression']: '${pdfFormWriter}',
             extensionElements: {
-              'flowable:pdfFormWriterEvent': {
-                attr_eventId: false,
-                attr_eventName: '',
-                attr_actionType: '',
-                attr_description: '',
-                attr_category: '',
-                attr_location: '',
-                attr_startTime: '',
-                attr_endTime: '',
-                attr_isAllDay: '',
-                related: {
-                  attr_user: ''
-                },
-                reminder: []
-              }
+              ['flowable:field']: [
+                { attr_name: 'fileField', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'pdfExample', ['flowable:expression']: { '__cdata': '' } }
+              ]
             }
           })
         })
