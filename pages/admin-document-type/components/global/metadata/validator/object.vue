@@ -6,7 +6,7 @@
         v-model="schemaText" 
         type="textarea" 
         :rows="8"
-        :placeholder="t('metadata.validation.object.schemaPlaceholder')"
+        :placeholder="t('metadata.validation.object.schema')"
         @input="updateSchema"
       />
     </ElFormItem>

@@ -9,8 +9,8 @@
       <ElInput v-model="validation.maximum" :placeholder="t('metadata.validation.number.maximum')" type="number" />
     </ElFormItem>
 
-    <ElFormItem :label="t('metadata.validation.number.decimal')" :required="true">
-      <ElInput v-model="validation.decimal" :placeholder="t('metadata.validation.number.decimal')" type="number" min="0" />
+    <ElFormItem :label="t('marsterTable.type.decimal')" :required="true">
+      <ElInput v-model="validation.decimal" :placeholder="t('marsterTable.type.decimal')" type="number" min="0" />
     </ElFormItem>
     
   </ElForm>

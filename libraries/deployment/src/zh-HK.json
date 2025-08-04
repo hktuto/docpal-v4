@@ -2146,8 +2146,6 @@
     "array": "數組",
     "create_error": "{name}創建失敗",
     "create_success": "{name}已創建成功",
-    "update_error": "{name}更新失敗",
-    "update_success": "{name}已更新成功",
     "dataType": {
       "date": "日期",
       "input": "單行文字",
@@ -2164,6 +2162,8 @@
     "regex": "正規表示式",
     "regexData": "正規表示式範例",
     "regexWarning": "正規表示式警告",
+    "update_error": "{name}更新失敗",
+    "update_success": "{name}已更新成功",
     "validation_error": "驗證錯誤"
   },
   "meta_contractNo": "合同編號",
@@ -2181,7 +2181,9 @@
       "date": {
         "dateOrDateTime": "日期或日期時間",
         "defaultValue": "預設值",
-        "format": "格式"
+        "format": "格式",
+        "specialValue": "特殊日期",
+        "specificDate": "具體日期"
       },
       "masterTable": {
         "displayColumn": "顯示欄位",
@@ -2192,6 +2194,10 @@
         "maximum": "最大值",
         "minimum": "最小值",
         "precision": "精度"
+      },
+      "object": {
+        "info": "資訊",
+        "schema": "Schema"
       },
       "role": {
         "allow": "允許"

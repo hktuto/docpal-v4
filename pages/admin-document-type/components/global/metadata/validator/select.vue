@@ -6,20 +6,21 @@
         <div v-for="(option, index) in validation.options" :key="index" class="option-item">
           <ElInput 
             v-model="validation.options[index]" 
-            :placeholder="t('metadata.validation.select.optionPlaceholder')" 
+            :placeholder="t('metadata.validation.select.options')" 
             class="option-input"
           />
           <ElButton 
             type="danger" 
             size="small" 
+            :class="`remove-option-button_${index}`"
             @click="removeOption(index)"
             :disabled="validation.options.length <= 1"
           >
-            {{ t('common.remove') }}
+            {{ t('common_remove') }}
           </ElButton>
         </div>
-        <ElButton type="primary" size="small" @click="addOption">
-          {{ t('metadata.validation.select.addOption') }}
+        <ElButton class="add-option-button" type="primary" size="small" @click="addOption">
+          {{ t('designer.setting.addOption') }}
         </ElButton>
       </div>
     </ElFormItem>
