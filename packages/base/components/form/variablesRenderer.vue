@@ -98,30 +98,31 @@ function createJson(variables: VariableItem[]): FormJson {
         if (item.options) _item.options = { ..._item.options, ...item.options }
         formJson.value.widgetList.push(_item)
     })
-    FormRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
+    FormRendererRef.value?.vFormRenderRef.setFormJson(formJson.value)
     return formJson.value
 }
-function handleEmit (funName: string, newValue: any, oldValue: any) {
+function handleEmit (funName: any, newValue: any, oldValue: any) {
     emits(funName, newValue, oldValue)
 }
-async function getData (): Promise<FormData> {
+async function getData (): Promise<any> {
   try {
-    const data = await FormRendererRef.value.getFormData()
+    const data = await FormRendererRef.value?.getFormData()
     return data
   } catch (error) {
+    return {}
   }
 }
 async function setFormJson (formJson: FormJson) {
-    await FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
+    await FormRendererRef.value?.vFormRenderRef.setFormJson(formJson)
 }
 async function setData (data: FormData) {
-    await FormRendererRef.value.vFormRenderRef.setFormData(data)
+    await FormRendererRef.value?.vFormRenderRef.setFormData(data)
 }
 function formChange(formData: FormData) {
     emits('formChange', formData)
 }
 function getWidgetRef (name: string) {
-    return FormRendererRef.value.vFormRenderRef.getWidgetRef(name)
+    return FormRendererRef.value?.vFormRenderRef.getWidgetRef(name)
 }
 defineExpose({ createJson, getData, setData, setFormJson, getWidgetRef, FormRendererRef })
 </script>
