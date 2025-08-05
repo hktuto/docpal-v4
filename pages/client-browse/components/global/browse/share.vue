@@ -21,8 +21,8 @@
                            @delete="handleDeleteRow" />
       <div class="div4 flex-x-end">
         <div>
-          <el-button type="primary" @click="handleAddMore">{{ $t('button.addMore') }}</el-button>
-          <el-button type="info" @click="handleDiscard">{{ $t('discard') }}</el-button>
+          <!-- <el-button type="primary" @click="handleAddMore">{{ $t('share.addMore') }}</el-button> -->
+          <!-- <el-button type="info" @click="handleDiscard">{{ $t('discard') }}</el-button> -->
           <el-button type="primary" @click="handleSubmit">{{ $t('dpButtom_confirm') }}</el-button>
         </div>
       </div>
@@ -36,7 +36,7 @@ import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 
 import { clientApi } from 'api'
 
-const { updateShareList, getMineTypeShareList, getUseWatermark } = useShareStore()
+const { updateShareList, getMineTypeShareList, getUseWatermark, shareList } = useShareStore()
 import formJson from './shareRequest.vform.json'
 
 const FormRendererRef = ref()
@@ -159,7 +159,13 @@ async function handleSubmit() {
 function handleDeleteRow(row: any) {
   const index = state.minTypeShareList.findIndex((item: any) => row.id === item.id)
   state.minTypeShareList.splice(index, 1)
-  updateShareList(state.minTypeShareList)
+  if (state.minTypeShareList.length === 0) {
+    handleDiscard()
+  }else{
+
+    
+    updateShareList(state.minTypeShareList)
+  }
 }
 
 async function handleDiscard() {
@@ -181,27 +187,47 @@ function handleAddMore() {
   routerProvider?.navigateTo(item)
 }
 
-onMounted(async () => {
-  state.backPath = props.backPath || '/'
-  console.log(state.backPath)
-
+watch(shareList, async(newVal) => {
   try {
     state.minTypeShareList = await getMineTypeShareList()
-  } catch (error) {
-
-  }
-  if (state.minTypeShareList.length === 0) {
+    if (state.minTypeShareList.length === 0) {
     const item = createBrowseListPageParams({
       idOrPath: props.backPath
     })
-    routerProvider?.navigateTo(item)
+      routerProvider?.navigateTo(item)
+    }
+    const mimeTypeList = state.minTypeShareList.reduce((prev: any, item: any) => {
+      if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
+      return prev
+    }, [])
+    clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
+  } catch (error) {
+
   }
-  const mimeTypeList = state.minTypeShareList.reduce((prev: any, item: any) => {
-    if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
-    return prev
-  }, [])
-  clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
+},{
+  immediate: true,
+  deep: true
 })
+
+// onMounted(async () => {
+//   state.backPath = props.backPath || '/'
+//   try {
+//     state.minTypeShareList = await getMineTypeShareList()
+//   } catch (error) {
+
+//   }
+//   if (state.minTypeShareList.length === 0) {
+//     const item = createBrowseListPageParams({
+//       idOrPath: props.backPath
+//     })
+//     routerProvider?.navigateTo(item)
+//   }
+//   const mimeTypeList = state.minTypeShareList.reduce((prev: any, item: any) => {
+//     if (item.mimeType && getUseWatermark(item.mimeType)) prev.push(item.id)
+//     return prev
+//   }, [])
+//   clientApi.api.postNuxeoSharePrepareDownload(mimeTypeList)
+// })
 onUnmounted(() => {
   if (!!state.interval) clearInterval(state.interval)
 })
