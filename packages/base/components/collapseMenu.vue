@@ -81,13 +81,13 @@ watch(opened,(bool) => {
   right: 0;
   z-index: 2;
   padding: var(--app-space-s);
-  background: var(--app-grey-900);
+  background: var(--app-grey-1000);
   border-radius: 4px;
   box-shadow: 0 0 5px rgba(0,0,0,0.3);
   transform: translateX(100vw);
   transition: transform .2s ease-in-out;
 
-  width: 220px;
+  // width: 220px;
   &.opened{
     display: flex;
     flex-flow: column nowrap;
