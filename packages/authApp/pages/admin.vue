@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-const {public : { platform }} = useRuntimeConfig()
+
 const localeReady = ref(false)
-const appPlatform = useAppPlatform()
-appPlatform.value = platform || 'client'
+const platform = useAppPlatform()
+platform.value = 'admin'
 </script>
 
 <template>
@@ -10,7 +10,7 @@ appPlatform.value = platform || 'client'
     <template #default="{ loggedIn, logout }">
       <AppEntry @ready="localeReady = true">
         <template v-if="localeReady" #sidebar>
-          <AppMenu class="sideMenu" :admin="appPlatform === 'admin'">
+          <AppMenu class="sideMenu" admin>
             <template #header>
               <AuthUser />
               <AuthSetting />

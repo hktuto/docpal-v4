@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {adminApi, clientApi} from 'api'
 
-const { public:{platform}} = useRuntimeConfig();
+const platform = useAppPlatform()
 const {t} = useI18n()
 
 const { state, handleSubmit, handleDelete, handleOpen } = useDashboardSetting({
@@ -25,7 +25,7 @@ async function handleWorkflowhange(newSelectedWorkflow: string) {
   if(!selectedWorkflowData) return
   // get workflow bpmn 
   let xml;
-  if(platform === 'admin') {
+  if(platform.value === 'admin') {
     const blob = await adminApi.api.getWorkflowVersionBpmnxml({
       draftId: selectedWorkflowData.draftId,
       versionNumber: selectedWorkflowData.versionNumber

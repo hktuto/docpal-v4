@@ -112,9 +112,7 @@ import { onMounted } from 'vue'
 const emits = defineEmits(['filter-change'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
 const ignoreList = getIgnoreSchemas()
 // const isSuperAdmin = useIsSuperAdmin()
 const props = defineProps<{
@@ -223,7 +221,7 @@ const { tableConfig, tableEvent, tableRef, reload, query, cleanSelectedRows } = 
         }
       case 'delete':
         return {
-          visible: platform === 'admin',
+          visible: platform.value === 'admin',
           disabled: false
         }
       case 'active':

@@ -26,9 +26,8 @@ import { useEventBus, EventType } from 'eventbus'
 
 import { set, watchDebounced } from '@vueuse/core'
 import { adminApi } from 'api'
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
+
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -51,7 +50,7 @@ const { t } = useI18n()
 
 
 function displayValue(item: any) {
-  if (platform === 'admin') {
+  if (platform.value === 'admin') {
     return state.defaultValue[item.id]
   }
   if (item.type === 'date') {

@@ -4,15 +4,14 @@
   </div>
 </template>
 <script lang="ts" setup>
+
 import { watchDebounced } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { clientApi } from 'api'
 const props = defineProps(['processKeys'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
 let extraParams: any = ref({
   candidateOrAssigned: useUserId()
 })
@@ -45,7 +44,7 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  if (platform === 'admin') return
+  if (platform.value === 'admin') return
   try {
     routerProvider?.navigateTo(
       routeWorkflowDetail({

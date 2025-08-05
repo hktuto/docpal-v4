@@ -66,6 +66,7 @@ const config = {
   },
   nitro:{
     routeRules:{
+      '/adminApi/api': {proxy: {to: process.env.ADMIN_PROXY+"/**"}},
       '/public-api/report/v1/api': {proxy: {to: process.env.DASHBOARD_PROXY}},
       '/api/**': {proxy: {to: process.env.PROXY +"/**"}},
       '/notification/api/**': {proxy: {to: process.env.NOTIFICATION_PROXY+"/**"}},
@@ -74,7 +75,11 @@ const config = {
     },
 
       devProxy:{
-        
+        '/adminApi/api':{
+          target: process.env.ADMIN_PROXY,
+          changeOrigin: true,
+          prependPath: true
+        },
         '/public-api/report/v1/api':{
           target: process.env.DASHBOARD_PROXY,
           changeOrigin: true,
