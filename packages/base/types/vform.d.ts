@@ -69,7 +69,7 @@ export type WidgetOptions = {
   name: string
   label: string
   required: boolean
-  defaultValue?: string
+  defaultValue?: any
   size?: string
   columnWidth?: string
   placeholder?: string
@@ -78,6 +78,20 @@ export type WidgetOptions = {
   hidden?: boolean
   clearable?: boolean
   requiredHint?: string
+  format?: string
+  valueFormat?: string
+  type?: string
+  maxLength?: number
+  minLength?: number
+  max?: number
+  min?: number
+  step?: number
+  precision?: number
+  rows?: number
+  controlsPosition?: string
+  labelIconPosition?: string
+  showWordLimit?: boolean
+  onDisabledDate?: string
   onValidate?: string
   onCreated?: string
   onMounted?: string

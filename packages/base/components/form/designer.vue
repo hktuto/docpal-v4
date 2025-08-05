@@ -56,7 +56,7 @@ function setFormJson(json: FormJson) {
   vFormDesignerRef.value?.refreshDesigner()
   vFormDesignerRef.value?.setFormJson(json)
 }
-function getFormJson(): FormJson {
+function getFormJson(): any {
   return vFormDesignerRef.value?.getFormJson()
 }
 defineExpose({ vFormDesignerRef, setFormJson, getFormJson })
