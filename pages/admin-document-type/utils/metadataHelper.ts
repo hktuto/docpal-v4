@@ -77,7 +77,7 @@ export type UserValidation = {
 }
 
 export type RoleValidation = {
-  validationRuleName: 'role';
+  validationRuleName: 'user_role_user_group';
   allow?: "ALL" | "USER_ROLE" | "USER_GROUP";
   isMultiple: boolean
 }
@@ -124,7 +124,7 @@ export type MetadataOption =
   | { group: 'SYSTEM'; name: 'Workflow'; validation: WorkflowValidation }
   | { group: 'SYSTEM'; name: 'MasterTable'; validation: MasterTableValidation }
   | { group: 'USER'; name: 'User'; validation: UserValidation }
-  | { group: 'USER'; name: 'Role'; validation: RoleValidation };
+  | { group: 'USER'; name: 'UserRoleUserGroup'; validation: RoleValidation };
   // | { group: 'COMPREHENSIVE'; name: 'Object'; validation: ObjectValidation }
   // | { group: 'COMPREHENSIVE'; name: 'Array'; validation: ArrayValidation };
 
@@ -237,9 +237,9 @@ export const METADATA_OPTIONS: {
       },
       {
         group: 'USER',
-        name: "Role",
+        name: "UserRoleUserGroup",
         validation: {
-          validationRuleName: 'role',
+          validationRuleName: 'user_role_user_group',
           allow: 'ALL',
           isMultiple: false
         }
