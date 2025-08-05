@@ -7,7 +7,7 @@ const props = defineProps<{
 <template>
   <div class="buttonContainer">
     <slot />
-    <div class="label">{{label}}</div>
+    <!-- <div class="label">{{label}}</div> -->
   </div>
 </template>
 
@@ -26,7 +26,7 @@ $label-show-size: 1920px;
     }
   }
   .label {
-    display: none;
+    // display: none;
     color: var(--app-grey-200);
     @container (min-width: #{$label-show-size}) {
       display: block;
