@@ -9,7 +9,14 @@
     <el-form ref="formRef" :model="formData" :rules="formRules" label-position="top" class="display-meta-form">
       <!-- Metadata Selection -->
       <el-form-item :label="$t('rightDetail_meta')" prop="metadataId" required>
-        <el-select-v2 v-model="formData.metadataId" :options="metadataOpts" :placeholder="$t('render.hint.fieldRequired', { name: $t('rightDetail_meta') })" default-first-option clearable filterable>
+        <el-select-v2
+          v-model="formData.metadataId"
+          :options="availableMetadata"
+          :placeholder="$t('render.hint.fieldRequired', { name: $t('rightDetail_meta') })"
+          default-first-option
+          clearable
+          filterable
+        >
           <template #default="{ item }">
             <span style="margin-right: 8px">{{ $t(item.label) }}</span>
           </template>
@@ -42,7 +49,7 @@
       <el-divider />
       <el-row :gutter="20">
         <el-col :span="8" v-for="item in ['hiddenPermissions', 'maskPermissions', 'readOnlyPermissions']" :key="item">
-          <DocTypePermission v-model="formData.metadataPermission[item]" :permissionType="item"  />
+          <DocTypePermission v-model="formData.metadataPermission[item]" :permissionType="item" />
         </el-col>
       </el-row>
     </el-form>
@@ -69,7 +76,7 @@ import { ElMessage, type FormInstance } from 'element-plus'
 
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
-  documentType: string,
+  documentType: string
   id: string
 }>()
 const { t } = useI18n()
@@ -104,11 +111,13 @@ const formRules = reactive({
 // Available metadata options
 const availableMetadata = computed(() => {
   if (!state.metadataList.length) return []
-
-  return state.metadataList.map((item) => ({
-    ...item,
-    disabled: state.isEdit ? false : item.display // Disable already displayed items in add mode
-  }))
+  const data = metadataOpts.value.map((item: any) => {
+    return {
+      ...item,
+      disabled: state.metadataList.some((item2: any) => item2.id === item.value)
+    }
+  })
+  return data
 })
 
 async function handleSubmit(addMore: boolean = false) {

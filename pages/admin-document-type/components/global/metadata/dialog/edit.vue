@@ -12,6 +12,7 @@
         </el-select>
       </el-form-item>
       <!-- validationRuleSection -->
+      <!-- <MetadataValidatorUserRoleUserGroup v-model:validation="formData.validationRule" /> -->
       <template v-if="selectedType && formData.validationRule && validationComponent">
         <component :is="validationComponent" ref="validationFormRef" v-model:validation="formData.validationRule" />
       </template>
@@ -73,6 +74,8 @@ function open(data: any) {
     data.validationRule = validationRule
   } else if (data.validationRule.validationRuleName === 'mastertable') {
     selectedType.value = 'MasterTable'
+  } else if (data.validationRule.validationRuleName === 'user_role_user_group') {
+    selectedType.value = 'UserRoleUserGroup'
   } else {
     // data.validationRule.type maybe in lower case, change it to first letter uppercase
     selectedType.value = data.validationRule.validationRuleName.charAt(0).toUpperCase() + data.validationRule.validationRuleName.slice(1)
