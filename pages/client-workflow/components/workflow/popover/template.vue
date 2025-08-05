@@ -45,7 +45,7 @@ const routerProvider = inject(MenuRouterKey)
 // @ts-ignore
 const { t } = useI18n()
 // @ts-ignore
-const state = reactive({
+const state = reactive<any>({
   dialogVisible: false,
   loading: false,
   variableLoading: false,
@@ -201,7 +201,13 @@ async function templateParamGet(templatePath: string) {
 
 // @ts-ignore
 onMounted(async () => {
-  state.templateList = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) || []
+  try{
+
+    state.templateList = await clientApi.api.postNuxeoTemplateGettemplatelist().then(res => res.data) || []
+  }catch(error){
+    console.log(error)
+    state.templateList = []
+  }
 })
 
 const reset = () => {
