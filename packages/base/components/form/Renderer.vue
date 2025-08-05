@@ -20,14 +20,15 @@
 </template>
 
 <script lang="ts" setup>
+import type { FormJson, FormData, WidgetItem, FormRenderer } from '@/types/vform'
 import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 const emits = defineEmits(['submit', 'clean', 'fail', 'formChange', 'emit'])
 const { t } = useI18n()
 const props = withDefaults(
   defineProps<{
-    data?: Object
-    formJson?: Object
+    data?: FormData
+    formJson?: FormJson
     options?: Object
     attachmentDownloadApi?: Function
   }>(),
@@ -41,10 +42,22 @@ const props = withDefaults(
       )
   }
 )
-const vFormRenderRef = ref()
-const fromJsonNormalizer = computed(() => {
-  if (!props.formJson) return {}
-  if (!props.formJson.formConfig) return {}
+const vFormRenderRef = ref<FormRenderer>()
+const fromJsonNormalizer = computed((): FormJson => {
+  if (!props.formJson)
+    return {
+      widgetList: [],
+      formConfig: {
+        jsonVersion: 3
+      }
+    }
+  if (!props.formJson.formConfig)
+    return {
+      widgetList: [],
+      formConfig: {
+        jsonVersion: 3
+      }
+    }
 
   let json = deepCopy(props.formJson)
   // if(json.formConfig.jsonVersion === 3) return props.formJson;
@@ -62,7 +75,7 @@ const fromJsonNormalizer = computed(() => {
 
   return json
 })
-function setFormJson(json) {
+function setFormJson(json: FormJson) {
   console.log('setFormJson', json)
   /**
    * old migrate function , change axious to $api
@@ -72,11 +85,12 @@ function setFormJson(json) {
   // st = st.replaceAll('this.$cookies.get', '$getCookie')
   // st = st.replaceAll('yyyy-MM-dd', 'YYYY-MM-DD')
   // json = JSON.parse(st)
-  vFormRenderRef.value.setFormJson(json)
+  vFormRenderRef.value?.setFormJson(json)
 }
-function setFormData(data: any) {
+function setFormData(data: FormData) {
+  if (!vFormRenderRef.value) return
   Object.keys(vFormRenderRef.value.widgetRefList).forEach((key: string) => {
-    const widgetRef = vFormRenderRef.value.widgetRefList[key]
+    const widgetRef = vFormRenderRef.value?.widgetRefList[key]
     // widget：仅容器含有；设置容器变量
     if (widgetRef.widget) {
       const widget = widgetRef.widget
@@ -84,9 +98,9 @@ function setFormData(data: any) {
         if (!data[widget.id])
           delete data[widget.id] // 删除 sub-form data,将按照默认设置渲染表单
         else {
-          widget.widgetList.forEach((widgetItem) => {
+          widget.widgetList.forEach((widgetItem: any) => {
             if (widgetItem.type === 'date' && widgetItem.options.valueFormat) {
-              data[widget.id].forEach((dataItem) => {
+              data[widget.id].forEach((dataItem: FormData) => {
                 dataItem[widget.id] = formatDate(dataItem[widget.id], widgetItem.options.valueFormat)
               })
             }
@@ -108,12 +122,12 @@ function setFormData(data: any) {
       }
     }
   })
-  vFormRenderRef.value.setFormData(data)
+  vFormRenderRef.value?.setFormData(data)
 }
-function formChange(fieldName, newValue, oldValue, formModel) {
+function formChange(fieldName: string, newValue: any, oldValue: any, formModel: FormData) {
   emits('formChange', { fieldName, newValue, oldValue, formModel })
 }
-function handleEmit(funName, newValue, oldValue) {
+function handleEmit(funName: any, newValue: any, oldValue: any) {
   emits(funName, newValue, oldValue)
   emits('emit', funName, newValue, oldValue)
 }
@@ -130,7 +144,7 @@ const previewFile = reactive<any>({
     readOnly: true
   }
 })
-async function handleFilePreview({ file, options }) {
+async function handleFilePreview({ file, options }: { file: any; options: any }) {
   previewFile.loading = true
   try {
     let fileId = ''
@@ -161,7 +175,7 @@ async function handleFilePreview({ file, options }) {
 async function getFormData(needValidation: boolean = true) {
   let data = null
   try {
-    data = await vFormRenderRef.value.getFormData(needValidation)
+    data = await vFormRenderRef.value?.getFormData(needValidation)
   } catch (error: any) {
     console.log(error)
     ElMessage.error(error)
