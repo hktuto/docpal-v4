@@ -13,9 +13,9 @@ export type SimplifiedDocDetail = {
     version: string,
     collections: string[]
 }
-
+const useShareList = () => useState<SimplifiedDocDetail[]>('share-state', () => ([]))
 export const useShareStore = () => {
-    const shareList = useState<SimplifiedDocDetail[]>('share-state', () => ([]))
+    const shareList = useShareList()
 
     async function getMineTypeShareList() {
         // const data = await DocumentThumbnailListGetApi(state.shareList.map((item:any) => item.id))
