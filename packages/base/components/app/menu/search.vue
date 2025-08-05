@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 const { opened, displayList, keyword, selectedItemIndex } = useGlobalSearch()
 
 const keywordRef = ref()

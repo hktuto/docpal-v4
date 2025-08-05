@@ -699,12 +699,6 @@ importers:
       '@nuxt/test-utils':
         specifier: 3.18.0
         version: 3.18.0(@vitest/ui@3.1.4)(@vue/test-utils@2.4.6)(happy-dom@17.4.7)(playwright-core@1.51.0)(sass@1.85.1)(typescript@5.8.3)(vitest@3.1.4)
-      '@stagewise/toolbar':
-        specifier: ^0.6.2
-        version: 0.6.2
-      '@stagewise/toolbar-vue':
-        specifier: ^0.6.2
-        version: 0.6.2(vue@3.5.6)
       '@vue/test-utils':
         specifier: ^2.4.6
         version: 2.4.6
@@ -9374,19 +9368,6 @@ packages:
 
   /@speed-highlight/core@1.2.7:
     resolution: {integrity: sha512-0dxmVj4gxg3Jg879kvFS/msl4s9F3T9UXC1InxgOf7t5NvcPD97u/WTA5vL/IxWHMn7qSxBozqrnnE2wvl1m8g==}
-
-  /@stagewise/toolbar-vue@0.6.2(vue@3.5.6):
-    resolution: {integrity: sha512-dmEQEWn3hXB6NogoQmBmkyPzaFs72Xvh/abrIvmYSjLze9kILOt7ijaKV/ENqnq6GfPGfXTPKqGKESpBecyFVQ==}
-    peerDependencies:
-      vue: '>=3.0.0'
-    dependencies:
-      '@stagewise/toolbar': 0.6.2
-      vue: 3.5.6(typescript@5.8.3)
-    dev: true
-
-  /@stagewise/toolbar@0.6.2:
-    resolution: {integrity: sha512-WN7PWaOT6YQKjJYL4/85V5UU0eZEws+/UBT/J4wJOEbFxoluLuchqh7xVTmUZTtw0q0xpzlgX8Vb0kAZf/pjmw==}
-    dev: true
 
   /@statsig/client-core@3.12.2:
     resolution: {integrity: sha512-v+dVrzfgsHbtr665KcU/4FVH7FJ5cfEHqNofMEjQmU7uV7G7/88qyr1Bq4u3EiX1nEs+RJi26xLNVrwfENe5jg==}

@@ -7,9 +7,7 @@
 import { ElMessage } from 'element-plus'
 import { clientApi } from 'api'
 const routerProvider = inject(MenuRouterKey)
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
 const { t } = useI18n()
 let extraParams: any = {}
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
@@ -34,7 +32,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   saveColumnOrder: false
 })
 async function getData(params: any = {}) {
-  if (platform === 'admin') return
+  if (platform.value === 'admin') return
   const res = await clientApi.api.postInternalshareOthers({ ...params, ...extraParams }).then((res) => res.data)
   return {
     data: {
@@ -44,7 +42,7 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  if (platform === 'admin') return
+  if (platform.value === 'admin') return
   if (row.isFolder) {
     routerProvider?.navigateTo(routeShareOtherPageFolder(row), false)
   } else {

@@ -10,7 +10,7 @@ import { clientApi } from 'api'
 const props = defineProps(['processKeys'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const { public: { platform } } = useRuntimeConfig();
+const platform = useAppPlatform()
 let extraParams: any = ref({
   interrelatedUserId: useUserId()
 })
@@ -43,7 +43,7 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  if(platform === 'admin') return
+  if(platform.value === 'admin') return
   try {
     routerProvider?.navigateTo(routeWorkflowDetail({ ...row, name: row.taskInstance.businessKey, workflowType: 'activeTask' }), false)
   } catch (error: any) {

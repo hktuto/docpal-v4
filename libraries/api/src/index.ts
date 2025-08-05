@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus'
 // import {logout} from '~/utils/auth'
 
 let clientBaseURL = '/api'
-let adminBaseURL = '/api'
+let adminBaseURL = '/adminApi/api'
 let publicBaseURL = '/public-api/report/v1/api'
 let templateBaseURL = '/open-api/template'
 

@@ -4,11 +4,13 @@ import { useEventBus, EventType, emitBus } from 'eventbus'
 
 function getBaseUrl(baseURL: string) {
   const { public: { DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY, PROXY, OPEN_PROXY} } = useRuntimeConfig()
-  console.log(CLIENT_PROXY)
   if (baseURL === '/dashboard') return DASHBOARD_PROXY
   if (baseURL === '/client') return CLIENT_PROXY
-  if (baseURL === '/admin') return ADMIN_PROXY
+  if (baseURL === '/admin'){ return ADMIN_PROXY}
   if (baseURL === '/api') return PROXY
+  if (baseURL === '/adminApi/api') {
+    return ADMIN_PROXY
+  }
   if (baseURL === '/docpalApi') return PROXY
   if (baseURL === '/public-api/report/v1/api') return DASHBOARD_PROXY
   if (baseURL === '/open-api/template') return OPEN_PROXY

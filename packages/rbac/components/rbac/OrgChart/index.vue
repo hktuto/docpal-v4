@@ -33,9 +33,7 @@ import { useRBAC } from '../../../composables/useRBAC'
 interface Props {
   roleId?: string
 }
-const {
-  public: { platform },
-} = useRuntimeConfig();
+const platform = useAppPlatform()
 const props = defineProps<Props>()
 
 const { t } = useI18n()

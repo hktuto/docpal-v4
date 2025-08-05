@@ -10,9 +10,7 @@ import { clientApi } from 'api'
 const props = defineProps(['processKeys'])
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
 let extraParams: any = ref({
   assignedUser: useUserId()
 })
@@ -31,7 +29,7 @@ const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = 
   saveColumnOrder: false
 })
 async function getData(params: any = {}) {
-  if (platform === 'admin') return
+  if (platform.value === 'admin') return
   const settingParams: any = {}
   if (props.processKeys && props.processKeys.length > 0) {
     settingParams.processKeys = props.processKeys
@@ -45,10 +43,7 @@ async function getData(params: any = {}) {
   }
 }
 function handleDblclick(row: any) {
-  const {
-    public: { platform }
-  } = useRuntimeConfig()
-  if (platform === 'admin') return
+  if (platform.value === 'admin') return
   try {
     routerProvider?.navigateTo(
       routeWorkflowDetail({

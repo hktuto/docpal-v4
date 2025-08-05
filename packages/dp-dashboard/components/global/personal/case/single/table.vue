@@ -2,9 +2,7 @@
 import { clientApi } from 'api'
 import { MoreFilled } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
 const { id, name, detail } = defineProps<{
   id: string
   name: string
@@ -27,7 +25,7 @@ const caseTypeId = ref('')
 const { tableConfig, tableEvent, tableRef, query, reload, cleanSelectedRows } = useVxeTable({
   id: 'clientCaseTableList',
   api: async (pageParams: any) => {
-    if (platform === 'admin') {
+    if (platform.value === 'admin') {
       return {
         entryList: [],
         totalSize: 0

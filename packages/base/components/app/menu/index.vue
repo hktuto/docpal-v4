@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="T extends MenuItem">
-const  { menu, appMenu } = useAppConfig()
+const  { menu, appMenu, adminMenu } = useAppConfig()
 const mode = ref<'collapse' | 'expand'>('collapse')
-
+const props = defineProps<{
+    admin?: boolean
+}>()
 const layout = useTabLayout()
 const hightLightPanel = useCurrentTargetPanel()
 const tabProvider = inject(TabManagerKey)
@@ -41,7 +43,7 @@ const searchList = useGlobalSearchList()
 function generateMenu(){
     let result = []
     
-    const _appMenu = deepCopy(appMenu) // menu list
+    const _appMenu = props.admin ? deepCopy(adminMenu) : deepCopy(appMenu) // menu list
     const _menu = deepCopy(menu) // menu对象映射
     const menuSearchList:GlobalSearchItem[] = [];
     

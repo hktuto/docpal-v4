@@ -4,9 +4,7 @@ import { clientApi } from 'api'
 
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
-const {
-  public: { platform }
-} = useRuntimeConfig()
+const platform = useAppPlatform()
 
 const props = defineProps<{
   setting: any
@@ -179,7 +177,7 @@ async function getAllWorkingInstances(processKey: string, pageNum: number = 0, p
 const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
   id: 'personal-workflow-single-table',
   api: async (pageParams: any) => {
-    if (platform === 'admin') {
+    if (platform.value === 'admin') {
       return []
     }
     return getAllWorkingInstances(props.setting.selectedWorkflow, 0, 100, [])

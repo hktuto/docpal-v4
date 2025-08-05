@@ -2,7 +2,7 @@
 import { clientApi } from 'api'
 import userSignature from '~/components/setting/userSignature.vue'
 
-const { public: { platform } } = useRuntimeConfig()
+const platform = useAppPlatform()
 const router = useRouter()
 const routerProvider = inject(MenuRouterKey)
 const { t } = useI18n()
