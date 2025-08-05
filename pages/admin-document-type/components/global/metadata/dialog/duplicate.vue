@@ -68,6 +68,8 @@ function open(data: any) {
   originalName.value = data.name
   if (data.validationRule && data.validationRule.validationRuleName === 'mastertable') {
     selectedType.value = 'MasterTable'
+  } else if (data.validationRule && data.validationRule.validationRuleName === 'userRoleUserGroup') {
+    selectedType.value = 'UserRoleUserGroup'
   }
   // Copy all settings from the original metadata
   else if (data.validationRule && data.validationRule.validationRuleName) {

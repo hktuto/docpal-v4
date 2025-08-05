@@ -7,24 +7,14 @@
 </FormRenderer>
 </template>
 <script lang="ts" setup>
-export type variableItem = {
-    name: string,
-    label: string,
-    type: 'date' | 'input' | 'switch' | 'textarea' | 'number' | 'select',
-    disabled: Boolean,
-    hidden: Boolean,
-    required: Boolean,
-    // format?: string,
-    options?: any,
-    // maxLength?: number,
-    // onValidate?: string
-}
+import type { VariableItem } from '@/types/vform.extend'
+import type { FormJson, FormData, WidgetItem, FormVariablesRenderer } from '@/types/vform'
 const props = defineProps<{
-    variables?: variableItem[],
+    variables?: VariableItem[],
 }>()
 const emits = defineEmits(['formChange'])
-const FormRendererRef = ref()
-const formJson = ref({
+const FormRendererRef = ref<FormVariablesRenderer>()
+const formJson = ref<FormJson>({
     "widgetList": [],
     "formConfig": {
         "modelName": "formData",
@@ -48,13 +38,13 @@ const formJson = ref({
         "dataSources": []
     }
 })
-function createJson(variables: variableItem[]) {
+function createJson(variables: VariableItem[]): FormJson {
     console.log("createJson", variables)
     
     const date = new Date().valueOf()
     formJson.value.widgetList = []
-    variables.forEach((item, index) => {
-        const _item: any = {
+    variables.forEach((item: VariableItem, index: number) => {
+        const _item: WidgetItem = {
             key: date + index,
             id: item.type + date + index,
             type: item.type,
@@ -108,30 +98,31 @@ function createJson(variables: variableItem[]) {
         if (item.options) _item.options = { ..._item.options, ...item.options }
         formJson.value.widgetList.push(_item)
     })
-    FormRendererRef.value.vFormRenderRef.setFormJson(formJson.value)
+    FormRendererRef.value?.vFormRenderRef.setFormJson(formJson.value)
     return formJson.value
 }
-function handleEmit (funName, newValue, oldValue) {
+function handleEmit (funName: any, newValue: any, oldValue: any) {
     emits(funName, newValue, oldValue)
 }
-async function getData () {
+async function getData (): Promise<any> {
   try {
-    const data = await FormRendererRef.value.getFormData()
+    const data = await FormRendererRef.value?.getFormData()
     return data
   } catch (error) {
+    return {}
   }
 }
-async function setFormJson (formJson) {
-    await FormRendererRef.value.vFormRenderRef.setFormJson(formJson)
+async function setFormJson (formJson: FormJson) {
+    await FormRendererRef.value?.vFormRenderRef.setFormJson(formJson)
 }
-async function setData (data) {
-    await FormRendererRef.value.vFormRenderRef.setFormData(data)
+async function setData (data: FormData) {
+    await FormRendererRef.value?.vFormRenderRef.setFormData(data)
 }
-function formChange(formData) {
+function formChange(formData: FormData) {
     emits('formChange', formData)
 }
-function getWidgetRef (name) {
-    return FormRendererRef.value.vFormRenderRef.getWidgetRef(name)
+function getWidgetRef (name: string) {
+    return FormRendererRef.value?.vFormRenderRef.getWidgetRef(name)
 }
 defineExpose({ createJson, getData, setData, setFormJson, getWidgetRef, FormRendererRef })
 </script>
