@@ -103,18 +103,18 @@ async function getVariables() {
 async function handleTest() {
   state.downloadLoading = true
 
+  const id = new Date().valueOf() + state.info.name
+  const notification = ElNotification({
+    title: '',
+    icon: Download,
+    dangerouslyUseHTMLString: true,
+    message: `<span id="${id}">0%</span> <span title="${state.info.name}">${state.info.name}</span>`,
+    showClose: false,
+    customClass: 'download-notification',
+    duration: 0,
+    position: 'bottom-right'
+  })
   try {
-    const id = new Date().valueOf() + state.info.name
-    const notification = ElNotification({
-      title: '',
-      icon: Download,
-      dangerouslyUseHTMLString: true,
-      message: `<span id="${id}">0%</span> <span title="${state.info.name}">${state.info.name}</span>`,
-      showClose: false,
-      customClass: 'download-notification',
-      duration: 0,
-      position: 'bottom-right'
-    })
     let blob
     if (state.info.fileType === 'Word') {
       const dataJson = {
@@ -153,7 +153,8 @@ async function handleTest() {
       notification.close()
     }, 3000)
   } catch (error) {
-    throw new Error(error)
+    notification.close()
+    routerProvider?.message.error(error)
   } finally {
     state.downloadLoading = false
   }
