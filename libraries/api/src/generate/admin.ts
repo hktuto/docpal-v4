@@ -347,6 +347,8 @@ export interface ExternalStorageDTO {
     connectionType?: string;
     /** Connection settings configuration */
     connectionSettings?: Record<string, object>;
+    /** Platform [WINDOW|LINUX] */
+    platform?: string;
     /** Storage path or directory */
     path?: string;
     /** Status of the external storage (ACTIVE, INACTIVE, etc.) */
@@ -597,6 +599,8 @@ export interface DocumentTemplateRequestDTO {
     documentId?: string;
     /** Document Template File Type */
     fileType?: string;
+    /** Document Template Source */
+    source?: string;
     /** Document Template Variable */
     templateVariable?: string;
     /** Document Template Description */
@@ -622,6 +626,8 @@ export interface DocumentTemplateRequestDTO {
     variables?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface SortObject {
@@ -777,6 +783,8 @@ export interface RetentionPolicyRequestDTO {
     ids?: number[];
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** RetentionPolicy trigger list */
@@ -888,6 +896,8 @@ export interface PersonalDashboardRequestDTO {
     styleJson?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface MasterTable {
@@ -955,6 +965,8 @@ export interface MTRecordRequestDTO {
     relationRecords?: MTRecordDTO[];
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface IdGenerationRuleItem {
@@ -1119,6 +1131,8 @@ export interface CompanyChopRequestDTO {
     file?: File;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface CompanyChop {
@@ -1233,6 +1247,8 @@ export interface CmmnDashboardRequestDTO {
     status?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Calendar (Request) */
@@ -2018,6 +2034,8 @@ export interface SmartFolderRequestDTO {
     userGroupIds?: string[];
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOSmartFolderResponseDTO {
@@ -2673,6 +2691,8 @@ export interface ExternalStorageImportJobRequestDTO {
     endDate?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOExternalStorageImportJobDTO {
@@ -2770,6 +2790,8 @@ export interface ExternalProfileRequestDTO {
     outputSetting?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** External Storage Request DTO */
@@ -2798,6 +2820,8 @@ export interface ExternalStorageRequestDTO {
     connectionType?: string;
     /** Storage path or directory */
     path?: string;
+    /** Platform [WINDOW|LINUX] */
+    platform?: string;
     /** Status of the external storage (ACTIVE, INACTIVE, etc.) */
     status?: string;
     /** Work group associated with the storage */
@@ -2810,6 +2834,8 @@ export interface ExternalStorageRequestDTO {
     extendData?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface DocPalTypeMetadata {
@@ -2862,6 +2888,8 @@ export interface DocPalTypeRequestDTO {
     metadataFieldMap?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface DocPalTypeResponseDTO {
@@ -2959,16 +2987,68 @@ export interface QueryMetadataRequestDTO {
     docpalTypeName?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
+}
+
+export type BooleanValidation = MetadataValidation;
+
+export type CaseValidation = MetadataValidation;
+
+export type DateValidation = MetadataValidation & {
+    dateOrDateTime?: string;
+    format?: string;
+    defaultValue?: string;
+};
+
+export type DocumentValidation = MetadataValidation;
+
+export type MasterTableValidation = MetadataValidation & {
+    masterTableName?: string;
+    displayColumn?: string;
+    valueColumn?: string;
+};
+
+export interface MetadataMaskRuleDTO {
+    maskType?: string;
+    /** @format int32 */
+    maskLength?: number;
 }
 
 export interface MetadataResponseVO {
     name?: string;
-    dateType?: string;
+    dataType?: string;
     createdBy?: string;
     lastModifiedDate?: string;
     id?: string;
     display?: boolean;
+    validationRule?:
+        | BooleanValidation
+        | CaseValidation
+        | DateValidation
+        | DocumentValidation
+        | MasterTableValidation
+        | NumberValidation
+        | SelectValidation
+        | TextValidation
+        | UserRoleUserGroupValidation
+        | UserValidation
+        | WorkflowValidation;
+    maskRule?: MetadataMaskRuleDTO;
 }
+
+export interface MetadataValidation {
+    validationRuleName?: string;
+    isMultiple?: boolean;
+}
+
+export type NumberValidation = MetadataValidation & {
+    /** @format int32 */
+    minimum?: number;
+    /** @format int32 */
+    maximum?: number;
+    multipleOf?: number;
+};
 
 export interface PaginationDTOMetadataResponseVO {
     entryList?: MetadataResponseVO[];
@@ -2991,25 +3071,22 @@ export interface ResultPaginationDTOMetadataResponseVO {
     data?: PaginationDTOMetadataResponseVO;
 }
 
-export type BooleanValidation = MetadataValidation & {
-    true?: boolean;
+export type SelectValidation = MetadataValidation & {
+    options?: string[];
 };
 
-export type CaseValidation = MetadataValidation;
-
-export type DateValidation = MetadataValidation & {
-    dateOrDateTime?: string;
-    format?: string;
-    defaultValue?: string;
+export type TextValidation = MetadataValidation & {
+    /** @format int32 */
+    maxLength?: number;
 };
 
-export type DocumentValidation = MetadataValidation;
-
-export type MasterTableValidation = MetadataValidation & {
-    masterTableId?: string;
-    displayColumn?: string;
-    valueColumn?: string;
+export type UserRoleUserGroupValidation = MetadataValidation & {
+    allow?: string;
 };
+
+export type UserValidation = MetadataValidation;
+
+export type WorkflowValidation = MetadataValidation;
 
 export interface MetaDataDefinitionRequestDTO {
     id?: string;
@@ -3034,41 +3111,6 @@ export interface MetaDataDefinitionRequestDTO {
     };
 }
 
-export interface MetadataMaskRuleDTO {
-    maskType?: string;
-    /** @format int32 */
-    maskLength?: number;
-}
-
-export interface MetadataValidation {
-    validationRuleName?: string;
-    isMultiple?: boolean;
-}
-
-export type NumberValidation = MetadataValidation & {
-    /** @format int32 */
-    minimum?: number;
-    /** @format int32 */
-    maximum?: number;
-};
-
-export type SelectValidation = MetadataValidation & {
-    options?: string[];
-};
-
-export type TextValidation = MetadataValidation & {
-    /** @format int32 */
-    maxLength?: number;
-};
-
-export type UserRoleUserGroupValidation = MetadataValidation & {
-    allow?: string;
-};
-
-export type UserValidation = MetadataValidation;
-
-export type WorkflowValidation = MetadataValidation;
-
 export interface ImportDocPalTypeDTO {
     name?: string;
     category?: string;
@@ -3085,6 +3127,20 @@ export interface MetadataOption {
     options?: string;
 }
 
+export interface DocpalTypeRequestV2DTO {
+    id?: string;
+    name?: string;
+    category?: string;
+    isFolder?: boolean;
+    status?: string;
+    langs?: {
+        empty?: boolean;
+        [key: string]: any;
+    };
+    metadataFields?: Record<string, object>[];
+    acls?: string[];
+}
+
 export interface AddMetadataRequestDTO {
     docType?: string;
     name?: string;
@@ -3096,6 +3152,7 @@ export interface AddMetadataRequestDTO {
 }
 
 export interface MetadataPermissionCondition {
+    attribute?: string;
     condition?: string;
     value?: string;
 }
@@ -3110,7 +3167,6 @@ export interface MetadataPermissionDTO {
 
 export interface MetadataPermissionRuleDTO {
     name?: string;
-    attribute?: string;
     conditions?: MetadataPermissionCondition[];
 }
 
@@ -3154,33 +3210,29 @@ export interface MoveMetadataRequestDTO {
     moveIndex?: number;
 }
 
+export interface DocpalTypeDetailResponseVO {
+    docpalTypeName?: string;
+    category?: string;
+    isFolder?: string;
+    langs?: Record<string, object>;
+    metadataList?: DocpalTypeMetadataResponseVO[];
+}
+
 export interface DocpalTypeMetadataResponseVO {
     id?: string;
     name?: string;
-    dateType?: string;
+    dataType?: string;
     display?: boolean;
     lastModifiedDate?: string;
+    metadataPermission?: MetadataPermissionDTO;
 }
 
-export interface ResultListDocpalTypeMetadataResponseVO {
+export interface ResultDocpalTypeDetailResponseVO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: DocpalTypeMetadataResponseVO[];
-}
-
-export interface DocpalTypeRequestV2DTO {
-    id?: string;
-    name?: string;
-    category?: string;
-    isFolder?: boolean;
-    status?: string;
-    langs?: {
-        empty?: boolean;
-        [key: string]: any;
-    };
-    acls?: string[];
+    data?: DocpalTypeDetailResponseVO;
 }
 
 /** DocPalType (RequestDTO) */
@@ -3298,6 +3350,8 @@ export interface ProcessVersionRequestDTO {
     operator?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOProcessDefinitionVersion {
@@ -3691,6 +3745,8 @@ export interface QueryWorkflowJobRequest {
     businessKey?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOWorkflowRetryManagerDTO {
@@ -3846,6 +3902,8 @@ export interface ProcessDefinitionRequestDTO {
     categories?: string[];
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOProcessDefinitionDraft {
@@ -3895,6 +3953,8 @@ export interface BasePageRequest {
     isDesc?: boolean;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOWhatsAppLogDTO {
@@ -4124,6 +4184,8 @@ export interface EmailTemplateRequestDTO {
     name?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOEmailTemplate {
@@ -4196,6 +4258,8 @@ export interface EmailLayoutRequestDTO {
     modifiedBy?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOEmailLayout {
@@ -4224,6 +4288,7 @@ export interface DocumentTemplate {
     name?: string;
     documentId?: string;
     fileType?: string;
+    source?: string;
     templateVariable?: string;
     description?: string;
     createdBy?: string;
@@ -4390,6 +4455,8 @@ export interface HoldPolicyRequestDTO {
     status?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOHoldPolicy {
@@ -4553,6 +4620,8 @@ export interface MetadataRequestDTO {
     status?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface MessageTemplateRequestDTO {
@@ -4578,6 +4647,8 @@ export interface MessageTemplateRequestDTO {
     modifiedBy?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface MessageTemplateVO {
@@ -4695,6 +4766,8 @@ export interface MasterTableRequestDTO {
     where?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface MTColumnInfo {
@@ -4819,6 +4892,8 @@ export interface MTAuditLogRequestDTO {
     eventCategory?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface MTAddColumnRequestDTO {
@@ -4956,6 +5031,8 @@ export interface IdTemplateRequestDTO {
     name?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOIdTemplate {
@@ -5041,6 +5118,8 @@ export interface FormDesignRequestDTO {
     equals?: Record<string, object>;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Form Design Information List */
@@ -5173,6 +5252,8 @@ export interface EasyFormResultRequestDTO {
     formResult?: EasyFormResult;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface ResultEasyFormResult {
@@ -5215,6 +5296,8 @@ export interface EasyFormEmailQueryRequestDTO {
     status?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface EasyFormActionDTO {
@@ -5353,6 +5436,8 @@ export interface DictRequestDTO {
     version?: number;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Dict ResponseDTO */
@@ -5456,6 +5541,8 @@ export interface CompanyRequestDTO {
     address?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOCompany {
@@ -5656,6 +5743,8 @@ export interface CmmnVersionRequestDTO {
     styleJson?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOCmmnVersion {
@@ -5706,6 +5795,8 @@ export interface CaseTypeRequestDTO {
     caseIds?: string[];
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface PaginationDTOCaseType {
@@ -5788,6 +5879,8 @@ export interface CaseTableRequestDTO {
     operator?: UserDTO;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Where And Condition */
@@ -5942,6 +6035,8 @@ export interface CaseInstanceRequestDTO {
     planItemDefinitionTypes?: string[];
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Case Instance (Request) */
@@ -6075,6 +6170,8 @@ export interface CmmnProcessRequestDTO {
     assignee?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Case Instance Process Instance Information */
@@ -6271,6 +6368,8 @@ export interface FolderCabinetRequestDTO {
     delayEmail?: FCNotificationConfig;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 /** Document Access Control Entry */
@@ -6435,6 +6534,8 @@ export interface OcrTransactionLogRequestDTO {
     scanType?: string;
     sort?: SortObject;
     descSort?: SortObject;
+    desc?: boolean;
+    orderByValue?: string;
 }
 
 export interface OcrTransactionLogDTO {
@@ -11734,11 +11835,11 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             }),
 
         /**
-         * @description Create a new external storage import job
+         * @description Save a external storage import job
          *
          * @tags ExternalStorageImportJobController
          * @name PostImportjobsAdd
-         * @summary Create new import job
+         * @summary Save import job record
          * @request POST:/api/importJobs/add
          */
         postImportjobsAdd: (data: ExternalStorageImportJobDTO, params: RequestParams = {}) =>
@@ -11773,11 +11874,11 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
             }),
 
         /**
-         * @description Create a new external storage import job
+         * @description Save a external storage import job
          *
          * @tags ExternalStorageImportJobController
          * @name PostImportjobs
-         * @summary Create new import job
+         * @summary Save import job record
          * @request POST:/api/importJobs
          */
         postImportjobs: (data: ExternalStorageImportJobDTO, params: RequestParams = {}) =>
@@ -12099,6 +12200,22 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags DocPalTypeSettingController
+         * @name PostDocpaltypeSettingsMetadataV2Duplicate
+         * @request POST:/api/docpalType/settings/metadata-v2/duplicate
+         */
+        postDocpaltypeSettingsMetadataV2Duplicate: (data: MetaDataDefinitionRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpalType/settings/metadata-v2/duplicate`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalTypeSettingController
          * @name PostDocpaltypeSettingsMetadataV2Create
          * @request POST:/api/docpalType/settings/metadata-v2/create
          */
@@ -12170,6 +12287,22 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags DocPalTypeSettingController
+         * @name PostDocpaltypeSettingsDocpalTypeV2Update
+         * @request POST:/api/docpalType/settings/docpal-type-v2/update
+         */
+        postDocpaltypeSettingsDocpalTypeV2Update: (data: DocpalTypeRequestV2DTO, params: RequestParams = {}) =>
+            this.request<ResultDocPalTypeResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpalType/settings/docpal-type-v2/update`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalTypeSettingController
          * @name PostDocpaltypeSettingsDocpalTypeV2UpdateMetadataDocpaltypeid
          * @request POST:/api/docpalType/settings/docpal-type-v2/update-metadata/{docpalTypeId}
          */
@@ -12226,7 +12359,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @request POST:/api/docpalType/settings/docpal-type-v2/metadata/query
          */
         postDocpaltypeSettingsDocpalTypeV2MetadataQuery: (data: QueryMetadataRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListDocpalTypeMetadataResponseVO, Result | (ResultObject | Result | ResultString)>({
+            this.request<ResultDocpalTypeDetailResponseVO, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpalType/settings/docpal-type-v2/metadata/query`,
                 method: "POST",
                 body: data,
@@ -12266,6 +12399,22 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         ) =>
             this.request<void, Result | (ResultObject | Result | ResultString)>({
                 path: `/docpalType/settings/docpal-type-v2/export-docpal-type-cvs`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalTypeSettingController
+         * @name PostDocpaltypeSettingsDocpalTypeV2Duplicate
+         * @request POST:/api/docpalType/settings/docpal-type-v2/duplicate
+         */
+        postDocpaltypeSettingsDocpalTypeV2Duplicate: (data: DocpalTypeRequestV2DTO, params: RequestParams = {}) =>
+            this.request<ResultDocPalTypeResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpalType/settings/docpal-type-v2/duplicate`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -13261,6 +13410,46 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags DocumentTemplateController
+         * @name PostTemplateDocumentParse
+         * @summary Parsing PDF File for get data
+         * @request POST:/api/docpal/template/document/parse
+         */
+        postTemplateDocumentParse: (
+            query: {
+                /** @format binary */
+                file: File;
+                id?: string;
+            },
+            data: {
+                /** @format binary */
+                file?: File;
+                /** @format string */
+                id?: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<
+                {
+                    /** @format string */
+                    id?: string;
+                    /** @format array string */
+                    fields?: arrayString;
+                },
+                Result | (ResultObject | Result | ResultString)
+            >({
+                path: `/docpal/template/document/parse`,
+                method: "POST",
+                query: query,
+                body: data,
+                type: ContentType.FormData,
+                format: "json",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocumentTemplateController
          * @name PostTemplateDocumentPage
          * @summary Pagination search (Document Template)
          * @request POST:/api/docpal/template/document/page
@@ -13288,6 +13477,27 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocumentTemplateController
+         * @name PostTemplateDocumentGeneratePdf
+         * @request POST:/api/docpal/template/document/generate/PDF
+         */
+        postTemplateDocumentGeneratePdf: (
+            query: {
+                /** Document Template RequestDTO */
+                requestDTO: DocumentTemplateRequestDTO;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/template/document/generate/PDF`,
+                method: "POST",
+                query: query,
                 ...params,
             }),
 
@@ -17248,10 +17458,17 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @name GetPasswordCheckLockUserUserid
          * @request GET:/api/password/check-lock-user/{userId}
          */
-        getPasswordCheckLockUserUserid: (userId: string, params: RequestParams = {}) =>
+        getPasswordCheckLockUserUserid: (
+            userId: string,
+            query?: {
+                skipAddLoginCount?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultLockUserDTO, Result | (ResultObject | Result | ResultString)>({
                 path: `/password/check-lock-user/${userId}`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 

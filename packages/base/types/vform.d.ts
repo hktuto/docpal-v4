@@ -59,7 +59,7 @@ export type FormConfig = {
 }
 
 export type WidgetItem = {
-  key: string
+  key?: any
   id: string
   type: string
   formItemFlag?: boolean
