@@ -4,7 +4,7 @@ export const routeMasterTableDetail  = function(params: any){
       name: "master-table-detail-versions-" + params.id,
       icon: 'uil:database-alt',
       label: params.name,
-      component: 'LazyMasterTableDetail',
+      component: 'LazyAdminMasterTableDetail',
       props: {
           id: params.id,
       }
@@ -16,6 +16,6 @@ export const routeMasterTableNew  = function(params: any){
     name: params.name,
     label: 'adminMenu.masterTable',
     icon : 'uil:database-alt',
-    component: 'LazyMasterTableNewDead',
+    component: 'LazyAdminMasterTableNewDead',
   } as TabItem
 }
