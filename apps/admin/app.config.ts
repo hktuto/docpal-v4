@@ -1,5 +1,5 @@
 export default defineAppConfig({
-  appMenu: [
+  adminMenu: [
     {
       name: '',
       icon: 'tabler:align-box-right-bottom',
