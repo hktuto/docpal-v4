@@ -63,6 +63,9 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
+    routeRules: {
+      '/open-api/template': { proxy: { to: process.env.OPEN_PROXY } }
+    },
     devProxy: {
       '/open-api/template': {
         target: process.env.OPEN_PROXY,
