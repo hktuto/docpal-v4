@@ -10,7 +10,7 @@ export default defineAppConfig({
       label: "adminMenu.masterTable",
       icon: "uil:database-alt",
       hoverIcon: "uil:database-alt",
-      component: "LazyMasterTablePage",
+      component: "LazyAdminMasterTablePage",
       feature: "MASTER_TABLE",
       props:{},
     }
