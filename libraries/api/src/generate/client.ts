@@ -574,6 +574,68 @@ export interface MTRecordRequestDTO {
     pageIndex?: number;
 }
 
+/** 文档模板签名请求 */
+export interface DocTemplateSignatureRequestDTO {
+    /** 签名模板ID */
+    id?: string;
+    /** 签名模板名称 */
+    name: string;
+    /** 签名前缀 */
+    prefix?: string;
+    /** 签名类型（User Signature、Company Chop） */
+    signatureType: JsonNode;
+    /** 签名后缀（可替换参数模板） */
+    suffix?: string;
+    /** 关联的文档模板ID */
+    docTemplateId: string;
+    /** 文档模板类型（文件类型） */
+    docTemplateType?: string;
+}
+
+/** 签名类型（User Signature、Company Chop） */
+export type JsonNode = object;
+
+/** 文档模板签名响应 */
+export interface DocTemplateSignatureResponseDTO {
+    /** 签名模板ID */
+    id?: string;
+    /** 签名模板名称 */
+    name?: string;
+    /** 签名前缀 */
+    prefix?: string;
+    /** 签名类型（User Signature、Company Chop） */
+    signatureType?: JsonNode;
+    /** 签名后缀 */
+    suffix?: string;
+    /** 关联的文档模板ID */
+    docTemplateId?: string;
+    /** 文档模板类型 */
+    docTemplateType?: string;
+    /** 创建者 */
+    createdBy?: string;
+    /** 修改者 */
+    modifiedBy?: string;
+    /**
+     * 创建日期
+     * @format date-time
+     */
+    createdDate?: string;
+    /**
+     * 修改日期
+     * @format date-time
+     */
+    modifiedDate?: string;
+}
+
+export interface ResultDocTemplateSignatureResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** 文档模板签名响应 */
+    data?: DocTemplateSignatureResponseDTO;
+}
+
 /** Calendar (Request) */
 export interface CalendarTaskReq {
     /** Task ID */
@@ -2318,9 +2380,31 @@ export interface UploadFileDTO {
     createdDate?: string;
 }
 
-/** Define audit template */
-export interface AuditTemplateDTO {
-    id?: string;
+/** Open Observe Audit Log Search Request */
+export interface OpenObserveAuditLogSearchRequest {
+    documentId?: string;
+    eventCategory?: string;
+    eventId?: string;
+    /** @format date-time */
+    eventDateFrom?: string;
+    /** @format date-time */
+    eventDateTo?: string;
+    orderBy?: string;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageSize?: number;
+    principalName?: string;
+    path?: string;
+    masterTables?: string[];
+    userIds?: string[];
+    isDesc?: boolean;
+}
+
+export interface AuditTemplateResponseExtendDTO {
+    /** @format int64 */
+    id?: number;
+    label?: string;
     eventId?: string;
     nuxeoEventId?: string;
     documentId?: string;
@@ -2330,26 +2414,16 @@ export interface AuditTemplateDTO {
     eventType?: string;
     eventCategory?: string;
     /** @format date-time */
-    createTime?: string;
-    /** @format date-time */
-    updateTime?: string;
-    eventDateFrom?: string;
-    eventDateTo?: string;
+    eventDate?: string;
+    envetDateStr?: string;
     principalName?: string;
-    creators?: string[];
-    businessNames?: string[];
-    collapseField?: string;
-    /** @format int32 */
-    pageNum?: number;
-    /** @format int32 */
-    pageSize?: number;
-    orderBy?: string;
-    isDesc?: boolean;
-    excludeUser?: string;
+    extended?: Record<string, object>;
+    currentPath?: string;
+    logicalPath?: string;
 }
 
-export interface PaginationDTOAuditTemplateDTO {
-    entryList?: AuditTemplateDTO[];
+export interface PaginationDTOAuditTemplateResponseExtendDTO {
+    entryList?: AuditTemplateResponseExtendDTO[];
     /** @format int32 */
     totalSize?: number;
     /** @format int32 */
@@ -2361,12 +2435,12 @@ export interface PaginationDTOAuditTemplateDTO {
     isNextPageAvailable?: boolean;
 }
 
-export interface ResultPaginationDTOAuditTemplateDTO {
+export interface ResultPaginationDTOAuditTemplateResponseExtendDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginationDTOAuditTemplateDTO;
+    data?: PaginationDTOAuditTemplateResponseExtendDTO;
 }
 
 /** Create office file request body */
@@ -3293,25 +3367,25 @@ export interface WorkflowHistoryRequestDTO {
     orderList?: string[];
 }
 
-export interface PaginableEntityDTOInstanceDTO {
+export interface PaginationDTOInstanceDTO {
     entryList?: InstanceDTO[];
+    /** @format int32 */
+    totalSize?: number;
     /** @format int32 */
     currentPageSize?: number;
     /** @format int32 */
-    currentPageIndex?: number;
-    /** @format int32 */
-    totalSize?: number;
+    pageNum?: number;
     /** @format int32 */
     pageCount?: number;
     isNextPageAvailable?: boolean;
 }
 
-export interface ResultPaginableEntityDTOInstanceDTO {
+export interface ResultPaginationDTOInstanceDTO {
     result?: boolean;
     /** @format int32 */
     code?: number;
     message?: string;
-    data?: PaginableEntityDTOInstanceDTO;
+    data?: PaginationDTOInstanceDTO;
 }
 
 export interface ResultListObject {
@@ -5039,6 +5113,47 @@ export interface ResultListPlanItemInstanceDTO {
     data?: PlanItemInstanceDTO[];
 }
 
+/** Define audit template */
+export interface AuditTemplateDTO {
+    /** @format int64 */
+    id?: number;
+    label?: string;
+    eventId?: string;
+    nuxeoEventId?: string;
+    documentId?: string;
+    comment?: string;
+    docPath?: string;
+    docType?: string;
+    eventType?: string;
+    eventCategory?: string;
+    /** @format date-time */
+    eventDate?: string;
+    envetDateStr?: string;
+    principalName?: string;
+    extended?: Record<string, object>;
+}
+
+export interface PaginationDTOAuditTemplateDTO {
+    entryList?: AuditTemplateDTO[];
+    /** @format int32 */
+    totalSize?: number;
+    /** @format int32 */
+    currentPageSize?: number;
+    /** @format int32 */
+    pageNum?: number;
+    /** @format int32 */
+    pageCount?: number;
+    isNextPageAvailable?: boolean;
+}
+
+export interface ResultPaginationDTOAuditTemplateDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: PaginationDTOAuditTemplateDTO;
+}
+
 export interface CmmnDashboard {
     id?: string;
     caseTypeId?: string;
@@ -5981,6 +6096,7 @@ export interface DocumentTemplate {
     fileType?: string;
     templateVariable?: string;
     description?: string;
+    source?: string;
     createdBy?: string;
     modifiedBy?: string;
     /** @format date-time */
@@ -6593,9 +6709,7 @@ export interface ResultObjectNode {
     data?: object;
 }
 
-export type BooleanValidation = MetadataValidation & {
-    true?: boolean;
-};
+export type BooleanValidation = MetadataValidation;
 
 export type CaseValidation = MetadataValidation;
 
@@ -6608,7 +6722,7 @@ export type DateValidation = MetadataValidation & {
 export type DocumentValidation = MetadataValidation;
 
 export type MasterTableValidation = MetadataValidation & {
-    masterTableId?: string;
+    masterTableName?: string;
     displayColumn?: string;
     valueColumn?: string;
 };
@@ -6641,6 +6755,7 @@ export type NumberValidation = MetadataValidation & {
     minimum?: number;
     /** @format int32 */
     maximum?: number;
+    multipleOf?: number;
 };
 
 export interface ResultListMetadataValidDTO {
@@ -7099,6 +7214,14 @@ export interface ResultEasyFormBaseEmailDTO {
     code?: number;
     message?: string;
     data?: EasyFormBaseEmailDTO;
+}
+
+export interface ResultListDocTemplateSignatureResponseDTO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: DocTemplateSignatureResponseDTO[];
 }
 
 export interface DAMConversionSetting {
@@ -8512,258 +8635,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name GetWorkflowTaskAttachmentPreviewDeprecate
-         * @summary Retrieve task attachment preview
-         * @request GET:/api/docpal/workflow/task/attachment/preview/
-         */
-        getWorkflowTaskAttachmentPreviewDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/preview/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskAttachmentPreviewDeprecate
-         * @summary Retrieve task attachment preview
-         * @request POST:/api/docpal/workflow/task/attachment/preview/
-         */
-        postWorkflowTaskAttachmentPreviewDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/preview/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowTaskAttachmentPreview
-         * @summary Retrieve task attachment preview
-         * @request GET:/api/docpal/workflow/task/attachment/preview
-         */
-        getWorkflowTaskAttachmentPreview: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/preview`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskAttachmentPreview
-         * @summary Retrieve task attachment preview
-         * @request POST:/api/docpal/workflow/task/attachment/preview
-         */
-        postWorkflowTaskAttachmentPreview: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/preview`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowTaskAttachmentInfoDeprecate
-         * @request GET:/api/docpal/workflow/task/attachment/info/
-         */
-        getWorkflowTaskAttachmentInfoDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/info/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskAttachmentInfoDeprecate
-         * @request POST:/api/docpal/workflow/task/attachment/info/
-         */
-        postWorkflowTaskAttachmentInfoDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/info/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowTaskAttachmentInfo
-         * @request GET:/api/docpal/workflow/task/attachment/info
-         */
-        getWorkflowTaskAttachmentInfo: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/info`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskAttachmentInfo
-         * @request POST:/api/docpal/workflow/task/attachment/info
-         */
-        postWorkflowTaskAttachmentInfo: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/info`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name GetWorkflowTaskAttachmentDeprecate
-         * @summary Retrieve task attachment
-         * @request GET:/api/docpal/workflow/task/attachment/
-         */
-        getWorkflowTaskAttachmentDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PutWorkflowTaskAttachmentDeprecate
-         * @request PUT:/api/docpal/workflow/task/attachment/
-         */
-        putWorkflowTaskAttachmentDeprecate: (
-            data: {
-                attachmentId: string;
-                /** @format binary */
-                file: File;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/`,
-                method: "PUT",
-                body: data,
-                type: ContentType.FormData,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowTaskAttachmentDeprecate
-         * @summary Retrieve task attachment
-         * @request POST:/api/docpal/workflow/task/attachment/
-         */
-        postWorkflowTaskAttachmentDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name DeleteWorkflowTaskAttachmentDeprecate
-         * @summary Delete an attachment
-         * @request DELETE:/api/docpal/workflow/task/attachment/
-         */
-        deleteWorkflowTaskAttachmentDeprecate: (
-            query: {
-                attachmentId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<string[], ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/attachment/`,
-                method: "DELETE",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name GetWorkflowTaskAttachment
-         * @summary Retrieve task attachment
+         * @summary Download task attachment
          * @request GET:/api/docpal/workflow/task/attachment
          */
         getWorkflowTaskAttachment: (
@@ -8807,7 +8680,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Workflow
          * @name PostWorkflowTaskAttachment
-         * @summary Retrieve task attachment
+         * @summary Download task attachment
          * @request POST:/api/docpal/workflow/task/attachment
          */
         postWorkflowTaskAttachment: (
@@ -8840,6 +8713,90 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<string[], ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/task/attachment`,
                 method: "DELETE",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflowTaskAttachmentPreview
+         * @summary Download task attachment preview
+         * @request GET:/api/docpal/workflow/task/attachment/preview
+         */
+        getWorkflowTaskAttachmentPreview: (
+            query: {
+                attachmentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task/attachment/preview`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowTaskAttachmentPreview
+         * @summary Download task attachment preview
+         * @request POST:/api/docpal/workflow/task/attachment/preview
+         */
+        postWorkflowTaskAttachmentPreview: (
+            query: {
+                attachmentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task/attachment/preview`,
+                method: "POST",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name GetWorkflowTaskAttachmentInfo
+         * @summary Get the information about the uploaded file
+         * @request GET:/api/docpal/workflow/task/attachment/info
+         */
+        getWorkflowTaskAttachmentInfo: (
+            query: {
+                attachmentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task/attachment/info`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PostWorkflowTaskAttachmentInfo
+         * @summary Get the information about the uploaded file
+         * @request POST:/api/docpal/workflow/task/attachment/info
+         */
+        postWorkflowTaskAttachmentInfo: (
+            query: {
+                attachmentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task/attachment/info`,
+                method: "POST",
                 query: query,
                 ...params,
             }),
@@ -9052,6 +9009,50 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "PUT",
                 body: data,
                 type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name PutWorkflowTaskAttachmentDeprecate
+         * @request PUT:/api/docpal/workflow/task/attachment/
+         */
+        putWorkflowTaskAttachmentDeprecate: (
+            data: {
+                attachmentId: string;
+                /** @format binary */
+                file: File;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultFileDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task/attachment/`,
+                method: "PUT",
+                body: data,
+                type: ContentType.FormData,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow
+         * @name DeleteWorkflowTaskAttachmentDeprecate
+         * @summary Delete an attachment
+         * @request DELETE:/api/docpal/workflow/task/attachment/
+         */
+        deleteWorkflowTaskAttachmentDeprecate: (
+            query: {
+                attachmentId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<string[], ResultString | (ResultString | Result)>({
+                path: `/docpal/workflow/task/attachment/`,
+                method: "DELETE",
+                query: query,
                 ...params,
             }),
 
@@ -9381,6 +9382,53 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * @description 根据签名模板ID获取详细信息
+         *
+         * @tags DocTemplateSignatureController
+         * @name GetDocTemplateSignatureId
+         * @summary 根据ID查询签名模板
+         * @request GET:/api/docpal/doc/template/signature/{id}
+         */
+        getDocTemplateSignatureId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultDocTemplateSignatureResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/doc/template/signature/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * @description 根据ID更新签名模板信息
+         *
+         * @tags DocTemplateSignatureController
+         * @name PutDocTemplateSignatureId
+         * @summary 更新签名模板
+         * @request PUT:/api/docpal/doc/template/signature/{id}
+         */
+        putDocTemplateSignatureId: (id: string, data: DocTemplateSignatureRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultDocTemplateSignatureResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/doc/template/signature/${id}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * @description 根据ID删除签名模板
+         *
+         * @tags DocTemplateSignatureController
+         * @name DeleteDocTemplateSignatureId
+         * @summary 删除签名模板
+         * @request DELETE:/api/docpal/doc/template/signature/{id}
+         */
+        deleteDocTemplateSignatureId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/doc/template/signature/${id}`,
+                method: "DELETE",
+                ...params,
+            }),
+
+        /**
          * No description
          *
          * @tags TaskController
@@ -9547,7 +9595,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             },
             params: RequestParams = {},
         ) =>
-            this.request<GenerateDocumentMode, ResultString | (ResultString | Result)>({
+            this.request<JsonNode, ResultString | (ResultString | Result)>({
                 path: `/wopi/files/${id}/contents`,
                 method: "POST",
                 query: query,
@@ -11292,6 +11340,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getNuxeoDocument: (
             query: {
                 idOrPath: string;
+                nonPermission?: boolean;
             },
             params: RequestParams = {},
         ) =>
@@ -11644,8 +11693,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @name PostNuxeoDocumentQueryauditevent
          * @request POST:/api/nuxeo/document/queryAuditEvent
          */
-        postNuxeoDocumentQueryauditevent: (data: AuditTemplateDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginationDTOAuditTemplateDTO, ResultString | (ResultString | Result)>({
+        postNuxeoDocumentQueryauditevent: (data: OpenObserveAuditLogSearchRequest, params: RequestParams = {}) =>
+            this.request<ResultPaginationDTOAuditTemplateResponseExtendDTO, ResultString | (ResultString | Result)>({
                 path: `/nuxeo/document/queryAuditEvent`,
                 method: "POST",
                 body: data,
@@ -12786,7 +12835,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/test/start
          */
         postWorkflowTestStart: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<GenerateDocumentMode, ResultString | (ResultString | Result)>({
+            this.request<JsonNode, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/test/start`,
                 method: "POST",
                 body: data,
@@ -13205,23 +13254,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowTaskAssignDeprecate
-         * @summary Assign task to a user
-         * @request POST:/api/docpal/workflow/task/assign/
-         */
-        postWorkflowTaskAssignDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultTaskDTO, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/task/assign/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowAdhocApproval
          * @request POST:/api/docpal/workflow/adhoc/approval
          */
@@ -13612,23 +13644,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags Workflow
-         * @name PostWorkflowProcessBpmnDeprecate
-         * @summary Retrieve process definition model
-         * @request POST:/api/docpal/workflow/process/bpmn/
-         */
-        postWorkflowProcessBpmnDeprecate: (data: WorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/process/bpmn/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
          * @name PostWorkflowProcessBpmn
          * @summary Retrieve process definition model
          * @request POST:/api/docpal/workflow/process/bpmn
@@ -13676,25 +13691,8 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @request POST:/api/docpal/workflow/process/active
          */
         postWorkflowProcessActive: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultPaginableEntityDTOInstanceDTO, ResultString | (ResultString | Result)>({
+            this.request<ResultPaginationDTOInstanceDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/workflow/process/active`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow
-         * @name PostWorkflowHistoryVariableDeprecate
-         * @summary Retrieve task variable history
-         * @request POST:/api/docpal/workflow/history/variable/
-         */
-        postWorkflowHistoryVariableDeprecate: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultListObject, ResultString | (ResultString | Result)>({
-                path: `/docpal/workflow/history/variable/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -13957,7 +13955,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          *
          * @tags Workflow
          * @name PostWorkflowHistoryActivity
-         * @summary Retrieve process definition model
+         * @summary Retrieve workflow activity history
          * @request POST:/api/docpal/workflow/history/activity
          */
         postWorkflowHistoryActivity: (data: WorkflowHistoryRequestDTO, params: RequestParams = {}) =>
@@ -15726,6 +15724,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * @description 创建一个新的文档模板签名配置
+         *
+         * @tags DocTemplateSignatureController
+         * @name PostDocTemplateSignature
+         * @summary 创建签名模板
+         * @request POST:/api/docpal/doc/template/signature
+         */
+        postDocTemplateSignature: (data: DocTemplateSignatureRequestDTO, params: RequestParams = {}) =>
+            this.request<ResultDocTemplateSignatureResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/doc/template/signature`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
          * No description
          *
          * @tags CaseTypeController
@@ -17300,10 +17315,17 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * @name GetPasswordCheckLockUserUserid
          * @request GET:/api/password/check-lock-user/{userId}
          */
-        getPasswordCheckLockUserUserid: (userId: string, params: RequestParams = {}) =>
+        getPasswordCheckLockUserUserid: (
+            userId: string,
+            query?: {
+                skipAddLoginCount?: boolean;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultLockUserDTO, ResultString | (ResultString | Result)>({
                 path: `/password/check-lock-user/${userId}`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 
@@ -20146,7 +20168,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             },
             params: RequestParams = {},
         ) =>
-            this.request<GenerateDocumentMode, ResultString | (ResultString | Result)>({
+            this.request<JsonNode, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design`,
                 method: "DELETE",
                 query: query,
@@ -20192,6 +20214,21 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getFormDesignEmailHistoryLogId: (id: number, params: RequestParams = {}) =>
             this.request<ResultEasyFormBaseEmailDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/form/design/email/history/log/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * @description 获取指定文档模板关联的所有签名模板
+         *
+         * @tags DocTemplateController
+         * @name GetDocTemplateDoctemplateidSignature
+         * @summary 根据文档模板ID查询签名模板列表
+         * @request GET:/api/docpal/doc/template/{docTemplateId}/signature
+         */
+        getDocTemplateDoctemplateidSignature: (docTemplateId: string, params: RequestParams = {}) =>
+            this.request<ResultListDocTemplateSignatureResponseDTO, ResultString | (ResultString | Result)>({
+                path: `/docpal/doc/template/${docTemplateId}/signature`,
                 method: "GET",
                 ...params,
             }),
