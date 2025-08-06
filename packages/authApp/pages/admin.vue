@@ -1,8 +1,18 @@
 <script lang="ts" setup>
 
 const localeReady = ref(false)
-const platform = useAppPlatform()
-platform.value = 'admin'
+const appPlatform = useAppPlatform()
+appPlatform.value = 'admin'
+const { public: { platform }} = useRuntimeConfig()
+
+const router = useRouter()
+if(platform === 'admin') {
+  // if the platform on runtime config is admin, then no need to use this page, router back to index
+  router.replace({
+    path: '/'
+  })
+}
+
 </script>
 
 <template>
