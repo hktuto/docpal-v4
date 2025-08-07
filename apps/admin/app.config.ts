@@ -4,7 +4,7 @@ export default defineAppConfig({
       name: '',
       icon: 'tabler:align-box-right-bottom',
       hoverIcon: 'tabler:align-box-right-bottom-filled',
-      label: 'User Management',
+      label: 'adminMenu.UserAndGroup',
       children: [
         {
           name: 'admin-user'

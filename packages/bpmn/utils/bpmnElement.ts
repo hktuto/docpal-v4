@@ -69,6 +69,7 @@ export enum BpmnElementType {
   startEvent = 'startEvent',
   endEvent = 'endEvent',
   userTask = 'userTask',
+  httpTask = 'httpTask',
   exclusiveGateway = 'exclusiveGateway',
   serviceTask = 'serviceTask',
   boundaryEvent = 'boundaryEvent',
@@ -282,6 +283,85 @@ export const bpmnElement: BpmnElement = {
       }
       return 'LazyBpmnContextUserTask'
     }
+  },
+  httpTask: {
+    nodeStyle: (item: any) => {
+      let icon = '/bpmn/icons/form.svg'
+      let color = '#0099ff'
+      let type = 'httpTask'
+      let bgColor = '#fff'
+      let textColor = '#000'
+      return {
+        ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
+        shape: 'bpmn-node',
+        ports: {
+          items: [
+            {
+              id: 'from',
+              group: 'from'
+            },
+            {
+              id: 'to',
+              group: 'to'
+            },
+            {
+              id: 'left',
+              group: 'left'
+            },
+            {
+              id: 'right',
+              group: 'right'
+            }
+          ]
+        }
+      }
+    },
+    embed: false,
+    toolbar: [
+      {
+        icon: 'bpmn:http-task',
+        label: 'HTTP Task',
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.httpTask.nodeStyle({
+            ['attr_flowable:parallelInSameTransaction']: 'true',
+            ['attr_flowable:type']: 'http',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'requestMethod', ['flowable:string']: { '__cdata': '' } },
+                { attr_name: 'requestUrl', ['flowable:string']: { '__cdata': '' } },
+                { attr_name: 'responseVariableName', ['flowable:string']: { '__cdata': '' } }
+                // { attr_name: 'saveResponseVariableAsJson', ['flowable:string']: { '__cdata': 'true' } }
+              ]
+            }
+          }),
+          label: 'HTTP Task',
+          data: bpmnElement.httpTask.newNodeData(id, 'HTTP Task', {
+            attr_id: id,
+            attr_name: 'HTTP Task',
+            ['attr_flowable:parallelInSameTransaction']: 'true',
+            ['attr_flowable:type']: 'http',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'requestMethod', ['flowable:string']: { '__cdata': 'GET' } },
+                { attr_name: 'requestUrl', ['flowable:string']: { '__cdata': '' } },
+                { attr_name: 'responseVariableName', ['flowable:string']: { '__cdata': '' } }
+                // { attr_name: 'saveResponseVariableAsJson', ['flowable:string']: { '__cdata': 'true' } }
+              ]
+            }
+          })
+        })
+      }
+    ],
+    newNodeData: (id, label, data) => ({
+      id,
+      name: label,
+      type: BpmnElementType['httpTask'],
+      data
+    }),
+    clickHandler: () => {
+    },
+    contextMenuComponent: 'LazyBpmnContextHttpRequest'
   },
   exclusiveGateway: {
     nodeStyle: (item: any) => ({
