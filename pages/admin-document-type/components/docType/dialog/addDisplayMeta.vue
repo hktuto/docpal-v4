@@ -110,7 +110,7 @@ const formRules = reactive({
 
 // Available metadata options
 const availableMetadata = computed(() => {
-  if (!state.metadataList.length) return []
+  if (!state.metadataList) state.metadataList = []
   const data = metadataOpts.value.map((item: any) => {
     return {
       ...item,

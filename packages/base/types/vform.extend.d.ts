@@ -10,40 +10,58 @@ export type VariableItem = {
   // maxLength?: number,
   // onValidate?: string
 }
-export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText
+export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText | MetadataUserRoleUserGroup
 export type DocumentMetadata = Record<string, MetadataType>
 export type MetadataNumber = {
-  validationRuleName: 'number'
+  validationName: 'number'
   minimum?: number
   maximum?: number
   multipleOf?: number
 }
 export type MetadataText = {
-  validationRuleName: 'text'
+  validationName: 'text'
   maxLength?: number
 }
 export type MetadataBoolean = {
-  validationRuleName: 'boolean'
+  validationName: 'boolean'
 }
 export type MetadataSelect = {
-  validationRuleName: 'select'
+  validationName: 'select'
   options?: string[]
   isMultiple?: boolean
 }
 export type MetadataDate = {
-  validationRuleName: 'date'
+  validationName: 'date'
   dateOrDateTime?: 'date' | 'dateTime'
-  format?: string,
-  defaultValue ?: string
+  format?: string
+  defaultValue?: string
+  dateFormat?: string
 }
 export type MetadataMasterTable = {
-  validationRuleName: 'mastertable'
+  validationName: 'mastertable'
   masterTableName?: string
   displayColumn?: string
   valueColumn?: string
   isMultiple?: boolean
   options?: {
     label: string
-    value: string
+    value: string,
+    options?: {
+      label: string
+      value: string
+    }[]
+  }[]
+}
+export type MetadataUserRoleUserGroup = {
+  validationName: 'user_role_user_group'
+  allow?: 'USER_ROLE' | 'USER_GROUP' | 'ALL'
+  isMultiple?: boolean
+  options?: {
+    label: string
+    value: string,
+    options?: {
+      label: string
+      value: string
+    }[]
   }[]
 }

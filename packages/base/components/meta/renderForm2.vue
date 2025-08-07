@@ -7,11 +7,11 @@
             v-if="state.aiAnalysis && state.aiAnalysis[item.name]"
             :id="`slot-${item.name}`"
             :key="item.name"
-            :class="{ 'ai-suggestion-content': true, 'ai-suggestion-content--disabled': !checkItemFormat(item, state.aiAnalysis[item.name]) }"
+            :class="{ 'ai-suggestion-content': true, 'ai-suggestion-content--disabled': !checkAiSuggestionFormat(item, state.aiAnalysis[item.name]) }"
           >
             <SvgIcon src="/icons/file/ai.svg" />
             <pre>{{ state.aiAnalysis[item.name].label || state.aiAnalysis[item.name].value }}</pre>
-            <div v-if="checkItemFormat(item, state.aiAnalysis[item.name])" class="flex-x-start ai-button-list">
+            <div v-if="checkAiSuggestionFormat(item, state.aiAnalysis[item.name])" class="flex-x-start ai-button-list">
               <ElIcon class="iconButton" @click="aiFormChange(item, state.aiAnalysis[item.name])"><Check /> </ElIcon>
               <ElIcon class="iconButton" @click="deleteAiSuggestion(item.name)"><Close /> </ElIcon>
               <!--                    <el-button :icon="Check" type="link" text style="color: #fff"-->
@@ -29,8 +29,8 @@
 <script lang="ts" setup>
 import { Check, Close } from '@element-plus/icons-vue'
 import { ElMessageBox } from 'element-plus'
-import { getDocumentAdditional } from '../../utils/browseHelper'
 import { clientApi } from 'api'
+import { useMetadata } from './metadata'
 type initMetaFormOptions = {
   isFolder?: boolean
   aiAnalysis?: any
@@ -55,10 +55,9 @@ const props = withDefaults(
     showOcrLanguage: false
   }
 )
-
 const emits = defineEmits(['formChange', 'handleApply'])
-
 const metaDateFormat = useDisplayTimeFormat()
+const metadataHelper = useMetadata()
 const { t } = useI18n()
 const state = reactive<any>({
   loading: false,
@@ -70,94 +69,14 @@ const state = reactive<any>({
   initOptions: {},
   initData: {}
 })
-const ignoreList = [
-  'dc:title',
-  'dc:creator',
-  'dc:modified',
-  'dc:lastContributor',
-  'dc:created',
-  'dc:publisher',
-  'dc:contributors',
-  'common:icon',
-  'common:icon-expanded',
-  'uid:uid',
-  'uid:major_version',
-  'uid:minor_version',
-  'file:content',
-  'files:files',
-  'nxtag:tags',
-  'relatedtext:relatedtextresources',
-  'sec:clearanceLevel',
-  'sec:securityKeyword'
-]
+
 // #region module: Variables
 const FormVariablesRendererRef = ref()
 async function getVariables(isFolder?: boolean) {
   try {
     const date = new Date().valueOf()
-    state.variables = []
-    state.data.forEach((item: any, index: any) => {
-      if (!item.options) item.options = {}
-      if (item.display && ignoreList.indexOf(item.metaData) === -1) {
-        const _item: any = {
-          name: item.metaData,
-          label: t(item.metaData),
-          type: item.dataType || 'input',
-          required: item.isRequire || false,
-          options: {}
-        }
-
-        switch (item.dataType) {
-          case 'input':
-          case 'textarea':
-            if (item.options?.length) _item.options.maxLength = item.options.length
-            if (item.options?.regex) _item.options.onValidate = getValidate(item.options.regex)
-            // _item.onValidate = getValidate('^[a-zA-Z_][a-zA-Z0-9_]*$')
-            if (!_item.options.maxLength) _item.options.maxLength = 200
-            break
-          case 'date':
-            if (metaDateFormat.value) {
-              _item.options.format = metaDateFormat.value
-              if (metaDateFormat.value?.includes('HH') || metaDateFormat.value?.includes('hh')) _item.options.type = 'datetime'
-            }
-            break
-          case 'select':
-            if (item.values) _item.options.optionItems = item.values
-            _item.options.clearable = true
-            _item.options.filterable = true
-            _item.options.multiple = item.options.multiple
-            if (!_item.options.multipleLimit) _item.options.multipleLimit = 5
-            break
-          default:
-            break
-        }
-        if (item.metaDataType === 'array') {
-          _item.options = { ..._item.options, multiple: true }
-        }
-        state.variables.push(_item)
-      }
-    })
-
-    // if(props.showOcrLanguage) {
-    //     const index = state.variables.findIndex(item => item.name === 'dc:language')
-    //     if(index !== -1) state.variables.splice(index, 1)
-    //
-    //     const language = await getOcrSupportedLanguage()
-    //     state.variables.unshift({
-    //         name: 'dc:language',
-    //         label: t('filePopover_OCRLanguages'),
-    //         type: 'select',
-    //         required: true,
-    //         options: {
-    //             optionItems: language.map((item) => ({ label: t(`dpLanuage.${item}`), value: item }) ),
-    //             clearable: false,
-    //             filterable: true,
-    //             multipleLimit: 2,
-    //             multiple: true
-    //         }
-    //     })
-    // }
-
+    const variableList = await metadataHelper.initVformVariableList(state.initOptions.documentType)
+    state.variables = variableList
     if (['ai', 'upload', 'changeDocType'].includes(props.mode)) {
       state.variables.unshift({
         name: 'documentType',
@@ -222,9 +141,9 @@ function getAIFormJson(formJson: any) {
   })
   return { formConfig: formJson.formConfig, widgetList }
 }
-function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
-  return `if((value || value === 0 || value === false) && !/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
-}
+// function getValidate(rule = '^[a-zA-Z_][a-zA-Z0-9_]*$') {
+//   return `if((value || value === 0 || value === false) && !/${rule}/.test(value)) callback(new Error("${rule}")) \nelse callback()`
+// }
 function clear() {
   state.variables = []
   FormVariablesRendererRef.value.createJson(state.variables)
@@ -238,9 +157,6 @@ async function init(documentType: any, initOptions: initMetaFormOptions) {
   try {
     state.loading = true
     state.data = []
-    state.variables = []
-    state.data = await getDocumentAdditional(documentType)
-
     await getVariables(initOptions?.isFolder)
     if (props.mode === 'ai' || props.mode === 'ai-edit') {
       if (initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
@@ -251,7 +167,7 @@ async function init(documentType: any, initOptions: initMetaFormOptions) {
 }
 // #endregion
 async function setData(properties: any) {
-  const data = deepCopy(properties)
+  const data = metadataHelper.getParseData(properties, state.variables)
   state.initData = data
   state.variables.forEach((item: any) => {
     switch (item.type) {
@@ -275,6 +191,7 @@ async function setData(properties: any) {
 }
 async function getData() {
   const data = await FormVariablesRendererRef.value.getData()
+  console.log(data)
   if (!data) return
   state.variables.forEach((item: any) => {
     switch (item.type) {
@@ -287,20 +204,26 @@ async function getData() {
         break
     }
   })
-  return Object.keys(data).reduce((prev: any, key) => {
+  const validData = Object.keys(data).reduce((prev: any, key) => {
     prev[key] = data[key] ? data[key] : ''
     return prev
   }, {})
+  return metadataHelper.getStringfyData(validData, state.variables)
 }
-async function formChange(formData: any) {
-  emits('formChange', formData)
-  if (!['changeDocType'].includes(props.mode)) return
-  const { fieldName, formModel, newValue, oldValue } = formData
-  if (fieldName === 'documentType' && newValue !== oldValue && !!oldValue) {
-    await init(newValue, state.initOptions)
-    setTimeout(() => {
-      setData({ ...state.initData, documentType: newValue })
-    })
+async function formChange({ formData, fieldName, formModel, newValue, oldValue }: any) {
+  emits('formChange', {
+    formModel: metadataHelper.getStringfyData(formModel, state.variables),
+    fieldName,
+    newValue,
+    oldValue
+  })
+  if (['changeDocType'].includes(props.mode)) {
+    if (fieldName === 'documentType' && newValue !== oldValue && !!oldValue) {
+      await init(newValue, state.initOptions)
+      setTimeout(() => {
+        setData({ ...state.initData, documentType: newValue })
+      })
+  }
   }
 }
 async function aiFormChange(row: any, analysis: any) {
@@ -341,45 +264,7 @@ async function deleteAiSuggestion(deleteName: string) {
 function handleApply(formModel: any) {
   emits('handleApply', formModel)
 }
-// #region module: Validate
-async function getValidateMsg(documentType: string, properties?: any) {
-  let msg = ''
-  const metaList = await getDocumentAdditional(documentType)
-  if (!metaList) return msg
-  metaList.forEach((metaItem: any) => {
-    if (!metaItem.display || ignoreList.includes(metaItem.metaData)) return
-    if (metaItem.isRequire) {
-      if (!properties || !properties[metaItem.metaData] || (properties[metaItem.metaData] instanceof Array && properties[metaItem.metaData].length === 0)) {
-        msg += `[${t(metaItem.metaData)}]: ${t('common_canNotEmpty')}<br/>`
-      }
-    }
-  })
-  return msg
-}
-async function getErrorMessage(doc, docKey) {
-  const _msg = await getValidateMsg(doc.documentType, deepCopy(doc.properties))
-  if (_msg) return `<h4 class="msg-h4">${doc[docKey]}:</h4>${_msg}`
-  return ''
-}
-// docListItem: name,properties, documentType
-async function checkMetaValidate(docList: any[], docKey: string = 'name') {
-  const pList: any = []
-  docList.forEach((item) => {
-    if (!item.properties) item.properties = {}
-    const pItem = getErrorMessage(item, docKey)
-    pList.push(pItem)
-  })
-  let errorMessage = await Promise.all(pList)
-  errorMessage = errorMessage.filter((item) => !!item)
-  if (errorMessage.length > 0) {
-    ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
-      dangerouslyUseHTMLString: true,
-      confirmButtonText: t('dpButtom_confirm')
-    })
-    // throw new Error("error");
-  }
-  return errorMessage.length === 0
-}
+
 // #endregion
 async function GetActiveDocpalTypeWithIsFolderApi(isFolder: boolean) {
   try {
@@ -395,7 +280,7 @@ async function GetActiveDocpalTypeWithIsFolderApi(isFolder: boolean) {
     return []
   }
 }
-function checkItemFormat(row: any, aiAnalysis: any) {
+function checkAiSuggestionFormat(row: any, aiAnalysis: any) {
   switch (row.type) {
     case 'date':
       const date = formatDate(aiAnalysis.value)
@@ -407,7 +292,7 @@ function checkItemFormat(row: any, aiAnalysis: any) {
   }
   return true
 }
-defineExpose({ getData, setData, init, getValidateMsg, checkMetaValidate })
+defineExpose({ getData, setData, init })
 </script>
 <style lang="scss" scoped>
 .ai-button-list {
