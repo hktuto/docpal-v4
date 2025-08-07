@@ -2,6 +2,8 @@
 import { ElNotification } from 'element-plus'
 const nuxtApp = useNuxtApp()
 const { t } = useI18n()
+
+const toastShow = ref(false);
 // app:manifest:update'
 nuxtApp.hooks.hookOnce('app:manifest:update', () => {
   setTimeout(() => {
@@ -11,8 +13,10 @@ nuxtApp.hooks.hookOnce('app:manifest:update', () => {
 
 
 function showUpdateToast() {
+  if (toastShow.value) return;
+  toastShow.value = true;
   ElNotification({
-    title: 'HTML String',
+    title: 'New Version Available',
     dangerouslyUseHTMLString: true,
     message: `<strong>${t('appVersionUpdate.title')}</strong><br/><button class="el-button el-button--primary" onclick="window.location.reload()">${t('appVersionUpdate.button')}</button>`,
     duration: 0,
