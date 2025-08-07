@@ -15,7 +15,7 @@
       >{{ $t('folderCabinet.previewName') }}：{{ state.setting.previewName }}</el-text
     >
     <BrowseActionsReplaceUpload v-model="state.fileList" :limit="1" @change="handleChange"></BrowseActionsReplaceUpload>
-    <MetaRenderForm ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
+    <MetaRenderForm2 ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
     <template #footer>
       <el-button id="FolderCabinet__Detail__Create__Submit" :loading="state.loading" type="primary" @click="handleSubmit">{{ $t('submit') }} </el-button>
     </template>

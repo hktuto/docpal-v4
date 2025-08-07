@@ -24,20 +24,15 @@ const props = defineProps<{ doc: any, permission: any }>();
 const {doc} = toRefs(props)
 const emit = defineEmits(['update'])
 const displayMeta = ref<any[]>([])
-const metaStructureByProperties = (metaList: any[], properties: string) => {
-  if (!properties || !metaList) return []
-  return metaList.reduce((p, item) => {
-    if (item.display) {
-      item.value = properties[item.metaData];
-      p.push(item)
-    }
-    return p
-  }, [])
-}
-
+const ignoreList = ['file:content', 'nxtag:tags', 'dc:creator','dc:title', 'dpc:startDate', 'dpe:approver', 'dpm:contractExpirationDate', 'dpa:docpalType']
 function updateDisplayMeta() {
-  if (!doc.value.displayMeta) return;
-  displayMeta.value = metaStructureByProperties(doc.value.displayMeta, doc.value.properties)
+  Object.keys(doc.value.properties).forEach((key) => {
+    if(ignoreList.includes(key)) return
+    displayMeta.value.push({
+      metaData: key,
+      value: doc.value.properties[key]
+    })
+  })
 }
 
 function strToArr(str: any) {

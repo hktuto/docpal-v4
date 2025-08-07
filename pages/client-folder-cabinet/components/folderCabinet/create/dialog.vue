@@ -2,7 +2,7 @@
   <el-dialog v-model="state.visible" :title="$t('folderCabinet.newItem')" class="scroll-dialog" append-to-body>
     <FormRenderer ref="FormRendererRef" :form-json="formJson" v-loading="state.initLoading" @formChange="formChange">
       <template v-slot:metaForm>
-        <MetaRenderForm ref="MetaFormRef" @formChange="formChange"></MetaRenderForm>
+        <MetaRenderForm2 ref="MetaFormRef" @formChange="formChange"></MetaRenderForm2>
       </template>
       <template v-slot:namingRule>
         <div>

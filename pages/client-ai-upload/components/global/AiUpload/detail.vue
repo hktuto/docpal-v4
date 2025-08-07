@@ -212,12 +212,12 @@ async function handleNodeClick(row) {
   })
   setTimeout(() => {
     if (!row.properties) row.properties = {}
-    MetaFormRef.value.setData({
+    MetaFormRef.value?.setData({
       ...row.properties,
       documentType: row.fileType,
       docName: getFileName(state.selectedDoc.name, row.isFolder)
     })
-  })
+  }, 100)
 }
 
 function applyAllAi() {
@@ -331,12 +331,8 @@ async function handleSubmit() {
     return prev
   }, [])
   try {
-    if (await checkFailedListExist(fileConfirmDTOList)) return
     state.submitLoading = true
-    const metaValid = await MetaFormRef.value.checkMetaValidate(docList)
-    if (!metaValid) {
-      throw new Error('')
-    }
+    if (await checkFailedListExist(fileConfirmDTOList)) return
     const { data }: any = await clientApi.api.postNuxeoDocumentBatchconfirm({
       userId: userId.value,
       uploadId: id,
@@ -353,10 +349,11 @@ async function handleSubmit() {
     } else throw new Error(t('dpMsg_503'))
   } catch (error) {
     if (error.message) ElMessage.error(error.message)
+  } finally {
+    setTimeout(() => {
+      state.submitLoading = false
+    }, 100)
   }
-  setTimeout(() => {
-    state.submitLoading = false
-  }, 1000)
 }
 
 async function checkFailedListExist(fileConfirmDTOList: any[]): Promise<boolean> {

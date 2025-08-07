@@ -91,8 +91,6 @@ async function handleSubmit() {
     console.error(e)
     return
   }
-  const metaValid = await MetaFormRef.value.checkMetaValidate(state.tableData);
-  if (!metaValid) return;
   state.submitLoading = true;
   try {
     const param = {

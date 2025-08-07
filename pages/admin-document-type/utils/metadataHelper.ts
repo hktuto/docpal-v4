@@ -27,7 +27,7 @@ export type NumberValidation = {
   validationRuleName: 'number';
   minimum?: number;
   maximum?: number;
-  decimal: number;
+  multipleOf: number;
 }
 
 export type BooleanValidation = {
@@ -150,7 +150,7 @@ export const METADATA_OPTIONS: {
           validationRuleName: 'number',
           minimum: -999999,
           maximum: 999999,
-          decimal: 0
+          multipleOf: 0
         }
       },
       {

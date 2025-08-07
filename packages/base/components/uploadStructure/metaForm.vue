@@ -77,9 +77,8 @@ function handleMetaChange(data) {
     }
 }
 async function validate(nodeMapData) {
-    const tableData = Object.values(nodeMapData)
-    const result = await MetaFormRef.value.checkMetaValidate(tableData)
-    return result
+    // const tableData = Object.values(nodeMapData)
+    return true
 }
 defineExpose({
     init, validate

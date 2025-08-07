@@ -42,13 +42,13 @@
           </template>
         </div>
         <el-text :type="hasPreviewName(state.selectedRow.previewName) ? '': 'danger'" style="margin-bottom: 15px">{{ $t('folderCabinet.previewName') }}：{{ state.selectedRow.previewName }}</el-text>
-        <MetaRenderForm ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm>
+        <MetaRenderForm2 ref="MetaFormRef" mode="folderCabinet" @formChange="handleMetaChange"></MetaRenderForm2>
       </template>
       <template v-else>
         {{ $t('tip.clickFolderOrFileToSetMeta') }}
       </template>
     </div>
-    <MetaRenderForm ref="MetaFormRef2" @formChange="handleMetaChange"></MetaRenderForm>
+    <MetaRenderForm2 ref="MetaFormRef2" @formChange="handleMetaChange"></MetaRenderForm2>
     <input v-show="false" ref="fileUploaderRef" multiple type="file" @change="uploadHandler($event)" />
   </div>
 </template>
@@ -119,10 +119,6 @@ async function getData(isValidate: boolean = false) {
   }
 
   async function getErrorMessage(doc: any) {
-    const _msg = await MetaFormRef2.value.getValidateMsg(doc.documentType, deepCopy(doc.properties))
-    if (_msg) return `<h4 class="msg-h4">${doc.label}:</h4>${_msg}`
-
-    if (!hasPreviewName(doc.previewName)) return `<h4 class="msg-h4">${doc.label}:</h4>${$t('dpTip.noValidName')}`
     return ''
   }
 }
