@@ -4,7 +4,6 @@ import { ElNotification, ElMessage } from 'element-plus'
 import * as mime from 'mime-types'
 
 export function downloadHandler(doc: any) {
-
   if (!doc.isFolder) downloadFileHandler(doc)
   else downloadFolderHandler(doc)
 }
@@ -21,13 +20,16 @@ export async function downloadFolderHandler(doc: any) {
     position: 'bottom-right'
   })
   try {
-    const blob = await adminApi.api.postNuxeoFolderstructureExport({
-      idOrPath: doc.id
-    }, {
-      format: 'blob',
-      timeout: 0,
-      headers: { 'white': 'true' }
-    })
+    const blob = await adminApi.api.postNuxeoFolderstructureExport(
+      {
+        idOrPath: doc.id
+      },
+      {
+        format: 'blob',
+        timeout: 0,
+        headers: { white: 'true' }
+      }
+    )
     downloadBlob(blob, doc.name + '.zip', 'application/zip')
   } catch (error: any) {
     console.error(error)
@@ -39,9 +41,23 @@ export async function downloadFolderHandler(doc: any) {
 export function canCollaboraEdit(mimeType: string) {
   // is mimeType is .doc or .docx file
   // check is doc or docx
-  const excelType = ['application/vnd.ms-excel', 'application/msexcel', 'application/x-msexcel', 'application/x-ms-excel', 'application/x-excel', 'application/x-dos_ms_excel', 'application/xls', 'application/x-xls', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+  const excelType = [
+    'application/vnd.ms-excel',
+    'application/msexcel',
+    'application/x-msexcel',
+    'application/x-ms-excel',
+    'application/x-excel',
+    'application/x-dos_ms_excel',
+    'application/xls',
+    'application/x-xls',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ]
   if (excelType.includes(mimeType)) return true
-  const wordType = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-word.template.macroEnabled.12']
+  const wordType = [
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-word.template.macroEnabled.12'
+  ]
   if (wordType.includes(mimeType)) return true
   const pptType = ['application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation']
   if (pptType.includes(mimeType)) return true
@@ -52,13 +68,12 @@ export function canCollaboraEdit(mimeType: string) {
 
 export function getMimeTypeFromDocument(doc: any): string | undefined {
   console.log('getMimeTypeFromDocument', doc)
-  if(!doc.properties) return undefined
+  if (!doc.properties) return undefined
   const properties = doc.properties as any
   const mimeType: string = properties['file:content'] && properties['file:content']['mime-type'] ? properties['file:content']['mime-type'] : ''
   if (!mimeType) return undefined
   return mimeType
 }
-
 
 export const formatFileSize = (size: number) => {
   if (!size) return ''
@@ -66,7 +81,7 @@ export const formatFileSize = (size: number) => {
     return size.toFixed(1) + ' B'
   } else if (size < 1024 * 1024) {
     return (size / 1024).toFixed(1) + ' KB'
-  }else if (size < 1024 * 1024 * 1024) {
+  } else if (size < 1024 * 1024 * 1024) {
     return (size / 1024 / 1024).toFixed(1) + ' MB'
   } else {
     return (size / 1024 / 1024 / 1024).toFixed(2) + ' GB'
@@ -109,13 +124,15 @@ export const mimeTypeToIcon = (mimeType: string) => {
     return `/icons/doc/word.svg`
   }
   // if mimetype is ppt, return ppt src
-  if (mimeType?.startsWith('application/vnd.ms-powerpoint') || mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')) {
+  if (
+    mimeType?.startsWith('application/vnd.ms-powerpoint') ||
+    mimeType?.startsWith('application/vnd.openxmlformats-officedocument.presentationml.presentation')
+  ) {
     return `/icons/doc/ppt.svg`
   }
 
   // if mimetype is unknown, return unknown src
   return `/icons/doc/file.svg`
-
 }
 
 export function mimeTypeToExtension(mimeType: string) {
@@ -141,10 +158,12 @@ export const getUniqueName = async (file: any) => {
   try {
     const fileName = file.fileName || file.name
     // TODO: check if deprecated
-    const res = await clientApi.api.postNuxeoDocumentIsduplicatename({
-      path: file.goPath,
-      titles: [fileName]
-    }).then(res => res.data)
+    const res = await clientApi.api
+      .postNuxeoDocumentIsduplicatename({
+        path: file.goPath,
+        titles: [fileName]
+      })
+      .then((res) => res.data)
     console.log('getUniqueName', res)
     // TODO : the uniqueName has bug, will return same name
     const name = res[fileName]?.uniqueName || fileName
@@ -154,50 +173,17 @@ export const getUniqueName = async (file: any) => {
   }
 }
 
-
 export const getDocDetail = async (idOrPath: string, userId: string) => {
-  let doc: any = {}
-  let permission: any = {}
   try {
-    console.log(idOrPath, userId)
     const promise = []
-    promise.push(
-      clientApi.api.postNuxeoDocument({ idOrPath }),
-      getPermission(idOrPath, userId)
-    )
+    promise.push(clientApi.api.postNuxeoDocument({ idOrPath }), getPermission(idOrPath, userId))
     let [{ data: doc }, permission] = await Promise.all(promise)
-    const displayMeta = await getDocumentAdditional(doc.type)
-    doc.displayMeta = displayMeta
     return {
       doc,
       permission
     }
-
   } catch (err) {
     throw err
-  }
-}
-
-export const getDocumentAdditional = async (type: string): Promise<any[]> => {
-  // cache type into window object
-  try {
-    if (window['docTypeCache'] && window['docTypeCache'][type]) {
-      return window['docTypeCache'][type]
-    }
-    const { data } = await clientApi.api.postTypesMetadatas({ name: type }, {
-      headers: { 'noThrowError': 'true' }
-    })
-    if (!data) {
-      throw new Error('no type found')
-    }
-    if (!window['docTypeCache']) {
-      window['docTypeCache'] = { [type]: data }
-    } else {
-      window['docTypeCache'][type] = data
-    }
-    return data
-  } catch (err) {
-    return []
   }
 }
 
@@ -206,9 +192,12 @@ export const getPermission = async (idOrPath: string, userId: string): Promise<a
     if (!idOrPath || !userId) {
       return {}
     }
-    const { data } = await clientApi.api.getNuxeoDocumentAclPermission({ docId: idOrPath, userId }, {
-      headers: { 'noThrowError': 'true' }
-    })
+    const { data } = await clientApi.api.getNuxeoDocumentAclPermission(
+      { docId: idOrPath, userId },
+      {
+        headers: { noThrowError: 'true' }
+      }
+    )
     if (!data) {
       throw new Error('no permission found')
     }
@@ -218,27 +207,29 @@ export const getPermission = async (idOrPath: string, userId: string): Promise<a
     }
   } catch (error) {
     return {
-      'print': false,
-      'permissionList': [],
-      'permission': 'Everything',
-      'retention': null,
-      'hold': null
+      print: false,
+      permissionList: [],
+      permission: 'Everything',
+      retention: null,
+      hold: null
     }
   }
 }
 
 async function DownloadDocApi(idOrPath: string, cb?: Function) {
-  return clientApi.api.postNuxeoDocumentDownload({ idOrPath }, {
-    format: 'blob',
-    timeout: 0,
-    onDownloadProgress: function(progressEvent) {
-      if (cb) cb(progressEvent)
+  return clientApi.api.postNuxeoDocumentDownload(
+    { idOrPath },
+    {
+      format: 'blob',
+      timeout: 0,
+      onDownloadProgress: function (progressEvent) {
+        if (cb) cb(progressEvent)
+      }
     }
-  })
+  )
 }
 
 export async function downloadFileHandler(doc: any) {
-
   // const { t } = useI18n() // 会报错SyntaxError: Must be called at the top of a `setup` function
   // exportFolderStructureApi
   const id = new Date().valueOf() + doc.name
@@ -269,17 +260,15 @@ export async function downloadFileHandler(doc: any) {
   }, 3000)
 }
 
-
 export function allowFeature(f: string) {
-  // if(f == 'WORKFLOW') return false 
-  // if(f == 'DAM_FILE_CONVERTION') return false 
+  // if(f == 'WORKFLOW') return false
+  // if(f == 'DAM_FILE_CONVERTION') return false
   // if(f=== 'AUDIT')return false
   if (f === 'BULK_IMPORT') return false // 暂时隐藏BULK_IMPORT
   const features = useFeature().value
   if (features && features[f]) return features[f]
   return false
 }
-
 
 /**
  *
@@ -295,10 +284,10 @@ export const duplicateNameFilter = async (idOrPath: string, list: any) => {
       prev.push(item.fileName || item.name)
       return prev
     }, [])
-    const { data: res } = await clientApi.api.postNuxeoDocumentIsduplicatename({
+    const { data: res } = (await clientApi.api.postNuxeoDocumentIsduplicatename({
       path: idOrPath,
       titles
-    }) as any
+    })) as any
     if (!res) return { isDuplicate: false }
     if (!res.hasDuplicateTitle) return { isDuplicate: false }
     list.forEach((doc: any) => {
