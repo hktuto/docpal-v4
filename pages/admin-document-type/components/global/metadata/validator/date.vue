@@ -1,6 +1,5 @@
 <template>
   <ElForm ref="formRef" :model="validation" :rules="validationRules" label-position="top">
-
     <ElFormItem :label="t('metadata.validation.date.dateOrDateTime')" class="date-or-date-time-item" :required="true">
       <ElSelect v-model="validation.dateOrDateTime" :placeholder="t('metadata.validation.date.dateOrDateTime')">
         <ElOption label="Date" value="date" />
@@ -9,7 +8,22 @@
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.date.format')" class="date-format-item" :required="true">
-      <ElInput v-model="validation.format" :placeholder="t('metadata.validation.date.format')" />
+      <el-select
+        v-model="validation.format"
+        :placeholder="t('metadata.validation.date.format')"
+        clearable
+        filterable
+        allow-create
+        default-first-option
+        class="date-format-select"
+      >
+        <el-option label="YYYY-MM-DD" value="YYYY-MM-DD" />
+        <el-option label="YYYY-MM-DD HH:mm" value="YYYY-MM-DD HH:mm" />
+        <el-option label="YYYY-MM-DD HH:mm:ss" value="YYYY-MM-DD HH:mm:ss" />
+        <el-option label="YYYY-MM-DDTHH:mm:ss.000Z" value="YYYY-MM-DDTHH:mm:ss.000Z" />
+        <el-option label="YYYY/MM/DD" value="YYYY/MM/DD" />
+      </el-select>
+      <!-- <ElInput v-model="validation.format" :placeholder="t('metadata.validation.date.format')" /> -->
     </ElFormItem>
 
     <ElFormItem :label="t('metadata.validation.date.defaultValue')" class="date-default-value-item" :required="false">
@@ -18,39 +32,34 @@
         <ElOption :label="t('metadata.validation.date.specialValue')" value="special" />
         <ElOption :label="t('metadata.validation.date.specificDate')" value="date" />
       </ElSelect>
-      
-      <ElSelect 
-        v-if="defaultValueType === 'special'" 
-        v-model="validation.defaultValue" 
+
+      <ElSelect
+        v-if="defaultValueType === 'special'"
+        v-model="validation.defaultValue"
         :placeholder="t('metadata.validation.date.specialValue')"
-        class="mt-2 special-value-select"
+        class="special-value-select"
       >
         <ElOption label="Today" value="today" />
         <ElOption label="Tomorrow" value="tomorrow" />
         <ElOption label="Yesterday" value="yesterday" />
         <ElOption label="Now" value="now" />
       </ElSelect>
-      
-      <ElDatePicker 
-        v-if="defaultValueType === 'date'" 
-        v-model="validation.defaultValue" 
+
+      <ElDatePicker
+        v-if="defaultValueType === 'date'"
+        v-model="validation.defaultValue"
         :type="validation.dateOrDateTime === 'date' ? 'date' : 'datetime'"
         :format="validation.format"
         :placeholder="t('metadata.validation.date.specificDate')"
-        class="mt-2 date-picker"
+        class="date-picker"
       />
     </ElFormItem>
-
-    <ElFormItem :label="t('meta.multiple')" :required="false">
-      <ElSwitch v-model="validation.isMultiple" />
-    </ElFormItem>
-    
   </ElForm>
 </template>
 
 <script lang="ts" setup>
-import type{ DateValidation } from '../../../../utils/metadataHelper';
-import type { FormInstance } from 'element-plus';
+import type { DateValidation } from '../../../../utils/metadataHelper'
+import type { FormInstance } from 'element-plus'
 
 const validation = defineModel<DateValidation>('validation', { required: true })
 
@@ -68,12 +77,12 @@ watch(defaultValueType, (newType) => {
 const validationRules = reactive({
   dateOrDateTime: [
     {
-      required: true,
+      required: true
     }
   ],
   format: [
     {
-      required: true,
+      required: true
     }
   ]
 })
@@ -87,6 +96,21 @@ const validate = async () => {
 const getData = () => {
   return validation.value
 }
-
-defineExpose( { validate, getData })
-</script> 
+const initData = (data: DateValidation) => {
+  console.log(data, 'data')
+  validation.value = data
+  if (!data.defaultValue) {
+    defaultValueType.value = 'none'
+  } else if (Date.parse(data.defaultValue)) {
+    defaultValueType.value = 'date'
+  } else {
+    defaultValueType.value = 'special'
+  }
+}
+defineExpose({ validate, getData, initData })
+</script>
+<style lang="scss" scoped>
+.date-default-value-select {
+  margin-bottom: var(--app-space-xs);
+}
+</style>

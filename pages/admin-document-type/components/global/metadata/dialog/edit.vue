@@ -28,7 +28,7 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="handleUpdate">{{ t('common_save') }}</el-button>
+      <el-button type="primary" @click="handleUpdate" :loading="loading">{{ t('common_save') }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -55,7 +55,7 @@ const { t } = useI18n()
 const selectedType = ref<MetadataOption['name']>('Text')
 const originalName = ref('')
 const elFormRef = ref<FormInstance>()
-
+const loading = ref(false)
 const validationFormRef = ref<FormInstance>()
 
 const validationComponent = computed(() => {
@@ -87,13 +87,17 @@ function open(data: any) {
     }
   }
   formData.value = JSON.parse(JSON.stringify(data))
-  if (formData.value.validationRule.validationRuleName === 'mastertable') {
-    validationFormRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
-  }
   nextTick(() => {
     visible.value = true
     isInit = false
   })
+  setTimeout(() => {
+    if (formData.value.validationRule.validationRuleName === 'mastertable') {
+      validationFormRef.value?.masterTableChange(formData.value.validationRule.masterTableName, true)
+    } else if (formData.value.validationRule.validationRuleName === 'date') {
+      validationFormRef.value?.initData(formData.value.validationRule)
+    }
+  }, 1000)
 }
 
 function close() {
@@ -107,50 +111,63 @@ function close() {
     maskLength: 10
   }
   visible.value = false
-  emit('reload')
+  setTimeout(() => {
+    emit('reload')
+  }, 1000)
 }
 
 async function handleUpdate() {
   // validate the form
-  if (elFormRef.value) {
-    // step 1 validate the form
-    const formValid = await elFormRef.value.validate()
-    if (!formValid) {
-      return
-    }
-    // check if the validationRule is valid
-    if (validationFormRef.value) {
-      const isValid = await validationFormRef.value.validate()
-      if (!isValid) {
-        ElMessage.error(t('meta.validation_error'))
+  try {
+    loading.value = true
+    if (elFormRef.value) {
+      // step 1 validate the form
+      const formValid = await elFormRef.value.validate()
+      if (!formValid) {
         return
       }
-    }
-    // step 3 check if the name is already exists
-    if (formData.value.name !== originalName.value) {
-      const nameExists = await adminApi.api
-        .postDocpaltypeSettingsMetadataV2Query({
-          metadataName: formData.value.name,
-          pageNum: 0,
-          pageSize: 1
-        })
-        .then((res) => (res.data?.entryList?.length ?? 0) > 0)
-      if (nameExists) {
-        ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
-        return
+      // check if the validationRule is valid
+      if (validationFormRef.value) {
+        const isValid = await validationFormRef.value.validate()
+        if (!isValid) {
+          ElMessage.error(t('meta.validation_error'))
+          return
+        }
+      }
+      // step 3 check if the name is already exists
+      if (formData.value.name !== originalName.value) {
+        const nameExists = await adminApi.api
+          .postDocpaltypeSettingsMetadataV2Query({
+            metadataName: formData.value.name,
+            pageNum: 0,
+            pageSize: 1
+          })
+          .then((res) => (res.data?.entryList?.length ?? 0) > 0)
+        if (nameExists) {
+          ElMessage.error(t('dpTip.exit', { name: formData.value.name }))
+          return
+        }
+      }
+      const result = await adminApi.api.patchDocpaltypeSettingsMetadataV2Update(formData.value).then((res) => res.data)
+      if (result) {
+        ElMessage.success(
+          t('meta.update_success', {
+            name: formData.value.name
+          })
+        )
+        close()
+      } else {
+        ElMessage.error(
+          t('meta.update_error', {
+            name: formData.value.name
+          })
+        )
       }
     }
-    const result = await adminApi.api.patchDocpaltypeSettingsMetadataV2Update(formData.value).then((res) => res.data)
-    if (result) {
-      ElMessage.success(t('meta.update_success', {
-        name: formData.value.name
-      }))
-      close()
-    } else {
-      ElMessage.error(t('meta.update_error', {
-        name: formData.value.name
-      }))
-    }
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
   }
 }
 
