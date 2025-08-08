@@ -65,11 +65,16 @@ async function getList () {
     state.loading = true
     const { data:res}: any = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value})
     res.entryList.map((item: any) => {
-      if(typeof item.content === 'string') {
-        item.content = JSON.parse(item.content)
-        if(typeof item.content.emailList === 'string') item.content.emailList = JSON.parse(item.content.emailList).join(',')
+      try {
+        if(typeof item.content === 'string') {
+          item.content = JSON.parse(item.content)
+          if(typeof item.content.emailList === 'string') item.content.emailList = JSON.parse(item.content.emailList).join(',')
+        }
+      } catch (error) {
+        console.error('parse notification content error', error)
+      } finally {
+        return item
       }
-      return item
     })
     state.list.push(...res.entryList)
     state.totalSize = res.totalSize
