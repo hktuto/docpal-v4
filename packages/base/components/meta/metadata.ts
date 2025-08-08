@@ -200,7 +200,7 @@ export const useMetadata = () => {
         if (!data[item.name]) return
         result[item.name] = Array.isArray(data[item.name]) ? data[item.name] : [data[item.name]]
         if (['case', 'workflow', 'document', 'date'].includes(item.options.validationName)) return
-        if (['select', 'user_role_user_group'].includes(item.options.validationName)) return
+        if (['select'].includes(item.options.validationName)) return
         result[item.name] = result[item.name].map((citem: any) => {
           const selectItem = item.options.optionItems?.find((sitem: any) => sitem.value === citem)
           if (!selectItem) return ''
@@ -236,13 +236,7 @@ export const useMetadata = () => {
     })
     return result
   }
-  function getParseDataItem(s: string) {
-    try {
-      return JSON.parse(s)
-    } catch (error) {
-      return s
-    }
-  }
+  
   return {
     // getDocumentMetadata,
     // getVFormWidgetList,
@@ -252,6 +246,34 @@ export const useMetadata = () => {
   }
 }
 
+const ignoreDisplayList = ['file:content', 'nxtag:tags', 'dc:creator','dc:title', 'dpc:startDate', 'dpe:approver', 'dpm:contractExpirationDate', 'dpa:docpalType']
+export function getDisplayProperties(properties: Record<string, any>) {
+  if (!properties) return []
+  const result: any = []
+  Object.keys(properties).forEach((key) => {
+    if (ignoreDisplayList.includes(key)) return
+    const propertyItem = properties[key]
+    if (Array.isArray(propertyItem)) {
+      result.push({
+        metaData: key,
+        value: propertyItem.map((item: any) => getParseDataItem(item))
+      })
+    } else {
+      result.push({
+        metaData: key,
+        value: propertyItem
+      })
+    }
+  })
+  return result
+}
+function getParseDataItem(s: string) {
+  try {
+    return JSON.parse(s)
+  } catch (error) {
+    return s
+  }
+}
 async function getUserList() {
   try {
     const { data }: any = await clientApi.api.postNuxeoIdentityUsers()
@@ -264,13 +286,14 @@ async function getUserList() {
     return []
   }
 }
-async function getRoleList(prefix: string = 'role____') {
+async function getRoleList(type: string = 'role') {
   try {
     const data = await adminApi.api.getAclRoleRoot().then((res: any) => res.data)
     const roleList = data ? makeFlapRoleList([data]) : []
     return roleList.map((item: any) => ({
       label: item.name,
-      value: prefix + item.id
+      value: item.id,
+      type: type
     }))
   } catch (error) {
     console.error(error)
@@ -289,12 +312,13 @@ function makeFlapRoleList(data: any[], roleList: any[] = []) {
   })
   return roleList
 }
-async function getUserGroupList(prefix: string = 'group____') {
+async function getUserGroupList(type: string = 'group') {
   try {
     const { data }: any = await adminApi.api.postNuxeoIdentityGroups()
     return data.map((item: any) => ({
       label: item.name,
-      value: prefix + item.id
+      value: item.id,
+      type: type
     }))
   } catch (error) {
     console.error(error)

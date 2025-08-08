@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+
+import { getDisplayProperties } from '@/components/meta/metadata';
 import { useEventListener } from '@vueuse/core'
 import { clientApi } from 'api'
 import { emitBus, EventType } from 'eventbus'
@@ -22,21 +24,28 @@ const MetaFormRef = ref()
 async function iconClickHandler(doc: any) {
   dialogOpened.value = true
   state.docPath = doc.path
+  state.loading = true
   const { data: docData } = await clientApi.api.postNuxeoDocument({ idOrPath: doc.id })
   state.doc = docData
   // await clientApi.api.getTypesActive()
-  const { data } = await clientApi.api.postTypesMetadatas({
-    idOrPath: doc.type || doc.documentType || doc.docpalType
+  state.dispalyMeta = getDisplayProperties(state.doc.properties)
+
+  await MetaFormRef.value.init(state.doc.type, {
+    isFolder: state.doc.isFolder
   })
-  state.dispalyMeta = data
-  await MetaFormRef.value.init(doc.type || doc.documentType || doc.docpalType, {
-    isFolder: doc.isFolder
-  })
-  MetaFormRef.value.setData({ ...state.doc.properties, documentType: doc.type || doc.documentType || doc.docpalType })
+  setTimeout(() => {
+    if (!state.doc.properties) state.doc.properties = {}
+    MetaFormRef.value?.setData({
+      ...state.doc.properties,
+      documentType: state.doc.type,
+    })
+  }, 100)
+  // MetaFormRef.value.setData({ ...state.doc.properties, documentType: doc.type || doc.documentType || doc.docpalType })
   // open upload dialog
   setTimeout(() => {
     handleReset()
   })
+  state.loading = false
 }
 
 async function handleSubmit() {
@@ -81,13 +90,10 @@ function getVersion(doc) {
 }
 
 function getMetaValue(row: any) {
-  if (!state.doc || !state.doc.properties || !state.doc.properties[row.metaData]) return ''
-  switch (row.dataType) {
-    case 'date':
-      return formatDate(state.doc.properties[row.metaData])
+  if (Array.isArray(row)) {
+    return row.map((item: any) => item.label || item || '-').join(',')
   }
-
-  return state.doc.properties[row.metaData]
+  return row.label || row || '-'
 }
 
 function handleReset() {}
@@ -100,14 +106,14 @@ defineExpose({ iconClickHandler })
 
 <template>
   <el-dialog
-    class="scroll-dialog"
+    class="scroll-dialog change-doc-type-dialog"
     v-model="dialogOpened"
     append-to-body
     :title="`${$t('filePopover_changeDocType')} ${state.doc.name}`"
     :close-on-click-modal="false"
   >
-    <main>
-      <div v-if="state.doc && state.doc.properties">
+    <main v-loading="state.loading">
+      <div v-if="state.doc && state.doc.properties" style="overflow: auto; height: 100%;">
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_type')" :value="state.doc.type" :noCopy="true" />
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_version')" :value="getVersion(state.doc)" />
         <BrowseActionsChangeDocTypeCopyItem
@@ -121,11 +127,11 @@ defineExpose({ iconClickHandler })
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_by')" :value="state.doc.createdBy" />
         <template v-if="state.dispalyMeta && state.dispalyMeta.length > 0 && state.doc.properties">
           <el-divider></el-divider>
-          <BrowseActionsChangeDocTypeCopyItem v-for="item in state.dispalyMeta" :label="$t(item.metaData)" :value="getMetaValue(item)" />
+          <BrowseActionsChangeDocTypeCopyItem v-for="item in state.dispalyMeta" :label="$t(item.metaData)" :value="getMetaValue(item.value)" />
         </template>
       </div>
       <div class="border"></div>
-      <MetaRenderForm2 ref="MetaFormRef" mode="changeDocType"></MetaRenderForm2>
+      <MetaRenderForm2 ref="MetaFormRef" mode="changeDocType" style="overflow: auto"></MetaRenderForm2>
     </main>
     <template #footer>
       <el-button id="Browse__ChangeDocumentType__Submit" :loading="state.loading" type="primary" @click="handleSubmit">
@@ -140,9 +146,18 @@ main {
   display: grid;
   grid-template-columns: 30% min-content 1fr;
   gap: var(--app-space-xs);
-
+  height: calc(80vh - 10rem);
+  overflow: hidden;
   .border {
     border-right: 1px solid #ddd;
+  }
+}
+</style>
+<style lang="scss">
+.change-doc-type-dialog {
+  .el-dialog__body {
+    height: 80vh;
+    overflow: hidden;
   }
 }
 </style>
