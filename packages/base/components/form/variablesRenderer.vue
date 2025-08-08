@@ -71,7 +71,7 @@ function createJson(variables: VariableItem[]): FormJson {
         onEnter: ''
       }
     }
-    if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group'].includes(item.type)) _item.type = 'input'
+    if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range'].includes(item.type)) _item.type = 'input'
     if (item.type === 'date') {
       _item.options.format = item.options.type === 'datetime' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD' //日期显示格式
       _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'

@@ -17,18 +17,22 @@ export type MetadataNumber = {
   minimum?: number
   maximum?: number
   multipleOf?: number
+  type?: any
 }
 export type MetadataText = {
   validationName: 'text'
   maxLength?: number
+  type?: any
 }
 export type MetadataBoolean = {
   validationName: 'boolean'
+  type?: any
 }
 export type MetadataSelect = {
   validationName: 'select'
   options?: string[]
   isMultiple?: boolean
+  type?: any
 }
 export type MetadataDate = {
   validationName: 'date'
@@ -36,6 +40,8 @@ export type MetadataDate = {
   format?: string
   defaultValue?: string
   dateFormat?: string
+  isMultiple?: boolean
+  type?: any
 }
 export type MetadataMasterTable = {
   validationName: 'mastertable'
@@ -43,6 +49,7 @@ export type MetadataMasterTable = {
   displayColumn?: string
   valueColumn?: string
   isMultiple?: boolean
+  type?: any
   options?: {
     label: string
     value: string,
@@ -56,6 +63,7 @@ export type MetadataUserRoleUserGroup = {
   validationName: 'user_role_user_group'
   allow?: 'USER_ROLE' | 'USER_GROUP' | 'ALL'
   isMultiple?: boolean
+  type?: any
   options?: {
     label: string
     value: string,

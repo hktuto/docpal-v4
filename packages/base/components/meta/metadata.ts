@@ -1,13 +1,8 @@
 import type { WidgetItem } from '@/types/vform'
 import type { DocumentMetadata, VariableItem } from '@/types/vform.extend'
 import { adminApi, clientApi } from 'api'
+import dayjs from 'dayjs'
 export const useMetadata = () => {
-  const dateMap = {
-    today: 'today',
-    tomorrow: 'tomorrow',
-    yesterday: 'yesterday',
-    now: 'now'
-  }
   const metadataMap = useState<Record<string, DocumentMetadata>>('metadataMap', () => ({}))
   const ignoreList = [
     'dc:title',
@@ -47,6 +42,7 @@ export const useMetadata = () => {
         if (item.items) {
           metadataItem.validationName = item.items.validationName
           metadataItem.isMultiple = item.isMultiple
+          metadataItem.type = item.type
           if (item.items.validationName === 'select') {
             metadataItem.options = item.items.enum.map((item: any) => ({
               label: item,
@@ -85,9 +81,8 @@ export const useMetadata = () => {
               )
             }
           } else {
-            metadataItem = { ...item.items }
+            metadataItem = { ...item, ...item.items, type: item.type }
           }
-          // TODO role
           // TODO case
           // TODO workflow
           // TODO document
@@ -104,7 +99,6 @@ export const useMetadata = () => {
     }
   }
   const getVFormWidgetList = (metadataListMap: DocumentMetadata): VariableItem[] => {
-    const metaDateFormat = useDisplayTimeFormat()
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
       if (ignoreList.indexOf(key) !== -1) return
@@ -121,56 +115,26 @@ export const useMetadata = () => {
         case 'user_role_user_group':
         case 'mastertable':
         case 'select':
-          if (metadataItem.options && metadataItem.options[0] && (metadataItem.options[0] as any).options) {
-            _item.type = 'select-group'
-          } else {
-            _item.type = 'select'
-          }
-          if (_item.type === 'select-group' && metadataItem.options && metadataItem.options.length === 1 && (metadataItem.options[0] as any).options) {
-            _item.type = 'select'
-            _item.options.optionItems = (metadataItem.options[0] as any).options
-          } else {
-            _item.options.optionItems = metadataItem.options
-          }
-
-          _item.options.clearable = true
-          _item.options.filterable = true
-          _item.options.multiple = metadataItem.isMultiple
-          // _item.options.multipleLimit = 5
+          const selectResult = selectDecorator(metadataItem)
+          _item.options = selectResult.options
+          _item.type = selectResult.type
           break
         case 'date':
-          console.log(metadataItem, 'metadataItem')
-          _item.type = 'date'
-          if (metadataItem.dateFormat) {
-            _item.options.format = metadataItem.dateFormat
-          } else if (metaDateFormat.value) {
-            _item.options.format = metaDateFormat.value
-            if (metaDateFormat.value?.includes('HH') || metaDateFormat.value?.includes('hh')) _item.options.type = 'datetime'
-          }
-          if (metadataItem.dateOrDateTime) {
-            _item.options.displayType = metadataItem.dateOrDateTime
-          }
+          const dateResult = dateDecorator(metadataItem)
+          _item.options = dateResult.options
+          _item.type = dateResult.type
           break
         case 'number':
-          _item.type = 'number'
-          _item.options.min = metadataItem.minimum
-          _item.options.max = metadataItem.maximum
-          if (metadataItem.multipleOf) {
-            if (metadataItem.multipleOf < 1) {
-              const precision = metadataItem.multipleOf.toString().split('.')[1].length
-              _item.options.precision = precision
-            } else {
-              _item.options.precision = 0
-            }
-            _item.options.step = metadataItem.multipleOf
-          }
+          const numberResult = numberDecorator(metadataItem)
+          _item.options = numberResult.options
+          _item.type = numberResult.type
           break
         case 'text':
           _item.type = 'textarea'
           _item.options.maxLength = metadataItem.maxLength
           break
         case 'boolean':
-          _item.type = 'checkbox'
+          _item.type = 'switch'
           break
         default:
           const item = metadataItem as any
@@ -184,6 +148,8 @@ export const useMetadata = () => {
           }
           break
       }
+      _item.options.validationName = metadataItem.validationName
+      _item.options.validationType = metadataItem.type
       widgetVariableList.push(_item)
     })
     return widgetVariableList
@@ -221,13 +187,14 @@ export const useMetadata = () => {
     // const variableList: VariableItem[] = getVFormWidgetList(data)
     const result = data ? { ...data } : {}
     variableList.forEach((item) => {
-      if (item.type === 'select' && !['documentType'].includes(item.name)) {
+      if (!item.options) return
+      if (item.options.validationType === 'array') {
         if (!data[item.name]) return
-        console.log(data[item.name])
-
         result[item.name] = Array.isArray(data[item.name]) ? data[item.name] : [data[item.name]]
+        if (['case', 'workflow', 'document', 'date'].includes(item.options.validationName)) return
+        if (['select', 'user_role_user_group'].includes(item.options.validationName)) return
         result[item.name] = result[item.name].map((citem: any) => {
-          const selectItem = item.options.optionItems.find((sitem: any) => sitem.value === citem)
+          const selectItem = item.options.optionItems?.find((sitem: any) => sitem.value === citem)
           if (!selectItem) return ''
           return JSON.stringify(selectItem)
         })
@@ -237,16 +204,24 @@ export const useMetadata = () => {
   }
   function getParseData(data: Record<string, any>, variableList: VariableItem[]) {
     const result = { ...data }
-    variableList.forEach((item) => {
-      if (item.type === 'select' && !['documentType'].includes(item.name)) {
-        if (!result[item.name]) return
-        console.log(result)
-
-        result[item.name] = result[item.name].map((citem: any) => {
+    Object.keys(result).forEach((key) => {
+      let resultItem = result[key]
+      if (Array.isArray(resultItem)) {
+        result[key] = resultItem.map((citem: any) => {
           const _citem = getParseDataItem(citem)
+          console.log(_citem, 'citem')
           if (!_citem.value) return _citem
           return _citem.value
         })
+      }
+      const variableItem = variableList.find((item) => item.name === key)
+      if (!variableItem) return
+      if (variableItem.options.validationName === 'date') {
+        result[key] = variableItem.options.type === 'daterange' ? result[key] : result[key].length > 0 ? result[key][0] : ''
+      } else if (['case', 'workflow', 'document'].includes(variableItem.options.validationName)) {
+        result[key] = result[key].length > 0 ? result[key][0] : ''
+      } else if (['select', 'select-group'].includes(variableItem.type) && !variableItem.options.multiple && variableItem.name !== 'documentType') {
+        result[key] = result[key].length > 0 ? result[key][0] : ''
       }
     })
     return result
@@ -302,5 +277,88 @@ async function getUserGroupList(prefix: string = 'group____') {
   } catch (error) {
     console.error(error)
     return []
+  }
+}
+function selectDecorator(data: any) {
+  const result: any = {
+    type: data.options && data.options[0] && data.options[0].options ? 'select-group' : 'select',
+    options: {}
+  }
+  if (result.type === 'select-group' && data.options && data.options.length === 1 && (data.options[0] as any).options) {
+    result.type = 'select'
+    result.options.optionItems = (data.options[0] as any).options
+  } else {
+    result.options.optionItems = data.options
+  }
+
+  result.options.clearable = true
+  result.options.filterable = true
+  result.options.multiple = data.isMultiple || false
+  return result
+}
+function numberDecorator(data: any) {
+  const result: any = {
+    type: 'number',
+    options: {
+      min: data.minimum,
+      max: data.maximum,
+      step: data.multipleOf || 1,
+      precision: 0
+    }
+  }
+  if (data.multipleOf) {
+    if (data.multipleOf < 1) {
+      const precision = data.multipleOf.toString().split('.')[1].length
+      result.options.precision = precision
+    } else {
+      result.options.precision = 0
+    }
+  }
+  return result
+}
+function dateDecorator(data: any) {
+  const metaDateFormat = useDisplayTimeFormat()
+  const result: any = {
+    type: data.isMultiple ? 'date-range' : 'date',
+    options: {
+      format: 'YYYY-MM-DD',
+      valueFormat: data.dateFormat || 'YYYY-MM-DD',
+      type: 'date',
+      defaultValue: ''
+    }
+  }
+  if (result.type === 'date-range') {
+    result.options.type = 'daterange'
+    const defaultStartDate = dateDefaultDecorator(data.defaultValue, result.options.valueFormat)
+    const defaultEndDate = formatDate(formatDate(defaultStartDate, 'YYYY-MM-DD 23:59:59'), result.options.valueFormat)
+    result.options.defaultValue = [defaultStartDate, defaultEndDate]
+    result.options.defaultTime = ['2000-01-01 00:00:00', '2000-01-01 23:59:00']
+  } else {
+    if (data.dateFormat) {
+      result.options.format = data.dateFormat
+    } else if (metaDateFormat.value) {
+      result.options.format = metaDateFormat.value
+      if (metaDateFormat.value?.includes('HH') || metaDateFormat.value?.includes('hh')) result.options.type = 'datetime'
+    }
+    if (data.dateOrDateTime) {
+      result.options.type = data.dateOrDateTime.toLowerCase()
+      result.options.defaultValue = dateDefaultDecorator(data.defaultValue, result.options.valueFormat)
+    }
+  }
+  return result
+}
+function dateDefaultDecorator(defaultValue: any, valueFormat: string) {
+  if (Date.parse(defaultValue)) {
+    return formatDate(defaultValue, valueFormat)
+  } else if (defaultValue === 'today') {
+    return formatDate(dayjs().format('YYYY-MM-DD 00:00:00'), valueFormat)
+  } else if (defaultValue === 'tomorrow') {
+    return formatDate(dayjs().add(1, 'day').format('YYYY-MM-DD 00:00:00'), valueFormat)
+  } else if (defaultValue === 'yesterday') {
+    return formatDate(dayjs().subtract(1, 'day').format('YYYY-MM-DD 00:00:00'), valueFormat)
+  } else if (defaultValue === 'now') {
+    return formatDate(dayjs().format('YYYY-MM-DD HH:mm:ss'), valueFormat)
+  } else {
+    return ''
   }
 }
