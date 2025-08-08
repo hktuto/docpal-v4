@@ -69,7 +69,6 @@ export enum BpmnElementType {
   startEvent = 'startEvent',
   endEvent = 'endEvent',
   userTask = 'userTask',
-  httpTask = 'httpTask',
   exclusiveGateway = 'exclusiveGateway',
   serviceTask = 'serviceTask',
   boundaryEvent = 'boundaryEvent',
@@ -87,6 +86,8 @@ export type BpmnElement = {
     toolbar: {
       icon: string
       label: string
+      group: string
+      order: number
       dropData: any
     }[]
     newNodeData: (
@@ -284,85 +285,6 @@ export const bpmnElement: BpmnElement = {
       return 'LazyBpmnContextUserTask'
     }
   },
-  httpTask: {
-    nodeStyle: (item: any) => {
-      let icon = '/bpmn/icons/form.svg'
-      let color = '#0099ff'
-      let type = 'httpTask'
-      let bgColor = '#fff'
-      let textColor = '#000'
-      return {
-        ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
-        shape: 'bpmn-node',
-        ports: {
-          items: [
-            {
-              id: 'from',
-              group: 'from'
-            },
-            {
-              id: 'to',
-              group: 'to'
-            },
-            {
-              id: 'left',
-              group: 'left'
-            },
-            {
-              id: 'right',
-              group: 'right'
-            }
-          ]
-        }
-      }
-    },
-    embed: false,
-    toolbar: [
-      {
-        icon: 'bpmn:http-task',
-        label: 'HTTP Task',
-        dropData: (id: string) => ({
-          id,
-          ...bpmnElement.httpTask.nodeStyle({
-            ['attr_flowable:parallelInSameTransaction']: 'true',
-            ['attr_flowable:type']: 'http',
-            extensionElements: {
-              ['flowable:field']: [
-                { attr_name: 'requestMethod', ['flowable:string']: { '__cdata': '' } },
-                { attr_name: 'requestUrl', ['flowable:string']: { '__cdata': '' } },
-                { attr_name: 'responseVariableName', ['flowable:string']: { '__cdata': '' } }
-                // { attr_name: 'saveResponseVariableAsJson', ['flowable:string']: { '__cdata': 'true' } }
-              ]
-            }
-          }),
-          label: 'HTTP Task',
-          data: bpmnElement.httpTask.newNodeData(id, 'HTTP Task', {
-            attr_id: id,
-            attr_name: 'HTTP Task',
-            ['attr_flowable:parallelInSameTransaction']: 'true',
-            ['attr_flowable:type']: 'http',
-            extensionElements: {
-              ['flowable:field']: [
-                { attr_name: 'requestMethod', ['flowable:string']: { '__cdata': 'GET' } },
-                { attr_name: 'requestUrl', ['flowable:string']: { '__cdata': '' } },
-                { attr_name: 'responseVariableName', ['flowable:string']: { '__cdata': '' } }
-                // { attr_name: 'saveResponseVariableAsJson', ['flowable:string']: { '__cdata': 'true' } }
-              ]
-            }
-          })
-        })
-      }
-    ],
-    newNodeData: (id, label, data) => ({
-      id,
-      name: label,
-      type: BpmnElementType['httpTask'],
-      data
-    }),
-    clickHandler: () => {
-    },
-    contextMenuComponent: 'LazyBpmnContextHttpRequest'
-  },
   exclusiveGateway: {
     nodeStyle: (item: any) => ({
       ...circleNodeStyle('#0099ff', '/bpmn/icons/check.svg'),
@@ -446,6 +368,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:clock',
         label: 'boundaryEvent',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.boundaryEvent.nodeStyle(),
@@ -477,68 +401,77 @@ export const bpmnElement: BpmnElement = {
       let type = 'ServiceTask'
       let bgColor = '#fff'
       let textColor = '#000'
-      if (!item['attr_flowable:delegateExpression']) {
-        return squareNodeStyle('#7B61FF', 'ServiceTask', icon)
+
+      if (item['attr_flowable:type'] === 'http') {
+        icon = '/bpmn/icons/download-pdf.svg'
+        type = 'http'
+        color = '#7B61FF'
+      } else {
+        if (!item['attr_flowable:delegateExpression']) {
+          return squareNodeStyle('#7B61FF', 'ServiceTask', icon)
+        }
+
+        switch (item['attr_flowable:delegateExpression']) {
+          case '${sendNotificationDelegate}':
+            icon = '/bpmn/icons/email.svg'
+            type = 'Email'
+            color = '#36ce3c'
+            break
+          case '${generateDocumentDelegate}':
+            icon = '/bpmn/icons/document.svg'
+            type = 'Document'
+            color = '#7B61FF'
+            break
+          case '${filingGenerateDocumentDelegate}':
+            icon = '/bpmn/icons/browse.svg'
+            type = 'Filing'
+            color = '#7B61FF'
+            break
+          case '${conditionValidateDelegate}':
+            icon = '/bpmn/icons/condition.svg'
+            type = 'condition'
+            color = '#7B61FF'
+            bgColor = '#0F2037'
+            textColor = '#fff'
+            break
+          case '${sendWhatsAppMsgDelegate}':
+            icon = '/bpmn/icons/whatsapp.svg'
+            type = 'WhatsApp'
+            color = '#7B61FF'
+            break
+          case '${updateDataDelegate}':
+            icon = '/bpmn/icons/update-data.svg'
+            type = 'Update Data'
+            color = '#7B61FF'
+            break
+          case '${idGeneratorDelegate}':
+            icon = '/bpmn/icons/update-data.svg'
+            type = 'Generate Id'
+            color = '#7B61FF'
+            break
+          case '${masterTableRecordDelegate}':
+            icon = '/bpmn/icons/master-table.svg'
+            type = 'Master Table'
+            color = '#7B61FF'
+            break
+          case '${calendarEventDelegate}':
+            icon = '/bpmn/icons/calendar.svg'
+            type = 'Calendar'
+            color = '#7B61FF'
+            break
+          case '${pdfFormReader}':
+            icon = '/bpmn/icons/upload-pdf.svg'
+            type = 'Reader PDF'
+            color = '#7B61FF'
+            break
+          case '${pdfFormWriter}':
+            icon = '/bpmn/icons/download-pdf.svg'
+            type = 'Writer PDF'
+            color = '#7B61FF'
+            break
+        }
       }
-      switch (item['attr_flowable:delegateExpression']) {
-        case '${sendNotificationDelegate}':
-          icon = '/bpmn/icons/email.svg'
-          type = 'Email'
-          color = '#36ce3c'
-          break
-        case '${generateDocumentDelegate}':
-          icon = '/bpmn/icons/document.svg'
-          type = 'Document'
-          color = '#7B61FF'
-          break
-        case '${filingGenerateDocumentDelegate}':
-          icon = '/bpmn/icons/browse.svg'
-          type = 'Filing'
-          color = '#7B61FF'
-          break
-        case '${conditionValidateDelegate}':
-          icon = '/bpmn/icons/condition.svg'
-          type = 'condition'
-          color = '#7B61FF'
-          bgColor = '#0F2037'
-          textColor = '#fff'
-          break
-        case '${sendWhatsAppMsgDelegate}':
-          icon = '/bpmn/icons/whatsapp.svg'
-          type = 'WhatsApp'
-          color = '#7B61FF'
-          break
-        case '${updateDataDelegate}':
-          icon = '/bpmn/icons/update-data.svg'
-          type = 'Update Data'
-          color = '#7B61FF'
-          break
-        case '${idGeneratorDelegate}':
-          icon = '/bpmn/icons/update-data.svg'
-          type = 'Generate Id'
-          color = '#7B61FF'
-          break
-        case '${masterTableRecordDelegate}':
-          icon = '/bpmn/icons/master-table.svg'
-          type = 'Master Table'
-          color = '#7B61FF'
-          break
-        case '${calendarEventDelegate}':
-          icon = '/bpmn/icons/calendar.svg'
-          type = 'Calendar'
-          color = '#7B61FF'
-          break
-        case '${pdfFormReader}':
-          icon = '/bpmn/icons/upload-pdf.svg'
-          type = 'Reader PDF'
-          color = '#7B61FF'
-          break
-        case '${pdfFormWriter}':
-          icon = '/bpmn/icons/download-pdf.svg'
-          type = 'Writer PDF'
-          color = '#7B61FF'
-          break
-      }
+
       return {
         ...squareNodeStyle(color, type, icon, 200, 64, bgColor, textColor),
         shape: 'bpmn-node',
@@ -569,6 +502,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:document',
         label: 'document',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -605,6 +540,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:email',
         label: 'email',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -633,6 +570,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:browse',
         label: 'filing',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -651,6 +590,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:condition',
         label: 'Condition',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -685,6 +626,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:whatsapp',
         label: 'WhatsApp',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -721,6 +664,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:update-data',
         label: 'Update Data',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -743,6 +688,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:update-data',
         label: 'Generate Id',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -769,6 +716,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:master-table',
         label: 'Master Table',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -803,6 +752,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:upload-pdf',
         label: 'Reader PDF',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -831,6 +782,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:download-pdf',
         label: 'Writer PDF',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
@@ -855,6 +808,48 @@ export const bpmnElement: BpmnElement = {
             }
           })
         })
+      },
+      {
+        icon: 'bpmn:http-task',
+        label: 'HTTP Task',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            // ['attr_flowable:parallelInSameTransaction']: 'true',
+            ['attr_flowable:type']: 'http',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
+                { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
+                { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': id } },
+                { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'responseBody', ['flowable:expression']: { '__cdata': '' } }
+              ]
+            }
+          }),
+          label: 'HTTP Task',
+          data: bpmnElement.serviceTask.newNodeData(id, 'HTTP Task', {
+            attr_id: id,
+            attr_name: 'HTTP Task',
+            // ['attr_flowable:parallelInSameTransaction']: 'true',
+            ['attr_flowable:type']: 'http',
+            extensionElements: {
+              ['flowable:field']: [
+                { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
+                { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
+                { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': id } },
+                { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'responseBody', ['flowable:expression']: { '__cdata': '' } }
+              ]
+            }
+          })
+        })
       }
     ],
     newNodeData: (id, label, data) => ({
@@ -867,6 +862,10 @@ export const bpmnElement: BpmnElement = {
     clickHandler: () => {
     },
     contextMenuComponent: (item: any) => {
+      if (item['attr_flowable:type'] === 'http') {
+        return 'LazyBpmnContextHttpRequest'
+      }
+
       const type = item['attr_flowable:delegateExpression']
       if (!type) {
         return 'LazyBpmnContextCustomeService'
