@@ -54,6 +54,9 @@
         class="date-picker"
       />
     </ElFormItem>
+    <ElFormItem :label="t('designer.widgetLabel.date-range')" :required="false">
+      <ElSwitch v-model="validation.isMultiple" />
+    </ElFormItem>
   </ElForm>
 </template>
 
