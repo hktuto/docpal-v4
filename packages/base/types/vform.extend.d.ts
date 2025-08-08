@@ -10,7 +10,7 @@ export type VariableItem = {
   // maxLength?: number,
   // onValidate?: string
 }
-export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText | MetadataUserRoleUserGroup
+export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText | MetadataUserRoleUserGroup | MetadataUser
 export type DocumentMetadata = Record<string, MetadataType>
 export type MetadataNumber = {
   validationName: 'number'
@@ -71,5 +71,14 @@ export type MetadataUserRoleUserGroup = {
       label: string
       value: string
     }[]
+  }[]
+}
+export type MetadataUser = {
+  validationName: 'user'
+  isMultiple?: boolean
+  type?: any
+  options?: {
+    label: string
+    value: string
   }[]
 }

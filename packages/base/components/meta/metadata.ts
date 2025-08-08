@@ -80,6 +80,13 @@ export const useMetadata = () => {
                 })
               )
             }
+          } else if (item.items.validationName === 'user') {
+            metadataItem.options = []
+            promises.push(
+              getUserList().then((options) => {
+                metadataItem.options = options
+              })
+            )
           } else {
             metadataItem = { ...item, ...item.items, type: item.type }
           }
@@ -112,6 +119,7 @@ export const useMetadata = () => {
       }
 
       switch (metadataItem.validationName) {
+        case 'user':
         case 'user_role_user_group':
         case 'mastertable':
         case 'select':
@@ -209,7 +217,6 @@ export const useMetadata = () => {
       if (Array.isArray(resultItem)) {
         result[key] = resultItem.map((citem: any) => {
           const _citem = getParseDataItem(citem)
-          console.log(_citem, 'citem')
           if (!_citem.value) return _citem
           return _citem.value
         })
@@ -217,11 +224,14 @@ export const useMetadata = () => {
       const variableItem = variableList.find((item) => item.name === key)
       if (!variableItem) return
       if (variableItem.options.validationName === 'date') {
+        if (!result[key]) result[key] = []
         result[key] = variableItem.options.type === 'daterange' ? result[key] : result[key].length > 0 ? result[key][0] : ''
       } else if (['case', 'workflow', 'document'].includes(variableItem.options.validationName)) {
         result[key] = result[key].length > 0 ? result[key][0] : ''
       } else if (['select', 'select-group'].includes(variableItem.type) && !variableItem.options.multiple && variableItem.name !== 'documentType') {
         result[key] = result[key].length > 0 ? result[key][0] : ''
+      } else if (variableItem.options.multiple && !result[key]) {
+        result[key] = []
       }
     })
     return result
@@ -242,6 +252,18 @@ export const useMetadata = () => {
   }
 }
 
+async function getUserList() {
+  try {
+    const { data }: any = await clientApi.api.postNuxeoIdentityUsers()
+    return data.map((item: any) => ({
+      label: item.username,
+      value: item.userId
+    }))
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
 async function getRoleList(prefix: string = 'role____') {
   try {
     const data = await adminApi.api.getAclRoleRoot().then((res: any) => res.data)
@@ -284,9 +306,9 @@ function selectDecorator(data: any) {
     type: data.options && data.options[0] && data.options[0].options ? 'select-group' : 'select',
     options: {}
   }
-  if (result.type === 'select-group' && data.options && data.options.length === 1 && (data.options[0] as any).options) {
+  if (result.type === 'select-group' && data.options && data.options.length === 1 && data.options[0].options) {
     result.type = 'select'
-    result.options.optionItems = (data.options[0] as any).options
+    result.options.optionItems = data.options[0].options
   } else {
     result.options.optionItems = data.options
   }
