@@ -78,18 +78,18 @@ async function handleSave() {
   try {
     const metaFormData = await MetaFormRef.value.getData()
     if (!metaFormData) {
-      state.loading = false
       return
     }
     // check if the name is exist in the folder
-    const { isDuplicate } = await duplicateNameFilter(props.doc.parentRef, [form.value])
-    if (isDuplicate && form.value.name !== props.doc.name) {
-      ElMessage({
-        message: t('dpTip_duplicateFileName') as string,
-        type: 'error'
-      })
-      state.loading = false
-      return
+    if (form.value.name !== props.doc.name) {
+      const { isDuplicate } = await duplicateNameFilter(props.doc.parentRef, [form.value])
+      if (isDuplicate) {
+        ElMessage({
+          message: t('dpTip_duplicateFileName') as string,
+          type: 'error'
+        })
+        return
+      }
     }
     await clientApi.api.patchNuxeoDocument({
       idOrPath: props.doc.id,
@@ -102,10 +102,11 @@ async function handleSave() {
       relatedIdOrPath: props.doc.id
     })
     dialogOpened.value = false
-  } catch (error) {
-    console.log('edit fail', error)
+  } catch (error: any) {
+    console.error('edit fail', error)
+  } finally {
+    state.loading = false
   }
-  state.loading = false
 }
 
 onMounted(async () => {
