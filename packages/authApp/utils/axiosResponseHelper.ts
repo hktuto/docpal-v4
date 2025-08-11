@@ -5,16 +5,16 @@ import { useEventBus, EventType, emitBus } from 'eventbus'
 function getBaseUrl(baseURL: string) {
   const { public: { DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY, PROXY, OPEN_PROXY } } = useRuntimeConfig()
   console.log('baseURL', baseURL)
-  if (baseURL === '/dashboard') return DASHBOARD_PROXY
-  if (baseURL === '/client') return CLIENT_PROXY
-  if (baseURL === '/admin') return ADMIN_PROXY
-  if (baseURL === '/api') return PROXY
-  if (baseURL === '/adminApi/api') return ADMIN_PROXY
-  if (baseURL === '/docpalApi') return PROXY
-  if (baseURL === '/public-api/report/v1/api') return DASHBOARD_PROXY
-  if (baseURL === '/open-api/template') return OPEN_PROXY
+  if (baseURL === '/dashboard') baseURL =  DASHBOARD_PROXY
+  if (baseURL === '/client') baseURL = CLIENT_PROXY
+  if (baseURL === '/admin') baseURL = ADMIN_PROXY
+  if (baseURL === '/api') baseURL = PROXY
+  if (baseURL === '/adminApi/api') baseURL = ADMIN_PROXY
+  if (baseURL === '/docpalApi') baseURL = PROXY
+  if (baseURL === '/public-api/report/v1/api') baseURL = DASHBOARD_PROXY
+  if (baseURL === '/open-api/template') baseURL = OPEN_PROXY
   console.log('baseURL', baseURL)
-  return PROXY
+  return baseURL
 }
 
 export const requestSuccessHelper = (config: any, axiosInstance: AxiosInstance) => {
