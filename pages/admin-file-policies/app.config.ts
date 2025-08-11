@@ -10,7 +10,7 @@ export default defineAppConfig({
       label: "adminMenu.holdPoliciesManage",
       icon: "ic:outline-lock-clock",
       hoverIcon: "ic:outline-lock-clock",
-      component: "LazyHoldPage",
+      component: "LazyAdminHoldPage",
       feature: "HOLD_POLICIES",
       props:{},
     },
@@ -20,7 +20,7 @@ export default defineAppConfig({
       label: "adminMenu.retention",
       icon: "iconoir:privacy-policy",
       hoverIcon: "iconoir:privacy-policy",
-      component: "LazyRetentionPage",
+      component: "LazyAdminRetentionPage",
       feature: "RETENTION_POLICIES",
       props:{},
     }
