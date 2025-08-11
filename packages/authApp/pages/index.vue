@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-const {public : { platform }} = useRuntimeConfig()
+const {public : { platform , defaultTab}} = useRuntimeConfig()
 const localeReady = ref(false)
 const appPlatform = useAppPlatform()
 appPlatform.value = platform || 'client'
+const defaultTabStore = useAppDefaultTab()
+defaultTabStore.value =  defaultTab
 </script>
 
 <template>
   <AuthState>
     <template #default="{ loggedIn, logout }">
-      <AppEntry @ready="localeReady = true">
+      <AppEntry @ready="localeReady = true" mode="client" :defaultTab="defaultTabStore">
         <template v-if="localeReady" #sidebar>
           <AppMenu class="sideMenu" :admin="appPlatform === 'admin'">
             <template #header>

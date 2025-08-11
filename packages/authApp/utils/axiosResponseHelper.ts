@@ -41,7 +41,7 @@ export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstanc
   return response
 }
 export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstance) => {
-  console.log('error', error)
+  
   const originalRequest = error.config
 
   if (error.response.status === 420) {
