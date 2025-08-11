@@ -13,6 +13,7 @@ function getBaseUrl(baseURL: string) {
   if (baseURL === '/docpalApi') return PROXY
   if (baseURL === '/public-api/report/v1/api') return DASHBOARD_PROXY
   if (baseURL === '/open-api/template') return OPEN_PROXY
+  console.log('baseURL', baseURL)
   return PROXY
 }
 
