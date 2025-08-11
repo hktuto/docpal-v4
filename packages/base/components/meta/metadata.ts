@@ -25,9 +25,9 @@ export const useMetadata = () => {
     'sec:securityKeyword'
   ]
   const getDocumentMetadata = async (type: string): Promise<any> => {
-    // if (metadataMap.value[type]) return metadataMap.value[type]
+    if (metadataMap.value[type]) return metadataMap.value[type]
     try {
-      type = 'testOy'
+      // type = 'testOy'
       const { data }: any = await clientApi.api.getTypesMetadataGenerateJsonSchemaDocpaltypename(type, {
         headers: { noThrowError: 'true' }
       })
