@@ -10,7 +10,7 @@ export default defineAppConfig({
       label: "adminMenu.easyForm",
       icon: "material-symbols-light:table-edit-rounded",
       hoverIcon: "material-symbols-light:table-edit-rounded",
-      component: "LazyEasyFormPage",
+      component: "LazyAdminEasyFormPage",
       feature: "WORKFLOW",
       props:{},
     }

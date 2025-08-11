@@ -4,7 +4,7 @@ export const routeRetentionDetail  = function(params: any){
     name: "admin-retention-versions-" + params.id,
     icon: 'streamline:interface-lock-shield-combination-combo-lock-locked-padlock-secure-security-shield-keyhole',
     label: params.policyName,
-    component: 'LazyRetentionDetail',
+    component: 'LazyAdminRetentionDetail',
     props: {
       id: params.id,
     }
