@@ -111,6 +111,9 @@ async function handleDocTypeChange(docType: string) {
   state.curDocType = docType
   state.dragList = metaList.reduce((prev: any, item: any) => {
     if (['boolean'].includes(item.options.validationType)) return prev
+    if (item.options.validationType === 'array') {
+      if(item.options.multiple || item.options.type === 'daterange') return prev
+    }
     prev.push({
       name: item.label,
       metadata: item.name,
