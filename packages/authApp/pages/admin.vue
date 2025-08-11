@@ -4,8 +4,17 @@ const localeReady = ref(false)
 const appPlatform = useAppPlatform()
 appPlatform.value = 'admin'
 const { public: { platform }} = useRuntimeConfig()
-
+const defaultTab = useAppDefaultTab()
 const router = useRouter()
+
+defaultTab.value =  {
+  id: 'admin-user',
+  name: 'admin-user-list',
+  label: 'adminMenu.User',
+  icon: 'lucide:user',
+  component: 'LazyAdminUserList',
+  props: {}
+}
 if(platform === 'admin') {
   // if the platform on runtime config is admin, then no need to use this page, router back to index
   router.replace({
@@ -18,7 +27,7 @@ if(platform === 'admin') {
 <template>
   <AuthState>
     <template #default="{ loggedIn, logout }">
-      <AppEntry @ready="localeReady = true">
+      <AppEntry @ready="localeReady = true" mode="admin" :defaultTab="defaultTab">
         <template v-if="localeReady" #sidebar>
           <AppMenu class="sideMenu" admin>
             <template #header>

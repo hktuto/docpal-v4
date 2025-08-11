@@ -4,11 +4,18 @@ import { TabApp } from "#components";
 const tabAppRef = ref<InstanceType<typeof TabApp>>();
 const emits = defineEmits(["ready"]);
 import { getLocale } from "../../utils/languageHelper";
+
+const props = defineProps<{
+  mode: 'client' | 'admin',
+  defaultTab?: any
+}>()
+
 async function getTabsFromServer() {
   // check if new tab
   const route = useRoute();
 
-  let storageTabs = localStorage.getItem("app-tab");
+  let storageTabs = localStorage.getItem(props.mode + '-app-tab');
+  console.log(props.mode + '-app-tab', storageTabs)
   sessionStorage.removeItem('temp-path')
   // storageTabs = null
   try {
@@ -27,13 +34,7 @@ async function getTabsFromServer() {
       // init a basic layout
       tabAppRef.value?.setHightLightPanel("dummy-tab-container");
       const config = useRuntimeConfig() as any;
-      const defaultTab = config.public.defaultTab || {
-        id: "new-tab-001",
-        label: "New Tab",
-        name: "new-tab-001",
-        parent: "dummy-tab-container",
-        component: "LazyTabEmpty",
-      };
+      const defaultTab = props.defaultTab || config.public.defaultTab
       defaultTab.parent = "dummy-tab-container";
 
       tabAppRef.value?.setLayout([
@@ -86,7 +87,7 @@ async function saveTabsToLocalStorage(layout: TabPanel[]) {
       tab.initized = false;
     });
   });
-  localStorage.setItem("app-tab", JSON.stringify(saveData));
+  localStorage.setItem(props.mode + '-app-tab', JSON.stringify(saveData));
 }
 const { t } = useI18n();
 const languageReady = ref(false);
