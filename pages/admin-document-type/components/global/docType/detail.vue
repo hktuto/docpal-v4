@@ -13,7 +13,7 @@
             ></el-input>
           </el-form-item>
           <el-form-item :label="$t('docType.category')">
-            <el-select v-model="state.form.category" :disabled="state.loading" filterable @change="handleSubmit('category')">
+            <el-select :loading="categoryLoading" v-model="state.form.category" :disabled="state.loading" filterable @change="handleSubmit('category')">
               <el-option v-for="item in categoryOpts" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
           </el-form-item>
@@ -45,12 +45,12 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { adminApi } from 'api'
 import { useDebounceFn } from '@vueuse/core'
+import { initCategoryOpts, categoryOpts } from '@/composables/useDocumentTypeOptioins'
 // const { getLanguageListStore } = useLanguage()
 const { name, id } = defineProps<{
   name: string
   id: string
 }>()
-const { categoryOpts } = useDocumentTypeOptioins()
 const { t } = useI18n()
 
 const state = reactive({
@@ -63,7 +63,7 @@ const state = reactive({
     isFolder: false
   }
 })
-
+const categoryLoading = ref(false)
 async function initDocType(detail: any) {
   state.docTypeDetail = {
     docpalTypeName: detail.docpalTypeName,
@@ -118,6 +118,16 @@ async function handleSubmit(attr: string) {
     state.loading = false
   }
 }
+onMounted(async () => {
+  try {
+    categoryLoading.value = true
+    await initCategoryOpts()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    categoryLoading.value = false
+  }
+})
 </script>
 
 <style lang="scss" scoped>

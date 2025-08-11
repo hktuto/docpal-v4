@@ -76,7 +76,7 @@ async function getVariables(isFolder?: boolean) {
   try {
     const date = new Date().valueOf()
     const variableList = await metadataHelper.initVformVariableList(state.initOptions.documentType)
-    state.variables = variableList
+    state.variables = [...variableList]
     if (['ai', 'upload', 'changeDocType'].includes(props.mode)) {
       state.variables.unshift({
         name: 'documentType',
@@ -113,7 +113,10 @@ async function getVariables(isFolder?: boolean) {
         FormVariablesRendererRef.value.setFormJson(newFormJson)
       }
     })
-  } catch (error) {}
+    return state.variables
+  } catch (error) {
+    return []
+  }
 }
 function getApplyFormJson(formJson: any) {
   const widgetList: any = []
@@ -157,13 +160,18 @@ async function init(documentType: any, initOptions: initMetaFormOptions) {
   try {
     state.loading = true
     state.data = []
-    await getVariables(initOptions?.isFolder)
+    const metaList = await getVariables(initOptions?.isFolder)
     if (props.mode === 'ai' || props.mode === 'ai-edit') {
       if (initOptions.aiAnalysis) state.aiAnalysis = initOptions.aiAnalysis
       if (initOptions.aiDocId) state.aiDocId = initOptions.aiDocId
     }
-  } catch (error) {}
-  state.loading = false
+    return metaList
+  } catch (error) {
+    console.error(error)
+    return []
+  } finally {
+    state.loading = false
+  }
 }
 // #endregion
 async function setData(properties: any) {
@@ -222,7 +230,7 @@ async function formChange({ formData, fieldName, formModel, newValue, oldValue }
       setTimeout(() => {
         setData({ ...state.initData, documentType: newValue })
       })
-  }
+    }
   }
 }
 async function aiFormChange(row: any, analysis: any) {
@@ -230,9 +238,9 @@ async function aiFormChange(row: any, analysis: any) {
   switch (row.type) {
     case 'date':
       value = formatDate(value, row.options.format)
-      break;
+      break
     default:
-      break;
+      break
   }
   const key = row.name
   FormVariablesRendererRef.value.setData({
