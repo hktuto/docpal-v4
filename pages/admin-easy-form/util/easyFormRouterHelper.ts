@@ -4,7 +4,7 @@ export const routeEasyFormDetail  = function(params: any){
     name: "easy-form-detail-versions-" + params.id,
     icon: 'material-symbols-light:table-edit-rounded',
     label: params.name,
-    component: 'LazyEasyFormDetail',
+    component: 'LazyAdminEasyFormDetail',
     props: {
       id: params.id,
     }
@@ -16,7 +16,7 @@ export const routeEasyFormDesigner  = function(params: any){
     name: "easy-form-designer-versions-" + params.id,
     icon: 'material-symbols-light:table-edit-rounded',
     label: params.name,
-    component: 'LazyEasyFormDesigner',
+    component: 'LazyAdminEasyFormDesigner',
     props: {
       id: params.id,
     }
