@@ -32,6 +32,7 @@ const state = reactive<any>({
       readOnly: true
     }
   },
+  id: '',
   downloadLoading: false,
   pageLoading: false,
   saveLoading: false,
@@ -103,12 +104,12 @@ async function getVariables() {
 async function handleTest() {
   state.downloadLoading = true
 
-  const id = new Date().valueOf() + state.info.name
+  const testId = new Date().valueOf() + state.info.name
   const notification = ElNotification({
     title: '',
     icon: Download,
     dangerouslyUseHTMLString: true,
-    message: `<span id="${id}">0%</span> <span title="${state.info.name}">${state.info.name}</span>`,
+    message: `<span id="${testId}">0%</span> <span title="${state.info.name}">${state.info.name}</span>`,
     showClose: false,
     customClass: 'download-notification',
     duration: 0,
@@ -208,20 +209,19 @@ async function handleSaveWord() {
 
   try {
     const fileName = state.info.name + '.json'
-    const blob = await convertJsonToBlob(editDataJson, fileName)
+    const blob = await convertJsonToBlob(editDataJson)
     const file = new File([blob], fileName, { type: 'application/json' })
-
     const form = new FormData()
     form.append('file', file)
-    form.append('fileName', fileName)
     form.append('id', id)
-    await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form)
+    await adminApi.api.putTemplateDocumentUpload({ requestDTO: {} }, form as any)
 
     const schema = variablesSchema(variables.value)
     await adminApi.api.patchTemplateDocumentUpdatetemplatevariable({ id: id, templateVariable: JSON.stringify(schema) })
     state.oldVariables = JSON.parse(JSON.stringify(variables.value))
     routerProvider?.message.success(t('tip_updateSuccessMsg', { modelName: null, name: state.info.name }))
   } catch (e) {
+    console.log(22, e)
     routerProvider?.message.error('Save Document template Error')
   } finally {
     state.saveLoading = false
@@ -287,6 +287,7 @@ function updateEditorData(json: any) {
 }
 
 async function init() {
+  state.id = id
   await getInfo()
   if (isEdit) {
     // 分流不同的文件類型，顯示不同的編輯器
