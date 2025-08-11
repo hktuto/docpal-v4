@@ -26,20 +26,16 @@ async function handleOpen() {
 
 async function getImageUrl() {
   try {
-    // 獲取用戶簽名圖片
-
-    const response = await clientApi.api.getUserprofileUseridSignature(props.userId, {
-      format: 'blob'
-    })
-    if (response) {
-      const blob = new Blob([response], { type: 'image/png' })
+    const response = await clientApi.api.getUserprofileUseridSignature(props.userId, { format: 'blob' })
+    if (response && response.size > 0) {
+      const blob = new Blob([response], { type: response.type })
       const url = URL.createObjectURL(blob)
 
       const file = {
         name: 'user-signature.png',
         url: url,
         size: blob.size,
-        type: 'image/png'
+        type: response.type
       }
       state.fileList = [file]
       state.isCreate = false
@@ -50,7 +46,14 @@ async function getImageUrl() {
 }
 
 async function handleSubmit() {
-  if (state.fileList.length === 0) {
+  if (!state.isCreate && state.fileList.length === 0) {
+    await clientApi.api.deleteUserprofileUseridSignature(props.userId)
+    routerProvider?.message.success(
+      t('tip_updateSuccessMsg', {
+        modelName: t('user.setting.userSignature'),
+        name: null
+      })
+    )
     state.userSignatureVisible = false
     return
   }
@@ -64,22 +67,9 @@ async function handleSubmit() {
 
     // TODO: swagger APi 文檔需要移除 query 參數
     if (state.isCreate) {
-      await clientApi.api.postUserprofileUseridSignature(props.userId, {}, { body: form })
+      await clientApi.api.postUserprofileUseridSignature(props.userId, {}, form as any)
     } else {
-      console.log(222, state.fileList)
-      if (state.fileList.length === 0) {
-        await clientApi.api.deleteUserprofileUseridSignature(userId)
-        routerProvider?.message.success(
-          t('tip_updateSuccessMsg', {
-            modelName: t('user.setting.userSignature'),
-            name: null
-          })
-        )
-        state.userSignatureVisible = false
-        return
-      }
-
-      await clientApi.api.putUserprofileUseridSignature(props.userId, {}, { body: form })
+      await clientApi.api.putUserprofileUseridSignature(props.userId, {}, form as any)
     }
   } catch (e) {
     routerProvider?.message.error(t('user.setting.userSignatureUploadFailed'))
