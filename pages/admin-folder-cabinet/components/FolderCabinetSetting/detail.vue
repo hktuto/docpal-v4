@@ -5,7 +5,7 @@
         <BrowseItemIcon class="file-icon el-icon--left" :type="state.setting.folder ? 'folder' : 'file'" />
         {{ state.setting.label }}
       </div>
-      <FormRenderer ref="FormRendererRef" :form-json="formJson" @docTypeChange="handleDocTypeChange"></FormRenderer>
+      <FormRenderer ref="FormRendererRef" :form-json="formJson" @formChange="formChange"></FormRenderer>
       <div style="padding: 0 var(--app-space-xs)">
         <el-divider v-if="isRoot" />
         <el-form label-position="top" ref="FormRef" :model="form">
@@ -29,7 +29,7 @@
         </el-form>
         <el-divider />
         <h3>{{ $t('folderCabinet.defaultMetadataValue') }}</h3>
-        <MasterTableVariableForm ref="FormVariablesRendererRef" :ignoreList="ignoreList" />
+        <MetaRenderForm2 ref="MetaFormRef" />
         <el-divider />
         <template v-if="state.setting.folder">
           <h3>{{ $t('folderCabinet.allowFilesTip') }}</h3>
@@ -101,28 +101,23 @@ const form = reactive({
   repeatName: false
 })
 const FormRef = ref()
-const FormVariablesRendererRef = ref()
+const MetaFormRef = ref()
 
-function handleDocTypeChange(data: any) {
-  // if (state.editReady) form.labelRule = []
-  state.curDocType = data.value
-  state.dragList = data.metaList.reduce((prev: any, item: any) => {
-    if (item.metaDataType === 'string' || item.metaDataType === 'date') {
-      if (item.dataType === 'select') {
-        const options = JSON.parse(item.options)
-        if (options.multiple) {
-          return prev
-        }
-      }
-      prev.push({
-        name: item.metadata,
-        metadata: item.metadata || item.metaData,
-        dataType: item.metaDataType
-      })
-    }
+function formChange({ fieldName, newValue, oldValue, formModel }) {
+  if (fieldName === 'documentType') handleDocTypeChange(newValue)
+}
+async function handleDocTypeChange(docType: string) {
+  const metaList = await MetaFormRef.value.init(docType)
+  state.curDocType = docType
+  state.dragList = metaList.reduce((prev: any, item: any) => {
+    if (['boolean'].includes(item.options.validationType)) return prev
+    prev.push({
+      name: item.label,
+      metadata: item.name,
+      dataType: item.options.validationType
+    })
     return prev
   }, [])
-
   state.dragList.push(
     { name: 'fc:label', metadata: 'fc:label', dataType: 'string' },
     { name: 'fc:createDate', metadata: 'fc:createDate', dataType: 'date' },
@@ -134,24 +129,9 @@ function handleDocTypeChange(data: any) {
       (allItem: any) => !form.labelRule.some((exitItem: any) => exitItem.metadata === allItem.metadata || exitItem.metaData === allItem.metadata)
     )
   }
-  FormVariablesRendererRef.value.init(
-    data.metaList.reduce((prev: any, item: any) => {
-      prev.push({
-        id: item.metadata,
-        name: item.metadata,
-        label: item.metadata,
-        metadata: item.metadata || item.metaData,
-        required: item.isRequire,
-        dataType: item.metaDataType
-        // vocabulary: ,
-        // masterTable,
-        // displayField,
-        // documentType
-      })
-      return prev
-    }, []),
-    state.defaultValue
-  )
+  setTimeout(() => {
+    MetaFormRef.value.setData(state.defaultValue)
+  }, 1000)
 }
 
 function getReminder(data: any, revertList: any) {
@@ -276,7 +256,7 @@ async function handleSave() {
         return prev
       }, [])
     }
-    const metadataDefault = await FormVariablesRendererRef.value.getData(false)
+    const metadataDefault = await MetaFormRef.value.getData(false)
     if (!metadataDefault) return
     if (metadataDefault) params.metadataValue = JSON.stringify(metadataDefault)
 

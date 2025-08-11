@@ -12,6 +12,7 @@
         <el-select-v2
           v-model="formData.metadataId"
           :options="availableMetadata"
+          :loading="metadataLoading"
           :placeholder="$t('render.hint.fieldRequired', { name: $t('rightDetail_meta') })"
           default-first-option
           clearable
@@ -73,7 +74,7 @@
 <script lang="ts" setup>
 import { adminApi } from 'api'
 import { ElMessage, type FormInstance } from 'element-plus'
-
+import { initMetadataOpts, metadataOpts } from '@/composables/useDocumentTypeOptioins'
 const routerProvider = inject(MenuRouterKey)
 const props = defineProps<{
   documentType: string
@@ -81,8 +82,8 @@ const props = defineProps<{
 }>()
 const { t } = useI18n()
 const emits = defineEmits(['refresh'])
-const { metadataOpts } = useDocumentTypeOptioins()
 const formRef = ref<FormInstance>()
+const metadataLoading = ref(false)
 const state = reactive({
   loading: false,
   visible: false,
@@ -165,11 +166,10 @@ function resetForm() {
   formRef.value?.resetFields()
 }
 
-function handleOpen(exitList: any[], data: any) {
+async function handleOpen(exitList: any[], data: any) {
   state.visible = true
   state.metadataList = exitList || []
   state.isEdit = !!data
-
   // If editing, populate form with existing data
   if (!!data) {
     formData.metadataId = data.id
@@ -181,6 +181,14 @@ function handleOpen(exitList: any[], data: any) {
     }
   } else {
     resetForm()
+  }
+  try {
+    metadataLoading.value = true
+    await initMetadataOpts()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    metadataLoading.value = false
   }
 }
 

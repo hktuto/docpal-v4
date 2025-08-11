@@ -4,7 +4,7 @@ export const routeFolderCabinetDetail  = function(params: any){
     name: "folder-cabinet-detail-versions-" + params.id,
     icon: 'icon-park-outline:document-folder',
     label: params.label,
-    component: 'LazyFolderCabinetDetail',
+    component: 'LazyAdminFolderCabinetDetail',
     props: {
       id: params.id,
     }
@@ -16,7 +16,7 @@ export const routeFolderCabinetPage  = function(){
     name: "admin-folder-cabinet",
     icon: 'icon-park-outline:document-folder',
     label: "adminMenu.folderCabinet",
-    component: 'LazyFolderCabinetPage',
+    component: 'LazyAdminFolderCabinetPage',
     props: {
     }
   } as TabItem

@@ -12,7 +12,7 @@
       <span class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
         <el-button v-if="selectedIndex > -1" type="danger" @click="handleRemove">Remove</el-button>
-        <el-button type="primary" @click="handleSave">Save</el-button>
+        <el-button type="primary" @click="handleSave" :loading="loading">Save</el-button>
       </span>
     </template>
   </el-dialog>
@@ -22,18 +22,18 @@
 import { ref, reactive, watch } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { User, Delete, Plus } from '@element-plus/icons-vue'
-
+import { userRulesOpts, initUserRulesOpts } from '@/composables/useDocumentTypeOptioins'
 const props = defineProps<{
   title: string
 }>()
 const { t } = useI18n()
 // Emits
 const emit = defineEmits(['add', 'remove'])
-const { userRulesOpts } = useDocumentTypeOptioins()
 // 响应式数据
 const visible = ref(false)
 const ruleFormRef = ref<FormInstance>()
 const isEdit = ref(false)
+const loading = ref(false)
 const selectedIndex = ref(-1)
 // 表单数据
 const formData = reactive<RuleForm>({
@@ -53,7 +53,7 @@ const rules: FormRules = {
 }
 const UserRulesRef = ref()
 // 打开弹窗
-const handleOpen = (data: any, index: number = -1) => {
+const handleOpen = async (data: any, index: number = -1) => {
   visible.value = true
   selectedIndex.value = index
 
@@ -63,6 +63,14 @@ const handleOpen = (data: any, index: number = -1) => {
     UserRulesRef.value.setFormData(conditions)
     console.log(data)
   }, 100)
+  try {
+    loading.value = true
+    await initUserRulesOpts()
+  } catch (error) {
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
 }
 
 // 关闭弹窗

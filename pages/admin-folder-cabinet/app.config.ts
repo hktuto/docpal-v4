@@ -9,7 +9,7 @@ export default defineAppConfig({
       label: "adminMenu.folderCabinet",
       icon: "icon-park-outline:document-folder",
       hoverIcon: "icon-park-outline:document-folder",
-      component: "LazyFolderCabinetPage",
+      component: "LazyAdminFolderCabinetPage",
       feature: "FOLDER_CABINET",
       props:{},
     }

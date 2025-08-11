@@ -94,57 +94,14 @@
                 "labelIconPosition": "rear",
                 "labelTooltip": null,
                 "onCreated": "",
-                "onMounted": "this.globalOptionData.fileList = []\nthis.globalOptionData.folderList = []\n$api.get('/docpal/types/active', {}).then(res => {\n  res = res.data.data\n conso  res.forEach((item) => {\n    const _item = {\n       value: item.name,\n      label: item.name ? $t(item.name) : \n    }\n    if(item.isFolder) {\n      this.globalOptionData.folderList.push(_item)\n    } else {\n      this.globalOptionData.fileList.push(_item)\n    }\n  })\n  this.loadOptions(this.globalOptionData.folderList)\n}).catch(err => {\n  console.log(\"error\", err)\n})",
-                "onRemoteQuery": "",
-                "onChange": "const metadataRef = this.getWidgetRef('metadata')\nif(value) {\n  $api.get(`/docpalType/settings/name/${value}`).then(res => {\n     res = res.data.data\n     console.log(res)\n     if(!res) return\n  if(!res.metadata){metadataRef.loadOptions([]) return}  const reponse =  res.metadata.reduce((prev,item) => {\n      prev.push({\n        ...item,\n        value: item.metadata,\n        label: item.metadata\n      })\n      return prev\n    }, [])\n     console.log(reponse)\n    metadataRef.loadOptions(reponse)\n    const vform = this.getFormRef()\n    vform.$emit('emit', 'docTypeChange', {\n      value,\n      metaList: reponse\n    })\n  }).catch(err => {\n  })\n} else {\n  metadataRef.loadOptions([])\n}\n\n\n",
-                "onFocus": "",
-                "onBlur": "",
-                "onValidate": ""
-              },
-              "id": "select68154"
-            },
-            {
-              "key": 94515,
-              "type": "select",
-              "icon": "select-field",
-              "formItemFlag": true,
-              "options": {
-                "name": "metadata",
-                "label": "folder_cabinetDetailFilter",
-                "labelAlign": "",
-                "defaultValue": [],
-                "placeholder": "",
-                "columnWidth": "200px",
-                "size": "",
-                "labelWidth": null,
-                "labelHidden": false,
-                "disabled": false,
-                "hidden": true,
-                "clearable": true,
-                "filterable": true,
-                "allowCreate": true,
-                "remote": false,
-                "automaticDropdown": false,
-                "multiple": true,
-                "multipleLimit": 0,
-                "optionItems": [],
-                "required": false,
-                "requiredHint": "",
-                "validation": "",
-                "validationHint": "",
-                "customClass": [],
-                "labelIconClass": null,
-                "labelIconPosition": "rear",
-                "labelTooltip": null,
-                "onCreated": "",
-                "onMounted": "",
+                "onMounted": "this.globalOptionData.fileList = []\nthis.globalOptionData.folderList = []\n$api.get('/docpal/types/active', {}).then(res => {\n  res = res.data.data\n  res.forEach((item) => {\n    const _item = {\n      value: item.name,\n      label: item.name ? $t(item.name) : '',\n      keywords: item.keywords\n    }\n    if(item.isFolder) {\n      this.globalOptionData.folderList.push(_item)\n    } else {\n      this.globalOptionData.fileList.push(_item)\n    }\n  })\n  this.loadOptions(this.globalOptionData.folderList)\n}).catch(err => {\n  console.log(\"error\", err)\n})",
                 "onRemoteQuery": "",
                 "onChange": "",
                 "onFocus": "",
                 "onBlur": "",
                 "onValidate": ""
               },
-              "id": "select51159"
+              "id": "select68154"
             },
             {
               "key": 62371,
@@ -216,7 +173,7 @@
         "inactiveColor": null,
         "onCreated": "",
         "onMounted": "",
-        "onChange": "const _this = this\nconst notificationList = [\n  { key: 'metadata', required: false },\n  { key: 'notificationReminder.intervalTime', required: true },\n  { key: 'notificationReminder.tos', required: true },\n  { key: 'emailReminder.intervalTime', required: true },\n  { key: 'emailReminder.tos', required: true },\n  { key: 'emailReminder.ccs', required: false },\n  { key: 'emailReport.intervalTime', required: true },\n  { key: 'emailReport.tos', required: true },\n  { key: 'emailReport.ccs', required: false }\n]\nconst showNotification = _this.getWidgetRef(\"showNotification\");\nnotificationList.forEach(item => {\n  const widgetRef = _this.getWidgetRef(item.key)\n  widgetRef.setHidden(!value)\n  widgetRef.setRequired(value ? item.required : false)\n})",
+        "onChange": "const _this = this\nconst notificationList = [\n  { key: 'notificationReminder.intervalTime', required: true },\n  { key: 'notificationReminder.tos', required: true },\n  { key: 'emailReminder.intervalTime', required: true },\n  { key: 'emailReminder.tos', required: true },\n  { key: 'emailReminder.ccs', required: false },\n  { key: 'emailReport.intervalTime', required: true },\n  { key: 'emailReport.tos', required: true },\n  { key: 'emailReport.ccs', required: false }\n]\nconst showNotification = _this.getWidgetRef(\"showNotification\");\nnotificationList.forEach(item => {\n  const widgetRef = _this.getWidgetRef(item.key)\n  widgetRef.setHidden(!value)\n  widgetRef.setRequired(value ? item.required : false)\n})",
         "onValidate": "",
         "required": false
       },
@@ -421,148 +378,7 @@
                 "automaticDropdown": false,
                 "multiple": true,
                 "multipleLimit": 20,
-                "optionItems": [
-                  {
-                    "value": "createBy",
-                    "label": "创建者"
-                  },
-                  {
-                    "label": "Administrator<lyle.zheng@wclsolution.com>",
-                    "value": "Administrator"
-                  },
-                  {
-                    "label": "create_test<ikki.cheng@wclsolution.com>",
-                    "value": "create_test"
-                  },
-                  {
-                    "label": "demo_account<walter.mak@wclsolution.com>",
-                    "value": "demo_account"
-                  },
-                  {
-                    "label": "demo_director<walter.mak@wclsolution.com>",
-                    "value": "demo_director"
-                  },
-                  {
-                    "label": "demo_head<walter.mak@wclsolution.com>",
-                    "value": "demo_head"
-                  },
-                  {
-                    "label": "demo_user<walter.mark@wclsolution.com>",
-                    "value": "demo_user"
-                  },
-                  {
-                    "label": "docpaladmin<ninerabbit9299@gmail.com>",
-                    "value": "docpaladmin"
-                  },
-                  {
-                    "label": "entityType<entitytype@163.com>",
-                    "value": "entityType"
-                  },
-                  {
-                    "label": "everything<ikki.cheng@wclsolution.com>",
-                    "value": "everything"
-                  },
-                  {
-                    "label": "frank_yang<frank.yang@wclsolution.com>",
-                    "value": "frank_yang"
-                  },
-                  {
-                    "label": "ikki_cheng<ikki.cheng@wclsolution.com>",
-                    "value": "ikki_cheng"
-                  },
-                  {
-                    "label": "jack_li<352775063@qq.com>",
-                    "value": "jack_li"
-                  },
-                  {
-                    "label": "jack_li2<352775063@qq.com>",
-                    "value": "jack_li2"
-                  },
-                  {
-                    "label": "Jay_Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay_Cai"
-                  },
-                  {
-                    "label": "Jay.Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay.Cai"
-                  },
-                  {
-                    "label": "Joshua<joshua@wcl.com>",
-                    "value": "Joshua"
-                  },
-                  {
-                    "label": "Lyle<lyle.zheng@wclsolution.com>",
-                    "value": "Lyle"
-                  },
-                  {
-                    "label": "nine<ninerabbit9299@gmail.com>",
-                    "value": "nine"
-                  },
-                  {
-                    "label": "ninerabbit<ninerabbit9299@163.com>",
-                    "value": "ninerabbit"
-                  },
-                  {
-                    "label": "nissin<alison.yuen@wclsolution.cm>",
-                    "value": "nissin"
-                  },
-                  {
-                    "label": "ooo<ooo@qq.bb>",
-                    "value": "ooo"
-                  },
-                  {
-                    "label": "ooyy<oy.ou@wclsolution.com>",
-                    "value": "ooyy"
-                  },
-                  {
-                    "label": "ooyy1<ooyy1@qq.com>",
-                    "value": "ooyy1"
-                  },
-                  {
-                    "label": "readonly<ikki.cheng@wclsolution.com>",
-                    "value": "readonly"
-                  },
-                  {
-                    "label": "readwrite<ikki.cheng@wclsolution.com>",
-                    "value": "readwrite"
-                  },
-                  {
-                    "label": "Rh_Admin<royhoo.zhang@wclsolution.com>",
-                    "value": "Rh_Admin"
-                  },
-                  {
-                    "label": "rh<royhoo_cc@163.com>",
-                    "value": "rh"
-                  },
-                  {
-                    "label": "royhoo<royhoo.zhang@wclsolution.com>",
-                    "value": "royhoo"
-                  },
-                  {
-                    "label": "sales_manager<jay.cai@wclsolution.com>",
-                    "value": "sales_manager"
-                  },
-                  {
-                    "label": "sean-admin<example@example.com>",
-                    "value": "sean-admin"
-                  },
-                  {
-                    "label": "sean-client<9394wing@gmail.com>",
-                    "value": "sean-client"
-                  },
-                  {
-                    "label": "Shawn_Fang<shawn.fang@wclsolution.com>",
-                    "value": "Shawn_Fang"
-                  },
-                  {
-                    "label": "will_du<will.du@wclsolution.com>",
-                    "value": "will_du"
-                  },
-                  {
-                    "label": "willl<willdu@wclsolution.com>",
-                    "value": "willl"
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "folder_cabinetEmailReminderToNotBeEmpty",
                 "validation": "",
@@ -605,148 +421,7 @@
                 "automaticDropdown": false,
                 "multiple": true,
                 "multipleLimit": 20,
-                "optionItems": [
-                  {
-                    "value": "createBy",
-                    "label": "创建者"
-                  },
-                  {
-                    "label": "Administrator<lyle.zheng@wclsolution.com>",
-                    "value": "Administrator"
-                  },
-                  {
-                    "label": "create_test<ikki.cheng@wclsolution.com>",
-                    "value": "create_test"
-                  },
-                  {
-                    "label": "demo_account<walter.mak@wclsolution.com>",
-                    "value": "demo_account"
-                  },
-                  {
-                    "label": "demo_director<walter.mak@wclsolution.com>",
-                    "value": "demo_director"
-                  },
-                  {
-                    "label": "demo_head<walter.mak@wclsolution.com>",
-                    "value": "demo_head"
-                  },
-                  {
-                    "label": "demo_user<walter.mark@wclsolution.com>",
-                    "value": "demo_user"
-                  },
-                  {
-                    "label": "docpaladmin<ninerabbit9299@gmail.com>",
-                    "value": "docpaladmin"
-                  },
-                  {
-                    "label": "entityType<entitytype@163.com>",
-                    "value": "entityType"
-                  },
-                  {
-                    "label": "everything<ikki.cheng@wclsolution.com>",
-                    "value": "everything"
-                  },
-                  {
-                    "label": "frank_yang<frank.yang@wclsolution.com>",
-                    "value": "frank_yang"
-                  },
-                  {
-                    "label": "ikki_cheng<ikki.cheng@wclsolution.com>",
-                    "value": "ikki_cheng"
-                  },
-                  {
-                    "label": "jack_li<352775063@qq.com>",
-                    "value": "jack_li"
-                  },
-                  {
-                    "label": "jack_li2<352775063@qq.com>",
-                    "value": "jack_li2"
-                  },
-                  {
-                    "label": "Jay_Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay_Cai"
-                  },
-                  {
-                    "label": "Jay.Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay.Cai"
-                  },
-                  {
-                    "label": "Joshua<joshua@wcl.com>",
-                    "value": "Joshua"
-                  },
-                  {
-                    "label": "Lyle<lyle.zheng@wclsolution.com>",
-                    "value": "Lyle"
-                  },
-                  {
-                    "label": "nine<ninerabbit9299@gmail.com>",
-                    "value": "nine"
-                  },
-                  {
-                    "label": "ninerabbit<ninerabbit9299@163.com>",
-                    "value": "ninerabbit"
-                  },
-                  {
-                    "label": "nissin<alison.yuen@wclsolution.cm>",
-                    "value": "nissin"
-                  },
-                  {
-                    "label": "ooo<ooo@qq.bb>",
-                    "value": "ooo"
-                  },
-                  {
-                    "label": "ooyy<oy.ou@wclsolution.com>",
-                    "value": "ooyy"
-                  },
-                  {
-                    "label": "ooyy1<ooyy1@qq.com>",
-                    "value": "ooyy1"
-                  },
-                  {
-                    "label": "readonly<ikki.cheng@wclsolution.com>",
-                    "value": "readonly"
-                  },
-                  {
-                    "label": "readwrite<ikki.cheng@wclsolution.com>",
-                    "value": "readwrite"
-                  },
-                  {
-                    "label": "Rh_Admin<royhoo.zhang@wclsolution.com>",
-                    "value": "Rh_Admin"
-                  },
-                  {
-                    "label": "rh<royhoo_cc@163.com>",
-                    "value": "rh"
-                  },
-                  {
-                    "label": "royhoo<royhoo.zhang@wclsolution.com>",
-                    "value": "royhoo"
-                  },
-                  {
-                    "label": "sales_manager<jay.cai@wclsolution.com>",
-                    "value": "sales_manager"
-                  },
-                  {
-                    "label": "sean-admin<example@example.com>",
-                    "value": "sean-admin"
-                  },
-                  {
-                    "label": "sean-client<9394wing@gmail.com>",
-                    "value": "sean-client"
-                  },
-                  {
-                    "label": "Shawn_Fang<shawn.fang@wclsolution.com>",
-                    "value": "Shawn_Fang"
-                  },
-                  {
-                    "label": "will_du<will.du@wclsolution.com>",
-                    "value": "will_du"
-                  },
-                  {
-                    "label": "willl<willdu@wclsolution.com>",
-                    "value": "willl"
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -860,148 +535,7 @@
                 "automaticDropdown": false,
                 "multiple": true,
                 "multipleLimit": 20,
-                "optionItems": [
-                  {
-                    "value": "createBy",
-                    "label": "创建者"
-                  },
-                  {
-                    "label": "Administrator<lyle.zheng@wclsolution.com>",
-                    "value": "Administrator"
-                  },
-                  {
-                    "label": "create_test<ikki.cheng@wclsolution.com>",
-                    "value": "create_test"
-                  },
-                  {
-                    "label": "demo_account<walter.mak@wclsolution.com>",
-                    "value": "demo_account"
-                  },
-                  {
-                    "label": "demo_director<walter.mak@wclsolution.com>",
-                    "value": "demo_director"
-                  },
-                  {
-                    "label": "demo_head<walter.mak@wclsolution.com>",
-                    "value": "demo_head"
-                  },
-                  {
-                    "label": "demo_user<walter.mark@wclsolution.com>",
-                    "value": "demo_user"
-                  },
-                  {
-                    "label": "docpaladmin<ninerabbit9299@gmail.com>",
-                    "value": "docpaladmin"
-                  },
-                  {
-                    "label": "entityType<entitytype@163.com>",
-                    "value": "entityType"
-                  },
-                  {
-                    "label": "everything<ikki.cheng@wclsolution.com>",
-                    "value": "everything"
-                  },
-                  {
-                    "label": "frank_yang<frank.yang@wclsolution.com>",
-                    "value": "frank_yang"
-                  },
-                  {
-                    "label": "ikki_cheng<ikki.cheng@wclsolution.com>",
-                    "value": "ikki_cheng"
-                  },
-                  {
-                    "label": "jack_li<352775063@qq.com>",
-                    "value": "jack_li"
-                  },
-                  {
-                    "label": "jack_li2<352775063@qq.com>",
-                    "value": "jack_li2"
-                  },
-                  {
-                    "label": "Jay_Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay_Cai"
-                  },
-                  {
-                    "label": "Jay.Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay.Cai"
-                  },
-                  {
-                    "label": "Joshua<joshua@wcl.com>",
-                    "value": "Joshua"
-                  },
-                  {
-                    "label": "Lyle<lyle.zheng@wclsolution.com>",
-                    "value": "Lyle"
-                  },
-                  {
-                    "label": "nine<ninerabbit9299@gmail.com>",
-                    "value": "nine"
-                  },
-                  {
-                    "label": "ninerabbit<ninerabbit9299@163.com>",
-                    "value": "ninerabbit"
-                  },
-                  {
-                    "label": "nissin<alison.yuen@wclsolution.cm>",
-                    "value": "nissin"
-                  },
-                  {
-                    "label": "ooo<ooo@qq.bb>",
-                    "value": "ooo"
-                  },
-                  {
-                    "label": "ooyy<oy.ou@wclsolution.com>",
-                    "value": "ooyy"
-                  },
-                  {
-                    "label": "ooyy1<ooyy1@qq.com>",
-                    "value": "ooyy1"
-                  },
-                  {
-                    "label": "readonly<ikki.cheng@wclsolution.com>",
-                    "value": "readonly"
-                  },
-                  {
-                    "label": "readwrite<ikki.cheng@wclsolution.com>",
-                    "value": "readwrite"
-                  },
-                  {
-                    "label": "Rh_Admin<royhoo.zhang@wclsolution.com>",
-                    "value": "Rh_Admin"
-                  },
-                  {
-                    "label": "rh<royhoo_cc@163.com>",
-                    "value": "rh"
-                  },
-                  {
-                    "label": "royhoo<royhoo.zhang@wclsolution.com>",
-                    "value": "royhoo"
-                  },
-                  {
-                    "label": "sales_manager<jay.cai@wclsolution.com>",
-                    "value": "sales_manager"
-                  },
-                  {
-                    "label": "sean-admin<example@example.com>",
-                    "value": "sean-admin"
-                  },
-                  {
-                    "label": "sean-client<9394wing@gmail.com>",
-                    "value": "sean-client"
-                  },
-                  {
-                    "label": "Shawn_Fang<shawn.fang@wclsolution.com>",
-                    "value": "Shawn_Fang"
-                  },
-                  {
-                    "label": "will_du<will.du@wclsolution.com>",
-                    "value": "will_du"
-                  },
-                  {
-                    "label": "willl<willdu@wclsolution.com>",
-                    "value": "willl"
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "folder_cabinetReportNotificationToNotBeEmpty",
                 "validation": "",
@@ -1044,148 +578,7 @@
                 "automaticDropdown": false,
                 "multiple": true,
                 "multipleLimit": 20,
-                "optionItems": [
-                  {
-                    "value": "createBy",
-                    "label": "创建者"
-                  },
-                  {
-                    "label": "Administrator<lyle.zheng@wclsolution.com>",
-                    "value": "Administrator"
-                  },
-                  {
-                    "label": "create_test<ikki.cheng@wclsolution.com>",
-                    "value": "create_test"
-                  },
-                  {
-                    "label": "demo_account<walter.mak@wclsolution.com>",
-                    "value": "demo_account"
-                  },
-                  {
-                    "label": "demo_director<walter.mak@wclsolution.com>",
-                    "value": "demo_director"
-                  },
-                  {
-                    "label": "demo_head<walter.mak@wclsolution.com>",
-                    "value": "demo_head"
-                  },
-                  {
-                    "label": "demo_user<walter.mark@wclsolution.com>",
-                    "value": "demo_user"
-                  },
-                  {
-                    "label": "docpaladmin<ninerabbit9299@gmail.com>",
-                    "value": "docpaladmin"
-                  },
-                  {
-                    "label": "entityType<entitytype@163.com>",
-                    "value": "entityType"
-                  },
-                  {
-                    "label": "everything<ikki.cheng@wclsolution.com>",
-                    "value": "everything"
-                  },
-                  {
-                    "label": "frank_yang<frank.yang@wclsolution.com>",
-                    "value": "frank_yang"
-                  },
-                  {
-                    "label": "ikki_cheng<ikki.cheng@wclsolution.com>",
-                    "value": "ikki_cheng"
-                  },
-                  {
-                    "label": "jack_li<352775063@qq.com>",
-                    "value": "jack_li"
-                  },
-                  {
-                    "label": "jack_li2<352775063@qq.com>",
-                    "value": "jack_li2"
-                  },
-                  {
-                    "label": "Jay_Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay_Cai"
-                  },
-                  {
-                    "label": "Jay.Cai<jay.cai@wclsolution.com>",
-                    "value": "Jay.Cai"
-                  },
-                  {
-                    "label": "Joshua<joshua@wcl.com>",
-                    "value": "Joshua"
-                  },
-                  {
-                    "label": "Lyle<lyle.zheng@wclsolution.com>",
-                    "value": "Lyle"
-                  },
-                  {
-                    "label": "nine<ninerabbit9299@gmail.com>",
-                    "value": "nine"
-                  },
-                  {
-                    "label": "ninerabbit<ninerabbit9299@163.com>",
-                    "value": "ninerabbit"
-                  },
-                  {
-                    "label": "nissin<alison.yuen@wclsolution.cm>",
-                    "value": "nissin"
-                  },
-                  {
-                    "label": "ooo<ooo@qq.bb>",
-                    "value": "ooo"
-                  },
-                  {
-                    "label": "ooyy<oy.ou@wclsolution.com>",
-                    "value": "ooyy"
-                  },
-                  {
-                    "label": "ooyy1<ooyy1@qq.com>",
-                    "value": "ooyy1"
-                  },
-                  {
-                    "label": "readonly<ikki.cheng@wclsolution.com>",
-                    "value": "readonly"
-                  },
-                  {
-                    "label": "readwrite<ikki.cheng@wclsolution.com>",
-                    "value": "readwrite"
-                  },
-                  {
-                    "label": "Rh_Admin<royhoo.zhang@wclsolution.com>",
-                    "value": "Rh_Admin"
-                  },
-                  {
-                    "label": "rh<royhoo_cc@163.com>",
-                    "value": "rh"
-                  },
-                  {
-                    "label": "royhoo<royhoo.zhang@wclsolution.com>",
-                    "value": "royhoo"
-                  },
-                  {
-                    "label": "sales_manager<jay.cai@wclsolution.com>",
-                    "value": "sales_manager"
-                  },
-                  {
-                    "label": "sean-admin<example@example.com>",
-                    "value": "sean-admin"
-                  },
-                  {
-                    "label": "sean-client<9394wing@gmail.com>",
-                    "value": "sean-client"
-                  },
-                  {
-                    "label": "Shawn_Fang<shawn.fang@wclsolution.com>",
-                    "value": "Shawn_Fang"
-                  },
-                  {
-                    "label": "will_du<will.du@wclsolution.com>",
-                    "value": "will_du"
-                  },
-                  {
-                    "label": "willl<willdu@wclsolution.com>",
-                    "value": "willl"
-                  }
-                ],
+                "optionItems": [],
                 "required": false,
                 "requiredHint": "",
                 "validation": "",
@@ -1258,7 +651,7 @@
         "inactiveColor": null,
         "onCreated": "",
         "onMounted": "",
-        "onChange": "const _this = this\nconst notificationList = [\n  { key: 'metadata', required: false },\n  { key: 'notificationReminder.intervalTime', required: true },\n  { key: 'notificationReminder.tos', required: true },\n  { key: 'emailReminder.intervalTime', required: true },\n  { key: 'emailReminder.tos', required: true },\n  { key: 'emailReminder.ccs', required: false },\n  { key: 'emailReport.intervalTime', required: true },\n  { key: 'emailReport.tos', required: true },\n  { key: 'emailReport.ccs', required: false }\n]\nconst showNotification = _this.getWidgetRef(\"useNotification\");\nnotificationList.forEach(item => {\n  showNotification.setHidden(!value);\n  const widgetRef = _this.getWidgetRef(item.key)\n  const show = showNotification.getValue()\n  widgetRef.setHidden(!value || !show)\n  widgetRef.setRequired(value && show ? item.required : false)\n})\n",
+        "onChange": "const _this = this\nconst notificationList = [\n  { key: 'notificationReminder.intervalTime', required: true },\n  { key: 'notificationReminder.tos', required: true },\n  { key: 'emailReminder.intervalTime', required: true },\n  { key: 'emailReminder.tos', required: true },\n  { key: 'emailReminder.ccs', required: false },\n  { key: 'emailReport.intervalTime', required: true },\n  { key: 'emailReport.tos', required: true },\n  { key: 'emailReport.ccs', required: false }\n]\nconst showNotification = _this.getWidgetRef(\"useNotification\");\nnotificationList.forEach(item => {\n  showNotification.setHidden(!value);\n  const widgetRef = _this.getWidgetRef(item.key)\n  const show = showNotification.getValue()\n  widgetRef.setHidden(!value || !show)\n  widgetRef.setRequired(value && show ? item.required : false)\n})\n",
         "onValidate": ""
       },
       "id": "switch28303"
@@ -1313,9 +706,9 @@
     "onFormMounted": "",
     "onFormDataChange": "",
     "dhList": [],
+    "onFormValidate": "",
     "saveRemoteOptions": "never",
     "labelFormUniqueName": true,
-    "onFormValidate": "",
     "dataSources": []
   }
 }

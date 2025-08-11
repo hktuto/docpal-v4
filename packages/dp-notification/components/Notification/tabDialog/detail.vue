@@ -1,36 +1,44 @@
 <template>
-  <!-- <div> -->
-    <div v-infinite-scroll="getList" test-id="notification-detail" class="infinite-list" style="overflow: auto;height: 100%;"
-      :infinite-scroll-disabled="state.scrollNoMore || state.loading"
-      :infinite-scroll-immediate="false"
-    >
-      <div v-for="item in state.list" :key="item.id" class="infinite-list-item">
-        <div class="notificationContent">
-          <div>{{ formatDate(item.createdDateTimestamp)  }}</div>
-          <div class="dp-title">{{ $t(item.content.templateId, {
-            userId: item.creator,
-            documentName: item.content.documentName,
-            businessName: item.content.businessName,
-            emailList: item.content.emailList,
-            email: item.content.email,
-            path: item.content.path,
-            fileName: item.content.fileName
-          }) }}</div>
-          {{item.content.comment}}
-          <div>{{ item.creator }}</div>
-          <div>
-            <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info"  @click="handleDismiss(item)">{{ $t('button.dismiss') }}</el-button>
-            <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`"  type="primary" @click="handleView(item)">{{ $t('button.view') }}</el-button>
-          </div>
-          <el-divider />
+  <div
+    v-infinite-scroll="getList"
+    test-id="notification-detail"
+    class="infinite-list"
+    style="overflow: auto; height: 100%"
+    :infinite-scroll-disabled="state.scrollNoMore || state.loading"
+    :infinite-scroll-immediate="false"
+  >
+    <div v-for="item in state.list" :key="item.id" class="infinite-list-item">
+      <div class="notificationContent">
+        <div>{{ formatDate(item.createdDateTimestamp) }}</div>
+        <div class="dp-title">
+          {{
+            $t(item.content.templateId, {
+              userId: item.creator,
+              documentName: item.content.documentName,
+              businessName: item.content.businessName,
+              emailList: item.content.emailList,
+              email: item.content.email,
+              path: item.content.path,
+              fileName: item.content.fileName
+            })
+          }}
         </div>
-        
+        {{ item.content.comment }}
+        <div>{{ item.creator }}</div>
+        <div>
+          <el-button :loading="item.loading" :test-id="`notification-dismiss-button-${item.id}`" type="info" @click="handleDismiss(item)">{{
+            $t('button.dismiss')
+          }}</el-button>
+          <el-button v-if="notiShowView(item)" :test-id="`notification-view-button-${item.id}`" type="primary" @click="handleView(item)">{{
+            $t('button.view')
+          }}</el-button>
+        </div>
+        <el-divider />
       </div>
-      <p v-if="state.loading" class="center">{{ $t('dpTip.loading') }}</p>
-      <p v-if="!state.loading && state.scrollNoMore" class="center">{{ $t('dpTip.noMore') }}</p>
     </div>
-
-  <!-- </div> -->
+    <p v-if="state.loading" class="center">{{ $t('dpTip.loading') }}</p>
+    <p v-if="!state.loading && state.scrollNoMore" class="center">{{ $t('dpTip.noMore') }}</p>
+  </div>
 </template>
 <script lang="ts" setup>
 import { clientApi } from 'api'
@@ -54,21 +62,21 @@ const state = reactive<any>({
   list: [],
   totalSize: 0,
   loading: false,
-  scrollNoMore: true,
+  scrollNoMore: true
 })
-async function getList () {
+async function getList() {
   const param: any = {
     readStatus: 'CREATE'
   }
   if (props.type !== 'Unread') param.type = props.type
   try {
     state.loading = true
-    const { data:res}: any = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value})
+    const { data: res }: any = await clientApi.api.postNotificationQueryNotificationList({ ...param, ...pageParams.value })
     res.entryList.map((item: any) => {
       try {
-        if(typeof item.content === 'string') {
+        if (typeof item.content === 'string') {
           item.content = JSON.parse(item.content)
-          if(typeof item.content.emailList === 'string') item.content.emailList = JSON.parse(item.content.emailList).join(',')
+          if (typeof item.content.emailList === 'string') item.content.emailList = JSON.parse(item.content.emailList).join(',')
         }
       } catch (error) {
         console.error('parse notification content error', error)
@@ -78,9 +86,9 @@ async function getList () {
     })
     state.list.push(...res.entryList)
     state.totalSize = res.totalSize
-    pageParams.value.pageNum ++
+    pageParams.value.pageNum++
   } catch (error) {
-    
+    console.error(error)
   } finally {
     state.loading = false
     state.scrollNoMore = state.list.length >= state.totalSize
@@ -104,10 +112,10 @@ async function handleView(item: any) {
   handleDismiss(item)
   emits('close')
 }
-function initData (noGetData:boolean = false) {
+function initData(noGetData: boolean = false) {
   state.list = []
   pageParams.value.pageNum = 0
-  if(!noGetData) getList()
+  if (!noGetData) getList()
 }
 onMounted(() => {
   initData()
