@@ -216,6 +216,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:form',
         label: 'UserForm',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.userTask.nodeStyle(),
@@ -243,6 +245,8 @@ export const bpmnElement: BpmnElement = {
       {
         icon: 'bpmn:signature',
         label: 'Signature',
+        group: '',
+        order: 0,
         dropData: (id: string) => ({
           id,
           ...bpmnElement.userTask.nodeStyle({}),
@@ -817,17 +821,19 @@ export const bpmnElement: BpmnElement = {
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
+            // ['attr_flowable:delegateExpression']: '${HttpDelegate}',
             // ['attr_flowable:parallelInSameTransaction']: 'true',
             ['attr_flowable:type']: 'http',
             extensionElements: {
               ['flowable:field']: [
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'requestHeader', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
-                { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': id } },
-                { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
-                { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
-                { attr_name: 'responseBody', ['flowable:expression']: { '__cdata': '' } }
+                // { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': '' } },
+                // { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
+                // { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } }
               ]
             }
           }),
@@ -835,6 +841,7 @@ export const bpmnElement: BpmnElement = {
           data: bpmnElement.serviceTask.newNodeData(id, 'HTTP Task', {
             attr_id: id,
             attr_name: 'HTTP Task',
+            // ['attr_flowable:delegateExpression']: '${HttpDelegate}',
             // ['attr_flowable:parallelInSameTransaction']: 'true',
             ['attr_flowable:type']: 'http',
             extensionElements: {
@@ -842,12 +849,16 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
-                { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': id } },
-                { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
-                { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
-                { attr_name: 'responseBody', ['flowable:expression']: { '__cdata': '' } }
+                // { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': '' } },
+                // { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
+                // { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } }
               ]
-            }
+            },
+            // outputParameter: [
+            //   {att_name:'' ,httpResponse},
+            //   {att_name: "source","response"}
+            // ]
           })
         })
       }

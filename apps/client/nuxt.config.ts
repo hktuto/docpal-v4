@@ -91,7 +91,7 @@ export default defineNuxtConfig({
                 prependPath: true
             },
             '/api': {
-                target: process.env.CLIENT_PROXY,
+                target: process.env.PROXY,
                 changeOrigin: true,
                 prependPath: true
             },
