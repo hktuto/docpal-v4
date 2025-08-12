@@ -1,5 +1,8 @@
 <template>
   <v-form-designer ref="vFormDesignerRef" :designer-config="_designerConfig" :fieldListApi="fieldListApi">
+    <template #customToolButtons>
+      <el-button type="text" @click="autoGenerate">{{$t('button.autoGenerate')}}</el-button>
+    </template>
     <template v-for="(idx, slotName) in $slots">
       <slot :name="slotName"></slot>
     </template>
@@ -8,10 +11,14 @@
 
 <script lang="ts" setup>
 import type { FormJson, FieldListApiType, FormConfig, FormDesigner } from '@/types/vform'
+import { useMetadata } from '@/components/meta/metadata'
+import { ElMessage } from 'element-plus'
+const { initMetadataVformOptions, getVFormVariableListByMetadata, vFormWidgetListDecorator } = useMetadata()
 const props = defineProps<{
   fieldListApi?: FieldListApiType
   designerConfig?: FormConfig
 }>()
+const { t } = useI18n()
 const _designerConfig = computed((): FormConfig => {
   const designerConfig = props.designerConfig || {}
   return {
@@ -59,10 +66,37 @@ function setFormJson(json: FormJson) {
 function getFormJson(): any {
   return vFormDesignerRef.value?.getFormJson()
 }
+
+async function autoGenerate() {
+  if (!props.fieldListApi) {
+    ElMessage.info(t('dpMsg_noDataUpdate'))
+    return
+  }
+  const list = props.fieldListApi?.data.reduce((prev, item) => {
+    prev[item[props.fieldListApi.nameKey]] = {
+      validationName: 'input',
+      label: item[props.fieldListApi.labelKey],
+    }
+    return prev
+  }, {})
+  const metadataVariableList = await initMetadataVformOptions(list, false)
+  const variableList = getVFormVariableListByMetadata(metadataVariableList)
+  const widgetList = vFormWidgetListDecorator(variableList)
+  const oldFieldList = vFormDesignerRef.value?.getFieldWidgets()
+  const newFieldList = widgetList.filter((item) => !oldFieldList.some((oldItem) => oldItem.name === item.options?.name))
+  if (newFieldList.length === 0) {
+    ElMessage.info(t('dpMsg_noDataUpdate'))
+    return
+  }
+  const formJson = vFormDesignerRef.value?.getFormJson()
+  formJson.widgetList.push(...newFieldList)
+  vFormDesignerRef.value?.setFormJson(formJson)
+  ElMessage.success(t('dpMsg_success'))
+}
 defineExpose({ vFormDesignerRef, setFormJson, getFormJson })
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 :deep(.el-header.main-header) {
   display: none;
 }
@@ -77,5 +111,10 @@ defineExpose({ vFormDesignerRef, setFormJson, getFormJson })
 }
 :deep(.el-form-item__label) {
   position: relative;
+}
+:deep(.center-layout-container) {
+  .el-main {
+    overflow: hidden;
+  }
 }
 </style>

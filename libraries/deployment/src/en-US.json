@@ -300,6 +300,7 @@
   "button": {
     "add": "Add",
     "addMore": "Add More",
+    "autoGenerate": "Auto generate",
     "batchEdit": "Batch Edit",
     "clearFilter": "Clear Filter",
     "clearSelected": "Clear Selected",
