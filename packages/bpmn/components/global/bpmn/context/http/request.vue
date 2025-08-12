@@ -7,6 +7,8 @@ const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
 }>()
+const variablesRef = ref()
+const dialogParamsVisible = ref()
 
 const graphProvider = inject(BPMN_PROVIDER)
 if (!graphProvider) {
@@ -19,13 +21,13 @@ const allFieldOptions = computed(() => {
   return Object.keys(graphProvider.allFormField.value).map((key) => {
     return {
       label: graphProvider.allFormField.value[key].attr_name,
-      value: graphProvider.allFormField.value[key].attr_id
+      value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
     }
   })
 })
 
 const state = reactive({
-  method: ['GET', 'POST'],
+  method: ['GET', 'POST', 'PUT', 'PATH', 'DELETE'],
   requestMethod: '',
   requestUrl: '',
   requestHeader: '',
@@ -43,13 +45,13 @@ function initForm() {
   fields.forEach((item: any) => {
     switch (item.attr_name) {
       case 'requestMethod':
-        state.requestMethod = item['flowable:string'].__cdata
+        state.requestMethod = item['flowable:expression'].__cdata
         break
       case 'requestUrl':
-        state.requestUrl = item['flowable:string'].__cdata
+        state.requestUrl = item['flowable:expression'].__cdata
         break
       case 'responseVariableName':
-        state.responseData = item['flowable:string'].__cdata
+        state.responseData = item['flowable:expression'].__cdata
         break
       default :
     }
@@ -66,10 +68,23 @@ function fieldMappingUpdate(newVal: string, name: string) {
     version: (nodeData.version || 0) + 1
   }
   const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
-  newData.data.extensionElements['flowable:field'][index]['flowable:string'].__cdata = newVal || ''
+  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || ''
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 
   graphProvider?.graph.value?.stopBatch('update-http-field-data')
+}
+
+// TODO Test Data
+const paramsState = reactive({
+  params: [
+    { key: 'a', value: 'aaa' },
+    { key: '2', value: '213' },
+    { key: 'b', value: 'bx' }
+  ]
+})
+
+function openVisible() {
+  variablesRef.value.openDrawer(paramsState.params)
 }
 
 watch(() => node, async () => {
@@ -94,33 +109,47 @@ watch(() => node, async () => {
     </el-form-item>
 
     <el-form-item :label="t('Request Url')">
-      <el-select v-model="state.requestUrl" placeholder="please select your zone"
-                 @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')">
-        <el-option v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value" />
-      </el-select>
+      <el-input v-model="state.requestUrl" @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')" />
+      <!--      <el-select v-model="state.requestUrl" placeholder="please select your zone"-->
+      <!--                 @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')">-->
+      <!--        <el-option v-for="item in allFieldOptions" :key="item.value" :value="item.value"-->
+      <!--                   :label="item.value.replace('${variables:get(', '').replace(')}', '')" />-->
+      <!--      </el-select>-->
     </el-form-item>
 
-    <!--    <el-form-item :label="t('Request Header')">-->
-    <!--      <el-select v-model="state.requestHeader" placeholder="please select your zone"-->
-    <!--                 @change="(val:any) => fieldMappingUpdate(val, 'requestHeader')">-->
-    <!--        <el-option v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value" />-->
-    <!--      </el-select>-->
-    <!--    </el-form-item>-->
+    <el-form-item :label="t('Request Params')" class="flex gap-4">
+      <el-input disabled />
+      <el-button @click="openVisible">{{ t('Add Params') }}</el-button>
+    </el-form-item>
+
+    <el-form-item :label="t('Request Header')">
+      <el-select v-model="state.requestHeader" placeholder="please select your zone"
+                 @change="(val:any) => fieldMappingUpdate(val, 'requestHeader')">
+        <el-option v-for="item in allFieldOptions" :key="item.value"
+                   :label="item.value.replace('${variables:get(', '').replace(')}', '')" :value="item.value" />
+      </el-select>
+    </el-form-item>
 
     <el-form-item :label="t('Response Variable Name')">
       <el-select v-model="state.responseData" placeholder="please select your zone"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
-        <el-option v-for="item in allFieldOptions" :key="item.value" :label="item.label" :value="item.value" />
+        <el-option v-for="item in allFieldOptions" :key="item.value" :value="item.value"
+                   :label="item.label.replace('${variables:get(', '').replace(')}', '')" />
       </el-select>
     </el-form-item>
 
-    <!--    <el-form-item :label="t('Response Variable As Json')">-->
-    <!--      <el-select v-model="state.requestMethod" placeholder="please select your zone"-->
-    <!--                 @change="(val:any) => fieldMappingUpdate(val, 'requestMethod')">-->
-    <!--        <el-option v-for="item in state.method" :key="item.value" :label="item.label" :value="item.value" />-->
-    <!--      </el-select>-->
-    <!--    </el-form-item>-->
+    <el-form-item :label="t('Response Variable As Json')">
+      <el-switch>
+
+      </el-switch>
+      <!--            <el-select v-model="state.requestMethod" placeholder="please select your zone"-->
+      <!--                 @change="(val:any) => fieldMappingUpdate(val, 'requestMethod')">-->
+      <!--        <el-option v-for="item in state.method" :key="item.value" :label="item.label" :value="item.value" />-->
+      <!--            </el-select>-->
+    </el-form-item>
   </el-form>
+
+  <LazyBpmnContextHttpVariables ref="variablesRef" :title="t('Add Params')"></LazyBpmnContextHttpVariables>
 </template>
 
 <style scoped lang="scss">
