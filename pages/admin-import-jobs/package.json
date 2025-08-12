@@ -1,5 +1,5 @@
 {
-  "name": "admin-company-profile",
+  "name": "admin-import-profile",
   "version": "1.0.0",
   "description": "all DocPal module entry",
   "main": "index.js",
