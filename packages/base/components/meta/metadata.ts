@@ -1,6 +1,7 @@
 import type { WidgetItem } from '@/types/vform'
 import type { DocumentMetadata, VariableItem } from '@/types/vform.extend'
 import { adminApi, clientApi } from 'api'
+import { mounteMasterTableOptions, mounteRoleOptions } from './metadata.vform.extent'
 import dayjs from 'dayjs'
 export const useMetadata = () => {
   const metadataMap = useState<Record<string, DocumentMetadata>>('metadataMap', () => ({}))
@@ -24,37 +25,50 @@ export const useMetadata = () => {
     'sec:clearanceLevel',
     'sec:securityKeyword'
   ]
-  const getDocumentMetadata = async (type: string): Promise<any> => {
+  let count = 0
+  const getDocumentMetadata = async (type: string, initOptions = true): Promise<any> => {
     if (metadataMap.value[type]) return metadataMap.value[type]
     try {
       // type = 'testOy'
       const { data }: any = await clientApi.api.getTypesMetadataGenerateJsonSchemaDocpaltypename(type, {
         headers: { noThrowError: 'true' }
       })
-      const metadataList: any = data.properties || {}
-      const properties: DocumentMetadata = {}
-      const promises: Promise<any>[] = []
-      Object.keys(metadataList).forEach(async (key) => {
-        let item: any = metadataList[key]
-        let metadataItem: any = {
-          validationName: item.validationName
-        }
-        if (item.items) {
-          metadataItem.validationName = item.items.validationName
-          metadataItem.isMultiple = item.isMultiple
-          metadataItem.type = item.type
-          if (item.items.validationName === 'select') {
-            metadataItem.options = item.items.enum.map((item: any) => ({
-              label: item,
-              value: item
-            }))
-          } else if (item.items.validationName === 'mastertable') {
+      const metadataSchema: any = data.properties || {}
+      metadataMap.value[type] = await initMetadataVformOptions(metadataSchema, initOptions)
+      return metadataMap.value[type]
+    } catch (error) {
+      return null
+    }
+  }
+  const initMetadataVformOptions = async (metadataSchema: any, initOptions = true) => {
+    const promises: Promise<any>[] = []
+    const properties: DocumentMetadata = {}
+    Object.keys(metadataSchema).forEach(async (key) => {
+      let item: any = metadataSchema[key]
+      let metadataItem: any = {
+        validationName: item.validationName
+      }
+      if (item.items) {
+        metadataItem.validationName = item.items.validationName
+        metadataItem.isMultiple = item.isMultiple
+        metadataItem.type = item.type
+        if (item.items.validationName === 'select') {
+          metadataItem.options = item.items.enum.map((item: any) => ({
+            label: item,
+            value: item
+          }))
+        } else if (item.items.validationName === 'mastertable') {
+          if (initOptions) {
             promises.push(
               getMasterTableOptions(item.items.info).then((options) => {
                 metadataItem.options = options
               })
             )
-          } else if (item.items.validationName === 'user_role_user_group') {
+          } else if (item.items.info.masterTableName && item.items.info.displayColumn && item.items.info.valueColumn) {
+            metadataItem.onMounted = mounteMasterTableOptions(item.items.info.masterTableName, item.items.info.displayColumn, item.items.info.valueColumn)
+          }
+        } else if (item.items.validationName === 'user_role_user_group') {
+          if (initOptions) {
             // allow USER_ROLE, USER_GROUP, ALL
             metadataItem.options = []
             item.items.allow = 'USER_ROLE'
@@ -80,39 +94,42 @@ export const useMetadata = () => {
                 })
               )
             }
-          } else if (item.items.validationName === 'user') {
-            metadataItem.options = []
+          } else {
+            metadataItem.onMounted = mounteRoleOptions(item.items.allow !== 'USER_GROUP', item.items.allow !== 'USER_ROLE', false)
+          }
+        } else if (item.items.validationName === 'user') {
+          metadataItem.options = []
+          if (initOptions) {
             promises.push(
               getUserList().then((options) => {
                 metadataItem.options = options
               })
             )
           } else {
-            metadataItem = { ...item, ...item.items, type: item.type }
+            metadataItem.onMounted = mounteRoleOptions(false, false, true)
           }
-          // TODO case
-          // TODO workflow
-          // TODO document
         } else {
-          metadataItem = { ...item }
+          metadataItem = { ...item, ...item.items, type: item.type }
         }
-        properties[key] = metadataItem
-      })
-      await Promise.all(promises)
-      metadataMap.value[type] = properties
-      return metadataMap.value[type]
-    } catch (error) {
-      return null
-    }
+        // TODO case
+        // TODO workflow
+        // TODO document
+      } else {
+        metadataItem = { ...item }
+      }
+      properties[key] = metadataItem
+    })
+    await Promise.all(promises)
+    return properties
   }
-  const getVFormWidgetList = (metadataListMap: DocumentMetadata): VariableItem[] => {
+  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata): VariableItem[] => {
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
       if (ignoreList.indexOf(key) !== -1) return
       const metadataItem = metadataListMap[key]
       const _item: any = {
         name: key,
-        label: key,
+        label: metadataItem.label || key,
         type: 'input',
         required: false,
         options: {}
@@ -158,6 +175,9 @@ export const useMetadata = () => {
       }
       _item.options.validationName = metadataItem.validationName
       _item.options.validationType = metadataItem.type
+      if (metadataItem.onMounted) {
+        _item.options.onMounted = metadataItem.onMounted
+      }
       widgetVariableList.push(_item)
     })
     return widgetVariableList
@@ -188,11 +208,10 @@ export const useMetadata = () => {
   }
   const initVformVariableList = async (type: string) => {
     const metadataList = await getDocumentMetadata(type)
-    const variableList: VariableItem[] = getVFormWidgetList(metadataList)
+    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList)
     return variableList
   }
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
-    // const variableList: VariableItem[] = getVFormWidgetList(data)
     const result = data ? { ...data } : {}
     variableList.forEach((item) => {
       if (!item.options) return
@@ -236,17 +255,94 @@ export const useMetadata = () => {
     })
     return result
   }
-  
+  function generateId(prefix: string = '') {
+    const random = Math.floor(100000 + Math.random() * 900000)
+    return `${prefix}_${random}${count++}`
+  }
+  function vFormWidgetListDecorator(variableList: VariableItem[]) {
+    const widgetList: WidgetItem[] = []
+    variableList.forEach((item: VariableItem, index: number) => {
+      const id = generateId(item.type)
+      const _item: WidgetItem = {
+        key: id,
+        id: id,
+        type: item.type,
+        formItemFlag: true,
+        options: {
+          name: item.name,
+          label: item.label ? item.label : item.name,
+          required: item.required ? true : false,
+          defaultValue: '',
+          size: '',
+          columnWidth: '',
+          placeholder: '',
+          readonly: false,
+          disabled: false,
+          hidden: false,
+          clearable: true,
+          requiredHint: '',
+          onValidate: '',
+          onCreated: '',
+          onMounted: '',
+          onInput: '',
+          onChange: '',
+          onFocus: '',
+          onBlur: '',
+          onEnter: ''
+        }
+      }
+      if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range'].includes(item.type))
+        _item.type = 'input'
+      if (item.type === 'date') {
+        _item.options.format = item.options.type === 'datetime' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD' //日期显示格式
+        _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
+        _item.options.onDisabledDate =
+          "const myDate = new Date();\nconst year = myDate.getFullYear() + 100;  \nconst minDate = new Date('1901-01-01 00:00:00').getTime()\nconst maxDate = new Date(year + '-12-31 23:59:59').getTime()\nreturn dateTime.getTime() < minDate || dateTime.getTime() > maxDate;"
+      } else if (item.type === 'input') {
+        _item.options.type = 'text'
+        _item.options.maxLength = 255
+        _item.options.showWordLimit = true
+      } else if (item.type === 'textarea') {
+        _item.options.rows = 5
+        _item.options.maxLength = 4000
+        _item.options.showWordLimit = true
+      } else if (item.type === 'number') {
+        _item.options.defaultValue = 0
+        _item.options.min = -999999999999998
+        _item.options.max = 999999999999998
+        _item.options.controlsPosition = 'right'
+      } else if (item.type === 'switch') {
+        // _item.activeText = ''
+        // _item.inactiveText = ''
+        _item.options.defaultValue = false
+        _item.options.labelIconPosition = 'rear'
+      } else if (item.type === 'select') {
+      }
+      if (item.options) _item.options = { ..._item.options, ...item.options }
+      widgetList.push(_item)
+    })
+    return widgetList
+  }
   return {
-    // getDocumentMetadata,
-    // getVFormWidgetList,
+    vFormWidgetListDecorator,
+    getVFormVariableListByMetadata,
     initVformVariableList,
+    initMetadataVformOptions,
     getStringfyData,
     getParseData
   }
 }
 
-const ignoreDisplayList = ['file:content', 'nxtag:tags', 'dc:creator','dc:title', 'dpc:startDate', 'dpe:approver', 'dpm:contractExpirationDate', 'dpa:docpalType']
+const ignoreDisplayList = [
+  'file:content',
+  'nxtag:tags',
+  'dc:creator',
+  'dc:title',
+  'dpc:startDate',
+  'dpe:approver',
+  'dpm:contractExpirationDate',
+  'dpa:docpalType'
+]
 export function getDisplayProperties(properties: Record<string, any>) {
   if (!properties) return []
   const result: any = []
