@@ -15,6 +15,8 @@ export interface Result {
     code?: number;
     message?: string;
     data?: object;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultString {
@@ -23,6 +25,8 @@ export interface ResultString {
     code?: number;
     message?: string;
     data?: string;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultObject {
@@ -31,6 +35,8 @@ export interface ResultObject {
     code?: number;
     message?: string;
     data?: object;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Document Type */
@@ -60,6 +66,8 @@ export interface ResultDocumentTypeDTO {
     message?: string;
     /** Document Type */
     data?: DocumentTypeDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListDocumentTypeDTO {
@@ -68,6 +76,8 @@ export interface ResultListDocumentTypeDTO {
     code?: number;
     message?: string;
     data?: DocumentTypeDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Keyword (Request) */
@@ -92,6 +102,8 @@ export interface ResultListKeywordTypeGroupDTO {
     code?: number;
     message?: string;
     data?: KeywordTypeGroupDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultKeywordTypeGroupDTO {
@@ -101,6 +113,8 @@ export interface ResultKeywordTypeGroupDTO {
     message?: string;
     /** Keyword Type Group */
     data?: KeywordTypeGroupDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultSetString {
@@ -110,9 +124,13 @@ export interface ResultSetString {
     message?: string;
     /** @uniqueItems true */
     data?: string[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface BasePageRequest {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -239,6 +257,8 @@ export interface ResultPaginationDTODocumentDTO {
     code?: number;
     message?: string;
     data?: PaginationDTODocumentDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PaginableEntityDTODocumentDTO {
@@ -260,6 +280,8 @@ export interface ResultPaginableEntityDTODocumentDTO {
     code?: number;
     message?: string;
     data?: PaginableEntityDTODocumentDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Additional role data transfer object */
@@ -327,6 +349,8 @@ export interface ResultListUserDTO {
     code?: number;
     message?: string;
     data?: UserDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Rule data transfer object */
@@ -403,6 +427,8 @@ export interface ResultSetUserDTO {
     message?: string;
     /** @uniqueItems true */
     data?: UserDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Document File */
@@ -431,6 +457,8 @@ export interface ResultFileDTO {
     message?: string;
     /** Document File */
     data?: FileDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultBoolean {
@@ -439,6 +467,8 @@ export interface ResultBoolean {
     code?: number;
     message?: string;
     data?: boolean;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Virtual Folder Setting (Request) */
@@ -474,6 +504,8 @@ export interface ResultUserProfileSettingDTO {
     message?: string;
     /** User Profile Setting */
     data?: UserProfileSettingDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PersonalLandingRequestDTO {
@@ -486,6 +518,8 @@ export interface ResultVoid {
     code?: number;
     message?: string;
     data?: object;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface NotificationRecordDTO {
@@ -518,6 +552,8 @@ export interface ResultListNotificationSetting {
     code?: number;
     message?: string;
     data?: NotificationSetting[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface NotificationManageRequestDTO {
@@ -537,6 +573,8 @@ export interface MTRecordDTO {
 
 /** Master Table Record RequestDTO */
 export interface MTRecordRequestDTO {
+    /** Query Keyword Condition */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -557,8 +595,6 @@ export interface MTRecordRequestDTO {
     name?: string;
     /** Master Table Status */
     status?: boolean;
-    /** Query Keyword Condition */
-    q?: string;
     /** Record Data List */
     data?: Record<string, object>[];
     /** Where Condition */
@@ -634,6 +670,8 @@ export interface ResultDocTemplateSignatureResponseDTO {
     message?: string;
     /** 文档模板签名响应 */
     data?: DocTemplateSignatureResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Calendar (Request) */
@@ -764,6 +802,8 @@ export interface ResultCalendarTaskRespDTO {
     message?: string;
     /** Calendar Task ResponseDTO */
     data?: CalendarTaskRespDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface TaskReminder {
@@ -809,6 +849,72 @@ export interface RoleRequest {
     type?: number;
     parentId?: string;
     additionUsers?: string[];
+}
+
+/** Event Calendar Setting */
+export interface EventCalendarSetting {
+    /** Event calendar setting ID */
+    id?: string;
+    /** Event calendar setting name */
+    name?: string;
+    /** Event color code (hex format) */
+    color?: string;
+    /** Event status (A, D, R) */
+    status?: string;
+    /** Whether the event type is registered */
+    registered?: boolean;
+    /** Location configuration settings */
+    location?: Record<string, object>;
+    /** EventCalendarSetting Permission */
+    permission?: Permission;
+    /** Workflow Configuration Settings */
+    flows?: Workflows[];
+    /** Background color for event display */
+    backgroundColor?: string;
+    /** Text color for event display */
+    textColor?: string;
+    /** Highlight color for event selection */
+    highlightColor?: string;
+    /**
+     * Available seats for the event
+     * @format int32
+     */
+    availableSeat?: number;
+}
+
+/** EventCalendarSetting Permission */
+export interface Permission {
+    /** View configuration settings */
+    view?: Record<string, string[]>;
+    /** Create event configuration settings */
+    create?: Record<string, string[]>;
+    /** Update event configuration settings */
+    update?: Record<string, string[]>;
+    /** Cancel event configuration settings */
+    cancel?: Record<string, string[]>;
+    /** Remove event configuration settings */
+    remove?: Record<string, string[]>;
+    /** Remove event configuration settings */
+    export?: Record<string, string[]>;
+}
+
+/** Workflow Configuration Settings */
+export interface Workflows {
+    /** Workflow Key */
+    key?: string;
+    /** Workflow Name */
+    name?: string;
+}
+
+export interface ResultEventCalendarSetting {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Event Calendar Setting */
+    data?: EventCalendarSetting;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface WOPIFileDTO {
@@ -1229,6 +1335,8 @@ export interface ResultMapStringListString {
     code?: number;
     message?: string;
     data?: Record<string, string[]>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListDocumentDTO {
@@ -1237,6 +1345,8 @@ export interface ResultListDocumentDTO {
     code?: number;
     message?: string;
     data?: DocumentDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Tag (Request) */
@@ -1255,6 +1365,8 @@ export interface ResultListTagDTO {
     code?: number;
     message?: string;
     data?: TagDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Tag */
@@ -1291,6 +1403,8 @@ export interface ResultMapObjectObject {
     code?: number;
     message?: string;
     data?: Record<string, object>;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** The Bind Document List */
@@ -1353,6 +1467,8 @@ export interface ResultEasyShareDTO {
     message?: string;
     /** EasyShare */
     data?: EasyShareDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface NestedSearchLogRequestDTO {
@@ -1415,6 +1531,8 @@ export interface ResultMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocpalSearchRequest {
@@ -1457,6 +1575,8 @@ export interface ResultSearchResponse {
     code?: number;
     message?: string;
     data?: SearchResponse;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface SearchResponse {
@@ -1544,6 +1664,8 @@ export interface ResultListSearchDocumentVO {
     code?: number;
     message?: string;
     data?: SearchDocumentVO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface SearchDocumentVO {
@@ -1605,6 +1727,8 @@ export interface ResultDocumentDTO {
     message?: string;
     /** Document */
     data?: DocumentDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultSendMessageResponseDTO {
@@ -1613,6 +1737,8 @@ export interface ResultSendMessageResponseDTO {
     code?: number;
     message?: string;
     data?: SendMessageResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface SendMessageResponseDTO {
@@ -1632,6 +1758,36 @@ export interface MailSendRequest {
     variables?: Record<string, object>;
     files?: File[];
     accessToken?: string;
+}
+
+export interface SubNotificationRequest {
+    action?:
+        | "DOCUMENT_CREATE"
+        | "DOCUMENT_MODIFY"
+        | "DOCUMENT_REPLACE"
+        | "DOCUMENT_TRASH"
+        | "DOCUMENT_DELETE"
+        | "DOCUMENT_COMMENT_ADD"
+        | "DOCUMENT_FORMAT_CONVERT"
+        | "DOCUMENT_DOWNLOAD"
+        | "DOCUMENT_UPLOAD"
+        | "UPLOAD_REQUEST_OPEN_LINK"
+        | "UPLOAD_REQUEST_UPLOAD_FILE"
+        | "AI_ANALYSIS_MODULE_UPLOAD_FOLDER"
+        | "AI_ANALYSIS_MODULE_REPLACE_FILE"
+        | "DOCUMENT_ACL_MODULE"
+        | "DOCUMENT_ACL_ADD"
+        | "DOCUMENT_ACL_REMOVE"
+        | "DOCUMENT_SHARE_OPEN_LINK"
+        | "DOCUMENT_SHARE_DOWNLOAD_FILE"
+        | "DOCUMENT_FOLDER_CABINET_NOTIFICATION"
+        | "DOCUMENT_FOLDER_CABINET_SUMMARY_REPORT"
+        | "WORKFLOW_CUSTOM";
+    variables?: Record<string, object>;
+    notificationUserId?: string[];
+    businessId?: string;
+    setting?: NotificationSetting;
+    messageBody?: string;
 }
 
 export interface WhatsAppUsageDTO {
@@ -1879,6 +2035,8 @@ export interface ResultUserDTO {
     message?: string;
     /** User */
     data?: UserDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListGroupDTO {
@@ -1887,6 +2045,8 @@ export interface ResultListGroupDTO {
     code?: number;
     message?: string;
     data?: GroupDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultGroupDTO {
@@ -1896,6 +2056,8 @@ export interface ResultGroupDTO {
     message?: string;
     /** Group data transfer object */
     data?: GroupDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultMapStringInstant {
@@ -1904,6 +2066,8 @@ export interface ResultMapStringInstant {
     code?: number;
     message?: string;
     data?: Record<string, string>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface FileRequestUploadRequestDTO {
@@ -1954,6 +2118,8 @@ export interface ResultFileRequestUploadDTO {
     code?: number;
     message?: string;
     data?: FileRequestUploadDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Workflow (Request) */
@@ -2048,6 +2214,8 @@ export interface ResultLong {
     message?: string;
     /** @format int64 */
     data?: number;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface FileUploadRequestDTO {
@@ -2170,6 +2338,8 @@ export interface ResultDocumentResponseDTO {
     message?: string;
     /** Document */
     data?: DocumentResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface RetentionPolicyDocument {
@@ -2236,6 +2406,8 @@ export interface ResultFileCheckResultDTO {
     code?: number;
     message?: string;
     data?: FileCheckResultDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface UploadFileDetailRecord {
@@ -2290,6 +2462,8 @@ export interface ResultListUploadFileDetailDTO {
     code?: number;
     message?: string;
     data?: UploadFileDetailDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface UploadFileDetailDTO {
@@ -2305,6 +2479,8 @@ export interface UploadFileDetailDTO {
 }
 
 export interface QueryFileOverviewRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -2366,6 +2542,8 @@ export interface ResultPageUploadFileDTO {
     code?: number;
     message?: string;
     data?: PageUploadFileDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface UploadFileDTO {
@@ -2441,6 +2619,8 @@ export interface ResultPaginationDTOAuditTemplateResponseExtendDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOAuditTemplateResponseExtendDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Create office file request body */
@@ -2480,6 +2660,8 @@ export interface ResultDuplicateNameRespDTO {
     code?: number;
     message?: string;
     data?: DuplicateNameRespDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CheckDuplicateNameReqDTO {
@@ -2495,6 +2677,8 @@ export interface ResultDocStructureResponseDTO {
     message?: string;
     /** Document (Request) */
     data?: DocStructureResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface WatermarkDocumentRequestDTO {
@@ -2605,6 +2789,8 @@ export interface ResultPaginationDTODocumentThumbnailDTO {
     code?: number;
     message?: string;
     data?: PaginationDTODocumentThumbnailDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface FileConfirmDTO {
@@ -2632,6 +2818,8 @@ export interface ResultFileConfirmResponseDTO {
     code?: number;
     message?: string;
     data?: FileConfirmResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Access Control Entry */
@@ -2670,6 +2858,8 @@ export interface ResultListAccessControlListDTO {
     code?: number;
     message?: string;
     data?: AccessControlListDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface FileTemplateRecord {
@@ -2698,6 +2888,8 @@ export interface ResultFileTemplateRecord {
     code?: number;
     message?: string;
     data?: FileTemplateRecord;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Conversion (Request) */
@@ -2739,6 +2931,8 @@ export interface ResultListFileConversionRecord {
     code?: number;
     message?: string;
     data?: FileConversionRecord[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Comment (Request) */
@@ -2792,6 +2986,8 @@ export interface ResultCommentDTO {
     message?: string;
     /** Comment */
     data?: CommentDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListCommentDTO {
@@ -2800,6 +2996,8 @@ export interface ResultListCommentDTO {
     code?: number;
     message?: string;
     data?: CommentDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Collection (Request) */
@@ -2832,6 +3030,8 @@ export interface ResultEntityVODocumentThumbnailDTO {
     code?: number;
     message?: string;
     data?: EntityVODocumentThumbnailDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Collection of Documents (Request) */
@@ -2924,6 +3124,8 @@ export interface ResultListAnnotationDTO {
     code?: number;
     message?: string;
     data?: AnnotationDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface BusinessResultRecord {
@@ -2980,6 +3182,8 @@ export interface ResultPageBusinessResultRecord {
     code?: number;
     message?: string;
     data?: PageBusinessResultRecord;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultUploadFileDetailRecord {
@@ -2988,6 +3192,8 @@ export interface ResultUploadFileDetailRecord {
     code?: number;
     message?: string;
     data?: UploadFileDetailRecord;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocumentTypeMetadataMapping {
@@ -3077,6 +3283,8 @@ export interface ResultListTaskDTO {
     code?: number;
     message?: string;
     data?: TaskDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Task */
@@ -3145,6 +3353,8 @@ export interface ResultPaginationDTOTaskDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOTaskDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultTaskDTO {
@@ -3154,6 +3364,8 @@ export interface ResultTaskDTO {
     message?: string;
     /** Task */
     data?: TaskDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocPalDocumentType {
@@ -3171,6 +3383,8 @@ export interface ResultListDocumentTypeMetadataMapping {
     code?: number;
     message?: string;
     data?: DocumentTypeMetadataMapping[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocumentTypeProfileSettingRequest {
@@ -3225,6 +3439,8 @@ export interface ResultDocumentTypeProfileSetting {
     code?: number;
     message?: string;
     data?: DocumentTypeProfileSetting;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Form Property */
@@ -3258,6 +3474,8 @@ export interface ResultListFormPropertyDTO {
     code?: number;
     message?: string;
     data?: FormPropertyDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Process Definition */
@@ -3294,6 +3512,8 @@ export interface ResultProcessDTO {
     message?: string;
     /** Process Definition */
     data?: ProcessDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultInstanceDTO {
@@ -3303,6 +3523,8 @@ export interface ResultInstanceDTO {
     message?: string;
     /** Process Instance */
     data?: InstanceDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListProcessDTO {
@@ -3311,6 +3533,8 @@ export interface ResultListProcessDTO {
     code?: number;
     message?: string;
     data?: ProcessDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListInstanceDTO {
@@ -3319,6 +3543,8 @@ export interface ResultListInstanceDTO {
     code?: number;
     message?: string;
     data?: InstanceDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ConditionValidationReq {
@@ -3386,6 +3612,8 @@ export interface ResultPaginationDTOInstanceDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOInstanceDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListObject {
@@ -3394,6 +3622,8 @@ export interface ResultListObject {
     code?: number;
     message?: string;
     data?: object[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface HistoricProcessInstanceEntityImpl {
@@ -3469,6 +3699,8 @@ export interface ResultPaginationDTOHistoricProcessInstanceEntityImpl {
     code?: number;
     message?: string;
     data?: PaginationDTOHistoricProcessInstanceEntityImpl;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultMapStringString {
@@ -3477,6 +3709,8 @@ export interface ResultMapStringString {
     code?: number;
     message?: string;
     data?: Record<string, string>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListFileDTO {
@@ -3485,6 +3719,8 @@ export interface ResultListFileDTO {
     code?: number;
     message?: string;
     data?: FileDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface JSONObject {
@@ -3557,6 +3793,8 @@ export interface ResultWMKTemplateRequestDTO {
     code?: number;
     message?: string;
     data?: WMKTemplateRequestDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PageWatermarkSettingsTemplate {
@@ -3584,6 +3822,8 @@ export interface ResultPageWatermarkSettingsTemplate {
     code?: number;
     message?: string;
     data?: PageWatermarkSettingsTemplate;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface WatermarkSettingsTemplate {
@@ -3655,6 +3895,8 @@ export interface ResultListDocPalTypeMetadataDTO {
     code?: number;
     message?: string;
     data?: DocPalTypeMetadataDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ValidateJsonSchemaRequestDTO {
@@ -3686,6 +3928,8 @@ export interface ResultLanguageEntity {
     code?: number;
     message?: string;
     data?: LanguageEntity;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface FormPropertiesRelation {
@@ -3699,6 +3943,8 @@ export interface FormPropertiesRelation {
 
 /** Retention Policy Document RequestDTO */
 export interface RetentionPolicyDocumentRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -3747,6 +3993,8 @@ export interface ResultRetentionPolicyDocument {
     code?: number;
     message?: string;
     data?: RetentionPolicyDocument;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PaginationDTORetentionPolicyDocument {
@@ -3768,10 +4016,14 @@ export interface ResultPaginationDTORetentionPolicyDocument {
     code?: number;
     message?: string;
     data?: PaginationDTORetentionPolicyDocument;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** HoldPolicy Document RequestDTO */
 export interface PolicyDocumentRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -3831,6 +4083,8 @@ export interface ResultPolicyDocument {
     code?: number;
     message?: string;
     data?: PolicyDocument;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PaginationDTOPolicyDocument {
@@ -3852,6 +4106,8 @@ export interface ResultPaginationDTOPolicyDocument {
     code?: number;
     message?: string;
     data?: PaginationDTOPolicyDocument;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface NotificationRecord {
@@ -3879,6 +4135,8 @@ export interface ResultNotificationRecord {
     code?: number;
     message?: string;
     data?: NotificationRecord;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface NotificationSubscriberRequestDTO {
@@ -3908,6 +4166,8 @@ export interface ResultNotificationSubscriber {
     code?: number;
     message?: string;
     data?: NotificationSubscriber;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultNotificationSetting {
@@ -3916,6 +4176,8 @@ export interface ResultNotificationSetting {
     code?: number;
     message?: string;
     data?: NotificationSetting;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Notification Preference List */
@@ -3938,9 +4200,13 @@ export interface ResultListUserNotifyPreference {
     code?: number;
     message?: string;
     data?: UserNotifyPreference[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface QueryNotificationRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4000,6 +4266,8 @@ export interface ResultPaginationDTONotificationInfoDTO {
     code?: number;
     message?: string;
     data?: PaginationDTONotificationInfoDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PageNotificationRecord {
@@ -4027,10 +4295,14 @@ export interface ResultPageNotificationRecord {
     code?: number;
     message?: string;
     data?: PageNotificationRecord;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Master Table RequestDTO */
 export interface MasterTableRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4049,6 +4321,8 @@ export interface MasterTableRequestDTO {
     id?: string;
     /** Master Table Name */
     name?: string;
+    /** Master Table Status is Active or Disable (A or D) */
+    status?: string;
     /** Create by list */
     createdBys?: string[];
     /** New Data List */
@@ -4068,6 +4342,8 @@ export interface ResultListMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DeleteMTRecordRequestDTO {
@@ -4102,6 +4378,8 @@ export interface ResultPaginationDTONestedSearchLogV2 {
     code?: number;
     message?: string;
     data?: PaginationDTONestedSearchLogV2;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface InternalShareQueryDTO {
@@ -4178,6 +4456,8 @@ export interface ResultPaginableEntityDTOObject {
     code?: number;
     message?: string;
     data?: PaginableEntityDTOObject;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface InternalShareToMePageRequestDTO {
@@ -4233,6 +4513,8 @@ export interface ResultInternalShare {
     code?: number;
     message?: string;
     data?: InternalShare;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface InternalShareRequestDTO {
@@ -4297,6 +4579,8 @@ export interface ResultInternalShareAudit {
     code?: number;
     message?: string;
     data?: InternalShareAudit;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface EasyFormEmailDTO {
@@ -4313,6 +4597,8 @@ export interface UserEmailDTO {
 
 /** form design request */
 export interface FormDesignRequestDTO {
+    /** Fuzzy Search */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4352,8 +4638,6 @@ export interface FormDesignRequestDTO {
     notEquals?: Record<string, object>;
     /** Where Condition (Equal) */
     equals?: Record<string, object>;
-    /** Fuzzy Search */
-    q?: string;
     sort?: SortObject;
     sortOrder?: string;
     descSort?: SortObject;
@@ -4367,10 +4651,14 @@ export interface ResultListLinkedHashMapStringObject {
     code?: number;
     message?: string;
     data?: Record<string, object>[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Easy Form Email RequestDTO */
 export interface EasyFormEmailQueryRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4437,6 +4725,8 @@ export interface ResultPaginationDTOEasyFormEmailLogDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOEasyFormEmailLogDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Form Design Form Result List */
@@ -4564,10 +4854,13 @@ export interface ResultPaginationDTOFormDesignResponseDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOFormDesignResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Case model dashboard (RequestDTO) */
 export interface CmmnDashboardRequestDTO {
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4586,7 +4879,6 @@ export interface CmmnDashboardRequestDTO {
     caseTypeId?: string;
     /** Case definition version Id */
     cmmnVersionId?: string;
-    q?: string;
     /** Is need to detail */
     detail?: boolean;
     /** Where Condition */
@@ -4601,6 +4893,8 @@ export interface CmmnDashboardRequestDTO {
 
 /** Case Table RequestDTO */
 export interface CaseTableRequestDTO {
+    /** Fuzzy Search */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4642,8 +4936,6 @@ export interface CaseTableRequestDTO {
     /** Where And Condition */
     andConditions?: WhereCondition[];
     c?: Record<string, object>;
-    /** Fuzzy Search */
-    q?: string;
     /** User */
     operator?: UserDTO;
     sort?: SortObject;
@@ -4699,6 +4991,8 @@ export interface WhereCondition {
 
 /** Case Type RequestDTO */
 export interface CaseTypeRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -4771,6 +5065,8 @@ export interface ResultPaginationDTOCaseType {
     code?: number;
     message?: string;
     data?: PaginationDTOCaseType;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CaseTypeInfo {
@@ -4859,6 +5155,8 @@ export interface ResultListCaseTypeResponseDTO {
     code?: number;
     message?: string;
     data?: CaseTypeResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CmmnTriggerEventReqDTO {
@@ -4940,10 +5238,14 @@ export interface ResultListCmmnTaskDTO {
     code?: number;
     message?: string;
     data?: CmmnTaskDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Case Instance (Request) */
 export interface CaseInstanceRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -5058,10 +5360,14 @@ export interface ResultCaseInstanceDTO {
     message?: string;
     /** Case Instance */
     data?: CaseInstanceDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** PlanItem Instance (Request) */
 export interface PlanItemInstanceRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -5111,6 +5417,8 @@ export interface ResultListPlanItemInstanceDTO {
     code?: number;
     message?: string;
     data?: PlanItemInstanceDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Define audit template */
@@ -5152,6 +5460,8 @@ export interface ResultPaginationDTOAuditTemplateDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOAuditTemplateDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CmmnDashboard {
@@ -5190,10 +5500,13 @@ export interface ResultPaginationDTOCmmnDashboard {
     code?: number;
     message?: string;
     data?: PaginationDTOCmmnDashboard;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Case Process RequestDTO */
 export interface CmmnProcessRequestDTO {
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -5212,7 +5525,6 @@ export interface CmmnProcessRequestDTO {
     businessKey?: string;
     caseDefinitionId?: string;
     processDefinitionKeys?: string[];
-    q?: string;
     assignee?: string;
     candidateOrAssigned?: string;
     category?: string;
@@ -5243,6 +5555,8 @@ export interface ResultPaginationDTOCmmnTaskDTO {
     code?: number;
     message?: string;
     data?: PaginationDTOCmmnTaskDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListCalendarTaskRespDTO {
@@ -5251,6 +5565,8 @@ export interface ResultListCalendarTaskRespDTO {
     code?: number;
     message?: string;
     data?: CalendarTaskRespDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** The folder cabinet metadata */
@@ -5386,10 +5702,14 @@ export interface ResultDocFolderCabinetResponseDTO {
     message?: string;
     /** Folder Cabinet ResponseDTO */
     data?: DocFolderCabinetResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Document Folder Cabinet RequestDTO */
 export interface DocFolderCabinetRequestDTO {
+    /** Fuzzy Search Parameter */
+    q?: string;
     /**
      * Page Number
      * @format int32
@@ -5551,6 +5871,8 @@ export interface ResultDocumentFolderCabinet {
     code?: number;
     message?: string;
     data?: DocumentFolderCabinet;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface FilingDocumentPreviewReq {
@@ -5573,6 +5895,8 @@ export interface ResultMapStringUserRoleGroupDTO {
     code?: number;
     message?: string;
     data?: Record<string, UserRoleGroupDTO>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface RoleUsersRequest {
@@ -5640,6 +5964,8 @@ export interface ResultPaginationDTORoleUsersVO {
     code?: number;
     message?: string;
     data?: PaginationDTORoleUsersVO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface RoleUsersVO {
@@ -5670,6 +5996,8 @@ export interface ResultPaginationDTORoleVO {
     code?: number;
     message?: string;
     data?: PaginationDTORoleVO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface RoleVO {
@@ -5696,6 +6024,8 @@ export interface ResultListRoleDTO {
     code?: number;
     message?: string;
     data?: RoleDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Role data transfer object */
@@ -5813,6 +6143,8 @@ export interface ResultAiChatAnswerResponseDTO {
     code?: number;
     message?: string;
     data?: AiChatAnswerResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AddAiCommentRequestDTO {
@@ -5903,6 +6235,8 @@ export interface ResultUserSignature {
     code?: number;
     message?: string;
     data?: UserSignature;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface UserSignature {
@@ -5946,6 +6280,8 @@ export interface ResultUserStatusDTO {
     message?: string;
     /** user status DTO */
     data?: UserStatusDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** user status DTO */
@@ -5968,6 +6304,8 @@ export interface ResultLockUserDTO {
     code?: number;
     message?: string;
     data?: LockUserDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PasswordConfigDTO {
@@ -6022,6 +6360,8 @@ export interface ResultPasswordConfigDTO {
     code?: number;
     message?: string;
     data?: PasswordConfigDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultVocabularyDTO {
@@ -6031,6 +6371,8 @@ export interface ResultVocabularyDTO {
     message?: string;
     /** Nuxeo Vocabulary */
     data?: VocabularyDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Nuxeo Vocabulary */
@@ -6072,6 +6414,8 @@ export interface ResultListVirtualFolderSettingResponseDTO {
     code?: number;
     message?: string;
     data?: VirtualFolderSettingResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface VirtualFolderSettingResponseDTO {
@@ -6087,6 +6431,8 @@ export interface ResultVirtualFolderSettingResponseDTO {
     code?: number;
     message?: string;
     data?: VirtualFolderSettingResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocumentTemplate {
@@ -6111,6 +6457,8 @@ export interface ResultDocumentTemplate {
     code?: number;
     message?: string;
     data?: DocumentTemplate;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListDocumentTemplate {
@@ -6119,6 +6467,8 @@ export interface ResultListDocumentTemplate {
     code?: number;
     message?: string;
     data?: DocumentTemplate[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultSmartFolderResponseDTO {
@@ -6128,6 +6478,8 @@ export interface ResultSmartFolderResponseDTO {
     message?: string;
     /** Smart Folder */
     data?: SmartFolderResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Smart Folder */
@@ -6145,6 +6497,8 @@ export interface ResultListSmartFolderResponseDTO {
     code?: number;
     message?: string;
     data?: SmartFolderResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultViewSettingResponseDTO {
@@ -6153,6 +6507,8 @@ export interface ResultViewSettingResponseDTO {
     code?: number;
     message?: string;
     data?: ViewSettingResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ViewSettingResponseDTO {
@@ -6177,6 +6533,8 @@ export interface ResultListNestedSearchLogRecord {
     code?: number;
     message?: string;
     data?: NestedSearchLogRecord[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface EasyShareDocumentResponseDTO {
@@ -6228,6 +6586,8 @@ export interface ResultEasyShareDocumentResponseDTO {
     code?: number;
     message?: string;
     data?: EasyShareDocumentResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListEasyShareDocumentResponseDTO {
@@ -6236,6 +6596,8 @@ export interface ResultListEasyShareDocumentResponseDTO {
     code?: number;
     message?: string;
     data?: EasyShareDocumentResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MQProperties {
@@ -6250,6 +6612,8 @@ export interface ResultMapStringMQProperties {
     code?: number;
     message?: string;
     data?: Record<string, MQProperties>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocumentType {
@@ -6267,6 +6631,8 @@ export interface ResultListDocumentType {
     code?: number;
     message?: string;
     data?: DocumentType[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AiAnalysisDocumentVO {
@@ -6282,6 +6648,8 @@ export interface ResultAiAnalysisDocumentVO {
     code?: number;
     message?: string;
     data?: AiAnalysisDocumentVO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultMapStringListObject {
@@ -6290,6 +6658,8 @@ export interface ResultMapStringListObject {
     code?: number;
     message?: string;
     data?: Record<string, object[]>;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** CustomIcon */
@@ -6303,6 +6673,8 @@ export interface ResultListCustomIconDTO {
     code?: number;
     message?: string;
     data?: CustomIconDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListBusinessResultRecord {
@@ -6311,6 +6683,8 @@ export interface ResultListBusinessResultRecord {
     code?: number;
     message?: string;
     data?: BusinessResultRecord[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MQMessageTotalDTO {
@@ -6325,6 +6699,8 @@ export interface ResultListMQMessageTotalDTO {
     code?: number;
     message?: string;
     data?: MQMessageTotalDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MQConsumeGroupStatusDTO {
@@ -6342,6 +6718,8 @@ export interface ResultListMQConsumeGroupStatusDTO {
     code?: number;
     message?: string;
     data?: MQConsumeGroupStatusDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MQDayTotalDTO {
@@ -6355,6 +6733,8 @@ export interface ResultListMQDayTotalDTO {
     code?: number;
     message?: string;
     data?: MQDayTotalDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MQConfigurationInfo {
@@ -6368,6 +6748,8 @@ export interface ResultListMQConfigurationInfo {
     code?: number;
     message?: string;
     data?: MQConfigurationInfo[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ProcessDefinitionVersion {
@@ -6396,6 +6778,8 @@ export interface ResultProcessDefinitionVersion {
     code?: number;
     message?: string;
     data?: ProcessDefinitionVersion;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MetadataSetting {
@@ -6429,6 +6813,8 @@ export interface ResultListDocumentTypeProfileSetting {
     code?: number;
     message?: string;
     data?: DocumentTypeProfileSetting[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultMapStringListMapStringString {
@@ -6437,6 +6823,8 @@ export interface ResultMapStringListMapStringString {
     code?: number;
     message?: string;
     data?: Record<string, Record<string, string>[]>;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Process Instance Information */
@@ -6467,6 +6855,8 @@ export interface ResultProcessInstanceDTO {
     message?: string;
     /** Process Instance Information */
     data?: ProcessInstanceDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Form Property */
@@ -6517,6 +6907,8 @@ export interface ResultListProcessDefinitionDTO {
     code?: number;
     message?: string;
     data?: ProcessDefinitionDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface UserTaskDTO {
@@ -6532,6 +6924,8 @@ export interface ResultListUserTaskDTO {
     code?: number;
     message?: string;
     data?: UserTaskDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultLinkedHashSetString {
@@ -6541,6 +6935,8 @@ export interface ResultLinkedHashSetString {
     message?: string;
     /** @uniqueItems true */
     data?: string[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** BPMN Dynamic Form Information DTO */
@@ -6557,6 +6953,8 @@ export interface ResultListBpmnDynamicFormDTO {
     code?: number;
     message?: string;
     data?: BpmnDynamicFormDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AdhocApproval {
@@ -6599,6 +6997,8 @@ export interface ResultAdhocApprovalResp {
     code?: number;
     message?: string;
     data?: AdhocApprovalResp;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface Content {
@@ -6623,6 +7023,8 @@ export interface ResultListMessageTemplateDTO {
     code?: number;
     message?: string;
     data?: MessageTemplateDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListWatermarkSettingsTemplate {
@@ -6631,6 +7033,8 @@ export interface ResultListWatermarkSettingsTemplate {
     code?: number;
     message?: string;
     data?: WatermarkSettingsTemplate[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListWatermarkSettingsDTO {
@@ -6639,6 +7043,8 @@ export interface ResultListWatermarkSettingsDTO {
     code?: number;
     message?: string;
     data?: WatermarkSettingsDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocPalTypeMetadata {
@@ -6683,6 +7089,8 @@ export interface ResultDocPalTypeResponseDTO {
     code?: number;
     message?: string;
     data?: DocPalTypeResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DocPalTypeRelated {
@@ -6699,6 +7107,8 @@ export interface ResultListDocPalTypeRelated {
     code?: number;
     message?: string;
     data?: DocPalTypeRelated[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultObjectNode {
@@ -6707,6 +7117,8 @@ export interface ResultObjectNode {
     code?: number;
     message?: string;
     data?: object;
+    messageKey?: string;
+    locale?: string;
 }
 
 export type BooleanValidation = MetadataValidation;
@@ -6764,6 +7176,8 @@ export interface ResultListMetadataValidDTO {
     code?: number;
     message?: string;
     data?: MetadataValidDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export type SelectValidation = MetadataValidation & {
@@ -6797,6 +7211,8 @@ export interface ResultDocPalTypeDistinction {
     code?: number;
     message?: string;
     data?: DocPalTypeDistinction;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultMapStringBoolean {
@@ -6805,6 +7221,8 @@ export interface ResultMapStringBoolean {
     code?: number;
     message?: string;
     data?: Record<string, boolean>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListFormPropertiesRelation {
@@ -6813,6 +7231,8 @@ export interface ResultListFormPropertiesRelation {
     code?: number;
     message?: string;
     data?: FormPropertiesRelation[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListLanguageEntity {
@@ -6821,6 +7241,8 @@ export interface ResultListLanguageEntity {
     code?: number;
     message?: string;
     data?: LanguageEntity[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** KeyCloakPropertyVO */
@@ -6859,6 +7281,8 @@ export interface ResultKeyCloakPropertyVO {
     message?: string;
     /** KeyCloakPropertyVO */
     data?: KeyCloakPropertyVO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListRetentionPolicy {
@@ -6867,6 +7291,8 @@ export interface ResultListRetentionPolicy {
     code?: number;
     message?: string;
     data?: RetentionPolicy[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface RetentionPolicy {
@@ -6926,6 +7352,8 @@ export interface ResultListRetentionPolicyEvent {
     code?: number;
     message?: string;
     data?: RetentionPolicyEvent[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultRetentionPolicyResponseDTO {
@@ -6935,6 +7363,8 @@ export interface ResultRetentionPolicyResponseDTO {
     message?: string;
     /** Retention Policy ResponseDTO */
     data?: RetentionPolicyResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Retention Policy ResponseDTO */
@@ -6978,6 +7408,8 @@ export interface ResultMapLongListRetentionPolicyEvent {
     code?: number;
     message?: string;
     data?: Record<string, RetentionPolicyEvent[]>;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Document Folder Cabinet Condition ResponseDTO */
@@ -6996,6 +7428,8 @@ export interface ResultListConditionResponseDTO {
     code?: number;
     message?: string;
     data?: ConditionResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface HoldPolicy {
@@ -7023,6 +7457,8 @@ export interface ResultListHoldPolicy {
     code?: number;
     message?: string;
     data?: HoldPolicy[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultHoldPolicy {
@@ -7031,6 +7467,8 @@ export interface ResultHoldPolicy {
     code?: number;
     message?: string;
     data?: HoldPolicy;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PersonalLandingResponseDTO {
@@ -7046,6 +7484,8 @@ export interface ResultPersonalLandingResponseDTO {
     code?: number;
     message?: string;
     data?: PersonalLandingResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface PersonalDashboard {
@@ -7068,6 +7508,8 @@ export interface ResultPersonalDashboard {
     code?: number;
     message?: string;
     data?: PersonalDashboard;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListPersonalDashboard {
@@ -7076,6 +7518,8 @@ export interface ResultListPersonalDashboard {
     code?: number;
     message?: string;
     data?: PersonalDashboard[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListDocumentThumbnailDTO {
@@ -7084,6 +7528,8 @@ export interface ResultListDocumentThumbnailDTO {
     code?: number;
     message?: string;
     data?: DocumentThumbnailDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface NotificationUnreadCountDTO {
@@ -7098,6 +7544,8 @@ export interface ResultListNotificationUnreadCountDTO {
     code?: number;
     message?: string;
     data?: NotificationUnreadCountDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CheckBoxDTO {
@@ -7113,6 +7561,8 @@ export interface ResultListCheckBoxDTO {
     code?: number;
     message?: string;
     data?: CheckBoxDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MTColumnInfo {
@@ -7156,6 +7606,8 @@ export interface ResultListMasterTableResponseDTO {
     code?: number;
     message?: string;
     data?: MasterTableResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultMasterTableResponseDTO {
@@ -7165,6 +7617,8 @@ export interface ResultMasterTableResponseDTO {
     message?: string;
     /** Master Table ResponseDTO */
     data?: MasterTableResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface MTRelationOptionDTO {
@@ -7183,6 +7637,8 @@ export interface ResultListMTRelationResponseDTO {
     code?: number;
     message?: string;
     data?: MTRelationResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListFormDesignResponseDTO {
@@ -7191,6 +7647,8 @@ export interface ResultListFormDesignResponseDTO {
     code?: number;
     message?: string;
     data?: FormDesignResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultFormDesignResponseDTO {
@@ -7200,6 +7658,8 @@ export interface ResultFormDesignResponseDTO {
     message?: string;
     /** Form Designer (Response) */
     data?: FormDesignResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface EasyFormBaseEmailDTO {
@@ -7214,6 +7674,8 @@ export interface ResultEasyFormBaseEmailDTO {
     code?: number;
     message?: string;
     data?: EasyFormBaseEmailDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListDocTemplateSignatureResponseDTO {
@@ -7222,6 +7684,8 @@ export interface ResultListDocTemplateSignatureResponseDTO {
     code?: number;
     message?: string;
     data?: DocTemplateSignatureResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface DAMConversionSetting {
@@ -7241,6 +7705,8 @@ export interface ResultMapStringListDAMConversionSetting {
     code?: number;
     message?: string;
     data?: Record<string, DAMConversionSetting[]>;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListCaseType {
@@ -7249,6 +7715,8 @@ export interface ResultListCaseType {
     code?: number;
     message?: string;
     data?: CaseType[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListPlanItemDefinitionDTO {
@@ -7257,6 +7725,8 @@ export interface ResultListPlanItemDefinitionDTO {
     code?: number;
     message?: string;
     data?: PlanItemDefinitionDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultCmmnPlanFormDTO {
@@ -7266,6 +7736,8 @@ export interface ResultCmmnPlanFormDTO {
     message?: string;
     /** Case Model Plan Form DTO */
     data?: CmmnPlanFormDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultCaseTypeResponseDTO {
@@ -7274,6 +7746,8 @@ export interface ResultCaseTypeResponseDTO {
     code?: number;
     message?: string;
     data?: CaseTypeResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CaseTable {
@@ -7296,6 +7770,8 @@ export interface ResultListCaseTable {
     code?: number;
     message?: string;
     data?: CaseTable[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CmmnInstance {
@@ -7320,6 +7796,8 @@ export interface ResultListCmmnInstance {
     code?: number;
     message?: string;
     data?: CmmnInstance[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CaseModelDraft {
@@ -7342,6 +7820,8 @@ export interface ResultCaseModelDraft {
     code?: number;
     message?: string;
     data?: CaseModelDraft;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListCmmnPlanFormDTO {
@@ -7350,6 +7830,8 @@ export interface ResultListCmmnPlanFormDTO {
     code?: number;
     message?: string;
     data?: CmmnPlanFormDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListUserEventInstanceDTO {
@@ -7358,6 +7840,8 @@ export interface ResultListUserEventInstanceDTO {
     code?: number;
     message?: string;
     data?: UserEventInstanceDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Case User Event InstanceDTO */
@@ -7404,6 +7888,8 @@ export interface ResultCaseInstanceFormDataDTO {
     message?: string;
     /** Case Model Form Data DTO */
     data?: CaseInstanceFormDataDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultCmmnInstance {
@@ -7412,6 +7898,8 @@ export interface ResultCmmnInstance {
     code?: number;
     message?: string;
     data?: CmmnInstance;
+    messageKey?: string;
+    locale?: string;
 }
 
 /** Case Model Information DTO */
@@ -7458,6 +7946,8 @@ export interface ResultListCaseDefinitionDTO {
     code?: number;
     message?: string;
     data?: CaseDefinitionDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListCaseInstanceDTO {
@@ -7466,6 +7956,8 @@ export interface ResultListCaseInstanceDTO {
     code?: number;
     message?: string;
     data?: CaseInstanceDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultCmmnDashboard {
@@ -7474,6 +7966,8 @@ export interface ResultCmmnDashboard {
     code?: number;
     message?: string;
     data?: CmmnDashboard;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface CmmnDashboardDTO {
@@ -7500,6 +7994,8 @@ export interface ResultListCmmnDashboardDTO {
     code?: number;
     message?: string;
     data?: CmmnDashboardDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 /** case instance activity item */
@@ -7525,6 +8021,8 @@ export interface ResultListCmmnActivityItem {
     code?: number;
     message?: string;
     data?: CmmnActivityItem[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListCmmnDashboard {
@@ -7533,6 +8031,8 @@ export interface ResultListCmmnDashboard {
     code?: number;
     message?: string;
     data?: CmmnDashboard[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface Document {
@@ -7644,6 +8144,8 @@ export interface ResultFolderCabinetResponseDTO {
     message?: string;
     /** Folder Cabinet ResponseDTO */
     data?: FolderCabinetResponseDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListDocumentFolderCabinet {
@@ -7652,6 +8154,8 @@ export interface ResultListDocumentFolderCabinet {
     code?: number;
     message?: string;
     data?: DocumentFolderCabinet[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListFolderCabinetResponseDTO {
@@ -7660,6 +8164,8 @@ export interface ResultListFolderCabinetResponseDTO {
     code?: number;
     message?: string;
     data?: FolderCabinetResponseDTO[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultUserDetailDTO {
@@ -7669,6 +8175,8 @@ export interface ResultUserDetailDTO {
     message?: string;
     /** User detail data transfer object */
     data?: UserDetailDTO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultListAclUserInformation {
@@ -7677,6 +8185,8 @@ export interface ResultListAclUserInformation {
     code?: number;
     message?: string;
     data?: AclUserInformation[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface ResultRoleDTO {
@@ -7686,6 +8196,18 @@ export interface ResultRoleDTO {
     message?: string;
     /** Role data transfer object */
     data?: RoleDTO;
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultListEventCalendarSetting {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EventCalendarSetting[];
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AiTopicIdVO {
@@ -7698,6 +8220,8 @@ export interface ResultAiTopicIdVO {
     code?: number;
     message?: string;
     data?: AiTopicIdVO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AiChatInitInfoVO {
@@ -7713,6 +8237,8 @@ export interface ResultAiChatInitInfoVO {
     code?: number;
     message?: string;
     data?: AiChatInitInfoVO;
+    messageKey?: string;
+    locale?: string;
 }
 
 export interface AclEntryDTO {
@@ -7760,6 +8286,8 @@ export interface ResultListHistoricProcessInstanceEntityImpl {
     code?: number;
     message?: string;
     data?: HistoricProcessInstanceEntityImpl[];
+    messageKey?: string;
+    locale?: string;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, HeadersDefaults, ResponseType } from "axios";
@@ -9499,6 +10027,38 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags EventCalendarController
+         * @name GetCalendarsettingSettingId
+         * @summary Get Event Calendar Setting by ID
+         * @request GET:/api/calendarSetting/setting/{id}
+         */
+        getCalendarsettingSettingId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/setting/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name PutCalendarsettingSettingId
+         * @summary Update Event Calendar Setting
+         * @request PUT:/api/calendarSetting/setting/{id}
+         */
+        putCalendarsettingSettingId: (id: string, data: EventCalendarSetting, params: RequestParams = {}) =>
+            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/setting/${id}`,
+                method: "PUT",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags wopi-host-controller
          * @name GetWopiFilesId
          * @request GET:/api/wopi/files/{id}
@@ -10565,6 +11125,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 path: `/nuxeo/registeredServer/policy/documents/approval`,
                 method: "POST",
                 query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Document (Nuxeo)
+         * @name PostNuxeoRegisteredserverNotificationSend
+         * @summary Send subscribe notification using customize message body
+         * @request POST:/api/nuxeo/registeredServer/notification/send
+         */
+        postNuxeoRegisteredserverNotificationSend: (data: SubNotificationRequest, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/nuxeo/registeredServer/notification/send`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
                 ...params,
             }),
 
@@ -14976,6 +15553,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags NotificationRecordController
+         * @name PostNotificationSend
+         * @summary Send subscribe notification using customize message body
+         * @request POST:/api/docpal/notification/send
+         */
+        postNotificationSend: (data: SubNotificationRequest, params: RequestParams = {}) =>
+            this.request<ResultBoolean, ResultString | (ResultString | Result)>({
+                path: `/docpal/notification/send`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags NotificationRecordController
          * @name PostNotificationReadAll
          * @summary Read all notification record of current login user
          * @request POST:/api/docpal/notification/read/all
@@ -16443,6 +17037,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
+         * @tags EventCalendarController
+         * @name PostCalendarsettingSetting
+         * @summary Create Event Calendar Setting
+         * @request POST:/api/calendarSetting/setting
+         */
+        postCalendarsettingSetting: (data: EventCalendarSetting, params: RequestParams = {}) =>
+            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/setting`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
          * @tags DocBlockPermissionController
          * @name PostBlockPermission
          * @summary Create DocBlockPermission
@@ -16945,6 +17556,23 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         patchCabinet: (data: DocFolderCabinetRequestDTO, params: RequestParams = {}) =>
             this.request<ResultDocFolderCabinetResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/cabinet`,
+                method: "PATCH",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name PatchCalendarsettingEventsId
+         * @summary Edit a Event Calendar in calendar setting
+         * @request PATCH:/api/calendarSetting/events/{id}
+         */
+        patchCalendarsettingEventsId: (id: string, data: EventCalendarSetting, params: RequestParams = {}) =>
+            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/events/${id}`,
                 method: "PATCH",
                 body: data,
                 type: ContentType.Json,
@@ -20623,6 +21251,7 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 caseTypeId?: string;
                 /** Case definition version Id */
                 cmmnVersionId?: string;
+                /** Fuzzy Search Parameter */
                 q?: string;
                 /** Is need to detail */
                 detail?: string;
@@ -21455,6 +22084,57 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getAclRoleHierarchyRoleid: (roleId: string, params: RequestParams = {}) =>
             this.request<ResultRoleDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/acl/role/hierarchy/${roleId}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name GetCalendarsettingSettings
+         * @summary Get All Event Calendar Settings
+         * @request GET:/api/calendarSetting/settings
+         */
+        getCalendarsettingSettings: (params: RequestParams = {}) =>
+            this.request<ResultListEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/settings`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name GetCalendarsettingEvents
+         * @summary Retrieves a list of calendar settings and associated events for a specified user identified by userId. The response includes calendar details and permissions.
+         * @request GET:/api/calendarSetting/events
+         */
+        getCalendarsettingEvents: (
+            query: {
+                userId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/events`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name GetCalendarsettingEventsIdUsers
+         * @summary Retrieve user list by calendar id
+         * @request GET:/api/calendarSetting/events/{id}/users
+         */
+        getCalendarsettingEventsIdUsers: (id: string, params: RequestParams = {}) =>
+            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
+                path: `/calendarSetting/events/${id}/users`,
                 method: "GET",
                 ...params,
             }),

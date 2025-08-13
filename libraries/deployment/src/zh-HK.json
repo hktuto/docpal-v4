@@ -300,6 +300,7 @@
   "button": {
     "add": "添加",
     "addMore": "添加更多",
+    "autoGenerate": "自動生成",
     "batchEdit": "批次編輯",
     "clearFilter": "清除",
     "clearSelected": "清除所選內容",
