@@ -333,6 +333,26 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
     }
   }
 
+  // Delete table by name
+  async function deleteTable(tableName?: string): Promise<void> {
+    try {
+      await ensureInitialized()
+
+      const targetTableName = tableName || config.schema.name
+      const sql = `DROP TABLE IF EXISTS ${targetTableName}`
+      await exec(sql)
+
+      // Remove from initialized tables state if it's the current table
+      if (targetTableName === config.schema.name) {
+        isInitialized.value = false
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      error.value = errorMessage
+      throw new Error(errorMessage)
+    }
+  }
+
   // Sync data from API with local database
   async function syncData(data: {
     create: (T & DatabaseRecord)[],
@@ -424,6 +444,7 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
     executeTransaction,
     tableExists,
     getTableInfo,
+    deleteTable,
     syncData,
     clearError
   }
