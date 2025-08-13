@@ -44,11 +44,15 @@ const state = reactive({
   requestUrl: '',
   requestParams: '',
   requestHeader: '',
-  responseData: '',
-  responseVariableAsJson: false
+  requestBody: '',
+  responseBodyName: ''
 })
 
 function initForm() {
+  state.requestParams = ''
+  state.requestHeader = ''
+  state.requestBody = ''
+
   const fields: any = node.data.data.extensionElements['flowable:field']
 
   if (fields && fields.lenght < 1) {
@@ -62,13 +66,27 @@ function initForm() {
         break
       case 'requestUrl':
         state.requestUrl = item['flowable:expression'].__cdata
+        if (!state.requestUrl || state.requestUrl === '') return
+
+        const paramsArray = extractParamsFromUrl(state.requestUrl)
+        if (paramsArray.length > 0) {
+          state.requestParams = paramsArray
+            .filter(item => item.key)
+            .map(item => `${item.key.trim()}=${item.value.trim()}`)
+            .join('&')
+        }
+        break
+      case 'requestHeaders':
+        state.requestHeader = item['flowable:expression'].__cdata
+        break
+      case 'requestBody':
+        state.requestBody = item['flowable:expression'].__cdata
         break
       case 'responseVariableName':
-        state.responseData = item['flowable:expression'].__cdata
+        state.responseBodyName = item['flowable:expression'].__cdata
         break
       default :
     }
-
   })
 }
 
@@ -87,13 +105,7 @@ function fieldMappingUpdate(newVal: string, name: string) {
   graphProvider?.graph.value?.stopBatch('update-http-field-data')
 }
 
-/**
- * 解析 URL，提取参数
- * @param {string} url - 需要解析的 URL
- * @returns {Array<{key: string, value: string}>} 参数数组
- */
-function extractParamsFromUrl(url) {
-  // 判断是否为标准 URL
+function extractParamsFromUrl(url: string) {
   try {
     const urlObj = new URL(url)
     const paramsArray = []
@@ -106,18 +118,6 @@ function extractParamsFromUrl(url) {
     return []
   }
 }
-
-// watch(
-//   () => state.requestUrl,
-//   (newUrl) => {
-//     // 只在是标准 URL 时提取参数
-//     const params = extractParamsFromUrl(newUrl)
-//     if (params.length > 0) {
-//       requestState.params = params
-//     }
-//   },
-//   { immediate: true }
-// )
 
 function openVisible(status: string) {
   if (status === 'Params') {
@@ -137,16 +137,23 @@ function openVisible(status: string) {
   }
 }
 
-/**
- * update url
- * @param visible
- */
 function handleUpdateParams(visible: any) {
   if (visible.length > 0 && Array.isArray(visible)) {
     state.requestParams = visible
       .filter(item => item.key)
-      .map(item => `${item.key}=${item.value}`)
+      .map(item => `${item.key.trim()}=${item.value.trim()}`)
       .join('&')
+
+    // update url
+    const urlArray = state.requestUrl.split('?')
+    if (!urlArray || urlArray[0] === '') return
+
+    if (urlArray.length > 1) {
+      state.requestUrl = urlArray[0] + '?' + state.requestParams
+    } else {
+      state.requestUrl = state.requestUrl + '?' + state.requestParams
+    }
+    fieldMappingUpdate(state.requestUrl, 'requestUrl')
   } else {
     state.requestParams = ''
   }
@@ -156,11 +163,12 @@ function handleUpdateHeader(visible: any) {
   if (visible.length > 0 && Array.isArray(visible)) {
     state.requestHeader = visible
       .filter(item => item.key)
-      .map(item => `${item.key}: ${item.value}`)
+      .map(item => `${item.key.trim()}: ${item.value.trim()}`)
       .join('\n')
   } else {
     state.requestHeader = ''
   }
+  fieldMappingUpdate(state.requestHeader, 'requestHeaders')
 }
 
 watch(() => node, async () => {
@@ -195,26 +203,28 @@ watch(() => node, async () => {
 
     <el-form-item :label="t('Request Params')" class="flex gap-4">
       <el-input disabled v-model="state.requestParams" />
-      <el-button @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
+      <el-button type="primary" @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
     </el-form-item>
 
     <el-form-item :label="t('Request Headers')">
       <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
                 v-model="state.requestHeader" />
-      <el-button @click="openVisible('Headers')">{{ t('Add Header') }}</el-button>
+      <el-button type="primary" @click="openVisible('Headers')">{{ t('Add Header') }}</el-button>
+    </el-form-item>
+
+    <el-form-item :label="t('Request Body')">
+      <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
+                v-model="state.requestBody" />
+      <el-button type="primary" @click="openVisible('Body')">{{ t('Add Body') }}</el-button>
     </el-form-item>
 
     <el-form-item :label="t('Response Variable Name')">
-      <el-select v-model="state.responseData" placeholder="please select your zone"
+      <el-select v-model="state.responseBodyName" placeholder="please select your zone"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
         <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
                    :label="item.label" />
       </el-select>
     </el-form-item>
-
-    <!--    <el-form-item :label="t('Response Variable As Json')">-->
-    <!--      <el-switch v-model="state.responseVariableAsJson" :active-text="t('Open')" :inactive-text="t('Close')" />-->
-    <!--    </el-form-item>-->
   </el-form>
 
   <LazyBpmnContextHttpVariables ref="variablesParamsRef" :title="t('Add Params')" @update="handleUpdateParams" />

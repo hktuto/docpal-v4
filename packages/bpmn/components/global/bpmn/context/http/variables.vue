@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { QuestionFilled } from '@element-plus/icons-vue'
 
 const { t } = useI18n()
 const dialogVisible = ref()
@@ -38,6 +39,21 @@ defineExpose({ openDrawer })
 <template>
   <el-drawer v-model="dialogVisible" :title="props.title" size="100%">
     <div>
+      <el-popover
+        class="box-item"
+        width="300"
+        title="Info"
+        content="You can set data through '${key}'"
+        placement="top"
+      >
+        <template #reference>
+          <div style="display: flex; justify-content: flex-end; align-items: center;">
+            <el-icon >
+              <QuestionFilled />
+            </el-icon>
+          </div>
+        </template>
+      </el-popover>
       <el-table :data="state.variables" style="width: 100%">
         <el-table-column :label="t('Key')" prop="key">
           <template #default="{ row, $index }">
@@ -57,7 +73,7 @@ defineExpose({ openDrawer })
           </template>
         </el-table-column>
       </el-table>
-      <el-button @click="handleCreate">
+      <el-button type="primary" @click="handleCreate">
         {{ t('docTemplate.variable.addRow') }}
       </el-button>
     </div>
