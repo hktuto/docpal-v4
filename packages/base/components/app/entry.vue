@@ -15,7 +15,6 @@ async function getTabsFromServer() {
   const route = useRoute();
 
   let storageTabs = localStorage.getItem(props.mode + '-app-tab');
-  console.log(props.mode + '-app-tab', storageTabs)
   sessionStorage.removeItem('temp-path')
   // storageTabs = null
   try {

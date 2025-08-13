@@ -22,6 +22,7 @@ const config = {
     '../assets/styles/main.scss'
   ],
   extends:[
+    "../sql-store"
   ],
   
   runtimeConfig:{
