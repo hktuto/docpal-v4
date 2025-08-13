@@ -1,24 +1,14 @@
 <script lang="tsx" setup>
-import { useDebounceFn, useMagicKeys } from '@vueuse/core'
+import { useDebounceFn } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import { 
-  createDropableFolder, 
-  createDropableFile, 
-  useSqliteTable, 
-  documentColumn, 
-  documentIndex, 
-  apiToColumn,
-  columnToApi,
- } from '#imports'
-import type { DocumentColumnData, DocumentApiData } from '#imports'
-
+import { createDropableFolder, createDropableFile } from '#imports'
+import { useMagicKeys } from '@vueuse/core'
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
-
-
+import { log } from 'vxe-pc-ui'
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
@@ -34,60 +24,6 @@ const emits = defineEmits(['selectedChange', 'expandedItemsChange'])
 const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
-
-
-const {
-  find,
-  syncData,
-} = useSqliteTable<DocumentColumnData >({
-  schema: {
-    name: 'docpal_documents',
-    columns: documentColumn,
-    indexes: documentIndex,
-  },
-  hooks:{
-    afterFind: async(result:DocumentColumnData[], where:any, options:any)=>{
-
-      const list = await loadData([], where.parentRef) as DocumentApiData[]
-
-      // step 2 calculate diff between apiList and result
-      const batchData = {
-        create: [],
-        update: [],
-        delete: []
-      } as {
-        create: DocumentColumnData[],
-        update: DocumentColumnData[],
-        delete: DocumentColumnData[]
-      }
-      // find updatd and delete items in result
-      result.forEach((item:DocumentColumnData) => {
-        if(!list.some((apiItem:DocumentApiData) => apiItem.id === item.id)){
-          batchData.delete.push(item)
-        }
-      })
-      // find create items in list
-      list.forEach((item:DocumentApiData) => {
-        const existingItem = result.find((apiItem:DocumentColumnData) => apiItem.id === item.id)
-        if(!existingItem){
-          batchData.create.push(apiToColumn(item))
-        }else{
-          if(item.modifiedDate !== existingItem.modifiedDate){
-            batchData.update.push(apiToColumn(item))
-          }
-        }
-      })
-      // update table
-      tableRef.value?.insert(batchData.create)
-      tableRef.value?.setRow(batchData.update)
-      tableRef.value?.remove(batchData.delete)
-      syncData(batchData)
-      // sync data
-    }
-  }
-})
-
-
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -139,17 +75,10 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
     if (listProvider.mode.value === 'browse') {
-      const data = await find({
-        parentRef: listProvider.idOrPath?.value || '/'
-      }).then(data => {
-        return data.map(item => columnToApi(item))
-      })
-      if(data){
-        data.sort(sortEntry)
-        emits('selectedChange', [])
-        return data
-      }
-      return []
+      const data = await loadData([], listProvider.idOrPath?.value || '/')
+      data.sort(sortEntry)
+      emits('selectedChange', [])
+      return data
     }
     // if mode is search, use searchData to get search data
     if (listProvider.mode.value === 'search') {
@@ -534,7 +463,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   optionalConfig: {
     treeConfig: {
       transform: true,
-      parentField: 'parentRef',
+      parentField: 'parentId',
       lazy: true,
       indent: 20,
       showLine: true,
@@ -542,7 +471,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       loadMethod: async (params) => {
         try{
 
-          const entry = await find({parentRef:params.row.id})
+          const entry = await loadAllChildren([], params.row.id)
           return entry.sort(sortEntry)
         }catch(e){
           // if error, return empty array and remove item from expandedItems
@@ -562,8 +491,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       height: 42,
       isCurrent: true,
       isHover: true,
-      useKey: true,
-      keyField: 'id'
+      useKey: true
     },
     rowStyle: ({ rowIndex, row }) => {
       if (row.source === 'tempFile') {

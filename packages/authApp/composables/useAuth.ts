@@ -5,8 +5,6 @@ import type Keycloak from 'keycloak-js'
 
 import type { UserDTO } from 'api/src/generate/client'
 
-
-
 export const useDesktopMode = () => useState<boolean>('is-desktop')
 export const useUserState = () => useState<UserDTO | null>('auth-user')
 export const useKeyCloakState = () => useState<Keycloak | null>('keycloak-state')
@@ -42,45 +40,6 @@ export async function verifly() {
   await Promise.all([getUser(), getFeature(), getUserPreference(), getOCRSetting()])
   isDesktopMode.value = !(!window || !window.navigator || !window.navigator.userAgent || !window.navigator.userAgent.toLowerCase().includes('electron'))
   logedIn.value = true
-  // check if user in in db
-  const userId = useUserId()
-  const user = useUserState()
-  
-  const {
-    create,
-    findOne,
-    deleteTable,
-  } = useSqliteTable({
-    schema:{
-      name: 'auth_user',
-      columns: [
-        {
-          name: 'id',
-          type: 'TEXT',
-          primaryKey: true
-        },
-        {
-          name: 'username',
-          type: 'TEXT',
-          primaryKey: false
-        },
-        
-      ]
-    }
-  })  
-  try{
-    console.log('user in db', userId.value)
-    await findOne({
-      id: userId.value
-    })
-  }catch(err){
-    console.log('user not in db')
-    await deleteTable('docpal_documents')
-    await create({
-      id: userId.value,
-      username: user.value.username
-    })
-  }
   emitBus(EventType.USER_LOGIN__SUCCESS, '')
 }
 
