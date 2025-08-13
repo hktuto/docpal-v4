@@ -5,7 +5,7 @@ const dialogVisible = ref()
 const props = defineProps<{
   title: string
 }>()
-const emits = defineEmits(['updateVariable'])
+const emits = defineEmits(['update'])
 const state = reactive({
   variables: []
 })
@@ -29,7 +29,7 @@ function handleDelete(index: number) {
 
 function handleSubmit() {
   dialogVisible.value = false
-  emits('updateVariable', state.variables)
+  emits('update', state.variables)
 }
 
 defineExpose({ openDrawer })
