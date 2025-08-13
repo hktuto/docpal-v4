@@ -154,9 +154,8 @@ async function handleTest() {
       notification.close()
     }, 3000)
   } catch (error) {
-    console.log(error)
     notification.close()
-    routerProvider?.message.error(error.message || "Download failed")
+    routerProvider?.message.error(error)
   } finally {
     state.downloadLoading = false
   }
