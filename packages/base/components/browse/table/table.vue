@@ -7,7 +7,8 @@ import {
   useSqliteTable, 
   documentColumn, 
   documentIndex, 
-  documentTransformers,
+  apiToColumn,
+  columnToApi,
  } from '#imports'
 import type { DocumentColumnData, DocumentApiData } from '#imports'
 
@@ -36,35 +37,52 @@ const { shift } = useMagicKeys()
 
 
 const {
-  load
-} = useSqliteTable<DocumentApiData ,DocumentColumnData >({
-  name: 'document',
+  find,
+  syncData,
+} = useSqliteTable<DocumentColumnData >({
   schema: {
     name: 'docpal_documents',
     columns: documentColumn,
     indexes: documentIndex,
   },
-  transformers: documentTransformers,
-  api:{
-    endpoints: {
-      list : async (params:any) => {
-        console.log('getList', params, listProvider.idOrPath?.value )
-        return loadData([], listProvider.idOrPath?.value || '/')
-      },
-    }
-  },
-  callbacks:{
-    onDataLoaded:(data:DocumentApiData[])=>{
-      console.log('onDataLoaded', data)
-      for(const item of data){
-        const existingItem = tableRef.value?.getRowById(item.id)
-        if(!existingItem){
-          tableRef.value?.insert(item)
-        }else{
-          tableRef.value?.setRow(item, item);
-        }
+  hooks:{
+    afterFind: async(result:DocumentColumnData[], where:any, options:any)=>{
+
+      const list = await loadData([], where.parentRef) as DocumentApiData[]
+
+      // step 2 calculate diff between apiList and result
+      const batchData = {
+        create: [],
+        update: [],
+        delete: []
+      } as {
+        create: DocumentColumnData[],
+        update: DocumentColumnData[],
+        delete: DocumentColumnData[]
       }
-      // TODO: insert data to table
+      // find updatd and delete items in result
+      result.forEach((item:DocumentColumnData) => {
+        if(!list.some((apiItem:DocumentApiData) => apiItem.id === item.id)){
+          batchData.delete.push(item)
+        }
+      })
+      // find create items in list
+      list.forEach((item:DocumentApiData) => {
+        const existingItem = result.find((apiItem:DocumentColumnData) => apiItem.id === item.id)
+        if(!existingItem){
+          batchData.create.push(apiToColumn(item))
+        }else{
+          if(item.modifiedDate !== existingItem.modifiedDate){
+            batchData.update.push(apiToColumn(item))
+          }
+        }
+      })
+      // update table
+      tableRef.value?.insert(batchData.create)
+      tableRef.value?.setRow(batchData.update)
+      tableRef.value?.remove(batchData.delete)
+      syncData(batchData)
+      // sync data
     }
   }
 })
@@ -121,16 +139,15 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
     if (listProvider.mode.value === 'browse') {
-      const data = await load({
-        where: {
-          parentId: listProvider.idOrPath?.value || '/'
-        }
+      const data = await find({
+        parentRef: listProvider.idOrPath?.value || '/'
+      }).then(data => {
+        return data.map(item => columnToApi(item))
       })
-      if(data.success && data.data){
-        data.data.sort(sortEntry)
+      if(data){
+        data.sort(sortEntry)
         emits('selectedChange', [])
-        console.log('tableConfig', data.data)
-        return data.data
+        return data
       }
       return []
     }
@@ -517,7 +534,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
   optionalConfig: {
     treeConfig: {
       transform: true,
-      parentField: 'parentId',
+      parentField: 'parentRef',
       lazy: true,
       indent: 20,
       showLine: true,
@@ -525,7 +542,7 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       loadMethod: async (params) => {
         try{
 
-          const entry = await loadAllChildren([], params.row.id)
+          const entry = await find({parentRef:params.row.id})
           return entry.sort(sortEntry)
         }catch(e){
           // if error, return empty array and remove item from expandedItems

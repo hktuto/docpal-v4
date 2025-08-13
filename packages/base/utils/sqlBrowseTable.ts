@@ -180,8 +180,8 @@ export const documentIndex:IndexDefinition[] = [
     unique: false
   },
   {
-    name: "idx_document_parentId",
-    columns: ["parentId"],
+    name: "idx_document_parentRef",
+    columns: ["parentRef"],
     unique: false
   },
   {
@@ -201,35 +201,24 @@ export const documentIndex:IndexDefinition[] = [
   }
 ]
 
-
-
-export const documentTransformers = {
-  apiToColumn: (apiData:DocumentApiData, options?: QueryOptions):DocumentColumnData => {
+export const apiToColumn = (apiData:DocumentApiData, options?: QueryOptions):DocumentColumnData => {
     return {...apiData,
-    permissionIds: apiData.permissionIds ? apiData.permissionIds.join(',') : '',
-    collections: apiData.collections ? apiData.collections.join(',') : '',
-    contributors: apiData.contributors ? apiData.contributors.join(',') : '',
-    tags: apiData.tags ? apiData.tags.join(',') : '',
-    hold: apiData.hold ? JSON.stringify(apiData.hold) : "",
-    retention: apiData.retention ? JSON.stringify(apiData.retention) : ""}
-  },
-  columnToApi: (columnData:DocumentColumnData):DocumentApiData => ({
+      permissionIds: apiData.permissionIds ? apiData.permissionIds.join(',') : '',
+      collections: apiData.collections ? apiData.collections.join(',') : '',
+      contributors: apiData.contributors ? apiData.contributors.join(',') : '',
+      tags: apiData.tags ? apiData.tags.join(',') : '',
+      hold: apiData.hold ? JSON.stringify(apiData.hold) : "",
+      retention: apiData.retention ? JSON.stringify(apiData.retention) : ""
+    } as DocumentColumnData
+  }
+export const columnToApi = (columnData:DocumentColumnData):DocumentApiData => {
+  return {
     ...columnData,
     permissionIds: columnData.permissionIds ? columnData.permissionIds.split(',').map(Number) : [],
     collections: columnData.collections ? columnData.collections.split(',') : [],
     contributors: columnData.contributors ? columnData.contributors.split(',') : [],
     tags: columnData.tags ? columnData.tags.split(',') : [],
-    isFolder: columnData.isFolder ? true : false,
-    fileSize: columnData.fileSize ? columnData.fileSize : 0,
-    status: columnData.status ? columnData.status : 0,
-    statusName: columnData.statusName ? columnData.statusName : '',
-    hold: columnData.hold ? JSON.parse(columnData.hold) : "",
-    retention: columnData.retention ? JSON.parse(columnData.retention) : ""
-  }),
-  queryTransformer: (dbQueryOptions: QueryOptions) => {
-    return {
-      idOrPath: dbQueryOptions.where?.idOrPath || ''
-    }
   }
 }
+  
 
