@@ -52,7 +52,6 @@ export default defineNuxtConfig({
   //     exclude: ['@sqlite.org/sqlite-wasm'],
   //   },
   // },
-  css: ['~/assets/css/global.css'],
   app: {
     head: {
       meta: [
