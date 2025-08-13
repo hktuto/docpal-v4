@@ -13,7 +13,7 @@
     </template>
     <template #docIcon="{ row }">
       <div class="nameItem">
-        <BrowseItemIcon v-if="!!row" :type="row.isFolder ? 'folder' : 'file'" />
+        <BrowseItemIcon v-if="!!row" :type="row.is_folder ? 'folder' : 'file'" />
         <div class="label">{{ row.name }}</div>
       </div>
     </template>
