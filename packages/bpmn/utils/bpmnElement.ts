@@ -940,7 +940,7 @@ export const bpmnElement: BpmnElement = {
         id,
         ...bpmnElement.scriptTask.nodeStyle({
           script: {
-            ['__CDATA']: ''
+            ['__cdata']: ''
           }
         }),
         label: 'New Script Task',
@@ -949,7 +949,7 @@ export const bpmnElement: BpmnElement = {
           attr_name: 'Script Task',
           attr_scriptFormat: 'javascript',
           script: {
-            ['__CDATA']: ''
+            ['__cdata']: ''
           }
         })
       })
