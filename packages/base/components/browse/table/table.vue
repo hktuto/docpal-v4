@@ -1,14 +1,23 @@
 <script lang="tsx" setup>
-import { useDebounceFn } from '@vueuse/core'
+import { useDebounceFn, useMagicKeys } from '@vueuse/core'
 import { emitBus, EventType, useEventBus } from 'eventbus'
-import { createDropableFolder, createDropableFile } from '#imports'
-import { useMagicKeys } from '@vueuse/core'
+import { 
+  createDropableFolder, 
+  createDropableFile, 
+  useSqliteTable, 
+  documentColumn, 
+  documentIndex, 
+  documentTransformers,
+ } from '#imports'
+import type { DocumentColumnData, DocumentApiData } from '#imports'
+
 
 const cleanSelectedRowsBus = useEventBus(EventType.FILE_CLEAN_SELECTED_ROWS)
 const listProvider = inject(BrowseListProviderKey)
 const routerProvider = inject(MenuRouterKey)
 import { clientApi } from 'api'
-import { log } from 'vxe-pc-ui'
+
+
 
 if (!listProvider || !routerProvider) {
   throw new Error('BrowseListProviderKey not found')
@@ -24,6 +33,43 @@ const emits = defineEmits(['selectedChange', 'expandedItemsChange'])
 const lastSelectedIndex = ref(-1)
 const lastSelectedRow = ref<any>(null)
 const { shift } = useMagicKeys()
+
+
+const {
+  load
+} = useSqliteTable<DocumentApiData ,DocumentColumnData >({
+  name: 'document',
+  schema: {
+    name: 'docpal_documents',
+    columns: documentColumn,
+    indexes: documentIndex,
+  },
+  transformers: documentTransformers,
+  api:{
+    endpoints: {
+      list : async (params:any) => {
+        console.log('getList', params, listProvider.idOrPath?.value )
+        return loadData([], listProvider.idOrPath?.value || '/')
+      },
+    }
+  },
+  callbacks:{
+    onDataLoaded:(data:DocumentApiData[])=>{
+      console.log('onDataLoaded', data)
+      for(const item of data){
+        const existingItem = tableRef.value?.getRowById(item.id)
+        if(!existingItem){
+          tableRef.value?.insert(item)
+        }else{
+          tableRef.value?.setRow(item, item);
+        }
+      }
+      // TODO: insert data to table
+    }
+  }
+})
+
+
 
 async function loadData(entry: any[], path?: string, pageNum: number = 0) {
   const { data } = await listProvider?.getchildApi({ idOrPath: path, pageSize: 1000, pageNum })
@@ -75,10 +121,18 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
     cleanSelectedRows()
     // if mode is browse, use loadData to get current path data
     if (listProvider.mode.value === 'browse') {
-      const data = await loadData([], listProvider.idOrPath?.value || '/')
-      data.sort(sortEntry)
-      emits('selectedChange', [])
-      return data
+      const data = await load({
+        where: {
+          parentId: listProvider.idOrPath?.value || '/'
+        }
+      })
+      if(data.success && data.data){
+        data.data.sort(sortEntry)
+        emits('selectedChange', [])
+        console.log('tableConfig', data.data)
+        return data.data
+      }
+      return []
     }
     // if mode is search, use searchData to get search data
     if (listProvider.mode.value === 'search') {
@@ -491,7 +545,8 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       height: 42,
       isCurrent: true,
       isHover: true,
-      useKey: true
+      useKey: true,
+      keyField: 'id'
     },
     rowStyle: ({ rowIndex, row }) => {
       if (row.source === 'tempFile') {
