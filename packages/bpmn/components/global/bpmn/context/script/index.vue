@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Node } from '@antv/x6'
-// import { EditorState } from '@codemirror/state'
-// import { EditorView, keymap } from '@codemirror/view'
-// import { javascript } from '@codemirror/lang-javascript'
-// import { defaultKeymap } from '@codemirror/commands'
+import { Codemirror } from 'vue-codemirror'
+import { javascript } from '@codemirror/lang-javascript'
+import { oneDark } from '@codemirror/theme-one-dark'
+import { QuestionFilled } from '@element-plus/icons-vue'
 
 const { node } = defineProps<{
   node: Node
@@ -14,22 +14,12 @@ const graphProvider = inject(BPMN_PROVIDER)
 if (!graphProvider) {
   throw createError('graph provider not found')
 }
-const defaultFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
-
-  return Object.keys(graphProvider.allFormField.value).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: graphProvider.allFormField.value[key].attr_id
-    }
-  })
-})
 
 const state = reactive({
   js: ''
 })
 
-function fieldMappingUpdate(newVal: string, name: string) {
+function fieldMappingUpdate(newVal: string) {
   graphProvider?.graph.value?.startBatch('update-script-field-data')
 
   const nodeData = node.getData()
@@ -37,55 +27,60 @@ function fieldMappingUpdate(newVal: string, name: string) {
     ...nodeData,
     version: (nodeData.version || 0) + 1
   }
-  newData.data.script['__CDATA'] = newVal || ''
+  newData.data.script['__cdata'] = newVal || ''
   node.setData(newData, { overwrite: true, deep: true, silent: false })
 
   graphProvider?.graph.value?.stopBatch('update-script-field-data')
 }
 
-// const editor = ref<HTMLDivElement | null>(null)
-// let view = ref()
-//
-// function init() {
-//   if (editor.value) {
-//     let startState = EditorState.create({
-//       doc: state.js,
-//       extensions: [
-//         keymap.of(defaultKeymap),
-//         EditorView.theme({})
-//       ]
-//     })
-//
-//     const view = new EditorView({
-//       doc: state.js,
-//       parent: document.body,
-//       extensions: [
-//         javascript({ typescript: true })
-//       ]
-//     })
-//   }
-// }
+const extensions = [javascript({ typescript: true }), oneDark]
 
-// onMounted(() => {
-//   init()
-// })
+function init() {
+  const field: string = node.data.data.script['__cdata']
 
-// onBeforeUnmount(() => {
-//   if (view) {
-//     view.destroy()
-//   }
-// })
+  if (!field) {
+    state.js = ''
+    return
+  }
+  state.js = field
+}
+
+function handleBlur() {
+  fieldMappingUpdate(state.js)
+}
+
+onMounted(() => {
+  init()
+})
 
 </script>
 
 <template>
   <BpmnSidebarEditLabel :node="node" />
-  <el-form-item :label="t('JavaScript')" label-position="top">
-    <el-input v-model="state.js" type="textarea" rows="35"
-              @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')" />
-    <!--    <div ref="editor"></div>-->
+  <el-popover
+    class="box-item"
+    width="300"
+    title="Info"
+    content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
+    placement="top"
+  >
+    <template #reference>
+      <el-icon>
+        <QuestionFilled />
+      </el-icon>
+    </template>
+  </el-popover>
+  <el-form-item label="JavaScript" label-position="top">
+    <codemirror
+      v-model="state.js"
+      :style="{width: '290px', height: '68vh'}"
+      :autofocus="true"
+      :indent-with-tab="true"
+      :tab-size="2"
+      :extensions="extensions"
+      @blur="handleBlur"
+    />
   </el-form-item>
-
 </template>
 
 <style scoped lang="scss">
