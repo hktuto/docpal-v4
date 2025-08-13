@@ -7,8 +7,8 @@ const { t } = useI18n()
 const { node } = defineProps<{
   node: Node
 }>()
-const variablesRef = ref()
-const dialogParamsVisible = ref()
+const variablesParamsRef = ref()
+const variablesHeaderRef = ref()
 
 const graphProvider = inject(BPMN_PROVIDER)
 if (!graphProvider) {
@@ -26,13 +26,26 @@ const allFieldOptions = computed(() => {
   })
 })
 
+const defaultFieldOptions = computed(() => {
+  if (!graphProvider.allFormField.value) return []
+
+  return Object.keys(graphProvider.allFormField.value).map((key) => {
+    return {
+      label: graphProvider.allFormField.value[key].attr_name,
+      value: graphProvider.allFormField.value[key].attr_id
+    }
+  })
+})
+
+
 const state = reactive({
   method: ['GET', 'POST', 'PUT', 'PATH', 'DELETE'],
   requestMethod: '',
   requestUrl: '',
+  requestParams: '',
   requestHeader: '',
   responseData: '',
-  responseVariableAsJson: ''
+  responseVariableAsJson: false
 })
 
 function initForm() {
@@ -75,16 +88,25 @@ function fieldMappingUpdate(newVal: string, name: string) {
 }
 
 // TODO Test Data
-const paramsState = reactive({
+const requestState = reactive({
   params: [
-    { key: 'a', value: 'aaa' },
-    { key: '2', value: '213' },
-    { key: 'b', value: 'bx' }
+    // { key: 'a', value: 'aaa' },
+    // { key: '2', value: '213' },
+    // { key: 'b', value: 'bx' }
+  ],
+  header: [
+    // { key: 'a', value: 'aaa' },
+    // { key: '2', value: '213' },
+    // { key: 'b', value: 'bx' }
   ]
 })
 
-function openVisible() {
-  variablesRef.value.openDrawer(paramsState.params)
+function openVisible(status: string) {
+  if (status === 'Params') {
+    variablesParamsRef.value.openDrawer(requestState.params)
+  } else {
+    variablesHeaderRef.value.openDrawer(requestState.params)
+  }
 }
 
 watch(() => node, async () => {
@@ -118,38 +140,31 @@ watch(() => node, async () => {
     </el-form-item>
 
     <el-form-item :label="t('Request Params')" class="flex gap-4">
-      <el-input disabled />
-      <el-button @click="openVisible">{{ t('Add Params') }}</el-button>
+      <el-input disabled v-model="state.requestParams" />
+      <el-button @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
     </el-form-item>
 
     <el-form-item :label="t('Request Header')">
-      <el-select v-model="state.requestHeader" placeholder="please select your zone"
-                 @change="(val:any) => fieldMappingUpdate(val, 'requestHeader')">
-        <el-option v-for="item in allFieldOptions" :key="item.value"
-                   :label="item.value.replace('${variables:get(', '').replace(')}', '')" :value="item.value" />
-      </el-select>
+      <el-input disabled v-model="state.requestHeader" />
+      <el-button @click="openVisible('Header')">{{ t('Add Header') }}</el-button>
     </el-form-item>
 
     <el-form-item :label="t('Response Variable Name')">
+      <!--      <el-input v-model="state.responseData" @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')" />-->
       <el-select v-model="state.responseData" placeholder="please select your zone"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
-        <el-option v-for="item in allFieldOptions" :key="item.value" :value="item.value"
-                   :label="item.label.replace('${variables:get(', '').replace(')}', '')" />
+        <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
+                   :label="item.label" />
       </el-select>
     </el-form-item>
 
-    <el-form-item :label="t('Response Variable As Json')">
-      <el-switch>
-
-      </el-switch>
-      <!--            <el-select v-model="state.requestMethod" placeholder="please select your zone"-->
-      <!--                 @change="(val:any) => fieldMappingUpdate(val, 'requestMethod')">-->
-      <!--        <el-option v-for="item in state.method" :key="item.value" :label="item.label" :value="item.value" />-->
-      <!--            </el-select>-->
-    </el-form-item>
+    <!--    <el-form-item :label="t('Response Variable As Json')">-->
+    <!--      <el-switch v-model="state.responseVariableAsJson" :active-text="t('Open')" :inactive-text="t('Close')" />-->
+    <!--    </el-form-item>-->
   </el-form>
 
-  <LazyBpmnContextHttpVariables ref="variablesRef" :title="t('Add Params')"></LazyBpmnContextHttpVariables>
+  <LazyBpmnContextHttpVariables ref="variablesParamsRef" :title="t('Add Params')"></LazyBpmnContextHttpVariables>
+  <LazyBpmnContextHttpVariables ref="variablesHeaderRef" :title="t('Add Header')"></LazyBpmnContextHttpVariables>
 </template>
 
 <style scoped lang="scss">

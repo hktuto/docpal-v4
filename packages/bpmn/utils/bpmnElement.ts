@@ -72,7 +72,7 @@ export enum BpmnElementType {
   exclusiveGateway = 'exclusiveGateway',
   serviceTask = 'serviceTask',
   boundaryEvent = 'boundaryEvent',
-  // scriptTask = 'scriptTask',
+  scriptTask = 'scriptTask',
   sequenceFlow = 'sequenceFlow' // sequenceFlow must be in last, otherwise , create edge may not work
 }
 
@@ -830,9 +830,8 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestHeader', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
-                // { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': '' } },
                 // { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
-                // { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } }
               ]
             }
@@ -849,16 +848,11 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
-                // { attr_name: 'resultVariablePrefix', ['flowable:expression']: { '__cdata': '' } },
                 // { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
-                // { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'true' } },
+                { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } }
               ]
-            },
-            // outputParameter: [
-            //   {att_name:'' ,httpResponse},
-            //   {att_name: "source","response"}
-            // ]
+            }
           })
         })
       }
@@ -909,19 +903,67 @@ export const bpmnElement: BpmnElement = {
       }
     }
   },
-  // scriptTask:{
-  //     nodeStyle:squareNodeStyle('#29CC6A', '/bpmn/icons/email.svg'),
-  //     embed:false,
-  //     toolbar:{
-  //         enable:false,
-  //     },
-  //     newNodeData:(id,label,data) => ({
-  //         id,
-  //         name:label,
-  //         data
-  //     }),
-  //     clickHandler:() => {}
-  // },
+  scriptTask: {
+    nodeStyle: (item: any) => {
+      return {
+        ...squareNodeStyle('#0099ff', 'scriptTask', '/bpmn/icons/form.svg', 200, 64, '#fff', '#000'),
+        shape: 'bpmn-node',
+        ports: {
+          items: [
+            {
+              id: 'from',
+              group: 'from'
+            },
+            {
+              id: 'to',
+              group: 'to'
+            },
+            {
+              id: 'left',
+              group: 'left'
+            },
+            {
+              id: 'right',
+              group: 'right'
+            }
+          ]
+        }
+      }
+    },
+    embed: false,
+    toolbar: [{
+      icon: 'bpmn:form',
+      label: 'Script Task',
+      group: '',
+      order: 0,
+      dropData: (id: string) => ({
+        id,
+        ...bpmnElement.scriptTask.nodeStyle({
+          script: {
+            ['__CDATA']: ''
+          }
+        }),
+        label: 'New Script Task',
+        data: bpmnElement.scriptTask.newNodeData(id, 'New Script Task', {
+          attr_id: id,
+          attr_name: 'Script Task',
+          attr_scriptFormat: 'javascript',
+          script: {
+            ['__CDATA']: ''
+          }
+        })
+      })
+    }],
+    newNodeData: (id, label, data) => ({
+      id,
+      name: label,
+      type: BpmnElementType['scriptTask'],
+      data
+    }),
+    clickHandler: () => {
+    },
+    contextMenuComponent: 'LazyBpmnContextScript'
+  },
   sequenceFlow: {
     nodeStyle: () => ({}),
     embed: false,

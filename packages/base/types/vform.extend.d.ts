@@ -12,44 +12,43 @@ export type VariableItem = {
 }
 export type MetadataType = MetadataMasterTable | MetadataNumber | MetadataBoolean | MetadataSelect | MetadataDate | MetadataText | MetadataUserRoleUserGroup | MetadataUser
 export type DocumentMetadata = Record<string, MetadataType>
-export type MetadataNumber = {
+export type MetadataConfig = {
+  onMounted?: string
+  type?: any
+  label?: string
+}
+export type MetadataNumber = MetadataConfig & {
   validationName: 'number'
   minimum?: number
   maximum?: number
   multipleOf?: number
-  type?: any
 }
-export type MetadataText = {
+export type MetadataText = MetadataConfig & {
   validationName: 'text'
   maxLength?: number
-  type?: any
 }
-export type MetadataBoolean = {
+export type MetadataBoolean = MetadataConfig & {
   validationName: 'boolean'
-  type?: any
 }
-export type MetadataSelect = {
+export type MetadataSelect = MetadataConfig & {
   validationName: 'select'
   options?: string[]
   isMultiple?: boolean
-  type?: any
 }
-export type MetadataDate = {
+export type MetadataDate = MetadataConfig & {
   validationName: 'date'
   dateOrDateTime?: 'date' | 'dateTime'
   format?: string
   defaultValue?: string
   dateFormat?: string
   isMultiple?: boolean
-  type?: any
 }
-export type MetadataMasterTable = {
+export type MetadataMasterTable = MetadataConfig & {
   validationName: 'mastertable'
   masterTableName?: string
   displayColumn?: string
   valueColumn?: string
   isMultiple?: boolean
-  type?: any
   options?: {
     label: string
     value: string,
@@ -59,11 +58,10 @@ export type MetadataMasterTable = {
     }[]
   }[]
 }
-export type MetadataUserRoleUserGroup = {
+export type MetadataUserRoleUserGroup = MetadataConfig & {
   validationName: 'user_role_user_group'
   allow?: 'USER_ROLE' | 'USER_GROUP' | 'ALL'
   isMultiple?: boolean
-  type?: any
   options?: {
     label: string
     value: string,
@@ -73,10 +71,9 @@ export type MetadataUserRoleUserGroup = {
     }[]
   }[]
 }
-export type MetadataUser = {
+export type MetadataUser = MetadataConfig & {
   validationName: 'user'
   isMultiple?: boolean
-  type?: any
   options?: {
     label: string
     value: string
