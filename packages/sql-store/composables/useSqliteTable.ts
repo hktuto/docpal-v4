@@ -156,11 +156,11 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
 
       // Call after hook if provided
       if (config.hooks?.afterFind && typeof config.hooks.afterFind === 'function') {
-        await config.hooks.afterFind(result, where, options)
+        config.hooks.afterFind(result, where, options)
       }
-
       return result
     } catch (err) {
+      console.error('find error', err)
       const errorMessage = err instanceof Error ? err.message : 'Unknown error'
       error.value = errorMessage
       throw new Error(errorMessage)
@@ -300,6 +300,7 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
       const result = await transaction(ops)
       return result
     } catch (err) {
+      console.error('executeTransaction error', err)
       const errorMessage = err instanceof Error ? err.message : 'Unknown error'
       error.value = errorMessage
       throw new Error(errorMessage)
@@ -333,67 +334,44 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
   }
 
   // Sync data from API with local database
-  async function syncData(apiData: (T & DatabaseRecord)[], options?: { 
-    compareFields?: string[], 
-    parentId?: string 
+  async function syncData(data: {
+    create: (T & DatabaseRecord)[],
+    update: (T & DatabaseRecord)[],
+    delete: (T & DatabaseRecord)[]
   }): Promise<SyncResult<T>> {
     try {
       await ensureInitialized()
 
       // Call before hook if provided
       if (config.hooks?.beforeSyncData && typeof config.hooks.beforeSyncData === 'function') {
-        await config.hooks.beforeSyncData(apiData)
+        await config.hooks.beforeSyncData([...data.create, ...data.update])
       }
 
-      // Get existing data from local database
-      const whereClause = options?.parentId ? { parentId: options.parentId } : {}
-      const existingData = await find(whereClause)
-      
-      // Create maps for efficient lookup
-      const existingMap = new Map(existingData.map(item => [(item as any).id, item]))
-      const apiDataMap = new Map(apiData.map(item => [item.id, item]))
-
-      const newItems: T[] = []
-      const updatedItems: T[] = []
-      const deletedItems: T[] = []
       const operations: Array<{ sql: string; params?: any[] }> = []
 
-      // Prepare operations for new and updated items
-      for (const apiItem of apiData) {
-        const existingItem = existingMap.get(apiItem.id)
-        
-        if (!existingItem) {
-          // New item - prepare INSERT operation
-          const { sql, params } = SchemaBuilder.buildInsertSQL(config.schema.name, apiItem as Record<string, any>)
-          operations.push({ sql, params })
-          newItems.push(apiItem)
-        } else {
-          // Check if item needs updating
-          const needsUpdate = shouldUpdateItem(existingItem, apiItem, options?.compareFields)
-          if (needsUpdate) {
-            // Prepare UPDATE operation
-            const { sql, params } = SchemaBuilder.buildUpdateSQL(
-              config.schema.name, 
-              apiItem as Record<string, any>, 
-              { id: apiItem.id }
-            )
-            operations.push({ sql, params })
-            updatedItems.push(apiItem)
-          }
-        }
+      // Prepare INSERT operations for new items
+      for (const item of data.create) {
+        const { sql, params } = SchemaBuilder.buildInsertSQL(config.schema.name, item as Record<string, any>)
+        operations.push({ sql, params })
       }
 
-      // Prepare operations for deleted items
-      for (const existingItem of existingData) {
-        if (!apiDataMap.has((existingItem as any).id)) {
-          // Prepare DELETE operation
-          const { sql, params } = SchemaBuilder.buildDeleteSQL(
-            config.schema.name, 
-            { id: (existingItem as any).id }
-          )
-          operations.push({ sql, params })
-          deletedItems.push(existingItem)
-        }
+      // Prepare UPDATE operations for updated items
+      for (const item of data.update) {
+        const { sql, params } = SchemaBuilder.buildUpdateSQL(
+          config.schema.name, 
+          item as Record<string, any>, 
+          { id: item.id }
+        )
+        operations.push({ sql, params })
+      }
+
+      // Prepare DELETE operations for deleted items
+      for (const item of data.delete) {
+        const { sql, params } = SchemaBuilder.buildDeleteSQL(
+          config.schema.name, 
+          { id: item.id }
+        )
+        operations.push({ sql, params })
       }
 
       // Execute all operations in a single transaction
@@ -402,12 +380,11 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
       }
 
       const result: SyncResult<T> = {
-        new: newItems,
-        updated: updatedItems,
-        deleted: deletedItems,
-        total: newItems.length + updatedItems.length + deletedItems.length
+        new: data.create,
+        updated: data.update,
+        deleted: data.delete,
+        total: data.create.length + data.update.length + data.delete.length
       }
-
       // Call after hook if provided
       if (config.hooks?.afterSyncData && typeof config.hooks.afterSyncData === 'function') {
         await config.hooks.afterSyncData(result)
@@ -421,33 +398,7 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
     }
   }
 
-  // Helper function to determine if an item needs updating
-  function shouldUpdateItem(existing: T, updated: T, compareFields?: string[]): boolean {
-    if (!compareFields || compareFields.length === 0) {
-      // If no specific fields provided, compare all fields
-      const existingKeys = Object.keys(existing as object)
-      const updatedKeys = Object.keys(updated as object)
-      
-      if (existingKeys.length !== updatedKeys.length) {
-        return true
-      }
 
-      for (const key of existingKeys) {
-        if (existing[key as keyof T] !== updated[key as keyof T]) {
-          return true
-        }
-      }
-      return false
-    }
-
-    // Compare only specified fields
-    for (const field of compareFields) {
-      if (existing[field as keyof T] !== updated[field as keyof T]) {
-        return true
-      }
-    }
-    return false
-  }
 
   // Clear error state
   function clearError(): void {

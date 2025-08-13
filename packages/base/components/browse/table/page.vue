@@ -78,7 +78,6 @@ async function getDoc() {
     )
   } else {
     docDetail.value = doc
-    console.log('docDetail', docDetail.value)
   }
 }
 
@@ -172,11 +171,6 @@ watch(
   }
 )
 
-onMounted(() => {
-  if (tableRef.value) {
-    tableRef.value.reload()
-  }
-})
 
 provide(BrowseListProviderKey, {
   getchildApi: (pageParams: any) => {
