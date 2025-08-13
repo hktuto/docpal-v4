@@ -87,25 +87,79 @@ function fieldMappingUpdate(newVal: string, name: string) {
   graphProvider?.graph.value?.stopBatch('update-http-field-data')
 }
 
-// TODO Test Data
-const requestState = reactive({
-  params: [
-    // { key: 'a', value: 'aaa' },
-    // { key: '2', value: '213' },
-    // { key: 'b', value: 'bx' }
-  ],
-  header: [
-    // { key: 'a', value: 'aaa' },
-    // { key: '2', value: '213' },
-    // { key: 'b', value: 'bx' }
-  ]
-})
+/**
+ * 解析 URL，提取参数
+ * @param {string} url - 需要解析的 URL
+ * @returns {Array<{key: string, value: string}>} 参数数组
+ */
+function extractParamsFromUrl(url) {
+  // 判断是否为标准 URL
+  try {
+    const urlObj = new URL(url)
+    const paramsArray = []
+    for (const [key, value] of urlObj.searchParams.entries()) {
+      paramsArray.push({ key, value })
+    }
+    return paramsArray
+  } catch (e) {
+    // 不是标准 URL，返回空数组
+    return []
+  }
+}
+
+// watch(
+//   () => state.requestUrl,
+//   (newUrl) => {
+//     // 只在是标准 URL 时提取参数
+//     const params = extractParamsFromUrl(newUrl)
+//     if (params.length > 0) {
+//       requestState.params = params
+//     }
+//   },
+//   { immediate: true }
+// )
 
 function openVisible(status: string) {
   if (status === 'Params') {
-    variablesParamsRef.value.openDrawer(requestState.params)
+    const paramsArray: any = state.requestParams
+      ? state.requestParams.split('&').map(item => {
+        const [key, value] = item.split('=')
+        return { key, value }
+      }) : []
+    variablesParamsRef.value.openDrawer(paramsArray)
   } else {
-    variablesHeaderRef.value.openDrawer(requestState.params)
+    const headerArray: any = state.requestHeader
+      ? state.requestHeader.split('\n').map(item => {
+        const [key, value] = item.split(': ')
+        return { key, value }
+      }) : []
+    variablesHeaderRef.value.openDrawer(headerArray)
+  }
+}
+
+/**
+ * update url
+ * @param visible
+ */
+function handleUpdateParams(visible: any) {
+  if (visible.length > 0 && Array.isArray(visible)) {
+    state.requestParams = visible
+      .filter(item => item.key)
+      .map(item => `${item.key}=${item.value}`)
+      .join('&')
+  } else {
+    state.requestParams = ''
+  }
+}
+
+function handleUpdateHeader(visible: any) {
+  if (visible.length > 0 && Array.isArray(visible)) {
+    state.requestHeader = visible
+      .filter(item => item.key)
+      .map(item => `${item.key}: ${item.value}`)
+      .join('\n')
+  } else {
+    state.requestHeader = ''
   }
 }
 
@@ -144,13 +198,13 @@ watch(() => node, async () => {
       <el-button @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
     </el-form-item>
 
-    <el-form-item :label="t('Request Header')">
-      <el-input disabled v-model="state.requestHeader" />
-      <el-button @click="openVisible('Header')">{{ t('Add Header') }}</el-button>
+    <el-form-item :label="t('Request Headers')">
+      <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
+                v-model="state.requestHeader" />
+      <el-button @click="openVisible('Headers')">{{ t('Add Header') }}</el-button>
     </el-form-item>
 
     <el-form-item :label="t('Response Variable Name')">
-      <!--      <el-input v-model="state.responseData" @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')" />-->
       <el-select v-model="state.responseData" placeholder="please select your zone"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
         <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
@@ -163,8 +217,8 @@ watch(() => node, async () => {
     <!--    </el-form-item>-->
   </el-form>
 
-  <LazyBpmnContextHttpVariables ref="variablesParamsRef" :title="t('Add Params')"></LazyBpmnContextHttpVariables>
-  <LazyBpmnContextHttpVariables ref="variablesHeaderRef" :title="t('Add Header')"></LazyBpmnContextHttpVariables>
+  <LazyBpmnContextHttpVariables ref="variablesParamsRef" :title="t('Add Params')" @update="handleUpdateParams" />
+  <LazyBpmnContextHttpVariables ref="variablesHeaderRef" :title="t('Add Header')" @update="handleUpdateHeader" />
 </template>
 
 <style scoped lang="scss">
