@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { FolderCabinetPage, ResponsiveFilter } from '#components'
+import { AdminFolderCabinetPage, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
 vi.mock('element-plus', () => ({
@@ -36,12 +36,12 @@ const ReaderDialog = {
   methods: {}
 }
 
-describe('[admin-folder-cabinet]FolderCabinetPage', () => {
+describe('[admin-folder-cabinet]AdminFolderCabinetPage', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(FolderCabinetPage, {
+    wrapper = mount(AdminFolderCabinetPage, {
       props: {
         id: 1
       },

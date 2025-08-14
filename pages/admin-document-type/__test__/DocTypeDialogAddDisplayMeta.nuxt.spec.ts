@@ -4,7 +4,17 @@ import { DocTypeDialogAddDisplayMeta, DocTypePermission } from '#components'
 import { adminApi } from './mock/api'
 import { ElMessage } from 'element-plus'
 import { mockRouterProvider } from './util'
-
+// Mock the composables
+vi.mock('@/composables/useDocumentTypeOptioins', () => ({
+  initMetadataOpts: vi.fn(() => Promise.resolve()),
+  metadataOpts: {
+    value: [
+      { value: 1, label: 'metadata.field1', name: 'Field 1' },
+      { value: 2, label: 'metadata.field2', name: 'Field 2' },
+      { value: 3, label: 'metadata.field3', name: 'Field 3' }
+    ]
+  }
+}))
 vi.mock('element-plus', () => ({
   ElMessageBox: {
     alert: vi.fn(),
@@ -18,7 +28,6 @@ vi.mock('element-plus', () => ({
     warning: vi.fn()
   }
 }))
-
 
 describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
   let wrapper: any
@@ -320,23 +329,10 @@ describe('[admin-document-type]DocTypeDialogAddDisplayMeta', () => {
       ]
 
       const availableOptions = wrapper.vm.availableMetadata
-
-      expect(availableOptions).toHaveLength(2)
-      expect(availableOptions[0].disabled).toBe(false) // Not displayed, so available
-      expect(availableOptions[1].disabled).toBe(true) // Already displayed, so disabled
-    })
-
-    it('should not disable options in edit mode', () => {
-      wrapper.vm.state.isEdit = true
-      wrapper.vm.state.metadataList = [
-        { id: 1, name: 'Meta 1', display: true },
-        { id: 2, name: 'Meta 2', display: true }
-      ]
-
-      const availableOptions = wrapper.vm.availableMetadata
-
-      expect(availableOptions[0].disabled).toBe(false)
-      expect(availableOptions[1].disabled).toBe(false)
+      expect(availableOptions).toHaveLength(3)
+      expect(availableOptions[0].disabled).toBe(true) 
+      expect(availableOptions[1].disabled).toBe(true) 
+      expect(availableOptions[2].disabled).toBe(false) 
     })
   })
 

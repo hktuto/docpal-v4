@@ -1,7 +1,7 @@
 import { mount, flushPromises, shallowMount } from '@vue/test-utils';
 import { describe, it, vi, expect, beforeEach, afterEach } from 'vitest';
 import {
-  EasyFormDetail,
+  AdminEasyFormDetail,
   EasyFormEmailLog,
   EasyFormDetailName,
   EasyFormDetailPermission,
@@ -29,11 +29,11 @@ vi.mock('element-plus', () => ({
 const EmptyComponent = {
   template: '<div></div>'
 };
-describe('[admin-easy-form]EasyFormDetail', () => {
+describe('[admin-easy-form]AdminEasyFormDetail', () => {
   let wrapper: any;
 
   beforeEach(() => {
-    wrapper = shallowMount(EasyFormDetail, {
+    wrapper = shallowMount(AdminEasyFormDetail, {
       props: {
         id: '1'
       },

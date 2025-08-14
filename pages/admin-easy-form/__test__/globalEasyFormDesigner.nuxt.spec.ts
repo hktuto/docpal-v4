@@ -1,7 +1,7 @@
 import { shallowMount, mount, flushPromises } from '@vue/test-utils';
 import { describe, it, vi, expect, beforeEach, afterEach, } from 'vitest';
 import {
-  EasyFormDesigner,
+  AdminEasyFormDesigner,
 } from '#components';
 import { adminApi } from './mock/api';
 
@@ -12,12 +12,12 @@ const mockFormJson = {
   formConfig: {/*...*/ }
 };
 
-describe('[admin-easy-form]EasyFormDesigner', () => {
+describe('[admin-easy-form]AdminEasyFormDesigner', () => {
   let wrapper: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    wrapper = shallowMount(EasyFormDesigner, {
+    wrapper = shallowMount(AdminEasyFormDesigner, {
       props: {
         id: '1'
       },

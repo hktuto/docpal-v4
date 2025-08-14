@@ -13,8 +13,8 @@ vi.mock('element-plus', () => ({
 
 // Mock useDocumentTypeOptioins composable
 vi.mock('~/composables/useDocumentTypeOptioins', () => ({
-  useDocumentTypeOptioins: () => ({
-    userRulesOpts: ref([
+  userRulesOpts: {
+    value: [
       {
         label: 'user_role',
         value: 'userRole',
@@ -24,8 +24,9 @@ vi.mock('~/composables/useDocumentTypeOptioins', () => ({
           { label: 'Admin', value: 'admin' }
         ]
       }
-    ])
-  })
+    ]
+  },
+  initUserRulesOpts: vi.fn(() => Promise.resolve())
 }))
 
 describe('[admin-document-type]DocTypePermissionRuleDialog', () => {

@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { HoldPage, HoldDialog, ResponsiveFilter } from '#components'
+import { AdminHoldPage, HoldDialog, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
 vi.mock('element-plus', () => ({
@@ -40,12 +40,12 @@ const Editorjs = {
   methods: {}
 }
 
-describe('[admin-hold]HoldPage', () => {
+describe('[admin-hold]AdminHoldPage', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = mount(HoldPage, {
+    wrapper = mount(AdminHoldPage, {
       props: {
         setting: {
           name: '1111'

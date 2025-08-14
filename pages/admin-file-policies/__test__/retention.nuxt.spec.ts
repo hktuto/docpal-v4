@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { RetentionPage, ResponsiveFilter } from '#components'
+import { AdminRetentionPage, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
 
@@ -42,12 +42,12 @@ const Editorjs = {
   methods: {}
 }
 
-describe('[admin-azure]RetentionPage', () => {
+describe('[admin-azure]AdminRetentionPage', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = shallowMount(RetentionPage, {
+    wrapper = shallowMount(AdminRetentionPage, {
       props: {
         page: 1,
         pageSize: 10

@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { MasterTableDetail, ResponsiveFilter } from '#components'
+import { AdminMasterTableDetail, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 import { mockQuery, mockTable } from './setup'
 vi.mock('element-plus', () => ({
@@ -34,12 +34,12 @@ const ReaderDialog = {
   methods: {}
 }
 
-describe('[admin-master-table]MasterTableDetail', () => {
+describe('[admin-master-table]AdminMasterTableDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = shallowMount(MasterTableDetail, {
+    wrapper = shallowMount(AdminMasterTableDetail, {
       props: {
         id: 'test-id'
       },
