@@ -39,21 +39,16 @@ defineExpose({ openDrawer })
 <template>
   <el-drawer v-model="dialogVisible" :title="props.title" size="100%">
     <div>
-      <el-popover
-        class="box-item"
-        width="300"
-        title="Info"
-        content="You can set data through '${key}'"
-        placement="top"
-      >
-        <template #reference>
-          <div style="display: flex; justify-content: flex-end; align-items: center;">
-            <el-icon >
+      <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <el-popover class="box-item" width="300" title="Info" content="You can set data through '${key}'"
+                    placement="top">
+          <template #reference>
+            <el-icon style="display: flex; align-items: center; margin-left: 8px;">
               <QuestionFilled />
             </el-icon>
-          </div>
-        </template>
-      </el-popover>
+          </template>
+        </el-popover>
+      </div>
       <el-table :data="state.variables" style="width: 100%">
         <el-table-column :label="t('Key')" prop="key">
           <template #default="{ row, $index }">
