@@ -8,7 +8,6 @@ import { QuestionFilled } from '@element-plus/icons-vue'
 const { node } = defineProps<{
   node: Node
 }>()
-const { t } = useI18n()
 
 const graphProvider = inject(BPMN_PROVIDER)
 if (!graphProvider) {
@@ -65,9 +64,11 @@ onMounted(() => {
     placement="top"
   >
     <template #reference>
-      <el-icon>
-        <QuestionFilled />
-      </el-icon>
+      <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <el-icon>
+          <QuestionFilled />
+        </el-icon>
+      </div>
     </template>
   </el-popover>
   <el-form-item label="JavaScript" label-position="top">

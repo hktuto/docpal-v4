@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Node } from '@antv/x6'
-import { useDebounceFn } from '@vueuse/core'
-import { adminApi } from 'api'
+import { Codemirror } from 'vue-codemirror'
+import { json } from '@codemirror/lang-json'
+import { oneDark } from '@codemirror/theme-one-dark'
+import { QuestionFilled } from '@element-plus/icons-vue'
 
 const { t } = useI18n()
 const { node } = defineProps<{
@@ -45,7 +47,9 @@ const state = reactive({
   requestParams: '',
   requestHeader: '',
   requestBody: '',
-  responseBodyName: ''
+  responseBodyName: '',
+  bodyVisible: false,
+  editBody: ''
 })
 
 function initForm() {
@@ -171,6 +175,19 @@ function handleUpdateHeader(visible: any) {
   fieldMappingUpdate(state.requestHeader, 'requestHeaders')
 }
 
+const extensions = [json(), oneDark]
+
+function openBodyEdit() {
+  state.bodyVisible = true
+  state.editBody = deepCopy(state.requestBody)
+}
+
+function handleRequestBodySubmit() {
+  state.requestBody = deepCopy(state.editBody)
+  fieldMappingUpdate(state.requestBody, 'requestBody')
+  state.bodyVisible = false
+}
+
 watch(() => node, async () => {
   if (node && node.data) {
     console.log('Request Node', node)
@@ -215,7 +232,7 @@ watch(() => node, async () => {
     <el-form-item :label="t('Request Body')">
       <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
                 v-model="state.requestBody" />
-      <el-button type="primary" @click="openVisible('Body')">{{ t('Add Body') }}</el-button>
+      <el-button type="primary" @click="openBodyEdit">{{ t('Add Body') }}</el-button>
     </el-form-item>
 
     <el-form-item :label="t('Response Variable Name')">
@@ -229,6 +246,40 @@ watch(() => node, async () => {
 
   <LazyBpmnContextHttpVariables ref="variablesParamsRef" :title="t('Add Params')" @update="handleUpdateParams" />
   <LazyBpmnContextHttpVariables ref="variablesHeaderRef" :title="t('Add Header')" @update="handleUpdateHeader" />
+
+  <el-drawer v-model="state.bodyVisible" :title="t('Edit Request Body')" size="100%">
+    <el-popover
+      class="box-item"
+      width="300"
+      title="Info"
+      content="You can set data through ${key}"
+      placement="top"
+    >
+      <template #reference>
+        <div style="display: flex; justify-content: flex-end; align-items: center;">
+          <el-icon>
+            <QuestionFilled />
+          </el-icon>
+        </div>
+      </template>
+    </el-popover>
+    <el-form-item label="Json" label-position="top">
+      <codemirror
+        v-model="state.editBody"
+        :style="{width: '290px', height: '80vh'}"
+        :autofocus="true"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+      />
+    </el-form-item>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="handleRequestBodySubmit"> {{ t('common_submit') }}</el-button>
+      </div>
+    </template>
+  </el-drawer>
+
 </template>
 
 <style scoped lang="scss">
