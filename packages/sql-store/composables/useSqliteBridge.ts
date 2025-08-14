@@ -31,7 +31,8 @@ if (typeof window !== 'undefined' && 'SharedWorker' in window) {
   port = (worker as SharedWorker).port
   port.start()
   isSharedWorker = true
-  console.log('Using SharedWorker for SQLite bridge')
+  console.log('Using SharedWorker for SQLite bridge', worker)
+
 } else {
   // Fallback to regular Worker
   worker = new Worker('/workers/sqlite.standalone-worker.js', { type: 'module' })
