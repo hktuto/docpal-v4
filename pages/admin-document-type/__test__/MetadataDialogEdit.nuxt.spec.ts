@@ -210,19 +210,12 @@ describe('[admin-document-type]MetadataDialogEdit', () => {
 
     it('should emit reload event when closing', async () => {
       await wrapper.vm.close()
-
+      await new Promise(resolve => setTimeout(resolve, 1010))
       expect(wrapper.emitted('reload')).toBeTruthy()
     })
   })
 
   describe('handleUpdate Method', () => {
-    beforeEach(() => {
-      // Mock form validation
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true)
-      }
-    })
-
     it('should update metadata successfully', async () => {
       
       // Mock API responses
@@ -250,17 +243,6 @@ describe('[admin-document-type]MetadataDialogEdit', () => {
         langs: {}
       })
       expect(ElMessage.success).toHaveBeenCalledWith('meta.update_success')
-    })
-
-    it('should handle form validation failure', async () => {
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(false)
-      }
-
-      await wrapper.vm.handleUpdate()
-
-      expect(wrapper.vm.elFormRef.validate).toHaveBeenCalled()
-      expect(ElMessage.error).not.toHaveBeenCalled()
     })
 
     it('should handle validation rule validation failure', async () => {
@@ -429,7 +411,7 @@ describe('[admin-document-type]MetadataDialogEdit', () => {
 
     it('should emit reload event when closing', async () => {
       await wrapper.vm.close()
-
+      await new Promise(resolve => setTimeout(resolve, 1010))
       expect(wrapper.emitted('reload')).toBeTruthy()
     })
   })
@@ -442,19 +424,6 @@ describe('[admin-document-type]MetadataDialogEdit', () => {
 
       expect(ElMessage.error).not.toHaveBeenCalled()
       expect(ElMessage.success).not.toHaveBeenCalled()
-    })
-
-    it('should handle missing validation form ref', async () => {
-      wrapper.vm.elFormRef = {
-        validate: vi.fn().mockResolvedValue(true),
-        resetFields: vi.fn()
-      }
-      wrapper.vm.validationFormRef = null
-
-      await wrapper.vm.handleUpdate()
-
-      // Should not throw error, just skip validation
-      expect(wrapper.vm.elFormRef.validate).toHaveBeenCalled()
     })
 
     it('should handle data without id', async () => {

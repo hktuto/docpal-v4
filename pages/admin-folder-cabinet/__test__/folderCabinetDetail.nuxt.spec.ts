@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { FolderCabinetDetail, FolderCabinetSettingDetail, ResponsiveFilter } from '#components'
+import { AdminFolderCabinetDetail, FolderCabinetSettingDetail, ResponsiveFilter } from '#components'
 import { ElMessageBox, ElNotification, ElMessage } from 'element-plus'
 
 vi.mock('element-plus', () => ({
@@ -44,12 +44,12 @@ global.getIgnoreSchemas = () => {
   console.log('这是一个全局函数');
   return ['createDate']
 };
-describe('[admin-folder-cabinet]FolderCabinetDetail', () => {
+describe('[admin-folder-cabinet]AdminFolderCabinetDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = shallowMount(FolderCabinetDetail, {
+    wrapper = shallowMount(AdminFolderCabinetDetail, {
       props: {
         id: 'test-id'
       },

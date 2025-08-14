@@ -3,7 +3,7 @@ import { describe, it, test, vi, expect, beforeEach, afterEach } from 'vitest'
 import { adminApi } from './mock/api'
 import { VxeGrid } from 'vxe-table'
 import { mockRouterProvider } from './util'
-import { RetentionDetail, ResponsiveFilter, RetentionAddDialog } from '#components'
+import { AdminRetentionDetail, ResponsiveFilter, RetentionAddDialog } from '#components'
 import { ElMessage } from 'element-plus'
 vi.mock('element-plus', () => ({
   ElMessageBox: {
@@ -39,12 +39,12 @@ const Editorjs = {
   methods: {}
 }
 
-describe('[admin-retention]RetentionDetail', () => {
+describe('[admin-retention]AdminRetentionDetail', () => {
   let wrapper: any
   const mockTabProvider = {}
 
   beforeEach(async () => {
-    wrapper = shallowMount(RetentionDetail, {
+    wrapper = shallowMount(AdminRetentionDetail, {
       props: {
         id: 1
       },

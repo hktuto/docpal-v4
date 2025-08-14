@@ -260,7 +260,7 @@ describe('[admin-document-type]MetadataDialogNew', () => {
         validationRuleName: 'number',
         minimum: -999999,
         maximum: 999999,
-        decimal: 0
+        multipleOf: 0
       })
     })
   })

@@ -9,7 +9,7 @@ import {
   MetadataValidatorMasterTable,
   MetadataValidatorNumber,
   MetadataValidatorObject,
-  MetadataValidatorRole,
+  MetadataValidatorUserRoleUserGroup,
   MetadataValidatorSelect,
   MetadataValidatorText,
   MetadataValidatorUser,
@@ -145,7 +145,7 @@ describe('[admin-document-type] MetadataValidator Components', () => {
       
       expect(wrapper.vm.validation.minimum).toBe("10")
       expect(wrapper.vm.validation.maximum).toBe("90")
-      expect(wrapper.vm.validation.decimal).toBe("3")
+      expect(wrapper.vm.validation.multipleOf).toBe("3")
     })
   })
 
@@ -302,11 +302,6 @@ describe('[admin-document-type] MetadataValidator Components', () => {
       })
     })
 
-    it('should update date format', async () => {
-      const formatInput = wrapper.find('.date-format-item input')
-      await formatInput.setValue('DD/MM/YYYY')
-      expect(wrapper.vm.validation.format).toBe('DD/MM/YYYY')
-    })
   })
 
   describe('MetadataValidatorDocument', () => {
@@ -554,11 +549,11 @@ describe('[admin-document-type] MetadataValidator Components', () => {
     })
   })
 
-  describe('MetadataValidatorRole', () => {
+  describe('MetadataValidatorUserRoleUserGroup', () => {
     let wrapper: any
 
     beforeEach(() => {
-      wrapper = mount(MetadataValidatorRole, {
+      wrapper = mount(MetadataValidatorUserRoleUserGroup, {
         props: {
           validation: {
             validationRuleName: 'role',

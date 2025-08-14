@@ -1,15 +1,15 @@
 import { mount } from '@vue/test-utils';
 import { describe, test, vi, expect, beforeEach } from 'vitest';
-import { EasyFormPage, ResponsiveFilter } from '#components';
+import { AdminEasyFormPage, ResponsiveFilter } from '#components';
 import { adminApi } from './mock/api';
 import { VxeGrid } from 'vxe-table';
 import { mockRouterProvider } from './util';
 
-describe('[admin-easy-form]EasyFormPage', () => {
+describe('[admin-easy-form]AdminEasyFormPage', () => {
   let wrapper: any;
   beforeEach(() => {
     vi.clearAllMocks();
-    wrapper = mount(EasyFormPage, {
+    wrapper = mount(AdminEasyFormPage, {
       global: {
         components: { VxeGrid, ResponsiveFilter },
         provide: {

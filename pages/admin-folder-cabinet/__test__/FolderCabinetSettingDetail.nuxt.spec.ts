@@ -21,13 +21,13 @@ vi.mock('element-plus', () => ({
   ElDropdown: {
     name: 'ElDropdown',
     props: ['trigger'],
-    template: '<div><slot /></div>',
+    template: '<div><slot /></div>'
   },
   ElTree: {
     name: 'ElTree',
     props: ['data', 'node-key', 'props', 'default-expand-all', 'highlight-current'],
-    template: '<div><slot /></div>',
-  },
+    template: '<div><slot /></div>'
+  }
 }))
 const FormRenderer = {
   template: '<div class="FormRenderer">FormRenderer</div>',
@@ -65,28 +65,28 @@ describe('[admin-folder-cabinet]FolderCabinetSettingDetail', () => {
     allow: true,
     multiple: false,
     repeatName: false,
-    labelRule: JSON.stringify([{ metadata: 'fc:docTitle', dataType: 'string' }]),
+    labelRule: JSON.stringify([{ metadata: 'fc:docTitle', dataType: 'string' }])
   }
   beforeEach(async () => {
     globalThis.getIgnoreSchemas = () => {
-      return ['schema1', 'schema2']; // 返回需要忽略的模式
-    };
+      return ['schema1', 'schema2'] // 返回需要忽略的模式
+    }
     wrapper = shallowMount(FolderCabinetSettingDetail, {
       props: {
         data: mockData,
         isRoot: true,
         id: 'test-id',
-        tree: { children: [] },
+        tree: { children: [] }
       },
       global: {
-        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs,WorkflowDialog, MasterTableVariableForm },
+        components: { VxeGrid, ResponsiveFilter, FormRenderer, VFormRender, ReaderDialog, Editorjs, WorkflowDialog, MasterTableVariableForm },
         provide: {
           [TabManagerKey]: mockTabProvider,
-          [MenuRouterKey]: mockRouterProvider,
+          [MenuRouterKey]: mockRouterProvider
         },
         mocks: {
           $t: (msg: string) => msg, // Mock translation function
-          $i18n: { t: (key: string) => key },
+          $i18n: { t: (key: string) => key }
         }
       }
     })
@@ -103,14 +103,11 @@ describe('[admin-folder-cabinet]FolderCabinetSettingDetail', () => {
     expect(wrapper.find('h3').text()).toBe('folderCabinet.defaultMetadataValue')
   })
   it('handles document type change', async () => {
-    const mockDocTypeData = {
-      value: 'newDocType',
-      metaList: [{ metadata: 'fc:docTitle', metaDataType: 'string', dataType: 'string' }],
+    const mockDocTypeData = [{ metadata: 'fc:docTitle', metaDataType: 'string', dataType: 'string', options: { validationType: 'string' } }]
+    wrapper.vm.MetaFormRef = {
+      init: vi.fn().mockResolvedValue(mockDocTypeData)
     }
-    wrapper.vm.FormVariablesRendererRef = {
-      init: vi.fn()
-    }
-    await wrapper.vm.handleDocTypeChange(mockDocTypeData)
+    await wrapper.vm.handleDocTypeChange('newDocType')
 
     expect(wrapper.vm.state.curDocType).toBe('newDocType')
     expect(wrapper.vm.state.dragList.length).toBeGreaterThan(0)
@@ -120,38 +117,38 @@ describe('[admin-folder-cabinet]FolderCabinetSettingDetail', () => {
       label: 'New Label',
       allow: true,
       multiple: false,
-      repeatName: false,
+      repeatName: false
     }
     wrapper.vm.FormRef = {
       validate: vi.fn().mockReturnValue(true)
     }
     wrapper.vm.FormRendererRef = {
-      getFormData:  vi.fn().mockResolvedValue(mockValidData),
+      getFormData: vi.fn().mockResolvedValue(mockValidData),
       vFormRenderRef: {
         resetForm: vi.fn(),
-        setFormData: vi.fn().mockReturnValue(true),
+        setFormData: vi.fn().mockReturnValue(true)
       }
     }
-    wrapper.vm.FormVariablesRendererRef = {
+    wrapper.vm.MetaFormRef = {
       getData: vi.fn().mockResolvedValue(mockValidData)
     }
     await wrapper.vm.handleSave()
 
     expect(adminApi.api.postCabinetTemplateDuplicateName).toHaveBeenCalled()
-    
+
     expect(adminApi.api.patchCabinetTemplate).toHaveBeenCalled()
     expect(mockRouterProvider.message.success).toHaveBeenCalled()
   })
-  
+
   it('handles save validation failure', async () => {
     wrapper.vm.FormRef = {
       validate: vi.fn().mockReturnValue(false)
     }
     wrapper.vm.FormRendererRef = {
-      getFormData:  vi.fn().mockResolvedValue({}),
+      getFormData: vi.fn().mockResolvedValue({}),
       vFormRenderRef: {
         resetForm: vi.fn(),
-        setFormData: vi.fn().mockReturnValue(true),
+        setFormData: vi.fn().mockReturnValue(true)
       }
     }
     await wrapper.vm.handleSave()
@@ -160,7 +157,7 @@ describe('[admin-folder-cabinet]FolderCabinetSettingDetail', () => {
   })
   it('deletes the cabinet and confirms deletion', async () => {
     wrapper.vm.state.setting = {
-      id: "test-id"
+      id: 'test-id'
     }
     vi.spyOn(ElMessageBox, 'confirm').mockResolvedValue('confirm')
 
