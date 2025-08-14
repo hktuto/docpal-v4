@@ -7,7 +7,7 @@
     "check": "npx nuxi typecheck",
     "build": "nuxt build",
     "dev": "nuxt dev --dotenv ../../env/.env.dev.client",
-    "generate": "nuxt generate",
+    "generate": "nuxt generate --dotenv ../../env/.env.app4.client",
     "preview": "nuxt preview",
     "prepare": "nuxt prepare"
   },

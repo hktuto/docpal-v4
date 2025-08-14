@@ -172,11 +172,11 @@ watch(
   }
 )
 
-onMounted(() => {
-  if (tableRef.value) {
-    tableRef.value.reload()
-  }
-})
+// onMounted(() => {
+//   if (tableRef.value) {
+//     tableRef.value.reload()
+//   }
+// })
 
 provide(BrowseListProviderKey, {
   getchildApi: (pageParams: any) => {
