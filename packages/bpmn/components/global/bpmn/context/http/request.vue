@@ -251,7 +251,19 @@ watch(() => node, async () => {
       </el-select>
     </el-form-item>
 
-    <el-form-item :label="t('Request Url')">
+    <el-form-item>
+      <template #label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>{{ t('Request Url') }}</span>
+          <el-popover width="300" title="Info" content="You can set data through '${key}'" placement="top">
+            <template #reference>
+              <el-icon style="cursor: pointer; color: #909399;">
+                <QuestionFilled />
+              </el-icon>
+            </template>
+          </el-popover>
+        </div>
+      </template>
       <el-input v-model="state.requestUrl" @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')" />
       <!--      <el-select v-model="state.requestUrl" placeholder="please select your zone"-->
       <!--                 @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')">-->
@@ -260,24 +272,50 @@ watch(() => node, async () => {
       <!--      </el-select>-->
     </el-form-item>
 
-    <el-form-item :label="t('Request Params')" class="flex gap-4">
-      <el-input disabled v-model="state.requestParams" />
-      <el-button type="primary" @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
+    <el-form-item :label="t('Request Params')">
+      <div style="display: flex; gap: 8px; align-items: flex-start; width: 100%;">
+        <el-input disabled v-model="state.requestParams" style="flex: 1;" />
+        <div style="display: flex; align-items: center; justify-content: flex-end; min-width: fit-content;">
+          <el-button type="primary" @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
+        </div>
+      </div>
     </el-form-item>
 
     <el-form-item :label="t('Request Headers')">
-      <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
-                v-model="state.requestHeader" />
-      <el-button type="primary" @click="openVisible('Headers')">{{ t('Add Header') }}</el-button>
+      <div style="display: flex; gap: 8px; align-items: flex-start; width: 100%;">
+        <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
+                  v-model="state.requestHeader" style="flex: 1;" />
+        <div style="display: flex; align-items: center; justify-content: flex-end; min-width: fit-content;">
+          <el-button type="primary" @click="openVisible('Headers')">{{ t('Add Header') }}</el-button>
+        </div>
+      </div>
     </el-form-item>
 
     <el-form-item :label="t('Request Body')">
-      <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
-                v-model="state.requestBody" />
-      <el-button type="primary" @click="openBodyEdit">{{ t('Add Body') }}</el-button>
+      <div style="display: flex; gap: 8px; align-items: flex-start; width: 100%;">
+        <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
+                  v-model="state.requestBody" style="flex: 1;" />
+        <div style="display: flex; align-items: center; justify-content: flex-end; min-width: fit-content;">
+          <el-button type="primary" @click="openBodyEdit">{{ t('Add Body') }}</el-button>
+        </div>
+      </div>
     </el-form-item>
 
-    <el-form-item :label="t('Response Variable Name')">
+    <el-form-item>
+      <template #label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>{{ t('Response Variable Name') }}</span>
+          <el-popover width="300" title="Info"
+                      content="When setting this property, the result body is allowed to be obtained using interpolation syntax through the key of the property in the subsequent process."
+                      placement="top">
+            <template #reference>
+              <el-icon style="cursor: pointer; color: #909399;">
+                <QuestionFilled />
+              </el-icon>
+            </template>
+          </el-popover>
+        </div>
+      </template>
       <el-select v-model="state.responseBodyName" placeholder="please select your zone"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
         <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
@@ -301,7 +339,7 @@ watch(() => node, async () => {
           placement="top"
         >
           <template #reference>
-            <div style="display: flex; align-items: center; margin-left: 8px;">
+            <div style="display: flex; align-items: center; margin-left: 8px; cursor: pointer; color: #909399;">
               <el-icon>
                 <QuestionFilled />
               </el-icon>
@@ -313,7 +351,8 @@ watch(() => node, async () => {
     <div>
       {{ t('JSON Format Check') }}
       <el-switch v-model="codeMirror.checkFormat" size="small" @change="handleJsonFormatCheck" />
-      <el-button v-if="codeMirror.checkFormat" style="margin-left: 20px" @click="handleJsonFormat" type="primary" size="small">
+      <el-button v-if="codeMirror.checkFormat" style="margin-left: 20px" @click="handleJsonFormat" type="primary"
+                 size="small">
         JSON Format
       </el-button>
     </div>
