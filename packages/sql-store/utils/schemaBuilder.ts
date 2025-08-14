@@ -1,4 +1,4 @@
-import type { TableSchema, ColumnDefinition, IndexDefinition, ConstraintDefinition } from '../types'
+import type { TableSchema, ColumnDefinition, IndexDefinition, ConstraintDefinition } from '../composables/useSqliteTable'
 
 export class SchemaBuilder {
   static buildCreateTableSQL(schema: TableSchema): string {
