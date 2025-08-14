@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Node } from '@antv/x6'
 import { Codemirror } from 'vue-codemirror'
-import { json } from '@codemirror/lang-json'
+import { linter } from '@codemirror/lint'
+import { json, jsonParseLinter } from '@codemirror/lang-json'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { QuestionFilled } from '@element-plus/icons-vue'
 
@@ -48,8 +49,7 @@ const state = reactive({
   requestHeader: '',
   requestBody: '',
   responseBodyName: '',
-  bodyVisible: false,
-  editBody: ''
+  bodyVisible: false
 })
 
 function initForm() {
@@ -175,15 +175,57 @@ function handleUpdateHeader(visible: any) {
   fieldMappingUpdate(state.requestHeader, 'requestHeaders')
 }
 
-const extensions = [json(), oneDark]
+const codeMirror = reactive({
+  data: '',
+  extensions: [json(), linter(jsonParseLinter()), oneDark],
+  checkFormat: false,
+  errorMessage: ''
+})
 
 function openBodyEdit() {
   state.bodyVisible = true
-  state.editBody = deepCopy(state.requestBody)
+  if (state.requestBody !== '') {
+    codeMirror.data = deepCopy(state.requestBody)
+  } else {
+    codeMirror.data = ''
+  }
+}
+
+function handleJsonFormat() {
+  if (!checkJsonFormat()) {
+    codeMirror.data = JSON.stringify(JSON.parse(codeMirror.data), null, 2)
+    codeMirror.errorMessage = ''
+  }
+}
+
+function checkJsonFormat() {
+  if (!codeMirror.checkFormat) {
+    return false
+  }
+  try {
+    JSON.parse(codeMirror.data)
+    codeMirror.errorMessage = ''
+    return false
+  } catch (e) {
+    codeMirror.errorMessage = 'Unable to format JSON: ' + e.message
+    return true
+  }
+}
+
+function handleJsonFormatCheck() {
+  if (!codeMirror.checkFormat) {
+    codeMirror.errorMessage = ''
+  } else {
+    checkJsonFormat()
+  }
 }
 
 function handleRequestBodySubmit() {
-  state.requestBody = deepCopy(state.editBody)
+  // Because of the interpolation syntax, json syntax checks throw error, so no detection is done when submitting
+  if (checkJsonFormat()) {
+    return
+  }
+  state.requestBody = codeMirror.data
   fieldMappingUpdate(state.requestBody, 'requestBody')
   state.bodyVisible = false
 }
@@ -248,40 +290,55 @@ watch(() => node, async () => {
   <LazyBpmnContextHttpVariables ref="variablesHeaderRef" :title="t('Add Header')" @update="handleUpdateHeader" />
 
   <el-drawer v-model="state.bodyVisible" :title="t('Edit Request Body')" size="100%">
-    <el-popover
-      class="box-item"
-      width="300"
-      title="Info"
-      content="You can set data through ${key}"
-      placement="top"
-    >
-      <template #reference>
-        <div style="display: flex; justify-content: flex-end; align-items: center;">
-          <el-icon>
-            <QuestionFilled />
-          </el-icon>
-        </div>
-      </template>
-    </el-popover>
-    <el-form-item label="Json" label-position="top">
-      <codemirror
-        v-model="state.editBody"
-        :style="{width: '290px', height: '80vh'}"
-        :autofocus="true"
-        :indent-with-tab="true"
-        :tab-size="2"
-        :extensions="extensions"
-      />
-    </el-form-item>
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <div style="display: flex; align-items: center;">
+        <span>Json</span>
+        <el-popover
+          class="box-item"
+          width="300"
+          title="Info"
+          content="You can set data using {key}. Using interpolation syntax will fail the JSON syntax check. Please disable syntax checking and check whether the interpolation syntax is correct."
+          placement="top"
+        >
+          <template #reference>
+            <div style="display: flex; align-items: center; margin-left: 8px;">
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </div>
+          </template>
+        </el-popover>
+      </div>
+    </div>
+    <div>
+      {{ t('JSON Format Check') }}
+      <el-switch v-model="codeMirror.checkFormat" size="small" @change="handleJsonFormatCheck" />
+      <el-button v-if="codeMirror.checkFormat" style="margin-left: 20px" @click="handleJsonFormat" type="primary" size="small">
+        JSON Format
+      </el-button>
+    </div>
+
+    <div v-if="codeMirror.errorMessage" class="error">{{ codeMirror.errorMessage }}</div>
+    <codemirror
+      v-model="codeMirror.data"
+      :style="{width: '280px', height: '64vh'}"
+      :autofocus="true"
+      :indent-with-tab="true"
+      :tab-size="2"
+      :extensions="codeMirror.extensions"
+      @change="checkJsonFormat"
+    />
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleRequestBodySubmit"> {{ t('common_submit') }}</el-button>
       </div>
     </template>
   </el-drawer>
-
 </template>
 
 <style scoped lang="scss">
-
+.error {
+  color: red;
+  margin-top: 10px;
+}
 </style>

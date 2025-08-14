@@ -829,7 +829,7 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' } },
-                { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '{}' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
                 // { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
                 { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
@@ -850,7 +850,7 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
                 { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' } },
-                { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '' } },
+                { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '{}' } },
                 // { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'true' } },
                 { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } }
