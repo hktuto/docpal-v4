@@ -15,7 +15,7 @@ if (!graphProvider) {
 }
 
 const state = reactive({
-  js: ''
+  data: ''
 })
 
 function fieldMappingUpdate(newVal: string) {
@@ -35,45 +35,48 @@ function fieldMappingUpdate(newVal: string) {
 const extensions = [javascript({ typescript: true }), oneDark]
 
 function init() {
-  const field: string = node.data.data.script['__cdata']
-
-  if (!field) {
-    state.js = ''
-    return
-  }
-  state.js = field
+  state.data = ''
+  state.data = node.data.data.script['__cdata']
 }
 
 function handleBlur() {
-  fieldMappingUpdate(state.js)
+  fieldMappingUpdate(state.data)
 }
 
-onMounted(() => {
-  init()
+watch(() => node, async () => {
+  if (node && node.data) {
+    console.log('Request Node', node)
+    init()
+  }
+}, {
+  immediate: true,
+  deep: true
 })
-
 </script>
 
 <template>
   <BpmnSidebarEditLabel :node="node" />
-  <el-popover
-    class="box-item"
-    width="300"
-    title="Info"
-    content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
-    placement="top"
-  >
-    <template #reference>
-      <div style="display: flex; justify-content: flex-end; align-items: center;">
-        <el-icon>
-          <QuestionFilled />
-        </el-icon>
+  <el-form-item label="JavaScript" label-position="top">
+    <template #label>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <span>JavaScript</span>
+        <el-popover
+          class="box-item"
+          width="300"
+          title="Info"
+          content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
+          placement="top"
+        >
+          <template #reference>
+            <el-icon>
+              <QuestionFilled />
+            </el-icon>
+          </template>
+        </el-popover>
       </div>
     </template>
-  </el-popover>
-  <el-form-item label="JavaScript" label-position="top">
     <codemirror
-      v-model="state.js"
+      v-model="state.data"
       :style="{width: '290px', height: '68vh'}"
       :autofocus="true"
       :indent-with-tab="true"

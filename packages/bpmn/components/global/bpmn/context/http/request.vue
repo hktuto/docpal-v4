@@ -18,17 +18,6 @@ if (!graphProvider) {
   throw createError('graph provider not found')
 }
 
-const allFieldOptions = computed(() => {
-  if (!graphProvider.allFormField.value) return []
-
-  return Object.keys(graphProvider.allFormField.value).map((key) => {
-    return {
-      label: graphProvider.allFormField.value[key].attr_name,
-      value: '${variables:get(' + graphProvider.allFormField.value[key].attr_id + ')}'
-    }
-  })
-})
-
 const defaultFieldOptions = computed(() => {
   if (!graphProvider.allFormField.value) return []
 
@@ -40,7 +29,6 @@ const defaultFieldOptions = computed(() => {
   })
 })
 
-
 const state = reactive({
   method: ['GET', 'POST', 'PUT', 'PATH', 'DELETE'],
   requestMethod: '',
@@ -49,6 +37,9 @@ const state = reactive({
   requestHeader: '',
   requestBody: '',
   responseBodyName: '',
+  saveResponseParameters: false,
+  disallowRedirects: false,
+  ignoreException: false,
   bodyVisible: false
 })
 
@@ -56,6 +47,9 @@ function initForm() {
   state.requestParams = ''
   state.requestHeader = ''
   state.requestBody = ''
+  state.saveResponseParameters = false
+  state.disallowRedirects = false
+  state.ignoreException = false
 
   const fields: any = node.data.data.extensionElements['flowable:field']
 
@@ -88,6 +82,15 @@ function initForm() {
         break
       case 'responseVariableName':
         state.responseBodyName = item['flowable:expression'].__cdata
+        break
+      case 'saveResponseParameters':
+        state.saveResponseParameters = item['flowable:expression'].__cdata
+        break
+      case 'disallowRedirects':
+        state.disallowRedirects = item['flowable:expression'].__cdata
+        break
+      case 'ignoreException':
+        state.ignoreException = item['flowable:expression'].__cdata
         break
       default :
     }
@@ -265,11 +268,6 @@ watch(() => node, async () => {
         </div>
       </template>
       <el-input v-model="state.requestUrl" @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')" />
-      <!--      <el-select v-model="state.requestUrl" placeholder="please select your zone"-->
-      <!--                 @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')">-->
-      <!--        <el-option v-for="item in allFieldOptions" :key="item.value" :value="item.value"-->
-      <!--                   :label="item.value.replace('${variables:get(', '').replace(')}', '')" />-->
-      <!--      </el-select>-->
     </el-form-item>
 
     <el-form-item :label="t('Request Params')">
@@ -321,6 +319,33 @@ watch(() => node, async () => {
         <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
                    :label="item.label" />
       </el-select>
+    </el-form-item>
+
+    <el-form-item label-position="left">
+      <template #label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>{{ t('Save All Response Parameters') }}</span>
+          <el-popover width="300" title="Info" content="By default, only the response body will be saved as a variable."
+                      placement="top">
+            <template #reference>
+              <el-icon style="cursor: pointer; color: #909399;">
+                <QuestionFilled />
+              </el-icon>
+            </template>
+          </el-popover>
+        </div>
+      </template>
+      <el-switch v-model="state.saveResponseParameters"
+                 @change="(val:any) => fieldMappingUpdate(val, 'saveResponseParameters')" />
+    </el-form-item>
+
+    <el-form-item :label="t('Disallow Redirects')" label-position="left">
+      <el-switch v-model="state.disallowRedirects"
+                 @change="(val:any) => fieldMappingUpdate(val, 'disallowRedirects')" />
+    </el-form-item>
+
+    <el-form-item :label="t('Ignore Exception')" label-position="left">
+      <el-switch v-model="state.ignoreException" @change="(val:any) => fieldMappingUpdate(val, 'ignoreException')" />
     </el-form-item>
   </el-form>
 
