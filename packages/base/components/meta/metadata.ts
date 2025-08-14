@@ -71,7 +71,6 @@ export const useMetadata = () => {
           if (initOptions) {
             // allow USER_ROLE, USER_GROUP, ALL
             metadataItem.options = []
-            item.items.allow = 'USER_ROLE'
             if (item.items.allow !== 'USER_GROUP') {
               promises.push(
                 getRoleList().then((options) => {
