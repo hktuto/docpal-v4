@@ -61,7 +61,6 @@ function normalizeApiResponse(obj: any): any {
 
 function getBaseUrl(baseURL: string) {
   const { public: { DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY, PROXY, OPEN_PROXY } } = useRuntimeConfig()
-  console.log('baseURL', baseURL)
   if (baseURL === '/dashboard') baseURL =  DASHBOARD_PROXY
   if (baseURL === '/client') baseURL = CLIENT_PROXY
   if (baseURL === '/admin') baseURL = ADMIN_PROXY
@@ -106,7 +105,6 @@ export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstanc
   // Normalize response data to camelCase if it contains snake_case keys
   if (response.data ) {
     response.data = normalizeApiResponse(response.data)
-    console.log('response.data', response.data)
   }
   
   return response
