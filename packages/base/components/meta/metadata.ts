@@ -216,19 +216,28 @@ export const useMetadata = () => {
     return variableList
   }
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
-    const result = data ? { ...data } : {}
+    const result: any =  {}
     variableList.forEach((item) => {
       if (!item.options) return
       if (item.options.validationType === 'array') {
-        if (!data[item.name]) return
+        if (!data[item.name]) return []
         result[item.name] = Array.isArray(data[item.name]) ? data[item.name] : [data[item.name]]
         if (['case', 'workflow', 'document', 'date'].includes(item.options.validationName)) return
         if (['select'].includes(item.options.validationName)) return
         result[item.name] = result[item.name].map((citem: any) => {
-          const selectItem = item.options.optionItems?.find((sitem: any) => sitem.value === citem)
-          if (!selectItem) return ''
+          let selectItem = item.options.optionItems?.find((sitem: any) => sitem.value === citem)
+          if (!selectItem) {
+            selectItem = {
+              label: citem,
+              value: citem
+            }
+          }
           return JSON.stringify(selectItem)
         })
+      } else if(item.options.validationName === 'boolean') {
+        result[item.name] = data[item.name] ? true : false
+      } else if(data[item.name]) {
+        result[item.name] = data[item.name]
       }
     })
     return result
@@ -242,7 +251,7 @@ export const useMetadata = () => {
           const _citem = getParseDataItem(citem)
           if (!_citem.value) return _citem
           return _citem.value
-        })
+        }).filter((item: any) => !!item)
       }
       const variableItem = variableList.find((item) => item.name === key)
       if (!variableItem) return
