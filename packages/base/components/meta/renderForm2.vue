@@ -74,7 +74,7 @@ const state = reactive<any>({
 const FormVariablesRendererRef = ref()
 async function getVariables(isFolder: boolean = false) {
   try {
-    const variableList = await metadataHelper.initVformVariableList(state.initOptions.documentType, state.initOptions?.requiredFields)
+    const variableList = await metadataHelper.initVformVariableList(state.initOptions.documentType, state.initOptions)
     state.variables = [...variableList]
     if (['ai', 'upload', 'changeDocType'].includes(props.mode)) {
       state.variables.unshift({

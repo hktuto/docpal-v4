@@ -59,9 +59,11 @@ async function openDialog() {
   nextTick(async () => {
     const analysis: any = await clientApi.api.getNuxeoDocumentQueryaianalyzeIdorpath(props.doc.id)
     state.MetaRenderMode = checkLicenseFeatures('AI_CLASSIFICATION') && analysis.aiId ? 'ai-edit' : 'normal'
+    // const hiddenFields = ['testOySelect', 'testOyMasterTable', 'testDate', 'testOyDate', 'testOyRole', 'testOyDocument']
     await MetaFormRef.value.init(props.doc.type, {
       aiAnalysis: analysis.metaDatas,
-      aiDocId: analysis.aiId
+      aiDocId: analysis.aiId,
+      // hiddenFields
     })
     MetaFormRef.value.setData(props.doc.properties)
   })
