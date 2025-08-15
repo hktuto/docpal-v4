@@ -33,7 +33,9 @@ async function initLogCondition() {
   ResponsiveFilterRef.value.init(logTableCondition)
 }
 function goClientPath(path: string) {
-  window.open('https://' + config.public.endpoint.docpal + '/browse?path=' + path, '_blank')
+  const host = window.location.host
+  const protocol = window.location.protocol
+  window.open(protocol + '//' + host + '/browse?path=' + path, '_blank')
 }
 async function GetAzureSetting() {
   const res = await adminApi.api.getAzureOcrQueryazuresetting()

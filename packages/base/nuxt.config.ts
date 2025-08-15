@@ -34,7 +34,6 @@ const config = {
       DASHBOARD_PROXY: process.env.DASHBOARD_PROXY,
       OFFICE_END_POINT: process.env.OFFICE_END_POINT,
       UPLOAD_END_POINT: process.env.UPLOAD_END_POINT,
-      DOCPAL_END_POINT: process.env.DOCPAL_END_POINT,
       ADMIN_END_POINT: process.env.ADMIN_END_POINT,
     }
   },
