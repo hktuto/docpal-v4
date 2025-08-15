@@ -24,7 +24,7 @@ function convertKeysToCamelCase(obj: any): any {
   if (Array.isArray(obj)) {
     return obj.map(item => convertKeysToCamelCase(item))
   }
-  
+
   const result: any = {}
   for (const [key, value] of Object.entries(obj)) {
     const camelKey = toCamelCase(key)
@@ -43,14 +43,14 @@ function normalizeApiResponse(obj: any): any {
   if (Array.isArray(obj)) {
     return obj.map(item => normalizeApiResponse(item))
   }
-  
+
   // Check if the object has any snake_case keys
   const hasSnakeCaseKeys = Object.keys(obj).some(key => key.includes('_'))
-  
+
   if (hasSnakeCaseKeys) {
     return convertKeysToCamelCase(obj)
   }
-  
+
   // If no snake_case keys found, process nested objects but keep current keys
   const result: any = {}
   for (const [key, value] of Object.entries(obj)) {
@@ -61,7 +61,7 @@ function normalizeApiResponse(obj: any): any {
 
 function getBaseUrl(baseURL: string) {
   const { public: { DASHBOARD_PROXY, CLIENT_PROXY, ADMIN_PROXY, PROXY, OPEN_PROXY } } = useRuntimeConfig()
-  if (baseURL === '/dashboard') baseURL =  DASHBOARD_PROXY
+  if (baseURL === '/dashboard') baseURL = DASHBOARD_PROXY
   if (baseURL === '/client') baseURL = CLIENT_PROXY
   if (baseURL === '/admin') baseURL = ADMIN_PROXY
   if (baseURL === '/api') baseURL = PROXY
@@ -98,19 +98,23 @@ const ignoreCaseConversion = ['/auth/nuxeo/login'] // which url need to ignore c
 
 export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstance) => {
   // Skip case conversion if explicitly disabled via header
-  if(ignoreCaseConversion.includes(response.config.url)){
+  if (ignoreCaseConversion.includes(response.config.url)) {
     return response
   }
-  
+
+  if (response.data instanceof Blob){
+    return response
+  }
+
   // Normalize response data to camelCase if it contains snake_case keys
-  if (response.data ) {
+  if (response.data) {
     response.data = normalizeApiResponse(response.data)
   }
-  
+
   return response
 }
 export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstance) => {
-  
+
   const originalRequest = error.config
 
   if (error.response.status === 420) {
