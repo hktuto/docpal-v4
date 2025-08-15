@@ -90,36 +90,41 @@ watch(() => node, async () => {
 
 <template>
   <BpmnSidebarEditLabel :node="node" />
-  <el-form-item label-position="top">
-    <template #label>
-      <div class="label-container">
-        <div class="label-left">
-          <span>JavaScript</span>
-          <el-popover class="box-item" width="300" title="Info" placement="top"
-                      content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
-          >
-            <template #reference>
-              <el-icon>
-                <QuestionFilled />
-              </el-icon>
-            </template>
-          </el-popover>
+  <div ref="codeMirror" :style="isFullscreen ? {margin: '10px', backgroundColor: '#FFF'} : {}">
+    <el-form-item label-position="top">
+      <template #label>
+        <div class="label-container">
+          <div class="label-left">
+            <span>JavaScript</span>
+            <el-popover class="box-item" width="300" title="Info" placement="top"
+                        content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
+            >
+              <template #reference>
+                <el-icon v-if="!isFullscreen" style="cursor: pointer; color: #909399;">
+                  <QuestionFilled />
+                </el-icon>
+              </template>
+            </el-popover>
+          </div>
+          <el-button v-if="!isFullscreen" class="fullscreen-btn" @click="toggleFullscreen" size="small"
+                     :icon="FullScreen" circle />
         </div>
-        <el-button class="fullscreen-btn" @click="toggleFullscreen" size="small" :icon="FullScreen" circle />
+      </template>
+      <div v-if="isFullscreen" style="width: 42%">
+        <el-alert type="success"
+                  title="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')" />
       </div>
-    </template>
-    <div ref="codeMirror">
       <codemirror
         v-model="state.data"
-        :style="isFullscreen ? {width: '100%', height: '100%' } :{width: '300px', height: '65vh' }"
+        :style="isFullscreen ? {width: '100%', height: '95vh' } :{width: '300px', height: '65vh' }"
         :autofocus="true"
         :indent-with-tab="true"
         :tab-size="2"
         :extensions="extensions"
         @blur="handleBlur"
       />
-    </div>
-  </el-form-item>
+    </el-form-item>
+  </div>
 </template>
 
 <style scoped lang="scss">
