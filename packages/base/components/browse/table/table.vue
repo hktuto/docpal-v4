@@ -549,9 +549,15 @@ const { tableConfig, tableEvent, tableRef, reload, cleanSelectedRows } = useVxeT
       loadMethod: async (params) => {
         try{
 
-          const entry = await find({parentRef:params.row.id})
+          const entry = await find({parentRef:params.row.id},{},{skipIfEmpty:true})
           if(entry.length === 0){
             const apiData = await loadData([], params.row.id) as DocumentApiData[]
+            const syncList = {
+              create: apiData.map((item:DocumentApiData) => apiToColumn(item)),
+              update: [],
+              delete: []
+            }
+            await syncData(syncList)
             return apiData.sort(sortEntry)
           }else{
             return entry.map((item:DocumentColumnData) => columnToApi(item)).sort(sortEntry)
