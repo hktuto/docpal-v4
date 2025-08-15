@@ -13,6 +13,7 @@ const config = {
   runtimeConfig:{
     public: {
       needAuth: true,
+      updateInterval: 300000,
       endPoint: {
         clientUrl : process.env.CLIENTURL,
         admin : process.env.ADMIN_END_POINT,
