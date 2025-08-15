@@ -2,7 +2,7 @@
 
 # 專案設置
 
-### 1. 初始化 Git Submodules
+### 1. test初始化 Git Submodules
 
 在克隆此存儲庫後，請運行以下命令來初始化和更新所有子模塊：
 

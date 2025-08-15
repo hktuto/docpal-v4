@@ -82,7 +82,7 @@ defineExpose({
 <style scoped lang="scss">
 .contextHandler{
     position: absolute;
-    width: 320px;
+    width: 332px;
     height: calc(100% - var(--app-space-xs) * 2);
     overflow: auto;
     right: var(--app-space-xs);

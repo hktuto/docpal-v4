@@ -37,6 +37,8 @@ const state = reactive({
   requestHeader: '',
   requestBody: '',
   responseBodyName: '',
+  saveResponseVariableAsJson: false,
+  saveResponseParametersTransient: false,
   saveResponseParameters: false,
   disallowRedirects: false,
   ignoreException: false,
@@ -47,6 +49,8 @@ function initForm() {
   state.requestParams = ''
   state.requestHeader = ''
   state.requestBody = ''
+  state.saveResponseVariableAsJson = false
+  state.saveResponseParametersTransient = false
   state.saveResponseParameters = false
   state.disallowRedirects = false
   state.ignoreException = false
@@ -82,6 +86,12 @@ function initForm() {
         break
       case 'responseVariableName':
         state.responseBodyName = item['flowable:expression'].__cdata
+        break
+      case 'saveResponseVariableAsJson':
+        state.saveResponseVariableAsJson = item['flowable:expression'].__cdata
+        break
+      case 'saveResponseParametersTransient':
+        state.saveResponseParametersTransient = item['flowable:expression'].__cdata
         break
       case 'saveResponseParameters':
         state.saveResponseParameters = item['flowable:expression'].__cdata
@@ -314,19 +324,59 @@ watch(() => node, async () => {
           </el-popover>
         </div>
       </template>
-      <el-select v-model="state.responseBodyName" placeholder="please select your zone"
+      <el-select v-model="state.responseBodyName" placeholder="please select your zone" clearable
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
         <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
                    :label="item.label" />
       </el-select>
     </el-form-item>
 
+    <!--    <el-form-item label-position="left">-->
+    <!--      <template #label>-->
+    <!--        <div style="display: flex; align-items: center; gap: 4px;">-->
+    <!--          <span>{{ t('Save Response Variable As Json') }}</span>-->
+    <!--          <el-popover width="300" title="Info" placement="top"-->
+    <!--                      content="If enabled, the response body will be saved as a JSON variable instead of a String.-->
+    <!--                      If your HTTP service returns JSON, you can get the data value through punctuation (e.g. ResponseDody.user.name)">-->
+    <!--            <template #reference>-->
+    <!--              <el-icon style="cursor: pointer; color: #909399;">-->
+    <!--                <QuestionFilled />-->
+    <!--              </el-icon>-->
+    <!--            </template>-->
+    <!--          </el-popover>-->
+    <!--        </div>-->
+    <!--      </template>-->
+    <!--      <el-switch v-model="state.saveResponseVariableAsJson"-->
+    <!--                 @change="(val:any) => fieldMappingUpdate(val, 'saveResponseVariableAsJson')" />-->
+    <!--    </el-form-item>-->
+
+    <el-form-item label-position="left">
+      <template #label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>{{ t('Save Response Parameters Transient') }}</span>
+          <el-popover width="300" title="Info" placement="top"
+                      content="Use the 'Response Variable Name' to store the response as a process instance variable.
+                      As these responses tend to become large, by checking the Save response as a transient variable flag.">
+            <template #reference>
+              <el-icon style="cursor: pointer; color: #909399;">
+                <QuestionFilled />
+              </el-icon>
+            </template>
+          </el-popover>
+        </div>
+      </template>
+      <el-switch v-model="state.saveResponseParametersTransient"
+                 @change="(val:any) => fieldMappingUpdate(val, 'saveResponseParametersTransient')" />
+    </el-form-item>
+
     <el-form-item label-position="left">
       <template #label>
         <div style="display: flex; align-items: center; gap: 4px;">
           <span>{{ t('Save All Response Parameters') }}</span>
-          <el-popover width="300" title="Info" content="By default, only the response body will be saved as a variable."
-                      placement="top">
+          <el-popover width="300" title="Info" placement="top"
+                      content="By default, only the response body is saved as a variable. After turning it on,
+                      you can get the corresponding data by adding parameters (ResponseBody, ResponseProtocol, ResponseStatusCode, ResponseHeaders)
+                      to taskId. The format is as follows: {taskId}ResponseHeaders">
             <template #reference>
               <el-icon style="cursor: pointer; color: #909399;">
                 <QuestionFilled />
