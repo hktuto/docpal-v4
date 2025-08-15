@@ -18,13 +18,14 @@ import { useRuntimeConfig } from 'nuxt/app';
 const props = defineProps<{
     doc?: any
 }>()
-
-const config = useRuntimeConfig()
+const { t } = useI18n()
 function copyPath(){
     // copy path to clipboard
     // TODO : use object to copy
     const el = document.createElement('textarea');
-    el.value = 'https://' + config.public.DOCPAL_END_POINT + '/browse?path=' +  encodeURIComponent(props.doc.path);
+    const host = window.location.host
+    const protocol = window.location.protocol
+    el.value = protocol + '//' + host + '/browse?path=' +  encodeURIComponent(props.doc.path);
     document.body.appendChild(el);
     el.select();
     document.execCommand('copy');
@@ -33,7 +34,7 @@ function copyPath(){
     // show notification using element-plus 
     ElNotification({
         title: 'Success',
-        message: $i18n.t('dpTip.copyPathSuccess'),
+        message: t('dpTip.copyPathSuccess'),
         type: 'success',
         duration: 6000
     });

@@ -26,6 +26,7 @@ async function submit() {
             username: form.username,
             password: form.password,
         }).then(res => res.data);
+        console.log('data', data)
         localStorage.setItem('access_token', data.access_token)
         localStorage.setItem('token', data.access_token)
         localStorage.setItem('refresh_token', data.refresh_token)

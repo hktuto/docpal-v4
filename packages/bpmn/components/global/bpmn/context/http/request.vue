@@ -14,7 +14,8 @@ const variablesParamsRef = ref()
 const variablesHeaderRef = ref()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
 
@@ -41,7 +42,7 @@ const state = reactive({
   saveResponseParametersTransient: false,
   saveResponseParameters: false,
   disallowRedirects: false,
-  ignoreException: false,
+  ignoreException: true,
   bodyVisible: false
 })
 
@@ -53,7 +54,7 @@ function initForm() {
   state.saveResponseParametersTransient = false
   state.saveResponseParameters = false
   state.disallowRedirects = false
-  state.ignoreException = false
+  state.ignoreException = true
 
   const fields: any = node.data.data.extensionElements['flowable:field']
 
@@ -88,19 +89,19 @@ function initForm() {
         state.responseBodyName = item['flowable:expression'].__cdata
         break
       case 'saveResponseVariableAsJson':
-        state.saveResponseVariableAsJson = item['flowable:expression'].__cdata
+        state.saveResponseVariableAsJson = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
         break
       case 'saveResponseParametersTransient':
-        state.saveResponseParametersTransient = item['flowable:expression'].__cdata
+        state.saveResponseParametersTransient = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
         break
       case 'saveResponseParameters':
-        state.saveResponseParameters = item['flowable:expression'].__cdata
+        state.saveResponseParameters = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
         break
       case 'disallowRedirects':
-        state.disallowRedirects = item['flowable:expression'].__cdata
+        state.disallowRedirects = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
         break
       case 'ignoreException':
-        state.ignoreException = item['flowable:expression'].__cdata
+        state.ignoreException = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : true
         break
       default :
     }
@@ -121,6 +122,22 @@ function fieldMappingUpdate(newVal: string, name: string) {
 
   graphProvider?.graph.value?.stopBatch('update-http-field-data')
 }
+
+function fieldBooleanMappingUpdate(newVal: boolean, name: string) {
+  graphProvider?.graph.value?.startBatch('update-http-field-data')
+
+  const nodeData = node.getData()
+  const newData = {
+    ...nodeData,
+    version: (nodeData.version || 0) + 1
+  }
+  const index = newData.data.extensionElements['flowable:field'].findIndex((f: any) => f.attr_name === name)
+  newData.data.extensionElements['flowable:field'][index]['flowable:expression'].__cdata = newVal || false
+  node.setData(newData, { overwrite: true, deep: true, silent: false })
+
+  graphProvider?.graph.value?.stopBatch('update-http-field-data')
+}
+
 
 function extractParamsFromUrl(url: string) {
   try {
@@ -259,6 +276,7 @@ watch(() => node, async () => {
   <el-form label-width="auto" label-position="top">
     <el-form-item :label="t('Request Method')">
       <el-select v-model="state.requestMethod" placeholder="please select your zone"
+                 :disabled="editorProvider.readonly.value"
                  @change="(val:any) => fieldMappingUpdate(val, 'requestMethod')">
         <el-option v-for="item in state.method" :key="item" :label="item" :value="item" />
       </el-select>
@@ -277,7 +295,8 @@ watch(() => node, async () => {
           </el-popover>
         </div>
       </template>
-      <el-input v-model="state.requestUrl" @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')" />
+      <el-input v-model="state.requestUrl" :disabled="editorProvider.readonly.value"
+                @change="(val:any) =>  fieldMappingUpdate(val, 'requestUrl')" />
     </el-form-item>
 
     <el-form-item :label="t('Request Params')">
@@ -315,7 +334,7 @@ watch(() => node, async () => {
           <span>{{ t('Response Variable Name') }}</span>
           <el-popover width="300" title="Info"
                       content="When setting this property, the result body is allowed to be obtained using interpolation syntax through the key of the property in the subsequent process."
-                      placement="top">
+          >
             <template #reference>
               <el-icon style="cursor: pointer; color: #909399;">
                 <QuestionFilled />
@@ -325,6 +344,7 @@ watch(() => node, async () => {
         </div>
       </template>
       <el-select v-model="state.responseBodyName" placeholder="please select your zone" clearable
+                 :disabled="editorProvider.readonly.value" placement="top"
                  @change="(val:any) => fieldMappingUpdate(val, 'responseVariableName')">
         <el-option v-for="item in defaultFieldOptions" :key="item.value" :value="item.value"
                    :label="item.label" />
@@ -347,7 +367,7 @@ watch(() => node, async () => {
     <!--        </div>-->
     <!--      </template>-->
     <!--      <el-switch v-model="state.saveResponseVariableAsJson"-->
-    <!--                 @change="(val:any) => fieldMappingUpdate(val, 'saveResponseVariableAsJson')" />-->
+    <!--                 @change="(val:any) => fieldBooleanMappingUpdate(val, 'saveResponseVariableAsJson')" />-->
     <!--    </el-form-item>-->
 
     <el-form-item label-position="left">
@@ -365,8 +385,8 @@ watch(() => node, async () => {
           </el-popover>
         </div>
       </template>
-      <el-switch v-model="state.saveResponseParametersTransient"
-                 @change="(val:any) => fieldMappingUpdate(val, 'saveResponseParametersTransient')" />
+      <el-switch v-model="state.saveResponseParametersTransient" :disabled="editorProvider.readonly.value"
+                 @change="(val:any) => fieldBooleanMappingUpdate(val, 'saveResponseParametersTransient')" />
     </el-form-item>
 
     <el-form-item label-position="left">
@@ -376,7 +396,7 @@ watch(() => node, async () => {
           <el-popover width="300" title="Info" placement="top"
                       content="By default, only the response body is saved as a variable. After turning it on,
                       you can get the corresponding data by adding parameters (ResponseBody, ResponseProtocol, ResponseStatusCode, ResponseHeaders)
-                      to taskId. The format is as follows: {taskId}ResponseHeaders">
+                      to taskId. The format is as follows: <taskId>ResponseHeaders">
             <template #reference>
               <el-icon style="cursor: pointer; color: #909399;">
                 <QuestionFilled />
@@ -385,24 +405,40 @@ watch(() => node, async () => {
           </el-popover>
         </div>
       </template>
-      <el-switch v-model="state.saveResponseParameters"
-                 @change="(val:any) => fieldMappingUpdate(val, 'saveResponseParameters')" />
+      <el-switch v-model="state.saveResponseParameters" :disabled="editorProvider.readonly.value"
+                 @change="(val:any) => fieldBooleanMappingUpdate(val, 'saveResponseParameters')" />
     </el-form-item>
 
     <el-form-item :label="t('Disallow Redirects')" label-position="left">
-      <el-switch v-model="state.disallowRedirects"
-                 @change="(val:any) => fieldMappingUpdate(val, 'disallowRedirects')" />
+      <el-switch v-model="state.disallowRedirects" :disabled="editorProvider.readonly.value"
+                 @change="(val:any) => fieldBooleanMappingUpdate(val, 'disallowRedirects')" />
     </el-form-item>
 
-    <el-form-item :label="t('Ignore Exception')" label-position="left">
-      <el-switch v-model="state.ignoreException" @change="(val:any) => fieldMappingUpdate(val, 'ignoreException')" />
+    <el-form-item label-position="left">
+      <template #label>
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <span>{{ t('Ignore Exception') }}</span>
+          <el-popover width="300" title="Info" placement="top"
+                      content="When this option is disabled, ensure the stability of the API.
+                      Unresponsiveness can cause subsequent processes to become unavailable. When enabled,
+                      caught exceptions are stored in a variable named <taskId>errorMessage.">
+            <template #reference>
+              <el-icon style="cursor: pointer; color: #909399;">
+                <QuestionFilled />
+              </el-icon>
+            </template>
+          </el-popover>
+        </div>
+      </template>
+      <el-switch v-model="state.ignoreException" :disabled="editorProvider.readonly.value"
+                 @change="(val:any) => fieldBooleanMappingUpdate(val, 'ignoreException')" />
     </el-form-item>
   </el-form>
 
   <LazyBpmnContextHttpVariables ref="variablesParamsRef" :title="t('Add Params')" @update="handleUpdateParams" />
   <LazyBpmnContextHttpVariables ref="variablesHeaderRef" :title="t('Add Header')" @update="handleUpdateHeader" />
 
-  <el-drawer v-model="state.bodyVisible" :title="t('Edit Request Body')" size="100%">
+  <el-dialog v-model="state.bodyVisible" :title="t('Edit Request Body')" append-to-body>
     <div style="display: flex; align-items: center; justify-content: space-between;">
       <div style="display: flex; align-items: center;">
         <span>Json</span>
@@ -435,7 +471,7 @@ watch(() => node, async () => {
     <div v-if="codeMirror.errorMessage" class="error">{{ codeMirror.errorMessage }}</div>
     <codemirror
       v-model="codeMirror.data"
-      :style="{width: '280px', height: '64vh'}"
+      :style="{height: '400px'}"
       :autofocus="true"
       :indent-with-tab="true"
       :tab-size="2"
@@ -447,7 +483,7 @@ watch(() => node, async () => {
         <el-button type="primary" @click="handleRequestBodySubmit"> {{ t('common_submit') }}</el-button>
       </div>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <style scoped lang="scss">

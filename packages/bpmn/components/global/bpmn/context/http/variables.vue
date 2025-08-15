@@ -37,9 +37,12 @@ defineExpose({ openDrawer })
 </script>
 
 <template>
-  <el-drawer v-model="dialogVisible" :title="props.title" size="100%">
+  <el-dialog v-model="dialogVisible" :title="props.title" append-to-body>
     <div>
       <div style="display: flex; justify-content: flex-end; align-items: center;">
+        <el-button type="primary" size="small" @click="handleCreate">
+          {{ t('docTemplate.variable.addRow') }}
+        </el-button>
         <el-popover class="box-item" width="300" title="Info" content="You can set data through '${key}'"
                     placement="top">
           <template #reference>
@@ -68,16 +71,14 @@ defineExpose({ openDrawer })
           </template>
         </el-table-column>
       </el-table>
-      <el-button type="primary" @click="handleCreate">
-        {{ t('docTemplate.variable.addRow') }}
-      </el-button>
     </div>
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="handleSubmit"> {{ t('common_submit') }}</el-button>
       </div>
     </template>
-  </el-drawer>
+  </el-dialog>
+
 </template>
 
 <style scoped lang="scss">

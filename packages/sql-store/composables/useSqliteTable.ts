@@ -143,7 +143,7 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
   }
 
   // Find records by criteria
-  async function find(where: Record<string, any>, options?: QueryOptions, hookOptions:HookOptions): Promise<T[]> {
+  async function find(where: Record<string, any>, options?: QueryOptions, hookOptions?:HookOptions): Promise<T[]> {
     try {
       await ensureInitialized()
 
@@ -161,7 +161,7 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
 
       // Call after hook if provided
       if (config.hooks?.afterFind && typeof config.hooks.afterFind === 'function') {
-        if(!hookOptions?.skipIfEmpty && result.length > 0){
+        if(!hookOptions ||!hookOptions?.skipIfEmpty && result.length > 0){
           config.hooks.afterFind(result, where, options)
         }
       }
