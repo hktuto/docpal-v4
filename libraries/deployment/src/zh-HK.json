@@ -3031,6 +3031,7 @@
       "userProfile": "使用者設定檔",
       "userProfileView": "使用者資料視圖",
       "userSignature": "使用者簽名",
+      "userSignatureFailed": "取得簽名失敗",
       "username": "使用者名稱",
       "website": "網站"
     }

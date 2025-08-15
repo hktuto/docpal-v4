@@ -3033,6 +3033,7 @@
       "userProfile": "User Profile",
       "userProfileView": "User Profile View",
       "userSignature": "User Signature",
+      "userSignatureFailed": "Get signature failed",
       "username": "Username",
       "website": "Website"
     }
