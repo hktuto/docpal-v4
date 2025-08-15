@@ -17,7 +17,6 @@ const config = {
       endPoint: {
         clientUrl : process.env.CLIENTURL,
         admin : process.env.ADMIN_END_POINT,
-        docpal : process.env.DOCPAL_END_POINT,
         office  : process.env.OFFICE_END_POINT,
         dashboard : process.env.DASHBOARD_PROXY,
         upload: process.env.UPLOAD_PROXY,
