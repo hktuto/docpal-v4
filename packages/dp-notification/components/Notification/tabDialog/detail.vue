@@ -10,7 +10,7 @@
     <div v-for="item in state.list" :key="item.id" class="infinite-list-item">
       <div class="notificationContent">
         <div>{{ formatDate(item.createdDateTimestamp) }}</div>
-        <div class="dp-title">
+        <div class="dp-title" v-if="item.content.templateId">
           {{
             $t(item.content.templateId, {
               userId: item.creator,
@@ -23,6 +23,7 @@
             })
           }}
         </div>
+        <div v-if="item.content.message"> {{ item.content.message }}</div>
         {{ item.content.comment }}
         <div>{{ item.creator }}</div>
         <div>
