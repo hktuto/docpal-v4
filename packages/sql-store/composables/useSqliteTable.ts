@@ -71,6 +71,11 @@ export interface ConstraintDefinition {
   definition: string
 }
 
+
+export interface HookOptions {
+  skipIfEmpty?: boolean
+}
+
 export interface QueryOptions {
   limit?: number
   offset?: number
@@ -138,7 +143,7 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
   }
 
   // Find records by criteria
-  async function find(where: Record<string, any>, options?: QueryOptions): Promise<T[]> {
+  async function find(where: Record<string, any>, options?: QueryOptions, hookOptions:HookOptions): Promise<T[]> {
     try {
       await ensureInitialized()
 
@@ -156,7 +161,9 @@ export function useSqliteTable<T = any, U extends DatabaseRecord = any>(config: 
 
       // Call after hook if provided
       if (config.hooks?.afterFind && typeof config.hooks.afterFind === 'function') {
-        config.hooks.afterFind(result, where, options)
+        if(!hookOptions?.skipIfEmpty && result.length > 0){
+          config.hooks.afterFind(result, where, options)
+        }
       }
       return result
     } catch (err) {

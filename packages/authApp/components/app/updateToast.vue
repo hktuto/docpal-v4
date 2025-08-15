@@ -8,7 +8,7 @@ const toastShow = ref(false);
 nuxtApp.hooks.hookOnce('app:manifest:update', () => {
   setTimeout(() => {
     showUpdateToast()
-  }, 3000)
+  }, 300000)
 })
 
 
