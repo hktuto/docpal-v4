@@ -133,7 +133,10 @@ async function getMetaName() {
 }
 
 // #endregion
-
+function getRequiredMetadata() {
+  const labelRules = getLabelList(state.cabinetTemplate.labelRule)
+  return labelRules.map((item: any) => item.metadata)
+}
 // #region module: init
 async function handleOpen(id: string) {
   state.initLoading = true
@@ -146,7 +149,9 @@ async function handleOpen(id: string) {
       defaultValue = JSON.parse(state.cabinetTemplate.metadataValue)
     }
     setTimeout(async () => {
-      await MetaFormRef.value.init(state.cabinetTemplate.documentType, defaultValue)
+      await MetaFormRef.value.init(state.cabinetTemplate.documentType, {
+        requiredFields: getRequiredMetadata()
+      })
       await FormRendererRef.value.vFormRenderRef.resetForm()
       MetaFormRef.value.setData(defaultValue)
       FormRendererRef.value.vFormRenderRef.setFormData({ ...getReminder(state.cabinetTemplate, ['notificationReminder', 'emailReminder', 'emailReport']) })

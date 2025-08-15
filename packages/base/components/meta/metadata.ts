@@ -121,7 +121,7 @@ export const useMetadata = () => {
     await Promise.all(promises)
     return properties
   }
-  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata): VariableItem[] => {
+  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, requiredFields: string[] = []): VariableItem[] => {
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
       if (ignoreList.indexOf(key) !== -1) return
@@ -130,7 +130,7 @@ export const useMetadata = () => {
         name: key,
         label: metadataItem.label || key,
         type: 'input',
-        required: false,
+        required: requiredFields.includes(key) ? true : false,
         options: {}
       }
 
@@ -156,6 +156,8 @@ export const useMetadata = () => {
         case 'text':
           _item.type = 'textarea'
           _item.options.maxLength = metadataItem.maxLength
+          const row60 = (metadataItem.maxLength / 60).toFixed(0)
+          _item.options.rows = row60 > 0 ? row60 : 1 
           break
         case 'boolean':
           _item.type = 'switch'
@@ -205,9 +207,10 @@ export const useMetadata = () => {
       return []
     }
   }
-  const initVformVariableList = async (type: string) => {
+  const initVformVariableList = async (type: string, requiredFields: string[] = []) => {
+    if (!requiredFields) requiredFields = []
     const metadataList = await getDocumentMetadata(type)
-    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList)
+    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, requiredFields)
     return variableList
   }
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
