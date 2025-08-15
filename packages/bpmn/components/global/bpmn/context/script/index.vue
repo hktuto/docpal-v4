@@ -4,6 +4,7 @@ import { Codemirror } from 'vue-codemirror'
 import { javascript } from '@codemirror/lang-javascript'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { QuestionFilled } from '@element-plus/icons-vue'
+import { FullScreen } from '@element-plus/icons-vue'
 
 const { node } = defineProps<{
   node: Node
@@ -43,6 +44,39 @@ function handleBlur() {
   fieldMappingUpdate(state.data)
 }
 
+const codeMirror = ref()
+const isFullscreen = ref(false)
+
+function isInFullscreen() {
+  return !!(document.fullscreenElement ||
+    (document as any).mozFullScreenElement ||
+    (document as any).webkitFullscreenElement ||
+    (document as any).msFullscreenElement)
+}
+
+function toggleFullscreen() {
+  isFullscreen.value = !isFullscreen.value
+  if (codeMirror.value.requestFullscreen) {
+    codeMirror.value.requestFullscreen()
+  } else if (codeMirror.value.mozRequestFullScreen) { // Firefox
+    codeMirror.value.mozRequestFullScreen()
+  } else if (codeMirror.value.webkitRequestFullscreen) { // Chrome, Safari and Opera
+    codeMirror.value.webkitRequestFullscreen()
+  } else if (codeMirror.value.msRequestFullscreen) { // IE/Edge
+    codeMirror.value.msRequestFullscreen()
+  }
+}
+
+onMounted(() => {
+  const handleFullscreenChange = () => {
+    if (!isInFullscreen()) {
+      isFullscreen.value = false
+    }
+  }
+
+  document.addEventListener('fullscreenchange', handleFullscreenChange)
+})
+
 watch(() => node, async () => {
   if (node && node.data) {
     console.log('Request Node', node)
@@ -56,37 +90,55 @@ watch(() => node, async () => {
 
 <template>
   <BpmnSidebarEditLabel :node="node" />
-  <el-form-item label="JavaScript" label-position="top">
+  <el-form-item label-position="top">
     <template #label>
-      <div style="display: flex; align-items: center; gap: 4px;">
-        <span>JavaScript</span>
-        <el-popover
-          class="box-item"
-          width="300"
-          title="Info"
-          content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
-          placement="top"
-        >
-          <template #reference>
-            <el-icon>
-              <QuestionFilled />
-            </el-icon>
-          </template>
-        </el-popover>
+      <div class="label-container">
+        <div class="label-left">
+          <span>JavaScript</span>
+          <el-popover class="box-item" width="300" title="Info" placement="top"
+                      content="You can get and set data through execution.getVariable('key') and execution.setVariable('key', 'data : string')"
+          >
+            <template #reference>
+              <el-icon>
+                <QuestionFilled />
+              </el-icon>
+            </template>
+          </el-popover>
+        </div>
+        <el-button class="fullscreen-btn" @click="toggleFullscreen" size="small" :icon="FullScreen" circle />
       </div>
     </template>
-    <codemirror
-      v-model="state.data"
-      :style="{width: '290px', height: '68vh'}"
-      :autofocus="true"
-      :indent-with-tab="true"
-      :tab-size="2"
-      :extensions="extensions"
-      @blur="handleBlur"
-    />
+    <div ref="codeMirror">
+      <codemirror
+        v-model="state.data"
+        :style="isFullscreen ? {width: '100%', height: '100%' } :{width: '300px', height: '65vh' }"
+        :autofocus="true"
+        :indent-with-tab="true"
+        :tab-size="2"
+        :extensions="extensions"
+        @blur="handleBlur"
+      />
+    </div>
   </el-form-item>
 </template>
 
 <style scoped lang="scss">
+:deep(.el-form-item__label) {
+  width: 100%;
+}
 
+.label-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.label-left {
+  gap: 4px;
+}
+
+.fullscreen-btn {
+  margin-left: auto;
+}
 </style>
