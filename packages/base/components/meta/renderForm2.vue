@@ -72,10 +72,9 @@ const state = reactive<any>({
 
 // #region module: Variables
 const FormVariablesRendererRef = ref()
-async function getVariables(isFolder?: boolean) {
+async function getVariables(isFolder: boolean = false) {
   try {
-    const date = new Date().valueOf()
-    const variableList = await metadataHelper.initVformVariableList(state.initOptions.documentType)
+    const variableList = await metadataHelper.initVformVariableList(state.initOptions.documentType, state.initOptions?.requiredFields)
     state.variables = [...variableList]
     if (['ai', 'upload', 'changeDocType'].includes(props.mode)) {
       state.variables.unshift({
@@ -175,7 +174,8 @@ async function init(documentType: any, initOptions: initMetaFormOptions) {
 }
 // #endregion
 async function setData(properties: any) {
-  const data = metadataHelper.getParseData(properties, state.variables)
+  const _properties = JSON.parse(JSON.stringify(properties))
+  const data = metadataHelper.getParseData(_properties, state.variables)
   state.initData = data
   state.variables.forEach((item: any) => {
     switch (item.type) {
@@ -192,14 +192,13 @@ async function setData(properties: any) {
         break
     }
   })
-  setTimeout(() => {
-    FormVariablesRendererRef.value.setData(data)
-  })
+  await new Promise((resolve) => setTimeout(resolve, 10))
+  FormVariablesRendererRef.value.setData(data)
   // return await FormVariablesRendererRef.value.setData(properties)
 }
 async function getData() {
-  const data = await FormVariablesRendererRef.value.getData()
-  if (!data) return
+  const data = await FormVariablesRendererRef.value.getData(true)
+  if (!data) throw new Error("valid failed");
   state.variables.forEach((item: any) => {
     switch (item.type) {
       case 'textarea':
@@ -362,7 +361,6 @@ defineExpose({ getData, setData, init })
 }
 .meta-render-form {
   // padding: var(--app-space-xs);
-  width: 99%;
   overflow: auto;
   .static-content-item {
     min-height: unset !important;

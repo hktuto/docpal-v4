@@ -3,7 +3,6 @@ export function getNameByLabelRule(labelRules: any, data: any) {
   const date = new Date()
   const userId: string = useUserId().value
   try {
-    console.log("getNameByLabelRule", labelRules, data)
     if (!labelRules || labelRules.length === 0) throw new Error('no labelRules')
     else {
       return labelRules.reduce((prev: any, rule: any, index: number) => {
@@ -32,7 +31,14 @@ export function getNameByLabelRule(labelRules: any, data: any) {
 }
 
 export function getLabelList(labelRules: string) {
-  return labelRules ? JSON.parse(labelRules) : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
+  return labelRules ? jsonParse(labelRules) : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
+}
+function jsonParse(str: any) {
+  try {
+    return JSON.parse(str)
+  } catch (e) {
+    return str
+  }
 }
 export function hasPreviewName(previewName: string) {
   if (!previewName) previewName = ''

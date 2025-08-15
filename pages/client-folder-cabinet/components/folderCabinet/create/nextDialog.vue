@@ -189,12 +189,8 @@ function initTreeData(children: any, parentId: string = '') {
   })
 }
 
-function getLabelList(row: any) {
-  return row.labelRule ? JSON.parse(row.labelRule) : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
-}
-
 function getMetaName(formData: any = {}, row: any) {
-  const labelRule = getLabelList(row)
+  const labelRule = getLabelList(row.labelRule)
   try {
     const data = {
       ...formData,
