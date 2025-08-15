@@ -1,9 +1,7 @@
 import { clientApi } from 'api'
 
 export function notiShowView(row: any) {
-  const isCancel = row.operate === 'TRASH' ||
-    row.operate === 'DELETE' ||
-    row.operate === 'CANCELD' ||
+  const isCancel = ['TRASH', 'DELETE', 'CANCELD'].includes(row.operate) ||
     (row.type === 'Upload-Request' && !row.content.processInstanceId)
   const showView = row.content.documentId ||
     row.content.uploadId ||
