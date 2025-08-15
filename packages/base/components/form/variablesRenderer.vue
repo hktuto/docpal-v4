@@ -112,7 +112,7 @@ async function getData(): Promise<any> {
     const data = await FormRendererRef.value?.getFormData()
     return data
   } catch (error) {
-    return {}
+    return null
   }
 }
 async function setFormJson(formJson: FormJson) {

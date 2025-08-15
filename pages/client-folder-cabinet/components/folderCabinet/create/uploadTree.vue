@@ -78,25 +78,24 @@ const MetaFormRef2 = ref()
 async function getData(isValidate: boolean = false) {
   state.isCheck = true
   try {
-    const pList: any = []
+    const errorMessageList: any = []
     const nodeMap: any = Object.values(treeRef.value.store.nodesMap).reduce((prev: any, item: any) => {
       if (item.data.folder || (!item.data.folder && item.data.raw)) {
         prev[item.data.id] = {
           ...item.data
         }
-        const pItem: any = getErrorMessage(prev[item.data.id])
-        pList.push(pItem)
+        const errorMessage = getErrorMessage(prev[item.data.id])
+        if (errorMessage) errorMessageList.push(errorMessage)
         delete prev[item.data.id].children
       }
       return prev
     }, {})
     if (isValidate) {
-      let errorMessage = await Promise.all(pList)
-      errorMessage = errorMessage.filter((item) => !!item)
-      if (errorMessage.length > 0) {
-        ElMessageBox.confirm(errorMessage.join('<br>'), t('dpTip_warning'), {
+      if (errorMessageList.length > 0) {
+        ElMessageBox.confirm(errorMessageList.join('<br>'), t('dpTip_warning'), {
           dangerouslyUseHTMLString: true,
-          confirmButtonText: t('dpButtom_confirm')
+          confirmButtonText: t('dpButtom_confirm'),
+          showCancelButton: false
         })
         throw new Error('error')
       }
@@ -118,8 +117,17 @@ async function getData(isValidate: boolean = false) {
   } finally {
   }
 
-  async function getErrorMessage(doc: any) {
-    return ''
+  function getErrorMessage(doc: any) {
+    const message = []
+    const labelRules = getLabelList(doc.labelRule)
+    const requiredFields = labelRules.map((item: any) => item.metadata)
+    const _requiredFields = requiredFields.filter((key) => !['fc:docTitle','fc:label', 'fc:createDate', 'fc:creator'].includes(key))
+    _requiredFields.forEach((key) => {
+      if (!doc.properties[key]) {
+        message.push(`【${doc.properties.docName || doc.docName}】: ${key} is required`)
+      }
+    })
+    return message.join('<br>')
   }
 }
 
@@ -131,7 +139,9 @@ function getMetaName(formData: any = {}) {
   return getNameByLabelRule(labelRules, data)
 }
 
-function handleNodeClick(row: any) {
+async function handleNodeClick(row: any) {
+  state.selectedRow = null
+  await new Promise((resolve) => setTimeout(resolve, 10))
   state.selectedRow = row
   let defaultValue = {}
   if (state.selectedRow.metadataValue) defaultValue = JSON.parse(state.selectedRow.metadataValue)
@@ -139,17 +149,21 @@ function handleNodeClick(row: any) {
   if (!state.selectedRow.properties) state.selectedRow.properties = {}
   // 用了 v-if，如果不用 nextTick 会报错
   nextTick(async () => {
-    await MetaFormRef.value.init(state.selectedRow.documentType)
+    const labelRules = getLabelList(state.selectedRow.labelRule)
+    const requiredFields = labelRules.map((item: any) => item.metadata)
+    await MetaFormRef.value.init(state.selectedRow.documentType, {
+      requiredFields
+    })
+    const properties = JSON.parse(JSON.stringify(state.selectedRow.properties))
     MetaFormRef.value.setData({
       docName: state.selectedRow.docName ? state.selectedRow.docName : row.label,
-      ...state.selectedRow.properties,
-      ...defaultValue
+      ...defaultValue,
+      ...state.selectedRow.properties
     })
   })
 }
 
 async function handleMetaChange(data: any) {
-  // if(state.ready) state.selectedRow.properties = deepCopy(data.formModel)
   state.selectedRow.properties = deepCopy(data.formModel)
   state.selectedRow.previewName = getMetaName()
 }

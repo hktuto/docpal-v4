@@ -121,16 +121,16 @@ export const useMetadata = () => {
     await Promise.all(promises)
     return properties
   }
-  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata): VariableItem[] => {
+  const getVFormVariableListByMetadata = (metadataListMap: DocumentMetadata, initOptions: any): VariableItem[] => {
     const widgetVariableList: VariableItem[] = []
     Object.keys(metadataListMap).forEach((key) => {
-      if (ignoreList.indexOf(key) !== -1) return
+      if (ignoreList.indexOf(key) !== -1 || initOptions.hiddenFields.includes(key)) return
       const metadataItem = metadataListMap[key]
       const _item: any = {
         name: key,
         label: metadataItem.label || key,
         type: 'input',
-        required: false,
+        required: initOptions.requiredFields.includes(key) ? true : false,
         options: {}
       }
 
@@ -155,7 +155,9 @@ export const useMetadata = () => {
           break
         case 'text':
           _item.type = 'textarea'
-          _item.options.maxLength = metadataItem.maxLength
+          _item.options.maxLength = metadataItem.maxLength || 0
+          const row60 = (_item.options.maxLength / 60).toFixed(0)
+          _item.options.rows = Number(row60) > 0 ? Number(row60) : 1 
           break
         case 'boolean':
           _item.type = 'switch'
@@ -205,25 +207,37 @@ export const useMetadata = () => {
       return []
     }
   }
-  const initVformVariableList = async (type: string) => {
+  const initVformVariableList = async (type: string, initOptions: any) => {
+    if (!initOptions) initOptions = {}
+    if (!initOptions.hiddenFields) initOptions.hiddenFields = []
+    if (!initOptions.requiredFields) initOptions.requiredFields = []
     const metadataList = await getDocumentMetadata(type)
-    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList)
+    const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
     return variableList
   }
   function getStringfyData(data: Record<string, any>, variableList: VariableItem[]) {
-    const result = data ? { ...data } : {}
+    const result: any =  {}
     variableList.forEach((item) => {
       if (!item.options) return
       if (item.options.validationType === 'array') {
-        if (!data[item.name]) return
+        if (!data[item.name]) return []
         result[item.name] = Array.isArray(data[item.name]) ? data[item.name] : [data[item.name]]
         if (['case', 'workflow', 'document', 'date'].includes(item.options.validationName)) return
         if (['select'].includes(item.options.validationName)) return
         result[item.name] = result[item.name].map((citem: any) => {
-          const selectItem = item.options.optionItems?.find((sitem: any) => sitem.value === citem)
-          if (!selectItem) return ''
+          let selectItem = item.options.optionItems?.find((sitem: any) => sitem.value === citem)
+          if (!selectItem) {
+            selectItem = {
+              label: citem,
+              value: citem
+            }
+          }
           return JSON.stringify(selectItem)
         })
+      } else if(item.options.validationName === 'boolean') {
+        result[item.name] = data[item.name] ? true : false
+      } else if(data[item.name]) {
+        result[item.name] = data[item.name]
       }
     })
     return result
@@ -237,7 +251,7 @@ export const useMetadata = () => {
           const _citem = getParseDataItem(citem)
           if (!_citem.value) return _citem
           return _citem.value
-        })
+        }).filter((item: any) => !!item)
       }
       const variableItem = variableList.find((item) => item.name === key)
       if (!variableItem) return
