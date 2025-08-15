@@ -2,13 +2,13 @@
 import { ElNotification } from 'element-plus'
 const nuxtApp = useNuxtApp()
 const { t } = useI18n()
-
+const config = useRuntimeConfig()
 const toastShow = ref(false);
 // app:manifest:update'
 nuxtApp.hooks.hookOnce('app:manifest:update', () => {
   setTimeout(() => {
     showUpdateToast()
-  }, 300000)
+  }, (config?.public?.updateInterval as number) || 300000)
 })
 
 
