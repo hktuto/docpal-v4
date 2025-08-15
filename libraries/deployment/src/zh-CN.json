@@ -3031,6 +3031,7 @@
       "userProfile": "用戶資料",
       "userProfileView": "用户资料视图",
       "userSignature": "用户签名",
+      "userSignatureFailed": "获取签名失败",
       "username": "用户名",
       "website": "网站"
     }
