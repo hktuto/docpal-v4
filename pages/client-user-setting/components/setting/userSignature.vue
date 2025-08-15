@@ -91,7 +91,6 @@ const onChange = useDebounceFn(
       prev.push(item)
       return prev
     }, [])
-    state._fileList = [...state.fileList]
   },
   500,
   { maxWait: 5000 }
@@ -121,6 +120,7 @@ defineExpose({ handleOpen })
             :on-change="onChange"
             :auto-upload="false"
             :show-file-list="false"
+            :disabled="state.fileList.length > 0"
           >
             <div>
               <el-icon
@@ -132,11 +132,12 @@ defineExpose({ handleOpen })
                 <DeleteFilled />
               </el-icon>
             </div>
-            <el-image v-if="state.fileList.length > 0" style="height: 100px" :src="state.fileList[0].url" :fit="fit" />
+            <el-image v-if="state.fileList.length > 0" style="height: 100px" :src="state.fileList[0].url"
+                      fit="scale-down" />
             <el-icon class="el-icon--upload" v-if="state.fileList.length === 0">
               <upload-filled />
             </el-icon>
-            <div class="el-upload__text">Drop file here or <em>click to upload</em></div>
+            <div v-if="state.fileList.length === 0" class="el-upload__text">Drop file here or click to upload</div>
           </el-upload>
         </el-form-item>
       </el-form>
