@@ -69,6 +69,9 @@ const conditionOption = computed(() => {
 function typeChange(value:string) {
     if(selectedType.value){
         form.value.attr_condition = selectedType.value.validation[0].value
+        if(selectedType.value.type === 'is_null'){
+            form.value.attr_targetValue = "isNull";
+        }
         if(selectedType.value.target.type === 'boolean'){
 
             form.value.attr_targetValue = true;
@@ -175,6 +178,13 @@ watch(form, () => {
                 </ElSelect>
             </ElFormItem>
             <template v-if="selectedType">
+              <template v-if="selectedType.target.type === 'is_null'">
+                <ElFormItem  label="Condition Value" prop="attr_targetValue" required>
+                    <ElSelect v-model="form.attr_targetValue" filterable placeholder="Select" :disabled="editorProvider.readonly.value" >
+                        <ElOption v-for="item in ['isNull', 'notNull']" :key="item" :label="item" :value="item" />
+                    </ElSelect>
+                </ElFormItem>
+              </template>
                 <template v-if="selectedType.target.type === 'boolean'" >
                     <ElFormItem  label="Condition Value" prop="attr_targetValue" required>
                         <ElSwitch v-model="form.attr_targetValue" active-text="True" inactive-text="False" :disabled="editorProvider.readonly.value"  />

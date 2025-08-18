@@ -182,6 +182,21 @@ export type UserTask = {
 
 export const conditionOptions = [
     {
+      "type": "is_null",
+      "source": {
+          "type": "string"
+      },
+      "target": {
+          "type": "is_null"
+      },
+      "validation": [
+          {
+              "label": "Is",
+              "value": "is"
+          }
+      ]
+    },
+    {
         "type": "Boolean_Validation",
         "source": {
             "type": "boolean"
