@@ -60,7 +60,12 @@ export default defineNuxtConfig({
         '../../pages/admin-password-policy',
         '../../pages/admin-company-profile',
         '../../pages/admin-external-storage',
-        '../../pages/admin-import-jobs'
+        '../../pages/admin-import-jobs',
+
+        // public pages
+        '../../pages/public-share',
+        '../../pages/public-upload',
+        '../../pages/public-easy-form',
     ],
     features: {
         inlineStyles: true,
