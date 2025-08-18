@@ -89,19 +89,19 @@ function initForm() {
         state.responseBodyName = item['flowable:expression'].__cdata
         break
       case 'saveResponseVariableAsJson':
-        state.saveResponseVariableAsJson = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
+        state.saveResponseVariableAsJson = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
         break
       case 'saveResponseParametersTransient':
-        state.saveResponseParametersTransient = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
+        state.saveResponseParametersTransient = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
         break
       case 'saveResponseParameters':
-        state.saveResponseParameters = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
+        state.saveResponseParameters = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
         break
       case 'disallowRedirects':
-        state.disallowRedirects = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : false
+        state.disallowRedirects = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
         break
       case 'ignoreException':
-        state.ignoreException = item['flowable:expression'].__cdata ? item['flowable:expression'].__cdata : true
+        state.ignoreException = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : true
         break
       default :
     }
@@ -137,7 +137,6 @@ function fieldBooleanMappingUpdate(newVal: boolean, name: string) {
 
   graphProvider?.graph.value?.stopBatch('update-http-field-data')
 }
-
 
 function extractParamsFromUrl(url: string) {
   try {
