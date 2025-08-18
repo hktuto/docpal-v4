@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-
-import { getDisplayProperties } from '@/components/meta/metadata';
+import { getDisplayProperties } from '@/components/meta/metadata'
 import { useEventListener } from '@vueuse/core'
 import { clientApi } from 'api'
 import { emitBus, EventType } from 'eventbus'
@@ -29,15 +28,19 @@ async function iconClickHandler(doc: any) {
   state.doc = docData
   // await clientApi.api.getTypesActive()
   state.dispalyMeta = getDisplayProperties(state.doc.properties)
-
+  if (!state.doc.properties) state.doc.properties = {}
+  if (!state.doc.properties.maskList) state.doc.properties.maskList = []
+  if (!state.doc.properties.readonlyList) state.doc.properties.readonlyList = []
   await MetaFormRef.value.init(state.doc.type, {
-    isFolder: state.doc.isFolder
+    isFolder: state.doc.isFolder,
+    hiddenFields: state.doc.properties.maskList,
+    readonlyFields: state.doc.properties.readonlyList
   })
   setTimeout(() => {
     if (!state.doc.properties) state.doc.properties = {}
     MetaFormRef.value?.setData({
       ...state.doc.properties,
-      documentType: state.doc.type,
+      documentType: state.doc.type
     })
   }, 100)
   // MetaFormRef.value.setData({ ...state.doc.properties, documentType: doc.type || doc.documentType || doc.docpalType })
@@ -113,7 +116,7 @@ defineExpose({ iconClickHandler })
     :close-on-click-modal="false"
   >
     <main v-loading="state.loading">
-      <div v-if="state.doc && state.doc.properties" style="overflow: auto; height: 100%;">
+      <div v-if="state.doc && state.doc.properties" style="overflow: auto; height: 100%">
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_type')" :value="state.doc.type" :noCopy="true" />
         <BrowseActionsChangeDocTypeCopyItem :label="$t('info_version')" :value="getVersion(state.doc)" />
         <BrowseActionsChangeDocTypeCopyItem
