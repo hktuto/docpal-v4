@@ -1,6 +1,6 @@
 import { useState, createError } from '#imports'
 import { EventType, emitBus } from 'eventbus'
-import { clientApi, safeClientAPI } from 'api'
+import { clientApi } from 'api'
 import type Keycloak from 'keycloak-js'
 
 import type { UserDTO } from 'api/src/generate/client'
@@ -128,7 +128,7 @@ async function checkPassword() {
   //   firstLoginForceResetPassword: true
   // }
   try {
-    const { data } = await safeClientAPI.getPasswordUserStatus()
+    const { data } = await clientApi.api.getPasswordUserStatus()
     console.log(data)
     if (data?.firstLoginForceResetPassword || data?.accountExpire) {
       const router = useRouter()

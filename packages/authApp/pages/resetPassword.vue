@@ -49,7 +49,7 @@
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
-import { safeClientAPI } from 'api'
+import { clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 const { t } = useI18n()
 const formRef = ref()
@@ -64,7 +64,7 @@ const rules = ref<any>({})
 async function getPasswordPolicy() {
   let config: any = {}
   try {
-    config = await safeClientAPI.getPasswordConfig().then((res) => res.data)
+    config = await clientApi.api.getPasswordConfig().then((res) => res.data)
   } catch (e) {
     console.error(e)
   }
@@ -79,7 +79,7 @@ async function getPasswordPolicy() {
 async function onSubmit() {
   try {
     await formRef.value.validate()
-    const res = await safeClientAPI
+    const res = await clientApi.api
       .patchPasswordUpdatePassword({
         oldPassword: form.oldPassword,
         newPassword: form.newPassword
