@@ -130,7 +130,8 @@ export const useMetadata = () => {
         name: key,
         label: metadataItem.label || key,
         type: 'input',
-        required: initOptions.requiredFields.includes(key) ? true : false,
+        required: initOptions.readonlyFields.includes(key) ? false : initOptions.requiredFields.includes(key) ? true : false,
+        disabled: initOptions.readonlyFields.includes(key) ? true : false,
         options: {}
       }
 
@@ -211,6 +212,7 @@ export const useMetadata = () => {
     if (!initOptions) initOptions = {}
     if (!initOptions.hiddenFields) initOptions.hiddenFields = []
     if (!initOptions.requiredFields) initOptions.requiredFields = []
+    if (!initOptions.readonlyFields) initOptions.readonlyFields = []
     const metadataList = await getDocumentMetadata(type)
     const variableList: VariableItem[] = getVFormVariableListByMetadata(metadataList, initOptions)
     return variableList
@@ -290,7 +292,7 @@ export const useMetadata = () => {
           columnWidth: '',
           placeholder: '',
           readonly: false,
-          disabled: false,
+          disabled: item.disabled ? true : false,
           hidden: false,
           clearable: true,
           requiredHint: '',
@@ -354,7 +356,9 @@ const ignoreDisplayList = [
   'dpc:startDate',
   'dpe:approver',
   'dpm:contractExpirationDate',
-  'dpa:docpalType'
+  'dpa:docpalType',
+  'maskList',
+  'readonlyList'
 ]
 export function getDisplayProperties(properties: Record<string, any>) {
   if (!properties) return []

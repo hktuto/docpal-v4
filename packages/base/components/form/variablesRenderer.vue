@@ -8,6 +8,8 @@
 <script lang="ts" setup>
 import type { VariableItem } from '@/types/vform.extend'
 import type { FormJson, FormData, WidgetItem, FormVariablesRenderer } from '@/types/vform'
+import { useMetadata } from '@/components/meta/metadata'
+const { vFormWidgetListDecorator } = useMetadata()
 const props = defineProps<{
   variables?: VariableItem[]
 }>()
@@ -38,69 +40,7 @@ const formJson = ref<FormJson>({
   }
 })
 function createJson(variables: VariableItem[]): FormJson {
-  console.log('createJson', variables)
-
-  const date = new Date().valueOf()
-  formJson.value.widgetList = []
-  variables.forEach((item: VariableItem, index: number) => {
-    const _item: WidgetItem = {
-      key: date + index,
-      id: item.type + date + index,
-      type: item.type,
-      formItemFlag: true,
-      options: {
-        name: item.name,
-        label: item.label ? item.label : item.name,
-        required: item.required ? true : false,
-        defaultValue: '',
-        size: '',
-        columnWidth: '',
-        placeholder: '',
-        readonly: false,
-        disabled: false,
-        hidden: false,
-        clearable: true,
-        requiredHint: '',
-        onValidate: '',
-        onCreated: '',
-        onMounted: '',
-        onInput: '',
-        onChange: '',
-        onFocus: '',
-        onBlur: '',
-        onEnter: ''
-      }
-    }
-    if (!['date', 'input', 'switch', 'textarea', 'number', 'select', 'json-editor', 'divider', 'select-group', 'date-range'].includes(item.type)) _item.type = 'input'
-    if (item.type === 'date') {
-      _item.options.format = item.options.type === 'datetime' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD' //日期显示格式
-      _item.options.valueFormat = 'YYYY-MM-DDTHH:mm:ss.000Z'
-      _item.options.onDisabledDate =
-        "const myDate = new Date();\nconst year = myDate.getFullYear() + 100;  \nconst minDate = new Date('1901-01-01 00:00:00').getTime()\nconst maxDate = new Date(year + '-12-31 23:59:59').getTime()\nreturn dateTime.getTime() < minDate || dateTime.getTime() > maxDate;"
-    } else if (item.type === 'input') {
-      _item.options.type = 'text'
-      _item.options.maxLength = 255
-      _item.options.showWordLimit = true
-    } else if (item.type === 'textarea') {
-      _item.options.rows = 5
-      _item.options.maxLength = 4000
-      _item.options.showWordLimit = true
-    } else if (item.type === 'number') {
-      _item.options.defaultValue = 0
-      _item.options.min = -999999999999998
-      _item.options.max = 999999999999998
-      _item.options.controlsPosition = 'right'
-    } else if (item.type === 'switch') {
-      // _item.activeText = ''
-      // _item.inactiveText = ''
-      _item.options.defaultValue = false
-      _item.options.labelIconPosition = 'rear'
-    } else if (item.type === 'select') {
-    }
-    if (item.options) _item.options = { ..._item.options, ...item.options }
-    formJson.value.widgetList.push(_item)
-  })
-  console.log(formJson.value)
+  formJson.value.widgetList = vFormWidgetListDecorator(variables)
   FormRendererRef.value?.vFormRenderRef.setFormJson(formJson.value)
   return formJson.value
 }

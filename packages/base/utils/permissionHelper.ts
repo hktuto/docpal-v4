@@ -93,7 +93,9 @@ export const RbacAllowTo = (
   } else {
     rbacPermission = 'write'
   }
-  
+  if(!Array.isArray(permissionIds)) {
+    console.error('permissionIds', permissionIds)
+  }
   return permissionIds.some((id: number) => {
     const option = permissionOptions.find((opt) => {
       const folderMatch = isFolder === '' || String(isFolder) === opt.isFolder || !opt.isFolder
