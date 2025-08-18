@@ -95,12 +95,11 @@ export const requestErrorHelper = (error: any, axiosInstance: AxiosInstance) => 
   return Promise.reject(error)
 }
 
-const ignoreCaseConversion = ['/auth/nuxeo/login', '/docpal/systemfeature/keycloak-token-verification'] // which url need to ignore case conversion
+const ignoreCaseConversion = ['/auth/nuxeo/login', '/docpal/systemfeature/keycloak-token-verification']; // which url need to ignore case conversion
 
 export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstance) => {
   // Skip case conversion if explicitly disabled via header
   if (response.config.responseType === 'blob') return response
-  if(ignoreCaseConversion.some(url => response.config.url.includes(url))) {
   if (ignoreCaseConversion.includes(response.config.url)) {
     return response
   }
@@ -111,6 +110,7 @@ export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstanc
 
   return response
 }
+
 export const responseErrorHelper = async (error: any, axiosInstance: AxiosInstance) => {
   const originalRequest = error.config
 
