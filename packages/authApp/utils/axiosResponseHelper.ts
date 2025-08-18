@@ -95,16 +95,17 @@ export const requestErrorHelper = (error: any, axiosInstance: AxiosInstance) => 
   return Promise.reject(error)
 }
 
-const ignoreCaseConversion = ['/auth/nuxeo/login'] // which url need to ignore case conversion
+const ignoreCaseConversion = ['/auth/nuxeo/login', '/docpal/systemfeature/keycloak-token-verification'] // which url need to ignore case conversion
 
 export const responseSuccessHelper = (response: any, axiosInstance: AxiosInstance) => {
   // Skip case conversion if explicitly disabled via header
   if (response.config.responseType === 'blob') return response
+  if(ignoreCaseConversion.some(url => response.config.url.includes(url))) {
   if (ignoreCaseConversion.includes(response.config.url)) {
     return response
   }
   // Normalize response data to camelCase if it contains snake_case keys
-  if (response.data) {
+  if (response.data && !(response.data instanceof Blob)) {
     response.data = normalizeApiResponse(response.data)
   }
 
