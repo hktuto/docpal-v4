@@ -15,7 +15,7 @@ export const deepCopy = (data: any) => {
 export function downloadBlob(blob: any, name: string, type = 'application/octet-stream') {
   let blobStream: Blob;
   if(blob instanceof Blob){
-    blobStream = blob.slice(0, blob.size, type)
+    blobStream = blob.slice(0, blob.size, blob.type)
   }else{
     blobStream = new Blob([blob], { type });
   }
@@ -37,6 +37,7 @@ export function downloadUrl(url: string, name: string) {
 
 export function calFileNameAndExt(mimeType: string, name: string): string {
   const ext = mime.extension(mimeType);
+  console.log('ext', ext)
   // check name include extension
   if (ext && !name.includes(`.${ext}`)) {
     return name + '.' + ext;
