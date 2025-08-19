@@ -16,7 +16,7 @@
   </el-dialog>
 </template>
 <script lang="ts" setup>
-import { adminApi } from 'api'
+import { adminApi, clientApi } from 'api'
 import { ElMessage } from 'element-plus'
 
 const { t } = useI18n()

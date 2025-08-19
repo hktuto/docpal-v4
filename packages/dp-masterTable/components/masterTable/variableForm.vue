@@ -10,7 +10,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { adminApi } from "api";
+import { adminApi, clientApi } from "api";
 const props = withDefaults(
   // @ts-ignore
   defineProps<{
