@@ -26,7 +26,7 @@ export default defineAppConfig({
     "client-share-other": {
       id:"client-share-other",
       name: 'client-share-other',
-      label: "file_share_other",
+      label: "file_shar e_other",
       icon: "lucide:file-symlink",
       hoverIcon: "lucide:file-symlink",
       component: "LazyInternalShareOtherPage",
