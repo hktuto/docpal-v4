@@ -31,8 +31,8 @@ export default defineAppConfig({
         "client-fileRequest": {
             id: 'client-fileRequest',
             name: 'client-fileRequest',
-            icon: 'uil:upload',
-            hoverIcon: 'uil:upload',
+            icon: 'lucide:file-symlink',
+            hoverIcon: 'lucide:file-symlink',
             label: "file_uploads",
             component: "LazyUploadRequestPage",
             feature: "UPLOAD_REQUEST",

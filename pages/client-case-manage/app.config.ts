@@ -3,8 +3,8 @@ export default defineAppConfig({
         "client-case-manage": {
             id: 'client-case-manage',
             name: 'client-case-manage',
-            icon: 'dp-icon:case-outline',
-            hoverIcon: 'dp-icon:case-fill',
+            icon: 'dp-icon:case',
+            hoverIcon: 'dp-icon:case',
             label: "adminMenu.caseManagement",
             component: "LazyCasePage",
             feature: "WORKFLOW",

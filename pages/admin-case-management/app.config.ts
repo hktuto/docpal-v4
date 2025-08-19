@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"admin-case-management",
       name: 'admin-case-management-list',
       label: "adminMenu.caseManagement",
-      icon: "dp-icon:case-outline",
-      hoverIcon: "dp-icon:case-fill",
+      icon: "dp-icon:case",
+      hoverIcon: "dp-icon:case",
       component: "LazyCaseManagementList",
       feature: "WORKFLOW",
       props:{
