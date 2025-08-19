@@ -64,7 +64,7 @@ const {
       },
     },
     { field: "type", title: "notification.type" },
-    { field: "operate", title: "notification.action" },
+    { field: "operate", title: "vxe.table.actionTitle" },
     {
       field: "description",
       title: "docType_description",

@@ -83,7 +83,7 @@ export default defineAppConfig({
       ]
     },
     {
-      label: 'adminMenu.dashboard',
+      label: 'adminMenu.dashboardManagement',
       icon: 'material-symbols:dashboard-customize-outline-rounded',
       children: [
         {
