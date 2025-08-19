@@ -27,7 +27,7 @@
 </template>
 <script lang="ts" setup>
 import { Finished, Select } from '@element-plus/icons-vue'
-import { adminApi } from 'api'
+import { adminApi, clientApi } from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -74,7 +74,8 @@ async function init() {
   const id = CMDProvider?.instanceId?.value || null
   const _caseTypeId = CMDProvider?.caseTypeId?.value || null
   if (id) {
-    const { data } = (await adminApi.api.getCaseDashboardInstanceCaseidActivity(id)) as any
+    const appPlatform = useAppPlatform()
+    const { data } = appPlatform.value === 'admin' ? (await adminApi.api.getCaseDashboardInstanceCaseidActivity(id)) as any : (await clientApi.api.getCaseDashboardInstanceCaseidActivity(id)) as any
     state.activityList = data
   } else if (_caseTypeId) {
     const { data } = (await adminApi.api.getCaseDashboardCasetypeCasetypeidActivity(_caseTypeId)) as any
