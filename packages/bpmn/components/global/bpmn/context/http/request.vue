@@ -89,23 +89,32 @@ function initForm() {
         state.responseBodyName = item['flowable:expression'].__cdata
         break
       case 'saveResponseVariableAsJson':
-        state.saveResponseVariableAsJson = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
+        state.saveResponseVariableAsJson = toBoolean(item['flowable:expression'].__cdata)
         break
       case 'saveResponseParametersTransient':
-        state.saveResponseParametersTransient = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
+        state.saveResponseParametersTransient = toBoolean(item['flowable:expression'].__cdata)
         break
       case 'saveResponseParameters':
-        state.saveResponseParameters = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
+        state.saveResponseParameters = toBoolean(item['flowable:expression'].__cdata)
         break
       case 'disallowRedirects':
-        state.disallowRedirects = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : false
+        state.disallowRedirects = toBoolean(item['flowable:expression'].__cdata)
         break
       case 'ignoreException':
-        state.ignoreException = typeof item['flowable:expression'].__cdata === 'boolean' ? item['flowable:expression'].__cdata : true
+        state.ignoreException = toBoolean(item['flowable:expression'].__cdata)
         break
       default :
     }
   })
+}
+
+function toBoolean(value) {
+  if (typeof value === 'boolean') {
+    return value
+  } else {
+    // String
+    return value.toLocaleString() === 'true'
+  }
 }
 
 function fieldMappingUpdate(newVal: string, name: string) {
@@ -302,7 +311,9 @@ watch(() => node, async () => {
       <div style="display: flex; gap: 8px; align-items: flex-start; width: 100%;">
         <el-input disabled v-model="state.requestParams" style="flex: 1;" />
         <div style="display: flex; align-items: center; justify-content: flex-end; min-width: fit-content;">
-          <el-button type="primary" @click="openVisible('Params')">{{ t('Add Params') }}</el-button>
+          <el-button :disabled="editorProvider.readonly.value" type="primary" @click="openVisible('Params')">
+            {{ t('Add Params') }}
+          </el-button>
         </div>
       </div>
     </el-form-item>
@@ -312,7 +323,9 @@ watch(() => node, async () => {
         <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
                   v-model="state.requestHeader" style="flex: 1;" />
         <div style="display: flex; align-items: center; justify-content: flex-end; min-width: fit-content;">
-          <el-button type="primary" @click="openVisible('Headers')">{{ t('Add Header') }}</el-button>
+          <el-button :disabled="editorProvider.readonly.value" type="primary" @click="openVisible('Headers')">
+            {{ t('Add Header') }}
+          </el-button>
         </div>
       </div>
     </el-form-item>
@@ -322,7 +335,9 @@ watch(() => node, async () => {
         <el-input type="textarea" rows="2" :autosize="{ minRows: 2, maxRows: 6 }" resize="none" disabled
                   v-model="state.requestBody" style="flex: 1;" />
         <div style="display: flex; align-items: center; justify-content: flex-end; min-width: fit-content;">
-          <el-button type="primary" @click="openBodyEdit">{{ t('Add Body') }}</el-button>
+          <el-button :disabled="editorProvider.readonly.value" type="primary" @click="openBodyEdit">
+            {{ t('Add Body') }}
+          </el-button>
         </div>
       </div>
     </el-form-item>
