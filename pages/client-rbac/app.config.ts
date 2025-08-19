@@ -4,8 +4,8 @@ import { defineAppConfig } from '#imports'
 
 export default defineAppConfig({
   menu:{
-   "RBAC-page":{
-      id:"RBAC-page",
+   "RBAC-client-page":{
+      id:"RBAC-client-pag",
       name: 'rgac-page',
       label: "ROLE-Page",
       icon: "lucide:file-cog",
