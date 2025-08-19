@@ -29,7 +29,7 @@ export const useCalendarViewerCategories = () => useState<CalendarVieweCalendarS
 
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
-
+    
     const calendarViewOptions = viewName
     
     const weekDayOptions = [
@@ -51,7 +51,9 @@ export const useCalendarStore = () => {
 
     const categoriesColumn = useCategoriesColumn()
     async function getCatergoriesColumn(){
-        const {data} = await adminApi.api.getMasterTablesId(setting.value.category.master_table) as any
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const {data} = await api.api.getMasterTablesId(setting.value.category.master_table) as any
         categoriesColumn.value = data.fields;
     }
 
@@ -66,7 +68,9 @@ export const useCalendarStore = () => {
     const categoriesOption = useCalenarCategories()
     const calendarViewerCategories = useCalendarViewerCategories()
     async function getCategories(){
-        const { data } = await adminApi.api.postMasterTablesRecords({
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const { data } = await api.api.postMasterTablesRecords({
             id: setting.value.category.master_table
         }) as any
         categoriesOption.value = data || []
@@ -92,8 +96,9 @@ export const useCalendarStore = () => {
 
     const locationsOption = useCalenarLocation()
     async function getLocations(){
-        
-        const data = await adminApi.api.postMasterTablesRecords({
+      const appPlatform = useAppPlatform()
+      const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const data = await api.api.postMasterTablesRecords({
             id: setting.value.location.master_table
         }).then(res => res.data) as any;
         locationsOption.value = (data || []).filter(i => i.status).sort((a,b) => a.name.localeCompare(b.name))
