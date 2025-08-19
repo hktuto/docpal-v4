@@ -1,5 +1,5 @@
 
-import { adminApi } from '../../../libraries/api/src/index';
+import { adminApi, clientApi } from 'api';
 import { onMounted } from "vue";
 import { viewName } from '../utils/calendarHelper';
 
@@ -56,7 +56,8 @@ export const useCalendarStore = () => {
     }
 
     async function getCalendarMasterTable(){
-        const {data} = await adminApi.api.getCalendarsSettingTables() as any
+        const appPlatform = useAppPlatform()
+        const {data} = appPlatform.value === 'admin' ? await adminApi.api.getCalendarsSettingTables() as any : await clientApi.api.getCalendarsSettingTables() as any
         return data
     }
 
