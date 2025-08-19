@@ -97,7 +97,7 @@
       "formItemFlag": true,
       "options": {
         "name": "userGroups",
-        "label": "doc_typeSmartFolderUserOrGroup",
+        "label": "folder_cabinetUserOrGroup",
         "labelAlign": "",
         "defaultValue": [],
         "placeholder": "",

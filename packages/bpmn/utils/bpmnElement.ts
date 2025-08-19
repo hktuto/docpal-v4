@@ -405,9 +405,8 @@ export const bpmnElement: BpmnElement = {
       let type = 'ServiceTask'
       let bgColor = '#fff'
       let textColor = '#000'
-
       if (item['attr_flowable:type'] === 'http') {
-        icon = '/bpmn/icons/download-pdf.svg'
+        icon = '/bpmn/icons/http-task.svg'
         type = 'http'
         color = '#7B61FF'
       } else {
@@ -827,12 +826,12 @@ export const bpmnElement: BpmnElement = {
               ['flowable:field']: [
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
-                { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' }},
+                { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' } },
                 { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '{}' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
+                { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'false' } },
-                { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'saveResponseParameters', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'disallowRedirects', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'ignoreException', ['flowable:expression']: { '__cdata': 'true' } }
@@ -850,11 +849,11 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
-                { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' }},
+                { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' } },
                 { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '{}' } },
+                { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'saveResponseParametersTransient', ['flowable:expression']: { '__cdata': 'false' } },
-                { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'saveResponseParameters', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'disallowRedirects', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'ignoreException', ['flowable:expression']: { '__cdata': 'true' } }

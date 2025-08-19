@@ -15,19 +15,19 @@
           class="xmlEditor__ace-editor"
         />
       </div>
-      
+
       <div class="footer">
-        <ElButton 
-          size="small" 
+        <ElButton
+          size="small"
           type="info"
           @click="refreshXml"
           :loading="isLoading"
         >
           {{ $t('common_refresh') || 'Refresh' }}
         </ElButton>
-        <ElButton 
-          size="small" 
-          type="primary" 
+        <ElButton
+          size="small"
+          type="primary"
           @click="saveXml"
           :loading="isSaving"
           :disabled="!hasChanges"
@@ -43,7 +43,7 @@
         :closable="false"
         show-icon
       />
-      
+
       <ElAlert
         v-if="hasChanges"
         :title="$t('bpmn_xmlEditor_unsaved_changes') || 'You have unsaved changes'"
@@ -118,7 +118,11 @@ function convertNodeDataToXml() {
     // Convert the node's data back to XML
     const xml = jsonToBpmn(nodeData.data)
     // Format the XML for better readability
-    const formattedXml = formatXmlString(xml)
+    let formattedXml = formatXmlString(xml)
+    // 當xml顯示script Task的js代碼時，該方法會導致js内的"<"&">"等語法失，效導致後續運行workflow報錯
+    if (nodeData.type === 'scriptTask') {
+      formattedXml = xml
+    }
     xmlContent.value = formattedXml
     originalXml.value = formattedXml
     hasChanges.value = false
@@ -145,7 +149,7 @@ async function saveXml() {
 
     // Parse the XML back to JSON
     const json = nodeXmltoJson(xmlContent.value)
-    
+
     if (!json) {
       throw new Error('Invalid XML format')
     }
@@ -193,37 +197,36 @@ function refreshXml() {
 }
 
 
-
 // Helper function to format XML string with proper indentation
 function formatXmlString(xml: string): string {
   let formatted = ''
   let indent = ''
   const tab = '  ' // 2 spaces for indentation
-  
+
   // Remove all whitespace between tags
   xml = xml.replace(/>\s+</g, '><')
-  
+
   // Split by tags
   const parts = xml.split(/(<\/?[^>]+>)/)
-  
+
   for (let i = 0; i < parts.length; i++) {
     const part = parts[i].trim()
     if (!part) continue
-    
+
     // Check if it's a closing tag
     if (part.startsWith('</')) {
       indent = indent.substring(tab.length)
     }
-    
+
     // Add indentation and the tag
     formatted += indent + part + '\n'
-    
+
     // Check if it's an opening tag (not self-closing)
     if (part.startsWith('<') && !part.startsWith('</') && !part.endsWith('/>')) {
       indent += tab
     }
   }
-  
+
   return formatted.trim()
 }
 
@@ -235,7 +238,7 @@ function setupListeners() {
   graphProvider.graph.value.on('history:undo', () => {
     refreshXml()
   })
-  
+
   graphProvider.graph.value.on('history:redo', () => {
     refreshXml()
   })
