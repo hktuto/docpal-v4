@@ -57,7 +57,9 @@ export const useCalendarStore = () => {
 
     async function getCalendarMasterTable(){
         const appPlatform = useAppPlatform()
-        const {data} = appPlatform.value === 'admin' ? await adminApi.api.getCalendarsSettingTables() as any : await clientApi.api.getCalendarsSettingTables() as any
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        console.log("api", api.instance.defaults.baseURL)
+        const {data} = await api.api.getCalendarsSettingTables() as any
         return data
     }
 
@@ -99,7 +101,9 @@ export const useCalendarStore = () => {
 
     async function getCalendarsSetting(){
         const masterTable = await getCalendarMasterTable()
-        const { data } = await adminApi.api.getCalendarsSetting() as any;
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const { data } = await api.api.getCalendarsSetting() as any;
         const { public: { platform } } = useRuntimeConfig();
 
         setting.value = {

@@ -5,7 +5,6 @@ import {clientApi} from 'api'
 import {nextTick, ref, toRefs} from 'vue';
 
 const userPreference = useUserPreference()
-const {public: {OFFICE_END_POINT}} = useRuntimeConfig()
 const props = defineProps<{
   docId?: string,
   readonly: boolean
@@ -73,8 +72,9 @@ function toggleMode() {
 }
 
 const officeUrl = (docId: string) => {
-  const WOPISrc = `https://${OFFICE_END_POINT}/wopi/files/${docId}${mode.value === 'view' ? "_read_only" : ""}?fileType=${props.fileType.toUpperCase()}&readonly=${mode.value === 'view'}&access_token=${token.value}`
-  return `https://${OFFICE_END_POINT}/browser/85ac843/cool.html?lang=${userPreference.value.language.replaceAll('HK', "TW")}&WOPISrc=${encodeURIComponent(WOPISrc)}`;
+  const officURL =  'https://office.' + (location.host === 'localhost' ? "sit-v2.wclsolution.com" : location.host)
+  const WOPISrc = `https://${officURL}/wopi/files/${docId}${mode.value === 'view' ? "_read_only" : ""}?fileType=${props.fileType.toUpperCase()}&readonly=${mode.value === 'view'}&access_token=${token.value}`
+  return `https://${officURL}/browser/85ac843/cool.html?lang=${userPreference.value.language.replaceAll('HK', "TW")}&WOPISrc=${encodeURIComponent(WOPISrc)}`;
 }
 
 function gotMessageFromIframe(e: MessageEvent) {
