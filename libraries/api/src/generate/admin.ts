@@ -8798,7 +8798,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "http://admin.app4.wclsolution.com",
+            baseURL: axiosConfig.baseURL || "http://sit-v2.wclsolution.com",
         });
         this.secure = secure;
         this.format = format;
@@ -8893,7 +8893,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title OpenAPI definition
  * @version v0
- * @baseUrl http://admin.app4.wclsolution.com
+ * @baseUrl http://sit-v2.wclsolution.com
  */
 export class Admin<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
     api = {

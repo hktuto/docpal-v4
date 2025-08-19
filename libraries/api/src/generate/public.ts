@@ -456,6 +456,8 @@ export interface AclUserGroup {
      * @example "IT sale dept"
      */
     groupLabel?: string;
+    /** tenant id */
+    tenantId?: string;
     /**
      * Delete flag
      * @example "NO"
@@ -498,6 +500,8 @@ export interface AclUserGroupDTO {
      * @example "IT sale dept"
      */
     groupLabel?: string;
+    /** tenant id */
+    tenantId?: string;
     /**
      * Delete flag
      * @example "NO"
@@ -518,6 +522,14 @@ export interface AclUserGroupDTO {
      */
     modifiedDate: string;
     users?: AclUserInformation[];
+}
+
+export interface ResultListAclUserGroup {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: AclUserGroup[];
 }
 
 export interface ResultAccessControlEntry {
@@ -1067,6 +1079,8 @@ export interface DateRangeDTO {
 
 export interface DateRangeRequestDTO {
     dateRange?: DateRangeDTO;
+    docTypes?: string[];
+    groupBy?: string;
 }
 
 /** Define block inherited permission of document */
@@ -1263,7 +1277,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "http://app2.wclsolution.com:9080",
+            baseURL: axiosConfig.baseURL || "http://sit-v2.wclsolution.com",
         });
         this.secure = secure;
         this.format = format;
@@ -1358,7 +1372,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title DocPal REST API
  * @version 0.0.1
- * @baseUrl http://app2.wclsolution.com:9080
+ * @baseUrl http://sit-v2.wclsolution.com
  *
  * DocPal REST API Documentation
  */
@@ -1367,7 +1381,7 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Configuration (Nuxeo)
+         * @tags Configuration
          * @name GetNuxeoTypes
          * @summary Get all document types
          * @request GET:/api/nuxeo/types
@@ -1389,7 +1403,7 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags Configuration (Nuxeo)
+         * @tags Configuration
          * @name PostNuxeoTypes
          * @summary Get all document types
          * @request POST:/api/nuxeo/types
@@ -1403,50 +1417,6 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<ResultListDocumentTypeDTO, Result>({
                 path: `/nuxeo/types`,
-                method: "POST",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name GetNuxeoTypesDeprecate
-         * @summary Get all document types
-         * @request GET:/api/nuxeo/types/
-         */
-        getNuxeoTypesDeprecate: (
-            query: {
-                /** @format int32 */
-                flag: number;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListDocumentTypeDTO, Result>({
-                path: `/nuxeo/types/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Configuration (Nuxeo)
-         * @name PostNuxeoTypesDeprecate
-         * @summary Get all document types
-         * @request POST:/api/nuxeo/types/
-         */
-        postNuxeoTypesDeprecate: (
-            query: {
-                /** @format int32 */
-                flag: number;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListDocumentTypeDTO, Result>({
-                path: `/nuxeo/types/`,
                 method: "POST",
                 query: query,
                 ...params,
@@ -1863,6 +1833,22 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags AclUserGroupController
+         * @name PostPermissionUserGroupGroups
+         * @request POST:/api/permission/user/group/groups
+         */
+        postPermissionUserGroupGroups: (data: AclUserGroupDTO, params: RequestParams = {}) =>
+            this.request<ResultListAclUserGroup, Result>({
+                path: `/permission/user/group/groups`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags AclUserGroupController
          * @name PostPermissionUserGroupAddUsers
          * @summary Add user to user group
          * @request POST:/api/permission/user/group/add/users
@@ -2242,63 +2228,12 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags dash-board-controller
-         * @name PostDashboardWorkflowspendtimeDeprecate
-         * @request POST:/api/docpal/dashboard/WorkflowSpendTime/
-         */
-        postDashboardWorkflowspendtimeDeprecate: (data: DashBoardWorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultMapStringInteger, Result>({
-                path: `/docpal/dashboard/WorkflowSpendTime/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
          * @name PostDashboardWorkflowactivelist
          * @request POST:/api/docpal/dashboard/WorkflowActiveList
          */
         postDashboardWorkflowactivelist: (data: DashBoardWorkflowRequestDTO, params: RequestParams = {}) =>
             this.request<Result, Result>({
                 path: `/docpal/dashboard/WorkflowActiveList`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardWorkflowactivelistDeprecate
-         * @request POST:/api/docpal/dashboard/WorkflowActiveList/
-         */
-        postDashboardWorkflowactivelistDeprecate: (data: DashBoardWorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/WorkflowActiveList/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardWorkflowactivatetasktrendDeprecate
-         * @request POST:/api/docpal/dashboard/WorkflowActivateTaskTrend/
-         */
-        postDashboardWorkflowactivatetasktrendDeprecate: (
-            data: DashBoardWorkflowRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultLinkedListDashBoardWorkflowResponseDTO, Result>({
-                path: `/docpal/dashboard/WorkflowActivateTaskTrend/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -2325,47 +2260,12 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags dash-board-controller
-         * @name PostDashboardWorkflowactivatetaskspendtimeDeprecate
-         * @request POST:/api/docpal/dashboard/WorkflowActivateTaskSpendTime/
-         */
-        postDashboardWorkflowactivatetaskspendtimeDeprecate: (
-            data: DashBoardWorkflowRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringDouble, Result>({
-                path: `/docpal/dashboard/WorkflowActivateTaskSpendTime/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
          * @name PostDashboardWorkflowactivatetaskspendtime
          * @request POST:/api/docpal/dashboard/WorkflowActivateTaskSpendTime
          */
         postDashboardWorkflowactivatetaskspendtime: (data: DashBoardWorkflowRequestDTO, params: RequestParams = {}) =>
             this.request<ResultMapStringDouble, Result>({
                 path: `/docpal/dashboard/WorkflowActivateTaskSpendTime`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardNewworkflowcounttrendDeprecate
-         * @request POST:/api/docpal/dashboard/NewWorkflowCountTrend/
-         */
-        postDashboardNewworkflowcounttrendDeprecate: (data: DashBoardWorkflowRequestDTO, params: RequestParams = {}) =>
-            this.request<ResultLinkedListDashBoardWorkflowResponseDTO, Result>({
-                path: `/docpal/dashboard/NewWorkflowCountTrend/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -2411,50 +2311,12 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags dash-board-controller
-         * @name PostDashboardNewfilesofuserssizebydtypebymonthlycumulationDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfUsersSizeByDTypeBymonthlyCumulation/
-         */
-        postDashboardNewfilesofuserssizebydtypebymonthlycumulationDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfUsersSizeByDTypeBymonthlyCumulation/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
          * @name PostDashboardNewfilesofusersmetabydtypebyrange
          * @request POST:/api/docpal/dashboard/NewFilesOfUsersMetaByDTypeByRange
          */
         postDashboardNewfilesofusersmetabydtypebyrange: (data: DashBoardRequestDTO, params: RequestParams = {}) =>
             this.request<Result, Result>({
                 path: `/docpal/dashboard/NewFilesOfUsersMetaByDTypeByRange`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardNewfilesofusersmetabydtypebyrangeDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfUsersMetaByDTypeByRange/
-         */
-        postDashboardNewfilesofusersmetabydtypebyrangeDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfUsersMetaByDTypeByRange/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -2484,44 +2346,6 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags dash-board-controller
-         * @name PostDashboardNewfilesofuserscountbydtypebymonthlycumulationDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfUsersCountByDTypeBymonthlyCumulation/
-         */
-        postDashboardNewfilesofuserscountbydtypebymonthlycumulationDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfUsersCountByDTypeBymonthlyCumulation/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardNewfilesofuserbydtypebyrangefiltermatedataDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfUserByDTypeByRangeFilterMatedata/
-         */
-        postDashboardNewfilesofuserbydtypebyrangefiltermatedataDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfUserByDTypeByRangeFilterMatedata/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
          * @name PostDashboardNewfilesofuserbydtypebyrangefiltermatedata
          * @request POST:/api/docpal/dashboard/NewFilesOfUserByDTypeByRangeFilterMatedata
          */
@@ -2531,25 +2355,6 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<Result, Result>({
                 path: `/docpal/dashboard/NewFilesOfUserByDTypeByRangeFilterMatedata`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardNewfilesofspecifyusersizebydtypebymonthlycumulationDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfSpecifyUserSizeByDTypeBymonthlyCumulation/
-         */
-        postDashboardNewfilesofspecifyusersizebydtypebymonthlycumulationDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfSpecifyUserSizeByDTypeBymonthlyCumulation/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -2595,44 +2400,6 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags dash-board-controller
-         * @name PostDashboardNewfilesofspecifyusermetabydtypebyrangeDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfSpecifyUserMetaByDTypeByRange/
-         */
-        postDashboardNewfilesofspecifyusermetabydtypebyrangeDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfSpecifyUserMetaByDTypeByRange/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardNewfilesofspecifyusercountbydtypebymonthlycumulationDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfSpecifyUserCountByDTypeBymonthlyCumulation/
-         */
-        postDashboardNewfilesofspecifyusercountbydtypebymonthlycumulationDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfSpecifyUserCountByDTypeBymonthlyCumulation/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
          * @name PostDashboardNewfilesofspecifyusercountbydtypebymonthlycumulation
          * @request POST:/api/docpal/dashboard/NewFilesOfSpecifyUserCountByDTypeBymonthlyCumulation
          */
@@ -2642,25 +2409,6 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<Result, Result>({
                 path: `/docpal/dashboard/NewFilesOfSpecifyUserCountByDTypeBymonthlyCumulation`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardNewfilesofspecifyuserbydtypebyrangefiltermatedataDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesOfSpecifyUserByDTypeByRangeFilterMatedata/
-         */
-        postDashboardNewfilesofspecifyuserbydtypebyrangefiltermatedataDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesOfSpecifyUserByDTypeByRangeFilterMatedata/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -2706,63 +2454,12 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
          * No description
          *
          * @tags dash-board-controller
-         * @name PostDashboardNewfileslistDeprecate
-         * @request POST:/api/docpal/dashboard/NewFilesList/
-         */
-        postDashboardNewfileslistDeprecate: (data: DashBoardRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/NewFilesList/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
          * @name PostDashboardDocumenttypeofsizebyrange
          * @request POST:/api/docpal/dashboard/DocumentTypeOfSizeByRange
          */
         postDashboardDocumenttypeofsizebyrange: (data: DateRangeRequestDTO, params: RequestParams = {}) =>
             this.request<Result, Result>({
                 path: `/docpal/dashboard/DocumentTypeOfSizeByRange`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardDocumenttypeofsizebyrangeDeprecate
-         * @request POST:/api/docpal/dashboard/DocumentTypeOfSizeByRange/
-         */
-        postDashboardDocumenttypeofsizebyrangeDeprecate: (data: DateRangeRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/DocumentTypeOfSizeByRange/`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardDocumenttypeofsizebymonthlyrangecumulationDeprecate
-         * @request POST:/api/docpal/dashboard/DocumentTypeOfSizeByMonthlyRangeCumulation/
-         */
-        postDashboardDocumenttypeofsizebymonthlyrangecumulationDeprecate: (
-            data: DashBoardRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/DocumentTypeOfSizeByMonthlyRangeCumulation/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -2782,22 +2479,6 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
         ) =>
             this.request<Result, Result>({
                 path: `/docpal/dashboard/DocumentTypeOfSizeByMonthlyRangeCumulation`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags dash-board-controller
-         * @name PostDashboardDocumenttypeofcountbyrangeDeprecate
-         * @request POST:/api/docpal/dashboard/DocumentTypeOfCountByRange/
-         */
-        postDashboardDocumenttypeofcountbyrangeDeprecate: (data: DateRangeRequestDTO, params: RequestParams = {}) =>
-            this.request<Result, Result>({
-                path: `/docpal/dashboard/DocumentTypeOfCountByRange/`,
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
@@ -3219,6 +2900,26 @@ export class Public<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultListString, Result>({
                 path: `/docpal/workflow/job/query_approver_list`,
                 method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags user-controller
+         * @name GetUserMembers
+         * @request GET:/api/docpal/user/members
+         */
+        getUserMembers: (
+            query: {
+                userId: string;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultObject, Result>({
+                path: `/docpal/user/members`,
+                method: "GET",
+                query: query,
                 ...params,
             }),
 
