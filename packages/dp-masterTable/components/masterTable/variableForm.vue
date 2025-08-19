@@ -185,8 +185,10 @@ async function turnFields(fields: any, initData: any, flexible: boolean = false)
   await Promise.all(pList);
   return resultFields;
   async function getRelationOptions(params: any, field: any): Promise<any> {
+    const appPlatform = useAppPlatform()
+    const api = appPlatform.value === 'admin' ? adminApi : clientApi
     try {
-      const data: any = await adminApi.api
+      const data: any = await api.api
         .getMasterTablesRecords(params)
         .then((res) => res.data);
 
