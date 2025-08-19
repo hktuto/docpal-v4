@@ -1,10 +1,27 @@
 
 const fs = require('fs');
 const path = require('path');
-const argv = require('minimist')(process.argv.slice(2));
 const enJson = require('./src/en-US.json')
 const zhJson = require('./src/zh-CN.json')
 const zhHKJson = require('./src/zh-HK.json')
+
+function parseArgv() {
+  const args = {};
+  for (let i = 2; i < process.argv.length; i++) {
+      let arg = process.argv[i];
+      if (arg.startsWith('--')) {
+          const key = arg.slice(2);
+          let value = true;
+          if (i + 1 < process.argv.length && !process.argv[i + 1].startsWith('--')) {
+              value = process.argv[i + 1];
+              i++;
+          }
+          args[key] = value;
+      }
+  }
+  return args;
+}
+const argv = parseArgv();
 
 
 const { SUPERADMIN, PASSWORD, ADMINURL } = argv;
