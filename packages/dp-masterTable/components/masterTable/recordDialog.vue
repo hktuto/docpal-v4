@@ -124,7 +124,9 @@ async function turnFields(fields) {
   return resultFields
 
   async function getRelationOptions(params, field) {
-    const data = await adminApi.api.getMasterTablesRecords(params).then(res => res.data)
+    const appPlatform = useAppPlatform()
+    const api = appPlatform.value === 'admin' ? adminApi : clientApi
+    const data = await api.api.getMasterTablesRecords(params).then(res => res.data)
     field.type = 'select'
     field.options.optionItems = data?.map(item => ({
       label: item[params.displayField],
