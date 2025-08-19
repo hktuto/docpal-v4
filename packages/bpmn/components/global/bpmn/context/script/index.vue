@@ -11,7 +11,8 @@ const { node } = defineProps<{
 }>()
 
 const graphProvider = inject(BPMN_PROVIDER)
-if (!graphProvider) {
+const editorProvider = inject(EDITOR_PROVIDER)
+if (!graphProvider || !editorProvider) {
   throw createError('graph provider not found')
 }
 
@@ -121,6 +122,7 @@ watch(() => node, async () => {
         :indent-with-tab="true"
         :tab-size="2"
         :extensions="extensions"
+        :disabled="editorProvider.readonly.value"
         @blur="handleBlur"
       />
     </el-form-item>

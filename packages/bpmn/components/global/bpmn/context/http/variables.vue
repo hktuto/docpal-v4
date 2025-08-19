@@ -43,14 +43,6 @@ defineExpose({ openDrawer })
         <el-button type="primary" size="small" @click="handleCreate">
           {{ t('docTemplate.variable.addRow') }}
         </el-button>
-        <el-popover class="box-item" width="300" title="Info" content="You can set data through '${key}'"
-                    placement="top">
-          <template #reference>
-            <el-icon style="display: flex; align-items: center; margin-left: 8px;">
-              <QuestionFilled />
-            </el-icon>
-          </template>
-        </el-popover>
       </div>
       <el-table :data="state.variables" style="width: 100%">
         <el-table-column :label="t('Key')" prop="key">
@@ -58,7 +50,20 @@ defineExpose({ openDrawer })
             <el-input v-model="row.key" @input="emitValue($index)" />
           </template>
         </el-table-column>
-        <el-table-column :label="t('Value')" prop="value">
+        <el-table-column prop="value">
+          <template #header>
+            <div style="display: flex; ">
+              {{ t('Value') }}
+              <el-popover class="box-item" width="300" title="Info" content="You can set data through '${key}'"
+                          placement="top">
+                <template #reference>
+                  <el-icon style="display: flex; align-items: center; margin-left: 8px;">
+                    <QuestionFilled />
+                  </el-icon>
+                </template>
+              </el-popover>
+            </div>
+          </template>
           <template #default="{ row, $index }">
             <el-input v-model="row.value" @input="emitValue($index)" />
           </template>
