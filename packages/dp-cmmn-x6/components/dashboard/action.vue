@@ -14,7 +14,7 @@
 </template>
 <script lang="ts" setup>
 import { emitBus, EventType } from 'eventbus'
-import { adminApi } from 'api'
+import { adminApi , clientApi} from 'api'
 const props = withDefaults(
   defineProps<{
     dates?: any
@@ -56,9 +56,9 @@ async function init() {
   const id = CMDProvider?.instanceId?.value || null
   // const _caseTypeId = CMDProvider.caseTypeId?.value || null
   const _caseVersionId = CMDProvider?.caseVersionId?.value || null
-
+  const appPlatform = useAppPlatform()
   if (id) {
-    const { data: userAction } = await adminApi.api.getCaseDashboardInstanceCaseidActions(id, { userId })
+    const { data: userAction } = appPlatform.value === 'admin' ? await adminApi.api.getCaseDashboardInstanceCaseidActions(id, { userId }) : await clientApi.api.getCaseDashboardInstanceCaseidActions(id, { userId })
     state.data = userAction?.filter(filterActions).sort((a: any, b: any) => a.name.localeCompare(b.name))
   }
   // else if(_caseTypeId){
