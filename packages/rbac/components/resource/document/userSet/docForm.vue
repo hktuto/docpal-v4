@@ -1,22 +1,58 @@
 <script setup lang="ts">
+import { adminApi } from 'api'
 const formData = ref({
   condition: 'or',
   resourceRules: []
 })
 
-const resourceAttributes = [
-  { label: 'DocType : Invoice : invoice amount', value: 'invoice_amount', type: 'number' },
-  { label: 'DocType : Invoice : status', value: 'status', type: 'string' },
-  {
-    label: 'DocType : Invoice : type',
-    value: 'type',
-    type: 'select',
-    options: [
-      { label: 'A', value: 'A' },
-      { label: 'B', value: 'B' }
-    ]
+const resourceAttributes = ref([])
+async function getResourceAttributes() {
+  try {
+    const metadataOpts: any = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    const optionList = metadataOpts.map((item: any) => {
+      const extraProps = {
+        type: 'string'
+      }
+      switch (item.dataType) {
+        case 'select':
+          extraProps.type = 'select'
+          extraProps.options = item.validationRule.options.map((item: any) => ({
+            label: item,
+            value: item
+          }))
+          break
+        case 'user':
+        case 'user_role_user_group':
+        case 'mastertable':
+          extraProps.type = 'select-dynamic'
+          extraProps.selectConfig = {
+            type: item.dataType,
+            ...item.validationRule
+          }
+          extraProps.selectOptions = []
+          break
+        case 'number':
+          extraProps.type = 'number'
+          break
+        case 'boolean':
+          extraProps.type = 'boolean'
+          break
+        default:
+          extraProps.type = 'string'
+      }
+      return {
+        ...extraProps,
+        label: item.name,
+        value: item.name
+      }
+    })
+
+    console.log('aaaaaaaaa optionList', optionList)
+    resourceAttributes.value = optionList
+  } catch (error) {
+    resourceAttributes.value = []
   }
-]
+}
 function setFormData(data) {
   if (!data) {
     formData.value = {
@@ -51,16 +87,18 @@ function getFormData() {
     operator: formData.value.condition === 'or' ? 'OR' : 'AND',
     rules: formData.value.resourceRules.map((item: any) => {
       return {
-        attributeType: 1,
+        attributeType: item.selectConfig?.type  || item.type,
         attributeName: item.attribute,
         operator: item.condition,
-        attributeValue: item.value.length > 1 ? item.value : item.value[0]
+        attributeValue: item.type === 'boolean' ? item.value : item.value.length > 1 ? item.value : item.value[0]
       }
     })
   }
   return params
 }
-
+onMounted(() => {
+  getResourceAttributes()
+})
 defineExpose({
   setFormData,
   getFormData
@@ -70,10 +108,5 @@ defineExpose({
   <h3 class="mb-2">
     {{ $t('rbac.permission.resource_rules') }}
   </h3>
-  <FormLogicalSelector
-    ref="SelectorDocTypeRef"
-    v-model:form-data="formData"
-    :resource-attributes="resourceAttributes"
-    :is-or="true"
-  />
+  <FormLogicalSelector ref="SelectorDocTypeRef" v-model:form-data="formData" :resource-attributes="resourceAttributes" :is-or="true" />
 </template>
