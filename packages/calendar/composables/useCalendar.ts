@@ -1,5 +1,5 @@
 
-import { adminApi } from '../../../libraries/api/src/index';
+import { adminApi, clientApi } from 'api';
 import { onMounted } from "vue";
 import { viewName } from '../utils/calendarHelper';
 
@@ -29,7 +29,7 @@ export const useCalendarViewerCategories = () => useState<CalendarVieweCalendarS
 
 export const useCalendarStore = () => {
     const setting = useCalendarSetting();
-
+    
     const calendarViewOptions = viewName
     
     const weekDayOptions = [
@@ -51,19 +51,26 @@ export const useCalendarStore = () => {
 
     const categoriesColumn = useCategoriesColumn()
     async function getCatergoriesColumn(){
-        const {data} = await adminApi.api.getMasterTablesId(setting.value.category.master_table) as any
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const {data} = await api.api.getMasterTablesId(setting.value.category.master_table) as any
         categoriesColumn.value = data.fields;
     }
 
     async function getCalendarMasterTable(){
-        const {data} = await adminApi.api.getCalendarsSettingTables() as any
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        console.log("api", api.instance.defaults.baseURL)
+        const {data} = await api.api.getCalendarsSettingTables() as any
         return data
     }
 
     const categoriesOption = useCalenarCategories()
     const calendarViewerCategories = useCalendarViewerCategories()
     async function getCategories(){
-        const { data } = await adminApi.api.postMasterTablesRecords({
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const { data } = await api.api.postMasterTablesRecords({
             id: setting.value.category.master_table
         }) as any
         categoriesOption.value = data || []
@@ -89,8 +96,9 @@ export const useCalendarStore = () => {
 
     const locationsOption = useCalenarLocation()
     async function getLocations(){
-        
-        const data = await adminApi.api.postMasterTablesRecords({
+      const appPlatform = useAppPlatform()
+      const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const data = await api.api.postMasterTablesRecords({
             id: setting.value.location.master_table
         }).then(res => res.data) as any;
         locationsOption.value = (data || []).filter(i => i.status).sort((a,b) => a.name.localeCompare(b.name))
@@ -98,7 +106,9 @@ export const useCalendarStore = () => {
 
     async function getCalendarsSetting(){
         const masterTable = await getCalendarMasterTable()
-        const { data } = await adminApi.api.getCalendarsSetting() as any;
+        const appPlatform = useAppPlatform()
+        const api = appPlatform.value === 'admin' ? adminApi : clientApi
+        const { data } = await api.api.getCalendarsSetting() as any;
         const { public: { platform } } = useRuntimeConfig();
 
         setting.value = {
