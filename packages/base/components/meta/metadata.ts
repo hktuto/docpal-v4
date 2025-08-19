@@ -184,30 +184,7 @@ export const useMetadata = () => {
     })
     return widgetVariableList
   }
-  const getMasterTableOptions = async ({
-    masterTableName,
-    displayColumn,
-    valueColumn
-  }: {
-    masterTableName: string
-    displayColumn: string
-    valueColumn: string
-  }): Promise<any> => {
-    try {
-      const record: any = await clientApi.api
-        .postMasterTablesRecordPageNonpermission({
-          name: masterTableName
-        })
-        .then((res) => res.data)
-      const options: any[] = record.map((item: any) => ({
-        label: item[displayColumn],
-        value: item[valueColumn]
-      }))
-      return options
-    } catch (error) {
-      return []
-    }
-  }
+  
   const initVformVariableList = async (type: string, initOptions: any) => {
     if (!initOptions) initOptions = {}
     if (!initOptions.hiddenFields) initOptions.hiddenFields = []
@@ -380,6 +357,30 @@ export function getDisplayProperties(properties: Record<string, any>) {
   })
   return result
 }
+export const getMasterTableOptions = async ({
+  masterTableName,
+  displayColumn,
+  valueColumn
+}: {
+  masterTableName: string
+  displayColumn: string
+  valueColumn: string
+}): Promise<any> => {
+  try {
+    const record: any = await clientApi.api
+      .postMasterTablesRecordPageNonpermission({
+        name: masterTableName
+      })
+      .then((res) => res.data)
+    const options: any[] = record.map((item: any) => ({
+      label: item[displayColumn],
+      value: item[valueColumn]
+    }))
+    return options
+  } catch (error) {
+    return []
+  }
+}
 function getParseDataItem(s: string) {
   try {
     return JSON.parse(s)
@@ -387,7 +388,7 @@ function getParseDataItem(s: string) {
     return s
   }
 }
-async function getUserList() {
+export async function getUserList() {
   try {
     const { data }: any = await clientApi.api.postNuxeoIdentityUsers()
     return data.map((item: any) => ({
@@ -399,7 +400,7 @@ async function getUserList() {
     return []
   }
 }
-async function getRoleList(type: string = 'role') {
+export async function getRoleList(type: string = 'role') {
   try {
     const data = await adminApi.api.getAclRoleRoot().then((res: any) => res.data)
     const roleList = data ? makeFlapRoleList([data]) : []
@@ -425,7 +426,7 @@ function makeFlapRoleList(data: any[], roleList: any[] = []) {
   })
   return roleList
 }
-async function getUserGroupList(type: string = 'group') {
+export async function getUserGroupList(type: string = 'group') {
   try {
     const { data }: any = await adminApi.api.postNuxeoIdentityGroups()
     return data.map((item: any) => ({
