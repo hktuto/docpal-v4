@@ -490,6 +490,8 @@ export interface Workflows {
     key?: string;
     /** Workflow Name */
     name?: string;
+    /** Workflow Template Key */
+    type?: string;
 }
 
 export interface ResultEventCalendarSetting {
@@ -4082,7 +4084,6 @@ export interface ProcessDefinitionDraft {
     publishStatus?: string;
     latestVersion?: string;
     productionVersion?: string;
-    folderCabinetSettingId?: string;
     bytes?: string[];
     jsonValue?: string;
     createdBy?: string;
@@ -4091,7 +4092,6 @@ export interface ProcessDefinitionDraft {
     createdDate?: string;
     /** @format date-time */
     modifiedDate?: string;
-    folderCabinetSettingName?: string;
     latestVersionId?: string;
     productionVersionId?: string;
 }
@@ -4155,6 +4155,37 @@ export interface ResultPaginationDTOProcessDefinitionDraft {
     data?: PaginationDTOProcessDefinitionDraft;
     messageKey?: string;
     locale?: string;
+}
+
+export interface WorkflowDraftRequestDTO {
+    /** Process Definition Draft ID */
+    draftId?: string;
+    /** Whether draft */
+    isDraft?: boolean;
+    /** Process Definition Draft Key */
+    key?: string;
+    /** Process Definition Draft Name */
+    name?: string;
+    /** Process Definition Draft Status */
+    status?: string;
+    /** Publish Status of process definition */
+    publishStatus?: string;
+    /** Process Definition Name Space */
+    nameSpace?: string;
+    /** Process Definition Json */
+    jsonValue?: string;
+    /** @format binary */
+    file?: File;
+    /** Email Template List */
+    templateIds?: string[];
+    /** Folder Cabinet Setting ID */
+    folderCabinetSettingId?: string;
+    /**  Permissions [Start Or View] */
+    permissions?: Record<string, string>[];
+    /** Process Definition Version Id */
+    versionId?: string;
+    /** Process Definition Version Number */
+    versionNumber?: string;
 }
 
 export interface ConditionValidationReq {
@@ -8767,7 +8798,7 @@ export class HttpClient<SecurityDataType = unknown> {
     constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
         this.instance = axios.create({
             ...axiosConfig,
-            baseURL: axiosConfig.baseURL || "http://admin.sit-v2.wclsolution.com",
+            baseURL: axiosConfig.baseURL || "http://admin.app4.wclsolution.com",
         });
         this.secure = secure;
         this.format = format;
@@ -8862,7 +8893,7 @@ export class HttpClient<SecurityDataType = unknown> {
 /**
  * @title OpenAPI definition
  * @version v0
- * @baseUrl http://admin.sit-v2.wclsolution.com
+ * @baseUrl http://admin.app4.wclsolution.com
  */
 export class Admin<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
     api = {
@@ -9530,7 +9561,7 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          *
          * @tags EventCalendarController
          * @name DeleteEventCalendarsSettingId
-         * @summary Delete Event Calendar Setting
+         * @summary Remove Event Calendar Setting
          * @request DELETE:/api/event/calendars/setting/{id}
          */
         deleteEventCalendarsSettingId: (id: string, params: RequestParams = {}) =>
@@ -13597,6 +13628,27 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * No description
          *
          * @tags Workflow Process Definition Controller
+         * @name PostWorkflowProcessDefinitionCopyCopiedkey
+         * @summary Copy workflow (process definition)
+         * @request POST:/api/docpal/workflow/process/definition/copy/{copiedKey}
+         */
+        postWorkflowProcessDefinitionCopyCopiedkey: (
+            copiedKey: string,
+            data: WorkflowDraftRequestDTO,
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultProcessDefinitionResponseDTO, Result | (ResultObject | Result | ResultString)>({
+                path: `/docpal/workflow/process/definition/copy/${copiedKey}`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags Workflow Process Definition Controller
          * @name PostWorkflowProcessDefinitionCopyFromFlowable
          * @summary Data Patch API
          * @request POST:/api/docpal/workflow/process/definition/copy/from/flowable
@@ -17404,42 +17456,6 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
         /**
          * No description
          *
-         * @tags Workflow Process Definition Controller
-         * @name DeleteWorkflowProcessDefinitionDraftDraftidCabinetSetting
-         * @summary Delete folder cabinet setting into the process definition
-         * @request DELETE:/api/docpal/workflow/process/definition/draft/{draftId}/cabinet/setting
-         */
-        deleteWorkflowProcessDefinitionDraftDraftidCabinetSetting: (draftId: string, params: RequestParams = {}) =>
-            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/process/definition/draft/${draftId}/cabinet/setting`,
-                method: "DELETE",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Workflow Process Definition Controller
-         * @name PatchWorkflowProcessDefinitionDraftDraftidCabinetSetting
-         * @summary Update folder cabinet setting into the process definition
-         * @request PATCH:/api/docpal/workflow/process/definition/draft/{draftId}/cabinet/setting
-         */
-        patchWorkflowProcessDefinitionDraftDraftidCabinetSetting: (
-            draftId: string,
-            data: ProcessDefinitionDraftRequestDTO,
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultBoolean, Result | (ResultObject | Result | ResultString)>({
-                path: `/docpal/workflow/process/definition/draft/${draftId}/cabinet/setting`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags Watermark Template
          * @name PatchWatermarkTemplatesDeprecate
          * @summary Modify watermark template and watermark setting list
@@ -18631,10 +18647,17 @@ export class Admin<SecurityDataType extends unknown> extends HttpClient<Security
          * @summary Get All Event Calendar Settings
          * @request GET:/api/event/calendars/settings
          */
-        getEventCalendarsSettings: (params: RequestParams = {}) =>
+        getEventCalendarsSettings: (
+            query: {
+                /** Event Calendar Setting */
+                eventCalendarSetting: EventCalendarSetting;
+            },
+            params: RequestParams = {},
+        ) =>
             this.request<ResultListEventCalendarSetting, Result | (ResultObject | Result | ResultString)>({
                 path: `/event/calendars/settings`,
                 method: "GET",
+                query: query,
                 ...params,
             }),
 

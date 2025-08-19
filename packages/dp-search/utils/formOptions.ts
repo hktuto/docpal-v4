@@ -100,19 +100,8 @@ export function sortListWithI18n(list: any, prefix = '') {
 }
 export const getMetadataOptions = async () => {
   try {
-    const {
-      public: { platform }
-    } = useRuntimeConfig()
-    /// TODO: depecate in next version
-    let globalType
-    if (platform === 'admin') {
-      const { data }: any = await adminApi.api.getDocpaltypeSettingsMetadataDocumenttype('GlobalFile')
-      globalType = data.keywords
-    } else {
-      const { data } = await clientApi.api.getNuxeoTypesDocumenttype('GlobalFile')
-      globalType = data?.keywords
-    }
-    const optionList = globalType.map((item: any) => ({
+    const metadataOpts: any = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    const optionList = metadataOpts.map((item: any) => ({
       ...item,
       label: item.name,
       value: item.name
@@ -122,6 +111,7 @@ export const getMetadataOptions = async () => {
     return []
   }
 }
+
 export const getGroupList = async () => {
   const { data } = (await clientApi.api.postNuxeoIdentityGroups()) as any
   const optionList = data.map((item: any) => ({

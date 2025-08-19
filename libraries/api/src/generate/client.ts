@@ -851,72 +851,6 @@ export interface RoleRequest {
     additionUsers?: string[];
 }
 
-/** Event Calendar Setting */
-export interface EventCalendarSetting {
-    /** Event calendar setting ID */
-    id?: string;
-    /** Event calendar setting name */
-    name?: string;
-    /** Event color code (hex format) */
-    color?: string;
-    /** Event status (A, D, R) */
-    status?: string;
-    /** Whether the event type is registered */
-    registered?: boolean;
-    /** Location configuration settings */
-    location?: Record<string, object>;
-    /** EventCalendarSetting Permission */
-    permission?: Permission;
-    /** Workflow Configuration Settings */
-    flows?: Workflows[];
-    /** Background color for event display */
-    backgroundColor?: string;
-    /** Text color for event display */
-    textColor?: string;
-    /** Highlight color for event selection */
-    highlightColor?: string;
-    /**
-     * Available seats for the event
-     * @format int32
-     */
-    availableSeat?: number;
-}
-
-/** EventCalendarSetting Permission */
-export interface Permission {
-    /** View configuration settings */
-    view?: Record<string, string[]>;
-    /** Create event configuration settings */
-    create?: Record<string, string[]>;
-    /** Update event configuration settings */
-    update?: Record<string, string[]>;
-    /** Cancel event configuration settings */
-    cancel?: Record<string, string[]>;
-    /** Remove event configuration settings */
-    remove?: Record<string, string[]>;
-    /** Remove event configuration settings */
-    export?: Record<string, string[]>;
-}
-
-/** Workflow Configuration Settings */
-export interface Workflows {
-    /** Workflow Key */
-    key?: string;
-    /** Workflow Name */
-    name?: string;
-}
-
-export interface ResultEventCalendarSetting {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    /** Event Calendar Setting */
-    data?: EventCalendarSetting;
-    messageKey?: string;
-    locale?: string;
-}
-
 export interface WOPIFileDTO {
     BaseFileName?: string;
     /** @format int32 */
@@ -1936,6 +1870,7 @@ export interface DocumentRequestDTO {
     oldDocPalType?: string;
     watermarkTemplateId?: string;
     version?: string;
+    needMetadata?: boolean;
     title?: string;
     fileName?: string;
 }
@@ -2726,6 +2661,7 @@ export interface WatermarkDocumentRequestDTO {
     /** Watermark Template Id */
     watermarkTemplateId?: string;
     version?: string;
+    needMetadata?: boolean;
     /** Origin Document Id */
     originDocumentId?: string;
     title?: string;
@@ -5805,6 +5741,7 @@ export interface DFCRequestDTO {
     oldDocPalType?: string;
     watermarkTemplateId?: string;
     version?: string;
+    needMetadata?: boolean;
     /** Email Reminder */
     notificationReminder?: FCReminder;
     /** Email Reminder */
@@ -5881,6 +5818,117 @@ export interface FilingDocumentPreviewReq {
     variables?: Record<string, object>;
     operator?: string;
     folderCabinetDataMapping?: Record<string, FCDataMappingDTO[]>;
+}
+
+/** 审计日志查询请求 */
+export interface AuditLogQueryRequestDTO {
+    /**
+     * 页码（从0开始）
+     * @format int32
+     * @min 0
+     * @example 0
+     */
+    pageNum?: number;
+    /**
+     * 每页大小
+     * @format int32
+     * @min 1
+     * @example 20
+     */
+    pageSize?: number;
+    /**
+     * 文档ID
+     * @minLength 0
+     * @maxLength 100
+     * @example "doc-12345"
+     */
+    documentId?: string;
+    /**
+     * 事件分类
+     * @minLength 0
+     * @maxLength 50
+     * @example "DOCUMENT"
+     */
+    eventCategory?: string;
+    /**
+     * 事件ID
+     * @minLength 0
+     * @maxLength 100
+     * @example "DOCUMENT_VIEW"
+     */
+    eventId?: string;
+    /**
+     * 用户ID
+     * @minLength 0
+     * @maxLength 50
+     * @example "user123"
+     */
+    principalName?: string;
+    /** 用户ID列表 */
+    userIds?: string[];
+    /** 主表名称列表 */
+    masterTables?: string[];
+    /**
+     * 事件开始时间
+     * @format date-time
+     */
+    eventDateFrom?: string;
+    /**
+     * 事件结束时间
+     * @format date-time
+     */
+    eventDateTo?: string;
+    /**
+     * 排序字段
+     * @minLength 0
+     * @maxLength 20
+     * @example "eventDate"
+     */
+    orderBy?: "eventDate" | "principalName";
+    /**
+     * 是否降序排序
+     * @example true
+     */
+    desc?: boolean;
+}
+
+/** 审计日志创建请求 */
+export interface AuditLogCreateRequestDTO {
+    /**
+     * 事件ID
+     * @minLength 0
+     * @maxLength 100
+     * @example "DOCUMENT_VIEW"
+     */
+    eventId: string;
+    /**
+     * 用户ID
+     * @minLength 0
+     * @maxLength 50
+     * @example "user123"
+     */
+    userId: string;
+    /**
+     * 客户端IP地址
+     * @minLength 0
+     * @maxLength 45
+     * @example "192.168.1.100"
+     */
+    clientIp?: string;
+    /**
+     * 文档ID（可选）
+     * @minLength 0
+     * @maxLength 100
+     * @example "doc-12345"
+     */
+    documentId?: string;
+    /**
+     * 审计日志注释（已替换占位符）
+     * @minLength 0
+     * @maxLength 500
+     * @example "用户查看了文档：项目计划书"
+     */
+    comment?: string;
 }
 
 export interface UserRoleGroupDTO {
@@ -6748,6 +6796,84 @@ export interface ResultListMQConfigurationInfo {
     code?: number;
     message?: string;
     data?: MQConfigurationInfo[];
+    messageKey?: string;
+    locale?: string;
+}
+
+/** Event Calendar Setting */
+export interface EventCalendarSetting {
+    /** Event calendar setting ID */
+    id?: string;
+    /** Event calendar setting name */
+    name?: string;
+    /** Event color code (hex format) */
+    color?: string;
+    /** Event status (A, D, R) */
+    status?: string;
+    /** Whether the event type is registered */
+    registered?: boolean;
+    /** Location configuration settings */
+    location?: Record<string, object>;
+    /** EventCalendarSetting Permission */
+    permission?: Permission;
+    /** Workflow Configuration Settings */
+    flows?: Workflows[];
+    /** Background color for event display */
+    backgroundColor?: string;
+    /** Text color for event display */
+    textColor?: string;
+    /** Highlight color for event selection */
+    highlightColor?: string;
+    /**
+     * Available seats for the event
+     * @format int32
+     */
+    availableSeat?: number;
+}
+
+/** EventCalendarSetting Permission */
+export interface Permission {
+    /** View configuration settings */
+    view?: Record<string, string[]>;
+    /** Create event configuration settings */
+    create?: Record<string, string[]>;
+    /** Update event configuration settings */
+    update?: Record<string, string[]>;
+    /** Cancel event configuration settings */
+    cancel?: Record<string, string[]>;
+    /** Remove event configuration settings */
+    remove?: Record<string, string[]>;
+    /** Remove event configuration settings */
+    export?: Record<string, string[]>;
+}
+
+/** Workflow Configuration Settings */
+export interface Workflows {
+    /** Workflow Key */
+    key?: string;
+    /** Workflow Name */
+    name?: string;
+    /** Workflow Template Key */
+    type?: string;
+}
+
+export interface ResultListEventCalendarSetting {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: EventCalendarSetting[];
+    messageKey?: string;
+    locale?: string;
+}
+
+export interface ResultEventCalendarSetting {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    /** Event Calendar Setting */
+    data?: EventCalendarSetting;
     messageKey?: string;
     locale?: string;
 }
@@ -8196,16 +8322,6 @@ export interface ResultRoleDTO {
     message?: string;
     /** Role data transfer object */
     data?: RoleDTO;
-    messageKey?: string;
-    locale?: string;
-}
-
-export interface ResultListEventCalendarSetting {
-    result?: boolean;
-    /** @format int32 */
-    code?: number;
-    message?: string;
-    data?: EventCalendarSetting[];
     messageKey?: string;
     locale?: string;
 }
@@ -10027,38 +10143,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         /**
          * No description
          *
-         * @tags EventCalendarController
-         * @name GetCalendarsettingSettingId
-         * @summary Get Event Calendar Setting by ID
-         * @request GET:/api/calendarSetting/setting/{id}
-         */
-        getCalendarsettingSettingId: (id: string, params: RequestParams = {}) =>
-            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/setting/${id}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags EventCalendarController
-         * @name PutCalendarsettingSettingId
-         * @summary Update Event Calendar Setting
-         * @request PUT:/api/calendarSetting/setting/{id}
-         */
-        putCalendarsettingSettingId: (id: string, data: EventCalendarSetting, params: RequestParams = {}) =>
-            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/setting/${id}`,
-                method: "PUT",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
          * @tags wopi-host-controller
          * @name GetWopiFilesId
          * @request GET:/api/wopi/files/{id}
@@ -11353,49 +11437,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
                 method: "POST",
                 body: data,
                 type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Public (Nuxeo)
-         * @name GetNuxeoPublicFilerequestDeprecate
-         * @request GET:/api/nuxeo/public/filerequest/
-         */
-        getNuxeoPublicFilerequestDeprecate: (
-            query: {
-                password: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultMapStringObject, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/public/filerequest/`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags Public (Nuxeo)
-         * @name PostNuxeoPublicFilerequestDeprecate
-         * @request POST:/api/nuxeo/public/filerequest/
-         */
-        postNuxeoPublicFilerequestDeprecate: (
-            data: {
-                password: string;
-                taskId: string;
-                files: File[];
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<Result, ResultString | (ResultString | Result)>({
-                path: `/nuxeo/public/filerequest/`,
-                method: "POST",
-                body: data,
-                type: ContentType.FormData,
                 ...params,
             }),
 
@@ -16919,6 +16960,42 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             }),
 
         /**
+         * @description 根据条件查询审计日志，支持分页、筛选和排序
+         *
+         * @tags 审计日志管理
+         * @name PostAuditLogQuery
+         * @summary 查询审计日志
+         * @request POST:/api/docpal/audit-log/query
+         */
+        postAuditLogQuery: (data: AuditLogQueryRequestDTO, params: RequestParams = {}) =>
+            this.request<Result, Result | ResultString>({
+                path: `/docpal/audit-log/query`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                format: "json",
+                ...params,
+            }),
+
+        /**
+         * @description 手动创建审计日志记录，所有参数由前端传入，系统不做自动提取
+         *
+         * @tags 审计日志管理
+         * @name PostAuditLogDeprecate
+         * @summary 创建审计日志
+         * @request POST:/api/docpal/audit-log/
+         */
+        postAuditLogDeprecate: (data: AuditLogCreateRequestDTO, params: RequestParams = {}) =>
+            this.request<Result, Result | ResultString>({
+                path: `/docpal/audit-log/`,
+                method: "POST",
+                body: data,
+                type: ContentType.Json,
+                format: "json",
+                ...params,
+            }),
+
+        /**
          * @description Batch retrieve roles and group information for multiple users
          *
          * @tags User Management
@@ -17031,23 +17108,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
             this.request<ResultObject, ResultString | (ResultString | Result)>({
                 path: `/clearUpExpiredDocument`,
                 method: "POST",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags EventCalendarController
-         * @name PostCalendarsettingSetting
-         * @summary Create Event Calendar Setting
-         * @request POST:/api/calendarSetting/setting
-         */
-        postCalendarsettingSetting: (data: EventCalendarSetting, params: RequestParams = {}) =>
-            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/setting`,
-                method: "POST",
-                body: data,
-                type: ContentType.Json,
                 ...params,
             }),
 
@@ -17556,23 +17616,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         patchCabinet: (data: DocFolderCabinetRequestDTO, params: RequestParams = {}) =>
             this.request<ResultDocFolderCabinetResponseDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/cabinet`,
-                method: "PATCH",
-                body: data,
-                type: ContentType.Json,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags EventCalendarController
-         * @name PatchCalendarsettingEventsId
-         * @summary Edit a Event Calendar in calendar setting
-         * @request PATCH:/api/calendarSetting/events/{id}
-         */
-        patchCalendarsettingEventsId: (id: string, data: EventCalendarSetting, params: RequestParams = {}) =>
-            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/events/${id}`,
                 method: "PATCH",
                 body: data,
                 type: ContentType.Json,
@@ -19104,6 +19147,58 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getFileDownloadFileId: (id: number, params: RequestParams = {}) =>
             this.request<string, ResultString | (ResultString | Result)>({
                 path: `/file/download/file/${id}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name GetEventCalendarsSettings
+         * @summary Get All Event Calendar Settings
+         * @request GET:/api/event/calendars/settings
+         */
+        getEventCalendarsSettings: (
+            query: {
+                /** Event Calendar Setting */
+                eventCalendarSetting: EventCalendarSetting;
+            },
+            params: RequestParams = {},
+        ) =>
+            this.request<ResultListEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/event/calendars/settings`,
+                method: "GET",
+                query: query,
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name GetEventCalendarsSettingsIdUsers
+         * @summary Retrieve user list by calendar id
+         * @request GET:/api/event/calendars/settings/{id}/users
+         */
+        getEventCalendarsSettingsIdUsers: (id: string, params: RequestParams = {}) =>
+            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
+                path: `/event/calendars/settings/${id}/users`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags EventCalendarController
+         * @name GetEventCalendarsSettingId
+         * @summary Get Event Calendar Setting by ID
+         * @request GET:/api/event/calendars/setting/{id}
+         */
+        getEventCalendarsSettingId: (id: string, params: RequestParams = {}) =>
+            this.request<ResultEventCalendarSetting, ResultString | (ResultString | Result)>({
+                path: `/event/calendars/setting/${id}`,
                 method: "GET",
                 ...params,
             }),
@@ -22084,57 +22179,6 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getAclRoleHierarchyRoleid: (roleId: string, params: RequestParams = {}) =>
             this.request<ResultRoleDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/acl/role/hierarchy/${roleId}`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags EventCalendarController
-         * @name GetCalendarsettingSettings
-         * @summary Get All Event Calendar Settings
-         * @request GET:/api/calendarSetting/settings
-         */
-        getCalendarsettingSettings: (params: RequestParams = {}) =>
-            this.request<ResultListEventCalendarSetting, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/settings`,
-                method: "GET",
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags EventCalendarController
-         * @name GetCalendarsettingEvents
-         * @summary Retrieves a list of calendar settings and associated events for a specified user identified by userId. The response includes calendar details and permissions.
-         * @request GET:/api/calendarSetting/events
-         */
-        getCalendarsettingEvents: (
-            query: {
-                userId: string;
-            },
-            params: RequestParams = {},
-        ) =>
-            this.request<ResultListEventCalendarSetting, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/events`,
-                method: "GET",
-                query: query,
-                ...params,
-            }),
-
-        /**
-         * No description
-         *
-         * @tags EventCalendarController
-         * @name GetCalendarsettingEventsIdUsers
-         * @summary Retrieve user list by calendar id
-         * @request GET:/api/calendarSetting/events/{id}/users
-         */
-        getCalendarsettingEventsIdUsers: (id: string, params: RequestParams = {}) =>
-            this.request<ResultListUserDTO, ResultString | (ResultString | Result)>({
-                path: `/calendarSetting/events/${id}/users`,
                 method: "GET",
                 ...params,
             }),
