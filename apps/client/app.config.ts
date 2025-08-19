@@ -99,7 +99,7 @@ export default defineAppConfig({
       name :"user-role-file-action"
     },
     {
-      name: "RBAC-client-pag"
+      name: "RBAC-client-page"
     }
   ],
   adminMenu:[
