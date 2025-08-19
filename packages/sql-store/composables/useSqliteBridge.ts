@@ -24,20 +24,24 @@ let worker: Worker | SharedWorker
 let port: MessagePort | null = null
 let isSharedWorker = false
 
-// Check if SharedWorker is available
-if (typeof window !== 'undefined' && 'SharedWorker' in window) {
-  // Use SharedWorker
-  worker = new SharedWorker('/workers/sqlite.shared-worker.js', { type: 'module' })
-  port = (worker as SharedWorker).port
-  port.start()
-  isSharedWorker = true
+worker = new Worker('/workers/sqlite.standalone-worker.js', { type: 'module' })
+isSharedWorker = false
+console.log('SharedWorker not supported, using regular Worker for SQLite bridge')
 
-} else {
-  // Fallback to regular Worker
-  worker = new Worker('/workers/sqlite.standalone-worker.js', { type: 'module' })
-  isSharedWorker = false
-  console.log('SharedWorker not supported, using regular Worker for SQLite bridge')
-}
+// // Check if SharedWorker is available
+// if (typeof window !== 'undefined' && 'SharedWorker' in window) {
+//   // Use SharedWorker
+//   worker = new SharedWorker('/workers/sqlite.shared-worker.js', { type: 'module' })
+//   port = (worker as SharedWorker).port
+//   port.start()
+//   isSharedWorker = true
+
+// } else {
+//   // Fallback to regular Worker
+//   worker = new Worker('/workers/sqlite.standalone-worker.js', { type: 'module' })
+//   isSharedWorker = false
+//   console.log('SharedWorker not supported, using regular Worker for SQLite bridge')
+// }
 
 // Track pending requests
 const pendingRequests = new Map<string, { resolve: (value: any) => void; reject: (error: any) => void }>()
