@@ -42,7 +42,7 @@ const { tableConfig, tableEvent, tableRef, query, reload } = useVxeTable({
   },
   columns: [
     { field: 'name', title: 'doc_typeSmartFolderName', fixed: 'left' },
-    { field: 'userGroups', title: 'doc_typeSmartFolderUserOrGroup' }
+    { field: 'userGroups', title: 'folder_cabinetUserOrGroup' }
   ],
   bodyActions: [
     [
