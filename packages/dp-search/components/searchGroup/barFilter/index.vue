@@ -28,7 +28,7 @@
 </div>
 </template>
 <script lang="ts" setup>
-import { clientApi } from 'api'
+import { globalApi } from 'api'
 
 import type { searchGroup, searchGroupQuery, searchGroupQQ } from '~/typing/search'
 import { getUniqueId } from '../../../utils/searchFormHelper'
@@ -134,10 +134,10 @@ const searchOptions = ref({})
 
 async function getOptions() {
   const [docType, users, collections, tags, groupList, metadata] = await Promise.all([
-    clientApi.api.getTypesActive(),
-    clientApi.api.postNuxeoIdentityGetkeycloakallusers(),
-    clientApi.api.getNuxeoCollection(),
-    clientApi.api.postNuxeoTagsGetalltags(),
+    globalApi.api.getTypesActive(),
+    globalApi.api.postNuxeoIdentityGetkeycloakallusers(),
+    globalApi.api.getNuxeoCollection(),
+    globalApi.api.postNuxeoTagsGetalltags(),
     getGroupList(),
     getMetadataOptions()
   ])

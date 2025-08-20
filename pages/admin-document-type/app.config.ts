@@ -30,7 +30,7 @@ export default defineAppConfig({
       label: "adminMenu.smartFolder",
       icon: "material-symbols:map-search-outline-rounded",
       hoverIcon: "material-symbols:map-search-outline-rounded",
-      component: "LazySmartFolderPage",
+      component: "LazyAdminSmartFolderPage",
       feature: "SMART_FOLDER",
       props:{},
     }

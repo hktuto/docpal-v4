@@ -192,7 +192,7 @@
 <script lang="ts" setup>
 import { isJSON } from '~/utils/searchFormHelper'
 import type { CascaderProps } from 'element-plus'
-import { clientApi } from 'api'
+import { globalApi } from 'api'
 
 const props = defineProps(['form', 'id'])
 const emits = defineEmits(['selectClear', 'formChange'])
@@ -216,7 +216,7 @@ const pathProps: CascaderProps = {
     //   return
     // }
     const idOrPath = level == 0 ? '/' : value
-    clientApi.api
+    globalApi.api
       .postNuxeoDocumentChildrenThumbnail({ idOrPath, pageSize: 100000 })
       .then((res: any) => {
         const nodes = res.data.entryList.reduce((prev: any, item: any) => {
