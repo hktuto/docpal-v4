@@ -1,4 +1,4 @@
-import { globalApi } from 'api'
+import { globalApi, clientApi,adminApi } from 'api'
 
 export const conditionType = [
   { label: 'authors', value: 'authors' },
@@ -100,7 +100,13 @@ export function sortListWithI18n(list: any, prefix = '') {
 }
 export const getMetadataOptions = async () => {
   try {
-    const metadataOpts: any = await globalApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    let metadataOpts
+    const platform = window.location.pathname.includes('admin') ? 'admin' : 'client'
+    if (platform === 'admin') {
+      metadataOpts = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    } else {
+      metadataOpts = await clientApi.api.getTypesMetadataV2QueryCache().then((res: any) => res.data)
+    }
     const optionList = metadataOpts.map((item: any) => ({
       ...item,
       label: item.name,
