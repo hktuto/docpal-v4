@@ -11,7 +11,13 @@
     <template #logicalPath="{ row }">
       <PathTabButton :path="row.path" :fileName="row.name" :openParent="!row.isFolder" :displayPath="row.logicalPath" canOpen />
     </template>
-    
+    <template #contributors="{ row }">
+
+      <div v-if="row && row.contributors">
+        <el-tag v-for="item in row.contributors" :key="item">{{ item }}</el-tag>
+      </div>
+    </template>
+
     <template #summary="{ row }">
       <div v-if="row.properties && row.properties.summarys">
         <div v-if="row.properties.summarys.length > 1" @click="row.expandSummary = !row.expandSummary">
@@ -140,11 +146,24 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
     },
     {
       title: 'docInfo.fileExtension',
-      field: 'file_suffix'
+      field: 'fileSuffix'
     },
     {
+      title: "searchGroup.creators",
+      field: 'createBy',
+      width: 120
+    },
+    {
+      title: 'searchGroup.authors',
+      fields: 'contributors',
+      slots: {
+        default: 'contributors'
+      }
+    },
+    
+    {
       title: 'search.size',
-      field: 'file_content.length',
+      field: 'fileContent.length',
       width: 120,
       formatter: ({ cellValue }: any) => {
         if (!cellValue) return '-'
@@ -168,22 +187,16 @@ const { tableConfig, tableEvent, tableRef, reload, query } = useVxeTable({
       }
     },
     {
-      title: 'search.authors',
-      field: 'create_by',
-      width: 240
-    },
-    {
-      title: 'search.contributors',
-      field: 'contributors',
+      title: 'tableHeader_creationDate',
+      field: 'createDate',
       width: 200,
       formatter: ({ cellValue }: any) => {
-        if (!cellValue) return '-'
-        return cellValue.join(',')
+        return formatDate(cellValue)
       }
     },
     {
       title: 'tableHeader_modifiedDate',
-      field: 'modify_date',
+      field: 'modifyDate',
       width: 200,
       formatter: ({ cellValue }: any) => {
         return formatDate(cellValue)
