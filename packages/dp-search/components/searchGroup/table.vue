@@ -37,7 +37,7 @@
 import { ArrowLeftBold, ArrowUp } from '@element-plus/icons-vue'
 import { watchDebounced } from '@vueuse/core'
 import * as mime from 'mime-types'
-import { clientApi } from 'api'
+import { globalApi } from 'api'
 
 const { tableId, showCheckbox } = defineProps<{
   tableId: string,
@@ -245,7 +245,7 @@ async function getList(param: any) {
         totalSize: 0
       }
     }
-    const { data: res } = (await clientApi.api.postNuxeoSearchOpenSearch({ ...state.barParams, ...state.aggParams, ...param })) as any
+    const { data: res } = (await globalApi.api.postNuxeoSearchOpenSearch({ ...state.barParams, ...state.aggParams, ...param })) as any
     if (!res.page)
       res.page = {
         data:{

@@ -1,4 +1,4 @@
-import { clientApi, adminApi } from 'api'
+import { globalApi } from 'api'
 
 export const conditionType = [
   { label: 'authors', value: 'authors' },
@@ -100,7 +100,7 @@ export function sortListWithI18n(list: any, prefix = '') {
 }
 export const getMetadataOptions = async () => {
   try {
-    const metadataOpts: any = await adminApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
+    const metadataOpts: any = await globalApi.api.getDocpaltypeSettingsMetadataV2QueryCache().then((res: any) => res.data)
     const optionList = metadataOpts.map((item: any) => ({
       ...item,
       label: item.name,
@@ -113,7 +113,7 @@ export const getMetadataOptions = async () => {
 }
 
 export const getGroupList = async () => {
-  const { data } = (await clientApi.api.postNuxeoIdentityGroups()) as any
+  const { data } = (await globalApi.api.postNuxeoIdentityGroups()) as any
   const optionList = data.map((item: any) => ({
     ...item,
     label: item.name,

@@ -46,8 +46,6 @@ async function getResourceAttributes() {
         value: item.name
       }
     })
-
-    console.log('aaaaaaaaa optionList', optionList)
     resourceAttributes.value = optionList
   } catch (error) {
     resourceAttributes.value = []

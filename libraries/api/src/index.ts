@@ -31,5 +31,5 @@ export const templateApi = new Template({
   baseURL: templateBaseURL,
   timeout: 50000
 })
-
+export const globalApi = window.location.pathname.includes('admin') ? adminApi : clientApi
 // if node env mode is dev set proxy
