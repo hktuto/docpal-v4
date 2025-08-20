@@ -7323,6 +7323,44 @@ export type UserValidation = MetadataValidation;
 
 export type WorkflowValidation = MetadataValidation;
 
+export interface MetadataMaskRuleDTO {
+    maskType?: string;
+    /** @format int32 */
+    maskLength?: number;
+}
+
+export interface MetadataResponseVO {
+    name?: string;
+    dataType?: string;
+    createdBy?: string;
+    lastModifiedDate?: string;
+    id?: string;
+    display?: boolean;
+    validationRule?:
+        | BooleanValidation
+        | CaseValidation
+        | DateValidation
+        | DocumentValidation
+        | MasterTableValidation
+        | NumberValidation
+        | SelectValidation
+        | TextValidation
+        | UserRoleUserGroupValidation
+        | UserValidation
+        | WorkflowValidation;
+    maskRule?: MetadataMaskRuleDTO;
+}
+
+export interface ResultListMetadataResponseVO {
+    result?: boolean;
+    /** @format int32 */
+    code?: number;
+    message?: string;
+    data?: MetadataResponseVO[];
+    messageKey?: string;
+    locale?: string;
+}
+
 export interface DocPalTypeDistinction {
     oldDocPalType?: string;
     newDocPalType?: string;
@@ -20009,6 +20047,20 @@ export class Client<SecurityDataType extends unknown> extends HttpClient<Securit
         getTypesMetadataV2Docpaltypename: (docpalTypeName: string, params: RequestParams = {}) =>
             this.request<ResultListMetadataValidDTO, ResultString | (ResultString | Result)>({
                 path: `/docpal/types/metadata-v2/${docpalTypeName}`,
+                method: "GET",
+                ...params,
+            }),
+
+        /**
+         * No description
+         *
+         * @tags DocPalTypeController
+         * @name GetTypesMetadataV2QueryCache
+         * @request GET:/api/docpal/types/metadata-v2/query-cache
+         */
+        getTypesMetadataV2QueryCache: (params: RequestParams = {}) =>
+            this.request<ResultListMetadataResponseVO, ResultString | (ResultString | Result)>({
+                path: `/docpal/types/metadata-v2/query-cache`,
                 method: "GET",
                 ...params,
             }),
