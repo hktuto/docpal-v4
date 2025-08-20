@@ -472,6 +472,11 @@ export const bpmnElement: BpmnElement = {
             type = 'Writer PDF'
             color = '#7B61FF'
             break
+          case '${DocumentFolderCabinetDelegate}':
+            icon = '/bpmn/icons/download-pdf.svg'
+            type = 'Folder Cabinet'
+            color = '#7B61FF'
+            break
         }
       }
 
@@ -826,7 +831,10 @@ export const bpmnElement: BpmnElement = {
               ['flowable:field']: [
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
-                { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' } },
+                {
+                  attr_name: 'requestHeaders',
+                  ['flowable:expression']: { '__cdata': 'Content-Type: application/json' }
+                },
                 { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '{}' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
                 { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } },
@@ -849,7 +857,10 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'requestMethod', ['flowable:expression']: { '__cdata': 'GET' } },
                 { attr_name: 'requestUrl', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'requestTimeout', ['flowable:expression']: { '__cdata': '2000' } },
-                { attr_name: 'requestHeaders', ['flowable:expression']: { '__cdata': 'Content-Type: application/json' } },
+                {
+                  attr_name: 'requestHeaders',
+                  ['flowable:expression']: { '__cdata': 'Content-Type: application/json' }
+                },
                 { attr_name: 'requestBody', ['flowable:expression']: { '__cdata': '{}' } },
                 { attr_name: 'responseVariableName', ['flowable:expression']: { '__cdata': '' } },
                 { attr_name: 'saveResponseVariableAsJson', ['flowable:expression']: { '__cdata': 'false' } },
@@ -858,6 +869,48 @@ export const bpmnElement: BpmnElement = {
                 { attr_name: 'disallowRedirects', ['flowable:expression']: { '__cdata': 'false' } },
                 { attr_name: 'ignoreException', ['flowable:expression']: { '__cdata': 'true' } }
               ]
+            }
+          })
+        })
+      },
+      {
+        icon: 'bpmn:folder-cabinet',
+        label: 'Folder Cabinet',
+        group: '',
+        order: 0,
+        dropData: (id: string) => ({
+          id,
+          ...bpmnElement.serviceTask.nodeStyle({
+            ['attr_flowable:delegateExpression']: '${DocumentFolderCabinetDelegate}',
+            extensionElements: {
+              ['flowable:folderCabinetMapping']: {
+                attr_id: '',
+                attr_name: '',
+                ['field']: [
+                  {
+                    attr_formProperty: '',
+                    attr_metadata: ''
+                  }
+                ]
+              }
+            }
+          }),
+          label: 'New Folder Cabinet',
+          data: bpmnElement.serviceTask.newNodeData(id, 'New Folder Cabinet', {
+            attr_id: id,
+            attr_name: 'New Folder Cabinet',
+            ['attr_flowable:delegateExpression']: '${DocumentFolderCabinetDelegate}',
+            extensionElements: {
+              ['flowable:folderCabinetMapping']: {
+                attr_id: '',
+                attr_name: '',
+                ['field']: [
+                  {
+                    attr_formProperty: '',
+                    attr_metadata: ''
+                  }
+                ]
+              }
             }
           })
         })
@@ -904,6 +957,8 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextPDFReader'
         case '${pdfFormWriter}':
           return 'LazyBpmnContextPDFWriter'
+        case '${DocumentFolderCabinetDelegate}':
+          return 'LazyBpmnContextFolderCabinet1'
         default:
           return 'LazyBpmnContextCustomeService'
       }
@@ -912,7 +967,7 @@ export const bpmnElement: BpmnElement = {
   scriptTask: {
     nodeStyle: (item: any) => {
       return {
-        ...squareNodeStyle('#0099ff', 'scriptTask', '/bpmn/icons/form.svg', 200, 64, '#fff', '#000'),
+        ...squareNodeStyle('#0099ff', 'Script Task', '/bpmn/icons/form.svg', 200, 64, '#fff', '#000'),
         shape: 'bpmn-node',
         ports: {
           items: [
