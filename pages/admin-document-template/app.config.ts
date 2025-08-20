@@ -7,8 +7,8 @@ export default defineAppConfig({
       id:"admin-document-template",
       name: 'document-template',
       label: "adminMenu.template",
-      icon: "lucide:file-sliders",
-      hoverIcon: "lucide:file-sliders",
+      icon: "dp-icon:template",
+      hoverIcon: "dp-icon:template",
       component: "LazyDocumentTemplatePage",
       feature: "GENERATE_TEMPLATE",
       props:{

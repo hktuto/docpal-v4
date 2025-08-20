@@ -85,8 +85,6 @@ export const requestSuccessHelper = (config: any, axiosInstance: AxiosInstance) 
   }
   if (process.env.NODE_ENV !== 'development') {
     config.baseURL = getBaseUrl(config.baseURL)
-    config.headers['Access-Control-Allow-Credentials'] = true
-    config.headers['Access-Control-Allow-Origin'] = config.baseURL
   }
   //
   return config

@@ -1,4 +1,4 @@
-import { adminApi } from './../../libraries/api/src/index';
+
 // create nuxt app config
 import { defineAppConfig } from '#imports'
 
@@ -8,8 +8,8 @@ export default defineAppConfig({
       id:"RBAC-page",
       name: 'rgac-page',
       label: "ROLE-Page",
-      icon: "lucide:file-cog",
-      hoverIcon: "lucide:file-cog",
+      icon: "dp-icon:role",
+      hoverIcon: "dp-icon:role",
       component: "LazyAdminRbacPage",
       feature: "CORE",
     },
