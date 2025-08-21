@@ -23,13 +23,12 @@ const selectedCabinet = ref()
 const form = ref<any[]>([])
 
 async function loopChildren(all: any, item: any, level = 0) {
-  const response = await adminApi.api.getDocpaltypeSettingsNameName(item.documentType)
-  console.log(response)
+  const response = await adminApi.api.postDocpaltypeSettingsDocpalTypeV2MetadataQuery({ docpalTypeName: item.documentType })
   const meta = response.data
   all.push({
     ...item,
     level,
-    displayMeta: meta && meta.metadata ? ['folderCabinetId', 'fc:docTitle', ...meta.metadata.map((item: any) => item.metadata)] : ['folderCabinetId', 'fc:docTitle']
+    displayMeta: (meta && meta.metadataList?.length > 0) ? ['folderCabinetId', 'fc:docTitle', ...meta.metadataList?.map((item: any) => item.name)] : ['folderCabinetId', 'fc:docTitle']
   })
 
   if (item.children) {
@@ -66,7 +65,6 @@ async function getCabinetDetail(id: string) {
   const response = await adminApi.api.getCabinetTemplateId(id)
   cabinetDetail.value = response.data
   let arr: any[] = []
-  console.log(111, cabinetDetail.value)
   arr = await loopChildren(arr, cabinetDetail.value, 0)
   const graph = graphProvider?.graph.value
   const processNode = graph?.getCellById(node.data.id)
@@ -99,6 +97,7 @@ async function getCabinetDetail(id: string) {
         attr_name: item.label,
         attr_level: item.level,
         attr_isFolder: item.folder,
+        rule: item.labelRule,
         field: fields,
         isFolder: item.folder,
         check: elementsIdList.value?.includes(item.id)

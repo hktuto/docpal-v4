@@ -6,7 +6,7 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['update:fields', 'update:fieldData'])
 const activeName = ref('')
-
+const { t } = useI18n()
 
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!editorProvider) {
@@ -56,6 +56,18 @@ function handleUpdateField(item: any) {
     emits('update:fieldData', item)
   }
 }
+
+function getLabelList(labelRules: string) {
+  return labelRules ? jsonParse(labelRules) : [{ dataType: 'string', metadata: 'fc:docTitle', noDelete: true }]
+}
+
+function jsonParse(str: any) {
+  try {
+    return JSON.parse(str)
+  } catch (e) {
+    return str
+  }
+}
 </script>
 
 <template>
@@ -76,7 +88,11 @@ function handleUpdateField(item: any) {
             <div class="content">
               <ElForm label-position="top" @sumit.stop>
                 <div>
-                  Folder name rule: {{ item }}
+                  Folder name rule:
+                  <template v-for="(i, index) in getLabelList(item.rule)" :key="index">
+                    <el-tag v-if="i.metadata">{{ $t(i.metadata) }}</el-tag>
+                    <template v-if="index !== getLabelList(item.rule).length - 1"> -</template>
+                  </template>
                 </div>
                 <ElFormItem v-for="metaField in item.field" :key="metaField.metadata" :label="metaField.attr_metadata">
                   <ElSelect v-model="metaField.attr_formProperty" @change="handleUpdateField(item)" clearable
@@ -85,6 +101,9 @@ function handleUpdateField(item: any) {
                               :value="option.attr_id" />
                   </ElSelect>
                 </ElFormItem>
+
+                <el-divider v-if="!item.isFolder" />
+
                 <ElFormItem v-if="!item.isFolder" label="File">
                   <ElSelect @change="handleUpdateField(item)" clearable :disabled="editorProvider.readonly.value">
                     <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name"
