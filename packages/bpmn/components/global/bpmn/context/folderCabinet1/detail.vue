@@ -8,6 +8,24 @@ const emits = defineEmits(['update:fields', 'update:fieldData'])
 const activeName = ref('')
 const { t } = useI18n()
 
+function filterOption(item: any) {
+  const set: any = []
+  field.value.forEach((i: any) => {
+    if (!i.isFolder) {
+      i.field.forEach((f: any) => {
+        if (f.attr_file && item.attr_file !== f.attr_file && f.attr_formProperty !== '') {
+          set.push(f.attr_formProperty)
+        }
+      })
+    }
+  })
+  const filteredList = deepCopy(props.allField)
+  set.forEach((property: string) => {
+    delete filteredList[property]
+  })
+  return filteredList
+}
+
 const editorProvider = inject(EDITOR_PROVIDER)
 if (!editorProvider) {
   throw createError('editor provider not found')
@@ -88,7 +106,7 @@ function jsonParse(str: any) {
                             :label="metaField.attr_metadata">
                   <ElSelect v-model="metaField.attr_formProperty" :disabled="editorProvider.readonly.value" clearable
                             @change="handleUpdateField(item)">
-                    <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name"
+                    <ElOption v-for="option in filterOption(metaField)" :key="option.attr_id" :label="option.attr_name"
                               :value="option.attr_id" />
                   </ElSelect>
                 </ElFormItem>
@@ -96,10 +114,10 @@ function jsonParse(str: any) {
                 <el-divider v-if="!item.isFolder" />
 
                 <ElFormItem v-if="!item.isFolder" label="File">
-                  <ElSelect v-model="item.field[item.field.length-1].attr_formProperty" clearable
+                  <ElSelect v-model="item.field[item.field.length - 1].attr_formProperty" clearable
                             :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
-                    <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name"
-                              :value="option.attr_id" />
+                    <ElOption v-for="option in filterOption(item.field[item.field.length - 1])"
+                              :key="option.attr_id" :label="option.attr_name" :value="option.attr_id" />
                   </ElSelect>
                 </ElFormItem>
               </ElForm>

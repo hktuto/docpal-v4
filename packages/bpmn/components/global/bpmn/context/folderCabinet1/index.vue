@@ -106,7 +106,6 @@ async function getCabinetDetail(id: string) {
           })
         }
       }
-
       // add folderCabinetId to arr
       return {
         attr_id: item.id,
