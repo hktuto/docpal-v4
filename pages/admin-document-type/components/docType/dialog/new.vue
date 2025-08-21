@@ -10,7 +10,7 @@
         <el-input v-model="formData.name" />
       </el-form-item>
       <el-form-item :label="$t('docType.category')" prop="category" required>
-        <el-select v-model="formData.category" placeholder="Select">
+        <el-select v-model="formData.category" placeholder="Select" filterable>
           <el-option v-for="item in categoryOptions" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -19,7 +19,7 @@
       </el-form-item>
       <el-divider />
       <el-form-item :label="$t('dpTable_permission')">
-        <el-select v-model="formData.acls" multiple placeholder="Select" style="width: 100%">
+        <el-select v-model="formData.acls" multiple placeholder="Select" style="width: 100%" filterable>
           <el-option-group v-for="group in permissionOptions" :key="group.label" :label="$t(group.label)">
             <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value" />
           </el-option-group>
