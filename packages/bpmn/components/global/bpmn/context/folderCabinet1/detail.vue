@@ -19,7 +19,7 @@ function handleCheckBox(status: boolean, item: any) {
   const levelList: any = [level]
   const index = field.value.findIndex(i => i.attr_id === id)
 
-  // 勾選時將上級和子集合全部勾選
+  // 勾選時將全部上級勾選
   if (status) {
     // 遍歷上級
     for (let i = index; i >= 0; i--) {
@@ -28,16 +28,6 @@ function handleCheckBox(status: boolean, item: any) {
         field.value[i].check = true
       }
     }
-
-    // 遍歷子集合
-    // for (let i = index + 1; i < field.value.length; i++) {
-    //   if (field.value[i].attr_level > level) {
-    //     field.value[i].check = true
-    //   }
-    //   if (field.value[i].attr_level === level) {
-    //     break
-    //   }
-    // }
   } else {
     // 取消勾選，下級全部取消
     for (let i = index + 1; i < field.value.length; i++) {
@@ -94,9 +84,10 @@ function jsonParse(str: any) {
                     <template v-if="index !== getLabelList(item.rule).length - 1"> -</template>
                   </template>
                 </div>
-                <ElFormItem v-for="metaField in item.field" :key="metaField.metadata" :label="metaField.attr_metadata">
-                  <ElSelect v-model="metaField.attr_formProperty" @change="handleUpdateField(item)" clearable
-                            :disabled="editorProvider.readonly.value">
+                <ElFormItem v-for="metaField in item.field.slice(0, item.field.length - 1)" :key="metaField.metadata"
+                            :label="metaField.attr_metadata">
+                  <ElSelect v-model="metaField.attr_formProperty" :disabled="editorProvider.readonly.value" clearable
+                            @change="handleUpdateField(item)">
                     <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name"
                               :value="option.attr_id" />
                   </ElSelect>
@@ -105,7 +96,8 @@ function jsonParse(str: any) {
                 <el-divider v-if="!item.isFolder" />
 
                 <ElFormItem v-if="!item.isFolder" label="File">
-                  <ElSelect @change="handleUpdateField(item)" clearable :disabled="editorProvider.readonly.value">
+                  <ElSelect v-model="item.field[item.field.length-1].attr_formProperty" clearable
+                            :disabled="editorProvider.readonly.value" @change="handleUpdateField(item)">
                     <ElOption v-for="option in allField" :key="option.attr_id" :label="option.attr_name"
                               :value="option.attr_id" />
                   </ElSelect>

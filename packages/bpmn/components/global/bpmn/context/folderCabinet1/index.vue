@@ -75,8 +75,8 @@ async function getCabinetDetail(id: string) {
   const cabinetMapping = processData.extensionElements['flowable:folderCabinetMapping']
   if (cabinetMapping) {
     form.value = arr.map(item => {
+      const bpmnItem = cabinetMapping.find((oldItem: any) => item.id === oldItem.attr_id)
       const fields = item.displayMeta.reduce((allMeta: any, meta: any) => {
-        const bpmnItem = cabinetMapping.find((oldItem: any) => item.id === oldItem.attr_id)
         if (bpmnItem && bpmnItem.field) {
           const formItem = bpmnItem.field.find((item: any) => item.attr_metadata === meta)
           allMeta.push({
@@ -91,6 +91,22 @@ async function getCabinetDetail(id: string) {
         }
         return allMeta
       }, [])
+
+      if (!item.folder) {
+        if (bpmnItem && bpmnItem.field) {
+          const formItem = bpmnItem.field.find((fieldItem: any) => fieldItem.attr_file && fieldItem.attr_file === item.id)
+          fields.push({
+            attr_formProperty: formItem ? formItem.attr_formProperty : '',
+            attr_file: item.id
+          })
+        } else {
+          fields.push({
+            attr_formProperty: '',
+            attr_file: item.id
+          })
+        }
+      }
+
       // add folderCabinetId to arr
       return {
         attr_id: item.id,
@@ -136,8 +152,6 @@ async function setData() {
       elementsIdList.value = cabinetMapping.map(item => item.attr_id)
     } else {
       selectedCabinet.value = cabinetMapping.attr_id
-
-
     }
     await getCabinetDetail(selectedCabinet.value)
   } else {
@@ -196,7 +210,7 @@ function handleUpdateFieldData(item: any) {
 
 watch(() => node, async () => {
   console.log('node changed')
-  setData()
+  await setData()
 }, {
   immediate: true,
   deep: true
