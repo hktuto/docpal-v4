@@ -472,8 +472,8 @@ export const bpmnElement: BpmnElement = {
             type = 'Writer PDF'
             color = '#7B61FF'
             break
-          case '${DocumentFolderCabinetDelegate}':
-            icon = '/bpmn/icons/download-pdf.svg'
+          case '${documentFolderCabinetDelegate}':
+            icon = 'lucide:folder-closed'
             type = 'Folder Cabinet'
             color = '#7B61FF'
             break
@@ -881,17 +881,12 @@ export const bpmnElement: BpmnElement = {
         dropData: (id: string) => ({
           id,
           ...bpmnElement.serviceTask.nodeStyle({
-            ['attr_flowable:delegateExpression']: '${DocumentFolderCabinetDelegate}',
+            ['attr_flowable:delegateExpression']: '${documentFolderCabinetDelegate}',
             extensionElements: {
               ['flowable:folderCabinetMapping']: {
                 attr_id: '',
                 attr_name: '',
-                ['field']: [
-                  {
-                    attr_formProperty: '',
-                    attr_metadata: ''
-                  }
-                ]
+                ['field']: []
               }
             }
           }),
@@ -899,17 +894,12 @@ export const bpmnElement: BpmnElement = {
           data: bpmnElement.serviceTask.newNodeData(id, 'New Folder Cabinet', {
             attr_id: id,
             attr_name: 'New Folder Cabinet',
-            ['attr_flowable:delegateExpression']: '${DocumentFolderCabinetDelegate}',
+            ['attr_flowable:delegateExpression']: '${documentFolderCabinetDelegate}',
             extensionElements: {
               ['flowable:folderCabinetMapping']: {
                 attr_id: '',
                 attr_name: '',
-                ['field']: [
-                  {
-                    attr_formProperty: '',
-                    attr_metadata: ''
-                  }
-                ]
+                ['field']: []
               }
             }
           })
@@ -957,7 +947,7 @@ export const bpmnElement: BpmnElement = {
           return 'LazyBpmnContextPDFReader'
         case '${pdfFormWriter}':
           return 'LazyBpmnContextPDFWriter'
-        case '${DocumentFolderCabinetDelegate}':
+        case '${documentFolderCabinetDelegate}':
           return 'LazyBpmnContextFolderCabinet1'
         default:
           return 'LazyBpmnContextCustomeService'
